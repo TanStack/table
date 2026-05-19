@@ -5,13 +5,14 @@ import type { Table_Internal } from '../../types/Table'
 import type { Column_Internal } from '../../types/Column'
 
 /**
- * Returns faceted min max values for a column.
+ * Computes min and max numeric facet values for one column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The configured `facetedMinMaxValues` row-model factory owns the calculation.
+ * If no factory is registered, the result is `undefined`.
  *
  * @example
  * ```ts
- * const value = column_getFacetedMinMaxValues(column)
+ * const range = column_getFacetedMinMaxValues(column, table)
  * ```
  */
 export function column_getFacetedMinMaxValues<
@@ -29,13 +30,15 @@ export function column_getFacetedMinMaxValues<
 }
 
 /**
- * Returns faceted row model for a column.
+ * Computes the row model used to derive one column's facet values.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The faceted row model normally applies every other active filter while
+ * excluding this column's own filter. If no factory is registered, the
+ * pre-filtered row model is returned.
  *
  * @example
  * ```ts
- * const value = column_getFacetedRowModel(column)
+ * const rows = column_getFacetedRowModel(column, table)
  * ```
  */
 export function column_getFacetedRowModel<
@@ -53,13 +56,14 @@ export function column_getFacetedRowModel<
 }
 
 /**
- * Returns faceted unique values for a column.
+ * Computes unique facet values and their occurrence counts for one column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The configured `facetedUniqueValues` row-model factory owns the calculation.
+ * If no factory is registered, an empty `Map` is returned.
  *
  * @example
  * ```ts
- * const value = column_getFacetedUniqueValues(column)
+ * const values = column_getFacetedUniqueValues(column, table)
  * ```
  */
 export function column_getFacetedUniqueValues<
@@ -77,13 +81,14 @@ export function column_getFacetedUniqueValues<
 }
 
 /**
- * Returns global faceted min max values for the table.
+ * Computes min and max numeric facet values for the global filter context.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The global context is requested with the internal `__global__` column id. If
+ * no factory is registered, the result is `undefined`.
  *
  * @example
  * ```ts
- * const value = table_getGlobalFacetedMinMaxValues(table)
+ * const range = table_getGlobalFacetedMinMaxValues(table)
  * ```
  */
 export function table_getGlobalFacetedMinMaxValues<
@@ -97,13 +102,15 @@ export function table_getGlobalFacetedMinMaxValues<
 }
 
 /**
- * Returns global faceted row model for the table.
+ * Computes the row model used to derive global facet values.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The global context is requested with the internal `__global__` column id. If
+ * no faceted row-model factory is registered, the pre-filtered row model is
+ * returned.
  *
  * @example
  * ```ts
- * const value = table_getGlobalFacetedRowModel(table)
+ * const rows = table_getGlobalFacetedRowModel(table)
  * ```
  */
 export function table_getGlobalFacetedRowModel<
@@ -117,13 +124,14 @@ export function table_getGlobalFacetedRowModel<
 }
 
 /**
- * Returns global faceted unique values for the table.
+ * Computes unique values and occurrence counts for the global filter context.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The global context is requested with the internal `__global__` column id. If
+ * no factory is registered, an empty `Map` is returned.
  *
  * @example
  * ```ts
- * const value = table_getGlobalFacetedUniqueValues(table)
+ * const values = table_getGlobalFacetedUniqueValues(table)
  * ```
  */
 export function table_getGlobalFacetedUniqueValues<

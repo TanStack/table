@@ -9,11 +9,12 @@ title: column_getCanResize
 function column_getCanResize<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.utils.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L47)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L49)
 
-Returns whether a column can use resize.
+Checks whether this column can start a resize interaction.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+Both `columnDef.enableResizing` and table `enableColumnResizing` default to
+`true`.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanResize(column)
+const canResize = column_getCanResize(column)
 ```

@@ -27,11 +27,23 @@ export interface ColumnMeta<
   TValue extends CellData = CellData,
 > {}
 
+/**
+ * Reads a cell value from an original row object.
+ *
+ * The row index is provided for accessors that need stable position-aware
+ * derived values.
+ */
 export type AccessorFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 > = (originalRow: TData, index: number) => TValue
 
+/**
+ * A renderable column template value.
+ *
+ * Strings render directly; functions receive the relevant cell/header context
+ * and can return framework-specific render output.
+ */
 export type ColumnDefTemplate<TProps extends object> =
   | string
   | ((props: TProps) => any)
@@ -43,7 +55,13 @@ export type StringOrTemplateHeader<
 > = string | ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
 
 export interface StringHeaderIdentifier {
+  /**
+   * Header text used both for rendering and as a fallback column id.
+   */
   header: string
+  /**
+   * Optional explicit id that overrides the header-derived id.
+   */
   id?: string
 }
 
@@ -52,7 +70,13 @@ export interface IdIdentifier<
   TData extends RowData,
   TValue extends CellData = CellData,
 > {
+  /**
+   * Explicit stable column id.
+   */
   id: string
+  /**
+   * Header text or template used to render this column's header.
+   */
   header?: StringOrTemplateHeader<TFeatures, TData, TValue>
 }
 type ColumnIdentifiers<
@@ -66,9 +90,23 @@ interface ColumnDefBase_Core<
   TData extends RowData,
   TValue extends CellData = CellData,
 > {
+  /**
+   * Produces the values used by faceting/grouping for this column.
+   *
+   * When omitted, the normal accessor value is wrapped in a single-item array.
+   */
   getUniqueValues?: AccessorFn<TData, Array<unknown>>
+  /**
+   * Footer template rendered with header context.
+   */
   footer?: ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>
+  /**
+   * Cell template rendered with cell context.
+   */
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
+  /**
+   * User-defined metadata available on the resolved column definition.
+   */
   meta?: ColumnMeta<TFeatures, TData, TValue>
 }
 

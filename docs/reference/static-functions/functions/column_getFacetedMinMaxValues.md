@@ -9,11 +9,12 @@ title: column_getFacetedMinMaxValues
 function column_getFacetedMinMaxValues<TFeatures, TData, TValue>(column, table): [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L17)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L18)
 
-Returns faceted min max values for a column.
+Computes min and max numeric facet values for one column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The configured `facetedMinMaxValues` row-model factory owns the calculation.
+If no factory is registered, the result is `undefined`.
 
 ## Type Parameters
 
@@ -46,5 +47,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getFacetedMinMaxValues(column)
+const range = column_getFacetedMinMaxValues(column, table)
 ```

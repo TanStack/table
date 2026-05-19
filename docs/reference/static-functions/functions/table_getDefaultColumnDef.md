@@ -9,11 +9,13 @@ title: table_getDefaultColumnDef
 function table_getDefaultColumnDef<TFeatures, TData>(table): Partial<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L76)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L80)
 
-Returns default column def for the table.
+Merges built-in, feature, and user default column definitions.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Built-in defaults provide a header and fallback cell renderer, feature
+defaults can add feature-specific column options, and
+`options.defaultColumn` wins last.
 
 ## Type Parameters
 
@@ -38,5 +40,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getDefaultColumnDef(table)
+const defaultColumn = table_getDefaultColumnDef(table)
 ```

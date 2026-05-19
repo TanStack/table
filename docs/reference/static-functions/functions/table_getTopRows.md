@@ -9,11 +9,12 @@ title: table_getTopRows
 function table_getTopRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L144)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L152)
 
-Returns top rows for the table.
+Resolves the visible rows pinned to the top region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The result follows `state.rowPinning.top` order and marks each row with
+`position = 'top'`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getTopRows(table)
+const rows = table_getTopRows(table)
 ```

@@ -32,8 +32,10 @@ export function cloneState<T>(value: T): T {
     }
 
     const copy: Record<string, unknown> = {}
+    const keys = Object.keys(value)
 
-    for (const key of Object.keys(value)) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]!
       copy[key] = cloneState((value as Record<string, unknown>)[key])
     }
 
@@ -42,11 +44,6 @@ export function cloneState<T>(value: T): T {
 
   return value
 }
-
-/**
- * A no-operation function used as a safe default callback.
- */
-export function noop() {}
 
 /**
  * Creates a table state updater for a single state slice.
@@ -71,13 +68,6 @@ type AnyFunction = (...args: any) => any
  */
 export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
-}
-
-/**
- * Returns whether a value is an array containing only numbers.
- */
-export function isNumberArray(d: any): d is Array<number> {
-  return Array.isArray(d) && d.every((val) => typeof val === 'number')
 }
 
 /**
@@ -136,10 +126,15 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   const memoizedFn = (depArgs?: TDepArgs): TResult => {
     onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
-    const depsChanged =
-      !newDeps ||
-      newDeps.length !== deps?.length ||
-      newDeps.some((dep: any, index: number) => deps?.[index] !== dep)
+    let depsChanged = !newDeps || newDeps.length !== deps?.length
+    if (!depsChanged && newDeps) {
+      for (let i = 0; i < newDeps.length; i++) {
+        if (newDeps[i] !== deps![i]) {
+          depsChanged = true
+          break
+        }
+      }
+    }
     onAfterCompare?.(depsChanged)
 
     if (!depsChanged) {

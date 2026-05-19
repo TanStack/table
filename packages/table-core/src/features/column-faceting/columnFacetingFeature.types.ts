@@ -8,15 +8,18 @@ export interface Column_ColumnFaceting<
   TData extends RowData,
 > {
   /**
-   * A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
+   * Computes min/max numeric facet values for this column.
    */
   getFacetedMinMaxValues: () => undefined | [number, number]
   /**
-   * A function that **computes and returns** a row model with all other column filters applied, excluding its own filter. Useful for displaying faceted result counts.
+   * Computes the row model used to derive this column's facet values.
+   *
+   * Other column filters are applied, while this column's own filter is
+   * excluded.
    */
   getFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
+   * Computes unique facet values and occurrence counts for this column.
    */
   getFacetedUniqueValues: () => Map<any, number>
 }
@@ -26,18 +29,21 @@ export interface Table_RowModels_Faceted<
   TData extends RowData,
 > {
   /**
-   * A function that **computes and returns** a min/max tuple derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
-   * > Requires that you pass a valid `facetedMinMaxValues` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedMinMaxValues` function.
+   * Computes min/max numeric facet values for the active faceting context.
+   *
+   * Requires a `facetedMinMaxValues` row-model factory in `_rowModels`.
    */
   getFacetedMinMaxValues: () => undefined | [number, number]
   /**
-   * Returns the row model with all other column filters applied, excluding its own filter. Useful for displaying faceted result counts.
-   * > Requires that you pass a valid `facetedRowModel` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedRowModel` function.
+   * Computes the row model used to derive facet values.
+   *
+   * Requires a `facetedRowModel` row-model factory in `_rowModels`.
    */
   getFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * A function that **computes and returns** a `Map` of unique values and their occurrences derived from `column.getFacetedRowModel`. Useful for displaying faceted result values.
-   * > Requires that you pass a valid `facetedUniqueValues` row model factory in `_rowModels`. A default implementation is provided via the exported `createFacetedUniqueValues` function.
+   * Computes unique facet values and occurrence counts.
+   *
+   * Requires a `facetedUniqueValues` row-model factory in `_rowModels`.
    */
   getFacetedUniqueValues: () => Map<any, number>
 }
@@ -93,7 +99,7 @@ export interface Table_ColumnFaceting<
    */
   getGlobalFacetedMinMaxValues: () => undefined | [number, number]
   /**
-   * Returns the row model for the table after **global** filtering has been applied.
+   * Computes the row model used to derive global facet values.
    */
   getGlobalFacetedRowModel: () => RowModel<TFeatures, TData>
   /**

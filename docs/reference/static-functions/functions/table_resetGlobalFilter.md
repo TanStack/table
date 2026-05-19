@@ -9,11 +9,12 @@ title: table_resetGlobalFilter
 function table_resetGlobalFilter<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L102)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L108)
 
-Resets the table's global filter state slice.
+Resets `globalFilter` to the configured initial state or feature default.
 
-By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+With no argument, the reset clones `table.initialState.globalFilter`. Passing
+`true` ignores initial state and resets to `undefined`.
 
 ## Type Parameters
 

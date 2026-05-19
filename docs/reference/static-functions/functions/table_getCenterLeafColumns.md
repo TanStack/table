@@ -9,11 +9,11 @@ title: table_getCenterLeafColumns
 function table_getCenterLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:713](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L713)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:746](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L746)
 
-Returns center leaf columns for the table.
+Resolves leaf columns that are not pinned to either side.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Left- and right-pinned ids are removed from `table.getAllLeafColumns()`.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCenterLeafColumns(table)
+const columns = table_getCenterLeafColumns(table)
 ```

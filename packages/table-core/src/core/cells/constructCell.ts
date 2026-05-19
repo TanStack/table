@@ -16,8 +16,9 @@ function getCellPrototype<
 >(table: Table_Internal<TFeatures, TData>): object {
   if (!table._cellPrototype) {
     table._cellPrototype = { table }
-    for (const feature of Object.values(table._features)) {
-      feature.assignCellPrototype?.(table._cellPrototype, table)
+    const features = Object.values(table._features)
+    for (let i = 0; i < features.length; i++) {
+      features[i]!.assignCellPrototype?.(table._cellPrototype, table)
     }
   }
   return table._cellPrototype

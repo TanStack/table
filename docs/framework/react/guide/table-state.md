@@ -192,6 +192,68 @@ You can also subscribe directly to a single atom and select one value from it:
 
 Advanced subscription patterns require understanding which table APIs depend on which state slices. For example, a row model may depend on filtering, sorting, and pagination, while one row selection checkbox may only need one row's selection value. Start with the default selector, then optimize with selectors and `table.Subscribe` where render cost matters.
 
+#### Subscribe for React Compiler Compatibility
+
+`useTable` itself was significantly reworked in the v9 upgrade for React Compiler compatibility — it returns a fresh `table` reference on every state change so that the compiler invalidates JSX dependent on it. For most tables that's enough. But state isn't only read through `table` — it's also read through `column.getIsPinned()`, `row.getIsSelected()`, `cell.getIsAggregated()`, `header.column.getCanSort()`, and similar builder-pattern APIs. Those method calls hide their state dependencies from the compiler. When you split header / cell / row rendering into nested React components, the compiler can memoize the inner JSX against the stable `column` / `row` / `cell` / `header` references it sees, and those state-dependent reads never get re-evaluated.
+
+The symptoms are subtle and look like rendering bugs: row-selection checkboxes that don't reflect clicks, pin buttons that don't update, sort indicators that go stale. This is most visible in tables that wrap header or cell rendering inside custom components (for example, a DnD-enabled table where each header is rendered through a `DraggableTableHeader` component, or where you've broken a column's `cell` template out into a named React component for re-use).
+
+`table.Subscribe` (or the standalone `Subscribe` from `@tanstack/react-table`) is the supported way to work around this. It exposes the underlying TanStack Store subscription as a render-prop using `useSelector` under the hood — a hook the compiler recognizes as a real reactive dependency. The JSX inside re-runs on every selected state change, so the builder-pattern reads return current values.
+
+```tsx
+import { Subscribe } from '@tanstack/react-table'
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'select',
+    header: ({ table }) => (
+      // work around react compiler memoization for nested components using table APIs
+      <Subscribe source={table.store} selector={(s) => s.rowSelection}>
+        {() => (
+          <input
+            type="checkbox"
+            checked={table.getIsAllPageRowsSelected()}
+            onChange={table.getToggleAllPageRowsSelectedHandler()}
+          />
+        )}
+      </Subscribe>
+    ),
+    cell: ({ row, table }) => (
+      // work around react compiler memoization for nested components using row APIs
+      <Subscribe
+        source={table.atoms.rowSelection}
+        selector={(s) => s[row.id]}
+      >
+        {(isSelected) => (
+          <input
+            type="checkbox"
+            checked={!!isSelected}
+            onChange={row.getToggleSelectedHandler()}
+          />
+        )}
+      </Subscribe>
+    ),
+  }),
+])
+```
+
+You only need `Subscribe` for UI that reads through TanStack Table's method APIs from inside a component that React Compiler is allowed to memoize. Simpler tables (where headers and cells are rendered inline in the parent component) usually don't need this — the compiler always re-evaluates inline JSX when the parent re-renders. Reach for `Subscribe` once you start factoring header / cell templates into custom child components.
+
+**Tips:**
+
+- For UI that depends on multiple state slices, return an object from the selector:
+  ```tsx
+  <Subscribe
+    source={table.store}
+    selector={(s) => ({ rowSelection: s.rowSelection, rowPinning: s.rowPinning })}
+  >
+    {() => /* checkbox + pin button */}
+  </Subscribe>
+  ```
+- For per-row or per-column UI, prefer subscribing to a specific atom (`table.atoms.rowSelection`, `table.atoms.columnPinning`, etc.) so only that row's or column's component re-renders on changes.
+- Inside cell / header render contexts, the `table` field is typed as the core `Table<TFeatures, TData>`, so `table.Subscribe` isn't available there — import the standalone `Subscribe` component and pass `source={table.store}` instead. From a top-level component that holds the `ReactTable` returned by `useTable`, `table.Subscribe` works.
+- See the [Kitchen Sink](../examples/kitchen-sink) example for a table that combines every stock feature and uses `Subscribe` to stay correct under React Compiler.
+
 ### Setting Table State
 
 You should almost never need to set table state directly. TanStack Table features expose dedicated APIs for interacting with their state, and those APIs are the safest way to make changes because they preserve the feature's own rules and related updates.

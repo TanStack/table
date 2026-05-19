@@ -12,11 +12,12 @@ function table_getRow<TFeatures, TData>(
 searchAll?): Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:228](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L228)
+Defined in: [core/rows/coreRowsFeature.utils.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L241)
 
-Returns row for the table.
+Looks up a row by id from the current or full row model.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+By default this searches `table.getRowModel()`. Passing `searchAll` searches
+the pre-pagination model first, then falls back to the core model.
 
 ## Type Parameters
 
@@ -49,5 +50,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getRow(table)
+const row = table_getRow(table, rowId, true)
 ```

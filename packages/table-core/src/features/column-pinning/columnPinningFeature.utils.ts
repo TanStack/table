@@ -1,10 +1,12 @@
 import {
   column_getIsVisible,
   row_getVisibleCells,
+  row_getVisibleCellsByColumnId,
   table_getVisibleLeafColumns,
 } from '../column-visibility/columnVisibilityFeature.utils'
 import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import { callMemoOrStaticFn, cloneState } from '../../utils'
+import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Cell } from '../../types/Cell'
 import type { Row } from '../../types/Row'
@@ -20,13 +22,14 @@ import type {
 // State
 
 /**
- * Returns the default column pinning state.
+ * Creates the default column pinning state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * Both pinning regions start empty. Reset APIs use this value when
+ * `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultColumnPinningState()
+ * const pinning = getDefaultColumnPinningState()
  * ```
  */
 export function getDefaultColumnPinningState(): ColumnPinningState {
@@ -39,9 +42,11 @@ export function getDefaultColumnPinningState(): ColumnPinningState {
 // Column APIs
 
 /**
- * Pin. for a column.
+ * Moves this column's leaf column ids into a pinning region.
  *
- * This is the static implementation behind the matching column instance API.
+ * Pinning a group column pins all of its leaves. The leaf ids are first removed
+ * from both regions, then appended to the requested `'left'` or `'right'`
+ * region. Passing `false` unpins them back to the center.
  *
  * @example
  * ```ts
@@ -56,10 +61,13 @@ export function column_pin<
   column: Column_Internal<TFeatures, TData, TValue>,
   position: ColumnPinningPosition,
 ) {
-  const columnIds = column
-    .getLeafColumns()
-    .map((d) => d.id)
-    .filter(Boolean)
+  // Single pass: collect non-empty leaf-column ids.
+  const leafColumns = column.getLeafColumns()
+  const columnIds: Array<string> = []
+  for (let i = 0; i < leafColumns.length; i++) {
+    const id = leafColumns[i]!.id
+    if (id) columnIds.push(id)
+  }
 
   table_setColumnPinning(column.table, (old) => {
     if (position === 'right') {
@@ -87,13 +95,14 @@ export function column_pin<
 }
 
 /**
- * Returns whether a column can use pin.
+ * Checks whether this column or any of its leaf columns can be pinned.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * Column-level `enablePinning` and table `enableColumnPinning` both default to
+ * `true`; at least one leaf column must allow pinning.
  *
  * @example
  * ```ts
- * const value = column_getCanPin(column)
+ * const canPin = column_getCanPin(column)
  * ```
  */
 export function column_getCanPin<
@@ -113,13 +122,14 @@ export function column_getCanPin<
 }
 
 /**
- * Returns is pinned for a column.
+ * Reads this column's current pinning region.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Group columns report `'left'` or `'right'` when any leaf column is pinned in
+ * that region. Unpinned columns return `false`.
  *
  * @example
  * ```ts
- * const value = column_getIsPinned(column)
+ * const position = column_getIsPinned(column)
  * ```
  */
 export function column_getIsPinned<
@@ -141,13 +151,14 @@ export function column_getIsPinned<
 }
 
 /**
- * Returns pinned index for a column.
+ * Finds this column's index within its pinned region.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Unpinned columns return `0`; pinned columns return their position in
+ * `state.columnPinning.left` or `state.columnPinning.right`.
  *
  * @example
  * ```ts
- * const value = column_getPinnedIndex(column)
+ * const index = column_getPinnedIndex(column)
  * ```
  */
 export function column_getPinnedIndex<
@@ -166,13 +177,13 @@ export function column_getPinnedIndex<
 // Row APIs
 
 /**
- * Returns center visible cells for a row.
+ * Collects visible cells whose columns are not pinned left or right.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * The result preserves the row's visible-cell order for center columns.
  *
  * @example
  * ```ts
- * const value = row_getCenterVisibleCells(row)
+ * const centerCells = row_getCenterVisibleCells(row)
  * ```
  */
 export function row_getCenterVisibleCells<
@@ -191,13 +202,14 @@ export function row_getCenterVisibleCells<
 }
 
 /**
- * Returns left visible cells for a row.
+ * Collects visible cells for columns pinned to the left region.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Cells are returned in `state.columnPinning.left` order and are marked with
+ * `cell.position = 'left'`.
  *
  * @example
  * ```ts
- * const value = row_getLeftVisibleCells(row)
+ * const leftCells = row_getLeftVisibleCells(row)
  * ```
  */
 export function row_getLeftVisibleCells<
@@ -209,12 +221,13 @@ export function row_getLeftVisibleCells<
   if (!left.length) return []
   const allVisibleCells = callMemoOrStaticFn(
     row,
-    'getVisibleCells',
-    row_getVisibleCells,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
   )
-  const cells: typeof allVisibleCells = []
-  for (const columnId of left) {
-    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+  const cells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < left.length; i++) {
+    const columnId = left[i]!
+    const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
       cell.position = 'left'
@@ -225,13 +238,14 @@ export function row_getLeftVisibleCells<
 }
 
 /**
- * Returns right visible cells for a row.
+ * Collects visible cells for columns pinned to the right region.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Cells are returned in `state.columnPinning.right` order and are marked with
+ * `cell.position = 'right'`.
  *
  * @example
  * ```ts
- * const value = row_getRightVisibleCells(row)
+ * const rightCells = row_getRightVisibleCells(row)
  * ```
  */
 export function row_getRightVisibleCells<
@@ -243,12 +257,13 @@ export function row_getRightVisibleCells<
   if (!right.length) return [] as Array<Cell<TFeatures, TData, unknown>>
   const allVisibleCells = callMemoOrStaticFn(
     row,
-    'getVisibleCells',
-    row_getVisibleCells,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
   )
-  const cells: typeof allVisibleCells = []
-  for (const columnId of right) {
-    const cell = allVisibleCells.find((c) => c.column.id === columnId)
+  const cells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < right.length; i++) {
+    const columnId = right[i]!
+    const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
       cell.position = 'right'
@@ -261,13 +276,14 @@ export function row_getRightVisibleCells<
 // Table APIs
 
 /**
- * Updates the table's column pinning state slice.
+ * Routes a column pinning updater through the table's pinning change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next `{ left, right }` state or a function of the
+ * previous state, matching the instance `table.setColumnPinning` behavior.
  *
  * @example
  * ```ts
- * table_setColumnPinning(table, (old) => old)
+ * table_setColumnPinning(table, (old) => ({ ...old, left: ['select'] }))
  * ```
  */
 export function table_setColumnPinning<
@@ -281,9 +297,11 @@ export function table_setColumnPinning<
 }
 
 /**
- * Resets the table's column pinning state slice.
+ * Resets `columnPinning` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.columnPinning` when it
+ * exists. Passing `true` ignores initial state and resets to empty left/right
+ * arrays.
  *
  * @example
  * ```ts
@@ -306,13 +324,14 @@ export function table_resetColumnPinning<
 }
 
 /**
- * Returns is some columns pinned for the table.
+ * Checks whether any columns are pinned.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Omit `position` to check both sides, or pass `'left'`/`'right'` to inspect a
+ * single pinning region.
  *
  * @example
  * ```ts
- * const value = table_getIsSomeColumnsPinned(table)
+ * const hasPinnedColumns = table_getIsSomeColumnsPinned(table)
  * ```
  */
 export function table_getIsSomeColumnsPinned<
@@ -330,13 +349,14 @@ export function table_getIsSomeColumnsPinned<
 // header groups
 
 /**
- * Returns left header groups for the table.
+ * Builds header groups for visible columns pinned to the left region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The leaf columns are read in `state.columnPinning.left` order and then passed
+ * through the same header-group builder as the unpinned table.
  *
  * @example
  * ```ts
- * const value = table_getLeftHeaderGroups(table)
+ * const headerGroups = table_getLeftHeaderGroups(table)
  * ```
  */
 export function table_getLeftHeaderGroups<
@@ -353,8 +373,8 @@ export function table_getLeftHeaderGroups<
 
   const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
     []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -367,13 +387,14 @@ export function table_getLeftHeaderGroups<
 }
 
 /**
- * Returns right header groups for the table.
+ * Builds header groups for visible columns pinned to the right region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The leaf columns are read in `state.columnPinning.right` order and then
+ * passed through the same header-group builder as the unpinned table.
  *
  * @example
  * ```ts
- * const value = table_getRightHeaderGroups(table)
+ * const headerGroups = table_getRightHeaderGroups(table)
  * ```
  */
 export function table_getRightHeaderGroups<
@@ -390,8 +411,8 @@ export function table_getRightHeaderGroups<
 
   const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
     []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -404,13 +425,14 @@ export function table_getRightHeaderGroups<
 }
 
 /**
- * Returns center header groups for the table.
+ * Builds header groups for visible columns that are not pinned.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Left- and right-pinned column ids are removed from the visible leaf column
+ * list before header groups are built for the center region.
  *
  * @example
  * ```ts
- * const value = table_getCenterHeaderGroups(table)
+ * const headerGroups = table_getCenterHeaderGroups(table)
  * ```
  */
 export function table_getCenterHeaderGroups<
@@ -438,13 +460,13 @@ export function table_getCenterHeaderGroups<
 // footer groups
 
 /**
- * Returns left footer groups for the table.
+ * Builds footer groups for the left pinned region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Footer groups reuse the left header groups in reverse order.
  *
  * @example
  * ```ts
- * const value = table_getLeftFooterGroups(table)
+ * const footerGroups = table_getLeftFooterGroups(table)
  * ```
  */
 export function table_getLeftFooterGroups<
@@ -460,13 +482,13 @@ export function table_getLeftFooterGroups<
 }
 
 /**
- * Returns right footer groups for the table.
+ * Builds footer groups for the right pinned region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Footer groups reuse the right header groups in reverse order.
  *
  * @example
  * ```ts
- * const value = table_getRightFooterGroups(table)
+ * const footerGroups = table_getRightFooterGroups(table)
  * ```
  */
 export function table_getRightFooterGroups<
@@ -482,13 +504,13 @@ export function table_getRightFooterGroups<
 }
 
 /**
- * Returns center footer groups for the table.
+ * Builds footer groups for the center, unpinned region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Footer groups reuse the center header groups in reverse order.
  *
  * @example
  * ```ts
- * const value = table_getCenterFooterGroups(table)
+ * const footerGroups = table_getCenterFooterGroups(table)
  * ```
  */
 export function table_getCenterFooterGroups<
@@ -506,13 +528,13 @@ export function table_getCenterFooterGroups<
 // flat headers
 
 /**
- * Returns left flat headers for the table.
+ * Flattens every header from the left pinned header groups.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent headers and placeholder headers are included.
  *
  * @example
  * ```ts
- * const value = table_getLeftFlatHeaders(table)
+ * const headers = table_getLeftFlatHeaders(table)
  * ```
  */
 export function table_getLeftFlatHeaders<
@@ -524,21 +546,24 @@ export function table_getLeftFlatHeaders<
     'getLeftHeaderGroups',
     table_getLeftHeaderGroups,
   )
-  return leftHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < leftHeaderGroups.length; i++) {
+    const headers = leftHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 /**
- * Returns right flat headers for the table.
+ * Flattens every header from the right pinned header groups.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent headers and placeholder headers are included.
  *
  * @example
  * ```ts
- * const value = table_getRightFlatHeaders(table)
+ * const headers = table_getRightFlatHeaders(table)
  * ```
  */
 export function table_getRightFlatHeaders<
@@ -550,21 +575,24 @@ export function table_getRightFlatHeaders<
     'getRightHeaderGroups',
     table_getRightHeaderGroups,
   )
-  return rightHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < rightHeaderGroups.length; i++) {
+    const headers = rightHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 /**
- * Returns center flat headers for the table.
+ * Flattens every header from the center header groups.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent headers and placeholder headers are included.
  *
  * @example
  * ```ts
- * const value = table_getCenterFlatHeaders(table)
+ * const headers = table_getCenterFlatHeaders(table)
  * ```
  */
 export function table_getCenterFlatHeaders<
@@ -576,23 +604,26 @@ export function table_getCenterFlatHeaders<
     'getCenterHeaderGroups',
     table_getCenterHeaderGroups,
   )
-  return centerHeaderGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < centerHeaderGroups.length; i++) {
+    const headers = centerHeaderGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j])
+    }
+  }
+  return result
 }
 
 // leaf headers
 
 /**
- * Returns left leaf headers for the table.
+ * Collects leaf headers for the left pinned region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent headers are filtered out from the left flat header list.
  *
  * @example
  * ```ts
- * const value = table_getLeftLeafHeaders(table)
+ * const headers = table_getLeftLeafHeaders(table)
  * ```
  */
 export function table_getLeftLeafHeaders<
@@ -607,13 +638,13 @@ export function table_getLeftLeafHeaders<
 }
 
 /**
- * Returns right leaf headers for the table.
+ * Collects leaf headers for the right pinned region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent headers are filtered out from the right flat header list.
  *
  * @example
  * ```ts
- * const value = table_getRightLeafHeaders(table)
+ * const headers = table_getRightLeafHeaders(table)
  * ```
  */
 export function table_getRightLeafHeaders<
@@ -628,13 +659,13 @@ export function table_getRightLeafHeaders<
 }
 
 /**
- * Returns center leaf headers for the table.
+ * Collects leaf headers for the center, unpinned region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent headers are filtered out from the center flat header list.
  *
  * @example
  * ```ts
- * const value = table_getCenterLeafHeaders(table)
+ * const headers = table_getCenterLeafHeaders(table)
  * ```
  */
 export function table_getCenterLeafHeaders<
@@ -651,13 +682,14 @@ export function table_getCenterLeafHeaders<
 // leaf columns
 
 /**
- * Returns left leaf columns for the table.
+ * Resolves leaf columns pinned to the left region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result follows `state.columnPinning.left` order and skips stale ids that
+ * no longer correspond to a leaf column.
  *
  * @example
  * ```ts
- * const value = table_getLeftLeafColumns(table)
+ * const columns = table_getLeftLeafColumns(table)
  * ```
  */
 export function table_getLeftLeafColumns<
@@ -668,21 +700,22 @@ export function table_getLeftLeafColumns<
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (column) result.push(column)
   }
   return result
 }
 
 /**
- * Returns right leaf columns for the table.
+ * Resolves leaf columns pinned to the right region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result follows `state.columnPinning.right` order and skips stale ids that
+ * no longer correspond to a leaf column.
  *
  * @example
  * ```ts
- * const value = table_getRightLeafColumns(table)
+ * const columns = table_getRightLeafColumns(table)
  * ```
  */
 export function table_getRightLeafColumns<
@@ -693,21 +726,21 @@ export function table_getRightLeafColumns<
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (column) result.push(column)
   }
   return result
 }
 
 /**
- * Returns center leaf columns for the table.
+ * Resolves leaf columns that are not pinned to either side.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Left- and right-pinned ids are removed from `table.getAllLeafColumns()`.
  *
  * @example
  * ```ts
- * const value = table_getCenterLeafColumns(table)
+ * const columns = table_getCenterLeafColumns(table)
  * ```
  */
 export function table_getCenterLeafColumns<
@@ -721,13 +754,14 @@ export function table_getCenterLeafColumns<
 }
 
 /**
- * Returns pinned leaf columns for the table.
+ * Resolves leaf columns for a requested pinning region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Pass `'left'`, `'center'`, or `'right'` for a partition, or pass `false` to
+ * read all leaf columns without partitioning.
  *
  * @example
  * ```ts
- * const value = table_getPinnedLeafColumns(table)
+ * const columns = table_getPinnedLeafColumns(table, 'center')
  * ```
  */
 export function table_getPinnedLeafColumns<
@@ -761,13 +795,13 @@ export function table_getPinnedLeafColumns<
 // visible leaf columns
 
 /**
- * Returns left visible leaf columns for the table.
+ * Resolves visible leaf columns pinned to the left region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Hidden pinned columns are filtered out after the left pin order is applied.
  *
  * @example
  * ```ts
- * const value = table_getLeftVisibleLeafColumns(table)
+ * const columns = table_getLeftVisibleLeafColumns(table)
  * ```
  */
 export function table_getLeftVisibleLeafColumns<
@@ -784,13 +818,13 @@ export function table_getLeftVisibleLeafColumns<
 }
 
 /**
- * Returns right visible leaf columns for the table.
+ * Resolves visible leaf columns pinned to the right region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Hidden pinned columns are filtered out after the right pin order is applied.
  *
  * @example
  * ```ts
- * const value = table_getRightVisibleLeafColumns(table)
+ * const columns = table_getRightVisibleLeafColumns(table)
  * ```
  */
 export function table_getRightVisibleLeafColumns<
@@ -807,13 +841,14 @@ export function table_getRightVisibleLeafColumns<
 }
 
 /**
- * Returns center visible leaf columns for the table.
+ * Resolves visible leaf columns that are not pinned.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * This is the center partition used by layouts that render pinned columns
+ * separately from the scrollable middle region.
  *
  * @example
  * ```ts
- * const value = table_getCenterVisibleLeafColumns(table)
+ * const columns = table_getCenterVisibleLeafColumns(table)
  * ```
  */
 export function table_getCenterVisibleLeafColumns<
@@ -830,13 +865,14 @@ export function table_getCenterVisibleLeafColumns<
 }
 
 /**
- * Returns pinned visible leaf columns for the table.
+ * Resolves visible leaf columns for a requested pinning region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Omit `position` to get all visible leaf columns, or pass `'left'`, `'center'`,
+ * or `'right'` to get one partition.
  *
  * @example
  * ```ts
- * const value = table_getPinnedVisibleLeafColumns(table)
+ * const columns = table_getPinnedVisibleLeafColumns(table, 'left')
  * ```
  */
 export function table_getPinnedVisibleLeafColumns<

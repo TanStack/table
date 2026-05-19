@@ -15,6 +15,7 @@ const config = [
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-unnecessary-condition': 'warn',
       '@typescript-eslint/no-unsafe-function-type': 'off',
+      '@typescript-eslint/prefer-for-of': 'off',
     },
   },
 ]

@@ -188,7 +188,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   paginationPageElement.appendChild(paginationPageInput)
   paginationElement.appendChild(paginationPageElement)
 
-  // Render pagiantion page size
+  // Render pagination page size
   const paginationPageSizeSelect = document.createElement('select')
   paginationPageSizeSelect.value = String(table.store.state.pagination.pageSize)
   paginationPageSizeSelect.onchange = (e) => {

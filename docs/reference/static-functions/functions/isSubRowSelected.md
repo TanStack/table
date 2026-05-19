@@ -9,7 +9,7 @@ title: isSubRowSelected
 function isSubRowSelected<TFeatures, TData>(row): boolean | "some" | "all";
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:685](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L685)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:706](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L706)
 
 Returns whether all, some, or none of a row's selectable descendants are selected.
 
@@ -38,5 +38,5 @@ The result is used to drive indeterminate row selection UI.
 ## Example
 
 ```ts
-const selectedState = isSubRowSelected(row, selection, table)
+const selectedState = isSubRowSelected(row)
 ```

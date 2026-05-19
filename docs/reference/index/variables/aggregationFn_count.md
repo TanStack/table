@@ -9,6 +9,8 @@ title: aggregationFn_count
 const aggregationFn_count: AggregationFn<any, any>;
 ```
 
-Defined in: [fns/aggregationFns.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L198)
+Defined in: [fns/aggregationFns.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L234)
 
-Aggregation function for counting the number of rows in a column.
+Counts the number of leaf rows in the group.
+
+The column id is ignored because the result is based only on group size.

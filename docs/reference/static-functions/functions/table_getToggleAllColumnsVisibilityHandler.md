@@ -9,11 +9,12 @@ title: table_getToggleAllColumnsVisibilityHandler
 function table_getToggleAllColumnsVisibilityHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:329](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L329)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:374](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L374)
 
-Returns an event handler for all columns visibility handler.
+Creates a checkbox-style handler that shows or hides all columns.
 
-The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+The handler reads `event.target.checked`, so it is intended for controls whose
+checked state means "all columns visible".
 
 ## Type Parameters
 
@@ -50,5 +51,5 @@ The handler calls the matching table toggle API and can be attached directly to 
 ## Example
 
 ```ts
-const value = table_getToggleAllColumnsVisibilityHandler(table)
+const onChange = table_getToggleAllColumnsVisibilityHandler(table)
 ```

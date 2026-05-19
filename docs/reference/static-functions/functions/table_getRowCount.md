@@ -9,11 +9,13 @@ title: table_getRowCount
 function table_getRowCount<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:378](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L378)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:395](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L395)
 
-Returns row count for the table.
+Resolves the total row count used for pagination math.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+`options.rowCount` wins for manual pagination. Otherwise the count comes
+from the pre-paginated row model so filtering, grouping, sorting, and
+expansion are reflected before the page slice is applied.
 
 ## Type Parameters
 
@@ -38,5 +40,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getRowCount(table)
+const rows = table_getRowCount(table)
 ```

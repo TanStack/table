@@ -9,7 +9,7 @@ title: resolveFilterValue
 function resolveFilterValue(val): readonly [number, number];
 ```
 
-Defined in: [fns/filterFns.ts:258](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L258)
+Defined in: [fns/filterFns.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L289)
 
 ## Parameters
 

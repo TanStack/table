@@ -9,7 +9,7 @@ title: table_setOptions
 function table_setOptions<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [core/table/coreTablesFeature.utils.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L104)
+Defined in: [core/table/coreTablesFeature.utils.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L106)
 
 Updates the table options object.
 

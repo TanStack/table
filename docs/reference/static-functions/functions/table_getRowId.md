@@ -13,11 +13,12 @@ function table_getRowId<TFeatures, TData>(
    parent?): string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L203)
+Defined in: [core/rows/coreRowsFeature.utils.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L215)
 
-Returns row id for the table.
+Resolves the stable id for a row.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+`options.getRowId` wins when provided. Otherwise root rows use their index
+and child rows append their index to the parent id, such as `0.2`.
 
 ## Type Parameters
 
@@ -54,5 +55,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getRowId(table)
+const id = table_getRowId(originalRow, table, index, parentRow)
 ```

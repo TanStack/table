@@ -9,6 +9,9 @@ title: aggregationFn_extent
 const aggregationFn_extent: AggregationFn<any, any>;
 ```
 
-Defined in: [fns/aggregationFns.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L84)
+Defined in: [fns/aggregationFns.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L95)
 
-Aggregation function for finding the extent (min and max) of a column.
+Finds the numeric extent for a grouped column.
+
+Returns `[min, max]`, where each entry is `undefined` when no numeric value is
+present.

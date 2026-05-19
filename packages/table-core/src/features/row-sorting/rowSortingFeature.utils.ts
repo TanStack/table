@@ -13,13 +13,14 @@ import type {
 // State Utils
 
 /**
- * Returns the default sorting state.
+ * Creates the default sorting state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty array, meaning no columns are sorted. Reset
+ * APIs use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultSortingState()
+ * const sorting = getDefaultSortingState()
  * ```
  */
 export function getDefaultSortingState(): SortingState {
@@ -27,13 +28,14 @@ export function getDefaultSortingState(): SortingState {
 }
 
 /**
- * Updates the table's sorting state slice.
+ * Routes a sorting updater through the table's sorting change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next `SortingState` array or a function of the previous
+ * sorting state, matching the instance `table.setSorting` behavior.
  *
  * @example
  * ```ts
- * table_setSorting(table, (old) => old)
+ * table_setSorting(table, (old) => [...old, { id: 'age', desc: true }])
  * ```
  */
 export function table_setSorting<
@@ -44,9 +46,10 @@ export function table_setSorting<
 }
 
 /**
- * Resets the table's sorting state slice.
+ * Resets `sorting` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.sorting` when it
+ * exists. Passing `true` ignores initial state and resets to `[]`.
  *
  * @example
  * ```ts
@@ -67,13 +70,15 @@ export function table_resetSorting<
 // Column Utils
 
 /**
- * Infers sort fn for a column.
+ * Chooses a built-in sorting function from sampled filtered row values.
  *
- * The inference uses the column definition, table options, and sampled row values when needed.
+ * Date-like values use `datetime`, mixed text/numeric strings use
+ * `alphanumeric`, plain strings use `text`, and unknown values fall back to
+ * `basic`.
  *
  * @example
  * ```ts
- * const value = column_getAutoSortFn(column)
+ * const sortFn = column_getAutoSortFn(column)
  * ```
  */
 export function column_getAutoSortFn<
@@ -86,12 +91,12 @@ export function column_getAutoSortFn<
 
   let sortFn: SortFn<TFeatures, TData> | undefined
 
-  const firstRows = column.table.getFilteredRowModel().flatRows.slice(10)
+  const firstRows = column.table.getFilteredRowModel().flatRows.slice(0, 10)
 
   let isString = false
 
-  for (const row of firstRows) {
-    const value = row.getValue(column.id)
+  for (let i = 0; i < firstRows.length; i++) {
+    const value = firstRows[i]!.getValue(column.id)
 
     if (Object.prototype.toString.call(value) === '[object Date]') {
       sortFn = sortFns?.datetime
@@ -114,13 +119,14 @@ export function column_getAutoSortFn<
 }
 
 /**
- * Infers sort dir for a column.
+ * Chooses the default first sort direction from the first filtered row value.
  *
- * The inference uses the column definition, table options, and sampled row values when needed.
+ * String columns start ascending so alphabetical order is natural; other value
+ * types start descending.
  *
  * @example
  * ```ts
- * const value = column_getAutoSortDir(column)
+ * const direction = column_getAutoSortDir(column)
  * ```
  */
 export function column_getAutoSortDir<
@@ -140,13 +146,15 @@ export function column_getAutoSortDir<
 }
 
 /**
- * Returns sort fn for a column.
+ * Resolves the sorting function configured for a column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Function-valued `columnDef.sortFn` is returned directly, `'auto'` delegates
+ * to `column_getAutoSortFn`, and string values are looked up in the table's
+ * sorting function registry before falling back to `basic`.
  *
  * @example
  * ```ts
- * const value = column_getSortFn(column)
+ * const sortFn = column_getSortFn(column)
  * ```
  */
 export function column_getSortFn<
@@ -165,13 +173,15 @@ export function column_getSortFn<
 }
 
 /**
- * Toggles sorting for a column.
+ * Applies the next sorting state for this column.
  *
- * The update is applied through the owning table state slice and respects the feature options for that column.
+ * The toggle can add, replace, flip, or remove this column's sort entry. Multi
+ * sorting respects `enableMultiSort`, `maxMultiSortColCount`, and the `multi`
+ * argument.
  *
  * @example
  * ```ts
- * column_toggleSorting(column)
+ * column_toggleSorting(column, undefined, true)
  * ```
  */
 export function column_toggleSorting<
@@ -278,13 +288,14 @@ export function column_toggleSorting<
 }
 
 /**
- * Returns first sort dir for a column.
+ * Resolves the first direction used when this column begins sorting.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Column-level `sortDescFirst` wins, then table-level `sortDescFirst`, then the
+ * auto direction inferred from sampled values.
  *
  * @example
  * ```ts
- * const value = column_getFirstSortDir(column)
+ * const firstDirection = column_getFirstSortDir(column)
  * ```
  */
 export function column_getFirstSortDir<
@@ -300,13 +311,14 @@ export function column_getFirstSortDir<
 }
 
 /**
- * Returns next sorting order for a column.
+ * Resolves the next sort order for this column's toggle cycle.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The cycle starts with the first sort direction, flips between `asc` and
+ * `desc`, and can return `false` when sorting removal is enabled.
  *
  * @example
  * ```ts
- * const value = column_getNextSortingOrder(column)
+ * const nextOrder = column_getNextSortingOrder(column)
  * ```
  */
 export function column_getNextSortingOrder<
@@ -332,13 +344,14 @@ export function column_getNextSortingOrder<
 }
 
 /**
- * Returns whether a column can use sort.
+ * Checks whether this accessor column can participate in sorting.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * The column must have an accessor and sorting must be enabled by both the
+ * column definition and table options.
  *
  * @example
  * ```ts
- * const value = column_getCanSort(column)
+ * const canSort = column_getCanSort(column)
  * ```
  */
 export function column_getCanSort<
@@ -354,13 +367,14 @@ export function column_getCanSort<
 }
 
 /**
- * Returns whether a column can use multi sort.
+ * Checks whether this column can be added to a multi-sort state.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * Column-level `enableMultiSort` wins over table-level `enableMultiSort`; if
+ * neither is set, accessor columns can multi-sort by default.
  *
  * @example
  * ```ts
- * const value = column_getCanMultiSort(column)
+ * const canMultiSort = column_getCanMultiSort(column)
  * ```
  */
 export function column_getCanMultiSort<
@@ -376,13 +390,14 @@ export function column_getCanMultiSort<
 }
 
 /**
- * Returns is sorted for a column.
+ * Reads this column's current sort direction.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The result is `false` when the column is not sorted, otherwise `'asc'` or
+ * `'desc'` based on the column's entry in `state.sorting`.
  *
  * @example
  * ```ts
- * const value = column_getIsSorted(column)
+ * const direction = column_getIsSorted(column)
  * ```
  */
 export function column_getIsSorted<
@@ -397,13 +412,13 @@ export function column_getIsSorted<
 }
 
 /**
- * Returns sort index for a column.
+ * Finds this column's position in the ordered `state.sorting` array.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The result is `-1` when the column is not sorted.
  *
  * @example
  * ```ts
- * const value = column_getSortIndex(column)
+ * const index = column_getSortIndex(column)
  * ```
  */
 export function column_getSortIndex<
@@ -418,13 +433,13 @@ export function column_getSortIndex<
 }
 
 /**
- * Clear Sorting. for a column.
+ * Removes this column from the sorting state.
  *
- * This is the static implementation behind the matching column instance API.
+ * Other sorted columns are preserved, including their relative order.
  *
  * @example
  * ```ts
- * const value = column_clearSorting(column)
+ * column_clearSorting(column)
  * ```
  */
 export function column_clearSorting<
@@ -439,13 +454,15 @@ export function column_clearSorting<
 }
 
 /**
- * Returns an event handler for toggling sorting handler.
+ * Creates a header event handler that toggles this column's sorting.
  *
- * The handler is intended for direct use in column header controls such as buttons or checkboxes.
+ * The handler ignores events when the column cannot sort, persists React-style
+ * synthetic events when present, and asks `options.isMultiSortEvent` whether
+ * the event should add to a multi-sort.
  *
  * @example
  * ```ts
- * const value = column_getToggleSortingHandler(column)
+ * const onClick = column_getToggleSortingHandler(column)
  * ```
  */
 export function column_getToggleSortingHandler<

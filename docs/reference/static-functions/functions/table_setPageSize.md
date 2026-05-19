@@ -9,11 +9,12 @@ title: table_setPageSize
 function table_setPageSize<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:188](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L188)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L199)
 
-Updates the table's page size state slice.
+Updates `pagination.pageSize` while preserving the current top row.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The new size is clamped to at least `1`, and `pageIndex` is recalculated so
+the row that was previously at the top of the page remains in view.
 
 ## Type Parameters
 

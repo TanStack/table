@@ -14,18 +14,22 @@ export interface TableOptions_RowSelection<
   TData extends RowData,
 > {
   /**
-   * - Enables/disables multiple row selection for all rows in the table OR
-   * - A function that given a row, returns whether to enable/disable multiple row selection for that row's children/grandchildren
+   * Allows rows to be selected alongside other rows.
+   *
+   * Provide a predicate to decide per row. Defaults to `true`.
    */
   enableMultiRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
-   * - Enables/disables row selection for all rows in the table OR
-   * - A function that given a row, returns whether to enable/disable row selection for that row
+   * Allows rows to be selected.
+   *
+   * Provide a predicate to decide per row. Defaults to `true`.
    */
   enableRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
-   * Enables/disables automatic sub-row selection when a parent row is selected, or a function that enables/disables automatic sub-row selection for each row.
-   * (Use in combination with expanding or grouping features)
+   * Controls whether selecting a parent row also selects its subRows.
+   *
+   * Provide a predicate to decide per row. This is most useful with expanding or
+   * grouping features and defaults to `true`.
    */
   enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
@@ -49,31 +53,31 @@ export interface TableOptions_RowSelection<
 
 export interface Row_RowSelection {
   /**
-   * Returns whether or not the row can multi-select.
+   * Checks whether this row can be selected alongside other rows.
    */
   getCanMultiSelect: () => boolean
   /**
-   * Returns whether or not the row can be selected.
+   * Checks whether this row can currently be selected.
    */
   getCanSelect: () => boolean
   /**
-   * Returns whether or not the row can select sub rows automatically when the parent row is selected.
+   * Checks whether selecting this row should also select its subRows.
    */
   getCanSelectSubRows: () => boolean
   /**
-   * Returns whether or not all of the row's sub rows are selected.
+   * Checks whether all selectable descendants are selected.
    */
   getIsAllSubRowsSelected: () => boolean
   /**
-   * Returns whether or not the row is selected.
+   * Checks whether this row id is selected.
    */
   getIsSelected: () => boolean
   /**
-   * Returns whether or not some of the row's sub rows are selected.
+   * Checks whether some selectable descendants are selected.
    */
   getIsSomeSelected: () => boolean
   /**
-   * Returns a handler that can be used to toggle the row.
+   * Creates a checkbox-style handler that toggles this row's selected state.
    */
   getToggleSelectedHandler: () => (event: unknown) => void
   /**
@@ -87,27 +91,27 @@ export interface Table_RowSelection<
   TData extends RowData,
 > {
   /**
-   * Returns the row model of all rows that are selected after filtering has been applied.
+   * Builds a selected-row model from rows after filtering.
    */
   getFilteredSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns the row model of all rows that are selected after grouping has been applied.
+   * Builds a selected-row model from rows after grouping.
    */
   getGroupedSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns whether or not all rows on the current page are selected.
+   * Checks whether every selectable row on the current page is selected.
    */
   getIsAllPageRowsSelected: () => boolean
   /**
-   * Returns whether or not all rows in the table are selected.
+   * Checks whether every selectable filtered row is selected.
    */
   getIsAllRowsSelected: () => boolean
   /**
-   * Returns whether or not any rows on the current page are selected.
+   * Checks whether the current page has a partial row selection.
    */
   getIsSomePageRowsSelected: () => boolean
   /**
-   * Returns whether or not any rows in the table are selected.
+   * Checks whether filtered rows have a partial row selection.
    */
   getIsSomeRowsSelected: () => boolean
   /**
@@ -115,23 +119,25 @@ export interface Table_RowSelection<
    */
   getPreSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns the row model of all rows that are selected.
+   * Builds a selected-row model from the core row model.
    */
   getSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns a handler that can be used to toggle all rows on the current page.
+   * Creates a checkbox-style handler that toggles all current-page rows.
    */
   getToggleAllPageRowsSelectedHandler: () => (event: unknown) => void
   /**
-   * Returns a handler that can be used to toggle all rows in the table.
+   * Creates a checkbox-style handler that toggles all selectable rows.
    */
   getToggleAllRowsSelectedHandler: () => (event: unknown) => void
   /**
-   * Resets the **rowSelection** state to the `initialState.rowSelection`, or `true` can be passed to force a default blank state reset to `{}`.
+   * Resets `rowSelection` to `initialState.rowSelection`.
+   *
+   * Pass `true` to ignore initial state and reset to `{}`.
    */
   resetRowSelection: (defaultState?: boolean) => void
   /**
-   * Sets row selection state using a value or updater.
+   * Updates row selection state with a next map or updater function.
    */
   setRowSelection: (updater: Updater<RowSelectionState>) => void
   /**

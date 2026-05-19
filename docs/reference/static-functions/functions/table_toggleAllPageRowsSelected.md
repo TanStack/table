@@ -9,11 +9,12 @@ title: table_toggleAllPageRowsSelected
 function table_toggleAllPageRowsSelected<TFeatures, TData>(table, value?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L119)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L124)
 
-Toggles all page rows selected for the table.
+Selects or deselects every selectable row on the current page.
 
-This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+Omitting `value` toggles based on `table_getIsAllPageRowsSelected(table)`.
+Child rows are included when sub-row selection allows it.
 
 ## Type Parameters
 

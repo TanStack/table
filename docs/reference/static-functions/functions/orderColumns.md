@@ -9,11 +9,13 @@ title: orderColumns
 function orderColumns<TFeatures, TData>(table, leafColumns): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L191)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L203)
 
-Orders leaf columns with manual ordering, grouping, and pinning rules.
+Applies grouped-column placement rules to an already ordered leaf-column list.
 
-This helper is used by the column ordering feature to produce the final visible column order.
+`groupedColumnMode: 'remove'` drops grouped columns from the list.
+`groupedColumnMode: 'reorder'` moves grouped columns to the front in grouping
+state order.
 
 ## Type Parameters
 
@@ -42,5 +44,5 @@ This helper is used by the column ordering feature to produce the final visible 
 ## Example
 
 ```ts
-const orderedColumns = orderColumns(leafColumns, columnOrder, grouping, groupedColumnMode)
+const orderedColumns = orderColumns(table, leafColumns)
 ```

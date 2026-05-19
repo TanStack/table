@@ -9,11 +9,11 @@ title: column_clearSorting
 function column_clearSorting<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L430)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:445](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L445)
 
-Clear Sorting. for a column.
+Removes this column from the sorting state.
 
-This is the static implementation behind the matching column instance API.
+Other sorted columns are preserved, including their relative order.
 
 ## Type Parameters
 
@@ -42,5 +42,5 @@ This is the static implementation behind the matching column instance API.
 ## Example
 
 ```ts
-const value = column_clearSorting(column)
+column_clearSorting(column)
 ```

@@ -5,7 +5,7 @@ title: Table_ColumnFiltering
 
 # Interface: Table\_ColumnFiltering
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L177)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:185](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L185)
 
 ## Properties
 
@@ -15,9 +15,11 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:177](http
 resetColumnFilters: (defaultState?) => void;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L181)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L191)
 
-Resets the **columnFilters** state to `initialState.columnFilters`, or `true` can be passed to force a default blank state reset to `[]`.
+Resets `columnFilters` to `initialState.columnFilters`.
+
+Pass `true` to ignore initial state and reset to `[]`.
 
 #### Parameters
 
@@ -37,9 +39,9 @@ Resets the **columnFilters** state to `initialState.columnFilters`, or `true` ca
 setColumnFilters: (updater) => void;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:185](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L185)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L195)
 
-Sets column filter state using a value or updater.
+Updates column filter state with a next array or updater function.
 
 #### Parameters
 

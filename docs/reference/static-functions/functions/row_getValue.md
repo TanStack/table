@@ -9,11 +9,12 @@ title: row_getValue
 function row_getValue<TFeatures, TData>(row, columnId): unknown;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L19)
+Defined in: [core/rows/coreRowsFeature.utils.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L20)
 
-Returns value for a row.
+Reads and caches this row's value for a column.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+The value is produced by the column accessor. Missing columns or display
+columns without an accessor return `undefined`.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getValue(row)
+const firstName = row_getValue(row, 'firstName')
 ```

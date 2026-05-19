@@ -5,7 +5,7 @@ title: Row_ColumnPinning
 
 # Interface: Row\_ColumnPinning\<TFeatures, TData\>
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L62)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L69)
 
 ## Type Parameters
 
@@ -25,9 +25,9 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:62](https://g
 getCenterVisibleCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L69)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L76)
 
-Returns all center pinned (unpinned) leaf cells in the row.
+Gets visible row cells whose columns are not pinned left or right.
 
 #### Returns
 
@@ -41,9 +41,9 @@ Returns all center pinned (unpinned) leaf cells in the row.
 getLeftVisibleCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L73)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L80)
 
-Returns all left pinned leaf cells in the row.
+Gets visible row cells whose columns are pinned left.
 
 #### Returns
 
@@ -57,9 +57,9 @@ Returns all left pinned leaf cells in the row.
 getRightVisibleCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L77)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L84)
 
-Returns all right pinned leaf cells in the row.
+Gets visible row cells whose columns are pinned right.
 
 #### Returns
 

@@ -9,11 +9,12 @@ title: column_getPinnedIndex
 function column_getPinnedIndex<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L153)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L164)
 
-Returns pinned index for a column.
+Finds this column's index within its pinned region.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Unpinned columns return `0`; pinned columns return their position in
+`state.columnPinning.left` or `state.columnPinning.right`.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getPinnedIndex(column)
+const index = column_getPinnedIndex(column)
 ```

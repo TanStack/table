@@ -9,11 +9,12 @@ title: row_getCanSelectSubRows
 function row_getCanSelectSubRows<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:519](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L519)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:536](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L536)
 
-Returns whether a row can use select sub rows.
+Checks whether selecting this row should also select its subRows.
 
-This evaluates row data, table options, and feature-specific enablement rules.
+`options.enableSubRowSelection` may be a boolean or a row predicate; it
+defaults to `true`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This evaluates row data, table options, and feature-specific enablement rules.
 ## Example
 
 ```ts
-const value = row_getCanSelectSubRows(row)
+const canSelectChildren = row_getCanSelectSubRows(row)
 ```

@@ -1,11 +1,13 @@
-import { isNumberArray } from '../utils'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
 import type { AggregationFn } from '../features/column-grouping/columnGroupingFeature.types'
 
 /**
- * Aggregation function for summing up the values of a column.
+ * Sums numeric child-row values for a grouped column.
+ *
+ * Non-number values contribute `0`. Child rows are used so nested group totals
+ * can reuse already aggregated values.
  */
 export const aggregationFn_sum: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -24,7 +26,10 @@ export const aggregationFn_sum: AggregationFn<any, any> = <
 }
 
 /**
- * Aggregation function for finding the minimum value of a column.
+ * Finds the minimum numeric child-row value for a grouped column.
+ *
+ * Nullish and non-number values are ignored. Returns `undefined` when no
+ * numeric value is found.
  */
 export const aggregationFn_min: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -52,7 +57,10 @@ export const aggregationFn_min: AggregationFn<any, any> = <
 }
 
 /**
- * Aggregation function for finding the maximum value of a column.
+ * Finds the maximum numeric child-row value for a grouped column.
+ *
+ * Nullish and non-number values are ignored. Returns `undefined` when no
+ * numeric value is found.
  */
 export const aggregationFn_max: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -79,7 +87,10 @@ export const aggregationFn_max: AggregationFn<any, any> = <
 }
 
 /**
- * Aggregation function for finding the extent (min and max) of a column.
+ * Finds the numeric extent for a grouped column.
+ *
+ * Returns `[min, max]`, where each entry is `undefined` when no numeric value is
+ * present.
  */
 export const aggregationFn_extent: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -108,7 +119,10 @@ export const aggregationFn_extent: AggregationFn<any, any> = <
 }
 
 /**
- * Aggregation function for finding the mean (average) of a column.
+ * Averages numeric leaf-row values for a grouped column.
+ *
+ * Number-like values are coerced with unary `+`; nullish and non-numeric values
+ * are ignored.
  */
 export const aggregationFn_mean: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -140,7 +154,10 @@ export const aggregationFn_mean: AggregationFn<any, any> = <
 }
 
 /**
- * Aggregation function for finding the median value of a column.
+ * Computes the median of numeric leaf-row values for a grouped column.
+ *
+ * All values must be numbers. If any value is non-numeric, or no leaf rows are
+ * present, the result is `undefined`.
  */
 export const aggregationFn_median: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -153,21 +170,28 @@ export const aggregationFn_median: AggregationFn<any, any> = <
     return
   }
 
-  const values = leafRows.map((row) => row.getValue(columnId))
-  if (!isNumberArray(values)) {
-    return
+  const values: Array<number> = new Array(leafRows.length)
+  for (let i = 0; i < leafRows.length; i++) {
+    const v = leafRows[i]!.getValue(columnId)
+    if (typeof v !== 'number') return
+    values[i] = v
   }
+
   if (values.length === 1) {
     return values[0]
   }
 
   const mid = Math.floor(values.length / 2)
-  const nums = values.sort((a, b) => a - b)
-  return values.length % 2 !== 0 ? nums[mid] : (nums[mid - 1]! + nums[mid]!) / 2
+  values.sort((a, b) => a - b)
+  return values.length % 2 !== 0
+    ? values[mid]
+    : (values[mid - 1]! + values[mid]!) / 2
 }
 
 /**
- * Aggregation function for finding the unique values of a column.
+ * Collects unique leaf-row values for a grouped column.
+ *
+ * Values are compared with JavaScript `Set` semantics.
  */
 export const aggregationFn_unique: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -176,11 +200,17 @@ export const aggregationFn_unique: AggregationFn<any, any> = <
   columnId: string,
   leafRows: Array<Row<any, any>>,
 ) => {
-  return Array.from(new Set(leafRows.map((d) => d.getValue(columnId))).values())
+  const set = new Set<unknown>()
+  for (let i = 0; i < leafRows.length; i++) {
+    set.add(leafRows[i]!.getValue(columnId))
+  }
+  return Array.from(set.values())
 }
 
 /**
- * Aggregation function for finding the count of unique values of a column.
+ * Counts unique leaf-row values for a grouped column.
+ *
+ * Values are compared with JavaScript `Set` semantics.
  */
 export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,
@@ -189,11 +219,17 @@ export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
   columnId: string,
   leafRows: Array<Row<any, any>>,
 ) => {
-  return new Set(leafRows.map((d) => d.getValue(columnId))).size
+  const set = new Set<unknown>()
+  for (let i = 0; i < leafRows.length; i++) {
+    set.add(leafRows[i]!.getValue(columnId))
+  }
+  return set.size
 }
 
 /**
- * Aggregation function for counting the number of rows in a column.
+ * Counts the number of leaf rows in the group.
+ *
+ * The column id is ignored because the result is based only on group size.
  */
 export const aggregationFn_count: AggregationFn<any, any> = <
   TFeatures extends TableFeatures,

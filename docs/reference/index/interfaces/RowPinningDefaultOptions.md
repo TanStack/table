@@ -5,7 +5,7 @@ title: RowPinningDefaultOptions
 
 # Interface: RowPinningDefaultOptions
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L36)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L38)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:36](https://github.
 onRowPinningChange: OnChangeFn<RowPinningState>;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L37)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L39)

@@ -9,11 +9,12 @@ title: table_getIsSomeRowsPinned
 function table_getIsSomeRowsPinned<TFeatures, TData>(table, position?): boolean;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L88)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L93)
 
-Returns is some rows pinned for the table.
+Checks whether any rows are pinned.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Omit `position` to check both regions, or pass `'top'`/`'bottom'` to inspect
+one region.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsSomeRowsPinned(table)
+const hasPinnedRows = table_getIsSomeRowsPinned(table)
 ```

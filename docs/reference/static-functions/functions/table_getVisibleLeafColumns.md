@@ -9,11 +9,12 @@ title: table_getVisibleLeafColumns
 function table_getVisibleLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L200)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:239](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L239)
 
-Returns visible leaf columns for the table.
+Filters leaf columns down to those currently visible.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+This is the column list most row rendering code uses before pinning-specific
+partitioning.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getVisibleLeafColumns(table)
+const columns = table_getVisibleLeafColumns(table)
 ```

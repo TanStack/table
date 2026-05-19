@@ -1,0 +1,22 @@
+{
+  "name": "tanstack-lit-table-example-kitchen-sink",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.4.0",
+    "@tanstack/lit-table": "^9.0.0-alpha.49",
+    "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.3",
+    "typescript": "6.0.3",
+    "vite": "^8.0.13"
+  }
+}

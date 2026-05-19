@@ -9,11 +9,13 @@ title: table_getGlobalFacetedRowModel
 function table_getGlobalFacetedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L109)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L116)
 
-Returns global faceted row model for the table.
+Computes the row model used to derive global facet values.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The global context is requested with the internal `__global__` column id. If
+no faceted row-model factory is registered, the pre-filtered row model is
+returned.
 
 ## Type Parameters
 
@@ -38,5 +40,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getGlobalFacetedRowModel(table)
+const rows = table_getGlobalFacetedRowModel(table)
 ```

@@ -9,11 +9,11 @@ title: row_getPinnedIndex
 function row_getPinnedIndex<TFeatures, TData>(row): number;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:247](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L247)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:259](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L259)
 
-Returns pinned index for a row.
+Finds this row's visible index within its pinned region.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+Unpinned rows return `-1`.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getPinnedIndex(row)
+const index = row_getPinnedIndex(row)
 ```

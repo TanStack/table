@@ -60,17 +60,21 @@ function _createFacetedRowModel<
     return preRowModel
   }
 
-  const filterableIds = [
-    ...(columnFilters?.map((d) => d.id).filter((d) => d !== columnId) ?? []),
-    globalFilter ? '__global__' : undefined,
-  ].filter(Boolean) as Array<string>
+  const filterableIds: Array<string> = []
+  if (columnFilters) {
+    for (let i = 0; i < columnFilters.length; i++) {
+      const id = columnFilters[i]!.id
+      if (id !== columnId) filterableIds.push(id)
+    }
+  }
+  if (globalFilter) filterableIds.push('__global__')
 
   const filterRowsImpl = (
     row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
   ) => {
     // Horizontally filter rows through each column
-    for (const colId of filterableIds) {
-      if (row.columnFilters?.[colId] === false) {
+    for (let i = 0; i < filterableIds.length; i++) {
+      if (row.columnFilters?.[filterableIds[i]!] === false) {
         return false
       }
     }

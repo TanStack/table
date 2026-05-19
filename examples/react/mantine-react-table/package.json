@@ -11,13 +11,13 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
-    "@mantine/core": "^9.2.0",
-    "@mantine/dates": "^9.2.0",
-    "@mantine/hooks": "^9.2.0",
+    "@mantine/core": "^9.2.1",
+    "@mantine/dates": "^9.2.1",
+    "@mantine/hooks": "^9.2.1",
     "@tabler/icons-react": "^3.44.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/react-store": "^0.11.0",
-    "@tanstack/react-table": "^9.0.0-alpha.46",
+    "@tanstack/react-table": "^9.0.0-alpha.49",
     "@tanstack/react-virtual": "^3.13.24",
     "clsx": "^2.1.1",
     "dayjs": "^1.11.20",
@@ -29,12 +29,12 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^6.0.2",
     "babel-plugin-react-compiler": "^1.0.0",
     "postcss": "^8.5.14",
     "postcss-preset-mantine": "^1.18.0",
     "postcss-simple-vars": "^7.0.1",
     "typescript": "6.0.3",
-    "vite": "^8.0.12"
+    "vite": "^8.0.13"
   }
 }

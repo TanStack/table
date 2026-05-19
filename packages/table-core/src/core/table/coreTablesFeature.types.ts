@@ -66,11 +66,15 @@ export interface TableOptions_Table<
   TData extends RowData,
 > {
   /**
-   * The features that you want to enable for the table.
+   * The feature modules registered on this table instance.
+   *
+   * Feature registration controls which state slices, options, and prototype
+   * APIs are available.
    */
   readonly _features: TFeatures
   /**
-   * The row model options that you want to enable for the table.
+   * Row model factories used by features such as filtering, grouping, sorting,
+   * expansion, and pagination.
    */
   readonly _rowModels?: CreateRowModels_All<TFeatures, TData>
   /**

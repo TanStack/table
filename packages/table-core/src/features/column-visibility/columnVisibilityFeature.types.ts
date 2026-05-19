@@ -32,31 +32,34 @@ export interface Table_ColumnVisibility<
   TData extends RowData,
 > {
   /**
-   * Returns whether all columns are visible
+   * Checks whether every leaf column is currently visible.
    */
   getIsAllColumnsVisible: () => boolean
   /**
-   * Returns whether any columns are visible
+   * Checks whether at least one leaf column is currently visible.
    */
   getIsSomeColumnsVisible: () => boolean
   /**
-   * Returns a handler for toggling the visibility of all columns, meant to be bound to a `input[type=checkbox]` element.
+   * Creates a checkbox-style handler that shows or hides all columns.
    */
   getToggleAllColumnsVisibilityHandler: () => (event: unknown) => void
   /**
-   * Returns a flat array of columns that are visible, including parent columns.
+   * Lists visible columns in flat table order, including parent columns that
+   * have visible descendants.
    */
   getVisibleFlatColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Returns a flat array of leaf-node columns that are visible.
+   * Lists visible leaf columns in the order used for row cells and headers.
    */
   getVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
+   * Resets `columnVisibility` to `initialState.columnVisibility`.
+   *
+   * Pass `true` to ignore initial state and reset to `{}`.
    */
   resetColumnVisibility: (defaultState?: boolean) => void
   /**
-   * Sets column visibility state using a value or updater.
+   * Updates column visibility state with a next map or updater function.
    */
   setColumnVisibility: (updater: Updater<ColumnVisibilityState>) => void
   /**
@@ -67,7 +70,7 @@ export interface Table_ColumnVisibility<
 
 export interface ColumnDef_ColumnVisibility {
   /**
-   * Enables/disables column hiding for this column. Defaults to `true`.
+   * Allows this column to be hidden. Defaults to `true`.
    */
   enableHiding?: boolean
 }
@@ -77,22 +80,29 @@ export interface Row_ColumnVisibility<
   TData extends RowData,
 > {
   /**
-   * Returns an array of cells that account for column visibility for the row.
+   * Gets this row's cells for currently visible columns.
    */
   getVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
+  /**
+   * Maps this row's currently visible cells by column id.
+   */
+  getVisibleCellsByColumnId: () => Record<
+    string,
+    Cell<TFeatures, TData, unknown>
+  >
 }
 
 export interface Column_ColumnVisibility {
   /**
-   * Returns whether the column can be hidden
+   * Checks whether this column is allowed to be hidden.
    */
   getCanHide: () => boolean
   /**
-   * Returns whether the column is visible
+   * Checks whether this column is currently visible.
    */
   getIsVisible: () => boolean
   /**
-   * Returns a function that can be used to toggle the column visibility. This function can be used to bind to an event handler to a checkbox.
+   * Creates a checkbox-style handler that toggles this column's visibility.
    */
   getToggleVisibilityHandler: () => (event: unknown) => void
   /**

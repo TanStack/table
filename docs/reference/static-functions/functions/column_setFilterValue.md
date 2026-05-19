@@ -9,11 +9,12 @@ title: column_setFilterValue
 function column_setFilterValue<TFeatures, TData, TValue>(column, value): void;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L198)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:206](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L206)
 
-Updates filter value for a column.
+Adds, updates, or removes this column's filter value.
 
-This delegates to the owning table state updater so external state, external atoms, and internal state stay synchronized.
+The incoming value may be an updater. After resolution, `autoRemove` rules
+decide whether the filter should be removed instead of stored.
 
 ## Type Parameters
 
@@ -46,5 +47,5 @@ This delegates to the owning table state updater so external state, external ato
 ## Example
 
 ```ts
-column_setFilterValue(column, (old) => old)
+column_setFilterValue(column, (old) => String(old ?? '').trim())
 ```

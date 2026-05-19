@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/solid-table",
-  "version": "9.0.0-alpha.46",
+  "version": "9.0.0-alpha.49",
   "description": "Headless UI for building powerful tables & datagrids for Solid.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,7 +18,8 @@
     "solid",
     "table",
     "solid-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "types": "./dist/index.d.cts",
@@ -47,7 +48,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "skills"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -61,7 +63,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "solid-js": "^1.9.12",
+    "solid-js": "^1.9.13",
     "vite-plugin-solid": "^2.11.12"
   },
   "peerDependencies": {

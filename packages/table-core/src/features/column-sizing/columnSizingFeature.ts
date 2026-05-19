@@ -141,15 +141,31 @@ export function constructColumnSizingFeature<
         },
         table_getTotalSize: {
           fn: () => table_getTotalSize(table),
+          memoDeps: () => [
+            table.atoms.columnSizing?.get(),
+            table.getHeaderGroups(),
+          ],
         },
         table_getLeftTotalSize: {
           fn: () => table_getLeftTotalSize(table),
+          memoDeps: () => [
+            table.atoms.columnSizing?.get(),
+            table.getHeaderGroups(),
+          ],
         },
         table_getCenterTotalSize: {
           fn: () => table_getCenterTotalSize(table),
+          memoDeps: () => [
+            table.atoms.columnSizing?.get(),
+            table.getHeaderGroups(),
+          ],
         },
         table_getRightTotalSize: {
           fn: () => table_getRightTotalSize(table),
+          memoDeps: () => [
+            table.atoms.columnSizing?.get(),
+            table.getHeaderGroups(),
+          ],
         },
       })
     },

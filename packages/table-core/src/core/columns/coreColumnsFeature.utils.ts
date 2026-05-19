@@ -12,13 +12,14 @@ import type {
 import type { Column } from '../../types/Column'
 
 /**
- * Returns flat columns for a column.
+ * Flattens this column and every descendant column into a single array.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Group columns appear before their child columns, which matches the normalized
+ * column hierarchy produced during table construction.
  *
  * @example
  * ```ts
- * const value = column_getFlatColumns(column)
+ * const flatColumns = column_getFlatColumns(column)
  * ```
  */
 export function column_getFlatColumns<
@@ -32,13 +33,14 @@ export function column_getFlatColumns<
 }
 
 /**
- * Returns leaf columns for a column.
+ * Collects the terminal leaf columns below this column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Group columns return their ordered descendants. Non-group columns return an
+ * array containing only the column itself.
  *
  * @example
  * ```ts
- * const value = column_getLeafColumns(column)
+ * const leafColumns = column_getLeafColumns(column)
  * ```
  */
 export function column_getLeafColumns<
@@ -64,13 +66,15 @@ export function column_getLeafColumns<
 }
 
 /**
- * Returns default column def for the table.
+ * Merges built-in, feature, and user default column definitions.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Built-in defaults provide a header and fallback cell renderer, feature
+ * defaults can add feature-specific column options, and
+ * `options.defaultColumn` wins last.
  *
  * @example
  * ```ts
- * const value = table_getDefaultColumnDef(table)
+ * const defaultColumn = table_getDefaultColumnDef(table)
  * ```
  */
 export function table_getDefaultColumnDef<
@@ -103,13 +107,14 @@ export function table_getDefaultColumnDef<
 }
 
 /**
- * Returns all columns for the table.
+ * Normalizes `options.columns` into the table's nested column tree.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Each column definition is constructed with its parent and depth, and group
+ * column children are recursively constructed.
  *
  * @example
  * ```ts
- * const value = table_getAllColumns(table)
+ * const columns = table_getAllColumns(table)
  * ```
  */
 export function table_getAllColumns<
@@ -144,13 +149,14 @@ export function table_getAllColumns<
 }
 
 /**
- * Returns all flat columns for the table.
+ * Flattens every table column, including group columns and leaf columns.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Use this when parent/group columns must be included in addition to data leaf
+ * columns.
  *
  * @example
  * ```ts
- * const value = table_getAllFlatColumns(table)
+ * const flatColumns = table_getAllFlatColumns(table)
  * ```
  */
 export function table_getAllFlatColumns<
@@ -163,13 +169,14 @@ export function table_getAllFlatColumns<
 }
 
 /**
- * Returns all flat columns by id for the table.
+ * Builds an id lookup for every flat column in the table.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Group columns and leaf columns are included. Later columns with the same id
+ * replace earlier entries.
  *
  * @example
  * ```ts
- * const value = table_getAllFlatColumnsById(table)
+ * const columnsById = table_getAllFlatColumnsById(table)
  * ```
  */
 export function table_getAllFlatColumnsById<
@@ -179,20 +186,23 @@ export function table_getAllFlatColumnsById<
   table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   const result: Record<string, Column<TFeatures, TData, unknown>> = {}
-  for (const column of table.getAllFlatColumns()) {
+  const flatColumns = table.getAllFlatColumns()
+  for (let i = 0; i < flatColumns.length; i++) {
+    const column = flatColumns[i]!
     result[column.id] = column
   }
   return result
 }
 
 /**
- * Returns all leaf columns for the table.
+ * Collects all terminal leaf columns in their current table order.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Column ordering features can reorder the collected leaves before the result
+ * is returned.
  *
  * @example
  * ```ts
- * const value = table_getAllLeafColumns(table)
+ * const leafColumns = table_getAllLeafColumns(table)
  * ```
  */
 export function table_getAllLeafColumns<
@@ -212,13 +222,14 @@ export function table_getAllLeafColumns<
 }
 
 /**
- * Returns all leaf columns by id for the table.
+ * Builds an id lookup for terminal leaf columns only.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent/group columns are excluded, making this lookup appropriate for row
+ * cells and feature state keyed by data columns.
  *
  * @example
  * ```ts
- * const value = table_getAllLeafColumnsById(table)
+ * const leavesById = table_getAllLeafColumnsById(table)
  * ```
  */
 export function table_getAllLeafColumnsById<
@@ -228,20 +239,23 @@ export function table_getAllLeafColumnsById<
   table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   const result: Record<string, Column<TFeatures, TData, unknown>> = {}
-  for (const column of table.getAllLeafColumns()) {
+  const leafColumns = table.getAllLeafColumns()
+  for (let i = 0; i < leafColumns.length; i++) {
+    const column = leafColumns[i]!
     result[column.id] = column
   }
   return result
 }
 
 /**
- * Returns column for the table.
+ * Looks up a column by id from the flat column map.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The lookup can return group columns or leaf columns. In development, a
+ * missing id logs a warning to help catch stale column references.
  *
  * @example
  * ```ts
- * const value = table_getColumn(table)
+ * const column = table_getColumn(table, 'firstName')
  * ```
  */
 export function table_getColumn<

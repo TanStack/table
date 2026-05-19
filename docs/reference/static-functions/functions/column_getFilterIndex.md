@@ -9,11 +9,11 @@ title: column_getFilterIndex
 function column_getFilterIndex<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:176](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L176)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:183](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L183)
 
-Returns filter index for a column.
+Finds this column's position in the ordered `state.columnFilters` array.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The result is `-1` when the column has no active filter.
 
 ## Type Parameters
 
@@ -42,5 +42,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getFilterIndex(column)
+const index = column_getFilterIndex(column)
 ```

@@ -9,11 +9,12 @@ title: column_getSize
 function column_getSize<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L59)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L63)
 
-Returns size for a column.
+Resolves a column's current pixel size.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Committed `state.columnSizing[column.id]` wins over `columnDef.size`, then the
+built-in default size. The result is clamped between min and max size.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getSize(column)
+const width = column_getSize(column)
 ```

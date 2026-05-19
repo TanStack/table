@@ -18,7 +18,9 @@ export interface TableOptions_RowPinning<
   TData extends RowData,
 > {
   /**
-   * Enables/disables row pinning for the table. Defaults to `true`.
+   * Allows rows to be pinned to top or bottom regions.
+   *
+   * Provide a predicate to decide per row. Defaults to `true`.
    */
   enableRowPinning?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
@@ -39,7 +41,7 @@ export interface RowPinningDefaultOptions {
 
 export interface Row_RowPinning {
   /**
-   * Returns whether or not the row can be pinned.
+   * Checks whether this row can be pinned.
    */
   getCanPin: () => boolean
   /**
@@ -65,27 +67,29 @@ export interface Table_RowPinning<
   TData extends RowData,
 > {
   /**
-   * Returns all bottom pinned rows.
+   * Gets rows pinned to the bottom region.
    */
   getBottomRows: () => Array<Row<TFeatures, TData>>
   /**
-   * Returns all rows that are not pinned to the top or bottom.
+   * Gets rows that are not pinned to the top or bottom region.
    */
   getCenterRows: () => Array<Row<TFeatures, TData>>
   /**
-   * Returns whether or not any rows are pinned. Optionally specify to only check for pinned rows in either the `top` or `bottom` position.
+   * Checks whether any rows are pinned, optionally limited to one region.
    */
   getIsSomeRowsPinned: (position?: RowPinningPosition) => boolean
   /**
-   * Returns all top pinned rows.
+   * Gets rows pinned to the top region.
    */
   getTopRows: () => Array<Row<TFeatures, TData>>
   /**
-   * Resets the **rowPinning** state to `initialState.rowPinning`, or `true` can be passed to force a default blank state reset to `{ top: [], bottom: [], }`.
+   * Resets `rowPinning` to `initialState.rowPinning`.
+   *
+   * Pass `true` to ignore initial state and reset to empty top/bottom arrays.
    */
   resetRowPinning: (defaultState?: boolean) => void
   /**
-   * Sets row pinning state using a value or updater.
+   * Updates row pinning state with a next state or updater function.
    */
   setRowPinning: (updater: Updater<RowPinningState>) => void
 }

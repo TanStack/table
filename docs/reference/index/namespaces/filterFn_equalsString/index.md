@@ -5,7 +5,10 @@ title: filterFn_equalsString
 
 # filterFn\_equalsString
 
-Filter function for checking if a string is exactly equal to a given string. (Non-case-sensitive)
+Keeps rows whose stringified column value equals the filter text.
+
+Both values are lowercased before comparison, and empty filter values are
+auto-removed.
 
 ## Functions
 

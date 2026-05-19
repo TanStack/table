@@ -9,11 +9,12 @@ title: table_getRowModel
 function table_getRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:255](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L255)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L267)
 
-Returns row model for the table.
+Resolves the final row model consumed by renderers.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+This is the end of the built-in row-model pipeline: core -> filtering ->
+grouping -> sorting -> expanding -> pagination.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getRowModel(table)
+const visibleRows = table_getRowModel(table)
 ```

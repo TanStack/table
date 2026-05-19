@@ -11,11 +11,13 @@ function table_getGlobalFilterFn<TFeatures, TData>(table):
   | undefined;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L57)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L61)
 
-Returns global filter fn for the table.
+Resolves the filter function used for global filtering.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Function-valued `options.globalFilterFn` is returned directly, `'auto'`
+delegates to `table_getGlobalAutoFilterFn`, and string values are looked up in
+the table's filter function registry.
 
 ## Type Parameters
 
@@ -41,5 +43,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getGlobalFilterFn(table)
+const filterFn = table_getGlobalFilterFn(table)
 ```

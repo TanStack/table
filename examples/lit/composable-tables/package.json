@@ -11,12 +11,12 @@
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
     "@lit/context": "^1.1.6",
-    "@tanstack/lit-table": "^9.0.0-alpha.46",
-    "lit": "^3.3.2"
+    "@tanstack/lit-table": "^9.0.0-alpha.49",
+    "lit": "^3.3.3"
   },
   "devDependencies": {
     "@rollup/plugin-replace": "^6.0.3",
     "typescript": "6.0.3",
-    "vite": "^8.0.12"
+    "vite": "^8.0.13"
   }
 }

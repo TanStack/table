@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/vue-table",
-  "version": "9.0.0-alpha.46",
+  "version": "9.0.0-alpha.49",
   "description": "Headless UI for building powerful tables & datagrids for Vue.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,7 +18,8 @@
     "vue",
     "table",
     "vue-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "types": "./dist/index.d.cts",
@@ -45,7 +46,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "skills"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -59,7 +61,7 @@
     "@tanstack/vue-store": "^0.11.0"
   },
   "devDependencies": {
-    "@vitejs/plugin-vue": "^6.0.6",
+    "@vitejs/plugin-vue": "^6.0.7",
     "eslint-plugin-vue": "^10.9.1",
     "vue": "^3.5.34"
   },

@@ -9,11 +9,12 @@ title: table_getGlobalFacetedMinMaxValues
 function table_getGlobalFacetedMinMaxValues<TFeatures, TData>(table): [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L89)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L94)
 
-Returns global faceted min max values for the table.
+Computes min and max numeric facet values for the global filter context.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The global context is requested with the internal `__global__` column id. If
+no factory is registered, the result is `undefined`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getGlobalFacetedMinMaxValues(table)
+const range = table_getGlobalFacetedMinMaxValues(table)
 ```

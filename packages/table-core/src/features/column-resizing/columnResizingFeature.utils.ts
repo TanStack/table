@@ -14,13 +14,14 @@ import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.typ
 import type { columnResizingState } from './columnResizingFeature.types'
 
 /**
- * Returns the default column resizing state.
+ * Creates the default transient column resizing state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default represents no active drag interaction. Reset APIs use
+ * this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultColumnResizingState()
+ * const resizeInfo = getDefaultColumnResizingState()
  * ```
  */
 export function getDefaultColumnResizingState(): columnResizingState {
@@ -35,13 +36,14 @@ export function getDefaultColumnResizingState(): columnResizingState {
 }
 
 /**
- * Returns whether a column can use resize.
+ * Checks whether this column can start a resize interaction.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * Both `columnDef.enableResizing` and table `enableColumnResizing` default to
+ * `true`.
  *
  * @example
  * ```ts
- * const value = column_getCanResize(column)
+ * const canResize = column_getCanResize(column)
  * ```
  */
 export function column_getCanResize<
@@ -56,13 +58,13 @@ export function column_getCanResize<
 }
 
 /**
- * Returns is resizing for a column.
+ * Checks whether this column is the active column resize target.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The value is read from `state.columnResizing.isResizingColumn`.
  *
  * @example
  * ```ts
- * const value = column_getIsResizing(column)
+ * const isResizing = column_getIsResizing(column)
  * ```
  */
 export function column_getIsResizing<
@@ -76,9 +78,11 @@ export function column_getIsResizing<
 }
 
 /**
- * Returns resize handler for a header.
+ * Creates the pointer/touch start handler for resizing a header.
  *
- * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ * The handler records starting sizes for all leaf headers, tracks drag deltas,
+ * writes transient resize info, and commits column sizes on change or drag end
+ * depending on `columnResizeMode`.
  *
  * @example
  * ```ts
@@ -263,13 +267,14 @@ export function header_getResizeHandler<
 }
 
 /**
- * Updates the table's column resizing state slice.
+ * Routes a transient column resizing updater through the table's resize handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * This state tracks the active drag interaction; committed widths live in
+ * `columnSizing`.
  *
  * @example
  * ```ts
- * table_setColumnResizing(table, (old) => old)
+ * table_setColumnResizing(table, (old) => ({ ...old, deltaOffset: 12 }))
  * ```
  */
 export function table_setColumnResizing<
@@ -283,9 +288,11 @@ export function table_setColumnResizing<
 }
 
 /**
- * Resets the table's header size info state slice.
+ * Resets `columnResizing` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.columnResizing` when
+ * it exists. Passing `true` ignores initial state and resets to the no-drag
+ * default state.
  *
  * @example
  * ```ts
@@ -307,10 +314,12 @@ export function table_resetHeaderSizeInfo<
   )
 }
 
+let passiveSupported: boolean | null = null
 /**
  * Detects whether the current environment supports passive event listeners.
  *
- * Column resizing uses this to register pointer and touch listeners with the safest available options.
+ * Column resizing uses this to register pointer and touch listeners with
+ * `passive: false` only when the environment understands passive options.
  *
  * @example
  * ```ts
@@ -318,8 +327,6 @@ export function table_resetHeaderSizeInfo<
  * ```
  */
 export function passiveEventSupported() {
-  let passiveSupported: boolean | null = null
-
   if (typeof passiveSupported === 'boolean') return passiveSupported
 
   let supported = false
@@ -343,9 +350,10 @@ export function passiveEventSupported() {
 }
 
 /**
- * Returns whether an event is a touch-start event.
+ * Narrows an unknown event to a `touchstart` event.
  *
- * Column resizing uses this to normalize mouse and touch resize interactions.
+ * Column resizing uses this before reading touch coordinates and installing
+ * touch-specific listeners.
  *
  * @example
  * ```ts

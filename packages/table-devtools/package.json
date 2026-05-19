@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/table-devtools",
-  "version": "9.0.0-alpha.46",
+  "version": "9.0.0-alpha.49",
   "description": "Devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -17,7 +17,8 @@
   "keywords": [
     "tanstack",
     "table",
-    "devtools"
+    "devtools",
+    "tanstack-intent"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -43,14 +44,15 @@
   },
   "files": [
     "dist/",
-    "src"
+    "src",
+    "skills"
   ],
   "dependencies": {
     "@tanstack/devtools-ui": "^0.5.2",
     "@tanstack/devtools-utils": "^0.5.0",
     "@tanstack/solid-store": "^0.11.0",
     "goober": "^2.1.19",
-    "solid-js": "^1.9.12"
+    "solid-js": "^1.9.13"
   },
   "peerDependencies": {
     "@tanstack/table-core": "workspace:*"

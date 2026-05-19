@@ -5,7 +5,7 @@ title: filterFn_arrIncludesSome
 
 # filterFn\_arrIncludesSome
 
-Filter function for checking if an array includes any of the given values.
+Keeps rows whose array column value includes at least one filter value.
 
 ## Functions
 

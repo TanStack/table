@@ -9,11 +9,11 @@ title: row_getIsAllSubRowsSelected
 function row_getIsAllSubRowsSelected<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:480](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L480)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:495](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L495)
 
-Returns is all sub rows selected for a row.
+Checks whether all selectable descendants are selected.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+Rows without selectable descendants return false.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getIsAllSubRowsSelected(row)
+const allChildrenSelected = row_getIsAllSubRowsSelected(row)
 ```

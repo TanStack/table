@@ -9,6 +9,9 @@ title: aggregationFn_mean
 const aggregationFn_mean: AggregationFn<any, any>;
 ```
 
-Defined in: [fns/aggregationFns.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L113)
+Defined in: [fns/aggregationFns.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L127)
 
-Aggregation function for finding the mean (average) of a column.
+Averages numeric leaf-row values for a grouped column.
+
+Number-like values are coerced with unary `+`; nullish and non-numeric values
+are ignored.

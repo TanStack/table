@@ -25,9 +25,11 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:186](https://github
 resetSorting: (defaultState?) => void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L193)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L195)
 
-Resets the **sorting** state to `initialState.sorting`, or `true` can be passed to force a default blank state reset to `[]`.
+Resets `sorting` to `initialState.sorting`.
+
+Pass `true` to ignore initial state and reset to `[]`.
 
 #### Parameters
 
@@ -47,9 +49,9 @@ Resets the **sorting** state to `initialState.sorting`, or `true` can be passed 
 setSorting: (updater) => void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L197)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L199)
 
-Sets sorting state using a value or updater.
+Updates sorting state with a next ordered array or updater function.
 
 #### Parameters
 

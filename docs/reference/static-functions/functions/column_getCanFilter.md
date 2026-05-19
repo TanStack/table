@@ -9,11 +9,12 @@ title: column_getCanFilter
 function column_getCanFilter<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L115)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L121)
 
-Returns whether a column can use filter.
+Checks whether column filtering is enabled for this accessor column.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+The column must have an accessor and filtering must be enabled by the column
+definition, `enableColumnFilters`, and the table-wide `enableFilters` option.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanFilter(column)
+const canFilter = column_getCanFilter(column)
 ```

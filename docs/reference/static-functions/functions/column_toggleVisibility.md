@@ -9,11 +9,12 @@ title: column_toggleVisibility
 function column_toggleVisibility<TFeatures, TData, TValue>(column, visible?): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L35)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L37)
 
-Toggles visibility for a column.
+Updates this column's visibility when hiding is allowed.
 
-The update is applied through the owning table state slice and respects the feature options for that column.
+Passing `visible` stores that value. Omitting it flips the column's current
+visibility state. Columns that cannot hide are left unchanged.
 
 ## Type Parameters
 

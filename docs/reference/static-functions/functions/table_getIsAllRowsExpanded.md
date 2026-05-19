@@ -9,11 +9,12 @@ title: table_getIsAllRowsExpanded
 function table_getIsAllRowsExpanded<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:174](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L174)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L184)
 
-Returns is all rows expanded for the table.
+Checks whether every row in the current row model is expanded.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The special expanded-all value `true` returns true immediately. Empty
+expanded state returns false.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsAllRowsExpanded(table)
+const allExpanded = table_getIsAllRowsExpanded(table)
 ```

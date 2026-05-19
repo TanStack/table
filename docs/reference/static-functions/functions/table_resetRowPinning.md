@@ -9,11 +9,13 @@ title: table_resetRowPinning
 function table_resetRowPinning<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L62)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L66)
 
-Resets the table's row pinning state slice.
+Resets `rowPinning` to the configured initial state or feature default.
 
-By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+With no argument, the reset clones `table.initialState.rowPinning` when it
+exists. Passing `true` ignores initial state and resets to empty top/bottom
+arrays.
 
 ## Type Parameters
 

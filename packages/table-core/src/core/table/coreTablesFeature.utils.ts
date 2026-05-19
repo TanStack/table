@@ -12,7 +12,7 @@ import type { TableOptions } from '../../types/TableOptions'
  *
  * @example
  * ```ts
- * const value = table_syncExternalStateToBaseAtoms(table)
+ * table_syncExternalStateToBaseAtoms(table)
  * ```
  */
 export function table_syncExternalStateToBaseAtoms<
@@ -56,7 +56,9 @@ export function table_reset<
 >(table: Table_Internal<TFeatures, TData>): void {
   const snap = cloneState(table.initialState)
   table._reactivity.batch(() => {
-    for (const key of Object.keys(snap) as Array<keyof typeof snap>) {
+    const keys = Object.keys(snap) as Array<keyof typeof snap>
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]!
       ;(table.baseAtoms as any)[key].set(snap[key] as any)
     }
   })
@@ -70,7 +72,7 @@ export function table_reset<
  *
  * @example
  * ```ts
- * const value = table_mergeOptions(table)
+ * const options = table_mergeOptions(table, nextOptions)
  * ```
  */
 export function table_mergeOptions<

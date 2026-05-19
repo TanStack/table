@@ -9,11 +9,12 @@ title: getDefaultColumnOrderState
 function getDefaultColumnOrderState(): ColumnOrderState;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L21)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L22)
 
-Returns the default column order state.
+Creates the default column order state.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+The feature default is an empty array, meaning leaf columns keep their natural
+definition order. Reset APIs use this value when `defaultState` is `true`.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultColumnOrderState()
+const order = getDefaultColumnOrderState()
 ```

@@ -57,9 +57,11 @@ function _createFilteredRowModel<
   const globalFilter = table.atoms.globalFilter?.get()
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
-    for (const row of rowModel.flatRows as Array<
+    const flatRows = rowModel.flatRows as Array<
       Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
-    >) {
+    >
+    for (let i = 0; i < flatRows.length; i++) {
+      const row = flatRows[i]!
       row.columnFilters = {}
       row.columnFiltersMeta = {}
     }
@@ -110,13 +112,16 @@ function _createFilteredRowModel<
   }
 
   // Flag the pre-filtered row model with each filter state
-  for (const row of rowModel.flatRows as Array<
+  const flatRows = rowModel.flatRows as Array<
     Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
-  >) {
+  >
+  for (let i = 0; i < flatRows.length; i++) {
+    const row = flatRows[i]!
     row.columnFilters = {}
 
     if (resolvedColumnFilters.length) {
-      for (const currentColumnFilter of resolvedColumnFilters) {
+      for (let j = 0; j < resolvedColumnFilters.length; j++) {
+        const currentColumnFilter = resolvedColumnFilters[j]!
         const id = currentColumnFilter.id
 
         // Tag the row with the column filter state
@@ -134,7 +139,8 @@ function _createFilteredRowModel<
     }
 
     if (resolvedGlobalFilters.length) {
-      for (const currentGlobalFilter of resolvedGlobalFilters) {
+      for (let j = 0; j < resolvedGlobalFilters.length; j++) {
+        const currentGlobalFilter = resolvedGlobalFilters[j]!
         const id = currentGlobalFilter.id
         // Tag the row with the first truthy global filter state
         if (
@@ -164,8 +170,8 @@ function _createFilteredRowModel<
     row: Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>,
   ) => {
     // Horizontally filter rows through each column
-    for (const columnId of filterableIds) {
-      if (row.columnFilters[columnId] === false) {
+    for (let i = 0; i < filterableIds.length; i++) {
+      if (row.columnFilters[filterableIds[i]!] === false) {
         return false
       }
     }

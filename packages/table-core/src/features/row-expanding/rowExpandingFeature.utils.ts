@@ -9,13 +9,14 @@ import type {
 } from './rowExpandingFeature.types'
 
 /**
- * Returns the default expanded state.
+ * Creates the default expanded state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty map, meaning no rows are expanded. Reset APIs
+ * use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultExpandedState()
+ * const expanded = getDefaultExpandedState()
  * ```
  */
 export function getDefaultExpandedState(): ExpandedState {
@@ -23,9 +24,11 @@ export function getDefaultExpandedState(): ExpandedState {
 }
 
 /**
- * Schedules an automatic reset for expanded.
+ * Schedules an expanded-state reset after row-structure changes.
  *
- * The reset only runs when the related feature options allow automatic resets for the current table state change.
+ * The reset runs when `autoResetAll`, `autoResetExpanded`, or the default
+ * client-side expanding behavior allows it. Manual expanding opts out unless
+ * the reset options explicitly opt back in.
  *
  * @example
  * ```ts
@@ -46,13 +49,14 @@ export function table_autoResetExpanded<
 }
 
 /**
- * Updates the table's expanded state slice.
+ * Routes an expanded-state updater through the table's expanded change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be `true`, a row-id map, or a function of the previous
+ * expanded state, matching the instance `table.setExpanded` behavior.
  *
  * @example
  * ```ts
- * table_setExpanded(table, (old) => old)
+ * table_setExpanded(table, (old) => ({ ...old, [rowId]: true }))
  * ```
  */
 export function table_setExpanded<
@@ -63,9 +67,11 @@ export function table_setExpanded<
 }
 
 /**
- * Toggles all rows expanded for the table.
+ * Expands or collapses every row.
  *
- * This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+ * Passing `true` stores the special expanded-all state. Passing `false` stores
+ * an empty map. Omitting the value toggles based on whether all rows are
+ * currently expanded.
  *
  * @example
  * ```ts
@@ -84,9 +90,10 @@ export function table_toggleAllRowsExpanded<
 }
 
 /**
- * Resets the table's expanded state slice.
+ * Resets `expanded` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.expanded` when it
+ * exists. Passing `true` ignores initial state and resets to `{}`.
  *
  * @example
  * ```ts
@@ -105,13 +112,14 @@ export function table_resetExpanded<
 }
 
 /**
- * Returns can some rows expand for the table.
+ * Checks whether at least one pre-paginated row can expand.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Pagination is intentionally ignored so controls can reflect expandable rows
+ * that may not be on the current page.
  *
  * @example
  * ```ts
- * const value = table_getCanSomeRowsExpand(table)
+ * const canExpand = table_getCanSomeRowsExpand(table)
  * ```
  */
 export function table_getCanSomeRowsExpand<
@@ -124,13 +132,14 @@ export function table_getCanSomeRowsExpand<
 }
 
 /**
- * Returns an event handler for all rows expanded handler.
+ * Creates an event handler that toggles all rows expanded.
  *
- * The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+ * React-style synthetic events are persisted when present before the table state
+ * is toggled.
  *
  * @example
  * ```ts
- * const value = table_getToggleAllRowsExpandedHandler(table)
+ * const onClick = table_getToggleAllRowsExpandedHandler(table)
  * ```
  */
 export function table_getToggleAllRowsExpandedHandler<
@@ -144,13 +153,13 @@ export function table_getToggleAllRowsExpandedHandler<
 }
 
 /**
- * Returns is some rows expanded for the table.
+ * Checks whether any row is expanded.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The special expanded-all value `true` counts as some rows expanded.
  *
  * @example
  * ```ts
- * const value = table_getIsSomeRowsExpanded(table)
+ * const someExpanded = table_getIsSomeRowsExpanded(table)
  * ```
  */
 export function table_getIsSomeRowsExpanded<
@@ -162,13 +171,14 @@ export function table_getIsSomeRowsExpanded<
 }
 
 /**
- * Returns is all rows expanded for the table.
+ * Checks whether every row in the current row model is expanded.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The special expanded-all value `true` returns true immediately. Empty
+ * expanded state returns false.
  *
  * @example
  * ```ts
- * const value = table_getIsAllRowsExpanded(table)
+ * const allExpanded = table_getIsAllRowsExpanded(table)
  * ```
  */
 export function table_getIsAllRowsExpanded<
@@ -196,13 +206,14 @@ export function table_getIsAllRowsExpanded<
 }
 
 /**
- * Returns expanded depth for the table.
+ * Computes the deepest expanded row id depth.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Row ids are split on `.`; expanded-all state scans the current row model,
+ * while explicit expanded state scans its expanded id keys.
  *
  * @example
  * ```ts
- * const value = table_getExpandedDepth(table)
+ * const depth = table_getExpandedDepth(table)
  * ```
  */
 export function table_getExpandedDepth<
@@ -225,9 +236,11 @@ export function table_getExpandedDepth<
 }
 
 /**
- * Toggles expanded for a row.
+ * Expands or collapses this row.
  *
- * The update is routed through the table state updater for the owning feature state slice.
+ * Omitting `expanded` toggles the row. If the current state is expanded-all,
+ * the function first materializes that state into a row-id map before applying
+ * the row-specific change.
  *
  * @example
  * ```ts
@@ -270,13 +283,14 @@ export function row_toggleExpanded<
 }
 
 /**
- * Returns is expanded for a row.
+ * Checks whether this row is expanded.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * `options.getIsRowExpanded` can override state-derived behavior. Otherwise
+ * the row is expanded when expanded state is `true` or contains this row id.
  *
  * @example
  * ```ts
- * const value = row_getIsExpanded(row)
+ * const expanded = row_getIsExpanded(row)
  * ```
  */
 export function row_getIsExpanded<
@@ -292,13 +306,14 @@ export function row_getIsExpanded<
 }
 
 /**
- * Returns whether a row can use expand.
+ * Checks whether this row can be expanded.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.getRowCanExpand` wins when provided. Otherwise rows can expand when
+ * expanding is enabled and the row has subRows.
  *
  * @example
  * ```ts
- * const value = row_getCanExpand(row)
+ * const canExpand = row_getCanExpand(row)
  * ```
  */
 export function row_getCanExpand<
@@ -312,13 +327,13 @@ export function row_getCanExpand<
 }
 
 /**
- * Returns is all parents expanded for a row.
+ * Checks whether every ancestor of this row is expanded.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * The current row is not considered; only its parent chain is walked.
  *
  * @example
  * ```ts
- * const value = row_getIsAllParentsExpanded(row)
+ * const parentsExpanded = row_getIsAllParentsExpanded(row)
  * ```
  */
 export function row_getIsAllParentsExpanded<
@@ -330,20 +345,20 @@ export function row_getIsAllParentsExpanded<
 
   while (isFullyExpanded && currentRow.parentId) {
     currentRow = row.table.getRow(currentRow.parentId, true)
-    isFullyExpanded = row_getIsExpanded(row)
+    isFullyExpanded = row_getIsExpanded(currentRow)
   }
 
   return isFullyExpanded
 }
 
 /**
- * Returns an event handler for toggling expanded handler.
+ * Creates a row control handler that toggles this row's expanded state.
  *
- * The handler is intended for direct use in row-level controls such as expansion or selection buttons.
+ * The handler is a no-op when the row cannot expand.
  *
  * @example
  * ```ts
- * const value = row_getToggleExpandedHandler(row)
+ * const onClick = row_getToggleExpandedHandler(row)
  * ```
  */
 export function row_getToggleExpandedHandler<

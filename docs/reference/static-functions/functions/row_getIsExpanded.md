@@ -9,11 +9,12 @@ title: row_getIsExpanded
 function row_getIsExpanded<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:282](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L282)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:296](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L296)
 
-Returns is expanded for a row.
+Checks whether this row is expanded.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+`options.getIsRowExpanded` can override state-derived behavior. Otherwise
+the row is expanded when expanded state is `true` or contains this row id.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getIsExpanded(row)
+const expanded = row_getIsExpanded(row)
 ```

@@ -9,11 +9,12 @@ title: row_getIsPinned
 function row_getIsPinned<TFeatures, TData>(row): RowPinningPosition;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L223)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L235)
 
-Returns is pinned for a row.
+Reads this row's current pinning region.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+Rows listed in `state.rowPinning.top` return `'top'`, rows listed in
+`bottom` return `'bottom'`, and unpinned rows return `false`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getIsPinned(row)
+const position = row_getIsPinned(row)
 ```

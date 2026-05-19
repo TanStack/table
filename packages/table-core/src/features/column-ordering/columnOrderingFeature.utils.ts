@@ -9,13 +9,14 @@ import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeatu
 import type { ColumnOrderState } from './columnOrderingFeature.types'
 
 /**
- * Returns the default column order state.
+ * Creates the default column order state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty array, meaning leaf columns keep their natural
+ * definition order. Reset APIs use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultColumnOrderState()
+ * const order = getDefaultColumnOrderState()
  * ```
  */
 export function getDefaultColumnOrderState(): ColumnOrderState {
@@ -23,13 +24,14 @@ export function getDefaultColumnOrderState(): ColumnOrderState {
 }
 
 /**
- * Returns index for a column.
+ * Finds this column's index within a visible pinning region.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Pass `'left'`, `'center'`, or `'right'` to search that region; omit the
+ * position to search the full visible leaf column list.
  *
  * @example
  * ```ts
- * const value = column_getIndex(column)
+ * const index = column_getIndex(column, 'center')
  * ```
  */
 export function column_getIndex<
@@ -45,13 +47,13 @@ export function column_getIndex<
 }
 
 /**
- * Returns is first column for a column.
+ * Checks whether this column is the first visible column in a pinning region.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The same `position` semantics as `column_getIndex` apply.
  *
  * @example
  * ```ts
- * const value = column_getIsFirstColumn(column)
+ * const isFirst = column_getIsFirstColumn(column, 'left')
  * ```
  */
 export function column_getIsFirstColumn<
@@ -67,13 +69,13 @@ export function column_getIsFirstColumn<
 }
 
 /**
- * Returns is last column for a column.
+ * Checks whether this column is the last visible column in a pinning region.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The same `position` semantics as `column_getIndex` apply.
  *
  * @example
  * ```ts
- * const value = column_getIsLastColumn(column)
+ * const isLast = column_getIsLastColumn(column, 'right')
  * ```
  */
 export function column_getIsLastColumn<
@@ -89,13 +91,14 @@ export function column_getIsLastColumn<
 }
 
 /**
- * Updates the table's column order state slice.
+ * Routes a column order updater through the table's column-order change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next ordered id array or a function of the previous
+ * array, matching the instance `table.setColumnOrder` behavior.
  *
  * @example
  * ```ts
- * table_setColumnOrder(table, (old) => old)
+ * table_setColumnOrder(table, ['firstName', 'lastName', 'age'])
  * ```
  */
 export function table_setColumnOrder<
@@ -106,9 +109,10 @@ export function table_setColumnOrder<
 }
 
 /**
- * Resets the table's column order state slice.
+ * Resets `columnOrder` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.columnOrder` when it
+ * exists. Passing `true` ignores initial state and resets to `[]`.
  *
  * @example
  * ```ts
@@ -127,13 +131,14 @@ export function table_resetColumnOrder<
 }
 
 /**
- * Returns order columns fn for the table.
+ * Creates the ordering function used to arrange leaf columns.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The returned function applies `state.columnOrder`, preserves unspecified
+ * columns in their original order, then delegates to grouping rules.
  *
  * @example
  * ```ts
- * const value = table_getOrderColumnsFn(table)
+ * const orderColumnsForTable = table_getOrderColumnsFn(table)
  * ```
  */
 export function table_getOrderColumnsFn<
@@ -156,11 +161,15 @@ export function table_getOrderColumnsFn<
         string,
         Column_Internal<TFeatures, TData, unknown>
       >()
-      for (const column of columns) remaining.set(column.id, column)
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i]!
+        remaining.set(column.id, column)
+      }
 
       // Place columns in the requested order, removing each as it's used
       // (handles duplicates and unknown ids in columnOrder)
-      for (const id of columnOrder) {
+      for (let i = 0; i < columnOrder.length; i++) {
+        const id = columnOrder[i]!
         const column = remaining.get(id)
         if (column) {
           orderedColumns.push(column)
@@ -169,7 +178,8 @@ export function table_getOrderColumnsFn<
       }
 
       // Append leftover columns in their original order
-      for (const column of columns) {
+      for (let i = 0; i < columns.length; i++) {
+        const column = columns[i]!
         if (remaining.has(column.id)) orderedColumns.push(column)
       }
     }
@@ -179,13 +189,15 @@ export function table_getOrderColumnsFn<
 }
 
 /**
- * Orders leaf columns with manual ordering, grouping, and pinning rules.
+ * Applies grouped-column placement rules to an already ordered leaf-column list.
  *
- * This helper is used by the column ordering feature to produce the final visible column order.
+ * `groupedColumnMode: 'remove'` drops grouped columns from the list.
+ * `groupedColumnMode: 'reorder'` moves grouped columns to the front in grouping
+ * state order.
  *
  * @example
  * ```ts
- * const orderedColumns = orderColumns(leafColumns, columnOrder, grouping, groupedColumnMode)
+ * const orderedColumns = orderColumns(table, leafColumns)
  * ```
  */
 export function orderColumns<
@@ -214,11 +226,14 @@ export function orderColumns<
     string,
     Column_Internal<TFeatures, TData, unknown>
   >()
-  for (const col of leafColumns) leafColumnsById.set(col.id, col)
+  for (let i = 0; i < leafColumns.length; i++) {
+    const col = leafColumns[i]!
+    leafColumnsById.set(col.id, col)
+  }
 
   const groupingColumns: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (const g of grouping) {
-    const col = leafColumnsById.get(g)
+  for (let i = 0; i < grouping.length; i++) {
+    const col = leafColumnsById.get(grouping[i]!)
     if (col) groupingColumns.push(col)
   }
 

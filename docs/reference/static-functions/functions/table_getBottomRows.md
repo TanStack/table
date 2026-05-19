@@ -9,11 +9,12 @@ title: table_getBottomRows
 function table_getBottomRows<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L161)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:170](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L170)
 
-Returns bottom rows for the table.
+Resolves the visible rows pinned to the bottom region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The result follows `state.rowPinning.bottom` order and marks each row with
+`position = 'bottom'`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getBottomRows(table)
+const rows = table_getBottomRows(table)
 ```

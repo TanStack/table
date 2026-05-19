@@ -9,11 +9,13 @@ title: table_setPagination
 function table_setPagination<TFeatures, TData>(table, updater): void | undefined;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L60)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L65)
 
-Updates the table's pagination state slice.
+Routes a pagination updater through the table's pagination change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next state object or a function of the previous
+`PaginationState`; controlled state and external atoms observe the same
+updater path as the instance API.
 
 ## Type Parameters
 

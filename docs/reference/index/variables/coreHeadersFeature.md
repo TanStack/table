@@ -9,6 +9,6 @@ title: coreHeadersFeature
 const coreHeadersFeature: TableFeature<CoreHeadersFeatureConstructors<TableFeatures, RowData>>;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.ts#L103)
+Defined in: [core/headers/coreHeadersFeature.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.ts#L78)
 
 The Core Headers feature provides the core header functionality.

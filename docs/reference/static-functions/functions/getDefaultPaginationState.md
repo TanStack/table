@@ -9,11 +9,12 @@ title: getDefaultPaginationState
 function getDefaultPaginationState(): PaginationState;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L20)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L21)
 
-Returns the default pagination state.
+Creates the default pagination state used by the pagination feature.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+The feature default starts at the first page with a page size of 10. Reset
+APIs use this value when `defaultState` is `true`.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultPaginationState()
+const pagination = getDefaultPaginationState()
 ```

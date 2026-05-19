@@ -9,11 +9,12 @@ title: table_getExpandedRowModel
 function table_getExpandedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:186](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L186)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L194)
 
-Returns expanded row model for the table.
+Resolves the row model after expanded rows have been flattened into view.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+When `manualExpanding` is enabled, or no expanded row-model factory was
+registered, this returns the pre-expanded row model unchanged.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getExpandedRowModel(table)
+const expandedRows = table_getExpandedRowModel(table)
 ```

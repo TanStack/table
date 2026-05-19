@@ -9,11 +9,12 @@ title: column_getCanSort
 function column_getCanSort<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:344](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L344)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:357](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L357)
 
-Returns whether a column can use sort.
+Checks whether this accessor column can participate in sorting.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+The column must have an accessor and sorting must be enabled by both the
+column definition and table options.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanSort(column)
+const canSort = column_getCanSort(column)
 ```

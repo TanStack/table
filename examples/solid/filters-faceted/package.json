@@ -12,12 +12,12 @@
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.12",
+    "vite": "^8.0.13",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "@tanstack/solid-pacer": "^0.21.0",
-    "@tanstack/solid-table": "^9.0.0-alpha.46",
-    "solid-js": "^1.9.12"
+    "@tanstack/solid-pacer": "^0.21.1",
+    "@tanstack/solid-table": "^9.0.0-alpha.49",
+    "solid-js": "^1.9.13"
   }
 }

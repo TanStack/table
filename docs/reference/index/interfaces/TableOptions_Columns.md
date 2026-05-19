@@ -5,7 +5,7 @@ title: TableOptions_Columns
 
 # Interface: TableOptions\_Columns\<TFeatures, TData, TValue\>
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L60)
+Defined in: [core/columns/coreColumnsFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L61)
 
 ## Extended by
 
@@ -33,7 +33,7 @@ Defined in: [core/columns/coreColumnsFeature.types.ts:60](https://github.com/Tan
 columns: readonly ColumnDef<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L68)
+Defined in: [core/columns/coreColumnsFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L69)
 
 The array of column defs to use for the table.
 
@@ -45,6 +45,6 @@ The array of column defs to use for the table.
 optional defaultColumn: Partial<ColumnDef<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L72)
+Defined in: [core/columns/coreColumnsFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L73)
 
 Default column options to use for all column defs supplied to the table.

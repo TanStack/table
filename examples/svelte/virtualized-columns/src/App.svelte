@@ -21,15 +21,35 @@
     rowSortingFeature,
   })
 
-  const columns = makeColumns(1_000)
-  let data = $state(makeData(1_000, columns))
-  const refreshData = () => { data = makeData(1_000, columns) }
-  const stressTest = () => { data = makeData(10_000, columns) }
+  const DEFAULT_ROW_COUNT = 1_000
+  const DEFAULT_COLUMN_COUNT = 1_000
+  const STRESS_ROW_COUNT = 10_000
+  const STRESS_COLUMN_COUNT = 10_000
+
+  const initialColumns = makeColumns(DEFAULT_COLUMN_COUNT)
+  let columns = $state(initialColumns)
+  let data = $state(makeData(DEFAULT_ROW_COUNT, initialColumns))
+
+  const refreshData = () => {
+    columns = makeColumns(DEFAULT_COLUMN_COUNT)
+    data = makeData(DEFAULT_ROW_COUNT, columns)
+  }
+
+  const stressTestRows = () => {
+    data = makeData(STRESS_ROW_COUNT, columns)
+  }
+
+  const stressTestColumns = () => {
+    columns = makeColumns(STRESS_COLUMN_COUNT)
+    data = makeData(data.length, columns)
+  }
 
   const table = createTable({
     _features,
     _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-    columns,
+    get columns() {
+      return columns
+    },
     get data() {
       return data
     },
@@ -117,7 +137,10 @@
 <div class="app">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (10k rows)</button>
+    <button onclick={() => stressTestRows()}>Stress Test (10k rows)</button>
+    <button onclick={() => stressTestColumns()}>
+      Stress Test (10k columns)
+    </button>
   </div>
   <div>({columns.length.toLocaleString()} columns)</div>
   <div>({data.length.toLocaleString()} rows)</div>

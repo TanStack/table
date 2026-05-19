@@ -9,11 +9,12 @@ title: table_getToggleAllRowsSelectedHandler
 function table_getToggleAllRowsSelectedHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:357](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L357)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:370](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L370)
 
-Returns an event handler for all rows selected handler.
+Creates a checkbox-style handler that selects or deselects all rows.
 
-The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+The handler reads `event.target.checked`, so it is intended for controls whose
+checked state means "all rows selected".
 
 ## Type Parameters
 
@@ -50,5 +51,5 @@ The handler calls the matching table toggle API and can be attached directly to 
 ## Example
 
 ```ts
-const value = table_getToggleAllRowsSelectedHandler(table)
+const onChange = table_getToggleAllRowsSelectedHandler(table)
 ```

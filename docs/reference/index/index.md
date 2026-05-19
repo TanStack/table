@@ -281,7 +281,6 @@ title: index
 - [HeaderGroup](type-aliases/HeaderGroup.md)
 - [IdentifiedColumnDef](type-aliases/IdentifiedColumnDef.md)
 - [InitRowInstanceData](type-aliases/InitRowInstanceData.md)
-- [MemoFnMeta](type-aliases/MemoFnMeta.md)
 - [NoInfer](type-aliases/NoInfer.md)
 - [OnChangeFn](type-aliases/OnChangeFn.md)
 - [PartialKeys](type-aliases/PartialKeys.md)
@@ -313,7 +312,6 @@ title: index
 
 ## Variables
 
-- [$internalMemoFnMeta](variables/$internalMemoFnMeta.md)
 - [aggregationFn\_count](variables/aggregationFn_count.md)
 - [aggregationFn\_extent](variables/aggregationFn_extent.md)
 - [aggregationFn\_max](variables/aggregationFn_max.md)
@@ -418,12 +416,9 @@ title: index
 - [functionalUpdate](functions/functionalUpdate.md)
 - [getFunctionNameInfo](functions/getFunctionNameInfo.md)
 - [getInitialTableState](functions/getInitialTableState.md)
-- [getMemoFnMeta](functions/getMemoFnMeta.md)
 - [isFunction](functions/isFunction.md)
-- [isNumberArray](functions/isNumberArray.md)
 - [makeStateUpdater](functions/makeStateUpdater.md)
 - [memo](functions/memo.md)
-- [noop](functions/noop.md)
 - [tableFeatures](functions/tableFeatures.md)
 - [tableMemo](functions/tableMemo.md)
 - [tableOptions](functions/tableOptions.md)

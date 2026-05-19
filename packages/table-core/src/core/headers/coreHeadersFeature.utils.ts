@@ -1,9 +1,4 @@
-import {
-  getDefaultColumnPinningState,
-  table_getCenterHeaderGroups,
-  table_getLeftHeaderGroups,
-  table_getRightHeaderGroups,
-} from '../../features/column-pinning/columnPinningFeature.utils'
+import { getDefaultColumnPinningState } from '../../features/column-pinning/columnPinningFeature.utils'
 import {
   column_getIsVisible,
   table_getVisibleLeafColumns,
@@ -18,13 +13,14 @@ import type { Header_Header } from './coreHeadersFeature.types'
 import type { Column } from '../../types/Column'
 
 /**
- * Returns leaf headers for a header.
+ * Walks a header tree and collects all descendant leaf headers.
  *
- * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ * The header itself is included after its descendants, matching the recursive
+ * shape used by nested header groups.
  *
  * @example
  * ```ts
- * const value = header_getLeafHeaders(header)
+ * const leafHeaders = header_getLeafHeaders(header)
  * ```
  */
 export function header_getLeafHeaders<
@@ -47,13 +43,13 @@ export function header_getLeafHeaders<
 }
 
 /**
- * Returns context for a header.
+ * Builds the render context passed to a column's `header` or `footer` template.
  *
- * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ * The context contains the header, its column, and the owning table instance.
  *
  * @example
  * ```ts
- * const value = header_getContext(header)
+ * const context = header_getContext(header)
  * ```
  */
 export function header_getContext<
@@ -69,13 +65,14 @@ export function header_getContext<
 }
 
 /**
- * Returns header groups for the table.
+ * Builds visible header groups for the current column tree.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Column visibility and pinning are applied before groups are built. When no
+ * columns are pinned, the fast path skips pin partitioning.
  *
  * @example
  * ```ts
- * const value = table_getHeaderGroups(table)
+ * const headerGroups = table_getHeaderGroups(table)
  * ```
  */
 export function table_getHeaderGroups<
@@ -90,11 +87,17 @@ export function table_getHeaderGroups<
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
   ) as Array<Column<TFeatures, TData, unknown>>
+
+  // Fast path: no columns are pinned — skip per-side lookups, partition, and spread.
+  if (!left.length && !right.length) {
+    return buildHeaderGroups(allColumns, leafColumns, table)
+  }
+
   const leafColumnsById = table.getAllLeafColumnsById()
 
   const leftColumns: typeof leafColumns = []
-  for (const columnId of left) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < left.length; i++) {
+    const column = leafColumnsById[left[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -104,8 +107,8 @@ export function table_getHeaderGroups<
   }
 
   const rightColumns: typeof leafColumns = []
-  for (const columnId of right) {
-    const column = leafColumnsById[columnId]
+  for (let i = 0; i < right.length; i++) {
+    const column = leafColumnsById[right[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -118,23 +121,22 @@ export function table_getHeaderGroups<
     (column) => !left.includes(column.id) && !right.includes(column.id),
   )
 
-  const headerGroups = buildHeaderGroups(
+  return buildHeaderGroups(
     allColumns,
     [...leftColumns, ...centerColumns, ...rightColumns],
     table,
   )
-
-  return headerGroups
 }
 
 /**
- * Returns footer groups for the table.
+ * Builds footer groups by reversing the current header groups.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Footer rendering uses the same header objects and grouping structure, but
+ * renders them from leaf level back toward the root.
  *
  * @example
  * ```ts
- * const value = table_getFooterGroups(table)
+ * const footerGroups = table_getFooterGroups(table)
  * ```
  */
 export function table_getFooterGroups<
@@ -146,13 +148,14 @@ export function table_getFooterGroups<
 }
 
 /**
- * Returns flat headers for the table.
+ * Flattens every header from every header group into one array.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result includes parent headers and placeholder headers, in header-group
+ * order from top to bottom.
  *
  * @example
  * ```ts
- * const value = table_getFlatHeaders(table)
+ * const flatHeaders = table_getFlatHeaders(table)
  * ```
  */
 export function table_getFlatHeaders<
@@ -160,50 +163,38 @@ export function table_getFlatHeaders<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
-  return headerGroups
-    .map((headerGroup) => {
-      return headerGroup.headers
-    })
-    .flat()
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < headerGroups.length; i++) {
+    const headers = headerGroups[i]!.headers
+    for (let j = 0; j < headers.length; j++) {
+      result.push(headers[j]!)
+    }
+  }
+  return result
 }
 
 /**
- * Returns leaf headers for the table.
+ * Collects only the leaf headers from the current header tree.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Parent/group headers are skipped, making the result suitable for rendering
+ * one header per visible leaf column.
  *
  * @example
  * ```ts
- * const value = table_getLeafHeaders(table)
+ * const leafHeaders = table_getLeafHeaders(table)
  * ```
  */
 export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const left = callMemoOrStaticFn(
-    table,
-    'getLeftHeaderGroups',
-    table_getLeftHeaderGroups,
-  )
-  const center = callMemoOrStaticFn(
-    table,
-    'getCenterHeaderGroups',
-    table_getCenterHeaderGroups,
-  )
-  const right = callMemoOrStaticFn(
-    table,
-    'getRightHeaderGroups',
-    table_getRightHeaderGroups,
-  )
-
-  return [
-    ...(left[0]?.headers ?? []),
-    ...(center[0]?.headers ?? []),
-    ...(right[0]?.headers ?? []),
-  ]
-    .map((header) => {
-      return header.getLeafHeaders()
-    })
-    .flat()
+  const topHeaders = table.getHeaderGroups()[0]?.headers ?? []
+  const result: Array<Header<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < topHeaders.length; i++) {
+    const leafHeaders = topHeaders[i]!.getLeafHeaders()
+    for (let j = 0; j < leafHeaders.length; j++) {
+      result.push(leafHeaders[j]!)
+    }
+  }
+  return result
 }

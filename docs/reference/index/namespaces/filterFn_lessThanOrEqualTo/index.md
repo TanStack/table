@@ -5,7 +5,9 @@ title: filterFn_lessThanOrEqualTo
 
 # filterFn\_lessThanOrEqualTo
 
-Filter function for checking if a number is less than or equal to a given number.
+Keeps rows whose value is less than or equal to the filter value.
+
+This is implemented as the inverse of greater-than comparison.
 
 ## Functions
 

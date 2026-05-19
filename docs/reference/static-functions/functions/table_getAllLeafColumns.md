@@ -9,11 +9,12 @@ title: table_getAllLeafColumns
 function table_getAllLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L198)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L208)
 
-Returns all leaf columns for the table.
+Collects all terminal leaf columns in their current table order.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Column ordering features can reorder the collected leaves before the result
+is returned.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getAllLeafColumns(table)
+const leafColumns = table_getAllLeafColumns(table)
 ```

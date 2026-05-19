@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/angular-table",
-  "version": "9.0.0-alpha.46",
+  "version": "9.0.0-alpha.49",
   "description": "Headless UI for building powerful tables & datagrids for Angular.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,7 +18,8 @@
     "angular",
     "table",
     "angular-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "module": "dist/fesm2022/tanstack-angular-table.mjs",
@@ -46,7 +47,8 @@
   "files": [
     "dist",
     "src",
-    "static-functions"
+    "static-functions",
+    "skills"
   ],
   "scripts": {
     "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json",
@@ -66,8 +68,8 @@
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.5.1",
     "@analogjs/vitest-angular": "^2.5.1",
-    "@angular/core": "^21.2.12",
-    "@angular/platform-browser": "^21.2.12",
+    "@angular/core": "^21.2.13",
+    "@angular/platform-browser": "^21.2.13",
     "ng-packagr": "^21.2.3",
     "typescript": "6.0.3"
   },

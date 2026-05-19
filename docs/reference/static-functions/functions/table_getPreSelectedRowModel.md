@@ -9,11 +9,12 @@ title: table_getPreSelectedRowModel
 function table_getPreSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L149)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L155)
 
-Returns pre selected row model for the table.
+Reads the row model before row selection is projected into selected rows.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Selection does not alter the base row pipeline, so this returns the core row
+model.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getPreSelectedRowModel(table)
+const rowsBeforeSelection = table_getPreSelectedRowModel(table)
 ```

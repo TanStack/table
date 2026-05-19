@@ -20,6 +20,12 @@ import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
  */
 export interface TableState_Plugins<TFeatures extends TableFeatures> {}
 
+/**
+ * Complete table state for a specific feature set.
+ *
+ * State slices are included only when their feature is present in `TFeatures`,
+ * then custom feature/plugin state is mixed in.
+ */
 export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
   | ('columnFilteringFeature' extends keyof TFeatures
       ? TableState_ColumnFiltering
@@ -71,6 +77,12 @@ export type TableState<TFeatures extends TableFeatures> = UnionToIntersection<
 // > &
 //   TableState_Plugins<TFeatures>
 
+/**
+ * Internal broad state shape containing every stock feature state slice.
+ *
+ * Feature internals use this when they may need to inspect optional slices owned
+ * by other features.
+ */
 export type TableState_All = Partial<
   TableState_ColumnFiltering &
     TableState_ColumnGrouping &

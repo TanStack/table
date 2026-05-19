@@ -10,19 +10,21 @@ export interface Table_Headers<
   TData extends RowData,
 > {
   /**
-   * Returns all header groups for the table.
+   * Builds the visible header groups for the current column tree, visibility,
+   * and pinning state.
    */
   getHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Returns the footer groups for the table.
+   * Builds footer groups by reversing the current header group order.
    */
   getFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Returns headers for all columns in the table, including parent headers.
+   * Flattens every header from every header group, including parent and
+   * placeholder headers.
    */
   getFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * Returns headers for all leaf columns in the table, (not including parent headers).
+   * Collects only leaf headers, excluding parent/group headers.
    */
   getLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
 }

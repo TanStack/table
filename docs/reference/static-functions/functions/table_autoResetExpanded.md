@@ -9,11 +9,13 @@ title: table_autoResetExpanded
 function table_autoResetExpanded<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L35)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L38)
 
-Schedules an automatic reset for expanded.
+Schedules an expanded-state reset after row-structure changes.
 
-The reset only runs when the related feature options allow automatic resets for the current table state change.
+The reset runs when `autoResetAll`, `autoResetExpanded`, or the default
+client-side expanding behavior allows it. Manual expanding opts out unless
+the reset options explicitly opt back in.
 
 ## Type Parameters
 

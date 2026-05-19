@@ -14,8 +14,9 @@ function getRowPrototype<
 >(table: Table_Internal<TFeatures, TData>): object {
   if (!table._rowPrototype) {
     table._rowPrototype = { table }
-    for (const feature of Object.values(table._features)) {
-      feature.assignRowPrototype?.(table._rowPrototype, table)
+    const features = Object.values(table._features)
+    for (let i = 0; i < features.length; i++) {
+      features[i]!.assignRowPrototype?.(table._rowPrototype, table)
     }
   }
   return table._rowPrototype
@@ -56,8 +57,9 @@ export const constructRow = <
   row.subRows = subRows ?? []
 
   // Initialize instance-specific data (e.g., caches) for features that need it
-  for (const feature of Object.values(table._features)) {
-    feature.initRowInstanceData?.(row)
+  const features = Object.values(table._features)
+  for (let i = 0; i < features.length; i++) {
+    features[i]!.initRowInstanceData?.(row)
   }
 
   return row as Row<TFeatures, TData>
