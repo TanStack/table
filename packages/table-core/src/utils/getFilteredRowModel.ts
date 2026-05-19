@@ -49,7 +49,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
           resolvedColumnFilters.push({
             id: d.id,
             filterFn,
-            resolvedValue: filterFn.resolveFilterValue?.(d.value) ?? d.value,
+            resolvedValue: filterFn.resolveFilterValue?.(d.value, column) ?? d.value,
           })
         })
 
@@ -73,7 +73,7 @@ export function getFilteredRowModel<TData extends RowData>(): (
               id: column.id,
               filterFn: globalFilterFn,
               resolvedValue:
-                globalFilterFn.resolveFilterValue?.(globalFilter) ??
+                globalFilterFn.resolveFilterValue?.(globalFilter, column) ??
                 globalFilter,
             })
           })
