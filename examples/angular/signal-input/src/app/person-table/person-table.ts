@@ -7,6 +7,7 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import type { ColumnDef, PaginationState } from '@tanstack/angular-table'
 import type { Person } from '../makeData'
 
@@ -67,5 +68,11 @@ export class PersonTable {
 
   onPageSizeChange(event: any) {
     this.table.setPageSize(Number(event.target.value))
+  }
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'signal-input',
+    }))
   }
 }

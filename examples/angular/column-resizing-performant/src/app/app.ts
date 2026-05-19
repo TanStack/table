@@ -13,6 +13,7 @@ import {
   shallow,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import { TableResizableCells } from './resizable-cell/resizable-cell'
 import type { Person } from './makeData'
@@ -128,4 +129,10 @@ export class App {
 
   refreshData = () => this.data.set(makeData(200))
   stressTest = () => this.data.set(makeData(2_000))
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'column-resizing-performant',
+    }))
+  }
 }

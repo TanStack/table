@@ -5,6 +5,11 @@ import { createAppColumnHelper, useAppTable } from './hooks/table'
 import { makeData, makeProductData } from './makeData'
 import type { Person, Product } from './makeData'
 import './index.css'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 // Import cell components directly - they use useCellContext internally
 
 // Create column helpers with TFeatures already bound - only need TData!
@@ -79,6 +84,8 @@ function UsersTable() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table, 'Users table')
 
   return (
     // Main selector on AppTable - selects all needed state in one place
@@ -275,6 +282,8 @@ function ProductsTable() {
     (state) => state, // default selector
   )
 
+  useTanStackTableDevtools(table, 'Products table')
+
   return (
     <table.AppTable
       selector={(state) => ({
@@ -436,5 +445,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

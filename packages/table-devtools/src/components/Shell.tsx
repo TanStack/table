@@ -49,17 +49,19 @@ export function Shell() {
       </Header>
 
       <div class={styles().mainContainer}>
-        <Show when={tableOptions().length > 0}>
-          <Show when={selectedTargetId() ?? EMPTY_PANEL_KEY} keyed>
-            {(_selectedTargetId) => (
-              <Select
-                label="Table"
-                options={tableOptions()}
-                value={selectedTargetId()}
-                onChange={(value) => setSelectedTargetId(value)}
-              />
-            )}
-          </Show>
+        <Show when={tableOptions().length > 0 && tableOptions()}>
+          {(tableOptions) => (
+            <Show when={selectedTargetId() ?? EMPTY_PANEL_KEY}>
+              {(selectedTargetId) => (
+                <Select
+                  label="Table"
+                  options={tableOptions()}
+                  value={selectedTargetId()}
+                  onChange={(value) => setSelectedTargetId(value)}
+                />
+              )}
+            </Show>
+          )}
         </Show>
 
         <div class={styles().tabBar}>

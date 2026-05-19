@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core'
-import { tableDevtoolsPlugin } from '@tanstack/angular-table-devtools'
 import { UsersTable } from './components/users-table/users-table'
 import { ProductsTable } from './components/products-table/products-table'
-import type { TanStackDevtoolsAngularPlugin } from '@tanstack/angular-devtools'
 
 @Component({
   selector: 'app-root',
@@ -26,11 +24,4 @@ import type { TanStackDevtoolsAngularPlugin } from '@tanstack/angular-devtools'
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class App {
-  readonly plugins: Array<TanStackDevtoolsAngularPlugin> = [
-    tableDevtoolsPlugin(() => ({
-      theme: 'dark',
-      devtoolsOpen: true,
-    })),
-  ]
-}
+export class App {}

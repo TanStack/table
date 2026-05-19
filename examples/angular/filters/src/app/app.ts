@@ -19,6 +19,7 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import { TableFilter } from './table-filter/table-filter'
 import type { ColumnFiltersState, Updater } from '@tanstack/angular-table'
@@ -120,4 +121,10 @@ export class App {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(200_000))
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'filters',
+    }))
+  }
 }

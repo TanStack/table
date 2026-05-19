@@ -71,6 +71,9 @@ export class ProductsTable {
   stressTest = () => this.data.set(makeProductData(200_000))
 
   constructor() {
-    injectTanStackTableDevtools(() => this.table, 'products-table')
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'products-table',
+    }))
   }
 }

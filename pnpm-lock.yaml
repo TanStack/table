@@ -114,9 +114,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -160,9 +166,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -206,9 +218,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -252,9 +270,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -298,9 +322,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -344,9 +374,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -390,9 +426,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -437,8 +479,8 @@ importers:
         specifier: ^10.4.0
         version: 10.4.0
       '@tanstack/angular-devtools':
-        specifier: ^0.0.2
-        version: 0.0.2(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(csstype@3.2.3)(solid-js@1.9.12)
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
@@ -485,9 +527,15 @@ importers:
       '@angular/router':
         specifier: ^21.2.12
         version: 21.2.12(@angular/common@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(@angular/platform-browser@21.2.12(@angular/animations@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2)))(@angular/common@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -531,9 +579,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -577,9 +631,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -623,12 +683,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-pacer':
         specifier: ^0.23.0
         version: 0.23.0(@angular/common@21.2.12(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -672,9 +738,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -782,9 +854,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -831,9 +909,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -880,9 +964,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -929,9 +1019,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -975,9 +1071,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -997,6 +1099,8 @@ importers:
       typescript:
         specifier: 6.0.3
         version: 6.0.3
+
+  examples/lit/basic: {}
 
   examples/lit/basic-app-table:
     dependencies:
@@ -1069,6 +1173,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/lit/basic-external-store: {}
 
   examples/lit/basic-table-controller:
     dependencies:
@@ -1635,6 +1741,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/preact/basic: {}
+
   examples/preact/basic-external-atoms:
     dependencies:
       '@faker-js/faker':
@@ -1684,6 +1792,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/preact/basic-external-store: {}
 
   examples/preact/basic-subscribe:
     dependencies:
@@ -2283,6 +2393,16 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/qwik/basic: {}
+
+  examples/qwik/filters: {}
+
+  examples/qwik/row-selection: {}
+
+  examples/qwik/sorting: {}
+
+  examples/react/basic: {}
+
   examples/react/basic-external-atoms:
     dependencies:
       '@faker-js/faker':
@@ -2368,6 +2488,10 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/basic-external-store: {}
+
+  examples/react/basic-shadcn: {}
 
   examples/react/basic-subscribe:
     dependencies:
@@ -2537,6 +2661,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/bootstrap: {}
 
   examples/react/column-dnd:
     dependencies:
@@ -2950,6 +3076,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/react/component-lib-shadcn-radix: {}
+
   examples/react/composable-tables:
     dependencies:
       '@faker-js/faker':
@@ -2974,6 +3102,12 @@ importers:
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.60.3)
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.14))(@types/react@19.2.14)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.12)
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -2992,6 +3126,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/custom-features: {}
 
   examples/react/custom-plugin:
     dependencies:
@@ -3035,6 +3171,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/editable-data: {}
 
   examples/react/expanding:
     dependencies:
@@ -3217,6 +3355,12 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/react/full-width-resizable-table: {}
+
+  examples/react/full-width-table: {}
+
+  examples/react/fully-controlled: {}
+
   examples/react/grouping:
     dependencies:
       '@faker-js/faker':
@@ -3256,6 +3400,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/kitchen-sink: {}
 
   examples/react/kitchen-sink-hero-ui:
     dependencies:
@@ -3551,6 +3697,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/kitchen-sink-shadcn: {}
 
   examples/react/kitchen-sink-shadcn-base:
     dependencies:
@@ -4225,6 +4373,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/react/material-ui-pagination: {}
+
   examples/react/pagination:
     dependencies:
       '@faker-js/faker':
@@ -4267,6 +4417,10 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/pagination-controlled: {}
+
+  examples/react/query-router-search-params: {}
 
   examples/react/row-dnd:
     dependencies:
@@ -4415,6 +4569,10 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/react/shadcn-basic: {}
+
+  examples/react/shadcn-kitchen-sink: {}
+
   examples/react/sorting:
     dependencies:
       '@faker-js/faker':
@@ -4455,6 +4613,10 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/react/state-external-state-slices: {}
+
+  examples/react/state-external-store: {}
+
   examples/react/sub-components:
     dependencies:
       '@faker-js/faker':
@@ -4494,6 +4656,10 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/react/tanstack-form: {}
+
+  examples/react/tanstack-query: {}
 
   examples/react/virtualized-columns:
     dependencies:
@@ -4860,6 +5026,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/solid/basic: {}
+
   examples/solid/basic-app-table:
     dependencies:
       '@faker-js/faker':
@@ -4929,6 +5097,10 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0))
 
+  examples/solid/basic-external-store: {}
+
+  examples/solid/basic-table-helper: {}
+
   examples/solid/basic-use-table:
     dependencies:
       '@tanstack/solid-table':
@@ -4947,6 +5119,8 @@ importers:
       vite-plugin-solid:
         specifier: ^2.11.12
         version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0))
+
+  examples/solid/bootstrap: {}
 
   examples/solid/column-groups:
     dependencies:
@@ -5574,6 +5748,8 @@ importers:
         specifier: ^2.11.12
         version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.12)(vite@8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0))
 
+  examples/svelte/basic: {}
+
   examples/svelte/basic-app-table:
     devDependencies:
       '@faker-js/faker':
@@ -5698,6 +5874,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/svelte/basic-external-store: {}
+
   examples/svelte/basic-snippets:
     devDependencies:
       '@faker-js/faker':
@@ -5727,6 +5905,8 @@ importers:
       vite:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
+
+  examples/svelte/basic-table-helper: {}
 
   examples/svelte/column-groups:
     devDependencies:
@@ -6573,6 +6753,8 @@ importers:
         specifier: ^8.0.12
         version: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
+  examples/vue/basic: {}
+
   examples/vue/basic-external-atoms:
     dependencies:
       '@faker-js/faker':
@@ -7190,6 +7372,8 @@ importers:
         specifier: ^3.2.9
         version: 3.2.9(typescript@6.0.3)
 
+  examples/vue/pagination-controlled: {}
+
   examples/vue/row-pinning:
     dependencies:
       '@faker-js/faker':
@@ -7545,8 +7729,8 @@ importers:
         specifier: '>=21.0.0'
         version: 21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2)
       '@tanstack/devtools-utils':
-        specifier: https://pkg.pr.new/TanStack/devtools/@tanstack/devtools-utils@368
-        version: https://pkg.pr.new/TanStack/devtools/@tanstack/devtools-utils@368(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(@types/react@19.2.14)(preact@10.29.1)(react@19.2.6)(solid-js@1.9.12)(vue@3.5.34(typescript@6.0.3))
+        specifier: ^0.5.0
+        version: 0.5.0(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(@types/react@19.2.14)(preact@10.29.1)(react@19.2.6)(solid-js@1.9.12)(vue@3.5.34(typescript@6.0.3))
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -7610,6 +7794,8 @@ importers:
       preact:
         specifier: ^10.29.1
         version: 10.29.1
+
+  packages/qwik-table: {}
 
   packages/react-table:
     dependencies:
@@ -12475,8 +12661,8 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@tanstack/angular-devtools@0.0.2':
-    resolution: {integrity: sha512-r6y1+wnoiPeGKMkMGqdXOueO/lNNrAZCEqzc6aXVEx2V1T3Rh3UuoIEg8eIjb2yySMvAUwUibh7kmg+RI+wWfw==}
+  '@tanstack/angular-devtools@0.0.4':
+    resolution: {integrity: sha512-kaC+1oEAU6tSaoLETssS9HLuXI8XHtbRYYvIWKVQQrUsp2YWCdFVcq9ghzDJ82yp4U7kbCkGDCVJS4K+Ut4Jzg==}
     engines: {node: '>=18'}
     peerDependencies:
       '@angular/core': '>=21.0.0'
@@ -12543,41 +12729,8 @@ packages:
       vue:
         optional: true
 
-  '@tanstack/devtools-utils@https://pkg.pr.new/TanStack/devtools/@tanstack/devtools-utils@368':
-    resolution: {integrity: sha512-LeIB4CGWn71I1imoh75mga8eM1a8zd1Tc/MOSz01z5VhmUpC/+SNj5gNGx/Q9zx/DrB3QFG9j+io3CcCdrolnw==, tarball: https://pkg.pr.new/TanStack/devtools/@tanstack/devtools-utils@368}
-    version: 0.4.0
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      '@angular/core': '>=19.0.0'
-      '@types/react': '>=17.0.0'
-      preact: '>=10.0.0'
-      react: '>=17.0.0'
-      solid-js: '>=1.9.7'
-      vue: '>=3.2.0'
-    peerDependenciesMeta:
-      '@angular/core':
-        optional: true
-      '@types/react':
-        optional: true
-      preact:
-        optional: true
-      react:
-        optional: true
-      solid-js:
-        optional: true
-      vue:
-        optional: true
-
   '@tanstack/devtools@0.11.2':
     resolution: {integrity: sha512-K8+tsBx+ptTLqqd4dOF10B6laj1g+XYImqYZL9n0jBINGaT+sOf17PKV9pbBt8kdbZeIGsHaJ5OZWCyZoHqN4A==}
-    engines: {node: '>=18'}
-    hasBin: true
-    peerDependencies:
-      solid-js: '>=1.9.7'
-
-  '@tanstack/devtools@0.12.0':
-    resolution: {integrity: sha512-KiRMl8lFTTpNEOU4kt9mdZqQ8mTVEPwRLE8I1g3IJe5y1WpOhwNUU1E5vCq8VUsWJukszI6QmPbMs4Gw+C3cyQ==}
     engines: {node: '>=18'}
     hasBin: true
     peerDependencies:
@@ -22494,10 +22647,10 @@ snapshots:
       tailwindcss: 4.3.0
       vite: 8.0.13(@types/node@25.8.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.14))(terser@5.46.0)(yaml@2.9.0)
 
-  '@tanstack/angular-devtools@0.0.2(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(csstype@3.2.3)(solid-js@1.9.12)':
+  '@tanstack/angular-devtools@0.0.4(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(solid-js@1.9.12)':
     dependencies:
       '@angular/core': 21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2)
-      '@tanstack/devtools': 0.12.0(csstype@3.2.3)(solid-js@1.9.12)
+      '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.12)
       tslib: 2.8.1
     transitivePeerDependencies:
       - bufferutil
@@ -22559,32 +22712,7 @@ snapshots:
       solid-js: 1.9.12
       vue: 3.5.34(typescript@6.0.3)
 
-  '@tanstack/devtools-utils@https://pkg.pr.new/TanStack/devtools/@tanstack/devtools-utils@368(@angular/core@21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2))(@types/react@19.2.14)(preact@10.29.1)(react@19.2.6)(solid-js@1.9.12)(vue@3.5.34(typescript@6.0.3))':
-    optionalDependencies:
-      '@angular/core': 21.2.12(@angular/compiler@21.2.12)(rxjs@7.8.2)
-      '@types/react': 19.2.14
-      preact: 10.29.1
-      react: 19.2.6
-      solid-js: 1.9.12
-      vue: 3.5.34(typescript@6.0.3)
-
   '@tanstack/devtools@0.11.2(csstype@3.2.3)(solid-js@1.9.12)':
-    dependencies:
-      '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
-      '@solid-primitives/keyboard': 1.3.5(solid-js@1.9.12)
-      '@solid-primitives/resize-observer': 2.1.5(solid-js@1.9.12)
-      '@tanstack/devtools-client': 0.0.6
-      '@tanstack/devtools-event-bus': 0.4.1
-      '@tanstack/devtools-ui': 0.5.1(csstype@3.2.3)(solid-js@1.9.12)
-      clsx: 2.1.1
-      goober: 2.1.18(csstype@3.2.3)
-      solid-js: 1.9.12
-    transitivePeerDependencies:
-      - bufferutil
-      - csstype
-      - utf-8-validate
-
-  '@tanstack/devtools@0.12.0(csstype@3.2.3)(solid-js@1.9.12)':
     dependencies:
       '@solid-primitives/event-listener': 2.4.5(solid-js@1.9.12)
       '@solid-primitives/keyboard': 1.3.5(solid-js@1.9.12)

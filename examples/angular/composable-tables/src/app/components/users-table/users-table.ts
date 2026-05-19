@@ -82,6 +82,9 @@ export class UsersTable {
   stressTest = () => this.data.set(makeData(200_000))
 
   constructor() {
-    injectTanStackTableDevtools(() => this.table, 'users-table')
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'users-table',
+    }))
   }
 }

@@ -45,7 +45,11 @@ export function ColumnsPanel() {
 
     tableState()
 
-    return tableInstance.getAllFlatColumns()
+    return (
+      tableInstance.getAllFlatColumns?.() ??
+      tableInstance.getAllLeafColumns?.() ??
+      []
+    )
   })
 
   return (

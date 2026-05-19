@@ -5,6 +5,7 @@ import {
   signal,
 } from '@angular/core'
 import { FlexRender, isFunction } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { columns, injectTable } from './columns'
 import { makeData } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
@@ -53,4 +54,10 @@ export class App {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(200_000))
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'grouping',
+    }))
+  }
 }
