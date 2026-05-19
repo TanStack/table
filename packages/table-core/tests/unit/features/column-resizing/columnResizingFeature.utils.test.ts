@@ -435,13 +435,20 @@ describe('passiveEventSupported', () => {
     expect(firstResult).toBe(secondResult)
   })
 
-  it('should handle errors during support check', () => {
+  it('should handle errors during support check', async () => {
+    // Reset modules so passiveEventSupported's cache starts fresh —
+    // earlier tests in this describe block populate the module-level cache,
+    // which would otherwise short-circuit before reaching the throwing spy.
+    vi.resetModules()
+    const { passiveEventSupported: freshPassiveEventSupported } =
+      await import('../../../../src/features/column-resizing/columnResizingFeature.utils')
+
     const addEventListenerSpy = vi.spyOn(window, 'addEventListener')
     addEventListenerSpy.mockImplementation(() => {
       throw new Error('Test error')
     })
 
-    const result = passiveEventSupported()
+    const result = freshPassiveEventSupported()
     expect(result).toBe(false)
 
     addEventListenerSpy.mockRestore()

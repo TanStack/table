@@ -96,8 +96,8 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 - **Total findings:** 60
 - **Done `[x]`:** 17
 - **Partial `[~]`:** 2
-- **Skipped `[-]`:** 1
-- **Not started `[ ]`:** 40
+- **Skipped `[-]`:** 5
+- **Not started `[ ]`:** 36
 
 _(Update these counters as you go.)_
 
@@ -929,8 +929,8 @@ for (let i = 0; i < flatRows.length; i++) {
 
 ## 24. `column_getFilterValue` / `column_getFilterIndex` linear `.find` — Score: 6
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[-]` skipped
+**Implementation note:** Per project guidance, `columnFilters` state typically holds 1–3 active filters. At that size, `.find` over the array is essentially O(1) in practice and outperforms a Record/Map lookup (no hashing, no per-rebuild allocation, JIT-friendly). The C × F scale-impact math assumes F grows with C, but in real tables F stays small even when C is large — so the multiplier shown in the table overstates the win. Both alternatives (per-column memo, `table.getColumnFiltersById()`) add overhead that isn't recouped at typical filter counts.
 
 **Location:** `src/features/column-filtering/columnFilteringFeature.utils.ts:156–185`
 **Category:** `big-o`, `memoization`
@@ -1092,8 +1092,8 @@ Skip the `row.columnFilters = {}` write when it's already an empty object.
 
 ## 30. `existingGrouping.includes(colId)` per cell value access — Score: 7
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[-]` skipped
+**Implementation note:** Per project guidance, `grouping` state typically holds 1–3 columns. At that size, `.includes()` on the array is ~2–3 reference comparisons — cheaper than a Set lookup (hash + bucket walk + comparison), and avoids the per-row-model-rebuild Set allocation. The G × C × R scale table assumes G grows; in real grouped tables G is bounded and small, so the constant-factor Set overhead would dominate the saved comparisons. See [[skip-policy-small-state-arrays]] for the project-wide rule.
 
 **Location:** `src/features/column-grouping/createGroupedRowModel.ts:141–152`
 **Category:** `big-o`
@@ -1200,8 +1200,8 @@ Inside the grouped row's `getValue`, every non-grouped column lookup calls `tabl
 
 ## 34. `orderColumns` uses `grouping.includes` — Score: 7
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[-]` skipped
+**Implementation note:** Per project guidance, `grouping` state typically holds 1–3 columns. The L × G scale-table line that shows `L × G` ballooning with L assumes G also grows, but G stays bounded in real tables — so the inner walk is essentially L × constant ≈ O(L), comparable to L + G once the per-call Set allocation and hashing overhead are factored in. Matches the same decision recorded in #39 for the pin-side partition. See [[skip-policy-small-state-arrays]].
 
 **Location:** `src/features/column-ordering/columnOrderingFeature.utils.ts:205–225`
 **Category:** `big-o`
@@ -1295,8 +1295,8 @@ for (let i = 0; i < left.length; i++) {
 
 ## 36. `[...left, ...right].includes(id)` for center column filtering — Score: 6
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[-]` skipped
+**Implementation note:** Per project guidance, `columnPinning` state (`left` + `right`) typically holds 1–3 ids per side. At that size, `.includes()` on the small arrays outperforms a Set (no hashing, no per-call allocation). Same reasoning as #39, which deliberately chose `.includes()` over Sets for the cell-side partition. Note: the per-call `[...left, ...right]` spread itself is wasted work and could be removed without converting to a Set — `(left.includes(id) || right.includes(id))` is the equivalent allocation-free check. Documenting that micro-fix here for any later pass that wants to pick it up; not pursuing it now since it doesn't change asymptotic behavior. See [[skip-policy-small-state-arrays]].
 
 **Location:** `src/features/column-pinning/columnPinningFeature.utils.ts:189, 430`
 **Category:** `big-o`
