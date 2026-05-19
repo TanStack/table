@@ -56,11 +56,7 @@ export function mergeObjects(...sources: any): any {
  */
 export function flatMerge<T>(source: T): T
 export function flatMerge<T, U>(source: T, source1: U): T & U
-export function flatMerge<T, U, V>(
-  source: T,
-  source1: U,
-  source2: V,
-): T & U & V
+export function flatMerge<T, U, V>(source: T, source1: U, source2: V): T & U & V
 export function flatMerge<T, U, V, W>(
   source: T,
   source1: U,
