@@ -6,7 +6,7 @@ title: Grouping Guide
 
 Want to skip to the implementation? Check out these examples:
 
-- [grouping](https://github.com/TanStack/table/tree/main/examples/react/grouping)
+- [grouping](../framework/react/examples/grouping)
 
 ## API
 
