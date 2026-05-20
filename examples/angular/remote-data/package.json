@@ -31,7 +31,7 @@
     "@angular/cli": "^21.2.11",
     "@angular/compiler-cli": "^21.2.13",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.8.0",
+    "@types/node": "^25.9.1",
     "tslib": "^2.8.1",
     "typescript": "6.0.3"
   }
