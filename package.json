@@ -6,6 +6,9 @@
     "url": "git+https://github.com/TanStack/table.git"
   },
   "packageManager": "pnpm@11.1.3",
+  "engines": {
+    "pnpm": ">=11.0.0"
+  },
   "type": "module",
   "scripts": {
     "build": "nx affected --targets=build --exclude='examples/**' && size-limit",
