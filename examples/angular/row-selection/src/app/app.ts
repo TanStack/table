@@ -10,6 +10,7 @@ import {
   flexRenderComponent,
   shallow,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { TableFilter } from './table-filter/table-filter'
 import { makeData } from './makeData'
 import {
@@ -142,5 +143,11 @@ export class App {
 
   toggleEnableRowSelection() {
     this.enableRowSelection.update((value) => !value)
+  }
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'row-selection',
+    }))
   }
 }

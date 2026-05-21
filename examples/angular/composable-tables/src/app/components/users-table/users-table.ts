@@ -7,6 +7,7 @@ import {
   TanStackTableHeader,
   flexRenderComponent,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from '../../makeData'
 import { createAppColumnHelper, injectAppTable } from '../../table'
 import type { Person } from '../../makeData'
@@ -79,4 +80,11 @@ export class UsersTable {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(200_000))
+
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'users-table',
+    }))
+  }
 }

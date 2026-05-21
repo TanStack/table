@@ -1,3 +1,4 @@
+import { createEffect, createRoot, createSignal } from 'solid-js'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 type AnyTable = Table<TableFeatures, RowData>
@@ -18,17 +19,10 @@ export interface UpsertTableDevtoolsTargetOptions {
   name?: string
 }
 
-const registrations = new Map<string, TableDevtoolsRegistration>()
-const listeners = new Set<Listener>()
+const [registrationsMap, setRegistrationsMap] = createSignal<
+  Map<string, TableDevtoolsRegistration>
+>(new Map())
 let fallbackNameCounter = 1
-
-function emitTargets() {
-  const targets = getTableDevtoolsTargets()
-
-  for (const listener of listeners) {
-    listener(targets)
-  }
-}
 
 function normalizeName(name?: string) {
   const trimmedName = name?.trim()
@@ -38,15 +32,13 @@ function normalizeName(name?: string) {
 export function upsertTableDevtoolsTarget(
   options: UpsertTableDevtoolsTargetOptions,
 ) {
+  const registrations = registrationsMap()
   const existingRegistration = registrations.get(options.id)
   const name = normalizeName(options.name)
 
   if (existingRegistration) {
-    registrations.set(options.id, {
-      ...existingRegistration,
-      table: options.table,
-      name,
-    })
+    existingRegistration.table = options.table
+    existingRegistration.name = name
   } else {
     registrations.set(options.id, {
       id: options.id,
@@ -56,27 +48,31 @@ export function upsertTableDevtoolsTarget(
     })
   }
 
-  emitTargets()
+  setRegistrationsMap(new Map(registrations.entries()))
 }
 
 export function removeTableDevtoolsTarget(id: string) {
+  const registrations = registrationsMap()
   if (!registrations.delete(id)) {
     return
   }
 
-  emitTargets()
+  setRegistrationsMap(new Map(registrations.entries()))
 }
 
 export function getTableDevtoolsTargets(): Array<TableDevtoolsRegistration> {
-  return Array.from(registrations.values())
+  return Array.from(registrationsMap().values())
 }
 
 export function subscribeTableDevtoolsTargets(listener: Listener) {
-  listeners.add(listener)
-
-  return () => {
-    listeners.delete(listener)
-  }
+  let disposeRoot = () => {}
+  createRoot((dispose) => {
+    disposeRoot = dispose
+    createEffect(() => {
+      listener(getTableDevtoolsTargets())
+    })
+  })
+  return disposeRoot
 }
 
 export function setTableDevtoolsTarget(table: Table<any, any> | undefined) {

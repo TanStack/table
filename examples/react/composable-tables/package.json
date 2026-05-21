@@ -19,6 +19,8 @@
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
+    "@tanstack/react-devtools": "^0.10.5",
+    "@tanstack/react-table-devtools": "^9.0.0-alpha.49",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",

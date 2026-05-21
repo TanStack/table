@@ -13,6 +13,7 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { CdkDrag, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop'
 import { JsonPipe } from '@angular/common'
 import { DragHandleCell } from './drag-handle-cell/drag-handle-cell'
@@ -94,4 +95,10 @@ export class App {
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'row-dnd',
+    }))
+  }
 }

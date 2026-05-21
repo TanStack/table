@@ -17,6 +17,7 @@ import {
   rowSelectionFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { FilterComponent } from './filter'
 import { makeData } from './makeData'
 import {
@@ -157,4 +158,10 @@ export class AppComponent {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(200_000))
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'row-selection-signal',
+    }))
+  }
 }

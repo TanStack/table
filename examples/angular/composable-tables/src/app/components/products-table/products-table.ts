@@ -6,6 +6,7 @@ import {
   TanStackTableCell,
   TanStackTableHeader,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeProductData } from '../../makeData'
 import { createAppColumnHelper, injectAppTable } from '../../table'
 import type { Product } from '../../makeData'
@@ -68,4 +69,11 @@ export class ProductsTable {
 
   refreshData = () => this.data.set(makeProductData(1_000))
   stressTest = () => this.data.set(makeProductData(200_000))
+
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'products-table',
+    }))
+  }
 }

@@ -16,6 +16,7 @@ import {
   shallow,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { ReactiveFormsModule } from '@angular/forms'
 import { makeData } from './makeData'
 import {
@@ -128,4 +129,10 @@ export class App {
 
   refreshData = () => this.data.set(makeData(100, 5, 3))
   stressTest = () => this.data.set(makeData(10_000, 5, 3))
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'expanding',
+    }))
+  }
 }

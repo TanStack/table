@@ -8,6 +8,7 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { densityPlugin } from './density/density-feature'
 import { makeData } from './makeData'
 import type { DensityState } from './density/density-feature'
@@ -79,4 +80,10 @@ export class App {
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      name: 'custom-plugin',
+    }))
+  }
 }
