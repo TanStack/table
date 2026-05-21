@@ -1,7 +1,7 @@
 import { constructTable } from '@tanstack/table-core'
 import { useSelector } from '@tanstack/svelte-store'
 import { untrack } from 'svelte'
-import { mergeObjects } from './merge-objects'
+import { flatMerge, mergeObjects } from './merge-objects'
 import { svelteReactivity } from './reactivity.svelte'
 import type {
   RowData,
@@ -75,7 +75,7 @@ export function createTable<
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
       ) => {
-        return mergeObjects(defaultOptions, newOptions)
+        return flatMerge(defaultOptions, newOptions)
       },
     },
     mergedOptions,
@@ -107,7 +107,7 @@ export function createTable<
 
     untrack(() => {
       table.setOptions((prev) => {
-        return mergeObjects(prev, mergedOptions)
+        return flatMerge(prev, mergedOptions)
       })
     })
   })
