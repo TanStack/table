@@ -10,7 +10,7 @@
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
     "@rollup/plugin-replace": "^6.0.3",
-    "@types/node": "^25.8.0",
+    "@types/node": "^25.9.1",
     "typescript": "6.0.3",
     "vite": "^8.0.13"
   },

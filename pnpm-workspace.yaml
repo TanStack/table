@@ -38,3 +38,6 @@ linkWorkspacePackages: true
 preferWorkspacePackages: true
 blockExoticSubdeps: true
 trustPolicy: 'no-downgrade'
+trustPolicyExclude:
+  - chokidar@4.0.3
+  - semver@5.7.2 || 6.3.1

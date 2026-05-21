@@ -9,7 +9,7 @@
     "watch": "ng build --watch --configuration development"
   },
   "private": true,
-  "packageManager": "pnpm@11.1.2",
+  "packageManager": "pnpm@11.1.3",
   "dependencies": {
     "@angular/common": "^21.2.13",
     "@angular/compiler": "^21.2.13",
