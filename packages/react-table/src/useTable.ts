@@ -109,6 +109,7 @@ export type ReactTable<
   readonly state: Readonly<TSelected>
 }
 
+let tableId = 0
 /**
  * Creates a React table instance backed by TanStack Store atoms.
  *
@@ -142,10 +143,11 @@ export function useTable<
   selector?: (state: TableState<TFeatures>) => TSelected,
 ): ReactTable<TFeatures, TData, TSelected> {
   const instanceIdRef = useRef<string | undefined>(undefined)
-  const id = useId()
   if (!instanceIdRef.current) {
-    // eslint-disable-next-line @eslint-react/purity
-    instanceIdRef.current = `${id}-${Math.random().toString(36).slice(2, 9)}`
+    instanceIdRef.current =
+      'randomUUID' in globalThis.crypto
+        ? globalThis.crypto.randomUUID()
+        : `table-${++tableId}`
   }
   const [table] = useState(() => {
     const tableInstance = constructTable({
@@ -166,7 +168,7 @@ export function useTable<
     }) as ReactTable<TFeatures, TData, TSelected>['Subscribe']
 
     tableInstance.FlexRender = FlexRender
-    tableInstance.instanceId = id
+    tableInstance.instanceId = instanceIdRef.current
 
     return tableInstance
   })
