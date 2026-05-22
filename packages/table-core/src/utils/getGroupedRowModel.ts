@@ -92,8 +92,12 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 subRows,
                 leafRows,
                 getValue: (columnId: string) => {
-                  // Don't aggregate columns that are in the grouping
-                  if (existingGrouping.includes(columnId)) {
+                  // Don't aggregate columns that group this row at the current
+                  // level or an ancestor level - their value is constant across
+                  // the group. Columns grouped at a deeper level still need to
+                  // be aggregated here.
+                  const groupingIndex = existingGrouping.indexOf(columnId)
+                  if (groupingIndex > -1 && groupingIndex <= depth) {
                     if (row._valuesCache.hasOwnProperty(columnId)) {
                       return row._valuesCache[columnId]
                     }
