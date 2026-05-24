@@ -269,7 +269,7 @@ function SelectedCount({ table }) {
 }
 ```
 
-`<table.Subscribe>` still selects from `table.store.state` (the full state). For a single slice, `useSelector(table.atoms.X)` skips even constructing the snapshot.
+`<table.Subscribe>` still selects from `table.state` (the full state). For a single slice, `useSelector(table.atoms.X)` skips even constructing the snapshot.
 Source: `docs/framework/react/guide/table-state.md`.
 
 ### MEDIUM Hoisting heavy table state reads above virtualizers

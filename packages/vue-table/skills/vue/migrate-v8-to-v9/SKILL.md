@@ -5,7 +5,7 @@ description: >
   → `useTable`, move `getCoreRowModel`/`getSortedRowModel`/etc. options into `_rowModels`
   factories, add the mandatory `_features` via `tableFeatures({...})`, update
   `createColumnHelper<TData>()` → `createColumnHelper<typeof _features, TData>()`, rename
-  `sortingFn`/`sortingFns` → `sortFn`/`sortFns`, swap `table.getState()` for `table.store.state`
+  `sortingFn`/`sortingFns` → `sortFn`/`sortFns`, swap `table.getState()` for `table.state`
   / `table.state` / `table.atoms.<slice>.get()`, and prefer `<FlexRender :cell="cell" />` over the
   legacy `:render`/`:props` shape. Vue has NO `/legacy` entrypoint — migration is a direct
   rewrite. The Vue adapter installs `vueReactivity()` automatically.
@@ -133,7 +133,7 @@ const table = useTable({
 | `state.columnSizingInfo`                                                                  | `state.columnResizing`                                                                |
 | `onColumnSizingInfoChange`                                                                | `onColumnResizingChange`                                                              |
 | `ColumnSizing` feature                                                                    | `columnSizingFeature` + `columnResizingFeature` (split)                               |
-| `table.getState()`                                                                        | `table.store.state` (full) / `table.state` (selector) / `table.atoms.<slice>.get()`   |
+| `table.getState()`                                                                        | `table.state` (full) / `table.state` (selector) / `table.atoms.<slice>.get()`         |
 | `row._getAllCellsByColumnId()`                                                            | `row.getAllCellsByColumnId()` (underscore removed)                                    |
 | `table._getFacetedRowModel()` / `_getFacetedMinMaxValues()` / `_getFacetedUniqueValues()` | Same names without leading underscore                                                 |
 | `<FlexRender :render="…" :props="…" />`                                                   | `<FlexRender :cell="cell" />` / `:header` / `:footer` (preferred; legacy still works) |
@@ -193,7 +193,7 @@ const sorting = table.getState().sorting
 
 // v9 — pick the narrowest read.
 const sorting = table.atoms.sorting.get() // narrowest, no full state object built
-const snapshot = table.store.state // full readonly view
+const snapshot = table.state // full readonly view
 const table = useTable(opts, (s) => ({ sorting: s.sorting })) // selected reactive state
 table.state.sorting // typed selector output
 ```

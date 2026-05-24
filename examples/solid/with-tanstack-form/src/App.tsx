@@ -307,8 +307,8 @@ function App() {
             <span class="inline-controls">
               <div>Page</div>
               <strong>
-                {(table.store.state.pagination.pageIndex + 1).toLocaleString()}{' '}
-                of {table.getPageCount().toLocaleString()}
+                {(table.state().pagination.pageIndex + 1).toLocaleString()} of{' '}
+                {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span class="inline-controls">
@@ -317,7 +317,7 @@ function App() {
                 type="number"
                 min="1"
                 max={table.getPageCount()}
-                value={table.store.state.pagination.pageIndex + 1}
+                value={table.state().pagination.pageIndex + 1}
                 onInput={(e) => {
                   const page = e.currentTarget.value
                     ? Number(e.currentTarget.value) - 1
@@ -328,7 +328,7 @@ function App() {
               />
             </span>
             <select
-              value={table.store.state.pagination.pageSize}
+              value={table.state().pagination.pageSize}
               onChange={(e) => {
                 table.setPageSize(Number(e.currentTarget.value))
               }}

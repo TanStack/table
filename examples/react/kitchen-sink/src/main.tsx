@@ -512,7 +512,7 @@ function PinnedRow({
       {row.getVisibleCells().map((cell) => (
         <SortableContext
           key={cell.id}
-          items={table.store.state.columnOrder}
+          items={table.state.columnOrder}
           strategy={horizontalListSortingStrategy}
         >
           <DragAlongCell key={cell.id} cell={cell} table={table} />

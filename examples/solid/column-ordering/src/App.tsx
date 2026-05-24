@@ -187,7 +187,7 @@ function App() {
         </tfoot>
       </table>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
     </div>
   )
 }

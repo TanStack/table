@@ -1128,8 +1128,8 @@ function Pagination({ table }: { table: AppTable }) {
         <TablePagination
           component="div"
           count={table.getFilteredRowModel().rows.length}
-          page={table.store.state.pagination.pageIndex}
-          rowsPerPage={table.store.state.pagination.pageSize}
+          page={table.state.pagination.pageIndex}
+          rowsPerPage={table.state.pagination.pageSize}
           rowsPerPageOptions={[10, 20, 30, 40, 50]}
           showFirstButton
           showLastButton
@@ -1448,7 +1448,7 @@ function App({
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.store.state.columnSizing])
+  }, [table.state.columnSizing])
 
   const refreshData = () => setData(makeData(1_000))
   const stressTest = () => setData(makeData(200_000))

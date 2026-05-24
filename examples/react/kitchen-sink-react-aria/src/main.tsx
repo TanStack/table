@@ -994,8 +994,8 @@ function FilterListPopover({
 }
 
 function Pagination({ table }: { table: AppTable }) {
-  const pageIndex = table.store.state.pagination.pageIndex
-  const pageSize = table.store.state.pagination.pageSize
+  const pageIndex = table.state.pagination.pageIndex
+  const pageSize = table.state.pagination.pageSize
   const pageItems = getPageItems(pageIndex, table.getPageCount())
 
   return (
@@ -1377,7 +1377,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.store.state.columnSizing])
+  }, [table.state.columnSizing])
 
   const refreshData = () => setData(makeData(1_000))
   const stressTest = () => setData(makeData(200_000))

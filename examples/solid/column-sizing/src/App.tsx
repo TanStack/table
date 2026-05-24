@@ -87,7 +87,7 @@ function App() {
                   value={column.getSize()}
                   onInput={(e) => {
                     table.setColumnSizing({
-                      ...table.store.state.columnSizing,
+                      ...table.state().columnSizing,
                       [column.id]: Number(e.currentTarget.value),
                     })
                   }}
@@ -244,7 +244,7 @@ function App() {
         </div>
       </div>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
     </div>
   )
 }

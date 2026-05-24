@@ -107,8 +107,8 @@
   )
 
   $effect(() => {
-    if (table.store.state.columnFilters[0]?.id === 'fullName') {
-      if (table.store.state.sorting[0]?.id !== 'fullName') {
+    if (table.state.columnFilters[0]?.id === 'fullName') {
+      if (table.state.sorting[0]?.id !== 'fullName') {
         table.setSorting([{ id: 'fullName', desc: false
         }])
       }

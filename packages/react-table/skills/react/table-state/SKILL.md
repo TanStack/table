@@ -258,7 +258,7 @@ function Pager({ table }) {
 }
 ```
 
-`.get()` and `table.store.state` are current-value reads, not subscriptions. The component never re-renders when the atom changes.
+`.get()` and `table.state` are current-value reads, not subscriptions. The component never re-renders when the atom changes.
 Source: `docs/framework/react/guide/table-state.md`; `examples/react/basic-subscribe/src/main.tsx`.
 
 ### HIGH Passing both `atoms.X` and `state.X` for the same slice

@@ -200,7 +200,7 @@ Source: `examples/preact/basic-use-table/src/main.tsx`.
 
 ## Step 5 — Drive features with feature APIs
 
-Reach for `table.setSorting(...)`, `table.setPageIndex(...)`, `table.nextPage()`, `column.toggleVisibility()`, `row.toggleSelected()`, etc. — never edit `table.store.state` directly.
+Reach for `table.setSorting(...)`, `table.setPageIndex(...)`, `table.nextPage()`, `column.toggleVisibility()`, `row.toggleSelected()`, etc. — never edit `table.state` directly.
 
 ```tsx
 <button onClick={() => table.setPageIndex(0)} disabled={!table.getCanPreviousPage()}>First</button>

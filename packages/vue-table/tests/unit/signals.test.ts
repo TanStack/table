@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { nextTick } from 'vue'
+import { createAtom } from '@tanstack/vue-store'
 import { vueReactivity } from '../../src/reactivity'
 
 describe('vueReactivity', () => {
@@ -17,6 +18,21 @@ describe('vueReactivity', () => {
     await nextTick()
 
     expect(count.get()).toBe(2)
+    expect(doubled.get()).toBe(4)
+  })
+
+  test('readonly atoms update when they read external TanStack Store atoms', async () => {
+    const reactivity = vueReactivity()
+    const external = createAtom(1)
+    const doubled = reactivity.createReadonlyAtom(() => external.get() * 2, {
+      debugName: 'doubled',
+    })
+
+    expect(doubled.get()).toBe(2)
+
+    external.set(2)
+    await nextTick()
+
     expect(doubled.get()).toBe(4)
   })
 })

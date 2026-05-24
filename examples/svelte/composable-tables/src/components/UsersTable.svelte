@@ -72,16 +72,16 @@
   })
 
   // Reactive derived values from table state.
-  // Reading table.store.state creates a $state dependency (via the notifier)
+  // Reading table.state creates a $state dependency (via the notifier)
   // that triggers re-renders when any table state changes.
-  let sorting = $derived(table.store.state.sorting)
-  let columnFilters = $derived(table.store.state.columnFilters)
+  let sorting = $derived(table.state.sorting)
+  let columnFilters = $derived(table.state.columnFilters)
 
   // IMPORTANT: Derive rows from table state so Svelte tracks the dependency.
   // We must read a $state value that changes on every table update.
   // JSON.stringify forces a deep read, ensuring Svelte sees the dependency.
   const rows = $derived.by(() => {
-    JSON.stringify(table.store.state)
+    JSON.stringify(table.state)
     return table.getRowModel().rows
   })
 </script>

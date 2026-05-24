@@ -6,7 +6,7 @@ description: >
   memory has a v9 equivalent enumerated below: `useReactTable` → `useTable`,
   root `get*RowModel` options → `_rowModels` with factory + *Fns parameter,
   `createColumnHelper<TData>` → `createColumnHelper<typeof _features, TData>`,
-  `table.getState()` → `table.store.state` / `table.state` / `table.atoms.X.get()`,
+  `table.getState()` → `table.state` / `table.state` / `table.atoms.X.get()`,
   `sortingFn` → `sortFn`, `enablePinning` → split, `_`-prefixed APIs unprefixed,
   `ColumnSizing` split into `columnSizingFeature` + `columnResizingFeature`.
   For incremental migration, `useLegacyTable` from `@tanstack/react-table/legacy`
@@ -120,12 +120,12 @@ const state = table.getState()
 const cells = row._getAllCellsByColumnId()
 
 // v9
-const all = table.store.state // flat snapshot
+const all = table.state // flat snapshot
 const sorting = table.atoms.sorting.get() // per-slice atom
 const cells = row.getAllCellsByColumnId() // no underscore — APIs unprefixed
 ```
 
-In components, prefer `<table.Subscribe>` over `table.store.state` for reactivity (see `tanstack-table/react/table-state`).
+In components, prefer `<table.Subscribe>` over `table.state` for reactivity (see `tanstack-table/react/table-state`).
 
 ### Renames
 
@@ -329,7 +329,7 @@ function Toolbar({ table }) {
 }
 ```
 
-`getState` was removed. Use `table.store.state` for a flat snapshot, `table.state` if you passed a `useTable` selector, or `<table.Subscribe>` for reactive reads.
+`getState` was removed. Use `table.state` for a flat snapshot, `table.state` if you passed a `useTable` selector, or `<table.Subscribe>` for reactive reads.
 Source: `docs/framework/react/guide/migrating.md`; `examples/react/basic-subscribe/src/main.tsx`.
 
 ### HIGH `enablePinning: true` on v9

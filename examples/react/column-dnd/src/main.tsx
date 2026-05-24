@@ -197,7 +197,7 @@ function App() {
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 <SortableContext
-                  items={table.store.state.columnOrder}
+                  items={table.state.columnOrder}
                   strategy={horizontalListSortingStrategy}
                 >
                   {headerGroup.headers.map((header) => (
@@ -213,7 +213,7 @@ function App() {
                 {row.getAllCells().map((cell) => (
                   <SortableContext
                     key={cell.id}
-                    items={table.store.state.columnOrder}
+                    items={table.state.columnOrder}
                     strategy={horizontalListSortingStrategy}
                   >
                     <DragAlongCell key={cell.id} cell={cell} />

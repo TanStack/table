@@ -160,7 +160,7 @@ function exportSelected() {
 }
 ```
 
-`table.store.state` is the same idea for a full snapshot.
+`table.state` is the same idea for a full snapshot.
 
 ## 6. Key every `{#each}` block on a stable id
 

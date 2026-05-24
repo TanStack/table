@@ -170,6 +170,6 @@
     </tfoot>
   </table>
   <div class="spacer-md"></div>
-  <pre>{JSON.stringify(table.store.state.columnVisibility, null, 2)
+  <pre>{JSON.stringify(table.state.columnVisibility, null, 2)
   }</pre>
 </div>

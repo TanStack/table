@@ -451,7 +451,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.store.state.columnSizing])
+  }, [table.state.columnSizing])
 
   return (
     <div className="container mx-auto p-4 flex flex-col gap-4">

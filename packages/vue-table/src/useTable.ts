@@ -62,7 +62,15 @@ export type VueTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
+> = Omit<Table<TFeatures, TData>, 'store'> & {
+  /**
+   * @deprecated Prefer `table.state` for render reads,
+   * `table.atoms.<slice>.get()` for slice snapshots, or
+   * `table.Subscribe` / `useSelector(table.store, selector)` for explicit
+   * subscriptions. `table.store.state` is a current-value snapshot and is easy
+   * to misuse in render code.
+   */
+  readonly store: Table<TFeatures, TData>['store']
   /**
    * Store mode: `selector` required. Source mode: pass `source` (atom or store); omit
    * `selector` for the whole value (identity), or pass `selector` to project. Split
@@ -94,7 +102,9 @@ export type VueTable<
     }): VNode | Array<VNode>
   }
   /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
+   * The selected state of the table. This state may not match the structure of
+   * the full table state because it is selected by the selector function that
+   * you pass as the 2nd argument to `useTable`.
    *
    * @example
    * const table = useTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
@@ -147,18 +157,15 @@ export function useTable<
     )
   }
 
-  const mergedOptions = {
-    ...tableOptions,
+  const mergedOptions = mergeProxy(tableOptions, {
     _features: {
       coreReativityFeature: vueReactivity(),
       ...tableOptions._features,
     },
-  }
+  }) as TableOptionsWithReactiveData<TFeatures, TData>
 
   const resolvedOptions = mergeProxy(
-    getOptionsWithReactiveValues(
-      mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
-    ),
+    getOptionsWithReactiveValues(mergedOptions),
     {
       // Remove state and onStateChange - store handles it internally
       mergeOptions: (
@@ -170,19 +177,13 @@ export function useTable<
     },
   ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(resolvedOptions) as VueTable<
-    TFeatures,
-    TData,
-    TSelected
-  >
+  const coreTable = constructTable(resolvedOptions)
+  const table = coreTable as unknown as VueTable<TFeatures, TData, TSelected>
 
   watch(
-    () =>
-      getReactiveOptionDeps(
-        mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
-      ),
+    () => getReactiveOptionDeps(mergedOptions),
     () => {
-      syncTableOptions(table, mergedOptions)
+      syncTableOptions(coreTable, mergedOptions)
     },
     { immediate: true },
   )
@@ -216,7 +217,7 @@ export function useTable<
     },
     (controlledValues) => {
       if (controlledValues.length > 0) {
-        syncTableOptions(table, mergedOptions)
+        syncTableOptions(coreTable, mergedOptions)
       }
     },
     { immediate: true },

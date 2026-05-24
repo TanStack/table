@@ -109,7 +109,7 @@ Read the atom directly. Cheapest path; only reactive when called inside a rune-t
 ```ts
 const sorting = table.atoms.sorting.get()
 const pagination = table.atoms.pagination.get()
-const flat = table.store.state
+const flat = table.state
 ```
 
 ### Reactive read inside markup — `table.state` selector

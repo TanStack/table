@@ -1052,8 +1052,8 @@ function FilterListPopover({
 }
 
 function Pagination({ table }: { table: AppTable }) {
-  const pageIndex = table.store.state.pagination.pageIndex
-  const pageSize = table.store.state.pagination.pageSize
+  const pageIndex = table.state.pagination.pageIndex
+  const pageSize = table.state.pagination.pageSize
 
   return (
     <Group justify="space-between" p="sm">
@@ -1426,7 +1426,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.store.state.columnSizing])
+  }, [table.state.columnSizing])
 
   const refreshData = () => setData(makeData(1_000))
   const stressTest = () => setData(makeData(200_000))

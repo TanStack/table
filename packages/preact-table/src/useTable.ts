@@ -20,7 +20,15 @@ export type PreactTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
+> = Omit<Table<TFeatures, TData>, 'store'> & {
+  /**
+   * @deprecated Prefer `table.state` for render reads,
+   * `table.atoms.<slice>.get()` for slice snapshots, or
+   * `table.Subscribe` / `useSelector(table.store, selector)` for explicit
+   * subscriptions. `table.store.state` is a current-value snapshot and is easy
+   * to misuse in render code.
+   */
+  readonly store: Table<TFeatures, TData>['store']
   /**
    * A Preact HOC (Higher Order Component) that allows you to subscribe to the table state.
    *
@@ -71,7 +79,9 @@ export type PreactTable<
     props: FlexRenderProps<TFeatures, TData, TValue>,
   ) => ComponentChildren
   /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
+   * The selected state of the table. This state may not match the structure of
+   * the full table state because it is selected by the selector function that
+   * you pass as the 2nd argument to `useTable`.
    */
   readonly state: Readonly<TSelected>
 }
@@ -115,7 +125,7 @@ export function useTable<
         coreReativityFeature: preactReactivity(),
         ...tableOptions._features,
       },
-    }) as PreactTable<TFeatures, TData, TSelected>
+    }) as unknown as PreactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
       const source = props.source ?? tableInstance.store

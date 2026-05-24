@@ -181,7 +181,7 @@ function App() {
             ))}
           </div>
           {/* When resizing any column we will render this special memoized version of our table body */}
-          {table.store.state.columnResizing.isResizingColumn && enableMemo ? (
+          {table.state.columnResizing.isResizingColumn && enableMemo ? (
             <MemoizedTableBody table={table} />
           ) : (
             <TableBody table={table} />

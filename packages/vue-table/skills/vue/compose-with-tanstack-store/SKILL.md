@@ -117,8 +117,8 @@ useSelector(table.atoms.sorting) // reactive ref-like
 computed(() => table.atoms.sorting.get()) // alternative
 
 // (b) Flat store — full snapshot.
-table.store.state // readonly
-table.store.state.sorting // current value
+table.state // readonly
+table.state.sorting // current value
 
 // (c) useTable selector — typed reactive projection.
 const table = useTable(opts, (s) => ({ sorting: s.sorting }))
@@ -285,7 +285,7 @@ const sorting = computed(() => sortingAtom.get())
 
 ### Hallucinating pre-v9 API names (CRITICAL)
 
-`useVueTable`, `table.getState()` — both v8. v9 uses `useTable` and `table.store.state` /
+`useVueTable`, `table.getState()` — both v8. v9 uses `useTable` and `table.state` /
 `table.state` / `table.atoms.<slice>.get()`. See `tanstack-table/vue/migrate-v8-to-v9`.
 
 ### "API missing" because feature not in `_features` (CRITICAL — v9-specific)

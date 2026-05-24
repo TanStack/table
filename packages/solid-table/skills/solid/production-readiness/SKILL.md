@@ -238,10 +238,11 @@ A clear "didn't think about the bundle" tell. Use only the features you render.
 Keep `createVirtualizer` in the component that owns the scroll container, not
 high up in the tree. Otherwise scroll-driven recompute fires across the page.
 
-### MEDIUM — re-reading `table.store.state` in JSX when an atom would do
+### MEDIUM — re-reading `table.state` in JSX
 
-`table.store.state.pagination` works, but `table.atoms.pagination.get()` or
-`useSelector(table.atoms.pagination)` is the per-slice path. Prefer the slice.
+Use `table.state()` for component-level reactive reads, or
+`table.atoms.pagination.get()` / `useSelector(table.atoms.pagination)` for
+per-slice reads. Avoid direct `table.state` reads in JSX.
 
 ### MEDIUM — `autoResetPageIndex: true` on a server-driven table
 

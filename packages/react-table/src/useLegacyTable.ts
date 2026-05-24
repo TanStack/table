@@ -279,7 +279,7 @@ export type LegacyReactTable<TData extends RowData> = ReactTable<
 > & {
   /**
    * Returns the current table state.
-   * @deprecated In v9, access state directly via `table.state` or use `table.store.state` for the full state.
+   * @deprecated In v9, access state directly via `table.state` or use `table.state` for the full state.
    */
   getState: () => TableState<StockFeatures>
   /**

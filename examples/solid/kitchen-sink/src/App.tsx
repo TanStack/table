@@ -355,7 +355,7 @@ function TableCell(props: {
   table: AppTable
 }) {
   const className = () => {
-    const groupingActive = props.table.store.state.grouping.length > 0
+    const groupingActive = props.table.state().grouping.length > 0
     const hasAggregation = !!props.cell.column.columnDef.aggregationFn
     return !groupingActive
       ? undefined
@@ -551,8 +551,8 @@ function App() {
   )
 
   const columnSizeVars = createMemo(() => {
-    void table.store.state.columnResizing
-    void table.store.state.columnSizing
+    void table.state().columnResizing
+    void table.state().columnSizing
     const colSizes: Record<string, number> = {}
     for (const header of table.getFlatHeaders()) {
       colSizes[`--header-${header.id}-size`] = header.getSize()
@@ -577,7 +577,7 @@ function App() {
       <div class="toolbar">
         <div class="toolbar-row">
           <DebouncedInput
-            value={(table.store.state.globalFilter ?? '') as string}
+            value={(table.state().globalFilter ?? '') as string}
             onChange={(value) => table.setGlobalFilter(String(value))}
             class="global-filter-input"
             placeholder="Fuzzy search all columns..."
@@ -714,7 +714,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.state().pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -724,7 +724,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.state().pagination.pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -735,7 +735,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.state().pagination.pageSize}
           onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
         >
           <For each={[10, 20, 30, 50, 100]}>
@@ -752,9 +752,7 @@ function App() {
       <div class="spacer-md" />
       <details>
         <summary>Table state (live)</summary>
-        <pre class="state-dump">
-          {JSON.stringify(table.store.state, null, 2)}
-        </pre>
+        <pre class="state-dump">{JSON.stringify(table.state(), null, 2)}</pre>
       </details>
     </div>
   )

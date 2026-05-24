@@ -71,7 +71,7 @@ function logSort() {
 }
 ```
 
-`table.store.state` is the full snapshot equivalent.
+`table.state` is the full snapshot equivalent.
 
 ## Pattern 2 — Reactive selector via `createTable`
 

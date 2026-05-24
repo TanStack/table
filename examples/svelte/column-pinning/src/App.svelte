@@ -303,5 +303,5 @@
     }
   </div>
   <br />
-  <pre>{JSON.stringify(table.store.state.columnPinning, null, 2)}</pre>
+  <pre>{JSON.stringify(table.state.columnPinning, null, 2)}</pre>
 </div>

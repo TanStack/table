@@ -8,7 +8,7 @@
         [debounce]="300"
         class="global-filter-input"
         placeholder="Fuzzy search all columns..."
-        [value]="table.store.state.globalFilter ?? ''"
+        [value]="table.state.globalFilter ?? ''"
         (changeEvent)="onGlobalFilterChange($event)"
       />
     </div>
@@ -301,7 +301,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {{ (table.store.state.pagination.pageIndex + 1).toLocaleString() }} of
+        {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
         {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
@@ -309,13 +309,13 @@
       | Go to page:
       <input
         type="number"
-        [value]="table.store.state.pagination.pageIndex + 1"
+        [value]="table.state.pagination.pageIndex + 1"
         (input)="onPageInputChange($event)"
         class="page-size-input"
       />
     </span>
 
-    <select [value]="table.store.state.pagination.pageSize" (change)="onPageSizeChange($event)">
+    <select [value]="table.state.pagination.pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 50, 100]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }

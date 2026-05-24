@@ -112,7 +112,7 @@ class LitTableExample extends LitElement {
       >[number]['headers'][number],
     ) => {
       if (this.columnResizeMode === 'onEnd' && header.column.getIsResizing()) {
-        const delta = table.store.state.columnResizing.deltaOffset ?? 0
+        const delta = table.state.columnResizing.deltaOffset ?? 0
         const dir = this.columnResizeDirection === 'rtl' ? -1 : 1
         return `translateX(${dir * delta}px)`
       }

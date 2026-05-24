@@ -37,14 +37,14 @@ state directly through table APIs inside reactive scopes and never need
 
 A `createTable(...)` call produces a `SolidTable` with several state surfaces:
 
-- `table.baseAtoms.<slice>` — internal writable atoms (signals).
-- `table.atoms.<slice>` — readonly derived atoms (memos). One per registered feature slice.
-- `table.store` — flat readonly TanStack Store snapshot. `table.store.state.pagination` reads the current value.
+- `table.baseAtoms.<slice>` — internal writable TanStack Store atoms. Treat these as write plumbing, not a render read surface.
+- `table.atoms.<slice>` — readonly derived atoms (memos). One per registered feature slice. Use `table.atoms.pagination.get()` for slice-level reactive reads.
+- `table.store` — flat readonly TanStack Store snapshot for explicit subscriptions. Prefer `table.state()` or `table.atoms.<slice>.get()` in JSX.
 - `table.state()` — **a Solid accessor**, not a value. Returns the result of the selector passed as the second argument to `createTable`. Default selector is identity.
 
 State slices only exist for features registered through `_features`. If
 `rowSortingFeature` is not in `_features`, then `table.atoms.sorting`,
-`table.store.state.sorting`, and `state.sorting` are all absent (TS error + missing at runtime).
+`table.state().sorting`, and `state.sorting` are all absent (TS error + missing at runtime).
 
 ## Creating a table — native signals
 

@@ -111,7 +111,7 @@
   </i>
   <div class="spacer-md"></div>
   <pre style="min-height: 10rem">
-    {JSON.stringify(table.store.state, null, 2)}
+    {JSON.stringify(table.state, null, 2)}
   </pre>
   <div class="spacer-md"></div>
   ({data.length.toLocaleString()} rows)

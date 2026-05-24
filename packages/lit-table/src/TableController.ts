@@ -31,7 +31,14 @@ export type LitTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
+> = Omit<Table<TFeatures, TData>, 'store'> & {
+  /**
+   * @deprecated Prefer `table.state` for render reads,
+   * `table.atoms.<slice>.get()` for slice snapshots, or `table.Subscribe` for
+   * explicit subscriptions. `table.store.state` is a current-value snapshot and
+   * is easy to misuse in render code.
+   */
+  readonly store: Table<TFeatures, TData>['store']
   /**
    * Subscribe to a selected slice of table state, or to a single source (atom or store).
    *
@@ -74,7 +81,7 @@ export type LitTable<
   }
   /**
    * The selected state of the table. This state may not match the structure of
-   * `table.store.state` because it is selected by the `selector` function that
+   * the full table state because it is selected by the selector function that
    * you pass as the 2nd argument to `controller.table()`.
    *
    * @example
@@ -224,7 +231,7 @@ export class TableController<
         return (selector?.(tableInstance.store.state) ??
           tableInstance.store.state) as TSelected
       },
-    }
+    } as unknown as LitTable<TFeatures, TData, TSelected>
   }
 
   private _setupSubscriptions() {

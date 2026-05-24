@@ -102,7 +102,7 @@ function App() {
       </i>
       <div class="spacer-md" />
       <pre style={{ 'min-height': '10rem' }}>
-        {JSON.stringify(table.store.state, null, 2)}
+        {JSON.stringify(table.state(), null, 2)}
       </pre>
       <div class="spacer-md" />({data().length.toLocaleString()} rows)
       <div class="scroll-container">

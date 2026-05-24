@@ -145,7 +145,7 @@ A table instance has three ways to look at its state:
 | ------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- |
 | `table.baseAtoms.<slice>` | writable TanStack Store atom (always exists for registered slices)             | low-level direct write; rare                |
 | `table.atoms.<slice>`     | **readonly** derived atom per registered feature; backed by Angular `computed` | reading current value or driving reactivity |
-| `table.store.state`       | flat snapshot object of every registered slice; backed by Angular `computed`   | reading multiple slices at once, devtools   |
+| `table.state`             | flat snapshot object of every registered slice; backed by Angular `computed`   | reading multiple slices at once, devtools   |
 
 All three are signal-backed in Angular. Reading any of them inside a template,
 `computed(...)`, or `effect(...)` registers an Angular dependency.
@@ -155,7 +155,7 @@ All three are signal-backed in Angular. Reading any of them inside a template,
 const pagination = this.table.atoms.pagination.get()
 
 // Same value, flat shape
-const pagination2 = this.table.store.state.pagination
+const pagination2 = this.table.state.pagination
 
 // Reactive derivation with custom equality
 import { computed } from '@angular/core'

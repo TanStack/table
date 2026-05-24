@@ -179,6 +179,6 @@
       {/each}
     </tbody>
   </table>
-  <pre>{JSON.stringify(table.store.state.columnOrder, null, 2)
+  <pre>{JSON.stringify(table.state.columnOrder, null, 2)
   }</pre>
 </div>

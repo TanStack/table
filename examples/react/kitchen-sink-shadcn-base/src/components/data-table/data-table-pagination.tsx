@@ -37,15 +37,13 @@ export function DataTablePagination({
         <div className="flex items-center space-x-2">
           <p className="whitespace-nowrap font-medium text-sm">Rows per page</p>
           <Select
-            value={`${table.store.state.pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
             }}
           >
             <SelectTrigger className="h-8 w-[4.5rem]">
-              <SelectValue
-                placeholder={table.store.state.pagination.pageSize}
-              />
+              <SelectValue placeholder={table.state.pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
               {pageSizeOptions.map((pageSize) => (
@@ -57,8 +55,8 @@ export function DataTablePagination({
           </Select>
         </div>
         <div className="flex items-center justify-center font-medium text-sm">
-          Page {(table.store.state.pagination.pageIndex + 1).toLocaleString()}{' '}
-          of {table.getPageCount().toLocaleString()}
+          Page {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+          {table.getPageCount().toLocaleString()}
         </div>
         <div className="flex items-center space-x-2">
           <Button

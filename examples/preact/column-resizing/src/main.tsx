@@ -157,8 +157,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.store.state.columnResizing
-                                    .deltaOffset ?? 0)
+                                  (table.state.columnResizing.deltaOffset ?? 0)
                                 }px)`
                               : '',
                         }}
@@ -219,8 +218,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.store.state.columnResizing
-                                    .deltaOffset ?? 0)
+                                  (table.state.columnResizing.deltaOffset ?? 0)
                                 }px)`
                               : '',
                         }}
@@ -295,8 +293,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.store.state.columnResizing
-                                    .deltaOffset ?? 0)
+                                  (table.state.columnResizing.deltaOffset ?? 0)
                                 }px)`
                               : '',
                         }}

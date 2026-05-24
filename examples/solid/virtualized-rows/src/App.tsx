@@ -87,7 +87,7 @@ function App() {
         ({data().length.toLocaleString()} rows)
         <VirtualizedTable table={table} />
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
     </>
   )
 }

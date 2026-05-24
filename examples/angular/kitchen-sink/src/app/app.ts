@@ -228,7 +228,7 @@ export class App {
   })
 
   readonly tableState = computed(() =>
-    JSON.stringify(this.table.store.state, null, 2),
+    JSON.stringify(this.table.state, null, 2),
   )
 
   refreshData = () => this.data.set(makeData(1_000))
@@ -290,7 +290,7 @@ export class App {
   }
 
   cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
-    const groupingActive = this.table.store.state.grouping.length > 0
+    const groupingActive = this.table.state.grouping.length > 0
     const hasAggregation = !!cell.column.columnDef.aggregationFn
     return !groupingActive
       ? undefined

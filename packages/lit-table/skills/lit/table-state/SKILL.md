@@ -161,7 +161,7 @@ Direct atom / store reads return the current value without subscribing to change
 ```ts
 const pagination = table.atoms.pagination.get()
 const sorting = table.atoms.sorting.get()
-const snapshot = table.store.state
+const snapshot = table.state
 ```
 
 ### 4. `table.Subscribe` in templates

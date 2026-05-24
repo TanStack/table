@@ -3,7 +3,7 @@ name: angular/migrate-v8-to-v9
 description: >
   Mechanical v8 → v9 migration for `@tanstack/angular-table`: `createAngularTable` →
   `injectTable`, `get*RowModel()` options → `_rowModels` factories with explicit `*Fns`,
-  required `_features` via `tableFeatures()`, `state` access via `table.store.state` instead
+  required `_features` via `tableFeatures()`, `state` access via `table.state` instead
   of `table.getState()`, `createColumnHelper<TFeatures, TData>()` generic-order flip, every
   type now requires `TFeatures`, `enablePinning` split into `enableColumnPinning` /
   `enableRowPinning`, `sortingFn` → `sortFn` rename pile, `ColumnSizingInfo` → `ColumnResizing`
@@ -124,21 +124,21 @@ Row-model and feature lookup tables → [`references/v8-to-v9-mapping.md`](refer
 
 ---
 
-## 3. State access: `getState()` → `table.store.state` (and atoms)
+## 3. State access: `getState()` → `table.state` (and atoms)
 
 ```ts
 // v8
 const { sorting, pagination } = table.getState()
 
 // v9 — flat snapshot
-const { sorting, pagination } = table.store.state
+const { sorting, pagination } = table.state
 
 // v9 — per slice (signal-backed in Angular)
 const sorting = table.atoms.sorting.get()
 const pagination = table.atoms.pagination.get()
 ```
 
-In Angular, all three (`table.atoms.<slice>`, `table.store.state`,
+In Angular, all three (`table.atoms.<slice>`, `table.state`,
 `table.baseAtoms.<slice>`) are signal-backed — reading them inside a template,
 `computed(...)`, or `effect(...)` registers an Angular dependency
 automatically. No `toSignal(...)` wrappers needed.
@@ -275,7 +275,7 @@ v8 backed reactivity with manual memoized getters. v9's adapter
 `computed` and every writable atom with an Angular `signal`. Consequences:
 
 - **No `toSignal(...)` adapters around table state.** Read `table.atoms.x.get()`
-  / `table.store.state.x` directly inside templates, `computed`, `effect`.
+  / `table.state.x` directly inside templates, `computed`, `effect`.
 - **`computed(...)` is for derivation / equality, not for "make it reactive".**
   Use `{ equal: shallow }` from `@tanstack/angular-table` on object/array
   slices to skip downstream work on no-op updates.
@@ -306,7 +306,7 @@ v8 backed reactivity with manual memoized getters. v9's adapter
 - [ ] Update `createColumnHelper<Person>()` → `createColumnHelper<typeof _features, Person>()`.
 - [ ] Update every `ColumnDef<Person>` / `Cell<Person, X>` etc. to include
       `TFeatures`.
-- [ ] Replace `table.getState()` reads with `table.store.state` (or
+- [ ] Replace `table.getState()` reads with `table.state` (or
       `table.atoms.<slice>.get()` for per-slice reactivity).
 - [ ] Remove any usage of the v8 single `onStateChange` — split into per-slice
       `on[State]Change`.
@@ -366,9 +366,9 @@ _rowModels: {
 Same for sorting, pagination, expanding, grouping, faceting. Selection,
 visibility, ordering, pinning, sizing, resizing do **not** need a row model.
 
-### 4. (HIGH) `getState()` → `table.store.state` text replacement loses reactivity
+### 4. (HIGH) `getState()` → `table.state` text replacement loses reactivity
 
-Bulk-replacing `table.getState().x` with `table.store.state.x` works for _current
+Bulk-replacing `table.getState().x` with `table.state.x` works for _current
 value_ reads, but if you used a `computed`/`memo` around `getState()` for
 reactivity, switch to `table.atoms.x.get()` — it's already signal-backed and
 needs no wrapper.

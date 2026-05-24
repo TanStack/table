@@ -6,7 +6,7 @@ description: >
   stable references OUTSIDE the `injectTable` initializer; pass only the `*Fns` your data needs
   to `createSortedRowModel` / `createFilteredRowModel` / `createGroupedRowModel`; use
   `ChangeDetectionStrategy.OnPush`; lean on signal-backed atoms (`table.atoms.<slice>.get()`)
-  instead of broad `table.store.state` reads where granularity matters; use `{ equal: shallow }`
+  instead of broad `table.state` reads where granularity matters; use `{ equal: shallow }`
   on object/array `computed` selectors; set `getRowId` for stable identity; track by `id` in
   every `@for`; defer cell components with `flexRenderComponent` only when you need its options;
   scope DI tokens via `[tanStackTable*]` directives to kill prop drilling.
@@ -148,13 +148,13 @@ All `examples/angular/*` use `OnPush`. Match that.
 
 ---
 
-## 4. Read narrowly — `table.atoms.<slice>.get()` over `table.store.state`
+## 4. Read narrowly — `table.atoms.<slice>.get()` over `table.state`
 
 Both surfaces are signal-backed. The difference is _which signal_ gets read.
 
 ```ts
 // Wider — depends on the flat snapshot signal (recomputes when ANY registered slice changes)
-const pageIndex = computed(() => this.table.store.state.pagination.pageIndex)
+const pageIndex = computed(() => this.table.state.pagination.pageIndex)
 
 // Narrower — depends only on the pagination atom
 const pageIndex = computed(() => this.table.atoms.pagination.get().pageIndex)

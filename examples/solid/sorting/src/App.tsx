@@ -136,7 +136,7 @@ function App() {
         </tbody>
       </table>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
     </div>
   )
 }

@@ -97,7 +97,7 @@ function App() {
     header: ReturnType<typeof table.getHeaderGroups>[number]['headers'][number],
   ) => {
     if (columnResizeMode() === 'onEnd' && header.column.getIsResizing()) {
-      const delta = table.store.state.columnResizing.deltaOffset ?? 0
+      const delta = table.state().columnResizing.deltaOffset ?? 0
       const dir = table.options.columnResizeDirection === 'rtl' ? -1 : 1
       return `translateX(${dir * delta}px)`
     }
@@ -293,7 +293,7 @@ function App() {
         </div>
       </div>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
     </div>
   )
 }

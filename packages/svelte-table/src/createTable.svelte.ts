@@ -15,9 +15,19 @@ export type SvelteTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
+> = Omit<Table<TFeatures, TData>, 'store'> & {
   /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
+   * @deprecated Prefer `table.state` for render reads,
+   * `table.atoms.<slice>.get()` for slice snapshots, or
+   * `useSelector(table.store, selector)` for explicit subscriptions.
+   * `table.store.state` is a current-value snapshot and is easy to misuse in
+   * render code.
+   */
+  readonly store: Table<TFeatures, TData>['store']
+  /**
+   * The selected state of the table. This state may not match the structure of
+   * the full table state because it is selected by the selector function that
+   * you pass as the 2nd argument to `createTable`.
    *
    * @example
    * const table = createTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
@@ -82,7 +92,7 @@ export function createTable<
   ) as TableOptions<TFeatures, TData>
 
   // 3. Construct table
-  const table = constructTable(resolvedOptions) as SvelteTable<
+  const table = constructTable(resolvedOptions) as unknown as SvelteTable<
     TFeatures,
     TData,
     TSelected

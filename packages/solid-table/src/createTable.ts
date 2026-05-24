@@ -28,7 +28,15 @@ export type SolidTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
+> = Omit<Table<TFeatures, TData>, 'store'> & {
+  /**
+   * @deprecated Prefer `table.state()` for component-level reactive reads,
+   * `table.atoms.<slice>.get()` for slice-level reactive reads, or
+   * `table.Subscribe` / `useSelector(table.store, selector)` for explicit
+   * subscriptions. Reading `table.state` directly does not follow Solid's
+   * accessor convention and may not update render code as expected.
+   */
+  readonly store: Table<TFeatures, TData>['store']
   /**
    * Subscribe to the store (selector required) or a single source (atom or store).
    * Source **without** `selector` is a separate overload so children receive
@@ -52,7 +60,9 @@ export type SolidTable<
     }): JSX.Element
   }
   /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
+   * The selected state of the table. This state may not match the structure of
+   * the full table state because it is selected by the selector function that
+   * you pass as the 2nd argument to `createTable`.
    *
    * @example
    * const table = createTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
@@ -125,7 +135,7 @@ export function createTable<
     mergedOptions,
   ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(resolvedOptions) as SolidTable<
+  const table = constructTable(resolvedOptions) as unknown as SolidTable<
     TFeatures,
     TData,
     TSelected

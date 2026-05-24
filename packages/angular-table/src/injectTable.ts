@@ -20,6 +20,7 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
+  TableState,
 } from '@tanstack/table-core'
 
 export type SubscribeSource<TValue> =
@@ -31,7 +32,19 @@ export type SubscribeSource<TValue> =
 export type AngularTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Table<TFeatures, TData>
+> = Table<TFeatures, TData> & {
+  /**
+   * @deprecated Prefer `table.state` for template/render reads,
+   * `table.atoms.<slice>.get()` for slice snapshots, or Angular computed values
+   * around explicit selectors. `table.state` is a current-value snapshot
+   * and is easy to misuse in render code.
+   */
+  readonly store: Table<TFeatures, TData>['store']
+  /**
+   * The current table state exposed for template/render reads.
+   */
+  readonly state: Readonly<TableState<TFeatures>>
+}
 
 /**
  * Creates and returns an Angular-reactive table instance.
@@ -107,6 +120,14 @@ export function injectTable<
           coreReativityFeature: angularReactivity(injector),
           ...options()._features,
         },
+      }) as AngularTable<TFeatures, TData>
+
+      Object.defineProperty(table, 'state', {
+        get() {
+          return table.state
+        },
+        configurable: true,
+        enumerable: true,
       })
 
       let isMount = true

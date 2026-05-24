@@ -110,8 +110,8 @@ function App() {
   })
 
   createEffect(() => {
-    if (table.store.state.columnFilters[0]?.id === 'fullName') {
-      if (table.store.state.sorting[0]?.id !== 'fullName') {
+    if (table.state().columnFilters[0]?.id === 'fullName') {
+      if (table.state().sorting[0]?.id !== 'fullName') {
         table.setSorting([{ id: 'fullName', desc: false }])
       }
     }
@@ -125,7 +125,7 @@ function App() {
       </div>
       <div>
         <DebouncedInput
-          value={(table.store.state.globalFilter ?? '') as string}
+          value={(table.state().globalFilter ?? '') as string}
           onChange={(value) => table.setGlobalFilter(String(value))}
           class="summary-panel"
           placeholder="Search all columns..."
@@ -221,7 +221,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.state().pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -229,7 +229,7 @@ function App() {
           | Go to page:
           <input
             type="number"
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.state().pagination.pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -240,7 +240,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.state().pagination.pageSize}
           onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
         >
           <For each={[10, 20, 30, 40, 50]}>
@@ -251,7 +251,7 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
     </div>
   )
 }

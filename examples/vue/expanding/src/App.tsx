@@ -294,7 +294,7 @@ export default defineComponent({
           <span class="inline-controls">
             <div>Page</div>
             <strong>
-              {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+              {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>
@@ -304,7 +304,7 @@ export default defineComponent({
               type="number"
               min="1"
               max={table.getPageCount()}
-              value={table.store.state.pagination.pageIndex + 1}
+              value={table.state.pagination.pageIndex + 1}
               onInput={(event: Event) => {
                 const target = event.currentTarget as HTMLInputElement
                 const page = target.value ? Number(target.value) - 1 : 0
@@ -314,7 +314,7 @@ export default defineComponent({
             />
           </span>
           <select
-            value={table.store.state.pagination.pageSize}
+            value={table.state.pagination.pageSize}
             onChange={(event: Event) => {
               const target = event.currentTarget as HTMLSelectElement
               table.setPageSize(Number(target.value))
@@ -328,7 +328,7 @@ export default defineComponent({
           </select>
         </div>
         <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-        <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+        <pre>{JSON.stringify(table.state, null, 2)}</pre>
       </div>
     )
   },

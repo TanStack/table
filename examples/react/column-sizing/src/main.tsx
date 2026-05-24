@@ -99,7 +99,7 @@ function App() {
                   // Don't actually do this to resize columns. This is just for demonstration purposes.
                   // See the Column Resizing Example for how to do this with dedicated resizing APIs efficiently.
                   table.setColumnSizing({
-                    ...table.store.state.columnSizing,
+                    ...table.state.columnSizing,
                     [column.id]: Number(e.target.value),
                   })
                 }}

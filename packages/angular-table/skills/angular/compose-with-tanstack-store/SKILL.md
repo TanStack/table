@@ -60,7 +60,7 @@ tracks the dependency.
 ```ts
 this.table.atoms.pagination.get()            // current value (reactive)
 this.table.atoms.pagination.subscribe(obs)   // RxJS observer form
-this.table.store.state.pagination            // flat snapshot read
+this.table.state.pagination            // flat snapshot read
 this.table.baseAtoms.pagination.set(...)     // direct internal write (avoid)
 ```
 

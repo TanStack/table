@@ -127,7 +127,7 @@ The Vue adapter calls `vueReactivity()` and installs it as `coreReativityFeature
 const sorting = table.atoms.sorting.get()
 
 // (b) Flat readonly store — every registered slice as one object
-const snapshot = table.store.state
+const snapshot = table.state
 
 // (c) Vue selected state — the value returned from useTable's 2nd arg
 const table = useTable(

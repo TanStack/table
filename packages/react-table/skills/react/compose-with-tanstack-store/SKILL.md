@@ -179,7 +179,7 @@ function Table({ data, filter }) {
 | `<table.Subscribe>` / `<Subscribe>` | ✓                           | Surgical re-render boundaries inside the tree                   |
 | `useSelector(table.atoms.X)`        | ✓                           | Narrowest possible subscription to one slice                    |
 | `table.atoms.X.get()`               | ✗ current-value read        | Inside event handlers / effects                                 |
-| `table.store.state`                 | ✗ current-value read        | Debugging / one-shot reads                                      |
+| `table.state`                       | ✗ current-value read        | Debugging / one-shot reads                                      |
 
 | Write path                      | Owner             | Effect                                                                             |
 | ------------------------------- | ----------------- | ---------------------------------------------------------------------------------- |

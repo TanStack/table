@@ -146,7 +146,7 @@ function MyTable(props: {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.state().pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -156,7 +156,7 @@ function MyTable(props: {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.state().pagination.pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -167,7 +167,7 @@ function MyTable(props: {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.state().pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.currentTarget.value))
           }}
@@ -181,7 +181,7 @@ function MyTable(props: {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
     </div>
   )
 }

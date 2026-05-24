@@ -210,12 +210,12 @@ class DashboardElement extends LitElement {
 
 ## Reading State Off the Controller
 
-The controller's `.table(...)` return value carries everything you usually need: feature methods, `FlexRender`, `Subscribe`, and the `state` projection. Direct reads off `table.atoms.<slice>.get()` and `table.store.state.<slice>` are current-value reads; reactivity comes from the host invalidation subscriptions the controller already wires up.
+The controller's `.table(...)` return value carries everything you usually need: feature methods, `FlexRender`, `Subscribe`, and the `state` projection. Direct reads off `table.atoms.<slice>.get()` and `table.state.<slice>` are current-value reads; reactivity comes from the host invalidation subscriptions the controller already wires up.
 
 ```ts
 // Inside render():
 const pagination = table.atoms.pagination.get() // current value
-const snapshot = table.store.state // current full state
+const snapshot = table.state // current full state
 const selected = table.state // projected via the selector you passed to .table()
 ```
 
