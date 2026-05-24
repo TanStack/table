@@ -1,0 +1,115 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  effect,
+  inject,
+  signal,
+} from '@angular/core'
+import { createAtom, injectSelector } from '@tanstack/angular-store'
+import {
+  FlexRender,
+  createColumnHelper,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  injectTable,
+  rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/angular-table'
+import { makeData } from './makeData'
+import type { PaginationState, SortingState } from '@tanstack/angular-table'
+import type { Person } from './makeData'
+
+const _features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
+
+const columnHelper = createColumnHelper<typeof _features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('lastName', {
+    header: 'Last Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('age', { header: 'Age' }),
+  columnHelper.accessor('visits', { header: 'Visits' }),
+  columnHelper.accessor('status', { header: 'Status' }),
+  columnHelper.accessor('progress', { header: 'Profile Progress' }),
+])
+
+@Component({
+  selector: 'app-root',
+  imports: [FlexRender],
+  templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class App {
+  private readonly injector = inject(Injector)
+
+  readonly data = signal(makeData(1_000))
+  readonly renderCount = signal(0)
+  readonly sortingAtom = createAtom<SortingState>([])
+  readonly paginationAtom = createAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  readonly sorting = injectSelector(this.sortingAtom)
+  readonly pagination = injectSelector(this.paginationAtom)
+
+  readonly table = injectTable(() => ({
+    debugTable: true,
+    _features,
+    _rowModels: {
+      sortedRowModel: createSortedRowModel<typeof _features, Person>(sortFns),
+      paginatedRowModel: createPaginatedRowModel(),
+    },
+    columns,
+    data: this.data(),
+    atoms: {
+      sorting: this.sortingAtom,
+      pagination: this.paginationAtom,
+    },
+  }))
+
+  constructor() {
+    effect(() => {
+      console.log('atom', this.paginationAtom.get())
+    })
+  }
+
+  refreshData() {
+    this.data.set(makeData(1_000))
+  }
+
+  stressTest() {
+    this.data.set(makeData(200_000))
+  }
+
+  rerender() {
+    this.renderCount.update((count) => count + 1)
+  }
+
+  onPageInputChange(event: Event) {
+    const input = event.target as HTMLInputElement
+    const page = input.value ? Number(input.value) - 1 : 0
+    this.table.setPageIndex(page)
+  }
+
+  onPageSizeChange(event: Event) {
+    const select = event.target as HTMLSelectElement
+    this.table.setPageSize(Number(select.value))
+  }
+
+  stateJson() {
+    return JSON.stringify(
+      { sorting: this.sorting(), pagination: this.pagination() },
+      null,
+      2,
+    )
+  }
+}

@@ -1,17 +1,16 @@
 <div class="demo-root">
-  <button (click)="refreshData()" class="demo-button">Regenerate Data</button>
-  <button (click)="stressTest()" class="demo-button">Stress Test (1k rows)</button>
-  <div class="spacer-md"></div>
   <table>
     <thead>
       @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
         <tr>
           @for (header of headerGroup.headers; track header.id) {
-            @if (!header.isPlaceholder) {
-              <th *flexRenderHeader="header; let header">
-                <div [innerHTML]="header"></div>
-              </th>
-            }
+            <th>
+              @if (!header.isPlaceholder) {
+                <ng-container *flexRenderHeader="header; let headerCell">
+                  {{ headerCell }}
+                </ng-container>
+              }
+            </th>
           }
         </tr>
       }
@@ -20,8 +19,10 @@
       @for (row of table.getRowModel().rows; track row.id) {
         <tr>
           @for (cell of row.getAllCells(); track cell.id) {
-            <td *flexRenderCell="cell; let cell">
-              <div [innerHTML]="cell"></div>
+            <td>
+              <ng-container *flexRenderCell="cell; let renderCell">
+                {{ renderCell }}
+              </ng-container>
             </td>
           }
         </tr>
@@ -31,12 +32,19 @@
       @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
         <tr>
           @for (footer of footerGroup.headers; track footer.id) {
-            <th *flexRenderFooter="footer; let footer">
-              {{ footer }}
+            <th>
+              @if (!footer.isPlaceholder) {
+                <ng-container *flexRenderFooter="footer; let footerCell">
+                  {{ footerCell }}
+                </ng-container>
+              }
             </th>
           }
         </tr>
       }
     </tfoot>
   </table>
+  <div class="spacer-md"></div>
+  <button (click)="rerender()" class="demo-button">Rerender</button>
+  <span class="demo-note">Render count: {{ renderCount() }}</span>
 </div>
