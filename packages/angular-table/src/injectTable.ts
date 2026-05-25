@@ -6,6 +6,7 @@ import {
   inject,
   untracked,
 } from '@angular/core'
+import { injectSelector } from '@tanstack/angular-store'
 import { constructTable } from '@tanstack/table-core'
 import { lazyInit } from './lazySignalInitializer'
 import { angularReactivity } from './reactivity'
@@ -121,10 +122,11 @@ export function injectTable<
           ...options()._features,
         },
       }) as AngularTable<TFeatures, TData>
+      const stateSignal = injectSelector(table.store, undefined, { injector })
 
       Object.defineProperty(table, 'state', {
         get() {
-          return table.state
+          return stateSignal()
         },
         configurable: true,
         enumerable: true,

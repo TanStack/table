@@ -1,11 +1,14 @@
-import { NgZone, computed, signal, untracked } from '@angular/core'
+import { DestroyRef, NgZone, computed, signal, untracked } from '@angular/core'
 import { toObservable } from '@angular/core/rxjs-interop'
+import { batch, createAtom } from '@tanstack/angular-store'
 import type { Atom, Observer, ReadonlyAtom } from '@tanstack/angular-store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
 import type { Injector, Signal, WritableSignal } from '@angular/core'
+
+const optionsStoreDebugName = 'table/optionsStore'
 
 function signalToReadonlyAtom<T>(
   signal: Signal<T>,
@@ -14,9 +17,13 @@ function signalToReadonlyAtom<T>(
   return Object.assign(signal, {
     get: () => signal(),
     subscribe: (observer: Observer<T>) => {
-      return toObservable(computed(signal), { injector: injector }).subscribe(
-        observer,
-      )
+      const subscription = toObservable(computed(signal), {
+        injector: injector,
+      }).subscribe(observer)
+
+      return {
+        unsubscribe: () => subscription.unsubscribe(),
+      }
     },
   })
 }
@@ -33,9 +40,13 @@ function signalToWritableAtom<T>(
     },
     get: () => signal(),
     subscribe: (observer: Observer<T>) => {
-      return toObservable(computed(signal), { injector: injector }).subscribe(
-        observer,
-      )
+      const subscription = toObservable(computed(signal), {
+        injector: injector,
+      }).subscribe(observer)
+
+      return {
+        unsubscribe: () => subscription.unsubscribe(),
+      }
     },
   })
 }
@@ -43,34 +54,59 @@ function signalToWritableAtom<T>(
 /**
  * Creates the table-core reactivity bindings used by the Angular adapter.
  *
- * Readonly table atoms are backed by Angular `computed` signals and writable
- * atoms by Angular `signal`. Subscriptions bridge through `toObservable` with
- * the caller's injector so table APIs can be consumed from Angular `computed`
- * and `effect` calls.
+ * Table state atoms are backed by TanStack Store atoms. The options store stays
+ * framework-native because row-model APIs read `table.options` directly during
+ * render. Readonly table atoms bridge Store dependency tracking into Angular
+ * computed signals.
  */
 export function angularReactivity(injector: Injector): TableReactivityBindings {
   const ngZone = injector.get(NgZone)
+  const destroyRef = injector.get(DestroyRef)
+
   return {
     createOptionsStore: true,
     schedule: (fn) => ngZone.runOutsideAngular(() => queueMicrotask(fn)),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      const signal = computed(() => fn(), {
-        equal: options?.compare,
-        debugName: options?.debugName,
+      const storeAtom = createAtom(() => fn(), {
+        compare: options?.compare,
       })
-      return signalToReadonlyAtom(signal, injector)
+      const version = signal(0, {
+        equal: () => false,
+      })
+      const subscription = storeAtom.subscribe(() => {
+        version.update((value) => value + 1)
+      })
+      destroyRef.onDestroy(() => subscription.unsubscribe())
+
+      const value = computed(
+        () => {
+          version()
+          return storeAtom.get()
+        },
+        {
+          equal: options?.compare,
+          debugName: options?.debugName,
+        },
+      )
+      return signalToReadonlyAtom(value, injector)
     },
     createWritableAtom: <T>(
       value: T,
       options?: TableAtomOptions<T>,
     ): Atom<T> => {
-      const writableSignal = signal(value, {
-        equal: options?.compare,
-        debugName: options?.debugName,
+      if (options?.debugName === optionsStoreDebugName) {
+        const writableSignal = signal(value, {
+          equal: options.compare,
+          debugName: options.debugName,
+        })
+        return signalToWritableAtom(writableSignal, injector)
+      }
+
+      return createAtom(value, {
+        compare: options?.compare,
       })
-      return signalToWritableAtom(writableSignal, injector)
     },
     untrack: untracked,
-    batch: (fn) => fn(),
+    batch,
   }
 }

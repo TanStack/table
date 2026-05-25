@@ -1,8 +1,9 @@
 import { describe, expect, test, vi } from 'vitest'
 import { computed, effect, signal } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
+import { createAtom } from '@tanstack/angular-store'
 import { injectTable, stockFeatures } from '../src'
-import type { ColumnDef } from '../src'
+import type { ColumnDef, RowSelectionState } from '../src'
 import type { WritableSignal } from '@angular/core'
 
 describe('angularReactivityFeature', () => {
@@ -101,6 +102,44 @@ describe('angularReactivityFeature', () => {
         [true],
         [false],
       ])
+    })
+
+    test('methods within effect react to external atom changes', () => {
+      const rowSelectionAtom = createAtom<RowSelectionState>({})
+      const table = TestBed.runInInjectionContext(() =>
+        injectTable(() => ({
+          data: data(),
+          _features: { ...stockFeatures },
+          columns: columns,
+          getRowId: (row) => row.id,
+          atoms: {
+            rowSelection: rowSelectionAtom,
+          },
+        })),
+      )
+      const isSelectedRow1Captor = vi.fn<(val: boolean) => void>()
+      const tableStateCaptor = vi.fn<(val: RowSelectionState) => void>()
+
+      TestBed.runInInjectionContext(() => {
+        effect(() => {
+          isSelectedRow1Captor(table.getRow('1').getIsSelected())
+        })
+        effect(() => {
+          tableStateCaptor(table.state.rowSelection)
+        })
+      })
+
+      TestBed.tick()
+      expect(isSelectedRow1Captor).toHaveBeenCalledTimes(1)
+      expect(tableStateCaptor).toHaveBeenCalledTimes(1)
+
+      rowSelectionAtom.set({ 1: true })
+      TestBed.tick()
+
+      expect(isSelectedRow1Captor).toHaveBeenCalledTimes(2)
+      expect(tableStateCaptor).toHaveBeenCalledTimes(2)
+      expect(isSelectedRow1Captor.mock.calls).toEqual([[false], [true]])
+      expect(tableStateCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
     })
   })
 })
