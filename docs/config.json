@@ -936,8 +936,11 @@
         {
           "label": "angular",
           "children": [
-            { "label": "Basic (Inject Table)", "to": "framework/angular/examples/basic-inject-table" },
-            { "label": "Basic (App Table)", "to": "framework/angular/examples/basic-app-table" }
+            { "label": "Basic (injectTable)", "to": "framework/angular/examples/basic-inject-table" },
+            { "label": "Basic (createAppTable)", "to": "framework/angular/examples/basic-app-table" },
+            { "label": "Basic (External State)", "to": "framework/angular/examples/basic-external-state" },
+            { "label": "Basic (External Atoms)", "to": "framework/angular/examples/basic-external-atoms" },
+            { "label": "Header Groups", "to": "framework/angular/examples/column-groups" }
           ]
         },
         {
@@ -1020,15 +1023,22 @@
           "label": "angular",
           "children": [
             { "label": "Column Filters", "to": "framework/angular/examples/filters" },
+            { "label": "Column Filters (Faceted)", "to": "framework/angular/examples/filters-faceted" },
+            { "label": "Fuzzy Search Filters", "to": "framework/angular/examples/filters-fuzzy" },
             { "label": "Column Ordering", "to": "framework/angular/examples/column-ordering" },
             { "label": "Column Pinning", "to": "framework/angular/examples/column-pinning" },
-            { "label": "Column Pinning (Sticky)", "to": "framework/angular/examples/column-pinning-sticky" },
-            { "label": "Column Resizing", "to": "framework/angular/examples/column-resizing-performant" },
+            { "label": "Column Pinning (Split)", "to": "framework/angular/examples/column-pinning-split" },
+            { "label": "Sticky Column Pinning", "to": "framework/angular/examples/column-pinning-sticky" },
+            { "label": "Column Sizing", "to": "framework/angular/examples/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/angular/examples/column-resizing" },
+            { "label": "Performant Column Resizing", "to": "framework/angular/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/angular/examples/column-visibility" },
-            { "label": "Row Expanding", "to": "framework/angular/examples/expanding" },
-            { "label": "Column Grouping", "to": "framework/angular/examples/grouping" },
+            { "label": "Expanding", "to": "framework/angular/examples/expanding" },
+            { "label": "Grouping", "to": "framework/angular/examples/grouping" },
+            { "label": "Pagination", "to": "framework/angular/examples/pagination" },
+            { "label": "Row Pinning", "to": "framework/angular/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/angular/examples/row-selection" },
-            { "label": "Row Selection (Signal)", "to": "framework/angular/examples/row-selection-signal" },
+            { "label": "Sorting", "to": "framework/angular/examples/sorting" },
             { "label": "Kitchen Sink (All Features)", "to": "framework/angular/examples/kitchen-sink" }
           ]
         },
@@ -1192,8 +1202,14 @@
             { "label": "Composable Tables", "to": "framework/angular/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/angular/examples/custom-plugin" },
             { "label": "Sub Components", "to": "framework/angular/examples/sub-components" },
+            { "label": "With TanStack Virtual - Columns", "to": "framework/angular/examples/virtualized-columns" },
+            { "label": "With TanStack Virtual - Rows", "to": "framework/angular/examples/virtualized-rows" },
+            { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/angular/examples/virtualized-infinite-scrolling" },
+            { "label": "With TanStack Form", "to": "framework/angular/examples/with-tanstack-form" },
+            { "label": "With TanStack Query", "to": "framework/angular/examples/with-tanstack-query" },
             { "label": "Fetch API data (SPA / SSR)", "to": "framework/angular/examples/remote-data" },
             { "label": "Signal Input", "to": "framework/angular/examples/signal-input" },
+            { "label": "Row Selection (Signal)", "to": "framework/angular/examples/row-selection-signal" },
             { "label": "Editable data", "to": "framework/angular/examples/editable" },
             { "label": "Row Drag & Drop", "to": "framework/angular/examples/row-dnd" }
           ]

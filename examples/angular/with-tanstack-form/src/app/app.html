@@ -1,0 +1,92 @@
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (200k rows)
+  </button>
+  <button class="demo-button success-action" type="button" (click)="addRow()">Add Row</button>
+  <button
+    class="demo-button primary-action"
+    type="button"
+    [disabled]="!validation().success"
+    (click)="submit()"
+  >
+    Save All Changes
+  </button>
+  <span [class.success-text]="validation().success" [class.error-text]="!validation().success">{{
+    validation().success ? 'Valid' : 'Invalid'
+  }}</span>
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+                <ng-container *flexRenderHeader="header; let headerCell">{{
+                  headerCell
+                }}</ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          <td>
+            <input
+              class="text-input"
+              [value]="row.original.firstName"
+              (input)="update(row.index, 'firstName', $event)"
+            />
+          </td>
+          <td>
+            <input
+              class="text-input"
+              [value]="row.original.lastName"
+              (input)="update(row.index, 'lastName', $event)"
+            />
+          </td>
+          <td>
+            <input
+              class="number-input"
+              type="number"
+              [value]="row.original.age"
+              (input)="update(row.index, 'age', $event)"
+            />
+          </td>
+          <td>
+            <input
+              class="number-input"
+              type="number"
+              [value]="row.original.visits"
+              (input)="update(row.index, 'visits', $event)"
+            />
+          </td>
+          <td>
+            <select
+              class="compact-input"
+              [value]="row.original.status"
+              (change)="update(row.index, 'status', $event)"
+            >
+              <option value="relationship">relationship</option>
+              <option value="complicated">complicated</option>
+              <option value="single">single</option>
+            </select>
+          </td>
+          <td>
+            <input
+              class="number-input"
+              type="number"
+              [value]="row.original.progress"
+              (input)="update(row.index, 'progress', $event)"
+            />
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <pre>{{ tableState() }}</pre>
+</div>

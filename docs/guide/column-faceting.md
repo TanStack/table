@@ -28,6 +28,10 @@ Want to skip to the implementation? Check out these examples:
 
 - [Faceted Filters](../framework/vue/examples/filters-faceted)
 
+# Angular
+
+- [Faceted Filters](../framework/angular/examples/filters-faceted)
+
 # Lit
 
 - [Faceted Filters](../framework/lit/examples/filters-faceted)

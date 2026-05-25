@@ -747,7 +747,7 @@ The `RowData` type is now more restrictive.
 ## Examples
 
 Check out these examples to see v9 patterns in action:
-- [Basic](../examples/basic)
+- [Basic (Inject Table)](../examples/basic-inject-table)
 - [Basic (App Table)](../examples/basic-app-table)
 - [Filters](../examples/filters)
 - [Column Ordering](../examples/column-ordering)

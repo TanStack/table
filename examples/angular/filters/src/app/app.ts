@@ -6,11 +6,7 @@ import {
 } from '@angular/core'
 import {
   FlexRender,
-  columnFacetingFeature,
   columnFilteringFeature,
-  createFacetedMinMaxValues,
-  createFacetedRowModel,
-  createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
@@ -27,16 +23,12 @@ import type { Person } from './makeData'
 
 export const _features = tableFeatures({
   columnFilteringFeature,
-  columnFacetingFeature,
   rowPaginationFeature,
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
   _features,
   _rowModels: {
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedRowModel: createFacetedRowModel(),
-    facetedUniqueValues: createFacetedUniqueValues(),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
   },

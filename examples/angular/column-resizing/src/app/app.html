@@ -1,0 +1,170 @@
+<div class="demo-root">
+  <div>
+    <button class="demo-button" (click)="refreshData()">Regenerate Data</button>
+    <button class="demo-button" (click)="stressTest()">Stress Test (100 rows)</button>
+  </div>
+  <div class="spacer-md"></div>
+  <select
+    class="demo-button outlined-control"
+    [value]="columnResizeMode()"
+    (change)="setResizeMode($event)"
+  >
+    <option value="onEnd">Resize: "onEnd"</option>
+    <option value="onChange">Resize: "onChange"</option>
+  </select>
+  <select
+    class="demo-button outlined-control"
+    [value]="columnResizeDirection()"
+    (change)="setResizeDirection($event)"
+  >
+    <option value="ltr">Resize Direction: "ltr"</option>
+    <option value="rtl">Resize Direction: "rtl"</option>
+  </select>
+  <div [style.direction]="table.options.columnResizeDirection">
+    <div class="spacer-md"></div>
+    <div class="section-title">&lt;table/&gt;</div>
+    <div class="scroll-container">
+      <table [style.width.px]="table.getCenterTotalSize()">
+        <thead>
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <tr>
+              @for (header of headerGroup.headers; track header.id) {
+                <th [attr.colSpan]="header.colSpan" [style.width.px]="header.getSize()">
+                  @if (!header.isPlaceholder) {
+                    <ng-container *flexRenderHeader="header; let headerCell">
+                      {{ headerCell }}
+                    </ng-container>
+                  }
+                  <div
+                    class="resizer"
+                    [class.ltr]="table.options.columnResizeDirection === 'ltr'"
+                    [class.rtl]="table.options.columnResizeDirection === 'rtl'"
+                    [class.isResizing]="header.column.getIsResizing()"
+                    [style.transform]="getResizeTransform(header)"
+                    (dblclick)="header.column.resetSize()"
+                    (mousedown)="header.getResizeHandler()($event)"
+                    (touchstart)="header.getResizeHandler()($event)"
+                  ></div>
+                </th>
+              }
+            </tr>
+          }
+        </thead>
+        <tbody>
+          @for (row of table.getRowModel().rows; track row.id) {
+            <tr>
+              @for (cell of row.getAllCells(); track cell.id) {
+                <td [style.width.px]="cell.column.getSize()">
+                  <ng-container *flexRenderCell="cell; let renderCell">
+                    {{ renderCell }}
+                  </ng-container>
+                </td>
+              }
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+    <div class="spacer-md"></div>
+    <div class="section-title">&lt;div/&gt; (relative)</div>
+    <div class="scroll-container">
+      <div class="divTable" [style.width.px]="table.getTotalSize()">
+        <div class="thead">
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <div class="tr">
+              @for (header of headerGroup.headers; track header.id) {
+                <div class="th" [style.width.px]="header.getSize()">
+                  @if (!header.isPlaceholder) {
+                    <ng-container *flexRenderHeader="header; let headerCell">
+                      {{ headerCell }}
+                    </ng-container>
+                  }
+                  <div
+                    class="resizer"
+                    [class.ltr]="table.options.columnResizeDirection === 'ltr'"
+                    [class.rtl]="table.options.columnResizeDirection === 'rtl'"
+                    [class.isResizing]="header.column.getIsResizing()"
+                    [style.transform]="getResizeTransform(header)"
+                    (dblclick)="header.column.resetSize()"
+                    (mousedown)="header.getResizeHandler()($event)"
+                    (touchstart)="header.getResizeHandler()($event)"
+                  ></div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+        <div class="tbody">
+          @for (row of table.getRowModel().rows; track row.id) {
+            <div class="tr">
+              @for (cell of row.getAllCells(); track cell.id) {
+                <div class="td" [style.width.px]="cell.column.getSize()">
+                  <ng-container *flexRenderCell="cell; let renderCell">
+                    {{ renderCell }}
+                  </ng-container>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+    <div class="spacer-md"></div>
+    <div class="section-title">&lt;div/&gt; (absolute positioning)</div>
+    <div class="scroll-container">
+      <div class="divTable" [style.width.px]="table.getTotalSize()">
+        <div class="thead">
+          @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+            <div class="tr" style="position: relative">
+              @for (header of headerGroup.headers; track header.id) {
+                <div
+                  class="th"
+                  style="position: absolute"
+                  [style.left.px]="header.getStart()"
+                  [style.width.px]="header.getSize()"
+                >
+                  @if (!header.isPlaceholder) {
+                    <ng-container *flexRenderHeader="header; let headerCell">
+                      {{ headerCell }}
+                    </ng-container>
+                  }
+                  <div
+                    class="resizer"
+                    [class.ltr]="table.options.columnResizeDirection === 'ltr'"
+                    [class.rtl]="table.options.columnResizeDirection === 'rtl'"
+                    [class.isResizing]="header.column.getIsResizing()"
+                    [style.transform]="getResizeTransform(header)"
+                    (dblclick)="header.column.resetSize()"
+                    (mousedown)="header.getResizeHandler()($event)"
+                    (touchstart)="header.getResizeHandler()($event)"
+                  ></div>
+                </div>
+              }
+            </div>
+          }
+        </div>
+        <div class="tbody">
+          @for (row of table.getRowModel().rows; track row.id) {
+            <div class="tr" style="position: relative">
+              @for (cell of row.getAllCells(); track cell.id) {
+                <div
+                  class="td"
+                  style="position: absolute"
+                  [style.left.px]="cell.column.getStart()"
+                  [style.width.px]="cell.column.getSize()"
+                >
+                  <ng-container *flexRenderCell="cell; let renderCell">
+                    {{ renderCell }}
+                  </ng-container>
+                </div>
+              }
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="spacer-md"></div>
+  <button class="demo-button" (click)="rerender()">Rerender</button>
+  <pre>{{ tableState() }}</pre>
+</div>

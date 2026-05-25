@@ -2,7 +2,7 @@
 title: createTableHook Guide
 ---
 
-`createTableHook` is an advanced API for building reusable, composable table configurations in Preact. It mirrors the [React `createTableHook` API](../react/guide/create-table-hook) — you define features, row models, and pre-bound components once, then reuse them across multiple tables with minimal boilerplate.
+`createTableHook` is an advanced API for building reusable, composable table configurations in Preact. It mirrors the [React `createTableHook` API](../../react/guide/create-table-hook) — you define features, row models, and pre-bound components once, then reuse them across multiple tables with minimal boilerplate.
 
 > **When to use it:** Use `createTableHook` when you have multiple tables that share the same configuration. For a single table, `useTable` is sufficient.
 
@@ -165,5 +165,5 @@ Same as React: `table.AppTable`, `table.AppHeader`, `table.AppCell`, and `table.
 
 ## See Also
 
-- [React createTableHook Guide](../react/guide/create-table-hook) — The React guide has more detailed examples and the same API.
-- [Composable Tables (React)](../react/examples/composable-tables) — Reference implementation (Preact API mirrors React).
+- [React createTableHook Guide](../../react/guide/create-table-hook) — The React guide has more detailed examples and the same API.
+- [Composable Tables (React)](../../react/examples/composable-tables) — Reference implementation (Preact API mirrors React).

@@ -1,0 +1,76 @@
+<div class="app">
+  <p>
+    <strong>Notice:</strong> You are currently running Angular in development mode. Virtualized
+    rendering performance will be slightly degraded until this application is built for production.
+  </p>
+  <div>({{ columns().length.toLocaleString() }} columns)</div>
+  <div>({{ data().length.toLocaleString() }} rows)</div>
+  <div>
+    <button (click)="refreshData()">Regenerate Data</button>
+    <button (click)="stressTestRows()">Stress Test (10k rows)</button>
+    <button (click)="stressTestColumns()">Stress Test (10k columns)</button>
+  </div>
+  <div #scrollContainer class="container" style="overflow: auto; position: relative; height: 800px">
+    <!-- Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights -->
+    <table style="display: grid">
+      <thead style="display: grid; position: sticky; top: 0; z-index: 1">
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr style="display: flex; width: 100%">
+            @if (virtualPaddingLeft()) {
+              <!-- fake empty column to the left for virtualization scroll padding -->
+              <th style="display: flex" [style.width.px]="virtualPaddingLeft()"></th>
+            }
+            @for (virtualColumn of virtualColumns(); track virtualColumn.key) {
+              @let header = headerGroup.headers[virtualColumn.index];
+              <th style="display: flex" [style.width.px]="header.getSize()">
+                @if (!header.isPlaceholder) {
+                  <div
+                    [class.sortable-header]="header.column.getCanSort()"
+                    (click)="header.column.getToggleSortingHandler()?.($event)"
+                  >
+                    <ng-container *flexRenderHeader="header; let headerCell">
+                      {{ headerCell }}
+                    </ng-container>
+                    {{ sortIndicator(header.column.getIsSorted()) }}
+                  </div>
+                }
+              </th>
+            }
+            @if (virtualPaddingRight()) {
+              <!-- fake empty column to the right for virtualization scroll padding -->
+              <th style="display: flex" [style.width.px]="virtualPaddingRight()"></th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody style="display: grid; position: relative" [style.height.px]="totalSize()">
+        @for (virtualRow of virtualRows(); track virtualRow.key) {
+          @let row = rows()[virtualRow.index];
+          @let visibleCells = row.getVisibleCells();
+          <tr
+            [attr.data-index]="virtualRow.index"
+            [style.transform]="'translateY(' + virtualRow.start + 'px)'"
+            style="display: flex; position: absolute; width: 100%"
+          >
+            @if (virtualPaddingLeft()) {
+              <!-- fake empty column to the left for virtualization scroll padding -->
+              <td style="display: flex" [style.width.px]="virtualPaddingLeft()"></td>
+            }
+            @for (virtualColumn of virtualColumns(); track virtualColumn.key) {
+              @let cell = visibleCells[virtualColumn.index];
+              <td style="display: flex" [style.width.px]="cell.column.getSize()">
+                <ng-container *flexRenderCell="cell; let renderCell">
+                  {{ renderCell }}
+                </ng-container>
+              </td>
+            }
+            @if (virtualPaddingRight()) {
+              <!-- fake empty column to the right for virtualization scroll padding -->
+              <td style="display: flex" [style.width.px]="virtualPaddingRight()"></td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

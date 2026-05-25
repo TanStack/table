@@ -290,6 +290,58 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  examples/angular/column-groups:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   examples/angular/column-ordering:
     dependencies:
       '@angular/common':
@@ -394,6 +446,58 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  examples/angular/column-pinning-split:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   examples/angular/column-pinning-sticky:
     dependencies:
       '@angular/common':
@@ -446,7 +550,111 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  examples/angular/column-resizing:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   examples/angular/column-resizing-performant:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/column-sizing:
     dependencies:
       '@angular/common':
         specifier: ^21.2.13
@@ -810,6 +1018,119 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  examples/angular/filters-faceted:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-pacer':
+        specifier: ^0.23.0
+        version: 0.23.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/filters-fuzzy:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-pacer':
+        specifier: ^0.23.0
+        version: 0.23.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      '@tanstack/match-sorter-utils':
+        specifier: workspace:*
+        version: link:../../../packages/match-sorter-utils
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   examples/angular/grouping:
     dependencies:
       '@angular/common':
@@ -911,6 +1232,58 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  examples/angular/pagination:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   examples/angular/remote-data:
     dependencies:
       '@angular/common':
@@ -983,6 +1356,58 @@ importers:
       '@angular/cdk':
         specifier: ^21.2.12
         version: 21.2.12(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/row-pinning:
+    dependencies:
       '@angular/common':
         specifier: ^21.2.13
         version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
@@ -1198,6 +1623,58 @@ importers:
         specifier: 6.0.3
         version: 6.0.3
 
+  examples/angular/sorting:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
   examples/angular/sub-components:
     dependencies:
       '@angular/common':
@@ -1224,6 +1701,284 @@ importers:
       '@tanstack/angular-devtools':
         specifier: ^0.0.4
         version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/virtualized-columns:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      '@tanstack/angular-virtual':
+        specifier: ^5.0.1
+        version: 5.0.1(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/virtualized-infinite-scrolling:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      '@tanstack/angular-virtual':
+        specifier: ^5.0.1
+        version: 5.0.1(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/virtualized-rows:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      '@tanstack/angular-virtual':
+        specifier: ^5.0.1
+        version: 5.0.1(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/with-tanstack-form:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-form':
+        specifier: ^1.32.0
+        version: 1.32.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@angular/build':
+        specifier: ^21.2.11
+        version: 21.2.11(80151f06bb48b510832a92a42ff06e0e)
+      '@angular/cli':
+        specifier: ^21.2.11
+        version: 21.2.11(@types/node@25.9.1)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/with-tanstack-query:
+    dependencies:
+      '@angular/common':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^21.2.13
+        version: 21.2.13
+      '@angular/core':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^21.2.13
+        version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.4.0
+        version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
+      '@tanstack/angular-query-experimental':
+        specifier: ^5.100.14
+        version: 5.100.14(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
@@ -12938,16 +13693,38 @@ packages:
     peerDependencies:
       '@angular/core': '>=21.0.0'
 
+  '@tanstack/angular-form@1.32.0':
+    resolution: {integrity: sha512-Hc8PZxKxzOCvskzRev9d0E5CN7ynJ4WTL4DwJe+iIR3vcFSLUMLRK+O/am2FtucHj5aMtLqkgv6bkTQBbL9AMQ==}
+    peerDependencies:
+      '@angular/core': '>=19.0.0'
+
   '@tanstack/angular-pacer@0.23.0':
     resolution: {integrity: sha512-ejhXrN4xmdS01ubTotq5AuAcEsZVXjX2HgW8QaeE2f7mMhLqfGeY1tCBtUkdfgdboHAv+oG/SQtj7SmfIJIw/Q==}
     engines: {node: '>=18'}
     peerDependencies:
       '@angular/core': '>=17.0.0'
 
+  '@tanstack/angular-query-experimental@5.100.14':
+    resolution: {integrity: sha512-j97AzXmXG3S18XQPcFO9BpRG1dIupjddt2334M3tzDICnIeSTQY7PNSrHRYKQY4jZiBTSkyhTZc3GDMRqzEXyQ==}
+    peerDependencies:
+      '@angular/common': '>=16.0.0'
+      '@angular/core': '>=16.0.0'
+
   '@tanstack/angular-store@0.11.0':
     resolution: {integrity: sha512-MZXax5LbzrmX8SERXv3GlzURkqJ+EW7tMTn3Hw7dFmOBxknNpMUbbzHUgpco7W1dNavnrQVdYJ1Sz5JcQ00qvg==}
     peerDependencies:
       '@angular/common': '>=19.0.0'
+      '@angular/core': '>=19.0.0'
+
+  '@tanstack/angular-store@0.9.3':
+    resolution: {integrity: sha512-8i6GreuOQ7UFIQpYWLpXUaFHEP4XcaMcN+F05Bo5LOPN8s90fiCzt00CQbV9rbRHqzXaIcY8bwcXKOTRMxNVNQ==}
+    peerDependencies:
+      '@angular/common': '>=19.0.0'
+      '@angular/core': '>=19.0.0'
+
+  '@tanstack/angular-virtual@5.0.1':
+    resolution: {integrity: sha512-AChWyUvH5Fh79R7ZPSobt/bQz8CUeh3xvSyR51JqZ1Ujxr0RpLlcrV+7diZ+svMCBamjUJLiOr/8ikPE/touDA==}
+    peerDependencies:
       '@angular/core': '>=19.0.0'
 
   '@tanstack/devtools-client@0.0.6':
@@ -13063,6 +13840,12 @@ packages:
 
   '@tanstack/query-core@5.100.11':
     resolution: {integrity: sha512-lmE0994apShXPj8CUxgx4ch5yUJhE9k/+tVwihBvPOyerACWdBocfFg24t8+0RhtlTd7tEgchDkhlCxNssvDxw==}
+
+  '@tanstack/query-core@5.100.14':
+    resolution: {integrity: sha512-5X41dGpxgeaHISCRW2oYwcSycZeULZzAunaudXT9ov1KOTj9xwt0CH6hbwqP1/z74ZWF7rYFnDpyYH07XFcZew==}
+
+  '@tanstack/query-devtools@5.100.14':
+    resolution: {integrity: sha512-g96SmSSQecYTYcyuAMRXr895GplJv01UGt7qttQWPOUyZ5EGz5tbRc589bMc2m5BsPFD6O0PCEAHdbDYNP6UBw==}
 
   '@tanstack/react-devtools@0.10.5':
     resolution: {integrity: sha512-orVsRJ7oAXFb7oyafQCgx9YuK44jpILh5T/ddYuxAsolNfN5DZBr5/NLrWErD7HCGIzvYzg1TZI4sPxmiKvtvA==}
@@ -22924,6 +23707,15 @@ snapshots:
       - solid-js
       - utf-8-validate
 
+  '@tanstack/angular-form@1.32.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/core': 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@tanstack/angular-store': 0.9.3(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
+      '@tanstack/form-core': 1.32.0
+      tslib: 2.8.1
+    transitivePeerDependencies:
+      - '@angular/common'
+
   '@tanstack/angular-pacer@0.23.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))':
     dependencies:
       '@angular/core': 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
@@ -22932,11 +23724,31 @@ snapshots:
     transitivePeerDependencies:
       - '@angular/common'
 
+  '@tanstack/angular-query-experimental@5.100.14(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/common': 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@tanstack/query-core': 5.100.14
+    optionalDependencies:
+      '@tanstack/query-devtools': 5.100.14
+
   '@tanstack/angular-store@0.11.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))':
     dependencies:
       '@angular/common': 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
       '@angular/core': 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
       '@tanstack/store': 0.11.0
+
+  '@tanstack/angular-store@0.9.3(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/common': 21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@tanstack/store': 0.9.3
+      tslib: 2.8.1
+
+  '@tanstack/angular-virtual@5.0.1(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/core': 21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)
+      '@tanstack/virtual-core': 3.15.0
 
   '@tanstack/devtools-client@0.0.6':
     dependencies:
@@ -23069,6 +23881,11 @@ snapshots:
       - supports-color
 
   '@tanstack/query-core@5.100.11': {}
+
+  '@tanstack/query-core@5.100.14': {}
+
+  '@tanstack/query-devtools@5.100.14':
+    optional: true
 
   '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)':
     dependencies:

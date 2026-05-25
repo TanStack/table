@@ -28,6 +28,10 @@ Want to skip to the implementation? Check out these examples:
 
 - [Sorting](../framework/vue/examples/sorting)
 
+# Angular
+
+- [Sorting](../framework/angular/examples/sorting)
+
 # Lit
 
 - [Sorting](../framework/lit/examples/sorting)

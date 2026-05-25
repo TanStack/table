@@ -28,6 +28,10 @@ Want to skip to the implementation? Check out these examples:
 
 - [Column Sizing](../framework/vue/examples/column-sizing)
 
+# Angular
+
+- [Column Sizing](../framework/angular/examples/column-sizing)
+
 # Lit
 
 - [Column Sizing](../framework/lit/examples/column-sizing)

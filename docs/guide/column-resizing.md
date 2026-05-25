@@ -35,6 +35,7 @@ Want to skip to the implementation? Check out these examples:
 
 # Angular
 
+- [Column Resizing](../framework/angular/examples/column-resizing)
 - [Performant Column Resizing](../framework/angular/examples/column-resizing-performant)
 
 # Lit

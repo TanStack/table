@@ -41,6 +41,7 @@ Want to skip to the implementation? Check out these examples:
 # Angular
 
 - [Column Pinning](../framework/angular/examples/column-pinning)
+- [Column Pinning Split](../framework/angular/examples/column-pinning-split)
 - [Sticky Column Pinning](../framework/angular/examples/column-pinning-sticky)
 
 # Lit

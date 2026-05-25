@@ -41,6 +41,8 @@ Want to skip to the implementation? Check out these examples:
 # Angular
 
 - [Column Filters](../framework/angular/examples/filters)
+- [Faceted Filters](../framework/angular/examples/filters-faceted)
+- [Fuzzy Search](../framework/angular/examples/filters-fuzzy)
 
 # Lit
 

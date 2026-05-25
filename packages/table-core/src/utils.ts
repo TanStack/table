@@ -254,8 +254,12 @@ export function tableMemo<
   }
 
   const onAfterUpdateHandler = () => {
+    if (!onAfterUpdate) {
+      return
+    }
+
     const { schedule, untrack } = table._reactivity
-    schedule(() => untrack(() => onAfterUpdate?.()))
+    schedule(() => untrack(() => onAfterUpdate()))
   }
 
   const debugOptions =

@@ -1,0 +1,75 @@
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core'
+import {
+  FlexRender,
+  createSortedRowModel,
+  injectTable,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
+import { makeData } from './makeData'
+import type { ColumnDef, SortFn } from '@tanstack/angular-table'
+import type { Person } from './makeData'
+
+const _features = tableFeatures({ rowSortingFeature })
+
+const sortStatusFn: SortFn<typeof _features, Person> = (rowA, rowB) => {
+  const statusOrder = ['single', 'complicated', 'relationship']
+  return (
+    statusOrder.indexOf(rowA.original.status) -
+    statusOrder.indexOf(rowB.original.status)
+  )
+}
+
+const columns: Array<ColumnDef<typeof _features, Person>> = [
+  { accessorKey: 'firstName', cell: (info) => info.getValue() },
+  {
+    accessorFn: (row) => row.lastName,
+    id: 'lastName',
+    cell: (info) => info.getValue(),
+    header: () => 'Last Name',
+    sortUndefined: 'last',
+    sortDescFirst: false,
+  },
+  { accessorKey: 'age', header: () => 'Age' },
+  { accessorKey: 'visits', header: () => 'Visits', sortUndefined: 'last' },
+  { accessorKey: 'status', header: 'Status', sortFn: sortStatusFn },
+  { accessorKey: 'progress', header: 'Profile Progress' },
+  { accessorKey: 'rank', header: 'Rank', invertSorting: true },
+  { accessorKey: 'createdAt', header: 'Created At' },
+]
+
+@Component({
+  selector: 'app-root',
+  imports: [FlexRender],
+  templateUrl: './app.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class App {
+  readonly data = signal<Array<Person>>(makeData(1_000))
+
+  readonly table = injectTable<typeof _features, Person>(() => ({
+    _features,
+    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    columns,
+    data: this.data(),
+    debugTable: true,
+  }))
+
+  readonly tableState = computed(() =>
+    JSON.stringify(this.table.state, null, 2),
+  )
+
+  refreshData = () => this.data.set(makeData(1_000))
+  stressTest = () => this.data.set(makeData(500_000))
+
+  constructor() {
+    injectTanStackTableDevtools(() => ({ table: this.table, name: 'sorting' }))
+  }
+}

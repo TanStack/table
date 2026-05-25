@@ -28,6 +28,10 @@ Want to skip to the implementation? Check out these examples:
 
 - [Fuzzy Search](../framework/vue/examples/filters-fuzzy)
 
+# Angular
+
+- [Fuzzy Search](../framework/angular/examples/filters-fuzzy)
+
 # Lit
 
 - [Fuzzy Search](../framework/lit/examples/filters-fuzzy)

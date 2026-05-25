@@ -28,6 +28,10 @@ Want to skip to the implementation? Check out these examples:
 
 - [Row Pinning](../framework/vue/examples/row-pinning)
 
+# Angular
+
+- [Row Pinning](../framework/angular/examples/row-pinning)
+
 # Lit
 
 - [Row Pinning](../framework/lit/examples/row-pinning)

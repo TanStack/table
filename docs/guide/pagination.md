@@ -35,6 +35,8 @@ Want to skip to the implementation? Check out these examples:
 
 # Angular
 
+- [Pagination](../framework/angular/examples/pagination)
+- [With TanStack Query](../framework/angular/examples/with-tanstack-query)
 - [Remote Data](../framework/angular/examples/remote-data)
 
 # Lit

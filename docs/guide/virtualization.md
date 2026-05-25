@@ -32,6 +32,12 @@ Want to skip to the implementation? Check out these examples:
 - [Virtualized Rows](../framework/vue/examples/virtualized-rows)
 - [Virtualized Infinite Scrolling](../framework/vue/examples/virtualized-infinite-scrolling)
 
+# Angular
+
+- [Virtualized Columns](../framework/angular/examples/virtualized-columns)
+- [Virtualized Rows](../framework/angular/examples/virtualized-rows)
+- [Virtualized Infinite Scrolling](../framework/angular/examples/virtualized-infinite-scrolling)
+
 # Lit
 
 - [Virtualized Columns](../framework/lit/examples/virtualized-columns)
