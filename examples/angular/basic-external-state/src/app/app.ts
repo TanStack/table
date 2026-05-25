@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, computed, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core'
 import {
   FlexRender,
   createColumnHelper,
@@ -11,7 +16,11 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
-import type { PaginationState, SortingState, Updater } from '@tanstack/angular-table'
+import type {
+  PaginationState,
+  SortingState,
+  Updater,
+} from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
 const _features = tableFeatures({

@@ -18,8 +18,12 @@
                   <ng-container *flexRenderHeader="header; let headerCell">
                     {{ headerCell }}
                   </ng-container>
-                  @if (header.column.getIsSorted() === 'asc') { 🔼 }
-                  @if (header.column.getIsSorted() === 'desc') { 🔽 }
+                  @if (header.column.getIsSorted() === 'asc') {
+                    🔼
+                  }
+                  @if (header.column.getIsSorted() === 'desc') {
+                    🔽
+                  }
                 </div>
               }
             </th>
@@ -43,17 +47,51 @@
   </table>
   <div class="spacer-sm"></div>
   <div class="controls">
-    <button class="demo-button demo-button-sm" (click)="table.setPageIndex(0)" [disabled]="!table.getCanPreviousPage()"><<</button>
-    <button class="demo-button demo-button-sm" (click)="table.previousPage()" [disabled]="!table.getCanPreviousPage()"><</button>
-    <button class="demo-button demo-button-sm" (click)="table.nextPage()" [disabled]="!table.getCanNextPage()">></button>
-    <button class="demo-button demo-button-sm" (click)="table.setPageIndex(table.getPageCount() - 1)" [disabled]="!table.getCanNextPage()">>></button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.setPageIndex(0)"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      <<
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.previousPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      <
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.nextPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      >
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.setPageIndex(table.getPageCount() - 1)"
+      [disabled]="!table.getCanNextPage()"
+    >
+      >>
+    </button>
     <span class="inline-controls">
       <div>Page</div>
-      <strong>{{ (pagination().pageIndex + 1).toLocaleString() }} of {{ table.getPageCount().toLocaleString() }}</strong>
+      <strong
+        >{{ (pagination().pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}</strong
+      >
     </span>
     <span class="inline-controls">
       | Go to page:
-      <input type="number" min="1" [max]="table.getPageCount()" [value]="pagination().pageIndex + 1" (input)="onPageInputChange($event)" class="page-size-input" />
+      <input
+        type="number"
+        min="1"
+        [max]="table.getPageCount()"
+        [value]="pagination().pageIndex + 1"
+        (input)="onPageInputChange($event)"
+        class="page-size-input"
+      />
     </span>
     <select [value]="pagination().pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
