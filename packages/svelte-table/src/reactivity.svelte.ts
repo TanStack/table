@@ -79,7 +79,11 @@ export function svelteReactivity(): TableReactivityBindings {
       })
 
       return {
-        get: () => value,
+        get: () => {
+          const currentValue = storeAtom.get()
+          value
+          return currentValue
+        },
         subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
           return subscribeToRune(() => value, observerOrNext)
         }) as ReadonlyAtom<T>['subscribe'],

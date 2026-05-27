@@ -1,4 +1,4 @@
-import { createEffect, createRoot, createSignal } from 'solid-js'
+import { createEffect, createRoot, createSignal, untrack } from 'solid-js'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 type AnyTable = Table<TableFeatures, RowData>
@@ -21,7 +21,7 @@ const [registrationsMap, setRegistrationsMap] = createSignal<
 >(new Map())
 
 function getTableKey(table: AnyTable) {
-  const key = table.options.key?.trim()
+  const key = untrack(() => table.options.key?.trim())
   return key || undefined
 }
 
@@ -35,19 +35,30 @@ export function upsertTableDevtoolsTarget(
     return undefined
   }
 
-  const registrations = registrationsMap()
+  const registrations = untrack(registrationsMap)
   const existingRegistration = registrations.get(key)
 
   if (existingRegistration) {
-    existingRegistration.table = options.table
-  } else {
-    registrations.set(key, {
+    if (existingRegistration.table === options.table) {
+      return () => {
+        removeTableDevtoolsTarget(key)
+      }
+    }
+
+    const nextRegistrations = new Map(registrations)
+    nextRegistrations.set(key, {
       id: key,
       table: options.table,
     })
+    setRegistrationsMap(nextRegistrations)
+  } else {
+    const nextRegistrations = new Map(registrations)
+    nextRegistrations.set(key, {
+      id: key,
+      table: options.table,
+    })
+    setRegistrationsMap(nextRegistrations)
   }
-
-  setRegistrationsMap(new Map(registrations.entries()))
 
   return () => {
     removeTableDevtoolsTarget(key)
@@ -55,12 +66,15 @@ export function upsertTableDevtoolsTarget(
 }
 
 export function removeTableDevtoolsTarget(id: string) {
-  const registrations = registrationsMap()
-  if (!registrations.delete(id)) {
+  const registrations = untrack(registrationsMap)
+  if (!registrations.has(id)) {
     return
   }
 
-  setRegistrationsMap(new Map(registrations.entries()))
+  const nextRegistrations = new Map(registrations)
+  nextRegistrations.delete(id)
+
+  setRegistrationsMap(nextRegistrations)
 }
 
 export function getTableDevtoolsTargets(): Array<TableDevtoolsRegistration> {

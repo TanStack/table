@@ -18,10 +18,15 @@ const optionsStoreDebugName = 'table/optionsStore'
 
 function signalToReadonlyAtom<T>(
   signal: Accessor<T>,
+  getSource: () => T,
   owner: Owner,
 ): ReadonlyAtom<T> {
   return Object.assign(signal, {
-    get: () => signal(),
+    get: () => {
+      const value = getSource()
+      signal()
+      return value
+    },
     subscribe: (observer: Observer<T>) => {
       return runWithOwner(owner, () => observable(signal))!.subscribe(observer)
     },
@@ -80,7 +85,7 @@ export function solidReactivity(owner: Owner): TableReactivityBindings {
           name: options?.debugName,
         },
       )
-      return signalToReadonlyAtom(signal, owner)
+      return signalToReadonlyAtom(signal, () => storeAtom.get(), owner)
     },
     createWritableAtom: <T>(
       value: T,
