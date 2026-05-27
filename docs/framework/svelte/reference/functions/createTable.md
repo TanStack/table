@@ -9,7 +9,7 @@ title: createTable
 function createTable<TFeatures, TData, TSelected>(tableOptions, selector?): SvelteTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [packages/svelte-table/src/createTable.svelte.ts:55](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L55)
+Defined in: [packages/svelte-table/src/createTable.svelte.ts:65](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L65)
 
 Creates a Svelte 5 table instance backed by rune-aware TanStack Store atoms.
 

@@ -9,7 +9,7 @@ title: createTable
 function createTable<TFeatures, TData, TSelected>(tableOptions, selector?): SolidTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [createTable.ts:99](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L99)
+Defined in: [createTable.ts:109](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L109)
 
 Creates a Solid table instance backed by Solid-aware TanStack Store atoms.
 

@@ -6,7 +6,7 @@ title: LitTable
 # Type Alias: LitTable\<TFeatures, TData, TSelected\>
 
 ```ts
-type LitTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
+type LitTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
 Defined in: [TableController.ts:30](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L30)
@@ -41,7 +41,7 @@ readonly state: Readonly<TSelected>;
 ```
 
 The selected state of the table. This state may not match the structure of
-`table.store.state` because it is selected by the `selector` function that
+the full table state because it is selected by the selector function that
 you pass as the 2nd argument to `controller.table()`.
 
 #### Example
@@ -53,6 +53,19 @@ const table = this.tableController.table(options, (state) => ({
 
 console.log(table.state.globalFilter)
 ```
+
+### ~~store~~
+
+```ts
+readonly store: Table<TFeatures, TData>["store"];
+```
+
+#### Deprecated
+
+Prefer `table.state` for render reads,
+`table.atoms.<slice>.get()` for slice snapshots, or `table.Subscribe` for
+explicit subscriptions. `table.store.state` is a current-value snapshot and
+is easy to misuse in render code.
 
 ### Subscribe()
 

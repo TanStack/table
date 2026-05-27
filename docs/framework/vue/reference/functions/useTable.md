@@ -9,7 +9,7 @@ title: useTable
 function useTable<TFeatures, TData, TSelected>(tableOptions, selector?): VueTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [packages/vue-table/src/useTable.ts:130](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L130)
+Defined in: [packages/vue-table/src/useTable.ts:140](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L140)
 
 Creates a Vue table instance backed by Vue-aware TanStack Store atoms.
 

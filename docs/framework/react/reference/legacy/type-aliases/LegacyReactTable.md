@@ -29,7 +29,7 @@ Returns the current table state.
 
 #### Deprecated
 
-In v9, access state directly via `table.state` or use `table.store.state` for the full state.
+In v9, access state directly via `table.state` or use `table.state` for the full state.
 
 ### ~~setState()~~
 

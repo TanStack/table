@@ -228,7 +228,7 @@ getSubRows: row => row.subRows
 readonly optional initialState: Partial<TableState<TFeatures>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L102)
+Defined in: [core/table/coreTablesFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L109)
 
 Optionally provide starting values for registered table state slices.
 Feature reset APIs use this value by default, and many reset APIs accept
@@ -241,13 +241,32 @@ object later does not reset table state, so it does not need to be stable.
 
 ***
 
+### key?
+
+```ts
+readonly optional key: string;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L102)
+
+Optional key used to identify this table instance.
+
+This is used by TanStack Table Devtools to register and select tables. It is
+not required unless the table is passed to devtools.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`key`](TableOptions_Table.md#key)
+
+***
+
 ### mergeOptions()?
 
 ```ts
 readonly optional mergeOptions: (defaultOptions, options) => TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L106)
+Defined in: [core/table/coreTablesFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L113)
 
 This option is used to optionally implement the merging of table options.
 
@@ -277,7 +296,7 @@ This option is used to optionally implement the merging of table options.
 readonly optional meta: TableMeta<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L113)
+Defined in: [core/table/coreTablesFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L120)
 
 You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
 
@@ -309,7 +328,7 @@ Value used when the desired value is not found in the data.
 readonly optional state: Partial<TableState<TFeatures>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L121)
+Defined in: [core/table/coreTablesFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L128)
 
 Optionally provide externally managed values for individual state slices.
 

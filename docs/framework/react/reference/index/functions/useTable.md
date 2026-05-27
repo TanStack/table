@@ -9,7 +9,7 @@ title: useTable
 function useTable<TFeatures, TData, TSelected>(tableOptions, selector?): ReactTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [useTable.ts:132](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L132)
+Defined in: [useTable.ts:142](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L142)
 
 Creates a React table instance backed by TanStack Store atoms.
 

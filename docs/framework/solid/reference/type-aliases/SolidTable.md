@@ -6,7 +6,7 @@ title: SolidTable
 # Type Alias: SolidTable\<TFeatures, TData, TSelected\>
 
 ```ts
-type SolidTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
+type SolidTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
 Defined in: [createTable.ts:27](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L27)
@@ -37,7 +37,9 @@ rendering headers, cells, or footers with custom markup. Mirrors the
 readonly state: Accessor<Readonly<TSelected>>;
 ```
 
-The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
+The selected state of the table. This state may not match the structure of
+the full table state because it is selected by the selector function that
+you pass as the 2nd argument to `createTable`.
 
 #### Example
 
@@ -46,6 +48,20 @@ const table = createTable(options, (state) => ({ globalFilter: state.globalFilte
 
 console.log(table.state().globalFilter)
 ```
+
+### ~~store~~
+
+```ts
+readonly store: Table<TFeatures, TData>["store"];
+```
+
+#### Deprecated
+
+Prefer `table.state()` for component-level reactive reads,
+`table.atoms.<slice>.get()` for slice-level reactive reads, or
+`table.Subscribe` / `useSelector(table.store, selector)` for explicit
+subscriptions. Reading `table.state` directly does not follow Solid's
+accessor convention and may not update render code as expected.
 
 ### Subscribe()
 
