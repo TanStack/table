@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
 import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
-import { makeData } from './makeData'
-import type { Person } from './makeData'
 import type { ColumnDef } from '@tanstack/angular-table'
 
 // This example uses the Angular standalone `injectTable` helper to create a table without the `createTableHook` util.
@@ -98,12 +96,18 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
   // 5. Store data with a stable reference
   readonly data = signal<Array<Person>>([...defaultData])
   readonly renderCount = signal(0)
 
   // 6. Create the table instance with required _features, columns, and data
   readonly table = injectTable(() => ({
+    key: 'basic-inject-table', // needed for devtools
     debugTable: true,
     _features,
     _rowModels: {},
@@ -113,12 +117,5 @@ export class App {
 
   rerender() {
     this.renderCount.update((count) => count + 1)
-  }
-
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'basic-inject-table',
-    }))
   }
 }

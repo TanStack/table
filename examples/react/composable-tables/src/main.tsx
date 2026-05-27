@@ -1,15 +1,14 @@
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import { useCallback, useMemo, useState } from 'react'
 import ReactDOM from 'react-dom/client'
-import { createAppColumnHelper, useAppTable } from './hooks/table'
-import { makeData, makeProductData } from './makeData'
-import type { Person, Product } from './makeData'
-import './index.css'
-import { TanStackDevtools } from '@tanstack/react-devtools'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/react-table-devtools'
+import { createAppColumnHelper, useAppTable } from './hooks/table'
+import { makeData, makeProductData } from './makeData'
+import type { Person, Product } from './makeData'
 // Import cell components directly - they use useCellContext internally
 
 // Create column helpers with TFeatures already bound - only need TData!
@@ -77,6 +76,7 @@ function UsersTable() {
   // Create the table - _features and _rowModels are already configured!
   const table = useAppTable(
     {
+      key: 'users-table', // needed for devtools
       columns,
       data,
       debugTable: true,
@@ -85,7 +85,7 @@ function UsersTable() {
     (state) => state, // default selector
   )
 
-  useTanStackTableDevtools(table, 'Users table')
+  useTanStackTableDevtools(table)
 
   return (
     // Main selector on AppTable - selects all needed state in one place
@@ -274,6 +274,7 @@ function ProductsTable() {
   // Create the table using the same useAppTable hook
   const table = useAppTable(
     {
+      key: 'products-table', // needed for devtools
       debugTable: true,
       columns,
       data,
@@ -282,7 +283,7 @@ function ProductsTable() {
     (state) => state, // default selector
   )
 
-  useTanStackTableDevtools(table, 'Products table')
+  useTanStackTableDevtools(table)
 
   return (
     <table.AppTable

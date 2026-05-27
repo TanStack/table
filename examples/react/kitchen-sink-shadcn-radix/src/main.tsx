@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import * as ReactDOM from 'react-dom/client'
 import './index.css'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
@@ -48,6 +49,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import type { Person } from '@/lib/make-data'
 import type {
   CellData,
@@ -391,6 +396,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'kitchen-sink-shadcn-radix', // needed for devtools
       _features,
       _rowModels: {
         coreRowModel: createCoreRowModel(),
@@ -442,6 +448,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()
@@ -658,6 +666,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <App />
+      <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
     </ThemeProvider>
   </React.StrictMode>,
 )

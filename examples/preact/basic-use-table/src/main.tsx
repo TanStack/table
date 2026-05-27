@@ -1,6 +1,11 @@
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { useReducer, useState } from 'preact/hooks'
 import { tableFeatures, useTable } from '@tanstack/preact-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
 import type { ColumnDef } from '@tanstack/preact-table'
 import './index.css'
 
@@ -98,6 +103,7 @@ function App() {
   // 6. Create the table instance with required _features, columns, and data
   const table = useTable(
     {
+      key: 'basic-use-table', // needed for devtools
       debugTable: true,
       _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
       _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
@@ -107,6 +113,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   // 7. Render your table markup from the table instance APIs
   return (
@@ -161,4 +169,10 @@ function App() {
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-render(<App />, rootElement)
+render(
+  <>
+    <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </>,
+  rootElement,
+)

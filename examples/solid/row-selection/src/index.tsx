@@ -9,7 +9,6 @@ render(
   () => (
     <>
       <App />
-      <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
     </>
   ),
   document.getElementById('root') as HTMLElement,

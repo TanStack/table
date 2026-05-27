@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { ref } from 'vue'
 import { createAppColumnHelper, useAppTable } from '../hooks/table'
 import { makeData } from '../makeData'
@@ -55,6 +56,7 @@ function stressTest() {
 }
 
 const table = useAppTable({
+  key: 'users-table', // needed for devtools
   debugTable: true,
   columns,
   data,
@@ -65,6 +67,8 @@ const table = useAppTable({
     },
   },
 })
+
+useTanStackTableDevtools(table)
 
 // Typed selector — avoids implicit 'any' for `state` in the template
 function tableSelector(state: ReturnType<typeof table.store.get>) {

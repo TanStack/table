@@ -14,6 +14,7 @@ import {
   sortFns,
   stockFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import {
   For,
@@ -531,6 +532,7 @@ function App() {
 
   const table = createAppTable(
     {
+      key: 'kitchen-sink', // needed for devtools
       columns,
       get data() {
         return data()
@@ -549,6 +551,8 @@ function App() {
     },
     (state) => state,
   )
+
+  useTanStackTableDevtools(table)
 
   const columnSizeVars = createMemo(() => {
     void table.state().columnResizing

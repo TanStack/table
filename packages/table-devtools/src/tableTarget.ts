@@ -4,51 +4,54 @@ import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 type AnyTable = Table<TableFeatures, RowData>
 type Listener = (targets: Array<TableDevtoolsRegistration>) => void
 
-const LEGACY_TARGET_ID = '__legacy__'
+const MISSING_KEY_ERROR =
+  '[TanStack Table Devtools] Missing table key. Add a `key` option to your table to use devtools.'
 
 export interface TableDevtoolsRegistration {
   id: string
   table: AnyTable
-  name?: string
-  fallbackName: string
 }
 
 export interface UpsertTableDevtoolsTargetOptions {
-  id: string
   table: AnyTable
-  name?: string
 }
 
 const [registrationsMap, setRegistrationsMap] = createSignal<
   Map<string, TableDevtoolsRegistration>
 >(new Map())
-let fallbackNameCounter = 1
 
-function normalizeName(name?: string) {
-  const trimmedName = name?.trim()
-  return trimmedName ? trimmedName : undefined
+function getTableKey(table: AnyTable) {
+  const key = table.options.key?.trim()
+  return key || undefined
 }
 
 export function upsertTableDevtoolsTarget(
   options: UpsertTableDevtoolsTargetOptions,
 ) {
+  const key = getTableKey(options.table)
+
+  if (!key) {
+    console.error(MISSING_KEY_ERROR)
+    return undefined
+  }
+
   const registrations = registrationsMap()
-  const existingRegistration = registrations.get(options.id)
-  const name = normalizeName(options.name)
+  const existingRegistration = registrations.get(key)
 
   if (existingRegistration) {
     existingRegistration.table = options.table
-    existingRegistration.name = name
   } else {
-    registrations.set(options.id, {
-      id: options.id,
+    registrations.set(key, {
+      id: key,
       table: options.table,
-      name,
-      fallbackName: `Table ${fallbackNameCounter++}`,
     })
   }
 
   setRegistrationsMap(new Map(registrations.entries()))
+
+  return () => {
+    removeTableDevtoolsTarget(key)
+  }
 }
 
 export function removeTableDevtoolsTarget(id: string) {
@@ -77,12 +80,8 @@ export function subscribeTableDevtoolsTargets(listener: Listener) {
 
 export function setTableDevtoolsTarget(table: Table<any, any> | undefined) {
   if (!table) {
-    removeTableDevtoolsTarget(LEGACY_TARGET_ID)
     return
   }
 
-  upsertTableDevtoolsTarget({
-    id: LEGACY_TARGET_ID,
-    table,
-  })
+  upsertTableDevtoolsTarget({ table })
 }

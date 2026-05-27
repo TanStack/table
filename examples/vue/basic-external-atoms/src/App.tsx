@@ -11,6 +11,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { makeData } from './makeData'
 import type {
   Cell,
@@ -75,6 +76,7 @@ export default defineComponent({
     const pagination = useSelector(paginationAtom)
 
     const table = useTable({
+      key: 'basic-external-atoms', // needed for devtools
       _features,
       _rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
@@ -90,6 +92,8 @@ export default defineComponent({
       },
       debugTable: true,
     })
+
+    useTanStackTableDevtools(table)
 
     return () => (
       <div class="demo-root">

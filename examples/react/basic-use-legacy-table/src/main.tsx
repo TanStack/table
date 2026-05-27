@@ -11,9 +11,14 @@
  * New code should use useTable with explicit _features and _rowModels.
  */
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { flexRender } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   getCoreRowModel,
@@ -111,6 +116,7 @@ function App() {
   // Notice how we use get*RowModel() options instead of _rowModels
   // and we don't need to define _features
   const table = useLegacyTable({
+    key: 'basic-use-legacy-table', // needed for devtools
     columns,
     data,
     // V8-style row model options (these are mapped to v9 _rowModels under the hood)
@@ -130,6 +136,8 @@ function App() {
     debugTable: true,
     debugColumns: true,
   })
+
+  useTanStackTableDevtools(table)
 
   return (
     <div className="demo-root">
@@ -377,5 +385,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

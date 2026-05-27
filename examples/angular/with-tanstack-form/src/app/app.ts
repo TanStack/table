@@ -15,7 +15,6 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { injectForm, injectStore } from '@tanstack/angular-form'
 import { z } from 'zod'
 import { makeData } from './makeData'
@@ -112,11 +111,5 @@ export class App {
   stressTest = () => this.data.set(makeData(200_000))
   submit() {
     alert(`Submitted ${this.data().length} records!`)
-  }
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'with-tanstack-form',
-    }))
   }
 }

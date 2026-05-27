@@ -3,7 +3,7 @@ name: solid/compose-with-tanstack-devtools
 description: >
   Wire up TanStack Devtools for TanStack Table in Solid. Mount `TanStackDevtools`
   with `tableDevtoolsPlugin()` once at the app root and call
-  `useTanStackTableDevtools(table, name?)` after each `createTable` so the table
+  `useTanStackTableDevtools(table)` after each `createTable` so the table
   is registered as a devtools target. Live devtools are tree-shaken to no-ops in
   production unless you import from `@tanstack/solid-table-devtools/production`.
 type: composition
@@ -34,7 +34,7 @@ pnpm add @tanstack/solid-devtools @tanstack/solid-table-devtools
 The recommended pattern has two parts:
 
 1. Mount `<TanStackDevtools>` once at the app root with `tableDevtoolsPlugin()`.
-2. Call `useTanStackTableDevtools(table, name?)` right after every `createTable()`.
+2. Call `useTanStackTableDevtools(table)` right after every `createTable()`.
 
 ```tsx
 import { render } from 'solid-js/web'
@@ -49,12 +49,13 @@ function UsersScreen() {
   const table = createTable({
     _features,
     _rowModels,
+    key: 'users-table',
     columns,
     data,
   })
 
   // Register this table with the devtools panel.
-  useTanStackTableDevtools(table, 'Users Table')
+  useTanStackTableDevtools(table)
 
   return <UsersGrid table={table} />
 }
@@ -75,12 +76,12 @@ render(
 
 ## Patterns
 
-### Naming Tables
+### Keying Tables
 
-The optional second argument labels the table in the panel selector. Without it, devtools assign fallback names like `Table 1` and `Table 2`.
+Add a stable `key` option to the table options. Devtools use this key as both the registration id and the panel selector label.
 
 ```tsx
-useTanStackTableDevtools(table, 'Orders Table')
+useTanStackTableDevtools(table)
 ```
 
 ### Multiple Tables
@@ -92,8 +93,8 @@ function Dashboard() {
   const ordersTable = createTable(ordersOptions)
   const usersTable = createTable(usersOptions)
 
-  useTanStackTableDevtools(ordersTable, 'Orders')
-  useTanStackTableDevtools(usersTable, 'Users')
+  useTanStackTableDevtools(ordersTable)
+  useTanStackTableDevtools(usersTable)
 
   return <Layout ordersTable={ordersTable} usersTable={usersTable} />
 }
@@ -104,7 +105,7 @@ function Dashboard() {
 `useTanStackTableDevtools` accepts an `enabled` option. When `false`, the registration is removed (the table disappears from the panel) but the hook still runs cleanly.
 
 ```tsx
-useTanStackTableDevtools(table, 'Users Table', {
+useTanStackTableDevtools(table, {
   enabled: import.meta.env.DEV && showTableDevtools(),
 })
 ```
@@ -171,6 +172,6 @@ The flip side: importing from `/production` in your default app bundle means eve
 
 The hook uses `createRenderEffect` + `onCleanup`. Call it inside a component (or another Solid reactive scope) that owns the `table`. Calling it in a top-level module body bypasses the reactive owner and the cleanup never fires.
 
-### Multiple tables without names
+### Multiple tables without keys
 
-Two `useTanStackTableDevtools(table)` calls without a name produce selector entries like `Table 1` / `Table 2`. When you have 3+ tables this becomes unusable. Always pass a descriptive name as the second argument.
+A table registered without `options.key` is skipped and devtools log an error. Add a unique `key` option to every table that should appear in devtools.

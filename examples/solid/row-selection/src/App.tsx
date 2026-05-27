@@ -1,5 +1,4 @@
 import { For, Show, createEffect, createSignal } from 'solid-js'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import {
   FlexRender,
   columnFilteringFeature,
@@ -12,6 +11,7 @@ import {
   rowSelectionFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { makeData } from './makeData'
 import type {
   Column,
@@ -112,6 +112,7 @@ function App() {
   ]
 
   const table = createTable({
+    key: 'row-selection', // needed for devtools
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
@@ -127,8 +128,9 @@ function App() {
     },
     debugTable: true,
   })
+
+  useTanStackTableDevtools(table)
   tableRef.current = table
-  useTanStackTableDevtools(table, 'Row Selection Example')
 
   return (
     <div class="demo-root">

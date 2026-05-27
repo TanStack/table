@@ -7,7 +7,7 @@ export const TableDevtoolsPanel =
     ? Devtools.TableDevtoolsPanelNoOp
     : Devtools.TableDevtoolsPanel
 
-export const tableDevtoolsPlugin =
+export const tableDevtoolsPlugin: typeof plugin.tableDevtoolsPlugin =
   process.env.NODE_ENV !== 'development'
     ? plugin.tableDevtoolsNoOpPlugin
     : plugin.tableDevtoolsPlugin

@@ -1,6 +1,11 @@
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import { createTableHook } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import './index.css'
 
 // This example uses the new `createTableHook` method to create a re-usable table hook factory instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
@@ -105,6 +110,7 @@ function App() {
   // Features and row models are already defined in the createTableHook call above
   const table = useAppTable(
     {
+      key: 'basic-use-app-table', // needed for devtools
       debugTable: true,
       columns,
       data,
@@ -112,6 +118,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   // 8. Render your table markup from the table instance APIs
   return (
@@ -169,5 +177,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

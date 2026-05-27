@@ -104,7 +104,7 @@ function App() {
 }
 
 interface TableContainerProps {
-  table: ReactTable<any, Person>
+  table: ReactTable<typeof features, Person>
 }
 
 function TableContainer({ table }: TableContainerProps) {

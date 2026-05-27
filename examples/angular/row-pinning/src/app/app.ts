@@ -19,7 +19,6 @@ import {
   rowPinningFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type {
   ColumnDef,
@@ -105,11 +104,5 @@ export class App {
   stressTest = () => this.data.set(makeData(200_000, 2, 2))
   onPageSizeChange(event: Event): void {
     this.table.setPageSize(Number((event.target as HTMLSelectElement).value))
-  }
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'row-pinning',
-    }))
   }
 }

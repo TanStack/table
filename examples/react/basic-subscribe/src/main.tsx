@@ -1,4 +1,5 @@
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import {
   Subscribe,
@@ -13,12 +14,11 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/react-table-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { useCreateAtom } from '@tanstack/react-store'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
@@ -135,6 +135,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'basic-subscribe', // needed for devtools
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
@@ -153,7 +154,7 @@ function App() {
     () => null, // subscribe to no table state by default; use table.Subscribe below for targeted updates
   )
 
-  useTanStackTableDevtools(table, 'Basic Subscribe Example')
+  useTanStackTableDevtools(table)
 
   return (
     <div className="demo-root">

@@ -142,5 +142,8 @@
     </select>
   </div>
   <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-  <pre>{{ stringifiedGrouping() }}</pre>
+  <div>
+    <button (click)="rerender()">Force Rerender</button>
+  </div>
+  <pre>{{ tableState() }}</pre>
 </div>

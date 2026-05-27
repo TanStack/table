@@ -19,8 +19,10 @@
     "@mantine/hooks": "^9.2.1",
     "@tabler/icons-react": "^3.44.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
+    "@tanstack/react-devtools": "^0.10.5",
     "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-table": "^9.0.0-alpha.49",
+    "@tanstack/react-table-devtools": "^9.0.0-alpha.49",
     "date-fns": "^4.2.1",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"

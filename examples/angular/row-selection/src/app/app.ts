@@ -19,7 +19,7 @@ import {
 } from './selection-column/selection-column'
 import { createAppColumnHelper, injectTable } from './table'
 import type { Person } from './makeData'
-import type { RowSelectionState } from '@tanstack/angular-table'
+import type { RowSelectionState, Updater } from '@tanstack/angular-table'
 
 const columnHelper = createAppColumnHelper<Person>()
 
@@ -31,6 +31,11 @@ const columnHelper = createAppColumnHelper<Person>()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(1_000))
@@ -91,10 +96,12 @@ export class App {
   ])
 
   readonly table = injectTable(() => ({
+    key: 'row-selection', // needed for devtools
     debugTable: true,
     data: this.data(),
     columns: this.columns,
     state: {
+      globalFilter: this.globalFilter(),
       rowSelection: this.rowSelection(),
     },
 
@@ -104,6 +111,13 @@ export class App {
       this.rowSelection.set(
         typeof updaterOrValue === 'function'
           ? updaterOrValue(this.rowSelection())
+          : updaterOrValue,
+      )
+    },
+    onGlobalFilterChange: (updaterOrValue: Updater<string>) => {
+      this.globalFilter.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.globalFilter())
           : updaterOrValue,
       )
     },
@@ -140,14 +154,13 @@ export class App {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(200_000))
+  rerender = () => this.data.update((data) => [...data])
+
+  onGlobalFilter(event: Event): void {
+    this.table.setGlobalFilter((event.target as HTMLInputElement).value)
+  }
 
   toggleEnableRowSelection() {
     this.enableRowSelection.update((value) => !value)
-  }
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'row-selection',
-    }))
   }
 }

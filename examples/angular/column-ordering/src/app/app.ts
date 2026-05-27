@@ -12,7 +12,6 @@ import {
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -119,10 +118,4 @@ export class App {
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'column-ordering',
-    }))
-  }
 }

@@ -13,7 +13,7 @@ describe('tableMemo', () => {
         },
       } as any,
       fnName: 'table.getValue',
-      fn: (value: number) => value,
+      fn: (value?: number) => value ?? 0,
       memoDeps: (value?: number) => [value],
     })
 
@@ -34,7 +34,7 @@ describe('tableMemo', () => {
         },
       } as any,
       fnName: 'table.getValue',
-      fn: (value: number) => value,
+      fn: (value?: number) => value ?? 0,
       memoDeps: (value?: number) => [value],
       onAfterUpdate,
     })

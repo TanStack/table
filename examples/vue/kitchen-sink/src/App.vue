@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { computed, ref } from 'vue'
 import { faker } from '@faker-js/faker'
 import {
@@ -162,6 +163,7 @@ const data = ref(makeData(1_000))
 
 const table = useTable(
   {
+    key: 'kitchen-sink', // needed for devtools
     _features: stockFeatures,
     _rowModels: {
       expandedRowModel: createExpandedRowModel(),
@@ -194,6 +196,8 @@ const table = useTable(
   },
   (state) => state,
 )
+
+useTanStackTableDevtools(table)
 
 const columnSizeVars = computed(() => {
   void table.state.columnResizing

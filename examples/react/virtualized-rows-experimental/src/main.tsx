@@ -3,15 +3,15 @@ import ReactDOM from 'react-dom/client'
 import {
   FlexRender,
   columnSizingFeature,
+  createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
   useTable,
-  createColumnHelper,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeData } from './makeData'
-import type { Row, Table } from '@tanstack/react-table'
+import type { ReactTable, Row } from '@tanstack/react-table'
 import type { Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 import './index.css'
@@ -171,7 +171,7 @@ function App() {
 }
 
 interface TableBodyWrapperProps {
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
   tableContainerRef: React.RefObject<HTMLDivElement | null>
 }
 
@@ -216,7 +216,7 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
 }
 
 interface TableBodyProps {
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof _features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
 }

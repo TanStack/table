@@ -70,19 +70,19 @@ Framework adapters mount this Solid component inside the host framework via `@ta
 - `@tanstack/devtools-utils/solid` — used directly by `solid-table-devtools`.
 - The vue adapter uses its own interop in `packages/vue-table-devtools/src/plugin.ts`.
 
-Each adapter exports `tableDevtoolsPlugin()` (returns a plugin descriptor for the `TanStackDevtools` host) and a `useTanStackTableDevtools(table, name?, options?)` hook idiomatic to the framework. The hook's only job is to call `upsertTableDevtoolsTarget(...)` on mount/update and `removeTableDevtoolsTarget(...)` on cleanup.
+Each adapter exports `tableDevtoolsPlugin()` (returns a plugin descriptor for the `TanStackDevtools` host) and a `useTanStackTableDevtools(table, options?)` hook idiomatic to the framework. The hook's only job is to call `upsertTableDevtoolsTarget(...)` on mount/update and runs the returned cleanup on unmount.
 
 ### Registration target store (`tableTarget.ts`)
 
 The target store is the bridge between framework-specific hooks and the Solid panel:
 
-- `upsertTableDevtoolsTarget({ id, table, name })` — register or update a table by stable id.
+- `upsertTableDevtoolsTarget({ table })` — register or update a table by `table.options.key`.
 - `removeTableDevtoolsTarget(id)` — unregister on cleanup.
-- `setTableDevtoolsTarget(...)` — replace the full set (used internally).
+- `setTableDevtoolsTarget(...)` — register a table through the same key-based path (used internally).
 - `subscribeTableDevtoolsTargets(listener)` — the Solid panel subscribes here to keep its selector in sync.
 - `getTableDevtoolsTargets()` — snapshot for non-reactive reads.
 
-Ids are generated per-adapter using framework primitives (`React.useId()`, `preact/hooks` `useId()`, Solid's incrementing counter, Vue's `getCurrentInstance().uid`), guaranteeing stable identity across renders.
+Devtools use `table.options.key` as the stable registration id. No adapter generates ids automatically.
 
 ### Dev vs. production swap
 

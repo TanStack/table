@@ -3,7 +3,7 @@ name: preact/compose-with-tanstack-devtools
 description: >
   Wire up TanStack Devtools for TanStack Table in Preact. Mount `TanStackDevtools`
   with `tableDevtoolsPlugin()` once at the app root and call
-  `useTanStackTableDevtools(table, name?)` after each `useTable` so the table is
+  `useTanStackTableDevtools(table)` after each `useTable` so the table is
   registered as a devtools target. Live devtools are tree-shaken to no-ops in
   production unless you import from `@tanstack/preact-table-devtools/production`.
 type: composition
@@ -34,7 +34,7 @@ pnpm add @tanstack/preact-devtools @tanstack/preact-table-devtools
 The recommended pattern has two parts:
 
 1. Mount `<TanStackDevtools>` once at the app root with `tableDevtoolsPlugin()`.
-2. Call `useTanStackTableDevtools(table, name?)` right after every `useTable()`.
+2. Call `useTanStackTableDevtools(table)` right after every `useTable()`.
 
 ```tsx
 import { render } from 'preact'
@@ -49,12 +49,13 @@ function UsersScreen() {
   const table = useTable({
     _features,
     _rowModels,
+    key: 'users-table',
     columns,
     data,
   })
 
   // Register this table with the devtools panel.
-  useTanStackTableDevtools(table, 'Users Table')
+  useTanStackTableDevtools(table)
 
   return <UsersGrid table={table} />
 }
@@ -69,16 +70,16 @@ render(
 )
 ```
 
-`tableDevtoolsPlugin()` returns a plugin descriptor for the multi-panel TanStack Devtools UI. `useTanStackTableDevtools` is a `preact/hooks` `useEffect` wrapper that upserts/removes the registration target on mount/unmount and re-runs when `table` or `name` changes.
+`tableDevtoolsPlugin()` returns a plugin descriptor for the multi-panel TanStack Devtools UI. `useTanStackTableDevtools` is a `preact/hooks` `useEffect` wrapper that upserts/removes the registration target on mount/unmount and re-runs when `table` or `table.options.key` changes.
 
 ## Patterns
 
-### Naming Tables
+### Keying Tables
 
-The optional second argument labels the table in the panel selector. Without it, devtools assign fallback names like `Table 1` and `Table 2`.
+Add a stable `key` option to the table options. Devtools use this key as both the registration id and the panel selector label.
 
 ```tsx
-useTanStackTableDevtools(table, 'Orders Table')
+useTanStackTableDevtools(table)
 ```
 
 ### Multiple Tables
@@ -87,11 +88,11 @@ Register as many tables as you like. The Table panel renders a selector. Name ea
 
 ```tsx
 function Dashboard() {
-  const ordersTable = useTable(ordersOptions)
-  const usersTable = useTable(usersOptions)
+  const ordersTable = useTable({ ...ordersOptions, key: 'orders-table' })
+  const usersTable = useTable({ ...usersOptions, key: 'users-table' })
 
-  useTanStackTableDevtools(ordersTable, 'Orders')
-  useTanStackTableDevtools(usersTable, 'Users')
+  useTanStackTableDevtools(ordersTable)
+  useTanStackTableDevtools(usersTable)
 
   return <Layout ordersTable={ordersTable} usersTable={usersTable} />
 }
@@ -102,7 +103,7 @@ function Dashboard() {
 `useTanStackTableDevtools` accepts an `enabled` option. When `false`, the registration is removed (the table disappears from the panel) but the hook still runs cleanly.
 
 ```tsx
-useTanStackTableDevtools(table, 'Users Table', {
+useTanStackTableDevtools(table, {
   enabled: import.meta.env.DEV && showTableDevtools,
 })
 ```
@@ -156,6 +157,6 @@ The flip side: importing from `/production` in your default app bundle means eve
 
 The hook needs a `Table` instance to register. If you call it in a parent before `useTable` runs, or in a sibling that does not have access to the table, you pass `undefined` and nothing is registered. Always call it in the same component as `useTable`, immediately after.
 
-### Multiple tables without names
+### Multiple tables without keys
 
-Two `useTanStackTableDevtools(table)` calls without a name produce selector entries like `Table 1` / `Table 2`. When you have 3+ tables this becomes unusable. Always pass a descriptive name as the second argument.
+A table registered without `options.key` is skipped and devtools log an error. Add a unique `key` option to every table that should appear in devtools.

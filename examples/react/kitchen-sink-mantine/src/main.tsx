@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import * as ReactDOM from 'react-dom/client'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
@@ -100,6 +101,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import type { Person } from '@/lib/make-data'
 import type { DragEndEvent } from '@dnd-kit/core'
 import type {
@@ -110,9 +115,9 @@ import type {
   ExpandedState,
   GroupingState,
   Header,
+  ReactTable,
   RowData,
   SortingState,
-  Table,
   TableFeatures,
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
@@ -154,7 +159,7 @@ const _features = tableFeatures({
 })
 
 const columnHelper = createColumnHelper<typeof _features, Person>()
-type AppTable = Table<typeof _features, Person>
+type AppTable = ReactTable<typeof _features, Person>
 type AppColumn = Column<typeof _features, Person, any>
 
 function SortableFrame({
@@ -1366,6 +1371,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'kitchen-sink-mantine', // needed for devtools
       _features,
       _rowModels: {
         coreRowModel: createCoreRowModel(),
@@ -1417,6 +1423,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()
@@ -1661,6 +1669,7 @@ function Root() {
   return (
     <MantineProvider defaultColorScheme="auto">
       <App />
+      <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
     </MantineProvider>
   )
 }

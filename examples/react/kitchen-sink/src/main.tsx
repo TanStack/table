@@ -1,4 +1,5 @@
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import {
   Subscribe,
@@ -17,6 +18,10 @@ import {
   stockFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
@@ -664,6 +669,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'kitchen-sink', // needed for devtools
       _features: stockFeatures,
       _rowModels: {
         expandedRowModel: createExpandedRowModel(),
@@ -694,6 +700,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   // memoized column-size css variables (column-resizing-performant pattern)
   const columnSizeVars = React.useMemo(() => {
@@ -943,5 +951,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

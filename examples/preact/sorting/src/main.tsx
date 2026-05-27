@@ -1,11 +1,5 @@
 import { render } from 'preact'
 import { useMemo, useReducer, useState } from 'preact/hooks'
-import './index.css'
-import { TanStackDevtools } from '@tanstack/preact-devtools'
-import {
-  tableDevtoolsPlugin,
-  useTanStackTableDevtools,
-} from '@tanstack/preact-table-devtools'
 import {
   createColumnHelper,
   createSortedRowModel,
@@ -105,8 +99,6 @@ function App() {
     (state) => state, // default selector
   )
 
-  useTanStackTableDevtools(table, 'Sorting Example')
-
   return (
     <div className="demo-root">
       <div>
@@ -187,7 +179,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 render(
   <>
     <App />
-    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </>,
   rootElement,
 )

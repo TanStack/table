@@ -11,7 +11,9 @@
     "test:types": "tsc"
   },
   "dependencies": {
+    "@tanstack/preact-devtools": "^0.10.5",
     "@tanstack/preact-table": "^9.0.0-alpha.49",
+    "@tanstack/preact-table-devtools": "^9.0.0-alpha.49",
     "preact": "^10.29.2"
   },
   "devDependencies": {

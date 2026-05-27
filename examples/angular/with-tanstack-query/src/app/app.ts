@@ -16,7 +16,6 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { fetchData } from './fetchData'
 import type { PaginationState, Updater } from '@tanstack/angular-table'
 import type { Person } from './fetchData'
@@ -74,6 +73,8 @@ export class App {
     JSON.stringify({ pagination: this.pagination() }, null, 2),
   )
 
+  rerender = () => this.pagination.update((pagination) => ({ ...pagination }))
+
   onPageInputChange(event: Event): void {
     const page = (event.target as HTMLInputElement).value
       ? Number((event.target as HTMLInputElement).value) - 1
@@ -82,11 +83,5 @@ export class App {
   }
   onPageSizeChange(event: Event): void {
     this.table.setPageSize(Number((event.target as HTMLSelectElement).value))
-  }
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'with-tanstack-query',
-    }))
   }
 }

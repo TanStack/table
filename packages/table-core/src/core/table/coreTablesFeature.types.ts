@@ -94,6 +94,13 @@ export interface TableOptions_Table<
    */
   readonly data: ReadonlyArray<TData>
   /**
+   * Optional key used to identify this table instance.
+   *
+   * This is used by TanStack Table Devtools to register and select tables. It is
+   * not required unless the table is passed to devtools.
+   */
+  readonly key?: string
+  /**
    * Optionally provide starting values for registered table state slices.
    * Feature reset APIs use this value by default, and many reset APIs accept
    * `true` to reset to that feature's blank/default state instead. Changing this

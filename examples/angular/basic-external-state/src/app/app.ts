@@ -15,6 +15,7 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type {
   PaginationState,
@@ -60,17 +61,23 @@ const columns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
   readonly data = signal(makeData(1_000))
   readonly sorting = signal<SortingState>([])
   readonly pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
   readonly renderCount = signal(0)
 
   readonly table = injectTable(() => ({
+    key: 'basic-external-state', // needed for devtools
     debugTable: true,
     _features,
     _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
+      sortedRowModel: createSortedRowModel<typeof _features, Person>(sortFns),
+      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
     },
     columns,
     data: this.data(),

@@ -14,7 +14,6 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { EditableCell } from './editable-cell/editable-cell'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -131,10 +130,4 @@ export class App {
 
   refreshData = () => this.data.set(makeData(10_000))
   stressTest = () => this.data.set(makeData(200_000))
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'editable',
-    }))
-  }
 }

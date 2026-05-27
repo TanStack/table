@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, type ComponentPublicInstance } from 'vue'
+import { computed, ref } from 'vue'
 import {
   FlexRender,
   columnSizingFeature,
@@ -11,7 +11,9 @@ import {
   useTable,
 } from '@tanstack/vue-table'
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { makeColumns, makeData, type Person } from './makeData'
+import { makeColumns, makeData } from './makeData'
+import type { ComponentPublicInstance } from 'vue'
+import type { Person } from './makeData'
 
 const _features = tableFeatures({
   columnSizingFeature,
@@ -25,7 +27,7 @@ const STRESS_ROW_COUNT = 10_000
 const STRESS_COLUMN_COUNT = 10_000
 
 const columns = ref(makeColumns(DEFAULT_COLUMN_COUNT))
-const data = ref<Person[]>(makeData(DEFAULT_ROW_COUNT, columns.value))
+const data = ref<Array<Person>>(makeData(DEFAULT_ROW_COUNT, columns.value))
 
 function refreshData() {
   const nextColumns = makeColumns(DEFAULT_COLUMN_COUNT)

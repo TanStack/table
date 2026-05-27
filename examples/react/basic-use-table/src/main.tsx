@@ -1,6 +1,11 @@
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import { tableFeatures, useTable } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
@@ -98,7 +103,8 @@ function App() {
   // 6. Create the table instance with required _features, columns, and data
   const table = useTable(
     {
-      debugTable: true,
+      key: 'basic-use-table', // needed for devtools, omit if you don't want to use the devtools
+      debugTable: true, // optionally, enable console logging debug messages
       _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
       _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
       columns,
@@ -107,6 +113,9 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  // optionally, add this table instance to the devtools
+  useTanStackTableDevtools(table)
 
   // 7. Render your table markup from the table instance APIs
   return (
@@ -164,5 +173,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

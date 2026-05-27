@@ -100,6 +100,11 @@ const columns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
   // 6. Store data with a stable reference
   readonly data = signal<Array<Person>>([...defaultData])
   readonly renderCount = signal(0)
@@ -107,6 +112,7 @@ export class App {
   // 7. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
   readonly table = injectAppTable(() => ({
+    key: 'basic-app-table', // needed for devtools
     debugTable: true,
     columns,
     data: this.data(),
@@ -114,11 +120,5 @@ export class App {
 
   rerender() {
     this.renderCount.update((count) => count + 1)
-  }
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'basic-app-table',
-    }))
   }
 }

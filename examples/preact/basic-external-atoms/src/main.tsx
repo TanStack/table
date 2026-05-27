@@ -1,4 +1,5 @@
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { useReducer, useState } from 'preact/hooks'
 import './index.css'
 import { useCreateAtom, useSelector } from '@tanstack/preact-store'
@@ -12,6 +13,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
 import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/preact-table'
 
@@ -76,6 +81,7 @@ function App() {
   // Create the table and pass your per-slice external atoms.
   const table = useTable(
     {
+      key: 'basic-external-atoms', // needed for devtools
       _features,
       _rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
@@ -91,6 +97,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   return (
     <div className="demo-root">
@@ -213,4 +221,10 @@ function App() {
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-render(<App />, rootElement)
+render(
+  <>
+    <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </>,
+  rootElement,
+)

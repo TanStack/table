@@ -7,19 +7,15 @@ declare module '@tanstack/table-devtools' {
   export interface TableDevtoolsRegistration {
     id: string
     table: Table<TableFeatures, RowData>
-    name?: string
-    fallbackName: string
   }
 
   export interface UpsertTableDevtoolsTargetOptions {
-    id: string
     table: Table<TableFeatures, RowData>
-    name?: string
   }
 
   export function upsertTableDevtoolsTarget(
     options: UpsertTableDevtoolsTargetOptions,
-  ): void
+  ): (() => void) | undefined
 
   export function removeTableDevtoolsTarget(id: string): void
 }

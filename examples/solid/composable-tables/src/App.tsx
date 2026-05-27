@@ -1,4 +1,5 @@
 import { For, createSignal } from 'solid-js'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { createAppColumnHelper, createAppTable } from './hooks/table'
 import { makeData, makeProductData } from './makeData'
 import type { Person, Product } from './makeData'
@@ -64,6 +65,7 @@ function UsersTable() {
 
   // Create the table - _features and _rowModels are already configured!
   const table = createAppTable({
+    key: 'users-table', // needed for devtools
     columns,
     get data() {
       return data()
@@ -71,6 +73,8 @@ function UsersTable() {
     debugTable: true,
     // more table options
   })
+
+  useTanStackTableDevtools(table)
 
   return (
     // Main selector on AppTable - selects all needed state in one place
@@ -270,6 +274,7 @@ function ProductsTable() {
 
   // Create the table using the same createAppTable hook
   const table = createAppTable({
+    key: 'products-table', // needed for devtools
     debugTable: true,
     columns,
     get data() {
@@ -277,6 +282,8 @@ function ProductsTable() {
     },
     getRowId: (row) => row.id,
   })
+
+  useTanStackTableDevtools(table)
 
   return (
     <table.AppTable

@@ -32,7 +32,7 @@ export function Shell() {
   const tableOptions = () =>
     targets().map((target) => ({
       value: target.id,
-      label: target.name ?? target.fallbackName,
+      label: target.id,
     }))
 
   return (

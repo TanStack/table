@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { createTableHook } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
 
@@ -105,11 +106,14 @@ function rerender() {
 // 7. Create the table instance with the required columns and data.
 // Features and row models are already defined in the createTableHook call above
 const table = useAppTable({
+  key: 'basic-use-app-table', // needed for devtools
   debugTable: true,
   columns,
   data,
   // add additional table options here or in the createTableHook call above
 })
+
+useTanStackTableDevtools(table)
 </script>
 
 <template>

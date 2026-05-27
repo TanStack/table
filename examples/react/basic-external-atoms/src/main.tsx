@@ -1,4 +1,5 @@
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { useCreateAtom, useSelector } from '@tanstack/react-store'
@@ -12,6 +13,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
 
@@ -79,6 +84,7 @@ function App() {
   // Create the table and pass your per-slice external atoms.
   const table = useTable(
     {
+      key: 'basic-external-atoms', // needed for devtools
       _features,
       _rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
@@ -94,6 +100,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   return (
     <div className="demo-root">
@@ -231,5 +239,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

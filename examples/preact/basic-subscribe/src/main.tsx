@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import {
   Subscribe,
   columnFilteringFeature,
@@ -17,7 +18,6 @@ import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/preact-table-devtools'
-import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { useCreateAtom } from '@tanstack/preact-store'
 import { makeData } from './makeData'
 import type {
@@ -134,6 +134,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'basic-subscribe', // needed for devtools
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
@@ -152,7 +153,7 @@ function App() {
     () => null, // subscribe to no table state by default; use table.Subscribe below for targeted updates
   )
 
-  useTanStackTableDevtools(table, 'Basic Subscribe Example')
+  useTanStackTableDevtools(table)
 
   return (
     <div className="demo-root">
@@ -472,7 +473,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 render(
   <>
     <App />
-    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </>,
   rootElement,
 )

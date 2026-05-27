@@ -1,6 +1,8 @@
 <div class="demo-root">
   <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
-  <button class="demo-button demo-button-spaced" (click)="stressTest()">Stress Test</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (200k rows)
+  </button>
   <div class="spacer-sm"></div>
   <table>
     <thead>
@@ -8,11 +10,13 @@
         <tr>
           @for (header of headerGroup.headers; track header.id) {
             <th [attr.colSpan]="header.colSpan">
-              @if (!header.isPlaceholder) {
-                <ng-container *flexRenderHeader="header; let headerCell">{{
-                  headerCell
-                }}</ng-container>
-              }
+              <div>
+                @if (!header.isPlaceholder) {
+                  <ng-container *flexRenderHeader="header; let headerCell">{{
+                    headerCell
+                  }}</ng-container>
+                }
+              </div>
             </th>
           }
         </tr>
@@ -100,6 +104,13 @@
     </select>
   </div>
 
-  <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
+  <div>
+    Showing {{ table.getRowModel().rows.length.toLocaleString() }} of
+    {{ table.getRowCount().toLocaleString() }} Rows
+  </div>
   <pre>{{ tableState() }}</pre>
+</div>
+<hr />
+<div>
+  <button (click)="rerender()">Force Rerender</button>
 </div>

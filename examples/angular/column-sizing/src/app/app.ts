@@ -11,7 +11,6 @@ import {
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/angular-table'
 import type { Person } from './makeData'
@@ -90,12 +89,5 @@ export class App {
       ...this.table.state.columnSizing,
       [columnId]: Number((event.target as HTMLInputElement).value),
     })
-  }
-
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'column-sizing',
-    }))
   }
 }

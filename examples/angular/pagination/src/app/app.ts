@@ -11,7 +11,6 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/angular-table'
 import type { Person } from './makeData'
@@ -81,7 +80,9 @@ export class App {
 
   readonly table = injectTable<typeof _features, Person>(() => ({
     _features,
-    _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+    _rowModels: {
+      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
+    },
     columns,
     data: this.data(),
     debugTable: true,
@@ -93,6 +94,7 @@ export class App {
 
   refreshData = () => this.data.set(makeData(100_000))
   stressTest = () => this.data.set(makeData(200_000))
+  rerender = () => this.data.update((data) => [...data])
 
   onPageInputChange(event: Event): void {
     const page = (event.target as HTMLInputElement).value
@@ -103,12 +105,5 @@ export class App {
 
   onPageSizeChange(event: Event): void {
     this.table.setPageSize(Number((event.target as HTMLSelectElement).value))
-  }
-
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'pagination',
-    }))
   }
 }

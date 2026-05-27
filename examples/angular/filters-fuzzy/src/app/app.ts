@@ -20,7 +20,6 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { DebouncedInput } from './debounced-input/debounced-input'
 import { makeData } from './makeData'
 import type { FilterFn, SortFn } from '@tanstack/angular-table'
@@ -120,11 +119,5 @@ export class App {
   }
   onPageSizeChange(event: Event) {
     this.table.setPageSize(Number((event.target as HTMLSelectElement).value))
-  }
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'filters-fuzzy',
-    }))
   }
 }

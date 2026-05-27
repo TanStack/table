@@ -1,5 +1,6 @@
 import { defineComponent, ref } from 'vue'
 import { FlexRender, tableFeatures, useTable } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import type {
   Cell,
   ColumnDef,
@@ -92,6 +93,7 @@ export default defineComponent({
     const data = ref([...defaultData])
 
     const table = useTable({
+      key: 'basic-use-table', // needed for devtools
       debugTable: true,
       _features,
       _rowModels: {},
@@ -100,6 +102,8 @@ export default defineComponent({
         return data.value
       },
     })
+
+    useTanStackTableDevtools(table)
 
     const rerender = () => {
       data.value = [...defaultData]

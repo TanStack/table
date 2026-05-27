@@ -106,6 +106,7 @@ const toggleRowSelection = () => {
 
 const table = useTable(
   {
+    key: 'row-selection', // needed for devtools
     _features,
     _rowModels: {},
     data,
@@ -120,7 +121,7 @@ const table = useTable(
   (state) => ({ rowSelection: state.rowSelection }),
 )
 
-useTanStackTableDevtools(table, 'Row Selection Example')
+useTanStackTableDevtools(table)
 </script>
 
 <template>

@@ -3,8 +3,7 @@ import {
   withEventReplay,
   withHttpTransferCacheOptions,
 } from '@angular/platform-browser'
-import { isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core'
-import { provideTanStackDevtools } from '@tanstack/angular-devtools/provider'
+import { provideBrowserGlobalErrorListeners } from '@angular/core'
 import type { ApplicationConfig } from '@angular/core'
 
 export const appConfig: ApplicationConfig = {
@@ -16,18 +15,5 @@ export const appConfig: ApplicationConfig = {
         includeHeaders: ['X-Total-Count'],
       }),
     ),
-    isDevMode()
-      ? provideTanStackDevtools(() => ({
-          plugins: [
-            {
-              name: 'TanStack Table',
-              render: () =>
-                import('@tanstack/angular-table-devtools').then((m) =>
-                  m.TableDevtoolsPanel(),
-                ),
-            },
-          ],
-        }))
-      : [],
   ],
 }

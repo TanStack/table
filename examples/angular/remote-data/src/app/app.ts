@@ -18,8 +18,6 @@ import {
 } from '@tanstack/angular-table'
 import { map } from 'rxjs'
 import { rxResource } from '@angular/core/rxjs-interop'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
-import { TanStackDevtools } from '@tanstack/angular-devtools'
 import type {
   ColumnDef,
   PaginationState,
@@ -46,7 +44,7 @@ type TodoResponse = { items: Array<Todo>; totalCount: number }
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRender, ReactiveFormsModule, TanStackDevtools],
+  imports: [FlexRender, ReactiveFormsModule],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -171,13 +169,6 @@ export class App {
       },
     }
   })
-
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'Remote data',
-    }))
-  }
 
   onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement

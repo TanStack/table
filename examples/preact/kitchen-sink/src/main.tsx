@@ -1,4 +1,5 @@
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
 import { faker } from '@faker-js/faker'
 import {
@@ -17,6 +18,10 @@ import {
   stockFeatures,
   useTable,
 } from '@tanstack/preact-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
 import type { JSX } from 'preact'
@@ -538,6 +543,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'kitchen-sink', // needed for devtools
       _features: stockFeatures,
       _rowModels: {
         expandedRowModel: createExpandedRowModel(),
@@ -568,6 +574,8 @@ function App() {
     },
     (state) => state,
   )
+
+  useTanStackTableDevtools(table)
 
   const columnSizeVars = useMemo(() => {
     const headers = table.getFlatHeaders()
@@ -774,4 +782,10 @@ function App() {
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-render(<App />, rootElement)
+render(
+  <>
+    <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </>,
+  rootElement,
+)

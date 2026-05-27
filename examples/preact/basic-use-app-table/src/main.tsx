@@ -1,6 +1,11 @@
 import { useReducer, useState } from 'preact/hooks'
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { createTableHook } from '@tanstack/preact-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
 import './index.css'
 
 // This example uses the new `createTableHook` method to create a re-usable table hook factory instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
@@ -105,6 +110,7 @@ function App() {
   // Features and row models are already defined in the createTableHook call above
   const table = useAppTable(
     {
+      key: 'basic-use-app-table', // needed for devtools
       debugTable: true,
       columns,
       data,
@@ -112,6 +118,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   // 8. Render your table markup from the table instance APIs
   return (
@@ -166,4 +174,10 @@ function App() {
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-render(<App />, rootElement)
+render(
+  <>
+    <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </>,
+  rootElement,
+)

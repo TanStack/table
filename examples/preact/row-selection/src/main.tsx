@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import {
   columnFilteringFeature,
   createColumnHelper,
@@ -16,7 +17,6 @@ import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/preact-table-devtools'
-import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { useCreateAtom } from '@tanstack/preact-store'
 import { makeData } from './makeData'
 import type {
@@ -105,6 +105,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'row-selection', // needed for devtools
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
@@ -123,7 +124,7 @@ function App() {
     (state) => state, // default selector
   )
 
-  useTanStackTableDevtools(table, 'Row Selection Example')
+  useTanStackTableDevtools(table)
 
   return (
     <>
@@ -394,7 +395,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 render(
   <>
     <App />
-    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </>,
   rootElement,
 )

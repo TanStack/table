@@ -42,6 +42,12 @@ const _features = tableFeatures({
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
+
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(1_000))
@@ -109,6 +115,7 @@ export class AppComponent {
 
   // TODO make this generic infer without passing in manually
   table = injectTable<typeof _features, Person>(() => ({
+    key: 'row-selection-signal', // needed for devtools
     _features,
     _rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
@@ -158,10 +165,4 @@ export class AppComponent {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(200_000))
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'row-selection-signal',
-    }))
-  }
 }

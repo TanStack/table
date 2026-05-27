@@ -1,6 +1,8 @@
 <div class="demo-root">
   <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
-  <button class="demo-button demo-button-spaced" (click)="stressTest()">Stress Test</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (500k rows)
+  </button>
   <div class="spacer-sm"></div>
   <table>
     <thead>
@@ -12,16 +14,14 @@
                 <div
                   [class.sortable-header]="header.column.getCanSort()"
                   (click)="header.column.getToggleSortingHandler()?.($event)"
+                  [title]="
+                    getSortTitle(header.column.getCanSort(), header.column.getNextSortingOrder())
+                  "
                 >
                   <ng-container *flexRenderHeader="header; let headerCell">{{
                     headerCell
                   }}</ng-container>
-                  @if (header.column.getIsSorted() === 'asc') {
-                    <span> asc</span>
-                  }
-                  @if (header.column.getIsSorted() === 'desc') {
-                    <span> desc</span>
-                  }
+                  {{ sortIndicator(header.column.getIsSorted()) }}
                 </div>
               }
             </th>
@@ -30,7 +30,7 @@
       }
     </thead>
     <tbody>
-      @for (row of table.getRowModel().rows; track row.id) {
+      @for (row of table.getRowModel().rows.slice(0, 10); track row.id) {
         <tr>
           @for (cell of row.getAllCells(); track cell.id) {
             <td>
@@ -56,8 +56,10 @@
       }
     </tfoot>
   </table>
-  <div class="spacer-sm"></div>
-
   <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
+  <div>
+    <button (click)="rerender()">Force Rerender</button>
+  </div>
+  <!-- Store mode: dump full table state for debugging -->
   <pre>{{ tableState() }}</pre>
 </div>

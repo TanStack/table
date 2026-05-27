@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { ref } from 'vue'
 import { createAppColumnHelper, useAppTable } from '../hooks/table'
 import { makeProductData } from '../makeData'
@@ -45,6 +46,7 @@ function stressTest() {
 }
 
 const table = useAppTable({
+  key: 'products-table', // needed for devtools
   debugTable: true,
   columns,
   data,
@@ -55,6 +57,8 @@ const table = useAppTable({
     },
   },
 })
+
+useTanStackTableDevtools(table)
 </script>
 
 <template>

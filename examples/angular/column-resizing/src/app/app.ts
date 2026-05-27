@@ -11,7 +11,6 @@ import {
   injectTable,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type {
   ColumnDef,
@@ -127,12 +126,5 @@ export class App {
     return `translateX(${
       direction * (this.table.state.columnResizing.deltaOffset ?? 0)
     }px)`
-  }
-
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'column-resizing',
-    }))
   }
 }

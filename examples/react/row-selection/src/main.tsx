@@ -1,4 +1,5 @@
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import {
   columnFilteringFeature,
@@ -12,12 +13,11 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/react-table-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { useCreateAtom } from '@tanstack/react-store'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
@@ -102,6 +102,7 @@ function App() {
 
   const table = useTable(
     {
+      key: 'row-selection', // needed for devtools
       _features,
       _rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
@@ -120,7 +121,7 @@ function App() {
     (state) => state, // default selector
   )
 
-  useTanStackTableDevtools(table, 'Row Selection Example')
+  useTanStackTableDevtools(table)
 
   return (
     <>

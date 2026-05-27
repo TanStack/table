@@ -26,6 +26,11 @@ export const productColumnHelper = createAppColumnHelper<Product>()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsTable {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
   readonly data = signal(makeProductData(1_000))
 
   readonly columns = productColumnHelper.columns([
@@ -57,6 +62,7 @@ export class ProductsTable {
   ])
 
   table = injectAppTable(() => ({
+    key: 'products-table', // needed for devtools
     columns: this.columns,
     data: this.data(),
     getRowId: (row) => row.id,
@@ -69,11 +75,4 @@ export class ProductsTable {
 
   refreshData = () => this.data.set(makeProductData(1_000))
   stressTest = () => this.data.set(makeProductData(200_000))
-
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'products-table',
-    }))
-  }
 }

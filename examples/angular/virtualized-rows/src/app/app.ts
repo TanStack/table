@@ -17,7 +17,6 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 import { injectVirtualizer } from '@tanstack/angular-virtual'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type { ElementRef } from '@angular/core'
 import type { Person } from './makeData'
@@ -109,12 +108,5 @@ export class App {
 
   sortIndicator(sortDirection: false | 'asc' | 'desc') {
     return sortDirection ? sortIndicators[sortDirection] : null
-  }
-
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'virtualized-rows',
-    }))
   }
 }

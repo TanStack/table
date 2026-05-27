@@ -5,7 +5,6 @@ import {
   signal,
 } from '@angular/core'
 import { FlexRender, isFunction } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { columns, injectTable } from './columns'
 import { makeData } from './makeData'
 import type { GroupingState, Updater } from '@tanstack/angular-table'
@@ -43,6 +42,10 @@ export class App {
     },
   }))
 
+  readonly tableState = computed(() =>
+    JSON.stringify(this.table.state, null, 2),
+  )
+
   onPageInputChange(event: any): void {
     const page = event.target.value ? Number(event.target.value) - 1 : 0
     this.table.setPageIndex(page)
@@ -54,10 +57,5 @@ export class App {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(200_000))
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-      name: 'grouping',
-    }))
-  }
+  rerender = () => this.data.update((data) => [...data])
 }

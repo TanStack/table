@@ -9,6 +9,7 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { createAtom, useSelector } from '@tanstack/solid-store'
 import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
@@ -69,6 +70,7 @@ function App() {
 
   // Create the table and pass your per-slice external atoms.
   const table = createTable({
+    key: 'basic-external-atoms', // needed for devtools
     _features,
     _rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
@@ -84,6 +86,8 @@ function App() {
     },
     debugTable: true,
   })
+
+  useTanStackTableDevtools(table)
 
   return (
     <div class="demo-root">

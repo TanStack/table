@@ -4,6 +4,7 @@ import {
   createPaginatedRowModel,
   createTableHook,
   filterFns,
+  globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
@@ -11,6 +12,7 @@ import {
 
 const _features = tableFeatures({
   columnFilteringFeature,
+  globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
 })

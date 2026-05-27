@@ -1,7 +1,9 @@
 <div class="demo-root">
-  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
-  <button class="demo-button demo-button-spaced" (click)="stressTest()">Stress Test</button>
-  <div class="spacer-sm"></div>
+  <div>
+    <button class="demo-button" (click)="refreshData()">Regenerate Data</button>
+    <button class="demo-button" (click)="stressTest()">Stress Test (1k rows)</button>
+  </div>
+  <div class="spacer-md"></div>
   <table>
     <thead>
       @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
@@ -45,8 +47,6 @@
       }
     </tfoot>
   </table>
-  <div class="spacer-sm"></div>
-
-  <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-  <pre>{{ tableState() }}</pre>
+  <div class="spacer-md"></div>
+  <button class="demo-button" (click)="rerender()">Rerender</button>
 </div>

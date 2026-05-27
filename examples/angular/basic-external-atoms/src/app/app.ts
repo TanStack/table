@@ -1,9 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Injector,
   effect,
-  inject,
   signal,
 } from '@angular/core'
 import { createAtom, injectSelector } from '@tanstack/angular-store'
@@ -18,6 +16,7 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/angular-table'
 import type { Person } from './makeData'
@@ -48,7 +47,15 @@ const columns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  private readonly injector = inject(Injector)
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+
+    effect(() => {
+      console.log('atom', this.paginationAtom.get())
+    })
+  }
 
   readonly data = signal(makeData(1_000))
   readonly renderCount = signal(0)
@@ -62,11 +69,12 @@ export class App {
   readonly pagination = injectSelector(this.paginationAtom)
 
   readonly table = injectTable(() => ({
+    key: 'basic-external-atoms', // needed for devtools
     debugTable: true,
     _features,
     _rowModels: {
       sortedRowModel: createSortedRowModel<typeof _features, Person>(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
+      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
     },
     columns,
     data: this.data(),
@@ -75,12 +83,6 @@ export class App {
       pagination: this.paginationAtom,
     },
   }))
-
-  constructor() {
-    effect(() => {
-      console.log('atom', this.paginationAtom.get())
-    })
-  }
 
   refreshData() {
     this.data.set(makeData(1_000))

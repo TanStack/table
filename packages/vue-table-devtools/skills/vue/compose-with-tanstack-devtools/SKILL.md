@@ -2,8 +2,8 @@
 name: vue/compose-with-tanstack-devtools
 description: >
   Wire up TanStack Devtools for TanStack Table in Vue. Mount `TanStackDevtools`
-  with `tableDevtoolsPlugin()` from the app root and call
-  `useTanStackTableDevtools(table, name?)` inside `<script setup>` after each
+  with `tableDevtoolsPlugin({})` from the app root and call
+  `useTanStackTableDevtools(table)` inside `<script setup>` after each
   `useTable()`. Live devtools are tree-shaken to no-ops in production unless you
   import from `@tanstack/vue-table-devtools/production`.
 type: composition
@@ -33,8 +33,8 @@ pnpm add @tanstack/vue-devtools @tanstack/vue-table-devtools
 
 The recommended pattern has two parts:
 
-1. Mount `TanStackDevtools` once at the app root with `tableDevtoolsPlugin()`.
-2. Call `useTanStackTableDevtools(table, name?)` inside `<script setup>` after each `useTable()`.
+1. Mount `TanStackDevtools` once at the app root with `tableDevtoolsPlugin({})`.
+2. Call `useTanStackTableDevtools(table)` inside `<script setup>` after each `useTable()`.
 
 ### App Root (`main.ts`)
 
@@ -49,7 +49,7 @@ const Root = defineComponent({
     return () => [
       h(App),
       h(TanStackDevtools, {
-        plugins: [tableDevtoolsPlugin()],
+        plugins: [tableDevtoolsPlugin({})],
       }),
     ]
   },
@@ -68,11 +68,12 @@ import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 const table = useTable({
   _features,
   _rowModels,
+  key: 'users-table',
   columns,
   data,
 })
 
-useTanStackTableDevtools(table, 'Users Table')
+useTanStackTableDevtools(table)
 </script>
 
 <template>
@@ -80,16 +81,16 @@ useTanStackTableDevtools(table, 'Users Table')
 </template>
 ```
 
-`tableDevtoolsPlugin()` returns a plugin descriptor for the multi-panel TanStack Devtools UI. `useTanStackTableDevtools` is a Vue composable that registers/unregisters the table via a `watchEffect`, so it reacts to `MaybeRef` inputs for the table, name, and `enabled` option.
+`tableDevtoolsPlugin({})` returns a plugin descriptor for the multi-panel TanStack Devtools UI. `useTanStackTableDevtools` is a Vue composable that registers/unregisters the table via a `watchEffect`, so it reacts to `MaybeRef` inputs for the table, name, and `enabled` option.
 
 ## Patterns
 
-### Naming Tables
+### Keying Tables
 
-The optional second argument labels the table in the panel selector. Without it, devtools assign fallback names like `Table 1` and `Table 2`.
+Add a stable `key` option to the table options. Devtools use this key as both the registration id and the panel selector label.
 
 ```ts
-useTanStackTableDevtools(table, 'Orders Table')
+useTanStackTableDevtools(table)
 ```
 
 The name may be reactive — pass a `Ref<string>` to update the label live.
@@ -103,8 +104,8 @@ Register multiple tables and the Table panel renders a selector. Name each one.
 const ordersTable = useTable(ordersOptions)
 const usersTable = useTable(usersOptions)
 
-useTanStackTableDevtools(ordersTable, 'Orders')
-useTanStackTableDevtools(usersTable, 'Users')
+useTanStackTableDevtools(ordersTable)
+useTanStackTableDevtools(usersTable)
 </script>
 ```
 
@@ -116,7 +117,7 @@ useTanStackTableDevtools(usersTable, 'Users')
 import { ref } from 'vue'
 const showTableDevtools = ref(false)
 
-useTanStackTableDevtools(table, 'Users Table', {
+useTanStackTableDevtools(table, {
   enabled: showTableDevtools.value,
 })
 ```
@@ -151,7 +152,7 @@ const TableDevtoolsRoot = defineAsyncComponent(async () => {
   const { TanStackDevtools } = await import('@tanstack/vue-devtools')
   return {
     setup() {
-      return () => h(TanStackDevtools, { plugins: [tableDevtoolsPlugin()] })
+      return () => h(TanStackDevtools, { plugins: [tableDevtoolsPlugin({})] })
     },
   }
 })
@@ -161,7 +162,7 @@ const TableDevtoolsRoot = defineAsyncComponent(async () => {
 
 ### Forgetting to mount `TanStackDevtools` at the app root
 
-Calling `useTanStackTableDevtools(table)` alone does nothing visible — it only registers the table with the devtools target store. Without a `<TanStackDevtools :plugins="[tableDevtoolsPlugin()]" />` (or `h(TanStackDevtools, ...)`) somewhere in the tree, there is no panel to render the registration. Symptom: composable runs without errors, no devtools button appears.
+Calling `useTanStackTableDevtools(table)` alone does nothing visible — it only registers the table with the devtools target store. Without a `<TanStackDevtools :plugins="[tableDevtoolsPlugin({})]" />` (or `h(TanStackDevtools, ...)`) somewhere in the tree, there is no panel to render the registration. Symptom: composable runs without errors, no devtools button appears.
 
 ### Importing devtools from the default path in a prod-only bundle
 
@@ -173,8 +174,8 @@ The flip side: importing from `/production` in your default app bundle means eve
 
 ### Calling `useTanStackTableDevtools` outside `setup`
 
-The composable uses `watchEffect` and `getCurrentInstance` — it must run inside a component's `setup` / `<script setup>` block. Calling it in a regular utility function gives an unstable registration id and no automatic cleanup.
+The composable uses `watchEffect`, so it should run inside a component's `setup` / `<script setup>` block where Vue can own the effect cleanup.
 
-### Multiple tables without names
+### Multiple tables without keys
 
-Two `useTanStackTableDevtools(table)` calls without a name produce selector entries like `Table 1` / `Table 2`. When you have 3+ tables this becomes unusable. Always pass a descriptive name as the second argument.
+A table registered without `options.key` is skipped and devtools log an error. Add a unique `key` option to every table that should appear in devtools.

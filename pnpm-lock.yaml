@@ -166,12 +166,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-store':
         specifier: ^0.11.0
         version: 0.11.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -212,12 +218,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-store':
         specifier: ^0.11.0
         version: 0.11.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -313,15 +325,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -365,15 +371,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -417,15 +417,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -469,15 +463,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -521,15 +509,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -573,15 +555,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -625,15 +601,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -677,15 +647,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -729,15 +693,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -830,15 +788,9 @@ importers:
       '@angular/router':
         specifier: ^21.2.13
         version: 21.2.13(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(@angular/platform-browser@21.2.13(@angular/animations@21.2.14(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2)))(rxjs@7.8.2)
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -882,15 +834,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -934,15 +880,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -986,18 +926,12 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-pacer':
         specifier: ^0.23.0
         version: 0.23.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1041,18 +975,12 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-pacer':
         specifier: ^0.23.0
         version: 0.23.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1096,18 +1024,12 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-pacer':
         specifier: ^0.23.0
         version: 0.23.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
@@ -1154,15 +1076,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1206,9 +1122,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: ^9.0.0-alpha.43
+        version: link:../../../packages/angular-table-devtools
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
@@ -1255,15 +1177,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1313,15 +1229,9 @@ importers:
       '@angular/ssr':
         specifier: ^21.2.11
         version: 21.2.11(d5e6282e718d55cda9fee26f6d40013e)
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       express:
         specifier: ^5.2.1
         version: 5.2.1
@@ -1377,15 +1287,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1429,15 +1333,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1594,15 +1492,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1646,15 +1538,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1698,15 +1584,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1750,15 +1630,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       '@tanstack/angular-virtual':
         specifier: ^5.0.1
         version: 5.0.1(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
@@ -1805,15 +1679,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       '@tanstack/angular-virtual':
         specifier: ^5.0.1
         version: 5.0.1(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
@@ -1860,15 +1728,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       '@tanstack/angular-virtual':
         specifier: ^5.0.1
         version: 5.0.1(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
@@ -1915,18 +1777,12 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-form':
         specifier: ^1.32.0
         version: 1.32.0(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -1973,18 +1829,12 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
-      '@tanstack/angular-devtools':
-        specifier: ^0.0.4
-        version: 0.0.4(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-query-experimental':
         specifier: ^5.100.14
         version: 5.100.14(@angular/common@21.2.13(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.13(@angular/compiler@21.2.13)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
-      '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
-        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -2672,12 +2522,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -2697,12 +2553,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -2722,12 +2584,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -2735,12 +2603,6 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.0)(preact@10.29.2)(rollup@4.60.4)(vite@8.0.13(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.0)(yaml@2.9.0))
-      '@tanstack/preact-devtools':
-        specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
-      '@tanstack/preact-table-devtools':
-        specifier: workspace:*
-        version: link:../../../packages/preact-table-devtools
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -2750,9 +2612,15 @@ importers:
 
   examples/preact/basic-use-app-table:
     dependencies:
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -2769,9 +2637,15 @@ importers:
 
   examples/preact/basic-use-table:
     dependencies:
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -2989,12 +2863,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -3167,9 +3047,15 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -3236,12 +3122,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
       preact:
         specifier: ^10.29.2
         version: 10.29.2
@@ -3249,12 +3141,6 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.0)(preact@10.29.2)(rollup@4.60.4)(vite@8.0.13(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.0)(yaml@2.9.0))
-      '@tanstack/preact-devtools':
-        specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
-      '@tanstack/preact-table-devtools':
-        specifier: workspace:*
-        version: link:../../../packages/preact-table-devtools
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -3277,12 +3163,6 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.0)(preact@10.29.2)(rollup@4.60.4)(vite@8.0.13(@types/node@25.9.1)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.99.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.0)(yaml@2.9.0))
-      '@tanstack/preact-devtools':
-        specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
-      '@tanstack/preact-table-devtools':
-        specifier: workspace:*
-        version: link:../../../packages/preact-table-devtools
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -3345,12 +3225,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -3388,12 +3274,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -3431,6 +3323,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -3440,6 +3335,9 @@ importers:
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -3453,12 +3351,6 @@ importers:
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.60.4)
-      '@tanstack/react-devtools':
-        specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
-      '@tanstack/react-table-devtools':
-        specifier: workspace:*
-        version: link:../../../packages/react-table-devtools
       '@types/react':
         specifier: ^19.2.15
         version: 19.2.15
@@ -3480,9 +3372,15 @@ importers:
 
   examples/react/basic-use-app-table:
     dependencies:
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -3520,12 +3418,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -3560,9 +3464,15 @@ importers:
 
   examples/react/basic-use-table:
     dependencies:
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -4012,12 +3922,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -4031,12 +3947,6 @@ importers:
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.60.4)
-      '@tanstack/react-devtools':
-        specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
-      '@tanstack/react-table-devtools':
-        specifier: workspace:*
-        version: link:../../../packages/react-table-devtools
       '@types/react':
         specifier: ^19.2.15
         version: 19.2.15
@@ -4340,6 +4250,9 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -4349,6 +4262,9 @@ importers:
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -4410,12 +4326,18 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       date-fns:
         specifier: ^4.2.1
         version: 4.2.1
@@ -4483,12 +4405,18 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       date-fns:
         specifier: ^4.2.1
         version: 4.2.1
@@ -4565,12 +4493,18 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       date-fns:
         specifier: ^4.2.1
         version: 4.2.1
@@ -4629,12 +4563,18 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       date-fns:
         specifier: ^4.2.1
         version: 4.2.1
@@ -4702,12 +4642,18 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -4790,12 +4736,18 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       class-variance-authority:
         specifier: ^0.7.1
         version: 0.7.1
@@ -5492,6 +5444,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -5501,6 +5456,9 @@ importers:
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.6
         version: 19.2.6
@@ -5514,12 +5472,6 @@ importers:
       '@rollup/plugin-replace':
         specifier: ^6.0.3
         version: 6.0.3(rollup@4.60.4)
-      '@tanstack/react-devtools':
-        specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
-      '@tanstack/react-table-devtools':
-        specifier: workspace:*
-        version: link:../../../packages/react-table-devtools
       '@types/react':
         specifier: ^19.2.15
         version: 19.2.15
@@ -5989,9 +5941,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.5
+        version: 0.8.5(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.13
         version: 1.9.13
@@ -6008,12 +5966,18 @@ importers:
 
   examples/solid/basic-external-atoms:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.5
+        version: 0.8.5(solid-js@1.9.13)
       '@tanstack/solid-store':
         specifier: ^0.11.0
         version: 0.11.0(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.13
         version: 1.9.13
@@ -6033,9 +5997,15 @@ importers:
 
   examples/solid/basic-external-state:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.5
+        version: 0.8.5(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.13
         version: 1.9.13
@@ -6055,9 +6025,15 @@ importers:
 
   examples/solid/basic-use-table:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.5
+        version: 0.8.5(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.13
         version: 1.9.13
@@ -6272,9 +6248,15 @@ importers:
 
   examples/solid/composable-tables:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.5
+        version: 0.8.5(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.13
         version: 1.9.13
@@ -6416,9 +6398,15 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.5
+        version: 0.8.5(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.13
         version: 1.9.13
@@ -7760,12 +7748,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.19
+        version: 0.2.19(solid-js@1.9.13)
       '@tanstack/vue-store':
         specifier: ^0.11.0
         version: 0.11.0(vue@3.5.34(typescript@6.0.3))
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.34
         version: 3.5.34(typescript@6.0.3)
@@ -7794,9 +7788,15 @@ importers:
       '@faker-js/faker':
         specifier: ^10.4.0
         version: 10.4.0
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.19
+        version: 0.2.19(solid-js@1.9.13)
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.34
         version: 3.5.34(typescript@6.0.3)
@@ -7822,9 +7822,15 @@ importers:
 
   examples/vue/basic-use-app-table:
     dependencies:
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.19
+        version: 0.2.19(solid-js@1.9.13)
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.34
         version: 3.5.34(typescript@6.0.3)
@@ -7850,9 +7856,15 @@ importers:
 
   examples/vue/basic-use-table:
     dependencies:
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.19
+        version: 0.2.19(solid-js@1.9.13)
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.34
         version: 3.5.34(typescript@6.0.3)
@@ -8157,12 +8169,18 @@ importers:
 
   examples/vue/composable-tables:
     dependencies:
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.19
+        version: 0.2.19(solid-js@1.9.13)
       '@tanstack/vue-store':
         specifier: ^0.11.0
         version: 0.11.0(vue@3.5.34(typescript@6.0.3))
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.34
         version: 3.5.34(typescript@6.0.3)
@@ -8349,9 +8367,15 @@ importers:
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
         version: link:../../../packages/match-sorter-utils
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.19
+        version: 0.2.19(solid-js@1.9.13)
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.34
         version: 3.5.34(typescript@6.0.3)

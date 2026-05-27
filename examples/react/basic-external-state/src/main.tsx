@@ -1,4 +1,5 @@
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
@@ -11,6 +12,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
 
@@ -75,6 +80,7 @@ function App() {
   // Create the table and pass state + onChange handlers
   const table = useTable(
     {
+      key: 'basic-external-state', // needed for devtools
       debugTable: true,
       _features,
       _rowModels: {
@@ -92,6 +98,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   return (
     <div className="demo-root">
@@ -220,5 +228,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

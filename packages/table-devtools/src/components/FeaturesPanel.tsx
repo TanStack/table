@@ -16,7 +16,14 @@ function toFnBuckets(value: unknown): FnBuckets {
   return typeof value === 'object' && value != null ? value : {}
 }
 
-const CORE_FEATURE_NAMES: Array<string> = Object.keys(coreFeatures)
+const CORE_REACTIVITY_FEATURE_NAME = 'coreReativityFeature'
+
+const CORE_FEATURE_NAMES: Array<string> = [
+  CORE_REACTIVITY_FEATURE_NAME,
+  ...Object.keys(coreFeatures).filter(
+    (featureName) => featureName !== CORE_REACTIVITY_FEATURE_NAME,
+  ),
+]
 const STOCK_FEATURE_NAMES: Array<string> = Object.keys(stockFeatures)
 
 const PACKAGE_SIZE_LIMIT_BYTES = 16_987

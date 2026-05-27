@@ -10,6 +10,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { makeData } from './makeData'
 import type {
   Cell,
@@ -79,6 +80,7 @@ export default defineComponent({
 
     const table = useTable(
       {
+        key: 'basic-external-state', // needed for devtools
         debugTable: true,
         _features,
         _rowModels: {
@@ -109,6 +111,8 @@ export default defineComponent({
         pagination: state.pagination,
       }),
     )
+
+    useTanStackTableDevtools(table)
 
     return () => (
       <div class="demo-root">

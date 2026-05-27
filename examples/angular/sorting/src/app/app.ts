@@ -12,7 +12,6 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
-import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeData } from './makeData'
 import type { ColumnDef, SortFn } from '@tanstack/angular-table'
 import type { Person } from './makeData'
@@ -45,6 +44,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   { accessorKey: 'createdAt', header: 'Created At' },
 ]
 
+const sortIndicators: Record<'asc' | 'desc', string> = {
+  asc: ' ^',
+  desc: ' v',
+}
+
 @Component({
   selector: 'app-root',
   imports: [FlexRender],
@@ -56,7 +60,9 @@ export class App {
 
   readonly table = injectTable<typeof _features, Person>(() => ({
     _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    _rowModels: {
+      sortedRowModel: createSortedRowModel<typeof _features, Person>(sortFns),
+    },
     columns,
     data: this.data(),
     debugTable: true,
@@ -68,8 +74,16 @@ export class App {
 
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(500_000))
+  rerender = () => this.data.update((data) => [...data])
 
-  constructor() {
-    injectTanStackTableDevtools(() => ({ table: this.table, name: 'sorting' }))
+  getSortTitle(canSort: boolean, nextSortOrder: false | 'asc' | 'desc') {
+    if (!canSort) return undefined
+    if (nextSortOrder === 'asc') return 'Sort ascending'
+    if (nextSortOrder === 'desc') return 'Sort descending'
+    return 'Clear sort'
+  }
+
+  sortIndicator(sortDirection: false | 'asc' | 'desc') {
+    return sortDirection ? sortIndicators[sortDirection] : null
   }
 }
