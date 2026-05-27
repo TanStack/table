@@ -1,9 +1,5 @@
 import { NgTemplateOutlet } from '@angular/common'
-import {
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   FlexRender,
   columnPinningFeature,

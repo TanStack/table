@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { FlexRender, isFunction } from '@tanstack/angular-table'
 import { columns, injectTable } from './columns'
 import { makeData } from './makeData'

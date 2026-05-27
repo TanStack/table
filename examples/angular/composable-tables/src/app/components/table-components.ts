@@ -92,7 +92,10 @@ export class RowCount {
           (change)="onPageChange($event)"
         />
       </span>
-      <select [value]="table().state.pagination.pageSize" (change)="onPageSizeChange($event)">
+      <select
+        [value]="table().state.pagination.pageSize"
+        (change)="onPageSizeChange($event)"
+      >
         @for (size of pageSizes; track size) {
           <option [value]="size">Show {{ size }}</option>
         }

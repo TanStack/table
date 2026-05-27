@@ -1,8 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import {
   FlexRender,
