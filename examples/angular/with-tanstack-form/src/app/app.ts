@@ -74,9 +74,9 @@ export class App {
   readonly validation = computed(() =>
     z.array(personSchema).safeParse(this.data()),
   )
-  readonly tableState = computed(() =>
-    JSON.stringify(this.table.state, null, 2),
-  )
+  stateJson() {
+    return JSON.stringify(this.table.state, null, 2)
+  }
 
   update(rowIndex: number, key: keyof Person, event: Event) {
     const value = (event.target as HTMLInputElement | HTMLSelectElement).value

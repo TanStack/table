@@ -138,9 +138,9 @@ export class AppComponent {
     debugTable: true,
   }))
 
-  readonly stringifiedRowSelection = computed(() =>
-    JSON.stringify(this.rowSelection(), null, 2),
-  )
+  stringifiedRowSelection() {
+    return JSON.stringify(this.table.state.rowSelection, null, 2)
+  }
 
   readonly rowSelectionLength = computed(
     () => Object.keys(this.rowSelection()).length,

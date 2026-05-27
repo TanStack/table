@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
@@ -97,13 +96,9 @@ export class App {
     },
   }))
 
-  readonly stateJson = computed(() =>
-    JSON.stringify(
-      { sorting: this.sorting(), pagination: this.pagination() },
-      null,
-      2,
-    ),
-  )
+  stateJson() {
+    return JSON.stringify(this.table.state, null, 2)
+  }
 
   refreshData() {
     this.data.set(makeData(1_000))

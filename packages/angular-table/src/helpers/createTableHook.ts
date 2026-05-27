@@ -465,7 +465,7 @@ export function createTableHook<
         ...tableOptions(),
         _features: {
           ...defaultTableOptions._features,
-          ...appTableFeatures,
+          appTableFeatures,
         },
       } as TableOptions<TFeatures, TData>
     }) as AngularTable<any, any>

@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
@@ -109,9 +108,9 @@ export class App {
     debugTable: true,
   }))
 
-  readonly tableState = computed(() =>
-    JSON.stringify(this.table.state, null, 2),
-  )
+  stateJson() {
+    return JSON.stringify(this.table.state, null, 2)
+  }
   refreshData = () => this.data.set(makeData(1_000))
   stressTest = () => this.data.set(makeData(50_000))
   onGlobalFilter(event: Event) {

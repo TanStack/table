@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
@@ -106,9 +105,9 @@ export class App {
     debugColumns: true,
   }))
 
-  readonly stringifiedColumnOrdering = computed(() => {
+  stringifiedColumnOrdering() {
     return JSON.stringify(this.table.state.columnOrder)
-  })
+  }
 
   randomizeColumns() {
     this.table.setColumnOrder(

@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
@@ -126,9 +125,9 @@ export class App {
     debugColumns: true,
   }))
 
-  stringifiedColumnPinning = computed(() => {
+  stringifiedColumnPinning() {
     return JSON.stringify(this.table.state.columnPinning)
-  })
+  }
 
   randomizeColumns() {
     this.table.setColumnOrder(

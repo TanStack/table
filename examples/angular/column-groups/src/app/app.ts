@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
@@ -80,9 +79,9 @@ export class App {
     debugTable: true,
   }))
 
-  readonly tableState = computed(() =>
-    JSON.stringify(this.table.state, null, 2),
-  )
+  stateJson() {
+    return JSON.stringify(this.table.state, null, 2)
+  }
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))

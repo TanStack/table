@@ -10,7 +10,6 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   injectTable,
-  shallow,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
@@ -93,10 +92,6 @@ export class App {
     debugColumns: true,
   }))
 
-  readonly columnSizing = computed(() => this.table.atoms.columnSizing.get(), {
-    equal: shallow,
-  })
-
   /**
    * Instead of calling `column.getSize()` on every render for every header
    * and especially every data cell (very expensive),
@@ -104,7 +99,7 @@ export class App {
    * and pass the column sizes down as CSS variables to the <table> element.
    */
   readonly columnSizeVars = computed(() => {
-    void this.columnSizing()
+    void this.table.state.columnSizing
     const headers = untracked(() => this.table.getFlatHeaders())
     const colSizes: { [key: string]: number } = {}
     let i = headers.length
@@ -119,7 +114,7 @@ export class App {
   readonly columnSizingDebugInfo = computed(() =>
     JSON.stringify(
       {
-        columnSizing: this.columnSizing(),
+        columnSizing: this.table.state.columnSizing,
       },
       null,
       2,

@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core'
+import { Component, signal } from '@angular/core'
 import {
   FlexRender,
   columnOrderingFeature,
@@ -97,9 +97,9 @@ export class App {
     columnResizeMode: 'onChange' as const,
   }))
 
-  stringifiedColumnPinning = computed(() => {
+  stringifiedColumnPinning() {
     return JSON.stringify(this.table.state.columnPinning)
-  })
+  }
 
   readonly getCommonPinningStyles = (
     column: Column<any, Person>,

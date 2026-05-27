@@ -4,7 +4,7 @@ import {
   effect,
   signal,
 } from '@angular/core'
-import { createAtom, injectSelector } from '@tanstack/angular-store'
+import { createAtom } from '@tanstack/angular-store'
 import {
   FlexRender,
   createColumnHelper,
@@ -65,9 +65,6 @@ export class App {
     pageSize: 10,
   })
 
-  readonly sorting = injectSelector(this.sortingAtom)
-  readonly pagination = injectSelector(this.paginationAtom)
-
   readonly table = injectTable(() => ({
     key: 'basic-external-atoms', // needed for devtools
     debugTable: true,
@@ -108,10 +105,6 @@ export class App {
   }
 
   stateJson() {
-    return JSON.stringify(
-      { sorting: this.sorting(), pagination: this.pagination() },
-      null,
-      2,
-    )
+    return JSON.stringify(this.table.state, null, 2)
   }
 }

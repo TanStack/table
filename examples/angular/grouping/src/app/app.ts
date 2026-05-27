@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import { FlexRender, isFunction } from '@tanstack/angular-table'
@@ -19,10 +18,6 @@ import type { GroupingState, Updater } from '@tanstack/angular-table'
 export class App {
   readonly data = signal(makeData(1_000))
   readonly grouping = signal<GroupingState>([])
-
-  readonly stringifiedGrouping = computed(() =>
-    JSON.stringify(this.grouping(), null, 2),
-  )
 
   readonly table = injectTable(() => ({
     debugTable: true,
@@ -42,9 +37,13 @@ export class App {
     },
   }))
 
-  readonly tableState = computed(() =>
-    JSON.stringify(this.table.state, null, 2),
-  )
+  stateJson() {
+    return JSON.stringify(this.table.state, null, 2)
+  }
+
+  stringifiedGrouping() {
+    return JSON.stringify(this.table.state.grouping, null, 2)
+  }
 
   onPageInputChange(event: any): void {
     const page = event.target.value ? Number(event.target.value) - 1 : 0

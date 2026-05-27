@@ -2,7 +2,6 @@ import { NgTemplateOutlet } from '@angular/common'
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
@@ -61,9 +60,9 @@ export class App {
     debugTable: true,
   }))
 
-  readonly stringifiedColumnPinning = computed(() => {
+  stringifiedColumnPinning() {
     return JSON.stringify(this.table.state.columnPinning)
-  })
+  }
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))

@@ -1,5 +1,11 @@
-import { DestroyRef, NgZone, computed, signal, untracked } from '@angular/core'
-import { toObservable } from '@angular/core/rxjs-interop'
+import {
+  DestroyRef,
+  NgZone,
+  computed,
+  effect,
+  signal,
+  untracked,
+} from '@angular/core'
 import { batch, createAtom } from '@tanstack/angular-store'
 import type { Atom, Observer, ReadonlyAtom } from '@tanstack/angular-store'
 import type {
@@ -10,44 +16,64 @@ import type { Injector, Signal, WritableSignal } from '@angular/core'
 
 const optionsStoreDebugName = 'table/optionsStore'
 
-function signalToReadonlyAtom<T>(
-  signal: Signal<T>,
-  injector: Injector,
-): ReadonlyAtom<T> {
-  return Object.assign(signal, {
-    get: () => signal(),
-    subscribe: (observer: Observer<T>) => {
-      const subscription = toObservable(computed(signal), {
-        injector: injector,
-      }).subscribe(observer)
+function observerToCallback<T>(
+  observerOrNext: Observer<T> | ((value: T) => void),
+): (value: T) => void {
+  return typeof observerOrNext === 'function'
+    ? observerOrNext
+    : (value) => observerOrNext.next?.(value)
+}
 
-      return {
-        unsubscribe: () => subscription.unsubscribe(),
-      }
+function signalToReadonlyAtom<T>(
+  source: Signal<T>,
+  getSource: () => T,
+  subscribeSource: (observerOrNext: Observer<T> | ((value: T) => void)) => {
+    unsubscribe: () => void
+  },
+): ReadonlyAtom<T> {
+  return Object.assign(source, {
+    get: () => {
+      const value = getSource()
+      source()
+      return value
     },
+    subscribe: subscribeSource as ReadonlyAtom<T>['subscribe'],
   })
 }
 
 function signalToWritableAtom<T>(
-  signal: WritableSignal<T>,
+  source: WritableSignal<T>,
   injector: Injector,
 ): Atom<T> {
-  return Object.assign(signal.asReadonly(), {
+  const observers = new Set<(value: T) => void>()
+  let observed = false
+  effect(
+    () => {
+      const value = source()
+      if (!observed) {
+        observed = true
+        return
+      }
+      observers.forEach((observer) => observer(value))
+    },
+    { injector },
+  )
+
+  return Object.assign(source.asReadonly(), {
     set: (updater: T | ((prevVal: T) => T)) => {
       typeof updater === 'function'
-        ? signal.update(updater as (val: T) => T)
-        : signal.set(updater)
+        ? source.update(updater as (val: T) => T)
+        : source.set(updater)
     },
-    get: () => signal(),
-    subscribe: (observer: Observer<T>) => {
-      const subscription = toObservable(computed(signal), {
-        injector: injector,
-      }).subscribe(observer)
+    get: () => source(),
+    subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
+      const observer = observerToCallback(observerOrNext)
+      observers.add(observer)
 
       return {
-        unsubscribe: () => subscription.unsubscribe(),
+        unsubscribe: () => observers.delete(observer),
       }
-    },
+    }) as Atom<T>['subscribe'],
   })
 }
 
@@ -88,7 +114,16 @@ export function angularReactivity(injector: Injector): TableReactivityBindings {
           debugName: options?.debugName,
         },
       )
-      return signalToReadonlyAtom(value, injector)
+      return signalToReadonlyAtom(
+        value,
+        () => storeAtom.get(),
+        (observerOrNext) => {
+          const observer = observerToCallback(observerOrNext)
+          return storeAtom.subscribe(() => {
+            observer(storeAtom.get())
+          })
+        },
+      )
     },
     createWritableAtom: <T>(
       value: T,

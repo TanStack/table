@@ -301,7 +301,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+        {{ (pageIndex() + 1).toLocaleString() }} of
         {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
@@ -309,15 +309,15 @@
       | Go to page:
       <input
         type="number"
-        [value]="table.state.pagination.pageIndex + 1"
+        [value]="pageIndex() + 1"
         (input)="onPageInputChange($event)"
         class="page-size-input"
       />
     </span>
 
-    <select [value]="table.state.pagination.pageSize" (change)="onPageSizeChange($event)">
-      @for (pageSize of [10, 20, 30, 50, 100]; track pageSize) {
-        <option [value]="pageSize">Show {{ pageSize }}</option>
+    <select [value]="pageSize()" (change)="onPageSizeChange($event)">
+      @for (size of [10, 20, 30, 50, 100]; track size) {
+        <option [value]="size" [selected]="pageSize() === size">Show {{ size }}</option>
       }
     </select>
   </div>
@@ -332,6 +332,6 @@
   <div class="spacer-md"></div>
   <details>
     <summary>Table state (live)</summary>
-    <pre class="state-dump">{{ tableState() }}</pre>
+    <pre class="state-dump">{{ stateJson() }}</pre>
   </details>
 </div>

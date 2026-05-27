@@ -76,7 +76,7 @@
     <span class="inline-controls"
       ><div>Page</div>
       <strong
-        >{{ (pagination().pageIndex + 1).toLocaleString() }} of
+        >{{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
         {{ table.getPageCount().toLocaleString() }}</strong
       ></span
     >
@@ -86,11 +86,11 @@
         type="number"
         min="1"
         [max]="table.getPageCount()"
-        [value]="pagination().pageIndex + 1"
+        [value]="table.state.pagination.pageIndex + 1"
         (input)="onPageInputChange($event)"
         class="page-size-input"
     /></span>
-    <select [value]="pagination().pageSize" (change)="onPageSizeChange($event)">
+    <select [value]="table.state.pagination.pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }

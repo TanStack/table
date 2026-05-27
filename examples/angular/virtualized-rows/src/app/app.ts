@@ -5,7 +5,6 @@ import {
   signal,
   viewChild,
 } from '@angular/core'
-import { JsonPipe } from '@angular/common'
 import {
   FlexRender,
   columnSizingFeature,
@@ -66,7 +65,7 @@ const sortIndicators: Record<string, string> = {
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRender, JsonPipe],
+  imports: [FlexRender],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -102,6 +101,10 @@ export class App {
 
   readonly virtualRows = computed(() => this.rowVirtualizer.getVirtualItems())
   readonly totalSize = computed(() => this.rowVirtualizer.getTotalSize())
+
+  stateJson() {
+    return JSON.stringify(this.table.state, null, 2)
+  }
 
   refreshData = () => this.data.set(makeData(200_000))
   stressTest = () => this.data.set(makeData(1_000_000))

@@ -210,14 +210,9 @@ export class App {
     debugTable: true,
   }))
 
-  readonly columnSizing = computed(() => this.table.atoms.columnSizing.get())
-  readonly columnResizing = computed(() =>
-    this.table.atoms.columnResizing.get(),
-  )
-
   readonly columnSizeVars = computed(() => {
-    void this.columnSizing()
-    void this.columnResizing()
+    void this.table.state.columnSizing
+    void this.table.state.columnResizing
     const headers = untracked(() => this.table.getFlatHeaders())
     const colSizes: Record<string, number> = {}
     for (const header of headers) {
@@ -227,9 +222,17 @@ export class App {
     return colSizes
   })
 
-  readonly tableState = computed(() =>
-    JSON.stringify(this.table.state, null, 2),
-  )
+  stateJson() {
+    return JSON.stringify(this.table.state, null, 2)
+  }
+
+  pageIndex() {
+    return this.table.state.pagination.pageIndex
+  }
+
+  pageSize() {
+    return this.table.state.pagination.pageSize
+  }
 
   refreshData = () => this.data.set(makeData(1_000))
   nestedData = () => this.data.set(makeData(100, 5, 3))

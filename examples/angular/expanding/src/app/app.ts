@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
@@ -13,7 +12,6 @@ import {
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
-  shallow,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { ReactiveFormsModule } from '@angular/forms'
@@ -102,19 +100,13 @@ export class App {
     debugTable: true,
   }))
 
-  readonly rawExpandedState = computed(() =>
-    JSON.stringify(this.expanded(), undefined, 2),
-  )
+  rawExpandedState() {
+    return JSON.stringify(this.table.state.expanded, undefined, 2)
+  }
 
-  readonly rowSelectionState = computed(
-    () => this.table.atoms.rowSelection.get(),
-    {
-      equal: shallow,
-    },
-  )
-  readonly rawRowSelectionState = computed(() =>
-    JSON.stringify(this.rowSelectionState(), undefined, 2),
-  )
+  rawRowSelectionState() {
+    return JSON.stringify(this.table.state.rowSelection, undefined, 2)
+  }
 
   onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement

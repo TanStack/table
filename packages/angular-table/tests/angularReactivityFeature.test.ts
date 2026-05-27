@@ -141,5 +141,156 @@ describe('angularReactivityFeature', () => {
       expect(isSelectedRow1Captor.mock.calls).toEqual([[false], [true]])
       expect(tableStateCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
     })
+
+    test('table store can be subscribed from another reactive effect', () => {
+      const table = createTestTable()
+      const tableStateCaptor = vi.fn()
+
+      TestBed.runInInjectionContext(() => {
+        effect((onCleanup) => {
+          const subscription = table.store.subscribe(() => {
+            tableStateCaptor(table.state)
+          })
+
+          onCleanup(() => subscription.unsubscribe())
+        })
+      })
+
+      expect(() => TestBed.tick()).not.toThrow()
+    })
+
+    test('table state reacts to every external signal state update', () => {
+      const rowSelection = signal<RowSelectionState>({})
+      const table = TestBed.runInInjectionContext(() =>
+        injectTable(() => ({
+          data: data(),
+          _features: { ...stockFeatures },
+          columns: columns,
+          getRowId: (row) => row.id,
+          state: {
+            rowSelection: rowSelection(),
+          },
+        })),
+      )
+      const tableStateCaptor = vi.fn<(val: RowSelectionState) => void>()
+
+      TestBed.runInInjectionContext(() => {
+        effect(() => {
+          tableStateCaptor(table.state.rowSelection)
+        })
+      })
+
+      TestBed.tick()
+      rowSelection.set({ 1: true })
+      TestBed.tick()
+      rowSelection.set({ 1: true, 2: true })
+      TestBed.tick()
+      rowSelection.set({ 2: true })
+      TestBed.tick()
+
+      expect(tableStateCaptor.mock.calls).toEqual([
+        [{}],
+        [{ 1: true }],
+        [{ 1: true, 2: true }],
+        [{ 2: true }],
+      ])
+    })
+
+    test('table state exposes initial state on first render read', () => {
+      const table = TestBed.runInInjectionContext(() =>
+        injectTable(() => ({
+          data: data(),
+          _features: { ...stockFeatures },
+          columns: columns,
+          getRowId: (row) => row.id,
+          initialState: {
+            pagination: {
+              pageIndex: 0,
+              pageSize: 20,
+            },
+          },
+        })),
+      )
+
+      expect(table.state.pagination.pageSize).toBe(20)
+      expect(JSON.stringify(table.state, null, 2)).toContain('"pageSize": 20')
+    })
+
+    test('table state reacts to internal table state updates', () => {
+      const table = TestBed.runInInjectionContext(() =>
+        injectTable(() => ({
+          data: data(),
+          _features: { ...stockFeatures },
+          columns: columns,
+          getRowId: (row) => row.id,
+          initialState: {
+            pagination: {
+              pageIndex: 0,
+              pageSize: 20,
+            },
+          },
+        })),
+      )
+      const pageSizeCaptor = vi.fn<(val: number) => void>()
+      const stateJsonCaptor = vi.fn<(val: string) => void>()
+
+      TestBed.runInInjectionContext(() => {
+        effect(() => {
+          pageSizeCaptor(table.state.pagination.pageSize)
+        })
+        effect(() => {
+          stateJsonCaptor(JSON.stringify(table.state, null, 2))
+        })
+      })
+
+      TestBed.tick()
+      table.setPageSize(50)
+      TestBed.tick()
+      table.setPageSize(100)
+      TestBed.tick()
+
+      expect(pageSizeCaptor.mock.calls).toEqual([[20], [50], [100]])
+      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain(
+        '"pageSize": 100',
+      )
+    })
+
+    test('stock feature table exposes full initial state and updates json state', () => {
+      const table = TestBed.runInInjectionContext(() =>
+        injectTable(() => ({
+          data: data(),
+          _features: stockFeatures,
+          _rowModels: {},
+          columns: columns,
+          getRowId: (row) => row.id,
+          initialState: {
+            columnOrder: columns.map((column) => column.id!),
+            columnPinning: { left: ['id'], right: [] },
+            pagination: {
+              pageIndex: 0,
+              pageSize: 20,
+            },
+          },
+        })),
+      )
+      const stateJsonCaptor = vi.fn<(val: string) => void>()
+
+      TestBed.runInInjectionContext(() => {
+        effect(() => {
+          stateJsonCaptor(JSON.stringify(table.state, null, 2))
+        })
+      })
+
+      TestBed.tick()
+      expect(table.state.pagination.pageSize).toBe(20)
+      expect(table.state.columnOrder).toEqual(['id', 'title'])
+      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 20')
+
+      table.setPageSize(50)
+      TestBed.tick()
+
+      expect(table.state.pagination.pageSize).toBe(50)
+      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 50')
+    })
   })
 })

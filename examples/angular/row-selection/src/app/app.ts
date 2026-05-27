@@ -8,7 +8,6 @@ import {
   FlexRender,
   TanStackTable,
   flexRenderComponent,
-  shallow,
 } from '@tanstack/angular-table'
 import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { TableFilter } from './table-filter/table-filter'
@@ -123,13 +122,9 @@ export class App {
     },
   }))
 
-  readonly paginationState = computed(() => this.table.atoms.pagination.get(), {
-    equal: shallow,
-  })
-
-  readonly stringifiedRowSelection = computed(() =>
-    JSON.stringify(this.rowSelection(), null, 2),
-  )
+  stringifiedRowSelection() {
+    return JSON.stringify(this.table.state.rowSelection, null, 2)
+  }
 
   readonly rowSelectionLength = computed(
     () => Object.keys(this.rowSelection()).length,

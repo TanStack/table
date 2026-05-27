@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
@@ -99,9 +98,9 @@ export class App {
     debugColumns: true,
   }))
 
-  readonly stringifiedColumnVisibility = computed(() => {
+  stringifiedColumnVisibility() {
     return JSON.stringify(this.table.state.columnVisibility)
-  })
+  }
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))

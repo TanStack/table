@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   signal,
 } from '@angular/core'
 import {
@@ -96,9 +95,9 @@ export class App {
     },
   }))
 
-  readonly stringifiedFilters = computed(() =>
-    JSON.stringify(this.columnFilters(), null, 2),
-  )
+  stringifiedFilters() {
+    return JSON.stringify(this.table.state.columnFilters, null, 2)
+  }
 
   onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement
