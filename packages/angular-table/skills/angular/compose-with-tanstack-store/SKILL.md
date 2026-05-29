@@ -42,12 +42,12 @@ sources:
 
 Every TanStack Table instance exposes its state at three layers:
 
-| Surface                   | Shape                             | Angular reactivity              | Use when                                            |
-| ------------------------- | --------------------------------- | ------------------------------- | --------------------------------------------------- |
-| `table.baseAtoms.<slice>` | Writable `Atom<T>`                | Backed by an Angular `signal`   | Direct internal writes; rare                        |
-| `table.atoms.<slice>`     | Readonly `Atom<T>` (derived)      | Backed by an Angular `computed` | Reading or driving Angular reactivity per-slice     |
-| `table.state`             | Readonly flat proxy               | Reads from slice atoms          | Full-state JSON/debug output                        |
-| `table.store`             | Readonly flat `Store<TableState>` | Backed by an Angular `computed` | Low-level flat store access; rare                    |
+| Surface                   | Shape                             | Angular reactivity              | Use when                                        |
+| ------------------------- | --------------------------------- | ------------------------------- | ----------------------------------------------- |
+| `table.baseAtoms.<slice>` | Writable `Atom<T>`                | Backed by an Angular `signal`   | Direct internal writes; rare                    |
+| `table.atoms.<slice>`     | Readonly `Atom<T>` (derived)      | Backed by an Angular `computed` | Reading or driving Angular reactivity per-slice |
+| `table.state`             | Readonly flat proxy               | Reads from slice atoms          | Full-state JSON/debug output                    |
+| `table.store`             | Readonly flat `Store<TableState>` | Backed by an Angular `computed` | Low-level flat store access; rare               |
 
 All three are populated only for **registered features** (`_features`). All
 three are signal-backed via `angularReactivity(injector)`:
