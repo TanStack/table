@@ -69,7 +69,7 @@ export class App {
     debugTable: true,
   }))
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 
@@ -81,7 +81,7 @@ export class App {
     // Don't actually do this to resize columns. This is just for demonstration purposes.
     // See the Column Resizing Example for how to do this with dedicated resizing APIs efficiently.
     this.table.setColumnSizing({
-      ...this.table.state.columnSizing,
+      ...this.table.atoms.columnSizing.get(),
       [columnId]: Number((event.target as HTMLInputElement).value),
     })
   }

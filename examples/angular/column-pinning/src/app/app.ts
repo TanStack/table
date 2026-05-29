@@ -121,8 +121,8 @@ export class App {
     debugColumns: true,
   }))
 
-  stringifiedColumnPinning() {
-    return JSON.stringify(this.table.state.columnPinning)
+  stringifiedState() {
+    return JSON.stringify(this.table.state, null, 2)
   }
 
   randomizeColumns() {

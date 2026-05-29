@@ -153,15 +153,16 @@ All `examples/angular/*` use `OnPush`. Match that.
 Both surfaces are signal-backed. The difference is _which signal_ gets read.
 
 ```ts
-// Wider — depends on the flat snapshot signal (recomputes when ANY registered slice changes)
+// Wider — reads through the flat state proxy
 const pageIndex = computed(() => this.table.state.pagination.pageIndex)
 
 // Narrower — depends only on the pagination atom
 const pageIndex = computed(() => this.table.atoms.pagination.get().pageIndex)
 ```
 
-For most apps the difference is negligible. For high-frequency atoms or
-deeply-derived components, prefer per-atom reads.
+For most apps the difference is negligible. For render code, high-frequency
+atoms, or deeply-derived components, prefer per-atom reads. Keep `table.state`
+for places that genuinely want the full-state shape, such as debug JSON.
 
 ---
 
@@ -347,7 +348,7 @@ the wiring cost. Pick exactly one source of truth per slice (see
 - [ ] Cell render fns return primitives or component classes when possible;
       `flexRenderComponent(...)` reserved for explicit-option cases.
 - [ ] Reading state inside `effect`s / heavy `computed`s uses
-      `table.atoms.<slice>.get()` (not the flat snapshot).
+      `table.atoms.<slice>.get()` (not the flat state proxy).
 - [ ] Object/array `computed` selectors that feed expensive downstream use
       `{ equal: shallow }`.
 - [ ] No `cell` / `header` / `table` inputs drilled through multiple

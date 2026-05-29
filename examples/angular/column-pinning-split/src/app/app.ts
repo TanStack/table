@@ -56,8 +56,8 @@ export class App {
     debugTable: true,
   }))
 
-  stringifiedColumnPinning() {
-    return JSON.stringify(this.table.state.columnPinning)
+  stringifiedState() {
+    return JSON.stringify(this.table.state, null, 2)
   }
 
   refreshData = () => this.data.set(makeData(20))

@@ -30,6 +30,7 @@ sources:
 > on top of TanStack Store (`alien-signals`). In Angular, the adapter bridges those
 > atoms to native Angular signals, so reading `table.atoms.<slice>.get()` from a
 > template, `computed(...)`, or `effect(...)` participates in Angular reactivity.
+> Prefer that direct atom read when you need a specific state slice.
 >
 > This is the prerequisite for every other Angular Table skill. Don't skip it.
 
@@ -145,16 +146,19 @@ A table instance has three ways to look at its state:
 | ------------------------- | ------------------------------------------------------------------------------ | ------------------------------------------- |
 | `table.baseAtoms.<slice>` | writable TanStack Store atom (always exists for registered slices)             | low-level direct write; rare                |
 | `table.atoms.<slice>`     | **readonly** derived atom per registered feature; backed by Angular `computed` | reading current value or driving reactivity |
-| `table.state`             | flat snapshot object of every registered slice; backed by Angular `computed`   | reading multiple slices at once, devtools   |
+| `table.state`             | flat proxy object over every registered slice                                  | full-state JSON/debug output                |
 
 All three are signal-backed in Angular. Reading any of them inside a template,
-`computed(...)`, or `effect(...)` registers an Angular dependency.
+`computed(...)`, or `effect(...)` registers an Angular dependency. For normal
+render code, prefer `table.atoms.<slice>.get()` so the read is explicit and
+limited to the slice the component needs. Use `table.state` when you actually
+need the flat full-state shape, such as `JSON.stringify(table.state, null, 2)`.
 
 ```ts
 // Read current value (anywhere)
 const pagination = this.table.atoms.pagination.get()
 
-// Same value, flat shape
+// Same value through the flat proxy; use mainly for full-state debug output
 const pagination2 = this.table.state.pagination
 
 // Reactive derivation with custom equality

@@ -94,8 +94,8 @@ export class App {
     debugColumns: true,
   }))
 
-  stringifiedColumnVisibility() {
-    return JSON.stringify(this.table.state.columnVisibility)
+  stringifiedState() {
+    return JSON.stringify(this.table.state, null, 2)
   }
 
   refreshData = () => this.data.set(makeData(20))

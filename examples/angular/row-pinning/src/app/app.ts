@@ -92,7 +92,7 @@ export class App {
     debugAll: true,
   }))
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
   refreshData = () => this.data.set(makeData(1_000, 2, 2))

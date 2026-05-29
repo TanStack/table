@@ -91,8 +91,8 @@ export class App {
     },
   }))
 
-  stringifiedFilters() {
-    return JSON.stringify(this.table.state.columnFilters, null, 2)
+  stringifiedState() {
+    return JSON.stringify(this.table.state, null, 2)
   }
 
   onPageInputChange(event: Event): void {

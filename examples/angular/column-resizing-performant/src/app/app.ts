@@ -99,7 +99,7 @@ export class App {
    * and pass the column sizes down as CSS variables to the <table> element.
    */
   readonly columnSizeVars = computed(() => {
-    void this.table.state.columnSizing
+    void this.table.atoms.columnSizing.get()
     const headers = untracked(() => this.table.getFlatHeaders())
     const colSizes: { [key: string]: number } = {}
     let i = headers.length
@@ -114,7 +114,7 @@ export class App {
   readonly columnSizingDebugInfo = computed(() =>
     JSON.stringify(
       {
-        columnSizing: this.table.state.columnSizing,
+        columnSizing: this.table.atoms.columnSizing.get(),
       },
       null,
       2,

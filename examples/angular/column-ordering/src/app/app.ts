@@ -101,8 +101,8 @@ export class App {
     debugColumns: true,
   }))
 
-  stringifiedColumnOrdering() {
-    return JSON.stringify(this.table.state.columnOrder)
+  stringifiedState() {
+    return JSON.stringify(this.table.state, null, 2)
   }
 
   randomizeColumns() {

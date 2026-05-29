@@ -277,7 +277,9 @@ const v9Table = injectTable(() => ({
 
 ### Accessing State
 
-In v8, you accessed state via `table.getState()`. In v9, state is accessed via the store:
+In v8, you accessed state via `table.getState()`. In v9, read the specific
+state slice from `table.atoms.<slice>.get()` where possible. Use `table.state`
+when you need the full flat state shape, such as debug JSON.
 
 ```ts
 // v8
@@ -285,9 +287,13 @@ const state = table.getState()
 const v8 = table.getState()
 const { sorting, pagination } = v8
 
-// v9 - via the store
-const fullState = table.store.state
-const v9 = table.store.state
+// v9 - per-slice reads, preferred for Angular render code
+const sorting = table.atoms.sorting.get()
+const pagination = table.atoms.pagination.get()
+
+// v9 - full-state flat proxy
+const fullState = table.state
+const v9 = table.state
 const { sorting: v9Sorting, pagination: v9Pagination } = v9
 ```
 
@@ -344,7 +350,7 @@ class TableCmp {
 
   // Provide an equality function for object slices
   readonly pagination = computed(
-    () => this.table.store.state.pagination,
+    () => this.table.atoms.pagination.get(),
     { equal: shallow },
   )
 
@@ -732,7 +738,7 @@ The `RowData` type is now more restrictive.
 - [ ] Migrate `get*RowModel()` options to `_rowModels`
 - [ ] Update row model factories to include `Fns` parameters where needed
 - [ ] Update TypeScript types to include `TFeatures` generic
-- [ ] Update state access: `table.getState()` → `table.store.state`
+- [ ] Update state access: `table.getState().slice` → `table.atoms.<slice>.get()` where possible; use `table.state` for full-state/debug reads
 - [ ] Update `createColumnHelper<TData>()` → `createColumnHelper<TFeatures, TData>()`
 - [ ] Replace `enablePinning` with `enableColumnPinning`/`enableRowPinning` if used
 - [ ] Rename `sortingFn` → `sortFn` in column definitions

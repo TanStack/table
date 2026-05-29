@@ -28,7 +28,8 @@ A table instance has a few state surfaces:
 
 - `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
-- `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
+- `table.state` is a readonly flat proxy over the registered `table.atoms`, useful for full-state debug output.
+- `table.store` is the underlying readonly flat TanStack Store. Prefer `table.atoms` or `table.state` in app code.
 
 The Angular adapter provides `angularReactivity(injector)` as the table's reactivity binding. Core readonly atoms are Angular `computed` values, writable atoms are Angular `signal` values, and subscriptions bridge through `toObservable(computed(...), { injector })`. `injectTable` reruns the options initializer when Angular signals read inside it change, then calls `table.setOptions`.
 
@@ -80,11 +81,11 @@ const pagination = this.table.atoms.pagination.get()
 const sorting = this.table.atoms.sorting.get()
 ```
 
-You can also read the current flat store snapshot:
+Use `table.state` when you need the current flat state shape, such as debug JSON:
 
 ```ts
-const tableState = this.table.store.state
-const pagination = this.table.store.state.pagination
+const tableState = this.table.state
+const stateJson = JSON.stringify(this.table.state, null, 2)
 ```
 
 Atom reads are signal reads in Angular. If `this.table.atoms.pagination.get()` is used in a template expression, `computed(...)`, or `effect(...)`, Angular tracks it and updates when that atom changes.
@@ -115,11 +116,11 @@ readonly pagination = computed(
 readonly pageIndex = computed(() => this.pagination().pageIndex)
 ```
 
-You can also select from the flat store if that is more convenient.
+You can also select from the flat state proxy if that is more convenient, but prefer direct atoms for narrow render reads.
 
 ```ts
 readonly pagination = computed(
-  () => this.table.store.state.pagination,
+  () => this.table.state.pagination,
   { equal: shallow },
 )
 ```

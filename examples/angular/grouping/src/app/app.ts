@@ -33,12 +33,8 @@ export class App {
     },
   }))
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
-  }
-
-  stringifiedGrouping() {
-    return JSON.stringify(this.table.state.grouping, null, 2)
   }
 
   onPageInputChange(event: any): void {

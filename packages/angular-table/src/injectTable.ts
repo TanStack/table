@@ -6,7 +6,6 @@ import {
   inject,
   untracked,
 } from '@angular/core'
-import { injectSelector } from '@tanstack/angular-store'
 import { constructTable } from '@tanstack/table-core'
 import { lazyInit } from './lazySignalInitializer'
 import { angularReactivity } from './reactivity'
@@ -35,16 +34,67 @@ export type AngularTable<
   TData extends RowData,
 > = Table<TFeatures, TData> & {
   /**
-   * @deprecated Prefer `table.state` for template/render reads,
-   * `table.atoms.<slice>.get()` for slice snapshots, or Angular computed values
-   * around explicit selectors. `table.store.state` is a current-value snapshot
-   * and is easy to misuse in render code.
+   * @deprecated Prefer `table.atoms.<slice>.get()` for template/render reads
+   * of a specific state slice, `table.state` for full-state debug snapshots, or
+   * Angular computed values around explicit selectors. `table.store.state` is a
+   * current-value snapshot and is easy to misuse in render code.
    */
   readonly store: Table<TFeatures, TData>['store']
   /**
-   * The current table state exposed for template/render reads.
+   * The current table state exposed as a flat proxy. Prefer
+   * `table.atoms.<slice>.get()` when reading a specific slice.
    */
   readonly state: Readonly<TableState<TFeatures>>
+}
+
+function createStateProxy<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData>): Readonly<TableState<TFeatures>> {
+  const getSnapshot = () => {
+    const snapshot = {} as TableState<TFeatures>
+    const stateKeys = Object.keys(table.initialState) as Array<
+      keyof TableState<TFeatures>
+    >
+
+    for (const key of stateKeys) {
+      snapshot[key] = table.atoms[key].get()
+    }
+
+    return snapshot
+  }
+
+  const target = {} as TableState<TFeatures>
+
+  return new Proxy(target, {
+    get(target, prop, receiver) {
+      if (prop === 'toJSON') {
+        return getSnapshot
+      }
+
+      if (typeof prop === 'string' && prop in table.initialState) {
+        return table.atoms[prop as keyof TableState<TFeatures>]?.get()
+      }
+
+      return Reflect.get(target, prop, receiver)
+    },
+    has(_, prop) {
+      return typeof prop === 'string' && prop in table.initialState
+    },
+    ownKeys() {
+      return Reflect.ownKeys(table.initialState)
+    },
+    getOwnPropertyDescriptor(_, prop) {
+      if (typeof prop !== 'string' || !(prop in table.initialState)) {
+        return undefined
+      }
+
+      return {
+        enumerable: true,
+        configurable: true,
+      }
+    },
+  })
 }
 
 /**
@@ -122,11 +172,11 @@ export function injectTable<
           ...options()._features,
         },
       }) as AngularTable<TFeatures, TData>
-      const stateSignal = injectSelector(table.store, undefined, { injector })
+      const stateProxy = createStateProxy(table)
 
       Object.defineProperty(table, 'state', {
         get() {
-          return stateSignal()
+          return stateProxy
         },
         configurable: true,
         enumerable: true,

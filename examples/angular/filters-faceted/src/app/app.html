@@ -77,7 +77,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+        {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
         {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
@@ -85,13 +85,13 @@
       | Go to page:
       <input
         type="number"
-        [value]="table.state.pagination.pageIndex + 1"
+        [value]="table.atoms.pagination.get().pageIndex + 1"
         (input)="onPageInputChange($event)"
         class="page-size-input"
       />
     </span>
 
-    <select [value]="table.state.pagination.pageSize" (change)="onPageSizeChange($event)">
+    <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }
@@ -99,6 +99,6 @@
   </div>
   <div>{{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows</div>
   <div>
-    <pre>{{ stringifiedFilters() }}</pre>
+    <pre>{{ stringifiedState() }}</pre>
   </div>
 </div>

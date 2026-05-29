@@ -8,7 +8,7 @@
         [debounce]="300"
         class="global-filter-input"
         placeholder="Fuzzy search all columns..."
-        [value]="table.state.globalFilter ?? ''"
+        [value]="table.atoms.globalFilter.get() ?? ''"
         (changeEvent)="onGlobalFilterChange($event)"
       />
     </div>
@@ -332,6 +332,6 @@
   <div class="spacer-md"></div>
   <details>
     <summary>Table state (live)</summary>
-    <pre class="state-dump">{{ stateJson() }}</pre>
+    <pre class="state-dump">{{ stringifiedState() }}</pre>
   </details>
 </div>

@@ -93,7 +93,7 @@ export class App {
     debugColumns: true,
   }))
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 
@@ -119,7 +119,7 @@ export class App {
     const direction =
       this.table.options.columnResizeDirection === 'rtl' ? -1 : 1
     return `translateX(${
-      direction * (this.table.state.columnResizing.deltaOffset ?? 0)
+      direction * (this.table.atoms.columnResizing.get().deltaOffset ?? 0)
     }px)`
   }
 }

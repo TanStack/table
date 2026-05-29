@@ -138,8 +138,8 @@ export class AppComponent {
     debugTable: true,
   }))
 
-  stringifiedRowSelection() {
-    return JSON.stringify(this.table.state.rowSelection, null, 2)
+  stringifiedState() {
+    return JSON.stringify(this.table.state, null, 2)
   }
 
   readonly rowSelectionLength = computed(

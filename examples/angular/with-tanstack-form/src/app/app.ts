@@ -74,7 +74,7 @@ export class App {
   readonly validation = computed(() =>
     z.array(personSchema).safeParse(this.data()),
   )
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 

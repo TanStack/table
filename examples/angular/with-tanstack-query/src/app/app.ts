@@ -64,7 +64,7 @@ export class App {
     debugTable: true,
   }))
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 

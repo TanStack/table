@@ -104,7 +104,7 @@ export class App {
     this.table.setPageSize(Number(select.value))
   }
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 }

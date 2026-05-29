@@ -211,8 +211,8 @@ export class App {
   }))
 
   readonly columnSizeVars = computed(() => {
-    void this.table.state.columnSizing
-    void this.table.state.columnResizing
+    void this.table.atoms.columnSizing.get()
+    void this.table.atoms.columnResizing.get()
     const headers = untracked(() => this.table.getFlatHeaders())
     const colSizes: Record<string, number> = {}
     for (const header of headers) {
@@ -222,16 +222,16 @@ export class App {
     return colSizes
   })
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 
   pageIndex() {
-    return this.table.state.pagination.pageIndex
+    return this.table.atoms.pagination.get().pageIndex
   }
 
   pageSize() {
-    return this.table.state.pagination.pageSize
+    return this.table.atoms.pagination.get().pageSize
   }
 
   refreshData = () => this.data.set(makeData(1_000))
@@ -293,7 +293,7 @@ export class App {
   }
 
   cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
-    const groupingActive = this.table.state.grouping.length > 0
+    const groupingActive = this.table.atoms.grouping.get().length > 0
     const hasAggregation = !!cell.column.columnDef.aggregationFn
     return !groupingActive
       ? undefined

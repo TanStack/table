@@ -4,6 +4,7 @@ import {
   assertInInjectionContext,
   effect,
   inject,
+  untracked,
 } from '@angular/core'
 import type { Table } from '@tanstack/table-core'
 
@@ -27,7 +28,7 @@ export function injectTanStackTableDevtools(
       if (!enabledValue || !table) {
         return
       }
-      const cleanup = upsertTableDevtoolsTarget({ table })
+      const cleanup = untracked(() => upsertTableDevtoolsTarget({ table }))
       onCleanup(() => {
         cleanup?.()
       })

@@ -102,7 +102,7 @@ export class App {
   readonly virtualRows = computed(() => this.rowVirtualizer.getVirtualItems())
   readonly totalSize = computed(() => this.rowVirtualizer.getTotalSize())
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 

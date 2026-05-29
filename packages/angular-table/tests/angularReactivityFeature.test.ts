@@ -255,6 +255,42 @@ describe('angularReactivityFeature', () => {
       )
     })
 
+    test('table state property reads only track the accessed slice', () => {
+      const table = TestBed.runInInjectionContext(() =>
+        injectTable(() => ({
+          data: data(),
+          _features: { ...stockFeatures },
+          columns: columns,
+          getRowId: (row) => row.id,
+          initialState: {
+            pagination: {
+              pageIndex: 0,
+              pageSize: 20,
+            },
+          },
+        })),
+      )
+      const pageSizeCaptor = vi.fn<(val: number) => void>()
+      const stateJsonCaptor = vi.fn<(val: string) => void>()
+
+      TestBed.runInInjectionContext(() => {
+        effect(() => {
+          pageSizeCaptor(table.state.pagination.pageSize)
+        })
+        effect(() => {
+          stateJsonCaptor(JSON.stringify(table.state, null, 2))
+        })
+      })
+
+      TestBed.tick()
+      table.toggleAllRowsSelected(true)
+      TestBed.tick()
+
+      expect(pageSizeCaptor.mock.calls).toEqual([[20]])
+      expect(stateJsonCaptor).toHaveBeenCalledTimes(2)
+      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"rowSelection"')
+    })
+
     test('stock feature table exposes full initial state and updates json state', () => {
       const table = TestBed.runInInjectionContext(() =>
         injectTable(() => ({

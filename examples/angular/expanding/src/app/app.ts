@@ -96,12 +96,8 @@ export class App {
     debugTable: true,
   }))
 
-  rawExpandedState() {
-    return JSON.stringify(this.table.state.expanded, undefined, 2)
-  }
-
-  rawRowSelectionState() {
-    return JSON.stringify(this.table.state.rowSelection, undefined, 2)
+  stringifiedState() {
+    return JSON.stringify(this.table.state, null, 2)
   }
 
   onPageInputChange(event: Event): void {

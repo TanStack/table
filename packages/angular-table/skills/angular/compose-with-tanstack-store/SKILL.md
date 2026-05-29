@@ -2,8 +2,8 @@
 name: angular/compose-with-tanstack-store
 description: >
   Compose TanStack Table v9 with `@tanstack/angular-store`. TanStack Table v9 is itself built on
-  TanStack Store — each state slice is an atom. Three read surfaces: `table.atoms.<slice>` (per-slice
-  readonly, signal-backed), `table.store` (flat readonly view), and `table.baseAtoms.<slice>`
+  TanStack Store — each state slice is an atom. Read surfaces include `table.atoms.<slice>`
+  (per-slice readonly, signal-backed), `table.state` / `table.store` (flat readonly views), and `table.baseAtoms.<slice>`
   (writable). The `atoms` table option lets you replace an internal slice with an external
   TanStack Store atom for cross-app sharing (URL sync, persistence, multi-table coordination).
   In Angular, native signals + `state` + `on[State]Change` is the default; reach for external
@@ -46,7 +46,8 @@ Every TanStack Table instance exposes its state at three layers:
 | ------------------------- | --------------------------------- | ------------------------------- | --------------------------------------------------- |
 | `table.baseAtoms.<slice>` | Writable `Atom<T>`                | Backed by an Angular `signal`   | Direct internal writes; rare                        |
 | `table.atoms.<slice>`     | Readonly `Atom<T>` (derived)      | Backed by an Angular `computed` | Reading or driving Angular reactivity per-slice     |
-| `table.store`             | Readonly flat `Store<TableState>` | Backed by an Angular `computed` | Reading multiple slices in one go (devtools, debug) |
+| `table.state`             | Readonly flat proxy               | Reads from slice atoms          | Full-state JSON/debug output                        |
+| `table.store`             | Readonly flat `Store<TableState>` | Backed by an Angular `computed` | Low-level flat store access; rare                    |
 
 All three are populated only for **registered features** (`_features`). All
 three are signal-backed via `angularReactivity(injector)`:
@@ -60,7 +61,7 @@ tracks the dependency.
 ```ts
 this.table.atoms.pagination.get()            // current value (reactive)
 this.table.atoms.pagination.subscribe(obs)   // RxJS observer form
-this.table.state.pagination            // flat snapshot read
+this.table.state.pagination                  // flat proxy read; prefer atoms for narrow reads
 this.table.baseAtoms.pagination.set(...)     // direct internal write (avoid)
 ```
 

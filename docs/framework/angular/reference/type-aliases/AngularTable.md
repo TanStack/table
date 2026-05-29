@@ -19,7 +19,8 @@ Defined in: [packages/angular-table/src/injectTable.ts:33](https://github.com/Ta
 readonly state: Readonly<TableState<TFeatures>>;
 ```
 
-The current table state exposed for template/render reads.
+The current table state exposed as a flat proxy. Prefer
+`table.atoms.<slice>.get()` when reading a specific slice.
 
 ### ~~store~~
 
@@ -29,10 +30,10 @@ readonly store: Table<TFeatures, TData>["store"];
 
 #### Deprecated
 
-Prefer `table.state` for template/render reads,
-`table.atoms.<slice>.get()` for slice snapshots, or Angular computed values
-around explicit selectors. `table.state` is a current-value snapshot
-and is easy to misuse in render code.
+Prefer `table.atoms.<slice>.get()` for template/render reads
+of a specific state slice, `table.state` for full-state debug snapshots, or
+Angular computed values around explicit selectors. `table.store.state` is a
+current-value snapshot and is easy to misuse in render code.
 
 ## Type Parameters
 

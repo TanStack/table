@@ -92,7 +92,7 @@ export class App {
     },
   }))
 
-  stateJson() {
+  stringifiedState() {
     return JSON.stringify(this.table.state, null, 2)
   }
 
