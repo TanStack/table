@@ -124,7 +124,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
@@ -176,7 +176,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
@@ -228,7 +228,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
@@ -280,7 +280,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
@@ -746,7 +746,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
@@ -1129,7 +1129,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       '@tanstack/match-sorter-utils':
         specifier: workspace:*
@@ -1389,7 +1389,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
@@ -1444,7 +1444,7 @@ importers:
         specifier: workspace:*
         version: link:../../../packages/angular-table
       '@tanstack/angular-table-devtools':
-        specifier: ^9.0.0-alpha.43
+        specifier: ^9.0.0-alpha.51
         version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
