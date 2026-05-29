@@ -6,7 +6,7 @@ description: >
   memory has a v9 equivalent enumerated below: `useReactTable` → `useTable`,
   root `get*RowModel` options → `_rowModels` with factory + *Fns parameter,
   `createColumnHelper<TData>` → `createColumnHelper<typeof _features, TData>`,
-  `table.getState()` → `table.state` / `table.state` / `table.atoms.X.get()`,
+  `table.getState()` → `table.state` / `table.store.state` / `table.atoms.X.get()`,
   `sortingFn` → `sortFn`, `enablePinning` → split, `_`-prefixed APIs unprefixed,
   `ColumnSizing` split into `columnSizingFeature` + `columnResizingFeature`.
   For incremental migration, `useLegacyTable` from `@tanstack/react-table/legacy`

@@ -55,28 +55,28 @@
       (click)="table.setPageIndex(0)"
       [disabled]="!table.getCanPreviousPage()"
     >
-      <<
+      &lt;&lt;
     </button>
     <button
       class="demo-button demo-button-sm"
       (click)="table.previousPage()"
       [disabled]="!table.getCanPreviousPage()"
     >
-      <
+      &lt;
     </button>
     <button
       class="demo-button demo-button-sm"
       (click)="table.nextPage()"
       [disabled]="!table.getCanNextPage()"
     >
-      >
+      &gt;
     </button>
     <button
       class="demo-button demo-button-sm"
       (click)="table.setPageIndex(table.getPageCount() - 1)"
       [disabled]="!table.getCanNextPage()"
     >
-      >>
+      &gt;&gt;
     </button>
     <span class="inline-controls">
       <div>Page</div>

@@ -37,7 +37,7 @@ export type AngularTable<
   /**
    * @deprecated Prefer `table.state` for template/render reads,
    * `table.atoms.<slice>.get()` for slice snapshots, or Angular computed values
-   * around explicit selectors. `table.state` is a current-value snapshot
+   * around explicit selectors. `table.store.state` is a current-value snapshot
    * and is easy to misuse in render code.
    */
   readonly store: Table<TFeatures, TData>['store']

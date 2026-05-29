@@ -160,7 +160,7 @@ export function useTable<
   const mergedOptions = mergeProxy(tableOptions, {
     _features: {
       coreReativityFeature: vueReactivity(),
-      ...tableOptions._features,
+      ...(unref(tableOptions._features) ?? {}),
     },
   }) as TableOptionsWithReactiveData<TFeatures, TData>
 
