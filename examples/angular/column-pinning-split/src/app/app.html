@@ -22,7 +22,7 @@
   <div class="split-tables">
     <table class="outlined-table">
       <thead>
-        @for (headerGroup of table.getLeftHeaderGroups(); track headerGroup.id) {
+        @for (headerGroup of leftHeaderGroups(); track headerGroup.id) {
           <tr>
             @for (header of headerGroup.headers; track header.id) {
               <th [attr.colSpan]="header.colSpan">
@@ -33,7 +33,7 @@
         }
       </thead>
       <tbody>
-        @for (row of table.getRowModel().rows.slice(0, 20); track row.id) {
+        @for (row of visibleRows(); track row.id) {
           <tr>
             @for (cell of row.getLeftVisibleCells(); track cell.id) {
               <td>
@@ -49,7 +49,7 @@
 
     <table class="outlined-table">
       <thead>
-        @for (headerGroup of table.getCenterHeaderGroups(); track headerGroup.id) {
+        @for (headerGroup of centerHeaderGroups(); track headerGroup.id) {
           <tr>
             @for (header of headerGroup.headers; track header.id) {
               <th [attr.colSpan]="header.colSpan">
@@ -60,7 +60,7 @@
         }
       </thead>
       <tbody>
-        @for (row of table.getRowModel().rows.slice(0, 20); track row.id) {
+        @for (row of visibleRows(); track row.id) {
           <tr>
             @for (cell of row.getCenterVisibleCells(); track cell.id) {
               <td>
@@ -76,7 +76,7 @@
 
     <table class="outlined-table">
       <thead>
-        @for (headerGroup of table.getRightHeaderGroups(); track headerGroup.id) {
+        @for (headerGroup of rightHeaderGroups(); track headerGroup.id) {
           <tr>
             @for (header of headerGroup.headers; track header.id) {
               <th [attr.colSpan]="header.colSpan">
@@ -87,7 +87,7 @@
         }
       </thead>
       <tbody>
-        @for (row of table.getRowModel().rows.slice(0, 20); track row.id) {
+        @for (row of visibleRows(); track row.id) {
           <tr>
             @for (cell of row.getRightVisibleCells(); track cell.id) {
               <td>

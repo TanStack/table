@@ -1,5 +1,10 @@
 import { NgTemplateOutlet } from '@angular/common'
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  signal,
+} from '@angular/core'
 import {
   FlexRender,
   columnPinningFeature,
@@ -56,9 +61,17 @@ export class App {
     debugTable: true,
   }))
 
-  stringifiedState() {
-    return JSON.stringify(this.table.state, null, 2)
-  }
+  readonly leftHeaderGroups = computed(() => this.table.getLeftHeaderGroups())
+  readonly centerHeaderGroups = computed(() =>
+    this.table.getCenterHeaderGroups(),
+  )
+  readonly rightHeaderGroups = computed(() => this.table.getRightHeaderGroups())
+  readonly visibleRows = computed(() =>
+    this.table.getRowModel().rows.slice(0, 20),
+  )
+  readonly stringifiedState = computed(() =>
+    JSON.stringify(this.table.state, null, 2),
+  )
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))
