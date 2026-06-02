@@ -19,6 +19,17 @@ import type { TableReactivityBindings } from './core/reactivity/coreReactivityFe
 export function storeReactivityBindings(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: false,
+    addSubscription: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
+    unmount: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
     batch,
     schedule: (fn) => queueMicrotask(fn),
     untrack: (fn) => fn(),

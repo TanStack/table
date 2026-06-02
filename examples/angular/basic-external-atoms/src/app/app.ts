@@ -51,10 +51,6 @@ export class App {
     injectTanStackTableDevtools(() => ({
       table: this.table,
     }))
-
-    effect(() => {
-      console.log('atom', this.paginationAtom.get())
-    })
   }
 
   readonly data = signal(makeData(1_000))

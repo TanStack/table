@@ -13,6 +13,17 @@ import type {
 export function litReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: false,
+    addSubscription: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
+    unmount: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
     schedule: (fn) => queueMicrotask(() => fn()),
     batch,
     untrack: (fn) => fn(),

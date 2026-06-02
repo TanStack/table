@@ -66,6 +66,17 @@ function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
 export function vueReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: false,
+    addSubscription: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
+    unmount: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
       const storeAtom = createAtom(() => fn(), {

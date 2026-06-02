@@ -1,4 +1,5 @@
 import {
+  DestroyRef,
   Injector,
   NgZone,
   assertInInjectionContext,
@@ -10,18 +11,18 @@ import { constructTable } from '@tanstack/table-core'
 import { lazyInit } from './lazySignalInitializer'
 import { angularReactivity } from './reactivity'
 import type {
-  Atom,
-  ReadonlyAtom,
-  ReadonlyStore,
-  Store,
-} from '@tanstack/angular-store'
-import type {
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
+import type {
+  Atom,
+  ReadonlyAtom,
+  ReadonlyStore,
+  Store,
+} from '@tanstack/angular-store'
 
 export type SubscribeSource<TValue> =
   | Atom<TValue>
@@ -172,6 +173,11 @@ export function injectTable<
           ...options()._features,
         },
       }) as AngularTable<TFeatures, TData>
+
+      injector.get(DestroyRef).onDestroy(() => {
+        table._reactivity.unmount?.()
+      })
+
       const stateProxy = createStateProxy(table)
 
       Object.defineProperty(table, 'state', {

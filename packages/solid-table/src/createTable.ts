@@ -1,5 +1,12 @@
 import { constructTable } from '@tanstack/table-core'
-import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
+import {
+  createComputed,
+  getOwner,
+  mergeProps,
+  onCleanup,
+  runWithOwner,
+  untrack,
+} from 'solid-js'
 import { shallow, useSelector } from '@tanstack/solid-store'
 import { FlexRender } from './FlexRender'
 import { solidReactivity } from './reactivity'
@@ -115,10 +122,11 @@ export function createTable<
   selector?: (state: TableState<TFeatures>) => TSelected,
 ): SolidTable<TFeatures, TData, TSelected> {
   const owner = getOwner()!
+  const reactivity = solidReactivity(owner)
 
   const mergedOptions = mergeProps(tableOptions, {
     _features: {
-      coreReativityFeature: solidReactivity(owner),
+      coreReativityFeature: reactivity,
       ...tableOptions._features,
     },
   }) as any
@@ -155,6 +163,8 @@ export function createTable<
       })
     })
   })
+
+  onCleanup(() => reactivity.unmount?.())
 
   table.Subscribe = ((props: {
     source?: SubscribeSource<unknown>

@@ -58,6 +58,17 @@ function createRuneWritableAtom<T>(initialValue: T): Atom<T> {
 export function svelteReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: false,
+    addSubscription: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
+    unmount: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
       const storeAtom = createAtom(() => fn(), {

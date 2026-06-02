@@ -1,4 +1,9 @@
-import type { Atom, AtomOptions, ReadonlyAtom } from '@tanstack/store'
+import type {
+  Atom,
+  AtomOptions,
+  ReadonlyAtom,
+  Subscription,
+} from '@tanstack/store'
 
 export interface TableAtomOptions<T> extends AtomOptions<T> {
   /**
@@ -16,6 +21,8 @@ export interface TableAtomOptions<T> extends AtomOptions<T> {
  */
 export interface TableReactivityBindings {
   createOptionsStore: boolean
+  wrapExternalAtoms: boolean
+  addSubscription: (subscription: Subscription) => void
   /**
    * Creates a writable atom with an initial value.
    */
@@ -42,4 +49,8 @@ export interface TableReactivityBindings {
    * Schedules a function to run. This is used to defer updates after the current call stack (render, etc.) has finished
    */
   schedule: (fn: () => void) => void
+  /**
+   * Unmounts the table, performing any necessary cleanup. This is called when the table is destroyed or unmounted in the framework adapter.
+   */
+  unmount?: () => void
 }

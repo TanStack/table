@@ -2,6 +2,7 @@ import { coreFeatures } from '../coreFeatures'
 import { cloneState } from '../../utils'
 import { atomToStore } from '../reactivity/coreReactivityFeature.utils'
 import { table_syncExternalStateToBaseAtoms } from './coreTablesFeature.utils'
+import type { Atom } from '@tanstack/store'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -51,6 +52,29 @@ export function constructTable<
 
   const mergedOptions = { ...defaultOptions, ...tableOptions }
 
+  if (_reactivity.wrapExternalAtoms && mergedOptions.atoms) {
+    for (const [atomKey, _atom] of Object.entries(mergedOptions.atoms)) {
+      const atom = _atom as Atom<any>
+      const wrappedAtom = _reactivity.createWritableAtom(atom.get(), {
+        debugName: `externalAtom/${atomKey}`,
+      })
+      ;(mergedOptions.atoms as any)[atomKey] = wrappedAtom
+      // Two-way syncing between the original atom and the wrapped one.
+      let syncExternal = false
+      const syncAtomToWrappedSub = atom.subscribe((value) => {
+        if (syncExternal) return
+        wrappedAtom.set(value)
+      })
+      const syncWrappedToAtomSub = wrappedAtom.subscribe((value) => {
+        syncExternal = true
+        atom.set(value)
+        syncExternal = false
+      })
+      _reactivity.addSubscription(syncAtomToWrappedSub)
+      _reactivity.addSubscription(syncWrappedToAtomSub)
+    }
+  }
+
   if (_reactivity.createOptionsStore) {
     // @ts-ignore - direct set
     table.optionsStore = _reactivity.createWritableAtom<
@@ -81,7 +105,6 @@ export function constructTable<
 
   for (let i = 0; i < stateKeys.length; i++) {
     const key = stateKeys[i]!
-    // create writable base atom
     table.baseAtoms[key] = _reactivity.createWritableAtom(
       table.initialState[key],
       {

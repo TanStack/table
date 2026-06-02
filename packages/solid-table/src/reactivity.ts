@@ -1,32 +1,31 @@
 import {
+  batch,
   createMemo,
   createSignal,
   observable,
-  onCleanup,
   runWithOwner,
   untrack,
 } from 'solid-js'
-import { batch, createAtom } from '@tanstack/solid-store'
+import type {
+  Atom,
+  Observer,
+  ReadonlyAtom,
+  Subscription,
+} from '@tanstack/solid-store'
 import type { Accessor, Owner, Setter } from 'solid-js'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
-import type { Atom, Observer, ReadonlyAtom } from '@tanstack/solid-store'
 
 const optionsStoreDebugName = 'table/optionsStore'
 
 function signalToReadonlyAtom<T>(
   signal: Accessor<T>,
-  getSource: () => T,
   owner: Owner,
 ): ReadonlyAtom<T> {
   return Object.assign(signal, {
-    get: () => {
-      const value = getSource()
-      signal()
-      return value
-    },
+    get: () => signal(),
     subscribe: (observer: Observer<T>) => {
       return runWithOwner(owner, () => observable(signal))!.subscribe(observer)
     },
@@ -34,10 +33,10 @@ function signalToReadonlyAtom<T>(
 }
 
 function signalToWritableAtom<T>(
-  signal: Accessor<T>,
-  setSignal: Setter<T>,
+  signalTuple: [Accessor<T>, Setter<T>],
   owner: Owner,
 ): Atom<T> {
+  const [signal, setSignal] = signalTuple
   return Object.assign(signal, {
     set: (updater: T | ((prevVal: T) => T)) => {
       typeof updater === 'function'
@@ -59,49 +58,35 @@ function signalToWritableAtom<T>(
  * render. Readonly table atoms bridge Store dependency tracking into Solid memos.
  */
 export function solidReactivity(owner: Owner): TableReactivityBindings {
+  const subscriptions = new Set<Subscription>()
+
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: true,
+    addSubscription: (subscription) => {
+      subscriptions.add(subscription)
+    },
+    unmount: () => {
+      subscriptions.forEach((s) => s.unsubscribe())
+      subscriptions.clear()
+    },
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      const storeAtom = createAtom(() => fn(), {
-        compare: options?.compare,
+      const signal = createMemo(() => fn(), {
+        equals: options?.compare,
+        name: options?.debugName,
       })
-      const [version, setVersion] = createSignal(0, { equals: false })
-      runWithOwner(owner, () => {
-        const subscription = storeAtom.subscribe(() => {
-          setVersion((value) => value + 1)
-        })
-        onCleanup(() => subscription.unsubscribe())
-      })
-
-      const signal = createMemo(
-        () => {
-          version()
-          return storeAtom.get()
-        },
-        undefined,
-        {
-          equals: options?.compare,
-          name: options?.debugName,
-        },
-      )
-      return signalToReadonlyAtom(signal, () => storeAtom.get(), owner)
+      return signalToReadonlyAtom(signal, owner)
     },
     createWritableAtom: <T>(
       value: T,
       options?: TableAtomOptions<T>,
     ): Atom<T> => {
-      if (options?.debugName === optionsStoreDebugName) {
-        const [signal, setSignal] = createSignal(value, {
-          equals: options.compare,
-          name: options.debugName,
-        })
-        return signalToWritableAtom(signal, setSignal, owner)
-      }
-
-      return createAtom(value, {
-        compare: options?.compare,
+      const writableSignal = createSignal(value, {
+        equals: options?.compare,
+        name: options?.debugName,
       })
+      return signalToWritableAtom(writableSignal, owner)
     },
     untrack: untrack,
     batch: batch,

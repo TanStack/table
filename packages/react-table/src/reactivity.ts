@@ -13,6 +13,17 @@ import type {
 export function reactReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: false,
+    wrapExternalAtoms: false,
+    addSubscription: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
+    unmount: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
     schedule: (fn) => queueMicrotask(fn),
     batch,
     untrack: (fn) => fn(),
