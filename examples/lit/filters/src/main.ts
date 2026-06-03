@@ -262,7 +262,7 @@ class LitTableExample extends LitElement {
           </strong>
         </span>
       </div>
-      <pre>${JSON.stringify(table.state.columnFilters, null, 2)}</pre>
+      <pre>${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

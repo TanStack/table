@@ -214,7 +214,7 @@ function App() {
       <button onClick={() => rerender(0)} className="demo-button">
         Rerender
       </button>
-      <pre>{JSON.stringify({ sorting, pagination }, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }

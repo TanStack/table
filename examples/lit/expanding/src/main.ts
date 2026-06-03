@@ -316,15 +316,6 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
-        <div>
-          <button
-            @click="${() => {
-              this._data = makeData(100, 5, 3)
-            }}"
-          >
-            Regenerate Data
-          </button>
-        </div>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>

@@ -326,16 +326,7 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div class="spacer-sm"></div>
-        <pre>
-${JSON.stringify(
-            {
-              rowPinning: table.state.rowPinning,
-              pagination: table.state.pagination,
-            },
-            null,
-            2,
-          )}</pre
-        >
+        <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

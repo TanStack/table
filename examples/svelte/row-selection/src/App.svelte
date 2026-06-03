@@ -271,14 +271,6 @@
   <hr />
   <br />
   <div>
-    <button class="demo-button demo-button-spaced" onclick={() => refreshData()}>
-      Regenerate Data
-    </button>
-    <button class="demo-button demo-button-spaced" onclick={() => stressTest()}>
-      Stress Test (200k rows)
-    </button>
-  </div>
-  <div>
     <button
       class="demo-button demo-button-spaced"
       onclick={() =>

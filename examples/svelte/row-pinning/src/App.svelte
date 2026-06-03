@@ -382,14 +382,5 @@
       </label>
     </div>
   </div>
-  <div>
-    <button class="demo-button demo-button-spaced" onclick={() => refreshData()
-    }>
-      Regenerate Data
-    </button>
-    <button class="demo-button demo-button-spaced" onclick={() => stressTest()}>
-      Stress Test (200k rows)
-    </button>
-  </div>
-  <div>{JSON.stringify(table.state.rowPinning, null, 2)}</div>
+  <div>{JSON.stringify(table.state, null, 2)}</div>
 </div>

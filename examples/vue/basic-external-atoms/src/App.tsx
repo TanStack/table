@@ -72,7 +72,6 @@ export default defineComponent({
       pageSize: 10,
     })
 
-    const sorting = useSelector(sortingAtom)
     const pagination = useSelector(paginationAtom)
 
     const table = useTable({
@@ -220,13 +219,7 @@ export default defineComponent({
           </select>
         </div>
         <div class="spacer-md" />
-        <pre>
-          {JSON.stringify(
-            { sorting: sorting.value, pagination: pagination.value },
-            null,
-            2,
-          )}
-        </pre>
+        <pre>{JSON.stringify(table.state, null, 2)}</pre>
       </div>
     )
   },

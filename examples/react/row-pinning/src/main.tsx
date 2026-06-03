@@ -365,7 +365,7 @@ function App() {
           Force Rerender
         </button>
       </div>
-      <div>{JSON.stringify(rowPinning, null, 2)}</div>
+      <div>{JSON.stringify(table.state, null, 2)}</div>
     </div>
   )
 }

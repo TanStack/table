@@ -141,12 +141,6 @@
   </div>
   <div class="spacer-md"></div>
   <div class="button-row">
-    <button onclick={() => refreshData()} class="demo-button demo-button-sm">
-      Regenerate Data
-    </button>
-    <button onclick={() => stressTest()} class="demo-button demo-button-sm">
-      Stress Test (500k rows)
-    </button>
     <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>
@@ -179,6 +173,6 @@
       {/each}
     </tbody>
   </table>
-  <pre>{JSON.stringify(table.state.columnOrder, null, 2)
+  <pre>{JSON.stringify(table.state, null, 2)
   }</pre>
 </div>

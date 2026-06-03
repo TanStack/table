@@ -111,14 +111,8 @@ export class App {
     return colSizes
   })
 
-  readonly columnSizingDebugInfo = computed(() =>
-    JSON.stringify(
-      {
-        columnSizing: this.table.atoms.columnSizing.get(),
-      },
-      null,
-      2,
-    ),
+  readonly stringifiedState = computed(() =>
+    JSON.stringify(this.table.state, null, 2),
   )
 
   refreshData = () => this.data.set(makeData(200))

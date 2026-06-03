@@ -188,7 +188,7 @@ function App() {
       <div>
         <button onClick={() => rerender(0)}>Force Rerender</button>
       </div>
-      <pre>{JSON.stringify({ pagination }, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }

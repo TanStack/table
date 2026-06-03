@@ -249,9 +249,5 @@
     </select>
   </div>
   <div>{table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows</div>
-  <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
-  </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

@@ -239,16 +239,7 @@ export default defineComponent({
           </select>
         </div>
         <div class="spacer-md" />
-        <pre>
-          {JSON.stringify(
-            {
-              sorting: table.state.sorting,
-              pagination: table.state.pagination,
-            },
-            null,
-            2,
-          )}
-        </pre>
+        <pre>{JSON.stringify(table.state, null, 2)}</pre>
       </div>
     )
   },
