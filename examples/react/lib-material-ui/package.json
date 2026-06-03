@@ -16,7 +16,7 @@
     "@faker-js/faker": "^10.4.0",
     "@mui/icons-material": "^9.0.1",
     "@mui/material": "^9.0.1",
-    "@tanstack/react-table": "^9.0.0-alpha.52",
+    "@tanstack/react-table": "^9.0.0-alpha.53",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },

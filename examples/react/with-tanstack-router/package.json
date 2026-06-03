@@ -13,7 +13,7 @@
     "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-query": "^5.100.14",
     "@tanstack/react-router": "^1.170.10",
-    "@tanstack/react-table": "^9.0.0-alpha.52",
+    "@tanstack/react-table": "^9.0.0-alpha.53",
     "react": "^19.2.6",
     "react-dom": "^19.2.6"
   },

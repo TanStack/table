@@ -14,7 +14,7 @@
     "@faker-js/faker": "^10.4.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/preact-pacer": "^0.22.1",
-    "@tanstack/preact-table": "^9.0.0-alpha.52",
+    "@tanstack/preact-table": "^9.0.0-alpha.53",
     "preact": "^10.29.2"
   },
   "devDependencies": {
