@@ -382,5 +382,5 @@
       </label>
     </div>
   </div>
-  <div>{JSON.stringify(table.state, null, 2)}</div>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>
