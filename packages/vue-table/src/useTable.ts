@@ -1,7 +1,7 @@
 import { unref, watch } from 'vue'
 import { constructTable } from '@tanstack/table-core'
 import { shallow, useSelector } from '@tanstack/vue-store'
-import { mergeProxy } from './merge-proxy'
+import { flatMerge, mergeProxy } from './merge-proxy'
 import { vueReactivity } from './reactivity'
 import type {
   Atom,
@@ -151,9 +151,8 @@ export function useTable<
     table: Table<TFeatures, TData>,
     options: TableOptionsWithReactiveData<TFeatures, TData>,
   ) => {
-    table.setOptions(
-      () =>
-        getOptionsWithReactiveValues(options) as TableOptions<TFeatures, TData>,
+    table.setOptions((prev) =>
+      flatMerge(prev, getOptionsWithReactiveValues(options)),
     )
   }
 
@@ -172,7 +171,7 @@ export function useTable<
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
       ) => {
-        return mergeProxy(defaultOptions, newOptions)
+        return flatMerge(defaultOptions, newOptions)
       },
     },
   ) as TableOptions<TFeatures, TData>
