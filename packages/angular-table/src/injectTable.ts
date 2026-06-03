@@ -191,7 +191,7 @@ export function injectTable<
       let isMount = true
       effect(
         () => {
-          const newOptions = options()
+          const { atoms, ...newOptions } = options()
           if (isMount) {
             isMount = false
             return
