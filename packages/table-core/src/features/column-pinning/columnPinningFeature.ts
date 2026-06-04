@@ -283,6 +283,7 @@ export function constructColumnPinningFeature<
           memoDeps: () => [
             table.options.columns,
             table.atoms.columnPinning?.get(),
+            table.atoms.columnOrder?.get(),
           ],
         },
         table_getRightLeafColumns: {
@@ -290,6 +291,7 @@ export function constructColumnPinningFeature<
           memoDeps: () => [
             table.options.columns,
             table.atoms.columnPinning?.get(),
+            table.atoms.columnOrder?.get(),
           ],
         },
         table_getCenterLeafColumns: {
@@ -297,6 +299,7 @@ export function constructColumnPinningFeature<
           memoDeps: () => [
             table.options.columns,
             table.atoms.columnPinning?.get(),
+            table.atoms.columnOrder?.get(),
           ],
         },
         table_getPinnedLeafColumns: {
@@ -310,6 +313,7 @@ export function constructColumnPinningFeature<
             table.options.columns,
             table.atoms.columnPinning?.get(),
             table.atoms.columnVisibility?.get(),
+            table.atoms.columnOrder?.get(),
           ],
         },
         table_getCenterVisibleLeafColumns: {
@@ -318,6 +322,7 @@ export function constructColumnPinningFeature<
             table.options.columns,
             table.atoms.columnPinning?.get(),
             table.atoms.columnVisibility?.get(),
+            table.atoms.columnOrder?.get(),
           ],
         },
         table_getRightVisibleLeafColumns: {
@@ -326,6 +331,7 @@ export function constructColumnPinningFeature<
             table.options.columns,
             table.atoms.columnPinning?.get(),
             table.atoms.columnVisibility?.get(),
+            table.atoms.columnOrder?.get(),
           ],
         },
         table_getPinnedVisibleLeafColumns: {

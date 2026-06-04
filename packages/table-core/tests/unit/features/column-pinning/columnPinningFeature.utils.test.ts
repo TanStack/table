@@ -28,7 +28,10 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from '../../../../src/static-functions'
-import { generateTestTableWithData } from '../../../helpers/generateTestTable'
+import {
+  generateTestTableWithData,
+  generateTestTableWithDataAndState,
+} from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
 import type { Header } from '../../../../src'
 
@@ -658,6 +661,51 @@ describe('column pinning table instance APIs', () => {
     })
 
     expect(table.getColumn('firstName')!.getStart('left')).toBe(0)
+  })
+
+  it('should update center visible columns when column order changes', () => {
+    const table = generateTestTableWithDataAndState(1, {
+      _features: stockFeatures,
+    })
+
+    expect(
+      table.getCenterVisibleLeafColumns().map((col: { id: string }) => col.id),
+    ).toEqual([
+      'id',
+      'firstName',
+      'lastName',
+      'age',
+      'visits',
+      'progress',
+      'status',
+      'subRows',
+    ])
+    expect(table.getColumn('lastName')!.getStart('center')).toBe(300)
+
+    table.setColumnOrder([
+      'lastName',
+      'firstName',
+      'id',
+      'age',
+      'visits',
+      'progress',
+      'status',
+      'subRows',
+    ])
+
+    expect(
+      table.getCenterVisibleLeafColumns().map((col: { id: string }) => col.id),
+    ).toEqual([
+      'lastName',
+      'firstName',
+      'id',
+      'age',
+      'visits',
+      'progress',
+      'status',
+      'subRows',
+    ])
+    expect(table.getColumn('lastName')!.getStart('center')).toBe(0)
   })
 })
 
