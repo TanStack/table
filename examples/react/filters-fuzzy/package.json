@@ -13,7 +13,7 @@
     "@faker-js/faker": "^10.4.0",
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/react-pacer": "^0.22.1",
-    "@tanstack/react-table": "^9.0.0-alpha.53",
+    "@tanstack/react-table": "^9.0.0-alpha.54",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
