@@ -50,15 +50,15 @@
   ],
   "dependencies": {
     "@tanstack/devtools-utils": "^0.5.0",
-    "@tanstack/table-devtools": "workspace:*"
+    "@tanstack/table-devtools": "^9.0.0-alpha.53"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-alpha.53",
     "preact": "^10.29.2"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-alpha.53",
     "preact": ">=10.0.0"
   }
 }

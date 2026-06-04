@@ -60,7 +60,7 @@
   },
   "dependencies": {
     "@tanstack/preact-store": "^0.13.1",
-    "@tanstack/table-core": "workspace:*"
+    "@tanstack/table-core": "^9.0.0-alpha.53"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",

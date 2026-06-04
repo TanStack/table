@@ -45,8 +45,8 @@
   ],
   "dependencies": {
     "@tanstack/devtools-utils": "^0.5.0",
-    "@tanstack/table-core": "workspace:*",
-    "@tanstack/table-devtools": "workspace:*"
+    "@tanstack/table-core": "^9.0.0-alpha.53",
+    "@tanstack/table-devtools": "^9.0.0-alpha.53"
   },
   "peerDependencies": {
     "@angular/core": ">=21.0.0"

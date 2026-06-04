@@ -55,10 +55,10 @@
     "solid-js": "^1.9.13"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "workspace:*"
+    "@tanstack/table-core": "^9.0.0-alpha.53"
   },
   "devDependencies": {
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-alpha.53",
     "eslint-plugin-solid": "^0.14.5",
     "vite-plugin-solid": "^2.11.12"
   }

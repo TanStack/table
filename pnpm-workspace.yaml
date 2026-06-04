@@ -35,6 +35,10 @@ allowBuilds:
 
 cleanupUnusedCatalogs: true
 
+# Keep real semver in example package.json (StackBlitz/CodeSandbox). Monorepo
+# dev still links via overrides + preferWorkspacePackages below.
+saveWorkspaceProtocol: false
+
 linkWorkspacePackages: true
 preferWorkspacePackages: true
 blockExoticSubdeps: true

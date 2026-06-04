@@ -58,15 +58,15 @@
   ],
   "dependencies": {
     "@tanstack/devtools-utils": "^0.5.0",
-    "@tanstack/table-devtools": "workspace:*"
+    "@tanstack/table-devtools": "^9.0.0-alpha.53"
   },
   "devDependencies": {
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-alpha.53",
     "@vitejs/plugin-vue": "^6.0.7",
     "vue": "^3.5.35"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-alpha.53",
     "vue": ">=3.2"
   }
 }
