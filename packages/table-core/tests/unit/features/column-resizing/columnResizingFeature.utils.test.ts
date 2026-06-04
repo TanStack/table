@@ -422,6 +422,118 @@ describe('header_getResizeHandler', () => {
 
     removeEventListenerSpy.mockRestore()
   })
+
+  it('should not resize a column below its minSize', () => {
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onChange',
+    })
+
+    let resizingState = getDefaultColumnResizingState()
+    table.options.onColumnResizingChange = (updater: any) => {
+      resizingState =
+        typeof updater === 'function' ? updater(resizingState) : updater
+      ;(table.store.state as any).columnResizing = resizingState
+    }
+
+    const sizingUpdates: Record<string, number>[] = []
+    table.options.onColumnSizingChange = (updater: any) => {
+      if (typeof updater === 'function') {
+        const result = updater(table.atoms.columnSizing?.get() ?? {})
+        sizingUpdates.push(result)
+      } else {
+        sizingUpdates.push(updater)
+      }
+    }
+
+    // Column starts at 100px, minSize is 50px
+    const constrainedColumn = {
+      ...table.getAllColumns()[0],
+      id: 'firstName',
+      columnDef: { enableResizing: true, minSize: 50, size: 100 },
+      table,
+    }
+    const header = createTestResizeHeader(table, {
+      getSize: () => 100,
+      getLeafHeaders: () => [
+        {
+          column: constrainedColumn,
+          getSize: () => 100,
+          subHeaders: [],
+        },
+      ],
+    })
+
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 200 })
+
+    // Drag far left — would put column at ~10px without the clamp
+    const moveEvent = new MouseEvent('mousemove', { clientX: 10 })
+    document.dispatchEvent(moveEvent)
+
+    const lastUpdate = sizingUpdates[sizingUpdates.length - 1]
+    expect(lastUpdate).toBeDefined()
+    const newSize = lastUpdate!['firstName']
+    expect(newSize).toBeGreaterThanOrEqual(50)
+
+    const upEvent = new MouseEvent('mouseup', { clientX: 10 })
+    document.dispatchEvent(upEvent)
+  })
+
+  it('should not resize a column above its maxSize', () => {
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onChange',
+    })
+
+    let resizingState = getDefaultColumnResizingState()
+    table.options.onColumnResizingChange = (updater: any) => {
+      resizingState =
+        typeof updater === 'function' ? updater(resizingState) : updater
+      ;(table.store.state as any).columnResizing = resizingState
+    }
+
+    const sizingUpdates: Record<string, number>[] = []
+    table.options.onColumnSizingChange = (updater: any) => {
+      if (typeof updater === 'function') {
+        const result = updater(table.atoms.columnSizing?.get() ?? {})
+        sizingUpdates.push(result)
+      } else {
+        sizingUpdates.push(updater)
+      }
+    }
+
+    // Column starts at 100px, maxSize is 150px
+    const constrainedColumn = {
+      ...table.getAllColumns()[0],
+      id: 'firstName',
+      columnDef: { enableResizing: true, maxSize: 150, size: 100 },
+      table,
+    }
+    const header = createTestResizeHeader(table, {
+      getSize: () => 100,
+      getLeafHeaders: () => [
+        {
+          column: constrainedColumn,
+          getSize: () => 100,
+          subHeaders: [],
+        },
+      ],
+    })
+
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    // Drag far right — would put column at ~500px without the clamp
+    const moveEvent = new MouseEvent('mousemove', { clientX: 600 })
+    document.dispatchEvent(moveEvent)
+
+    const lastUpdate = sizingUpdates[sizingUpdates.length - 1]
+    expect(lastUpdate).toBeDefined()
+    const newSize = lastUpdate!['firstName']
+    expect(newSize).toBeLessThanOrEqual(150)
+
+    const upEvent = new MouseEvent('mouseup', { clientX: 600 })
+    document.dispatchEvent(upEvent)
+  })
 })
 
 describe('passiveEventSupported', () => {

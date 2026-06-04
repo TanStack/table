@@ -1,5 +1,6 @@
 import {
   column_getSize,
+  getDefaultColumnSizingColumnDef,
   header_getSize,
   table_setColumnSizing,
 } from '../column-sizing/columnSizingFeature.utils'
@@ -119,6 +120,18 @@ export function header_getResizeHandler<
         column_getSize(leafHeader.column),
       ])
 
+    const defaultSizes = getDefaultColumnSizingColumnDef()
+    const columnSizingConstraints: Record<
+      string,
+      { minSize: number; maxSize: number }
+    > = {}
+    header.getLeafHeaders().forEach((leafHeader) => {
+      columnSizingConstraints[leafHeader.column.id] = {
+        minSize: leafHeader.column.columnDef.minSize ?? defaultSizes.minSize,
+        maxSize: leafHeader.column.columnDef.maxSize ?? defaultSizes.maxSize,
+      }
+    })
+
     const clientX = isTouchStartEvent(event)
       ? Math.round(event.touches[0]!.clientX)
       : (event as MouseEvent).clientX
@@ -142,14 +155,16 @@ export function header_getResizeHandler<
         )
 
         old.columnSizingStart.forEach(([columnId, headerSize]) => {
+          const rawSize =
+            headerSize > 0
+              ? headerSize + headerSize * deltaPercentage
+              : deltaOffset / old.columnSizingStart.length
+          const constraints = columnSizingConstraints[columnId]
+          const minSize = constraints?.minSize ?? 0
+          const maxSize = constraints?.maxSize ?? Number.MAX_SAFE_INTEGER
           newColumnSizing[columnId] =
             Math.round(
-              Math.max(
-                headerSize > 0
-                  ? headerSize + headerSize * deltaPercentage
-                  : deltaOffset / old.columnSizingStart.length,
-                0,
-              ) * 100,
+              Math.min(maxSize, Math.max(minSize, rawSize)) * 100,
             ) / 100
         })
 
