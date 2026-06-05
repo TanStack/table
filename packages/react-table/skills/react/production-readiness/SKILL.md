@@ -2,8 +2,8 @@
 name: react/production-readiness
 description: >
   Ship-ready optimizations for `@tanstack/react-table` v9: tree-shake the
-  bundle by registering ONLY the `_features` you actually use; memoize
-  `_features`, `data`, and `columns` for stable identity; replace
+  bundle by registering ONLY the `features` you actually use; memoize
+  `features`, `data`, and `columns` for stable identity; replace
   `(state) => state` with narrow selectors or per-slice
   `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven
   re-renders down the tree with `<table.Subscribe>` / `<Subscribe>` so the
@@ -26,7 +26,7 @@ sources:
   - TanStack/table:examples/react/kitchen-sink/src/main.tsx
 ---
 
-This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `_features` tree-shaking and the atom reactivity model are the foundation; this skill is about _which_ of the patterns introduced there you actually need in production.
+This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `features` tree-shaking and the atom reactivity model are the foundation; this skill is about _which_ of the patterns introduced there you actually need in production.
 
 ## When to optimize
 
@@ -34,16 +34,16 @@ The default `useTable` selector is `(state) => state` — the component re-rende
 
 ## Setup — stable references
 
-The biggest single perf win is keeping `_features`, `_rowModels`, `columns`, and `data` references stable across renders. Internal memoization keys off identity, so a new object every render forces full recomputation.
+The biggest single perf win is keeping `features`, `rowModels`, `columns`, and `data` references stable across renders. Internal memoization keys off identity, so a new object every render forces full recomputation.
 
 ```tsx
 // ✓ Module scope = stable identity
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-const _rowModels = {
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const rowModels = {
   sortedRowModel: createSortedRowModel(sortFns),
   paginatedRowModel: createPaginatedRowModel(),
 }
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
   columnHelper.accessor('age', { header: 'Age' }),
@@ -54,8 +54,8 @@ const EMPTY: Person[] = []
 
 function MyTable({ data }: { data: Person[] | undefined }) {
   const table = useTable({
-    _features,
-    _rowModels,
+    features,
+    rowModels,
     columns,
     data: data ?? EMPTY,
   })
@@ -64,20 +64,20 @@ function MyTable({ data }: { data: Person[] | undefined }) {
 
 ## Core Patterns
 
-### 1. Tree-shake `_features` to only what you use
+### 1. Tree-shake `features` to only what you use
 
 Avoid `stockFeatures` in production. A sort-only table is ~6–7kb registered explicitly versus ~15–20kb if you import the whole stock set.
 
 ```tsx
 // ✓ Pay only for what you render
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
 })
 
 // ✗ Ships filtering, faceting, grouping, pinning, expanding, sizing,
 //   resizing, visibility, ordering, row-selection, row-pinning…
-const _features = tableFeatures(stockFeatures)
+const features = tableFeatures(stockFeatures)
 ```
 
 Source: `docs/guide/features.md`; maintainer guidance.
@@ -88,7 +88,7 @@ Source: `docs/guide/features.md`; maintainer guidance.
 
 ```tsx
 // Narrow to specific slices at the table level.
-const table = useTable({ _features, _rowModels, columns, data }, (state) => ({
+const table = useTable({ features, rowModels, columns, data }, (state) => ({
   sorting: state.sorting,
   pagination: state.pagination,
 }))
@@ -106,7 +106,7 @@ A noisy footer that re-renders on every keystroke in a filter doesn't need to re
 ```tsx
 function MyTable({ data, columns }) {
   const table = useTable(
-    { _features, _rowModels, columns, data },
+    { features, rowModels, columns, data },
     () => null, // top-level opt-out
   )
   return (
@@ -155,7 +155,7 @@ Wrong:
 
 ```tsx
 import { useTable, stockFeatures, tableFeatures } from '@tanstack/react-table'
-const _features = tableFeatures(stockFeatures) // ships every feature
+const features = tableFeatures(stockFeatures) // ships every feature
 ```
 
 Correct:
@@ -167,21 +167,21 @@ import {
   rowSortingFeature,
   rowPaginationFeature,
 } from '@tanstack/react-table'
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 ```
 
-Tree-shaking via `_features` is one of the headline reasons for the v9 rewrite. `stockFeatures` exists for migration / "everything on" smoke tests, not production.
+Tree-shaking via `features` is one of the headline reasons for the v9 rewrite. `stockFeatures` exists for migration / "everything on" smoke tests, not production.
 Source: maintainer guidance; `docs/guide/features.md`.
 
-### HIGH Unstable `_features` / `_rowModels` / `columns` references
+### HIGH Unstable `features` / `rowModels` / `columns` references
 
 Wrong:
 
 ```tsx
 function MyTable({ data }) {
-  const _features = tableFeatures({ rowSortingFeature }) // new every render
-  const _rowModels = { sortedRowModel: createSortedRowModel(sortFns) } // new every render
-  const table = useTable({ _features, _rowModels, columns, data })
+  const features = tableFeatures({ rowSortingFeature }) // new every render
+  const rowModels = { sortedRowModel: createSortedRowModel(sortFns) } // new every render
+  const table = useTable({ features, rowModels, columns, data })
 }
 ```
 
@@ -189,11 +189,11 @@ Correct:
 
 ```tsx
 // Module scope — declared once.
-const _features = tableFeatures({ rowSortingFeature })
-const _rowModels = { sortedRowModel: createSortedRowModel(sortFns) }
+const features = tableFeatures({ rowSortingFeature })
+const rowModels = { sortedRowModel: createSortedRowModel(sortFns) }
 
 function MyTable({ data }) {
-  const table = useTable({ _features, _rowModels, columns, data })
+  const table = useTable({ features, rowModels, columns, data })
 }
 ```
 
@@ -325,7 +325,7 @@ header: ({ table }) => (
 Correct:
 
 ```tsx
-const table = useTable({ _features, _rowModels, columns, data })
+const table = useTable({ features, rowModels, columns, data })
 // Reach for Subscribe later, scoped to actual hotspots.
 ```
 

@@ -26,8 +26,8 @@ export const {
   injectTableCellContext,
   injectTableHeaderContext,
 } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: {
     /* … */
   },
   tableComponents: { PaginationControls, RowCount },

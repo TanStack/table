@@ -116,7 +116,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -132,9 +132,9 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
-type AppTable = ReactTable<typeof _features, Person>
-type AppColumn = Column<typeof _features, Person, any>
+const columnHelper = createColumnHelper<typeof features, Person>()
+type AppTable = ReactTable<typeof features, Person>
+type AppColumn = Column<typeof features, Person, any>
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(' ')
@@ -1323,8 +1323,8 @@ function App() {
   const table = useTable(
     {
       key: 'kitchen-sink-react-aria', // needed for devtools
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         coreRowModel: createCoreRowModel(),
         filteredRowModel: createFilteredRowModel({
           ...filterFns,
@@ -1525,10 +1525,10 @@ function ResizableHeaderCell({
   header,
   table,
 }: {
-  header: Header<typeof _features, Person>
+  header: Header<typeof features, Person>
   table: {
     FlexRender: React.ComponentType<{
-      header: Header<typeof _features, Person>
+      header: Header<typeof features, Person>
     }>
   }
 }) {

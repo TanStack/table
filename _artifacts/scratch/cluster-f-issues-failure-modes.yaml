@@ -55,7 +55,7 @@ issue_findings:
     wrong_pattern: |
       // ❌ Common v9 alpha setup — surfaces SubscribeBound warning on every parent rerender
       function MyTable({ globalFilter }) {
-        const table = useTable({ _features, data, columns, state: { globalFilter } })
+        const table = useTable({ features, data, columns, state: { globalFilter } })
         return (
           <table.Subscribe selector={s => ({ globalFilter: s.globalFilter })}>
             {() => <span>...</span>}
@@ -69,7 +69,7 @@ issue_findings:
       function MyTable() {
         const [globalFilter, setGlobalFilter] = useState('')
         const table = useTable({
-          _features, data, columns,
+          features, data, columns,
           state: { globalFilter },
           onGlobalFilterChange: setGlobalFilter,
         })
@@ -128,7 +128,7 @@ issue_findings:
       import type { ReactTable } from '@tanstack/react-table'
       columnHelper.accessor('name', {
         cell: ({ table, row }) => {
-          const reactTable = table as ReactTable<typeof _features, MyData>
+          const reactTable = table as ReactTable<typeof features, MyData>
           return (
             <reactTable.Subscribe selector={s => s.rowSelection[row.id]}>
               {(isSelected) => <Checkbox checked={!!isSelected} />}
@@ -341,9 +341,9 @@ issue_findings:
       // ✅ Move to v9 alpha useTable + Subscribe; opt-in subscription model is React-Compiler-friendly
       'use client'
       import { useTable, tableFeatures, rowSelectionFeature } from '@tanstack/react-table'
-      const _features = tableFeatures({ rowSelectionFeature })
+      const features = tableFeatures({ rowSelectionFeature })
       export function DataTable({ columns, data }) {
-        const table = useTable({ _features, data, columns })
+        const table = useTable({ features, data, columns })
         return (
           <table.Subscribe selector={(s) => ({ rowSelection: s.rowSelection })}>
             {() => <Table table={table} />}
@@ -372,7 +372,7 @@ issue_findings:
       }
     correct_pattern: |
       // ✅ Use v9 alpha — table.Subscribe drives re-renders explicitly
-      const table = useTable({ _features, data, columns })
+      const table = useTable({ features, data, columns })
       <table.Subscribe selector={(s) => s.rowSelection}>
         {() => (
           <tbody>
@@ -811,7 +811,7 @@ issue_findings:
     mechanism: |
       v9 alpha renames `useReactTable` → `useTable` (and adds a `useLegacyTable` shim).
       Agents trained on v8 will reach for `useReactTable`. The signature also changes —
-      `_features` and `_rowModels` are now mandatory configuration, not pre-bundled
+      `features` and `rowModels` are now mandatory configuration, not pre-bundled
       defaults. `useReactTable` still exists for back-compat but produces v8-style
       tables that don't have `.Subscribe`, `.atoms`, or feature composition.
     wrong_pattern: |
@@ -827,10 +827,10 @@ issue_findings:
         useTable, tableFeatures,
         sortingFeature, columnFilteringFeature, rowPaginationFeature,
       } from '@tanstack/react-table'
-      const _features = tableFeatures({
+      const features = tableFeatures({
         sortingFeature, columnFilteringFeature, rowPaginationFeature,
       })
-      const table = useTable({ _features, data, columns })
+      const table = useTable({ features, data, columns })
     source: 'PR #6202 (fix useLegacyTable infinite rerender), useTable.ts source, CHANGELOG history'
     priority: 'CRITICAL'
     status: 'active'
@@ -840,29 +840,29 @@ issue_findings:
     mistake: 'Importing pre-bundled getCoreRowModel etc. in v9'
     mechanism: |
       In v8, `getCoreRowModel()`, `getSortedRowModel()`, `getFilteredRowModel()` etc.
-      were standalone factories. In v9, row models are opt-in through `_rowModels` on
+      were standalone factories. In v9, row models are opt-in through `rowModels` on
       the table options or auto-installed by features in `tableFeatures()`. Agents
       will keep emitting v8 imports that either don't exist or aren't wired correctly.
     wrong_pattern: |
       // ❌ v8 pattern — won't drive v9 row models
       const table = useTable({
-        _features,
+        features,
         data, columns,
         getCoreRowModel: getCoreRowModel(),
         getSortedRowModel: getSortedRowModel(),
       })
     correct_pattern: |
-      // ✅ v9 — row models opt-in via _rowModels or feature inclusion
+      // ✅ v9 — row models opt-in via rowModels or feature inclusion
       import {
         useTable, tableFeatures,
         sortingFeature, coreRowModelsFeature, sortedRowModelsFeature,
       } from '@tanstack/react-table'
-      const _features = tableFeatures({
+      const features = tableFeatures({
         sortingFeature,
         coreRowModelsFeature,
         sortedRowModelsFeature,
       })
-      const table = useTable({ _features, data, columns })
+      const table = useTable({ features, data, columns })
     source: 'PR #6234 (atoms refactor), v9 alpha package exports'
     priority: 'CRITICAL'
     status: 'active'
@@ -1065,7 +1065,7 @@ gaps:
       No issue yet asks this verbatim because v9 is alpha and adoption is small, but
       every adoption issue shows the same disorientation. The skill needs a 1:1 mapping
       table from v8 imports to v9 feature/row-model imports, plus a "minimum boilerplate"
-      example showing _features and the tableFeatures registry.
+      example showing features and the tableFeatures registry.
     status: 'open'
 
   - skill: 'migrate-v8-to-v9'
@@ -1080,7 +1080,7 @@ gaps:
     question: 'When should I use createTableHook vs useTable directly?'
     context: |
       v9 adds `createTableHook` (React/Solid) for ergonomic composition: `<table.AppTable>`,
-      pre-configured `_features`, etc. Issues #6199 and #6244 reference it but no skill
+      pre-configured `features`, etc. Issues #6199 and #6244 reference it but no skill
       content covers the trade-offs vs the bare `useTable` API. Agents won't know when
       `createTableHook` is appropriate.
     status: 'open'

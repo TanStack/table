@@ -126,8 +126,8 @@ export type VueTable<
  * ```ts
  * const table = useTable(
  *   {
- *     _features,
- *     _rowModels: {},
+ *     features,
+ *     rowModels: {},
  *     columns,
  *     data,
  *   },
@@ -157,9 +157,9 @@ export function useTable<
   }
 
   const mergedOptions = mergeProxy(tableOptions, {
-    _features: {
+    features: {
       coreReativityFeature: vueReactivity(),
-      ...(unref(tableOptions._features) ?? {}),
+      ...(unref(tableOptions.features) ?? {}),
     },
   }) as TableOptionsWithReactiveData<TFeatures, TData>
 

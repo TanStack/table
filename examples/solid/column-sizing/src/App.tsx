@@ -8,9 +8,9 @@ import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature })
+const features = tableFeatures({ columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -54,8 +54,8 @@ function App() {
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       get data() {
         return data()

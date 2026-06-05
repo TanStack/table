@@ -9,7 +9,7 @@ import {
 
 function createTable(key?: string) {
   return constructTable({
-    _features: {
+    features: {
       ...coreFeatures,
       coreReativityFeature: storeReactivityBindings(),
     },

@@ -17,7 +17,7 @@ import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnPinningFeature,
   columnResizingFeature,
@@ -25,12 +25,12 @@ const _features = tableFeatures({
   columnVisibilityFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 // These are the important styles to make sticky column pinning work!
 // Apply styles like this using your CSS strategy of choice with this kind of logic to head cells, data cells, footer cells, etc.
 // View the index.css file for more needed styles such as border-collapse: collapse
 const getCommonPinningStyles = (
-  column: Column<typeof _features, Person>,
+  column: Column<typeof features, Person>,
 ): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -103,8 +103,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data,
       debugTable: true,

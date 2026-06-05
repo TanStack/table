@@ -223,8 +223,8 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     enableToolbarInternalActions,
     enableTopToolbar,
     filterFns,
-    _features: stockFeatures,
-    _rowModels: {
+    features: stockFeatures,
+    rowModels: {
       ...((enableColumnFilters || enableGlobalFilter || enableFilters) &&
       !manualFiltering
         ? { filteredRowModel: createFilteredRowModel(filterFns as any) }

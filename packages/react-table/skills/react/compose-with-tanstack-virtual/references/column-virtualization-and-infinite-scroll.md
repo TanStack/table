@@ -50,8 +50,8 @@ const flatRows = React.useMemo(
 )
 
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: {}, // server sorts each page
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: {}, // server sorts each page
   columns,
   data: flatRows,
   manualSorting: true,
@@ -114,8 +114,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   data: flatRows,
 })
 // Each new page arrives → table re-sorts everything → row order scrambles between pages.
@@ -125,8 +125,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: {}, // server sorts each page
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: {}, // server sorts each page
   data: flatRows,
   manualSorting: true,
 })

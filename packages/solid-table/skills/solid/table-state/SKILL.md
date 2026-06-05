@@ -42,8 +42,8 @@ A `createTable(...)` call produces a `SolidTable` with several state surfaces:
 - `table.store` — flat readonly TanStack Store snapshot for explicit subscriptions. Prefer `table.state()` or `table.atoms.<slice>.get()` in JSX.
 - `table.state()` — **a Solid accessor**, not a value. Returns the result of the selector passed as the second argument to `createTable`. Default selector is identity.
 
-State slices only exist for features registered through `_features`. If
-`rowSortingFeature` is not in `_features`, then `table.atoms.sorting`,
+State slices only exist for features registered through `features`. If
+`rowSortingFeature` is not in `features`, then `table.atoms.sorting`,
 `table.state().sorting`, and `state.sorting` are all absent (TS error + missing at runtime).
 
 ## Creating a table — native signals
@@ -55,14 +55,14 @@ the table tracks the upstream signal.
 import { createTable, tableFeatures, type ColumnDef } from '@tanstack/solid-table'
 import { createSignal, For } from 'solid-js'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
 function App() {
   const [data, setData] = createSignal<Array<Person>>([])
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     // Reactive getter — required so the table re-derives when data() changes.
     get data() {
@@ -97,8 +97,8 @@ Pass a selector to narrow what `table.state()` returns:
 ```tsx
 const table = createTable(
   {
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return data()
@@ -194,8 +194,8 @@ const [pagination, setPagination] = createSignal<PaginationState>({
 })
 
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -232,8 +232,8 @@ const sortingAtom = createAtom<SortingState>([])
 const pagination = useSelector(paginationAtom) // Accessor<PaginationState>
 
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -290,7 +290,7 @@ column-grouping feature is registered.
 
 ## `createTableHook` — app-level table conventions
 
-When multiple tables share `_features`, `_rowModels`, default options, and
+When multiple tables share `features`, `rowModels`, default options, and
 component conventions, use `createTableHook` to register them once.
 
 ```tsx
@@ -308,8 +308,8 @@ const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  _features: tableFeatures({ rowPaginationFeature }),
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features: tableFeatures({ rowPaginationFeature }),
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   tableComponents: { PaginationControls },
   cellComponents: { TextCell, NumberCell },
   headerComponents: { SortIndicator },
@@ -410,7 +410,7 @@ patterns will write `table.state.sorting` and get `undefined`. Always call it:
 ### CRITICAL — feature not registered → API missing
 
 If you reach for `table.atoms.sorting`, `table.setSorting`, `column.getCanSort`,
-etc., the matching feature (`rowSortingFeature`) must be in `_features`.
+etc., the matching feature (`rowSortingFeature`) must be in `features`.
 Otherwise TS errors and runtime `undefined`. v9 features are explicit.
 
 ### CRITICAL — reactive `data` without a getter
@@ -423,4 +423,4 @@ tracks. The same applies to any reactive option (`columns` when computed,
 
 There is no `createSolidTable` (v8 name). The Solid v9 API is `createTable`.
 There is no `getCoreRowModel`/`getSortedRowModel` factory option pattern — pass
-row models under `_rowModels` (e.g. `_rowModels: { sortedRowModel: createSortedRowModel(sortFns) }`).
+row models under `rowModels` (e.g. `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }`).

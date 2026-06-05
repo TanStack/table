@@ -22,13 +22,13 @@
   import './index.css'
 
   // Define table features
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
     columnFilteringFeature,
   })
 
   // Create column helper with features and Person type
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   // Zod validation schema for a person
   const personSchema = z.object({
@@ -135,8 +135,8 @@
   // Create table using form state as data source
   const table = createTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
       },
@@ -167,19 +167,19 @@
     })
   }
 
-  function getFilterValue(column: Column<typeof _features, Person>): unknown {
+  function getFilterValue(column: Column<typeof features, Person>): unknown {
     return column.getFilterValue()
   }
 
   function getFirstValue(
-    tbl: Table<typeof _features, Person>,
+    tbl: Table<typeof features, Person>,
     columnId: string,
   ): unknown {
     return tbl.getPreFilteredRowModel().flatRows[0]?.getValue(columnId)
   }
 </script>
 
-{#snippet filterSnippet(column: Column<typeof _features, Person>)}
+{#snippet filterSnippet(column: Column<typeof features, Person>)}
   {@const firstValue = getFirstValue(table, column.id)}
   {@const filterValue = getFilterValue(column)}
   {#if typeof firstValue === 'number'}

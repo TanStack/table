@@ -7,8 +7,8 @@ import type { TableFeatures } from '../types/TableFeatures'
  * @example
  * ```
  * import { tableFeatures, columnVisibilityFeature, rowPinningFeature } from '@tanstack/react-table'
- * const _features = tableFeatures({ columnVisibilityFeature, rowPinningFeature });
- * const table = useTable({ _features, rowModels: {}, columns, data });
+ * const features = tableFeatures({ columnVisibilityFeature, rowPinningFeature });
+ * const table = useTable({ features, rowModels: {}, columns, data });
  * ```
  */
 export function tableFeatures<TFeatures extends TableFeatures>(

@@ -15,7 +15,7 @@ import type { Person } from './makeData'
 
 let data = makeData(1_000)
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   coreReativityFeature: storeReactivityBindings(),
 })
@@ -28,7 +28,7 @@ const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -161,8 +161,8 @@ const renderTable = () => {
 }
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
   },
   data,

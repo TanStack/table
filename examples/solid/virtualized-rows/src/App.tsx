@@ -14,7 +14,7 @@ import type { Row, SolidTable } from '@tanstack/solid-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/solid-virtual'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
 
 // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
 // See https://tanstack.com/virtual/v3/docs/examples/solid/table for a simpler fixed row height example.
@@ -68,8 +68,8 @@ function App() {
   const stressTest = () => setData(makeData(1_000_000))
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     get data() {
       return data()
@@ -96,7 +96,7 @@ function App() {
 // The ref must be undefined when createVirtualizer runs (before JSX return),
 // so that onMount can set up scroll observers after the element is in the DOM.
 function VirtualizedTable(props: {
-  table: SolidTable<typeof _features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   let tableContainerRef: HTMLDivElement | undefined
 
@@ -199,10 +199,10 @@ function VirtualizedTable(props: {
 }
 
 function TableBodyRow(props: {
-  row: Row<typeof _features, Person>
+  row: Row<typeof features, Person>
   virtualRow: VirtualItem
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
-  table: SolidTable<typeof _features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   return (
     <tr

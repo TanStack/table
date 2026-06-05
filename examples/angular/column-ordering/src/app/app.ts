@@ -15,12 +15,12 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnVisibilityFeature,
   columnOrderingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const defaultColumns = columnHelper.columns([
   columnHelper.group({
@@ -79,7 +79,7 @@ export class App {
   readonly columnOrder = signal<ColumnOrderState>([])
 
   readonly table = injectTable(() => ({
-    _features,
+    features,
     data: this.data(),
     columns: defaultColumns,
     state: {

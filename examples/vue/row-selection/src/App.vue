@@ -11,11 +11,11 @@ import { ref } from 'vue'
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
 import { makeData, Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSelectionFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -107,8 +107,8 @@ const toggleRowSelection = () => {
 const table = useTable(
   {
     key: 'row-selection', // needed for devtools
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     data,
     columns,
     debugTable: true,

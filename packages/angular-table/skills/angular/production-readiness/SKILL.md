@@ -1,8 +1,8 @@
 ---
 name: angular/production-readiness
 description: >
-  Ship-ready optimizations for Angular Table v9: register only the `_features` you actually use
-  (tree-shake the bundle); keep `columns` / `_features` / `_rowModels` / feature-fn maps as
+  Ship-ready optimizations for Angular Table v9: register only the `features` you actually use
+  (tree-shake the bundle); keep `columns` / `features` / `rowModels` / feature-fn maps as
   stable references OUTSIDE the `injectTable` initializer; pass only the `*Fns` your data needs
   to `createSortedRowModel` / `createFilteredRowModel` / `createGroupedRowModel`; use
   `ChangeDetectionStrategy.OnPush`; lean on signal-backed atoms (`table.atoms.<slice>.get()`)
@@ -45,10 +45,10 @@ by the bundler.
 
 ```ts
 // ❌ Pulls in EVERY feature, even unused ones
-const _features = stockFeatures
+const features = stockFeatures
 
 // ✅ Only what this table actually uses
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
@@ -70,13 +70,13 @@ import {
 } from '@tanstack/angular-table'
 
 // ❌ pulls in every built-in sort + filter fn
-_rowModels: {
+rowModels: {
   sortedRowModel:   createSortedRowModel(sortFns),
   filteredRowModel: createFilteredRowModel(filterFns),
 }
 
 // ✅ only what you use
-_rowModels: {
+rowModels: {
   sortedRowModel:   createSortedRowModel({ basic: sortFns.basic, datetime: sortFns.datetime }),
   filteredRowModel: createFilteredRowModel({ includesString: filterFns.includesString }),
 }
@@ -94,27 +94,27 @@ Anything you create inside the initializer is recreated on every signal
 change.
 
 ```ts
-// ❌ columns / _features / _rowModels / feature fns recreated on every data() change
+// ❌ columns / features / rowModels / feature fns recreated on every data() change
 @Component({...})
 export class App {
   readonly table = injectTable(() => ({
-    _features: tableFeatures({ rowSortingFeature }),           // ← new ref each run
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // ← new ref each run
+    features: tableFeatures({ rowSortingFeature }),           // ← new ref each run
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // ← new ref each run
     columns: [/* … */],                                        // ← new ref each run
     data: this.data(),
   }))
 }
 
 // ✅ stable references outside; only reactive reads inside
-const _features = tableFeatures({ rowSortingFeature })
-const _rowModels = { sortedRowModel: createSortedRowModel(sortFns) }
-const columns: Array<ColumnDef<typeof _features, Person>> = [/* … */]
+const features = tableFeatures({ rowSortingFeature })
+const rowModels = { sortedRowModel: createSortedRowModel(sortFns) }
+const columns: Array<ColumnDef<typeof features, Person>> = [/* … */]
 
 @Component({...})
 export class App {
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels,
+    features,
+    rowModels,
     columns,
     data: this.data(),
   }))
@@ -125,7 +125,7 @@ Same rule for the controlled-state pattern — keep `state: { pagination: this.p
 inside the initializer, but keep the signal definitions on the class.
 
 For shared infrastructure across multiple tables, `createTableHook(...)` lets
-you define `_features` / `_rowModels` / default options once at module scope.
+you define `features` / `rowModels` / default options once at module scope.
 
 ---
 
@@ -325,7 +325,7 @@ the wiring cost. Pick exactly one source of truth per slice (see
 
 ## 12. Build hygiene
 
-- **`bundle-stats` / `source-map-explorer`**: after curating `_features`,
+- **`bundle-stats` / `source-map-explorer`**: after curating `features`,
   verify your final bundle doesn't include retired features. If you see
   `rowGroupingFeature` in the bundle but never imported it, something is
   pulling in `stockFeatures` indirectly.
@@ -336,11 +336,11 @@ the wiring cost. Pick exactly one source of truth per slice (see
 
 ## 13. Quick wins checklist
 
-- [ ] `_features` listed explicitly (no `stockFeatures` in production).
+- [ ] `features` listed explicitly (no `stockFeatures` in production).
 - [ ] `*Fns` registries passed only what you use to
       `createSortedRowModel` / `createFilteredRowModel` /
       `createGroupedRowModel`.
-- [ ] `columns`, `_features`, `_rowModels`, feature fns are at module scope
+- [ ] `columns`, `features`, `rowModels`, feature fns are at module scope
       or stable class fields — never inside the `injectTable` initializer.
 - [ ] Component is `ChangeDetectionStrategy.OnPush`.
 - [ ] `getRowId` set when rows have a stable primary key.
@@ -366,7 +366,7 @@ the wiring cost. Pick exactly one source of truth per slice (see
 calls this out — `stockFeatures` is a v8 → v9 bootstrap, not a production
 end-state.
 
-### 2. (CRITICAL) Recreating `columns` / `_features` / `_rowModels` inside the
+### 2. (CRITICAL) Recreating `columns` / `features` / `rowModels` inside the
 
 `injectTable` initializer
 
@@ -386,7 +386,7 @@ Symptoms:
 
 All of these are far slower than the built-in row models (which memoize and
 short-circuit) and ship more code. Use `table.setSorting(...)`,
-`table.setColumnFilters(...)`, the registered `_rowModels` factories.
+`table.setColumnFilters(...)`, the registered `rowModels` factories.
 
 ### 4. (HIGH) `OnPush` not set
 

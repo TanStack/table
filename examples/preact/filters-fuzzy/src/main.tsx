@@ -25,17 +25,17 @@ import type { Column, FilterFn, SortFn } from '@tanstack/preact-table'
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -54,7 +54,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
 }
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -73,7 +73,7 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
 declare module '@tanstack/preact-table' {
   // add fuzzy filter to the filterFns
   interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
+    fuzzy: FilterFn<typeof features, Person>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
@@ -115,10 +115,10 @@ function App() {
   const refreshData = () => setData((_old) => makeData(5_000))
   const stressTest = () => setData((_old) => makeData(200_000))
 
-  const table = useTable<typeof _features, Person>(
+  const table = useTable<typeof features, Person>(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel({
           ...filterFns,
           fuzzy: fuzzyFilter,
@@ -285,7 +285,7 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<typeof _features, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const columnFilterValue = column.getFilterValue()
 
   return (

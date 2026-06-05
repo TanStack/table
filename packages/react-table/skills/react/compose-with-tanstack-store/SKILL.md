@@ -71,7 +71,7 @@ import {
 } from '@tanstack/react-table'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 
 function MyTable({ columns, data }) {
   const sortingAtom = useCreateAtom<SortingState>([])
@@ -85,8 +85,8 @@ function MyTable({ columns, data }) {
   const pagination = useSelector(paginationAtom)
 
   const table = useTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -134,8 +134,8 @@ React.useEffect(() => {
 }, [visibilityAtom])
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { columnVisibility: visibilityAtom },
@@ -160,8 +160,8 @@ function OrdersTable() {
 
 function Table({ data, filter }) {
   const table = useTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       /* … */
     },
     columns,
@@ -199,8 +199,8 @@ Wrong:
 function MyTable() {
   const sortingAtom = createAtom<SortingState>([]) // new atom every render
   useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -214,8 +214,8 @@ Correct:
 function MyTable() {
   const sortingAtom = useCreateAtom<SortingState>([]) // stable across renders
   useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -232,8 +232,8 @@ Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: { sorting: localSorting }, // silently ignored
@@ -247,8 +247,8 @@ Correct:
 ```tsx
 // Pick exactly one ownership mechanism per slice.
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { sorting: sortingAtom },
@@ -264,8 +264,8 @@ Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { sorting: sortingAtom },
@@ -277,8 +277,8 @@ Correct:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { sorting: sortingAtom },

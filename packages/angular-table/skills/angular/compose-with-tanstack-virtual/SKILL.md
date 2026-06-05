@@ -66,7 +66,7 @@ import {
 } from '@tanstack/angular-table'
 import { injectVirtualizer } from '@tanstack/angular-virtual'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
 @Component({
   selector: 'app-virtual-table',
@@ -81,8 +81,8 @@ export class VirtualTable {
     viewChild.required<ElementRef<HTMLDivElement>>('scroll')
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
     getRowId: (row) => row.id,
@@ -216,8 +216,8 @@ caches that, scrollbar adjusts.)
 
 Combine with `rowExpandingFeature` for "click to expand details":
 
-- Register `rowExpandingFeature` in `_features` and
-  `expandedRowModel: createExpandedRowModel()` in `_rowModels`.
+- Register `rowExpandingFeature` in `features` and
+  `expandedRowModel: createExpandedRowModel()` in `rowModels`.
 - Use `table.getExpandedRowModel().rows` (or `getRowModel().rows`, which
   already includes expansion under `paginateExpandedRows: true` semantics —
   see `tanstack-table/core/row-expanding`).

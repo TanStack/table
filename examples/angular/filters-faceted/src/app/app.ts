@@ -19,15 +19,15 @@ import { TableFilter } from './table-filter/table-filter'
 import type { ColumnFiltersState, Updater } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   columnFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     facetedMinMaxValues: createFacetedMinMaxValues(),
     facetedRowModel: createFacetedRowModel(),
     facetedUniqueValues: createFacetedUniqueValues(),

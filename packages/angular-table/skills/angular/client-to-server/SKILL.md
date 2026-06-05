@@ -3,7 +3,7 @@ name: angular/client-to-server
 description: >
   Convert an Angular Table v9 from client-side to server-side processing. Flip
   `manualPagination` / `manualSorting` / `manualFiltering` / `manualGrouping` / `manualExpanding`
-  for the slices the server now owns; drop the corresponding `_rowModels` row-model factories the
+  for the slices the server now owns; drop the corresponding `rowModels` row-model factories the
   server replaces; supply `rowCount` (server total) so pagination computes correctly; hoist
   `pagination` / `sorting` / `columnFilters` / `globalFilter` to Angular signals with `state` +
   `on[State]Change`; fetch via `rxResource` / `httpResource` / `@tanstack/angular-query`; preserve
@@ -44,7 +44,7 @@ For each slice the server now owns:
 
 1. **Flip `manualX: true`** in table options. This tells the table "don't
    process this on the client — trust the data you receive."
-2. **Drop the matching client-side row-model factory** from `_rowModels`
+2. **Drop the matching client-side row-model factory** from `rowModels`
    (or keep it if you still want the feature's _state_ but no client
    recomputation — see §3).
 3. **Hoist the slice to an Angular signal**, control it via `state.x` +
@@ -104,13 +104,13 @@ import {
   type SortingState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Todo>()
+const columnHelper = createColumnHelper<typeof features, Todo>()
 
 type TodoResponse = { items: Array<Todo>; totalCount: number }
 
@@ -186,7 +186,7 @@ export class App {
     },
   })
 
-  readonly columns: Array<ColumnDef<typeof _features, Todo>> = [
+  readonly columns: Array<ColumnDef<typeof features, Todo>> = [
     columnHelper.accessor('id', { header: 'Id', cell: (i) => i.getValue() }),
     columnHelper.accessor('title', {
       header: 'Title',
@@ -202,8 +202,8 @@ export class App {
   readonly table = injectTable(() => {
     const data = this.dataWithLatest()
     return {
-      _features,
-      _rowModels: {}, // ← dropped paginatedRowModel, sortedRowModel, filteredRowModel
+      features,
+      rowModels: {}, // ← dropped paginatedRowModel, sortedRowModel, filteredRowModel
       columns: this.columns,
       data: data.items,
       getRowId: (row) => String(row.id),
@@ -245,7 +245,7 @@ export class App {
 
 ### What changed from the client-side version
 
-- `_rowModels: {}` — no `paginatedRowModel`, no `sortedRowModel`, no
+- `rowModels: {}` — no `paginatedRowModel`, no `sortedRowModel`, no
   `filteredRowModel`. The server is the source of truth.
 - `manualPagination` / `manualSorting` / `manualFiltering: true`.
 - `rowCount: data.totalCount` — required for correct `getPageCount()` and the
@@ -361,7 +361,7 @@ edits (toggle the flag around the update).
 
 ### 1. (CRITICAL) Flipping `manualPagination: true` but keeping
 
-`paginatedRowModel` in `_rowModels`
+`paginatedRowModel` in `rowModels`
 
 The client row-model factory will re-paginate the (already-paginated) data,
 chopping the visible rows down to the first `pageSize` of the page slice.
@@ -448,10 +448,10 @@ the new filtered result set only has 2 pages. They have to manually click back
 to page 1. Always reset `pageIndex` to 0 in `onGlobalFilterChange` /
 `onColumnFiltersChange`.
 
-### 11. (MEDIUM) Treating `_rowModels: {}` as "no row models work"
+### 11. (MEDIUM) Treating `rowModels: {}` as "no row models work"
 
 Core row model is always automatic. `table.getRowModel().rows` returns the
-data array as `Row<...>` objects no matter what — `_rowModels: {}` just means
+data array as `Row<...>` objects no matter what — `rowModels: {}` just means
 no client-side processing on top.
 
 ---

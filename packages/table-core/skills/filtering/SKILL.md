@@ -56,15 +56,15 @@ import {
 } from '@tanstack/table-core'
 import type { ColumnFiltersState } from '@tanstack/table-core'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowPaginationFeature,
 })
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -142,8 +142,8 @@ const { data } = useQuery({
     fetch('/api/rows?' + serialize(columnFilters)).then((r) => r.json()),
 })
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature }),
-  _rowModels: {}, // no filteredRowModel needed for manual filtering
+  features: tableFeatures({ columnFilteringFeature }),
+  rowModels: {}, // no filteredRowModel needed for manual filtering
   data,
   columns,
   manualFiltering: true,
@@ -156,8 +156,8 @@ const table = useTable({
 
 ```ts
 const table = constructTable({
-  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -176,8 +176,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ columnFacetingFeature, columnFilteringFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnFacetingFeature, columnFilteringFeature }),
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     // BUG: missing facetedRowModel
     facetedUniqueValues: createFacetedUniqueValues(),
@@ -192,12 +192,12 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFacetingFeature,
     columnFilteringFeature,
     rowPaginationFeature,
   }),
-  _rowModels: {
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
     facetedRowModel: createFacetedRowModel(), // REQUIRED base
@@ -220,8 +220,8 @@ Wrong:
 ```tsx
 // manualFiltering bypasses the filteredRowModel — filter UI changes do nothing
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature }),
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({ columnFilteringFeature }),
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   data,
   columns,
   manualFiltering: true,
@@ -240,8 +240,8 @@ const { data } = useQuery({
 })
 
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature }),
-  _rowModels: {}, // no filteredRowModel needed
+  features: tableFeatures({ columnFilteringFeature }),
+  rowModels: {}, // no filteredRowModel needed
   data,
   columns,
   manualFiltering: true,
@@ -298,8 +298,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ globalFilteringFeature }),
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({ globalFilteringFeature }),
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   globalFilterFn: 'includesString',
@@ -333,8 +333,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature }),
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({ columnFilteringFeature }),
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
 })

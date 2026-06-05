@@ -28,10 +28,10 @@
   //    In this case, this will be a basic table with no additional features
   const { createAppTable, createAppColumnHelper
   } = createTableHook({
-    _features: {},
-    // 3a. `_rowModels` defines client-side row models. `Core` row model is now
+    features: {},
+    // 3a. `rowModels` defines client-side row models. `Core` row model is now
     //     included by default, but you can still override it here.
-    _rowModels: {},
+    rowModels: {},
   })
 
   // 4. Create a column helper pre-bound to our features

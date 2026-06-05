@@ -23,14 +23,14 @@ import type {
 } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
   columnSizingFeature,
   rowPaginationFeature,
 })
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'pin',
     header: 'Pin',
@@ -67,10 +67,10 @@ export class App {
   readonly includeLeafRows = signal(true)
   readonly includeParentRows = signal(false)
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
+  readonly table = injectTable<typeof features, Person>(() => ({
     debugTable: true,
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       expandedRowModel: createExpandedRowModel(),
       paginatedRowModel: createPaginatedRowModel(),

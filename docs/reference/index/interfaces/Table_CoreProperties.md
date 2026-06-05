@@ -47,10 +47,10 @@ Prototype cache for Column objects - shared by all columns in this table
 
 ***
 
-### \_features
+### \features
 
 ```ts
-readonly _features: Partial<CoreFeatures> & TFeatures;
+readonly features: Partial<CoreFeatures> & TFeatures;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L150)
@@ -95,10 +95,10 @@ The row model processing functions that are used to process the data by features
 
 ***
 
-### \_rowModels
+### \rowModels
 
 ```ts
-readonly _rowModels: CachedRowModels<TFeatures, TData>;
+readonly rowModels: CachedRowModels<TFeatures, TData>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L162)

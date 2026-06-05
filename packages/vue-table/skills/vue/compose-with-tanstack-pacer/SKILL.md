@@ -149,8 +149,8 @@ const throttler = new Throttler(
 )
 
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: {
@@ -282,7 +282,7 @@ The debounced callback wraps `column.setFilterValue`, `table.setGlobalFilter`,
 `table.setGlobalFilter` on a v8 table would not exist. See
 `tanstack-table/vue/migrate-v8-to-v9`.
 
-### "Filter API missing" because feature not in `_features` (CRITICAL — v9-specific)
+### "Filter API missing" because feature not in `features` (CRITICAL — v9-specific)
 
 `column.setFilterValue` is only available if `columnFilteringFeature` is registered.
 `table.setGlobalFilter` requires `globalFilteringFeature`. Debouncing a missing API is still
@@ -301,8 +301,8 @@ useTable({ ..., data: filtered })
 ```ts
 // ✅ Use the table's filter feature; debounce the writer.
 useTable({
-  _features: tableFeatures({ columnFilteringFeature, globalFilteringFeature }),
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({ columnFilteringFeature, globalFilteringFeature }),
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
 })

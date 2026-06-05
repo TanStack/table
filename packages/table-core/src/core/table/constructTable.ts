@@ -33,11 +33,11 @@ export function constructTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  const _reactivity = tableOptions._features.coreReativityFeature!
+  const _reactivity = tableOptions.features.coreReativityFeature!
 
   const table = {
     _reactivity,
-    _features: { ...coreFeatures, ...tableOptions._features },
+    _features: { ...coreFeatures, ...tableOptions.features },
     _rowModels: {},
     _rowModelFns: {},
     baseAtoms: {},
@@ -146,7 +146,7 @@ export function constructTable<
     (tableOptions.debugAll || tableOptions.debugTable)
   ) {
     const features = Object.keys(table._features)
-    const rowModels = Object.keys(table.options._rowModels || {})
+    const rowModels = Object.keys(table.options.rowModels || {})
     const states = Object.keys(table.initialState)
 
     console.log(

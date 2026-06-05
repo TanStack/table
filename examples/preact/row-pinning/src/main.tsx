@@ -25,7 +25,7 @@ import type {
 } from '@tanstack/preact-table'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
@@ -33,7 +33,7 @@ const _features = tableFeatures({
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 function App() {
   const rerender = useReducer(() => ({}), {})[1]
 
@@ -151,8 +151,8 @@ function App() {
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         expandedRowModel: createExpandedRowModel(),
         paginatedRowModel: createPaginatedRowModel(),
@@ -359,8 +359,8 @@ function PinnedRow({
   row,
   table,
 }: {
-  row: Row<typeof _features, Person>
-  table: PreactTable<typeof _features, Person>
+  row: Row<typeof features, Person>
+  table: PreactTable<typeof features, Person>
 }) {
   return (
     <tr
@@ -394,8 +394,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: PreactTable<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: PreactTable<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

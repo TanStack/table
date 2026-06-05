@@ -307,8 +307,8 @@ describe('FlexRenderDirective', () => {
         return {
           columns: columns,
           data: defaultData,
-          _features: stockFeatures,
-          _rowModels: {
+          features: stockFeatures,
+          rowModels: {
             coreRowModel: createCoreRowModel(),
           },
           state: { expanded: this.expandState() },
@@ -408,8 +408,8 @@ describe('FlexRenderDirective', () => {
         return {
           columns: columns,
           data: defaultData,
-          _features: stockFeatures,
-          _rowModels: {
+          features: stockFeatures,
+          rowModels: {
             coreRowModel: createCoreRowModel(),
           },
           state: { expanded: this.expandState() },
@@ -534,7 +534,7 @@ export function createTestTable(
     readonly table = injectTable(() => {
       return {
         ...(optionsFn?.() ?? {}),
-        _features: stockFeatures,
+        features: stockFeatures,
         columns: this.columns(),
         data: this.data(),
       } as TableOptions<typeof stockFeatures, TestData>

@@ -30,8 +30,8 @@ import type { Row } from '@tanstack/react-table'
 import './index.css'
 
 const { appFeatures, useAppTable, createAppColumnHelper } = createTableHook({
-  _features: { columnSizingFeature },
-  _rowModels: {},
+  features: { columnSizingFeature },
+  rowModels: {},
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

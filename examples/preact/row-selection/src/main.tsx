@@ -29,14 +29,14 @@ import type { JSX } from 'preact'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const rerender = useReducer(() => ({}), {})[1]
@@ -106,8 +106,8 @@ function App() {
   const table = useTable(
     {
       key: 'row-selection', // needed for devtools
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
       },
@@ -308,8 +308,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

@@ -11,13 +11,13 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnVisibilityFeature,
   columnPinningFeature,
   columnOrderingFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -76,8 +76,8 @@ function App() {
   const stressTest = () => setData(makeData(500_000))
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return data()

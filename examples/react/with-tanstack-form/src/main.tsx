@@ -26,13 +26,13 @@ import './index.css'
 type FormRow = Omit<Person, 'subRows'>
 
 // Define table features
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
 })
 
 // Create column helper with features and row type
-const columnHelper = createColumnHelper<typeof _features, FormRow>()
+const columnHelper = createColumnHelper<typeof features, FormRow>()
 
 // Zod validation schema for a person
 const personSchema = z.object({
@@ -169,8 +169,8 @@ function App() {
   // The table gets fresh data on each render, cells handle their own field state
   const table = useTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
       },
@@ -368,8 +368,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, FormRow>
-  table: Table<typeof _features, FormRow>
+  column: Column<typeof features, FormRow>
+  table: Table<typeof features, FormRow>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

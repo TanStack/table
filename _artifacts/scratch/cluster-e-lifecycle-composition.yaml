@@ -19,7 +19,7 @@ skills:
     status: ready
     description: >
       End-to-end first-table journey: install the framework adapter, declare
-      `_features` via `tableFeatures()`, declare `_rowModels` factories with
+      `features` via `tableFeatures()`, declare `rowModels` factories with
       their *Fns parameters, create a column helper with both `TFeatures` and
       `TData` generics, instantiate `useTable` / `injectTable` / `createTable`,
       and render headers + cells with `table.FlexRender` (or `*flexRender*`
@@ -30,9 +30,9 @@ skills:
         `@tanstack/solid-table`, `@tanstack/svelte-table` (Svelte 5+),
         `@tanstack/preact-table`, `@tanstack/lit-table`).
       - |-
-        Declaring the minimum-viable v9 table (no features) — must still pass `_features: tableFeatures({})` and `_rowModels: {}`. Core row model is automatic; you only register filtered/sorted/paginated/etc. when you use them.
+        Declaring the minimum-viable v9 table (no features) — must still pass `features: tableFeatures({})` and `rowModels: {}`. Core row model is automatic; you only register filtered/sorted/paginated/etc. when you use them.
       - |-
-        `createColumnHelper<typeof _features, TData>()` and the new `columnHelper.columns([...])` variadic wrapper for preserving each column's `TValue` in nested/group columns.
+        `createColumnHelper<typeof features, TData>()` and the new `columnHelper.columns([...])` variadic wrapper for preserving each column's `TValue` in nested/group columns.
       - Rendering with `<table.FlexRender header={header} />` /
         `<table.FlexRender cell={cell} />` (preferred) or the standalone
         `<FlexRender />` import. `flexRender(def, ctx)` still works.
@@ -53,9 +53,9 @@ skills:
       - '@tanstack/lit-table'
     tasks:
       - 'Render a basic v9 table with 3 columns and an in-memory array.'
-      - 'Add sorting: register `rowSortingFeature` in `_features` and `sortedRowModel: createSortedRowModel(sortFns)` in `_rowModels`.'
+      - 'Add sorting: register `rowSortingFeature` in `features` and `sortedRowModel: createSortedRowModel(sortFns)` in `rowModels`.'
       - 'Add pagination + filtering on top of sorting without touching the rest of the setup.'
-      - 'Type a `ColumnDef<typeof _features, TData>[]` array outside the component for stable references.'
+      - 'Type a `ColumnDef<typeof features, TData>[]` array outside the component for stable references.'
     correct_pattern: |
       // React — minimum viable v9 table
       import {
@@ -70,8 +70,8 @@ skills:
       type Person = { firstName: string; lastName: string; age: number }
 
       // Define OUTSIDE the component for stable identity.
-      const _features = tableFeatures({ rowSortingFeature })
-      const columnHelper = createColumnHelper<typeof _features, Person>()
+      const features = tableFeatures({ rowSortingFeature })
+      const columnHelper = createColumnHelper<typeof features, Person>()
 
       const columns = columnHelper.columns([
         columnHelper.accessor('firstName', { header: 'First' }),
@@ -81,8 +81,8 @@ skills:
 
       function PeopleTable({ data }: { data: Person[] }) {
         const table = useTable({
-          _features,
-          _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+          features,
+          rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
           columns,
           data,
         })
@@ -108,9 +108,9 @@ skills:
       // BAD: agents trained on v8 will produce this and it will not compile.
       // (1) `useReactTable` was removed in favor of `useTable`.
       // (2) `getCoreRowModel: getCoreRowModel()` is no longer accepted —
-      //     core is implicit; everything else moved to `_rowModels`.
+      //     core is implicit; everything else moved to `rowModels`.
       // (3) `createColumnHelper<Person>()` is missing the TFeatures generic.
-      // (4) No `_features` => "Property '_features' is missing in type".
+      // (4) No `features` => "Property 'features' is missing in type".
       import { useReactTable, getCoreRowModel, createColumnHelper, flexRender }
         from '@tanstack/react-table'
 
@@ -121,12 +121,12 @@ skills:
         getCoreRowModel: getCoreRowModel(),               // removed option
       })
     failure_modes:
-      - "Forgetting `_features: tableFeatures({})` — the option is required even for a 'no features' table. Type error: '_features' is missing."
-      - 'Skipping `_rowModels: {}` — same as above. Core is automatic but the option key itself must be present.'
-      - "Calling `createColumnHelper<Person>()` instead of `createColumnHelper<typeof _features, Person>()`. The generic order changed in v9 and the old shape doesn't compile."
-      - 'Defining `_features` / `columns` / `data` literals inside the render body — every render produces a new reference and busts table-internal memoization. Always declare these outside the component or wrap in `useMemo`.'
+      - "Forgetting `features: tableFeatures({})` — the option is required even for a 'no features' table. Type error: 'features' is missing."
+      - 'Skipping `rowModels: {}` — same as above. Core is automatic but the option key itself must be present.'
+      - "Calling `createColumnHelper<Person>()` instead of `createColumnHelper<typeof features, Person>()`. The generic order changed in v9 and the old shape doesn't compile."
+      - 'Defining `features` / `columns` / `data` literals inside the render body — every render produces a new reference and busts table-internal memoization. Always declare these outside the component or wrap in `useMemo`.'
       - 'Importing `useReactTable` (v8) or `createAngularTable` (v8 Angular) — both were renamed. v9 uses `useTable` / `injectTable` / `createTable` consistently across adapters.'
-      - "Reaching for `useLegacyTable` for a new project. It's deprecated and ships every feature in the bundle. New code must use `useTable` with explicit `_features`."
+      - "Reaching for `useLegacyTable` for a new project. It's deprecated and ships every feature in the bundle. New code must use `useTable` with explicit `features`."
 
   - slug: migrate-v8-to-v9
     type: lifecycle
@@ -143,9 +143,9 @@ skills:
     covers:
       - Hook rename per adapter (React, Angular, Solid, Vue, Preact, Svelte 5+, Lit, vanilla).
       - |-
-        `_features` + `_rowModels` becoming required options; row-model factories now take their *Fns set as a parameter.
+        `features` + `rowModels` becoming required options; row-model factories now take their *Fns set as a parameter.
       - |-
-        `createColumnHelper<TData>()` → `createColumnHelper<typeof _features, TData>()` (generic order + arity change).
+        `createColumnHelper<TData>()` → `createColumnHelper<typeof features, TData>()` (generic order + arity change).
       - |-
         State surface: `table.getState()` → `table.store.state` (full) or `table.state` (selector output) or `table.atoms.<slice>.get()`.
       - |-
@@ -177,10 +177,10 @@ skills:
       - '@tanstack/lit-table'
       - '@tanstack/table-core'
     tasks:
-      - 'Upgrade a v8 React table to v9 by renaming `useReactTable` → `useTable`, moving `getCoreRowModel`/`getFilteredRowModel`/`getSortedRowModel`/`getPaginationRowModel` options into `_rowModels`, and adding `_features: tableFeatures({...})`.'
+      - 'Upgrade a v8 React table to v9 by renaming `useReactTable` → `useTable`, moving `getCoreRowModel`/`getFilteredRowModel`/`getSortedRowModel`/`getPaginationRowModel` options into `rowModels`, and adding `features: tableFeatures({...})`.'
       - 'Bridge a v8 React table to v9 via `useLegacyTable` from `@tanstack/react-table/legacy` so the rest of the app can upgrade incrementally.'
       - 'Rename `table.getState()` reads throughout the codebase to `table.store.state` (full read) or `table.state` (typed selector output) or `table.atoms.<slice>.get()` (single-slice atom read).'
-      - 'Update all `createColumnHelper<TData>()` call sites to `createColumnHelper<typeof _features, TData>()` and adjust `ColumnDef<TData>` / `Column<TData>` / `Row<TData>` / `Cell<TData, TValue>` type annotations to the new `TFeatures`-first generic order.'
+      - 'Update all `createColumnHelper<TData>()` call sites to `createColumnHelper<typeof features, TData>()` and adjust `ColumnDef<TData>` / `Column<TData>` / `Row<TData>` / `Cell<TData, TValue>` type annotations to the new `TFeatures`-first generic order.'
     correct_pattern: |
       // === v9 (correct) ===
       import {
@@ -200,7 +200,7 @@ skills:
       } from '@tanstack/react-table'
       import type { ColumnDef } from '@tanstack/react-table'
 
-      const _features = tableFeatures({
+      const features = tableFeatures({
         rowSortingFeature,
         rowPaginationFeature,
         columnFilteringFeature,
@@ -208,9 +208,9 @@ skills:
         columnResizingFeature, // explicit — formerly part of ColumnSizing
       })
 
-      const columnHelper = createColumnHelper<typeof _features, Person>()
+      const columnHelper = createColumnHelper<typeof features, Person>()
 
-      const columns: ColumnDef<typeof _features, Person>[] = columnHelper.columns([
+      const columns: ColumnDef<typeof features, Person>[] = columnHelper.columns([
         columnHelper.accessor('name', {
           header: 'Name',
           sortFn: 'alphanumeric',        // renamed from sortingFn
@@ -218,8 +218,8 @@ skills:
       ])
 
       const table = useTable({
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           sortedRowModel:    createSortedRowModel(sortFns),
           filteredRowModel:  createFilteredRowModel(filterFns),
           paginatedRowModel: createPaginatedRowModel(),
@@ -245,7 +245,7 @@ skills:
       import {
         useReactTable,               // (1) renamed → useTable
         getCoreRowModel,             // (2) no longer accepted as an option;
-        getFilteredRowModel,         //     move to `_rowModels` as factories
+        getFilteredRowModel,         //     move to `rowModels` as factories
         getSortedRowModel,           //     created via `createSortedRowModel(sortFns)` etc.
         getPaginationRowModel,
         createColumnHelper,          // (3) needs <TFeatures, TData> now
@@ -268,7 +268,7 @@ skills:
       const table = useReactTable({
         columns,
         data,
-        getCoreRowModel:        getCoreRowModel(),         // (2) move into `_rowModels`
+        getCoreRowModel:        getCoreRowModel(),         // (2) move into `rowModels`
         getFilteredRowModel:    getFilteredRowModel(),
         getSortedRowModel:      getSortedRowModel(),
         getPaginationRowModel:  getPaginationRowModel(),
@@ -301,10 +301,10 @@ skills:
       })
     failure_modes:
       - 'Importing `useReactTable` / `createAngularTable` / `createSolidTable` (v8 names). All adapters consolidated to `useTable` / `injectTable` / `createTable` in v9. The v8 imports will not exist and will fail at module-resolution time.'
-      - 'Passing `getCoreRowModel: getCoreRowModel()` / `getSortedRowModel: getSortedRowModel()` as root options. These were removed — sortedRowModel/filteredRowModel/etc. now live under `_rowModels` and are produced by `createSortedRowModel(sortFns)`-style factories. Core is automatic.'
+      - 'Passing `getCoreRowModel: getCoreRowModel()` / `getSortedRowModel: getSortedRowModel()` as root options. These were removed — sortedRowModel/filteredRowModel/etc. now live under `rowModels` and are produced by `createSortedRowModel(sortFns)`-style factories. Core is automatic.'
       - 'Calling `createSortedRowModel()` without passing `sortFns`. The factories now REQUIRE their *Fns parameter for tree-shaking — `createFilteredRowModel(filterFns)`, `createSortedRowModel(sortFns)`, `createGroupedRowModel(aggregationFns)`.'
-      - "Omitting `_features` entirely. The option is required even for a no-features table — pass `_features: tableFeatures({})` or `_features: stockFeatures` if you want v8-like 'everything on'."
-      - 'Calling `createColumnHelper<Person>()` (v8 arity). v9 requires `createColumnHelper<typeof _features, Person>()`. `typeof _features` is the standard idiom — declare features once at module scope and reuse the type.'
+      - "Omitting `features` entirely. The option is required even for a no-features table — pass `features: tableFeatures({})` or `features: stockFeatures` if you want v8-like 'everything on'."
+      - 'Calling `createColumnHelper<Person>()` (v8 arity). v9 requires `createColumnHelper<typeof features, Person>()`. `typeof features` is the standard idiom — declare features once at module scope and reuse the type.'
       - 'Reading state via `table.getState()`. The method was removed. Use `table.store.state` for a flat snapshot, `table.state` if you passed a `useTable` selector, or `table.atoms.<slice>.get()` for a single slice.'
       - 'Renaming misses: `sortingFn` (column def) → `sortFn`, `sortingFns` → `sortFns`, `getSortingFn()` → `getSortFn()`, `getAutoSortingFn()` → `getAutoSortFn()`, `SortingFn`/`SortingFns` types → `SortFn`/`SortFns`. TypeScript will surface these but the agent will try the v8 names first.'
       - 'Using `enablePinning: true`. It was split into `enableColumnPinning` and `enableRowPinning`. Pick one (or both).'
@@ -323,7 +323,7 @@ skills:
       `manualPagination` / `manualGrouping` / `manualExpanding` for whatever
       the server now owns, supply `rowCount` (and/or `pageCount`) so the
       table can paginate without seeing all rows, and remove the corresponding
-      `_rowModels` entries (you don't need `paginatedRowModel` if pagination
+      `rowModels` entries (you don't need `paginatedRowModel` if pagination
       is server-side). State for the server-managed slices is best owned
       EITHER via external TanStack Store atoms (passed via `options.atoms`)
       OR via classic `state` + `on*Change` controlled state — both work.
@@ -333,7 +333,7 @@ skills:
       - Setting `manualSorting`, `manualFiltering`, `manualPagination`,
         `manualGrouping`, `manualExpanding` so the table stops trying to
         slice rows it doesn't have.
-      - Removing the matching `_rowModels` keys so unused factories don't
+      - Removing the matching `rowModels` keys so unused factories don't
         ship (don't register `paginatedRowModel` if the server paginates).
       - Providing `rowCount` (and optionally `pageCount`) so
         `table.getPageCount()` / `getCanNextPage()` work without local rows.
@@ -363,7 +363,7 @@ skills:
       import { useCreateAtom, useSelector } from '@tanstack/react-store'
       import type { PaginationState } from '@tanstack/react-table'
 
-      const _features = tableFeatures({ rowPaginationFeature })
+      const features = tableFeatures({ rowPaginationFeature })
 
       function ServerTable({ columns }) {
         // 1) Own pagination in an external atom.
@@ -383,10 +383,10 @@ skills:
         })
 
         // 3) Manual pagination + `rowCount` for getPageCount(). Note: no
-        //    `paginatedRowModel` in `_rowModels` — server paginates.
+        //    `paginatedRowModel` in `rowModels` — server paginates.
         const table = useTable({
-          _features,
-          _rowModels: {},                        // core only
+          features,
+          rowModels: {},                        // core only
           columns,
           data: dataQuery.data?.rows ?? [],
           rowCount: dataQuery.data?.rowCount,
@@ -401,8 +401,8 @@ skills:
       // This makes the table try to slice the (already-sliced) `data` array
       // a second time, producing rows that don't exist.
       const table = useTable({
-        _features,
-        _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+        features,
+        rowModels: { paginatedRowModel: createPaginatedRowModel() },
         columns,
         data: serverPage.rows,
         // missing: manualPagination + rowCount
@@ -412,8 +412,8 @@ skills:
       // `Math.ceil(rows.length / pageSize)` which is the page size, not the
       // total — the pager shows "Page 1 of 1" forever.
       const table = useTable({
-        _features,
-        _rowModels: {},
+        features,
+        rowModels: {},
         columns,
         data: serverPage.rows,
         manualPagination: true,
@@ -430,14 +430,14 @@ skills:
       // `state + on*Change`. Don't pass `state` without `on*Change`.
       const [pagination, setPagination] = useState<PaginationState>({...})
       useTable({
-        _features, _rowModels: {}, columns, data,
+        features, rowModels: {}, columns, data,
         state: { pagination },
         // missing: onPaginationChange: setPagination
         manualPagination: true,
       })
     failure_modes:
       - 'Forgetting `manualPagination: true` (or `manualSorting` / `manualFiltering`). The table will re-sort/re-filter/re-paginate the already-server-processed rows, producing visually incorrect or duplicated results.'
-      - 'Leaving `paginatedRowModel: createPaginatedRowModel()` registered when the server paginates. The factory ships in your bundle for no reason AND the table slices server-sliced data. Drop it from `_rowModels`.'
+      - 'Leaving `paginatedRowModel: createPaginatedRowModel()` registered when the server paginates. The factory ships in your bundle for no reason AND the table slices server-sliced data. Drop it from `rowModels`.'
       - "Omitting `rowCount`. Without it, `getPageCount()` is computed from `data.length / pageSize` — which equals 1 if the server returned a single page. Pager UIs lock at 'Page 1 of 1'."
       - 'Passing `state.pagination` without `onPaginationChange`. The library treats `state` as controlled; without a writeback handler, `table.setPageIndex(2)` is a no-op. Either pass both, or pass `atoms.pagination` (which is its own writeback).'
       - 'Mixing `state.pagination` AND `atoms.pagination` for the SAME slice. Precedence is `options.atoms[key]` > `options.state[key]` > internal — `state` is silently ignored. Pick one mechanism per slice.'
@@ -450,7 +450,7 @@ skills:
     status: ready
     description: >
       Ship-ready optimizations for v9: tree-shake the bundle by registering
-      ONLY the `_features` you actually use; memoize `_features`, `data`,
+      ONLY the `features` you actually use; memoize `features`, `data`,
       and `columns` for stable identity; replace `(state) => state` with
       narrow selectors or per-slice `useSelector(table.atoms.<slice>)`
       subscriptions; and push state-driven re-renders down the tree with
@@ -462,7 +462,7 @@ skills:
       - |-
         Tree-shaking: list features explicitly in `tableFeatures({...})` rather than `stockFeatures`. A sort-only table is ~6–7kb vs ~15–20kb for v8's all-in approach.
       - |-
-        Reference stability: `_features`, `_rowModels`, `columns`, and `data` should NOT be redefined on every render. Declare at module scope or memoize with `useMemo` / Angular `signal()` / Solid memo.
+        Reference stability: `features`, `rowModels`, `columns`, and `data` should NOT be redefined on every render. Declare at module scope or memoize with `useMemo` / Angular `signal()` / Solid memo.
       - |-
         Default selector trade-off: `(state) => state` matches v8 behavior but forces a re-render on any state change. Narrow it (`(state) => ({ sorting: state.sorting })`) once you've profiled.
       - |-
@@ -483,7 +483,7 @@ skills:
       - '@tanstack/svelte-table'
       - '@tanstack/preact-table'
     tasks:
-      - "Audit a project's `_features` declarations and remove any feature whose imports aren't actually wired up in column defs / state."
+      - "Audit a project's `features` declarations and remove any feature whose imports aren't actually wired up in column defs / state."
       - 'Replace `useTable(opts, (state) => state)` with a narrowed selector when only a subset of state is rendered at the table level.'
       - 'Wrap a noisy pagination footer (re-renders on every keystroke in a filter) in `<table.Subscribe selector={s => ({ pagination: s.pagination })}>` so it only re-renders on pagination changes.'
       - 'Move a `RowSelectionCount` component from reading `table.state.rowSelection` to `useSelector(table.atoms.rowSelection)` for the narrowest subscription surface.'
@@ -500,8 +500,8 @@ skills:
       } from '@tanstack/react-table'
 
       // Module-scope, stable identity:
-      const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-      const _rowModels = {
+      const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+      const rowModels = {
         sortedRowModel:    createSortedRowModel(sortFns),
         paginatedRowModel: createPaginatedRowModel(),
       }
@@ -509,7 +509,7 @@ skills:
       function MyTable({ data, columns }) {
         // ✓ narrow selector — re-renders only when these slices change
         const table = useTable(
-          { _features, _rowModels, columns, data },
+          { features, rowModels, columns, data },
           (state) => ({
             sorting:    state.sorting,
             pagination: state.pagination,
@@ -540,16 +540,16 @@ skills:
       // BAD #1: stockFeatures in a sort-only table.
       // Ships filtering, faceting, grouping, pinning, expanding, sizing,
       // resizing, visibility, ordering, row-selection, row-pinning code
-      // none of which is used. ~3x the necessary bundle for `_features`.
+      // none of which is used. ~3x the necessary bundle for `features`.
       import { useTable, stockFeatures } from '@tanstack/react-table'
-      const table = useTable({ _features: stockFeatures, /* ... */ })
+      const table = useTable({ features: stockFeatures, /* ... */ })
 
       // BAD #2: unstable references — every render is a new identity.
       function MyTable({ data, columns }) {
-        const _features = tableFeatures({ rowSortingFeature })  // new every render
+        const features = tableFeatures({ rowSortingFeature })  // new every render
         const opts = {                                           // new every render
-          _features,
-          _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+          features,
+          rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
           columns,                                               // hopefully stable
           data,
         }
@@ -576,7 +576,7 @@ skills:
       }
     failure_modes:
       - 'Using `stockFeatures` in production without auditing which features are actually rendered. Defeats the whole reason tree-shaking exists in v9. Replace with an explicit `tableFeatures({...})` listing only what your UI uses.'
-      - 'Declaring `_features`, `_rowModels`, or `columns` inside the component body without `useMemo`. Internal memoization keys off identity, so a new object every render forces full recomputation.'
+      - 'Declaring `features`, `rowModels`, or `columns` inside the component body without `useMemo`. Internal memoization keys off identity, so a new object every render forces full recomputation.'
       - "Putting `data` in `useState` and never memoizing the array literal that produces it. `setData(rows.filter(...))` returns a new array each call — that's fine; the FAQ pitfall is `data={[]}` or `data={rows ?? []}` in JSX, which creates a new identity each render."
       - 'Leaving `(state) => state` as the selector when only one component cares about one slice. The whole tree re-renders on every state change. Narrow the selector and/or use `<table.Subscribe>` boundaries.'
       - 'Forgetting that `<table.Subscribe>` still selects from `table.store.state` (the full state). For a single-slice subscription, `useSelector(table.atoms.<slice>)` is narrower and skips even constructing a state snapshot.'
@@ -641,7 +641,7 @@ skills:
       } from '@tanstack/react-table'
       import type { PaginationState, SortingState } from '@tanstack/react-table'
 
-      const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+      const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 
       function MyTable({ columns, data }) {
         const sortingAtom    = useCreateAtom<SortingState>([])
@@ -654,8 +654,8 @@ skills:
         const pagination = useSelector(paginationAtom)
 
         const table = useTable({
-          _features,
-          _rowModels: {
+          features,
+          rowModels: {
             sortedRowModel:    createSortedRowModel(sortFns),
             paginatedRowModel: createPaginatedRowModel(),
           },
@@ -679,7 +679,7 @@ skills:
       // BAD #1: passing the SAME slice via both `state` and `atoms`. Atoms
       // win silently and the `state` value is ignored — confusing to debug.
       useTable({
-        _features, _rowModels: {},
+        features, rowModels: {},
         columns, data,
         state: { sorting: localSorting },           // ignored
         onSortingChange: setLocalSorting,           // ignored
@@ -691,7 +691,7 @@ skills:
       // resets to initial. (The same trap as `useState(createAtom(...))`.)
       function MyTable() {
         const sortingAtom = createAtom<SortingState>([])  // wrong: unstable
-        useTable({ _features, _rowModels: {}, columns, data,
+        useTable({ features, rowModels: {}, columns, data,
                    atoms: { sorting: sortingAtom } })
       }
 
@@ -761,7 +761,7 @@ skills:
         from '@tanstack/react-table'
       import type { PaginationState } from '@tanstack/react-table'
 
-      const _features = tableFeatures({ rowPaginationFeature })
+      const features = tableFeatures({ rowPaginationFeature })
 
       function ServerTable({ columns }) {
         const paginationAtom = useCreateAtom<PaginationState>({
@@ -776,8 +776,8 @@ skills:
         })
 
         const table = useTable({
-          _features,
-          _rowModels: {},                               // server paginates
+          features,
+          rowModels: {},                               // server paginates
           columns,
           data: dataQuery.data?.rows ?? EMPTY,          // EMPTY is module-scope
           rowCount: dataQuery.data?.rowCount,
@@ -815,7 +815,7 @@ skills:
       - "Missing `rowCount`. `getPageCount()` falls back to `Math.ceil(data.length / pageSize)` which is 1 if the server already paginated. Pager UIs lock at 'Page 1 of 1'."
       - 'Forgetting to include pagination/sort/filter state in `queryKey`. Query has no other way to know its inputs changed; clicks on the pager update state but the query never refetches.'
       - 'Skipping `placeholderData: keepPreviousData`. Between pages the table collapses to 0 rows, the row container collapses, and the scroll position jumps.'
-      - 'Keeping `paginatedRowModel: createPaginatedRowModel()` registered in `_rowModels` for a server-paginated table. The factory ships in your bundle for nothing AND it competes with `manualPagination`.'
+      - 'Keeping `paginatedRowModel: createPaginatedRowModel()` registered in `rowModels` for a server-paginated table. The factory ships in your bundle for nothing AND it competes with `manualPagination`.'
       - 'Mixing `state.pagination` + `onPaginationChange` AND `atoms.pagination` for the same slice. `atoms` wins; the `state` plumbing is silently dead. Pick one.'
       - 'Forgetting `queryClient.invalidateQueries(...)` after mutations. The table is a downstream consumer — it has no way to know the server data changed unless Query tells it.'
       - 'Recreating `data: dataQuery.data?.rows ?? []` in JSX. The `?? []` produces a new array identity on every render — wrap with a module-scope `const EMPTY: Row[] = []` or `useMemo`.'
@@ -874,8 +874,8 @@ skills:
       function App() {
         const tableContainerRef = useRef<HTMLDivElement>(null)
         const table = useTable({
-          _features: { rowSortingFeature, columnSizingFeature },
-          _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+          features: { rowSortingFeature, columnSizingFeature },
+          rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
           columns, data,
         })
         return (
@@ -1024,8 +1024,8 @@ skills:
       // 2. Critical: flatten row type for form path-keys (avoids TS2589)
       type FormRow = Omit<Person, 'subRows'>
 
-      const _features = tableFeatures({ rowPaginationFeature, columnFilteringFeature })
-      const columnHelper = createColumnHelper<typeof _features, FormRow>()
+      const features = tableFeatures({ rowPaginationFeature, columnFilteringFeature })
+      const columnHelper = createColumnHelper<typeof features, FormRow>()
 
       function App() {
         const form = useAppForm({
@@ -1054,8 +1054,8 @@ skills:
         void dataLength
 
         const table = useTable({
-          _features,
-          _rowModels: {
+          features,
+          rowModels: {
             filteredRowModel:  createFilteredRowModel(filterFns),
             paginatedRowModel: createPaginatedRowModel(),
           },

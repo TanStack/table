@@ -56,8 +56,8 @@ skills:
         mechanism: 'When a slice is owned both ways, external atoms take precedence over external state. The on[State]Change callback may stop firing or write into a base atom whose value is shadowed by the external atom, producing surprising divergence.'
         wrong_pattern: |
           const table = useTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data,
             atoms: { pagination: paginationAtom },
@@ -67,8 +67,8 @@ skills:
         correct_pattern: |
           // Pick exactly one source of truth per slice.
           const table = useTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data,
             atoms: { pagination: paginationAtom },
@@ -141,8 +141,8 @@ skills:
         wrong_pattern: |
           const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
           const table = useTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data,
             state: { pagination },
@@ -153,8 +153,8 @@ skills:
         correct_pattern: |
           const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
           const table = useTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data,
             state: {
@@ -231,16 +231,16 @@ skills:
         wrong_pattern: |
           const [data] = createSignal(makeData(100))
           const table = createTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data: data(),
           })
         correct_pattern: |
           const [data] = createSignal(makeData(100))
           const table = createTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             get data() { return data() },
           })
@@ -318,8 +318,8 @@ skills:
         wrong_pattern: |
           let pagination = $state({ pageIndex: 0, pageSize: 10 })
           const table = createTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data,
             state: { pagination },
@@ -330,8 +330,8 @@ skills:
         correct_pattern: |
           let pagination = $state({ pageIndex: 0, pageSize: 10 })
           const table = createTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             get data() { return data },
             state: {
@@ -382,15 +382,15 @@ skills:
         mechanism: 'injectTable expects a () => options factory and reruns it when read signals change. Passing a plain object skips signal tracking and the table never resyncs when source signals update.'
         wrong_pattern: |
           readonly table = injectTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data: this.data(),
           })
         correct_pattern: |
           readonly table = injectTable(() => ({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data: this.data(),
           }))
@@ -451,22 +451,22 @@ skills:
         mechanism: 'TableController owns the underlying table instance and subscriptions. Constructing it in render creates fresh subscriptions and discards prior state every cycle, causing data loss and double-subscribed host updates.'
         wrong_pattern: |
           protected render() {
-            const tableController = new TableController<typeof _features, Person>(this)
+            const tableController = new TableController<typeof features, Person>(this)
             const table = tableController.table({
-              _features,
-              _rowModels: {},
+              features,
+              rowModels: {},
               columns,
               data: this._data,
             })
             return html`...`
           }
         correct_pattern: |
-          private tableController = new TableController<typeof _features, Person>(this)
+          private tableController = new TableController<typeof features, Person>(this)
 
           protected render() {
             const table = this.tableController.table({
-              _features,
-              _rowModels: {},
+              features,
+              rowModels: {},
               columns,
               data: this._data,
             })
@@ -506,7 +506,7 @@ skills:
           }
         correct_pattern: |
           // wire external atoms through table.atoms or maintain a separate subscription
-          private tableController = new TableController<typeof _features, Person>(this)
+          private tableController = new TableController<typeof features, Person>(this)
           private _externalAtom = createAtom({ count: 0 })
           private _unsub?: () => void
 
@@ -544,36 +544,36 @@ skills:
       - 'initialState'
       - 'createTableHook (createAppColumnHelper, useAppTable, useTableContext, useCellContext, useHeaderContext)'
     tasks:
-      - 'Set up useTable in Preact with stable references for data, columns, and _features.'
+      - 'Set up useTable in Preact with stable references for data, columns, and features.'
       - 'Optimize a large Preact table by passing () => null as the selector and subscribing lower in the tree.'
       - 'Build reusable component registries with createTableHook in Preact.'
     failure_modes:
-      - mistake: 'Recreating columns or _features on every render'
-        mechanism: 'Preact relies on stable references for table options. New columns or _features arrays each render force useTable to call setOptions and rebuild derived state, undoing the work selectors and Subscribe are meant to save.'
+      - mistake: 'Recreating columns or features on every render'
+        mechanism: 'Preact relies on stable references for table options. New columns or features arrays each render force useTable to call setOptions and rebuild derived state, undoing the work selectors and Subscribe are meant to save.'
         wrong_pattern: |
           function App({ data }) {
             const columns = [
               { accessorKey: 'firstName', header: 'First name' },
             ]
-            const _features = tableFeatures({})
+            const features = tableFeatures({})
             const table = useTable({
-              _features,
-              _rowModels: {},
+              features,
+              rowModels: {},
               columns,
               data,
             })
             return null
           }
         correct_pattern: |
-          const _features = tableFeatures({})
+          const features = tableFeatures({})
           const columns = [
             { accessorKey: 'firstName', header: 'First name' },
           ]
 
           function App({ data }) {
             const table = useTable({
-              _features,
-              _rowModels: {},
+              features,
+              rowModels: {},
               columns,
               data,
             })
@@ -613,8 +613,8 @@ skills:
         mechanism: 'External atoms take precedence over external state. Mixing them silently hides on[State]Change-driven setState writes and leaves React-style state stale.'
         wrong_pattern: |
           const table = useTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data,
             atoms: { pagination: paginationAtom },
@@ -624,8 +624,8 @@ skills:
         correct_pattern: |
           // Pick exactly one source of truth per slice.
           const table = useTable({
-            _features,
-            _rowModels: {},
+            features,
+            rowModels: {},
             columns,
             data,
             atoms: { pagination: paginationAtom },
@@ -897,17 +897,17 @@ skills:
         mechanism: 'TableController.addController and store subscriptions run in the constructor. Recreating it per render leaks subscriptions, drops the prior table instance (losing state), and double-triggers host updates.'
         wrong_pattern: |
           protected render() {
-            const controller = new TableController<typeof _features, Person>(this)
-            const table = controller.table({ _features, _rowModels: {}, columns, data: this._data })
+            const controller = new TableController<typeof features, Person>(this)
+            const table = controller.table({ features, rowModels: {}, columns, data: this._data })
             return html`...`
           }
         correct_pattern: |
-          private tableController = new TableController<typeof _features, Person>(this)
+          private tableController = new TableController<typeof features, Person>(this)
 
           protected render() {
             const table = this.tableController.table({
-              _features,
-              _rowModels: {},
+              features,
+              rowModels: {},
               columns,
               data: this._data,
             })

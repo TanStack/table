@@ -27,7 +27,7 @@ import type {
 } from '@tanstack/vue-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowExpandingFeature,
   rowPaginationFeature,
@@ -35,7 +35,7 @@ const _features = tableFeatures({
   rowSelectionFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const IndeterminateCheckbox = defineComponent({
   name: 'IndeterminateCheckbox',
@@ -67,8 +67,8 @@ const IndeterminateCheckbox = defineComponent({
 })
 
 function renderFilter(
-  column: Column<typeof _features, Person>,
-  table: Table<typeof _features, Person>,
+  column: Column<typeof features, Person>,
+  table: Table<typeof features, Person>,
 ) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -196,8 +196,8 @@ export default defineComponent({
     ])
 
     const table = useTable({
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         expandedRowModel: createExpandedRowModel(),
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
@@ -226,10 +226,10 @@ export default defineComponent({
           <thead>
             {table
               .getHeaderGroups()
-              .map((headerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <div>
@@ -248,11 +248,11 @@ export default defineComponent({
           <tbody>
             {table
               .getRowModel()
-              .rows.map((row: Row<typeof _features, Person>) => (
+              .rows.map((row: Row<typeof features, Person>) => (
                 <tr key={row.id}>
                   {row
                     .getAllCells()
-                    .map((cell: Cell<typeof _features, Person, unknown>) => (
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
                       <td key={cell.id}>
                         <FlexRender cell={cell} />
                       </td>

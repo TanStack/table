@@ -115,14 +115,14 @@ function createStateProxy<
  * ```ts
  * // Register only the features you need
  * import {tableFeatures, rowPaginationFeature} from '@tanstack/angular-table';
- * const _features = tableFeatures({
+ * const features = tableFeatures({
  *  rowPaginationFeature,
  *  // ...all other features you need
  * })
  *
  * // Use all table core features
  * import {stockFeatures} from '@tanstack/angular-table';
- * const _features = tableFeatures(stockFeatures);
+ * const features = tableFeatures(stockFeatures);
  * ```
  * 2. Prepare the table columns
  * ```ts
@@ -130,13 +130,13 @@ function createStateProxy<
  *
  * type MyData = {}
  *
- * const columns: ColumnDef<typeof _features, MyData>[] = [
+ * const columns: ColumnDef<typeof features, MyData>[] = [
  *   // ...column definitions
  * ]
  *
  * // or using createColumnHelper
  * import {createColumnHelper} from '@tanstack/angular-table';
- * const columnHelper = createColumnHelper<typeof _features, MyData>();
+ * const columnHelper = createColumnHelper<typeof features, MyData>();
  * const columns = columnHelper.columns([
  *  columnHelper.accessor(...),
  *  // ...other columns
@@ -146,7 +146,7 @@ function createStateProxy<
  * ```ts
  * const table = injectTable(() => {
  *   // ...table options,
- *   _features,
+ *   features,
  *   columns: columns,
  *   data: myDataSignal(),
  * })
@@ -168,9 +168,9 @@ export function injectTable<
     lazyInit(() => {
       const table = constructTable({
         ...options(),
-        _features: {
+        features: {
           coreReativityFeature: angularReactivity(injector),
-          ...options()._features,
+          ...options().features,
         },
       }) as AngularTable<TFeatures, TData>
 

@@ -50,14 +50,14 @@ An Angular-reactive TanStack Table instance.
 ```ts
 // Register only the features you need
 import {tableFeatures, rowPaginationFeature} from '@tanstack/angular-table';
-const _features = tableFeatures({
+const features = tableFeatures({
  rowPaginationFeature,
  // ...all other features you need
 })
 
 // Use all table core features
 import {stockFeatures} from '@tanstack/angular-table';
-const _features = tableFeatures(stockFeatures);
+const features = tableFeatures(stockFeatures);
 ```
 2. Prepare the table columns
 ```ts
@@ -65,13 +65,13 @@ import {ColumnDef} from '@tanstack/angular-table';
 
 type MyData = {}
 
-const columns: ColumnDef<typeof _features, MyData>[] = [
+const columns: ColumnDef<typeof features, MyData>[] = [
   // ...column definitions
 ]
 
 // or using createColumnHelper
 import {createColumnHelper} from '@tanstack/angular-table';
-const columnHelper = createColumnHelper<typeof _features, MyData>();
+const columnHelper = createColumnHelper<typeof features, MyData>();
 const columns = columnHelper.columns([
  columnHelper.accessor(...),
  // ...other columns
@@ -81,7 +81,7 @@ const columns = columnHelper.columns([
 ```ts
 const table = injectTable(() => {
   // ...table options,
-  _features,
+  features,
   columns: columns,
   data: myDataSignal(),
 })

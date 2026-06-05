@@ -23,9 +23,9 @@
 
   const fetchSize = 50
 
-  const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+  const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.accessor('id', {
@@ -111,8 +111,8 @@
   })
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     get data() {
       return flatData
     },

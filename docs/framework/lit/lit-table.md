@@ -4,7 +4,7 @@ title: Lit Table
 
 The `@tanstack/lit-table` adapter wraps `@tanstack/table-core` with a Lit `ReactiveController`, rendering helpers, and types. `TableController` installs the Lit `coreReativityFeature` for you, so TanStack Store atom changes can request Lit host updates.
 
-TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
+TanStack Table v9 is explicit about what a table uses. Register features with `features`, and register client-side row model factories with `rowModels`. The core row model is included by default, so a basic table can use `rowModels: {}`.
 
 ## Creating a Table
 
@@ -25,9 +25,9 @@ type Person = {
   age: number
 }
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First name',
@@ -37,15 +37,15 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 @customElement('people-table')
 export class PeopleTable extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   @state()
   private data: Person[] = []
 
   protected render() {
     const table = this.tableController.table({
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data: this.data,
     })
@@ -55,7 +55,7 @@ export class PeopleTable extends LitElement {
 }
 ```
 
-For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
+For feature-specific row models, register the feature and put the row model factory under `rowModels`.
 
 ```ts
 import {
@@ -67,14 +67,14 @@ import {
   tableFeatures,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const tableOptions = {
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -96,7 +96,7 @@ import {
   type PaginationState,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -106,8 +106,8 @@ const paginationAtom = createAtom<PaginationState>({
 })
 
 const table = this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: this.data,
   atoms: {
@@ -140,14 +140,14 @@ return html`
 
 ## createTableHook
 
-`createTableHook` creates app-specific Lit table helpers. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
+`createTableHook` creates app-specific Lit table helpers. Use it when multiple tables should share `features`, `rowModels`, default options, column helpers, and component conventions.
 
 ```ts
 import { createTableHook, tableFeatures } from '@tanstack/lit-table'
 
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({}),
-  _rowModels: {},
+  features: tableFeatures({}),
+  rowModels: {},
 })
 
 const columnHelper = createAppColumnHelper<Person>()

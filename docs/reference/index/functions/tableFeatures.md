@@ -35,6 +35,6 @@ Use this utility to make it easier to have the correct type inference for the fe
 
 ```
 import { tableFeatures, columnVisibilityFeature, rowPinningFeature } from '@tanstack/react-table'
-const _features = tableFeatures({ columnVisibilityFeature, rowPinningFeature });
-const table = useTable({ _features, rowModels: {}, columns, data });
+const features = tableFeatures({ columnVisibilityFeature, rowPinningFeature });
+const table = useTable({ features, rowModels: {}, columns, data });
 ```

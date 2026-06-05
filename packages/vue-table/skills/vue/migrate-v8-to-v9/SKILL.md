@@ -2,9 +2,9 @@
 name: vue/migrate-v8-to-v9
 description: >
   Mechanical breaking-change migration from `@tanstack/vue-table` v8 to v9. Rename `useVueTable`
-  → `useTable`, move `getCoreRowModel`/`getSortedRowModel`/etc. options into `_rowModels`
-  factories, add the mandatory `_features` via `tableFeatures({...})`, update
-  `createColumnHelper<TData>()` → `createColumnHelper<typeof _features, TData>()`, rename
+  → `useTable`, move `getCoreRowModel`/`getSortedRowModel`/etc. options into `rowModels`
+  factories, add the mandatory `features` via `tableFeatures({...})`, update
+  `createColumnHelper<TData>()` → `createColumnHelper<typeof features, TData>()`, rename
   `sortingFn`/`sortingFns` → `sortFn`/`sortFns`, swap `table.getState()` for `table.state`
   / `table.state` / `table.atoms.<slice>.get()`, and prefer `<FlexRender :cell="cell" />` over the
   legacy `:render`/`:props` shape. Vue has NO `/legacy` entrypoint — migration is a direct
@@ -89,15 +89,15 @@ import {
   useTable,
 } from '@tanstack/vue-table'
 
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('age', { header: 'Age', sortFn: 'alphanumeric' }), // sortingFn → sortFn
 ])
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -118,11 +118,11 @@ const table = useTable({
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `useVueTable(opts)`                                                                       | `useTable(opts, selector?)`                                                           |
 | `getCoreRowModel: getCoreRowModel()`                                                      | implicit; not an option                                                               |
-| `getSortedRowModel: getSortedRowModel()`                                                  | `_rowModels: { sortedRowModel: createSortedRowModel(sortFns) }`                       |
-| `getFilteredRowModel: getFilteredRowModel()`                                              | `_rowModels: { filteredRowModel: createFilteredRowModel(filterFns) }`                 |
-| `getPaginationRowModel: getPaginationRowModel()`                                          | `_rowModels: { paginatedRowModel: createPaginatedRowModel() }`                        |
-| `getGroupedRowModel: getGroupedRowModel()`                                                | `_rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) }`              |
-| `createColumnHelper<TData>()`                                                             | `createColumnHelper<typeof _features, TData>()`                                       |
+| `getSortedRowModel: getSortedRowModel()`                                                  | `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }`                        |
+| `getFilteredRowModel: getFilteredRowModel()`                                              | `rowModels: { filteredRowModel: createFilteredRowModel(filterFns) }`                  |
+| `getPaginationRowModel: getPaginationRowModel()`                                          | `rowModels: { paginatedRowModel: createPaginatedRowModel() }`                         |
+| `getGroupedRowModel: getGroupedRowModel()`                                                | `rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) }`               |
+| `createColumnHelper<TData>()`                                                             | `createColumnHelper<typeof features, TData>()`                                        |
 | `ColumnDef<TData, TValue>`                                                                | `ColumnDef<TFeatures, TData, TValue>`                                                 |
 | `Column<TData, TValue>` / `Row<TData>` / `Cell<TData, TValue>`                            | `…<TFeatures, TData, TValue>`                                                         |
 | `sortingFn` (column def)                                                                  | `sortFn`                                                                              |
@@ -143,13 +143,13 @@ non-Vue-specific renames are shared across adapters).
 
 ## Core Patterns
 
-### 1. Convert `getXRowModel` options to `_rowModels` factories
+### 1. Convert `getXRowModel` options to `rowModels` factories
 
 Every row-model factory now requires its `*Fns` parameter — this is what makes the registries
 tree-shakeable in v9.
 
 ```ts
-_rowModels: {
+rowModels: {
   sortedRowModel:    createSortedRowModel(sortFns),
   filteredRowModel:  createFilteredRowModel(filterFns),
   paginatedRowModel: createPaginatedRowModel(),
@@ -162,7 +162,7 @@ The `*Fns` registries are open-ended; do not cite a number of built-in fns.
 
 ### 2. Add `tableFeatures` and register every feature you use
 
-If a feature isn't in `_features`, its API isn't on the table (TS error AND runtime
+If a feature isn't in `features`, its API isn't on the table (TS error AND runtime
 `undefined`). This is v9's biggest behavioral change.
 
 ```ts
@@ -174,7 +174,7 @@ import {
   tableFeatures,
 } from '@tanstack/vue-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
@@ -213,8 +213,8 @@ The Vue-specific rule is that each `state.<slice>` must be a **getter** so Vue t
 const sorting = ref<SortingState>([])
 
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: {
@@ -270,20 +270,20 @@ mechanical.
 ```ts
 // ❌ v8 muscle memory.
 const table = useTable({
-  _features,
+  features,
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
 })
 
-// ✅ Core row model is implicit. `_rowModels: {}` is fine.
-const table = useTable({ _features, _rowModels: {}, columns, data })
+// ✅ Core row model is implicit. `rowModels: {}` is fine.
+const table = useTable({ features, rowModels: {}, columns, data })
 ```
 
-### Forgetting `_features` (CRITICAL)
+### Forgetting `features` (CRITICAL)
 
-`_features` is required even for a no-features migration. Pass `tableFeatures({})` for empty,
-or list everything you use. Without it: `'_features' is missing in type`.
+`features` is required even for a no-features migration. Pass `tableFeatures({})` for empty,
+or list everything you use. Without it: `'features' is missing in type`.
 
 ### Wrong `createColumnHelper` generic arity (CRITICAL)
 
@@ -292,11 +292,11 @@ or list everything you use. Without it: `'_features' is missing in type`.
 const columnHelper = createColumnHelper<Person>()
 
 // ✅ v9
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
-Same applies to type annotations: `ColumnDef<typeof _features, Person>`,
-`Row<typeof _features, Person>`, `Cell<typeof _features, Person, unknown>`.
+Same applies to type annotations: `ColumnDef<typeof features, Person>`,
+`Row<typeof features, Person>`, `Cell<typeof features, Person, unknown>`.
 
 ### Forgetting to pass `sortFns` / `filterFns` to row-model factories (CRITICAL)
 
@@ -371,5 +371,5 @@ etc.
 - `tanstack-table/vue/getting-started` — the v9 minimum-viable shape
 - `tanstack-table/vue/table-state` — reactivity model + reading state
 - `tanstack-table/vue/production-readiness` — finish the migration with bundle + identity audits
-- `tanstack-table/table-core/setup` — `_features` / `_rowModels` deep dive
+- `tanstack-table/table-core/setup` — `features` / `rowModels` deep dive
 - `tanstack-table/table-core/column-definitions` — column helper + generics

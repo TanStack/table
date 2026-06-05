@@ -41,7 +41,7 @@ v8 name `useVueTable` no longer exists.
 
 ## Setup
 
-Every Vue table call requires `_features` (built from `tableFeatures({...})`) and `_rowModels`.
+Every Vue table call requires `features` (built from `tableFeatures({...})`) and `rowModels`.
 Core row model is automatic; only register `paginatedRowModel`, `sortedRowModel`, etc. when you
 use the matching feature.
 
@@ -61,8 +61,8 @@ import {
 type Person = { firstName: string; lastName: string; age: number }
 
 // Stable identity — declare outside the component or at module scope.
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
   columnHelper.accessor('lastName', { header: 'Last' }),
@@ -72,8 +72,8 @@ const columns = columnHelper.columns([
 const data = ref<Person[]>([])
 
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   // Reactive data: pass the ref directly OR a getter — the adapter unwraps.
   data,
@@ -132,8 +132,8 @@ const snapshot = table.state
 // (c) Vue selected state — the value returned from useTable's 2nd arg
 const table = useTable(
   {
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
   },
@@ -142,7 +142,7 @@ const table = useTable(
 table.state.sorting // typed, reactive
 ```
 
-`table.atoms.<slice>` only contains slices for features registered in `_features`. If
+`table.atoms.<slice>` only contains slices for features registered in `features`. If
 `rowSortingFeature` is not registered, `table.atoms.sorting` is `undefined` (and TypeScript
 flags it). This is the v9-specific "missing API" gotcha — register the feature first.
 
@@ -155,12 +155,12 @@ The adapter accepts a `ref`/`computed` for any option. The idiomatic shapes are:
 ```ts
 // (a) Pass the ref directly — adapter unwraps via `unref()`
 const data = ref(makeData(100))
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const table = useTable({ features, rowModels: {}, columns, data })
 
 // (b) Use a getter when `data` is owned by a parent object
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return data.value
@@ -170,8 +170,8 @@ const table = useTable({
 // (c) Computed when filtering/derivation lives on the client
 const filtered = computed(() => data.value.filter(/* … */))
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return filtered.value
@@ -199,7 +199,7 @@ import {
   type PaginationState,
 } from '@tanstack/vue-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 const paginationAtom = createAtom<PaginationState>({
   pageIndex: 0,
@@ -209,8 +209,8 @@ const pagination = useSelector(paginationAtom) // reactive ref-like
 
 const data = ref([] as Person[])
 const table = useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -239,8 +239,8 @@ const sorting = ref<SortingState>([])
 const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -301,8 +301,8 @@ return () => (
 // ❌ Captures the ref object; later `pagination.value = …` writes are invisible.
 const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: { pagination },
@@ -310,8 +310,8 @@ const table = useTable({
 
 // ✅ Use a getter so Vue tracks `.value`.
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: {
@@ -350,19 +350,19 @@ import { useVueTable } from '@tanstack/vue-table'
 import { useTable } from '@tanstack/vue-table'
 ```
 
-### "API missing" because the feature is not in `_features` (CRITICAL, v9-specific)
+### "API missing" because the feature is not in `features` (CRITICAL, v9-specific)
 
 ```ts
 // ❌ `rowSortingFeature` not registered → `table.setSorting` and `table.atoms.sorting` do not exist.
-const _features = tableFeatures({})
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({})
+const table = useTable({ features, rowModels: {}, columns, data })
 table.setSorting([{ id: 'age', desc: true }]) // TS error / runtime no-op
 
 // ✅ Register the feature; add the matching row model factory if it's a row-model feature.
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -388,9 +388,9 @@ nearly every state transition.
 `sortingFn` instead of `sortFn` — all v8 shapes that will not compile. See
 `migrate-v8-to-v9` for the full rename list.
 
-### Unstable `_features` / `columns` / `data` identity
+### Unstable `features` / `columns` / `data` identity
 
-Declare `_features`, `columnHelper`, and `columns` **outside** `<script setup>` (at module
+Declare `features`, `columnHelper`, and `columns` **outside** `<script setup>` (at module
 scope) or use `computed`. Recreating them every render churns the table's option diff watcher
 and triggers a `setOptions` on every render — slow, and external atom slices can flicker.
 

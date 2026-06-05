@@ -8,9 +8,9 @@ Reference material extracted from the getting-started SKILL.md.
 
 Every opt-in v9 feature has two pieces:
 
-1. The **feature** itself in `_features` — adds APIs (e.g.
+1. The **feature** itself in `features` — adds APIs (e.g.
    `column.toggleSorting()`) and the matching state slice.
-2. A **row-model factory** in `_rowModels` — produces the derived row output.
+2. A **row-model factory** in `rowModels` — produces the derived row output.
    Without it, sort/filter/paginate UI updates but rows don't reorder.
 
 | Feature                                                                                                                                              | Row model needed                                                                             |
@@ -35,7 +35,7 @@ Every opt-in v9 feature has two pieces:
 const columnHelper = createColumnHelper<Person>()
 
 // ✅ v9 — features first
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
 Or use `createAppColumnHelper<Person>()` from a `createTableHook(...)` factory,

@@ -20,14 +20,14 @@ import ColumnFilter from './ColumnFilter'
 import type { Person } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -88,8 +88,8 @@ function App() {
   const stressTest = () => setData(makeData(200_000))
 
   const table = createTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),

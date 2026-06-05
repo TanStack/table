@@ -3,8 +3,8 @@ name: solid/migrate-v8-to-v9
 description: >
   Mechanical breaking-change migration from `@tanstack/solid-table` v8 to v9.
   Renames (`createSolidTable` → `createTable`, `getCoreRowModel`/`getSortedRowModel`/...
-  → `_rowModels` + factories), new required `_features` registration via
-  `tableFeatures()`, two-generic `createColumnHelper<typeof _features, TData>`,
+  → `rowModels` + factories), new required `features` registration via
+  `tableFeatures()`, two-generic `createColumnHelper<typeof features, TData>`,
   the v9 atom state model, and the lack of a `/legacy` entrypoint for Solid
   (full rewrite, no `useLegacyTable`).
 type: lifecycle
@@ -31,30 +31,30 @@ direct rewrite. Plan to do it incrementally per table, not per file.
 ## What changed (high-level)
 
 1. **Adapter API renamed.** `createSolidTable(...)` → `createTable(...)`.
-2. **Features must be registered.** v9 introduced `_features` via `tableFeatures({...})`. Without it, feature APIs and state slices don't exist (TS error + runtime undefined).
-3. **Row models moved to `_rowModels`.** No more top-level `getCoreRowModel: getCoreRowModel()` options; instead `_rowModels: { paginatedRowModel: createPaginatedRowModel(), ... }`.
+2. **Features must be registered.** v9 introduced `features` via `tableFeatures({...})`. Without it, feature APIs and state slices don't exist (TS error + runtime undefined).
+3. **Row models moved to `rowModels`.** No more top-level `getCoreRowModel: getCoreRowModel()` options; instead `rowModels: { paginatedRowModel: createPaginatedRowModel(), ... }`.
 4. **State is atom-based.** Powered by TanStack Store. The classic `state`+`on*Change` pattern still works for compatibility, but `atoms` is the new recommended hand-off for per-slice external ownership.
-5. **`createColumnHelper` takes two generics.** `createColumnHelper<typeof _features, TData>()` (features first).
+5. **`createColumnHelper` takes two generics.** `createColumnHelper<typeof features, TData>()` (features first).
 6. **Some method/option renames.** Most notably `sortingFn` → `sortFn`; the `*Fns` registries (`sortFns`, `filterFns`, `aggregationFns`) are now passed to row-model factories.
 7. **No `onStateChange` top-level callback.** Use per-slice `on[State]Change` paired with `state.<slice>`, or use `atoms`.
 
 ## Rename map
 
-| v8 (Solid)                                                                 | v9 (Solid)                                                                                                  |
-| -------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `createSolidTable(options)`                                                | `createTable(options, selector?)`                                                                           |
-| `getCoreRowModel: getCoreRowModel()`                                       | (core row model included by default; pass `_rowModels: {}`)                                                 |
-| `getSortedRowModel: getSortedRowModel()`                                   | `_rowModels: { sortedRowModel: createSortedRowModel(sortFns) }` + register `rowSortingFeature`              |
-| `getFilteredRowModel: getFilteredRowModel()`                               | `_rowModels: { filteredRowModel: createFilteredRowModel(filterFns) }` + register `columnFilteringFeature`   |
-| `getPaginationRowModel: getPaginationRowModel()`                           | `_rowModels: { paginatedRowModel: createPaginatedRowModel() }` + register `rowPaginationFeature`            |
-| `getGroupedRowModel: getGroupedRowModel()`                                 | `_rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) }` + register `columnGroupingFeature` |
-| `getExpandedRowModel: getExpandedRowModel()`                               | `_rowModels: { expandedRowModel: createExpandedRowModel() }` + register `rowExpandingFeature`               |
-| `getFacetedRowModel` / `getFacetedUniqueValues` / `getFacetedMinMaxValues` | `_rowModels: { facetedRowModel, facetedUniqueValues, facetedMinMaxValues }` + faceting features             |
-| `createColumnHelper<TData>()`                                              | `createColumnHelper<typeof _features, TData>()`                                                             |
-| `sortingFn: 'alphanumeric'` on a column                                    | `sortFn: 'alphanumeric'` on a column                                                                        |
-| `onStateChange` (whole-state)                                              | (gone — use per-slice `on*Change` or `atoms`)                                                               |
-| `state: { ... }` + `onStateChange`                                         | `state: { ... }` + `on[State]Change`, OR `atoms: { ... }`                                                   |
-| (no atoms)                                                                 | `atoms: { sorting: someAtom, pagination: someAtom, ... }`                                                   |
+| v8 (Solid)                                                                 | v9 (Solid)                                                                                                 |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| `createSolidTable(options)`                                                | `createTable(options, selector?)`                                                                          |
+| `getCoreRowModel: getCoreRowModel()`                                       | (core row model included by default; pass `rowModels: {}`)                                                 |
+| `getSortedRowModel: getSortedRowModel()`                                   | `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }` + register `rowSortingFeature`              |
+| `getFilteredRowModel: getFilteredRowModel()`                               | `rowModels: { filteredRowModel: createFilteredRowModel(filterFns) }` + register `columnFilteringFeature`   |
+| `getPaginationRowModel: getPaginationRowModel()`                           | `rowModels: { paginatedRowModel: createPaginatedRowModel() }` + register `rowPaginationFeature`            |
+| `getGroupedRowModel: getGroupedRowModel()`                                 | `rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) }` + register `columnGroupingFeature` |
+| `getExpandedRowModel: getExpandedRowModel()`                               | `rowModels: { expandedRowModel: createExpandedRowModel() }` + register `rowExpandingFeature`               |
+| `getFacetedRowModel` / `getFacetedUniqueValues` / `getFacetedMinMaxValues` | `rowModels: { facetedRowModel, facetedUniqueValues, facetedMinMaxValues }` + faceting features             |
+| `createColumnHelper<TData>()`                                              | `createColumnHelper<typeof features, TData>()`                                                             |
+| `sortingFn: 'alphanumeric'` on a column                                    | `sortFn: 'alphanumeric'` on a column                                                                       |
+| `onStateChange` (whole-state)                                              | (gone — use per-slice `on*Change` or `atoms`)                                                              |
+| `state: { ... }` + `onStateChange`                                         | `state: { ... }` + `on[State]Change`, OR `atoms: { ... }`                                                  |
+| (no atoms)                                                                 | `atoms: { sorting: someAtom, pagination: someAtom, ... }`                                                  |
 
 ## Before → after
 
@@ -119,12 +119,12 @@ import {
 } from '@tanstack/solid-table'
 import { For, createSignal } from 'solid-js'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First Name' }),
@@ -135,8 +135,8 @@ function App(props: { data: Person[] }) {
   const [sorting, setSorting] = createSignal<SortingState>([])
 
   const table = createTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -197,8 +197,8 @@ table.state().sorting
   const sortingAtom = createAtom<SortingState>([])
 
   createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     get data() {
       return data()
@@ -236,21 +236,21 @@ On columns, the option name is now `sortFn`, `filterFn`, `aggregationFn`
 
 ## Failure modes
 
-### CRITICAL — `_features` missing → API gone
+### CRITICAL — `features` missing → API gone
 
 The single biggest v8→v9 trap. `table.setSorting` won't exist unless
-`rowSortingFeature` is in `_features`. Likewise for every other feature. v8 had
+`rowSortingFeature` is in `features`. Likewise for every other feature. v8 had
 no such requirement.
 
 ### CRITICAL — `getCoreRowModel: getCoreRowModel()` pattern
 
 v9 has no such option. The core row model is included by default. Move every
-`get*RowModel` option to a key under `_rowModels` and call the matching
+`get*RowModel` option to a key under `rowModels` and call the matching
 `create*RowModel()` factory. Don't leave the v8 options in place.
 
 ### CRITICAL — `createColumnHelper<Person>()` missing the features generic
 
-v8: `createColumnHelper<Person>()`. v9: `createColumnHelper<typeof _features, Person>()`.
+v8: `createColumnHelper<Person>()`. v9: `createColumnHelper<typeof features, Person>()`.
 Forgetting the first generic gives bad inference and broken cell typing.
 
 ### HIGH — `createSolidTable` no longer exists

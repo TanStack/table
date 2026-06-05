@@ -20,8 +20,8 @@ import { makeData } from './makeData'
 import type { ElementRef } from '@angular/core'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('id', {
@@ -74,9 +74,9 @@ export class App {
   readonly scrollContainer =
     viewChild<ElementRef<HTMLDivElement>>('scrollContainer')
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data: this.data(),
     debugTable: true,

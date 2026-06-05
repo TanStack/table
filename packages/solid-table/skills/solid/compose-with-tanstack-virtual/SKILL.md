@@ -54,14 +54,14 @@ import {
 } from '@tanstack/solid-virtual'
 import { For, createSignal } from 'solid-js'
 
-const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
 
 function App() {
   const [data] = createSignal(makeData(200_000))
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     get data() {
       return data()
@@ -73,7 +73,7 @@ function App() {
 
 // Keep the virtualizer + scroll container ref in the SAME component.
 function VirtualizedTable(props: {
-  table: SolidTable<typeof _features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   let tableContainerRef: HTMLDivElement | undefined
 
@@ -153,10 +153,10 @@ function VirtualizedTable(props: {
 }
 
 function TableBodyRow(props: {
-  row: Row<typeof _features, Person>
+  row: Row<typeof features, Person>
   virtualRow: VirtualItem
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
-  table: SolidTable<typeof _features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   return (
     <tr
@@ -281,4 +281,4 @@ state at all — they are already tracking their own atoms.
 ### LOW — column sizing without `columnSizingFeature` registered
 
 The example uses `header.getSize()` and `cell.column.getSize()`, which require
-`columnSizingFeature` in `_features`. Without it those APIs are missing.
+`columnSizingFeature` in `features`. Without it those APIs are missing.

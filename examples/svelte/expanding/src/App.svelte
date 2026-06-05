@@ -21,7 +21,7 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnFilteringFeature,
     rowExpandingFeature,
     rowPaginationFeature,
@@ -29,7 +29,7 @@
     rowSelectionFeature,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   // Svelte action to set indeterminate property on checkbox inputs
   function setIndeterminate(node: HTMLInputElement, value: boolean) {
@@ -78,8 +78,8 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         expandedRowModel: createExpandedRowModel(),
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
@@ -254,7 +254,7 @@
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>
 
-{#snippet Filter(column: Column<typeof _features, Person>, table: SvelteTable<typeof _features, Person>)}
+{#snippet Filter(column: Column<typeof features, Person>, table: SvelteTable<typeof features, Person>)}
   {@const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)}

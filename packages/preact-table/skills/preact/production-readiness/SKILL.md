@@ -2,8 +2,8 @@
 name: preact/production-readiness
 description: >
   Ship-ready optimizations for `@tanstack/preact-table` v9: tree-shake the
-  bundle by registering ONLY the `_features` you actually use; memoize
-  `_features`, `data`, and `columns` for stable identity; replace
+  bundle by registering ONLY the `features` you actually use; memoize
+  `features`, `data`, and `columns` for stable identity; replace
   `(state) => state` with narrow selectors or per-slice `useSelector`
   subscriptions; wrap hot subtrees in `<table.Subscribe>`; and prefer slice
   atoms over `state` + `on*Change` for fine-grained updates. Routing keywords:
@@ -27,13 +27,13 @@ sources:
 
 This skill collects the production-readiness levers for a Preact v9 table. Each one is independent — apply only the ones whose problem you actually have.
 
-## 1. Tree-Shake `_features`
+## 1. Tree-Shake `features`
 
-Only register features the table actually uses. v9's bundle savings come from `_features` controlling which feature code (and which state slices and APIs) get included.
+Only register features the table actually uses. v9's bundle savings come from `features` controlling which feature code (and which state slices and APIs) get included.
 
 ```tsx
 // Bad — pulls every feature into the bundle even if the UI never uses them.
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
@@ -51,32 +51,32 @@ const _features = tableFeatures({
 })
 
 // Good — feature list matches what the UI exposes.
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
 })
 ```
 
-Same idea for `_rowModels` — only register the row-model factory for features that need one and that you have registered.
+Same idea for `rowModels` — only register the row-model factory for features that need one and that you have registered.
 
 Source: `docs/guide/features.md`; `docs/framework/preact/preact-table.md`.
 
-## 2. Stable References for `_features`, `columns`, `data`, `_rowModels`
+## 2. Stable References for `features`, `columns`, `data`, `rowModels`
 
 Identity drives every internal memo. Declare these at module scope when possible; otherwise wrap with `useMemo`.
 
 ```tsx
 // Best — module scope. Single allocation.
-const _features = tableFeatures({ rowSortingFeature })
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const features = tableFeatures({ rowSortingFeature })
+const columns: Array<ColumnDef<typeof features, Person>> = [
   /* … */
 ]
 const EMPTY: Person[] = []
 
 function MyTable({ rows }: { rows: Person[] | undefined }) {
   const data = rows ?? EMPTY
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 
 // Okay — useMemo for dynamic columns.
@@ -181,8 +181,8 @@ Use `initialState` for starting values. Setting state in an effect after mount t
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     /* … */
   },
   columns,
@@ -198,7 +198,7 @@ Source: `docs/framework/preact/guide/table-state.md`.
 
 ## 7. Reach for `createTableHook` for Multi-Table Apps
 
-When several screens share the same `_features`, `_rowModels`, and conventions, `createTableHook` centralizes the configuration and lets you ship pre-bound cell/header components. Tables collapse to columns + data.
+When several screens share the same `features`, `rowModels`, and conventions, `createTableHook` centralizes the configuration and lets you ship pre-bound cell/header components. Tables collapse to columns + data.
 
 Source: `docs/framework/preact/guide/create-table-hook.md`.
 
@@ -210,22 +210,22 @@ Wrong:
 
 ```tsx
 function MyTable() {
-  const _features = tableFeatures({ rowSortingFeature }) // new object every render
-  useTable({ _features, _rowModels: {}, columns, data })
+  const features = tableFeatures({ rowSortingFeature }) // new object every render
+  useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature }) // module scope
+const features = tableFeatures({ rowSortingFeature }) // module scope
 
 function MyTable() {
-  useTable({ _features, _rowModels: {}, columns, data })
+  useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
-A new `_features` reference each render busts every memo that keys off it.
+A new `features` reference each render busts every memo that keys off it.
 Source: `docs/framework/preact/guide/table-state.md` (FAQ #1).
 
 ### CRITICAL Reimplementing built-ins manually
@@ -239,10 +239,10 @@ const sorted = useMemo(() => [...data].sort(/* … */), [data, sorting])
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })

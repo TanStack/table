@@ -71,12 +71,12 @@ export interface TableOptions_Table<
    * Feature registration controls which state slices, options, and prototype
    * APIs are available.
    */
-  readonly _features: TFeatures
+  readonly features: TFeatures
   /**
    * Row model factories used by features such as filtering, grouping, sorting,
    * expansion, and pagination.
    */
-  readonly _rowModels?: CreateRowModels_All<TFeatures, TData>
+  readonly rowModels?: CreateRowModels_All<TFeatures, TData>
   /**
    * Optionally, provide your own external writable atoms for individual state slices.
    * When an atom is provided for a given slice, it takes precedence over `options.state[key]`

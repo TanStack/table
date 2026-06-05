@@ -50,8 +50,8 @@ helpers without repeating the same feature and component generics.
 
 ```ts
 const { injectAppTable, createAppColumnHelper } = createTableHook({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   tableComponents: {},
   cellComponents: {},
   headerComponents: {},

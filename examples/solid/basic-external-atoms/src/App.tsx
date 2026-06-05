@@ -21,12 +21,12 @@ import type { PaginationState, SortingState } from '@tanstack/solid-table'
 // reactive cell — you can read, write, or subscribe to it from anywhere,
 // which makes it convenient for sharing state across components or modules.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -71,8 +71,8 @@ function App() {
   // Create the table and pass your per-slice external atoms.
   const table = createTable({
     key: 'basic-external-atoms', // needed for devtools
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },

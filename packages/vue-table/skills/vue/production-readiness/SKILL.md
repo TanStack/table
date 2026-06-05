@@ -2,8 +2,8 @@
 name: vue/production-readiness
 description: >
   Ship-ready optimizations for `@tanstack/vue-table` v9. Tree-shake by listing ONLY the
-  `_features` you actually render — never default to `stockFeatures`. Keep `_features`,
-  `_rowModels`, `columnHelper`, and `columns` at module scope for stable identity (Vue
+  `features` you actually render — never default to `stockFeatures`. Keep `features`,
+  `rowModels`, `columnHelper`, and `columns` at module scope for stable identity (Vue
   re-evaluates the `<script setup>` block per component instance — declare these outside or in
   a const). Use the `useTable(opts, selector)` second argument or per-slice `computed(() =>
   table.atoms.<slice>.get())` / `useSelector(table.atoms.<slice>)` from `@tanstack/vue-store`
@@ -49,12 +49,12 @@ import {
   tableFeatures,
 } from '@tanstack/vue-table'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
 })
 
-export const _rowModels = {
+export const rowModels = {
   sortedRowModel: createSortedRowModel(sortFns),
   paginatedRowModel: createPaginatedRowModel(),
 }
@@ -64,14 +64,14 @@ export const _rowModels = {
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useTable } from '@tanstack/vue-table'
-import { _features, _rowModels } from './table-setup'
+import { features, rowModels } from './table-setup'
 import { columns } from './columns'
 
 const props = defineProps<{ data: Person[] }>()
 const data = ref(props.data)
 
 // Narrow selector — table.state only carries what we actually render at this level.
-const table = useTable({ _features, _rowModels, columns, data }, (state) => ({
+const table = useTable({ features, rowModels, columns, data }, (state) => ({
   pagination: state.pagination,
   sorting: state.sorting,
 }))
@@ -85,23 +85,23 @@ const table = useTable({ _features, _rowModels, columns, data }, (state) => ({
 ```ts
 // ❌ Ships filtering, faceting, grouping, pinning, expanding, sizing, resizing,
 //   visibility, ordering, row-selection, row-pinning code you don't use.
-const _features = tableFeatures(stockFeatures)
+const features = tableFeatures(stockFeatures)
 
 // ✅ A sort-only table ships ~6–7 kb of feature code instead of ~15–20 kb.
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 ```
 
 `stockFeatures` exists for migrations and prototyping. Audit before shipping — if a feature
 isn't wired into a column def or UI handler, drop it. v9 is tree-shakeable specifically so you
 only pay for what you use.
 
-### 2. Module-scope `_features` / `_rowModels` / `columnHelper` / `columns`
+### 2. Module-scope `features` / `rowModels` / `columnHelper` / `columns`
 
 ```ts
 // ❌ Inside <script setup> — every component instance creates new identities, which churns
 //    the table's option-watcher and triggers a `setOptions` on every reactive tick.
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   /* ... */
 ])
@@ -109,8 +109,8 @@ const columns = columnHelper.columns([
 
 ```ts
 // ✅ Module scope — one identity, shared across instances, GC-friendly.
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 export const columns = columnHelper.columns([
   /* ... */
 ])
@@ -124,11 +124,11 @@ write `data: ref([...])` inline in the table options (a fresh ref each render).
 ```ts
 // ❌ Default selector — table.state contains every registered slice; any state change re-renders
 //    every consumer of table.state.
-const table = useTable({ _features, _rowModels, columns, data })
+const table = useTable({ features, rowModels, columns, data })
 
 // ✅ Project only what THIS component renders. Other slices still drive table internals; you
 //    just don't subscribe to them at the component level.
-const table = useTable({ _features, _rowModels, columns, data }, (state) => ({
+const table = useTable({ features, rowModels, columns, data }, (state) => ({
   pagination: state.pagination,
   sorting: state.sorting,
 }))
@@ -191,7 +191,7 @@ Use `table.Subscribe` only for cross-store source subscription (`<table.Subscrib
 Defeats the entire reason v9 is tree-shakeable. Replace with an explicit
 `tableFeatures({...})` listing only the features your UI renders.
 
-### Re-declaring `_features` / `_rowModels` / `columns` inside `<script setup>` (HIGH)
+### Re-declaring `features` / `rowModels` / `columns` inside `<script setup>` (HIGH)
 
 Vue runs `<script setup>` once per component instance, but that's still per-page-navigation in
 SPAs and per-instance in any reusable component. Module scope is cheapest and shared.
@@ -217,7 +217,7 @@ watchEffect(() => {
 
 ```ts
 // ❌ Whole table re-evaluates table.state on every keystroke in a column filter.
-const table = useTable({ _features, _rowModels, columns, data })
+const table = useTable({ features, rowModels, columns, data })
 
 // ✅
 const table = useTable(opts, (s) => ({ pagination: s.pagination }))

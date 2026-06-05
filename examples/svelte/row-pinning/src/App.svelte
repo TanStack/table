@@ -24,7 +24,7 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnSizingFeature,
     rowPinningFeature,
     rowExpandingFeature,
@@ -50,8 +50,8 @@
   const table = createTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         expandedRowModel: createExpandedRowModel(),
         paginatedRowModel: createPaginatedRowModel(),
@@ -179,7 +179,7 @@
   </tr>
 {/snippet}
 
-{#snippet Filter(column: Column<typeof _features, Person>, tableRef: SvelteTable<typeof _features, Person, any>)}
+{#snippet Filter(column: Column<typeof features, Person>, tableRef: SvelteTable<typeof features, Person, any>)}
   {@const firstValue = tableRef
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)}

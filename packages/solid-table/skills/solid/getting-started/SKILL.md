@@ -2,9 +2,9 @@
 name: solid/getting-started
 description: >
   End-to-end first table with `@tanstack/solid-table` v9. Install, declare
-  `_features` via `tableFeatures()`, declare `_rowModels` with the matching
+  `features` via `tableFeatures()`, declare `rowModels` with the matching
   factories (e.g. `createSortedRowModel(sortFns)`), create a column helper
-  with `createColumnHelper<typeof _features, TData>()`, build the table with
+  with `createColumnHelper<typeof features, TData>()`, build the table with
   `createTable(options)` using reactive `get data() {...}` getters, and render
   rows via `FlexRender` (or `table.FlexRender`).
 type: lifecycle
@@ -42,7 +42,7 @@ npm install @tanstack/solid-table
 the Solid-specific `createTable`, `FlexRender`, and `createTableHook`. You
 should not install `@tanstack/table-core` separately.
 
-## 2. Declare features (`_features`)
+## 2. Declare features (`features`)
 
 v9 is explicit about what a table uses. Only registered features expose APIs
 and state slices. This is what makes the bundle tree-shake.
@@ -55,7 +55,7 @@ import {
   columnFilteringFeature,
 } from '@tanstack/solid-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   columnFilteringFeature,
@@ -66,7 +66,7 @@ const _features = tableFeatures({
 object used everywhere (column helper, table options, etc.). Use it even for a
 no-feature table: `tableFeatures({})`.
 
-## 3. Declare row-model factories (`_rowModels`)
+## 3. Declare row-model factories (`rowModels`)
 
 Each non-core row-model feature needs its factory called and registered. The
 core row model is included by default.
@@ -80,7 +80,7 @@ import {
   filterFns,
 } from '@tanstack/solid-table'
 
-const _rowModels = {
+const rowModels = {
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(sortFns),
   filteredRowModel: createFilteredRowModel(filterFns),
@@ -93,7 +93,7 @@ object like `{ alphanumeric: sortFns.alphanumeric }`.
 
 ## 4. Define columns
 
-`createColumnHelper` takes **both** generics: `typeof _features` first, then
+`createColumnHelper` takes **both** generics: `typeof features` first, then
 `TData`. (This is the v9 ordering. v8 only had `TData`.)
 
 ```tsx
@@ -101,7 +101,7 @@ import { createColumnHelper } from '@tanstack/solid-table'
 
 type Person = { firstName: string; lastName: string; age: number }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -132,8 +132,8 @@ function App() {
   ])
 
   const table = createTable({
-    _features,
-    _rowModels,
+    features,
+    rowModels,
     columns,
     get data() {
       return data() // reactive getter
@@ -190,8 +190,8 @@ once with `createTableHook`:
 import { createTableHook } from '@tanstack/solid-table'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({}),
-  _rowModels: {},
+  features: tableFeatures({}),
+  rowModels: {},
 })
 
 const columnHelper = createAppColumnHelper<Person>()
@@ -216,12 +216,12 @@ function App(props: { data: Array<Person> }) {
 
 ```tsx
 // ❌ Reads once at construction — table never updates when data() changes
-createTable({ _features, _rowModels: {}, columns, data: data() })
+createTable({ features, rowModels: {}, columns, data: data() })
 
 // ✅ Tracked
 createTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return data()
@@ -246,7 +246,7 @@ table.state().pagination
 
 ### Missing feature → missing API
 
-If you write `table.setSorting(...)` without `rowSortingFeature` in `_features`,
+If you write `table.setSorting(...)` without `rowSortingFeature` in `features`,
 TS errors and the method is undefined at runtime. The fix is registration, not
 a cast.
 
@@ -264,6 +264,6 @@ rolling your own state update.
 ### Hallucinated names from older versions
 
 v9 is `createTable`, not `createSolidTable` (that was v8). Row models go under
-`_rowModels`, not top-level `getCoreRowModel` / `getSortedRowModel` options.
-`createColumnHelper` takes `<typeof _features, TData>` (two generics, features
+`rowModels`, not top-level `getCoreRowModel` / `getSortedRowModel` options.
+`createColumnHelper` takes `<typeof features, TData>` (two generics, features
 first).

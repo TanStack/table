@@ -82,8 +82,8 @@ The second argument to `createTable` is a TanStack Store selector. The result is
 <script lang="ts">
   const table = createTable(
     {
-      _features,
-      _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+      features,
+      rowModels: { paginatedRowModel: createPaginatedRowModel() },
       columns,
       get data() {
         return data
@@ -144,7 +144,7 @@ import {
   type SortingState,
 } from '@tanstack/svelte-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
@@ -160,8 +160,8 @@ const sorting = useSelector(sortingAtom)
 const pagination = useSelector(paginationAtom)
 
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     /* ... */
   },
   columns,
@@ -214,8 +214,8 @@ export const rowSelectionAtom = createAtom<RowSelectionState>({})
   import { rowSelectionAtom } from './stores/table-state'
 
   const table = createTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       /* ... */
     },
     columns,
@@ -259,7 +259,7 @@ atom is dormant in that case and your write will be silently ignored next sync.
 ## Common failure modes
 
 - **Reading a slice that wasn't registered.** `table.atoms.rowSelection` is `undefined` if
-  `rowSelectionFeature` isn't in `_features`. TS will catch it if you used `tableFeatures()`.
+  `rowSelectionFeature` isn't in `features`. TS will catch it if you used `tableFeatures()`.
 - **Creating atoms inside reactive blocks.** Atoms must be stable. Module scope or top-level
   component scope, never inside `$derived` / `$effect`.
 - **`useSelector` without `.current`.** `selection.pageIndex` is wrong — `selection.current.pageIndex`.

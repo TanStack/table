@@ -18,7 +18,7 @@ TanStack Table v9 is a major release that introduces significant architectural i
 
 ### 3. Composability
 
-- **`tableOptions`**: New utilities let you compose and share table configurations. Define `_features`, `_rowModels`, and default options once, then reuse them across tables or pass them through `createTableHook`.
+- **`tableOptions`**: New utilities let you compose and share table configurations. Define `features`, `rowModels`, and default options once, then reuse them across tables or pass them through `createTableHook`.
 - **`createTableHook`** (optional, advanced): Create reusable, strongly typed Angular table factories with pre-bound features, row models, default options, and component registries.
 
 ### The Good News: Most Upgrades Are Opt-in
@@ -28,7 +28,7 @@ While v9 is a significant upgrade, **you don't have to adopt everything at once*
 - **Don't want to think about tree-shaking yet?** You can start with `stockFeatures` to include most commonly used features.
 - **Your table markup is largely unchanged.** How you render `<table>`, `<thead>`, `<tr>`, `<td>`, etc. remains the same.
 
-The main change is **how you define a table** with the Angular adapter — specifically the new `_features` and `_rowModels` options.
+The main change is **how you define a table** with the Angular adapter — specifically the new `features` and `rowModels` options.
 
 ---
 
@@ -36,7 +36,7 @@ The main change is **how you define a table** with the Angular adapter — speci
 
 Angular does **not** ship a legacy API.
 
-If you're migrating an Angular project from TanStack Table v8 to v9, you will migrate directly to the v9 Angular adapter APIs (`injectTable`, `_features`, and `_rowModels`).
+If you're migrating an Angular project from TanStack Table v8 to v9, you will migrate directly to the v9 Angular adapter APIs (`injectTable`, `features`, and `rowModels`).
 
 ---
 
@@ -65,9 +65,9 @@ const v9Table = injectTable(() => ({
 ```
 
 > Note: `injectTable` evaluates your initializer whenever any Angular signal read inside of it changes.
-> Keep expensive/static values (like `columns`, `_features`, and `_rowModels`) as stable references outside the initializer.
+> Keep expensive/static values (like `columns`, `features`, and `rowModels`) as stable references outside the initializer.
 
-### New Required Options: `_features` and `_rowModels`
+### New Required Options: `features` and `rowModels`
 
 In v9, you must explicitly declare which features and row models your table uses:
 
@@ -87,12 +87,12 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({}) // Empty = core feaFtures only
+const features = tableFeatures({}) // Empty = core feaFtures only
 
 // Define stable references outside the initializer
 const v9Table = injectTable(() => ({
-  _features,
-  _rowModels: {}, // Core row model is automatic
+  features,
+  rowModels: {}, // Core row model is automatic
   columns: this.columns,
   data: this.data(),
 }))
@@ -100,7 +100,7 @@ const v9Table = injectTable(() => ({
 
 ---
 
-## The `_features` Option
+## The `features` Option
 
 Features control what table functionality is available. In v8, all features were bundled. In v9, you import only what you need.
 
@@ -118,7 +118,7 @@ import {
 } from '@tanstack/angular-table'
 
 // Create a features object (define this outside your injectTable initializer for stable reference)
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
@@ -136,8 +136,8 @@ import { injectTable, stockFeatures } from '@tanstack/angular-table'
 
 class TableCmp {
   readonly table = injectTable(() => ({
-    _features: stockFeatures, // All features included
-    _rowModels: { /* ... */ },
+    features: stockFeatures, // All features included
+    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
   }))
@@ -165,13 +165,13 @@ class TableCmp {
 
 ---
 
-## The `_rowModels` Option
+## The `rowModels` Option
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, they're configured via `_rowModels` instead of `get*RowModel` options.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, they're configured via `rowModels` instead of `get*RowModel` options.
 
 ### Migration Mapping
 
-| v8 Option | v9 `_rowModels` Key | v9 Factory Function |
+| v8 Option | v9 `rowModels` Key | v9 Factory Function |
 |-----------|---------------------|---------------------|
 | `getCoreRowModel()` | (automatic) | Not needed — always included |
 | `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
@@ -201,8 +201,8 @@ import {
 
 class TableCmp {
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       sortedRowModel: createSortedRowModel(sortFns),
       groupedRowModel: createGroupedRowModel(aggregationFns),
@@ -253,15 +253,15 @@ import {
   sortFns,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
 const v9Table = injectTable(() => ({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -311,8 +311,8 @@ import { shallow } from '@tanstack/angular-table'
 
 class TableCmp {
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: { /* ... */ },
+    features,
+    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
   }))
@@ -342,8 +342,8 @@ import { shallow } from '@tanstack/angular-table'
 
 class TableCmp {
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: { /* ... */ },
+    features,
+    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
   }))
@@ -377,8 +377,8 @@ class TableCmp {
   readonly pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: { /* ... */ },
+    features,
+    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
     state: {
@@ -414,8 +414,8 @@ const columnHelperV8 = createColumnHelper<Person>()
 // v9
 import { createColumnHelper, tableFeatures, rowSortingFeature } from '@tanstack/angular-table'
 
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelperV9 = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelperV9 = createColumnHelper<typeof features, Person>()
 ```
 
 ### New `columns()` Helper Method
@@ -423,7 +423,7 @@ const columnHelperV9 = createColumnHelper<typeof _features, Person>()
 v9 adds a `columns()` helper for better type inference when wrapping column arrays.
 
 ```ts
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Wrap your columns array for better type inference
 const columns = columnHelper.columns([
@@ -452,8 +452,8 @@ When using `createTableHook`, you get a pre-bound `createAppColumnHelper` that o
 import { createTableHook, tableFeatures, rowSortingFeature } from '@tanstack/angular-table'
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { /* ... */ },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { /* ... */ },
 })
 
 // TFeatures is already bound — only need TData!
@@ -513,7 +513,7 @@ import { isDevMode } from '@angular/core';
 
 // Create a reusable options object with features pre-configured
 const baseOptions = tableOptions({
-  _features: tableFeatures({ rowSortingFeature }),
+  features: tableFeatures({ rowSortingFeature }),
   debugTable: isDevMode()
 })
 
@@ -522,14 +522,14 @@ class TableCmp {
     ...baseOptions,
     columns: this.columns,
     data: this.data(),
-    _rowModels: {},
+    rowModels: {},
   }))
 }
 ```
 
 ### Composing Partial Options
 
-`tableOptions()` allows you to omit certain required fields (like `data`, `columns`, or `_features`) when creating partial configurations:
+`tableOptions()` allows you to omit certain required fields (like `data`, `columns`, or `features`) when creating partial configurations:
 
 ```ts
 import {
@@ -545,11 +545,11 @@ import {
 
 // Partial options without data or columns
 const featureOptions = tableOptions({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowSortingFeature,
     columnFilteringFeature,
   }),
-  _rowModels: {
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
   },
@@ -559,9 +559,9 @@ const featureOptions = tableOptions({
 ```ts
 import { injectTable, tableOptions, createPaginatedRowModel } from '@tanstack/angular-table'
 
-// Another partial without _features (inherits from spread)
+// Another partial without features (inherits from spread)
 const paginationDefaults = tableOptions({
-  _rowModels: {
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   initialState: {
@@ -596,8 +596,8 @@ import {
 } from '@tanstack/angular-table'
 
 const sharedOptions = tableOptions({
-  _features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -697,19 +697,19 @@ type Row<TFeatures, TData>
 type Cell<TFeatures, TData, TValue>
 ```
 
-### Using `typeof _features`
+### Using `typeof features`
 
 The easiest way to get the `TFeatures` type is with `typeof`:
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
 })
 
-type MyFeatures = typeof _features
+type MyFeatures = typeof features
 
-const columns: ColumnDef<typeof _features, Person>[] = [...]
+const columns: ColumnDef<typeof features, Person>[] = [...]
 ```
 
 ### Using `StockFeatures`
@@ -734,8 +734,8 @@ The `RowData` type is now more restrictive.
 
 ## Migration Checklist
 
-- [ ] Update your table setup to v9 and define `_features` using `tableFeatures()` (or use `stockFeatures`)
-- [ ] Migrate `get*RowModel()` options to `_rowModels`
+- [ ] Update your table setup to v9 and define `features` using `tableFeatures()` (or use `stockFeatures`)
+- [ ] Migrate `get*RowModel()` options to `rowModels`
 - [ ] Update row model factories to include `Fns` parameters where needed
 - [ ] Update TypeScript types to include `TFeatures` generic
 - [ ] Update state access: `table.getState().slice` → `table.atoms.<slice>.get()` where possible; use `table.state` for full-state/debug reads

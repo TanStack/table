@@ -4,10 +4,10 @@ description: >
   Mechanical breaking-change migration from TanStack Table v8 to v9 for
   `@tanstack/lit-table`. v8's `TableController(host, () => options)` shape
   collapses to v9's `new TableController(host)` + `.table(options, selector?)`;
-  per-row-model `get*RowModel` options become `_features` + `_rowModels`;
+  per-row-model `get*RowModel` options become `features` + `rowModels`;
   `flexRender(def, ctx)` becomes `FlexRender({ cell|header|footer })`; core
   types gain a `TFeatures` first generic. Routing keywords: lit v8 to v9,
-  migration, TableController v8, get*RowModel, _features lit.
+  migration, TableController v8, get*RowModel, features lit.
 type: lifecycle
 library: tanstack-table
 framework: lit
@@ -25,22 +25,22 @@ sources:
 
 > **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.48`.
 
-The Lit v9 adapter mirrors v9's React surface (atoms, `_features`, `_rowModels`, FlexRender) wrapped in a `ReactiveController`. There is no `useLegacyTable` shim — migrate directly.
+The Lit v9 adapter mirrors v9's React surface (atoms, `features`, `rowModels`, FlexRender) wrapped in a `ReactiveController`. There is no `useLegacyTable` shim — migrate directly.
 
 ## The Core Mapping
 
-| v8 (`@tanstack/lit-table`)                           | v9 (`@tanstack/lit-table`)                                                                           |
-| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `new TableController(host, () => options)`           | `new TableController<typeof _features, TData>(host)` then `.table(options, selector?)`               |
-| `controller.table` (property)                        | `controller.table(opts, selector?)` (method, called each `render()`)                                 |
-| `getCoreRowModel: getCoreRowModel()` option          | core row model included by default — `_rowModels: {}` valid                                          |
-| `getSortedRowModel: getSortedRowModel()`             | `_features: { rowSortingFeature }` + `_rowModels: { sortedRowModel: createSortedRowModel(sortFns) }` |
-| `getFilteredRowModel`, `getPaginationRowModel`, etc. | matching `*Feature` + matching `_rowModels` factory                                                  |
-| `flexRender(def, ctx)`                               | `FlexRender({ cell })` / `FlexRender({ header })` / `FlexRender({ footer })`                         |
-| `state` + `on*Change` only                           | still supported; new `atoms` per-slice option preferred                                              |
-| `createColumnHelper<TData>()`                        | `createColumnHelper<typeof _features, TData>()`                                                      |
-| `ColumnDef<TData, TValue>`                           | `ColumnDef<TFeatures, TData, TValue>`                                                                |
-| `Table<TData>`                                       | `Table<TFeatures, TData>`                                                                            |
+| v8 (`@tanstack/lit-table`)                           | v9 (`@tanstack/lit-table`)                                                                         |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
+| `new TableController(host, () => options)`           | `new TableController<typeof features, TData>(host)` then `.table(options, selector?)`              |
+| `controller.table` (property)                        | `controller.table(opts, selector?)` (method, called each `render()`)                               |
+| `getCoreRowModel: getCoreRowModel()` option          | core row model included by default — `rowModels: {}` valid                                         |
+| `getSortedRowModel: getSortedRowModel()`             | `features: { rowSortingFeature }` + `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }` |
+| `getFilteredRowModel`, `getPaginationRowModel`, etc. | matching `*Feature` + matching `rowModels` factory                                                 |
+| `flexRender(def, ctx)`                               | `FlexRender({ cell })` / `FlexRender({ header })` / `FlexRender({ footer })`                       |
+| `state` + `on*Change` only                           | still supported; new `atoms` per-slice option preferred                                            |
+| `createColumnHelper<TData>()`                        | `createColumnHelper<typeof features, TData>()`                                                     |
+| `ColumnDef<TData, TValue>`                           | `ColumnDef<TFeatures, TData, TValue>`                                                              |
+| `Table<TData>`                                       | `Table<TFeatures, TData>`                                                                          |
 
 Source: `docs/framework/lit/lit-table.md`; `packages/lit-table/src/TableController.ts`.
 
@@ -65,13 +65,13 @@ protected render() {
 
 ```ts
 // v9 — controller takes only the host. Options pass to .table(...) inside render.
-private tableController = new TableController<typeof _features, Person>(this)
+private tableController = new TableController<typeof features, Person>(this)
 
 protected render() {
   const table = this.tableController.table(
     {
-      _features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
+      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data: this.data,
     },
@@ -82,7 +82,7 @@ protected render() {
 }
 ```
 
-### 2. Replace `get*RowModel` options with `_features` + `_rowModels`
+### 2. Replace `get*RowModel` options with `features` + `rowModels`
 
 ```ts
 // v8
@@ -95,15 +95,15 @@ protected render() {
 }
 
 // v9
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
 })
 
 {
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel:    createSortedRowModel(sortFns),
     filteredRowModel:  createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -112,7 +112,7 @@ const _features = tableFeatures({
 }
 ```
 
-Move `_features` to module scope. Reference identity matters.
+Move `features` to module scope. Reference identity matters.
 Source: `docs/framework/lit/lit-table.md`.
 
 ### 3. Update column types and helpers
@@ -125,11 +125,12 @@ const columns: ColumnDef<Person>[] = columnHelper.columns([
 ])
 
 // v9
-const columnHelper = createColumnHelper<typeof _features, Person>()
-const columns: Array<ColumnDef<typeof _features, Person>> =
-  columnHelper.columns([
+const columnHelper = createColumnHelper<typeof features, Person>()
+const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
+  [
     /* … */
-  ])
+  ],
+)
 ```
 
 `TFeatures` is now the first generic on `ColumnDef`, `Table`, and `createColumnHelper`.
@@ -209,8 +210,8 @@ Wrong:
 
 ```ts
 this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   getSortedRowModel: getSortedRowModel(), // ignored
@@ -220,26 +221,26 @@ this.tableController.table({
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 this.tableController.table({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
 ```
 
-v9 doesn't read `get*RowModel` options. Features need both registration in `_features` and a factory in `_rowModels`.
+v9 doesn't read `get*RowModel` options. Features need both registration in `features` and a factory in `rowModels`.
 
 ### CRITICAL Calling a feature API without registering the feature
 
 Wrong:
 
 ```ts
-const _features = tableFeatures({}) // no rowSelectionFeature
+const features = tableFeatures({}) // no rowSelectionFeature
 const table = this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
 })
@@ -249,10 +250,10 @@ table.getIsAllRowsSelected() // type error / runtime no-op
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowSelectionFeature })
+const features = tableFeatures({ rowSelectionFeature })
 const table = this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   enableRowSelection: true,
@@ -266,7 +267,7 @@ Source: `docs/guide/features.md`.
 
 Wrong: still passing `getCoreRowModel` — v9 includes the core row model automatically.
 
-Correct: drop it. `_rowModels: {}` is valid.
+Correct: drop it. `rowModels: {}` is valid.
 
 ### HIGH Single-generic column helper / `ColumnDef`
 
@@ -282,8 +283,8 @@ const columns: ColumnDef<Person>[] = [
 Correct:
 
 ```ts
-const columnHelper = createColumnHelper<typeof _features, Person>()
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columnHelper = createColumnHelper<typeof features, Person>()
+const columns: Array<ColumnDef<typeof features, Person>> = [
   /* … */
 ]
 ```

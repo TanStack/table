@@ -13,10 +13,10 @@ export function tableOptions<
   TData extends RowData = any,
 >(
   options: Omit<TableOptions<TFeatures, TData>, 'columns'> & {
-    _features: TFeatures
+    features: TFeatures
   },
-): Omit<TableOptions<TFeatures, TData>, 'columns' | '_features'> & {
-  _features: TFeatures
+): Omit<TableOptions<TFeatures, TData>, 'columns' | 'features'> & {
+  features: TFeatures
 }
 
 /**
@@ -27,10 +27,10 @@ export function tableOptions<
   TData extends RowData = any,
 >(
   options: Omit<TableOptions<TFeatures, TData>, 'data'> & {
-    _features: TFeatures
+    features: TFeatures
   },
-): Omit<TableOptions<TFeatures, TData>, 'data' | '_features'> & {
-  _features: TFeatures
+): Omit<TableOptions<TFeatures, TData>, 'data' | 'features'> & {
+  features: TFeatures
 }
 
 /**
@@ -42,10 +42,10 @@ export function tableOptions<
   TData extends RowData = any,
 >(
   options: Omit<TableOptions<TFeatures, TData>, 'data' | 'columns'> & {
-    _features: TFeatures
+    features: TFeatures
   },
-): Omit<TableOptions<TFeatures, TData>, 'data' | 'columns' | '_features'> & {
-  _features: TFeatures
+): Omit<TableOptions<TFeatures, TData>, 'data' | 'columns' | 'features'> & {
+  features: TFeatures
 }
 
 /**
@@ -57,38 +57,38 @@ export function tableOptions<
 >(options: TableOptions<TFeatures, TData>): TableOptions<TFeatures, TData>
 
 /**
- * Preserves inference when a wrapper supplies `_features`.
+ * Preserves inference when a wrapper supplies `features`.
  */
 export function tableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  options: Omit<TableOptions<TFeatures, TData>, '_features'>,
-): Omit<TableOptions<TFeatures, TData>, '_features'>
+  options: Omit<TableOptions<TFeatures, TData>, 'features'>,
+): Omit<TableOptions<TFeatures, TData>, 'features'>
 
 /**
- * Preserves inference when a wrapper supplies both `data` and `_features`.
+ * Preserves inference when a wrapper supplies both `data` and `features`.
  */
 export function tableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  options: Omit<TableOptions<TFeatures, TData>, 'data' | '_features'>,
-): Omit<TableOptions<TFeatures, TData>, 'data' | '_features'>
+  options: Omit<TableOptions<TFeatures, TData>, 'data' | 'features'>,
+): Omit<TableOptions<TFeatures, TData>, 'data' | 'features'>
 
 /**
- * Preserves inference when a wrapper supplies both `columns` and `_features`.
+ * Preserves inference when a wrapper supplies both `columns` and `features`.
  */
 export function tableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  options: Omit<TableOptions<TFeatures, TData>, 'columns' | '_features'>,
-): Omit<TableOptions<TFeatures, TData>, 'columns' | '_features'>
+  options: Omit<TableOptions<TFeatures, TData>, 'columns' | 'features'>,
+): Omit<TableOptions<TFeatures, TData>, 'columns' | 'features'>
 
 /**
  * Preserves inference when a wrapper supplies `data`, `columns`, and
- * `_features`.
+ * `features`.
  */
 export function tableOptions<
   TFeatures extends TableFeatures,
@@ -96,9 +96,9 @@ export function tableOptions<
 >(
   options: Omit<
     TableOptions<TFeatures, TData>,
-    'data' | 'columns' | '_features'
+    'data' | 'columns' | 'features'
   >,
-): Omit<TableOptions<TFeatures, TData>, 'data' | 'columns' | '_features'>
+): Omit<TableOptions<TFeatures, TData>, 'data' | 'columns' | 'features'>
 
 /**
  * Runtime implementation for `tableOptions`.
@@ -113,5 +113,5 @@ export function tableOptions(options: unknown) {
 // test
 
 // const options = tableOptions({
-//   _features: {},
+//   features: {},
 // })

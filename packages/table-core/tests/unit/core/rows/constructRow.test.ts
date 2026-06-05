@@ -15,7 +15,7 @@ describe('constructRow', () => {
       Person
     >
     const id = 'test-row'
-    const original = { firstName: 'Tanner' } as Person
+    const original = { firstName: 'Tanner' }
     const rowIndex = 0
     const depth = 0
     const subRows = [] as Array<Row<any, Person>>

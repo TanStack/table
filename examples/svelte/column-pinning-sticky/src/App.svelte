@@ -15,7 +15,7 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnOrderingFeature,
     columnPinningFeature,
     columnResizingFeature,
@@ -34,7 +34,7 @@
   }
 
   const getCommonPinningStyles = (
-    column: Column<typeof _features, Person>,
+    column: Column<typeof features, Person>,
   ): PinningStyles => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
@@ -110,8 +110,8 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns: defaultColumns,
       get data() {
         return data

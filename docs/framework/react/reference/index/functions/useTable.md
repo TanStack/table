@@ -52,8 +52,8 @@ subscriptions.
 ```tsx
 const table = useTable(
   {
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
   },

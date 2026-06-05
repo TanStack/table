@@ -4,7 +4,7 @@ description: >
   Mechanical migration from `@tanstack/svelte-table@8` to `@tanstack/svelte-table@9`. v9 in Svelte
   is a full rewrite — Svelte 5 runes only (no Svelte 3/4), no `/legacy` adapter (unlike React),
   `createSvelteTable` → `createTable`, `getCoreRowModel` / `getSortedRowModel` factories → required
-  `_features` + `_rowModels` registration, `flexRender` helper → `<FlexRender>` component,
+  `features` + `rowModels` registration, `flexRender` helper → `<FlexRender>` component,
   writable-store `state` → rune-based getters / external atoms, `onStateChange` → per-slice
   `on[State]Change` or `atoms`. Plan a feature-by-feature audit, not a search-and-replace.
 type: lifecycle
@@ -46,11 +46,11 @@ There is no third option. Trying to install v9 on a Svelte 4 codebase will error
 | -------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `createSvelteTable(options)`                       | `createTable(options, selector?)`                                                     |
 | `getCoreRowModel()`                                | included by default; no factory                                                       |
-| `getPaginationRowModel()`                          | `_rowModels.paginatedRowModel: createPaginatedRowModel()`                             |
-| `getSortedRowModel()`                              | `_rowModels.sortedRowModel: createSortedRowModel(sortFns)`                            |
-| `getFilteredRowModel()`                            | `_rowModels.filteredRowModel: createFilteredRowModel(filterFns)`                      |
-| `getExpandedRowModel()`                            | `_rowModels.expandedRowModel: createExpandedRowModel()`                               |
-| `getGroupedRowModel()`                             | `_rowModels.groupedRowModel: createGroupedRowModel(aggregationFns)`                   |
+| `getPaginationRowModel()`                          | `rowModels.paginatedRowModel: createPaginatedRowModel()`                              |
+| `getSortedRowModel()`                              | `rowModels.sortedRowModel: createSortedRowModel(sortFns)`                             |
+| `getFilteredRowModel()`                            | `rowModels.filteredRowModel: createFilteredRowModel(filterFns)`                       |
+| `getExpandedRowModel()`                            | `rowModels.expandedRowModel: createExpandedRowModel()`                                |
+| `getGroupedRowModel()`                             | `rowModels.groupedRowModel: createGroupedRowModel(aggregationFns)`                    |
 | `getFacetedRowModel()` / `MinMax` / `UniqueValues` | facet APIs auto-derived when `*Facet*Feature` registered                              |
 | `flexRender(template, ctx)` helper                 | `<FlexRender header={h} />` / `<FlexRender cell={c} />` / `<FlexRender footer={h} />` |
 | `ColumnDef<TData>`                                 | `ColumnDef<TFeatures, TData>` (extra generic)                                         |
@@ -77,11 +77,11 @@ For each Svelte component that uses the table:
    inside markup are no longer `$data` — just `data`.
 3. **Import surface.** `import { createSvelteTable, getCoreRowModel, flexRender }` →
    `import { createTable, FlexRender, tableFeatures, ... }`.
-4. **Add `_features`.** Create `const _features = tableFeatures({ ... only the features this
+4. **Add `features`.** Create `const features = tableFeatures({ ... only the features this
 table uses ... })`.
-5. **Move row-model factories.** Every `get*RowModel: get*RowModel()` becomes a `_rowModels`
+5. **Move row-model factories.** Every `get*RowModel: get*RowModel()` becomes a `rowModels`
    entry with the matching `create*RowModel(*Fns)` factory.
-6. **Generic columns.** Add `<typeof _features, TData>` to `ColumnDef<>` and
+6. **Generic columns.** Add `<typeof features, TData>` to `ColumnDef<>` and
    `createColumnHelper<>()`. TypeScript will tell you when you missed one.
 7. **`data` as a getter.** `data: data` → `get data() { return data }`. Same for any other
    reactive option (`state.*`, `columns`, `rowCount`).
@@ -110,8 +110,8 @@ table uses ... })`.
 
 ```ts
 const table = createTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   get data() {
     return data
@@ -130,8 +130,8 @@ const table = createTable({
   let pagination: PaginationState = $state({ pageIndex: 0, pageSize: 10 })
 
   const table = createTable({
-    _features,
-    _rowModels: { ... },
+    features,
+    rowModels: { ... },
     columns,
     get data() { return data },
     state: {
@@ -160,8 +160,8 @@ const sorting = useSelector(sortingAtom)
 const pagination = useSelector(paginationAtom)
 
 const table = createTable({
-  _features,
-  _rowModels: { ... },
+  features,
+  rowModels: { ... },
   columns,
   get data() { return data },
   atoms: {
@@ -220,10 +220,10 @@ import { renderSnippet } from '@tanstack/svelte-table'
 
 ## After the rewrite — verify
 
-- `pnpm test:types` (or `svelte-check`) catches missing `<typeof _features, TData>` generics,
-  missing `_features` / `_rowModels`, and feature APIs called on tables that didn't register
+- `pnpm test:types` (or `svelte-check`) catches missing `<typeof features, TData>` generics,
+  missing `features` / `rowModels`, and feature APIs called on tables that didn't register
   them.
-- `pnpm build` should pass with the new `_features` set. Bundle should shrink — only the
+- `pnpm build` should pass with the new `features` set. Bundle should shrink — only the
   features you register are included.
 - Click through every table screen. Reset buttons, multi-sort, pagination reset on filter,
   expanded-row count under pagination — these are all the spots where v8 muscle memory
@@ -239,11 +239,11 @@ import { renderSnippet } from '@tanstack/svelte-table'
   the adapter.
 - **Plain `data` instead of `get data()` getter.** Largest single source of "but my data
   changed" bugs during migration.
-- **Plain `_features: { rowPaginationFeature }` instead of `tableFeatures({...})`.** Loses
+- **Plain `features: { rowPaginationFeature }` instead of `tableFeatures({...})`.** Loses
   inference; you'll get `any` everywhere.
 - **Forgetting feature registration after copying the row-model factory.** Adding
   `paginatedRowModel: createPaginatedRowModel()` without `rowPaginationFeature` in
-  `_features` does nothing.
+  `features` does nothing.
 - **Reimplementing v8 helpers** (`flexRender`-style functions, manual store subscriptions,
   hand-rolled selectors) instead of using `FlexRender` / `subscribeTable` / atom selectors.
   That's the #1 AI tell on this migration.

@@ -80,12 +80,12 @@ If you're not sure, you can always start with client-side filtering and paginati
 
 If you have decided that you need to implement server-side filtering instead of using the built-in client-side filtering, here's how you do that.
 
-No `filteredRowModel` is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `_rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
+No `filteredRowModel` is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```jsx
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature }),
-  _rowModels: {}, // no filteredRowModel needed for manual server-side filtering
+  features: tableFeatures({ columnFilteringFeature }),
+  rowModels: {}, // no filteredRowModel needed for manual server-side filtering
   data,
   columns,
   manualFiltering: true,
@@ -107,11 +107,11 @@ import {
   filterFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ columnFilteringFeature })
+const features = tableFeatures({ columnFilteringFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
   },
   data,
@@ -141,8 +141,8 @@ You can access the column filter state from the table instance with `table.atoms
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -161,8 +161,8 @@ If you need easy access to the column filter state, you can control/manage the c
 const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]) // can set initial column filter state here
 //...
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -179,8 +179,8 @@ If you do not need to control the column filter state in your own state manageme
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -262,8 +262,8 @@ const columns = [
 ]
 //...
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel({
       ...filterFns,
       myCustomFilterFn: (row, columnId, filterValue) => {
@@ -326,8 +326,8 @@ const columns = [
 ]
 //...
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   enableColumnFilters: false, // disable column filtering for all columns
@@ -346,8 +346,8 @@ However, if you want to allow sub-rows to be filtered and searched through, rega
 
 ```jsx
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -365,8 +365,8 @@ Use `maxLeafRowFilterDepth: 0` if you want to preserve a parent row's sub-rows f
 
 ```jsx
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     expandedRowModel: createExpandedRowModel(),
   },

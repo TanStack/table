@@ -5,7 +5,7 @@ import { storeReactivityBindings } from '../../../../src/store-reactivity-bindin
 describe('constructTable', () => {
   it('should create a table with all core table APIs and properties', () => {
     const table = constructTable({
-      _features: {
+      features: {
         ...coreFeatures,
         coreReativityFeature: storeReactivityBindings(),
       },

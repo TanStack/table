@@ -35,7 +35,7 @@ This skill builds on `tanstack-table/state-management` and `tanstack-table/setup
 
 ## Setup
 
-Every React v9 table follows the same shape. Define `_features`, `_rowModels`, and `columns` at module scope so their references are stable, then call `useTable` and render with `<table.FlexRender>`.
+Every React v9 table follows the same shape. Define `features`, `rowModels`, and `columns` at module scope so their references are stable, then call `useTable` and render with `<table.FlexRender>`.
 
 ```tsx
 import {
@@ -51,8 +51,8 @@ import type { ColumnDef } from '@tanstack/react-table'
 type Person = { firstName: string; lastName: string; age: number }
 
 // Module-scope = stable identity. Critical for re-render perf.
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -63,8 +63,8 @@ const columns = columnHelper.columns([
 function PeopleTable({ data }: { data: Person[] }) {
   const table = useTable(
     {
-      _features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
+      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data,
     },
@@ -110,7 +110,7 @@ The default is `(state) => state` — the component re-renders on any state chan
 
 ```tsx
 // Narrow selector — only re-render this component on sorting/pagination changes.
-const table = useTable({ _features, _rowModels, columns, data }, (state) => ({
+const table = useTable({ features, rowModels, columns, data }, (state) => ({
   sorting: state.sorting,
   pagination: state.pagination,
 }))
@@ -182,8 +182,8 @@ function MyTable({ columns, data }) {
   const pagination = useSelector(paginationAtom)
 
   const table = useTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -199,14 +199,14 @@ Source: `examples/react/basic-external-atoms/src/main.tsx`.
 
 ### 4. `createTableHook` for reusable shared config
 
-When you ship the same `_features` / `_rowModels` / cell components across many tables, package them with `createTableHook`. You get `useAppTable`, `createAppColumnHelper`, and `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries.
+When you ship the same `features` / `rowModels` / cell components across many tables, package them with `createTableHook`. You get `useAppTable`, `createAppColumnHelper`, and `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries.
 
 ```tsx
 import { createTableHook } from '@tanstack/react-table'
 
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {},
-  _rowModels: {},
+  features: {},
+  rowModels: {},
   debugTable: true,
 })
 
@@ -267,8 +267,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -282,8 +282,8 @@ Correct:
 ```tsx
 // Pick exactly one source of truth per slice.
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -337,8 +337,8 @@ Wrong:
 function MyTable() {
   const sortingAtom = createAtom<SortingState>([]) // new atom every render
   useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -352,8 +352,8 @@ Correct:
 function MyTable() {
   const sortingAtom = useCreateAtom<SortingState>([]) // stable across renders
   useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -364,19 +364,19 @@ function MyTable() {
 A fresh atom each render unbinds the table from the slice and resets the state to the initial value on every render.
 Source: `examples/react/basic-external-atoms/src/main.tsx`.
 
-### HIGH Unstable `data` / `columns` / `_features` references
+### HIGH Unstable `data` / `columns` / `features` references
 
 Wrong:
 
 ```tsx
 function MyTable({ rows }) {
-  const _features = tableFeatures({ rowSortingFeature }) // new every render
+  const features = tableFeatures({ rowSortingFeature }) // new every render
   const columns = [
     /* … */
   ] // new every render
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data: rows ?? [],
   })
@@ -387,14 +387,14 @@ Correct:
 
 ```tsx
 // Module scope — declared once.
-const _features = tableFeatures({ rowSortingFeature })
-const columns: ColumnDef<typeof _features, Person>[] = [
+const features = tableFeatures({ rowSortingFeature })
+const columns: ColumnDef<typeof features, Person>[] = [
   /* … */
 ]
 
 function MyTable({ rows }) {
   const data = rows ?? EMPTY // EMPTY at module scope
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
@@ -418,7 +418,7 @@ Correct:
 
 ```tsx
 // Default selector + inline rendering. Reach for Subscribe later, scoped to actual hotspots.
-const table = useTable({ _features, _rowModels, columns, data })
+const table = useTable({ features, rowModels, columns, data })
 ```
 
 Subscribe and narrow selectors are for large / expensive tables where full re-renders measurably hurt. On a small table they only add complexity.

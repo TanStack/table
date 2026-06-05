@@ -21,24 +21,24 @@ import type { FilterFn, SortFn } from '@tanstack/angular-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 declare module '@tanstack/angular-table' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
+    fuzzy: FilterFn<typeof features, Person>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -49,7 +49,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -88,9 +88,9 @@ const columns = columnHelper.columns([
 })
 export class App {
   readonly data = signal(makeData(1_000))
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel({
         ...filterFns,
         fuzzy: fuzzyFilter,

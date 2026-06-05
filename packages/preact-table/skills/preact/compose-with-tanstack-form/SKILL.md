@@ -99,13 +99,13 @@ import { useAppForm } from './form-hook'
 
 type Person = { id: string; firstName: string; age: number }
 
-const _features = tableFeatures({})
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({})
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function EditableTable({ data }: { data: Person[] }) {
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
         header: 'First Name',
@@ -187,15 +187,15 @@ The bulk-edit alternative is a single top-level form with `<form.Field name={\`r
 Wrong:
 
 ```tsx
-useTable({ _features, _rowModels: {}, columns, data /* no getRowId */ })
+useTable({ features, rowModels: {}, columns, data /* no getRowId */ })
 ```
 
 Correct:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,

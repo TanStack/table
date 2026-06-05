@@ -43,12 +43,12 @@ describe('#getGroupedRowModel', () => {
     data.forEach((p) => (p.age = 123))
 
     const table = constructTable<any, Person>({
-      _features: {
+      features: {
         columnGroupingFeature,
         ...coreFeatures,
         coreReativityFeature: storeReactivityBindings(),
       },
-      _rowModels: {
+      rowModels: {
         groupedRowModel: createGroupedRowModel(aggregationFns),
       },
       onStateChange() {},

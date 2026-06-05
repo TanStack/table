@@ -47,12 +47,12 @@ export const {
   injectTableHeaderContext,
 } = createTableHook({
   // Features and row models are shared across all tables
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
   }),
-  _rowModels: {
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -205,7 +205,7 @@ Access header components in the template via `table.appHeader(header)`:
 - **`table.appHeader(header)`** — utility type functions for templates that wraps a `Header` with the registered `headerComponents`
 - **`table.appFooter(footer)`** — utility type functions for templates that wraps a `Header` (footer) with the registered `headerComponents`
 
-You do not need to pass `_features` or `_rowModels` — they are inherited from the hook configuration:
+You do not need to pass `features` or `rowModels` — they are inherited from the hook configuration:
 
 ```ts
 @Component({
@@ -225,7 +225,7 @@ export class UsersTable {
     // ...
   ])
 
-  // No need to specify _features, _rowModels, ... — they come from createTableHook
+  // No need to specify features, rowModels, ... — they come from createTableHook
   table = injectAppTable(() => ({
     columns: this.columns,
     data: this.data(),
@@ -273,8 +273,8 @@ export const {
   injectAppTable: injectAdminTable,
   createAppColumnHelper: createAdminColumnHelper,
 } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature, columnFilteringFeature }),
-  _rowModels: { /* ... */ },
+  features: tableFeatures({ rowSortingFeature, columnFilteringFeature }),
+  rowModels: { /* ... */ },
   cellComponents: { EditableCell, DeleteButton },
 })
 
@@ -283,8 +283,8 @@ export const {
   injectAppTable: injectReadonlyTable,
   createAppColumnHelper: createReadonlyColumnHelper,
 } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { /* ... */ },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { /* ... */ },
   cellComponents: { TextCell, NumberCell },
 })
 ```

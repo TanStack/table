@@ -8,7 +8,7 @@ exhaustive lookup.
 
 ## Row-model migration table
 
-| v8 option                  | v9 `_rowModels` key   | v9 factory                              |
+| v8 option                  | v9 `rowModels` key    | v9 factory                              |
 | -------------------------- | --------------------- | --------------------------------------- |
 | `getCoreRowModel()`        | (automatic)           | —                                       |
 | `getFilteredRowModel()`    | `filteredRowModel`    | `createFilteredRowModel(filterFns)`     |
@@ -44,7 +44,7 @@ exhaustive lookup.
 >
 > ```ts
 > import { stockFeatures } from '@tanstack/angular-table'
-> _features: stockFeatures
+> features: stockFeatures
 > ```
 >
 > This restores v8-like "everything bundled" behavior — but the v9 bundle
@@ -68,12 +68,12 @@ HeaderContext<TData, TValue>       → HeaderContext<TFeatures, TData, TValue>
 CellContext<TData, TValue>         → CellContext<TFeatures, TData, TValue>
 ```
 
-Easiest fix: extract `typeof _features` once.
+Easiest fix: extract `typeof features` once.
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature, columnFilteringFeature })
+const features = tableFeatures({ rowSortingFeature, columnFilteringFeature })
 
-type Features = typeof _features
+type Features = typeof features
 
 const columns: Array<ColumnDef<Features, Person>> = [
   /* … */
@@ -171,13 +171,13 @@ during migration if you have shared base config:
 import { tableOptions, tableFeatures, rowSortingFeature } from '@tanstack/angular-table'
 
 const baseOptions = tableOptions({
-  _features: tableFeatures({ rowSortingFeature }),
+  features: tableFeatures({ rowSortingFeature }),
   debugTable: isDevMode(),
 })
 
 readonly table = injectTable(() => ({
   ...baseOptions,
-  _rowModels: { /* … */ },
+  rowModels: { /* … */ },
   columns: this.columns,
   data: this.data(),
 }))
@@ -213,7 +213,7 @@ and/or `enableRowPinning: true`.
 Replace state name `columnSizingInfo` with `columnResizing`, setter
 `setColumnSizingInfo` with `setColumnResizing`, handler
 `onColumnSizingInfoChange` with `onColumnResizingChange`. And add
-`columnResizingFeature` to `_features` if you actually need resizing.
+`columnResizingFeature` to `features` if you actually need resizing.
 
 ### Single global `onStateChange` ported as a giant per-slice fan-out
 
@@ -224,13 +224,13 @@ actually care about — don't recreate a megaswitch.
 ### Hand-rolling `TFeatures` in render-fn types
 
 When a `cell` / `header` function signature requires `CellContext<TFeatures, TData, TValue>`,
-let `createColumnHelper<typeof _features, TData>()` infer it for you. Spelling
+let `createColumnHelper<typeof features, TData>()` infer it for you. Spelling
 features by hand in dozens of render-fn signatures is a sign you should be
 using `createAppColumnHelper` from `createTableHook`.
 
 ### Reaching for `_`-prefixed internals because the public method "doesn't exist"
 
-The "missing" method usually means the feature isn't in `_features`. Add the
+The "missing" method usually means the feature isn't in `features`. Add the
 feature; don't peek at internals.
 
 ### Reimplementing what the table API already does

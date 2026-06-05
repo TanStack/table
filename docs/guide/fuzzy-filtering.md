@@ -89,11 +89,11 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ globalFilteringFeature, rowSortingFeature })
+const features = tableFeatures({ globalFilteringFeature, rowSortingFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel({
       ...filterFns,
       fuzzy: fuzzyFilter,

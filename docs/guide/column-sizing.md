@@ -68,8 +68,8 @@ const columns = [
 ]
 
 const table = useTable({
-  _features: tableFeatures({ columnSizingFeature }),
-  _rowModels: {},
+  features: tableFeatures({ columnSizingFeature }),
+  rowModels: {},
   defaultColumn: {
     size: 200, // starting column size
     minSize: 50, // enforced during column resizing

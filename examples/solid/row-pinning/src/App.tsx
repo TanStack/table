@@ -21,7 +21,7 @@ import type {
 } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
@@ -48,7 +48,7 @@ function App() {
     {
       id: 'pin',
       header: () => 'Pin',
-      cell: ({ row }: { row: Row<typeof _features, Person> }) =>
+      cell: ({ row }: { row: Row<typeof features, Person> }) =>
         row.getIsPinned() ? (
           <button
             onClick={() =>
@@ -78,7 +78,7 @@ function App() {
     },
     {
       accessorKey: 'firstName',
-      header: ({ table }: { table: Table<typeof _features, Person> }) => (
+      header: ({ table }: { table: Table<typeof features, Person> }) => (
         <>
           <button onClick={table.getToggleAllRowsExpandedHandler()}>
             {table.getIsAllRowsExpanded() ? '👇' : '👉'}
@@ -90,7 +90,7 @@ function App() {
         row,
         getValue,
       }: {
-        row: Row<typeof _features, Person>
+        row: Row<typeof features, Person>
         getValue: () => unknown
       }) => (
         <div style={{ 'padding-left': `${row.depth * 2}rem` }}>
@@ -124,8 +124,8 @@ function App() {
   const table = createTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         expandedRowModel: createExpandedRowModel(),
         paginatedRowModel: createPaginatedRowModel(),
@@ -330,8 +330,8 @@ function App() {
 }
 
 function PinnedRow(props: {
-  row: Row<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  row: Row<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   return (
     <tr
@@ -363,8 +363,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

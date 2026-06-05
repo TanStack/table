@@ -3,7 +3,7 @@ name: svelte/client-to-server
 description: >
   Convert a client-side Svelte table to server-side (manual) modes. Toggle `manualPagination`,
   `manualSorting`, `manualFiltering`, `manualGrouping`, `manualExpanding` for whatever the server
-  owns, drop the matching `_rowModels` factories and `_features` you no longer need, supply
+  owns, drop the matching `rowModels` factories and `features` you no longer need, supply
   `rowCount` for the pager, then drive the request from `table.atoms.pagination` /
   `table.atoms.sorting` / etc. (or external atoms you own) — using rune-aware getters
   (`get data()`, `get rowCount()`) so the table re-syncs in `$effect.pre`. Svelte 5+ only.
@@ -102,7 +102,7 @@ const filters = useSelector(filtersAtom)
     tableFeatures,
   } from '@tanstack/svelte-table'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
@@ -110,8 +110,8 @@ const filters = useSelector(filtersAtom)
 
   // No row-model factories for these — server owns them.
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return query.data?.rows ?? []
@@ -192,12 +192,12 @@ client.
 
 ```ts
 const table = createTable({
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
   }),
-  _rowModels: {
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns), // client filters the page
     sortedRowModel: createSortedRowModel(sortFns), // client sorts the page
   },

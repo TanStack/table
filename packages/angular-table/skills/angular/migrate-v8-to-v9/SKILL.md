@@ -2,8 +2,8 @@
 name: angular/migrate-v8-to-v9
 description: >
   Mechanical v8 → v9 migration for `@tanstack/angular-table`: `createAngularTable` →
-  `injectTable`, `get*RowModel()` options → `_rowModels` factories with explicit `*Fns`,
-  required `_features` via `tableFeatures()`, state access via `table.atoms.<slice>.get()`
+  `injectTable`, `get*RowModel()` options → `rowModels` factories with explicit `*Fns`,
+  required `features` via `tableFeatures()`, state access via `table.atoms.<slice>.get()`
   or `table.state` instead of `table.getState()`, `createColumnHelper<TFeatures, TData>()` generic-order flip, every
   type now requires `TFeatures`, `enablePinning` split into `enableColumnPinning` /
   `enableRowPinning`, `sortingFn` → `sortFn` rename pile, `ColumnSizingInfo` → `ColumnResizing`
@@ -27,8 +27,8 @@ sources:
 # Migrate from TanStack Table v8 to v9 (Angular)
 
 > **Angular does not ship a legacy v8 API in v9** (unlike React's
-> `useLegacyTable`). You migrate directly to v9's `injectTable` + `_features` +
-> `_rowModels` shape. There is no incremental in-place adapter — the public
+> `useLegacyTable`). You migrate directly to v9's `injectTable` + `features` +
+> `rowModels` shape. There is no incremental in-place adapter — the public
 > entrypoint name itself changes.
 
 This skill is a mechanical translation table. Work through it top-to-bottom.
@@ -54,11 +54,11 @@ const v8Table = createAngularTable(() => ({
 // v9
 import { injectTable, tableFeatures } from '@tanstack/angular-table'
 
-const _features = tableFeatures({}) // empty is valid; core row model is automatic
+const features = tableFeatures({}) // empty is valid; core row model is automatic
 
 const v9Table = injectTable(() => ({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: data(),
 }))
@@ -66,12 +66,12 @@ const v9Table = injectTable(() => ({
 
 Key behavioral change: **the `injectTable` initializer re-runs when signals
 inside it change**, then the adapter calls `table.setOptions({ ...prev, ...new })`.
-Move stable values (`columns`, `_features`, `_rowModels`) **outside** the
+Move stable values (`columns`, `features`, `rowModels`) **outside** the
 initializer so they aren't recreated on every data update.
 
 ---
 
-## 2. Required new options: `_features` + `_rowModels`
+## 2. Required new options: `features` + `rowModels`
 
 v9 is opt-in for every feature. **Both options are required.**
 
@@ -102,15 +102,15 @@ import {
   sortFns, // note rename: sortingFns → sortFns
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
 injectTable(() => ({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns), // fns are PARAMETERS now
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -166,8 +166,8 @@ readonly sorting = signal<SortingState>([])
 readonly pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: { /* … */ },
+  features,
+  rowModels: { /* … */ },
   columns,
   data: this.data(),
   state: {
@@ -200,7 +200,7 @@ readonly table = injectTable(() => ({
 const columnHelper = createColumnHelper<Person>()
 
 // v9 — TFeatures FIRST, then TData
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
 New in v9: `columnHelper.columns([...])` preserves each column's `TValue` —
@@ -301,12 +301,12 @@ v8 backed reactivity with manual memoized getters. v9's adapter
 ## Migration checklist
 
 - [ ] Replace `createAngularTable` import + call with `injectTable`.
-- [ ] Add `_features: tableFeatures({...})` (or `stockFeatures`) — required.
-- [ ] Convert every `get*RowModel()` option to a `_rowModels.<slot>` entry with
+- [ ] Add `features: tableFeatures({...})` (or `stockFeatures`) — required.
+- [ ] Convert every `get*RowModel()` option to a `rowModels.<slot>` entry with
       the matching `create*RowModel(...)` factory.
 - [ ] Add `filterFns` / `sortFns` / `aggregationFns` as **factory parameters**
       where needed.
-- [ ] Update `createColumnHelper<Person>()` → `createColumnHelper<typeof _features, Person>()`.
+- [ ] Update `createColumnHelper<Person>()` → `createColumnHelper<typeof features, Person>()`.
 - [ ] Update every `ColumnDef<Person>` / `Cell<Person, X>` etc. to include
       `TFeatures`.
 - [ ] Replace `table.getState().slice` reads with `table.atoms.<slice>.get()`
@@ -314,7 +314,7 @@ v8 backed reactivity with manual memoized getters. v9's adapter
 - [ ] Remove any usage of the v8 single `onStateChange` — split into per-slice
       `on[State]Change`.
 - [ ] In `on[State]Change` callbacks, handle both value and updater-fn shapes.
-- [ ] Move `columns`, `_features`, `_rowModels` **outside** the `injectTable`
+- [ ] Move `columns`, `features`, `rowModels` **outside** the `injectTable`
       initializer.
 - [ ] Switch any `flexRender` long-form to `*flexRenderCell` / `*flexRenderHeader` /
       `*flexRenderFooter` shorthand where applicable.
@@ -326,7 +326,7 @@ v8 backed reactivity with manual memoized getters. v9's adapter
 - [ ] Rename `sortingFn` → `sortFn`, `getSortingFn` → `getSortFn`,
       `sortingFns` → `sortFns`, `SortingFn` → `SortFn`.
 - [ ] Replace `columnSizingInfo` state / setters / change handler with the
-      `columnResizing` equivalents; add `columnResizingFeature` to `_features`
+      `columnResizing` equivalents; add `columnResizingFeature` to `features`
       if you actually drag-resize.
 - [ ] Replace `enablePinning` with `enableColumnPinning` / `enableRowPinning`.
 - [ ] Update `ColumnMeta` module augmentation to include the `TFeatures`
@@ -342,7 +342,7 @@ v8 backed reactivity with manual memoized getters. v9's adapter
 
 ### 1. (CRITICAL) Leaving `getCoreRowModel()` / `getSortedRowModel()` / etc. in v9 options
 
-These options don't exist anymore. They become `_rowModels` entries with
+These options don't exist anymore. They become `rowModels` entries with
 factory functions. The TypeScript error is loud but agents sometimes silence
 it with `as any` — don't.
 
@@ -356,12 +356,12 @@ it must run from a class field, constructor, or
 
 ```ts
 // ❌ filtering enabled, but no filtered row model — UI changes, rows don't filter
-_features: tableFeatures({ columnFilteringFeature })
-_rowModels: {
+features: tableFeatures({ columnFilteringFeature })
+rowModels: {
 } // missing filteredRowModel
 
 // ✅
-_rowModels: {
+rowModels: {
   filteredRowModel: createFilteredRowModel(filterFns)
 }
 ```
@@ -390,7 +390,7 @@ to default sort.
 const columnHelper = createColumnHelper<Person>()
 ```
 
-### 7. (HIGH) Putting `_features` / `columns` / row-model factories inside the `injectTable` initializer
+### 7. (HIGH) Putting `features` / `columns` / row-model factories inside the `injectTable` initializer
 
 The v8 mental model was "build columns inside the hook". v9's
 `injectTable` initializer re-runs on every signal read change — keep heavy

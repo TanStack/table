@@ -23,7 +23,7 @@ import type {
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnPinningFeature,
   columnResizingFeature,
@@ -32,7 +32,7 @@ const _features = tableFeatures({
 })
 
 const getCommonPinningStyles = (
-  column: Column<typeof _features, Person>,
+  column: Column<typeof features, Person>,
 ): Record<string, string | undefined> => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -55,7 +55,7 @@ const getCommonPinningStyles = (
   }
 }
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     id: 'firstName',
@@ -104,7 +104,7 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   @state()
   private _data: Array<Person> = makeData(20)
@@ -121,8 +121,8 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {},
+        features,
+        rowModels: {},
         columns: defaultColumns,
         data: this._data,
         state: {

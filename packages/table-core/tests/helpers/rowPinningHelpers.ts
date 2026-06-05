@@ -13,17 +13,17 @@ import type { ColumnDef, RowPinningState, TableOptions } from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 // Define feature set with proper typing
-const _features = {
+const features = {
   ...coreFeatures,
   rowPinningFeature,
   coreReativityFeature: storeReactivityBindings(),
 } as any
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<typeof _features, Person, any>
+type PersonColumn = ColumnDef<typeof features, Person, any>
 
 function generateColumnDefs(people: Array<Person>): Array<PersonColumn> {
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
   const person = people[0]
 
   if (!person) {
@@ -44,7 +44,7 @@ export function createTableWithPinningState(
     initialState: {
       rowPinning: pinningState ?? getDefaultRowPinningState(),
     },
-    _features: {
+    features: {
       rowPinning: rowPinningFeature,
     },
   } as any)
@@ -57,7 +57,7 @@ export function createTableWithMockOnPinningChange(rowCount = 10): {
 } {
   const onRowPinningChangeMock = vi.fn()
   const table = generateTestTableWithData(rowCount, {
-    _features: {
+    features: {
       rowPinning: rowPinningFeature,
     },
   } as any)
@@ -67,8 +67,8 @@ export function createTableWithMockOnPinningChange(rowCount = 10): {
 
 export function createRowPinningTable(
   options?: Omit<
-    TableOptions<typeof _features, Person>,
-    'data' | 'columns' | '_features'
+    TableOptions<typeof features, Person>,
+    'data' | 'columns' | 'features'
   >,
   lengths: Array<number> | number = 10,
 ): any {
@@ -76,9 +76,9 @@ export function createRowPinningTable(
   const data = generateTestData(...lengthsArray)
   const columns = generateColumnDefs(data)
 
-  const table = constructTable<typeof _features, Person>({
-    _features,
-    _rowModels: {},
+  const table = constructTable<typeof features, Person>({
+    features,
+    rowModels: {},
     data,
     columns,
     getSubRows: (row: any) => row.subRows,

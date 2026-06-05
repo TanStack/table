@@ -18,12 +18,12 @@ import type { Person } from './makeData'
 
 // This example demonstrates managing table state externally via Lit's @state() decorator instead of letting the table manage its own state internally.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -53,7 +53,7 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   // Manage sorting state with Lit's @state() decorator
   @state()
@@ -67,8 +67,8 @@ class LitTableExample extends LitElement {
     // Create the table and pass state + onChange handlers
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           sortedRowModel: createSortedRowModel(sortFns),
           paginatedRowModel: createPaginatedRowModel(),
         },

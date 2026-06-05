@@ -11,12 +11,12 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnVisibilityFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -75,7 +75,7 @@ function App() {
 
   const table = createTable({
     debugTable: true,
-    _features,
+    features,
     get data() {
       return data()
     },

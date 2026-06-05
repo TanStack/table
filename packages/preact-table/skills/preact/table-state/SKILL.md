@@ -36,7 +36,7 @@ This skill builds on `tanstack-table/state-management` and `tanstack-table/setup
 
 ## Setup
 
-Every Preact v9 table follows the same shape. Define `_features`, `_rowModels`, and `columns` at module scope so their references are stable, then call `useTable` and render with `<table.FlexRender>`.
+Every Preact v9 table follows the same shape. Define `features`, `rowModels`, and `columns` at module scope so their references are stable, then call `useTable` and render with `<table.FlexRender>`.
 
 ```tsx
 import { render } from 'preact'
@@ -53,8 +53,8 @@ import {
 type Person = { firstName: string; lastName: string; age: number }
 
 // Module-scope = stable identity. Critical for re-render perf.
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -65,8 +65,8 @@ const columns = columnHelper.columns([
 function PeopleTable({ data }: { data: Person[] }) {
   const table = useTable(
     {
-      _features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
+      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data,
     },
@@ -116,8 +116,8 @@ The Preact adapter uses `useSelector` from `@tanstack/preact-store` with `shallo
 // Narrow selector — re-render only on sorting/pagination changes.
 const table = useTable(
   {
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       /*…*/
     },
     columns,
@@ -205,8 +205,8 @@ function MyTable({ data }) {
   const pagination = useSelector(paginationAtom)
 
   const table = useTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -222,7 +222,7 @@ Source: `examples/preact/basic-external-atoms/src/main.tsx`.
 
 ### 4. External state with `state` + `on*Change` and `createTableHook`
 
-Classic `useState` + `on*Change` integration (v8 migration paths) and the `createTableHook` factory for packaging shared `_features` / `_rowModels` / cell components into `useAppTable` + `createAppColumnHelper` + `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries — see [advanced-state-patterns.md](references/advanced-state-patterns.md).
+Classic `useState` + `on*Change` integration (v8 migration paths) and the `createTableHook` factory for packaging shared `features` / `rowModels` / cell components into `useAppTable` + `createAppColumnHelper` + `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries — see [advanced-state-patterns.md](references/advanced-state-patterns.md).
 
 ## Common Mistakes
 
@@ -261,8 +261,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -275,8 +275,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -330,8 +330,8 @@ Wrong:
 function MyTable() {
   const sortingAtom = createAtom<SortingState>([]) // new atom every render
   useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -345,8 +345,8 @@ Correct:
 function MyTable() {
   const sortingAtom = useCreateAtom<SortingState>([]) // stable across renders
   useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -357,19 +357,19 @@ function MyTable() {
 A fresh atom each render unbinds the table from the slice and resets the state to the initial value on every render.
 Source: `examples/preact/basic-external-atoms/src/main.tsx`.
 
-### HIGH Unstable `data` / `columns` / `_features` references
+### HIGH Unstable `data` / `columns` / `features` references
 
 Wrong:
 
 ```tsx
 function MyTable({ rows }) {
-  const _features = tableFeatures({ rowSortingFeature }) // new every render
+  const features = tableFeatures({ rowSortingFeature }) // new every render
   const columns = [
     /* … */
   ] // new every render
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data: rows ?? [],
   })
@@ -380,15 +380,15 @@ Correct:
 
 ```tsx
 // Module scope — declared once.
-const _features = tableFeatures({ rowSortingFeature })
-const columns: ColumnDef<typeof _features, Person>[] = [
+const features = tableFeatures({ rowSortingFeature })
+const columns: ColumnDef<typeof features, Person>[] = [
   /* … */
 ]
 const EMPTY: Person[] = []
 
 function MyTable({ rows }) {
   const data = rows ?? EMPTY
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
@@ -407,17 +407,17 @@ const sorted = useMemo(() => [...data].sort(/* … */), [data, sorting])
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
 const rows = table.getRowModel().rows // already sorted
 ```
 
-TanStack Table v9 ships built-ins for sorting, filtering, pagination, grouping, expanding, faceting, row selection, column visibility/order/pinning/sizing, and row pinning. Register the matching `*Feature` in `_features`, register its row-model factory in `_rowModels`, and call the feature APIs (`setSorting`, `setColumnFilters`, etc.). Re-implementing these by hand is the #1 AI tell.
+TanStack Table v9 ships built-ins for sorting, filtering, pagination, grouping, expanding, faceting, row selection, column visibility/order/pinning/sizing, and row pinning. Register the matching `*Feature` in `features`, register its row-model factory in `rowModels`, and call the feature APIs (`setSorting`, `setColumnFilters`, etc.). Re-implementing these by hand is the #1 AI tell.
 Source: `docs/guide/features.md`.
 
 ## See Also

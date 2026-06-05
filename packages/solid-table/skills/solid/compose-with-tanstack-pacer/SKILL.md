@@ -51,11 +51,11 @@ import {
 import { useDebouncedCallback } from '@tanstack/solid-pacer/debouncer'
 import { For, createSignal } from 'solid-js'
 
-const _features = tableFeatures({ columnFilteringFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ columnFilteringFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function FirstNameFilter(props: {
-  column: Column<typeof _features, Person, string>
+  column: Column<typeof features, Person, string>
 }) {
   // Local input value updates immediately (good UX).
   const [text, setText] = createSignal('')
@@ -91,8 +91,8 @@ function App() {
   const [data] = createSignal(makeData(10_000))
 
   const table = createTable({
-    _features,
-    _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+    features,
+    rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
     columns,
     get data() {
       return data()
@@ -139,8 +139,8 @@ columns this can cause noticeable lag on slower machines.
 import { useThrottledCallback } from '@tanstack/solid-pacer/throttler'
 
 const table = createTable({
-  _features: tableFeatures({ columnSizingFeature, columnResizingFeature }),
-  _rowModels: {},
+  features: tableFeatures({ columnSizingFeature, columnResizingFeature }),
+  rowModels: {},
   columns,
   get data() {
     return data()

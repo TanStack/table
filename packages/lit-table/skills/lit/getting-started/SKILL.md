@@ -2,8 +2,8 @@
 name: lit/getting-started
 description: >
   End-to-end first-table journey for `@tanstack/lit-table` v9: install the
-  adapter (plus required `lit` and `@lit/context` peers), declare `_features`
-  via `tableFeatures()`, declare `_rowModels` with their factories, build a
+  adapter (plus required `lit` and `@lit/context` peers), declare `features`
+  via `tableFeatures()`, declare `rowModels` with their factories, build a
   typed column helper, construct one `TableController` per LitElement host,
   call `.table(options, selector?)` inside `render()`, and render with
   `FlexRender({ cell|header|footer })`. Routing keywords: install lit-table,
@@ -41,7 +41,7 @@ Peer dependency versions: `lit ^3.1.3`, `@lit/context ^1.1.0`.
 
 Source: `packages/lit-table/package.json`.
 
-## Step 1 — Declare `_features`
+## Step 1 — Declare `features`
 
 v9 is explicit about what a table uses. Use `tableFeatures({...})` at module scope. The TypeScript shape drives state inference, API surface, and tree-shaking.
 
@@ -52,19 +52,19 @@ import {
   rowSortingFeature,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 ```
 
-If `_features` does not include `rowSelectionFeature`, then `table.atoms.rowSelection`, `table.setRowSelection`, etc. become TypeScript errors — and the runtime won't ship that logic. Pass `tableFeatures({})` for a minimum-overhead table with just the core row model.
+If `features` does not include `rowSelectionFeature`, then `table.atoms.rowSelection`, `table.setRowSelection`, etc. become TypeScript errors — and the runtime won't ship that logic. Pass `tableFeatures({})` for a minimum-overhead table with just the core row model.
 
 Source: `docs/framework/lit/lit-table.md`; `docs/guide/features.md`.
 
-## Step 2 — Declare `_rowModels`
+## Step 2 — Declare `rowModels`
 
-Each registered feature that needs a row-model stage maps to a factory under `_rowModels`. The factory takes a record of \*Fns for that stage.
+Each registered feature that needs a row-model stage maps to a factory under `rowModels`. The factory takes a record of \*Fns for that stage.
 
 ```ts
 import {
@@ -73,13 +73,13 @@ import {
   sortFns,
 } from '@tanstack/lit-table'
 
-const _rowModels = {
+const rowModels = {
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(sortFns),
 }
 ```
 
-The core row model is always included — `_rowModels: {}` is valid for a feature-free table.
+The core row model is always included — `rowModels: {}` is valid for a feature-free table.
 
 ## Step 3 — Type your data and build columns
 
@@ -96,7 +96,7 @@ type Person = {
   progress: number
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -119,7 +119,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 ]
 ```
 
-For a more type-safe path, use `createColumnHelper<typeof _features, Person>()`.
+For a more type-safe path, use `createColumnHelper<typeof features, Person>()`.
 
 Source: `examples/lit/basic-table-controller/src/main.ts`.
 
@@ -135,7 +135,7 @@ import { FlexRender, TableController } from '@tanstack/lit-table'
 class LitTableExample extends LitElement {
   // ONE controller per host. Constructed as a class field so the constructor's
   // `host.addController(this)` call happens once.
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   @state()
   private data: Person[] = makeData(20)
@@ -150,8 +150,8 @@ class LitTableExample extends LitElement {
     // Later calls merge options into the same instance.
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels,
+        features,
+        rowModels,
         columns,
         data: this.data,
       },
@@ -239,7 +239,7 @@ Wrong:
 
 ```ts
 protected render() {
-  const controller = new TableController<typeof _features, Person>(this) // every frame
+  const controller = new TableController<typeof features, Person>(this) // every frame
   const table = controller.table({ /* … */ })
 }
 ```
@@ -247,21 +247,21 @@ protected render() {
 Correct:
 
 ```ts
-private tableController = new TableController<typeof _features, Person>(this) // once per host
+private tableController = new TableController<typeof features, Person>(this) // once per host
 ```
 
 A new controller per render registers a new subscription and resets table state every frame.
 Source: `packages/lit-table/src/TableController.ts`.
 
-### CRITICAL Calling a feature API when the feature is not in `_features`
+### CRITICAL Calling a feature API when the feature is not in `features`
 
 Wrong:
 
 ```ts
-const _features = tableFeatures({}) // no rowPaginationFeature
+const features = tableFeatures({}) // no rowPaginationFeature
 const table = this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: this.data,
 })
@@ -271,10 +271,10 @@ table.setPageIndex(0) // TypeScript error AND runtime no-op
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 const table = this.tableController.table({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: this.data,
 })
@@ -288,8 +288,8 @@ Source: `docs/guide/features.md`.
 Wrong:
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature })
-const table = this.tableController.table({ _features, _rowModels: {} /* … */ })
+const features = tableFeatures({ rowSortingFeature })
+const table = this.tableController.table({ features, rowModels: {} /* … */ })
 table.setSorting([{ id: 'age', desc: true }])
 // rows are NOT sorted — no sortedRowModel registered
 ```
@@ -297,19 +297,19 @@ table.setSorting([{ id: 'age', desc: true }])
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = this.tableController.table({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   /* … */
 })
 ```
 
-### HIGH Building `_features` / `columns` / `data` inside `render()`
+### HIGH Building `features` / `columns` / `data` inside `render()`
 
 Wrong: re-creating these every frame busts internal memos.
 
-Correct: `_features` and `columns` at module scope; `data` from a `@state()` field on the element.
+Correct: `features` and `columns` at module scope; `data` from a `@state()` field on the element.
 Source: `docs/framework/lit/guide/table-state.md` (FAQ #1).
 
 ### HIGH Reimplementing built-in feature logic

@@ -8,7 +8,7 @@ import type { ColumnDef } from '../../../../src/types/ColumnDef'
 describe('constructColumn', () => {
   it('should create a column with all core column APIs and properties', () => {
     const table = constructTable({
-      _features: {
+      features: {
         coreColumnsFeature,
         coreReativityFeature: storeReactivityBindings(),
       },

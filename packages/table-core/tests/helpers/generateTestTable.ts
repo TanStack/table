@@ -15,9 +15,9 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
   lengths: Array<number> | number = 10,
   options?: Omit<
     TableOptions<TFeatures, Person>,
-    'data' | 'columns' | '_features'
+    'data' | 'columns' | 'features'
   > & {
-    _features?: TableFeatures
+    features?: TableFeatures
   },
 ): Table<TFeatures, Person> {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
@@ -29,9 +29,9 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
     columns,
     getSubRows: (row: Row<TFeatures, Person>) => row.subRows,
     ...options,
-    _features: {
+    features: {
       ...coreFeatures,
-      ...options?._features,
+      ...options?.features,
       coreReativityFeature: storeReactivityBindings(),
     },
   } as any)
@@ -46,9 +46,9 @@ export function generateTestTableFromData<TFeatures extends TableFeatures>(
     data,
     columns,
     ...options,
-    _features: {
+    features: {
       ...coreFeatures,
-      ...options?._features,
+      ...options?.features,
       coreReativityFeature: storeReactivityBindings(),
     },
   } as any)
@@ -72,8 +72,8 @@ export function generateTestTableWithDataAndState<
     data,
     columns,
     ...options,
-    _features: {
-      ...options?._features,
+    features: {
+      ...options?.features,
     },
     state,
     onStateChange: (updater: any) => {
@@ -105,8 +105,8 @@ export function generateTestTableWithStateFromData<
   const table = generateTestTableFromData(data, {
     columns,
     ...options,
-    _features: {
-      ...options?._features,
+    features: {
+      ...options?.features,
     },
     state,
     onStateChange: (updater: any) => {

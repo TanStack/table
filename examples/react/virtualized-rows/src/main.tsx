@@ -80,8 +80,8 @@ function App() {
 
   const table = useTable(
     {
-      _features: features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features: features,
+      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data,
       debugTable: true,

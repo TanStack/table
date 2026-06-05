@@ -27,7 +27,7 @@ skills:
     domain: core-foundations
     path: packages/table-core/skills/setup/SKILL.md
     package: packages/table-core
-    description: Install a table adapter and wire up a first working table with `_features`, `_rowModels`, columns, and data.
+    description: Install a table adapter and wire up a first working table with `features`, `rowModels`, columns, and data.
     requires:
       - state-management
       - column-definitions
@@ -43,7 +43,7 @@ skills:
     domain: core-foundations
     path: packages/table-core/skills/column-definitions/SKILL.md
     package: packages/table-core
-    description: Define columns with `createColumnHelper<typeof _features, TData>()` to extract data and render headers/cells/footers.
+    description: Define columns with `createColumnHelper<typeof features, TData>()` to extract data and render headers/cells/footers.
     sources:
       - TanStack/table:docs/guide/column-defs.md
       - TanStack/table:docs/guide/columns.md
@@ -385,8 +385,8 @@ skills:
     path: packages/react-table/skills/react/getting-started/SKILL.md
     package: packages/react-table
     description:
-      'End-to-end first-table journey: install the framework adapter, declare `_features` via `tableFeatures()`,
-      declare `_rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
       instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
       directives on Angular). New users land here, not on `useLegacyTable`.'
     requires:
@@ -405,8 +405,8 @@ skills:
     path: packages/vue-table/skills/vue/getting-started/SKILL.md
     package: packages/vue-table
     description:
-      'End-to-end first-table journey: install the framework adapter, declare `_features` via `tableFeatures()`,
-      declare `_rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
       instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
       directives on Angular). New users land here, not on `useLegacyTable`.'
     requires:
@@ -425,8 +425,8 @@ skills:
     path: packages/angular-table/skills/angular/getting-started/SKILL.md
     package: packages/angular-table
     description:
-      'End-to-end first-table journey: install the framework adapter, declare `_features` via `tableFeatures()`,
-      declare `_rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
       instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
       directives on Angular). New users land here, not on `useLegacyTable`.'
     requires:
@@ -445,8 +445,8 @@ skills:
     path: packages/solid-table/skills/solid/getting-started/SKILL.md
     package: packages/solid-table
     description:
-      'End-to-end first-table journey: install the framework adapter, declare `_features` via `tableFeatures()`,
-      declare `_rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
       instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
       directives on Angular). New users land here, not on `useLegacyTable`.'
     requires:
@@ -465,8 +465,8 @@ skills:
     path: packages/svelte-table/skills/svelte/getting-started/SKILL.md
     package: packages/svelte-table
     description:
-      'End-to-end first-table journey: install the framework adapter, declare `_features` via `tableFeatures()`,
-      declare `_rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
       instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
       directives on Angular). New users land here, not on `useLegacyTable`.'
     requires:
@@ -485,8 +485,8 @@ skills:
     path: packages/preact-table/skills/preact/getting-started/SKILL.md
     package: packages/preact-table
     description:
-      'End-to-end first-table journey: install the framework adapter, declare `_features` via `tableFeatures()`,
-      declare `_rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
       instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
       directives on Angular). New users land here, not on `useLegacyTable`.'
     requires:
@@ -505,8 +505,8 @@ skills:
     path: packages/lit-table/skills/lit/getting-started/SKILL.md
     package: packages/lit-table
     description:
-      'End-to-end first-table journey: install the framework adapter, declare `_features` via `tableFeatures()`,
-      declare `_rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
       instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
       directives on Angular). New users land here, not on `useLegacyTable`.'
     requires:
@@ -679,7 +679,7 @@ skills:
     description:
       "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
       / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
-      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `_rowModels`
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
       entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
       owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
       state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
@@ -700,7 +700,7 @@ skills:
     description:
       "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
       / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
-      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `_rowModels`
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
       entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
       owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
       state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
@@ -721,7 +721,7 @@ skills:
     description:
       "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
       / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
-      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `_rowModels`
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
       entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
       owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
       state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
@@ -742,7 +742,7 @@ skills:
     description:
       "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
       / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
-      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `_rowModels`
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
       entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
       owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
       state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
@@ -763,7 +763,7 @@ skills:
     description:
       "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
       / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
-      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `_rowModels`
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
       entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
       owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
       state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
@@ -784,7 +784,7 @@ skills:
     description:
       "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
       / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
-      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `_rowModels`
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
       entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
       owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
       state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
@@ -803,8 +803,8 @@ skills:
     path: packages/react-table/skills/react/production-readiness/SKILL.md
     package: packages/react-table
     description:
-      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `_features` you actually use;
-      memoize `_features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
       `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
       (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
       Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
@@ -822,8 +822,8 @@ skills:
     path: packages/vue-table/skills/vue/production-readiness/SKILL.md
     package: packages/vue-table
     description:
-      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `_features` you actually use;
-      memoize `_features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
       `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
       (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
       Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
@@ -841,8 +841,8 @@ skills:
     path: packages/angular-table/skills/angular/production-readiness/SKILL.md
     package: packages/angular-table
     description:
-      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `_features` you actually use;
-      memoize `_features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
       `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
       (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
       Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
@@ -860,8 +860,8 @@ skills:
     path: packages/solid-table/skills/solid/production-readiness/SKILL.md
     package: packages/solid-table
     description:
-      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `_features` you actually use;
-      memoize `_features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
       `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
       (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
       Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
@@ -879,8 +879,8 @@ skills:
     path: packages/svelte-table/skills/svelte/production-readiness/SKILL.md
     package: packages/svelte-table
     description:
-      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `_features` you actually use;
-      memoize `_features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
       `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
       (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
       Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
@@ -898,8 +898,8 @@ skills:
     path: packages/preact-table/skills/preact/production-readiness/SKILL.md
     package: packages/preact-table
     description:
-      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `_features` you actually use;
-      memoize `_features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
       `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
       (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
       Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."

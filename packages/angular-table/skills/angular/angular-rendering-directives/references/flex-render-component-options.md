@@ -8,7 +8,7 @@ callbacks, a custom injector, or Angular v20+ `bindings` / `directives`,
 import { flexRenderComponent, type ColumnDef } from '@tanstack/angular-table'
 import { EditableCell } from './editable-cell'
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: ({ getValue, row, column, table }) =>

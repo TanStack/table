@@ -13,13 +13,13 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnVisibilityFeature,
     columnPinningFeature,
     columnOrderingFeature,
   })
 
-  const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+  const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -79,8 +79,8 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       get data() {
         return data

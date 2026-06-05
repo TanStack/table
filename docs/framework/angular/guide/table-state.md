@@ -37,17 +37,17 @@ The returned table is also signal-reactive: table state and table APIs are wired
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -61,7 +61,7 @@ this.table.atoms.sorting.get()
 // this.table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -99,8 +99,8 @@ import { computed } from '@angular/core'
 import { shallow } from '@tanstack/angular-table'
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   columns,
@@ -161,8 +161,8 @@ If you only need to customize the starting value for some table state, use `init
 
 ```ts
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -219,8 +219,8 @@ readonly pagination = signal<PaginationState>({
 })
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -280,8 +280,8 @@ readonly sorting = signal<SortingState>([
 ])
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```ts
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

@@ -5,7 +5,7 @@ description: >
   (manual modes). Pass server-paginated/sorted/filtered rows as `data`, set
   `manualPagination` / `manualSorting` / `manualFiltering` / `manualGrouping` /
   `manualExpanding` for whatever the server now owns, supply `rowCount` so
-  `getPageCount()` works, and DROP the matching `_rowModels` entry (no
+  `getPageCount()` works, and DROP the matching `rowModels` entry (no
   `paginatedRowModel` if the server paginates). Own the relevant state slices
   via external atoms (`useCreateAtom` + `options.atoms`) so a query can key on
   the slice and refetch automatically — OR via classic `state` + `on*Change`
@@ -35,7 +35,7 @@ A client-side table sees every row, sorts/filters/paginates them locally, and re
 Four moves convert any client table to a server table:
 
 1. **`manualX: true`** for whichever operations the server owns.
-2. **Drop the matching factory** from `_rowModels` so it doesn't ship in your bundle.
+2. **Drop the matching factory** from `rowModels` so it doesn't ship in your bundle.
 3. **Provide `rowCount`** so `table.getPageCount()` / `getCanNextPage()` work.
 4. **Own the slice state externally** so your data fetcher can key on it.
 
@@ -56,8 +56,8 @@ import {
 } from '@tanstack/react-table'
 import type { PaginationState } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowPaginationFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
   columnHelper.accessor('age', { header: 'Age' }),
@@ -88,10 +88,10 @@ function ServerTable() {
     }
   }, [pagination])
 
-  // 3) Manual pagination + rowCount. No paginatedRowModel in _rowModels.
+  // 3) Manual pagination + rowCount. No paginatedRowModel in rowModels.
   const table = useTable({
-    _features,
-    _rowModels: {}, // core only — server slices
+    features,
+    rowModels: {}, // core only — server slices
     columns,
     data: serverPage?.rows ?? EMPTY, // EMPTY at module scope
     rowCount: serverPage?.rowCount,
@@ -113,8 +113,8 @@ const [pagination, setPagination] = React.useState<PaginationState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: serverPage?.rows ?? EMPTY,
   rowCount: serverPage?.rowCount,
@@ -133,7 +133,7 @@ Both work. `state` + `on*Change` is familiar from v8; atoms compose more cleanly
 Add the matching `manual*` flags for each operation the server now owns. Local features (column visibility, ordering, pinning) still work because they don't depend on the row model.
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
@@ -156,8 +156,8 @@ const serverArgs = { sorting, pagination, columnFilters }
 // ... fetch keyed on serverArgs
 
 const table = useTable({
-  _features,
-  _rowModels: {}, // no sorted/filtered/paginated factories — server owns them
+  features,
+  rowModels: {}, // no sorted/filtered/paginated factories — server owns them
   columns,
   data: serverPage?.rows ?? EMPTY,
   rowCount: serverPage?.rowCount,
@@ -186,8 +186,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: serverPage.rows,
   // missing manualPagination
@@ -198,8 +198,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {}, // dropped — server paginates
+  features,
+  rowModels: {}, // dropped — server paginates
   columns,
   data: serverPage.rows,
   rowCount: serverPage.rowCount,
@@ -216,8 +216,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: serverPage.rows,
   manualPagination: true,
@@ -230,8 +230,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: serverPage.rows,
   rowCount: serverPage.rowCount, // ← required for accurate pager
@@ -252,8 +252,8 @@ const [pagination] = React.useState<PaginationState>({
   pageSize: 10,
 })
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: { pagination },
@@ -270,8 +270,8 @@ const [pagination, setPagination] = React.useState<PaginationState>({
   pageSize: 10,
 })
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: { pagination },
@@ -290,8 +290,8 @@ Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() }, // ships for nothing
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() }, // ships for nothing
   columns,
   data: serverPage.rows,
   manualPagination: true,
@@ -302,8 +302,8 @@ Correct:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {}, // drop it — server owns pagination
+  features,
+  rowModels: {}, // drop it — server owns pagination
   columns,
   data: serverPage.rows,
   rowCount: serverPage.rowCount,
@@ -320,8 +320,8 @@ Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: { pagination }, // silently ignored
@@ -336,8 +336,8 @@ Correct:
 ```tsx
 // Pick one ownership mechanism per slice.
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },

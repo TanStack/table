@@ -7,7 +7,7 @@ import type { RowModel } from './coreRowModelsFeature.types'
 /**
  * Resolves the table's unmodified core row model.
  *
- * The factory is created once per table, either from `options._rowModels.coreRowModel`
+ * The factory is created once per table, either from `options.rowModels.coreRowModel`
  * or the built-in `createCoreRowModel()`, then reused for later calls.
  *
  * @example
@@ -21,7 +21,7 @@ export function table_getCoreRowModel<
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   if (!table._rowModels.coreRowModel) {
     table._rowModels.coreRowModel =
-      table.options._rowModels?.coreRowModel?.(table) ??
+      table.options.rowModels?.coreRowModel?.(table) ??
       createCoreRowModel<TFeatures, TData>()(table)
   }
 
@@ -64,7 +64,7 @@ export function table_getFilteredRowModel<
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   if (!table._rowModels.filteredRowModel) {
     table._rowModels.filteredRowModel =
-      table.options._rowModels?.filteredRowModel?.(table)
+      table.options.rowModels?.filteredRowModel?.(table)
   }
 
   if (table.options.manualFiltering || !table._rowModels.filteredRowModel) {
@@ -108,7 +108,7 @@ export function table_getGroupedRowModel<
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   if (!table._rowModels.groupedRowModel) {
     table._rowModels.groupedRowModel =
-      table.options._rowModels?.groupedRowModel?.(table)
+      table.options.rowModels?.groupedRowModel?.(table)
   }
 
   if (table.options.manualGrouping || !table._rowModels.groupedRowModel) {
@@ -153,7 +153,7 @@ export function table_getSortedRowModel<
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   if (!table._rowModels.sortedRowModel) {
     table._rowModels.sortedRowModel =
-      table.options._rowModels?.sortedRowModel?.(table)
+      table.options.rowModels?.sortedRowModel?.(table)
   }
 
   if (table.options.manualSorting || !table._rowModels.sortedRowModel) {
@@ -197,7 +197,7 @@ export function table_getExpandedRowModel<
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   if (!table._rowModels.expandedRowModel) {
     table._rowModels.expandedRowModel =
-      table.options._rowModels?.expandedRowModel?.(table)
+      table.options.rowModels?.expandedRowModel?.(table)
   }
 
   if (table.options.manualExpanding || !table._rowModels.expandedRowModel) {
@@ -243,7 +243,7 @@ export function table_getPaginatedRowModel<
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
   if (!table._rowModels.paginatedRowModel) {
     table._rowModels.paginatedRowModel =
-      table.options._rowModels?.paginatedRowModel?.(table)
+      table.options.rowModels?.paginatedRowModel?.(table)
   }
 
   if (table.options.manualPagination || !table._rowModels.paginatedRowModel) {

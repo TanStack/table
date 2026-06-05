@@ -10,9 +10,9 @@ import { makeData } from './makeData'
 import type { Table as SolidTableType } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature, columnResizingFeature })
+const features = tableFeatures({ columnSizingFeature, columnResizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -62,8 +62,8 @@ function App() {
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       get data() {
         return data()
@@ -151,7 +151,7 @@ function App() {
 function TableBody({
   table,
 }: {
-  table: SolidTableType<typeof _features, Person>
+  table: SolidTableType<typeof features, Person>
 }) {
   return (
     <div class="tbody">

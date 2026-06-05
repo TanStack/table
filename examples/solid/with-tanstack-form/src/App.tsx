@@ -16,13 +16,13 @@ import type { Column, Table } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
 // Define table features
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
 })
 
 // Create column helper with features and Person type
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Zod validation schema for a person
 const personSchema = z.object({
@@ -151,8 +151,8 @@ function App() {
 
   // Create table using form state as data source
   const table = createTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -351,8 +351,8 @@ function App() {
 }
 
 function Filter(props: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = () =>
     props.table.getPreFilteredRowModel().flatRows[0]?.getValue(props.column.id)

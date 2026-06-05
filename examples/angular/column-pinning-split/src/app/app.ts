@@ -15,8 +15,8 @@ import { makeData } from './makeData'
 import type { ColumnDef, ColumnPinningState } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnPinningFeature })
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const features = tableFeatures({ columnPinningFeature })
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -45,9 +45,9 @@ export class App {
     left: ['firstName'],
     right: ['progress'],
   })
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {},
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
     state: {

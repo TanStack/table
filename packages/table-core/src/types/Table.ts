@@ -53,7 +53,7 @@ export type Table_Core<
   Table_Headers<TFeatures, TData>
 
 /**
- * The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
+ * The table object that includes both the core table functionality and the features that are enabled via the `features` table option.
  */
 export type Table<
   TFeatures extends TableFeatures,
@@ -120,7 +120,7 @@ export type Table_Internal<
   _rowModels: CachedRowModel_All<TFeatures, TData>
   _rowModelFns: RowModelFns_All<TFeatures, TData>
   options: TableOptions_All<TFeatures, TData> & {
-    _rowModels?: CreateRowModels_All<TFeatures, TData>
+    rowModels?: CreateRowModels_All<TFeatures, TData>
     state?: TableState_All
     initialState?: TableState_All
     atoms?: ExternalAtoms_All

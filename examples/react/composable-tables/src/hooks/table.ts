@@ -61,14 +61,14 @@ export const {
   useHeaderContext,
 } = createTableHook({
   // Features are set once here and shared across all tables
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
   }),
 
   // Row models are set once here
-  _rowModels: {
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),

@@ -20,14 +20,14 @@
   import './index.css'
   import { makeData, type Person } from './makeData'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnFilteringFeature,
     globalFilteringFeature,
     columnFacetingFeature,
     rowPaginationFeature,
   })
 
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -88,8 +88,8 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         facetedRowModel: createFacetedRowModel(),
         facetedMinMaxValues: createFacetedMinMaxValues(),
         facetedUniqueValues: createFacetedUniqueValues(),

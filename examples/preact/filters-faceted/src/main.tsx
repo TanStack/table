@@ -26,13 +26,13 @@ import type {
 } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 declare module '@tanstack/preact-table' {
   // allows us to define custom properties for our columns
@@ -92,8 +92,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns), // client-side filtering
         paginatedRowModel: createPaginatedRowModel(),
         facetedRowModel: createFacetedRowModel(), // client-side faceting
@@ -231,7 +231,7 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<typeof _features, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const { filterVariant } = column.columnDef.meta ?? {}
 
   const columnFilterValue = column.getFilterValue()

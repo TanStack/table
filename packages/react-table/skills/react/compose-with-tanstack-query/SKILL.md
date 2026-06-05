@@ -71,9 +71,9 @@ import type { PaginationState } from '@tanstack/react-table'
 import { fetchData } from './fetchData' // returns { rows, rowCount }
 import type { Person } from './fetchData'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     header: 'First Name',
@@ -111,8 +111,8 @@ function App() {
   // 6) Manual pagination + rowCount; no paginatedRowModel.
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data: dataQuery.data?.rows ?? defaultData,
       rowCount: dataQuery.data?.rowCount,
@@ -180,7 +180,7 @@ Source: `examples/react/with-tanstack-query/src/main.tsx` (this is the canonical
 
 ## Adding sort + filter
 
-The same pattern extends to multiple slices. Key the query on each, set the matching `manual*` flag, drop the matching `_rowModels` factory.
+The same pattern extends to multiple slices. Key the query on each, set the matching `manual*` flag, drop the matching `rowModels` factory.
 
 ```tsx
 const paginationAtom = useCreateAtom<PaginationState>({
@@ -201,12 +201,12 @@ const dataQuery = useQuery({
 })
 
 const table = useTable({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowPaginationFeature,
     rowSortingFeature,
     columnFilteringFeature,
   }),
-  _rowModels: {}, // server owns sort/filter/paginate
+  rowModels: {}, // server owns sort/filter/paginate
   columns,
   data: dataQuery.data?.rows ?? defaultData,
   rowCount: dataQuery.data?.rowCount,
@@ -241,8 +241,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: query.data?.rows ?? [],
   // missing manualPagination
@@ -253,8 +253,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {}, // drop paginatedRowModel
+  features,
+  rowModels: {}, // drop paginatedRowModel
   columns,
   data: query.data?.rows ?? defaultData,
   rowCount: query.data?.rowCount,
@@ -272,8 +272,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: query.data?.rows ?? defaultData,
   atoms: { pagination: paginationAtom },
@@ -286,8 +286,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: query.data?.rows ?? defaultData,
   rowCount: query.data?.rowCount, // ← required for accurate pager
@@ -354,8 +354,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: query.data?.rows ?? [], // new identity every render
   // ...
@@ -369,8 +369,8 @@ const defaultData = React.useMemo(() => [], [])
 // or: const EMPTY: Person[] = [] at module scope
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: query.data?.rows ?? defaultData,
   // ...
@@ -386,8 +386,8 @@ Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: { pagination }, // silently ignored
@@ -402,8 +402,8 @@ Correct:
 ```tsx
 // Pick one. The atom pattern is canonical for Query.
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -444,7 +444,7 @@ Source: docs/framework/react/react-query.
 Wrong:
 
 ```tsx
-_rowModels: {
+rowModels: {
   paginatedRowModel: createPaginatedRowModel()
 } // ships unused code
 ```
@@ -452,7 +452,7 @@ _rowModels: {
 Correct:
 
 ```tsx
-_rowModels: {
+rowModels: {
 } // server paginates; drop the factory
 ```
 

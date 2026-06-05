@@ -36,7 +36,7 @@ This skill builds on `tanstack-table/state-management` and `tanstack-table/setup
 
 ## Setup
 
-The shape every Lit v9 table follows: register `_features` and `_rowModels` at module scope, construct `TableController` once per host element, and call `.table(options, selector?)` from inside `render()`.
+The shape every Lit v9 table follows: register `features` and `rowModels` at module scope, construct `TableController` once per host element, and call `.table(options, selector?)` from inside `render()`.
 
 ```ts
 import { LitElement, html } from 'lit'
@@ -54,9 +54,9 @@ import {
 
 type Person = { firstName: string; lastName: string; age: number }
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -69,7 +69,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 @customElement('people-table')
 export class PeopleTable extends LitElement {
   // ONE controller per host. The constructor calls host.addController(this).
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   @state()
   private data: Person[] = []
@@ -77,8 +77,8 @@ export class PeopleTable extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+        features,
+        rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
         columns,
         data: this.data,
       },
@@ -145,7 +145,7 @@ The selector is a function from full table state to whatever you want exposed on
 
 ```ts
 const table = this.tableController.table(
-  { _features, _rowModels: {}, columns, data: this._data },
+  { features, rowModels: {}, columns, data: this._data },
   (state) => ({ pagination: state.pagination }),
 )
 
@@ -198,7 +198,7 @@ import {
   type PaginationState,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 // Module-scope atoms — stable identity, shareable across components.
 const paginationAtom = createAtom<PaginationState>({
@@ -208,12 +208,12 @@ const paginationAtom = createAtom<PaginationState>({
 
 @customElement('my-table')
 class MyTable extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table({
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data: this._data,
       atoms: { pagination: paginationAtom },
@@ -237,8 +237,8 @@ private _sorting: SortingState = []
 
 protected render() {
   const table = this.tableController.table({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data: this._data,
     state: { sorting: this._sorting },
@@ -253,12 +253,12 @@ Source: `docs/framework/lit/guide/table-state.md`.
 
 ### 7. `createTableHook` for reusable shared config
 
-Bundle `_features`, `_rowModels`, default options, and pre-bound cell/header components. You get `useAppTable(host, options, selector?)`, `createAppColumnHelper`, and `useTableContext` / `useCellContext` / `useHeaderContext` (Lit Context consumers).
+Bundle `features`, `rowModels`, default options, and pre-bound cell/header components. You get `useAppTable(host, options, selector?)`, `createAppColumnHelper`, and `useTableContext` / `useCellContext` / `useHeaderContext` (Lit Context consumers).
 
 ```ts
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
 })
 
 const columnHelper = createAppColumnHelper<Person>()
@@ -319,7 +319,7 @@ Wrong:
 
 ```ts
 protected render() {
-  const controller = new TableController<typeof _features, Person>(this) // new instance every render
+  const controller = new TableController<typeof features, Person>(this) // new instance every render
   const table = controller.table({ /* … */ })
 }
 ```
@@ -328,7 +328,7 @@ Correct:
 
 ```ts
 class MyTable extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this) // once
+  private tableController = new TableController<typeof features, Person>(this) // once
 
   protected render() {
     const table = this.tableController.table({
@@ -341,15 +341,15 @@ class MyTable extends LitElement {
 Each `new TableController(host)` registers another controller on the host. The original table is discarded; the new one resubscribes; state is reset every render.
 Source: `packages/lit-table/src/TableController.ts`.
 
-### CRITICAL Calling a feature API when the feature is not in `_features`
+### CRITICAL Calling a feature API when the feature is not in `features`
 
 Wrong:
 
 ```ts
-const _features = tableFeatures({}) // no rowPaginationFeature
+const features = tableFeatures({}) // no rowPaginationFeature
 const table = this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: this._data,
 })
@@ -359,10 +359,10 @@ table.setPageIndex(0) // TypeScript error AND runtime no-op
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 const table = this.tableController.table({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: this._data,
 })
@@ -400,9 +400,9 @@ private appTable = (() => {
 
 Source: `examples/lit/basic-app-table/src/main.ts` (lines 77–90).
 
-### HIGH Unstable `_features` / `columns` / `data` references
+### HIGH Unstable `features` / `columns` / `data` references
 
-Wrong: building `_features` or `columns` inside `render()` so a new array/object is allocated every frame.
+Wrong: building `features` or `columns` inside `render()` so a new array/object is allocated every frame.
 
 Correct: declare at module scope. For `data`, prefer a `@state()` field; for derived data, memoize where the dependency actually changes.
 Source: `docs/framework/lit/guide/table-state.md` (FAQ #1).
@@ -411,7 +411,7 @@ Source: `docs/framework/lit/guide/table-state.md` (FAQ #1).
 
 Wrong: hand-rolled sorting / filtering / pagination outside the table.
 
-Correct: register the matching `*Feature` in `_features`, register its row-model factory in `_rowModels`, and use the feature APIs (`setSorting`, `setColumnFilters`, etc.). This is the #1 AI tell.
+Correct: register the matching `*Feature` in `features`, register its row-model factory in `rowModels`, and use the feature APIs (`setSorting`, `setColumnFilters`, etc.). This is the #1 AI tell.
 Source: `docs/guide/features.md`.
 
 ### MEDIUM Passing the same slice via `atoms` AND `state`

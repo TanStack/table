@@ -2,7 +2,7 @@
 name: vue/getting-started
 description: >
   End-to-end first-table walkthrough for `@tanstack/vue-table` v9. Install the adapter, declare
-  `_features` via `tableFeatures({})`, declare `_rowModels` with their `*Fns` parameters
+  `features` via `tableFeatures({})`, declare `rowModels` with their `*Fns` parameters
   (`createSortedRowModel(sortFns)`, `createPaginatedRowModel()`, …), build a column helper with
   both `TFeatures` and `TData` generics, instantiate `useTable(options, selector?)` from a
   `<script setup>` block, and render with `<FlexRender :cell="cell" />` / `:header="header"`.
@@ -53,8 +53,8 @@ import {
 type Person = { firstName: string; lastName: string; age: number }
 
 // Stable identities — declare at module scope (outside <script setup> blocks).
-const _features = tableFeatures({}) // required — even when no features are used
-const columnHelper = createColumnHelper<typeof _features, Person>() // note: TWO generics
+const features = tableFeatures({}) // required — even when no features are used
+const columnHelper = createColumnHelper<typeof features, Person>() // note: TWO generics
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -68,8 +68,8 @@ const data = ref<Person[]>([
 ])
 
 const table = useTable({
-  _features,
-  _rowModels: {}, // required — core row model is automatic
+  features,
+  rowModels: {}, // required — core row model is automatic
   columns,
   data,
 })
@@ -99,10 +99,10 @@ Source: `examples/vue/basic-use-table/src/App.tsx`, `docs/framework/vue/vue-tabl
 
 ### What's mandatory in v9
 
-- `_features` — built via `tableFeatures({...})`. Empty object is fine for a no-features table,
+- `features` — built via `tableFeatures({...})`. Empty object is fine for a no-features table,
   but the option key must exist.
-- `_rowModels` — `{}` is fine (core row model is automatic). Register factories per feature.
-- `createColumnHelper<typeof _features, Person>()` — two generics, in that order. The v8 single
+- `rowModels` — `{}` is fine (core row model is automatic). Register factories per feature.
+- `createColumnHelper<typeof features, Person>()` — two generics, in that order. The v8 single
   generic does not compile.
 
 ## Core Patterns
@@ -122,8 +122,8 @@ import {
   useTable,
 } from '@tanstack/vue-table'
 
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
   columnHelper.accessor('age', { header: 'Age' }),
@@ -132,8 +132,8 @@ const columns = columnHelper.columns([
 const data = ref<Person[]>([])
 
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -159,8 +159,8 @@ const table = useTable({
 
 Three rules:
 
-1. Register the feature in `_features` (`rowSortingFeature`).
-2. Provide the matching row model factory in `_rowModels`
+1. Register the feature in `features` (`rowSortingFeature`).
+2. Provide the matching row model factory in `rowModels`
    (`sortedRowModel: createSortedRowModel(sortFns)`). The factory **requires its `*Fns`
    parameter** in v9 — this is what makes filter/sort registries tree-shakeable.
 3. Wire UI to the built-in API: `column.getToggleSortingHandler()`, `column.getIsSorted()`.
@@ -183,13 +183,13 @@ import {
   tableFeatures,
 } from '@tanstack/vue-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
 })
 
-const _rowModels = {
+const rowModels = {
   sortedRowModel: createSortedRowModel(sortFns),
   filteredRowModel: createFilteredRowModel(filterFns),
   paginatedRowModel: createPaginatedRowModel(),
@@ -201,7 +201,7 @@ Then use `table.nextPage()`, `table.setPageIndex(0)`, `table.setColumnFilters(..
 
 ### 3. App-scoped tables with `createTableHook`
 
-If multiple tables in your app share `_features`, `_rowModels`, and conventions, prefer
+If multiple tables in your app share `features`, `rowModels`, and conventions, prefer
 `createTableHook`. The hook factory returns `useAppTable`, `createAppColumnHelper`, plus
 context helpers (`useTableContext`, `useCellContext`, `useHeaderContext`).
 
@@ -217,11 +217,11 @@ import {
   tableFeatures,
 } from '@tanstack/vue-table'
 
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 
 export const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -267,14 +267,14 @@ Vue's JSX support is fine — pass `cell`/`header` props to `<FlexRender>` and t
 import { defineComponent, ref } from 'vue'
 import { FlexRender, tableFeatures, useTable } from '@tanstack/vue-table'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
 export default defineComponent({
   setup() {
     const data = ref<Person[]>([])
     const table = useTable({
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       get data() {
         return data.value
@@ -304,15 +304,15 @@ Source: `examples/vue/basic-use-table/src/App.tsx`.
 
 ## Common Mistakes
 
-### Omitting `_features` or `_rowModels` (CRITICAL)
+### Omitting `features` or `rowModels` (CRITICAL)
 
 ```ts
-// ❌ TS error: Property '_features' is missing in type ...
+// ❌ TS error: Property 'features' is missing in type ...
 const table = useTable({ columns, data })
 
 // ✅
-const _features = tableFeatures({})
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({})
+const table = useTable({ features, rowModels: {}, columns, data })
 ```
 
 Both keys are required even for the simplest table.
@@ -324,20 +324,20 @@ Both keys are required even for the simplest table.
 const columnHelper = createColumnHelper<Person>()
 
 // ✅ v9 — TFeatures FIRST, then TData.
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
 ### Calling row-model factories without their `*Fns` parameter (CRITICAL)
 
 ```ts
 // ❌ TS error / runtime missing fns.
-_rowModels: {
+rowModels: {
   sortedRowModel:   createSortedRowModel(),
   filteredRowModel: createFilteredRowModel(),
 }
 
 // ✅ Pass the matching registry.
-_rowModels: {
+rowModels: {
   sortedRowModel:   createSortedRowModel(sortFns),
   filteredRowModel: createFilteredRowModel(filterFns),
 }
@@ -346,19 +346,19 @@ _rowModels: {
 This is what makes v9 tree-shakeable. Filter/sort/aggregation registries are open-ended — do
 not cite a number of built-in fns; just pass `filterFns` / `sortFns` / `aggregationFns`.
 
-### "API missing" because the feature is not in `_features` (CRITICAL, v9-specific)
+### "API missing" because the feature is not in `features` (CRITICAL, v9-specific)
 
 ```ts
 // ❌ `rowSortingFeature` not registered → `table.setSorting` is `undefined` and a TS error.
-const _features = tableFeatures({})
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({})
+const table = useTable({ features, rowModels: {}, columns, data })
 table.setSorting([{ id: 'age', desc: true }]) // missing
 
 // ✅ Register the feature AND its row model.
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -384,17 +384,17 @@ const sorted = computed(() => [...data.value].sort(/* … */))
 TanStack Table IS the state coordinator. Built-in APIs handle invariants, reset semantics, and
 multi-sort correctly.
 
-### Unstable references for `_features`, `columns`, `data`
+### Unstable references for `features`, `columns`, `data`
 
 ```vue
 <script setup>
 // ❌ New identity every component mount, breaks internal memoization.
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const columns = [...]
 </script>
 ```
 
-Declare `_features`, `columnHelper`, and `columns` at **module scope** (top of file, outside
+Declare `features`, `columnHelper`, and `columns` at **module scope** (top of file, outside
 `<script setup>`). For `data`, a stable `ref` is fine — the adapter watches its `.value`.
 
 ### Using `useReactTable` / `getCoreRowModel()` as an option (CRITICAL — v8 muscle memory)

@@ -137,12 +137,12 @@ import { z } from 'zod'
 import { createMemo, For } from 'solid-js'
 import { useAppForm } from './form'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const form = useAppForm(() => ({
@@ -188,8 +188,8 @@ function App() {
   )
 
   const table = createTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -272,7 +272,7 @@ new row automatically.
 
 If you want "delete selected rows":
 
-1. Register `rowSelectionFeature` in `_features`.
+1. Register `rowSelectionFeature` in `features`.
 2. Add a checkbox display column. Use `row.getIsSelected()` / `row.getToggleSelectedHandler()`.
 3. On delete: read `table.getSelectedRowModel().rows`, find each `row.index`, call `form.removeFieldValue('data', index)` (highest index first to avoid shifting).
 

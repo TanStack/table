@@ -18,7 +18,7 @@
   const refreshData = () => { data = makeData(1_000) }
   const stressTest = () => { data = makeData(500_000) }
 
-  const columns: ColumnDef<typeof _features, Person>[] = [
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -70,7 +70,7 @@
     },
   ]
 
-  const _features = tableFeatures({ columnVisibilityFeature })
+  const features = tableFeatures({ columnVisibilityFeature })
 
   let columnVisibility = $state<ColumnVisibilityState>({})
 
@@ -81,8 +81,8 @@
   }
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     get data() {
       return data
     },

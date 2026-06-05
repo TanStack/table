@@ -11,11 +11,11 @@ import { ref } from 'vue'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const INITIAL_PAGE_INDEX = 0
 
@@ -73,8 +73,8 @@ const columns = ref(
 
 const table = useTable(
   {
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
     },
     data,

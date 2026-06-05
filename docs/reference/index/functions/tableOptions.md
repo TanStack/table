@@ -13,7 +13,7 @@ overloads preserving table option inference at compile time.
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "columns"> & object;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "features" | "columns"> & object;
 ```
 
 Defined in: [helpers/tableOptions.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L11)
@@ -41,12 +41,12 @@ from a framework adapter or table factory.
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"` \| `"columns"`\> & `object`
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"features"` \| `"columns"`\> & `object`
 
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "data"> & object;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "features" | "data"> & object;
 ```
 
 Defined in: [helpers/tableOptions.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L25)
@@ -71,12 +71,12 @@ Preserves table option inference when reusable options omit `data`.
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"` \| `"data"`\> & `object`
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"features"` \| `"data"`\> & `object`
 
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features" | "data" | "columns"> & object;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "features" | "data" | "columns"> & object;
 ```
 
 Defined in: [helpers/tableOptions.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L40)
@@ -102,7 +102,7 @@ Preserves table option inference when reusable options omit both `data` and
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"` \| `"data"` \| `"columns"`\> & `object`
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"features"` \| `"data"` \| `"columns"`\> & `object`
 
 ## Call Signature
 
@@ -137,12 +137,12 @@ Preserves inference for a fully specified table options object.
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "_features">;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "features">;
 ```
 
 Defined in: [helpers/tableOptions.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L62)
 
-Preserves inference when a wrapper supplies `_features`.
+Preserves inference when a wrapper supplies `features`.
 
 ### Type Parameters
 
@@ -158,21 +158,21 @@ Preserves inference when a wrapper supplies `_features`.
 
 #### options
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"features"`\>
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"features"`\>
 
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "_features">;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "features">;
 ```
 
 Defined in: [helpers/tableOptions.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L72)
 
-Preserves inference when a wrapper supplies both `data` and `_features`.
+Preserves inference when a wrapper supplies both `data` and `features`.
 
 ### Type Parameters
 
@@ -188,21 +188,21 @@ Preserves inference when a wrapper supplies both `data` and `_features`.
 
 #### options
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"features"`\>
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"features"`\>
 
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "columns" | "_features">;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "columns" | "features">;
 ```
 
 Defined in: [helpers/tableOptions.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L82)
 
-Preserves inference when a wrapper supplies both `columns` and `_features`.
+Preserves inference when a wrapper supplies both `columns` and `features`.
 
 ### Type Parameters
 
@@ -218,22 +218,22 @@ Preserves inference when a wrapper supplies both `columns` and `_features`.
 
 #### options
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"columns"` \| `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"columns"` \| `"features"`\>
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"columns"` \| `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"columns"` \| `"features"`\>
 
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "columns" | "_features">;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "columns" | "features">;
 ```
 
 Defined in: [helpers/tableOptions.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L93)
 
 Preserves inference when a wrapper supplies `data`, `columns`, and
-`_features`.
+`features`.
 
 ### Type Parameters
 
@@ -249,8 +249,8 @@ Preserves inference when a wrapper supplies `data`, `columns`, and
 
 #### options
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"columns"` \| `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"columns"` \| `"features"`\>
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"columns"` \| `"_features"`\>
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"columns"` \| `"features"`\>

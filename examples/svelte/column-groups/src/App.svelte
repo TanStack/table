@@ -12,9 +12,9 @@
   const refreshData = () => { data = makeData(20) }
   const stressTest = () => { data = makeData(1_000) }
 
-  const _features = tableFeatures({})
+  const features = tableFeatures({})
 
-  const defaultColumns: ColumnDef<typeof _features, Person>[] = [
+  const defaultColumns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -68,8 +68,8 @@
 
   const table = createTable({
     debugTable: true,
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     get data() {
       return data
     },

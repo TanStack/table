@@ -12,11 +12,11 @@
   import type { Person } from './fetchData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.accessor('firstName', {
@@ -57,8 +57,8 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       get data() {
         return dataQuery.data?.rows ?? defaultData

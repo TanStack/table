@@ -32,7 +32,7 @@ TanStack Table has a core set of features that are built into the library such a
 
 TanStack Table has always been built in a way that allows it to be highly extensible (at least since v7). The `table` instance that is returned from whichever framework adapter that you are using (`createTable`, `useTable`, etc) is a plain JavaScript object that can have extra properties or APIs added to it. It has always been possible to use composition to add custom logic, state, and APIs to the table instance. Libraries like [Material React Table](https://github.com/KevinVandy/material-react-table/blob/v2/packages/material-react-table/src/hooks/useMRT_TableInstance.ts) have simply created custom wrapper hooks around the `useTable` hook to extend the table instance with custom functionality.
 
-In v9, TanStack Table uses the `_features` option (via `tableFeatures()`) to declare which features your table uses. This enables tree-shaking—you only bundle the code for the features you need. You can add custom features to the table instance in exactly the same way as the built-in features.
+In v9, TanStack Table uses the `features` option (via `tableFeatures()`) to declare which features your table uses. This enables tree-shaking—you only bundle the code for the features you need. You can add custom features to the table instance in exactly the same way as the built-in features.
 
 > In v9, features are opt-in. Use `tableFeatures({ ... })` to declare which features your table uses, including custom features.
 
@@ -160,7 +160,7 @@ declare module '@tanstack/react-table' {
 }
 ```
 
-Once the feature is registered this way, TypeScript can infer the feature's state, options, and APIs only on tables whose `_features` include `densityPlugin`.
+Once the feature is registered this way, TypeScript can infer the feature's state, options, and APIs only on tables whose `features` include `densityPlugin`.
 
 #### Step 3: Create the Feature Object
 
@@ -219,14 +219,14 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
 
 #### Step 4: Add the Feature to the Table
 
-Now that we have our feature object, we can add it to the table instance by including it in the `tableFeatures()` call and passing the result to the `_features` option when we create the table instance.
+Now that we have our feature object, we can add it to the table instance by including it in the `tableFeatures()` call and passing the result to the `features` option when we create the table instance.
 
 ```ts
-const _features = tableFeatures({ densityPlugin })
+const features = tableFeatures({ densityPlugin })
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   //..
@@ -238,11 +238,11 @@ const table = useTable({
 Now that the feature is added to the table instance, you can use the new instance APIs options, and state in your application.
 
 ```tsx
-const _features = tableFeatures({ densityPlugin })
+const features = tableFeatures({ densityPlugin })
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   //...

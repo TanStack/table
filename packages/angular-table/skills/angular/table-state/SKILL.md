@@ -36,9 +36,9 @@ sources:
 
 ---
 
-## 1. Prerequisites — `_features` and `_rowModels` decide what state exists
+## 1. Prerequisites — `features` and `rowModels` decide what state exists
 
-In v9, **a state slice only exists if its feature is registered in `_features`**.
+In v9, **a state slice only exists if its feature is registered in `features`**.
 This is the #1 v9-specific gotcha and the root cause of many "missing API"
 TypeScript errors.
 
@@ -54,14 +54,14 @@ import {
 } from '@tanstack/angular-table'
 
 // Declare features OUTSIDE the initializer (see §2 below)
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -75,7 +75,7 @@ this.table.atoms.sorting.get()    // ✅
 ```
 
 If you see `Property 'atoms.rowSelection' does not exist` or
-`table.toggleRowSelected is not a function`, **add the feature to `_features`** —
+`table.toggleRowSelected is not a function`, **add the feature to `features`** —
 don't reach for `@ts-ignore`, don't reimplement the API, don't switch to
 `stockFeatures` until you understand which features you actually need.
 
@@ -90,8 +90,8 @@ run inside an Angular injection context (a component constructor / class field).
 
 ```ts
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: this.data(),
 }))
@@ -105,25 +105,25 @@ That means:
 
 - **Reactive values that should re-sync the table** (`this.data()`, controlled
   state signals) go _inside_ the initializer.
-- **Stable references** (`columns`, `_features`, `_rowModels`, feature-fn maps)
+- **Stable references** (`columns`, `features`, `rowModels`, feature-fn maps)
   go _outside_ — or you'll recreate the column model on every data update.
 
 ```ts
-// ❌ WRONG — columns + _features recreated on every data change
+// ❌ WRONG — columns + features recreated on every data change
 readonly table = injectTable(() => ({
-  _features: tableFeatures({ rowSortingFeature }),     // new reference each run
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // ditto
+  features: tableFeatures({ rowSortingFeature }),     // new reference each run
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // ditto
   columns: [/* … */],                                  // ditto
   data: this.data(),
 }))
 
 // ✅ Stable references outside, signal reads inside
-const _features = tableFeatures({ rowSortingFeature })
-const columns: Array<ColumnDef<typeof _features, Person>> = [/* … */]
+const features = tableFeatures({ rowSortingFeature })
+const columns: Array<ColumnDef<typeof features, Person>> = [/* … */]
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data(), // ← only the signal read should be inside
 }))
@@ -229,8 +229,8 @@ the value that reset APIs reset to.
 
 ```ts
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: { /* … */ },
+  features,
+  rowModels: { /* … */ },
   columns,
   data: this.data(),
   initialState: {
@@ -267,7 +267,7 @@ import {
   type SortingState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
+const features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
 
 export class Component {
   readonly data = signal<Array<Person>>([])
@@ -275,8 +275,8 @@ export class Component {
   readonly pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       /* … */
     },
     columns,
@@ -333,9 +333,9 @@ right ownership model.** When you need more, see
   for slices owned by `@tanstack/store` / `@tanstack/angular-store`, when
   multiple non-table parts of the app share the slice.
 - **State type imports** — `PaginationState`, `SortingState`,
-  `RowSelectionState`, `TableState<typeof _features>`, etc.
+  `RowSelectionState`, `TableState<typeof features>`, etc.
 - **`createTableHook(...)`** — app-wide `injectAppTable` /
-  `createAppColumnHelper` that pre-bind `_features` and `_rowModels`. Also
+  `createAppColumnHelper` that pre-bind `features` and `rowModels`. Also
   exposes `tableComponents` / `cellComponents` / `headerComponents` registries
   (covered in `angular-rendering-directives`).
 
@@ -356,24 +356,24 @@ const table = createAngularTable(() => ({
 
 // ✅ v9
 import { injectTable, tableFeatures } from '@tanstack/angular-table'
-const _features = tableFeatures({})
+const features = tableFeatures({})
 const table = injectTable(() => ({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: data(),
 }))
 ```
 
 Also retired: `getFilteredRowModel`, `getSortedRowModel`, `getPaginationRowModel`
-as top-level options → migrated to `_rowModels: { filteredRowModel: ..., sortedRowModel: ..., paginatedRowModel: ... }`
+as top-level options → migrated to `rowModels: { filteredRowModel: ..., sortedRowModel: ..., paginatedRowModel: ... }`
 with explicit `*Fns` parameters.
 
-### 2. (CRITICAL) Missing API because feature not in `_features`
+### 2. (CRITICAL) Missing API because feature not in `features`
 
 `table.atoms.rowSelection`, `table.toggleAllRowsSelected`,
 `row.getCanSelect`, `column.getCanSort` etc. are **only** present when the
-matching feature is in `_features`. The fix is to add the feature, not to
+matching feature is in `features`. The fix is to add the feature, not to
 patch around it.
 
 ### 3. (CRITICAL) Reimplementing built-in state transitions
@@ -394,7 +394,7 @@ Same for `setPageIndex`, `setPageSize`, `setSorting`, `toggleSorting`,
 ### 4. (HIGH) Expensive values declared **inside** the `injectTable` initializer
 
 Because the initializer re-runs when any reactive read inside it changes,
-declaring `columns`, `_features`, `_rowModels`, or feature-fn maps inside the
+declaring `columns`, `features`, `rowModels`, or feature-fn maps inside the
 function causes them to be recreated and re-applied on every data update.
 Move them outside the class or to stable class fields.
 

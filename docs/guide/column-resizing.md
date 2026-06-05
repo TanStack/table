@@ -63,7 +63,7 @@ import {
   useTable,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnResizingFeature,
 })
@@ -78,8 +78,8 @@ const columns = [
 ]
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
 })

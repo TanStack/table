@@ -25,9 +25,9 @@ import type { OnChangeFn, SortingState } from '@tanstack/react-table'
 
 const fetchSize = 50
 
-const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   // we need a reference to the scrolling element for logic down below
@@ -125,8 +125,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
+      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       data: flatData,
       columns,
       state: {

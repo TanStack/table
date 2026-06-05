@@ -44,7 +44,7 @@ Column Faceting is a feature that allows you to generate lists of values for a g
 
 ### Column Faceting Row Models
 
-In order to use any of the column faceting features, add the `columnFacetingFeature` to your features and the appropriate faceted row models to `_rowModels`.
+In order to use any of the column faceting features, add the `columnFacetingFeature` to your features and the appropriate faceted row models to `rowModels`.
 
 ```ts
 import {
@@ -56,11 +56,11 @@ import {
   createFacetedUniqueValues,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ columnFacetingFeature })
+const features = tableFeatures({ columnFacetingFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     facetedRowModel: createFacetedRowModel(), // required for faceting (other faceted row models depend on this)
     facetedMinMaxValues: createFacetedMinMaxValues(), // if you need min/max values
     facetedUniqueValues: createFacetedUniqueValues(), // if you need a list of unique values
@@ -99,8 +99,8 @@ const facetingQuery = useQuery(
 )
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     facetedRowModel: createFacetedRowModel(),
     facetedUniqueValues: createFacetedUniqueValues(),
     facetedMinMaxValues: createFacetedMinMaxValues(),

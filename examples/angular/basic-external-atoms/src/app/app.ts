@@ -21,9 +21,9 @@ import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
+const features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -64,10 +64,10 @@ export class App {
   readonly table = injectTable(() => ({
     key: 'basic-external-atoms', // needed for devtools
     debugTable: true,
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel<typeof _features, Person>(sortFns),
-      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
+    features,
+    rowModels: {
+      sortedRowModel: createSortedRowModel<typeof features, Person>(sortFns),
+      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
     },
     columns,
     data: this.data(),

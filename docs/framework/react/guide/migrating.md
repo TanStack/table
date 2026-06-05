@@ -20,7 +20,7 @@ TanStack Table v9 is a major release that introduces significant architectural i
 
 ### 3. Composability
 
-- **`tableOptions`**: New utilities let you compose and share table configurations. Define `_features`, `_rowModels`, and default options once, then reuse them across tables or pass them through `createTableHook`.
+- **`tableOptions`**: New utilities let you compose and share table configurations. Define `features`, `rowModels`, and default options once, then reuse them across tables or pass them through `createTableHook`.
 - **`createTableHook`** (optional, advanced): Create custom table hooks with pre-bound features, row models, and components—similar to TanStack Form's `createFormHook`. Define your table setup once and reuse it across many tables. You don't need this for most use cases; `useTable` is sufficient.
 
 ### The Good News: Most Upgrades Are Opt-in
@@ -31,7 +31,7 @@ While v9 is a significant upgrade, **you don't have to adopt everything at once*
 - **Don't want to think about tree-shaking?** Import `stockFeatures` to include all features, just like v8.
 - **Table markup is largely unchanged.** How you render `<table>`, `<thead>`, `<tr>`, `<td>`, etc. remains the same.
 
-The main change is **how you define a table** with the `useTable` hook — specifically the new `_features` and `_rowModels` options.
+The main change is **how you define a table** with the `useTable` hook — specifically the new `features` and `rowModels` options.
 
 ---
 
@@ -75,7 +75,7 @@ import { useTable } from '@tanstack/react-table'
 const table = useTable(options)
 ```
 
-### New Required Options: `_features` and `_rowModels`
+### New Required Options: `features` and `rowModels`
 
 In v9, you must explicitly declare which features and row models your table uses:
 
@@ -92,11 +92,11 @@ const table = useReactTable({
 // v9
 import { useTable, tableFeatures } from '@tanstack/react-table'
 
-const _features = tableFeatures({}) // Empty = core features only
+const features = tableFeatures({}) // Empty = core features only
 
 const table = useTable({
-  _features,
-  _rowModels: {}, // Core row model is automatic
+  features,
+  rowModels: {}, // Core row model is automatic
   columns,
   data,
 })
@@ -104,7 +104,7 @@ const table = useTable({
 
 ---
 
-## The `_features` Option
+## The `features` Option
 
 Features control what table functionality is available. In v8, all features were bundled. In v9, you import only what you need.
 
@@ -122,7 +122,7 @@ import {
 } from '@tanstack/react-table'
 
 // Create a features object (define this outside your component for stable reference)
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
@@ -139,8 +139,8 @@ If you want all features without thinking about it (like v8), import `stockFeatu
 import { useTable, stockFeatures } from '@tanstack/react-table'
 
 const table = useTable({
-  _features: stockFeatures, // All features included
-  _rowModels: { /* ... */ },
+  features: stockFeatures, // All features included
+  rowModels: { /* ... */ },
   columns,
   data,
 })
@@ -167,13 +167,13 @@ const table = useTable({
 
 ---
 
-## The `_rowModels` Option
+## The `rowModels` Option
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, they're configured via `_rowModels` instead of `get*RowModel` options.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, they're configured via `rowModels` instead of `get*RowModel` options.
 
 ### Migration Mapping
 
-| v8 Option | v9 `_rowModels` Key | v9 Factory Function |
+| v8 Option | v9 `rowModels` Key | v9 Factory Function |
 |-----------|---------------------|---------------------|
 | `getCoreRowModel()` | (automatic) | Not needed — always included |
 | `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
@@ -200,8 +200,8 @@ import {
 } from '@tanstack/react-table'
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     sortedRowModel: createSortedRowModel(sortFns),
     groupedRowModel: createGroupedRowModel(aggregationFns),
@@ -251,15 +251,15 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns), // now called "create*RowModel()" with a Fns parameter
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -320,8 +320,8 @@ The biggest state management improvement is `table.Subscribe`, which enables fin
 ```tsx
 function MyTable() {
   const table = useTable({
-    _features,
-    _rowModels: { /* ... */ },
+    features,
+    rowModels: { /* ... */ },
     columns,
     data,
   })
@@ -353,8 +353,8 @@ If you want v8-style behavior where the component re-renders on any state change
 // Re-renders on ANY state change (like v8)
 const table = useTable(
   {
-    _features,
-    _rowModels: { /* ... */ },
+    features,
+    rowModels: { /* ... */ },
     columns,
     data,
   },
@@ -377,8 +377,8 @@ const [pagination, setPagination] = useState<PaginationState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: { /* ... */ },
+  features,
+  rowModels: { /* ... */ },
   columns,
   data,
   state: {
@@ -426,7 +426,7 @@ import {
 } from '@tanstack/react-table'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 
 function MyTable({ data, columns }) {
   // Create stable external atoms for the slices you want to own.
@@ -441,8 +441,8 @@ function MyTable({ data, columns }) {
   const pagination = useSelector(paginationAtom)
 
   const table = useTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -494,8 +494,8 @@ const columnHelper = createColumnHelper<Person>()
 // v9
 import { createColumnHelper, tableFeatures, rowSortingFeature } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
 ### New `columns()` Helper Method
@@ -503,7 +503,7 @@ const columnHelper = createColumnHelper<typeof _features, Person>()
 v9 adds a `columns()` helper for better type inference when wrapping column arrays. In v8, `TValue` wasn't always type-safe—especially with group columns, where nested column types could be lost or widened. The `columns()` helper uses variadic tuple types to preserve each column's individual `TValue` type, so `info.getValue()` and cell renderers stay correctly typed throughout nested structures:
 
 ```tsx
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Wrap your columns array for better type inference
 const columns = columnHelper.columns([
@@ -530,8 +530,8 @@ When using `createTableHook`, you get a pre-bound `createAppColumnHelper` that o
 
 ```tsx
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { /* ... */ },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { /* ... */ },
 })
 
 // TFeatures is already bound — only need TData!
@@ -597,7 +597,7 @@ import { tableOptions, tableFeatures, rowSortingFeature } from '@tanstack/react-
 
 // Create a reusable options object with features pre-configured
 const baseOptions = tableOptions({
-  _features: tableFeatures({ rowSortingFeature }),
+  features: tableFeatures({ rowSortingFeature }),
   debugTable: process.env.NODE_ENV === 'development',
 })
 
@@ -606,30 +606,30 @@ const table = useTable({
   ...baseOptions,
   columns,
   data,
-  _rowModels: {},
+  rowModels: {},
 })
 ```
 
 ### Composing Partial Options
 
-`tableOptions()` allows you to omit certain required fields (like `data`, `columns`, or `_features`) when creating partial configurations:
+`tableOptions()` allows you to omit certain required fields (like `data`, `columns`, or `features`) when creating partial configurations:
 
 ```tsx
 // Partial options without data or columns
 const featureOptions = tableOptions({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowSortingFeature,
     columnFilteringFeature,
   }),
-  _rowModels: {
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
   },
 })
 
-// Another partial without _features (inherits from spread)
+// Another partial without features (inherits from spread)
 const paginationDefaults = tableOptions({
-  _rowModels: {
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   initialState: {
@@ -652,8 +652,8 @@ const table = useTable({
 
 ```tsx
 const sharedOptions = tableOptions({
-  _features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -696,14 +696,14 @@ export const {
   useHeaderContext,
 } = createTableHook({
   // Features defined once
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFilteringFeature,
     rowSortingFeature,
     rowPaginationFeature,
   }),
 
   // Row models defined once
-  _rowModels: {
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -738,7 +738,7 @@ function UsersTable({ data }: { data: Person[] }) {
   const table = useAppTable({
     columns,
     data,
-    // _features and _rowModels already configured!
+    // features and rowModels already configured!
   })
 
   return (
@@ -868,7 +868,7 @@ If you only need column sizing (fixed widths) without interactive resizing, you 
 ```tsx
 import { columnSizingFeature, columnResizingFeature } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnResizingFeature, // Only if you need interactive resizing
 })
@@ -941,22 +941,22 @@ type Row<TFeatures, TData>
 type Cell<TFeatures, TData, TValue>
 ```
 
-### Using `typeof _features`
+### Using `typeof features`
 
 The easiest way to get the `TFeatures` type is with `typeof`:
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
 })
 
 // Use typeof to get the type
-type MyFeatures = typeof _features
+type MyFeatures = typeof features
 
-const columns: ColumnDef<typeof _features, Person>[] = [...]
+const columns: ColumnDef<typeof features, Person>[] = [...]
 
-function Filter({ column }: { column: Column<typeof _features, Person, unknown> }) {
+function Filter({ column }: { column: Column<typeof features, Person, unknown> }) {
   // ...
 }
 ```
@@ -1010,8 +1010,8 @@ This change improves type safety. If you were passing unusual data types, ensure
 ## Migration Checklist
 
 - [ ] Update import: `useReactTable` → `useTable`
-- [ ] Define `_features` using `tableFeatures()` (or use `stockFeatures`)
-- [ ] Migrate `get*RowModel()` options to `_rowModels`
+- [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`)
+- [ ] Migrate `get*RowModel()` options to `rowModels`
 - [ ] Update row model factories to include `Fns` parameters where needed
 - [ ] Update TypeScript types to include `TFeatures` generic
 - [ ] Update state access: `table.getState()` → `table.store.state` or `table.state`

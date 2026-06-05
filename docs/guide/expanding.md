@@ -68,11 +68,11 @@ import {
   createExpandedRowModel,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({ rowExpandingFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     expandedRowModel: createExpandedRowModel(),
   },
   // other options...
@@ -118,8 +118,8 @@ Then you can use the getSubRows function to return the children array in each ro
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     expandedRowModel: createExpandedRowModel(),
   },
   getSubRows: (row) => row.children, // return the children array as sub-rows
@@ -138,8 +138,8 @@ By default, the `row.getCanExpand()` row instance API will return false unless i
 ```ts
 //...
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     expandedRowModel: createExpandedRowModel(),
   },
   getRowCanExpand: (row) => true, // Add your logic to determine if a row can be expanded. True means all rows include expanded data
@@ -179,8 +179,8 @@ If you need to control the expanded state of the rows in your table, you can do 
 const [expanded, setExpanded] = useState<ExpandedState>({})
 
 const table = useTable({
-  _features,
-  _rowModels: { expandedRowModel: createExpandedRowModel() },
+  features,
+  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   state: {
     expanded,
@@ -234,8 +234,8 @@ By default, the filtering process starts from the parent rows and moves downward
 ```ts
 //...
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -252,8 +252,8 @@ By default, expanded rows are paginated along with the rest of the table (which 
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: { expandedRowModel: createExpandedRowModel() },
+  features,
+  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   paginateExpandedRows: false,
 })
@@ -273,8 +273,8 @@ If you are doing server-side expansion, you can enable manual row expansion by s
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowExpandingFeature }),
-  _rowModels: {}, // no expandedRowModel needed for manual expanding
+  features: tableFeatures({ rowExpandingFeature }),
+  rowModels: {}, // no expandedRowModel needed for manual expanding
   // other options...
   manualExpanding: true,
 })

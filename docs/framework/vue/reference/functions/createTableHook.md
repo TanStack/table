@@ -87,7 +87,7 @@ useAppTable: <TData, TSelected>(tableOptions, selector?) => AppVueTable<TFeature
 
 ##### tableOptions
 
-`Omit`\<[`TableOptionsWithReactiveData`](../type-aliases/TableOptionsWithReactiveData.md)\<`TFeatures`, `TData`\>, `"_features"` \| `"_rowModels"`\>
+`Omit`\<[`TableOptionsWithReactiveData`](../type-aliases/TableOptionsWithReactiveData.md)\<`TFeatures`, `TData`\>, `"features"` \| `"rowModels"`\>
 
 ##### selector?
 
@@ -149,8 +149,8 @@ useTableContext: <TData>() => VueTable<TFeatures, TData>;
 
 ```ts
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   tableComponents: {},
   cellComponents: {},
   headerComponents: {},

@@ -78,7 +78,7 @@ If you're not sure, you can always start with client-side filtering and paginati
 
 If you have decided that you need to implement server-side global filtering instead of using the built-in client-side global filtering, here's how you do that.
 
-No `filteredRowModel` is needed for manual server-side global filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `_rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
+No `filteredRowModel` is needed for manual server-side global filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```jsx
 import {
@@ -87,11 +87,11 @@ import {
   globalFilteringFeature,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({ globalFilteringFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {}, // no filteredRowModel needed for manual server-side global filtering
+  features,
+  rowModels: {}, // no filteredRowModel needed for manual server-side global filtering
   data,
   columns,
   manualFiltering: true,
@@ -113,11 +113,11 @@ import {
   filterFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({ globalFilteringFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
   },
   // other options...
@@ -130,8 +130,8 @@ The globalFilterFn option allows you to specify the filter function that will be
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
   },
   data,
@@ -163,8 +163,8 @@ The global filter state is stored in the table's state atoms and can be read wit
 const [globalFilter, setGlobalFilter] = useState<any>([])
 
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   state: {
     globalFilter,
@@ -209,8 +209,8 @@ const customFilterFn = (rows, columnId, filterValue) => {
 }
 
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   globalFilterFn: customFilterFn,
 })
@@ -226,8 +226,8 @@ However, you can also just specify the initial global filter state in the state.
 const [globalFilter, setGlobalFilter] = useState("search term") //recommended to initialize globalFilter state here
 
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   initialState: {
     globalFilter: 'search term', // if not managing globalFilter state, set initial state here
@@ -257,8 +257,8 @@ const columns = [
 ]
 //...
 const table = useTable({
-  _features,
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features,
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   columns,
   enableGlobalFilter: false, // disable global filtering for all columns

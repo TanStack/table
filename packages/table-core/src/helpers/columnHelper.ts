@@ -88,7 +88,7 @@ export type ColumnHelper<
  *
  * @example
  * ```tsx
- * const helper = createColumnHelper<typeof _features, Person>() // _features is the result of `tableFeatures({})` helper
+ * const helper = createColumnHelper<typeof features, Person>() // features is the result of `tableFeatures({})` helper
  * const columns = [
  *  helper.display({ id: 'actions', header: 'Actions' }),
  *  helper.accessor('firstName', {}),

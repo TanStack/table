@@ -14,7 +14,7 @@ import type { Column } from '@tanstack/solid-table'
 import type { JSX } from 'solid-js'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnPinningFeature,
   columnResizingFeature,
@@ -23,7 +23,7 @@ const _features = tableFeatures({
 })
 
 const getCommonPinningStyles = (
-  column: Column<typeof _features, Person>,
+  column: Column<typeof features, Person>,
 ): JSX.CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -100,8 +100,8 @@ function App() {
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns: defaultColumns,
       get data() {
         return data()

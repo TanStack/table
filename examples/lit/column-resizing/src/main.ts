@@ -17,12 +17,12 @@ import type {
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnResizingFeature,
   columnSizingFeature,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -76,7 +76,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   @state()
   private _data: Array<Person> = makeData(10)
@@ -90,8 +90,8 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {},
+        features,
+        rowModels: {},
         columns,
         data: this._data,
         columnResizeMode: this.columnResizeMode,

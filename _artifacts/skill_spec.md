@@ -11,7 +11,7 @@ Headless data-grid library: features, state, and APIs for building powerful, typ
 | Domain                                        | Description                                                                                                            | Skill count |
 | --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------: |
 | **Core foundations** (`core-foundations`)     | Setup, column definitions, state management, and customization of built-in feature behavior. State-management is the … |           4 |
-| **Row-model features** (`row-model-features`) | Features driven by entries in `_rowModels` — filtering (column+global+faceting+fuzzy), sorting, pagination, grouping,… |           5 |
+| **Row-model features** (`row-model-features`) | Features driven by entries in `rowModels` — filtering (column+global+faceting+fuzzy), sorting, pagination, grouping,…  |           5 |
 | **UI-state features** (`ui-state-features`)   | Features that are pure UI state — no row model needed. Column layout (visibility/ordering/pinning/sizing/resizing), r… |           3 |
 | **Framework adapters** (`framework-adapters`) | Per-framework reactivity bindings and rendering integration. Each adapter has its own `table-state` skill; React adds… |          10 |
 | **Lifecycle** (`lifecycle`)                   | End-to-end journeys that cross-cut features: getting-started, v8→v9 migration, client-to-server conversion, productio… |           4 |
@@ -65,7 +65,7 @@ Headless data-grid library: features, state, and APIs for building powerful, typ
 | client-side feature richness vs server-side correctness | filtering ↔ sorting ↔ pagination ↔ client-to-server                      | Agents converting a working client table to use a server endpoint flip `manualPagination` without auditing filtering/sorting consistency                                                                 |
 | atomic-state granularity vs API simplicity              | state-management ↔ compose-with-tanstack-store ↔ getting-started         | Agents default to `state` + `on*Change` because it looks like the v8 idiom, then hit re-render storms or sync issues with Query and patch around them, when the v9 atoms option would have been cleaner. |
 | React Compiler safety vs render-cost simplicity         | react-subscribe-compiler-compat ↔ production-readiness ↔ getting-started | Agents either over-wrap every component in Subscribe (verbose, slow to author) or under-wrap and ship tables that look fine in dev but break under React Compiler in prod                                |
-| tree-shaking via \_features vs ergonomic useLegacyTable | setup ↔ production-readiness ↔ migrate-v8-to-v9                          | Agents reach for `useLegacyTable` on v8→v9 migrations and never circle back to declare `_features`, sacrificing the bundle wins that motivated the v9 redesign.                                          |
+| tree-shaking via \features vs ergonomic useLegacyTable  | setup ↔ production-readiness ↔ migrate-v8-to-v9                          | Agents reach for `useLegacyTable` on v8→v9 migrations and never circle back to declare `features`, sacrificing the bundle wins that motivated the v9 redesign.                                           |
 
 ## Cross-References
 
@@ -88,7 +88,7 @@ Headless data-grid library: features, state, and APIs for building powerful, typ
 | `client-to-server`                | `compose-with-tanstack-query`     | Query is the canonical server-side fetch layer; client-to-server skill expects it                  |
 | `client-to-server`                | `state-management`                | external atoms via atoms option is the cleanest pattern for sharing pagination/sort/filter with Q… |
 | `production-readiness`            | `react-subscribe-compiler-compat` | Subscribe boundaries are a top perf optimization on React                                          |
-| `production-readiness`            | `setup`                           | `_features` tree-shaking is decided at setup                                                       |
+| `production-readiness`            | `setup`                           | `features` tree-shaking is decided at setup                                                        |
 | `compose-with-tanstack-virtual`   | `row-expanding`                   | virtualized + expanding requires careful measurer + getSubRows interaction                         |
 | `compose-with-tanstack-virtual`   | `column-layout`                   | virtualized columns interact with sizing and pinning                                               |
 | `compose-with-tanstack-form`      | `row-selection`                   | editable rows + selection — common together                                                        |
@@ -125,7 +125,7 @@ From Phase 4 (2026-05-17). Full Q&A is in `domain_map.yaml :: maintainer_intervi
 
 1. **Hallucinating react-table v7 / pre-v9 `@tanstack/[framework]-table` APIs** (CRITICAL). Every major version was a substantial upgrade; agents confidently produce v7/v8 shapes.
 2. **Reimplementing what TanStack Table's built-in APIs already provide** (CRITICAL). The #1 tell of AI-written code. TanStack Table IS a state-management coordinator with APIs for nearly every transition (`setSorting`, `toggleSelected`, `nextPage`, `setColumnFilters`, …).
-3. **API or state slice "missing" because feature not registered in `_features`** (CRITICAL, v9-specific). v9 is the first version where features must be declared for TS inference and runtime API exposure.
+3. **API or state slice "missing" because feature not registered in `features`** (CRITICAL, v9-specific). v9 is the first version where features must be declared for TS inference and runtime API exposure.
 4. **Bundling `stockFeatures` or unused features wastes the v9 tree-shake** (HIGH).
 5. **Premature `Subscribe`/selector optimization on small tables** (MEDIUM). Advanced state-management patterns are for advanced use cases.
 

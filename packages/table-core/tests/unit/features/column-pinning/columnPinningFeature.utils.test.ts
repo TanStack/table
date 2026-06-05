@@ -627,7 +627,7 @@ describe('table_getPinnedVisibleLeafColumns', () => {
 describe('column pinning table instance APIs', () => {
   it('should expose pinned leaf column APIs on the table instance', () => {
     const table = generateTestTableWithData(1, {
-      _features: stockFeatures,
+      features: stockFeatures,
       initialState: {
         columnPinning: {
           left: ['firstName'],
@@ -651,7 +651,7 @@ describe('column pinning table instance APIs', () => {
 
   it('should pass method arguments into memoized prototype API dependencies', () => {
     const table = generateTestTableWithData(1, {
-      _features: stockFeatures,
+      features: stockFeatures,
       initialState: {
         columnPinning: {
           left: ['firstName'],
@@ -665,7 +665,7 @@ describe('column pinning table instance APIs', () => {
 
   it('should update center visible columns when column order changes', () => {
     const table = generateTestTableWithDataAndState(1, {
-      _features: stockFeatures,
+      features: stockFeatures,
     })
 
     expect(

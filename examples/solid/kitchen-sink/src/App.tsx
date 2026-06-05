@@ -56,8 +56,8 @@ declare module '@tanstack/solid-table' {
 }
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
-  _features: stockFeatures,
-  _rowModels: {
+  features: stockFeatures,
+  rowModels: {
     expandedRowModel: createExpandedRowModel(),
     filteredRowModel: createFilteredRowModel({
       ...filterFns,

@@ -70,13 +70,13 @@ Use the `onRowSelectionChange` table option to hoist up the row selection state 
 ```ts
 import { useTable, tableFeatures, rowSelectionFeature } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSelectionFeature })
+const features = tableFeatures({ rowSelectionFeature })
 
 const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   //...
   onRowSelectionChange: setRowSelection,
   state: {
@@ -91,8 +91,8 @@ By default, the row id for each row is simply the `row.index`. If you are using 
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   //...
   getRowId: (row) => row.uuid, // use the row's uuid from your database as the row id
 })

@@ -128,8 +128,8 @@ export type ReactTable<
  * ```tsx
  * const table = useTable(
  *   {
- *     _features,
- *     _rowModels: {},
+ *     features,
+ *     rowModels: {},
  *     columns,
  *     data,
  *   },
@@ -150,9 +150,9 @@ export function useTable<
   const [table] = useState(() => {
     const tableInstance = constructTable({
       ...tableOptions,
-      _features: {
+      features: {
         coreReativityFeature: reactReactivity(),
-        ...tableOptions._features,
+        ...tableOptions.features,
       },
     }) as unknown as ReactTable<TFeatures, TData, TSelected>
 

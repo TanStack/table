@@ -22,7 +22,7 @@ import type { Person } from './makeData'
 import type { Column, Table } from '@tanstack/preact-table'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowExpandingFeature,
   rowPaginationFeature,
@@ -30,7 +30,7 @@ const _features = tableFeatures({
   rowSelectionFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const rerender = useReducer(() => ({}), {})[1]
@@ -117,8 +117,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         expandedRowModel: createExpandedRowModel(),
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
@@ -259,8 +259,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

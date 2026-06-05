@@ -544,8 +544,8 @@ function App() {
   const table = useTable(
     {
       key: 'kitchen-sink', // needed for devtools
-      _features: stockFeatures,
-      _rowModels: {
+      features: stockFeatures,
+      rowModels: {
         expandedRowModel: createExpandedRowModel(),
         filteredRowModel: createFilteredRowModel({
           ...filterFns,

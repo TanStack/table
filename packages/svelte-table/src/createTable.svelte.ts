@@ -50,8 +50,8 @@ export type SvelteTable<
  * <script lang="ts">
  *   const table = createTable(
  *     {
- *       _features,
- *       _rowModels: {},
+ *       features,
+ *       rowModels: {},
  *       columns,
  *       data,
  *     },
@@ -72,9 +72,9 @@ export function createTable<
 ): SvelteTable<TFeatures, TData, TSelected> {
   // 1. Merge reactivity into options using mergeObjects (preserves getters)
   const mergedOptions = mergeObjects(tableOptions, {
-    _features: {
+    features: {
       coreReativityFeature: svelteReactivity(),
-      ...tableOptions._features,
+      ...tableOptions.features,
     },
   }) as TableOptions<TFeatures, TData>
 

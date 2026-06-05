@@ -35,11 +35,11 @@ import {
 } from '@tanstack/table-core'
 import type { RowPinningState } from '@tanstack/table-core'
 
-const _features = tableFeatures({ rowPinningFeature, rowPaginationFeature })
+const features = tableFeatures({ rowPinningFeature, rowPaginationFeature })
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   columns,
@@ -97,8 +97,8 @@ row.pin('top', /* includeLeafRows */ true, /* includeParentRows */ false)
 
 ```ts
 const table = constructTable({
-  _features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   getRowId: (row) => row.id,
@@ -112,7 +112,7 @@ const table = constructTable({
 
 ```ts
 const table = constructTable({
-  _features,
+  features,
   columns,
   data,
   enableRowPinning: (row) => !row.original.archived, // predicate form
@@ -128,7 +128,7 @@ Wrong:
 ```ts
 // row.id defaults to row.index; pin survives wrong rows after refetch
 const table = useTable({
-  _features: tableFeatures({ rowPinningFeature, rowPaginationFeature }),
+  features: tableFeatures({ rowPinningFeature, rowPaginationFeature }),
   data, // refetched periodically
 })
 ```
@@ -137,7 +137,7 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowPinningFeature, rowPaginationFeature }),
+  features: tableFeatures({ rowPinningFeature, rowPaginationFeature }),
   data,
   getRowId: (row) => row.userId, // or row.uuid, row.id from API, etc.
 })
@@ -157,7 +157,7 @@ Wrong:
 ```ts
 // Expecting pinned rows to vanish on filter, but they don't (default)
 const table = useTable({
-  _features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
+  features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
   // keepPinnedRows defaults to true; pinned rows survive filtering
 })
 ```
@@ -167,7 +167,7 @@ Correct:
 ```ts
 // Be explicit about the UX you want
 const table = useTable({
-  _features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
+  features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
   keepPinnedRows: false, // pinned rows disappear when filtered/paginated out
 })
 
@@ -246,8 +246,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowPinningFeature }),
-  _rowModels: {},
+  features: tableFeatures({ rowPinningFeature }),
+  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,

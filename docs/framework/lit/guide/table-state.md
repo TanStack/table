@@ -38,17 +38,17 @@ The Lit adapter provides `litReactivity()` to the table's `coreReativityFeature`
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const table = this.tableController.table({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -62,7 +62,7 @@ table.atoms.sorting.get()
 // table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -98,8 +98,8 @@ The second argument to `tableController.table(...)` is a TanStack Store selector
 ```ts
 const table = this.tableController.table(
   {
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
@@ -164,8 +164,8 @@ If you only need to customize the starting value for some table state, use `init
 
 ```ts
 const table = this.tableController.table({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -217,7 +217,7 @@ import {
   type PaginationState,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -227,8 +227,8 @@ const paginationAtom = createAtom<PaginationState>({
 })
 
 const table = this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: this._data,
   atoms: {
@@ -252,8 +252,8 @@ private _sorting: SortingState = []
 
 protected render() {
   const table = this.tableController.table({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
     },
     columns,
@@ -308,8 +308,8 @@ private _sorting: SortingState = [
 ]
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```ts
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

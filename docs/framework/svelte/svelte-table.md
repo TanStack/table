@@ -6,7 +6,7 @@ title: Svelte Table
 
 The `@tanstack/svelte-table` adapter wraps `@tanstack/table-core` with Svelte 5 rune-based reactivity, rendering helpers, and types. It installs the Svelte `coreReativityFeature` for you, so table atoms can participate in Svelte dependency tracking.
 
-TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
+TanStack Table v9 is explicit about what a table uses. Register features with `features`, and register client-side row model factories with `rowModels`. The core row model is included by default, so a basic table can use `rowModels: {}`.
 
 ## Creating a Table
 
@@ -26,9 +26,9 @@ Use `createTable` to create a Svelte table instance.
     age: number
   }
 
-  const _features = tableFeatures({})
+  const features = tableFeatures({})
 
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       accessorKey: 'firstName',
       header: 'First name',
@@ -39,8 +39,8 @@ Use `createTable` to create a Svelte table instance.
   let data = $state<Person[]>([])
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return data
@@ -49,7 +49,7 @@ Use `createTable` to create a Svelte table instance.
 </script>
 ```
 
-For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
+For feature-specific row models, register the feature and put the row model factory under `rowModels`.
 
 ```svelte
 <script lang="ts">
@@ -62,14 +62,14 @@ For feature-specific row models, register the feature and put the row model fact
     tableFeatures,
   } from '@tanstack/svelte-table'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
     rowSortingFeature,
   })
 
   const tableOptions = {
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
     },
@@ -93,7 +93,7 @@ Use `atoms` when your app should own one state slice with TanStack Store. Use `s
     type PaginationState,
   } from '@tanstack/svelte-table'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
   })
 
@@ -103,8 +103,8 @@ Use `atoms` when your app should own one state slice with TanStack Store. Use `s
   })
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return data
@@ -146,14 +146,14 @@ Use `FlexRender` to render column `header`, `cell`, and `footer` definitions. It
 
 ## createTableHook
 
-`createTableHook` creates an app-specific table creator. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
+`createTableHook` creates an app-specific table creator. Use it when multiple tables should share `features`, `rowModels`, default options, column helpers, and component conventions.
 
 ```ts
 import { createTableHook, tableFeatures } from '@tanstack/svelte-table'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({}),
-  _rowModels: {},
+  features: tableFeatures({}),
+  rowModels: {},
 })
 
 const columnHelper = createAppColumnHelper<Person>()

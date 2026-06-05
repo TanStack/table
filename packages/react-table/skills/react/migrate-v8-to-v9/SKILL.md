@@ -4,8 +4,8 @@ description: >
   Mechanical breaking-change migration from `@tanstack/react-table` v8 to v9.
   Every v8-shaped option, type, or method an agent will reproduce from muscle
   memory has a v9 equivalent enumerated below: `useReactTable` → `useTable`,
-  root `get*RowModel` options → `_rowModels` with factory + *Fns parameter,
-  `createColumnHelper<TData>` → `createColumnHelper<typeof _features, TData>`,
+  root `get*RowModel` options → `rowModels` with factory + *Fns parameter,
+  `createColumnHelper<TData>` → `createColumnHelper<typeof features, TData>`,
   `table.getState()` → `table.state` / `table.store.state` / `table.atoms.X.get()`,
   `sortingFn` → `sortFn`, `enablePinning` → split, `_`-prefixed APIs unprefixed,
   `ColumnSizing` split into `columnSizingFeature` + `columnResizingFeature`.
@@ -28,7 +28,7 @@ sources:
   - TanStack/table:examples/react/basic-use-table/src/main.tsx
 ---
 
-This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `state-management` explains _why_ v9 split out `_features` / `_rowModels`, and `table-state` shows the new reactivity model.
+This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `state-management` explains _why_ v9 split out `features` / `rowModels`, and `table-state` shows the new reactivity model.
 
 ## Two migration paths
 
@@ -102,11 +102,11 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // factory takes *Fns
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // factory takes *Fns
   columns,
   data,
 })
@@ -151,7 +151,7 @@ useReactTable({
 })
 
 // v9 — explicit
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature, // fixed widths
   columnResizingFeature, // drag-to-resize (separate feature)
 })
@@ -169,7 +169,7 @@ declare module '@tanstack/react-table' {
 }
 
 // v9
-type MyDef = ColumnDef<typeof _features, Person, string>
+type MyDef = ColumnDef<typeof features, Person, string>
 declare module '@tanstack/react-table' {
   interface ColumnMeta<
     TFeatures extends TableFeatures,
@@ -218,7 +218,7 @@ function App({ data }) {
   const table = useLegacyTable({
     columns,
     data,
-    // v8-style root options — mapped to v9 _rowModels under the hood
+    // v8-style root options — mapped to v9 rowModels under the hood
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
@@ -260,11 +260,11 @@ Correct:
 
 ```tsx
 import { useTable, tableFeatures } from '@tanstack/react-table'
-const _features = tableFeatures({})
-const table = useTable({ _features, _rowModels: {}, data, columns })
+const features = tableFeatures({})
+const table = useTable({ features, rowModels: {}, data, columns })
 ```
 
-`useReactTable` is the v8 entry point and won't have `table.Subscribe` / `table.atoms`. `getCoreRowModel()` as an option was removed — core is automatic; non-core models move into `_rowModels` as factories that take their \*Fns parameter.
+`useReactTable` is the v8 entry point and won't have `table.Subscribe` / `table.atoms`. `getCoreRowModel()` as an option was removed — core is automatic; non-core models move into `rowModels` as factories that take their \*Fns parameter.
 Source: PR #6202; `packages/react-table/src/useTable.ts`.
 
 ### CRITICAL `createSortedRowModel()` without `sortFns`
@@ -272,7 +272,7 @@ Source: PR #6202; `packages/react-table/src/useTable.ts`.
 Wrong:
 
 ```tsx
-_rowModels: {
+rowModels: {
   sortedRowModel: createSortedRowModel()
 }
 ```
@@ -281,7 +281,7 @@ Correct:
 
 ```tsx
 import { createSortedRowModel, sortFns } from '@tanstack/react-table'
-_rowModels: {
+rowModels: {
   sortedRowModel: createSortedRowModel(sortFns)
 }
 ```
@@ -300,10 +300,10 @@ const columnHelper = createColumnHelper<Person>()
 Correct:
 
 ```tsx
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
-v9 requires `<TFeatures, TData>`. `typeof _features` is the standard idiom — declare features once and reuse the type.
+v9 requires `<TFeatures, TData>`. `typeof features` is the standard idiom — declare features once and reuse the type.
 Source: `docs/framework/react/guide/migrating.md`.
 
 ### CRITICAL `table.getState()` reads on v9
@@ -337,15 +337,15 @@ Source: `docs/framework/react/guide/migrating.md`; `examples/react/basic-subscri
 Wrong:
 
 ```tsx
-useTable({ _features, _rowModels: {}, columns, data, enablePinning: true })
+useTable({ features, rowModels: {}, columns, data, enablePinning: true })
 ```
 
 Correct:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   enableColumnPinning: true,
@@ -468,10 +468,10 @@ import {
   createSortedRowModel,
   sortFns,
 } from '@tanstack/react-table'
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -484,5 +484,5 @@ Source: maintainer interview (Phase 4).
 
 - `tanstack-table/react/getting-started` — the v9 minimum-viable shape.
 - `tanstack-table/react/table-state` — replacing `getState()` with selectors / `<Subscribe>`.
-- `tanstack-table/react/production-readiness` — tree-shaking with `_features` (the whole point of the v9 redesign).
+- `tanstack-table/react/production-readiness` — tree-shaking with `features` (the whole point of the v9 redesign).
 - `tanstack-table/react/react-subscribe-compiler-compat` — fixes the v8-React-Compiler "incompatible library" warning.

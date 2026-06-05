@@ -99,7 +99,7 @@ TFeatures is already known from the createTableHook call; TData is inferred from
 
 ##### tableOptions
 
-`Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"_features"` \| `"_rowModels"`\>
+`Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"` \| `"rowModels"`\>
 
 ##### selector?
 
@@ -180,12 +180,12 @@ export const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowPaginationFeature,
     rowSortingFeature,
     columnFilteringFeature,
   }),
-  _rowModels: {
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),

@@ -37,13 +37,13 @@ export const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
   }),
 
-  _rowModels: {
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),

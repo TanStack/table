@@ -16,12 +16,12 @@ import { SubComponent } from './sub-component/sub-component'
 import type { Person } from './makeData'
 import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowExpandingFeature,
   columnVisibilityFeature,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -103,9 +103,9 @@ export class App {
 
   readonly table = injectTable(() => ({
     debugTable: true,
-    _features,
-    _rowModels: {
-      expandedRowModel: createExpandedRowModel<typeof _features, Person>(),
+    features,
+    rowModels: {
+      expandedRowModel: createExpandedRowModel<typeof features, Person>(),
     },
     data: this.data(),
     columns,

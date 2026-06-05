@@ -9,9 +9,9 @@
   import { makeData, type Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({ columnSizingFeature })
+  const features = tableFeatures({ columnSizingFeature })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.accessor('firstName', {
@@ -54,8 +54,8 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       get data() {
         return data

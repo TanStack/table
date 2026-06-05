@@ -32,13 +32,13 @@ export type Todo = {
   completed: boolean
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   globalFilteringFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Todo>()
+const columnHelper = createColumnHelper<typeof features, Todo>()
 
 type TodoResponse = { items: Array<Todo>; totalCount: number }
 
@@ -119,7 +119,7 @@ export class App {
       header: () => 'Completed',
       footer: (props) => props.column.id,
     }),
-  ] as Array<ColumnDef<typeof _features, Todo>>
+  ] as Array<ColumnDef<typeof features, Todo>>
 
   // Keep previous value
   readonly dataWithLatest: WritableSignal<TodoResponse> = linkedSignal({
@@ -137,7 +137,7 @@ export class App {
     const data = this.dataWithLatest()
     return {
       debugTable: true,
-      _features,
+      features,
       data: data.items,
       columns: this.columns,
       state: {

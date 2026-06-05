@@ -104,14 +104,14 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
 // end of custom feature code
 
 // app code
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
   densityPlugin, // pass in our plugin just like any other stock feature
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const columns = useMemo(
@@ -154,8 +154,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
         sortedRowModel: createSortedRowModel(sortFns),
@@ -332,8 +332,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: PreactTable<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: PreactTable<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

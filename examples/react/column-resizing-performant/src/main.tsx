@@ -11,7 +11,7 @@ import { makeData } from './makeData'
 import type { Table } from '@tanstack/react-table'
 import './index.css'
 
-const _features = tableFeatures({ columnSizingFeature, columnResizingFeature })
+const features = tableFeatures({ columnSizingFeature, columnResizingFeature })
 
 type Person = {
   firstName: string
@@ -22,7 +22,7 @@ type Person = {
   progress: number
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -74,8 +74,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data,
       defaultColumn: {
@@ -193,7 +193,7 @@ function App() {
 }
 
 // un-memoized normal table body component - see memoized version below
-function TableBody({ table }: { table: Table<typeof _features, Person> }) {
+function TableBody({ table }: { table: Table<typeof features, Person> }) {
   return (
     <div className="tbody">
       {table.getRowModel().rows.map((row) => (

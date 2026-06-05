@@ -23,8 +23,8 @@ import { Store } from '@tanstack/store'
 const paginationAtom = new Store<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: { /* … */ },
+  features,
+  rowModels: { /* … */ },
   columns,
   data: this.data(),
   atoms: {
@@ -60,15 +60,15 @@ import type {
   TableState,
 } from '@tanstack/angular-table'
 
-// TableState<typeof _features> is inferred from registered features
-type MyTableState = TableState<typeof _features>
+// TableState<typeof features> is inferred from registered features
+type MyTableState = TableState<typeof features>
 ```
 
 ---
 
 ## `createTableHook` — app-wide table infrastructure
 
-When multiple tables in an app share the same `_features`, `_rowModels`, and
+When multiple tables in an app share the same `features`, `rowModels`, and
 component conventions, factor them into a `createTableHook(...)` call once and
 import the resulting `injectAppTable` / `createAppColumnHelper`.
 
@@ -91,8 +91,8 @@ export const {
   injectTableCellContext,
   injectTableHeaderContext,
 } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -110,7 +110,7 @@ const columnHelper = createAppColumnHelper<Person>() // only TData generic neede
 readonly table = injectAppTable(() => ({
   columns,
   data: this.data(),
-})) // _features & _rowModels inherited
+})) // features & rowModels inherited
 ```
 
 `createTableHook` also lets you register `tableComponents` / `cellComponents` /

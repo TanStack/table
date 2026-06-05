@@ -1,7 +1,7 @@
 ---
 name: column-definitions
 description: >
-  Define TanStack Table v9 columns with `createColumnHelper<typeof _features, TData>()`.
+  Define TanStack Table v9 columns with `createColumnHelper<typeof features, TData>()`.
   Covers `columnHelper.accessor` (key + function forms), `columnHelper.display`,
   `columnHelper.group`, `columnHelper.columns`, the `ColumnDef`/`AccessorKeyColumnDef`/
   `AccessorFnColumnDef`/`DisplayColumnDef`/`GroupColumnDef` types, `accessorKey` with
@@ -37,10 +37,10 @@ type Person = {
   visits: number
 }
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 
 // TFeatures FIRST, TData SECOND
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   // accessorKey — deep keys via DeepKeys (dot paths) are supported
@@ -77,8 +77,8 @@ const columns = columnHelper.columns([
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id, // ← stable from row's own data
@@ -92,7 +92,7 @@ Without `getRowId`, `row.id` defaults to the row's array index. Row-keyed state 
 ```ts
 type User = { name: { first: string; last: string } }
 
-const columnHelper = createColumnHelper<typeof _features, User>()
+const columnHelper = createColumnHelper<typeof features, User>()
 
 columnHelper.accessor('name.first', { header: 'First' })
 columnHelper.accessor('name.last', { header: 'Last' })
@@ -138,8 +138,8 @@ const columnHelper = createColumnHelper<Person>()
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
 v9 changed the generic order: `<TFeatures, TData>`. The compiler error is noisy because `Person` lands in the `TFeatures` slot and breaks every column type that follows.
@@ -209,7 +209,7 @@ function MyTable() {
     columnHelper.accessor('firstName', { header: 'First' }),
     columnHelper.accessor('lastName', { header: 'Last' }),
   ]
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
@@ -225,7 +225,7 @@ function MyTable() {
       ]),
     [],
   )
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
@@ -240,8 +240,8 @@ Wrong:
 ```ts
 // no getRowId — rowSelection survives data updates but maps to wrong rows
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   enableRowSelection: true,
@@ -252,8 +252,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,
@@ -328,6 +328,6 @@ Source: https://github.com/TanStack/table/issues/5860
 
 ## See also
 
-- `tanstack-table/setup` — how `_features` and `_rowModels` thread through `useTable`
+- `tanstack-table/setup` — how `features` and `rowModels` thread through `useTable`
 - `tanstack-table/customizing-feature-behavior` — per-column `sortFn`/`filterFn`/`aggregationFn`
 - `tanstack-table/row-selection` — why `getRowId` is essentially mandatory

@@ -59,9 +59,9 @@ import {
   type ColumnDef,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   { accessorKey: 'id', header: 'ID', size: 60 },
   {
     accessorKey: 'firstName',
@@ -76,7 +76,7 @@ class VirtualizedTable extends LitElement {
   @state()
   private _data: Person[] = makeData(50_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
   private rowVirtualizerController!: VirtualizerController<Element, Element>
   private tableContainerRef: Ref = createRef()
 
@@ -93,8 +93,8 @@ class VirtualizedTable extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+        features,
+        rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
         columns,
         data: this._data,
       },

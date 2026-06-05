@@ -15,8 +15,8 @@ import { fetchData } from './fetchData'
 import type { PaginationState, Updater } from '@tanstack/angular-table'
 import type { Person } from './fetchData'
 
-const _features = tableFeatures({ rowPaginationFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowPaginationFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     header: 'First Name',
@@ -49,9 +49,9 @@ export class App {
     placeholderData: keepPreviousData, // don't have 0 rows flash while changing pages/loading next page
   }))
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {},
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {},
     columns,
     data: this.dataQuery.data()?.rows ?? defaultData,
     rowCount: this.dataQuery.data()?.rowCount,

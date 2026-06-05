@@ -43,7 +43,7 @@ the affected pipeline stages, pipe the result back through reactive getters.
     type PaginationState,
   } from '@tanstack/svelte-table'
 
-  const _features = tableFeatures({ rowPaginationFeature })
+  const features = tableFeatures({ rowPaginationFeature })
 
   let pagination: PaginationState = $state({ pageIndex: 0, pageSize: 10 })
 
@@ -57,8 +57,8 @@ the affected pipeline stages, pipe the result back through reactive getters.
   }))
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return dataQuery.data?.rows ?? []
@@ -114,8 +114,8 @@ const dataQuery = createQuery(() => ({
 }))
 
 const table = createTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? []
@@ -147,12 +147,12 @@ const dataQuery = createQuery(() => ({
 }))
 
 const table = createTable({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowPaginationFeature,
     rowSortingFeature,
     columnFilteringFeature,
   }),
-  _rowModels: {},
+  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? []

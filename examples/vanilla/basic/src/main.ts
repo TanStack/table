@@ -11,11 +11,11 @@ import type { Person } from './makeData'
 
 let data = makeData(20)
 
-const _features = tableFeatures({
+const features = tableFeatures({
   coreReativityFeature: storeReactivityBindings(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -124,8 +124,8 @@ const renderTable = () => {
 
 const table = constructTable({
   debugTable: true,
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   debugAll: true,

@@ -26,10 +26,10 @@ options are mixed in.
 
 ## Properties
 
-### \_features
+### \features
 
 ```ts
-readonly _features: TFeatures;
+readonly features: TFeatures;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L74)
@@ -41,14 +41,14 @@ APIs are available.
 
 #### Inherited from
 
-[`TableOptions_Table`](TableOptions_Table.md).[`_features`](TableOptions_Table.md#_features)
+[`TableOptions_Table`](TableOptions_Table.md).[`features`](TableOptions_Table.md#features)
 
 ***
 
-### \_rowModels?
+### \rowModels?
 
 ```ts
-readonly optional _rowModels: CreateRowModels_All<TFeatures, TData>;
+readonly optional rowModels: CreateRowModels_All<TFeatures, TData>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L79)
@@ -58,7 +58,7 @@ expansion, and pagination.
 
 #### Inherited from
 
-[`TableOptions_Table`](TableOptions_Table.md).[`_rowModels`](TableOptions_Table.md#_rowmodels)
+[`TableOptions_Table`](TableOptions_Table.md).[`rowModels`](TableOptions_Table.md#_rowmodels)
 
 ***
 

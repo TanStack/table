@@ -16,8 +16,8 @@
   // 1. New in V9! Tell the table which features and row models we want to use.
   const { createAppTable, createAppColumnHelper
   } = createTableHook({
-    _features: { rowSortingFeature },
-    _rowModels: {
+    features: { rowSortingFeature },
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
     },
     debugTable: true,

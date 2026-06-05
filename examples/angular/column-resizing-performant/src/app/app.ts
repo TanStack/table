@@ -17,12 +17,12 @@ import { TableResizableCells } from './resizable-cell/resizable-cell'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnResizingFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -80,7 +80,7 @@ export class App {
 
   readonly table = injectTable(() => ({
     data: this.data(),
-    _features,
+    features,
     columns: defaultColumns,
     columnResizeMode: 'onChange' as const,
     defaultColumn: {

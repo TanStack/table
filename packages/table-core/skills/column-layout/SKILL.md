@@ -48,7 +48,7 @@ import {
   constructTable,
 } from '@tanstack/table-core'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnVisibilityFeature,
   columnOrderingFeature,
   columnPinningFeature,
@@ -57,8 +57,8 @@ const _features = tableFeatures({
 })
 
 const table = constructTable({
-  _features,
-  _rowModels: {}, // no row model needed for these features
+  features,
+  rowModels: {}, // no row model needed for these features
   columns,
   data,
   initialState: {
@@ -172,7 +172,7 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ columnSizingFeature, columnResizingFeature }),
+  features: tableFeatures({ columnSizingFeature, columnResizingFeature }),
   columnResizeMode: 'onChange',
 })
 <td style={{ width: cell.column.getSize() }}>{cell.renderValue()}</td>
@@ -211,7 +211,7 @@ Wrong:
 ```ts
 // v8 syntax — no longer disables pinning at table level in v9
 const table = useTable({
-  _features: tableFeatures({ columnPinningFeature }),
+  features: tableFeatures({ columnPinningFeature }),
   enablePinning: false, // ignored
 })
 ```
@@ -221,7 +221,7 @@ Correct:
 ```ts
 // v9 split: two distinct table-level options
 const table = useTable({
-  _features: tableFeatures({ columnPinningFeature, rowPinningFeature }),
+  features: tableFeatures({ columnPinningFeature, rowPinningFeature }),
   enableColumnPinning: false,
   enableRowPinning: false,
 })
@@ -251,7 +251,7 @@ function App() {
     }),
   ]
   const table = useTable({
-    _features: tableFeatures({ columnPinningFeature, columnResizingFeature }),
+    features: tableFeatures({ columnPinningFeature, columnResizingFeature }),
     columns,
     data,
   })
@@ -271,7 +271,7 @@ const defaultColumns = columnHelper.columns([
 ])
 function App() {
   const [columns] = React.useState(() => [...defaultColumns])
-  const table = useTable({ _features, columns, data })
+  const table = useTable({ features, columns, data })
 }
 
 // or: useMemo
@@ -305,8 +305,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ columnVisibilityFeature }),
-  _rowModels: {},
+  features: tableFeatures({ columnVisibilityFeature }),
+  rowModels: {},
   columns,
   data,
 })

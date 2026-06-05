@@ -20,7 +20,7 @@
   } from '@tanstack/svelte-table'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
     rowSelectionFeature,
     columnFilteringFeature,
@@ -44,8 +44,8 @@
   // Create table with selector to track specific state
   const table = createTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
       },
@@ -291,8 +291,8 @@
 </div>
 
 {#snippet Filter(
-  column: Column<typeof _features, Person>,
-  table: SvelteTable<typeof _features, Person, any>,
+  column: Column<typeof features, Person>,
+  table: SvelteTable<typeof features, Person, any>,
 )}
   {@const firstValue = table
     .getPreFilteredRowModel()

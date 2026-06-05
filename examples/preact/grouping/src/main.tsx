@@ -22,14 +22,14 @@ import type { Person } from './makeData'
 
 // this example happens to use the createTableHook pattern, but it is not required
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {
+  features: {
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,
     rowPaginationFeature,
     rowSortingFeature,
   },
-  _rowModels: {
+  rowModels: {
     expandedRowModel: createExpandedRowModel(),
     filteredRowModel: createFilteredRowModel(filterFns),
     groupedRowModel: createGroupedRowModel(aggregationFns),

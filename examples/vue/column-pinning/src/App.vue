@@ -16,13 +16,13 @@ import type { Column } from '@tanstack/vue-table'
 
 const data = ref(makeData(1_000))
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = ref(
   columnHelper.columns([
@@ -84,7 +84,7 @@ const stressTest = () => {
 
 const table = useTable(
   {
-    _features,
+    features,
     data,
     get columns() {
       return columns.value
@@ -105,12 +105,12 @@ const randomizeColumns = () => {
     faker.helpers.shuffle(
       table
         .getAllLeafColumns()
-        .map((column: Column<typeof _features, Person>) => column.id),
+        .map((column: Column<typeof features, Person>) => column.id),
     ),
   )
 }
 
-function toggleColumnVisibility(column: Column<typeof _features, Person>) {
+function toggleColumnVisibility(column: Column<typeof features, Person>) {
   table.setColumnVisibility({
     ...table.state.columnVisibility,
     [column.id]: !column.getIsVisible(),
@@ -120,7 +120,7 @@ function toggleColumnVisibility(column: Column<typeof _features, Person>) {
 function toggleAllColumnsVisibility() {
   table
     .getAllLeafColumns()
-    .forEach((column: Column<typeof _features, Person>) => {
+    .forEach((column: Column<typeof features, Person>) => {
       toggleColumnVisibility(column)
     })
 }

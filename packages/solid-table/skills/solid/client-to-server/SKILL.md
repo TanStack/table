@@ -69,7 +69,7 @@ import {
 import { createAtom, useSelector } from '@tanstack/solid-store'
 import { createResource } from 'solid-js'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   columnFilteringFeature,
@@ -104,8 +104,8 @@ function ServerTable() {
   )
 
   const table = createTable({
-    _features,
-    _rowModels: {}, // <- no factories needed for the manual slices
+    features,
+    rowModels: {}, // <- no factories needed for the manual slices
     columns,
     get data() {
       return resource()?.rows ?? []
@@ -145,8 +145,8 @@ const [sorting, setSorting] = createSignal<SortingState>([])
 const [filters, setFilters] = createSignal<ColumnFiltersState>([])
 
 const table = createTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return resource()?.rows ?? []
@@ -216,7 +216,7 @@ silently ignored. Pick one ownership model per slice.
 
 ### HIGH — kept the client row-model factory after going manual
 
-If you flipped `manualSorting: true`, keeping `_rowModels.sortedRowModel: createSortedRowModel(sortFns)` does no harm but is dead weight in the bundle and confusing to readers. Remove it.
+If you flipped `manualSorting: true`, keeping `rowModels.sortedRowModel: createSortedRowModel(sortFns)` does no harm but is dead weight in the bundle and confusing to readers. Remove it.
 
 ### MEDIUM — `data: data()` instead of `get data()`
 

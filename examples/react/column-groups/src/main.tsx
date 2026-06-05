@@ -9,9 +9,9 @@ import {
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // use new columnHelper.columns method to create columns with the same TValue generic so TypeScript doesn't complain when passing columns to useTable
 const columns = columnHelper.columns([
@@ -69,8 +69,8 @@ function App() {
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data,
     },

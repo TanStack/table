@@ -2,7 +2,7 @@
 name: svelte/production-readiness
 description: >
   Ship-ready optimizations for `@tanstack/svelte-table@9` on Svelte 5. Tree-shake by registering
-  ONLY the `_features` you use; keep `_features`, `columns`, and `data` stable; replace broad
+  ONLY the `features` you use; keep `features`, `columns`, and `data` stable; replace broad
   `(state) => state` selectors with narrow projections on `createTable`; reach for
   `subscribeTable(atom, selector?)` when only one block of markup should react; lean on rune-aware
   atom reads (`table.atoms.<slice>.get()`) for non-reactive paths; key every `{#each}` block on
@@ -31,21 +31,21 @@ v9-specific — v8 tables won't have any of these levers.
 
 ## 1. Register only the features you use
 
-`_features` is the bundle gate. Any feature you don't register is tree-shaken out — including
+`features` is the bundle gate. Any feature you don't register is tree-shaken out — including
 its state slice, its API surface, and its reactive plumbing.
 
 ```ts
 // good — minimal table, ~smallest bundle
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
 // good — feature-by-feature opt-in
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 // bad — kitchen sink, every state slice created even when unused
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   columnGroupingFeature,
   columnOrderingFeature,
@@ -64,12 +64,12 @@ const _features = tableFeatures({
 
 If you find yourself running a table without a feature's UI ever showing, drop the feature.
 
-## 2. Stable identities for `_features`, `columns`, `data`
+## 2. Stable identities for `features`, `columns`, `data`
 
 `createTable` syncs options in `$effect.pre`. If any of these identities flip every component
 run, the table re-syncs more than it needs to.
 
-- **`_features` and `_rowModels`**: declare at module scope, not inside the component
+- **`features` and `rowModels`**: declare at module scope, not inside the component
   function, and never inside `$derived` / `$effect`.
 - **`columns`**: same — module scope or `$state.frozen` / a non-reactive `const` in the
   component. Reactive recompute of columns is rare and almost always a bug.
@@ -80,8 +80,8 @@ run, the table re-syncs more than it needs to.
 ```svelte
 <script lang="ts">
   // module scope is fine in .svelte too, when truly static
-  const _features = tableFeatures({ rowPaginationFeature })
-  const _rowModels = { paginatedRowModel: createPaginatedRowModel() }
+  const features = tableFeatures({ rowPaginationFeature })
+  const rowModels = { paginatedRowModel: createPaginatedRowModel() }
   const columns = columnHelper.columns([
     /* ... */
   ])
@@ -90,8 +90,8 @@ run, the table re-syncs more than it needs to.
   const data = $derived(rawRows.map(normalize)) // computed once per rawRows change
 
   const table = createTable({
-    _features,
-    _rowModels,
+    features,
+    rowModels,
     columns,
     get data() {
       return data

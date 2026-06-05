@@ -29,12 +29,12 @@ type Person = {
   progress: number
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -82,8 +82,8 @@ function App() {
   const table = useTable(
     {
       key: 'basic-external-atoms', // needed for devtools
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
         paginatedRowModel: createPaginatedRowModel(),
       },

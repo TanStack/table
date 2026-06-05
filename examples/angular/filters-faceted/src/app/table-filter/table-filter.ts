@@ -1,6 +1,6 @@
 import { Component, computed, input } from '@angular/core'
 import { DebouncedInput } from '../debounced-input/debounced-input'
-import type { _features } from '../app'
+import type { features } from '../app'
 import type { Person } from '../makeData'
 import type {
   CellData,
@@ -95,9 +95,9 @@ declare module '@tanstack/angular-table' {
   imports: [DebouncedInput],
 })
 export class TableFilter {
-  readonly column = input.required<Column<typeof _features, Person>>()
+  readonly column = input.required<Column<typeof features, Person>>()
 
-  readonly table = input.required<Table<typeof _features, Person>>()
+  readonly table = input.required<Table<typeof features, Person>>()
 
   readonly filterVariant = computed(() => {
     return (this.column().columnDef.meta ?? {}).filterVariant

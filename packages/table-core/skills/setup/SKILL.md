@@ -2,11 +2,11 @@
 name: setup
 description: >
   Install a TanStack Table v9 framework adapter and wire up a first table with
-  `tableFeatures({...})` declaring `_features`, an `_rowModels` map of factory
+  `tableFeatures({...})` declaring `features`, an `rowModels` map of factory
   results (`createSortedRowModel(sortFns)`, `createFilteredRowModel(filterFns)`,
-  `createPaginatedRowModel()`, …), a `createColumnHelper<typeof _features, TData>()`
+  `createPaginatedRowModel()`, …), a `createColumnHelper<typeof features, TData>()`
   column set, and the framework `useTable` / `injectTable` / `createTable` /
-  `constructTable` entry point. Covers the registry model, why `_features` must
+  `constructTable` entry point. Covers the registry model, why `features` must
   be module-scoped, when to reach for `stockFeatures`, and `coreFeatures`.
 type: core
 library: tanstack-table
@@ -23,11 +23,11 @@ sources:
   - TanStack/table:examples/react/basic-use-table/src/main.tsx
 ---
 
-This skill builds on `tanstack-table/state-management` and `tanstack-table/column-definitions`. Read those first for the v9 atom model and the `createColumnHelper<typeof _features, TData>()` shape.
+This skill builds on `tanstack-table/state-management` and `tanstack-table/column-definitions`. Read those first for the v9 atom model and the `createColumnHelper<typeof features, TData>()` shape.
 
 ## Setup
 
-TanStack Table v9 separates a framework-agnostic core (`@tanstack/table-core`) from per-framework adapters. Every table — vanilla or framework — must declare two new v9-required options at construction time: `_features` (the registry of feature plugins) and `_rowModels` (the map of pipeline factories).
+TanStack Table v9 separates a framework-agnostic core (`@tanstack/table-core`) from per-framework adapters. Every table — vanilla or framework — must declare two new v9-required options at construction time: `features` (the registry of feature plugins) and `rowModels` (the map of pipeline factories).
 
 ```ts
 // Framework-agnostic, using @tanstack/table-core directly.
@@ -43,11 +43,11 @@ import {
 type Person = { firstName: string; lastName: string; age: number }
 
 // 1. Declare features at MODULE scope (stable reference). This is required —
-//    a fresh `_features` object on every call destroys feature registration.
-const _features = tableFeatures({ rowSortingFeature })
+//    a fresh `features` object on every call destroys feature registration.
+const features = tableFeatures({ rowSortingFeature })
 
 // 2. Build a column helper bound to BOTH TFeatures and TData.
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -61,8 +61,8 @@ const data: Person[] = [
 ]
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     // Pair every feature with its matching row-model factory.
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -89,10 +89,10 @@ Framework adapters wrap this with reactivity:
 ### Minimum table (no extra features)
 
 ```ts
-const _features = tableFeatures({}) // core features only
+const features = tableFeatures({}) // core features only
 const table = constructTable({
-  _features,
-  _rowModels: {}, // core row model auto-included
+  features,
+  rowModels: {}, // core row model auto-included
   columns,
   data,
 })
@@ -114,15 +114,15 @@ import {
   filterFns,
 } from '@tanstack/table-core'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
 })
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -132,7 +132,7 @@ const table = constructTable({
 })
 ```
 
-Each feature and its row-model factory are registered together — TypeScript exposes the feature's APIs (`table.setSorting`, `table.nextPage`, `table.setColumnFilters`) only when its feature plugin is present in `_features`.
+Each feature and its row-model factory are registered together — TypeScript exposes the feature's APIs (`table.setSorting`, `table.nextPage`, `table.setColumnFilters`) only when its feature plugin is present in `features`.
 
 ### Vanilla JS reactivity binding
 
@@ -140,11 +140,11 @@ Each feature and its row-model factory are registered together — TypeScript ex
 import { constructTable, tableFeatures } from '@tanstack/table-core'
 import { storeReactivityBindings } from '@tanstack/table-core'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
 const table = constructTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   _rowModelFns: {},
@@ -166,19 +166,19 @@ Reach for this only as a transitional aid. It re-introduces v8 bundle size (~15�
 import { stockFeatures, tableFeatures } from '@tanstack/table-core'
 
 // Discouraged in new code. Register only what you use.
-const _features = tableFeatures(stockFeatures)
+const features = tableFeatures(stockFeatures)
 ```
 
 ## Common Mistakes
 
-### [CRITICAL] API/state slice missing because the feature was not registered in `_features`
+### [CRITICAL] API/state slice missing because the feature was not registered in `features`
 
 Wrong:
 
 ```ts
 // rowSortingFeature missing — table.setSorting / state.sorting unavailable
-const _features = tableFeatures({}) // empty
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({}) // empty
+const table = useTable({ features, rowModels: {}, columns, data })
 table.setSorting([{ id: 'age', desc: true }]) // ❌ does not exist on this table type
 ```
 
@@ -186,10 +186,10 @@ Correct:
 
 ```ts
 // Register every feature you intend to use; pair with its row model when applicable
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -198,7 +198,7 @@ const table = useTable({
 })
 ```
 
-In v9, `_features` is a tree-shakeable registry — TypeScript hides APIs for unregistered features and the runtime atom is never created. Agents who see `table.setColumnFilters` "missing" often incorrectly conclude the API was removed.
+In v9, `features` is a tree-shakeable registry — TypeScript hides APIs for unregistered features and the runtime atom is never created. Agents who see `table.setColumnFilters` "missing" often incorrectly conclude the API was removed.
 
 Source: maintainer interview (Phase 4, 2026-05-17)
 
@@ -231,16 +231,16 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
 ```
 
-v7→v8 and v8→v9 both reshaped the API substantially. Agents trained on older data confidently emit v7/v8 shapes; v9 enforces `_features` + `_rowModels`.
+v7→v8 and v8→v9 both reshaped the API substantially. Agents trained on older data confidently emit v7/v8 shapes; v9 enforces `features` + `rowModels`.
 
 Source: maintainer interview (Phase 4, 2026-05-17)
 
@@ -251,8 +251,8 @@ Wrong:
 ```tsx
 function MyTable() {
   // ❌ new object every render — destroys stable feature registration
-  const _features = tableFeatures({ rowSortingFeature })
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const features = tableFeatures({ rowSortingFeature })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
@@ -260,14 +260,14 @@ Correct:
 
 ```tsx
 // ✅ module-scoped, stable reference
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 
 function MyTable() {
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
-A fresh `_features` reference on each render churns the table's feature registry — the same way unstable `columns` or `data` cause infinite re-renders. Hoist to module scope or memoize.
+A fresh `features` reference on each render churns the table's feature registry — the same way unstable `columns` or `data` cause infinite re-renders. Hoist to module scope or memoize.
 
 Source: docs/guide/data.md; examples/react/basic-use-table/src/main.tsx
 
@@ -277,10 +277,10 @@ Wrong:
 
 ```ts
 // rowSortingFeature missing — sortedRowModel is orphaned and never runs
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns), // no-op
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -292,10 +292,10 @@ const table = useTable({
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -304,7 +304,7 @@ const table = useTable({
 })
 ```
 
-Row-model factories only run if their matching feature is in `_features`. Runtime silently degrades.
+Row-model factories only run if their matching feature is in `features`. Runtime silently degrades.
 
 Source: docs/guide/row-models.md; examples/react/basic-external-atoms/src/main.tsx
 
@@ -323,8 +323,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -342,7 +342,7 @@ Wrong:
 ```ts
 // Pulls in every feature even though only sorting+pagination are used
 import { stockFeatures, tableFeatures } from '@tanstack/react-table'
-const _features = tableFeatures(stockFeatures)
+const features = tableFeatures(stockFeatures)
 ```
 
 Correct:
@@ -353,10 +353,10 @@ import {
   rowSortingFeature,
   rowPaginationFeature,
 } from '@tanstack/react-table'
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 ```
 
-Tree-shaking via `_features` is the headline reason for the v9 redesign. `stockFeatures` exists as a v8-style transitional escape hatch, not a default.
+Tree-shaking via `features` is the headline reason for the v9 redesign. `stockFeatures` exists as a v8-style transitional escape hatch, not a default.
 
 Source: maintainer interview (Phase 4, 2026-05-17)
 
@@ -367,8 +367,8 @@ Wrong:
 ```tsx
 // ❌ Fresh [] each render — infinite loop when items is undefined
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: items ?? [],
 })
@@ -381,8 +381,8 @@ Correct:
 const EMPTY: Person[] = []
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: items ?? EMPTY,
 })
@@ -396,5 +396,5 @@ Source: https://github.com/TanStack/table/issues/4566; https://github.com/TanSta
 ## See also
 
 - `tanstack-table/state-management` — atom model, ownership precedence, state slices
-- `tanstack-table/column-definitions` — `createColumnHelper<typeof _features, TData>()` and `getRowId`
+- `tanstack-table/column-definitions` — `createColumnHelper<typeof features, TData>()` and `getRowId`
 - `tanstack-table/migrate-v8-to-v9` — full rename + restructure table for v8 → v9 upgrades

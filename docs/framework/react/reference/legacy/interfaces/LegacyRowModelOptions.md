@@ -29,7 +29,7 @@ Additional aggregation functions to apply to the table.
 
 #### Deprecated
 
-Use `_rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
+Use `rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
 
 ***
 
@@ -45,7 +45,7 @@ Additional filter functions to apply to the table.
 
 #### Deprecated
 
-Use `_rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
+Use `rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
 
 ***
 
@@ -77,7 +77,7 @@ Returns the expanded row model for the table.
 
 #### Deprecated
 
-Use `_rowModels.expandedRowModel` with `createExpandedRowModel()` instead.
+Use `rowModels.expandedRowModel` with `createExpandedRowModel()` instead.
 
 ***
 
@@ -93,7 +93,7 @@ Returns the faceted min/max values for a column.
 
 #### Deprecated
 
-Use `_rowModels.facetedMinMaxValues` with `createFacetedMinMaxValues()` instead.
+Use `rowModels.facetedMinMaxValues` with `createFacetedMinMaxValues()` instead.
 
 ***
 
@@ -109,7 +109,7 @@ Returns the faceted row model for a column.
 
 #### Deprecated
 
-Use `_rowModels.facetedRowModel` with `createFacetedRowModel()` instead.
+Use `rowModels.facetedRowModel` with `createFacetedRowModel()` instead.
 
 ***
 
@@ -125,7 +125,7 @@ Returns the faceted unique values for a column.
 
 #### Deprecated
 
-Use `_rowModels.facetedUniqueValues` with `createFacetedUniqueValues()` instead.
+Use `rowModels.facetedUniqueValues` with `createFacetedUniqueValues()` instead.
 
 ***
 
@@ -141,7 +141,7 @@ Returns the filtered row model for the table.
 
 #### Deprecated
 
-Use `_rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
+Use `rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
 
 ***
 
@@ -157,7 +157,7 @@ Returns the grouped row model for the table.
 
 #### Deprecated
 
-Use `_rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
+Use `rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
 
 ***
 
@@ -173,7 +173,7 @@ Returns the paginated row model for the table.
 
 #### Deprecated
 
-Use `_rowModels.paginatedRowModel` with `createPaginatedRowModel()` instead.
+Use `rowModels.paginatedRowModel` with `createPaginatedRowModel()` instead.
 
 ***
 
@@ -189,7 +189,7 @@ Returns the sorted row model for the table.
 
 #### Deprecated
 
-Use `_rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
+Use `rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
 
 ***
 
@@ -205,4 +205,4 @@ Additional sort functions to apply to the table.
 
 #### Deprecated
 
-Use `_rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
+Use `rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.

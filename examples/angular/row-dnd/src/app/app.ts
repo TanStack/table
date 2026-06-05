@@ -74,7 +74,7 @@ export class App {
 
   readonly table = injectTable(() => {
     return {
-      _features: _tableFeatures,
+      features: _tableFeatures,
       data: this.data(),
       columns: defaultColumns,
       getRowId: (row) => row.userId,

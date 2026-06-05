@@ -25,7 +25,7 @@ sources:
   - TanStack/table:docs/framework/preact/guide/table-state.md
 ---
 
-Client-side tables run sort/filter/paginate through registered row-model factories. Server-side tables let the server own those stages; the table just renders what the server returned and emits state changes that the app uses to refetch. Same `_features`, same APIs — different ownership.
+Client-side tables run sort/filter/paginate through registered row-model factories. Server-side tables let the server own those stages; the table just renders what the server returned and emits state changes that the app uses to refetch. Same `features`, same APIs — different ownership.
 
 ## The Manual Flags
 
@@ -39,7 +39,7 @@ Set the matching flag(s) to `true` to tell the table that the server (not the re
 | `manualGrouping`   | group-by rows           |
 | `manualExpanding`  | row expansion           |
 
-The matching `*Feature` should still be in `_features` so its state slice exists and its APIs work — you are only telling the row-model pipeline to skip the transform.
+The matching `*Feature` should still be in `features` so its state slice exists and its APIs work — you are only telling the row-model pipeline to skip the transform.
 
 For pagination, supply `rowCount` so `table.getPageCount()` is correct. Optional but usually required for a UI.
 
@@ -59,7 +59,7 @@ import {
   type PaginationState,
 } from '@tanstack/preact-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 function App() {
   const paginationAtom = useCreateAtom<PaginationState>({
@@ -78,8 +78,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {}, // no client-side pagination factory
+      features,
+      rowModels: {}, // no client-side pagination factory
       columns,
       data: rowsPayload?.rows ?? defaultData,
       rowCount: rowsPayload?.rowCount, // makes getPageCount() correct
@@ -99,7 +99,7 @@ Source: `examples/preact/with-tanstack-query/src/main.tsx` (lines 56–86).
 Same shape, more atoms. Compose `pagination + sorting + columnFilters + globalFilter` into the request key.
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   columnFilteringFeature,
@@ -126,8 +126,8 @@ const { data } = useSomeServerFetcher({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {}, // server owns every stage
+  features,
+  rowModels: {}, // server owns every stage
   columns,
   data: data?.rows ?? EMPTY,
   rowCount: data?.rowCount,
@@ -153,8 +153,8 @@ Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: response?.rows ?? [],
   atoms: { pagination: paginationAtom },
@@ -168,8 +168,8 @@ Correct:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: response?.rows ?? [],
   rowCount: response?.rowCount,
@@ -187,8 +187,8 @@ Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() }, // still runs
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() }, // still runs
   data: server.rows,
   manualPagination: true,
 })
@@ -198,8 +198,8 @@ Correct:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: {}, // server owns pagination
+  features,
+  rowModels: {}, // server owns pagination
   data: server.rows,
   rowCount: server.rowCount,
   manualPagination: true,
@@ -251,8 +251,8 @@ const { data } = useQuery({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: data?.rows ?? defaultData,
   rowCount: data?.rowCount,
@@ -263,15 +263,15 @@ const table = useTable({
 
 Source: `examples/preact/with-tanstack-query/src/main.tsx`.
 
-### MEDIUM Removing the matching feature from `_features`
+### MEDIUM Removing the matching feature from `features`
 
 Wrong:
 
 ```tsx
-const _features = tableFeatures({}) // dropped rowPaginationFeature
+const features = tableFeatures({}) // dropped rowPaginationFeature
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   data: server.rows,
   rowCount: server.rowCount,
   manualPagination: true,
@@ -282,7 +282,7 @@ table.setPageIndex(0) // type error / no-op
 Correct: keep the feature registered. `manualPagination: true` only tells the row-model pipeline to skip slicing — you still want the pagination state slice and `setPageIndex` / `nextPage` APIs.
 
 ```tsx
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 ```
 
 Source: `docs/guide/features.md`.

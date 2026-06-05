@@ -29,14 +29,14 @@ import type { JSX } from 'preact'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 /**
  * This is an example showing how to use advanced re-rendering optimizations with more fine-grained control over what is subscribed to.
@@ -135,8 +135,8 @@ function App() {
   const table = useTable(
     {
       key: 'basic-subscribe', // needed for devtools
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns),
         paginatedRowModel: createPaginatedRowModel(),
       },
@@ -380,8 +380,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: PreactTable<typeof _features, Person, null>
+  column: Column<typeof features, Person>
+  table: PreactTable<typeof features, Person, null>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

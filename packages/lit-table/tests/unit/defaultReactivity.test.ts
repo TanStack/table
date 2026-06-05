@@ -10,8 +10,8 @@ describe('TableController', () => {
     const controller = new TableController<any, any>(host)
 
     const table = controller.table({
-      _features: {},
-      _rowModels: {},
+      features: {},
+      rowModels: {},
       columns: [],
       data: [],
     })

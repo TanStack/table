@@ -59,11 +59,11 @@ import {
   aggregationFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({ columnGroupingFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel(aggregationFns),
   },
   // other options...
@@ -74,11 +74,11 @@ When grouping state is active, the table will add matching rows as subRows to th
 To allow the user to expand and collapse the grouped rows, you can use the expanding feature.
 
 ```tsx
-const _features = tableFeatures({ columnGroupingFeature, rowExpandingFeature })
+const features = tableFeatures({ columnGroupingFeature, rowExpandingFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -104,8 +104,8 @@ By default, when a column is grouped, it is moved to the start of the table. You
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+  features,
+  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   groupedColumnMode: 'reorder',
 })
@@ -142,8 +142,8 @@ When rows are grouped, you can aggregate the data in the grouped rows using the 
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel({
       ...aggregationFns,
       myCustomAggregation: (columnId, leafRows, childRows) => {
@@ -169,8 +169,8 @@ If you are doing server-side grouping and aggregation, you can enable manual gro
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ columnGroupingFeature }),
-  _rowModels: {}, // no groupedRowModel needed for manual grouping
+  features: tableFeatures({ columnGroupingFeature }),
+  rowModels: {}, // no groupedRowModel needed for manual grouping
   // other options...
   manualGrouping: true,
 })
@@ -186,8 +186,8 @@ If you want to manage the grouping state yourself, you can use the onGroupingCha
 const [grouping, setGrouping] = useState<string[]>([])
 
 const table = useTable({
-  _features,
-  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+  features,
+  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   state: {
     grouping,

@@ -19,13 +19,13 @@ import {
 import type { Person } from './makeData'
 import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   rowExpandingFeature: rowExpandingFeature,
   rowPaginationFeature: rowPaginationFeature,
   rowSelectionFeature: rowSelectionFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: () =>
@@ -76,10 +76,10 @@ export class App {
   readonly expanded = signal<ExpandedState>({})
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
-      expandedRowModel: createExpandedRowModel<typeof _features, Person>(),
+    features,
+    rowModels: {
+      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
+      expandedRowModel: createExpandedRowModel<typeof features, Person>(),
     },
     data: this.data(),
     columns: defaultColumns,

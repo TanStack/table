@@ -83,8 +83,8 @@ function App() {
   const [data] = React.useState(() => makeData(200_000))
 
   const table = useTable({
-    _features: features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features: features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
   })

@@ -40,13 +40,13 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 function getAriaSort(sortDirection: false | 'asc' | 'desc') {
   if (sortDirection === 'asc') return 'ascending'
   if (sortDirection === 'desc') return 'descending'
@@ -93,8 +93,8 @@ function App() {
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
         paginatedRowModel: createPaginatedRowModel(),
         filteredRowModel: createFilteredRowModel(filterFns),

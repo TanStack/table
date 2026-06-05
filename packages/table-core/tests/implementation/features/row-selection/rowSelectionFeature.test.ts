@@ -13,14 +13,14 @@ import type { ColumnDef, Row } from '../../../../src'
 
 // TODO: bring up to new test structure
 
-const _features = {
+const features = {
   ...coreFeatures,
   rowSelectionFeature,
   coreReativityFeature: storeReactivityBindings(),
 }
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<typeof _features, Person, any>
+type PersonColumn = ColumnDef<typeof features, Person, any>
 
 function generateColumnDefs(people: Array<Person>): Array<PersonColumn> {
   const columnHelper = createColumnHelper<any, Person>()
@@ -42,9 +42,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(5)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -71,9 +71,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3, 2) // assuming 3 parent rows with 2 sub-rows each
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -100,9 +100,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(5)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -126,9 +126,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -151,9 +151,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -176,9 +176,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -201,9 +201,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -222,9 +222,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -243,9 +243,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -267,9 +267,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -293,9 +293,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -319,10 +319,10 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
-        enableRowSelection: (row: Row<typeof _features, Person>) =>
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
+        enableRowSelection: (row: Row<typeof features, Person>) =>
           row.index === 0, // only first row is selectable (of 2 sub-rows)
         renderFallbackValue: '',
         data,
@@ -345,9 +345,9 @@ describe('rowSelectionFeature', () => {
       const data = generateTestData(3, 2, 2)
       const columns = generateColumnDefs(data)
 
-      const table = constructTable<typeof _features, Person>({
-        _features,
-        _rowModels: {},
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,

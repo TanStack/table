@@ -39,19 +39,19 @@ The Preact adapter mirrors the React adapter. It uses TanStack Store atoms for t
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
-For example, if `_features` includes `rowPaginationFeature`, TypeScript exposes pagination state APIs and `table.atoms.pagination`. If `_features` does not include `rowPaginationFeature`, `pagination` should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
+For example, if `features` includes `rowPaginationFeature`, TypeScript exposes pagination state APIs and `table.atoms.pagination`. If `features` does not include `rowPaginationFeature`, `pagination` should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -101,8 +101,8 @@ You can pass your own selector to make `table.state` contain only the reactive s
 ```tsx
 const table = useTable(
   {
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
@@ -121,8 +121,8 @@ For large tables, you can also opt the parent table component out of table-state
 ```tsx
 const table = useTable(
   {
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
   },
@@ -141,8 +141,8 @@ Without a `source` prop, `table.Subscribe` subscribes to `table.store` and requi
 ```tsx
 const table = useTable(
   {
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -222,8 +222,8 @@ If you only need to customize the starting value for some table state, use `init
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -275,7 +275,7 @@ import {
   type PaginationState,
 } from '@tanstack/preact-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -293,8 +293,8 @@ function App() {
   })
 
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data: dataQuery.data?.rows ?? [],
     rowCount: dataQuery.data?.rowCount,
@@ -322,8 +322,8 @@ const [pagination, setPagination] = useState<PaginationState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -379,8 +379,8 @@ const [sorting, setSorting] = useState<SortingState>([
 ])
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```tsx
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

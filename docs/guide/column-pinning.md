@@ -73,7 +73,7 @@ Managing the `columnPinning` state is optional, and usually not necessary unless
 ```jsx
 import { useTable, tableFeatures, columnPinningFeature } from '@tanstack/react-table'
 
-const _features = tableFeatures({ columnPinningFeature })
+const features = tableFeatures({ columnPinningFeature })
 
 const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
   left: [],
@@ -81,8 +81,8 @@ const [columnPinning, setColumnPinning] = useState<ColumnPinningState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   //...
   state: {
     columnPinning,
@@ -99,8 +99,8 @@ A very common use case is to pin some columns by default. You can do this by eit
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   //...
   initialState: {
     columnPinning: {

@@ -5,7 +5,7 @@ description: >
   Key the query on the controlled table state that drives the request (pagination, sorting,
   filters); use `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages;
   set `manualPagination` / `manualSorting` / `manualFiltering` for the slices the server owns;
-  drop the matching client `_rowModels` factories; pass `rowCount` from the server response;
+  drop the matching client `rowModels` factories; pass `rowCount` from the server response;
   set `getRowId` for stable selection across refetches; hoist controlled slices to Angular
   signals + `state` + `on[State]Change`. Alternative — `rxResource` / `httpResource` if you
   don't want to add the Query dependency (see `client-to-server`).
@@ -89,13 +89,13 @@ import {
   type SortingState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Todo>()
+const columnHelper = createColumnHelper<typeof features, Todo>()
 
 type TodoResponse = { items: Array<Todo>; totalCount: number }
 
@@ -153,7 +153,7 @@ export class App {
   }))
 
   // 3. Stable column defs (module-scope-able)
-  readonly columns: Array<ColumnDef<typeof _features, Todo>> = [
+  readonly columns: Array<ColumnDef<typeof features, Todo>> = [
     columnHelper.accessor('id', { header: 'Id', cell: (i) => i.getValue() }),
     columnHelper.accessor('title', {
       header: 'Title',
@@ -169,8 +169,8 @@ export class App {
   readonly table = injectTable(() => {
     const data = this.todosQuery.data() ?? { items: [], totalCount: 0 }
     return {
-      _features,
-      _rowModels: {}, // ← dropped paginatedRowModel / sortedRowModel / filteredRowModel
+      features,
+      rowModels: {}, // ← dropped paginatedRowModel / sortedRowModel / filteredRowModel
       columns: this.columns,
       data: data.items,
       getRowId: (row) => String(row.id),
@@ -219,7 +219,7 @@ For server-driven Table + Query to work correctly:
    during refetches. Without it, `todosQuery.data()` becomes `undefined`
    mid-fetch, your table shows 0 rows for a frame, the user notices.
 3. **`manualPagination` / `manualSorting` / `manualFiltering: true`** for
-   slices the server owns + **drop the matching `_rowModels` factories** so
+   slices the server owns + **drop the matching `rowModels` factories** so
    the table doesn't re-process the data the server already filtered/sorted/paged.
 4. **`rowCount: data.totalCount`** (or `pageCount`) so `getPageCount()`
    computes correctly under `manualPagination`.
@@ -412,10 +412,10 @@ how many rows exist — pass it.
 ```ts
 // ❌ Double-processes the data
 manualPagination: true,
-_rowModels: { paginatedRowModel: createPaginatedRowModel() }, // re-paginates server page
+rowModels: { paginatedRowModel: createPaginatedRowModel() }, // re-paginates server page
 
 // ✅
-_rowModels: {} // (or just keep the ones still client-side)
+rowModels: {} // (or just keep the ones still client-side)
 ```
 
 Same applies to `sortedRowModel` under `manualSorting` and `filteredRowModel`

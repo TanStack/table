@@ -15,12 +15,12 @@ import type { Table } from '@tanstack/table-core'
 
 let data = makeData(200_000)
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   coreReativityFeature: storeReactivityBindings(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -52,7 +52,7 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const renderTable = (table: Table<typeof _features, Person>) => {
+const renderTable = (table: Table<typeof features, Person>) => {
   // Create buttons container
   const buttonsDiv = document.createElement('div')
 
@@ -224,8 +224,8 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 }
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   data,

@@ -12,9 +12,9 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({ rowExpandingFeature })
+  const features = tableFeatures({ rowExpandingFeature })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.display({
@@ -63,8 +63,8 @@
   const table = createTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         expandedRowModel: createExpandedRowModel(),
       },
       columns,
@@ -77,7 +77,7 @@
   )
 </script>
 
-{#snippet ExpanderButton(row: Row<typeof _features, Person>)}
+{#snippet ExpanderButton(row: Row<typeof features, Person>)}
   {#if row.getCanExpand()}
     <button
       onclick={row.getToggleExpandedHandler()}
@@ -90,7 +90,7 @@
   {/if}
 {/snippet}
 
-{#snippet SubComponent(row: Row<typeof _features, Person>)}
+{#snippet SubComponent(row: Row<typeof features, Person>)}
   <pre style="font-size: 10px">
     <code>{JSON.stringify(row.original, null, 2)}</code>
   </pre>

@@ -62,7 +62,7 @@
     }),
   ])
 
-  // Create the table - _features and _rowModels are already configured!
+  // Create the table - features and rowModels are already configured!
   const table = createAppTable({
     columns,
     get data() {

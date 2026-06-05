@@ -13,12 +13,12 @@ import type { Person } from './makeData'
 
 // Create table hook with features
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {
+  features: {
     columnVisibilityFeature,
     columnPinningFeature,
     columnOrderingFeature,
   },
-  _rowModels: {},
+  rowModels: {},
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

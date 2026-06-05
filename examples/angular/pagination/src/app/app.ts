@@ -10,9 +10,9 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -73,10 +73,10 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 export class App {
   readonly data = signal<Array<Person>>(makeData(100_000))
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {
+      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
     },
     columns,
     data: this.data(),

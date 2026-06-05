@@ -11,9 +11,9 @@ import { makeData } from './makeData'
 import type { ColumnDef, SortFn } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 
-const sortStatusFn: SortFn<typeof _features, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
@@ -21,7 +21,7 @@ const sortStatusFn: SortFn<typeof _features, Person> = (rowA, rowB) => {
   )
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   { accessorKey: 'firstName', cell: (info) => info.getValue() },
   {
     accessorFn: (row) => row.lastName,
@@ -53,10 +53,10 @@ const sortIndicators: Record<'asc' | 'desc', string> = {
 export class App {
   readonly data = signal<Array<Person>>(makeData(1_000))
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel<typeof _features, Person>(sortFns),
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {
+      sortedRowModel: createSortedRowModel<typeof features, Person>(sortFns),
     },
     columns,
     data: this.data(),

@@ -4,7 +4,7 @@ title: Solid Table
 
 The `@tanstack/solid-table` adapter wraps `@tanstack/table-core` with Solid-specific reactivity, rendering helpers, and types. It installs the Solid `coreReativityFeature` for you, so table atoms participate in Solid dependency tracking and can update computations with fine-grained precision.
 
-TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
+TanStack Table v9 is explicit about what a table uses. Register features with `features`, and register client-side row model factories with `rowModels`. The core row model is included by default, so a basic table can use `rowModels: {}`.
 
 ## Creating a Table
 
@@ -19,9 +19,9 @@ type Person = {
   age: number
 }
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First name',
@@ -31,8 +31,8 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 function App(props: { data: Person[] }) {
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return props.data
@@ -43,7 +43,7 @@ function App(props: { data: Person[] }) {
 }
 ```
 
-For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
+For feature-specific row models, register the feature and put the row model factory under `rowModels`.
 
 ```tsx
 import {
@@ -55,14 +55,14 @@ import {
   tableFeatures,
 } from '@tanstack/solid-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const tableOptions = {
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -84,7 +84,7 @@ import {
   type PaginationState,
 } from '@tanstack/solid-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -94,8 +94,8 @@ const paginationAtom = createAtom<PaginationState>({
 })
 
 const table = createTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: {
@@ -130,14 +130,14 @@ Use `table.FlexRender` to render column `header`, `cell`, and `footer` definitio
 
 ## createTableHook
 
-`createTableHook` creates an app-specific table creator. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
+`createTableHook` creates an app-specific table creator. Use it when multiple tables should share `features`, `rowModels`, default options, column helpers, and component conventions.
 
 ```tsx
 import { createTableHook, tableFeatures } from '@tanstack/solid-table'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({}),
-  _rowModels: {},
+  features: tableFeatures({}),
+  rowModels: {},
 })
 
 const columnHelper = createAppColumnHelper<Person>()

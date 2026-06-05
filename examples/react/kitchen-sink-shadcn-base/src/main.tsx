@@ -111,7 +111,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -127,14 +127,14 @@ const _features = tableFeatures({
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 /**
  * CSS for left/right pinned columns. Verbatim port of the helper from
  * `examples/react/column-pinning-sticky/src/main.tsx` so a pinned column gets
  * `position: sticky` plus the appropriate offset and edge shadow.
  */
 function getCommonPinningStyles(
-  column: Column<typeof _features, Person>,
+  column: Column<typeof features, Person>,
   isSelected = false,
 ): React.CSSProperties {
   const isPinned = column.getIsPinned()
@@ -398,8 +398,8 @@ function App() {
   const table = useTable(
     {
       key: 'kitchen-sink-shadcn-base', // needed for devtools
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         coreRowModel: createCoreRowModel(),
         filteredRowModel: createFilteredRowModel({
           ...filterFns,

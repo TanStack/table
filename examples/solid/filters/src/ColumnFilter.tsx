@@ -1,12 +1,12 @@
 import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { Show } from 'solid-js'
 import type { Person } from './makeData'
-import type { _features } from './App'
+import type { features } from './App'
 import type { Column, Table } from '@tanstack/solid-table'
 
 function ColumnFilter(props: {
-  column: Column<typeof _features, Person, unknown>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person, unknown>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = props.table
     .getPreFilteredRowModel()

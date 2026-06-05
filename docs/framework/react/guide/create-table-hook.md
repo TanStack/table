@@ -42,13 +42,13 @@ export const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
   }),
 
-  _rowModels: {
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -80,8 +80,8 @@ export const {
 
 | Export | Description |
 |--------|-------------|
-| `useAppTable` | Hook for creating tables. Merges default options from the hook with per-table options. No need to pass `_features` or `_rowModels`—they come from the hook. |
-| `createAppColumnHelper` | Column helper with `TFeatures` pre-bound. Only requires `TData`. Use `createAppColumnHelper<Person>()` instead of `createColumnHelper<typeof _features, Person>()`. |
+| `useAppTable` | Hook for creating tables. Merges default options from the hook with per-table options. No need to pass `features` or `rowModels`—they come from the hook. |
+| `createAppColumnHelper` | Column helper with `TFeatures` pre-bound. Only requires `TData`. Use `createAppColumnHelper<Person>()` instead of `createColumnHelper<typeof features, Person>()`. |
 | `useTableContext` | Access the table instance inside `tableComponents`. |
 | `useCellContext` | Access the cell instance inside `cellComponents`. |
 | `useHeaderContext` | Access the header instance inside `headerComponents`. |
@@ -146,7 +146,7 @@ export function SortIndicator() {
 
 ## Using `useAppTable`
 
-Create tables with `useAppTable`—`_features` and `_rowModels` are inherited from the hook:
+Create tables with `useAppTable`—`features` and `rowModels` are inherited from the hook:
 
 ```tsx
 const personColumnHelper = createAppColumnHelper<Person>()
@@ -261,16 +261,16 @@ You can call `createTableHook` multiple times for different parts of your app:
 // admin-tables.ts
 export const { useAppTable: useAdminTable, createAppColumnHelper: createAdminColumnHelper } =
   createTableHook({
-    _features: tableFeatures({ rowSortingFeature, columnFilteringFeature, rowSelectionFeature }),
-    _rowModels: { /* ... */ },
+    features: tableFeatures({ rowSortingFeature, columnFilteringFeature, rowSelectionFeature }),
+    rowModels: { /* ... */ },
     cellComponents: { EditableCell, DeleteButton },
   })
 
 // readonly-tables.ts
 export const { useAppTable: useReadonlyTable, createAppColumnHelper: createReadonlyColumnHelper } =
   createTableHook({
-    _features: tableFeatures({ rowSortingFeature }),
-    _rowModels: { /* ... */ },
+    features: tableFeatures({ rowSortingFeature }),
+    rowModels: { /* ... */ },
     cellComponents: { TextCell, NumberCell },
   })
 ```

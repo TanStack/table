@@ -215,8 +215,8 @@ The fine-grained reactivity feature (`table.Subscribe`) is not available with `u
 Once you're ready to migrate to the full v9 API:
 
 1. Replace `useLegacyTable` with `useTable`
-2. Define your `_features` using `tableFeatures()`
-3. Convert `get*RowModel()` options to `_rowModels`
+2. Define your `features` using `tableFeatures()`
+3. Convert `get*RowModel()` options to `rowModels`
 4. Update types from `Legacy*` to the standard v9 types
 
 See the [main migration guide](./migrating.md) for complete instructions.

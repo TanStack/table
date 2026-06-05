@@ -66,8 +66,8 @@ You can access the sorting state directly from the table instance with `table.at
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -88,8 +88,8 @@ const [sorting, setSorting] = useState<SortingState>([]) // can set initial sort
 // use sorting state to fetch data from your server or something...
 //...
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -106,8 +106,8 @@ If you do not need to control the sorting state in your own state management or 
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -136,8 +136,8 @@ If you plan to just use your own server-side sorting in your back-end logic, you
 const [sorting, setSorting] = useState<SortingState>([])
 //...
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }), // feature needed for sorting state/APIs
-  _rowModels: {}, // no sortedRowModel needed for manual sorting
+  features: tableFeatures({ rowSortingFeature }), // feature needed for sorting state/APIs
+  rowModels: {}, // no sortedRowModel needed for manual sorting
   columns,
   data,
   manualSorting: true, // use pre-sorted row model instead of sorted row model
@@ -163,11 +163,11 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
   },
   columns,
@@ -241,8 +241,8 @@ const columns = [
 ]
 //...
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel({
       ...sortFns,
       myCustomSortFn: (rowA, rowB, columnId) =>
@@ -281,8 +281,8 @@ const columns = [
 ]
 //...
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -309,8 +309,8 @@ const columns = [
 ]
 //...
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -376,8 +376,8 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
@@ -403,8 +403,8 @@ const columns = [
 ]
 //...
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -417,8 +417,8 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -433,8 +433,8 @@ By default, there is no limit to the number of columns that can be sorted at onc
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -447,8 +447,8 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

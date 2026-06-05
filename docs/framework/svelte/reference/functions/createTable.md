@@ -52,8 +52,8 @@ updates read table APIs such as `getRowModel()`.
 <script lang="ts">
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data,
     },

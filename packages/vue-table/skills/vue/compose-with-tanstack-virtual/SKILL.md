@@ -56,9 +56,9 @@ import {
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { makeData, type Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
 
-const columns: ColumnDef<typeof _features, Person>[] = [
+const columns: ColumnDef<typeof features, Person>[] = [
   { accessorKey: 'firstName' },
   { accessorKey: 'lastName' },
   { accessorKey: 'age' },
@@ -67,8 +67,8 @@ const columns: ColumnDef<typeof _features, Person>[] = [
 const data = ref<Person[]>(makeData(50_000))
 
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -323,7 +323,7 @@ in Vue, not a plain object.
 
 If `table.getRowModel().rows` is empty when data is loaded, the row-model feature for whatever
 slice you need (filtering/sorting/grouping) isn't registered. Add it to `tableFeatures({...})`
-and `_rowModels`.
+and `rowModels`.
 
 ### Reimplementing virtualization manually (CRITICAL — #1 AI tell)
 

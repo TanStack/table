@@ -19,10 +19,10 @@ Defined in: [types/Table.ts:116](https://github.com/TanStack/table/blob/main/pac
 _rowModelFns: RowModelFns_All<TFeatures, TData>;
 ```
 
-### \_rowModels
+### \rowModels
 
 ```ts
-_rowModels: CachedRowModel_All<TFeatures, TData>;
+rowModels: CachedRowModel_All<TFeatures, TData>;
 ```
 
 ### atoms
@@ -51,10 +51,10 @@ options: TableOptions_All<TFeatures, TData> & object;
 
 #### Type Declaration
 
-##### \_rowModels?
+##### \rowModels?
 
 ```ts
-optional _rowModels: CreateRowModels_All<TFeatures, TData>;
+optional rowModels: CreateRowModels_All<TFeatures, TData>;
 ```
 
 ##### atoms?

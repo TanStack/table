@@ -15,9 +15,9 @@ import type {
 } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnResizingFeature, columnSizingFeature })
+const features = tableFeatures({ columnResizingFeature, columnSizingFeature })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -81,9 +81,9 @@ export class App {
   readonly columnResizeDirection = signal<ColumnResizeDirection>('ltr')
   readonly rerenders = signal(0)
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {},
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
     columnResizeMode: this.columnResizeMode(),
@@ -111,7 +111,7 @@ export class App {
   stressTest = () => this.data.set(makeData(100))
   rerender = () => this.rerenders.update((value) => value + 1)
 
-  getResizeTransform(header: Header<typeof _features, Person, unknown>) {
+  getResizeTransform(header: Header<typeof features, Person, unknown>) {
     if (this.columnResizeMode() !== 'onEnd' || !header.column.getIsResizing()) {
       return ''
     }

@@ -15,13 +15,13 @@ import type { Person } from './makeData'
 
 export const { createAppColumnHelper, injectAppTable: injectTable } =
   createTableHook({
-    _features: {
+    features: {
       columnGroupingFeature,
       rowPaginationFeature,
       columnFilteringFeature,
       rowExpandingFeature,
     },
-    _rowModels: {
+    rowModels: {
       groupedRowModel: createGroupedRowModel(aggregationFns),
       expandedRowModel: createExpandedRowModel(),
       paginatedRowModel: createPaginatedRowModel(),

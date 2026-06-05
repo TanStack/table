@@ -2,7 +2,7 @@
 name: react/getting-started
 description: >
   End-to-end first-table journey for `@tanstack/react-table` v9. Install the
-  React adapter, declare `_features` via `tableFeatures()`, declare `_rowModels`
+  React adapter, declare `features` via `tableFeatures()`, declare `rowModels`
   factories with their *Fns parameters (`createSortedRowModel(sortFns)` etc.),
   create a column helper with both `TFeatures` and `TData` generics, instantiate
   `useTable`, and render with `<table.FlexRender>`. New users land here, not on
@@ -23,7 +23,7 @@ sources:
   - TanStack/table:examples/react/basic-use-app-table/src/main.tsx
 ---
 
-This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `_features` + `_rowModels` come from the core state-management concept, and `table-state` covers how reactivity flows in React.
+This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `features` + `rowModels` come from the core state-management concept, and `table-state` covers how reactivity flows in React.
 
 ## Install
 
@@ -39,9 +39,9 @@ npm install @tanstack/react-table
 
 Three things are non-negotiable, even for the simplest possible table:
 
-1. `_features: tableFeatures({...})` — required even if empty (`tableFeatures({})`).
-2. `_rowModels: {...}` — required even if empty (`_rowModels: {}`). The **core** row model is automatic; you only register sorted/filtered/paginated/grouped/etc. when you use them.
-3. `createColumnHelper<typeof _features, TData>()` — generic order is `<TFeatures, TData>` in v9 (changed from v8).
+1. `features: tableFeatures({...})` — required even if empty (`tableFeatures({})`).
+2. `rowModels: {...}` — required even if empty (`rowModels: {}`). The **core** row model is automatic; you only register sorted/filtered/paginated/grouped/etc. when you use them.
+3. `createColumnHelper<typeof features, TData>()` — generic order is `<TFeatures, TData>` in v9 (changed from v8).
 
 ```tsx
 import * as React from 'react'
@@ -57,11 +57,11 @@ type Person = {
   progress: number
 }
 
-// 1. _features — required option, even if empty.
-const _features = tableFeatures({})
+// 1. features — required option, even if empty.
+const features = tableFeatures({})
 
 // 2. Columns — defined at module scope for stable identity.
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -77,11 +77,11 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 function App({ initialData }: { initialData: Person[] }) {
   const [data] = React.useState(() => initialData)
 
-  // 3. Build the table — `_rowModels: {}` is required.
+  // 3. Build the table — `rowModels: {}` is required.
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data,
     },
@@ -121,7 +121,7 @@ Source: `examples/react/basic-use-table/src/main.tsx`.
 
 ## Adding sorting
 
-Register the feature in `_features`, the factory in `_rowModels`, and wire a click handler:
+Register the feature in `features`, the factory in `rowModels`, and wire a click handler:
 
 ```tsx
 import {
@@ -133,8 +133,8 @@ import {
   createColumnHelper,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -143,8 +143,8 @@ const columns = columnHelper.columns([
 
 function App({ data }: { data: Person[] }) {
   const table = useTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
   })
@@ -178,15 +178,15 @@ function App({ data }: { data: Person[] }) {
 Adding pagination and filtering is purely additive — register the feature + factory, and call the built-in APIs:
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -207,14 +207,14 @@ Source: `docs/framework/react/react-table.md`; `examples/react/basic-use-table/s
 
 ## Optional: `createTableHook` for shared config
 
-If you ship the same `_features` / `_rowModels` / cell components across many tables, package them once:
+If you ship the same `features` / `rowModels` / cell components across many tables, package them once:
 
 ```tsx
 import { createTableHook } from '@tanstack/react-table'
 
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {},
-  _rowModels: {},
+  features: {},
+  rowModels: {},
   debugTable: true,
 })
 
@@ -233,24 +233,24 @@ Source: `examples/react/basic-use-app-table/src/main.tsx`.
 
 ## Common Mistakes
 
-### CRITICAL Forgetting `_features: tableFeatures({})`
+### CRITICAL Forgetting `features: tableFeatures({})`
 
 Wrong:
 
 ```tsx
 const table = useTable({
-  _rowModels: {},
+  rowModels: {},
   columns,
   data,
 })
-// TS: Property '_features' is missing in type
+// TS: Property 'features' is missing in type
 ```
 
 Correct:
 
 ```tsx
-const _features = tableFeatures({})
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({})
+const table = useTable({ features, rowModels: {}, columns, data })
 ```
 
 The option is required even for a "no features" table — pass `tableFeatures({})` or `stockFeatures` if you want v8-style "everything on".
@@ -274,8 +274,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -285,30 +285,30 @@ const table = useTable({
 Maintainer flags this as the #1 tell that "an AI wrote this." The built-ins handle reset semantics, multi-sort, internal invariants.
 Source: maintainer interview (Phase 4).
 
-### CRITICAL API "missing" because the feature was not registered in `_features`
+### CRITICAL API "missing" because the feature was not registered in `features`
 
 Wrong:
 
 ```tsx
-const _features = tableFeatures({}) // empty
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({}) // empty
+const table = useTable({ features, rowModels: {}, columns, data })
 table.setSorting([{ id: 'age', desc: true }]) // TS error — does not exist on this table type
 ```
 
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
 table.setSorting([{ id: 'age', desc: true }]) // ✓
 ```
 
-In v9, `_features` is a tree-shakeable registry. If a feature isn't listed, TypeScript hides its APIs and the runtime atom is never created — the feature isn't broken, it's just not on.
+In v9, `features` is a tree-shakeable registry. If a feature isn't listed, TypeScript hides its APIs and the runtime atom is never created — the feature isn't broken, it's just not on.
 Source: maintainer interview (Phase 4); `docs/framework/react/react-table.md`.
 
 ### HIGH Wrong generic order on `createColumnHelper`
@@ -322,22 +322,22 @@ const columnHelper = createColumnHelper<Person>() // v8 arity
 Correct:
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   /* … */
 })
-const columnHelper = createColumnHelper<typeof _features, Person>() // v9: <TFeatures, TData>
+const columnHelper = createColumnHelper<typeof features, Person>() // v9: <TFeatures, TData>
 ```
 
-v9 added `TFeatures` as the first generic across `Column`, `Row`, `ColumnDef`, `ColumnMeta`, etc. Use `typeof _features` so the same feature set drives types and runtime.
+v9 added `TFeatures` as the first generic across `Column`, `Row`, `ColumnDef`, `ColumnMeta`, etc. Use `typeof features` so the same feature set drives types and runtime.
 Source: `docs/framework/react/react-table.md`.
 
-### HIGH Defining `_features` / `columns` / `data` inside the render body
+### HIGH Defining `features` / `columns` / `data` inside the render body
 
 Wrong:
 
 ```tsx
 function MyTable({ rows }) {
-  const _features = tableFeatures({ rowSortingFeature })  // new every render
+  const features = tableFeatures({ rowSortingFeature })  // new every render
   const columns = [/* … */]                                // new every render
   return <Table {/* … */} />
 }
@@ -347,8 +347,8 @@ Correct:
 
 ```tsx
 // Module scope = stable identity.
-const _features = tableFeatures({ rowSortingFeature })
-const columns: ColumnDef<typeof _features, Person>[] = [
+const features = tableFeatures({ rowSortingFeature })
+const columns: ColumnDef<typeof features, Person>[] = [
   /* … */
 ]
 ```
@@ -373,8 +373,8 @@ Correct:
 
 ```tsx
 import { useTable, tableFeatures } from '@tanstack/react-table'
-const _features = tableFeatures({})
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({})
+const table = useTable({ features, rowModels: {}, columns, data })
 ```
 
 `useLegacyTable` is a migration shim for incrementally upgrading v8 codebases. It bundles every feature, lacks `table.Subscribe`, and is deprecated in v9 / scheduled for removal in v10. New code uses `useTable`.

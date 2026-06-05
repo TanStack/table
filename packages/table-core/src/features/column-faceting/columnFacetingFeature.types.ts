@@ -31,19 +31,19 @@ export interface Table_RowModels_Faceted<
   /**
    * Computes min/max numeric facet values for the active faceting context.
    *
-   * Requires a `facetedMinMaxValues` row-model factory in `_rowModels`.
+   * Requires a `facetedMinMaxValues` row-model factory in `rowModels`.
    */
   getFacetedMinMaxValues: () => undefined | [number, number]
   /**
    * Computes the row model used to derive facet values.
    *
-   * Requires a `facetedRowModel` row-model factory in `_rowModels`.
+   * Requires a `facetedRowModel` row-model factory in `rowModels`.
    */
   getFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Computes unique facet values and occurrence counts.
    *
-   * Requires a `facetedUniqueValues` row-model factory in `_rowModels`.
+   * Requires a `facetedUniqueValues` row-model factory in `rowModels`.
    */
   getFacetedUniqueValues: () => Map<any, number>
 }

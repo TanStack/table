@@ -15,10 +15,10 @@ import type { Person } from './makeData'
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, we want sorting.
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowSortingFeature,
   }),
-  _rowModels: {
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
   },
   debugTable: true,

@@ -2,11 +2,11 @@
 name: preact/getting-started
 description: >
   End-to-end first-table journey for `@tanstack/preact-table` v9: install the
-  adapter, declare `_features` via `tableFeatures()`, declare `_rowModels` with
+  adapter, declare `features` via `tableFeatures()`, declare `rowModels` with
   their factories and *Fns parameters, build a typed column helper, call
   `useTable` with stable references, and render with `table.FlexRender`.
   Routing keywords: install preact-table, first table, getting started,
-  tableFeatures, _features, _rowModels, useTable, FlexRender, basic-use-table.
+  tableFeatures, features, rowModels, useTable, FlexRender, basic-use-table.
 type: lifecycle
 library: tanstack-table
 framework: preact
@@ -37,9 +37,9 @@ Peer dependency: `preact >=10`.
 
 Source: `packages/preact-table/package.json`.
 
-## Step 1 — Declare `_features`
+## Step 1 — Declare `features`
 
-v9 is explicit about what a table uses. `_features` is a registry of every feature the table needs. Use `tableFeatures({...})` to get an object whose TypeScript shape drives state inference, API surface, and tree-shaking.
+v9 is explicit about what a table uses. `features` is a registry of every feature the table needs. Use `tableFeatures({...})` to get an object whose TypeScript shape drives state inference, API surface, and tree-shaking.
 
 ```tsx
 import {
@@ -48,19 +48,19 @@ import {
   rowSortingFeature,
 } from '@tanstack/preact-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 ```
 
-If `_features` does not include `rowSelectionFeature`, then `table.atoms.rowSelection`, `table.setRowSelection`, `table.getIsAllRowsSelected()`, etc. all become TypeScript errors — and the runtime won't ship that logic. Pass `tableFeatures({})` for a minimum-overhead table with just the core row model.
+If `features` does not include `rowSelectionFeature`, then `table.atoms.rowSelection`, `table.setRowSelection`, `table.getIsAllRowsSelected()`, etc. all become TypeScript errors — and the runtime won't ship that logic. Pass `tableFeatures({})` for a minimum-overhead table with just the core row model.
 
 Source: `docs/framework/preact/preact-table.md`; `docs/guide/features.md`.
 
-## Step 2 — Declare `_rowModels`
+## Step 2 — Declare `rowModels`
 
-Each registered feature that needs a row-model stage maps to a factory under `_rowModels`. The factory takes a record of \*Fns (predicates, comparators, etc.) for that stage.
+Each registered feature that needs a row-model stage maps to a factory under `rowModels`. The factory takes a record of \*Fns (predicates, comparators, etc.) for that stage.
 
 ```tsx
 import {
@@ -69,19 +69,19 @@ import {
   sortFns,
 } from '@tanstack/preact-table'
 
-const _rowModels = {
+const rowModels = {
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(sortFns),
 }
 ```
 
-The core row model is always included — `_rowModels: {}` is valid for a feature-free table.
+The core row model is always included — `rowModels: {}` is valid for a feature-free table.
 
 Source: `docs/framework/preact/preact-table.md`.
 
 ## Step 3 — Type your data and build columns
 
-Declare your row shape once and feed it to `createColumnHelper<typeof _features, TData>()`. This is the type-safe path; `ColumnDef<typeof _features, Person>[]` also works.
+Declare your row shape once and feed it to `createColumnHelper<typeof features, TData>()`. This is the type-safe path; `ColumnDef<typeof features, Person>[]` also works.
 
 ```tsx
 import { createColumnHelper, type ColumnDef } from '@tanstack/preact-table'
@@ -95,7 +95,7 @@ type Person = {
   progress: number
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -145,8 +145,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels,
+      features,
+      rowModels,
       columns,
       data,
       debugTable: true,
@@ -211,13 +211,13 @@ For starting values, use `initialState`. For controlled slices, use `atoms` (pre
 
 ## Common Mistakes
 
-### CRITICAL Calling a feature API when the feature is not in `_features`
+### CRITICAL Calling a feature API when the feature is not in `features`
 
 Wrong:
 
 ```tsx
-const _features = tableFeatures({}) // no rowPaginationFeature
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({}) // no rowPaginationFeature
+const table = useTable({ features, rowModels: {}, columns, data })
 
 table.setPageIndex(0) // TypeScript error AND runtime no-op
 ```
@@ -225,10 +225,10 @@ table.setPageIndex(0) // TypeScript error AND runtime no-op
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 const table = useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data,
 })
@@ -244,8 +244,8 @@ Source: `docs/guide/features.md`; `docs/framework/preact/guide/table-state.md`.
 Wrong:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature })
-const table = useTable({ _features, _rowModels: {}, columns, data })
+const features = tableFeatures({ rowSortingFeature })
+const table = useTable({ features, rowModels: {}, columns, data })
 table.setSorting([{ id: 'age', desc: true }])
 // table.getRowModel().rows is still unsorted — no sortedRowModel registered
 ```
@@ -253,45 +253,45 @@ table.setSorting([{ id: 'age', desc: true }])
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
 ```
 
-Each row-model feature (sorting, filtering, pagination, grouping, expanding, faceting) requires its row-model factory in `_rowModels` to actually transform the rows.
+Each row-model feature (sorting, filtering, pagination, grouping, expanding, faceting) requires its row-model factory in `rowModels` to actually transform the rows.
 Source: `docs/framework/preact/preact-table.md`.
 
-### HIGH Unstable `_features` / `columns` / `data` references
+### HIGH Unstable `features` / `columns` / `data` references
 
 Wrong:
 
 ```tsx
 function MyTable({ rows }) {
-  const _features = tableFeatures({ rowSortingFeature }) // new every render
+  const features = tableFeatures({ rowSortingFeature }) // new every render
   const columns = [
     /* … */
   ] // new every render
   const data = rows ?? [] // new [] every render
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature })
-const columns: ColumnDef<typeof _features, Person>[] = [
+const features = tableFeatures({ rowSortingFeature })
+const columns: ColumnDef<typeof features, Person>[] = [
   /* … */
 ]
 const EMPTY: Person[] = []
 
 function MyTable({ rows }) {
   const data = rows ?? EMPTY
-  const table = useTable({ _features, _rowModels: {}, columns, data })
+  const table = useTable({ features, rowModels: {}, columns, data })
 }
 ```
 
@@ -309,10 +309,10 @@ const sorted = useMemo(() => [...data].sort(/* … */), [data, sorting]) // dupl
 Correct:
 
 ```tsx
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -351,17 +351,17 @@ import {
   sortFns,
 } from '@tanstack/preact-table'
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
 ```
 
-v8 used `useReactTable` and `get*RowModel` options. v9 uses `useTable` plus `_features` + `_rowModels`. See `tanstack-table/preact/migrate-v8-to-v9` for the full mapping.
+v8 used `useReactTable` and `get*RowModel` options. v9 uses `useTable` plus `features` + `rowModels`. See `tanstack-table/preact/migrate-v8-to-v9` for the full mapping.
 Source: `docs/framework/preact/preact-table.md`.
 
 ## See Also

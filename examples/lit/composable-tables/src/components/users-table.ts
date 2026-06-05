@@ -55,7 +55,7 @@ export class UsersTable extends LitElement {
   @state()
   private data = makeData(1000)
 
-  // Create the table — _features and _rowModels are already configured!
+  // Create the table — features and rowModels are already configured!
   // NOTE: We capture `this` (the LitElement) as `host` because inside the
   // object literal's getter, `this` would refer to the options object itself
   // (causing infinite recursion if we wrote `get data() { return this.data }`).

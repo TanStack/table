@@ -40,7 +40,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## Column Visibility Guide
 
-The column visibility feature allows table columns to be hidden or shown dynamically. In v9, add `columnVisibilityFeature` to your `_features` to enable this. There is a dedicated `columnVisibility` state and APIs for managing column visibility dynamically.
+The column visibility feature allows table columns to be hidden or shown dynamically. In v9, add `columnVisibilityFeature` to your `features` to enable this. There is a dedicated `columnVisibility` state and APIs for managing column visibility dynamically.
 
 ### Column Visibility State
 
@@ -56,8 +56,8 @@ const [columnVisibility, setColumnVisibility] = useState({
 })
 
 const table = useTable({
-  _features: tableFeatures({ columnVisibilityFeature }),
-  _rowModels: {},
+  features: tableFeatures({ columnVisibilityFeature }),
+  rowModels: {},
   //...
   state: {
     columnVisibility,
@@ -73,8 +73,8 @@ Alternatively, if you don't need to manage the column visibility state outside o
 
 ```jsx
 const table = useTable({
-  _features: tableFeatures({ columnVisibilityFeature }),
-  _rowModels: {},
+  features: tableFeatures({ columnVisibilityFeature }),
+  rowModels: {},
   //...
   initialState: {
     columnVisibility: {

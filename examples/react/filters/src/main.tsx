@@ -32,12 +32,12 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -92,8 +92,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel(filterFns), // client side filtering
         paginatedRowModel: createPaginatedRowModel(),
       },
@@ -230,7 +230,7 @@ function App() {
 function Filter({
   column,
 }: {
-  column: Column<typeof _features, Person, unknown>
+  column: Column<typeof features, Person, unknown>
 }) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}

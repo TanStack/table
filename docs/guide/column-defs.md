@@ -28,7 +28,7 @@ The following "types" of column defs aren't actually TypeScript types, but more 
 
 While column defs are just plain objects at the end of the day, a `createColumnHelper` function is exposed from the table core which, when called with your features type and row type, returns a utility for creating different column definition types with the highest type-safety possible.
 
-In v9, `createColumnHelper` requires two type parameters: `TFeatures` (from your `_features` object) and `TData` (your row type). Use `typeof _features` to get the features type.
+In v9, `createColumnHelper` requires two type parameters: `TFeatures` (from your `features` object) and `TData` (your row type). Use `typeof features` to get the features type.
 
 Here's an example of creating and using a column helper:
 
@@ -43,8 +43,8 @@ type Person = {
   progress: number
 }
 
-const _features = tableFeatures({}) // or tableFeatures({ rowSortingFeature, ... })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({}) // or tableFeatures({ rowSortingFeature, ... })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Make some columns! Use columnHelper.columns([...]) for better type inference with nested groups
 const defaultColumns = columnHelper.columns([

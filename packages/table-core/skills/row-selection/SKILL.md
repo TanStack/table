@@ -36,11 +36,11 @@ import {
 } from '@tanstack/table-core'
 import type { RowSelectionState } from '@tanstack/table-core'
 
-const _features = tableFeatures({ rowSelectionFeature })
+const features = tableFeatures({ rowSelectionFeature })
 
 const table = constructTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id, // ← essentially mandatory
@@ -79,8 +79,8 @@ columnHelper.display({
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature }),
-  _rowModels: {},
+  features: tableFeatures({ rowSelectionFeature }),
+  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,
@@ -107,7 +107,7 @@ columnHelper.display({
 
 ```ts
 const table = useTable({
-  _features,
+  features,
   columns,
   data,
   getRowId: (row) => row.id,
@@ -131,7 +131,7 @@ import { useCreateAtom } from '@tanstack/react-store'
 const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
 
 const table = useTable({
-  _features,
+  features,
   columns,
   data,
   getRowId: (row) => row.id,
@@ -156,7 +156,7 @@ Wrong:
 ```ts
 // Server-side pagination + default row.id = row.index
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature, rowPaginationFeature }),
+  features: tableFeatures({ rowSelectionFeature, rowPaginationFeature }),
   data, // only current page from server
   manualPagination: true,
   rowCount,
@@ -169,7 +169,7 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature, rowPaginationFeature }),
+  features: tableFeatures({ rowSelectionFeature, rowPaginationFeature }),
   data,
   manualPagination: true,
   rowCount,
@@ -190,7 +190,7 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature }),
+  features: tableFeatures({ rowSelectionFeature }),
   enableMultiRowSelection: false, // radio-like
 })
 
@@ -206,7 +206,7 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature }),
+  features: tableFeatures({ rowSelectionFeature }),
   enableMultiRowSelection: false,
   getRowId: (row) => row.id,
 })
@@ -269,7 +269,7 @@ Wrong:
 ```ts
 // Default behavior: clicking the parent selects all children
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature, rowExpandingFeature }),
+  features: tableFeatures({ rowSelectionFeature, rowExpandingFeature }),
   getSubRows: (row) => row.subRows,
   // enableSubRowSelection unset — defaults to true
 })
@@ -279,7 +279,7 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature, rowExpandingFeature }),
+  features: tableFeatures({ rowSelectionFeature, rowExpandingFeature }),
   getSubRows: (row) => row.subRows,
   enableSubRowSelection: false, // toggling parent doesn't touch subRows
 })
@@ -369,8 +369,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowSelectionFeature }),
-  _rowModels: {},
+  features: tableFeatures({ rowSelectionFeature }),
+  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,

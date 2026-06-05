@@ -20,16 +20,16 @@ import type { Column, FilterFn, SortFn } from '@tanstack/solid-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -40,7 +40,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {
@@ -54,7 +54,7 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
 
 declare module '@tanstack/solid-table' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
+    fuzzy: FilterFn<typeof features, Person>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
@@ -89,9 +89,9 @@ function App() {
   const refreshData = () => setData(makeData(5_000))
   const stressTest = () => setData(makeData(200_000))
 
-  const table = createTable<typeof _features, Person>({
-    _features,
-    _rowModels: {
+  const table = createTable<typeof features, Person>({
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel({
         ...filterFns,
         fuzzy: fuzzyFilter,
@@ -256,7 +256,7 @@ function App() {
   )
 }
 
-function Filter({ column }: { column: Column<typeof _features, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const columnFilterValue = () => column.getFilterValue()
 
   return (

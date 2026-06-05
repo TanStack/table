@@ -10,13 +10,13 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature })
+const features = tableFeatures({ columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // This is not the Column Resizing Example, this is a simplified version that just sets static column sizes
-const columns: Array<ColumnDef<typeof _features, Person>> =
-  columnHelper.columns([
+const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
+  [
     columnHelper.accessor('firstName', {
       cell: (info) => info.getValue(),
       footer: (props) => props.column.id,
@@ -49,7 +49,8 @@ const columns: Array<ColumnDef<typeof _features, Person>> =
       footer: (props) => props.column.id,
       size: 200,
     }),
-  ])
+  ],
+)
 
 @Component({
   selector: 'app-root',
@@ -61,9 +62,9 @@ export class App {
   readonly data = signal<Array<Person>>(makeData(20))
   readonly rerenders = signal(0)
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {},
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
     debugTable: true,

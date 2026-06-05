@@ -4,8 +4,8 @@ description: >
   Mechanical breaking-change migration from TanStack Table v8 to v9 at the
   `@tanstack/table-core` level. Covers hook/entry rename
   (`useReactTable`/`createSolidTable`/… → `useTable`/`injectTable`/`createTable`/
-  `constructTable`), the new required `_features` + `_rowModels` options,
-  `createColumnHelper<TData>()` → `createColumnHelper<typeof _features, TData>()`,
+  `constructTable`), the new required `features` + `rowModels` options,
+  `createColumnHelper<TData>()` → `createColumnHelper<typeof features, TData>()`,
   row-model factory rename (`getCoreRowModel()` → automatic; `getSortedRowModel()`
   → `createSortedRowModel(sortFns)`; same for filtered/paginated/grouped/expanded/
   faceted), `table.getState()` → `table.store.state` / `table.atoms.<slice>.get()`,
@@ -32,9 +32,9 @@ sources:
 v9 is a substantial reshape, not a tweak. The breaking changes group into:
 
 1. **Hook/entry rename** per adapter.
-2. **`_features` + `_rowModels` are required** — features are tree-shaken.
+2. **`features` + `rowModels` are required** — features are tree-shaken.
 3. **Column helper generic order** — `<TFeatures, TData>` not `<TData>`.
-4. **Row-model factories** moved out of root options, into `_rowModels`, and now take their `*Fns` argument.
+4. **Row-model factories** moved out of root options, into `rowModels`, and now take their `*Fns` argument.
 5. **State surface renamed** — `table.getState()` → `table.store.state` / `table.atoms.<slice>.get()` / `table.state` (selector).
 6. **Sorting names**: `sortingFn` → `sortFn`, `sortingFns` → `sortFns`, `getSortingFn()` → `getSortFn()`, type `SortingFn` → `SortFn`.
 7. **`enablePinning` split** into `enableColumnPinning` + `enableRowPinning` (table-level); per-column `enablePinning` stays.
@@ -69,7 +69,7 @@ import {
 } from '@tanstack/react-table'
 import type { ColumnDef } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
@@ -77,9 +77,9 @@ const _features = tableFeatures({
   columnResizingFeature, // explicit — formerly part of ColumnSizing
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const columns: ColumnDef<typeof _features, Person>[] = columnHelper.columns([
+const columns: ColumnDef<typeof features, Person>[] = columnHelper.columns([
   columnHelper.accessor('name', {
     header: 'Name',
     sortFn: 'alphanumeric', // renamed from sortingFn
@@ -87,8 +87,8 @@ const columns: ColumnDef<typeof _features, Person>[] = columnHelper.columns([
 ])
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -116,7 +116,7 @@ const cells = row.getAllCellsByColumnId() // no underscore
 import {
   useReactTable, // (1) renamed → useTable
   getCoreRowModel, // (2) no longer a root option
-  getFilteredRowModel, //     move to _rowModels as factories
+  getFilteredRowModel, //     move to rowModels as factories
   getSortedRowModel, //     createSortedRowModel(sortFns) etc.
   getPaginationRowModel,
   createColumnHelper, // (3) needs <TFeatures, TData> now
@@ -136,7 +136,7 @@ const columns: ColumnDef<Person>[] = [
 const table = useReactTable({
   columns,
   data,
-  getCoreRowModel: getCoreRowModel(), // (2) move into _rowModels
+  getCoreRowModel: getCoreRowModel(), // (2) move into rowModels
   getFilteredRowModel: getFilteredRowModel(),
   getSortedRowModel: getSortedRowModel(),
   getPaginationRowModel: getPaginationRowModel(),
@@ -200,10 +200,10 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -220,7 +220,7 @@ Wrong:
 ```ts
 // v8 pattern — won't drive v9 row models
 const table = useTable({
-  _features,
+  features,
   data,
   columns,
   getCoreRowModel: getCoreRowModel(),
@@ -239,10 +239,10 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns), // factory takes sortFns argument
   },
   columns,
@@ -250,7 +250,7 @@ const table = useTable({
 })
 ```
 
-In v9, row models live under `_rowModels` and the factories REQUIRE their \*Fns argument for tree-shaking: `createFilteredRowModel(filterFns)`, `createSortedRowModel(sortFns)`, `createGroupedRowModel(aggregationFns)`. Core is automatic.
+In v9, row models live under `rowModels` and the factories REQUIRE their \*Fns argument for tree-shaking: `createFilteredRowModel(filterFns)`, `createSortedRowModel(sortFns)`, `createGroupedRowModel(aggregationFns)`. Core is automatic.
 
 Source: PR #6234 (atoms refactor); packages/table-core/src/index.ts
 
@@ -265,11 +265,11 @@ const columnHelper = createColumnHelper<Person>()
 Correct:
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
-v9 requires `<TFeatures, TData>`. `typeof _features` is the standard idiom — declare features once at module scope and reuse the type.
+v9 requires `<TFeatures, TData>`. `typeof features` is the standard idiom — declare features once at module scope and reuse the type.
 
 Source: packages/table-core/src/helpers/columnHelper.ts; docs/framework/react/guide/migrating.md
 
@@ -321,7 +321,7 @@ Wrong:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ columnPinningFeature, rowPinningFeature }),
+  features: tableFeatures({ columnPinningFeature, rowPinningFeature }),
   enablePinning: true, // ignored at table level in v9
 })
 ```
@@ -330,7 +330,7 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ columnPinningFeature, rowPinningFeature }),
+  features: tableFeatures({ columnPinningFeature, rowPinningFeature }),
   enableColumnPinning: true,
   enableRowPinning: true,
 })
@@ -350,7 +350,7 @@ Wrong:
 ```ts
 // v8 — ColumnSizing implied resizing too
 const table = useTable({
-  _features: tableFeatures({ columnSizingFeature }),
+  features: tableFeatures({ columnSizingFeature }),
   onColumnSizingInfoChange: setInfo, // v8 name
 })
 ```
@@ -359,7 +359,7 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({
+  features: tableFeatures({
     columnSizingFeature,
     columnResizingFeature, // explicit in v9
   }),
@@ -475,10 +475,10 @@ import {
   createSortedRowModel,
   sortFns,
 } from '@tanstack/react-table'
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -492,4 +492,4 @@ Source: packages/react-table/src/legacy.ts; docs/framework/react/guide/use-legac
 
 - `tanstack-table/setup` — what the v9-native shape looks like
 - `tanstack-table/state-management` — `table.store.state` / `table.atoms` / `table.state` ownership
-- `tanstack-table/column-definitions` — `createColumnHelper<typeof _features, TData>()` generic order
+- `tanstack-table/column-definitions` — `createColumnHelper<typeof features, TData>()` generic order

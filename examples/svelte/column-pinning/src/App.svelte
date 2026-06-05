@@ -22,14 +22,14 @@
   import './index.css'
   import { makeData, type Person } from './makeData'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnOrderingFeature,
     columnPinningFeature,
     columnVisibilityFeature,
     rowSortingFeature,
   })
 
-  const columns: ColumnDef<typeof _features, Person>[] = [
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -100,8 +100,8 @@
   }
 
   const table = createTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
     },
     get data() {
@@ -126,7 +126,7 @@
   })
 </script>
 
-{#snippet headerCell(header: Header<typeof _features, Person, unknown>)}
+{#snippet headerCell(header: Header<typeof features, Person, unknown>)}
   <th colSpan={header.colSpan}>
     <div class="nowrap">
       {#if !header.isPlaceholder}

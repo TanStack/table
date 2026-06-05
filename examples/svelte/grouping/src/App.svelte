@@ -21,14 +21,14 @@
   import './index.css'
 
   const { createAppTable, createAppColumnHelper } = createTableHook({
-    _features: {
+    features: {
       columnFilteringFeature,
       columnGroupingFeature,
       rowExpandingFeature,
       rowPaginationFeature,
       rowSortingFeature,
     },
-    _rowModels: {
+    rowModels: {
       expandedRowModel: createExpandedRowModel(),
       filteredRowModel: createFilteredRowModel(filterFns),
       groupedRowModel: createGroupedRowModel(aggregationFns),

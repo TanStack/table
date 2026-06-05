@@ -63,7 +63,7 @@ columns, and controlled state **before** the DOM renders — `getRowModel()` is 
 
 ## Feature-based state — registered features only
 
-State slices only exist for the features registered in `_features`. Reading
+State slices only exist for the features registered in `features`. Reading
 `table.atoms.rowSelection` without `rowSelectionFeature` is a TypeScript error and a runtime
 `undefined`. **This is the most common v9 mistake.**
 
@@ -78,14 +78,14 @@ import {
   sortFns,
 } from '@tanstack/svelte-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -121,8 +121,8 @@ exposed as `table.state`. The default selector returns the full registered state
 <script lang="ts">
   const table = createTable(
     {
-      _features,
-      _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+      features,
+      rowModels: { paginatedRowModel: createPaginatedRowModel() },
       columns,
       get data() {
         return data
@@ -185,8 +185,8 @@ The default: set starting values, let the table own the rest. `initialState` als
 
 ```ts
 const table = createTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return data
@@ -215,7 +215,7 @@ import {
   type SortingState,
 } from '@tanstack/svelte-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
@@ -230,8 +230,8 @@ const sorting = useSelector(sortingAtom)
 const pagination = useSelector(paginationAtom)
 
 const table = createTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return data
@@ -265,8 +265,8 @@ updates.
   let pagination: PaginationState = $state({ pageIndex: 0, pageSize: 10 })
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     get data() {
       return data
@@ -340,7 +340,7 @@ Always key `{#each}` blocks on stable ids (`headerGroup.id`, `header.id`, `row.i
 
 ## `createTableHook` — app-wide composition
 
-Create one configured hook per app: shared `_features`, `_rowModels`, defaults, and pre-bound
+Create one configured hook per app: shared `features`, `rowModels`, defaults, and pre-bound
 component registries.
 
 ```ts
@@ -363,8 +363,8 @@ export const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  _features: tableFeatures({ rowPaginationFeature, rowSortingFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowPaginationFeature, rowSortingFeature }),
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -421,10 +421,10 @@ Inside custom `cellComponents` / `headerComponents` / `tableComponents`, use `us
 - **Svelte 4 code with v9 adapter.** Will not run. `$state` / `$derived.by` are Svelte 5 syntax.
 - **`createSvelteTable` import.** v8 name. v9 uses `createTable`. There is no `useSvelteTable`,
   `getCoreRowModel`, `getSortedRowModel`, etc. — those are v8 names too.
-- **Forgetting `tableFeatures()`.** `_features` must come from `tableFeatures({...})` for type
+- **Forgetting `tableFeatures()`.** `features` must come from `tableFeatures({...})` for type
   inference; passing a raw object loses the typed state slice keys.
 - **Forgetting feature registration.** Calling `table.setSorting(...)` without
-  `rowSortingFeature` in `_features` is a runtime no-op (the API method won't exist).
+  `rowSortingFeature` in `features` is a runtime no-op (the API method won't exist).
 - **Mixing ownership.** `atoms.pagination` + `state.pagination` + `initialState.pagination` is
   ambiguous; the table will not "merge" them the way you expect.
 - **Reactive getters dropped.** If you pass `data` as a plain value instead of a getter, the

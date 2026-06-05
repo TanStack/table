@@ -35,19 +35,19 @@ A table instance with the full state subscribed and a `getState()` method
 
 This hook is provided as a compatibility layer for migrating from TanStack Table v8.
 
-Use the new `useTable` hook instead with explicit `_features` and `_rowModels`:
+Use the new `useTable` hook instead with explicit `features` and `rowModels`:
 
 ```tsx
 // New v9 API
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
@@ -59,6 +59,6 @@ const table = useTable({
 
 Key differences from v8:
 - Features are tree-shakeable - only import what you use
-- Row models are explicitly passed via `_rowModels`
+- Row models are explicitly passed via `rowModels`
 - Use `table.Subscribe` for fine-grained re-renders
 - State is accessed via `table.state` after selecting with the 2nd argument

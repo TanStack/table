@@ -17,12 +17,12 @@ import type { Person } from './makeData'
 
 // This example demonstrates managing table state externally via Solid's createSignal instead of letting the table manage its own state internally.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -65,8 +65,8 @@ function App() {
   const table = createTable({
     key: 'basic-external-state', // needed for devtools
     debugTable: true,
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       paginatedRowModel: createPaginatedRowModel(),
     },

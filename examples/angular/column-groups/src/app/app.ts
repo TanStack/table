@@ -4,9 +4,9 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -67,9 +67,9 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 export class App {
   readonly data = signal<Array<Person>>(makeData(20))
 
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {},
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
     debugTable: true,

@@ -82,17 +82,17 @@ skills:
       - 'Wire up text/range/select per-column filters with debounced inputs (see examples/react/filters/src/main.tsx).'
       - 'Add a faceted filter UI: autocomplete from `column.getFacetedUniqueValues()` and a range slider from `column.getFacetedMinMaxValues()` (requires `createFacetedRowModel()` PLUS the unique/minMax row models).'
       - 'Implement fuzzy global search with `@tanstack/match-sorter-utils` and a custom `fuzzySort` that reads `row.columnFiltersMeta[columnId].itemRank`.'
-      - 'Switch a table to manual server-side filtering: set `manualFiltering: true`, omit the `filteredRowModel` from `_rowModels`, and pass pre-filtered `data` from the server.'
+      - 'Switch a table to manual server-side filtering: set `manualFiltering: true`, omit the `filteredRowModel` from `rowModels`, and pass pre-filtered `data` from the server.'
       - 'Make a tree table filter sub-rows by enabling `filterFromLeafRows: true` so a parent stays visible whenever any child matches.'
     failure_modes:
       - mistake: 'Forgetting `createFacetedRowModel()` while still registering `createFacetedUniqueValues()` / `createFacetedMinMaxValues()`.'
         mechanism: |
-          `createFacetedUniqueValues` and `createFacetedMinMaxValues` both compute their results from `column.getFacetedRowModel().flatRows`. Without the base `facetedRowModel` factory in `_rowModels.facetedRowModel`, `column_getFacetedRowModel` falls back to `table.getPreFilteredRowModel()` (see column-faceting/columnFacetingFeature.utils.ts lines 44-56), so facet values are still computed but **don't exclude the column's own active filter** — meaning a select dropdown showing options for a column will collapse to only the currently selected value once the user picks one.
+          `createFacetedUniqueValues` and `createFacetedMinMaxValues` both compute their results from `column.getFacetedRowModel().flatRows`. Without the base `facetedRowModel` factory in `rowModels.facetedRowModel`, `column_getFacetedRowModel` falls back to `table.getPreFilteredRowModel()` (see column-faceting/columnFacetingFeature.utils.ts lines 44-56), so facet values are still computed but **don't exclude the column's own active filter** — meaning a select dropdown showing options for a column will collapse to only the currently selected value once the user picks one.
         wrong_pattern: |
           ```tsx
           const table = useTable({
-            _features: tableFeatures({ columnFacetingFeature, columnFilteringFeature }),
-            _rowModels: {
+            features: tableFeatures({ columnFacetingFeature, columnFilteringFeature }),
+            rowModels: {
               filteredRowModel: createFilteredRowModel(filterFns),
               // BUG: missing facetedRowModel - the unique/minMax helpers will use
               // the pre-filtered model so they include every filter EXCEPT none
@@ -106,12 +106,12 @@ skills:
           ```tsx
           // From examples/react/filters-faceted/src/main.tsx
           const table = useTable({
-            _features: tableFeatures({
+            features: tableFeatures({
               columnFacetingFeature,
               columnFilteringFeature,
               rowPaginationFeature,
             }),
-            _rowModels: {
+            rowModels: {
               filteredRowModel: createFilteredRowModel(filterFns),
               paginatedRowModel: createPaginatedRowModel(),
               facetedRowModel: createFacetedRowModel(),       // REQUIRED base
@@ -135,8 +135,8 @@ skills:
           // BUG: manualFiltering: true means the filteredRowModel is BYPASSED.
           // Filter state changes do nothing visible unless `data` is refetched.
           const table = useTable({
-            _features: tableFeatures({ columnFilteringFeature }),
-            _rowModels: {
+            features: tableFeatures({ columnFilteringFeature }),
+            rowModels: {
               filteredRowModel: createFilteredRowModel(filterFns),
             },
             data,
@@ -153,8 +153,8 @@ skills:
             fetch('/api/rows?' + serialize(columnFilters)).then(r => r.json())
           )
           const table = useTable({
-            _features: tableFeatures({ columnFilteringFeature }),
-            _rowModels: {}, // no filteredRowModel needed for manual filtering
+            features: tableFeatures({ columnFilteringFeature }),
+            rowModels: {}, // no filteredRowModel needed for manual filtering
             data,
             columns,
             manualFiltering: true,
@@ -186,19 +186,19 @@ skills:
           import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
 
           declare module '@tanstack/react-table' {
-            interface FilterFns { fuzzy: FilterFn<typeof _features, Person> }
+            interface FilterFns { fuzzy: FilterFn<typeof features, Person> }
             interface FilterMeta { itemRank?: RankingInfo }
           }
 
-          const fuzzyFilter: FilterFn<typeof _features, Person> = (row, columnId, value, addMeta) => {
+          const fuzzyFilter: FilterFn<typeof features, Person> = (row, columnId, value, addMeta) => {
             const itemRank = rankItem(row.getValue(columnId), value)
             addMeta?.({ itemRank })
             return itemRank.passed
           }
 
           const table = useTable({
-            _features,
-            _rowModels: {
+            features,
+            rowModels: {
               filteredRowModel: createFilteredRowModel({
                 ...filterFns,           // KEEP built-ins
                 fuzzy: fuzzyFilter,     // ADD custom
@@ -223,7 +223,7 @@ skills:
           const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
           //                                                                       ^^ empty
           const table = useTable({
-            _features, _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+            features, rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
             columns, data,
             initialState: {
               columnFilters: [{ id: 'name', value: 'John' }], // IGNORED
@@ -240,7 +240,7 @@ skills:
             { id: 'name', value: 'John' }, // seeded here
           ])
           const table = useTable({
-            _features, _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+            features, rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
             columns, data,
             state: { columnFilters },
             onColumnFiltersChange: setColumnFilters,
@@ -268,8 +268,8 @@ skills:
           ```tsx
           // Override getColumnCanGlobalFilter or set per-column.
           const table = useTable({
-            _features: tableFeatures({ globalFilteringFeature }),
-            _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+            features: tableFeatures({ globalFilteringFeature }),
+            rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
             columns, data,
             globalFilterFn: 'includesString',
             getColumnCanGlobalFilter: (column) => true, // include every column
@@ -294,8 +294,8 @@ skills:
           // BUG: filterFromLeafRows hides ALL children that don't match,
           // even though the parent does match.
           const table = useTable({
-            _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-            _rowModels: { filteredRowModel: createFilteredRowModel(filterFns), expandedRowModel: createExpandedRowModel() },
+            features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+            rowModels: { filteredRowModel: createFilteredRowModel(filterFns), expandedRowModel: createExpandedRowModel() },
             columns, data,
             getSubRows: r => r.subRows,
             filterFromLeafRows: true,
@@ -307,8 +307,8 @@ skills:
           ```tsx
           // Keep parent's whole sub-tree when parent matches: filter root-only.
           const table = useTable({
-            _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-            _rowModels: {
+            features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+            rowModels: {
               filteredRowModel: createFilteredRowModel(filterFns),
               expandedRowModel: createExpandedRowModel(),
             },
@@ -416,8 +416,8 @@ skills:
           })
 
           const table = useTable({
-            _features: tableFeatures({ rowSortingFeature }),
-            _rowModels: {
+            features: tableFeatures({ rowSortingFeature }),
+            rowModels: {
               sortedRowModel: createSortedRowModel({   // pass registry here
                 ...sortFns,
                 myCustom: (a, b, id) => a.original[id] - b.original[id],
@@ -500,7 +500,7 @@ skills:
           import { compareItems } from '@tanstack/match-sorter-utils'
           import { sortFns } from '@tanstack/react-table'
 
-          const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+          const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
             let dir = 0
             if (rowA.columnFiltersMeta[columnId]) {
               dir = compareItems(
@@ -577,8 +577,8 @@ skills:
           ```tsx
           // BUG: getPageCount returns 1, next/prev buttons are disabled
           const table = useTable({
-            _features: tableFeatures({ rowPaginationFeature }),
-            _rowModels: {},
+            features: tableFeatures({ rowPaginationFeature }),
+            rowModels: {},
             data, // only 10 rows for the current page
             columns,
             manualPagination: true,
@@ -594,8 +594,8 @@ skills:
             fetchPage(pagination.pageIndex, pagination.pageSize),
           )
           const table = useTable({
-            _features: tableFeatures({ rowPaginationFeature }),
-            _rowModels: {},
+            features: tableFeatures({ rowPaginationFeature }),
+            rowModels: {},
             data: dataQuery.rows,
             columns,
             manualPagination: true,
@@ -631,8 +631,8 @@ skills:
           // Seed in useState OR use initialState only — never both.
           const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
           const table = useTable({
-            _features: tableFeatures({ rowPaginationFeature }),
-            _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+            features: tableFeatures({ rowPaginationFeature }),
+            rowModels: { paginatedRowModel: createPaginatedRowModel() },
             columns, data,
             state: { pagination },
             onPaginationChange: setPagination,
@@ -650,7 +650,7 @@ skills:
         wrong_pattern: |
           ```tsx
           const table = useTable({
-            _features, _rowModels: { paginatedRowModel: createPaginatedRowModel(), filteredRowModel: createFilteredRowModel(filterFns) },
+            features, rowModels: { paginatedRowModel: createPaginatedRowModel(), filteredRowModel: createFilteredRowModel(filterFns) },
             columns, data,
             autoResetPageIndex: false, // user on page 5, then filters down to 2 pages
             // -> page 5 is empty. No automatic clamp.
@@ -744,10 +744,10 @@ skills:
         wrong_pattern: |
           ```tsx
           // BUG: grouped rows show aggregates but can't be expanded.
-          const _features = tableFeatures({ columnGroupingFeature })
+          const features = tableFeatures({ columnGroupingFeature })
           const table = useTable({
-            _features,
-            _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            features,
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
             columns, data,
           })
           // row.getToggleExpandedHandler() -> TS error or undefined
@@ -763,7 +763,7 @@ skills:
             rowExpandingFeature,
           } from '@tanstack/react-table'
 
-          const _features = tableFeatures({
+          const features = tableFeatures({
             columnGroupingFeature,
             rowExpandingFeature,
             rowPaginationFeature,
@@ -772,8 +772,8 @@ skills:
           })
 
           const table = useTable({
-            _features,
-            _rowModels: {
+            features,
+            rowModels: {
               groupedRowModel: createGroupedRowModel(aggregationFns),
               expandedRowModel: createExpandedRowModel(),
               // + sorted, filtered, paginated as needed
@@ -801,8 +801,8 @@ skills:
           ```tsx
           // BUG: v8-style option that doesn't exist in v9
           const table = useTable({
-            _features: tableFeatures({ columnGroupingFeature }),
-            _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            features: tableFeatures({ columnGroupingFeature }),
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
             columns, data,
             // @ts-ignore - this property doesn't exist on TableOptions in v9
             aggregationFns: {
@@ -816,8 +816,8 @@ skills:
           import { aggregationFns, createGroupedRowModel } from '@tanstack/react-table'
 
           const table = useTable({
-            _features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
-            _rowModels: {
+            features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
+            rowModels: {
               groupedRowModel: createGroupedRowModel({
                 ...aggregationFns,
                 myCustomAggregation: (columnId, leafRows, childRows) => {
@@ -882,8 +882,8 @@ skills:
           ```tsx
           // BUG: column order is overridden by reorder mode
           const table = useTable({
-            _features,
-            _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            features,
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
             columns, data,
             initialState: {
               columnOrder: ['firstName', 'lastName', 'age', 'status'], // explicit
@@ -895,8 +895,8 @@ skills:
         correct_pattern: |
           ```tsx
           const table = useTable({
-            _features,
-            _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            features,
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
             columns, data,
             initialState: {
               columnOrder: ['firstName', 'lastName', 'age', 'status'],
@@ -1015,8 +1015,8 @@ skills:
           // For pure tree data, omit getRowCanExpand and let it auto-detect:
           // From examples/react/expanding/src/main.tsx
           const table = useTable({
-            _features,
-            _rowModels: { expandedRowModel: createExpandedRowModel(), /* ... */ },
+            features,
+            rowModels: { expandedRowModel: createExpandedRowModel(), /* ... */ },
             columns, data,
             getSubRows: row => row.subRows,
             // no getRowCanExpand — row.getCanExpand() is true only when subRows.length > 0
@@ -1025,8 +1025,8 @@ skills:
           // For pure detail panels, override and skip getSubRows:
           // From examples/react/sub-components/src/main.tsx
           const table = useTable({
-            _features: tableFeatures({ rowExpandingFeature }),
-            _rowModels: { expandedRowModel: createExpandedRowModel() },
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: { expandedRowModel: createExpandedRowModel() },
             columns, data,
             getRowCanExpand: (row) => true, // every row expands to show <subComponent>
           })
@@ -1054,8 +1054,8 @@ skills:
           // From docs/guide/expanding.md
           // Default behavior (children flow through pagination):
           const table = useTable({
-            _features,
-            _rowModels: { expandedRowModel: createExpandedRowModel(), paginatedRowModel: createPaginatedRowModel() },
+            features,
+            rowModels: { expandedRowModel: createExpandedRowModel(), paginatedRowModel: createPaginatedRowModel() },
             columns, data,
             getSubRows: r => r.subRows,
             // paginateExpandedRows defaults to true
@@ -1111,8 +1111,8 @@ skills:
           // BUG: manualExpanding bypasses the expanded row model;
           // sub-rows are never flattened into view.
           const table = useTable({
-            _features: tableFeatures({ rowExpandingFeature }),
-            _rowModels: { expandedRowModel: createExpandedRowModel() }, // ignored
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: { expandedRowModel: createExpandedRowModel() }, // ignored
             columns, data,
             getSubRows: r => r.subRows,
             manualExpanding: true,
@@ -1124,8 +1124,8 @@ skills:
           // returns a pre-flattened view based on which rows are expanded.
           // From docs/guide/expanding.md
           const table = useTable({
-            _features: tableFeatures({ rowExpandingFeature }),
-            _rowModels: {}, // no expandedRowModel for manual mode
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: {}, // no expandedRowModel for manual mode
             columns,
             data: dataQuery.data, // server returns flattened rows when expanded
             manualExpanding: true,
@@ -1135,8 +1135,8 @@ skills:
 
           // For client-side tree, omit manualExpanding:
           const table = useTable({
-            _features: tableFeatures({ rowExpandingFeature }),
-            _rowModels: { expandedRowModel: createExpandedRowModel() },
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: { expandedRowModel: createExpandedRowModel() },
             columns, data,
             getSubRows: r => r.subRows,
           })
@@ -1167,7 +1167,7 @@ gaps:
     detail: '`table_getSelectedRowModel`, `table_getFilteredSelectedRowModel`, and `table_getGroupedSelectedRowModel` all call `selectRowsFn(table.getCoreRowModel())` (rowSelectionFeature.utils.ts:173-244). The function bodies are the same except for comments. Per docs row-models.md they should dispatch on filtered/grouped models. Either documentation is aspirational or implementation is stubbed.'
 
   - issue: 'v9 createColumnHelper signature change'
-    detail: 'v9 requires `createColumnHelper<typeof _features, TData>()` — TFeatures FIRST. v8 was `createColumnHelper<TData>()`. Every cluster-B example confirms this pattern (filters, filters-faceted, filters-fuzzy, sorting, pagination, grouping, expanding, sub-components all use `<typeof _features, Person>`).'
+    detail: 'v9 requires `createColumnHelper<typeof features, TData>()` — TFeatures FIRST. v8 was `createColumnHelper<TData>()`. Every cluster-B example confirms this pattern (filters, filters-faceted, filters-fuzzy, sorting, pagination, grouping, expanding, sub-components all use `<typeof features, Person>`).'
 
   - issue: 'Framework variation: Vue/Svelte/Solid/Angular use signal/reactive data getter'
     detail: |
@@ -1176,7 +1176,7 @@ gaps:
       Solid: `createTable({ get data() { return data() }, columns, ... })` — getter against signal.
       Svelte: `createTable({ get data() { return data }, ... })` — getter against $state rune.
       Angular: `injectTable(() => ({ data: this.data(), columns, ... }))` — whole config is a factory.
-      All use the same `tableFeatures({ ... })` and `_rowModels` shapes. The reactive plumbing differs.
+      All use the same `tableFeatures({ ... })` and `rowModels` shapes. The reactive plumbing differs.
 
   - issue: 'Faceting requires THREE row models in lockstep'
     detail: "createFacetedRowModel() is the base; createFacetedUniqueValues() and createFacetedMinMaxValues() both depend on it (column_getFacetedUniqueValues / column_getFacetedMinMaxValues both call column_getFacetedRowModel internally for the memoDep). Phase 1+2 note flagged this as 'agents commonly forget the base faceted row model'. Confirmed by reading source."

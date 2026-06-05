@@ -8,12 +8,12 @@
   import './index.css'
 
   // 1. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-  const _features = tableFeatures({
+  const features = tableFeatures({
   }) // util method to create sharable TFeatures object/type
 
   // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns.
   //    Alternatively, check out the createTableHook/createAppColumnHelper util for an even more type-safe way to define columns.
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
       header: 'First Name',
@@ -50,11 +50,11 @@
   const refreshData = () => { data = makeData(20) }
   const stressTest = () => { data = makeData(1_000) }
 
-  // 6. Create the table instance with required _features, columns, and data
+  // 6. Create the table instance with required features, columns, and data
   const table = createTable({
     debugTable: true,
-    _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-    _rowModels: {
+    features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
+    rowModels: {
     }, // `Core` row model is now included by default, but you can still override it here
     columns,
     get data() {

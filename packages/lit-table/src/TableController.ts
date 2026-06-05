@@ -119,13 +119,13 @@ export type LitTable<
  * ```ts
  * @customElement('my-table')
  * class MyTable extends LitElement {
- *   private tableController = new TableController<typeof _features, Person>(this)
+ *   private tableController = new TableController<typeof features, Person>(this)
  *
  *   protected render() {
  *     const table = this.tableController.table(
  *       {
- *         _features,
- *         _rowModels: {},
+ *         features,
+ *         rowModels: {},
  *         columns,
  *         data,
  *       },
@@ -162,7 +162,7 @@ export class TableController<
    * @example
    * ```ts
    * const table = this.tableController.table(
-   *   { _features, _rowModels: {}, columns, data },
+   *   { features, rowModels: {}, columns, data },
    *   (state) => ({ sorting: state.sorting }),
    * )
    * ```
@@ -174,9 +174,9 @@ export class TableController<
     if (!this._table) {
       const mergedOptions: TableOptions<TFeatures, TData> = {
         ...tableOptions,
-        _features: {
+        features: {
           coreReativityFeature: litReactivity(),
-          ...tableOptions._features,
+          ...tableOptions.features,
         },
         mergeOptions: (
           defaultOptions: TableOptions<TFeatures, TData>,

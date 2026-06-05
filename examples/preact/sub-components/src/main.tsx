@@ -18,11 +18,11 @@ import type {
 import type { Person } from './makeData'
 import type { JSX } from 'preact'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowExpandingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -90,12 +90,12 @@ function Table({
   data,
   getRowCanExpand,
   renderSubComponent,
-}: TableProps<typeof _features, Person>): JSX.Element {
+}: TableProps<typeof features, Person>): JSX.Element {
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         expandedRowModel: createExpandedRowModel(),
       },
       columns,
@@ -159,11 +159,7 @@ function Table({
   )
 }
 
-const renderSubComponent = ({
-  row,
-}: {
-  row: Row<typeof _features, Person>
-}) => {
+const renderSubComponent = ({ row }: { row: Row<typeof features, Person> }) => {
   return (
     <pre style={{ fontSize: '10px' }}>
       <code>{JSON.stringify(row.original, null, 2)}</code>

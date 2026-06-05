@@ -53,8 +53,8 @@ const defaultData: Array<Person> = [
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {},
-  _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
+  features: {},
+  rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
   debugTable: true,
 })
 

@@ -15,9 +15,9 @@ import {
 } from '../../../src'
 import { getStaticTestData } from '../../fixtures/data/generateTestData'
 
-// TODO - fix _features not being inferred correctly
+// TODO - fix features not being inferred correctly
 const mockRows = generateTestRowsWithStateFromData(getStaticTestData(), {
-  _features: {
+  features: {
     columnFilteringFeature,
   },
 })

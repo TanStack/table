@@ -4,7 +4,7 @@ title: React Table
 
 The `@tanstack/react-table` adapter wraps `@tanstack/table-core` with React-specific reactivity, rendering helpers, and types. It installs the React `coreReativityFeature` for you, so table state is backed by TanStack Store atoms while React components can subscribe through `useTable`, selectors, and `table.Subscribe`.
 
-TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
+TanStack Table v9 is explicit about what a table uses. Register features with `features`, and register client-side row model factories with `rowModels`. The core row model is included by default, so a basic table can use `rowModels: {}`.
 
 ## Creating a Table
 
@@ -19,9 +19,9 @@ type Person = {
   age: number
 }
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First name',
@@ -31,8 +31,8 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 function App({ data }: { data: Person[] }) {
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
   })
@@ -41,7 +41,7 @@ function App({ data }: { data: Person[] }) {
 }
 ```
 
-For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
+For feature-specific row models, register the feature and put the row model factory under `rowModels`.
 
 ```tsx
 import {
@@ -53,14 +53,14 @@ import {
   tableFeatures,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const tableOptions = {
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -82,7 +82,7 @@ import {
   type PaginationState,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -93,8 +93,8 @@ function App({ data }: { data: Person[] }) {
   })
 
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
     atoms: {
@@ -128,14 +128,14 @@ Use `table.FlexRender` to render column `header`, `cell`, and `footer` definitio
 
 ## createTableHook
 
-`createTableHook` creates an app-specific table hook. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
+`createTableHook` creates an app-specific table hook. Use it when multiple tables should share `features`, `rowModels`, default options, column helpers, and component conventions.
 
 ```tsx
 import { createTableHook, tableFeatures } from '@tanstack/react-table'
 
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({}),
-  _rowModels: {},
+  features: tableFeatures({}),
+  rowModels: {},
 })
 
 const columnHelper = createAppColumnHelper<Person>()

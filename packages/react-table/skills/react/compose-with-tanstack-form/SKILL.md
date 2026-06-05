@@ -89,11 +89,11 @@ import type { Person } from './makeData'
 // Without Omit, TanStack Form's DeepKeys walks subRows and hits TS2589.
 type FormRow = Omit<Person, 'subRows'>
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
 })
-const columnHelper = createColumnHelper<typeof _features, FormRow>()
+const columnHelper = createColumnHelper<typeof features, FormRow>()
 
 function App() {
   const initialData: FormRow[] = makeData(100)
@@ -151,8 +151,8 @@ function App() {
   void dataLength
 
   const table = useTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -220,7 +220,7 @@ Correct:
 type FormRow = Omit<Person, 'subRows'>
 const initialData: FormRow[] = makeData(100)
 const form = useAppForm({ defaultValues: { data: initialData } })
-const columnHelper = createColumnHelper<typeof _features, FormRow>()
+const columnHelper = createColumnHelper<typeof features, FormRow>()
 ```
 
 Always strip the recursive child field from the row type you hand to the form.
@@ -295,8 +295,8 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     /* … */
   },
   columns,
@@ -308,8 +308,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     /* … */
   },
   columns,
@@ -343,8 +343,8 @@ Correct:
 // v9 idiom: TanStack Form owns the data, table renders it.
 const form = useAppForm({ defaultValues: { data } })
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     /* … */
   },
   columns,

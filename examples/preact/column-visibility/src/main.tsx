@@ -10,9 +10,9 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({ columnVisibilityFeature })
+const features = tableFeatures({ columnVisibilityFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -68,8 +68,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       columns,
       data,
       debugTable: true,

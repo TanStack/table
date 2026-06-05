@@ -36,11 +36,11 @@ import {
   sortFns,
 } from '@tanstack/table-core'
 
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -78,8 +78,8 @@ The four ownership patterns per slice:
 
 ```ts
 const table = constructTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   initialState: { sorting: [{ id: 'age', desc: false }] },
@@ -94,8 +94,8 @@ table.setSorting([{ id: 'firstName', desc: true }])
 const [sorting, setSorting] = React.useState<SortingState>([])
 
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: { sorting },
@@ -118,8 +118,8 @@ function MyTable() {
   })
 
   const table = useTable({
-    _features,
-    _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+    features,
+    rowModels: { paginatedRowModel: createPaginatedRowModel() },
     columns,
     data,
     atoms: { pagination: paginationAtom },
@@ -145,8 +145,8 @@ const dataQuery = useQuery({
 })
 
 const table = useTable({
-  _features: tableFeatures({ rowPaginationFeature }),
-  _rowModels: {}, // can drop paginatedRowModel — server paginates
+  features: tableFeatures({ rowPaginationFeature }),
+  rowModels: {}, // can drop paginatedRowModel — server paginates
   columns,
   data: dataQuery.data?.rows ?? EMPTY,
   rowCount: dataQuery.data?.rowCount, // server tells the table the total
@@ -170,7 +170,7 @@ const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 
 const [pagination, setPagination] = React.useState(...)
 
 const table = useTable({
-  _features, _rowModels: {...}, columns, data,
+  features, rowModels: {...}, columns, data,
   state: { pagination },                  // ignored
   onPaginationChange: setPagination,
   atoms: { pagination: paginationAtom },  // wins
@@ -184,7 +184,7 @@ Correct:
 const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
 const table = useTable({
-  _features, _rowModels: {...}, columns, data,
+  features, rowModels: {...}, columns, data,
   atoms: { pagination: paginationAtom },
 })
 ```
@@ -200,8 +200,8 @@ Wrong:
 ```tsx
 const [sorting, setSorting] = React.useState<SortingState>([])
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: { sorting }, // no onSortingChange
@@ -213,8 +213,8 @@ Correct:
 ```tsx
 const [sorting, setSorting] = React.useState<SortingState>([])
 const table = useTable({
-  _features,
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features,
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: { sorting },
@@ -234,8 +234,8 @@ Wrong:
 // updates to initialState are ignored after first render
 function MyTable({ defaultSort }: { defaultSort: SortingState }) {
   const table = useTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
     initialState: { sorting: defaultSort }, // later changes never sync
@@ -249,8 +249,8 @@ Correct:
 function MyTable({ defaultSort }: { defaultSort: SortingState }) {
   const [sorting, setSorting] = React.useState(defaultSort)
   const table = useTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
     state: { sorting },
@@ -269,7 +269,7 @@ Wrong:
 
 ```ts
 const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 10 })
-const table = useTable({ _features, _rowModels: {...}, columns, data, atoms: { pagination: paginationAtom } })
+const table = useTable({ features, rowModels: {...}, columns, data, atoms: { pagination: paginationAtom } })
 
 table.baseAtoms.pagination.set((old) => ({ ...old, pageIndex: 0 }))
 // baseAtom updated, but table.atoms.pagination still reads from paginationAtom
@@ -299,8 +299,8 @@ const dataQuery = useQuery({
   queryFn: fetchPage,
 })
 const table = useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: dataQuery.data?.rows ?? [],
   rowCount: dataQuery.data?.rowCount,
@@ -313,8 +313,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {}, // drop paginatedRowModel if fully server-side
+  features,
+  rowModels: {}, // drop paginatedRowModel if fully server-side
   columns,
   data: dataQuery.data?.rows ?? [],
   rowCount: dataQuery.data?.rowCount,
@@ -335,7 +335,7 @@ Wrong:
 // external atom keeps its current value; only baseAtoms reset
 const sortingAtom = useCreateAtom<SortingState>([])
 const table = useTable({
-  _features, _rowModels: {...}, columns, data,
+  features, rowModels: {...}, columns, data,
   atoms: { sorting: sortingAtom },
 })
 table.reset() // sortingAtom is NOT cleared
@@ -369,8 +369,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -383,6 +383,6 @@ Source: maintainer interview (Phase 4, 2026-05-17)
 
 ## See also
 
-- `tanstack-table/setup` — how `_features` and `_rowModels` are wired
+- `tanstack-table/setup` — how `features` and `rowModels` are wired
 - `tanstack-table/pagination`, `tanstack-table/sorting`, `tanstack-table/filtering` — feature-specific `manual*` and reset semantics
 - `tanstack-table/migrate-v8-to-v9` — `table.getState()` → `table.store.state` / `table.atoms.<slice>.get()`

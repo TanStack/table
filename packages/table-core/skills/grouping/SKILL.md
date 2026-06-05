@@ -45,13 +45,13 @@ import {
 } from '@tanstack/table-core'
 import type { GroupingState } from '@tanstack/table-core'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnGroupingFeature,
   rowExpandingFeature,
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -65,8 +65,8 @@ const columns = columnHelper.columns([
 ])
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
@@ -129,7 +129,7 @@ import type { AggregationFn } from '@tanstack/table-core'
 // Signature: (columnId, leafRows, childRows) → aggregated value
 // leafRows = ALL descendant non-grouped rows (recursive)
 // childRows = immediate children (may themselves be sub-aggregates)
-const weightedAverage: AggregationFn<typeof _features, Person> = (
+const weightedAverage: AggregationFn<typeof features, Person> = (
   columnId,
   leafRows,
 ) => {
@@ -145,8 +145,8 @@ const weightedAverage: AggregationFn<typeof _features, Person> = (
 }
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel({
       ...aggregationFns,
       weightedAverage,
@@ -176,8 +176,8 @@ columnHelper.accessor('firstName', {
 
 ```ts
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -197,10 +197,10 @@ Wrong:
 
 ```ts
 // grouped rows show aggregates but can't be expanded
-const _features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({ columnGroupingFeature })
 const table = useTable({
-  _features,
-  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+  features,
+  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   columns,
   data,
 })
@@ -218,14 +218,14 @@ import {
   rowExpandingFeature,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnGroupingFeature,
   rowExpandingFeature,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -250,8 +250,8 @@ Wrong:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ columnGroupingFeature }),
-  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+  features: tableFeatures({ columnGroupingFeature }),
+  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   columns, data,
   // @ts-ignore - this property doesn't exist on v9 TableOptions
   aggregationFns: {
@@ -266,8 +266,8 @@ Correct:
 import { aggregationFns, createGroupedRowModel } from '@tanstack/react-table'
 
 const table = useTable({
-  _features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
+  rowModels: {
     groupedRowModel: createGroupedRowModel({
       ...aggregationFns,
       myCustomAggregation: (columnId, leafRows, childRows) => {
@@ -344,8 +344,8 @@ Wrong:
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+  features,
+  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   columns,
   data,
   initialState: {
@@ -360,8 +360,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+  features,
+  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   columns,
   data,
   initialState: {
@@ -425,8 +425,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
+  rowModels: {
     groupedRowModel: createGroupedRowModel(aggregationFns),
     expandedRowModel: createExpandedRowModel(),
   },

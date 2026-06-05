@@ -2,7 +2,7 @@
 name: solid/production-readiness
 description: >
   Ship-ready optimizations for `@tanstack/solid-table` v9. Tree-shake by
-  registering only the `_features` you use; keep `_features`, `columns`, `data`
+  registering only the `features` you use; keep `features`, `columns`, `data`
   stable; prefer per-slice external atoms (`createAtom` + `useSelector`) and
   narrow selectors over `(state) => state`; leverage Solid's fine-grained
   reactivity (`createMemo`, JSX-level reads) so most components subscribe to
@@ -30,7 +30,7 @@ A v9 table that "works in dev" can still ship slow if you copied the
 getting-started shape unchanged into a 10k-row scenario. Solid's fine-grained
 reactivity rewards a few production habits.
 
-## 1. Tree-shake `_features` aggressively
+## 1. Tree-shake `features` aggressively
 
 v9's biggest bundle win. Register only the features you use.
 
@@ -46,7 +46,7 @@ import {
   columnFilteringFeature,
 } from '@tanstack/solid-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   columnFilteringFeature,
@@ -64,25 +64,25 @@ const sortRegistry = {
 createSortedRowModel(sortRegistry)
 ```
 
-## 2. Keep `_features`, `data`, `columns` stable
+## 2. Keep `features`, `data`, `columns` stable
 
 The Solid signal model already protects you from React-style re-creation, but
 two patterns still break things:
 
-- **Re-creating `_features` per render.** Module-scope it. Don't call
+- **Re-creating `features` per render.** Module-scope it. Don't call
   `tableFeatures({...})` inside a component.
 - **Returning a fresh `[]` on every read.** When `data` is unloaded
   (`resource()?.rows ?? []`), the fallback `[]` should be a module-scope
   constant so identity is stable.
 
 ```tsx
-const _features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
+const features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
 const EMPTY_ROWS: Array<Person> = []
 
 function App() {
   const table = createTable({
-    _features, // stable
-    _rowModels: {
+    features, // stable
+    rowModels: {
       /* stable factories OK module-scoped */
     },
     columns, // module-scope constant
@@ -103,8 +103,8 @@ const columns = createMemo(() =>
   ]),
 )
 createTable({
-  _features,
-  _rowModels,
+  features,
+  rowModels,
   get columns() {
     return columns()
   },
@@ -122,8 +122,8 @@ The default `createTable(options)` selector is identity. Anything reading
 ```tsx
 const table = createTable(
   {
-    _features,
-    _rowModels,
+    features,
+    rowModels,
     columns,
     get data() {
       return data()
@@ -211,12 +211,12 @@ which is excluded from v9 alpha.
 ### CRITICAL — registering features you don't use
 
 Every registered feature adds state slices, derivations, and code to the
-bundle. Keep `_features` minimal.
+bundle. Keep `features` minimal.
 
-### CRITICAL — recreating `_features` / `columns` / `data` identity on every render
+### CRITICAL — recreating `features` / `columns` / `data` identity on every render
 
 Solid's reactivity assumes stable references for options that are not behind
-getters. `_features` and `columns` should be module-scoped; reactive options
+getters. `features` and `columns` should be module-scoped; reactive options
 should use getters; fallbacks should be module-scope constants.
 
 ### HIGH — `(state) => state` default selector in a frequently-reading component

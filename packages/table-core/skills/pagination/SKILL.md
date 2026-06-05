@@ -34,11 +34,11 @@ import {
 } from '@tanstack/table-core'
 import type { PaginationState } from '@tanstack/table-core'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   columns,
@@ -125,8 +125,8 @@ const { data: dataQuery } = useQuery({
 })
 
 const table = useTable({
-  _features: tableFeatures({ rowPaginationFeature }),
-  _rowModels: {}, // no paginatedRowModel — server paginates
+  features: tableFeatures({ rowPaginationFeature }),
+  rowModels: {}, // no paginatedRowModel — server paginates
   data: dataQuery?.rows ?? EMPTY,
   columns,
   manualPagination: true,
@@ -142,8 +142,8 @@ const table = useTable({
 
 ```ts
 const table = constructTable({
-  _features: tableFeatures({ rowPaginationFeature, columnFilteringFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowPaginationFeature, columnFilteringFeature }),
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     filteredRowModel: createFilteredRowModel(filterFns),
   },
@@ -173,8 +173,8 @@ Wrong:
 ```tsx
 // getPageCount() returns 1, next/prev buttons are disabled
 const table = useTable({
-  _features: tableFeatures({ rowPaginationFeature }),
-  _rowModels: {},
+  features: tableFeatures({ rowPaginationFeature }),
+  rowModels: {},
   data, // only 10 rows for the current page
   columns,
   manualPagination: true,
@@ -188,8 +188,8 @@ Correct:
 
 ```tsx
 const table = useTable({
-  _features: tableFeatures({ rowPaginationFeature }),
-  _rowModels: {},
+  features: tableFeatures({ rowPaginationFeature }),
+  rowModels: {},
   data: dataQuery.rows,
   columns,
   manualPagination: true,
@@ -223,8 +223,8 @@ Correct:
 ```tsx
 const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
 const table = useTable({
-  _features: tableFeatures({ rowPaginationFeature }),
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features: tableFeatures({ rowPaginationFeature }),
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data,
   state: { pagination },
@@ -242,8 +242,8 @@ Wrong:
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     filteredRowModel: createFilteredRowModel(filterFns),
   },
@@ -366,8 +366,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowPaginationFeature }),
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features: tableFeatures({ rowPaginationFeature }),
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data,
 })

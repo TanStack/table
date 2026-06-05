@@ -18,13 +18,13 @@ all other framework adapters (React, Vue, Solid, Svelte, Angular).
 ```ts
 @customElement('my-table')
 class MyTable extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {},
+        features,
+        rowModels: {},
         columns,
         data,
       },
@@ -169,7 +169,7 @@ options into the same table instance and expose selected state through
 
 ```ts
 const table = this.tableController.table(
-  { _features, _rowModels: {}, columns, data },
+  { features, rowModels: {}, columns, data },
   (state) => ({ sorting: state.sorting }),
 )
 ```

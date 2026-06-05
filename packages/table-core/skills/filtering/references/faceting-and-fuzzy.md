@@ -12,15 +12,15 @@ import {
   createFacetedMinMaxValues,
 } from '@tanstack/table-core'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
 })
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
     facetedRowModel: createFacetedRowModel(), // REQUIRED base
@@ -48,14 +48,14 @@ import type { FilterFn, SortFn } from '@tanstack/table-core'
 
 declare module '@tanstack/react-table' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
+    fuzzy: FilterFn<typeof features, Person>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -66,7 +66,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -78,8 +78,8 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
 }
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel({
       ...filterFns,
       fuzzy: fuzzyFilter,
@@ -131,8 +131,8 @@ Wrong:
 ```tsx
 // filterFromLeafRows hides children that don't match individually
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -150,8 +150,8 @@ Correct:
 ```tsx
 // Filter root-only to preserve all sub-rows under a matching parent
 const table = useTable({
-  _features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  _rowModels: {
+  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     expandedRowModel: createExpandedRowModel(),
   },

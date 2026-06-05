@@ -47,8 +47,8 @@ type Person = {
   status: 'single' | 'complicated' | 'relationship'
 }
 
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { sortFn: 'alphanumeric' }),
@@ -60,8 +60,8 @@ const columns = columnHelper.columns([
 ])
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
   },
   columns,
@@ -99,7 +99,7 @@ table.setSorting([{ id: 'age', desc: true }])
 
 ```ts
 // From examples/react/sorting/src/main.tsx
-const sortStatusFn: SortFn<typeof _features, Person> = (
+const sortStatusFn: SortFn<typeof features, Person> = (
   rowA,
   rowB,
   _columnId,
@@ -142,8 +142,8 @@ const { data } = useQuery({
 })
 
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: {}, // omit sortedRowModel — server sorts
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: {}, // omit sortedRowModel — server sorts
   columns,
   data,
   manualSorting: true,
@@ -176,8 +176,8 @@ columnHelper.accessor('firstName', {
 })
 
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: {
     sortedRowModel: createSortedRowModel({
       ...sortFns,
       myCustom: (a, b, id) => a.original[id] - b.original[id],
@@ -263,7 +263,7 @@ Correct:
 ```ts
 import { compareItems } from '@tanstack/match-sorter-utils'
 
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -327,8 +327,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })

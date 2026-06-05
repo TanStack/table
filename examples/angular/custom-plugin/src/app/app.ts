@@ -13,11 +13,11 @@ import { makeData } from './makeData'
 import type { DensityState } from './density/density-feature'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   densityPlugin, // pass in our plugin just like any other stock feature
 })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -59,9 +59,9 @@ export class App {
   readonly density = signal<DensityState>('md')
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
+    features,
+    rowModels: {
+      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
     },
     columns,
     data: this.data(),

@@ -39,9 +39,9 @@ export class TableController<TFeatures, TData> implements ReactiveController {
       // First call: build the core table with the Lit reactivity bindings.
       this._table = constructTable({
         ...tableOptions,
-        _features: {
+        features: {
           coreReativityFeature: litReactivity(),
-          ...tableOptions._features,
+          ...tableOptions.features,
         },
         mergeOptions: (def, next) => ({ ...def, ...next }),
       })
@@ -112,16 +112,16 @@ import {
   type ColumnDef,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({}) // module scope
+const features = tableFeatures({}) // module scope
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   /* … module scope … */
 ]
 
 @customElement('people-table')
 class PeopleTable extends LitElement {
   // ONE controller, constructed as a class field.
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   @state()
   private data: Person[] = []
@@ -129,8 +129,8 @@ class PeopleTable extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {},
+        features,
+        rowModels: {},
         columns,
         data: this.data,
       },
@@ -227,7 +227,7 @@ Wrong:
 
 ```ts
 protected render() {
-  const controller = new TableController<typeof _features, Person>(this) // every frame
+  const controller = new TableController<typeof features, Person>(this) // every frame
   const table = controller.table({ /* … */ })
 }
 ```
@@ -235,7 +235,7 @@ protected render() {
 Correct: construct the controller once as a class field.
 
 ```ts
-private tableController = new TableController<typeof _features, Person>(this)
+private tableController = new TableController<typeof features, Person>(this)
 
 protected render() {
   const table = this.tableController.table({ /* … */ })
@@ -252,7 +252,7 @@ Wrong:
 ```ts
 connectedCallback() {
   super.connectedCallback()
-  this.cachedTable = this.tableController.table({ _features, _rowModels: {}, columns, data: this.data })
+  this.cachedTable = this.tableController.table({ features, rowModels: {}, columns, data: this.data })
 }
 
 protected render() {
@@ -264,7 +264,7 @@ Correct: call `.table()` each `render()`. The options are merged into the same l
 
 ```ts
 protected render() {
-  const table = this.tableController.table({ _features, _rowModels: {}, columns, data: this.data })
+  const table = this.tableController.table({ features, rowModels: {}, columns, data: this.data })
   return html`${table.getRowModel().rows.map(/* … */)}`
 }
 ```
@@ -278,21 +278,21 @@ Wrong: assuming `table.Subscribe({ source: table.atoms.rowSelection, … })` mak
 Correct: in the current adapter, the host's `requestUpdate()` is wired to the full `table.store` and `table.optionsStore`. `Subscribe` is a render-time projection convenience; it does not narrow host invalidation. Plan accordingly for large lists.
 Source: `packages/lit-table/src/TableController.ts` (lines 200–218 + `_setupSubscriptions`).
 
-### HIGH Building `_features` inside `render()`
+### HIGH Building `features` inside `render()`
 
 Wrong:
 
 ```ts
 protected render() {
-  const _features = tableFeatures({ rowSortingFeature }) // new each frame
-  const table = this.tableController.table({ _features, /* … */ })
+  const features = tableFeatures({ rowSortingFeature }) // new each frame
+  const table = this.tableController.table({ features, /* … */ })
 }
 ```
 
-Correct: declare `_features` at module scope (or once on the class, frozen). Identity drives internal memos.
+Correct: declare `features` at module scope (or once on the class, frozen). Identity drives internal memos.
 
 ```ts
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature })
 ```
 
 Source: `docs/framework/lit/guide/table-state.md` (FAQ #1).

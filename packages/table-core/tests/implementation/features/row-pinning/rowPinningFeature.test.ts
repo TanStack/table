@@ -17,17 +17,17 @@ import type { ColumnDef, Row } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
 // Define feature set with proper typing
-const _features = {
+const features = {
   ...coreFeatures,
   rowPinningFeature,
   coreReativityFeature: storeReactivityBindings(),
 }
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<typeof _features, Person, any>
+type PersonColumn = ColumnDef<typeof features, Person, any>
 
 function generateColumnDefs(people: Array<Person>): Array<PersonColumn> {
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
   const person = people[0]
 
   if (!person) {
@@ -175,8 +175,8 @@ describe('table methods', () => {
       }
 
       const table = constructTable<typeof _featuresWithPagination, Person>({
-        _features: _featuresWithPagination,
-        _rowModels: {
+        features: _featuresWithPagination,
+        rowModels: {
           paginatedRowModel: createPaginatedRowModel(),
         },
         data,
@@ -215,8 +215,8 @@ describe('table methods', () => {
     }
 
     const table = constructTable<typeof _featuresWithPagination, Person>({
-      _features: _featuresWithPagination,
-      _rowModels: {
+      features: _featuresWithPagination,
+      rowModels: {
         paginatedRowModel: createPaginatedRowModel(),
       },
       data,

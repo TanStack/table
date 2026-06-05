@@ -9,19 +9,19 @@ If you take a look at the most basic example of TanStack Table, you'll see a cod
 ```ts
 import { tableFeatures, useTable } from '@tanstack/react-table'
 
-const _features = tableFeatures({}) // Core features only
+const features = tableFeatures({}) // Core features only
 
 function Component() {
   const table = useTable({
-    _features,
-    _rowModels: {}, // Core row model is automatic; add others as needed
+    features,
+    rowModels: {}, // Core row model is automatic; add others as needed
     columns,
     data,
   })
 }
 ```
 
-In v9, row models are configured via the `_rowModels` option. The core row model is always included automatically. You only add the row models you need for filtering, sorting, pagination, etc. This keeps your bundle small—you only import and use the code for the features you enable.
+In v9, row models are configured via the `rowModels` option. The core row model is always included automatically. You only add the row models you need for filtering, sorting, pagination, etc. This keeps your bundle small—you only import and use the code for the features you enable.
 
 ### What are Row Models?
 
@@ -29,9 +29,9 @@ Row models run under the hood of TanStack Table to transform your original data 
 
 ### Configuring Row Models
 
-You should only add the row models that you need. Here are all of the row models that are available via `_rowModels`:
+You should only add the row models that you need. Here are all of the row models that are available via `rowModels`:
 
-| `_rowModels` Key | Factory Function | Purpose |
+| `rowModels` Key | Factory Function | Purpose |
 |------------------|------------------|---------|
 | (automatic) | — | Core row model (always included) |
 | `filteredRowModel` | `createFilteredRowModel(filterFns)` | Filtering (column + global) |
@@ -43,7 +43,7 @@ You should only add the row models that you need. Here are all of the row models
 | `facetedMinMaxValues` | `createFacetedMinMaxValues()` | Min/max for faceted filters |
 | `facetedUniqueValues` | `createFacetedUniqueValues()` | Unique values for faceted filters |
 
-You must also add the corresponding features to `_features` for each row model you use. For example:
+You must also add the corresponding features to `features` for each row model you use. For example:
 
 ```ts
 import {
@@ -59,15 +59,15 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),

@@ -25,11 +25,11 @@ declare module '@tanstack/angular-table' {
   }
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
-const defaultColumn: Partial<ColumnDef<typeof _features, Person>> = {
+const defaultColumn: Partial<ColumnDef<typeof features, Person>> = {
   cell: ({ getValue, row, column, table }) => {
     const initialValue = getValue()
 
@@ -48,7 +48,7 @@ const defaultColumn: Partial<ColumnDef<typeof _features, Person>> = {
   },
 }
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     footer: (info) => info.column.id,
@@ -96,9 +96,9 @@ export class App {
   readonly table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
+    features,
+    rowModels: {
+      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
     },
     defaultColumn: defaultColumn,
     debugTable: true,

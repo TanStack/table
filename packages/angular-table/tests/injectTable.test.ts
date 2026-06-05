@@ -29,7 +29,7 @@ describe('injectTable', () => {
 
       table = injectTable(() => ({
         data: this.data(),
-        _features: stockFeatures,
+        features: stockFeatures,
         columns: [],
       }))
     }
@@ -58,7 +58,7 @@ describe('injectTable', () => {
     const table = TestBed.runInInjectionContext(() =>
       injectTable(() => ({
         data: data(),
-        _features: stockFeatures,
+        features: stockFeatures,
         columns: columns,
         getRowId: (row) => row.id,
       })),
@@ -97,8 +97,8 @@ describe('injectTable', () => {
         const table = injectTable(() => ({
           data,
           columns: columns,
-          _features: stockFeatures,
-          _rowModels: {
+          features: stockFeatures,
+          rowModels: {
             paginatedRowModel: createPaginatedRowModel(),
           },
           getRowId: (row) => row.id,

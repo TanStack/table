@@ -12,11 +12,11 @@ import { makeData } from './makeData'
 import type { SortFn, SortingState } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 // custom sorting logic for one of our enum columns
 const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
   const statusA = rowA.original.status
@@ -77,8 +77,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
       },
       columns,

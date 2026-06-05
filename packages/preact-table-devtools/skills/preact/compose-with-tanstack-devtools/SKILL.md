@@ -47,8 +47,8 @@ import {
 
 function UsersScreen() {
   const table = useTable({
-    _features,
-    _rowModels,
+    features,
+    rowModels,
     key: 'users-table',
     columns,
     data,

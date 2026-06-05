@@ -40,7 +40,7 @@ Global Faceting allows you to generate lists of values for all columns from the 
 
 ### Global Faceting Row Models
 
-In order to use any of the global faceting features, add the appropriate faceted row models to your `_rowModels`:
+In order to use any of the global faceting features, add the appropriate faceted row models to your `rowModels`:
 
 ```ts
 import {
@@ -51,11 +51,11 @@ import {
   createFacetedUniqueValues,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({}) // add globalFilteringFeature if using global filtering
+const features = tableFeatures({}) // add globalFilteringFeature if using global filtering
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     facetedRowModel: createFacetedRowModel(), // required (other faceting methods depend on this)
     facetedMinMaxValues: createFacetedMinMaxValues(), // if you need min/max values
     facetedUniqueValues: createFacetedUniqueValues(), // if you need a list of unique values

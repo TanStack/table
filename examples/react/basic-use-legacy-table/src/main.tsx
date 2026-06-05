@@ -3,12 +3,12 @@
  * a v8-style API for easier migration from TanStack Table v8 to v9.
  *
  * Key differences from the v9 useTable hook:
- * - No need to define _features - all stock features are included
- * - Uses v8-style get*RowModel() options instead of _rowModels
+ * - No need to define features - all stock features are included
+ * - Uses v8-style get*RowModel() options instead of rowModels
  * - Subscribes to all state automatically (like v8 behavior)
  *
  * NOTE: useLegacyTable is deprecated and intended only as a migration aid.
- * New code should use useTable with explicit _features and _rowModels.
+ * New code should use useTable with explicit features and rowModels.
  */
 import React from 'react'
 import { TanStackDevtools } from '@tanstack/react-devtools'
@@ -113,13 +113,13 @@ function App() {
   })
 
   // Using useLegacyTable with the v8-style API!
-  // Notice how we use get*RowModel() options instead of _rowModels
-  // and we don't need to define _features
+  // Notice how we use get*RowModel() options instead of rowModels
+  // and we don't need to define features
   const table = useLegacyTable({
     key: 'basic-use-legacy-table', // needed for devtools
     columns,
     data,
-    // V8-style row model options (these are mapped to v9 _rowModels under the hood)
+    // V8-style row model options (these are mapped to v9 rowModels under the hood)
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), // client side filtering
     getSortedRowModel: getSortedRowModel(), // client side sorting

@@ -49,7 +49,7 @@ Every TanStack Table instance exposes its state at three layers:
 | `table.state`             | Readonly flat proxy               | Reads from slice atoms          | Full-state JSON/debug output                    |
 | `table.store`             | Readonly flat `Store<TableState>` | Backed by an Angular `computed` | Low-level flat store access; rare               |
 
-All three are populated only for **registered features** (`_features`). All
+All three are populated only for **registered features** (`features`). All
 three are signal-backed via `angularReactivity(injector)`:
 `createReadonlyAtom` → Angular `computed`, `createWritableAtom` → Angular
 `signal`, subscriptions bridged through `toObservable(computed(signal), {
@@ -85,7 +85,7 @@ import {
   type SortingState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
+const features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
 
 // Module-scope (or app-scope) shared atoms
 export const paginationStore = new Store<PaginationState>({
@@ -98,8 +98,8 @@ export const sortingStore = new Store<SortingState>([])
 @Component({...})
 export class App {
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: { /* … */ },
+    features,
+    rowModels: { /* … */ },
     columns,
     data: this.data(),
     atoms: {
@@ -151,7 +151,7 @@ import {
   type PaginationState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 // Shared, app-scope atom
 export const paginationStore = new Store<PaginationState>({
@@ -187,8 +187,8 @@ export class PageRoute {
   }
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       /* … */
     },
     columns,
@@ -238,8 +238,8 @@ export const sharedFilter = new Store<string | null>(null)
 
 // Table A
 readonly tableA = injectTable(() => ({
-  _features: tableFeatures({ globalFilteringFeature }),
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({ globalFilteringFeature }),
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns: columnsA,
   data: this.dataA(),
   atoms: { globalFilter: sharedFilter },
@@ -247,8 +247,8 @@ readonly tableA = injectTable(() => ({
 
 // Table B (separate component, same module)
 readonly tableB = injectTable(() => ({
-  _features: tableFeatures({ globalFilteringFeature }),
-  _rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({ globalFilteringFeature }),
+  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns: columnsB,
   data: this.dataB(),
   atoms: { globalFilter: sharedFilter },

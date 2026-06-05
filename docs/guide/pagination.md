@@ -87,11 +87,11 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   columns,
@@ -118,11 +118,11 @@ import {
   rowPaginationFeature,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 const table = useTable({
-  _features,
-  _rowModels: {}, // no paginatedRowModel needed for server-side pagination
+  features,
+  rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data,
   manualPagination: true, // turn off client-side pagination
@@ -152,7 +152,7 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature })
 
 const [pagination, setPagination] = useState({
   pageIndex: 0, // initial page index
@@ -160,8 +160,8 @@ const [pagination, setPagination] = useState({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   columns,
@@ -177,8 +177,8 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   columns,
@@ -204,8 +204,8 @@ By default, `pageIndex` is reset to `0` when page-altering state changes occur, 
 
 ```jsx
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
   },
   columns,

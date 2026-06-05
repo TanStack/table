@@ -131,8 +131,8 @@ const pagination = useSelector(paginationAtom)
 const sorting = useSelector(sortingAtom)
 
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     /* ... */
   },
   columns,
@@ -189,8 +189,8 @@ export function PageStatus() {
 
 // UsersTable.tsx
 const table = createTable({
-  _features,
-  _rowModels,
+  features,
+  rowModels,
   columns,
   get data() {
     return data()

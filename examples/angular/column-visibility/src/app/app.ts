@@ -10,11 +10,11 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnVisibilityFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -77,7 +77,7 @@ export class App {
   readonly columnVisibility = signal<ColumnVisibilityState>({})
 
   readonly table = injectTable(() => ({
-    _features,
+    features,
     columns: defaultColumns,
     data: this.data(),
     state: {

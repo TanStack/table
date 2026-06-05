@@ -25,7 +25,7 @@ type Table<TFeatures, TData> = Table_Core<TFeatures, TData> & UnionToIntersectio
 
 Defined in: [types/Table.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L58)
 
-The table object that includes both the core table functionality and the features that are enabled via the `_features` table option.
+The table object that includes both the core table functionality and the features that are enabled via the `features` table option.
 
 ## Type Parameters
 

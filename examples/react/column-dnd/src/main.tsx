@@ -31,8 +31,8 @@ import type { Cell, Header } from '@tanstack/react-table'
 import './index.css'
 
 const { appFeatures, useAppTable, createAppColumnHelper } = createTableHook({
-  _features: { columnOrderingFeature, columnSizingFeature },
-  _rowModels: {},
+  features: { columnOrderingFeature, columnSizingFeature },
+  rowModels: {},
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

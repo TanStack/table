@@ -4,7 +4,7 @@ title: Angular Table
 
 The `@tanstack/angular-table` adapter wraps `@tanstack/table-core` with Angular signals, rendering directives, dependency-injection helpers, and types. `injectTable` supplies Angular reactivity bindings for you, so table atoms can update Angular signals, computed values, effects, and templates.
 
-TanStack Table v9 is explicit about what a table uses. Register features with `_features`, and register client-side row model factories with `_rowModels`. The core row model is included by default, so a basic table can use `_rowModels: {}`.
+TanStack Table v9 is explicit about what a table uses. Register features with `features`, and register client-side row model factories with `rowModels`. The core row model is included by default, so a basic table can use `rowModels: {}`.
 
 ## Creating a Table
 
@@ -25,9 +25,9 @@ type Person = {
   age: number
 }
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First name',
@@ -45,15 +45,15 @@ export class App {
   readonly data = signal<Person[]>([])
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
   }))
 }
 ```
 
-For feature-specific row models, register the feature and put the row model factory under `_rowModels`.
+For feature-specific row models, register the feature and put the row model factory under `rowModels`.
 
 ```ts
 import {
@@ -65,14 +65,14 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const tableOptions = {
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -94,7 +94,7 @@ import {
   type PaginationState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -105,8 +105,8 @@ export class App {
   })
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
     state: {
@@ -145,14 +145,14 @@ For `*flexRender`, `*flexRenderHeader`, `*flexRenderFooter`, `flexRenderComponen
 
 ## createTableHook
 
-`createTableHook` creates app-specific Angular table helpers. Use it when multiple tables should share `_features`, `_rowModels`, default options, column helpers, and component conventions.
+`createTableHook` creates app-specific Angular table helpers. Use it when multiple tables should share `features`, `rowModels`, default options, column helpers, and component conventions.
 
 ```ts
 import { createTableHook, tableFeatures } from '@tanstack/angular-table'
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({}),
-  _rowModels: {},
+  features: tableFeatures({}),
+  rowModels: {},
 })
 
 const columnHelper = createAppColumnHelper<Person>()

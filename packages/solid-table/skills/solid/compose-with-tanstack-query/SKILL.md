@@ -50,8 +50,8 @@ import {
 } from '@tanstack/solid-table'
 import { For } from 'solid-js'
 
-const _features = tableFeatures({ rowPaginationFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowPaginationFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First Name' }),
   columnHelper.accessor('lastName', { header: 'Last Name' }),
@@ -77,8 +77,8 @@ function App() {
 
   // 2. Hand server data + rowCount to the table via getters.
   const table = createTable({
-    _features,
-    _rowModels: {}, // no client-side paginatedRowModel; server already paged
+    features,
+    rowModels: {}, // no client-side paginatedRowModel; server already paged
     columns,
     get data() {
       return dataQuery.data?.rows ?? defaultRows
@@ -152,7 +152,7 @@ function App() {
 - **`placeholderData: keepPreviousData`** — without this, switching pages shows the loading state with zero rows, then "pops" to the next page. With it, the previous page stays visible until the new page resolves.
 - **`atoms.pagination`** — sharing the atom between the query (read) and the table (read+write) is what wires the two together. No event bus, no `useEffect`.
 - **`manualPagination: true`** — tells the table not to slice rows. The server already did.
-- **No `paginatedRowModel`** — no factory needed for the manual slice. `_rowModels: {}` is correct.
+- **No `paginatedRowModel`** — no factory needed for the manual slice. `rowModels: {}` is correct.
 - **`rowCount`** — necessary so `table.getPageCount()`, `getCanNextPage()`, and `lastPage()` know the true total. Without it the table only sees one page of rows.
 
 ## Adding sorting and filtering
@@ -187,12 +187,12 @@ const dataQuery = useQuery(() => ({
 }))
 
 const table = createTable({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowPaginationFeature,
     rowSortingFeature,
     columnFilteringFeature,
   }),
-  _rowModels: {},
+  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? defaultRows

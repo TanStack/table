@@ -21,11 +21,11 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 
 // Define table features
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
 })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Zod validation schema for a person
 const personSchema = z.object({
@@ -61,9 +61,9 @@ const columns = columnHelper.columns([
 export class App {
   // Create table using form state as data source.
   readonly data = signal(makeData(100))
-  readonly table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },

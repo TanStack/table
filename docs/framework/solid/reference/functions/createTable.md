@@ -51,8 +51,8 @@ update without invalidating unrelated UI.
 ```tsx
 const table = createTable(
   {
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
   },

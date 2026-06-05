@@ -67,7 +67,7 @@ type Person = {
   status: 'single' | 'complicated' | 'relationship'
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
   globalFilteringFeature,
@@ -78,14 +78,14 @@ const _features = tableFeatures({
 // Module augmentation registers custom fn names so columnDef.filterFn typechecks.
 declare module '@tanstack/table-core' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
+    fuzzy: FilterFn<typeof features, Person>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -96,7 +96,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   return itemRank.passed
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -110,8 +110,8 @@ const columns = columnHelper.columns([
 ])
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel({
       ...filterFns, // keep built-ins
       fuzzy: fuzzyFilter, // add custom
@@ -147,7 +147,7 @@ Layered direction controls:
 ### Filter → sort handoff via `addMeta`
 
 ```ts
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -159,7 +159,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
 }
 
 // Custom sortFn reads the meta the filter stashed
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -183,7 +183,7 @@ import type { AggregationFn } from '@tanstack/table-core'
 // Signature: (columnId, leafRows, childRows) → aggregated value
 // leafRows = all descendant non-grouped rows
 // childRows = immediate children (may be sub-aggregates at deeper levels)
-const weightedMean: AggregationFn<typeof _features, Person> = (
+const weightedMean: AggregationFn<typeof features, Person> = (
   columnId,
   leafRows,
 ) => {
@@ -199,8 +199,8 @@ const weightedMean: AggregationFn<typeof _features, Person> = (
 }
 
 const table = constructTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     groupedRowModel: createGroupedRowModel({ ...aggregationFns, weightedMean }),
     expandedRowModel: createExpandedRowModel(),
   },
@@ -223,9 +223,9 @@ Wrong:
 ```ts
 // "fuzzy" string never registered
 const table = useTable({
-  _features,
+  features,
   columns: [columnHelper.accessor('fullName', { filterFn: 'fuzzy' })],
-  _rowModels: {
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns), // ❌ no fuzzy
   },
   data,
@@ -237,11 +237,11 @@ Correct:
 ```ts
 declare module '@tanstack/react-table' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
+    fuzzy: FilterFn<typeof features, Person>
   }
 }
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -253,9 +253,9 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
 }
 
 const table = useTable({
-  _features,
+  features,
   columns: [columnHelper.accessor('fullName', { filterFn: 'fuzzy' })],
-  _rowModels: {
+  rowModels: {
     filteredRowModel: createFilteredRowModel({
       ...filterFns,
       fuzzy: fuzzyFilter,
@@ -297,7 +297,7 @@ Wrong:
 
 ```ts
 // filter on 'fullName', sort reads meta from 'firstName'
-const fuzzySort: SortFn<typeof _features, Person> = (a, b, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (a, b, columnId) => {
   const meta = a.columnFiltersMeta['firstName'] // ❌ wrong key
   return meta
     ? compareItems(meta.itemRank, b.columnFiltersMeta['firstName'].itemRank)
@@ -309,7 +309,7 @@ columnHelper.accessor('fullName', { filterFn: 'fuzzy', sortFn: fuzzySort })
 Correct:
 
 ```ts
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -399,8 +399,8 @@ Correct:
 
 ```ts
 const table = useTable({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })

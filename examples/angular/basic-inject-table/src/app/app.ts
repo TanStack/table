@@ -53,11 +53,11 @@ const defaultData: Array<Person> = [
 
 // 3. New in V9! Tell the table which features and row models we want to use.
 // In this case, this will be a basic table with no additional features
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
 // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns.
 // Alternatively, check out the createTableHook/createColumnHelper util for an even more type-safe way to define columns.
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -105,12 +105,12 @@ export class App {
   readonly data = signal<Array<Person>>([...defaultData])
   readonly renderCount = signal(0)
 
-  // 6. Create the table instance with required _features, columns, and data
+  // 6. Create the table instance with required features, columns, and data
   readonly table = injectTable(() => ({
     key: 'basic-inject-table', // needed for devtools
     debugTable: true,
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data: this.data(),
   }))

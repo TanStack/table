@@ -7,7 +7,7 @@ import {
 } from '../../../../src'
 import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 
-const _features = {
+const features = {
   ...coreFeatures,
   columnSizingFeature,
   coreReativityFeature: storeReactivityBindings(),
@@ -25,8 +25,8 @@ function makeTable(opts: {
   columnSizing?: Record<string, number>
 }): any {
   return constructTable({
-    _features,
-    _rowModels: { coreRowModel: createCoreRowModel() },
+    features,
+    rowModels: { coreRowModel: createCoreRowModel() },
     columns: opts.columns,
     data,
     state: opts.columnSizing ? { columnSizing: opts.columnSizing } : undefined,

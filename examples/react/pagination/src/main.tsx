@@ -11,11 +11,11 @@ import {
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -81,8 +81,8 @@ function MyTable({
 }) {
   const table = useTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         paginatedRowModel: createPaginatedRowModel(),
       },
       columns,

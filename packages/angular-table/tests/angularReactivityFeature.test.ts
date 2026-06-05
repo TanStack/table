@@ -28,7 +28,7 @@ describe('angularReactivityFeature', () => {
     return TestBed.runInInjectionContext(() =>
       injectTable(() => ({
         data: _data(),
-        _features: { ...stockFeatures },
+        features: { ...stockFeatures },
         columns: columns,
         getRowId: (row) => row.id,
       })),
@@ -109,7 +109,7 @@ describe('angularReactivityFeature', () => {
       const table = TestBed.runInInjectionContext(() =>
         injectTable(() => ({
           data: data(),
-          _features: { ...stockFeatures },
+          features: { ...stockFeatures },
           columns: columns,
           getRowId: (row) => row.id,
           atoms: {
@@ -164,7 +164,7 @@ describe('angularReactivityFeature', () => {
       const table = TestBed.runInInjectionContext(() =>
         injectTable(() => ({
           data: data(),
-          _features: { ...stockFeatures },
+          features: { ...stockFeatures },
           columns: columns,
           getRowId: (row) => row.id,
           state: {
@@ -200,7 +200,7 @@ describe('angularReactivityFeature', () => {
       const table = TestBed.runInInjectionContext(() =>
         injectTable(() => ({
           data: data(),
-          _features: { ...stockFeatures },
+          features: { ...stockFeatures },
           columns: columns,
           getRowId: (row) => row.id,
           initialState: {
@@ -220,7 +220,7 @@ describe('angularReactivityFeature', () => {
       const table = TestBed.runInInjectionContext(() =>
         injectTable(() => ({
           data: data(),
-          _features: { ...stockFeatures },
+          features: { ...stockFeatures },
           columns: columns,
           getRowId: (row) => row.id,
           initialState: {
@@ -259,7 +259,7 @@ describe('angularReactivityFeature', () => {
       const table = TestBed.runInInjectionContext(() =>
         injectTable(() => ({
           data: data(),
-          _features: { ...stockFeatures },
+          features: { ...stockFeatures },
           columns: columns,
           getRowId: (row) => row.id,
           initialState: {
@@ -295,8 +295,8 @@ describe('angularReactivityFeature', () => {
       const table = TestBed.runInInjectionContext(() =>
         injectTable(() => ({
           data: data(),
-          _features: stockFeatures,
-          _rowModels: {},
+          features: stockFeatures,
+          rowModels: {},
           columns: columns,
           getRowId: (row) => row.id,
           initialState: {

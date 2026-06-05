@@ -239,8 +239,8 @@ const columns: ColumnDef<Person>[] = [
 })
 export class TableHeadSelectionComponent<T> {
   readonly table = input.required<Table<T>>();
-  // column = input.required<Column<typeof _features, T, unknown>>()
-  // header = input.required<Header<typeof _features, T, unknown>>()
+  // column = input.required<Column<typeof features, T, unknown>>()
+  // header = input.required<Header<typeof features, T, unknown>>()
 }
 ```
 

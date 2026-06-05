@@ -18,7 +18,7 @@ import { makeData } from './makeData'
 import type { Column, ColumnDef, Row, Table } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
@@ -26,8 +26,8 @@ const _features = tableFeatures({
 })
 
 function renderFilter(
-  column: Column<typeof _features, Person>,
-  table: Table<typeof _features, Person>,
+  column: Column<typeof features, Person>,
+  table: Table<typeof features, Person>,
 ) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -81,8 +81,8 @@ function renderFilter(
 }
 
 function renderPinnedRow(
-  row: Row<typeof _features, Person>,
-  table: Table<typeof _features, Person>,
+  row: Row<typeof features, Person>,
+  table: Table<typeof features, Person>,
 ) {
   const isPinnedTop = row.getIsPinned() === 'top'
   const topOffset = isPinnedTop
@@ -105,7 +105,7 @@ function renderPinnedRow(
   `
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'pin',
     header: () => 'Pin',
@@ -171,13 +171,13 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000, 2, 2)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           filteredRowModel: createFilteredRowModel(filterFns),
           expandedRowModel: createExpandedRowModel(),
           paginatedRowModel: createPaginatedRowModel(),

@@ -43,7 +43,7 @@ import type {
 // This is needed to break the circular inference chain caused by the component
 // files (table-components, cell-components, header-components) importing context
 // functions from this file, while this file imports from those component files.
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowPaginationFeature,
@@ -51,8 +51,8 @@ const _features = tableFeatures({
 })
 
 const _hook = createTableHook({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     filteredRowModel: createFilteredRowModel(filterFns),
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
@@ -87,18 +87,18 @@ export const useAppTable = _hook.useAppTable
 // TypeScript cannot infer the types of these when the component files that
 // import them are also imported by this module (circular dependency).
 export const useTableContext: <TData extends RowData = RowData>() => VueTable<
-  typeof _features,
+  typeof features,
   TData
 > = _hook.useTableContext
 
 export const useCellContext: <TValue extends CellData = CellData>() => Cell<
-  typeof _features,
+  typeof features,
   any,
   TValue
 > = _hook.useCellContext
 
 export const useHeaderContext: <TValue extends CellData = CellData>() => Header<
-  typeof _features,
+  typeof features,
   any,
   TValue
 > = _hook.useHeaderContext

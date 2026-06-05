@@ -38,17 +38,17 @@ The Solid adapter provides `solidReactivity(owner)` to the table's `coreReativit
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(sortFns),
   },
@@ -64,7 +64,7 @@ table.atoms.sorting.get()
 // table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state()`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state()`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -100,8 +100,8 @@ The second argument to `createTable` is a TanStack Store selector. The selected 
 ```tsx
 const table = createTable(
   {
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       paginatedRowModel: createPaginatedRowModel(),
     },
     columns,
@@ -192,8 +192,8 @@ If you only need to customize the starting value for some table state, use `init
 
 ```tsx
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -247,7 +247,7 @@ import {
   type PaginationState,
 } from '@tanstack/solid-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -264,8 +264,8 @@ const dataQuery = useQuery(() => ({
 }))
 
 const table = createTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? []
@@ -294,8 +294,8 @@ const [pagination, setPagination] = createSignal<PaginationState>({
 })
 
 const table = createTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -357,8 +357,8 @@ const [sorting, setSorting] = createSignal<SortingState>([
 ])
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```tsx
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

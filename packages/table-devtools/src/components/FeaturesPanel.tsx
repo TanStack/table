@@ -156,7 +156,7 @@ export function FeaturesPanel() {
     if (!tableInstance) return new Set()
 
     tableState()
-    return new Set(Object.keys(tableInstance._features ?? {}))
+    return new Set(Object.keys(tableInstance._features))
   })
 
   const rowModelNames = createMemo((): Array<string> => {
@@ -166,7 +166,7 @@ export function FeaturesPanel() {
     tableState()
     tableOptions()
 
-    return Object.keys(tableInstance.options._rowModels ?? {})
+    return Object.keys(tableInstance.options.rowModels ?? {})
   })
 
   const getFnNames = (

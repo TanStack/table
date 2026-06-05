@@ -113,12 +113,12 @@ Each cell type is a small Svelte component that knows which row + field it edits
   import SelectFieldCell from './SelectFieldCell.svelte'
   import { makeData, type Person } from './makeData'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
     columnFilteringFeature,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const personSchema = z.object({
     firstName: z.string().min(1),
@@ -169,8 +169,8 @@ Each cell type is a small Svelte component that knows which row + field it edits
   ])
 
   const table = createTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },

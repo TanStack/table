@@ -60,8 +60,8 @@ type Person = {
 }
 type FormRow = Omit<Person, 'subRows'> // <-- avoid TS2589 in form DeepKeys
 
-const _features = tableFeatures({ rowPaginationFeature })
-const columnHelper = createColumnHelper<typeof _features, FormRow>()
+const features = tableFeatures({ rowPaginationFeature })
+const columnHelper = createColumnHelper<typeof features, FormRow>()
 
 // 2) Form owns the data array. The table reads it.
 const form = useForm({
@@ -98,8 +98,8 @@ const columns = computed(() =>
 )
 
 const table = useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   get columns() {
     return columns.value
   },
@@ -190,8 +190,8 @@ to Vue's `<form.Field>` slot API.
 const form = useForm({ defaultValues: { data: makeData(100) } })
 
 const table = useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   get data() {
     return form.state.values.data
@@ -323,8 +323,8 @@ const columns = computed(() =>
   ]),
 )
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   get columns() {
     return columns.value
   },
@@ -344,7 +344,7 @@ composition. You get validation, dirty tracking, submit, and reset for free.
 `createFormHook` is React-form's factory for pre-bound field components. Vue-form does not
 ship it. Use `useForm` + `<form.Field>` slots directly.
 
-### "API missing" because feature not in `_features` (CRITICAL — v9-specific)
+### "API missing" because feature not in `features` (CRITICAL — v9-specific)
 
 The table still needs `tableFeatures({ rowPaginationFeature, … })` for whatever features
 your editable table uses. The form composition doesn't replace that requirement.

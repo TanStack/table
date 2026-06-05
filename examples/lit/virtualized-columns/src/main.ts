@@ -17,7 +17,7 @@ import { VirtualizerController } from '@tanstack/lit-virtual'
 import { Person, makeColumns, makeData } from './makeData.ts'
 import type { ColumnDef } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
@@ -29,11 +29,11 @@ const STRESS_ROW_COUNT = 10_000
 const STRESS_COLUMN_COUNT = 10_000
 
 const createColumns = (columnCount: number) =>
-  makeColumns(columnCount) as Array<ColumnDef<typeof _features, Person>>
+  makeColumns(columnCount) as Array<ColumnDef<typeof features, Person>>
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   private tableContainerRef: Ref = createRef()
 
@@ -96,8 +96,8 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           sortedRowModel: createSortedRowModel(sortFns),
         },
         columns: this._columns,

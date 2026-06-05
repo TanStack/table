@@ -10,8 +10,8 @@ function projectOptionsForTree(full: unknown) {
   const {
     state: _s,
     data: _d,
-    _features: _f,
-    _rowModels: _r,
+    features: _f,
+    rowModels: _r,
     ...options
   } = full as Record<string, unknown>
   return options

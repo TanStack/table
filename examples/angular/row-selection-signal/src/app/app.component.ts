@@ -28,7 +28,7 @@ import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
 import type { TemplateRef } from '@angular/core'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   columnVisibilityFeature,
   rowPaginationFeature,
@@ -55,7 +55,7 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<typeof _features, Person>> = [
+  readonly columns: Array<ColumnDef<typeof features, Person>> = [
     {
       id: 'select',
       header: () => TableHeadSelectionComponent<Person>,
@@ -114,10 +114,10 @@ export class AppComponent {
   ]
 
   // TODO make this generic infer without passing in manually
-  table = injectTable<typeof _features, Person>(() => ({
+  table = injectTable<typeof features, Person>(() => ({
     key: 'row-selection-signal', // needed for devtools
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },

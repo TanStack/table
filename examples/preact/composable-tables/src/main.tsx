@@ -73,7 +73,7 @@ function UsersTable() {
     [],
   )
 
-  // Create the table - _features and _rowModels are already configured!
+  // Create the table - features and rowModels are already configured!
   const table = useAppTable(
     {
       key: 'users-table', // needed for devtools

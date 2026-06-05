@@ -22,7 +22,7 @@ import type {
 import type { Person } from './makeData'
 import './index.css'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
@@ -35,9 +35,9 @@ function App() {
   const stressTest = () => setData(makeData(200_000))
   const [enableRowSelection, setEnableRowSelection] = createSignal(true)
 
-  const tableRef: { current?: SolidTable<typeof _features, Person> } = {}
+  const tableRef: { current?: SolidTable<typeof features, Person> } = {}
 
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       id: 'select',
       header: () => (
@@ -113,8 +113,8 @@ function App() {
 
   const table = createTable({
     key: 'row-selection', // needed for devtools
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       filteredRowModel: createFilteredRowModel(filterFns),
       paginatedRowModel: createPaginatedRowModel(),
     },
@@ -300,8 +300,8 @@ function App() {
 }
 
 function Filter(props: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = props.table
     .getPreFilteredRowModel()

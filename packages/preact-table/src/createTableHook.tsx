@@ -521,12 +521,12 @@ export type AppPreactTable<
  *   useCellContext,
  *   useHeaderContext,
  * } = createTableHook({
- *   _features: tableFeatures({
+ *   features: tableFeatures({
  *     rowPaginationFeature,
  *     rowSortingFeature,
  *     columnFilteringFeature,
  *   }),
- *   _rowModels: {
+ *   rowModels: {
  *     paginatedRowModel: createPaginatedRowModel(),
  *     sortedRowModel: createSortedRowModel(sortFns),
  *     filteredRowModel: createFilteredRowModel(filterFns),
@@ -802,7 +802,7 @@ export function createTableHook<
   >(
     tableOptions: Omit<
       TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels'
+      'features' | 'rowModels'
     >,
     selector?: (state: TableState<TFeatures>) => TSelected,
   ): AppPreactTable<
@@ -1113,7 +1113,7 @@ export function createTableHook<
   }
 
   return {
-    appFeatures: defaultTableOptions._features as TFeatures,
+    appFeatures: defaultTableOptions.features as TFeatures,
     createAppColumnHelper,
     useAppTable,
     useTableContext,

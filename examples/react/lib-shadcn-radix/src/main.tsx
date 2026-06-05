@@ -48,13 +48,13 @@ import './index.css'
 // 3. New in V9! Tell the table which features and row models we want to use.
 // Adding sorting, pagination, and global filtering opts the table into those
 // feature sets.
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 // 4. Define the columns for your table.
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -88,14 +88,14 @@ function App() {
   const refreshData = () => setData(makeData(200))
   const stressTest = () => setData(makeData(10_000))
 
-  // 6. Create the table instance with required _features, columns, and data.
+  // 6. Create the table instance with required features, columns, and data.
   // No `state` / `onSortingChange` / `onPaginationChange` props needed.
   // V9 manages sorting, pagination, and globalFilter state internally.
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
         paginatedRowModel: createPaginatedRowModel(),
         filteredRowModel: createFilteredRowModel(filterFns),

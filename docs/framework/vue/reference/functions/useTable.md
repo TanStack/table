@@ -51,8 +51,8 @@ exposes the selected value on `table.state`.
 ```ts
 const table = useTable(
   {
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     columns,
     data,
   },

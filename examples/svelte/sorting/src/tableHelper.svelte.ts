@@ -1,5 +1,5 @@
 import { rowSortingFeature, tableFeatures } from '@tanstack/svelte-table'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   rowSortingFeature,
 })

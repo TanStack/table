@@ -28,12 +28,12 @@ type Person = {
   progress: number
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -82,8 +82,8 @@ function App() {
     {
       key: 'basic-external-state', // needed for devtools
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
         paginatedRowModel: createPaginatedRowModel(),
       },

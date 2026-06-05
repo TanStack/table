@@ -9,7 +9,7 @@ The full MRT source lives under `src/material-react-table/` — it is a 1:1 mirr
 The upstream package targets TanStack Table v8 + MUI v6. This example has been migrated:
 
 - **`useReactTable` → `useTable`** (TanStack Table v9 hook).
-- **Row models**: `getCoreRowModel`/`getSortedRowModel`/etc. options replaced with `_features: stockFeatures` and `_rowModels: { sortedRowModel: createSortedRowModel(sortFns), … }`.
+- **Row models**: `getCoreRowModel`/`getSortedRowModel`/etc. options replaced with `features: stockFeatures` and `rowModels: { sortedRowModel: createSortedRowModel(sortFns), … }`.
 - **`createRow` → `constructRow`** (renamed v9 export).
 - **`sortingFn` → `sortFn`** on column defs and the `MRT_SortFn` type.
 - **`columnSizingInfo` state → `columnResizing`** (and `setColumnSizingInfo` → `setColumnResizing`).

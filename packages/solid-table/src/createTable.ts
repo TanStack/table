@@ -102,8 +102,8 @@ export type SolidTable<
  * ```tsx
  * const table = createTable(
  *   {
- *     _features,
- *     _rowModels: {},
+ *     features,
+ *     rowModels: {},
  *     columns,
  *     data,
  *   },
@@ -125,9 +125,9 @@ export function createTable<
   const reactivity = solidReactivity(owner)
 
   const mergedOptions = mergeProps(tableOptions, {
-    _features: {
+    features: {
       coreReativityFeature: reactivity,
-      ...tableOptions._features,
+      ...tableOptions.features,
     },
   }) as any
 

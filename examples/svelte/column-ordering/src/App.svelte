@@ -16,12 +16,12 @@
   import './index.css'
   import { makeData, type Person } from './makeData'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnOrderingFeature,
     columnVisibilityFeature,
   })
 
-  const columns: ColumnDef<typeof _features, Person>[] = [
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -88,8 +88,8 @@
   }
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
+    rowModels: {},
     get data() {
       return data
     },

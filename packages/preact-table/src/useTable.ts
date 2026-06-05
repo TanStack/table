@@ -99,8 +99,8 @@ export type PreactTable<
  * ```tsx
  * const table = useTable(
  *   {
- *     _features,
- *     _rowModels: {},
+ *     features,
+ *     rowModels: {},
  *     columns,
  *     data,
  *   },
@@ -121,9 +121,9 @@ export function useTable<
   const [table] = useState(() => {
     const tableInstance = constructTable({
       ...tableOptions,
-      _features: {
+      features: {
         coreReativityFeature: preactReactivity(),
-        ...tableOptions._features,
+        ...tableOptions.features,
       },
     }) as unknown as PreactTable<TFeatures, TData, TSelected>
 

@@ -15,7 +15,7 @@ import { makeColumns, makeData } from './makeData'
 import type { ComponentPublicInstance } from 'vue'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
@@ -46,8 +46,8 @@ function stressTestColumns() {
 }
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
   },
   get columns() {

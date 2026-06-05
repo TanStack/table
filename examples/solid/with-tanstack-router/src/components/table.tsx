@@ -17,7 +17,7 @@ import type {
 } from '@tanstack/solid-table'
 import type { Filters } from '../api/types'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -29,7 +29,7 @@ export const DEFAULT_PAGE_SIZE = 10
 
 type Props<TData extends Record<string, string | number>> = {
   data: Array<TData>
-  columns: Array<ColumnDef<typeof _features, TData>>
+  columns: Array<ColumnDef<typeof features, TData>>
   pagination: PaginationState
   paginationOptions: Pick<
     TableOptions_RowPagination,
@@ -47,8 +47,8 @@ export default function Table<T extends Record<string, string | number>>(
   const table = createTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {},
+      features,
+      rowModels: {},
       get columns() {
         return props.columns
       },

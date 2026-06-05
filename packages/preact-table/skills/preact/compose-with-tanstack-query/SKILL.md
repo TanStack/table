@@ -55,8 +55,8 @@ import { fetchData } from './fetchData'
 import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
-const _features = tableFeatures({ rowPaginationFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowPaginationFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -84,8 +84,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {}, // server owns slicing
+      features,
+      rowModels: {}, // server owns slicing
       columns,
       data: dataQuery.data?.rows ?? defaultData,
       rowCount: dataQuery.data?.rowCount,
@@ -142,7 +142,7 @@ Source: `examples/preact/with-tanstack-query/src/fetchData.ts`.
 Add more external atoms; include them in the `queryKey`; set the matching `manual*` flag. The server's fetcher accepts whatever shape you forward.
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   columnFilteringFeature,
@@ -170,8 +170,8 @@ const dataQuery = useQuery({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data: dataQuery.data?.rows ?? defaultData,
   rowCount: dataQuery.data?.rowCount,
@@ -254,14 +254,14 @@ useTable({ /* … */, data: dataQuery.data?.rows ?? defaultData })
 
 A new empty array each render busts row-model memos.
 
-### HIGH Keeping the client-side `_rowModels` when manual
+### HIGH Keeping the client-side `rowModels` when manual
 
 Wrong:
 
 ```tsx
 useTable({
-  _features,
-  _rowModels: { paginatedRowModel: createPaginatedRowModel() }, // wasted work
+  features,
+  rowModels: { paginatedRowModel: createPaginatedRowModel() }, // wasted work
   /* … */,
   manualPagination: true,
 })

@@ -16,7 +16,7 @@ import type { ColumnDef } from '@tanstack/vue-table'
 import type { ComponentPublicInstance } from 'vue'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
 })
@@ -61,7 +61,7 @@ function handleDebounceSearch(ev: Event) {
   }, 300)
 }
 
-const columns = computed<Array<ColumnDef<typeof _features, Person>>>(() => [
+const columns = computed<Array<ColumnDef<typeof features, Person>>>(() => [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -100,8 +100,8 @@ const columns = computed<Array<ColumnDef<typeof _features, Person>>>(() => [
 ])
 
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
   },
   get data() {

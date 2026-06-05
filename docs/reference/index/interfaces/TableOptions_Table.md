@@ -23,10 +23,10 @@ Defined in: [core/table/coreTablesFeature.types.ts:64](https://github.com/TanSta
 
 ## Properties
 
-### \_features
+### \features
 
 ```ts
-readonly _features: TFeatures;
+readonly features: TFeatures;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L74)
@@ -38,10 +38,10 @@ APIs are available.
 
 ***
 
-### \_rowModels?
+### \rowModels?
 
 ```ts
-readonly optional _rowModels: CreateRowModels_All<TFeatures, TData>;
+readonly optional rowModels: CreateRowModels_All<TFeatures, TData>;
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L79)

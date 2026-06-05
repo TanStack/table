@@ -45,7 +45,7 @@ storms.
   import { createDebouncer } from '@tanstack/svelte-pacer/debouncer'
   import type { Column } from '@tanstack/svelte-table'
 
-  type Props = { column: Column<typeof _features, Person> }
+  type Props = { column: Column<typeof features, Person> }
   let { column }: Props = $props()
 
   let localValue = $state((column.getFilterValue() as string) ?? '')

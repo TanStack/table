@@ -14,7 +14,7 @@ import type {
   Table_Internal,
 } from '../../../src'
 
-const _features = {
+const features = {
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -22,16 +22,16 @@ const _features = {
 
 function makeTable(options: any = {}) {
   return constructTable({
-    _features: {
+    features: {
       ...coreFeatures,
-      ..._features,
+      ...features,
       coreReativityFeature: storeReactivityBindings(),
     },
-    _rowModels: {},
+    rowModels: {},
     columns: [],
     data: [],
     ...options,
-  }) as unknown as Table_Internal<typeof _features, any>
+  }) as unknown as Table_Internal<typeof features, any>
 }
 
 describe('three-layer atom architecture', () => {

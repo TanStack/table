@@ -155,7 +155,7 @@ returning component classes with `input()` slots).
 The 90% case — return a value, render it.
 
 ```ts
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First name',
@@ -189,7 +189,7 @@ export class SelectAllComponent<T> {
   readonly table = input.required<Table<any, T>>()
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'select',
     header: () => SelectAllComponent,
@@ -297,8 +297,8 @@ column defs short and typed.
 
 ```ts
 export const { injectAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: {
+  features: tableFeatures({ rowSortingFeature }),
+  rowModels: {
     /* … */
   },
   tableComponents: { PaginationControls, RowCount },

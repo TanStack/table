@@ -20,16 +20,16 @@
   import { makeData, type Person } from './makeData'
   import type { Column, FilterFn, SortFn } from '@tanstack/svelte-table'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnFilteringFeature,
     globalFilteringFeature,
     rowSortingFeature,
     rowPaginationFeature,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
-  const fuzzyFilter: FilterFn<typeof _features, Person> = (
+  const fuzzyFilter: FilterFn<typeof features, Person> = (
     row,
     columnId,
     value,
@@ -40,7 +40,7 @@
     return itemRank.passed
   }
 
-  const fuzzySort: SortFn<typeof _features, Person> = (
+  const fuzzySort: SortFn<typeof features, Person> = (
     rowA,
     rowB,
     columnId,
@@ -85,8 +85,8 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         filteredRowModel: createFilteredRowModel({
           ...filterFns,
           fuzzy: fuzzyFilter,

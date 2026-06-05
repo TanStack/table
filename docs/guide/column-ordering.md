@@ -63,8 +63,8 @@ If all you need to do is specify the initial column order, you can just specify 
 
 ```jsx
 const table = useTable({
-  _features: tableFeatures({ columnOrderingFeature }),
-  _rowModels: {},
+  features: tableFeatures({ columnOrderingFeature }),
+  rowModels: {},
   //...
   initialState: {
     columnOrder: ['columnId1', 'columnId2', 'columnId3'],
@@ -83,8 +83,8 @@ If you need to dynamically change the column order, or set the column order afte
 const [columnOrder, setColumnOrder] = useState<string[]>(['columnId1', 'columnId2', 'columnId3'])
 //...
 const table = useTable({
-  _features: tableFeatures({ columnOrderingFeature }),
-  _rowModels: {},
+  features: tableFeatures({ columnOrderingFeature }),
+  rowModels: {},
   //...
   state: {
     columnOrder,

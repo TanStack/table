@@ -29,13 +29,13 @@ import type { SortingState } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   globalFilteringFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 function toSortDescriptor(sorting: SortingState): SortDescriptor | undefined {
   const sort = sorting[0]
   if (!sort) return undefined
@@ -113,8 +113,8 @@ function App() {
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
+      features,
+      rowModels: {
         sortedRowModel: createSortedRowModel(sortFns),
         paginatedRowModel: createPaginatedRowModel(),
         filteredRowModel: createFilteredRowModel(filterFns),

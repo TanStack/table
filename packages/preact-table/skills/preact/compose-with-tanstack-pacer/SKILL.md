@@ -172,7 +172,7 @@ Correct: debounce the **write** (`column.setFilterValue`) — that's what trigge
 
 Wrong: debouncing every `useTable` call.
 
-Correct: pacer doesn't fix unstable `_features` / `columns` / `data` references. Stabilize those first; reach for pacer for input/scroll/resize hotspots.
+Correct: pacer doesn't fix unstable `features` / `columns` / `data` references. Stabilize those first; reach for pacer for input/scroll/resize hotspots.
 Source: `docs/framework/preact/guide/table-state.md` (FAQ #1).
 
 ### MEDIUM Forgetting that debounce delays the trailing edge

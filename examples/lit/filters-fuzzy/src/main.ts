@@ -22,16 +22,16 @@ import type { Column, FilterFn, SortFn } from '@tanstack/lit-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, Person> = (
   row,
   columnId,
   value,
@@ -42,7 +42,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -55,7 +55,7 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
 
 declare module '@tanstack/lit-table' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
+    fuzzy: FilterFn<typeof features, Person>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
@@ -129,7 +129,7 @@ class DebouncedInput extends LitElement {
 @customElement('column-filter')
 class ColumnFilterEl extends LitElement {
   @property({ attribute: false })
-  column!: Column<typeof _features, Person>
+  column!: Column<typeof features, Person>
 
   render() {
     const columnFilterValue = this.column.getFilterValue()
@@ -151,13 +151,13 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(5_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           filteredRowModel: createFilteredRowModel({
             ...filterFns,
             fuzzy: fuzzyFilter,

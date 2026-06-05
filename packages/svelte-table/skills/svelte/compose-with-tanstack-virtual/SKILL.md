@@ -59,13 +59,13 @@ pnpm add @tanstack/svelte-virtual
   import { createVirtualizer } from '@tanstack/svelte-virtual'
   import { get } from 'svelte/store'
 
-  const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+  const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
 
   let data = $state<Person[]>(makeData(200_000))
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     get data() {
       return data
@@ -217,8 +217,8 @@ const flatData = $derived(
 )
 
 const table = createTable({
-  _features: tableFeatures({}),
-  _rowModels: {},
+  features: tableFeatures({}),
+  rowModels: {},
   columns,
   get data() {
     return flatData

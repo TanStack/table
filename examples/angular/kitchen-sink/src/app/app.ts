@@ -44,7 +44,7 @@ import type {
   TableFeatures,
 } from '@tanstack/angular-table'
 
-export const _features = stockFeatures
+export const features = stockFeatures
 
 declare module '@tanstack/angular-table' {
   interface ColumnMeta<
@@ -180,8 +180,8 @@ export class App {
   readonly data = signal(makeData(1_000))
 
   readonly table = injectTable<typeof stockFeatures, Person>(() => ({
-    _features: stockFeatures,
-    _rowModels: {
+    features: stockFeatures,
+    rowModels: {
       expandedRowModel: createExpandedRowModel(),
       filteredRowModel: createFilteredRowModel({
         ...filterFns,

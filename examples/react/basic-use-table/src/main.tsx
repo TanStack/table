@@ -58,10 +58,10 @@ const defaultData: Array<Person> = [
 ]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
+const features = tableFeatures({}) // util method to create sharable TFeatures object/type
 
 // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns. Alternatively, check out the createTableHelper/createColumnHelper util for an even more type-safe way to define columns.
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
     header: 'First Name',
@@ -100,13 +100,13 @@ function App() {
   const [data, _setData] = React.useState(() => [...defaultData])
   const rerender = React.useReducer(() => ({}), {})[1]
 
-  // 6. Create the table instance with required _features, columns, and data
+  // 6. Create the table instance with required features, columns, and data
   const table = useTable(
     {
       key: 'basic-use-table', // needed for devtools, omit if you don't want to use the devtools
       debugTable: true, // optionally, enable console logging debug messages
-      _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-      _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
+      features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
+      rowModels: {}, // `Core` row model is now included by default, but you can still override it here
       columns,
       data,
       // add additional table options here

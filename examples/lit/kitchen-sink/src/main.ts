@@ -169,8 +169,8 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features: stockFeatures,
-        _rowModels: {
+        features: stockFeatures,
+        rowModels: {
           expandedRowModel: createExpandedRowModel(),
           filteredRowModel: createFilteredRowModel({
             ...filterFns,

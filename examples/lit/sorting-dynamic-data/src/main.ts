@@ -14,11 +14,11 @@ import {
 import { Person, makeData } from './makeData'
 import type { SortFn } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
 })
 
-const sortStatusFn: SortFn<typeof _features, Person> = (
+const sortStatusFn: SortFn<typeof features, Person> = (
   rowA,
   rowB,
   _columnId,
@@ -29,7 +29,7 @@ const sortStatusFn: SortFn<typeof _features, Person> = (
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -85,7 +85,7 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = new Array<Person>()
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   constructor() {
     super()
@@ -111,8 +111,8 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           sortedRowModel: createSortedRowModel(sortFns),
         },
         columns,

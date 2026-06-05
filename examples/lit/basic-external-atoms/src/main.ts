@@ -22,12 +22,12 @@ import type { Person } from './makeData'
 // reactive cell — you can read, write, or subscribe to it from anywhere,
 // which makes it convenient for sharing state across components or modules.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -66,7 +66,7 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     // The table creates internal base atoms for every slice, and (because we
@@ -76,8 +76,8 @@ class LitTableExample extends LitElement {
     // flowing through the derived store triggers `host.requestUpdate()`.
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           sortedRowModel: createSortedRowModel(sortFns),
           paginatedRowModel: createPaginatedRowModel(),
         },

@@ -20,7 +20,7 @@ read signals, and access DI tokens from within `cell: () => …`.
 The most common cell — read the value and return it.
 
 ```ts
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First name',
@@ -128,7 +128,7 @@ export class SelectAllComponent<T> {
   readonly table = input.required<Table<any, T>>()
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'select',
     header: () => SelectAllComponent,

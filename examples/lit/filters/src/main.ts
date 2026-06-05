@@ -21,12 +21,12 @@ import type {
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -87,7 +87,7 @@ declare module '@tanstack/lit-table' {
 @customElement('column-filter')
 class ColumnFilter extends LitElement {
   @property()
-  private column!: Column<typeof _features, Person>
+  private column!: Column<typeof features, Person>
 
   private onChange(evt: InputEvent) {
     this.column.setFilterValue((evt.target as HTMLInputElement).value)
@@ -149,13 +149,13 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(50_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
+        features,
+        rowModels: {
           filteredRowModel: createFilteredRowModel(filterFns),
           paginatedRowModel: createPaginatedRowModel(),
         },

@@ -15,7 +15,7 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnSizingFeature,
     columnVisibilityFeature,
     rowSortingFeature,
@@ -45,8 +45,8 @@
   }
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
+    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     get columns() {
       return columns
     },

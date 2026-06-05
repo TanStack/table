@@ -52,7 +52,7 @@ import {
   type SortingState,
 } from '@tanstack/preact-table'
 
-const _features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
+const features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
 
 function PeopleTable({ data }) {
   // Stable atoms owned by this component.
@@ -67,8 +67,8 @@ function PeopleTable({ data }) {
   const pagination = useSelector(paginationAtom)
 
   const table = useTable({
-    _features,
-    _rowModels: {
+    features,
+    rowModels: {
       /* … */
     },
     columns,
@@ -100,8 +100,8 @@ export const selectionAtom = createAtom<RowSelectionState>({})
 import { selectionAtom } from '../shared/atoms'
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   atoms: { rowSelection: selectionAtom },

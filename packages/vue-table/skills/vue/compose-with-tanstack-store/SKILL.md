@@ -57,8 +57,8 @@ import {
 
 type Person = { firstName: string; lastName: string; age: number }
 
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
   columnHelper.accessor('age', { header: 'Age' }),
@@ -81,8 +81,8 @@ const data = ref<Person[]>([])
 // 3) Pass via `options.atoms`. NO `onSortingChange` / `onPaginationChange` needed —
 //    `table.setSorting()` writes through to your atom.
 const table = useTable({
-  _features,
-  _rowModels: {
+  features,
+  rowModels: {
     sortedRowModel: createSortedRowModel(sortFns),
     paginatedRowModel: createPaginatedRowModel(),
   },
@@ -125,7 +125,7 @@ const table = useTable(opts, (s) => ({ sorting: s.sorting }))
 table.state.sorting
 ```
 
-`table.atoms.<slice>` only contains slices for features registered in `_features`. If
+`table.atoms.<slice>` only contains slices for features registered in `features`. If
 `rowSortingFeature` is not registered, `table.atoms.sorting` is `undefined`.
 
 ### 2. Atom precedence rules
@@ -140,8 +140,8 @@ options.atoms[slice]    >  options.state[slice]  >  table.baseAtoms[slice]
 ```ts
 // ❌ Passing both for the SAME slice. `atoms.sorting` wins; `state.sorting` is silently dead.
 useTable({
-  _features,
-  _rowModels: {},
+  features,
+  rowModels: {},
   columns,
   data,
   state: {
@@ -288,7 +288,7 @@ const sorting = computed(() => sortingAtom.get())
 `useVueTable`, `table.getState()` — both v8. v9 uses `useTable` and `table.state` /
 `table.state` / `table.atoms.<slice>.get()`. See `tanstack-table/vue/migrate-v8-to-v9`.
 
-### "API missing" because feature not in `_features` (CRITICAL — v9-specific)
+### "API missing" because feature not in `features` (CRITICAL — v9-specific)
 
 `table.atoms.sorting` is `undefined` unless `rowSortingFeature` is registered. The fix isn't to
 fall back to `state` — it's to add the feature to `tableFeatures({...})`.
