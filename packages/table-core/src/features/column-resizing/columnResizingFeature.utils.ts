@@ -163,9 +163,8 @@ export function header_getResizeHandler<
           const minSize = constraints?.minSize ?? 0
           const maxSize = constraints?.maxSize ?? Number.MAX_SAFE_INTEGER
           newColumnSizing[columnId] =
-            Math.round(
-              Math.min(maxSize, Math.max(minSize, rawSize)) * 100,
-            ) / 100
+            Math.round(Math.min(maxSize, Math.max(minSize, rawSize)) * 100) /
+            100
         })
 
         return {
