@@ -13,7 +13,7 @@ import { useTableContext } from '../hooks/table'
 export function PaginationControls() {
   const table = useTableContext()
 
-  const pagination = createMemo(() => table.state().pagination)
+  const pagination = createMemo(() => table.store.get().pagination)
 
   return (
     <div class="pagination">

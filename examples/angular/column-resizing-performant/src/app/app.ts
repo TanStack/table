@@ -112,7 +112,7 @@ export class App {
   })
 
   readonly stringifiedState = computed(() =>
-    JSON.stringify(this.table.state, null, 2),
+    JSON.stringify(this.table.store.get(), null, 2),
   )
 
   refreshData = () => this.data.set(makeData(200))

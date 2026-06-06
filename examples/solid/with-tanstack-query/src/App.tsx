@@ -179,7 +179,7 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {dataQuery.data?.rowCount.toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

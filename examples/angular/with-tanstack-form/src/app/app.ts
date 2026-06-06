@@ -75,7 +75,7 @@ export class App {
     z.array(personSchema).safeParse(this.data()),
   )
   stringifiedState() {
-    return JSON.stringify(this.table.state, null, 2)
+    return JSON.stringify(this.table.store.get(), null, 2)
   }
 
   update(rowIndex: number, key: keyof Person, event: Event) {

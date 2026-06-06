@@ -184,7 +184,7 @@ function handlePageSizeChange(e: any) {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+            {{ (table.store.get().pagination.pageIndex + 1).toLocaleString() }} of
             {{ table.getPageCount().toLocaleString() }}
           </strong>
         </span>
@@ -198,7 +198,7 @@ function handlePageSizeChange(e: any) {
           />
         </span>
         <select
-          :value="table.state.pagination.pageSize"
+          :value="table.store.get().pagination.pageSize"
           @change="handlePageSizeChange"
         >
           <option
@@ -211,7 +211,7 @@ function handlePageSizeChange(e: any) {
         </select>
       </div>
       <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.state.pagination, null, 2) }}</pre>
+      <pre>{{ JSON.stringify(table.store.get().pagination, null, 2) }}</pre>
     </div>
     <div class="spacer-sm" />
   </div>

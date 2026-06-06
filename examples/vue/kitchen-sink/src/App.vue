@@ -200,8 +200,8 @@ const table = useTable(
 useTanStackTableDevtools(table)
 
 const columnSizeVars = computed(() => {
-  void table.state.columnResizing
-  void table.state.columnSizing
+  void table.store.get().columnResizing
+  void table.store.get().columnSizing
   const colSizes: Record<string, number> = {}
   for (const header of table.getFlatHeaders()) {
     colSizes[`--header-${header.id}-size`] = header.getSize()
@@ -264,7 +264,7 @@ function cellStyle(cell: Cell<typeof stockFeatures, Person, unknown>) {
 }
 
 function cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
-  const groupingActive = table.state.grouping.length > 0
+  const groupingActive = table.store.get().grouping.length > 0
   const hasAggregation = !!cell.column.columnDef.aggregationFn
   return !groupingActive
     ? undefined
@@ -341,7 +341,7 @@ function shuffleColumns() {
         <input
           class="global-filter-input"
           placeholder="Fuzzy search all columns..."
-          :value="table.state.globalFilter ?? ''"
+          :value="table.store.get().globalFilter ?? ''"
           @input="
             (event) =>
               debounceSet('global', () =>
@@ -738,7 +738,7 @@ function shuffleColumns() {
       <span class="inline-controls">
         <div>Page</div>
         <strong>
-          {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+          {{ (table.store.get().pagination.pageIndex + 1).toLocaleString() }} of
           {{ table.getPageCount().toLocaleString() }}
         </strong>
       </span>
@@ -748,7 +748,7 @@ function shuffleColumns() {
           type="number"
           min="1"
           :max="table.getPageCount()"
-          :value="table.state.pagination.pageIndex + 1"
+          :value="table.store.get().pagination.pageIndex + 1"
           @input="
             table.setPageIndex(
               ($event.target as HTMLInputElement).value
@@ -760,7 +760,7 @@ function shuffleColumns() {
         />
       </span>
       <select
-        :value="table.state.pagination.pageSize"
+        :value="table.store.get().pagination.pageSize"
         @change="
           table.setPageSize(Number(($event.target as HTMLSelectElement).value))
         "
@@ -783,7 +783,7 @@ function shuffleColumns() {
     <div class="spacer-md" />
     <details>
       <summary>Table state (live)</summary>
-      <pre class="state-dump">{{ JSON.stringify(table.state, null, 2) }}</pre>
+      <pre class="state-dump">{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
     </details>
   </div>
 </template>

@@ -78,7 +78,7 @@ export class RowCount {
       <span>
         Page
         <strong>
-          {{ (table().state.pagination.pageIndex + 1).toLocaleString() }} of
+          {{ (table().store.get().pagination.pageIndex + 1).toLocaleString() }} of
           {{ pageCount() }}
         </strong>
       </span>
@@ -88,12 +88,12 @@ export class RowCount {
           type="number"
           min="1"
           [max]="table().getPageCount()"
-          [value]="table().state.pagination.pageIndex + 1"
+          [value]="table().store.get().pagination.pageIndex + 1"
           (change)="onPageChange($event)"
         />
       </span>
       <select
-        [value]="table().state.pagination.pageSize"
+        [value]="table().store.get().pagination.pageSize"
         (change)="onPageSizeChange($event)"
       >
         @for (size of pageSizes; track size) {

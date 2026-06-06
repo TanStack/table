@@ -107,7 +107,7 @@ function handlePageSizeChange(e: any) {
     <div class="spacer-md" />
     <div>
       <DebouncedInput
-        :modelValue="table.state.globalFilter ?? ''"
+        :modelValue="table.store.get().globalFilter ?? ''"
         @update:modelValue="(value) => table.setGlobalFilter(String(value))"
         className="summary-panel"
         placeholder="Search all columns..."
@@ -197,7 +197,7 @@ function handlePageSizeChange(e: any) {
       <span class="inline-controls">
         <div>Page</div>
         <strong>
-          {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+          {{ (table.store.get().pagination.pageIndex + 1).toLocaleString() }} of
           {{ table.getPageCount().toLocaleString() }}
         </strong>
       </span>
@@ -211,7 +211,7 @@ function handlePageSizeChange(e: any) {
         />
       </span>
       <select
-        :value="table.state.pagination.pageSize"
+        :value="table.store.get().pagination.pageSize"
         @change="handlePageSizeChange"
       >
         <option :key="pageSize" :value="pageSize" v-for="pageSize in pageSizes">
@@ -222,7 +222,7 @@ function handlePageSizeChange(e: any) {
     <div>
       {{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows
     </div>
-    <pre>{{ JSON.stringify(table.state, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
     <div class="spacer-md" />
   </div>
 </template>

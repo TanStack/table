@@ -94,7 +94,7 @@ export class App {
   }))
 
   stringifiedState() {
-    return JSON.stringify(this.table.state, null, 2)
+    return JSON.stringify(this.table.store.get(), null, 2)
   }
 
   setResizeMode(event: Event) {

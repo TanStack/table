@@ -254,7 +254,7 @@ function App() {
           </tbody>
         </table>
       </div>
-      <pre>{JSON.stringify(table.state(), null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

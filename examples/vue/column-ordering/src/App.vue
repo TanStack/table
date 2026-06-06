@@ -107,7 +107,7 @@ const randomizeColumns = () => {
 
 function toggleColumnVisibility(column: Column<typeof features, Person>) {
   table.setColumnVisibility({
-    ...table.state.columnVisibility,
+    ...table.store.get().columnVisibility,
     [column.id]: !column.getIsVisible(),
   })
 }
@@ -201,7 +201,7 @@ function toggleAllColumnsVisibility() {
         </tr>
       </tfoot>
     </table>
-    <pre>{{ JSON.stringify(table.state.columnOrder, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.store.get().columnOrder, null, 2) }}</pre>
   </div>
 </template>
 
