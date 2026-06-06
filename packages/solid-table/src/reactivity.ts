@@ -1,24 +1,22 @@
 import {
-  batch,
   createMemo,
   createSignal,
   observable,
   runWithOwner,
   untrack,
 } from 'solid-js'
+import { batch } from '@tanstack/store'
 import type {
   Atom,
   Observer,
   ReadonlyAtom,
   Subscription,
-} from '@tanstack/solid-store'
+} from '@tanstack/store'
 import type { Accessor, Owner, Setter } from 'solid-js'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
-
-const optionsStoreDebugName = 'table/optionsStore'
 
 function signalToReadonlyAtom<T>(
   signal: Accessor<T>,

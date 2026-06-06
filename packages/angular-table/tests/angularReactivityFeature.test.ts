@@ -125,7 +125,7 @@ describe('angularReactivityFeature', () => {
           isSelectedRow1Captor(table.getRow('1').getIsSelected())
         })
         effect(() => {
-          tableStateCaptor(table.state.rowSelection)
+          tableStateCaptor(table.atoms.rowSelection.get())
         })
       })
 
@@ -149,7 +149,7 @@ describe('angularReactivityFeature', () => {
       TestBed.runInInjectionContext(() => {
         effect((onCleanup) => {
           const subscription = table.store.subscribe(() => {
-            tableStateCaptor(table.state)
+            tableStateCaptor(table.store.get())
           })
 
           onCleanup(() => subscription.unsubscribe())
@@ -176,7 +176,7 @@ describe('angularReactivityFeature', () => {
 
       TestBed.runInInjectionContext(() => {
         effect(() => {
-          tableStateCaptor(table.state.rowSelection)
+          tableStateCaptor(table.atoms.rowSelection.get())
         })
       })
 
@@ -212,8 +212,10 @@ describe('angularReactivityFeature', () => {
         })),
       )
 
-      expect(table.state.pagination.pageSize).toBe(20)
-      expect(JSON.stringify(table.state, null, 2)).toContain('"pageSize": 20')
+      expect(table.atoms.pagination.get().pageSize).toBe(20)
+      expect(JSON.stringify(table.store.get(), null, 2)).toContain(
+        '"pageSize": 20',
+      )
     })
 
     test('table state reacts to internal table state updates', () => {
@@ -236,10 +238,10 @@ describe('angularReactivityFeature', () => {
 
       TestBed.runInInjectionContext(() => {
         effect(() => {
-          pageSizeCaptor(table.state.pagination.pageSize)
+          pageSizeCaptor(table.atoms.pagination.get().pageSize)
         })
         effect(() => {
-          stateJsonCaptor(JSON.stringify(table.state, null, 2))
+          stateJsonCaptor(JSON.stringify(table.store.get(), null, 2))
         })
       })
 
@@ -275,10 +277,10 @@ describe('angularReactivityFeature', () => {
 
       TestBed.runInInjectionContext(() => {
         effect(() => {
-          pageSizeCaptor(table.state.pagination.pageSize)
+          pageSizeCaptor(table.atoms.pagination.get().pageSize)
         })
         effect(() => {
-          stateJsonCaptor(JSON.stringify(table.state, null, 2))
+          stateJsonCaptor(JSON.stringify(table.store.get(), null, 2))
         })
       })
 
@@ -313,19 +315,19 @@ describe('angularReactivityFeature', () => {
 
       TestBed.runInInjectionContext(() => {
         effect(() => {
-          stateJsonCaptor(JSON.stringify(table.state, null, 2))
+          stateJsonCaptor(JSON.stringify(table.store.get(), null, 2))
         })
       })
 
       TestBed.tick()
-      expect(table.state.pagination.pageSize).toBe(20)
-      expect(table.state.columnOrder).toEqual(['id', 'title'])
+      expect(table.atoms.pagination.get().pageSize).toBe(20)
+      expect(table.atoms.columnOrder.get()).toEqual(['id', 'title'])
       expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 20')
 
       table.setPageSize(50)
       TestBed.tick()
 
-      expect(table.state.pagination.pageSize).toBe(50)
+      expect(table.atoms.pagination.get().pageSize).toBe(50)
       expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 50')
     })
   })

@@ -1,5 +1,4 @@
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
-import { useSelector } from '@tanstack/vue-store'
 import { defineComponent, h, inject, provide } from 'vue'
 import { FlexRender } from './FlexRender'
 import { mergeProxy } from './merge-proxy'
@@ -192,31 +191,22 @@ export type CreateTableHookOptions<
   headerComponents?: THeaderComponents
 }
 
-export interface AppTableProps<
-  TFeatures extends TableFeatures,
-  TSelected = unknown,
-> {
-  selector?: (state: TableState<TFeatures>) => TSelected
-}
+export interface AppTableProps {}
 
 export interface AppCellProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-  TSelected = unknown,
 > {
   cell: Cell<TFeatures, TData, TValue>
-  selector?: (state: TableState<TFeatures>) => TSelected
 }
 
 export interface AppHeaderProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-  TSelected = unknown,
 > {
   header: Header<TFeatures, TData, TValue>
-  selector?: (state: TableState<TFeatures>) => TSelected
 }
 
 export type AppVueTable<
@@ -226,9 +216,9 @@ export type AppVueTable<
   TTableComponents extends Record<string, ComponentType<any>>,
   TCellComponents extends Record<string, ComponentType<any>>,
   THeaderComponents extends Record<string, ComponentType<any>>,
-> = VueTable<TFeatures, TData, TSelected> &
+> = VueTable<TFeatures, TData> &
   NoInfer<TTableComponents> & {
-    AppTable: Component<AppTableProps<TFeatures>>
+    AppTable: Component<AppTableProps>
     AppCell: Component<AppCellProps<TFeatures, TData>>
     AppHeader: Component<AppHeaderProps<TFeatures, TData>>
     AppFooter: Component<AppHeaderProps<TFeatures, TData>>
@@ -314,7 +304,7 @@ export function createTableHook<
   THeaderComponents
 >) {
   const TableContext = Symbol('TableContext') as InjectionKey<
-    VueTable<TFeatures, any, any>
+    VueTable<TFeatures, any>
   >
   const CellContext = Symbol('CellContext') as InjectionKey<
     Cell<TFeatures, any, any>
@@ -410,19 +400,15 @@ export function createTableHook<
     },
   })
 
-  function useAppTable<
-    TData extends RowData,
-    TSelected = TableState<TFeatures>,
-  >(
+  function useAppTable<TData extends RowData>(
     tableOptions: Omit<
       TableOptionsWithReactiveData<TFeatures, TData>,
       'features' | 'rowModels'
     >,
-    selector?: (state: TableState<TFeatures>) => TSelected,
   ): AppVueTable<
     TFeatures,
     TData,
-    TSelected,
+    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -432,28 +418,14 @@ export function createTableHook<
       tableOptions,
     ) as TableOptionsWithReactiveData<TFeatures, TData>
 
-    const table = useTable<TFeatures, TData, TSelected>(mergedOptions, selector)
+    const table = useTable<TFeatures, TData>(mergedOptions)
 
     const AppTable = defineComponent({
       name: 'AppTable',
-      props: {
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
-      },
-      setup(props, { slots }) {
+      setup(_, { slots }) {
         provide(TableContext, table)
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
-
         return () => {
-          if (!props.selector) {
-            return slots.default?.()
-          }
-
-          return slots.default?.({ state: selected?.value })
+          return slots.default?.()
         }
       },
     })
@@ -465,19 +437,11 @@ export function createTableHook<
           type: Object as PropType<object>,
           required: true,
         },
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
       },
       setup(props, { slots }) {
         const cell = props.cell as Cell<TFeatures, TData, any>
 
         provide(CellContext, cell)
-
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
 
         const extendedCell = Object.assign(cell, {
           FlexRender: CellFlexRender,
@@ -486,11 +450,7 @@ export function createTableHook<
           TCellComponents & { FlexRender: Component }
 
         return () => {
-          return slots.default?.(
-            props.selector
-              ? { cell: extendedCell, state: selected?.value }
-              : { cell: extendedCell },
-          )
+          return slots.default?.({ cell: extendedCell })
         }
       },
     })
@@ -502,19 +462,11 @@ export function createTableHook<
           type: Object as PropType<object>,
           required: true,
         },
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
       },
       setup(props, { slots }) {
         const header = props.header as Header<TFeatures, TData, any>
 
         provide(HeaderContext, header)
-
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
 
         const extendedHeader = Object.assign(header, {
           FlexRender: HeaderFlexRender,
@@ -523,11 +475,7 @@ export function createTableHook<
           THeaderComponents & { FlexRender: Component }
 
         return () => {
-          return slots.default?.(
-            props.selector
-              ? { header: extendedHeader, state: selected?.value }
-              : { header: extendedHeader },
-          )
+          return slots.default?.({ header: extendedHeader })
         }
       },
     })
@@ -539,19 +487,11 @@ export function createTableHook<
           type: Object as PropType<object>,
           required: true,
         },
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
       },
       setup(props, { slots }) {
         const header = props.header as Header<TFeatures, TData, any>
 
         provide(HeaderContext, header)
-
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
 
         const extendedHeader = Object.assign(header, {
           FlexRender: FooterFlexRender,
@@ -560,11 +500,7 @@ export function createTableHook<
           THeaderComponents & { FlexRender: Component }
 
         return () => {
-          return slots.default?.(
-            props.selector
-              ? { header: extendedHeader, state: selected?.value }
-              : { header: extendedHeader },
-          )
+          return slots.default?.({ header: extendedHeader })
         }
       },
     })
@@ -579,7 +515,7 @@ export function createTableHook<
     }) as AppVueTable<
       TFeatures,
       TData,
-      TSelected,
+      TableState<TFeatures>,
       TTableComponents,
       TCellComponents,
       THeaderComponents

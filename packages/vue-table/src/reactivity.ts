@@ -1,19 +1,11 @@
-import {
-  computed,
-  getCurrentScope,
-  onScopeDispose,
-  shallowRef,
-  watch,
-} from 'vue'
-import { batch, createAtom } from '@tanstack/vue-store'
+import { computed, shallowRef, watch } from 'vue'
+import { batch } from '@tanstack/store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
-import type { Atom, Observer, ReadonlyAtom } from '@tanstack/vue-store'
+import type { Atom, Observer, ReadonlyAtom, Subscription } from '@tanstack/store'
 import type { ComputedRef, ShallowRef } from 'vue'
-
-const optionsStoreDebugName = 'table/optionsStore'
 
 function observerToCallback<T>(
   observerOrNext: Observer<T> | ((value: T) => void),
@@ -64,50 +56,27 @@ function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
  * refs.
  */
 export function vueReactivity(): TableReactivityBindings {
+  const subscriptions = new Set<Subscription>()
+
   return {
     createOptionsStore: true,
-    wrapExternalAtoms: false,
-    addSubscription: () => {
-      throw new Error(
-        'Feature not supported in current reactivity implementation',
-      )
+    wrapExternalAtoms: true,
+    addSubscription: (subscription) => {
+      subscriptions.add(subscription)
     },
     unmount: () => {
-      throw new Error(
-        'Feature not supported in current reactivity implementation',
-      )
+      subscriptions.forEach((s) => s.unsubscribe())
+      subscriptions.clear()
     },
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-      const storeAtom = createAtom(() => fn(), {
-        compare: _options?.compare,
-      })
-      const version = shallowRef(0)
-      const subscription = storeAtom.subscribe(() => {
-        version.value += 1
-      })
-      if (getCurrentScope()) {
-        onScopeDispose(() => subscription.unsubscribe())
-      }
-
-      return refToReadonlyAtom(
-        computed(() => {
-          version.value
-          return storeAtom.get()
-        }),
-      )
+      return refToReadonlyAtom(computed(() => fn()))
     },
     createWritableAtom: <T>(
       value: T,
       _options?: TableAtomOptions<T>,
     ): Atom<T> => {
-      if (_options?.debugName === optionsStoreDebugName) {
-        return refToWritableAtom(shallowRef(value) as ShallowRef<T>)
-      }
-
-      return createAtom(value, {
-        compare: _options?.compare,
-      })
+      return refToWritableAtom(shallowRef(value) as ShallowRef<T>)
     },
     untrack: (fn) => fn(),
     batch,

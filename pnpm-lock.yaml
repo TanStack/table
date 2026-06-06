@@ -8887,16 +8887,16 @@ importers:
         version: 0.5.0(@angular/core@22.0.0(@angular/compiler@22.0.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.35(typescript@6.0.3))
       '@tanstack/react-devtools':
         specifier: '>=0.10.0'
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/table-devtools':
         specifier: workspace:*
         version: link:../table-devtools
       '@types/react-dom':
         specifier: '>=18.0.0'
-        version: 19.2.3(@types/react@19.2.15)
+        version: 19.2.3(@types/react@19.2.16)
       react-dom:
         specifier: '>=18'
-        version: 19.2.6(react@19.2.6)
+        version: 19.2.6(react@19.2.7)
     devDependencies:
       '@eslint-react/eslint-plugin':
         specifier: ^5.8.10
@@ -8922,9 +8922,9 @@ importers:
 
   packages/solid-table:
     dependencies:
-      '@tanstack/solid-store':
+      '@tanstack/store':
         specifier: ^0.11.0
-        version: 0.11.0(solid-js@1.9.13)
+        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -9019,12 +9019,12 @@ importers:
 
   packages/vue-table:
     dependencies:
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
-      '@tanstack/vue-store':
-        specifier: ^0.11.0
-        version: 0.11.0(vue@3.5.35(typescript@6.0.3))
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: ^6.0.7
@@ -14107,9 +14107,6 @@ packages:
     peerDependencies:
       '@types/react': '*'
 
-  '@types/react@19.2.15':
-    resolution: {integrity: sha512-eRwcGNHve+E8qtEQSSRl6urh+rFop4v8gm6O8rGv25CodbvFdLjA1vVQ1KkiFE0w0UPOnb8tDiFKL5lp0rtY5Q==}
-
   '@types/react@19.2.16':
     resolution: {integrity: sha512-esJiCAnl0kfpNdE69f3So4WJUXy95dLZydX0KwK46riIHDzHM7O9Vtf9xCHW0PXIqvgqNrswl522kA/5yx+F4w==}
 
@@ -17332,10 +17329,6 @@ packages:
     peerDependencies:
       react: '>=16.6.0'
       react-dom: '>=16.6.0'
-
-  react@19.2.6:
-    resolution: {integrity: sha512-sfWGGfavi0xr8Pg0sVsyHMAOziVYKgPLNrS7ig+ivMNb3wbCBw3KxtflsGBAwD3gYQlE/AEZsTLgToRrSCjb0Q==}
-    engines: {node: '>=0.10.0'}
 
   react@19.2.7:
     resolution: {integrity: sha512-HNe9WslTbXmFK8o8cmwgAeJFSBvt1bPdHCVKtaaV+WlAN36mpT4hcRpwbf3fY56ar2oIXzsBpOAiIRHAdY0OlQ==}
@@ -23809,13 +23802,13 @@ snapshots:
   '@tanstack/query-devtools@5.101.0':
     optional: true
 
-  '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.15))(@types/react@19.2.15)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)(solid-js@1.9.13)':
+  '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)':
     dependencies:
       '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.13)
-      '@types/react': 19.2.15
-      '@types/react-dom': 19.2.3(@types/react@19.2.15)
-      react: 19.2.6
-      react-dom: 19.2.6(react@19.2.6)
+      '@types/react': 19.2.16
+      '@types/react-dom': 19.2.3(@types/react@19.2.16)
+      react: 19.2.7
+      react-dom: 19.2.6(react@19.2.7)
     transitivePeerDependencies:
       - bufferutil
       - csstype
@@ -24222,10 +24215,6 @@ snapshots:
 
   '@types/range-parser@1.2.7': {}
 
-  '@types/react-dom@19.2.3(@types/react@19.2.15)':
-    dependencies:
-      '@types/react': 19.2.15
-
   '@types/react-dom@19.2.3(@types/react@19.2.16)':
     dependencies:
       '@types/react': 19.2.16
@@ -24233,10 +24222,6 @@ snapshots:
   '@types/react-transition-group@4.4.12(@types/react@19.2.16)':
     dependencies:
       '@types/react': 19.2.16
-
-  '@types/react@19.2.15':
-    dependencies:
-      csstype: 3.2.3
 
   '@types/react@19.2.16':
     dependencies:
@@ -28005,9 +27990,9 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.16
 
-  react-dom@19.2.6(react@19.2.6):
+  react-dom@19.2.6(react@19.2.7):
     dependencies:
-      react: 19.2.6
+      react: 19.2.7
       scheduler: 0.27.0
 
   react-dom@19.2.7(react@19.2.7):
@@ -28079,8 +28064,6 @@ snapshots:
       prop-types: 15.8.1
       react: 19.2.7
       react-dom: 19.2.7(react@19.2.7)
-
-  react@19.2.6: {}
 
   react@19.2.7: {}
 
