@@ -316,12 +316,7 @@ export interface AppCellComponent<
   TCellComponents extends Record<string, ComponentType<any>>,
 > {
   <TValue extends CellData = CellData>(
-    props: AppCellProps<
-      TFeatures,
-      TData,
-      TValue,
-      TCellComponents
-    >,
+    props: AppCellProps<TFeatures, TData, TValue, TCellComponents>,
   ): JSXElement
 }
 
@@ -334,12 +329,7 @@ export interface AppHeaderComponent<
   THeaderComponents extends Record<string, ComponentType<any>>,
 > {
   <TValue extends CellData = CellData>(
-    props: AppHeaderProps<
-      TFeatures,
-      TData,
-      TValue,
-      THeaderComponents
-    >,
+    props: AppHeaderProps<TFeatures, TData, TValue, THeaderComponents>,
   ): JSXElement
 }
 
@@ -532,9 +522,7 @@ export function createTableHook<
   THeaderComponents
 >) {
   // Create contexts internally with TFeatures baked in
-  const TableContext = createContext<SolidTable<TFeatures, any>>(
-    null as never,
-  )
+  const TableContext = createContext<SolidTable<TFeatures, any>>(null as never)
   const CellContext = createContext<Cell<TFeatures, any, any>>(null as never)
   const HeaderContext = createContext<Header<TFeatures, any, any>>(
     null as never,
@@ -759,12 +747,7 @@ export function createTableHook<
 
     // AppCell - Wraps cell with context and pre-bound cellComponents
     function AppCell<TValue extends CellData = CellData>(
-      props: AppCellProps<
-        TFeatures,
-        TData,
-        TValue,
-        TCellComponents
-      >,
+      props: AppCellProps<TFeatures, TData, TValue, TCellComponents>,
     ): JSXElement
     function AppCell<TValue extends CellData = CellData>(
       props: AppCellProps<TFeatures, TData, TValue, TCellComponents>,
@@ -784,12 +767,7 @@ export function createTableHook<
 
     // AppHeader - Wraps header with context and pre-bound headerComponents
     function AppHeader<TValue extends CellData = CellData>(
-      props: AppHeaderProps<
-        TFeatures,
-        TData,
-        TValue,
-        THeaderComponents
-      >,
+      props: AppHeaderProps<TFeatures, TData, TValue, THeaderComponents>,
     ): JSXElement
     function AppHeader<TValue extends CellData = CellData>(
       props: AppHeaderProps<TFeatures, TData, TValue, THeaderComponents>,
@@ -809,12 +787,7 @@ export function createTableHook<
 
     // AppFooter - Same as AppHeader but uses FooterFlexRender (footers use Header type)
     function AppFooter<TValue extends CellData = CellData>(
-      props: AppHeaderProps<
-        TFeatures,
-        TData,
-        TValue,
-        THeaderComponents
-      >,
+      props: AppHeaderProps<TFeatures, TData, TValue, THeaderComponents>,
     ): JSXElement
     function AppFooter<TValue extends CellData = CellData>(
       props: AppHeaderProps<TFeatures, TData, TValue, THeaderComponents>,

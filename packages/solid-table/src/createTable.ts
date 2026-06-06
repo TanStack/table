@@ -69,9 +69,7 @@ export type SolidTable<
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  tableOptions: TableOptions<TFeatures, TData>,
-): SolidTable<TFeatures, TData> {
+>(tableOptions: TableOptions<TFeatures, TData>): SolidTable<TFeatures, TData> {
   const owner = getOwner()!
   const reactivity = solidReactivity(owner)
 

@@ -58,9 +58,7 @@ export type VueTable<
    * atoms it needs, so Vue only tracks those atom reads.
    */
   Subscribe: (props: {
-    children: (
-      atoms: Table<TFeatures, TData>['atoms'],
-    ) => VNode | Array<VNode>
+    children: (atoms: Table<TFeatures, TData>['atoms']) => VNode | Array<VNode>
   }) => VNode | Array<VNode>
 }
 

@@ -307,8 +307,8 @@ function App() {
             <span class="inline-controls">
               <div>Page</div>
               <strong>
-                {(table.store.get().pagination.pageIndex + 1).toLocaleString()} of{' '}
-                {table.getPageCount().toLocaleString()}
+                {(table.store.get().pagination.pageIndex + 1).toLocaleString()}{' '}
+                of {table.getPageCount().toLocaleString()}
               </strong>
             </span>
             <span class="inline-controls">

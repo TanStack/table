@@ -4,7 +4,12 @@ import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
-import type { Atom, Observer, ReadonlyAtom, Subscription } from '@tanstack/store'
+import type {
+  Atom,
+  Observer,
+  ReadonlyAtom,
+  Subscription,
+} from '@tanstack/store'
 import type { ComputedRef, ShallowRef } from 'vue'
 
 function observerToCallback<T>(

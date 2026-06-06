@@ -756,7 +756,9 @@ function App() {
       <div class="spacer-md" />
       <details>
         <summary>Table state (live)</summary>
-        <pre class="state-dump">{JSON.stringify(table.store.get(), null, 2)}</pre>
+        <pre class="state-dump">
+          {JSON.stringify(table.store.get(), null, 2)}
+        </pre>
       </details>
     </div>
   )

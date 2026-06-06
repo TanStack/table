@@ -78,7 +78,10 @@ export class RowCount {
       <span>
         Page
         <strong>
-          {{ (table().store.get().pagination.pageIndex + 1).toLocaleString() }} of
+          {{
+            (table().store.get().pagination.pageIndex + 1).toLocaleString()
+          }}
+          of
           {{ pageCount() }}
         </strong>
       </span>
