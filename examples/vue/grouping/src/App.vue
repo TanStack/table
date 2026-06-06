@@ -184,9 +184,7 @@ function handlePageSizeChange(e: any) {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{
-              (table.store.get().pagination.pageIndex + 1).toLocaleString()
-            }}
+            {{ (table.store.get().pagination.pageIndex + 1).toLocaleString() }}
             of
             {{ table.getPageCount().toLocaleString() }}
           </strong>
