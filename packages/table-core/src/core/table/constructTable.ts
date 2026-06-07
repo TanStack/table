@@ -133,7 +133,7 @@ export function constructTable<
         const snapshot = {} as TableState<TFeatures>
         for (let i = 0; i < stateKeys.length; i++) {
           const key = stateKeys[i]!
-          snapshot[key] = table.atoms[key].get()
+          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key].get()
         }
         return snapshot
       },

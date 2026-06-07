@@ -17,7 +17,11 @@ import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinning
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { RowData, UnionToIntersection } from './type-utils'
-import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
+import type {
+  ExtractFeatureMapTypes,
+  ExtractFeatureTypes,
+  TableFeatures,
+} from './TableFeatures'
 
 export interface TableOptions_Plugins<
   TFeatures extends TableFeatures,
@@ -52,6 +56,35 @@ export type DebugOptions<TFeatures extends TableFeatures> = {
   debugTable?: boolean
 } & DebugKeysFor<CoreFeatures & TFeatures>
 
+export interface TableOptions_FeatureMap<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  columnFilteringFeature: TableOptions_ColumnFiltering<TFeatures, TData>
+  columnGroupingFeature: TableOptions_ColumnGrouping
+  columnOrderingFeature: TableOptions_ColumnOrdering
+  columnPinningFeature: TableOptions_ColumnPinning
+  columnResizingFeature: TableOptions_ColumnResizing
+  columnSizingFeature: TableOptions_ColumnSizing
+  columnVisibilityFeature: TableOptions_ColumnVisibility
+  globalFilteringFeature: TableOptions_GlobalFiltering<TFeatures, TData>
+  rowExpandingFeature: TableOptions_RowExpanding<TFeatures, TData>
+  rowPaginationFeature: TableOptions_RowPagination
+  rowPinningFeature: TableOptions_RowPinning<TFeatures, TData>
+  rowSelectionFeature: TableOptions_RowSelection<TFeatures, TData>
+  rowSortingFeature: TableOptions_RowSorting
+}
+
+export type TableOptions_FeatureMap_All<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = UnionToIntersection<
+  TableOptions_FeatureMap<TFeatures, TData>[keyof TableOptions_FeatureMap<
+    TFeatures,
+    TData
+  >]
+>
+
 /**
  * Complete table options for a specific feature set.
  *
@@ -63,57 +96,10 @@ export type TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
-  UnionToIntersection<
-    | ('columnFilteringFeature' extends keyof TFeatures
-        ? TableOptions_ColumnFiltering<TFeatures, TData>
-        : never)
-    | ('columnGroupingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnGrouping
-        : never)
-    | ('columnOrderingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnOrdering
-        : never)
-    | ('columnPinningFeature' extends keyof TFeatures
-        ? TableOptions_ColumnPinning
-        : never)
-    | ('columnResizingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnResizing
-        : never)
-    | ('columnSizingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnSizing
-        : never)
-    | ('columnVisibilityFeature' extends keyof TFeatures
-        ? TableOptions_ColumnVisibility
-        : never)
-    | ('globalFilteringFeature' extends keyof TFeatures
-        ? TableOptions_GlobalFiltering<TFeatures, TData>
-        : never)
-    | ('rowExpandingFeature' extends keyof TFeatures
-        ? TableOptions_RowExpanding<TFeatures, TData>
-        : never)
-    | ('rowPaginationFeature' extends keyof TFeatures
-        ? TableOptions_RowPagination
-        : never)
-    | ('rowPinningFeature' extends keyof TFeatures
-        ? TableOptions_RowPinning<TFeatures, TData>
-        : never)
-    | ('rowSelectionFeature' extends keyof TFeatures
-        ? TableOptions_RowSelection<TFeatures, TData>
-        : never)
-    | ('rowSortingFeature' extends keyof TFeatures
-        ? TableOptions_RowSorting
-        : never)
-  > &
+  ExtractFeatureMapTypes<TFeatures, TableOptions_FeatureMap<TFeatures, TData>> &
   ExtractFeatureTypes<'TableOptions', TFeatures> &
   TableOptions_Plugins<TFeatures, TData> &
   DebugOptions<TFeatures>
-
-// export type TableOptions<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-// > = TableOptions_Core<TFeatures, TData> &
-//   ExtractFeatureTypes<'TableOptions', TFeatures> &
-//   TableOptions_Plugins<TFeatures, TData>
 
 /**
  * Internal broad option shape used where feature code may need to read options
@@ -123,18 +109,4 @@ export type TableOptions_All<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
-  Partial<
-    TableOptions_ColumnFiltering<TFeatures, TData> &
-      TableOptions_ColumnGrouping &
-      TableOptions_ColumnOrdering &
-      TableOptions_ColumnPinning &
-      TableOptions_ColumnResizing &
-      TableOptions_ColumnSizing &
-      TableOptions_ColumnVisibility &
-      TableOptions_GlobalFiltering<TFeatures, TData> &
-      TableOptions_RowExpanding<TFeatures, TData> &
-      TableOptions_RowPagination &
-      TableOptions_RowPinning<TFeatures, TData> &
-      TableOptions_RowSelection<TFeatures, TData> &
-      TableOptions_RowSorting
-  >
+  Partial<TableOptions_FeatureMap_All<TFeatures, TData>>
