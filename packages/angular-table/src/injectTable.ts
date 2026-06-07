@@ -55,11 +55,11 @@ function createStateProxy<
   const getSnapshot = () => {
     const snapshot = {} as TableState<TFeatures>
     const stateKeys = Object.keys(table.initialState) as Array<
-      keyof TableState<TFeatures>
+      string & keyof TableState<TFeatures>
     >
 
     for (const key of stateKeys) {
-      snapshot[key] = table.atoms[key].get()
+      ;(snapshot as Record<string, unknown>)[key] = table.atoms[key].get()
     }
 
     return snapshot

@@ -22,6 +22,18 @@ export type ExtractFeatureTypes<
   }[keyof TFeatures]
 >
 
+type IsAny<T> = 0 extends 1 & T ? true : false
+
+export type ExtractFeatureMapTypes<
+  TFeatures extends TableFeatures,
+  TFeatureMap extends object,
+> =
+  IsAny<TFeatures> extends true
+    ? UnionToIntersection<TFeatureMap[keyof TFeatureMap]>
+    : UnionToIntersection<
+        TFeatureMap[Extract<keyof TFeatures, keyof TFeatureMap>]
+      >
+
 export interface FeatureConstructors {
   CachedRowModel?: any
   Cell?: any

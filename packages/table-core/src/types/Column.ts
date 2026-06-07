@@ -9,8 +9,12 @@ import type { Column_ColumnResizing } from '../features/column-resizing/columnRe
 import type { Column_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
 import type { Column_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
 import type { ColumnDefBase_All } from './ColumnDef'
-import type { RowData, UnionToIntersection } from './type-utils'
-import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
+import type { RowData } from './type-utils'
+import type {
+  ExtractFeatureMapTypes,
+  ExtractFeatureTypes,
+  TableFeatures,
+} from './TableFeatures'
 import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
 
 /**
@@ -29,53 +33,30 @@ export interface Column_Core<
   TValue = unknown,
 > extends Column_Column<TFeatures, TData, TValue> {}
 
+export interface Column_FeatureMap<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  columnFacetingFeature: Column_ColumnFaceting<TFeatures, TData>
+  columnFilteringFeature: Column_ColumnFiltering<TFeatures, TData>
+  columnGroupingFeature: Column_ColumnGrouping<TFeatures, TData>
+  columnOrderingFeature: Column_ColumnOrdering
+  columnPinningFeature: Column_ColumnPinning
+  columnResizingFeature: Column_ColumnResizing
+  columnSizingFeature: Column_ColumnSizing
+  columnVisibilityFeature: Column_ColumnVisibility
+  globalFilteringFeature: Column_GlobalFiltering
+  rowSortingFeature: Column_RowSorting<TFeatures, TData>
+}
+
 export type Column<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue = unknown,
 > = Column_Core<TFeatures, TData, TValue> &
-  UnionToIntersection<
-    | ('columnFacetingFeature' extends keyof TFeatures
-        ? Column_ColumnFaceting<TFeatures, TData>
-        : never)
-    | ('columnFilteringFeature' extends keyof TFeatures
-        ? Column_ColumnFiltering<TFeatures, TData>
-        : never)
-    | ('columnGroupingFeature' extends keyof TFeatures
-        ? Column_ColumnGrouping<TFeatures, TData>
-        : never)
-    | ('columnOrderingFeature' extends keyof TFeatures
-        ? Column_ColumnOrdering
-        : never)
-    | ('columnPinningFeature' extends keyof TFeatures
-        ? Column_ColumnPinning
-        : never)
-    | ('columnResizingFeature' extends keyof TFeatures
-        ? Column_ColumnResizing
-        : never)
-    | ('columnSizingFeature' extends keyof TFeatures
-        ? Column_ColumnSizing
-        : never)
-    | ('columnVisibilityFeature' extends keyof TFeatures
-        ? Column_ColumnVisibility
-        : never)
-    | ('globalFilteringFeature' extends keyof TFeatures
-        ? Column_GlobalFiltering
-        : never)
-    | ('rowSortingFeature' extends keyof TFeatures
-        ? Column_RowSorting<TFeatures, TData>
-        : never)
-  > &
+  ExtractFeatureMapTypes<TFeatures, Column_FeatureMap<TFeatures, TData>> &
   ExtractFeatureTypes<'Column', TFeatures> &
   Column_Plugins<TFeatures, TData, TValue>
-
-// export type Column<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-//   TValue = unknown,
-// > = Column_Core<TFeatures, TData, TValue> &
-//   ExtractFeatureTypes<'Column', TFeatures> &
-//   Column_Plugins<TFeatures, TData, TValue>
 
 export type Column_Internal<
   TFeatures extends TableFeatures,
