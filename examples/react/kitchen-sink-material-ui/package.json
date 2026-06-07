@@ -22,8 +22,8 @@
     "@tanstack/match-sorter-utils": "^9.0.0-beta.0",
     "@tanstack/react-devtools": "^0.10.5",
     "@tanstack/react-pacer": "^0.22.1",
-    "@tanstack/react-table": "^9.0.0-beta.2",
-    "@tanstack/react-table-devtools": "^9.0.0-beta.2",
+    "@tanstack/react-table": "^9.0.0-beta.3",
+    "@tanstack/react-table-devtools": "^9.0.0-beta.3",
     "date-fns": "^4.4.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

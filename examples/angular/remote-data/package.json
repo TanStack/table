@@ -23,7 +23,7 @@
     "@angular/platform-server": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@angular/ssr": "^22.0.0",
-    "@tanstack/angular-table": "^9.0.0-beta.2",
+    "@tanstack/angular-table": "^9.0.0-beta.3",
     "express": "^5.2.1",
     "rxjs": "~7.8.2"
   },
