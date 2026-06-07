@@ -140,7 +140,7 @@ function App() {
       </div>
       <div>
         <input
-          value={table.store.get().globalFilter ?? ''}
+          value={table.atoms.globalFilter.get() ?? ''}
           onInput={(e) => table.setGlobalFilter(e.target.value)}
           class="summary-panel"
           placeholder="Search all columns..."
@@ -235,7 +235,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.get().pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -245,7 +245,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.get().pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -254,7 +254,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.get().pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -266,7 +266,7 @@ function App() {
       </div>
       <br />
       <div>
-        {Object.keys(table.store.get().rowSelection).length.toLocaleString()} of{' '}
+        {Object.keys(table.atoms.rowSelection.get()).length.toLocaleString()} of{' '}
         {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total Rows
         Selected
       </div>

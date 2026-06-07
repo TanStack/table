@@ -118,7 +118,6 @@ const table = useTable(
     },
     // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
   },
-  (state) => ({ rowSelection: state.rowSelection }),
 )
 
 useTanStackTableDevtools(table)

@@ -116,7 +116,7 @@ function App() {
       </div>
       <input
         class="summary-panel"
-        value={table.store.get().globalFilter ?? ''}
+        value={table.atoms.globalFilter.get() ?? ''}
         onInput={(e) =>
           globalFilterDebouncer.maybeExecute(e.currentTarget.value)
         }
@@ -200,7 +200,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.get().pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -210,7 +210,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.get().pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -221,7 +221,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.get().pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.currentTarget.value))
           }}

@@ -83,7 +83,6 @@ const table = useAppTable(
     columns,
     getRowCanExpand: () => true,
   },
-  (state) => ({ expanded: state.expanded }),
 )
 </script>
 

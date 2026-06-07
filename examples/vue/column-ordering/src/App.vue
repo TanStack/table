@@ -89,10 +89,6 @@ const table = useTable(
     debugHeaders: true,
     debugColumns: true,
   },
-  (state) => ({
-    columnOrder: state.columnOrder,
-    columnVisibility: state.columnVisibility,
-  }),
 )
 
 const randomizeColumns = () => {
@@ -107,7 +103,7 @@ const randomizeColumns = () => {
 
 function toggleColumnVisibility(column: Column<typeof features, Person>) {
   table.setColumnVisibility({
-    ...table.store.get().columnVisibility,
+    ...table.atoms.columnVisibility.get(),
     [column.id]: !column.getIsVisible(),
   })
 }
@@ -201,7 +197,7 @@ function toggleAllColumnsVisibility() {
         </tr>
       </tfoot>
     </table>
-    <pre>{{ JSON.stringify(table.store.get().columnOrder, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.atoms.columnOrder.get(), null, 2) }}</pre>
   </div>
 </template>
 

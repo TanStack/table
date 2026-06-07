@@ -87,7 +87,7 @@ function App() {
                   value={column.getSize()}
                   onInput={(e) => {
                     table.setColumnSizing({
-                      ...table.store.get().columnSizing,
+                      ...table.atoms.columnSizing.get(),
                       [column.id]: Number(e.currentTarget.value),
                     })
                   }}

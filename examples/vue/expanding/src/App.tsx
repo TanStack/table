@@ -294,7 +294,7 @@ export default defineComponent({
           <span class="inline-controls">
             <div>Page</div>
             <strong>
-              {(table.store.get().pagination.pageIndex + 1).toLocaleString()} of{' '}
+              {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>
@@ -304,7 +304,7 @@ export default defineComponent({
               type="number"
               min="1"
               max={table.getPageCount()}
-              value={table.store.get().pagination.pageIndex + 1}
+              value={table.atoms.pagination.get().pageIndex + 1}
               onInput={(event: Event) => {
                 const target = event.currentTarget as HTMLInputElement
                 const page = target.value ? Number(target.value) - 1 : 0
@@ -314,7 +314,7 @@ export default defineComponent({
             />
           </span>
           <select
-            value={table.store.get().pagination.pageSize}
+            value={table.atoms.pagination.get().pageSize}
             onChange={(event: Event) => {
               const target = event.currentTarget as HTMLSelectElement
               table.setPageSize(Number(target.value))

@@ -195,7 +195,7 @@ export default function Table<T extends Record<string, string | number>>(
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.get().pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -203,7 +203,7 @@ export default function Table<T extends Record<string, string | number>>(
           | Go to page:
           <input
             type="number"
-            value={table.store.get().pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -214,7 +214,7 @@ export default function Table<T extends Record<string, string | number>>(
           />
         </span>
         <select
-          value={table.store.get().pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.currentTarget.value))
           }}

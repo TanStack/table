@@ -110,8 +110,8 @@ function App() {
   })
 
   createEffect(() => {
-    if (table.store.get().columnFilters[0]?.id === 'fullName') {
-      if (table.store.get().sorting[0]?.id !== 'fullName') {
+    if (table.atoms.columnFilters.get()[0]?.id === 'fullName') {
+      if (table.atoms.sorting.get()[0]?.id !== 'fullName') {
         table.setSorting([{ id: 'fullName', desc: false }])
       }
     }
@@ -125,7 +125,7 @@ function App() {
       </div>
       <div>
         <DebouncedInput
-          value={(table.store.get().globalFilter ?? '') as string}
+          value={(table.atoms.globalFilter.get() ?? '') as string}
           onChange={(value) => table.setGlobalFilter(String(value))}
           class="summary-panel"
           placeholder="Search all columns..."
@@ -221,7 +221,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.get().pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -229,7 +229,7 @@ function App() {
           | Go to page:
           <input
             type="number"
-            value={table.store.get().pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -240,7 +240,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.get().pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
         >
           <For each={[10, 20, 30, 40, 50]}>

@@ -78,7 +78,7 @@ export class RowCount {
       <span>
         Page
         <strong>
-          {{ (table().store.get().pagination.pageIndex + 1).toLocaleString() }}
+          {{ (table().atoms.pagination.get().pageIndex + 1).toLocaleString() }}
           of
           {{ pageCount() }}
         </strong>
@@ -89,12 +89,12 @@ export class RowCount {
           type="number"
           min="1"
           [max]="table().getPageCount()"
-          [value]="table().store.get().pagination.pageIndex + 1"
+          [value]="table().atoms.pagination.get().pageIndex + 1"
           (change)="onPageChange($event)"
         />
       </span>
       <select
-        [value]="table().store.get().pagination.pageSize"
+        [value]="table().atoms.pagination.get().pageSize"
         (change)="onPageSizeChange($event)"
       >
         @for (size of pageSizes; track size) {

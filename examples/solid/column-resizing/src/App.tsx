@@ -97,7 +97,7 @@ function App() {
     header: ReturnType<typeof table.getHeaderGroups>[number]['headers'][number],
   ) => {
     if (columnResizeMode() === 'onEnd' && header.column.getIsResizing()) {
-      const delta = table.store.get().columnResizing.deltaOffset ?? 0
+      const delta = table.atoms.columnResizing.get().deltaOffset ?? 0
       const dir = table.options.columnResizeDirection === 'rtl' ? -1 : 1
       return `translateX(${dir * delta}px)`
     }

@@ -114,11 +114,11 @@ export function createTable<
 
   onCleanup(() => reactivity.unmount?.())
 
-  table.Subscribe = ((props: {
+  table.Subscribe = (props: {
     children: (atoms: Table<TFeatures, TData>['atoms']) => JSX.Element
   }) => {
     return props.children(table.atoms)
-  }) as SolidTable<TFeatures, TData>['Subscribe']
+  }
 
   table.FlexRender = FlexRender
 

@@ -356,7 +356,7 @@ function TableCell(props: {
   table: AppTable
 }) {
   const className = () => {
-    const groupingActive = props.table.store.get().grouping.length > 0
+    const groupingActive = props.table.atoms.grouping.get().length > 0
     const hasAggregation = !!props.cell.column.columnDef.aggregationFn
     return !groupingActive
       ? undefined
@@ -555,8 +555,8 @@ function App() {
   useTanStackTableDevtools(table)
 
   const columnSizeVars = createMemo(() => {
-    void table.store.get().columnResizing
-    void table.store.get().columnSizing
+    void table.atoms.columnResizing.get()
+    void table.atoms.columnSizing.get()
     const colSizes: Record<string, number> = {}
     for (const header of table.getFlatHeaders()) {
       colSizes[`--header-${header.id}-size`] = header.getSize()
@@ -581,7 +581,7 @@ function App() {
       <div class="toolbar">
         <div class="toolbar-row">
           <DebouncedInput
-            value={(table.store.get().globalFilter ?? '') as string}
+            value={(table.atoms.globalFilter.get() ?? '') as string}
             onChange={(value) => table.setGlobalFilter(String(value))}
             class="global-filter-input"
             placeholder="Fuzzy search all columns..."
@@ -718,7 +718,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.get().pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -728,7 +728,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.get().pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -739,7 +739,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.get().pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
         >
           <For each={[10, 20, 30, 50, 100]}>

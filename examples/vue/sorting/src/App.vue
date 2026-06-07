@@ -67,7 +67,6 @@ const table = useTable(
     columns,
     debugTable: true,
   },
-  (state) => ({ sorting: state.sorting }),
 )
 </script>
 
@@ -134,7 +133,7 @@ const table = useTable(
 
     <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
 
-    <pre>{{ JSON.stringify(table.store.get().sorting, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.atoms.sorting.get(), null, 2) }}</pre>
   </div>
 </template>
 

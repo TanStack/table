@@ -194,14 +194,13 @@ const table = useTable(
     keepPinnedRows: true,
     debugTable: true,
   },
-  (state) => state,
 )
 
 useTanStackTableDevtools(table)
 
 const columnSizeVars = computed(() => {
-  void table.store.get().columnResizing
-  void table.store.get().columnSizing
+  void table.atoms.columnResizing.get()
+  void table.atoms.columnSizing.get()
   const colSizes: Record<string, number> = {}
   for (const header of table.getFlatHeaders()) {
     colSizes[`--header-${header.id}-size`] = header.getSize()
@@ -264,7 +263,7 @@ function cellStyle(cell: Cell<typeof stockFeatures, Person, unknown>) {
 }
 
 function cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
-  const groupingActive = table.store.get().grouping.length > 0
+  const groupingActive = table.atoms.grouping.get().length > 0
   const hasAggregation = !!cell.column.columnDef.aggregationFn
   return !groupingActive
     ? undefined
@@ -341,7 +340,7 @@ function shuffleColumns() {
         <input
           class="global-filter-input"
           placeholder="Fuzzy search all columns..."
-          :value="table.store.get().globalFilter ?? ''"
+          :value="table.atoms.globalFilter.get() ?? ''"
           @input="
             (event) =>
               debounceSet('global', () =>
@@ -738,7 +737,7 @@ function shuffleColumns() {
       <span class="inline-controls">
         <div>Page</div>
         <strong>
-          {{ (table.store.get().pagination.pageIndex + 1).toLocaleString() }} of
+          {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
           {{ table.getPageCount().toLocaleString() }}
         </strong>
       </span>
@@ -748,7 +747,7 @@ function shuffleColumns() {
           type="number"
           min="1"
           :max="table.getPageCount()"
-          :value="table.store.get().pagination.pageIndex + 1"
+          :value="table.atoms.pagination.get().pageIndex + 1"
           @input="
             table.setPageIndex(
               ($event.target as HTMLInputElement).value
@@ -760,7 +759,7 @@ function shuffleColumns() {
         />
       </span>
       <select
-        :value="table.store.get().pagination.pageSize"
+        :value="table.atoms.pagination.get().pageSize"
         @change="
           table.setPageSize(Number(($event.target as HTMLSelectElement).value))
         "

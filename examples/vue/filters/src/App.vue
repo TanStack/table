@@ -78,11 +78,6 @@ const table = useAppTable(
       return columns.value
     },
   },
-  (state) => ({
-    columnFilters: state.columnFilters,
-    globalFilter: state.globalFilter,
-    pagination: state.pagination,
-  }),
 )
 
 function handleGoToPage(e: any) {
@@ -107,7 +102,7 @@ function handlePageSizeChange(e: any) {
     <div class="spacer-md" />
     <div>
       <DebouncedInput
-        :modelValue="table.store.get().globalFilter ?? ''"
+        :modelValue="table.atoms.globalFilter.get() ?? ''"
         @update:modelValue="(value) => table.setGlobalFilter(String(value))"
         className="summary-panel"
         placeholder="Search all columns..."
@@ -197,7 +192,7 @@ function handlePageSizeChange(e: any) {
       <span class="inline-controls">
         <div>Page</div>
         <strong>
-          {{ (table.store.get().pagination.pageIndex + 1).toLocaleString() }} of
+          {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
           {{ table.getPageCount().toLocaleString() }}
         </strong>
       </span>
@@ -211,7 +206,7 @@ function handlePageSizeChange(e: any) {
         />
       </span>
       <select
-        :value="table.store.get().pagination.pageSize"
+        :value="table.atoms.pagination.get().pageSize"
         @change="handlePageSizeChange"
       >
         <option :key="pageSize" :value="pageSize" v-for="pageSize in pageSizes">

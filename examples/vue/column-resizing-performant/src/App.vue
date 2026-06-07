@@ -83,7 +83,6 @@ const table = useTable(
     },
     debugTable: true,
   },
-  (state) => ({ pagination: state.pagination }),
 )
 
 const refreshData = () => {
@@ -184,7 +183,7 @@ function handlePageSizeChange(e: any) {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{ (table.store.get().pagination.pageIndex + 1).toLocaleString() }}
+            {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }}
             of
             {{ table.getPageCount().toLocaleString() }}
           </strong>
@@ -199,7 +198,7 @@ function handlePageSizeChange(e: any) {
           />
         </span>
         <select
-          :value="table.store.get().pagination.pageSize"
+          :value="table.atoms.pagination.get().pageSize"
           @change="handlePageSizeChange"
         >
           <option
@@ -212,7 +211,7 @@ function handlePageSizeChange(e: any) {
         </select>
       </div>
       <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.store.get().pagination, null, 2) }}</pre>
+      <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
     </div>
     <div class="spacer-sm" />
   </div>
