@@ -206,7 +206,7 @@ function TableHead({
 
 interface TableHeadRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  headerGroup: HeaderGroup<any, Person>
+  headerGroup: HeaderGroup<typeof features, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
   table: ReactTable<typeof features, Person>
@@ -331,7 +331,7 @@ function TableBody({
 
 interface TableBodyRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  row: Row<any, Person>
+  row: Row<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
@@ -379,7 +379,7 @@ function TableBodyRow({
 }
 
 interface TableBodyCellProps {
-  cell: Cell<any, Person, unknown>
+  cell: Cell<typeof features, Person, unknown>
   table: ReactTable<typeof features, Person>
 }
 

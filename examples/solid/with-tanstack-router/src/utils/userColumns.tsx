@@ -5,6 +5,7 @@ import type {
   TableFeatures,
 } from '@tanstack/solid-table'
 import type { User } from '../api/user'
+import type { features } from '../components/table'
 
 declare module '@tanstack/solid-table' {
   interface ColumnMeta<
@@ -17,7 +18,7 @@ declare module '@tanstack/solid-table' {
   }
 }
 
-export const USER_COLUMNS: Array<ColumnDef<any, User>> = [
+export const USER_COLUMNS: Array<ColumnDef<typeof features, User>> = [
   {
     accessorKey: 'id',
     header: () => <span>ID</span>,

@@ -111,7 +111,7 @@ declare module '@tanstack/react-table' {
   }
 }
 
-const features = tableFeatures({
+export const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,

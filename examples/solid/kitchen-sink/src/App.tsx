@@ -48,7 +48,7 @@ declare module '@tanstack/solid-table' {
     filterVariant?: 'text' | 'range' | 'select'
   }
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, Person>
+    fuzzy: FilterFn<typeof stockFeatures, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo

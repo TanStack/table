@@ -1,5 +1,6 @@
 <script lang="ts">
   import DebouncedInput from './DebouncedInput.svelte'
+  import type { features } from './features'
   import type { Person } from './makeData'
   import type { Column, Table } from '@tanstack/svelte-table'
 
@@ -7,8 +8,8 @@
     column,
     table,
   }: {
-    column: Column<any, Person, unknown>
-    table: Table<any, Person>
+    column: Column<typeof features, Person, unknown>
+    table: Table<typeof features, Person>
   } = $props()
 
   const firstValue = $derived(

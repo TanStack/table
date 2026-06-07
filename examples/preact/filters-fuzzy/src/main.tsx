@@ -20,7 +20,7 @@ import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
 import type { JSX } from 'preact'
 import type { Person } from './makeData'
-import type { Column, FilterFn, SortFn } from '@tanstack/preact-table'
+import type { Column, FilterFn, RowData, SortFn } from '@tanstack/preact-table'
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
@@ -35,7 +35,7 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<typeof features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,
@@ -73,7 +73,7 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
 declare module '@tanstack/preact-table' {
   // add fuzzy filter to the filterFns
   interface FilterFns {
-    fuzzy: FilterFn<typeof features, Person>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo

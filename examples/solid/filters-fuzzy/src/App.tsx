@@ -16,7 +16,7 @@ import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { For, createEffect, createSignal } from 'solid-js'
 import { makeData } from './makeData'
-import type { Column, FilterFn, SortFn } from '@tanstack/solid-table'
+import type { Column, FilterFn, RowData, SortFn } from '@tanstack/solid-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
@@ -29,7 +29,7 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
-const fuzzyFilter: FilterFn<typeof features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,
@@ -54,7 +54,7 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
 
 declare module '@tanstack/solid-table' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof features, Person>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo

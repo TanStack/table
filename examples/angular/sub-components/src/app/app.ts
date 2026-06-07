@@ -16,7 +16,7 @@ import { SubComponent } from './sub-component/sub-component'
 import type { Person } from './makeData'
 import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-const features = tableFeatures({
+export const features = tableFeatures({
   rowExpandingFeature,
   columnVisibilityFeature,
 })

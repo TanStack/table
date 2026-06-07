@@ -102,7 +102,7 @@ export class App {
   }
 
   readonly getCommonPinningStyles = (
-    column: Column<any, Person>,
+    column: Column<typeof features, Person>,
   ): Record<string, any> => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =

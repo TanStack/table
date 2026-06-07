@@ -28,7 +28,7 @@ export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>,
+  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, RowData>>,
 ): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
     const table: Table_Internal<TFeatures, TData> = _table

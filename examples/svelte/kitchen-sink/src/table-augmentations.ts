@@ -6,7 +6,6 @@ import type {
   TableFeatures,
   stockFeatures,
 } from '@tanstack/svelte-table'
-import type { Person } from './makeData'
 
 declare module '@tanstack/svelte-table' {
   interface ColumnMeta<
@@ -18,7 +17,7 @@ declare module '@tanstack/svelte-table' {
   }
 
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, Person>
+    fuzzy: FilterFn<typeof stockFeatures, RowData>
   }
 
   interface FilterMeta {

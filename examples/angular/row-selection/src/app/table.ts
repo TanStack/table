@@ -10,7 +10,7 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({
+export const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowPaginationFeature,

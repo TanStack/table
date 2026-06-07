@@ -65,14 +65,16 @@ export function table_getGlobalFilterFn<
   table: Table_Internal<TFeatures, TData>,
 ): FilterFn<TFeatures, TData> | FilterFn<TFeatures, TData> | undefined {
   const { globalFilterFn: globalFilterFn } = table.options
-  const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
+  const filterFns: Record<string, FilterFn<TFeatures, RowData>> | undefined =
     table._rowModelFns.filterFns
 
-  return isFunction(globalFilterFn)
+  const filterFn = isFunction(globalFilterFn)
     ? globalFilterFn
     : globalFilterFn === 'auto'
       ? table_getGlobalAutoFilterFn()
       : filterFns?.[globalFilterFn as string]
+
+  return filterFn as FilterFn<TFeatures, TData> | undefined
 }
 
 /**

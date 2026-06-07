@@ -25,11 +25,12 @@
     FilterFn,
     Header,
     Row,
+    RowData,
     SortFn,
   } from '@tanstack/svelte-table'
   import './index.css'
 
-  const fuzzyFilter: FilterFn<typeof stockFeatures, Person> = (
+  const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
     row,
     columnId,
     value,

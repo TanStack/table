@@ -40,7 +40,7 @@ export function column_getAutoFilterFn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
+  const filterFns: Record<string, FilterFn<TFeatures, RowData>> | undefined =
     column.table._rowModelFns.filterFns
 
   const firstRow = column.table.getCoreRowModel().flatRows[0]
@@ -90,7 +90,7 @@ export function column_getFilterFn<
   column: Column_Internal<TFeatures, TData, TValue>,
 ): FilterFn<TFeatures, TData> | undefined {
   let filterFn = null
-  const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
+  const filterFns: Record<string, FilterFn<TFeatures, RowData>> | undefined =
     column.table._rowModelFns.filterFns
   filterFn = isFunction(column.columnDef.filterFn)
     ? column.columnDef.filterFn
@@ -104,7 +104,7 @@ export function column_getFilterFn<
     )
   }
 
-  return filterFn
+  return filterFn as FilterFn<TFeatures, TData> | undefined
 }
 
 /**

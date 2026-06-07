@@ -1,35 +1,24 @@
 <script lang="ts">
   import {
     FlexRender,
-    columnFilteringFeature,
     createColumnHelper,
     createFilteredRowModel,
     createPaginatedRowModel,
     createSortedRowModel,
     createTable,
     filterFns,
-    globalFilteringFeature,
-    rowPaginationFeature,
-    rowSortingFeature,
     sortFns,
-    tableFeatures,
   } from '@tanstack/svelte-table'
   import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
   import DebouncedInput from './DebouncedInput.svelte'
   import './index.css'
+  import { features } from './features'
   import { makeData, type Person } from './makeData'
-  import type { Column, FilterFn, SortFn } from '@tanstack/svelte-table'
-
-  const features = tableFeatures({
-    columnFilteringFeature,
-    globalFilteringFeature,
-    rowSortingFeature,
-    rowPaginationFeature,
-  })
+  import type { Column, FilterFn, RowData, SortFn } from '@tanstack/svelte-table'
 
   const columnHelper = createColumnHelper<typeof features, Person>()
 
-  const fuzzyFilter: FilterFn<typeof features, Person> = (
+  const fuzzyFilter: FilterFn<typeof features, RowData> = (
     row,
     columnId,
     value,

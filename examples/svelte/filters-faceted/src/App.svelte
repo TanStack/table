@@ -2,8 +2,6 @@
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    columnFacetingFeature,
-    columnFilteringFeature,
     createFacetedMinMaxValues,
     createFacetedRowModel,
     createFacetedUniqueValues,
@@ -11,21 +9,12 @@
     createPaginatedRowModel,
     createTable,
     filterFns,
-    globalFilteringFeature,
-    rowPaginationFeature,
-    tableFeatures,
   } from '@tanstack/svelte-table'
   import DebouncedInput from './DebouncedInput.svelte'
   import ColumnFilter from './ColumnFilter.svelte'
   import './index.css'
+  import { features } from './features'
   import { makeData, type Person } from './makeData'
-
-  const features = tableFeatures({
-    columnFilteringFeature,
-    globalFilteringFeature,
-    columnFacetingFeature,
-    rowPaginationFeature,
-  })
 
   const columns: Array<ColumnDef<typeof features, Person>> = [
     {

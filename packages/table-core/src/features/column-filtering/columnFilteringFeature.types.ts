@@ -39,7 +39,7 @@ export interface RowModelFns_ColumnFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>
+  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, RowData>>
 }
 
 export interface FilterFn<
@@ -71,12 +71,12 @@ export type ColumnFilterAutoRemoveTestFn<
 export type CustomFilterFns<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Record<string, FilterFn<TFeatures, TData>>
+> = Record<string, FilterFn<TFeatures, RowData>>
 
 export type FilterFnOption<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = 'auto' | BuiltInFilterFn | keyof FilterFns | FilterFn<TFeatures, TData>
+> = 'auto' | BuiltInFilterFn | keyof FilterFns | FilterFn<TFeatures, RowData>
 
 export interface ColumnDef_ColumnFiltering<
   TFeatures extends TableFeatures,

@@ -30,13 +30,15 @@ import {
 // are LitElement custom elements that use useTableContext(this) directly,
 // so they don't need to be registered here as tableComponents.
 
+export const features = tableFeatures({
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowSortingFeature,
+})
+
 export const { createAppColumnHelper, useAppTable, useTableContext } =
   createTableHook({
-    features: tableFeatures({
-      columnFilteringFeature,
-      rowPaginationFeature,
-      rowSortingFeature,
-    }),
+    features,
     rowModels: {
       sortedRowModel: createSortedRowModel(sortFns),
       filteredRowModel: createFilteredRowModel(filterFns),

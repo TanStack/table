@@ -17,7 +17,7 @@ import {
 } from '@tanstack/angular-table'
 import { DebouncedInput } from './debounced-input/debounced-input'
 import { makeData } from './makeData'
-import type { FilterFn, SortFn } from '@tanstack/angular-table'
+import type { FilterFn, RowData, SortFn } from '@tanstack/angular-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
@@ -31,14 +31,14 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 
 declare module '@tanstack/angular-table' {
   interface FilterFns {
-    fuzzy: FilterFn<typeof features, Person>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof features, Person> = (
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,

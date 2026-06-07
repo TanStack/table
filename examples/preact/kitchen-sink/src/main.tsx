@@ -50,14 +50,14 @@ declare module '@tanstack/preact-table' {
     filterVariant?: 'text' | 'range' | 'select'
   }
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, Person>
+    fuzzy: FilterFn<typeof stockFeatures, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof stockFeatures, Person> = (
+const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
   row,
   columnId,
   value,
