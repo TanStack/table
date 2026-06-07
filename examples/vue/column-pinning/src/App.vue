@@ -82,18 +82,16 @@ const stressTest = () => {
   data.value = makeData(500_000)
 }
 
-const table = useTable(
-  {
-    features,
-    data,
-    get columns() {
-      return columns.value
-    },
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
+const table = useTable({
+  features,
+  data,
+  get columns() {
+    return columns.value
   },
-)
+  debugTable: true,
+  debugHeaders: true,
+  debugColumns: true,
+})
 
 const randomizeColumns = () => {
   table.setColumnOrder(

@@ -104,21 +104,19 @@ const toggleRowSelection = () => {
   enableRowSelection.value = !enableRowSelection.value
 }
 
-const table = useTable(
-  {
-    key: 'row-selection', // needed for devtools
-    features,
-    rowModels: {},
-    data,
-    columns,
-    debugTable: true,
-    // enable row selection for all rows
-    get enableRowSelection() {
-      return enableRowSelection.value
-    },
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+const table = useTable({
+  key: 'row-selection', // needed for devtools
+  features,
+  rowModels: {},
+  data,
+  columns,
+  debugTable: true,
+  // enable row selection for all rows
+  get enableRowSelection() {
+    return enableRowSelection.value
   },
-)
+  // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+})
 
 useTanStackTableDevtools(table)
 </script>

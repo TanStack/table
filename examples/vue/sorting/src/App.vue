@@ -57,17 +57,15 @@ const stressTest = () => {
   data.value = makeData(500_000)
 }
 
-const table = useTable(
-  {
-    features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
-    data,
-    columns,
-    debugTable: true,
+const table = useTable({
+  features,
+  rowModels: {
+    sortedRowModel: createSortedRowModel(sortFns),
   },
-)
+  data,
+  columns,
+  debugTable: true,
+})
 </script>
 
 <template>

@@ -71,19 +71,17 @@ const columns = ref(
   ]),
 )
 
-const table = useTable(
-  {
-    features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-    data,
-    get columns() {
-      return columns.value
-    },
-    debugTable: true,
+const table = useTable({
+  features,
+  rowModels: {
+    paginatedRowModel: createPaginatedRowModel(),
   },
-)
+  data,
+  get columns() {
+    return columns.value
+  },
+  debugTable: true,
+})
 
 const refreshData = () => {
   data.value = makeData(1_000)

@@ -161,40 +161,38 @@ const columns = ref(
 
 const data = ref(makeData(1_000))
 
-const table = useTable(
-  {
-    key: 'kitchen-sink', // needed for devtools
-    features: stockFeatures,
-    rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-      filteredRowModel: createFilteredRowModel({
-        ...filterFns,
-        fuzzy: fuzzyFilter,
-      }),
-      facetedRowModel: createFacetedRowModel(),
-      facetedMinMaxValues: createFacetedMinMaxValues(),
-      facetedUniqueValues: createFacetedUniqueValues(),
-      groupedRowModel: createGroupedRowModel(aggregationFns),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
-    data,
-    get columns() {
-      return columns.value
-    },
-    getSubRows: (row: Person) => row.subRows,
-    globalFilterFn: 'fuzzy',
-    columnResizeMode: 'onChange',
-    defaultColumn: { minSize: 200, maxSize: 800 },
-    initialState: {
-      columnOrder: columns.value.map((c) => c.id!),
-      columnPinning: { left: ['select'], right: [] },
-      pagination: { pageIndex: 0, pageSize: 20 },
-    },
-    keepPinnedRows: true,
-    debugTable: true,
+const table = useTable({
+  key: 'kitchen-sink', // needed for devtools
+  features: stockFeatures,
+  rowModels: {
+    expandedRowModel: createExpandedRowModel(),
+    filteredRowModel: createFilteredRowModel({
+      ...filterFns,
+      fuzzy: fuzzyFilter,
+    }),
+    facetedRowModel: createFacetedRowModel(),
+    facetedMinMaxValues: createFacetedMinMaxValues(),
+    facetedUniqueValues: createFacetedUniqueValues(),
+    groupedRowModel: createGroupedRowModel(aggregationFns),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(sortFns),
   },
-)
+  data,
+  get columns() {
+    return columns.value
+  },
+  getSubRows: (row: Person) => row.subRows,
+  globalFilterFn: 'fuzzy',
+  columnResizeMode: 'onChange',
+  defaultColumn: { minSize: 200, maxSize: 800 },
+  initialState: {
+    columnOrder: columns.value.map((c) => c.id!),
+    columnPinning: { left: ['select'], right: [] },
+    pagination: { pageIndex: 0, pageSize: 20 },
+  },
+  keepPinnedRows: true,
+  debugTable: true,
+})
 
 useTanStackTableDevtools(table)
 

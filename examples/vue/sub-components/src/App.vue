@@ -75,15 +75,13 @@ const stressTest = () => {
   data.value = makeData(1_000)
 }
 
-const table = useAppTable(
-  {
-    debugTable: true,
-    // features and row models are already defined in the createTableHook call
-    data,
-    columns,
-    getRowCanExpand: () => true,
-  },
-)
+const table = useAppTable({
+  debugTable: true,
+  // features and row models are already defined in the createTableHook call
+  data,
+  columns,
+  getRowCanExpand: () => true,
+})
 </script>
 
 <template>

@@ -70,15 +70,13 @@ const stressTest = () => {
   data.value = makeData(200_000)
 }
 
-const table = useAppTable(
-  {
-    debugTable: true,
-    data,
-    get columns() {
-      return columns.value
-    },
+const table = useAppTable({
+  debugTable: true,
+  data,
+  get columns() {
+    return columns.value
   },
-)
+})
 
 function handleGoToPage(e: any) {
   const page = e.target.value ? Number(e.target.value) - 1 : 0

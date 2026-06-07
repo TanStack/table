@@ -78,35 +78,33 @@ export default defineComponent({
       pageSize: 10,
     })
 
-    const table = useTable(
-      {
-        key: 'basic-external-state', // needed for devtools
-        debugTable: true,
-        features,
-        rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-          paginatedRowModel: createPaginatedRowModel(),
+    const table = useTable({
+      key: 'basic-external-state', // needed for devtools
+      debugTable: true,
+      features,
+      rowModels: {
+        sortedRowModel: createSortedRowModel(sortFns),
+        paginatedRowModel: createPaginatedRowModel(),
+      },
+      columns,
+      get data() {
+        return data.value
+      },
+      state: {
+        get sorting() {
+          return sorting.value
         },
-        columns,
-        get data() {
-          return data.value
-        },
-        state: {
-          get sorting() {
-            return sorting.value
-          },
-          get pagination() {
-            return pagination.value
-          },
-        },
-        onSortingChange: (updater: Updater<SortingState>) => {
-          sorting.value = resolveUpdater(updater, sorting.value)
-        },
-        onPaginationChange: (updater: Updater<PaginationState>) => {
-          pagination.value = resolveUpdater(updater, pagination.value)
+        get pagination() {
+          return pagination.value
         },
       },
-)
+      onSortingChange: (updater: Updater<SortingState>) => {
+        sorting.value = resolveUpdater(updater, sorting.value)
+      },
+      onPaginationChange: (updater: Updater<PaginationState>) => {
+        pagination.value = resolveUpdater(updater, pagination.value)
+      },
+    })
 
     useTanStackTableDevtools(table)
 
