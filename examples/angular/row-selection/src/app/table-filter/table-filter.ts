@@ -56,7 +56,7 @@ export class TableFilter {
       | [string | undefined, string | undefined]
       | undefined
 
-    return (minValue?.[0] ?? '')
+    return minValue?.[0] ?? ''
   }
 
   getMaxValue() {
@@ -64,7 +64,7 @@ export class TableFilter {
       | [string | undefined, string | undefined]
       | undefined
 
-    return (maxValue?.[1] ?? '')
+    return maxValue?.[1] ?? ''
   }
 
   updateMinFilterValue(newValue: string): void {
