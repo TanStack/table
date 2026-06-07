@@ -1,4 +1,4 @@
-import { unref, watch } from 'vue'
+import { getCurrentScope, onScopeDispose, unref, watch } from 'vue'
 import { constructTable } from '@tanstack/table-core'
 import { flatMerge, mergeProxy } from './merge-proxy'
 import { vueReactivity } from './reactivity'
@@ -99,9 +99,11 @@ export function useTable<
     )
   }
 
+  const reactivity = vueReactivity()
+
   const mergedOptions = mergeProxy(tableOptions, {
     features: {
-      coreReativityFeature: vueReactivity(),
+      coreReativityFeature: reactivity,
       ...(unref(tableOptions.features) ?? {}),
     },
   }) as TableOptionsWithReactiveData<TFeatures, TData>
@@ -121,6 +123,10 @@ export function useTable<
 
   const coreTable = constructTable(resolvedOptions)
   const table = coreTable as unknown as VueTable<TFeatures, TData>
+
+  if (getCurrentScope()) {
+    onScopeDispose(() => reactivity.unmount?.())
+  }
 
   watch(
     () => getReactiveOptionDeps(mergedOptions),
@@ -165,11 +171,11 @@ export function useTable<
     { immediate: true },
   )
 
-  table.Subscribe = ((props: {
+  table.Subscribe = (props: {
     children: (atoms: Table<TFeatures, TData>['atoms']) => VNode | Array<VNode>
   }) => {
     return props.children(table.atoms)
-  }) as VueTable<TFeatures, TData>['Subscribe']
+  }
 
   return table
 }
