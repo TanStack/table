@@ -65,7 +65,6 @@ function App() {
   })
 
   // Subscribe to each atom independently — fine-grained Solid reactivity.
-  const sorting = useSelector(sortingAtom)
   const pagination = useSelector(paginationAtom)
 
   // Create the table and pass your per-slice external atoms.

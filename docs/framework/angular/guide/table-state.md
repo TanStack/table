@@ -28,8 +28,7 @@ A table instance has a few state surfaces:
 
 - `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
-- `table.state` is a readonly flat proxy over the registered `table.atoms`, useful for full-state debug output.
-- `table.store` is the underlying readonly flat TanStack Store. Prefer `table.atoms` or `table.state` in app code.
+- `table.store` is the readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
 
 The Angular adapter provides `angularReactivity(injector)` as the table's reactivity binding. Core readonly atoms are Angular `computed` values, writable atoms are Angular `signal` values, and subscriptions bridge through `toObservable(computed(...), { injector })`. `injectTable` reruns the options initializer when Angular signals read inside it change, then calls `table.setOptions`.
 
@@ -61,7 +60,7 @@ this.table.atoms.sorting.get()
 // this.table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.get()`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -81,11 +80,11 @@ const pagination = this.table.atoms.pagination.get()
 const sorting = this.table.atoms.sorting.get()
 ```
 
-Use `table.state` when you need the current flat state shape, such as debug JSON:
+Use `table.store.get()` when you need the current flat state shape, such as debug JSON:
 
 ```ts
-const tableState = this.table.state
-const stateJson = JSON.stringify(this.table.state, null, 2)
+const tableState = this.table.store.get()
+const stateJson = JSON.stringify(this.table.store.get(), null, 2)
 ```
 
 Atom reads are signal reads in Angular. If `this.table.atoms.pagination.get()` is used in a template expression, `computed(...)`, or `effect(...)`, Angular tracks it and updates when that atom changes.
@@ -116,11 +115,11 @@ readonly pagination = computed(
 readonly pageIndex = computed(() => this.pagination().pageIndex)
 ```
 
-You can also select from the flat state proxy if that is more convenient, but prefer direct atoms for narrow render reads.
+You can also select from the flat store snapshot if that is more convenient, but prefer direct atoms for narrow render reads.
 
 ```ts
 readonly pagination = computed(
-  () => this.table.state.pagination,
+  () => this.table.store.get().pagination,
   { equal: shallow },
 )
 ```
@@ -243,7 +242,7 @@ readonly table = injectTable(() => ({
 }))
 ```
 
-The v8-style `onStateChange` option is no longer part of the v9 `injectTable` state model. v9 encourages keeping table state slices atomic and separated for performance.
+Use the per-slice `on[State]Change` callbacks to keep controlled table state slices atomic and separated.
 
 ##### On State Change Callbacks
 
