@@ -21,7 +21,7 @@ export function createSortedRowModel<
   sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>,
 ): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table: Table_Internal<TFeatures, TData> = _table
+    const table = _table as unknown as Table_Internal<TFeatures, TData>
     if (!table._rowModelFns.sortFns) table._rowModelFns.sortFns = sortFns
     return tableMemo({
       feature: 'rowSortingFeature',

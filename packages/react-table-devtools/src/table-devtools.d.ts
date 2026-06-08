@@ -4,17 +4,30 @@ declare module '@tanstack/table-devtools' {
 
   export const TableDevtoolsCore: ClassType
 
+  export interface TableDevtoolsTable {
+    options: {
+      key?: string
+      [key: string]: unknown
+    }
+  }
+
   export interface TableDevtoolsRegistration {
     id: string
-    table: Table<TableFeatures, RowData>
+    table: TableDevtoolsTable
   }
 
-  export interface UpsertTableDevtoolsTargetOptions {
-    table: Table<TableFeatures, RowData>
+  export interface UpsertTableDevtoolsTargetOptions<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    table: Table<TFeatures, TData>
   }
 
-  export function upsertTableDevtoolsTarget(
-    options: UpsertTableDevtoolsTargetOptions,
+  export function upsertTableDevtoolsTarget<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    options: UpsertTableDevtoolsTargetOptions<TFeatures, TData>,
   ): (() => void) | undefined
 
   export function removeTableDevtoolsTarget(id: string): void

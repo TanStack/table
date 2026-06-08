@@ -4,10 +4,10 @@ import * as React from 'react'
 import { Check, ChevronsUpDown, GripVertical, Settings2 } from 'lucide-react'
 import type {
   ColumnOrderState,
+  ReactTable,
   RowData,
-  Table,
-  TableFeatures,
 } from '@tanstack/react-table'
+import type { features } from '@/main'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -33,23 +33,17 @@ import {
   SortableOverlay,
 } from '@/components/ui/sortable'
 
-interface DataTableViewOptionsProps<
-  TFeatures extends TableFeatures,
-  TRowData extends RowData,
-> {
-  table: Table<Pick<TFeatures, 'columnVisibilityFeature'>, TRowData>
+interface DataTableViewOptionsProps<TRowData extends RowData> {
+  table: ReactTable<typeof features, TRowData>
   columnOrder: ColumnOrderState
   onColumnOrderChange: (columnOrder: ColumnOrderState) => void
 }
 
-export function DataTableViewOptions<
-  TFeatures extends TableFeatures,
-  TRowData extends RowData,
->({
+export function DataTableViewOptions<TRowData extends RowData>({
   table,
   columnOrder,
   onColumnOrderChange,
-}: DataTableViewOptionsProps<TFeatures, TRowData>) {
+}: DataTableViewOptionsProps<TRowData>) {
   const triggerRef = React.useRef<HTMLButtonElement>(null)
 
   return (

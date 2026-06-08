@@ -9,7 +9,7 @@ import type { Signal } from '@angular/core'
  * This token is provided by the {@link TanStackTable} directive.
  */
 export const TanStackTableToken = new InjectionToken<
-  Signal<AngularTable<any, any>>
+  Signal<AngularTable<TableFeatures, RowData>>
 >('[TanStack Table] Table Context')
 
 /**
@@ -81,5 +81,7 @@ export function injectTableContext<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): Signal<AngularTable<TFeatures, TData>> {
-  return inject(TanStackTableToken)
+  return inject(TanStackTableToken) as unknown as Signal<
+    AngularTable<TFeatures, TData>
+  >
 }

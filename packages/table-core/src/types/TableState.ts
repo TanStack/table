@@ -11,17 +11,7 @@ import type { TableState_RowPagination } from '../features/row-pagination/rowPag
 import type { TableState_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { TableState_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableState_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-import type {
-  ExtractFeatureMapTypes,
-  ExtractFeatureTypes,
-  TableFeatures,
-} from './TableFeatures'
-
-/**
- * Use this interface as a target for declaration merging to add your own state properties.
- * Note: This will affect the types of all tables in your project.
- */
-export interface TableState_Plugins<TFeatures extends TableFeatures> {}
+import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 
 export interface TableState_FeatureMap {
   columnFilteringFeature: TableState_ColumnFiltering
@@ -46,28 +36,12 @@ export interface TableState_FeatureMap {
  * then custom feature/plugin state is mixed in.
  */
 export type TableState<TFeatures extends TableFeatures> =
-  ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap> &
-    ExtractFeatureTypes<'TableState', TFeatures> &
-    TableState_Plugins<TFeatures>
+  ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>
 
 /**
- * Internal broad state shape containing every stock feature state slice.
+ * Internal broad state shape containing every registered feature state slice.
  *
  * Feature internals use this when they may need to inspect optional slices owned
  * by other features.
  */
-export type TableState_All = Partial<
-  TableState_ColumnFiltering &
-    TableState_ColumnGrouping &
-    TableState_ColumnOrdering &
-    TableState_ColumnPinning &
-    TableState_ColumnResizing &
-    TableState_ColumnSizing &
-    TableState_ColumnVisibility &
-    TableState_GlobalFiltering &
-    TableState_RowExpanding &
-    TableState_RowPagination &
-    TableState_RowPinning &
-    TableState_RowSelection &
-    TableState_RowSorting
->
+export type TableState_All = Partial<TableState<TableFeatures>>

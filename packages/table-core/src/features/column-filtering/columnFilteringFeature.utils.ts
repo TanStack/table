@@ -323,7 +323,7 @@ export function shouldAutoRemoveFilter<
 ) {
   return (
     (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column)
+      ? filterFn.autoRemove(value, column as Column_Internal<TFeatures, TData>)
       : false) ||
     typeof value === 'undefined' ||
     (typeof value === 'string' && !value)

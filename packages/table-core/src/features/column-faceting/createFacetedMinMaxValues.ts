@@ -18,7 +18,7 @@ export function createFacetedMinMaxValues<
   columnId: string,
 ) => () => undefined | [number, number] {
   return (_table, columnId) => {
-    const table: Table_Internal<TFeatures, TData> = _table
+    const table = _table as unknown as Table_Internal<TFeatures, TData>
     return tableMemo({
       feature: 'columnFacetingFeature',
       fn: (flatRows) => _createFacetedMinMaxValues(columnId, flatRows),

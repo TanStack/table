@@ -16,7 +16,7 @@ export function createExpandedRowModel<
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table: Table_Internal<TFeatures, TData> = _table
+    const table = _table as unknown as Table_Internal<TFeatures, TData>
     return tableMemo({
       feature: 'rowExpandingFeature',
       table,

@@ -7,7 +7,7 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
-import type { TableState } from '../../types/TableState'
+import type { TableState, TableState_All } from '../../types/TableState'
 
 /**
  * Builds the initial table state from registered features and user initial state.
@@ -44,7 +44,7 @@ export function constructTable<
     atoms: {},
   } as Table_Internal<TFeatures, TData>
 
-  const featuresList: Array<TableFeature<{}>> = Object.values(table._features)
+  const featuresList: Array<TableFeature> = Object.values(table._features)
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
@@ -100,7 +100,7 @@ export function constructTable<
   )
 
   const stateKeys = Object.keys(table.initialState) as Array<
-    string & keyof TableState<TFeatures>
+    string & keyof TableState_All
   >
 
   for (let i = 0; i < stateKeys.length; i++) {
@@ -115,11 +115,14 @@ export function constructTable<
     // create readonly derived atom: on each get(), read either external atom or base atom
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {
-        const externalAtom = table.options.atoms?.[key]
+        const externalAtoms = table.options.atoms as
+          | Partial<Record<keyof TableState_All, Atom<unknown>>>
+          | undefined
+        const externalAtom = externalAtoms?.[key]
         if (externalAtom) {
           return externalAtom.get()
         }
-        return table.baseAtoms[key].get()
+        return table.baseAtoms[key]!.get()
       },
       { debugName: `table/atoms/${key}` },
     )
@@ -130,10 +133,10 @@ export function constructTable<
   table.store = atomToStore(
     _reactivity.createReadonlyAtom(
       () => {
-        const snapshot = {} as TableState<TFeatures>
+        const snapshot = {} as TableState<TFeatures> & TableState_All
         for (let i = 0; i < stateKeys.length; i++) {
           const key = stateKeys[i]!
-          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key].get()
+          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key]!.get()
         }
         return snapshot
       },

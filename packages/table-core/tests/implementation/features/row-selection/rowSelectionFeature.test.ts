@@ -23,7 +23,7 @@ type personKeys = keyof Person
 type PersonColumn = ColumnDef<typeof features, Person, any>
 
 function generateColumnDefs(people: Array<Person>): Array<PersonColumn> {
-  const columnHelper = createColumnHelper<any, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
   const person = people[0]
 
   if (!person) {

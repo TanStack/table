@@ -1,13 +1,14 @@
 <script lang="ts">
-  import type { Header, TableFeatures } from '@tanstack/svelte-table'
+  import type { Header } from '@tanstack/svelte-table'
+  import type { features } from './tableHelper.svelte'
   import type { Person } from './makeData'
 
-  type Props<TFeatures extends TableFeatures> = {
+  type Props = {
     label?: string
-    header?: Header<TFeatures, Person, unknown>
+    header?: Header<typeof features, Person, unknown>
   }
 
-  const { label, header }: Props<any> = $props()
+  const { label, header }: Props = $props()
 </script>
 
 {#if header && header.column}

@@ -10,12 +10,12 @@ import {
 } from 'lucide-react'
 import type {
   ColumnSort,
+  ReactTable,
   RowData,
   SortDirection,
   SortingState,
-  Table,
-  TableFeatures,
 } from '@tanstack/react-table'
+import type { features } from '@/main'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -48,23 +48,17 @@ import {
 } from '@/components/ui/sortable'
 import { cn } from '@/lib/utils'
 
-interface DataTableSortListProps<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  table: Table<Pick<TFeatures, 'rowSortingFeature'>, TData>
+interface DataTableSortListProps<TData extends RowData> {
+  table: ReactTable<typeof features, TData>
   sorting: SortingState
   onSortingChange: (sorting: SortingState) => void
 }
 
-export function DataTableSortList<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->({
+export function DataTableSortList<TData extends RowData>({
   table,
   sorting,
   onSortingChange,
-}: DataTableSortListProps<TFeatures, TData>) {
+}: DataTableSortListProps<TData>) {
   const labelId = React.useId()
   const descriptionId = React.useId()
   const listId = React.useId()

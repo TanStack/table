@@ -9,7 +9,7 @@ import type { Column, RowData, TableFeatures } from '@tanstack/table-core'
 type AnyColumn = Column<TableFeatures, RowData, unknown>
 
 function getColumnDefSummary(column: AnyColumn): string {
-  const def = column.columnDef as Record<string, unknown>
+  const def = column.columnDef as unknown as Record<string, unknown>
   const header = def.header
   const accessorKey = def.accessorKey
   const accessorFn = def.accessorFn
@@ -45,9 +45,14 @@ export function ColumnsPanel() {
 
     tableState()
 
+    const tableWithColumnFns = tableInstance as unknown as {
+      getAllFlatColumns?: () => Array<AnyColumn>
+      getAllLeafColumns?: () => Array<AnyColumn>
+    }
+
     return (
-      tableInstance.getAllFlatColumns?.() ??
-      tableInstance.getAllLeafColumns?.() ??
+      tableWithColumnFns.getAllFlatColumns?.() ??
+      tableWithColumnFns.getAllLeafColumns?.() ??
       []
     )
   })

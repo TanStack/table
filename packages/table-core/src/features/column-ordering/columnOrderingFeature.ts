@@ -12,94 +12,62 @@ import {
   table_resetColumnOrder,
   table_setColumnOrder,
 } from './columnOrderingFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   Column_ColumnOrdering,
-//   TableOptions_ColumnOrdering,
-//   TableState_ColumnOrdering,
-//   Table_ColumnOrdering,
-// } from './columnOrderingFeature.types'
-
-export interface ColumnOrderingFeatureConstructors<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  // Column: Column_ColumnOrdering
-  // Table: Table_ColumnOrdering<TFeatures, TData>
-  // TableOptions: TableOptions_ColumnOrdering
-  // TableState: TableState_ColumnOrdering
-}
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
- * Creates the stock column ordering feature.
- *
- * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ * Feature that adds column ordering state and APIs for ordering leaf columns.
  */
-export function constructColumnOrderingFeature<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(): TableFeature<ColumnOrderingFeatureConstructors<TFeatures, TData>> {
-  return {
-    getInitialState: (initialState) => {
-      return {
-        columnOrder: getDefaultColumnOrderState(),
-        ...initialState,
-      }
-    },
+export const columnOrderingFeature: TableFeature = {
+  getInitialState: (initialState) => {
+    return {
+      columnOrder: getDefaultColumnOrderState(),
+      ...initialState,
+    }
+  },
 
-    getDefaultTableOptions: (table) => {
-      return {
-        onColumnOrderChange: makeStateUpdater('columnOrder', table),
-      }
-    },
+  getDefaultTableOptions: (table) => {
+    return {
+      onColumnOrderChange: makeStateUpdater('columnOrder', table),
+    }
+  },
 
-    assignColumnPrototype: (prototype, table) => {
-      assignPrototypeAPIs('columnOrderingFeature', prototype, table, {
-        column_getIndex: {
-          fn: (column, position) => column_getIndex(column, position),
-          memoDeps: (column, position) => [
-            position,
-            column.table.atoms.columnOrder?.get(),
-            column.table.atoms.columnPinning?.get(),
-            column.table.atoms.grouping?.get(),
-            column.table.atoms.columnVisibility?.get(),
-          ],
-        },
-        column_getIsFirstColumn: {
-          fn: (column, position) => column_getIsFirstColumn(column, position),
-        },
-        column_getIsLastColumn: {
-          fn: (column, position) => column_getIsLastColumn(column, position),
-        },
-      })
-    },
+  assignColumnPrototype: (prototype, table) => {
+    assignPrototypeAPIs('columnOrderingFeature', prototype, table, {
+      column_getIndex: {
+        fn: (column, position) => column_getIndex(column, position),
+        memoDeps: (column, position) => [
+          position,
+          column.table.atoms.columnOrder?.get(),
+          column.table.atoms.columnPinning?.get(),
+          column.table.atoms.grouping?.get(),
+          column.table.atoms.columnVisibility?.get(),
+        ],
+      },
+      column_getIsFirstColumn: {
+        fn: (column, position) => column_getIsFirstColumn(column, position),
+      },
+      column_getIsLastColumn: {
+        fn: (column, position) => column_getIsLastColumn(column, position),
+      },
+    })
+  },
 
-    constructTableAPIs: (table) => {
-      assignTableAPIs('columnOrderingFeature', table, {
-        table_setColumnOrder: {
-          fn: (updater) => table_setColumnOrder(table, updater),
-        },
-        table_resetColumnOrder: {
-          fn: (defaultState) => table_resetColumnOrder(table, defaultState),
-        },
-        table_getOrderColumnsFn: {
-          fn: () => table_getOrderColumnsFn(table),
-          memoDeps: () => [
-            table.atoms.columnOrder?.get(),
-            table.atoms.grouping?.get(),
-            table.options.groupedColumnMode,
-          ],
-        },
-      })
-    },
-  }
+  constructTableAPIs: (table) => {
+    assignTableAPIs('columnOrderingFeature', table, {
+      table_setColumnOrder: {
+        fn: (updater) => table_setColumnOrder(table, updater),
+      },
+      table_resetColumnOrder: {
+        fn: (defaultState) => table_resetColumnOrder(table, defaultState),
+      },
+      table_getOrderColumnsFn: {
+        fn: () => table_getOrderColumnsFn(table),
+        memoDeps: () => [
+          table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
+        ],
+      },
+    })
+  },
 }
-
-/**
- * The stock column ordering feature.
- *
- * Register this feature to add column order state and APIs for deriving the
- * ordered leaf column list alongside grouping and pinning.
- */
-export const columnOrderingFeature = constructColumnOrderingFeature()

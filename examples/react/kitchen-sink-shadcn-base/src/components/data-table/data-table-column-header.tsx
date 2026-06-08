@@ -10,7 +10,8 @@ import {
   PinOff,
   Ungroup,
 } from 'lucide-react'
-import type { Column, RowData, TableFeatures } from '@tanstack/react-table'
+import type { CellData, Column, RowData } from '@tanstack/react-table'
+import type { features } from '@/main'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -32,29 +33,18 @@ import { cn } from '@/lib/utils'
  * (https://ui.shadcn.com/docs/components/radix/data-table) but extended to
  * cover grouping and pinning since the kitchen-sink uses the full v9 surface.
  */
-/**
- * Features the dropdown queries on the column. Mirrors the generic shape the
- * other `data-table-*` components use (TFeatures extends TableFeatures,
- * narrowed via Pick at the use site).
- */
-type ColumnHeaderFeatureKeys =
-  | 'columnGroupingFeature'
-  | 'columnPinningFeature'
-  | 'columnVisibilityFeature'
-  | 'rowSortingFeature'
-
 interface DataTableColumnHeaderProps<
-  TFeatures extends TableFeatures,
   TData extends RowData,
+  TValue extends CellData = CellData,
 > extends React.HTMLAttributes<HTMLDivElement> {
-  column: Column<Pick<TFeatures, ColumnHeaderFeatureKeys>, TData>
+  column: Column<typeof features, TData, TValue>
   title: string
 }
 
 export function DataTableColumnHeader<
-  TFeatures extends TableFeatures,
   TData extends RowData,
->({ column, title, className }: DataTableColumnHeaderProps<TFeatures, TData>) {
+  TValue extends CellData = CellData,
+>({ column, title, className }: DataTableColumnHeaderProps<TData, TValue>) {
   const canSort = column.getCanSort()
   const canHide = column.getCanHide()
   const canPin = column.getCanPin()

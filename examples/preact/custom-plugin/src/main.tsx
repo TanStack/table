@@ -2,6 +2,7 @@ import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
+  assignTableAPIs,
   columnFilteringFeature,
   createColumnHelper,
   createFilteredRowModel,
@@ -21,7 +22,9 @@ import type {
   Column,
   OnChangeFn,
   PreactTable,
+  RowData,
   TableFeature,
+  TableFeatures,
   Updater,
 } from '@tanstack/preact-table'
 import type { Person } from './makeData'
@@ -46,14 +49,32 @@ export interface Table_Density {
   toggleDensity: (value?: DensityState) => void
 }
 
-interface DensityPluginConstructors {
-  Table: Table_Density
-  TableOptions: TableOptions_Density
-  TableState: TableState_Density
+declare module '@tanstack/preact-table' {
+  interface Plugins {
+    densityPlugin: TableFeature
+  }
+
+  interface TableState_FeatureMap {
+    densityPlugin: TableState_Density
+  }
+
+  interface TableOptions_FeatureMap<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    densityPlugin: TableOptions_Density
+  }
+
+  interface Table_FeatureMap<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    densityPlugin: Table_Density
+  }
 }
 
 // Here is all of the actual javascript code for our new feature
-export const densityPlugin: TableFeature<DensityPluginConstructors> = {
+export const densityPlugin: TableFeature = {
   // define the new feature's initial state
   getInitialState: (initialState) => {
     return {
@@ -74,32 +95,27 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
 
   // define the new feature's table instance methods
   constructTableAPIs: (table) => {
-    table.setDensity = (updater) => {
-      const safeUpdater: Updater<DensityState> = (old) => {
-        const newState = functionalUpdate(updater, old)
-        return newState
-      }
-      return table.options.onDensityChange?.(safeUpdater)
-    }
-    table.toggleDensity = (value) => {
-      table.setDensity?.((old) => {
-        if (value) return value
-        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
-      })
-    }
+    assignTableAPIs('densityPlugin', table, {
+      table_setDensity: {
+        fn: (updater: Updater<DensityState>) => {
+          const safeUpdater: Updater<DensityState> = (old) => {
+            const newState = functionalUpdate(updater, old)
+            return newState
+          }
+          return table.options.onDensityChange?.(safeUpdater)
+        },
+      },
+      table_toggleDensity: {
+        fn: (value?: DensityState) => {
+          const safeUpdater: Updater<DensityState> = (old) => {
+            if (value) return value
+            return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
+          }
+          return table.options.onDensityChange?.(safeUpdater)
+        },
+      },
+    })
   },
-
-  // if you need to add row instance APIs...
-  // constructRowAPIs: (row) => {},
-
-  // if you need to add cell instance APIs...
-  // constructCellAPIs: (cell) => {},
-
-  // if you need to add column instance APIs...
-  // constructColumnAPIs: (column) => {},
-
-  // if you need to add header instance APIs...
-  // constructHeaderAPIs: (header) => {},
 }
 // end of custom feature code
 

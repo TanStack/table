@@ -4,10 +4,10 @@ import { generateTestData } from '../fixtures/data/generateTestData'
 import { storeReactivityBindings } from '../../src/store-reactivity-bindings'
 import type {
   Row,
-  Table,
   TableFeatures,
   TableOptions,
   TableState,
+  Table_Internal,
 } from '../../src'
 import type { Person } from '../fixtures/data/types'
 
@@ -17,9 +17,9 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
     TableOptions<TFeatures, Person>,
     'data' | 'columns' | 'features'
   > & {
-    features?: TableFeatures
+    features?: TFeatures
   },
-): Table<TFeatures, Person> {
+): Table_Internal<TFeatures, Person> {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
   const data = generateTestData(...lengthsArray)
   const columns = generateTestColumnDefs<TFeatures>(data)
@@ -34,15 +34,15 @@ export function generateTestTableWithData<TFeatures extends TableFeatures>(
       ...options?.features,
       coreReativityFeature: storeReactivityBindings(),
     },
-  } as any)
+  } as any) as unknown as Table_Internal<TFeatures, Person>
 }
 
 export function generateTestTableFromData<TFeatures extends TableFeatures>(
   data: Array<Person>,
   options?: Omit<TableOptions<TFeatures, Person>, 'data' | 'columns'>,
-): Table<TFeatures, Person> {
+): Table_Internal<TFeatures, Person> {
   const columns = generateTestColumnDefs<TFeatures>(data)
-  return constructTable({
+  return constructTable<TFeatures, Person>({
     data,
     columns,
     ...options,
@@ -51,7 +51,7 @@ export function generateTestTableFromData<TFeatures extends TableFeatures>(
       ...options?.features,
       coreReativityFeature: storeReactivityBindings(),
     },
-  } as any)
+  } as any) as unknown as Table_Internal<TFeatures, Person>
 }
 
 export function generateTestTableWithDataAndState<
@@ -62,13 +62,13 @@ export function generateTestTableWithDataAndState<
     TableOptions<TFeatures, Person>,
     'data' | 'columns' | 'onStateChange'
   >,
-): Table<TFeatures, Person> {
+): Table_Internal<TFeatures, Person> {
   const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
   const data = generateTestData(...lengthsArray)
   const columns = generateTestColumnDefs<TFeatures>(data)
   let state = { ...options?.initialState } as TableState<TFeatures>
 
-  const table = generateTestTableWithData(lengths, {
+  const table = generateTestTableWithData<TFeatures>(lengths, {
     data,
     columns,
     ...options,
@@ -83,7 +83,7 @@ export function generateTestTableWithDataAndState<
         state = updater
       }
 
-      table.options.state = state
+      ;(table.options as any).state = state
     },
   } as any)
 
@@ -98,11 +98,11 @@ export function generateTestTableWithStateFromData<
     TableOptions<TFeatures, Person>,
     'data' | 'columns' | 'onStateChange'
   >,
-): Table<TFeatures, Person> {
+): Table_Internal<TFeatures, Person> {
   const columns = generateTestColumnDefs<TFeatures>(data)
   let state = { ...options?.initialState } as TableState<TFeatures>
 
-  const table = generateTestTableFromData(data, {
+  const table = generateTestTableFromData<TFeatures>(data, {
     columns,
     ...options,
     features: {

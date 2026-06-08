@@ -59,7 +59,7 @@ export function table_reset<
     const keys = Object.keys(snap) as Array<keyof typeof snap>
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]!
-      ;(table.baseAtoms as any)[key].set(snap[key] as any)
+      ;(table.baseAtoms as any)[key].set(snap[key])
     }
   })
 }

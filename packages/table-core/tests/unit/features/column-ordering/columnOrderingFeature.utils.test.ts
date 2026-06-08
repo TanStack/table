@@ -34,7 +34,7 @@ describe('column_getIndex', () => {
       table,
     }
 
-    expect(column_getIndex(column)).toBe(-1)
+    expect(column_getIndex(column as any)).toBe(-1)
   })
 })
 

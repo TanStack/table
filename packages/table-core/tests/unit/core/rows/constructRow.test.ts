@@ -1,8 +1,12 @@
 import { describe, expect, it } from 'vitest'
 import { coreRowsFeature } from '../../../../src/core/rows/coreRowsFeature'
 import { constructRow } from '../../../../src/core/rows/constructRow'
-import type { Table } from '../../../../src/types/Table'
+import type { Table_Internal } from '../../../../src/types/Table'
 import type { Row } from '../../../../src/types/Row'
+
+type TestFeatures = {
+  coreRowsFeature: typeof coreRowsFeature
+}
 
 interface Person {
   firstName: string
@@ -10,15 +14,15 @@ interface Person {
 
 describe('constructRow', () => {
   it('should create a row with all core row APIs and properties', () => {
-    const table = { _features: { coreRowsFeature }, options: {} } as Table<
-      any,
-      Person
-    >
+    const table = {
+      _features: { coreRowsFeature },
+      options: {},
+    } as unknown as Table_Internal<TestFeatures, Person>
     const id = 'test-row'
     const original = { firstName: 'Tanner' }
     const rowIndex = 0
     const depth = 0
-    const subRows = [] as Array<Row<any, Person>>
+    const subRows = [] as Array<Row<TestFeatures, Person>>
     const parentId = 'parent-id'
 
     const row = constructRow(

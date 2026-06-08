@@ -35,8 +35,8 @@ describe('constructTable with stockFeatures', () => {
     expect(table.atoms.columnPinning).toBeDefined()
 
     // Defaults
-    expect(table.atoms.columnFilters.get()).toEqual([])
-    expect(table.atoms.columnOrder.get()).toEqual([])
-    expect(table.atoms.grouping.get()).toEqual([])
+    expect(table.atoms.columnFilters!.get()).toEqual([])
+    expect(table.atoms.columnOrder!.get()).toEqual([])
+    expect(table.atoms.grouping!.get()).toEqual([])
   })
 })

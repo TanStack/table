@@ -23,7 +23,7 @@ export interface TanStackTableHeaderContext<
  * This token is provided by the {@link TanStackTableHeader} directive.
  */
 export const TanStackTableHeaderToken = new InjectionToken<
-  TanStackTableHeaderContext<any, any, any>['header']
+  TanStackTableHeaderContext<TableFeatures, RowData, CellData>['header']
 >('[TanStack Table] HeaderContext')
 
 /**
@@ -95,5 +95,7 @@ export function injectTableHeaderContext<
   TData extends RowData,
   TValue extends CellData,
 >(): TanStackTableHeaderContext<TFeatures, TData, TValue>['header'] {
-  return inject(TanStackTableHeaderToken)
+  return inject(
+    TanStackTableHeaderToken,
+  ) as unknown as TanStackTableHeaderContext<TFeatures, TData, TValue>['header']
 }

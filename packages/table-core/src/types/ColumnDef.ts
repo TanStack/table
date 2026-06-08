@@ -1,9 +1,5 @@
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
-import type {
-  ExtractFeatureMapTypes,
-  ExtractFeatureTypes,
-  TableFeatures,
-} from './TableFeatures'
+import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { CellContext } from '../core/cells/coreCellsFeature.types'
 import type { HeaderContext } from '../core/headers/coreHeadersFeature.types'
 import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -14,16 +10,6 @@ import type { ColumnDef_ColumnSizing } from '../features/column-sizing/columnSiz
 import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
 import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-
-/**
- * Use this interface as a target for declaration merging to add your own plugin properties.
- * Note: This will affect the types of all tables in your project.
- */
-export interface ColumnDef_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData = CellData,
-> {}
 
 export interface ColumnMeta<
   TFeatures extends TableFeatures,
@@ -137,9 +123,7 @@ export type ColumnDefBase<
   ExtractFeatureMapTypes<
     TFeatures,
     ColumnDef_FeatureMap<TFeatures, TData, TValue>
-  > &
-  ExtractFeatureTypes<'ColumnDef', TFeatures> &
-  ColumnDef_Plugins<TFeatures, TData, TValue>
+  >
 
 export type ColumnDefBase_All<
   TFeatures extends TableFeatures,

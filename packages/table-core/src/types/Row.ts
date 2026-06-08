@@ -6,21 +6,8 @@ import type { RowData } from './type-utils'
 import type { Row_RowExpanding } from '../features/row-expanding/rowExpandingFeature.types'
 import type { Row_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { Row_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
-import type {
-  ExtractFeatureMapTypes,
-  ExtractFeatureTypes,
-  TableFeatures,
-} from './TableFeatures'
+import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Row_Row } from '../core/rows/coreRowsFeature.types'
-
-/**
- * Use this interface as a target for declaration merging to add your own plugin properties.
- * Note: This will affect the types of all tables in your project.
- */
-export interface Row_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {}
 
 export interface Row_Core<
   TFeatures extends TableFeatures,
@@ -44,6 +31,4 @@ export type Row<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Row_Core<TFeatures, TData> &
-  ExtractFeatureMapTypes<TFeatures, Row_FeatureMap<TFeatures, TData>> &
-  ExtractFeatureTypes<'Row', TFeatures> &
-  Row_Plugins<TFeatures, TData>
+  ExtractFeatureMapTypes<TFeatures, Row_FeatureMap<TFeatures, TData>>

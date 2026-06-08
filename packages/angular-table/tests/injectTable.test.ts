@@ -94,7 +94,7 @@ describe('injectTable', () => {
       }))
 
       TestBed.runInInjectionContext(() => {
-        const table = injectTable(() => ({
+        const table = injectTable<typeof stockFeatures, Data>(() => ({
           data,
           columns: columns,
           features: stockFeatures,

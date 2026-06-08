@@ -10,22 +10,8 @@ import type { Column_ColumnSizing } from '../features/column-sizing/columnSizing
 import type { Column_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
 import type { ColumnDefBase_All } from './ColumnDef'
 import type { RowData } from './type-utils'
-import type {
-  ExtractFeatureMapTypes,
-  ExtractFeatureTypes,
-  TableFeatures,
-} from './TableFeatures'
+import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
-
-/**
- * Use this interface as a target for declaration merging to add your own plugin properties.
- * Note: This will affect the types of all tables in your project.
- */
-export interface Column_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue = unknown,
-> {}
 
 export interface Column_Core<
   TFeatures extends TableFeatures,
@@ -54,9 +40,7 @@ export type Column<
   TData extends RowData,
   TValue = unknown,
 > = Column_Core<TFeatures, TData, TValue> &
-  ExtractFeatureMapTypes<TFeatures, Column_FeatureMap<TFeatures, TData>> &
-  ExtractFeatureTypes<'Column', TFeatures> &
-  Column_Plugins<TFeatures, TData, TValue>
+  ExtractFeatureMapTypes<TFeatures, Column_FeatureMap<TFeatures, TData>>
 
 export type Column_Internal<
   TFeatures extends TableFeatures,

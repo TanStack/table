@@ -5,8 +5,7 @@ import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { NoTableConnected } from './NoTableConnected'
 import { ResizableSplit } from './ResizableSplit'
-
-import type { RowData, Table } from '@tanstack/table-core'
+import type { TableDevtoolsTable } from '../tableTarget'
 
 type FnBuckets = Partial<
   Record<'filterFns' | 'sortFns' | 'aggregationFns', Record<string, unknown>>
@@ -110,7 +109,7 @@ const ROW_MODEL_TO_GETTER: Record<
 }
 
 function getRowCountForModel(
-  tableInstance: Table<{}, RowData> | undefined,
+  tableInstance: TableDevtoolsTable | undefined,
   rowModelName: string,
 ): number {
   const getter = ROW_MODEL_TO_GETTER[rowModelName]

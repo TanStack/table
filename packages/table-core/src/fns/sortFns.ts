@@ -1,7 +1,6 @@
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
-import type { SortFn } from '../features/row-sorting/rowSortingFeature.types'
 
 /**
  * Regular expression used to split mixed text and numeric chunks.
@@ -16,12 +15,12 @@ export const reSplitAlphaNumeric = /([0-9]+)/gm
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_alphanumeric: SortFn<any, any> = <
+export const sortFn_alphanumeric = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<any, any>,
-  rowB: Row<any, any>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareAlphanumeric(
@@ -35,12 +34,12 @@ export const sortFn_alphanumeric: SortFn<any, any> = <
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_alphanumericCaseSensitive: SortFn<any, any> = <
+export const sortFn_alphanumericCaseSensitive = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<any, any>,
-  rowB: Row<any, any>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareAlphanumeric(
@@ -56,12 +55,12 @@ export const sortFn_alphanumericCaseSensitive: SortFn<any, any> = <
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_text: SortFn<any, any> = <
+export const sortFn_text = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<any, any>,
-  rowB: Row<any, any>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareBasic(
@@ -77,12 +76,12 @@ export const sortFn_text: SortFn<any, any> = <
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_textCaseSensitive: SortFn<any, any> = <
+export const sortFn_textCaseSensitive = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<any, any>,
-  rowB: Row<any, any>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareBasic(
@@ -96,12 +95,12 @@ export const sortFn_textCaseSensitive: SortFn<any, any> = <
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_datetime: SortFn<any, any> = <
+export const sortFn_datetime = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<any, any>,
-  rowB: Row<any, any>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   const a: number | string = rowA.getValue(columnId)
@@ -118,12 +117,12 @@ export const sortFn_datetime: SortFn<any, any> = <
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_basic: SortFn<any, any> = <
+export const sortFn_basic = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  rowA: Row<any, any>,
-  rowB: Row<any, any>,
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
   return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))

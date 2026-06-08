@@ -1,7 +1,6 @@
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
-import type { FilterFn } from '../features/column-filtering/columnFilteringFeature.types'
 
 // Basic filters
 
@@ -10,18 +9,16 @@ import type { FilterFn } from '../features/column-filtering/columnFilteringFeatu
  *
  * Uses JavaScript `===` comparison and auto-removes empty filter values.
  */
-export const filterFn_equals: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: unknown,
-) => {
-  return row.getValue(columnId) === filterValue
-}
-
-filterFn_equals.autoRemove = (val: any) => testFalsy(val)
+export const filterFn_equals = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return row.getValue(columnId) === filterValue
+  },
+  { autoRemove: (val: any) => testFalsy(val) },
+)
 
 /**
  * Keeps rows whose column value is loosely equal to the filter value.
@@ -29,18 +26,16 @@ filterFn_equals.autoRemove = (val: any) => testFalsy(val)
  * Uses JavaScript `==` comparison and auto-removes empty filter values. This is
  * useful for matching string input against numeric row values.
  */
-export const filterFn_weakEquals: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: unknown,
-) => {
-  return row.getValue(columnId) == filterValue
-}
-
-filterFn_weakEquals.autoRemove = (val: any) => testFalsy(val)
+export const filterFn_weakEquals = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return row.getValue(columnId) == filterValue
+  },
+  { autoRemove: (val: any) => testFalsy(val) },
+)
 
 // String filters
 
@@ -49,20 +44,18 @@ filterFn_weakEquals.autoRemove = (val: any) => testFalsy(val)
  *
  * Matching is case-sensitive and empty filter values are auto-removed.
  */
-export const filterFn_includesStringSensitive: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: string,
-) => {
-  return Boolean(
-    row.getValue(columnId)?.toString().includes(filterValue.toString()),
-  )
-}
-
-filterFn_includesStringSensitive.autoRemove = (val: any) => testFalsy(val)
+export const filterFn_includesStringSensitive = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return Boolean(
+      row.getValue(columnId)?.toString().includes(String(filterValue)),
+    )
+  },
+  { autoRemove: (val: any) => testFalsy(val) },
+)
 
 /**
  * Keeps rows whose stringified column value includes the filter text.
@@ -70,24 +63,22 @@ filterFn_includesStringSensitive.autoRemove = (val: any) => testFalsy(val)
  * Both values are lowercased before comparison, and empty filter values are
  * auto-removed.
  */
-export const filterFn_includesString: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: string,
-) => {
-  return Boolean(
-    row
-      .getValue(columnId)
-      ?.toString()
-      .toLowerCase()
-      .includes(filterValue.toString().toLowerCase()),
-  )
-}
-
-filterFn_includesString.autoRemove = (val: any) => testFalsy(val)
+export const filterFn_includesString = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return Boolean(
+      row
+        .getValue(columnId)
+        ?.toString()
+        .toLowerCase()
+        .includes(String(filterValue).toLowerCase()),
+    )
+  },
+  { autoRemove: (val: any) => testFalsy(val) },
+)
 
 /**
  * Keeps rows whose stringified column value equals the filter text.
@@ -95,39 +86,35 @@ filterFn_includesString.autoRemove = (val: any) => testFalsy(val)
  * Both values are lowercased before comparison, and empty filter values are
  * auto-removed.
  */
-export const filterFn_equalsString: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: string,
-) => {
-  return (
-    row.getValue(columnId)?.toString().toLowerCase() ===
-    filterValue.toLowerCase()
-  )
-}
-
-filterFn_equalsString.autoRemove = (val: any) => testFalsy(val)
+export const filterFn_equalsString = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return (
+      row.getValue(columnId)?.toString().toLowerCase() ===
+      String(filterValue).toLowerCase()
+    )
+  },
+  { autoRemove: (val: any) => testFalsy(val) },
+)
 
 /**
  * Keeps rows whose stringified column value exactly equals the filter text.
  *
  * Matching is case-sensitive and empty filter values are auto-removed.
  */
-export const filterFn_equalsStringSensitive: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: string,
-) => {
-  return row.getValue(columnId)?.toString() === filterValue
-}
-
-filterFn_equalsStringSensitive.autoRemove = (val: any) => testFalsy(val)
+export const filterFn_equalsStringSensitive = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return row.getValue(columnId)?.toString() === String(filterValue)
+  },
+  { autoRemove: (val: any) => testFalsy(val) },
+)
 
 // Number filters
 
@@ -137,86 +124,78 @@ filterFn_equalsStringSensitive.autoRemove = (val: any) => testFalsy(val)
  * Numeric values are compared numerically when both sides can be coerced to
  * numbers; otherwise normalized strings are compared.
  */
-export const filterFn_greaterThan: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Date | number | string,
-) => {
-  const rowValue = row.getValue(columnId)
-  const numericRowValue =
-    rowValue === null || rowValue === undefined ? 0 : +rowValue
-  const numericFilterValue = +filterValue
+export const filterFn_greaterThan = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    const rowValue = row.getValue(columnId)
+    const numericRowValue =
+      rowValue === null || rowValue === undefined ? 0 : +rowValue
+    const numericFilterValue = Number(filterValue)
 
-  if (!isNaN(numericFilterValue) && !isNaN(numericRowValue)) {
-    return numericRowValue > numericFilterValue
-  }
+    if (!isNaN(numericFilterValue) && !isNaN(numericRowValue)) {
+      return numericRowValue > numericFilterValue
+    }
 
-  const stringValue = (rowValue ?? '').toString().toLowerCase().trim()
-  const stringFilterValue = filterValue.toString().toLowerCase().trim()
-  return stringValue > stringFilterValue
-}
-
-filterFn_greaterThan.resolveFilterValue = (val: any) => testFalsy(val)
+    const stringValue = (rowValue ?? '').toString().toLowerCase().trim()
+    const stringFilterValue = String(filterValue).toLowerCase().trim()
+    return stringValue > stringFilterValue
+  },
+  { resolveFilterValue: (val: any) => testFalsy(val) },
+)
 
 /**
  * Keeps rows whose value is greater than or equal to the filter value.
  *
  * Delegates to the built-in greater-than and equality comparisons.
  */
-export const filterFn_greaterThanOrEqualTo: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Date | number | string,
-) => {
-  return (
-    filterFn_greaterThan(row as any, columnId, filterValue) ||
-    filterFn_equals(row as any, columnId, filterValue)
-  )
-}
-
-filterFn_greaterThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
+export const filterFn_greaterThanOrEqualTo = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return (
+      filterFn_greaterThan(row, columnId, filterValue) ||
+      filterFn_equals(row, columnId, filterValue)
+    )
+  },
+  { resolveFilterValue: (val: any) => testFalsy(val) },
+)
 
 /**
  * Keeps rows whose value is less than the filter value.
  *
  * This is implemented as the inverse of greater-than-or-equal comparison.
  */
-export const filterFn_lessThan: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Date | number | string,
-) => {
-  return !filterFn_greaterThanOrEqualTo(row as any, columnId, filterValue)
-}
-
-filterFn_lessThan.resolveFilterValue = (val: any) => testFalsy(val)
+export const filterFn_lessThan = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return !filterFn_greaterThanOrEqualTo(row, columnId, filterValue)
+  },
+  { resolveFilterValue: (val: any) => testFalsy(val) },
+)
 
 /**
  * Keeps rows whose value is less than or equal to the filter value.
  *
  * This is implemented as the inverse of greater-than comparison.
  */
-export const filterFn_lessThanOrEqualTo: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Date | number | string,
-) => {
-  return !filterFn_greaterThan(row as any, columnId, filterValue)
-}
-
-filterFn_lessThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
+export const filterFn_lessThanOrEqualTo = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return !filterFn_greaterThan(row, columnId, filterValue)
+  },
+  { resolveFilterValue: (val: any) => testFalsy(val) },
+)
 
 // Range filters
 
@@ -225,46 +204,42 @@ filterFn_lessThanOrEqualTo.resolveFilterValue = (val: any) => testFalsy(val)
  *
  * Blank range endpoints are treated as open-ended.
  */
-const filterFn_between: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValues: [number | string, number | string],
-): boolean =>
-  ((['', undefined] as Array<any>).includes(filterValues[0]) ||
-    filterFn_greaterThan(row as any, columnId, filterValues[0])) &&
-  ((!isNaN(+filterValues[0]) &&
-    !isNaN(+filterValues[1]) &&
-    +filterValues[0] > +filterValues[1]) ||
-    (['', undefined] as Array<any>).includes(filterValues[1]) ||
-    filterFn_lessThan(row as any, columnId, filterValues[1]))
-
-filterFn_between.autoRemove = (val: any) => !val
+const filterFn_between = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValues: [unknown, unknown],
+  ): boolean =>
+    ((['', undefined] as Array<any>).includes(filterValues[0]) ||
+      filterFn_greaterThan(row, columnId, filterValues[0])) &&
+    ((!isNaN(Number(filterValues[0])) &&
+      !isNaN(Number(filterValues[1])) &&
+      Number(filterValues[0]) > Number(filterValues[1])) ||
+      (['', undefined] as Array<any>).includes(filterValues[1]) ||
+      filterFn_lessThan(row, columnId, filterValues[1])),
+  { autoRemove: (val: any) => !val },
+)
 
 /**
  * Keeps rows whose value falls between an inclusive min/max pair.
  *
  * Blank range endpoints are treated as open-ended.
  */
-const filterFn_betweenInclusive: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValues: [number | string, number | string],
-): boolean =>
-  ((['', undefined] as Array<any>).includes(filterValues[0]) ||
-    filterFn_greaterThanOrEqualTo(row as any, columnId, filterValues[0])) &&
-  ((!isNaN(+filterValues[0]) &&
-    !isNaN(+filterValues[1]) &&
-    +filterValues[0] > +filterValues[1]) ||
-    (['', undefined] as Array<any>).includes(filterValues[1]) ||
-    filterFn_lessThanOrEqualTo(row as any, columnId, filterValues[1]))
-
-filterFn_betweenInclusive.autoRemove = (val: any) => !val
+const filterFn_betweenInclusive = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValues: [unknown, unknown],
+  ): boolean =>
+    ((['', undefined] as Array<any>).includes(filterValues[0]) ||
+      filterFn_greaterThanOrEqualTo(row, columnId, filterValues[0])) &&
+    ((!isNaN(Number(filterValues[0])) &&
+      !isNaN(Number(filterValues[1])) &&
+      Number(filterValues[0]) > Number(filterValues[1])) ||
+      (['', undefined] as Array<any>).includes(filterValues[1]) ||
+      filterFn_lessThanOrEqualTo(row, columnId, filterValues[1])),
+  { autoRemove: (val: any) => !val },
+)
 
 /**
  * Keeps rows whose numeric value is inside an inclusive `[min, max]` range.
@@ -272,50 +247,50 @@ filterFn_betweenInclusive.autoRemove = (val: any) => !val
  * Filter values are normalized so blank endpoints become open-ended and
  * reversed endpoints are swapped.
  */
-export const filterFn_inNumberRange: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: [number, number],
-) => {
-  const [min, max] = filterValue
+export const filterFn_inNumberRange = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: [number, number],
+  ) => {
+    const [min, max] = filterValue
 
-  const rowValue: number = row.getValue(columnId)
-  return rowValue >= min && rowValue <= max
-}
+    const rowValue: number = row.getValue(columnId)
+    return rowValue >= min && rowValue <= max
+  },
+  {
+    resolveFilterValue: (val: [any, any]) => {
+      const [unsafeMin, unsafeMax] = val
 
-filterFn_inNumberRange.resolveFilterValue = (val: [any, any]) => {
-  const [unsafeMin, unsafeMax] = val
+      const parsedMin =
+        typeof unsafeMin !== 'number' ? parseFloat(unsafeMin) : unsafeMin
+      const parsedMax =
+        typeof unsafeMax !== 'number' ? parseFloat(unsafeMax) : unsafeMax
 
-  const parsedMin =
-    typeof unsafeMin !== 'number' ? parseFloat(unsafeMin) : unsafeMin
-  const parsedMax =
-    typeof unsafeMax !== 'number' ? parseFloat(unsafeMax) : unsafeMax
+      let min =
+        unsafeMin === null || Number.isNaN(parsedMin) ? -Infinity : parsedMin
+      let max =
+        unsafeMax === null || Number.isNaN(parsedMax) ? Infinity : parsedMax
 
-  let min =
-    unsafeMin === null || Number.isNaN(parsedMin) ? -Infinity : parsedMin
-  let max = unsafeMax === null || Number.isNaN(parsedMax) ? Infinity : parsedMax
+      if (min > max) {
+        const temp = min
+        min = max
+        max = temp
+      }
 
-  if (min > max) {
-    const temp = min
-    min = max
-    max = temp
-  }
-
-  return [min, max] as const
-}
-
-filterFn_inNumberRange.autoRemove = (val: any) =>
-  testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1]))
+      return [min, max] as const
+    },
+    autoRemove: (val: any) =>
+      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
+  },
+)
 
 // Array filters
 
 /**
  * Keeps rows whose scalar column value equals at least one filter value.
  */
-export const filterFn_arrHas: FilterFn<any, any> = <
+export const filterFn_arrHas = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -329,60 +304,52 @@ export const filterFn_arrHas: FilterFn<any, any> = <
 /**
  * Keeps rows whose array or string column value includes at least one filter value.
  */
-export const filterFn_arrIncludes: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Array<unknown>,
-) => {
-  return filterValue.some((val) =>
-    (row.getValue<unknown>(columnId) as Array<unknown> | string).includes(
-      val as any,
-    ),
-  )
-}
-
-filterFn_arrIncludes.autoRemove = (val: any) => testFalsy(val) || !val?.length
+export const filterFn_arrIncludes = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: Array<unknown>,
+  ) => {
+    return filterValue.some((val) =>
+      (row.getValue<unknown>(columnId) as Array<unknown> | string).includes(
+        val as any,
+      ),
+    )
+  },
+  { autoRemove: (val: any) => testFalsy(val) || !val?.length },
+)
 
 /**
  * Keeps rows whose array column value includes every filter value.
  */
-export const filterFn_arrIncludesAll: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Array<unknown>,
-) => {
-  const value = row.getValue<Array<unknown>>(columnId)
-  if (!Array.isArray(value)) return false
-  return !filterValue.some((val) => !value.includes(val))
-}
-
-filterFn_arrIncludesAll.autoRemove = (val: any) =>
-  testFalsy(val) || !val?.length
+export const filterFn_arrIncludesAll = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: Array<unknown>,
+  ) => {
+    const value = row.getValue<Array<unknown>>(columnId)
+    if (!Array.isArray(value)) return false
+    return !filterValue.some((val) => !value.includes(val))
+  },
+  { autoRemove: (val: any) => testFalsy(val) || !val?.length },
+)
 
 /**
  * Keeps rows whose array column value includes at least one filter value.
  */
-export const filterFn_arrIncludesSome: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Array<unknown>,
-) => {
-  const value = row.getValue<Array<unknown>>(columnId)
-  if (!Array.isArray(value)) return false
-  return filterValue.some((val) => value.includes(val))
-}
-
-filterFn_arrIncludesSome.autoRemove = (val: any) =>
-  testFalsy(val) || !val?.length
+export const filterFn_arrIncludesSome = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: Array<unknown>,
+  ) => {
+    const value = row.getValue<Array<unknown>>(columnId)
+    if (!Array.isArray(value)) return false
+    return filterValue.some((val) => value.includes(val))
+  },
+  { autoRemove: (val: any) => testFalsy(val) || !val?.length },
+)
 
 // Export
 

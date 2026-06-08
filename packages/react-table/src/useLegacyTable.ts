@@ -22,6 +22,7 @@ import type {
   Cell,
   Column,
   ColumnDef,
+  ColumnHelper,
   CreateRowModels_All,
   FilterFns,
   Header,
@@ -342,7 +343,10 @@ export type LegacyTable<TData extends RowData> = Table<StockFeatures, TData>
  * A column helper with StockFeatures pre-bound for use with useLegacyTable.
  * Only requires TData—no need to specify TFeatures.
  */
-export function legacyCreateColumnHelper<TData extends RowData>() {
+export function legacyCreateColumnHelper<TData extends RowData>(): ColumnHelper<
+  StockFeatures,
+  TData
+> {
   return createColumnHelper<StockFeatures, TData>()
 }
 

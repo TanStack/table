@@ -18,12 +18,10 @@ export interface RowModel<
   rowsById: Record<string, Row<TFeatures, TData>>
 }
 
-export interface CreateRowModel_Plugins {}
-
 export interface CreateRowModel_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> extends CreateRowModel_Plugins {
+> {
   /**
    * Optional factory for the core row model. When omitted, the built-in
    * `createCoreRowModel()` factory is used.
@@ -33,12 +31,10 @@ export interface CreateRowModel_Core<
   ) => () => RowModel<TFeatures, TData>
 }
 
-export interface CachedRowModel_Plugins {}
-
 export interface CachedRowModel_Core<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> extends CachedRowModel_Plugins {
+> {
   coreRowModel: () => RowModel<TFeatures, TData>
 }
 

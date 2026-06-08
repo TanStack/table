@@ -1,7 +1,6 @@
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
-import type { AggregationFn } from '../features/column-grouping/columnGroupingFeature.types'
 
 /**
  * Sums numeric child-row values for a grouped column.
@@ -9,14 +8,14 @@ import type { AggregationFn } from '../features/column-grouping/columnGroupingFe
  * Non-number values contribute `0`. Child rows are used so nested group totals
  * can reuse already aggregated values.
  */
-export const aggregationFn_sum: AggregationFn<any, any> = <
+export function aggregationFn_sum<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<any, any>>,
-  childRows: Array<Row<any, any>>,
-) => {
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
+) {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
   return childRows.reduce((sumValue, next) => {
@@ -31,14 +30,14 @@ export const aggregationFn_sum: AggregationFn<any, any> = <
  * Nullish and non-number values are ignored. Returns `undefined` when no
  * numeric value is found.
  */
-export const aggregationFn_min: AggregationFn<any, any> = <
+export function aggregationFn_min<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<any, any>>,
-  childRows: Array<Row<any, any>>,
-) => {
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
+) {
   let minValue: number | undefined
 
   childRows.forEach((row) => {
@@ -62,14 +61,14 @@ export const aggregationFn_min: AggregationFn<any, any> = <
  * Nullish and non-number values are ignored. Returns `undefined` when no
  * numeric value is found.
  */
-export const aggregationFn_max: AggregationFn<any, any> = <
+export function aggregationFn_max<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<any, any>>,
-  childRows: Array<Row<any, any>>,
-) => {
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
+) {
   let maxValue: number | undefined
 
   childRows.forEach((row) => {
@@ -92,14 +91,14 @@ export const aggregationFn_max: AggregationFn<any, any> = <
  * Returns `[min, max]`, where each entry is `undefined` when no numeric value is
  * present.
  */
-export const aggregationFn_extent: AggregationFn<any, any> = <
+export function aggregationFn_extent<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
   columnId: string,
-  _leafRows: Array<Row<any, any>>,
-  childRows: Array<Row<any, any>>,
-) => {
+  _leafRows: Array<Row<TFeatures, TData>>,
+  childRows: Array<Row<TFeatures, TData>>,
+) {
   let minValue: number | undefined
   let maxValue: number | undefined
 
@@ -124,13 +123,10 @@ export const aggregationFn_extent: AggregationFn<any, any> = <
  * Number-like values are coerced with unary `+`; nullish and non-numeric values
  * are ignored.
  */
-export const aggregationFn_mean: AggregationFn<any, any> = <
+export function aggregationFn_mean<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  columnId: string,
-  leafRows: Array<Row<any, any>>,
-) => {
+>(columnId: string, leafRows: Array<Row<TFeatures, TData>>) {
   let count = 0
   let sumValue = 0
 
@@ -159,13 +155,10 @@ export const aggregationFn_mean: AggregationFn<any, any> = <
  * All values must be numbers. If any value is non-numeric, or no leaf rows are
  * present, the result is `undefined`.
  */
-export const aggregationFn_median: AggregationFn<any, any> = <
+export function aggregationFn_median<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  columnId: string,
-  leafRows: Array<Row<any, any>>,
-) => {
+>(columnId: string, leafRows: Array<Row<TFeatures, TData>>) {
   if (!leafRows.length) {
     return
   }
@@ -193,13 +186,10 @@ export const aggregationFn_median: AggregationFn<any, any> = <
  *
  * Values are compared with JavaScript `Set` semantics.
  */
-export const aggregationFn_unique: AggregationFn<any, any> = <
+export function aggregationFn_unique<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  columnId: string,
-  leafRows: Array<Row<any, any>>,
-) => {
+>(columnId: string, leafRows: Array<Row<TFeatures, TData>>) {
   const set = new Set<unknown>()
   for (let i = 0; i < leafRows.length; i++) {
     set.add(leafRows[i]!.getValue(columnId))
@@ -212,13 +202,10 @@ export const aggregationFn_unique: AggregationFn<any, any> = <
  *
  * Values are compared with JavaScript `Set` semantics.
  */
-export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
+export function aggregationFn_uniqueCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  columnId: string,
-  leafRows: Array<Row<any, any>>,
-) => {
+>(columnId: string, leafRows: Array<Row<TFeatures, TData>>) {
   const set = new Set<unknown>()
   for (let i = 0; i < leafRows.length; i++) {
     set.add(leafRows[i]!.getValue(columnId))
@@ -231,13 +218,10 @@ export const aggregationFn_uniqueCount: AggregationFn<any, any> = <
  *
  * The column id is ignored because the result is based only on group size.
  */
-export const aggregationFn_count: AggregationFn<any, any> = <
+export function aggregationFn_count<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  _columnId: string,
-  leafRows: Array<Row<any, any>>,
-) => {
+>(_columnId: string, leafRows: Array<Row<TFeatures, TData>>) {
   return leafRows.length
 }
 

@@ -17,16 +17,7 @@ import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinning
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { RowData, UnionToIntersection } from './type-utils'
-import type {
-  ExtractFeatureMapTypes,
-  ExtractFeatureTypes,
-  TableFeatures,
-} from './TableFeatures'
-
-export interface TableOptions_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {}
+import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 
 /**
  * Core options that are always available on a table, before optional feature
@@ -97,8 +88,6 @@ export type TableOptions<
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
   ExtractFeatureMapTypes<TFeatures, TableOptions_FeatureMap<TFeatures, TData>> &
-  ExtractFeatureTypes<'TableOptions', TFeatures> &
-  TableOptions_Plugins<TFeatures, TData> &
   DebugOptions<TFeatures>
 
 /**

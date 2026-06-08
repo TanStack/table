@@ -18,11 +18,7 @@ import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
 import type { RowModelFns_All } from './RowModelFns'
 import type { TableState_All } from './TableState'
 import type { RowData } from './type-utils'
-import type {
-  ExtractFeatureMapTypes,
-  ExtractFeatureTypes,
-  TableFeatures,
-} from './TableFeatures'
+import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
 import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
 import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
@@ -33,15 +29,6 @@ import type {
   Table_Table,
 } from '../core/table/coreTablesFeature.types'
 import type { TableOptions_All } from './TableOptions'
-
-/**
- * Use this interface as a target for declaration merging to add your own plugin properties.
- * Note: This will affect the types of all tables in your project.
- */
-export interface Table_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {}
 
 /**
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
@@ -83,9 +70,7 @@ export type Table<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = Table_Core<TFeatures, TData> &
-  ExtractFeatureMapTypes<TFeatures, Table_FeatureMap<TFeatures, TData>> &
-  ExtractFeatureTypes<'Table', TFeatures> &
-  Table_Plugins<TFeatures, TData>
+  ExtractFeatureMapTypes<TFeatures, Table_FeatureMap<TFeatures, TData>>
 
 export type Table_Internal<
   TFeatures extends TableFeatures,

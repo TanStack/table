@@ -4,18 +4,13 @@
     FlexRender,
     createSortedRowModel,
     createTable,
-    rowSortingFeature,
     renderComponent,
     sortFns,
-    tableFeatures,
   } from '@tanstack/svelte-table'
   import Header from './Header.svelte'
   import './index.css'
   import { makeData, type Person } from './makeData'
-
-  const features = tableFeatures({
-    rowSortingFeature,
-  })
+  import { features } from './tableHelper.svelte'
 
   const columns: ColumnDef<typeof features, Person>[] = [
     {

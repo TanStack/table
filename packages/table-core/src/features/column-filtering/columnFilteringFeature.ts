@@ -15,115 +15,72 @@ import {
   table_resetColumnFilters,
   table_setColumnFilters,
 } from './columnFilteringFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Filtered,
-//   ColumnDef_ColumnFiltering,
-//   Column_ColumnFiltering,
-//   CreateRowModel_Filtered,
-//   RowModelFns_ColumnFiltering,
-//   Row_ColumnFiltering,
-//   TableOptions_ColumnFiltering,
-//   TableState_ColumnFiltering,
-//   Table_ColumnFiltering,
-// } from './columnFilteringFeature.types'
-
-export interface ColumnFilteringFeatureConstructors<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  // CachedRowModel: CachedRowModel_Filtered<TFeatures, TData>
-  // Column: Column_ColumnFiltering<TFeatures, TData>
-  // ColumnDef: ColumnDef_ColumnFiltering<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Filtered<TFeatures, TData>
-  // Row: Row_ColumnFiltering<TFeatures, TData>
-  // RowModelFns: RowModelFns_ColumnFiltering<TFeatures, TData>
-  // Table: Table_ColumnFiltering<TFeatures, TData>
-  // TableOptions: TableOptions_ColumnFiltering<TFeatures, TData>
-  // TableState: TableState_ColumnFiltering
-}
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
- * Creates the stock column filtering feature.
- *
- * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ * Feature that adds per-column filtering state, options, and column/table filter APIs.
  */
-export function constructColumnFilteringFeature<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(): TableFeature<ColumnFilteringFeatureConstructors<TFeatures, TData>> {
-  return {
-    getInitialState: (initialState) => {
-      return {
-        columnFilters: getDefaultColumnFiltersState(),
-        ...initialState,
-      }
-    },
+export const columnFilteringFeature: TableFeature = {
+  getInitialState: (initialState) => {
+    return {
+      columnFilters: getDefaultColumnFiltersState(),
+      ...initialState,
+    }
+  },
 
-    getDefaultColumnDef: () => {
-      return {
-        filterFn: 'auto',
-      }
-    },
+  getDefaultColumnDef: () => {
+    return {
+      filterFn: 'auto',
+    }
+  },
 
-    getDefaultTableOptions: (table) => {
-      return {
-        onColumnFiltersChange: makeStateUpdater('columnFilters', table),
-        filterFromLeafRows: false,
-        maxLeafRowFilterDepth: 100,
-      }
-    },
+  getDefaultTableOptions: (table) => {
+    return {
+      onColumnFiltersChange: makeStateUpdater('columnFilters', table),
+      filterFromLeafRows: false,
+      maxLeafRowFilterDepth: 100,
+    }
+  },
 
-    assignColumnPrototype: (prototype, table) => {
-      assignPrototypeAPIs('columnFilteringFeature', prototype, table, {
-        column_getAutoFilterFn: {
-          fn: (column) => column_getAutoFilterFn(column),
-        },
-        column_getFilterFn: {
-          fn: (column) => column_getFilterFn(column),
-        },
-        column_getCanFilter: {
-          fn: (column) => column_getCanFilter(column),
-        },
-        column_getIsFiltered: {
-          fn: (column) => column_getIsFiltered(column),
-        },
-        column_getFilterValue: {
-          fn: (column) => column_getFilterValue(column),
-        },
-        column_getFilterIndex: {
-          fn: (column) => column_getFilterIndex(column),
-        },
-        column_setFilterValue: {
-          fn: (column, value) => column_setFilterValue(column, value),
-        },
-      })
-    },
+  assignColumnPrototype: (prototype, table) => {
+    assignPrototypeAPIs('columnFilteringFeature', prototype, table, {
+      column_getAutoFilterFn: {
+        fn: (column) => column_getAutoFilterFn(column),
+      },
+      column_getFilterFn: {
+        fn: (column) => column_getFilterFn(column),
+      },
+      column_getCanFilter: {
+        fn: (column) => column_getCanFilter(column),
+      },
+      column_getIsFiltered: {
+        fn: (column) => column_getIsFiltered(column),
+      },
+      column_getFilterValue: {
+        fn: (column) => column_getFilterValue(column),
+      },
+      column_getFilterIndex: {
+        fn: (column) => column_getFilterIndex(column),
+      },
+      column_setFilterValue: {
+        fn: (column, value) => column_setFilterValue(column, value),
+      },
+    })
+  },
 
-    initRowInstanceData: (row) => {
-      ;(row as any).columnFilters = {}
-      ;(row as any).columnFiltersMeta = {}
-    },
+  initRowInstanceData: (row) => {
+    ;(row as any).columnFilters = {}
+    ;(row as any).columnFiltersMeta = {}
+  },
 
-    constructTableAPIs: (table) => {
-      assignTableAPIs('columnFilteringFeature', table, {
-        table_setColumnFilters: {
-          fn: (updater) => table_setColumnFilters(table, updater),
-        },
-        table_resetColumnFilters: {
-          fn: (defaultState) => table_resetColumnFilters(table, defaultState),
-        },
-      })
-    },
-  }
+  constructTableAPIs: (table) => {
+    assignTableAPIs('columnFilteringFeature', table, {
+      table_setColumnFilters: {
+        fn: (updater) => table_setColumnFilters(table, updater),
+      },
+      table_resetColumnFilters: {
+        fn: (defaultState) => table_resetColumnFilters(table, defaultState),
+      },
+    })
+  },
 }
-
-/**
- * The stock column filtering feature.
- *
- * Register this feature to add column filter state, filter defaults, and
- * table/row/column APIs for client-side or manual column filtering. Global
- * filtering is provided by `globalFilteringFeature`.
- */
-export const columnFilteringFeature = constructColumnFilteringFeature()

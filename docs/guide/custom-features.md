@@ -43,16 +43,53 @@ TanStack Table's source code is arguably somewhat simple (at least we think so).
 All of the functionality of a feature object can be described with the `TableFeature` type that is exported from TanStack Table. This type is a TypeScript interface that describes the shape of a feature object needed to create a feature.
 
 ```ts
-export interface TableFeature<TConstructors extends FeatureConstructors> {
-  assignCellPrototype?: AssignCellPrototype<TConstructors>
-  assignColumnPrototype?: AssignColumnPrototype<TConstructors>
-  assignHeaderPrototype?: AssignHeaderPrototype<TConstructors>
-  assignRowPrototype?: AssignRowPrototype<TConstructors>
-  constructTableAPIs?: ConstructTableAPIs<TConstructors>
-  getDefaultColumnDef?: GetDefaultColumnDef<TConstructors>
-  getDefaultTableOptions?: GetDefaultTableOptions<TConstructors>
-  getInitialState?: GetInitialState<TConstructors>
-  initRowInstanceData?: InitRowInstanceData<TConstructors>
+export interface TableFeature {
+  assignCellPrototype?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    prototype: Record<string, any>,
+    table: Table_Internal<TFeatures, TData>,
+  ) => void
+  assignColumnPrototype?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    prototype: Record<string, any>,
+    table: Table_Internal<TFeatures, TData>,
+  ) => void
+  assignHeaderPrototype?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    prototype: Record<string, any>,
+    table: Table_Internal<TFeatures, TData>,
+  ) => void
+  assignRowPrototype?: <TFeatures extends TableFeatures, TData extends RowData>(
+    prototype: Record<string, any>,
+    table: Table_Internal<TFeatures, TData>,
+  ) => void
+  constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
+    table: Table_Internal<TFeatures, TData>,
+  ) => void
+  getDefaultColumnDef?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >() => ColumnDefBase_All<TFeatures, TData, TValue>
+  getDefaultTableOptions?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    table: Table_Internal<TFeatures, TData>,
+  ) => Partial<TableOptions_All<TFeatures, TData>>
+  getInitialState?: (initialState: Partial<TableState_All>) => TableState_All
+  initRowInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    row: Row<TFeatures, TData>,
+  ) => void
 }
 ```
 
@@ -140,22 +177,34 @@ export interface Table_Density {
   setDensity: (updater: Updater<DensityState>) => void
   toggleDensity: (value?: DensityState) => void
 }
-
-interface DensityPluginConstructors {
-  Table: Table_Density
-  TableOptions: TableOptions_Density
-  TableState: TableState_Density
-}
 ```
 
-#### Step 2: Add the Feature to the TableFeatures Interface
+#### Step 2: Add the Feature to TanStack Table's Feature Maps
 
-TanStack Table uses the keys passed to `tableFeatures({ ... })` to infer which feature state, options, and APIs exist on a table. To make a custom feature key type-safe, add it to the exported `Plugins` interface with declaration merging.
+TanStack Table uses the keys passed to `tableFeatures({ ... })` to infer which feature state, options, and APIs exist on a table. To make a custom feature key type-safe, add it to the exported `Plugins`, `TableState_FeatureMap`, `TableOptions_FeatureMap`, and `Table_FeatureMap` interfaces with declaration merging.
 
 ```ts
 declare module '@tanstack/react-table' {
   interface Plugins {
-    densityPlugin?: TableFeature<DensityPluginConstructors>
+    densityPlugin: TableFeature
+  }
+
+  interface TableState_FeatureMap {
+    densityPlugin: TableState_Density
+  }
+
+  interface TableOptions_FeatureMap<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    densityPlugin: TableOptions_Density
+  }
+
+  interface Table_FeatureMap<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    densityPlugin: Table_Density
   }
 }
 ```
@@ -169,7 +218,7 @@ With all of that TypeScript setup out of the way, we can now create the feature 
 Use the `TableFeature` type to ensure that you are creating the feature object correctly. If the TypeScript types are set up correctly, you should have no TypeScript errors when you create the feature object with the new state, options, and instance APIs.
 
 ```ts
-export const densityPlugin: TableFeature<DensityPluginConstructors> = {
+export const densityPlugin: TableFeature = {
   // define the new feature's initial state
   getInitialState: (initialState) => {
     return {
@@ -190,19 +239,26 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
 
   // define the new feature's table instance methods
   constructTableAPIs: (table) => {
-    table.setDensity = (updater) => {
-      const safeUpdater: Updater<DensityState> = (old) => {
-        const newState = functionalUpdate(updater, old)
-        return newState
-      }
-      return table.options.onDensityChange?.(safeUpdater)
-    }
-    table.toggleDensity = (value) => {
-      table.setDensity?.((old) => {
-        if (value) return value
-        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg'
-      })
-    }
+    assignTableAPIs('densityPlugin', table, {
+      table_setDensity: {
+        fn: (updater: Updater<DensityState>) => {
+          const safeUpdater: Updater<DensityState> = (old) => {
+            const newState = functionalUpdate(updater, old)
+            return newState
+          }
+          return table.options.onDensityChange?.(safeUpdater)
+        },
+      },
+      table_toggleDensity: {
+        fn: (value?: DensityState) => {
+          const safeUpdater: Updater<DensityState> = (old) => {
+            if (value) return value
+            return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg'
+          }
+          return table.options.onDensityChange?.(safeUpdater)
+        },
+      },
+    })
   },
 
   // if you need to add row instance APIs...

@@ -1,34 +1,61 @@
 import { createEffect, createRoot, createSignal, untrack } from 'solid-js'
+import type { Readable } from '@tanstack/solid-store'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
-type AnyTable = Table<TableFeatures, RowData>
 type Listener = (targets: Array<TableDevtoolsRegistration>) => void
 
 const MISSING_KEY_ERROR =
   '[TanStack Table Devtools] Missing table key. Add a `key` option to your table to use devtools.'
 
-export interface TableDevtoolsRegistration {
-  id: string
-  table: AnyTable
+export interface TableDevtoolsStore<TState = unknown> extends Readable<TState> {
+  state: TState
 }
 
-export interface UpsertTableDevtoolsTargetOptions {
-  table: AnyTable
+export interface TableDevtoolsTable {
+  _features: Record<string, unknown>
+  _rowModelFns: unknown
+  baseAtoms: Record<string, unknown>
+  initialState: unknown
+  options: {
+    atoms?: Record<string, unknown>
+    data?: unknown
+    key?: string
+    rowModels?: Record<string, unknown>
+    state?: Record<string, unknown>
+    [key: string]: unknown
+  }
+  optionsStore?: TableDevtoolsStore
+  reset: () => void
+  store: TableDevtoolsStore
+}
+
+export interface TableDevtoolsRegistration {
+  id: string
+  table: TableDevtoolsTable
+}
+
+export interface UpsertTableDevtoolsTargetOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  table: Table<TFeatures, TData>
 }
 
 const [registrationsMap, setRegistrationsMap] = createSignal<
   Map<string, TableDevtoolsRegistration>
 >(new Map())
 
-function getTableKey(table: AnyTable) {
+function getTableKey(table: TableDevtoolsTable) {
   const key = untrack(() => table.options.key?.trim())
   return key || undefined
 }
 
-export function upsertTableDevtoolsTarget(
-  options: UpsertTableDevtoolsTargetOptions,
-) {
-  const key = getTableKey(options.table)
+export function upsertTableDevtoolsTarget<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: UpsertTableDevtoolsTargetOptions<TFeatures, TData>) {
+  const table = options.table as unknown as TableDevtoolsTable
+  const key = getTableKey(table)
 
   if (!key) {
     console.error(MISSING_KEY_ERROR)
@@ -39,7 +66,7 @@ export function upsertTableDevtoolsTarget(
   const existingRegistration = registrations.get(key)
 
   if (existingRegistration) {
-    if (existingRegistration.table === options.table) {
+    if (existingRegistration.table === table) {
       return () => {
         removeTableDevtoolsTarget(key)
       }
@@ -48,14 +75,14 @@ export function upsertTableDevtoolsTarget(
     const nextRegistrations = new Map(registrations)
     nextRegistrations.set(key, {
       id: key,
-      table: options.table,
+      table,
     })
     setRegistrationsMap(nextRegistrations)
   } else {
     const nextRegistrations = new Map(registrations)
     nextRegistrations.set(key, {
       id: key,
-      table: options.table,
+      table,
     })
     setRegistrationsMap(nextRegistrations)
   }
@@ -92,7 +119,10 @@ export function subscribeTableDevtoolsTargets(listener: Listener) {
   return disposeRoot
 }
 
-export function setTableDevtoolsTarget(table: Table<any, any> | undefined) {
+export function setTableDevtoolsTarget<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData> | undefined) {
   if (!table) {
     return
   }

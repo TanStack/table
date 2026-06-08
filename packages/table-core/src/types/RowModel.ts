@@ -28,20 +28,7 @@ import type {
   CreateRowModel_Sorted,
 } from '../features/row-sorting/rowSortingFeature.types'
 import type { RowData } from './type-utils'
-import type {
-  ExtractFeatureMapTypes,
-  ExtractFeatureTypes,
-  TableFeatures,
-} from './TableFeatures'
-
-/**
- * Use this interface as a target for declaration merging to add your own plugin properties.
- * Note: This will affect the types of all tables in your project.
- */
-export interface CreateRowModels_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {}
+import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 
 export interface CreateRowModels_FeatureMap<
   TFeatures extends TableFeatures,
@@ -62,9 +49,7 @@ export type CreateRowModels<
   ExtractFeatureMapTypes<
     TFeatures,
     CreateRowModels_FeatureMap<TFeatures, TData>
-  > &
-  ExtractFeatureTypes<'CreateRowModels', TFeatures> &
-  CreateRowModels_Plugins<TFeatures, TData>
+  >
 
 export type CreateRowModels_All<
   TFeatures extends TableFeatures,
@@ -76,11 +61,6 @@ export type CreateRowModels_All<
   CreateRowModel_Grouped<TFeatures, TData> &
   CreateRowModel_Paginated<TFeatures, TData> &
   CreateRowModel_Sorted<TFeatures, TData>
-
-export interface CachedRowModels_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {}
 
 export interface CachedRowModels_FeatureMap<
   TFeatures extends TableFeatures,
@@ -102,9 +82,7 @@ export type CachedRowModels<
 } & ExtractFeatureMapTypes<
   TFeatures,
   CachedRowModels_FeatureMap<TFeatures, TData>
-> &
-  ExtractFeatureTypes<'CachedRowModel', TFeatures> &
-  CachedRowModels_Plugins<TFeatures, TData>
+>
 
 export type CachedRowModel_All<
   TFeatures extends TableFeatures,

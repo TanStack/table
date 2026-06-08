@@ -11,17 +11,18 @@ import {
   subscribeTableDevtoolsTargets,
 } from './tableTarget'
 import type { Accessor, ParentComponent, Setter } from 'solid-js'
-import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
-import type { TableDevtoolsRegistration } from './tableTarget'
+import type {
+  TableDevtoolsRegistration,
+  TableDevtoolsTable,
+} from './tableTarget'
 
 type TableDevtoolsTabId = 'features' | 'state' | 'options' | 'rows' | 'columns'
-type AnyTable = Table<{}, RowData>
 
 interface TableDevtoolsContextValue {
   targets: Accessor<Array<TableDevtoolsRegistration>>
   selectedTargetId: Accessor<string | undefined>
   setSelectedTargetId: Setter<string | undefined>
-  table: Accessor<AnyTable | undefined>
+  table: Accessor<TableDevtoolsTable | undefined>
   activeTab: Accessor<TableDevtoolsTabId>
   setActiveTab: Setter<TableDevtoolsTabId>
 }
@@ -42,7 +43,9 @@ export const TableContextProvider: ParentComponent = (props) => {
   const selectedTarget = createMemo(() =>
     targets().find((target) => target.id === selectedTargetId()),
   )
-  const table = createMemo<AnyTable | undefined>(() => selectedTarget()?.table)
+  const table = createMemo<TableDevtoolsTable | undefined>(
+    () => selectedTarget()?.table,
+  )
 
   createEffect(() => {
     const unsubscribe = subscribeTableDevtoolsTargets((nextTargets) => {

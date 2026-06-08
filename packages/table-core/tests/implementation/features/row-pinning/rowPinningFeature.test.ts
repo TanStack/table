@@ -13,7 +13,7 @@ import {
 } from '../../../helpers/rowPinningHelpers'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
 import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
-import type { ColumnDef, Row } from '../../../../src'
+import type { ColumnDef, TableFeatures } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
 // Define feature set with proper typing
@@ -24,10 +24,13 @@ const features = {
 }
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<typeof features, Person, any>
+type PersonColumn<TFeatures extends TableFeatures = typeof features> =
+  ColumnDef<TFeatures, Person, any>
 
-function generateColumnDefs(people: Array<Person>): Array<PersonColumn> {
-  const columnHelper = createColumnHelper<typeof features, Person>()
+function generateColumnDefs<TFeatures extends TableFeatures = typeof features>(
+  people: Array<Person>,
+): Array<PersonColumn<TFeatures>> {
+  const columnHelper = createColumnHelper<TFeatures, Person>()
   const person = people[0]
 
   if (!person) {
@@ -36,7 +39,7 @@ function generateColumnDefs(people: Array<Person>): Array<PersonColumn> {
 
   return Object.keys(person).map((key) => {
     const typedKey = key as personKeys
-    return columnHelper.accessor(typedKey, { id: typedKey })
+    return columnHelper.accessor(typedKey, { id: typedKey } as any)
   })
 }
 
@@ -165,14 +168,13 @@ describe('table methods', () => {
 
     it('should handle keepPinnedRows - false', () => {
       const data = generateTestData(10)
-      const columns = generateColumnDefs(data)
-
       const _featuresWithPagination = {
         ...coreFeatures,
         rowPinningFeature,
         rowPaginationFeature,
         coreReativityFeature: storeReactivityBindings(),
       }
+      const columns = generateColumnDefs<typeof _featuresWithPagination>(data)
 
       const table = constructTable<typeof _featuresWithPagination, Person>({
         features: _featuresWithPagination,
@@ -205,14 +207,13 @@ describe('table methods', () => {
 
   it('should handle keepPinnedRows - true', () => {
     const data = generateTestData(10)
-    const columns = generateColumnDefs(data)
-
     const _featuresWithPagination = {
       ...coreFeatures,
       rowPinningFeature,
       rowPaginationFeature,
       coreReativityFeature: storeReactivityBindings(),
     }
+    const columns = generateColumnDefs<typeof _featuresWithPagination>(data)
 
     const table = constructTable<typeof _featuresWithPagination, Person>({
       features: _featuresWithPagination,
@@ -263,7 +264,7 @@ describe('row methods', () => {
 
     it('should use enableRowPinning function when provided', () => {
       const table = createRowPinningTable({
-        enableRowPinning: (row: Row<any, any>) => row.id === ROW[1],
+        enableRowPinning: (row) => row.id === ROW[1],
       })
 
       expect(table.getRow(ROW[0]).getCanPin()).toBe(false)
@@ -335,7 +336,7 @@ describe('row methods', () => {
       const { table, onRowPinningChangeMock } =
         createTableWithMockOnPinningChange()
       // Set up initial state with a pinned row
-      table.baseAtoms.rowPinning.set({
+      table.baseAtoms.rowPinning!.set({
         top: [ROW[0]],
         bottom: [],
       })

@@ -1,12 +1,27 @@
 import { defineComponent, h, isVNode } from 'vue'
 import type { PropType } from 'vue'
-import type {
-  Cell,
-  CellData,
-  Header,
-  RowData,
-  TableFeatures,
-} from '@tanstack/table-core'
+
+export interface FlexRenderCell {
+  column: {
+    columnDef: {
+      aggregatedCell?: any
+      cell?: any
+    }
+  }
+  getContext: () => any
+  getIsAggregated?: () => boolean
+  getIsPlaceholder?: () => boolean
+}
+
+export interface FlexRenderHeader {
+  column: {
+    columnDef: {
+      footer?: any
+      header?: any
+    }
+  }
+  getContext: () => any
+}
 
 /**
  * If rendering headers, cells, or footers with custom markup, use flexRender instead of `cell.getValue()` or `cell.renderValue()`.
@@ -60,24 +75,24 @@ export const FlexRender = defineComponent({
       default: undefined,
     },
     cell: {
-      type: Object as PropType<Cell<any, any, any>>,
+      type: Object as PropType<FlexRenderCell>,
       default: undefined,
     },
     header: {
-      type: Object as PropType<Header<any, any, any>>,
+      type: Object as PropType<FlexRenderHeader>,
       default: undefined,
     },
     footer: {
-      type: Object as PropType<Header<any, any, any>>,
+      type: Object as PropType<FlexRenderHeader>,
       default: undefined,
     },
   },
   setup: (props: {
     render?: any
     props?: any
-    cell?: Cell<any, any, any>
-    header?: Header<any, any, any>
-    footer?: Header<any, any, any>
+    cell?: FlexRenderCell
+    header?: FlexRenderHeader
+    footer?: FlexRenderHeader
   }) => {
     return () => {
       // New shorthand pattern: extract render and props from cell/header/footer

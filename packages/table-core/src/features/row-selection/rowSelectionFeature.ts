@@ -28,145 +28,113 @@ import {
   table_toggleAllPageRowsSelected,
   table_toggleAllRowsSelected,
 } from './rowSelectionFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   Row_RowSelection,
-//   TableOptions_RowSelection,
-//   TableState_RowSelection,
-//   Table_RowSelection,
-// } from './rowSelectionFeature.types'
-
-export interface RowSelectionFeatureConstructors<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  // Row: Row_RowSelection
-  // Table: Table_RowSelection<TFeatures, TData>
-  // TableOptions: TableOptions_RowSelection<TFeatures, TData>
-  // TableState: TableState_RowSelection
-}
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
- * Creates the stock row selection feature.
- *
- * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ * Feature that adds row selection state and APIs for row and page selection.
  */
-export function constructRowSelectionFeature<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(): TableFeature<RowSelectionFeatureConstructors<TFeatures, TData>> {
-  return {
-    getInitialState: (initialState) => {
-      return {
-        rowSelection: getDefaultRowSelectionState(),
-        ...initialState,
-      }
-    },
+export const rowSelectionFeature: TableFeature = {
+  getInitialState: (initialState) => {
+    return {
+      rowSelection: getDefaultRowSelectionState(),
+      ...initialState,
+    }
+  },
 
-    getDefaultTableOptions: (table) => {
-      return {
-        onRowSelectionChange: makeStateUpdater('rowSelection', table),
-        enableRowSelection: true,
-        enableMultiRowSelection: true,
-        enableSubRowSelection: true,
-      }
-    },
+  getDefaultTableOptions: (table) => {
+    return {
+      onRowSelectionChange: makeStateUpdater('rowSelection', table),
+      enableRowSelection: true,
+      enableMultiRowSelection: true,
+      enableSubRowSelection: true,
+    }
+  },
 
-    assignRowPrototype: (prototype, table) => {
-      assignPrototypeAPIs('rowSelectionFeature', prototype, table, {
-        row_toggleSelected: {
-          fn: (row, value, opts) => row_toggleSelected(row, value, opts),
-        },
-        row_getIsSelected: {
-          fn: (row) => row_getIsSelected(row),
-        },
-        row_getIsSomeSelected: {
-          fn: (row) => row_getIsSomeSelected(row),
-        },
-        row_getIsAllSubRowsSelected: {
-          fn: (row) => row_getIsAllSubRowsSelected(row),
-        },
-        row_getCanSelect: {
-          fn: (row) => row_getCanSelect(row),
-        },
-        row_getCanSelectSubRows: {
-          fn: (row) => row_getCanSelectSubRows(row),
-        },
-        row_getCanMultiSelect: {
-          fn: (row) => row_getCanMultiSelect(row),
-        },
-        row_getToggleSelectedHandler: {
-          fn: (row) => row_getToggleSelectedHandler(row),
-        },
-      })
-    },
+  assignRowPrototype: (prototype, table) => {
+    assignPrototypeAPIs('rowSelectionFeature', prototype, table, {
+      row_toggleSelected: {
+        fn: (row, value, opts) => row_toggleSelected(row, value, opts),
+      },
+      row_getIsSelected: {
+        fn: (row) => row_getIsSelected(row),
+      },
+      row_getIsSomeSelected: {
+        fn: (row) => row_getIsSomeSelected(row),
+      },
+      row_getIsAllSubRowsSelected: {
+        fn: (row) => row_getIsAllSubRowsSelected(row),
+      },
+      row_getCanSelect: {
+        fn: (row) => row_getCanSelect(row),
+      },
+      row_getCanSelectSubRows: {
+        fn: (row) => row_getCanSelectSubRows(row),
+      },
+      row_getCanMultiSelect: {
+        fn: (row) => row_getCanMultiSelect(row),
+      },
+      row_getToggleSelectedHandler: {
+        fn: (row) => row_getToggleSelectedHandler(row),
+      },
+    })
+  },
 
-    constructTableAPIs: (table) => {
-      assignTableAPIs('rowSelectionFeature', table, {
-        table_setRowSelection: {
-          fn: (updater) => table_setRowSelection(table, updater),
-        },
-        table_resetRowSelection: {
-          fn: (defaultState) => table_resetRowSelection(table, defaultState),
-        },
-        table_toggleAllRowsSelected: {
-          fn: (value) => table_toggleAllRowsSelected(table, value),
-        },
-        table_toggleAllPageRowsSelected: {
-          fn: (value) => table_toggleAllPageRowsSelected(table, value),
-        },
-        table_getPreSelectedRowModel: {
-          fn: () => table_getPreSelectedRowModel(table),
-        },
-        table_getSelectedRowModel: {
-          fn: () => table_getSelectedRowModel(table),
-          memoDeps: () => [
-            table.atoms.rowSelection?.get(),
-            table.getCoreRowModel(),
-          ],
-        },
-        table_getFilteredSelectedRowModel: {
-          fn: () => table_getFilteredSelectedRowModel(table),
-          memoDeps: () => [
-            table.atoms.rowSelection?.get(),
-            table.getFilteredRowModel(),
-          ],
-        },
-        table_getGroupedSelectedRowModel: {
-          fn: () => table_getGroupedSelectedRowModel(table),
-          memoDeps: () => [
-            table.atoms.rowSelection?.get(),
-            table.getSortedRowModel(),
-          ],
-        },
-        table_getIsAllRowsSelected: {
-          fn: () => table_getIsAllRowsSelected(table),
-        },
-        table_getIsAllPageRowsSelected: {
-          fn: () => table_getIsAllPageRowsSelected(table),
-        },
-        table_getIsSomeRowsSelected: {
-          fn: () => table_getIsSomeRowsSelected(table),
-        },
-        table_getIsSomePageRowsSelected: {
-          fn: () => table_getIsSomePageRowsSelected(table),
-        },
-        table_getToggleAllRowsSelectedHandler: {
-          fn: () => table_getToggleAllRowsSelectedHandler(table),
-        },
-        table_getToggleAllPageRowsSelectedHandler: {
-          fn: () => table_getToggleAllPageRowsSelectedHandler(table),
-        },
-      })
-    },
-  }
+  constructTableAPIs: (table) => {
+    assignTableAPIs('rowSelectionFeature', table, {
+      table_setRowSelection: {
+        fn: (updater) => table_setRowSelection(table, updater),
+      },
+      table_resetRowSelection: {
+        fn: (defaultState) => table_resetRowSelection(table, defaultState),
+      },
+      table_toggleAllRowsSelected: {
+        fn: (value) => table_toggleAllRowsSelected(table, value),
+      },
+      table_toggleAllPageRowsSelected: {
+        fn: (value) => table_toggleAllPageRowsSelected(table, value),
+      },
+      table_getPreSelectedRowModel: {
+        fn: () => table_getPreSelectedRowModel(table),
+      },
+      table_getSelectedRowModel: {
+        fn: () => table_getSelectedRowModel(table),
+        memoDeps: () => [
+          table.atoms.rowSelection?.get(),
+          table.getCoreRowModel(),
+        ],
+      },
+      table_getFilteredSelectedRowModel: {
+        fn: () => table_getFilteredSelectedRowModel(table),
+        memoDeps: () => [
+          table.atoms.rowSelection?.get(),
+          table.getFilteredRowModel(),
+        ],
+      },
+      table_getGroupedSelectedRowModel: {
+        fn: () => table_getGroupedSelectedRowModel(table),
+        memoDeps: () => [
+          table.atoms.rowSelection?.get(),
+          table.getSortedRowModel(),
+        ],
+      },
+      table_getIsAllRowsSelected: {
+        fn: () => table_getIsAllRowsSelected(table),
+      },
+      table_getIsAllPageRowsSelected: {
+        fn: () => table_getIsAllPageRowsSelected(table),
+      },
+      table_getIsSomeRowsSelected: {
+        fn: () => table_getIsSomeRowsSelected(table),
+      },
+      table_getIsSomePageRowsSelected: {
+        fn: () => table_getIsSomePageRowsSelected(table),
+      },
+      table_getToggleAllRowsSelectedHandler: {
+        fn: () => table_getToggleAllRowsSelectedHandler(table),
+      },
+      table_getToggleAllPageRowsSelectedHandler: {
+        fn: () => table_getToggleAllPageRowsSelectedHandler(table),
+      },
+    })
+  },
 }
-
-/**
- * The stock row selection feature.
- *
- * Register this feature to add row selection state, selected row-model helpers,
- * and table/row APIs for checkbox and bulk-selection UI.
- */
-export const rowSelectionFeature = constructRowSelectionFeature()

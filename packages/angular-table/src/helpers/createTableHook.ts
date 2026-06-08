@@ -447,7 +447,7 @@ export function createTableHook<
       return footer as Header<TFeatures, TData, any> & THeaderComponents
     }
 
-    const appTableFeatures: TableFeature<{}> = {
+    const appTableFeatures: TableFeature = {
       constructTableAPIs: (table) => {
         Object.assign(table, tableComponents, { appCell, appHeader, appFooter })
       },
@@ -467,8 +467,14 @@ export function createTableHook<
           ...defaultTableOptions.features,
           appTableFeatures,
         },
-      } as TableOptions<TFeatures, TData>
-    }) as AngularTable<any, any>
+      } as unknown as TableOptions<TFeatures, TData>
+    }) as unknown as AppAngularTable<
+      TFeatures,
+      TData,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
   }
 
   function createAppColumnHelper<TData extends RowData>(): AppColumnHelper<

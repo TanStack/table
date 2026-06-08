@@ -23,7 +23,7 @@ export interface TanStackTableCellContext<
  * This token is provided by the {@link TanStackTableCell} directive.
  */
 export const TanStackTableCellToken = new InjectionToken<
-  TanStackTableCellContext<any, any, any>['cell']
+  TanStackTableCellContext<TableFeatures, RowData, CellData>['cell']
 >('[TanStack Table] CellContext')
 
 /**
@@ -100,5 +100,9 @@ export function injectTableCellContext<
   TData extends RowData,
   TValue extends CellData,
 >(): TanStackTableCellContext<TFeatures, TData, TValue>['cell'] {
-  return inject(TanStackTableCellToken)
+  return inject(TanStackTableCellToken) as unknown as TanStackTableCellContext<
+    TFeatures,
+    TData,
+    TValue
+  >['cell']
 }

@@ -86,7 +86,7 @@ export function table_getHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as Array<Column<TFeatures, TData, unknown>>
+  )
 
   // Fast path: no columns are pinned — skip per-side lookups, partition, and spread.
   if (!left.length && !right.length) {

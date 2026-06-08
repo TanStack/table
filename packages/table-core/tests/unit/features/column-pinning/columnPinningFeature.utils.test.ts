@@ -128,9 +128,9 @@ describe('column_pin', () => {
 describe('column_getCanPin', () => {
   it('should return true when column pinning is enabled', () => {
     const table = generateTestTableWithData(1)
-    const column = table.getAllColumns()[0]
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getCanPin(column)
+    const result = column_getCanPin(column as any)
 
     expect(result).toBe(true)
   })
@@ -139,23 +139,30 @@ describe('column_getCanPin', () => {
     const table = generateTestTableWithData(1, {
       enableColumnPinning: false,
     })
-    const column = table.getAllColumns()[0]
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getCanPin(column)
+    const result = column_getCanPin(column as any)
 
     expect(result).toBe(false)
   })
 
   it('should return false when column pinning is disabled for specific column', () => {
     const table = generateTestTableWithData(1)
+    const baseColumn = table.getAllColumns()[0]!
     const column = {
-      ...table.getAllColumns()[0],
-      columnDef: { enablePinning: false },
+      ...baseColumn,
+      columnDef: {
+        ...baseColumn.columnDef,
+        enablePinning: false,
+      },
       table: table,
       getLeafColumns: () => [
         {
-          ...table.getAllColumns()[0],
-          columnDef: { enablePinning: false },
+          ...baseColumn,
+          columnDef: {
+            ...baseColumn.columnDef,
+            enablePinning: false,
+          },
         },
       ],
     }
@@ -469,7 +476,7 @@ describe('table_getCenterHeaderGroups', () => {
 
     const headerGroups = table_getCenterHeaderGroups(table)
     const centerColumnIds = headerGroups[0]?.headers.map(
-      (header: Header<any, any>) => header.column.id,
+      (header) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')
@@ -752,7 +759,7 @@ describe('table_getFooterGroups', () => {
 
     const footerGroups = table_getCenterFooterGroups(table)
     const centerColumnIds = footerGroups[0]?.headers.map(
-      (header: Header<any, any>) => header.column.id,
+      (header) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')

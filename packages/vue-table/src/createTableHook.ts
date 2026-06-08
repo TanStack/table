@@ -4,6 +4,7 @@ import { FlexRender } from './FlexRender'
 import { mergeProxy } from './merge-proxy'
 import { useTable } from './useTable'
 import type { TableOptionsWithReactiveData, VueTable } from './useTable'
+import type { FlexRenderCell, FlexRenderHeader } from './FlexRender'
 import type { Component, InjectionKey, PropType, VNodeChild } from 'vue'
 import type {
   AccessorFn,
@@ -229,15 +230,15 @@ export const AppFlexRender = defineComponent({
   name: 'TableFlexRender',
   props: {
     cell: {
-      type: Object as PropType<Cell<any, any, any>>,
+      type: Object as PropType<FlexRenderCell>,
       default: undefined,
     },
     header: {
-      type: Object as PropType<Header<any, any, any>>,
+      type: Object as PropType<FlexRenderHeader>,
       default: undefined,
     },
     footer: {
-      type: Object as PropType<Header<any, any, any>>,
+      type: Object as PropType<FlexRenderHeader>,
       default: undefined,
     },
   },

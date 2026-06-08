@@ -6,17 +6,21 @@ import {
   inject,
   untracked,
 } from '@angular/core'
-import type { Table } from '@tanstack/table-core'
+import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
-export interface InjectTanStackTableDevtoolsOptions {
-  table: Table<any, any> | undefined
+export interface InjectTanStackTableDevtoolsOptions<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
+> {
+  table: Table<TFeatures, TData> | undefined
   enabled?: () => boolean
   injector?: Injector
 }
 
-export function injectTanStackTableDevtools(
-  options: () => InjectTanStackTableDevtoolsOptions,
-): void {
+export function injectTanStackTableDevtools<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
+>(options: () => InjectTanStackTableDevtoolsOptions<TFeatures, TData>): void {
   const enabled = () => options().enabled?.() ?? true
   assertInInjectionContext(injectTanStackTableDevtools)
   const injector = options().injector ?? inject(Injector)
@@ -37,6 +41,7 @@ export function injectTanStackTableDevtools(
   )
 }
 
-export function injectTanStackTableDevtoolsNoOp(
-  _options: () => InjectTanStackTableDevtoolsOptions,
-): void {}
+export function injectTanStackTableDevtoolsNoOp<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
+>(_options: () => InjectTanStackTableDevtoolsOptions<TFeatures, TData>): void {}

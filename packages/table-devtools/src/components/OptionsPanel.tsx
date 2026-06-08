@@ -29,7 +29,7 @@ export function OptionsPanel() {
     () => {
       const tableInstance = table()
       return tableInstance
-        ? projectOptionsForTree(tableInstance.options as unknown)
+        ? projectOptionsForTree(tableInstance.options)
         : undefined
     },
   )
@@ -41,7 +41,7 @@ export function OptionsPanel() {
     }
 
     tableOptions()
-    return projectOptionsForTree(tableInstance.options as unknown)
+    return projectOptionsForTree(tableInstance.options)
   })
 
   return (

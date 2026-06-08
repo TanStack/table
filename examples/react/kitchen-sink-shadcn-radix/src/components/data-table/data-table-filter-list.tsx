@@ -13,15 +13,15 @@ import type {
   ExtendedColumnFilter,
   FilterOperator,
   JoinOperator,
-  TableFilterFeatures,
 } from '@/types'
 import type {
+  CellData,
   Column,
   ColumnMeta,
+  ReactTable,
   RowData,
-  Table,
-  TableFeatures,
 } from '@tanstack/react-table'
+import type { features } from '@/main'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -63,7 +63,7 @@ import {
 
 // TODO: column.getFacetedUniqueValues() is broken rn, remove this once it's fixed
 function createManualFacetedValues<TData extends RowData>(
-  table: Table<TableFilterFeatures<TableFeatures>, TData>,
+  table: ReactTable<typeof features, TData>,
   columnId: string,
 ): Map<unknown, number> {
   const facetedValues = new Map<unknown, number>()
@@ -81,15 +81,12 @@ function createManualFacetedValues<TData extends RowData>(
   return facetedValues
 }
 
-function getColumnOptions<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->({
+function getColumnOptions<TData extends RowData, TValue extends CellData>({
   column,
   table,
 }: {
-  column: Column<TableFilterFeatures<TFeatures>, TData>
-  table: Table<TableFilterFeatures<TFeatures>, TData>
+  column: Column<typeof features, TData, TValue>
+  table: ReactTable<typeof features, TData>
 }): Array<{ label: string; value: string; count?: number }> {
   const customOptions = column.columnDef.meta?.options
 
@@ -113,23 +110,17 @@ function getColumnOptions<
   }))
 }
 
-interface DataTableFilterListProps<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  table: Table<TableFilterFeatures<TFeatures>, TData>
+interface DataTableFilterListProps<TData extends RowData> {
+  table: ReactTable<typeof features, TData>
   columnFilters: Array<ExtendedColumnFilter>
   onColumnFiltersChange: (filters: Array<ExtendedColumnFilter>) => void
 }
 
-export function DataTableFilterList<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->({
+export function DataTableFilterList<TData extends RowData>({
   table,
   columnFilters,
   onColumnFiltersChange,
-}: DataTableFilterListProps<TFeatures, TData>) {
+}: DataTableFilterListProps<TData>) {
   const id = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
@@ -143,8 +134,8 @@ export function DataTableFilterList<
 
   const getColumnFilterVariant = React.useCallback(
     (
-      column: Column<TableFilterFeatures<TFeatures>, TData>,
-    ): ColumnMeta<TFeatures, TData>['variant'] => {
+      column: Column<typeof features, TData>,
+    ): ColumnMeta<typeof features, TData>['variant'] => {
       if (column.columnDef.meta?.variant) {
         return column.columnDef.meta.variant
       }
@@ -274,7 +265,7 @@ export function DataTableFilterList<
       filterId,
       inputId,
     }: {
-      column: Column<TableFilterFeatures<TFeatures>, TData>
+      column: Column<typeof features, TData>
       operator: FilterOperator
       filterId: string
       inputId: string

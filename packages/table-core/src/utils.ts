@@ -427,13 +427,14 @@ export function assignPrototypeAPIs<
  */
 export function callMemoOrStaticFn<
   TObject extends Record<string, any>,
-  TStaticFn extends AnyFunction,
+  TArgs extends Array<any>,
+  TReturn,
 >(
   obj: TObject,
   fnKey: string,
-  staticFn: TStaticFn,
-  ...args: Parameters<TStaticFn> extends [any, ...infer Rest] ? Rest : never
-): ReturnType<TStaticFn> {
+  staticFn: (obj: TObject, ...args: TArgs) => TReturn,
+  ...args: TArgs
+): TReturn {
   return (
     (obj[fnKey] as Function | undefined)?.(...args) ?? staticFn(obj, ...args)
   )

@@ -230,7 +230,7 @@ export function row_getLeftVisibleCells<
     const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
-      cell.position = 'left'
+      ;(cell as any).position = 'left'
       cells.push(cell)
     }
   }
@@ -266,7 +266,7 @@ export function row_getRightVisibleCells<
     const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
-      cell.position = 'right'
+      ;(cell as any).position = 'right'
       cells.push(cell)
     }
   }
@@ -550,7 +550,7 @@ export function table_getLeftFlatHeaders<
   for (let i = 0; i < leftHeaderGroups.length; i++) {
     const headers = leftHeaderGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j])
+      result.push(headers[j]!)
     }
   }
   return result
@@ -579,7 +579,7 @@ export function table_getRightFlatHeaders<
   for (let i = 0; i < rightHeaderGroups.length; i++) {
     const headers = rightHeaderGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j])
+      result.push(headers[j]!)
     }
   }
   return result
@@ -608,7 +608,7 @@ export function table_getCenterFlatHeaders<
   for (let i = 0; i < centerHeaderGroups.length; i++) {
     const headers = centerHeaderGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j])
+      result.push(headers[j]!)
     }
   }
   return result

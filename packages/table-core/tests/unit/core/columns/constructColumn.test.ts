@@ -5,25 +5,31 @@ import { constructTable } from '../../../../src'
 import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { ColumnDef } from '../../../../src/types/ColumnDef'
 
+const features = {
+  coreColumnsFeature,
+  coreReativityFeature: storeReactivityBindings(),
+}
+
+interface TestRow {
+  'test-accessor-key'?: string
+}
+
 describe('constructColumn', () => {
   it('should create a column with all core column APIs and properties', () => {
-    const table = constructTable({
-      features: {
-        coreColumnsFeature,
-        coreReativityFeature: storeReactivityBindings(),
-      },
-      columns: [] as Array<any>,
-      data: [] as Array<any>,
+    const table = constructTable<typeof features, TestRow>({
+      features,
+      columns: [],
+      data: [],
     })
 
     const columnDef = {
       id: 'test-column',
       accessorKey: 'test-accessor-key',
-    } as ColumnDef<any, any>
+    } as ColumnDef<typeof features, TestRow>
     const depth = 0
     const parent = undefined
 
-    const column = constructColumn(table as any, columnDef, depth, parent)
+    const column = constructColumn(table, columnDef, depth, parent)
 
     expect(column).toBeDefined()
     expect(column).toHaveProperty('accessorFn')

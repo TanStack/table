@@ -22,7 +22,6 @@ import {
 } from '../../../../src/static-functions'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
-import type { Column } from '../../../../src'
 
 const features = tableFeatures({
   ...coreFeatures,
@@ -89,7 +88,7 @@ describe('columnVisibilityFeature.utils', () => {
       const table = generateTestTableWithData(1, { features })
       const column = table.getAllColumns()[0]!
 
-      const result = column_getCanHide(column)
+      const result = column_getCanHide(column as any)
 
       expect(result).toBe(true)
     })
@@ -101,7 +100,7 @@ describe('columnVisibilityFeature.utils', () => {
       })
       const column = table.getAllColumns()[0]!
 
-      const result = column_getCanHide(column)
+      const result = column_getCanHide(column as any)
 
       expect(result).toBe(false)
     })
@@ -110,7 +109,10 @@ describe('columnVisibilityFeature.utils', () => {
       const table = generateTestTableWithData(1, { features })
       const column = {
         ...table.getAllColumns()[0]!,
-        columnDef: { enableHiding: false },
+        columnDef: {
+          ...table.getAllColumns()[0]!.columnDef,
+          enableHiding: false,
+        },
       }
 
       const result = column_getCanHide(column)
@@ -312,9 +314,7 @@ describe('columnVisibilityFeature.utils', () => {
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
       const result = onColumnVisibilityChange.mock.calls[0]?.[0]
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id: string) => [id, true]),
       )
@@ -331,9 +331,7 @@ describe('columnVisibilityFeature.utils', () => {
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
       const result = onColumnVisibilityChange.mock.calls[0]?.[0]
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id: string) => [id, false]),
       )
@@ -382,9 +380,7 @@ describe('columnVisibilityFeature.utils', () => {
 
     it('should return false when no columns are visible', () => {
       const table = generateTestTableWithData(1, { features })
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       const hideAllColumns = Object.fromEntries(
         allColumnIds.map((id: string) => [id, false]),
       )
@@ -415,9 +411,7 @@ describe('columnVisibilityFeature.utils', () => {
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
       const result = onColumnVisibilityChange.mock.calls[0]?.[0]
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id: string) => [id, true]),
       )

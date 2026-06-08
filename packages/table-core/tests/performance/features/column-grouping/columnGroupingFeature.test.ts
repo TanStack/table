@@ -15,10 +15,17 @@ import type { ColumnDef } from '../../../../src'
 // TODO: bring up to new test structure
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<any, Person, any>
+
+const features = {
+  ...coreFeatures,
+  columnGroupingFeature,
+  coreReativityFeature: storeReactivityBindings(),
+}
+
+type PersonColumn = ColumnDef<typeof features, Person, any>
 
 function generateColumns(people: Array<Person>): Array<PersonColumn> {
-  const columnHelper = createColumnHelper<any, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
   const person = people[0]
 
   if (!person) {
@@ -42,16 +49,11 @@ describe('#getGroupedRowModel', () => {
     data.forEach((p) => (p.lastName = 'Name'))
     data.forEach((p) => (p.age = 123))
 
-    const table = constructTable<any, Person>({
-      features: {
-        columnGroupingFeature,
-        ...coreFeatures,
-        coreReativityFeature: storeReactivityBindings(),
-      },
+    const table = constructTable<typeof features, Person>({
+      features,
       rowModels: {
         groupedRowModel: createGroupedRowModel(aggregationFns),
       },
-      onStateChange() {},
       renderFallbackValue: '',
       data,
       initialState: { grouping },
