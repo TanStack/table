@@ -16,8 +16,8 @@
     "@tanstack/svelte-table": "^9.0.0-beta.6",
     "@tanstack/svelte-virtual": "^3.13.28",
     "@tsconfig/svelte": "^5.0.8",
-    "svelte": "^5.56.1",
-    "svelte-check": "^4.5.0",
+    "svelte": "^5.56.2",
+    "svelte-check": "^4.6.0",
     "typescript": "6.0.3",
     "vite": "^8.0.16"
   }

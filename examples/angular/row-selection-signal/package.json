@@ -10,7 +10,7 @@
     "lint": "eslint ./src"
   },
   "private": true,
-  "packageManager": "pnpm@11.5.1",
+  "packageManager": "pnpm@11.5.2",
   "dependencies": {
     "@angular/animations": "^22.0.0",
     "@angular/common": "^22.0.0",

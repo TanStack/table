@@ -12,7 +12,7 @@
     "serve:ssr:remote-data": "node dist/remote-data/server/server.mjs"
   },
   "private": true,
-  "packageManager": "pnpm@11.5.1",
+  "packageManager": "pnpm@11.5.2",
   "dependencies": {
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
@@ -32,7 +32,7 @@
     "@angular/cli": "^22.0.0",
     "@angular/compiler-cli": "^22.0.0",
     "@types/express": "^5.0.6",
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.2",
     "tslib": "^2.8.1",
     "typescript": "6.0.3"
   }

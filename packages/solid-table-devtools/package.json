@@ -51,10 +51,10 @@
   "dependencies": {
     "@tanstack/devtools": "^0.12.2",
     "@tanstack/devtools-utils": "^0.5.0",
-    "@tanstack/table-devtools": "^9.0.0-beta.5"
+    "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
-    "@tanstack/table-core": "^9.0.0-beta.5",
+    "@tanstack/table-core": "workspace:*",
     "solid-js": "^1.9.13",
     "vite-plugin-solid": "^2.11.12"
   },

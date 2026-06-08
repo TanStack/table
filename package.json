@@ -5,7 +5,7 @@
     "type": "git",
     "url": "git+https://github.com/TanStack/table.git"
   },
-  "packageManager": "pnpm@11.5.1",
+  "packageManager": "pnpm@11.5.2",
   "engines": {
     "pnpm": ">=11.0.0"
   },
@@ -59,10 +59,10 @@
     "@tanstack/publish-config": "0.2.7",
     "@tanstack/typedoc-config": "0.3.3",
     "@testing-library/jest-dom": "^6.9.1",
-    "@types/node": "^25.9.1",
+    "@types/node": "^25.9.2",
     "eslint": "^10.4.1",
     "jsdom": "^29.1.1",
-    "knip": "^6.15.0",
+    "knip": "^6.16.1",
     "markdown-link-extractor": "^4.0.3",
     "nx": "^22.7.5",
     "prettier": "^3.8.3",
@@ -72,7 +72,7 @@
     "sherif": "^1.11.1",
     "size-limit": "^12.1.0",
     "tinyglobby": "^0.2.17",
-    "tsdown": "^0.22.1",
+    "tsdown": "^0.22.2",
     "typescript": "6.0.3",
     "vite": "^8.0.16",
     "vitest": "^4.1.8"

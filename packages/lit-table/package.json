@@ -58,7 +58,7 @@
   },
   "dependencies": {
     "@tanstack/store": "^0.11.0",
-    "@tanstack/table-core": "^9.0.0-beta.5"
+    "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",

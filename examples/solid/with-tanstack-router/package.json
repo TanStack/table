@@ -11,7 +11,7 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^10.4.0",
-    "@tanstack/router-vite-plugin": "^1.167.14",
+    "@tanstack/router-vite-plugin": "^1.167.18",
     "typescript": "6.0.3",
     "vite": "^8.0.16",
     "vite-plugin-solid": "^2.11.12"
@@ -19,7 +19,7 @@
   "dependencies": {
     "@tanstack/solid-pacer": "^0.21.1",
     "@tanstack/solid-query": "^5.101.0",
-    "@tanstack/solid-router": "^1.170.11",
+    "@tanstack/solid-router": "^1.170.15",
     "@tanstack/solid-table": "^9.0.0-beta.6",
     "solid-js": "^1.9.13"
   }

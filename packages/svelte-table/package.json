@@ -60,14 +60,14 @@
   },
   "dependencies": {
     "@tanstack/svelte-store": "^0.12.0",
-    "@tanstack/table-core": "^9.0.0-beta.5"
+    "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
     "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "eslint-plugin-svelte": "^3.19.0",
-    "svelte": "^5.56.1",
-    "svelte-check": "^4.5.0"
+    "svelte": "^5.56.2",
+    "svelte-check": "^4.6.0"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

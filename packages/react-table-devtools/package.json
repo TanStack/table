@@ -50,12 +50,12 @@
   ],
   "dependencies": {
     "@tanstack/devtools-utils": "^0.5.0",
-    "@tanstack/table-devtools": "^9.0.0-beta.5"
+    "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
-    "@eslint-react/eslint-plugin": "^5.8.10",
-    "@tanstack/table-core": "^9.0.0-beta.5",
-    "@types/react": "^19.2.16",
+    "@eslint-react/eslint-plugin": "^5.8.16",
+    "@tanstack/table-core": "workspace:*",
+    "@types/react": "^19.2.17",
     "@vitejs/plugin-react": "^6.0.2",
     "eslint-plugin-react-compiler": "19.1.0-rc.2",
     "eslint-plugin-react-hooks": "^7.1.1",

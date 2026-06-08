@@ -28,7 +28,7 @@
     "cmdk": "1.1.1",
     "date-fns": "^4.4.0",
     "lucide-react": "^1.17.0",
-    "radix-ui": "^1.4.3",
+    "radix-ui": "^1.5.0",
     "react": "^19.2.7",
     "react-day-picker": "10.0.1",
     "react-dom": "^19.2.7",
@@ -39,7 +39,7 @@
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
-    "@types/react": "^19.2.16",
+    "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
     "babel-plugin-react-compiler": "^1.0.0",
