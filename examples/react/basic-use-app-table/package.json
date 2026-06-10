@@ -11,8 +11,8 @@
   },
   "dependencies": {
     "@tanstack/react-devtools": "^0.10.5",
-    "@tanstack/react-table": "^9.0.0-beta.6",
-    "@tanstack/react-table-devtools": "^9.0.0-beta.6",
+    "@tanstack/react-table": "^9.0.0-beta.7",
+    "@tanstack/react-table-devtools": "^9.0.0-beta.7",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

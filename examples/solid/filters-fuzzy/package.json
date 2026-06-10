@@ -18,7 +18,7 @@
   "dependencies": {
     "@tanstack/match-sorter-utils": "^9.0.0-beta.0",
     "@tanstack/solid-pacer": "^0.21.1",
-    "@tanstack/solid-table": "^9.0.0-beta.6",
+    "@tanstack/solid-table": "^9.0.0-beta.7",
     "solid-js": "^1.9.13"
   }
 }
