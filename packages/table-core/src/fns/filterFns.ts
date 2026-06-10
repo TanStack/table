@@ -245,7 +245,8 @@ const filterFn_betweenInclusive = Object.assign(
  * Keeps rows whose numeric value is inside an inclusive `[min, max]` range.
  *
  * Filter values are normalized so blank endpoints become open-ended and
- * reversed endpoints are swapped.
+ * reversed endpoints are swapped. Non-numeric row values (such as `null`,
+ * `undefined`, empty strings or booleans) never fall inside the range.
  */
 export const filterFn_inNumberRange = Object.assign(
   <TFeatures extends TableFeatures, TData extends RowData>(
@@ -255,7 +256,13 @@ export const filterFn_inNumberRange = Object.assign(
   ) => {
     const [min, max] = filterValue
 
-    const rowValue: number = row.getValue(columnId)
+    const rowValue = row.getValue<number>(columnId)
+    // Guard against non-numeric values. Without this check JavaScript's loose
+    // relational coercion lets values such as `null`, `''` and booleans slip
+    // into a numeric range (e.g. `null >= 0 && null <= 20` evaluates to `true`).
+    if (typeof rowValue !== 'number' || Number.isNaN(rowValue)) {
+      return false
+    }
     return rowValue >= min && rowValue <= max
   },
   {

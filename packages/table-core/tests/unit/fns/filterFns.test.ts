@@ -7,6 +7,7 @@ import {
   filterFn_equalsStringSensitive,
   filterFn_greaterThan,
   filterFn_greaterThanOrEqualTo,
+  filterFn_inNumberRange,
   filterFn_includesString,
   filterFn_includesStringSensitive,
   filterFn_lessThan,
@@ -509,6 +510,91 @@ describe('Filter Functions', () => {
           filterValue,
         )
         expect(result).toBe(true)
+      })
+    })
+    describe('filterFn_inNumberRange', () => {
+      // Mirror the real filtering pipeline: the raw `[min, max]` the user sets
+      // is run through `resolveFilterValue` before being handed to the filter fn.
+      const resolve = filterFn_inNumberRange.resolveFilterValue
+      const makeRow = (value: unknown) => ({ getValue: () => value }) as any
+
+      it('should match numbers inside the range', () => {
+        const result = filterFn_inNumberRange(
+          makeRow(15),
+          'age',
+          resolve([0, 20]) as any,
+        )
+        expect(result).toBe(true)
+      })
+      it('should match numbers on the inclusive boundaries', () => {
+        expect(
+          filterFn_inNumberRange(makeRow(0), 'age', resolve([0, 20]) as any),
+        ).toBe(true)
+        expect(
+          filterFn_inNumberRange(makeRow(20), 'age', resolve([0, 20]) as any),
+        ).toBe(true)
+      })
+      it('should not match numbers outside the range', () => {
+        expect(
+          filterFn_inNumberRange(makeRow(25), 'age', resolve([0, 20]) as any),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow(-5), 'age', resolve([0, 20]) as any),
+        ).toBe(false)
+      })
+      it('should not match `null` values when the lower bound is 0', () => {
+        // `null >= 0 && null <= 20` coerces to `true` in JS, so a nullable
+        // numeric column would leak empty rows into a `[0, max]` range.
+        const result = filterFn_inNumberRange(
+          makeRow(null),
+          'age',
+          resolve([0, 20]) as any,
+        )
+        expect(result).toBe(false)
+      })
+      it('should not match `undefined` values when the lower bound is 0', () => {
+        const result = filterFn_inNumberRange(
+          makeRow(undefined),
+          'age',
+          resolve([0, 20]) as any,
+        )
+        expect(result).toBe(false)
+      })
+      it('should not match empty string values when the lower bound is 0', () => {
+        // `'' >= 0 && '' <= 20` also coerces to `true` in JS.
+        const result = filterFn_inNumberRange(
+          makeRow(''),
+          'age',
+          resolve([0, 20]) as any,
+        )
+        expect(result).toBe(false)
+      })
+      it('should not match boolean values that coerce into the range', () => {
+        // `true` coerces to 1 and `false` to 0, both of which fall inside [0, 20].
+        expect(
+          filterFn_inNumberRange(makeRow(true), 'age', resolve([0, 20]) as any),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(
+            makeRow(false),
+            'age',
+            resolve([0, 20]) as any,
+          ),
+        ).toBe(false)
+      })
+      it('should still match numbers when only an upper bound is provided', () => {
+        // A blank lower bound resolves to -Infinity, so real numbers below the
+        // max should still pass while empty values stay excluded.
+        expect(
+          filterFn_inNumberRange(makeRow(-5), 'age', resolve(['', 20]) as any),
+        ).toBe(true)
+        expect(
+          filterFn_inNumberRange(
+            makeRow(null),
+            'age',
+            resolve(['', 20]) as any,
+          ),
+        ).toBe(false)
       })
     })
   })
