@@ -93,11 +93,11 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 
 ## Progress
 
-- **Total findings:** 60
-- **Done `[x]`:** 17
+- **Total findings:** 61
+- **Done `[x]`:** 19
 - **Partial `[~]`:** 2
 - **Skipped `[-]`:** 5
-- **Not started `[ ]`:** 36
+- **Not started `[ ]`:** 35
 
 _(Update these counters as you go.)_
 
@@ -1858,8 +1858,8 @@ Both walk the `sorting` array; called for every visible sortable column on every
 
 ## 52. `compareAlphanumeric` allocates 2 arrays per comparison — Score: 6
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Went further than proposed — the audit undercounted the allocations. Besides the two `.filter(Boolean)` arrays per comparison, every chunk-pair iteration allocated and **default-sorted** a fresh `[an, bn]` array (`const combo = [an, bn].sort()`), paying array allocation + sort dispatch + number→string coercion just to classify NaN-ness. Since chunks from `reSplitAlphaNumeric` are either all-digit (`parseInt` always succeeds) or digit-free (`parseInt` always `NaN`), two plain `isNaN` checks replace the combo entirely (`aIsNaN && bIsNaN` → both-string branch, `aIsNaN || bIsNaN` → mixed branch). The `.filter(Boolean)` drop required two semantic guards: (1) empty chunks (which only occur at split-array boundaries) are skipped inline at the top of the loop; (2) the prefix tail return counts only **non-empty** remaining chunks instead of raw `aLen - ai - (bLen - bi)`. Net per comparison: 3+k array allocations → 1 per side (the unavoidable `.split()`), where k = chunk pairs visited. Measured on a 10k-row sort of mixed `itemNNNN-revNN` strings (Node, median of 7 runs): **36.5ms → 20.7ms (~43% faster)**. Equivalence verified two ways: a vocab×vocab differential test against the verbatim old implementation (625 pairs covering boundary digits, leading zeros, pure digits, empties, 30-digit overflow) plus targeted boundary-chunk unit tests, all in `tests/unit/fns/sortFns.test.ts`. Unblocked by #61 — the auto path can now actually select `alphanumeric` again.
 
 **Location:** `src/fns/sortFns.ts:154–200`
 **Category:** `big-o`, `micro`
@@ -2037,6 +2037,60 @@ Each file has a `getXyzPrototype(table)` function with identical shape — `if (
 
 ---
 
+## 61. `column_getAutoSortFn` never auto-selects `alphanumeric`/`datetime` — `isString` fallback clobbers the match (bug) — Score: 8 (bug)
+
+**Status:** `[x]` done
+**Implementation note:** Restored v8's early-return precedence (datetime → alphanumeric → text → basic). Discovered during the adversarial verification of #52. The v9 refactor had converted v8's in-loop `return sortingFns.datetime` / `return sortingFns.alphanumeric` (v8 `RowSorting.ts` `getAutoSortingFn`) into assignments to a shared `sortFn` local — but any string value in the sample also sets `isString = true`, and the trailing `if (isString) sortFn = sortFns?.text` unconditionally overwrote the match. Net effect: the auto path never selected `alphanumeric` (dead code) and `datetime` was clobbered whenever any sampled value was a string; digit-bearing string columns silently got plain `text` sorting (`"item10"` before `"item2"`). Each restored early return is guarded (`if (sortFns?.datetime) return ...`) so a custom registry missing an entry falls through to the next preference instead of returning `undefined`. Added `tests/unit/features/row-sorting/rowSortingFeature.utils.test.ts` covering all four selections plus empty-rows and missing-registry-entry fallbacks (no row-sorting utils tests existed before). Related to #50, which fixed the row sampling in the same function. Note for #52: this fix makes `compareAlphanumeric` reachable via the auto path again, so #52's allocation refactor is now worth pursuing.
+
+**Location:** `src/features/row-sorting/rowSortingFeature.utils.ts:84–122`
+**Category:** `bug`
+
+**Before**
+
+```ts
+for (let i = 0; i < firstRows.length; i++) {
+  const value = firstRows[i]!.getValue(column.id)
+  if (Object.prototype.toString.call(value) === '[object Date]') {
+    sortFn = sortFns?.datetime
+  }
+  if (typeof value === 'string') {
+    isString = true
+    if (value.split(reSplitAlphaNumeric).length > 1) {
+      sortFn = sortFns?.alphanumeric
+    }
+  }
+}
+if (isString) {
+  sortFn = sortFns?.text // clobbers any datetime/alphanumeric match above
+}
+return sortFn ?? sortFn_basic
+```
+
+**After**
+
+```ts
+for (let i = 0; i < firstRows.length; i++) {
+  const value = firstRows[i]!.getValue(column.id)
+  if (Object.prototype.toString.call(value) === '[object Date]') {
+    if (sortFns?.datetime) return sortFns.datetime
+  }
+  if (typeof value === 'string') {
+    isString = true
+    if (value.split(reSplitAlphaNumeric).length > 1) {
+      if (sortFns?.alphanumeric) return sortFns.alphanumeric
+    }
+  }
+}
+if (isString) {
+  return sortFns?.text ?? sortFn_basic
+}
+return sortFn_basic
+```
+
+**Risk:** Behavior changes for tables relying on the broken default — string columns containing digits now natural-sort (the documented v8 behavior) instead of lexicographic `text` sort.
+
+---
+
 # Suggested priority order
 
 Anything **≥ 7**:
@@ -2055,6 +2109,7 @@ Anything **≥ 7**:
 | 34  | `orderColumns` `grouping.includes` → Set                    | 7     | big-o         |
 | 49  | `createSortedRowModel` clones every row                     | 7     | big-o / micro |
 | 50  | `column_getAutoSortFn` `slice(10)` should be `slice(0, 10)` | 7     | bug           |
+| 61  | `column_getAutoSortFn` text fallback clobbers auto-match    | 8     | bug           |
 
 Anything **5–6**: a second wave of memoization gaps and partition-loop consolidations (#2, #9, #15, #21, #24, #27, #33, #36, #39, #40, #41, #52). All low-risk.
 

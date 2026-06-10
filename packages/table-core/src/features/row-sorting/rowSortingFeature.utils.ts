@@ -89,8 +89,6 @@ export function column_getAutoSortFn<
   const sortFns: Record<string, SortFn<TFeatures, TData>> | undefined =
     column.table._rowModelFns.sortFns
 
-  let sortFn: SortFn<TFeatures, TData> | undefined
-
   const firstRows = column.table.getFilteredRowModel().flatRows.slice(0, 10)
 
   let isString = false
@@ -99,23 +97,27 @@ export function column_getAutoSortFn<
     const value = firstRows[i]!.getValue(column.id)
 
     if (Object.prototype.toString.call(value) === '[object Date]') {
-      sortFn = sortFns?.datetime
+      if (sortFns?.datetime) {
+        return sortFns.datetime
+      }
     }
 
     if (typeof value === 'string') {
       isString = true
 
       if (value.split(reSplitAlphaNumeric).length > 1) {
-        sortFn = sortFns?.alphanumeric
+        if (sortFns?.alphanumeric) {
+          return sortFns.alphanumeric
+        }
       }
     }
   }
 
   if (isString) {
-    sortFn = sortFns?.text
+    return sortFns?.text ?? sortFn_basic
   }
 
-  return sortFn ?? sortFn_basic
+  return sortFn_basic
 }
 
 /**

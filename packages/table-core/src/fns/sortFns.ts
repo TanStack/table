@@ -151,10 +151,8 @@ function toString(a: any) {
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
 function compareAlphanumeric(aStr: string, bStr: string) {
-  // Split on number groups, but keep the delimiter
-  // Then remove falsey split values
-  const a = aStr.split(reSplitAlphaNumeric).filter(Boolean)
-  const b = bStr.split(reSplitAlphaNumeric).filter(Boolean)
+  const a = aStr.split(reSplitAlphaNumeric)
+  const b = bStr.split(reSplitAlphaNumeric)
 
   let ai = 0
   let bi = 0
@@ -162,16 +160,29 @@ function compareAlphanumeric(aStr: string, bStr: string) {
   const bLen = b.length
 
   while (ai < aLen && bi < bLen) {
+    // Skip the empty boundary chunks that .filter(Boolean) used to remove
+    if (!a[ai]) {
+      ai++
+      continue
+    }
+    if (!b[bi]) {
+      bi++
+      continue
+    }
+
     const aa = a[ai++]!
     const bb = b[bi++]!
 
+    // Chunks are either all-digit (parseInt always succeeds) or digit-free
+    // (parseInt is always NaN), so NaN-ness fully classifies each chunk
     const an = parseInt(aa, 10)
     const bn = parseInt(bb, 10)
 
-    const combo = [an, bn].sort()
+    const aIsNaN = isNaN(an)
+    const bIsNaN = isNaN(bn)
 
     // Both are string
-    if (isNaN(combo[0]!)) {
+    if (aIsNaN && bIsNaN) {
       if (aa > bb) {
         return 1
       }
@@ -181,9 +192,9 @@ function compareAlphanumeric(aStr: string, bStr: string) {
       continue
     }
 
-    // One is a string, one is a number
-    if (isNaN(combo[1]!)) {
-      return isNaN(an) ? -1 : 1
+    // One is a string, one is a number — the string chunk sorts first
+    if (aIsNaN || bIsNaN) {
+      return aIsNaN ? -1 : 1
     }
 
     // Both are numbers
@@ -195,7 +206,19 @@ function compareAlphanumeric(aStr: string, bStr: string) {
     }
   }
 
-  return aLen - ai - (bLen - bi)
+  // One side is exhausted — compare the counts of remaining non-empty chunks
+  let remaining = 0
+  for (; ai < aLen; ai++) {
+    if (a[ai]) {
+      remaining++
+    }
+  }
+  for (; bi < bLen; bi++) {
+    if (b[bi]) {
+      remaining--
+    }
+  }
+  return remaining
 }
 
 // Exports

@@ -140,6 +140,110 @@ describe('sortFn_basic', () => {
   })
 })
 
+describe('compareAlphanumeric boundary chunks (filter-removal regression)', () => {
+  // The inline empty-chunk skipping must match the old `.filter(Boolean)`
+  // behavior; empty chunks occur where a string starts/ends with digits.
+
+  it('handles leading digit groups', () => {
+    // Number chunk vs string chunk at position 0 — string sorts first
+    expect(cmp(sortFn_alphanumeric, '1abc', 'abc1')).toBe(1)
+    expect(cmp(sortFn_alphanumeric, 'abc1', '1abc')).toBe(-1)
+    expect(cmp(sortFn_alphanumeric, '2abc', '10abc')).toBe(-1)
+  })
+
+  it('handles pure digit strings (leading and trailing empties)', () => {
+    expect(cmp(sortFn_alphanumeric, '12', '12')).toBe(0)
+    expect(cmp(sortFn_alphanumeric, '2', '10')).toBe(-1)
+    expect(cmp(sortFn_alphanumeric, '10', '2')).toBe(1)
+  })
+
+  it('treats leading zeros as numerically equal', () => {
+    expect(cmp(sortFn_alphanumeric, 'item007', 'item7')).toBe(0)
+  })
+
+  it('counts only non-empty chunks in the prefix tail', () => {
+    // a exhausts past its trailing empty; b has one real chunk remaining
+    expect(cmp(sortFn_alphanumeric, '1', '1abc')).toBe(-1)
+    expect(cmp(sortFn_alphanumeric, '1abc', '1')).toBe(1)
+    expect(cmp(sortFn_alphanumeric, 'abc', 'abc123')).toBe(-1)
+  })
+
+  it('handles empty vs non-empty strings', () => {
+    expect(cmp(sortFn_alphanumeric, '', 'a')).toBe(-1)
+    expect(cmp(sortFn_alphanumeric, 'a', '')).toBe(1)
+  })
+
+  it('matches the previous filter-based implementation across all vocab pairs', () => {
+    // Reference: the implementation before the allocation refactor, verbatim
+    const reference = (aStr: string, bStr: string): number => {
+      const a = aStr.split(/([0-9]+)/gm).filter(Boolean)
+      const b = bStr.split(/([0-9]+)/gm).filter(Boolean)
+      let ai = 0
+      let bi = 0
+      const aLen = a.length
+      const bLen = b.length
+      while (ai < aLen && bi < bLen) {
+        const aa = a[ai++]!
+        const bb = b[bi++]!
+        const an = parseInt(aa, 10)
+        const bn = parseInt(bb, 10)
+        const combo = [an, bn].sort()
+        if (isNaN(combo[0]!)) {
+          if (aa > bb) return 1
+          if (bb > aa) return -1
+          continue
+        }
+        if (isNaN(combo[1]!)) {
+          return isNaN(an) ? -1 : 1
+        }
+        if (an > bn) return 1
+        if (bn > an) return -1
+      }
+      return aLen - ai - (bLen - bi)
+    }
+
+    const vocab = [
+      '',
+      'a',
+      'ab',
+      '1',
+      '0',
+      '12',
+      '007',
+      '7',
+      '1a',
+      'a1',
+      '1a1',
+      'a1a',
+      '1a2b',
+      'a1b2',
+      '12ab34',
+      'ab12cd',
+      'item2',
+      'item10',
+      '2item',
+      '10item',
+      'a007b',
+      'a7b',
+      'nan',
+      'infinity',
+      '999999999999999999999999999999',
+    ]
+
+    for (const a of vocab) {
+      for (const b of vocab) {
+        // Case-sensitive variant is a pure passthrough for string inputs
+        const actual = sortFn_alphanumericCaseSensitive(
+          makeRow(a),
+          makeRow(b),
+          'col',
+        )
+        expect(actual, `compare("${a}", "${b}")`).toBe(reference(a, b))
+      }
+    }
+  })
+})
+
 describe('sortFn_datetime', () => {
   it('returns 0 for equal dates', () => {
     const d = new Date(2026, 1, 1)
