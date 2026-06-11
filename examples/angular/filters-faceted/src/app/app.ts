@@ -11,6 +11,7 @@ import {
   createTableHook,
   filterFns,
   isFunction,
+  metaHelper,
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
@@ -19,10 +20,16 @@ import { TableFilter } from './table-filter/table-filter'
 import type { ColumnFiltersState, Updater } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
 export const features = tableFeatures({
   columnFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({

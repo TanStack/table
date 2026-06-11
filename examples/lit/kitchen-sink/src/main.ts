@@ -5,6 +5,7 @@ import { styleMap } from 'lit/directives/style-map.js'
 import { faker } from '@faker-js/faker'
 import {
   FlexRender,
+  metaHelper,
   TableController,
   aggregationFns,
   createColumnHelper,
@@ -19,6 +20,7 @@ import {
   filterFns,
   sortFns,
   stockFeatures,
+  tableFeatures,
 } from '@tanstack/lit-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
@@ -26,7 +28,6 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type {
   Cell,
-  CellData,
   Column,
   ColumnDef,
   FilterFn,
@@ -35,26 +36,27 @@ import type {
   Row,
   RowData,
   SortFn,
-  TableFeatures,
 } from '@tanstack/lit-table'
 
 declare module '@tanstack/lit-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, RowData>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,
@@ -65,11 +67,7 @@ const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof stockFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -80,7 +78,7 @@ const fuzzySort: SortFn<typeof stockFeatures, Person> = (
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
@@ -88,10 +86,10 @@ const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
   )
 }
 
-const columnHelper = createColumnHelper<typeof stockFeatures, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const columns: Array<ColumnDef<typeof stockFeatures, Person>> =
-  columnHelper.columns([
+const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
+  [
     columnHelper.display({
       id: 'select',
       size: 80,
@@ -153,23 +151,22 @@ const columns: Array<ColumnDef<typeof stockFeatures, Person>> =
       aggregatedCell: ({ getValue }) =>
         `${Math.round(getValue<number>() * 100) / 100}%`,
     }),
-  ])
+  ],
+)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000)
 
-  private tableController = new TableController<typeof stockFeatures, Person>(
-    this,
-  )
+  private tableController = new TableController<typeof features, Person>(this)
 
   private debounceTimers = new Map<string, ReturnType<typeof setTimeout>>()
 
   protected render() {
     const table = this.tableController.table(
       {
-        features: stockFeatures,
+        features,
         rowModels: {
           expandedRowModel: createExpandedRowModel(),
           filteredRowModel: createFilteredRowModel({
@@ -418,8 +415,8 @@ class LitTableExample extends LitElement {
   }
 
   private renderHeader(
-    table: LitTable<typeof stockFeatures, Person>,
-    header: Header<typeof stockFeatures, Person, unknown>,
+    table: LitTable<typeof features, Person>,
+    header: Header<typeof features, Person, unknown>,
   ) {
     const column = header.column
     return html`
@@ -501,7 +498,7 @@ class LitTableExample extends LitElement {
     `
   }
 
-  private renderFilter(column: Column<typeof stockFeatures, Person>) {
+  private renderFilter(column: Column<typeof features, Person>) {
     const filterVariant = column.columnDef.meta?.filterVariant
     const columnFilterValue = column.getFilterValue()
     const minMaxValues =
@@ -592,8 +589,8 @@ class LitTableExample extends LitElement {
   }
 
   private renderPinnedRow(
-    table: LitTable<typeof stockFeatures, Person>,
-    row: Row<typeof stockFeatures, Person>,
+    table: LitTable<typeof features, Person>,
+    row: Row<typeof features, Person>,
   ) {
     return html`
       <tr class="pinned-row" style=${styleMap(this.pinnedRowStyle(table, row))}>
@@ -603,8 +600,8 @@ class LitTableExample extends LitElement {
   }
 
   private renderCell(
-    table: LitTable<typeof stockFeatures, Person>,
-    cell: Cell<typeof stockFeatures, Person, unknown>,
+    table: LitTable<typeof features, Person>,
+    cell: Cell<typeof features, Person, unknown>,
   ) {
     return html`
       <td
@@ -669,13 +666,13 @@ class LitTableExample extends LitElement {
     )
   }
 
-  private shuffleColumns(table: LitTable<typeof stockFeatures, Person>) {
+  private shuffleColumns(table: LitTable<typeof features, Person>) {
     table.setColumnOrder(
       faker.helpers.shuffle(table.getAllLeafColumns().map((d) => d.id)),
     )
   }
 
-  private getCommonPinningStyle(column: Column<typeof stockFeatures, Person>) {
+  private getCommonPinningStyle(column: Column<typeof features, Person>) {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
       isPinned === 'left' && column.getIsLastColumn('left')
@@ -696,7 +693,7 @@ class LitTableExample extends LitElement {
     }
   }
 
-  private headerStyle(header: Header<typeof stockFeatures, Person, unknown>) {
+  private headerStyle(header: Header<typeof features, Person, unknown>) {
     return {
       ...this.getCommonPinningStyle(header.column),
       whiteSpace: 'nowrap',
@@ -704,7 +701,7 @@ class LitTableExample extends LitElement {
     }
   }
 
-  private cellStyle(cell: Cell<typeof stockFeatures, Person, unknown>) {
+  private cellStyle(cell: Cell<typeof features, Person, unknown>) {
     return {
       ...this.getCommonPinningStyle(cell.column),
       width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
@@ -712,8 +709,8 @@ class LitTableExample extends LitElement {
   }
 
   private pinnedRowStyle(
-    table: LitTable<typeof stockFeatures, Person>,
-    row: Row<typeof stockFeatures, Person>,
+    table: LitTable<typeof features, Person>,
+    row: Row<typeof features, Person>,
   ) {
     const bottomRows = table.getBottomRows()
     return {
@@ -731,8 +728,8 @@ class LitTableExample extends LitElement {
   }
 
   private cellClass(
-    table: LitTable<typeof stockFeatures, Person>,
-    cell: Cell<typeof stockFeatures, Person, unknown>,
+    table: LitTable<typeof features, Person>,
+    cell: Cell<typeof features, Person, unknown>,
   ) {
     const groupingActive = table.state.grouping.length > 0
     const hasAggregation = !!cell.column.columnDef.aggregationFn
@@ -747,7 +744,7 @@ class LitTableExample extends LitElement {
             : undefined
   }
 
-  private tableStyle(table: LitTable<typeof stockFeatures, Person>) {
+  private tableStyle(table: LitTable<typeof features, Person>) {
     const styles = [`width: ${table.getTotalSize()}px`]
     for (const header of table.getFlatHeaders()) {
       styles.push(`--header-${header.id}-size: ${header.getSize()}`)

@@ -2,24 +2,7 @@ import { Component, computed, input } from '@angular/core'
 import { DebouncedInput } from '../debounced-input/debounced-input'
 import type { features } from '../app'
 import type { Person } from '../makeData'
-import type {
-  CellData,
-  Column,
-  RowData,
-  Table,
-  TableFeatures,
-} from '@tanstack/angular-table'
-
-declare module '@tanstack/angular-table' {
-  // allows us to define custom properties for our columns
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
-}
+import type { Column, Table } from '@tanstack/angular-table'
 
 @Component({
   selector: 'app-table-filter',

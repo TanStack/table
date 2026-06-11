@@ -7,7 +7,7 @@ import type { TableOptions_All } from './TableOptions'
 import type { TableState_All } from './TableState'
 import type { StockFeatures } from '../features/stockFeatures'
 
-type IsAny<T> = 0 extends 1 & T ? true : false
+export type IsAny<T> = 0 extends 1 & T ? true : false
 type UnionToIntersectionOrEmpty<T> = [T] extends [never]
   ? {}
   : UnionToIntersection<T> & {}
@@ -25,7 +25,29 @@ export type ExtractFeatureMapTypes<
 export interface Plugins {}
 
 export interface TableFeatures
-  extends Partial<CoreFeatures>, Partial<StockFeatures>, Partial<Plugins> {}
+  extends Partial<CoreFeatures>, Partial<StockFeatures>, Partial<Plugins> {
+  /**
+   * Type-only slot for declaring the type of this table's `options.meta`.
+   *
+   * Pass a phantom value: `tableMeta: {} as MyTableMeta`. The value itself is
+   * ignored and stripped from the table's registered features at runtime — only
+   * its type is used, inferred wherever `TFeatures` flows.
+   *
+   * When omitted, the global declaration-merged `TableMeta` interface applies.
+   */
+  tableMeta?: object
+  /**
+   * Type-only slot for declaring the type of `columnDef.meta` for all columns
+   * of this table.
+   *
+   * Pass a phantom value: `columnMeta: {} as MyColumnMeta`. The value itself is
+   * ignored and stripped from the table's registered features at runtime — only
+   * its type is used, inferred wherever `TFeatures` flows.
+   *
+   * When omitted, the global declaration-merged `ColumnMeta` interface applies.
+   */
+  columnMeta?: object
+}
 
 export interface TableFeature {
   /**

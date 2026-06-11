@@ -1,22 +1,6 @@
-import type {
-  CellData,
-  ColumnDef,
-  RowData,
-  TableFeatures,
-} from '@tanstack/solid-table'
+import type { ColumnDef } from '@tanstack/solid-table'
 import type { User } from '../api/user'
 import type { features } from '../components/table'
-
-declare module '@tanstack/solid-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterKey?: keyof TData
-    filterVariant?: 'text' | 'number'
-  }
-}
 
 export const USER_COLUMNS: Array<ColumnDef<typeof features, User>> = [
   {

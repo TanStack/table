@@ -3,7 +3,7 @@ import type { Atom, ReadonlyAtom, ReadonlyStore } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { IsAny, TableFeatures } from '../../types/TableFeatures'
 import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState, TableState_All } from '../../types/TableState'
@@ -12,6 +12,24 @@ export interface TableMeta<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {}
+
+/**
+ * Resolves the type of `options.meta` for a feature set.
+ *
+ * When the features object declares a `tableMeta` type-only slot
+ * (`tableFeatures({ ..., tableMeta: {} as MyTableMeta })`), that type wins.
+ * Otherwise this falls back to the global declaration-merged `TableMeta`
+ * interface.
+ */
+export type ExtractTableMeta<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> =
+  IsAny<TFeatures> extends true
+    ? TableMeta<TFeatures, TData>
+    : TFeatures extends { tableMeta: infer TMeta extends object }
+      ? TMeta
+      : TableMeta<TFeatures, TData>
 
 /**
  * A map of writable atoms, one per `TableState` slice. These are the internal
@@ -116,8 +134,11 @@ export interface TableOptions_Table<
   ) => TableOptions<TFeatures, TData>
   /**
    * You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
+   *
+   * Declare its type per-table via the `tableMeta` type-only slot on the
+   * `features` option, or globally via declaration merging on `TableMeta`.
    */
-  readonly meta?: TableMeta<TFeatures, TData>
+  readonly meta?: ExtractTableMeta<TFeatures, TData>
   /**
    * Optionally provide externally managed values for individual state slices.
    *

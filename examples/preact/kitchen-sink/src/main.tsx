@@ -14,8 +14,10 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
+  metaHelper,
   sortFns,
   stockFeatures,
+  tableFeatures,
   useTable,
 } from '@tanstack/preact-table'
 import {
@@ -29,7 +31,6 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type {
   Cell,
-  CellData,
   Column,
   FilterFn,
   Header,
@@ -37,27 +38,28 @@ import type {
   Row,
   RowData,
   SortFn,
-  TableFeatures,
 } from '@tanstack/preact-table'
 import './index.css'
 
 declare module '@tanstack/preact-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, RowData>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,
@@ -68,11 +70,7 @@ const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof stockFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -83,7 +81,7 @@ const fuzzySort: SortFn<typeof stockFeatures, Person> = (
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
@@ -92,7 +90,7 @@ const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
 }
 
 const getCommonPinningStyles = (
-  column: Column<typeof stockFeatures, Person>,
+  column: Column<typeof features, Person>,
 ): JSX.CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -169,7 +167,7 @@ function DebouncedInput({
   )
 }
 
-function Filter({ column }: { column: Column<typeof stockFeatures, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const { filterVariant } = column.columnDef.meta ?? {}
   const columnFilterValue = column.getFilterValue()
   const minMaxValues =
@@ -251,8 +249,8 @@ function TableHeader({
   header,
   table,
 }: {
-  header: Header<typeof stockFeatures, Person, unknown>
-  table: PreactTable<typeof stockFeatures, Person>
+  header: Header<typeof features, Person, unknown>
+  table: PreactTable<typeof features, Person>
 }) {
   const column = header.column
   const style: JSX.CSSProperties = {
@@ -354,8 +352,8 @@ function TableCell({
   cell,
   table,
 }: {
-  cell: Cell<typeof stockFeatures, Person, unknown>
-  table: PreactTable<typeof stockFeatures, Person>
+  cell: Cell<typeof features, Person, unknown>
+  table: PreactTable<typeof features, Person>
 }) {
   const groupingActive = table.state.grouping.length > 0
   const hasAggregation = !!cell.column.columnDef.aggregationFn
@@ -397,8 +395,8 @@ function PinnedRow({
   row,
   table,
 }: {
-  row: Row<typeof stockFeatures, Person>
-  table: PreactTable<typeof stockFeatures, Person>
+  row: Row<typeof features, Person>
+  table: PreactTable<typeof features, Person>
 }) {
   const bottomRows = table.getBottomRows()
   return (
@@ -428,7 +426,7 @@ function App() {
   const rerender = useReducer(() => ({}), {})[1]
 
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<typeof stockFeatures, Person>()
+    const columnHelper = createColumnHelper<typeof features, Person>()
     return columnHelper.columns([
       columnHelper.display({
         id: 'select',
@@ -544,7 +542,7 @@ function App() {
   const table = useTable(
     {
       key: 'kitchen-sink', // needed for devtools
-      features: stockFeatures,
+      features,
       rowModels: {
         expandedRowModel: createExpandedRowModel(),
         filteredRowModel: createFilteredRowModel({

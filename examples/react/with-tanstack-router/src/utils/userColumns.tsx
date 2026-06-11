@@ -1,18 +1,6 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import type { CellData, RowData, TableFeatures } from '@tanstack/react-table'
 import type { User } from '../api/user'
 import type { features } from '../components/table'
-
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterKey?: keyof TData
-    filterVariant?: 'text' | 'number'
-  }
-}
 
 const columnHelper = createColumnHelper<typeof features, User>()
 

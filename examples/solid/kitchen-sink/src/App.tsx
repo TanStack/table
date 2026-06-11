@@ -11,8 +11,10 @@ import {
   createSortedRowModel,
   createTableHook,
   filterFns,
+  metaHelper,
   sortFns,
   stockFeatures,
+  tableFeatures,
 } from '@tanstack/solid-table'
 import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
@@ -29,24 +31,15 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type {
   Cell,
-  CellData,
   Column,
   FilterFn,
   Header,
   Row,
   RowData,
   SortFn,
-  TableFeatures,
 } from '@tanstack/solid-table'
 
 declare module '@tanstack/solid-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
   interface FilterFns {
     fuzzy: FilterFn<typeof stockFeatures, RowData>
   }
@@ -55,8 +48,17 @@ declare module '@tanstack/solid-table' {
   }
 }
 
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
 const { createAppTable, createAppColumnHelper } = createTableHook({
-  features: stockFeatures,
+  features,
   rowModels: {
     expandedRowModel: createExpandedRowModel(),
     filteredRowModel: createFilteredRowModel({
@@ -76,11 +78,7 @@ const { createAppTable, createAppColumnHelper } = createTableHook({
   },
 })
 
-const fuzzySort: SortFn<typeof stockFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -91,7 +89,7 @@ const fuzzySort: SortFn<typeof stockFeatures, Person> = (
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
@@ -100,7 +98,7 @@ const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
 }
 
 const getCommonPinningStyles = (
-  column: Column<typeof stockFeatures, Person>,
+  column: Column<typeof features, Person>,
 ): JSX.CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -168,7 +166,7 @@ function DebouncedInput(
   )
 }
 
-function Filter(props: { column: Column<typeof stockFeatures, Person> }) {
+function Filter(props: { column: Column<typeof features, Person> }) {
   const filterVariant = () => props.column.columnDef.meta?.filterVariant
   const sortedUniqueValues = createMemo(() =>
     filterVariant() === 'range'
@@ -260,7 +258,7 @@ function Filter(props: { column: Column<typeof stockFeatures, Person> }) {
 type AppTable = ReturnType<typeof createAppTable<Person>>
 
 function TableHeader(props: {
-  header: Header<typeof stockFeatures, Person, unknown>
+  header: Header<typeof features, Person, unknown>
   table: AppTable
 }) {
   const column = () => props.header.column
@@ -352,7 +350,7 @@ function TableHeader(props: {
 }
 
 function TableCell(props: {
-  cell: Cell<typeof stockFeatures, Person, unknown>
+  cell: Cell<typeof features, Person, unknown>
   table: AppTable
 }) {
   const className = () => {
@@ -396,7 +394,7 @@ function TableCell(props: {
 }
 
 function PinnedRow(props: {
-  row: Row<typeof stockFeatures, Person>
+  row: Row<typeof features, Person>
   table: AppTable
 }) {
   const bottomRows = () => props.table.getBottomRows()

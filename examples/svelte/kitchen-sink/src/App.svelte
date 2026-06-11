@@ -13,8 +13,10 @@
     createTableHook,
     filterFns,
     FlexRender,
+    metaHelper,
     sortFns,
     stockFeatures,
+    tableFeatures,
   } from '@tanstack/svelte-table'
   import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
   import { makeData } from './makeData'
@@ -30,7 +32,16 @@
   } from '@tanstack/svelte-table'
   import './index.css'
 
-  const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
+  interface MyColumnMeta {
+    filterVariant?: 'text' | 'range' | 'select'
+  }
+
+  const features = tableFeatures({
+    ...stockFeatures,
+    columnMeta: metaHelper<MyColumnMeta>(),
+  })
+
+  const fuzzyFilter: FilterFn<typeof features, RowData> = (
     row,
     columnId,
     value,
@@ -41,7 +52,7 @@
     return itemRank.passed
   }
 
-  const fuzzySort: SortFn<typeof stockFeatures, Person> = (
+  const fuzzySort: SortFn<typeof features, Person> = (
     rowA,
     rowB,
     columnId,
@@ -56,7 +67,7 @@
     return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
   }
 
-  const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
+  const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
     const statusOrder = ['single', 'complicated', 'relationship']
     return (
       statusOrder.indexOf(rowA.original.status) -
@@ -65,7 +76,7 @@
   }
 
   const { createAppTable, createAppColumnHelper } = createTableHook({
-    features: stockFeatures,
+    features,
     rowModels: {
       expandedRowModel: createExpandedRowModel(),
       filteredRowModel: createFilteredRowModel({
@@ -78,7 +89,7 @@
       groupedRowModel: createGroupedRowModel(aggregationFns),
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(sortFns),
-    } as any,
+    },
   })
 
   const columnHelper = createAppColumnHelper<Person>()
@@ -187,7 +198,7 @@
     )
   }
 
-  function getCommonPinningStyle(column: Column<typeof stockFeatures, Person>) {
+  function getCommonPinningStyle(column: Column<typeof features, Person>) {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
       isPinned === 'left' && column.getIsLastColumn('left')
@@ -210,15 +221,15 @@
       .join('; ')
   }
 
-  function headerStyle(header: Header<typeof stockFeatures, Person, unknown>) {
+  function headerStyle(header: Header<typeof features, Person, unknown>) {
     return `${getCommonPinningStyle(header.column)}; white-space: nowrap; width: calc(var(--header-${header.id}-size) * 1px)`
   }
 
-  function cellStyle(cell: Cell<typeof stockFeatures, Person, unknown>) {
+  function cellStyle(cell: Cell<typeof features, Person, unknown>) {
     return `${getCommonPinningStyle(cell.column)}; width: calc(var(--col-${cell.column.id}-size) * 1px)`
   }
 
-  function cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
+  function cellClass(cell: Cell<typeof features, Person, unknown>) {
     const groupingActive = table.state.grouping.length > 0
     const hasAggregation = !!cell.column.columnDef.aggregationFn
     return !groupingActive
@@ -232,7 +243,7 @@
             : undefined
   }
 
-  function pinnedRowStyle(row: Row<typeof stockFeatures, Person>) {
+  function pinnedRowStyle(row: Row<typeof features, Person>) {
     const bottomRows = table.getBottomRows()
     return [
       'position: sticky',
@@ -257,7 +268,7 @@
     return styles.join('; ')
   }
 
-  function sortedUniqueValues(column: Column<typeof stockFeatures, Person>) {
+  function sortedUniqueValues(column: Column<typeof features, Person>) {
     if (column.columnDef.meta?.filterVariant === 'range') return []
     return Array.from(column.getFacetedUniqueValues().keys())
       .sort()
@@ -265,7 +276,7 @@
   }
 
   function updateRangeFilter(
-    column: Column<typeof stockFeatures, Person>,
+    column: Column<typeof features, Person>,
     index: 0 | 1,
     value: string,
   ) {

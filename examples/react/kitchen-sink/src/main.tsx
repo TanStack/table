@@ -14,8 +14,10 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
+  metaHelper,
   sortFns,
   stockFeatures,
+  tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import {
@@ -48,7 +50,6 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type {
   Cell,
-  CellData,
   Column,
   FilterFn,
   Header,
@@ -56,7 +57,6 @@ import type {
   Row,
   RowData,
   SortFn,
-  TableFeatures,
 } from '@tanstack/react-table'
 import './index.css'
 
@@ -65,16 +65,8 @@ import './index.css'
 // =====================================================================
 
 declare module '@tanstack/react-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    /** Per-column filter UI input variant. */
-    filterVariant?: 'text' | 'range' | 'select'
-  }
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, RowData>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
@@ -82,10 +74,24 @@ declare module '@tanstack/react-table' {
 }
 
 // =====================================================================
+// Features (with type-only column meta slot)
+// =====================================================================
+
+interface MyColumnMeta {
+  /** Per-column filter UI input variant. */
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
+// =====================================================================
 // Custom fuzzy filter / sort (from filters-fuzzy example)
 // =====================================================================
 
-const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,
@@ -96,11 +102,7 @@ const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof stockFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {
@@ -116,7 +118,7 @@ const fuzzySort: SortFn<typeof stockFeatures, Person> = (
 // Custom status sort (from sorting example)
 // =====================================================================
 
-const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
@@ -129,7 +131,7 @@ const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
 // =====================================================================
 
 const getCommonPinningStyles = (
-  column: Column<typeof stockFeatures, Person>,
+  column: Column<typeof features, Person>,
 ): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -202,7 +204,7 @@ function DebouncedInput({
   )
 }
 
-function Filter({ column }: { column: Column<typeof stockFeatures, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const { filterVariant } = column.columnDef.meta ?? {}
   const columnFilterValue = column.getFilterValue()
   const minMaxValues =
@@ -285,8 +287,8 @@ function DraggableTableHeader({
   header,
   table,
 }: {
-  header: Header<typeof stockFeatures, Person, unknown>
-  table: ReactTable<typeof stockFeatures, Person>
+  header: Header<typeof features, Person, unknown>
+  table: ReactTable<typeof features, Person>
 }) {
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({ id: header.column.id })
@@ -430,8 +432,8 @@ function DragAlongCell({
   cell,
   table,
 }: {
-  cell: Cell<typeof stockFeatures, Person, unknown>
-  table: ReactTable<typeof stockFeatures, Person>
+  cell: Cell<typeof features, Person, unknown>
+  table: ReactTable<typeof features, Person>
 }) {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
@@ -494,8 +496,8 @@ function PinnedRow({
   row,
   table,
 }: {
-  row: Row<typeof stockFeatures, Person>
-  table: ReactTable<typeof stockFeatures, Person>
+  row: Row<typeof features, Person>
+  table: ReactTable<typeof features, Person>
 }) {
   const bottomRows = table.getBottomRows()
   return (
@@ -535,7 +537,7 @@ function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
 
   const columns = React.useMemo(() => {
-    const columnHelper = createColumnHelper<typeof stockFeatures, Person>()
+    const columnHelper = createColumnHelper<typeof features, Person>()
     return columnHelper.columns([
       columnHelper.display({
         id: 'select',
@@ -670,7 +672,7 @@ function App() {
   const table = useTable(
     {
       key: 'kitchen-sink', // needed for devtools
-      features: stockFeatures,
+      features,
       rowModels: {
         expandedRowModel: createExpandedRowModel(),
         filteredRowModel: createFilteredRowModel({

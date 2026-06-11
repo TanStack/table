@@ -7,6 +7,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFns,
+  metaHelper,
   rowPaginationFeature,
   tableFeatures,
   useTable,
@@ -14,28 +15,18 @@ import {
 import { useDebouncedCallback } from '@tanstack/preact-pacer/debouncer'
 import { makeData } from './makeData'
 import type { JSX } from 'preact'
-import type {
-  CellData,
-  Column,
-  RowData,
-  TableFeatures,
-} from '@tanstack/preact-table'
+import type { Column } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
-declare module '@tanstack/preact-table' {
-  // allows us to define custom properties for our columns
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
 }
 
 const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

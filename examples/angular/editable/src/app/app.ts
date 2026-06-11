@@ -11,22 +11,22 @@ import {
   createPaginatedRowModel,
   flexRenderComponent,
   injectTable,
+  metaHelper,
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { EditableCell } from './editable-cell/editable-cell'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
-import type { ColumnDef, RowData, TableFeatures } from '@tanstack/angular-table'
+import type { ColumnDef } from '@tanstack/angular-table'
 
-declare module '@tanstack/angular-table' {
-  interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void
-  }
+interface MyTableMeta {
+  updateData: (rowIndex: number, columnId: string, value: unknown) => void
 }
 
 const features = tableFeatures({
   rowPaginationFeature,
+  tableMeta: metaHelper<MyTableMeta>(),
 })
 
 const defaultColumn: Partial<ColumnDef<typeof features, Person>> = {

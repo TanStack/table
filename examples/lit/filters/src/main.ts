@@ -3,6 +3,7 @@ import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
 import {
   FlexRender,
+  metaHelper,
   TableController,
   columnFilteringFeature,
   createFilteredRowModel,
@@ -12,18 +13,18 @@ import {
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
-import type {
-  CellData,
-  Column,
-  ColumnDef,
-  RowData,
-  TableFeatures,
-} from '@tanstack/lit-table'
+import type { Column, ColumnDef } from '@tanstack/lit-table'
 import type { Person } from './makeData'
+
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
 
 const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
@@ -72,17 +73,6 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     },
   },
 ]
-
-declare module '@tanstack/lit-table' {
-  // allows us to define custom properties for our columns
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
-}
 
 @customElement('column-filter')
 class ColumnFilter extends LitElement {

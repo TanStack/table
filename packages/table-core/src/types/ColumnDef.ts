@@ -1,5 +1,9 @@
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
-import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
+import type {
+  ExtractFeatureMapTypes,
+  IsAny,
+  TableFeatures,
+} from './TableFeatures'
 import type { CellContext } from '../core/cells/coreCellsFeature.types'
 import type { HeaderContext } from '../core/headers/coreHeadersFeature.types'
 import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -16,6 +20,25 @@ export interface ColumnMeta<
   TData extends RowData,
   TValue extends CellData = CellData,
 > {}
+
+/**
+ * Resolves the type of `columnDef.meta` for a feature set.
+ *
+ * When the features object declares a `columnMeta` type-only slot
+ * (`tableFeatures({ ..., columnMeta: {} as MyColumnMeta })`), that type wins.
+ * Otherwise this falls back to the global declaration-merged `ColumnMeta`
+ * interface.
+ */
+export type ExtractColumnMeta<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+> =
+  IsAny<TFeatures> extends true
+    ? ColumnMeta<TFeatures, TData, TValue>
+    : TFeatures extends { columnMeta: infer TMeta extends object }
+      ? TMeta
+      : ColumnMeta<TFeatures, TData, TValue>
 
 /**
  * Reads a cell value from an original row object.
@@ -96,8 +119,11 @@ interface ColumnDefBase_Core<
   cell?: ColumnDefTemplate<CellContext<TFeatures, TData, TValue>>
   /**
    * User-defined metadata available on the resolved column definition.
+   *
+   * Declare its type per-table via the `columnMeta` type-only slot on the
+   * `features` option, or globally via declaration merging on `ColumnMeta`.
    */
-  meta?: ColumnMeta<TFeatures, TData, TValue>
+  meta?: ExtractColumnMeta<TFeatures, TData, TValue>
 }
 
 export interface ColumnDef_FeatureMap<

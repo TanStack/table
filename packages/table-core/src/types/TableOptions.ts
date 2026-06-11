@@ -34,7 +34,10 @@ export interface TableOptions_Core<
     TableOptions_Rows<TFeatures, TData> {}
 
 type DebugKeysFor<TFeatures extends TableFeatures> = {
-  [K in keyof TFeatures & string as `debug${Capitalize<K>}`]?: boolean
+  [K in Exclude<
+    keyof TFeatures & string,
+    'tableMeta' | 'columnMeta' // type-only slots, not real features
+  > as `debug${Capitalize<K>}`]?: boolean
 }
 
 export type DebugOptions<TFeatures extends TableFeatures> = {

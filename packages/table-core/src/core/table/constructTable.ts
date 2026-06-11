@@ -35,9 +35,16 @@ export function constructTable<
 >(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   const _reactivity = tableOptions.features.coreReactivityFeature!
 
+  // `tableMeta`/`columnMeta` are type-only slots, not real features
+  const {
+    columnMeta: _columnMeta,
+    tableMeta: _tableMeta,
+    ...features
+  } = tableOptions.features
+
   const table = {
     _reactivity,
-    _features: { ...coreFeatures, ...tableOptions.features },
+    _features: { ...coreFeatures, ...features },
     _rowModels: {},
     _rowModelFns: {},
     baseAtoms: {},

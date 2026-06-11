@@ -1,6 +1,7 @@
 import {
   columnFilteringFeature,
   createTable,
+  metaHelper,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -17,11 +18,17 @@ import type {
 } from '@tanstack/solid-table'
 import type { Filters } from '../api/types'
 
+interface MyColumnMeta {
+  filterKey?: string
+  filterVariant?: 'text' | 'number'
+}
+
 export const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 export const DEFAULT_PAGE_INDEX = 0
@@ -131,9 +138,9 @@ export default function Table<T extends Record<string, string | number>>(
                                     : 'text'
                                 }
                                 value={
-                                  (props.filters[fieldMeta!.filterKey!] as
-                                    | string
-                                    | number) ?? ''
+                                  (props.filters[
+                                    fieldMeta!.filterKey! as keyof T
+                                  ] as string | number) ?? ''
                                 }
                               />
                             </Show>

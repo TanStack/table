@@ -542,7 +542,11 @@ import type { StockFeatures } from '@tanstack/solid-table'
 type PersonColumn = ColumnDef<StockFeatures, Person>
 ```
 
-### `ColumnMeta` Generic Change
+### `TableMeta`/`ColumnMeta` Typing Changes
+
+No more declaration merging required! (Although it still works if you want to keep using it)
+
+Global declaration merging works exactly like it did in v8. The only change you need to make is updating the generics shape: both interfaces now take `TFeatures` as the first type parameter.
 
 ```tsx
 declare module '@tanstack/solid-table' {
@@ -551,6 +555,19 @@ declare module '@tanstack/solid-table' {
   }
 }
 ```
+
+That's all that's required if you want to keep declaring meta types globally.
+
+Optionally, v9 also adds a new way to declare meta types **per-table** without declaration merging. You can use type-only `tableMeta`/`columnMeta` slots on the `features` option, which only affect tables created with that `features` object:
+
+```tsx
+const features = tableFeatures({
+  rowSortingFeature,
+  columnMeta: metaHelper<{ align?: 'left' | 'right' }>(),
+})
+```
+
+See the new [Table and Column Meta Guide](../../../guide/table-and-column-meta) for full details on both approaches.
 
 ### `RowData` Type Restriction
 

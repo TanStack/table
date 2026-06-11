@@ -84,7 +84,8 @@
         { "label": "Cells", "to": "guide/cells" },
         { "label": "Header Groups", "to": "guide/header-groups" },
         { "label": "Headers", "to": "guide/headers" },
-        { "label": "Columns", "to": "guide/columns" }
+        { "label": "Columns", "to": "guide/columns" },
+        { "label": "Table and Column Meta", "to": "guide/table-and-column-meta" }
       ],
       "frameworks": [
         {

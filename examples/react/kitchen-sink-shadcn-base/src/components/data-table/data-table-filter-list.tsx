@@ -13,7 +13,6 @@ import type { ExtendedColumnFilter, FilterOperator } from '@/types'
 import type {
   CellData,
   Column,
-  ColumnMeta,
   ReactTable,
   RowData,
 } from '@tanstack/react-table'
@@ -129,9 +128,7 @@ export function DataTableFilterList<TData extends RowData>({
   )
 
   const getColumnFilterVariant = React.useCallback(
-    (
-      column: Column<typeof features, TData>,
-    ): ColumnMeta<typeof features, TData>['variant'] => {
+    (column: Column<typeof features, TData>) => {
       if (column.columnDef.meta?.variant) {
         return column.columnDef.meta.variant
       }

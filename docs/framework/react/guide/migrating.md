@@ -988,9 +988,11 @@ import type { StockFeatures, ColumnDef } from '@tanstack/react-table'
 const columns: ColumnDef<StockFeatures, Person>[] = [...]
 ```
 
-### `ColumnMeta` Generic Change
+### `TableMeta`/`ColumnMeta` Typing Changes
 
-If you're using module augmentation to extend `ColumnMeta`, note that it now requires a `TFeatures` parameter:
+No more declaration merging required! (Although it still works if you want to keep using it)
+
+Global declaration merging to extend `TableMeta` or `ColumnMeta` works exactly like it did in v8. The only change you need to make is updating the generics shape: both interfaces now take `TFeatures` as the first type parameter.
 
 ```tsx
 // v8
@@ -1007,6 +1009,19 @@ declare module '@tanstack/react-table' {
   }
 }
 ```
+
+That's all that's required if you want to keep declaring meta types globally.
+
+Optionally, v9 also adds a new way to declare meta types **per-table** without declaration merging. You can use type-only `tableMeta`/`columnMeta` slots on the `features` option, which only affect tables created with that `features` object:
+
+```tsx
+const features = tableFeatures({
+  rowSortingFeature,
+  columnMeta: metaHelper<{ customProperty: string }>(),
+})
+```
+
+See the new [Table and Column Meta Guide](../../../guide/table-and-column-meta) for full details on both approaches.
 
 ### `RowData` Type Restriction
 
@@ -1037,7 +1052,7 @@ This change improves type safety. If you were passing unusual data types, ensure
 - [ ] Rename `sortingFn` → `sortFn` in column definitions
 - [ ] Split column sizing/resizing: use both `columnSizingFeature` and `columnResizingFeature` if needed
 - [ ] Rename `columnSizingInfo` state → `columnResizing` (and related options)
-- [ ] Update `ColumnMeta` module augmentation to include `TFeatures` generic (if used)
+- [ ] If you use `TableMeta`/`ColumnMeta` declaration merging, add the `TFeatures` generic to your augmentations (optionally, switch to the per-table `tableMeta`/`columnMeta` feature slots)
 - [ ] (Optional) Add `table.Subscribe` for render optimizations
 - [ ] (Optional) Subscribe to individual slices via `table.atoms.<slice>` + `useSelector` for the narrowest re-renders
 - [ ] (Optional) Pass writable atoms via the new `atoms` option to own specific state slices externally

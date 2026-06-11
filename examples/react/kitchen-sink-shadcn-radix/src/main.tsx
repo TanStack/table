@@ -5,7 +5,6 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 import * as ReactDOM from 'react-dom/client'
 import './index.css'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
-
 import {
   CheckCircle,
   ChevronDown,
@@ -41,6 +40,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -55,15 +55,12 @@ import {
 } from '@tanstack/react-table-devtools'
 import type { Person } from '@/lib/make-data'
 import type {
-  CellData,
   Column,
   ColumnPinningState,
   ColumnSizingState,
   ExpandedState,
   GroupingState,
-  RowData,
   SortingState,
-  TableFeatures,
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -76,12 +73,10 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table'
-
 import { departments, makeData, statuses } from '@/lib/make-data'
 import { DataTablePagination } from '@/components/data-table/data-table-pagination'
 import { DataTableViewOptions } from '@/components/data-table/data-table-view-options'
 import { DataTableColumnHeader } from '@/components/data-table/data-table-column-header'
-
 import { Badge } from '@/components/ui/badge'
 import {
   DropdownMenu,
@@ -99,16 +94,10 @@ import { ThemeProvider } from '@/components/theme-provider'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Input } from '@/components/ui/input'
 
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    label?: string
-    variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
-    options?: Array<{ label: string; value: string; count?: number }>
-  }
+interface MyColumnMeta {
+  label?: string
+  variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
+  options?: Array<{ label: string; value: string; count?: number }>
 }
 
 export const features = tableFeatures({
@@ -125,6 +114,7 @@ export const features = tableFeatures({
   columnPinningFeature,
   columnGroupingFeature,
   globalFilteringFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

@@ -1,5 +1,6 @@
 import {
   columnFilteringFeature,
+  metaHelper,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -17,11 +18,18 @@ import type {
 } from '@tanstack/react-table'
 import type { Filters } from '../api/types'
 
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterKey?: string
+  filterVariant?: 'text' | 'number'
+}
+
 export const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 export const DEFAULT_PAGE_INDEX = 0

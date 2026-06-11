@@ -15,8 +15,10 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
+  metaHelper,
   sortFns,
   stockFeatures,
+  tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
@@ -26,33 +28,33 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type {
   Cell,
-  CellData,
   Column,
   FilterFn,
   Header,
   Row,
   RowData,
   SortFn,
-  TableFeatures,
 } from '@tanstack/vue-table'
 
 declare module '@tanstack/vue-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, RowData>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,
@@ -63,11 +65,7 @@ const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof stockFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -78,7 +76,7 @@ const fuzzySort: SortFn<typeof stockFeatures, Person> = (
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
@@ -86,7 +84,7 @@ const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
   )
 }
 
-const columnHelper = createColumnHelper<typeof stockFeatures, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = ref(
   columnHelper.columns([
@@ -163,7 +161,7 @@ const data = ref(makeData(1_000))
 
 const table = useTable({
   key: 'kitchen-sink', // needed for devtools
-  features: stockFeatures,
+  features,
   rowModels: {
     expandedRowModel: createExpandedRowModel(),
     filteredRowModel: createFilteredRowModel({
@@ -221,7 +219,7 @@ function debounceSet(key: string, setValue: () => void) {
 }
 
 function getCommonPinningStyles(
-  column: Column<typeof stockFeatures, Person>,
+  column: Column<typeof features, Person>,
 ): CSSProperties {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
@@ -244,7 +242,7 @@ function getCommonPinningStyles(
 }
 
 function headerStyle(
-  header: Header<typeof stockFeatures, Person, unknown>,
+  header: Header<typeof features, Person, unknown>,
 ): CSSProperties {
   return {
     ...getCommonPinningStyles(header.column),
@@ -253,14 +251,14 @@ function headerStyle(
   }
 }
 
-function cellStyle(cell: Cell<typeof stockFeatures, Person, unknown>) {
+function cellStyle(cell: Cell<typeof features, Person, unknown>) {
   return {
     ...getCommonPinningStyles(cell.column),
     width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
   }
 }
 
-function cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
+function cellClass(cell: Cell<typeof features, Person, unknown>) {
   const groupingActive = table.atoms.grouping.get().length > 0
   const hasAggregation = !!cell.column.columnDef.aggregationFn
   return !groupingActive
@@ -274,7 +272,7 @@ function cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
           : undefined
 }
 
-function rowStyle(row: Row<typeof stockFeatures, Person>): CSSProperties {
+function rowStyle(row: Row<typeof features, Person>): CSSProperties {
   const bottomRows = table.getBottomRows()
   return {
     position: 'sticky',
@@ -290,7 +288,7 @@ function rowStyle(row: Row<typeof stockFeatures, Person>): CSSProperties {
   }
 }
 
-function sortedUniqueValues(column: Column<typeof stockFeatures, Person>) {
+function sortedUniqueValues(column: Column<typeof features, Person>) {
   if (column.columnDef.meta?.filterVariant === 'range') return []
   return Array.from(column.getFacetedUniqueValues().keys())
     .sort()
@@ -298,7 +296,7 @@ function sortedUniqueValues(column: Column<typeof stockFeatures, Person>) {
 }
 
 function updateRangeFilter(
-  column: Column<typeof stockFeatures, Person>,
+  column: Column<typeof features, Person>,
   index: 0 | 1,
   value: string,
 ) {

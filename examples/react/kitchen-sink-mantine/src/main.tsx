@@ -93,6 +93,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -108,7 +109,6 @@ import {
 import type { Person } from '@/lib/make-data'
 import type { DragEndEvent } from '@dnd-kit/core'
 import type {
-  CellData,
   Column,
   ColumnPinningState,
   ColumnSizingState,
@@ -116,9 +116,7 @@ import type {
   GroupingState,
   Header,
   ReactTable,
-  RowData,
   SortingState,
-  TableFeatures,
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 
@@ -130,16 +128,10 @@ import {
 import { departments, makeData, statuses } from '@/lib/make-data'
 import './styles/globals.css'
 
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    label?: string
-    variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
-    options?: Array<{ label: string; value: string; count?: number }>
-  }
+interface MyColumnMeta {
+  label?: string
+  variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
+  options?: Array<{ label: string; value: string; count?: number }>
 }
 
 export const features = tableFeatures({
@@ -156,6 +148,7 @@ export const features = tableFeatures({
   columnPinningFeature,
   columnGroupingFeature,
   globalFilteringFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

@@ -21,8 +21,10 @@ import {
   createSortedRowModel,
   filterFns,
   injectTable,
+  metaHelper,
   sortFns,
   stockFeatures,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { DebouncedInput } from './debounced-input/debounced-input'
@@ -33,7 +35,6 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 import type {
   Cell,
-  CellData,
   Column,
   ColumnDef,
   FilterFn,
@@ -41,28 +42,28 @@ import type {
   Row,
   RowData,
   SortFn,
-  TableFeatures,
 } from '@tanstack/angular-table'
 
-export const features = stockFeatures
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+export const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
 
 declare module '@tanstack/angular-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
   interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, RowData>
+    fuzzy: FilterFn<typeof features, RowData>
   }
   interface FilterMeta {
     itemRank?: RankingInfo
   }
 }
 
-const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
+const fuzzyFilter: FilterFn<typeof features, RowData> = (
   row,
   columnId,
   value,
@@ -73,11 +74,7 @@ const fuzzyFilter: FilterFn<typeof stockFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof stockFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -88,7 +85,7 @@ const fuzzySort: SortFn<typeof stockFeatures, Person> = (
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
@@ -96,10 +93,10 @@ const sortStatusFn: SortFn<typeof stockFeatures, Person> = (rowA, rowB) => {
   )
 }
 
-const columnHelper = createColumnHelper<typeof stockFeatures, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const columns: Array<ColumnDef<typeof stockFeatures, Person>> =
-  columnHelper.columns([
+const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
+  [
     columnHelper.display({
       id: 'select',
       size: 80,
@@ -161,7 +158,8 @@ const columns: Array<ColumnDef<typeof stockFeatures, Person>> =
       aggregatedCell: ({ getValue }) =>
         `${Math.round(getValue<number>() * 100) / 100}%`,
     }),
-  ])
+  ],
+)
 
 @Component({
   selector: 'app-root',
@@ -179,8 +177,8 @@ const columns: Array<ColumnDef<typeof stockFeatures, Person>> =
 export class App {
   readonly data = signal(makeData(1_000))
 
-  readonly table = injectTable<typeof stockFeatures, Person>(() => ({
-    features: stockFeatures,
+  readonly table = injectTable<typeof features, Person>(() => ({
+    features,
     rowModels: {
       expandedRowModel: createExpandedRowModel(),
       filteredRowModel: createFilteredRowModel({
@@ -260,7 +258,7 @@ export class App {
     this.table.setPageSize(Number((event.target as HTMLSelectElement).value))
   }
 
-  getCommonPinningStyles(column: Column<typeof stockFeatures, Person>) {
+  getCommonPinningStyles(column: Column<typeof features, Person>) {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
       isPinned === 'left' && column.getIsLastColumn('left')
@@ -281,18 +279,18 @@ export class App {
     }
   }
 
-  headerStyles(header: Header<typeof stockFeatures, Person, unknown>) {
+  headerStyles(header: Header<typeof features, Person, unknown>) {
     return {
       ...this.getCommonPinningStyles(header.column),
       whiteSpace: 'nowrap',
     }
   }
 
-  cellStyles(cell: Cell<typeof stockFeatures, Person, unknown>) {
+  cellStyles(cell: Cell<typeof features, Person, unknown>) {
     return this.getCommonPinningStyles(cell.column)
   }
 
-  cellClass(cell: Cell<typeof stockFeatures, Person, unknown>) {
+  cellClass(cell: Cell<typeof features, Person, unknown>) {
     const groupingActive = this.table.atoms.grouping.get().length > 0
     const hasAggregation = !!cell.column.columnDef.aggregationFn
     return !groupingActive
@@ -306,7 +304,7 @@ export class App {
             : undefined
   }
 
-  pinnedRowStyles(row: Row<typeof stockFeatures, Person>) {
+  pinnedRowStyles(row: Row<typeof features, Person>) {
     const bottomRows = this.table.getBottomRows()
     return {
       position: 'sticky',
