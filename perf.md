@@ -94,10 +94,10 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 ## Progress
 
 - **Total findings:** 61
-- **Done `[x]`:** 19
+- **Done `[x]`:** 20
 - **Partial `[~]`:** 2
 - **Skipped `[-]`:** 5
-- **Not started `[ ]`:** 35
+- **Not started `[ ]`:** 34
 
 _(Update these counters as you go.)_
 
@@ -1734,8 +1734,8 @@ Replace `let isAll = …; if (cond) isAll = false; return isAll` with `return !p
 
 ## 48. `selectRowsFn` spreads row object even when subRows did not change — Score: 4
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Implemented a **reframed fix** — the proposed `newSubRows !== row.subRows` check is dead on arrival: `recurseRows` allocates a fresh `result` array on every call and returns it unconditionally, so the reference is _always_ different and the check could never skip a clone. (The scale table's premise is also inverted: an unmatched subtree returns `[]`, never the original reference.) The real waste in the same lines: the clone ran for **every** row with subRows, but unselected rows are never pushed to `result` — so their clone was allocated and immediately discarded. Fix: recurse unconditionally (required — selected descendants of unselected parents must still be collected into `flatRows`/`rowsById`), then build the clone only when `isSelected`. Under sparse selection on hierarchical data this eliminates nearly all clones. **Bug fix included:** rows are `Object.create(rowPrototype)` instances, but the old clone was a plain spread `{ ...row, subRows }` — which drops the prototype, so cloned parent rows in the selected row models lost all their prototype APIs (`getValue()`, etc.). The clone now uses the #49 precedent: `Object.assign(Object.create(Object.getPrototypeOf(row)), row)` + `subRows` assignment. Added regression tests (selected child under unselected parent; prototype-method survival on cloned parents) in `tests/implementation/features/row-selection/rowSelectionFeature.test.ts` — the existing suite only covered selected-child-under-selected-parent and would not have caught a recursion-skipping mistake.
 
 **Location:** `src/features/row-selection/rowSelectionFeature.utils.ts:618–658`
 **Category:** `micro`

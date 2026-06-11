@@ -649,7 +649,7 @@ export function selectRowsFn<
   ): Array<Row<TFeatures, TData>> => {
     const result: Array<Row<TFeatures, TData>> = []
     for (let i = 0; i < rows.length; i++) {
-      let row = rows[i]!
+      const row = rows[i]!
       const isSelected = isRowSelected(row)
 
       if (isSelected) {
@@ -658,13 +658,18 @@ export function selectRowsFn<
       }
 
       if (row.subRows.length) {
-        row = {
-          ...row,
-          subRows: recurseRows(row.subRows, depth + 1),
-        }
-      }
+        // Always recurse — selected descendants of unselected parents must
+        // still be collected into flatRows/rowsById.
+        const newSubRows = recurseRows(row.subRows, depth + 1)
 
-      if (isSelected) {
+        if (isSelected) {
+          // Preserve prototype chain so methods like getValue() remain accessible
+          const cloned = Object.create(Object.getPrototypeOf(row))
+          Object.assign(cloned, row)
+          cloned.subRows = newSubRows
+          result.push(cloned)
+        }
+      } else if (isSelected) {
         result.push(row)
       }
     }

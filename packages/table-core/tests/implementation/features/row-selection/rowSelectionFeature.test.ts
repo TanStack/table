@@ -96,6 +96,65 @@ describe('rowSelectionFeature', () => {
       expect(result.rowsById).toHaveProperty('0.0')
     })
 
+    it('should collect selected descendants of unselected parents', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable({
+        features,
+        rowModels: {},
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0.0': true, // child selected, parent '0' is not
+          },
+        },
+        columns,
+      })
+      const rowModel = table.getCoreRowModel()
+
+      const result = RowSelectionUtils.selectRowsFn(rowModel)
+
+      expect(result.rows.length).toBe(0)
+      expect(result.flatRows.length).toBe(1)
+      expect(result.flatRows[0]?.id).toBe('0.0')
+      expect(result.rowsById).toHaveProperty('0.0')
+    })
+
+    it('should preserve row prototype methods on cloned parent rows', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        rowModels: {},
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0': true,
+            '0.0': true,
+          },
+        },
+        columns,
+      })
+      const rowModel = table.getCoreRowModel()
+
+      const result = RowSelectionUtils.selectRowsFn(rowModel)
+
+      // Selected parents with subRows are cloned; the clone must keep the
+      // shared row prototype so APIs like getValue() still work
+      const clonedParent = result.rows[0]!
+      expect(clonedParent).not.toBe(rowModel.rows[0])
+      expect(typeof clonedParent.getValue).toBe('function')
+      expect(clonedParent.getValue('id')).toBe(rowModel.rows[0]!.getValue('id'))
+    })
+
     it('should return an empty list if no rows are selected', () => {
       const data = generateTestData(5)
       const columns = generateColumnDefs(data)
