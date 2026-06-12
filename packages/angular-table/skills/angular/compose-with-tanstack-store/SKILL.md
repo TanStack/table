@@ -233,12 +233,14 @@ import { Store } from '@tanstack/store'
 export const sharedFilter = new Store<string | null>(null)
 
 const featuresA = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,
 })
 
 const featuresB = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,

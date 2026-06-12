@@ -24,6 +24,7 @@ import {
   createTheme,
 } from '@mui/material'
 import {
+  columnFilteringFeature,
   createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
@@ -43,6 +44,7 @@ import './index.css'
 const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
+  columnFilteringFeature,
   globalFilteringFeature,
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),

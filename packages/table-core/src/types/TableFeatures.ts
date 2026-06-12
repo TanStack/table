@@ -26,6 +26,9 @@ export type ExtractFeatureMapTypes<
         TFeatureMap[Extract<keyof TFeatures, keyof TFeatureMap>]
       >
 
+/**
+ * This is an interface that you can delcaration-merge into to allow for custom plugins to be added to the table.
+ */
 export interface Plugins {}
 
 /**
@@ -62,17 +65,19 @@ export type NonFeatureKeys =
  */
 export interface FeatureSlotPrereqs {
   aggregationFns: 'columnGroupingFeature'
+  columnResizingFeature: 'columnSizingFeature' // columnSizingFeature is required for columnResizingFeature
   expandedRowModel: 'rowExpandingFeature'
   facetedMinMaxValues: 'columnFacetingFeature'
   facetedRowModel: 'columnFacetingFeature'
   facetedUniqueValues: 'columnFacetingFeature'
-  filterFns: 'columnFilteringFeature' | 'globalFilteringFeature'
-  filterMeta: 'columnFilteringFeature' | 'globalFilteringFeature'
-  filteredRowModel: 'columnFilteringFeature' | 'globalFilteringFeature'
+  filteredRowModel: 'columnFilteringFeature'
+  filterFns: 'columnFilteringFeature'
+  filterMeta: 'columnFilteringFeature'
+  globalFilteringFeature: 'columnFilteringFeature' // columnFilteringFeature is required for globalFilteringFeature
   groupedRowModel: 'columnGroupingFeature'
   paginatedRowModel: 'rowPaginationFeature'
-  sortFns: 'rowSortingFeature'
   sortedRowModel: 'rowSortingFeature'
+  sortFns: 'rowSortingFeature'
 }
 
 /**
@@ -100,15 +105,14 @@ export type ValidateFeatureSlots<TFeatures extends TableFeatures> =
 export interface TableFeatures
   extends Partial<CoreFeatures>, Partial<StockFeatures>, Partial<Plugins> {
   /**
-   * Type-only slot for declaring the type of this table's `options.meta`.
+   * Registry of aggregation functions available to this table by name.
    *
-   * Pass a phantom value: `tableMeta: {} as MyTableMeta`. The value itself is
-   * ignored and stripped from the table's registered features at runtime — only
-   * its type is used, inferred wherever `TFeatures` flows.
-   *
-   * When omitted, the global declaration-merged `TableMeta` interface applies.
+   * Keys registered here become the valid string values for `aggregationFn` on
+   * column definitions, with full inference. Spread the exported
+   * `aggregationFns` to register the built-in aggregation functions:
+   * `aggregationFns: { ...aggregationFns, myCustomAggregationFn }`.
    */
-  tableMeta?: object
+  aggregationFns?: Record<string, AggregationFn<any, any>>
   /**
    * Type-only slot for declaring the type of `columnDef.meta` for all columns
    * of this table.
@@ -120,6 +124,53 @@ export interface TableFeatures
    * When omitted, the global declaration-merged `ColumnMeta` interface applies.
    */
   columnMeta?: object
+  /**
+   * Factory for the table's core (unmodified) row model. Defaults to the
+   * built-in `createCoreRowModel()` when omitted.
+   */
+  coreRowModel?: (table: any) => () => RowModel<any, any>
+  /**
+   * Factory for the client-side expanded row model. Pass the exported
+   * `createExpandedRowModel()` or implement your own. Not needed for
+   * server-side expansion.
+   */
+  expandedRowModel?: (table: any) => () => RowModel<any, any>
+  /**
+   * Factory for per-column faceted min/max values. Pass the exported
+   * `createFacetedMinMaxValues()` or implement your own. Not needed for
+   * server-side faceting.
+   */
+  facetedMinMaxValues?: (
+    table: any,
+    columnId: string,
+  ) => () => [number, number] | undefined
+  /**
+   * Factory for the per-column faceted row model. Pass the exported
+   * `createFacetedRowModel()` or implement your own. Not needed for
+   * server-side faceting.
+   */
+  facetedRowModel?: (table: any, columnId: string) => () => RowModel<any, any>
+  /**
+   * Factory for per-column faceted unique values. Pass the exported
+   * `createFacetedUniqueValues()` or implement your own. Not needed for
+   * server-side faceting.
+   */
+  facetedUniqueValues?: (table: any, columnId: string) => () => Map<any, number>
+  /**
+   * Factory for the client-side filtered row model. Pass the exported
+   * `createFilteredRowModel()` or implement your own. Not needed for
+   * server-side filtering.
+   */
+  filteredRowModel?: (table: any) => () => RowModel<any, any>
+  /**
+   * Registry of filter functions available to this table by name.
+   *
+   * Keys registered here become the valid string values for `filterFn` on
+   * column definitions and the `globalFilterFn` option, with full inference.
+   * Spread the exported `filterFns` to register the built-in filter functions:
+   * `filterFns: { ...filterFns, myCustomFilterFn }`.
+   */
+  filterFns?: Record<string, FilterFn<any, any>>
   /**
    * Type-only slot for declaring the type of the filter meta that filter
    * functions attach to rows via `addMeta` and that is read back from
@@ -133,34 +184,11 @@ export interface TableFeatures
    */
   filterMeta?: object
   /**
-   * Factory for the table's core (unmodified) row model. Defaults to the
-   * built-in `createCoreRowModel()` when omitted.
-   */
-  coreRowModel?: (table: any) => () => RowModel<any, any>
-  /**
-   * Factory for the client-side filtered row model. Pass the exported
-   * `createFilteredRowModel()` or implement your own. Not needed for
-   * server-side filtering.
-   */
-  filteredRowModel?: (table: any) => () => RowModel<any, any>
-  /**
    * Factory for the client-side grouped row model. Pass the exported
    * `createGroupedRowModel()` or implement your own. Not needed for
    * server-side grouping.
    */
   groupedRowModel?: (table: any) => () => RowModel<any, any>
-  /**
-   * Factory for the client-side sorted row model. Pass the exported
-   * `createSortedRowModel()` or implement your own. Not needed for
-   * server-side sorting.
-   */
-  sortedRowModel?: (table: any) => () => RowModel<any, any>
-  /**
-   * Factory for the client-side expanded row model. Pass the exported
-   * `createExpandedRowModel()` or implement your own. Not needed for
-   * server-side expansion.
-   */
-  expandedRowModel?: (table: any) => () => RowModel<any, any>
   /**
    * Factory for the client-side paginated row model. Pass the exported
    * `createPaginatedRowModel()` or implement your own. Not needed for
@@ -168,35 +196,11 @@ export interface TableFeatures
    */
   paginatedRowModel?: (table: any) => () => RowModel<any, any>
   /**
-   * Factory for the per-column faceted row model. Pass the exported
-   * `createFacetedRowModel()` or implement your own. Not needed for
-   * server-side faceting.
+   * Factory for the client-side sorted row model. Pass the exported
+   * `createSortedRowModel()` or implement your own. Not needed for
+   * server-side sorting.
    */
-  facetedRowModel?: (table: any, columnId: string) => () => RowModel<any, any>
-  /**
-   * Factory for per-column faceted min/max values. Pass the exported
-   * `createFacetedMinMaxValues()` or implement your own. Not needed for
-   * server-side faceting.
-   */
-  facetedMinMaxValues?: (
-    table: any,
-    columnId: string,
-  ) => () => [number, number] | undefined
-  /**
-   * Factory for per-column faceted unique values. Pass the exported
-   * `createFacetedUniqueValues()` or implement your own. Not needed for
-   * server-side faceting.
-   */
-  facetedUniqueValues?: (table: any, columnId: string) => () => Map<any, number>
-  /**
-   * Registry of filter functions available to this table by name.
-   *
-   * Keys registered here become the valid string values for `filterFn` on
-   * column definitions and the `globalFilterFn` option, with full inference.
-   * Spread the exported `filterFns` to register the built-in filter functions:
-   * `filterFns: { ...filterFns, myCustomFilterFn }`.
-   */
-  filterFns?: Record<string, FilterFn<any, any>>
+  sortedRowModel?: (table: any) => () => RowModel<any, any>
   /**
    * Registry of sorting functions available to this table by name.
    *
@@ -206,14 +210,15 @@ export interface TableFeatures
    */
   sortFns?: Record<string, SortFn<any, any>>
   /**
-   * Registry of aggregation functions available to this table by name.
+   * Type-only slot for declaring the type of this table's `options.meta`.
    *
-   * Keys registered here become the valid string values for `aggregationFn` on
-   * column definitions, with full inference. Spread the exported
-   * `aggregationFns` to register the built-in aggregation functions:
-   * `aggregationFns: { ...aggregationFns, myCustomAggregationFn }`.
+   * Pass a phantom value: `tableMeta: {} as MyTableMeta`. The value itself is
+   * ignored and stripped from the table's registered features at runtime — only
+   * its type is used, inferred wherever `TFeatures` flows.
+   *
+   * When omitted, the global declaration-merged `TableMeta` interface applies.
    */
-  aggregationFns?: Record<string, AggregationFn<any, any>>
+  tableMeta?: object
 }
 
 export interface TableFeature {

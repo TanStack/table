@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
   columnFilteringFeature,
+  columnResizingFeature,
+  columnSizingFeature,
   constructTable,
   coreFeatures,
   createFilteredRowModel,
@@ -253,16 +255,41 @@ describe('row model and fn registry feature slots', () => {
       filteredRowModel: createFilteredRowModel(),
     })
 
-    // globalFilteringFeature alone satisfies the filterFns prerequisite
+    // globalFilteringFeature and the filtering slots all require columnFilteringFeature
     const globalOnly = tableFeatures({
+      // @ts-expect-error - globalFilteringFeature requires columnFilteringFeature
+      globalFilteringFeature,
+      // @ts-expect-error - filteredRowModel requires columnFilteringFeature
+      filteredRowModel: createFilteredRowModel(),
+      // @ts-expect-error - filterFns requires columnFilteringFeature
+      filterFns,
+    })
+
+    // columnFilteringFeature satisfies the prerequisite for all filtering slots
+    const withColumnFiltering = tableFeatures({
+      columnFilteringFeature,
       globalFilteringFeature,
       filteredRowModel: createFilteredRowModel(),
       filterFns,
     })
 
+    // columnResizingFeature requires columnSizingFeature
+    const missingSizing = tableFeatures({
+      // @ts-expect-error - columnResizingFeature requires columnSizingFeature
+      columnResizingFeature,
+    })
+
+    const withSizing = tableFeatures({
+      columnSizingFeature,
+      columnResizingFeature,
+    })
+
     expect(missingSorting).toBeDefined()
     expect(missingFiltering).toBeDefined()
     expect(globalOnly).toBeDefined()
+    expect(withColumnFiltering).toBeDefined()
+    expect(missingSizing).toBeDefined()
+    expect(withSizing).toBeDefined()
   })
 
   it('validates slots on the features table option too', () => {

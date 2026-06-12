@@ -12,9 +12,10 @@ Want to skip to the implementation? Check out these Preact examples:
 ### Preact Setup
 
 ```tsx
-import { useTable, tableFeatures, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/preact-table'
+import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/preact-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,
@@ -59,10 +60,11 @@ No `filteredRowModel` is needed for manual server-side global filtering. Instead
 import {
   useTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
 } from '@tanstack/preact-table'
 
-const features = tableFeatures({ globalFilteringFeature }) // no filteredRowModel for manual server-side global filtering
+const features = tableFeatures({ columnFilteringFeature, globalFilteringFeature }) // no filteredRowModel for manual server-side global filtering
 
 const table = useTable({
   features,
@@ -76,18 +78,20 @@ Note: When using manual global filtering, many of the options that are discussed
 
 ### Client-Side Global Filtering
 
-If you are using the built-in client-side global filtering, add the `globalFilteringFeature`, the `filteredRowModel` factory, and `filterFns` to your `tableFeatures` call:
+If you are using the built-in client-side global filtering, add the `globalFilteringFeature` (along with its required `columnFilteringFeature` prerequisite), the `filteredRowModel` factory, and `filterFns` to your `tableFeatures` call:
 
 ```tsx
 import {
   useTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
   createFilteredRowModel,
   filterFns,
 } from '@tanstack/preact-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,

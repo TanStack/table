@@ -14,9 +14,10 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 ### Svelte Setup
 
 ```ts
-import { createTable, tableFeatures, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/svelte-table'
+import { createTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/svelte-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,
@@ -63,10 +64,11 @@ No `filteredRowModel` is needed for manual server-side global filtering. Instead
 import {
   createTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
 } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({ columnFilteringFeature, globalFilteringFeature })
 
 const table = createTable({
   features,
@@ -80,18 +82,20 @@ Note: When using manual global filtering, many of the options that are discussed
 
 ### Client-Side Global Filtering
 
-If you are using the built-in client-side global filtering, add the `globalFilteringFeature` to your features and the `filteredRowModel` to your row models:
+If you are using the built-in client-side global filtering, add the `globalFilteringFeature` (along with its required `columnFilteringFeature` prerequisite) to your features and the `filteredRowModel` to your row models:
 
 ```ts
 import {
   createTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
   createFilteredRowModel,
   filterFns,
 } from '@tanstack/svelte-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,

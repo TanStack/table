@@ -17,6 +17,7 @@ import {
   TextField,
 } from 'react-aria-components'
 import {
+  columnFilteringFeature,
   createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
@@ -38,6 +39,7 @@ import './index.css'
 const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
+  columnFilteringFeature,
   globalFilteringFeature,
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),

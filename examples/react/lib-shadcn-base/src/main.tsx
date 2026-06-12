@@ -1,6 +1,7 @@
 import * as React from 'react'
 import ReactDOM from 'react-dom/client'
 import {
+  columnFilteringFeature,
   createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
@@ -51,6 +52,7 @@ import './index.css'
 const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
+  columnFilteringFeature,
   globalFilteringFeature,
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),

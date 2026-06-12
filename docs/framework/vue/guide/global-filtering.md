@@ -14,9 +14,10 @@ Vue refs can be passed directly where the adapter expects reactive table options
 ### Vue Setup
 
 ```ts
-import { useTable, tableFeatures, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/vue-table'
+import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/vue-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,
@@ -61,10 +62,11 @@ No `filteredRowModel` is needed for manual server-side global filtering. Instead
 import {
   useTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
 } from '@tanstack/vue-table'
 
-const features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({ columnFilteringFeature, globalFilteringFeature })
 
 const table = useTable({
   features,
@@ -78,18 +80,20 @@ Note: When using manual global filtering, many of the options that are discussed
 
 ### Client-Side Global Filtering
 
-If you are using the built-in client-side global filtering, add the `globalFilteringFeature`, `filteredRowModel`, and `filterFns` to your `tableFeatures` call:
+If you are using the built-in client-side global filtering, add the `globalFilteringFeature` (along with its required `columnFilteringFeature` prerequisite), `filteredRowModel`, and `filterFns` to your `tableFeatures` call:
 
 ```ts
 import {
   useTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
   createFilteredRowModel,
   filterFns,
 } from '@tanstack/vue-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,

@@ -13,9 +13,10 @@ Want to skip to the implementation? Check out these Angular examples:
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/angular-table'
+import { injectTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/angular-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,
@@ -64,10 +65,11 @@ No `filteredRowModel` is needed for manual server-side global filtering. Instead
 import {
   injectTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({ columnFilteringFeature, globalFilteringFeature })
 
 readonly table = injectTable(() => ({
   features,
@@ -81,18 +83,20 @@ Note: When using manual global filtering, many of the options that are discussed
 
 ### Client-Side Global Filtering
 
-If you are using the built-in client-side global filtering, add the `globalFilteringFeature` and the `filteredRowModel` factory to your features:
+If you are using the built-in client-side global filtering, add the `globalFilteringFeature` (along with its required `columnFilteringFeature` prerequisite) and the `filteredRowModel` factory to your features:
 
 ```ts
 import {
   injectTable,
   tableFeatures,
+  columnFilteringFeature,
   globalFilteringFeature,
   createFilteredRowModel,
   filterFns,
 } from '@tanstack/angular-table'
 
 const features = tableFeatures({
+  columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns,

@@ -95,7 +95,7 @@ Same shape, calling `table.setGlobalFilter`:
 
 ## Throttle column resizing
 
-`columnResizingFeature` writes to `columnSizing` continuously. v9 supports `columnResizeMode:
+`columnResizingFeature` (which requires `columnSizingFeature` to also be registered in `tableFeatures`) writes to `columnSizing` continuously. v9 supports `columnResizeMode:
 'onChange' | 'onEnd'` — the default is `'onChange'` (commit per-frame). For very heavy tables,
 either:
 

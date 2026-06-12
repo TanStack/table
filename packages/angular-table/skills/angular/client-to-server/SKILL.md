@@ -98,6 +98,7 @@ import {
   tableFeatures,
   rowPaginationFeature,
   rowSortingFeature,
+  columnFilteringFeature,
   globalFilteringFeature,
   createColumnHelper,
   type ColumnDef,
@@ -108,6 +109,7 @@ import {
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  columnFilteringFeature,
   globalFilteringFeature,
 })
 

@@ -327,8 +327,9 @@ v8 backed reactivity with manual memoized getters. v9's adapter
 - [ ] Rename `sortingFn` → `sortFn`, `getSortingFn` → `getSortFn`,
       `sortingFns` → `sortFns`, `SortingFn` → `SortFn`.
 - [ ] Replace `columnSizingInfo` state / setters / change handler with the
-      `columnResizing` equivalents; add `columnResizingFeature` to `features`
-      if you actually drag-resize.
+      `columnResizing` equivalents; add `columnSizingFeature` and
+      `columnResizingFeature` to `features` if you actually drag-resize
+      (`columnResizingFeature` requires `columnSizingFeature`).
 - [ ] Replace `enablePinning` with `enableColumnPinning` / `enableRowPinning`.
 - [ ] Update `ColumnMeta` module augmentation to include the `TFeatures`
       generic.

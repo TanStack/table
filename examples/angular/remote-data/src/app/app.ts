@@ -9,6 +9,7 @@ import {
 import { ReactiveFormsModule } from '@angular/forms'
 import {
   FlexRender,
+  columnFilteringFeature,
   createColumnHelper,
   globalFilteringFeature,
   injectTable,
@@ -34,6 +35,7 @@ export type Todo = {
 
 const features = tableFeatures({
   rowPaginationFeature,
+  columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
 })
