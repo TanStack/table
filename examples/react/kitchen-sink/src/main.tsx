@@ -55,7 +55,6 @@ import type {
   Header,
   ReactTable,
   Row,
-  RowData,
   SortFn,
   TableFeatures,
 } from '@tanstack/react-table'
@@ -82,7 +81,7 @@ type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 // Custom fuzzy filter / sort (from filters-fuzzy example)
 // =====================================================================
 
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -93,7 +92,7 @@ const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {

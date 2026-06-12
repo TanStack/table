@@ -75,6 +75,13 @@ function App() {
           meta: {
             filterVariant: 'range',
           },
+          // custom filter function
+          filterFn: (row, _columnId, filterValue) => {
+            return (
+              row.original.progress >= filterValue[0] &&
+              row.original.progress <= filterValue[1]
+            )
+          },
         }),
       ]),
     [],

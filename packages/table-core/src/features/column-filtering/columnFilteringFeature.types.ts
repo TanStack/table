@@ -53,7 +53,7 @@ export interface RowModelFns_ColumnFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  filterFns: Record<string, FilterFn<TFeatures, RowData>>
+  filterFns: Record<string, FilterFn<TFeatures, TData>>
 }
 
 export interface FilterFn<
@@ -85,7 +85,7 @@ export type ColumnFilterAutoRemoveTestFn<
 export type CustomFilterFns<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Record<string, FilterFn<TFeatures, RowData>>
+> = Record<string, FilterFn<TFeatures, TData>>
 
 /**
  * Resolves the valid string names for `columnDef.filterFn` and
@@ -107,7 +107,7 @@ export type ExtractFilterFnKeys<TFeatures extends TableFeatures> =
 export type FilterFnOption<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = 'auto' | ExtractFilterFnKeys<TFeatures> | FilterFn<TFeatures, RowData>
+> = 'auto' | ExtractFilterFnKeys<TFeatures> | FilterFn<TFeatures, TData>
 
 export interface ColumnDef_ColumnFiltering<
   TFeatures extends TableFeatures,

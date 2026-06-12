@@ -23,7 +23,6 @@ import type { Person } from './makeData'
 import type {
   Column,
   FilterFn,
-  RowData,
   SortFn,
   TableFeatures,
 } from '@tanstack/react-table'
@@ -42,7 +41,7 @@ interface FuzzyFilterMeta {
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -61,7 +60,7 @@ const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
 }
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information

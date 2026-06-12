@@ -32,7 +32,6 @@ import type {
   FilterFn,
   Header,
   Row,
-  RowData,
   SortFn,
   TableFeatures,
 } from '@tanstack/vue-table'
@@ -47,7 +46,7 @@ interface KitchenSinkFilterMeta {
 
 type KitchenSinkFeatures = TableFeatures & { filterMeta: KitchenSinkFilterMeta }
 
-const fuzzyFilter: FilterFn<KitchenSinkFeatures, RowData> = (
+const fuzzyFilter: FilterFn<KitchenSinkFeatures, any> = (
   row,
   columnId,
   value,
@@ -58,11 +57,7 @@ const fuzzyFilter: FilterFn<KitchenSinkFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<KitchenSinkFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+const fuzzySort: SortFn<KitchenSinkFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(

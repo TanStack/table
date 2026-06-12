@@ -35,7 +35,6 @@ import type {
   FilterFn,
   Header,
   Row,
-  RowData,
   SortFn,
   TableFeatures,
 } from '@tanstack/solid-table'
@@ -46,7 +45,7 @@ interface FuzzyFilterMeta {
 
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-const fuzzyFilterFn: FilterFn<FuzzyFeatures, RowData> = (
+const fuzzyFilterFn: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -57,7 +56,7 @@ const fuzzyFilterFn: FilterFn<FuzzyFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySortFn: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+const fuzzySortFn: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(

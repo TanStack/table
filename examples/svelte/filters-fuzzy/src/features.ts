@@ -13,12 +13,7 @@ import {
 } from '@tanstack/svelte-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type {
-  FilterFn,
-  RowData,
-  SortFn,
-  TableFeatures,
-} from '@tanstack/svelte-table'
+import type { FilterFn, SortFn, TableFeatures } from '@tanstack/svelte-table'
 import type { Person } from './makeData'
 
 interface FuzzyFilterMeta {
@@ -27,7 +22,7 @@ interface FuzzyFilterMeta {
 
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -38,11 +33,7 @@ const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   return itemRank.passed
 }
 
-export const fuzzySort: SortFn<FuzzyFeatures, Person> = (
-  rowA,
-  rowB,
-  columnId,
-) => {
+export const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {

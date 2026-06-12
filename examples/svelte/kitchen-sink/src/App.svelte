@@ -28,7 +28,6 @@
     FilterFn,
     Header,
     Row,
-    RowData,
     SortFn,
     TableFeatures,
   } from '@tanstack/svelte-table'
@@ -44,7 +43,7 @@
 
   type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-  const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+  const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
     row,
     columnId,
     value,
@@ -55,7 +54,7 @@
     return itemRank.passed
   }
 
-  const fuzzySort: SortFn<FuzzyFeatures, Person> = (
+  const fuzzySort: SortFn<FuzzyFeatures, any> = (
     rowA,
     rowB,
     columnId,

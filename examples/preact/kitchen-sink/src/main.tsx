@@ -36,7 +36,6 @@ import type {
   Header,
   PreactTable,
   Row,
-  RowData,
   SortFn,
   TableFeatures,
 } from '@tanstack/preact-table'
@@ -56,7 +55,7 @@ interface FuzzyFilterMeta {
 // object exists, with the filter meta type plugged in
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -67,7 +66,7 @@ const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(

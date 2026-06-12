@@ -34,7 +34,6 @@ import type {
   Header,
   LitTable,
   Row,
-  RowData,
   SortFn,
   TableFeatures,
 } from '@tanstack/lit-table'
@@ -49,7 +48,7 @@ interface MyColumnMeta {
   filterVariant?: 'text' | 'range' | 'select'
 }
 
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -60,7 +59,7 @@ const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(

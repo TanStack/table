@@ -2,15 +2,19 @@
 title: Migrating to TanStack Table v9 (Svelte)
 ---
 
+> [!NOTE]
+> `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Models](#row-models) section below for the new shape.
+
 ## What's New in TanStack Table v9
 
 TanStack Table v9 is a major release with explicit feature registration, row model registration, and a new atom-backed state model. The Svelte adapter was also rewritten around Svelte 5 runes.
 
-### 1. Tree-shaking
+### 1. Tree Shaking and Extensibility
 
 - **Features are tree-shakeable**: register only the table features you use.
 - **Row models are explicit**: register row model factories as slots inside `tableFeatures({...})`.
-- **Function registries moved to features**: pass `sortFns`, `filterFns`, and `aggregationFns` as slots inside `tableFeatures({...})` instead of as factory arguments or root table options.
+- **Function registries moved to features**: pass `sortFns`, `filterFns`, and `aggregationFns` as their own slots inside `tableFeatures({...})` instead of as factory arguments or root table options. This enables tree-shaking of the functions themselves: if you only register a custom filter, you don't pay for built-in filters you never use.
+- **Custom feature plugins with full type safety**: The same plugin architecture that powers the built-in features is open to your own code. Write a custom feature with its own state, options, and APIs, register it in `tableFeatures()` alongside the built-ins, and the table's types pick it all up automatically. See the [Custom Features Guide](./custom-features.md).
 
 ### 2. State Management
 
@@ -23,6 +27,12 @@ TanStack Table v9 is a major release with explicit feature registration, row mod
 
 - **`tableOptions()`**: compose reusable option fragments.
 - **`createTableHook()`**: define shared Svelte table factories with pre-bound features, row models, defaults, and registered components.
+
+### 4. Improved Type Safety (No More Declaration Merging)
+
+- **Function registries replace `declare module` augmentation**: Custom filter, sort, and aggregation functions are registered by name in the `filterFns` / `sortFns` / `aggregationFns` slots on `tableFeatures()`. The registered keys become the valid, type-safe string values for `filterFn`, `sortFn`, `globalFilterFn`, and `aggregationFn` in your column definitions, with full inference. No more augmenting the `FilterFns` / `SortFns` / `AggregationFns` interfaces globally.
+- **Per-table meta slots**: The type-only `tableMeta`, `columnMeta`, and `filterMeta` slots declare meta types for a single table instead of merging into a global interface. The `filterMeta` slot types both the `addMeta` callback in filter functions and the values read back from `row.columnFiltersMeta`.
+- **Feature-gated APIs and validated prerequisites**: APIs like `table.setSorting` only exist on the table type when their feature is registered, and `tableFeatures()` validates slot prerequisites at the type level. Registering `sortFns` without `rowSortingFeature`, or `globalFilteringFeature` without `columnFilteringFeature`, is a typed error instead of a silent runtime no-op.
 
 ### The Good News: Most Table Logic Is Still Familiar
 
@@ -638,6 +648,39 @@ const features = tableFeatures({
 
 See the new [Table and Column Meta Guide](../../../guide/table-and-column-meta) for full details on both approaches.
 
+### `FilterFns`/`SortFns`/`AggregationFns`/`FilterMeta` Augmentation Replaced by Registry Slots
+
+In v8, making a custom function usable as a string reference (like `filterFn: 'fuzzy'`) required `declare module` augmentation of the `FilterFns` interface, and typing filter meta required augmenting `FilterMeta`. In v9, registering the function in the matching registry slot does both jobs with no global augmentation:
+
+```ts
+// v8
+declare module '@tanstack/svelte-table' {
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>
+  }
+  interface FilterMeta {
+    itemRank: RankingInfo
+  }
+}
+
+// v9 - register in the slot; the key becomes a valid string value
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
+// 'fuzzy' now typechecks in column defs for tables using these features
+columnHelper.accessor('name', { filterFn: 'fuzzy' })
+```
+
+The same pattern applies to `sortFns` (for `sortFn` string values) and `aggregationFns` (for `aggregationFn` string values). Once a custom function is registered in a registry slot, prefer the string reference in column defs (`sortFn: 'fuzzy'`) over passing the function directly; svelte-check is stricter about function variance, and the string form sidesteps it. See the [Fuzzy Filtering Guide](./fuzzy-filtering.md) for a complete example.
+
 ### `RowData` Type Restriction
 
 Prefer explicit object row types:
@@ -660,7 +703,8 @@ type Person = {
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`).
 - [ ] Move row model factories into `tableFeatures({...})` as slots (e.g. `filteredRowModel: createFilteredRowModel()`).
 - [ ] Remove `getCoreRowModel`; the core row model is automatic.
-- [ ] Pass `sortFns`, `filterFns`, and `aggregationFns` as slots in `tableFeatures({...})` instead of as factory arguments.
+- [ ] Pass `sortFns`, `filterFns`, and `aggregationFns` as slots in `tableFeatures({...})` instead of as factory arguments (row model factories no longer take arguments).
+- [ ] Replace `declare module` augmentation of `FilterFns`/`SortFns`/`AggregationFns` with registry-slot registration, and `FilterMeta` augmentation with the `filterMeta` slot.
 - [ ] Rename `sortingFn` to `sortFn`.
 - [ ] Add `typeof features` to column helpers and types.
 - [ ] Pass reactive `data` and controlled `state` slices through getters.

@@ -2,15 +2,19 @@
 title: Migrating to TanStack Table v9 (Preact)
 ---
 
+> [!NOTE]
+> `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Model Factories](#row-model-factories) section below for the new shape.
+
 ## What's New in TanStack Table v9
 
 TanStack Table v9 is a major release with a smaller, more explicit table setup. The core table logic is familiar, but the table instance now declares exactly which features, row models, and state subscriptions it needs.
 
-### 1. Tree-shaking
+### 1. Tree Shaking and Extensibility
 
 - **Features are tree-shakeable**: features are registered explicitly. If a table only needs sorting and pagination, it does not need to ship filtering, grouping, or row selection code.
 - **Row models are registered explicitly**: row model factories now live as slots on `tableFeatures({...})` instead of root `get*RowModel` options or a `rowModels` object.
 - **Function registries moved to features slots**: `sortFns`, `filterFns`, and `aggregationFns` are registered as slots on `tableFeatures` alongside the row model factories. This lets unused built-in functions tree-shake.
+- **Custom feature plugins with full type safety**: The same plugin architecture that powers the built-in features is open to your own code. Write a custom feature with its own state, options, and APIs, register it in `tableFeatures()` alongside the built-ins, and the table's types pick it all up automatically. See the [Custom Features Guide](./custom-features.md).
 
 ### 2. State Management
 
@@ -23,6 +27,12 @@ TanStack Table v9 is a major release with a smaller, more explicit table setup. 
 
 - **`tableOptions()`**: build type-safe partial table option objects that can be shared and composed.
 - **`createTableHook()`**: create app-level Preact table factories with shared features, row models, defaults, and component conventions.
+
+### 4. Improved Type Safety (No More Declaration Merging)
+
+- **Function registries replace `declare module` augmentation**: Custom filter, sort, and aggregation functions are registered by name in the `filterFns` / `sortFns` / `aggregationFns` slots on `tableFeatures()`. The registered keys become the valid, type-safe string values for `filterFn`, `sortFn`, `globalFilterFn`, and `aggregationFn` in your column definitions, with full inference. No more augmenting the `FilterFns` / `SortFns` / `AggregationFns` interfaces globally.
+- **Per-table meta slots**: The type-only `tableMeta`, `columnMeta`, and `filterMeta` slots declare meta types for a single table instead of merging into a global interface. The `filterMeta` slot types both the `addMeta` callback in filter functions and the values read back from `row.columnFiltersMeta`.
+- **Feature-gated APIs and validated prerequisites**: APIs like `table.setSorting` only exist on the table type when their feature is registered, and `tableFeatures()` validates slot prerequisites at the type level. Registering `sortFns` without `rowSortingFeature`, or `globalFilteringFeature` without `columnFilteringFeature`, is a typed error instead of a silent runtime no-op.
 
 ### The Good News: Most Upgrades Are Opt-in
 
@@ -588,6 +598,39 @@ const features = tableFeatures({
 
 See the new [Table and Column Meta Guide](../../../guide/table-and-column-meta) for full details on both approaches.
 
+### `FilterFns`/`SortFns`/`AggregationFns`/`FilterMeta` Augmentation Replaced by Registry Slots
+
+In v8, making a custom function usable as a string reference (like `filterFn: 'fuzzy'`) required `declare module` augmentation of the `FilterFns` interface, and typing filter meta required augmenting `FilterMeta`. In v9, registering the function in the matching registry slot does both jobs with no global augmentation:
+
+```tsx
+// v8 / before: React adapter through preact/compat
+declare module '@tanstack/react-table' {
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>
+  }
+  interface FilterMeta {
+    itemRank: RankingInfo
+  }
+}
+
+// v9 - register in the slot; the key becomes a valid string value
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
+// 'fuzzy' now typechecks in column defs for tables using these features
+columnHelper.accessor('name', { filterFn: 'fuzzy' })
+```
+
+The same pattern applies to `sortFns` (for `sortFn` string values) and `aggregationFns` (for `aggregationFn` string values). See the [Fuzzy Filtering Guide](./fuzzy-filtering.md) for a complete example.
+
 ### `RowData` Type Restriction
 
 `RowData` is now constrained to record-like objects or arrays. Prefer object row types such as:
@@ -607,7 +650,7 @@ type Person = {
 - [ ] Replace `@tanstack/react-table` imports used through `preact/compat` with `@tanstack/preact-table`.
 - [ ] Replace `useReactTable` with `useTable`.
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`).
-- [ ] Move row model factories from `rowModels: {...}` into `tableFeatures({...})` slots.
+- [ ] Migrate `get*RowModel()` options (or earlier-beta `rowModels: {...}` entries) to `tableFeatures({...})` slots (e.g. `filteredRowModel: createFilteredRowModel()`).
 - [ ] Drop `getCoreRowModel`; the core row model is automatic.
 - [ ] Move `sortingFns`, `filterFns`, and `aggregationFns` into `tableFeatures` slots (not factory args).
 - [ ] Rename `sortingFn` to `sortFn` and `sortingFns` to `sortFns`.

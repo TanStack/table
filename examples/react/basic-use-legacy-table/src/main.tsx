@@ -40,6 +40,7 @@ import type {
 import type { LegacyColumn } from '@tanstack/react-table/legacy' // legacy types
 import type { Person } from './makeData'
 
+// old way of declaring column meta with declaration merging
 declare module '@tanstack/react-table' {
   // allows us to define custom properties for our columns
   interface ColumnMeta<

@@ -18,12 +18,7 @@ import {
 } from '@tanstack/angular-table'
 import { DebouncedInput } from './debounced-input/debounced-input'
 import { makeData } from './makeData'
-import type {
-  FilterFn,
-  RowData,
-  SortFn,
-  TableFeatures,
-} from '@tanstack/angular-table'
+import type { FilterFn, SortFn, TableFeatures } from '@tanstack/angular-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
@@ -33,7 +28,7 @@ interface FuzzyFilterMeta {
 
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -44,7 +39,7 @@ const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
