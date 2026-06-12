@@ -15,13 +15,14 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 ```tsx
 import { createTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/solid-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   get data() {
     return data()
@@ -54,7 +55,6 @@ In Solid, the table's state atoms are backed by Solid signals, so `table.atoms.s
 ```tsx
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -79,7 +79,6 @@ const sorting = useSelector(sortingAtom)
 
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -96,7 +95,6 @@ const [sorting, setSorting] = createSignal<SortingState>([])
 //...
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -116,7 +114,6 @@ If you do not need to control the sorting state in your own state management or 
 ```tsx
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -153,7 +150,6 @@ const sorting = useSelector(sortingAtom)
 //...
 const table = createTable({
   features,
-  rowModels: {}, // no sortedRowModel needed for manual sorting
   columns,
   data,
   manualSorting: true, // use pre-sorted row model instead of sorted row model
@@ -169,7 +165,7 @@ Hoisting the sorting state into your own scope (with an external atom or the `st
 
 ### Client-Side Sorting
 
-To implement client-side sorting, add the `rowSortingFeature` to your features and the `sortedRowModel` to your row models. Import `createSortedRowModel` and `sortFns` from TanStack Table:
+To implement client-side sorting, add the `rowSortingFeature` and the `sortedRowModel` factory to your features. Import `createSortedRowModel` and `sortFns` from TanStack Table:
 
 ```tsx
 import {
@@ -180,13 +176,14 @@ import {
   sortFns,
 } from '@tanstack/solid-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -257,35 +254,28 @@ const columns = [
   }
 ]
 //...
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    ...sortFns,
+    myCustomSortFn: (rowA, rowB, columnId) =>
+      rowA.original[columnId] > rowB.original[columnId]
+        ? 1
+        : rowA.original[columnId] < rowB.original[columnId]
+          ? -1
+          : 0,
+  },
+})
+
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel({
-      ...sortFns,
-      myCustomSortFn: (rowA, rowB, columnId) =>
-        rowA.original[columnId] > rowB.original[columnId]
-          ? 1
-          : rowA.original[columnId] < rowB.original[columnId]
-            ? -1
-            : 0,
-    }),
-  },
   columns,
   data,
 })
 ```
 
-> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, augment the `SortFns` interface with a `declare module` block:
->
-> ```tsx
-> declare module '@tanstack/solid-table' {
->   interface SortFns {
->     myCustomSortFn: SortFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `sortFn` column option.
+> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, register the function in the `sortFns` slot on `tableFeatures` (as shown above). The slot is the registry; no `declare module` augmentation is needed. Alternatively, skip the registry entirely by passing the function directly to the `sortFn` column option.
 
 ### Customize Sorting
 
@@ -311,7 +301,6 @@ const columns = [
 //...
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -339,7 +328,6 @@ const columns = [
 //...
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -406,7 +394,6 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 ```tsx
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (sorting can never return to 'none' once applied)
@@ -433,7 +420,6 @@ const columns = [
 //...
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -447,7 +433,6 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 ```tsx
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -463,7 +448,6 @@ By default, there is no limit to the number of columns that can be sorted at onc
 ```tsx
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -477,7 +461,6 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 ```tsx
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

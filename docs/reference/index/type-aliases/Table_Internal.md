@@ -63,12 +63,6 @@ optional atoms: ExternalAtoms_All;
 optional initialState: TableState_All;
 ```
 
-##### rowModels?
-
-```ts
-optional rowModels: CreateRowModels_All<TFeatures, TData>;
-```
-
 ##### state?
 
 ```ts

@@ -100,7 +100,6 @@ export type PreactTable<
  * const table = useTable(
  *   {
  *     features,
- *     rowModels: {},
  *     columns,
  *     data,
  *   },

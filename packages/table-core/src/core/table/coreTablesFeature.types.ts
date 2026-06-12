@@ -3,8 +3,12 @@ import type { Atom, ReadonlyAtom, ReadonlyStore } from '@tanstack/store'
 import type { CoreFeatures } from '../coreFeatures'
 import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
-import type { IsAny, TableFeatures } from '../../types/TableFeatures'
-import type { CachedRowModels, CreateRowModels_All } from '../../types/RowModel'
+import type {
+  IsAny,
+  TableFeatures,
+  ValidateFeatureSlots,
+} from '../../types/TableFeatures'
+import type { CachedRowModels } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState, TableState_All } from '../../types/TableState'
 
@@ -87,14 +91,12 @@ export interface TableOptions_Table<
    * The feature modules registered on this table instance.
    *
    * Feature registration controls which state slices, options, and prototype
-   * APIs are available.
+   * APIs are available. This object also carries the table's row model
+   * factories (`sortedRowModel`, `filteredRowModel`, etc.), row model function
+   * registries (`sortFns`, `filterFns`, `aggregationFns`), and type-only meta
+   * slots (`tableMeta`, `columnMeta`).
    */
-  readonly features: TFeatures
-  /**
-   * Row model factories used by features such as filtering, grouping, sorting,
-   * expansion, and pagination.
-   */
-  readonly rowModels?: CreateRowModels_All<TFeatures, TData>
+  readonly features: TFeatures & ValidateFeatureSlots<TFeatures>
   /**
    * Optionally, provide your own external writable atoms for individual state slices.
    * When an atom is provided for a given slice, it takes precedence over `options.state[key]`

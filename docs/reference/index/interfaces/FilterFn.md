@@ -5,7 +5,7 @@ title: FilterFn
 
 # Interface: FilterFn()\<TFeatures, TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L45)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L59)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ FilterFn(
    addMeta?): boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L49)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L63)
 
 ## Parameters
 
@@ -57,7 +57,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:49](https
 optional autoRemove: ColumnFilterAutoRemoveTestFn<TFeatures, TData, unknown>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L55)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L69)
 
 ***
 
@@ -67,4 +67,4 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:55](https
 optional resolveFilterValue: TransformFilterValueFn<TFeatures, TData, unknown>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L56)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L70)

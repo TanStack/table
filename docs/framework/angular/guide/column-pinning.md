@@ -23,7 +23,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))
@@ -65,7 +64,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     //...
     atoms: {
       columnPinning: this.columnPinningAtom,
@@ -87,7 +85,6 @@ readonly columnPinning = signal<ColumnPinningState>({
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   state: {
     columnPinning: this.columnPinning(),
@@ -108,7 +105,6 @@ A very common use case is to pin some columns by default. You can do this by eit
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnPinning: {

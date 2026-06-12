@@ -35,9 +35,24 @@ export function constructTable<
 >(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   const _reactivity = tableOptions.features.coreReactivityFeature!
 
-  // `tableMeta`/`columnMeta` are type-only slots, not real features
+  // Strip the non-feature slots: type-only meta slots, row model factories,
+  // and row model fn registries all live on the `features` option but are not
+  // table features themselves.
   const {
+    aggregationFns,
     columnMeta: _columnMeta,
+    coreRowModel,
+    expandedRowModel,
+    facetedMinMaxValues,
+    facetedRowModel,
+    facetedUniqueValues,
+    filterFns,
+    filterMeta: _filterMeta,
+    filteredRowModel,
+    groupedRowModel,
+    paginatedRowModel,
+    sortFns,
+    sortedRowModel,
     tableMeta: _tableMeta,
     ...features
   } = tableOptions.features
@@ -46,10 +61,10 @@ export function constructTable<
     _reactivity,
     _features: { ...coreFeatures, ...features },
     _rowModels: {},
-    _rowModelFns: {},
+    _rowModelFns: { aggregationFns, filterFns, sortFns },
     baseAtoms: {},
     atoms: {},
-  } as Table_Internal<TFeatures, TData>
+  } as unknown as Table_Internal<TFeatures, TData>
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
 
@@ -156,7 +171,19 @@ export function constructTable<
     (tableOptions.debugAll || tableOptions.debugTable)
   ) {
     const features = Object.keys(table._features)
-    const rowModels = Object.keys(table.options.rowModels || {})
+    const rowModels = Object.entries({
+      coreRowModel,
+      filteredRowModel,
+      groupedRowModel,
+      sortedRowModel,
+      expandedRowModel,
+      paginatedRowModel,
+      facetedRowModel,
+      facetedMinMaxValues,
+      facetedUniqueValues,
+    })
+      .filter(([, factory]) => factory)
+      .map(([key]) => key)
     const states = Object.keys(table.initialState)
 
     console.log(

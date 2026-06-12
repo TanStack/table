@@ -72,26 +72,22 @@ function App() {
   const [columnResizeDirection, setColumnResizeDirection] =
     createSignal<ColumnResizeDirection>('ltr')
 
-  const table = createTable(
-    {
-      features,
-      rowModels: {},
-      columns,
-      get data() {
-        return data()
-      },
-      get columnResizeMode() {
-        return columnResizeMode()
-      },
-      get columnResizeDirection() {
-        return columnResizeDirection()
-      },
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    get columnResizeMode() {
+      return columnResizeMode()
+    },
+    get columnResizeDirection() {
+      return columnResizeDirection()
+    },
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   const resizerTransform = (
     header: ReturnType<typeof table.getHeaderGroups>[number]['headers'][number],

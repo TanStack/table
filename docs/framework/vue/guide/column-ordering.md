@@ -19,7 +19,6 @@ const features = tableFeatures({ columnOrderingFeature })
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -52,7 +51,6 @@ const features = tableFeatures({ columnOrderingFeature })
 
 const table = useTable({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnOrder: ['columnId1', 'columnId2', 'columnId3'],
@@ -86,7 +84,6 @@ const columnOrder = useSelector(columnOrderAtom) // subscribe wherever it is nee
 
 const table = useTable({
   features,
-  rowModels: {},
   //...
   atoms: {
     columnOrder: columnOrderAtom,
@@ -104,7 +101,6 @@ const columnOrder = ref<ColumnOrderState>(['columnId1', 'columnId2', 'columnId3'
 //...
 const table = useTable({
   features,
-  rowModels: {},
   //...
   state: {
     get columnOrder() {

@@ -16,7 +16,11 @@ import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import { TableController, tableFeatures, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/lit-table'
 
-const features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 @customElement('my-table')
 class MyTable extends LitElement {
@@ -28,9 +32,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-      },
       columns,
       data: this.data,
     })
@@ -66,7 +67,7 @@ If you're not sure, you can always start with client-side filtering and paginati
 
 If you have decided that you need to implement server-side global filtering instead of using the built-in client-side global filtering, here's how you do that.
 
-No `filteredRowModel` is needed for manual server-side global filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
+No `filteredRowModel` is needed for manual server-side global filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have registered a `filteredRowModel` in your `features`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```ts
 import {
@@ -79,7 +80,6 @@ const features = tableFeatures({ globalFilteringFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {}, // no filteredRowModel needed for manual server-side global filtering
   data: this.data,
   columns,
   manualFiltering: true,
@@ -101,27 +101,25 @@ import {
   filterFns,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
   // other options...
 })
 ```
 
 ### Global Filter Function
 
-The `globalFilterFn` option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a built-in filter function, a string that references a custom filter function registered in the registry passed to `createFilteredRowModel`, or a custom filter function passed directly.
+The `globalFilterFn` option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a built-in filter function, a string that references a custom filter function registered in the `filterFns` slot on `tableFeatures`, or a custom filter function passed directly.
 
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
   data: this.data,
   columns,
   globalFilterFn: 'includesString', // built-in filter function
@@ -160,7 +158,6 @@ const globalFilterAtom = createAtom<string>('')
 // inside your element's render method
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   atoms: {
     globalFilter: globalFilterAtom, // table.setGlobalFilter now updates globalFilterAtom
@@ -178,7 +175,6 @@ private globalFilter: string = ''
 
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   state: {
     globalFilter: this.globalFilter,
@@ -217,7 +213,6 @@ const customFilterFn = (row, columnId, filterValue) => {
 
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   globalFilterFn: customFilterFn,
 })
@@ -230,7 +225,6 @@ If you want to set an initial global filter state when the table is initialized,
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   initialState: {
     globalFilter: 'search term', // if not controlling globalFilter state, set initial state here
@@ -258,7 +252,6 @@ const columns = [
 //...
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   // other options...
   columns,
   enableGlobalFilter: false, // disable global filtering for all columns

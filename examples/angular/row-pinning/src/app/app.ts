@@ -29,6 +29,10 @@ const features = tableFeatures({
   columnFilteringFeature,
   columnSizingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 const columns: Array<ColumnDef<typeof features, Person>> = [
   {
@@ -70,11 +74,6 @@ export class App {
   readonly table = injectTable<typeof features, Person>(() => ({
     debugTable: true,
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      expandedRowModel: createExpandedRowModel(),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data: this.data(),
     initialState: { pagination: { pageSize: 20, pageIndex: 0 } },

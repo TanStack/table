@@ -9,8 +9,8 @@ TanStack Table v9 is a major release with a smaller, more explicit table setup. 
 ### 1. Tree-shaking
 
 - **Features are tree-shakeable**: features are registered explicitly. If a table only needs sorting and pagination, it does not need to ship filtering, grouping, or row selection code.
-- **Row models are registered explicitly**: row model factories now live under `rowModels` instead of root `get*RowModel` options.
-- **Function registries moved to factories**: row model factories like `createSortedRowModel(sortFns)`, `createFilteredRowModel(filterFns)`, and `createGroupedRowModel(aggregationFns)` receive the function registry they need. This lets unused built-in functions tree-shake.
+- **Row models are registered explicitly**: row model factories now live as slots on `tableFeatures({...})` instead of root `get*RowModel` options or a `rowModels` object.
+- **Function registries moved to features slots**: `sortFns`, `filterFns`, and `aggregationFns` are registered as slots on `tableFeatures` alongside the row model factories. This lets unused built-in functions tree-shake.
 
 ### 2. State Management
 
@@ -30,7 +30,7 @@ TanStack Table v9 is a major release with a smaller, more explicit table setup. 
 - `useTable` defaults to v8-style full state subscriptions. Pass a narrower selector only when you want to optimize re-renders.
 - Table markup is largely unchanged. Rows, headers, cells, and feature APIs still drive rendering.
 
-The main migration is changing from the React adapter used through `preact/compat` to the native Preact adapter: `useReactTable` becomes `useTable`, and `get*RowModel` options become `features` plus `rowModels`.
+The main migration is changing from the React adapter used through `preact/compat` to the native Preact adapter: `useReactTable` becomes `useTable`, and `get*RowModel` options become feature and row model factory slots on `tableFeatures`.
 
 ## Preact v8 Context
 
@@ -56,9 +56,9 @@ import { useTable } from '@tanstack/preact-table'
 const table = useTable(options)
 ```
 
-### New Required Options: `features` and `rowModels`
+### New Required Options: `features`
 
-In v9, a table must declare its feature set and row models.
+In v9, a table must declare its feature set. Row model factories are registered as slots on `tableFeatures` rather than as a separate `rowModels` option.
 
 ```tsx
 // v8 / before: React adapter through preact/compat
@@ -73,17 +73,16 @@ const table = useReactTable({
 // v9
 import { tableFeatures, useTable } from '@tanstack/preact-table'
 
-const features = tableFeatures({})
+const features = tableFeatures({}) // core row model is automatic
 
 const table = useTable({
   features,
-  rowModels: {}, // core row model is automatic
   columns,
   data,
 })
 ```
 
-Keep `features` and reusable `rowModels` objects outside the component when possible so references stay stable.
+Keep the `features` object outside the component when possible so the reference stays stable.
 
 ---
 
@@ -121,7 +120,6 @@ import { stockFeatures, useTable } from '@tanstack/preact-table'
 
 const table = useTable({
   features: stockFeatures,
-  rowModels,
   columns,
   data,
 })
@@ -148,20 +146,20 @@ const table = useTable({
 
 ---
 
-## The `rowModels` Option
+## Row Model Factories
 
-Row models process data for features like filtering, sorting, grouping, expanding, faceting, and pagination. In v9, they are configured under `rowModels`.
+Row models process data for features like filtering, sorting, grouping, expanding, faceting, and pagination. In v9, row model factories and function registries are slots on `tableFeatures` rather than a separate `rowModels` option.
 
 ### Migration Mapping
 
-| v8 Option | v9 `rowModels` Key | v9 Factory Function |
+| v8 Option | v9 `tableFeatures` Slot | v9 Factory |
 |---|---|---|
 | `getCoreRowModel()` | (automatic) | Not needed |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel(sortFns)` |
+| `getFilteredRowModel()` + `filterFns` | `filteredRowModel` + `filterFns` | `createFilteredRowModel()` |
+| `getSortedRowModel()` + `sortingFns` | `sortedRowModel` + `sortFns` | `createSortedRowModel()` |
 | `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
 | `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel(aggregationFns)` |
+| `getGroupedRowModel()` + `aggregationFns` | `groupedRowModel` + `aggregationFns` | `createGroupedRowModel()` |
 | `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
 | `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
@@ -209,17 +207,15 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
-})
-
-const rowModels = {
-  filteredRowModel: createFilteredRowModel(filterFns),
-  sortedRowModel: createSortedRowModel(sortFns),
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-}
+  filterFns,
+  sortFns,
+})
 
 const table = useTable({
   features,
-  rowModels,
   columns,
   data,
 })
@@ -259,7 +255,6 @@ By default, `table.state` is reactive and contains the full registered table sta
 ```tsx
 const table = useTable({
   features,
-  rowModels,
   columns,
   data,
 })
@@ -273,7 +268,6 @@ Pass a custom selector when you want `table.state` to contain only the reactive 
 const table = useTable(
   {
     features,
-    rowModels,
     columns,
     data,
   },
@@ -291,7 +285,7 @@ Passing `(state) => state` is equivalent to the default selector and is no longe
 For large tables, opt the parent out and subscribe lower in the tree:
 
 ```tsx
-const table = useTable(options, () => null)
+const table = useTable({ features, columns, data }, () => null)
 ```
 
 ### Optimized Rendering with `table.Subscribe`
@@ -336,7 +330,6 @@ const [pagination, setPagination] = useState<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels,
   columns,
   data,
   state: {
@@ -370,7 +363,6 @@ function MyTable({ columns, data }) {
 
   const table = useTable({
     features,
-    rowModels,
     columns,
     data,
     atoms: {
@@ -448,7 +440,6 @@ import { tableOptions } from '@tanstack/preact-table'
 
 const baseOptions = tableOptions({
   features,
-  rowModels,
   defaultColumn: {
     minSize: 40,
   },
@@ -472,10 +463,7 @@ Use it when several tables share feature registration, row models, defaults, or 
 ```tsx
 import { createTableHook } from '@tanstack/preact-table'
 
-const { useAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels,
-})
+const { useAppTable, createAppColumnHelper } = createTableHook({ features })
 
 const columnHelper = createAppColumnHelper<Person>()
 
@@ -619,10 +607,11 @@ type Person = {
 - [ ] Replace `@tanstack/react-table` imports used through `preact/compat` with `@tanstack/preact-table`.
 - [ ] Replace `useReactTable` with `useTable`.
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`).
-- [ ] Replace root `get*RowModel` options with `rowModels`.
+- [ ] Move row model factories from `rowModels: {...}` into `tableFeatures({...})` slots.
 - [ ] Drop `getCoreRowModel`; the core row model is automatic.
-- [ ] Move `sortingFns`, `filterFns`, and `aggregationFns` into row model factories.
+- [ ] Move `sortingFns`, `filterFns`, and `aggregationFns` into `tableFeatures` slots (not factory args).
 - [ ] Rename `sortingFn` to `sortFn` and `sortingFns` to `sortFns`.
+- [ ] Replace `declare module` augmentation for `FilterFns`/`SortFns`/`AggregationFns`/`FilterMeta` with registry slots on `tableFeatures` (`filterFns`, `sortFns`, `aggregationFns`, `filterMeta`).
 - [ ] Update column helpers and types to include `typeof features`.
 - [ ] Replace broad `table.getState()` reads with `table.state`, `table.store.state`, or `table.atoms.<slice>.get()`.
 - [ ] Replace `onStateChange` with per-slice `on[State]Change` or external atoms.

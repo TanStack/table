@@ -101,7 +101,6 @@ function App() {
   const table = createTable(
     {
       features,
-      rowModels: {},
       columns: defaultColumns,
       get data() {
         return data()

@@ -34,27 +34,20 @@ import type {
   Row,
   RowData,
   SortFn,
+  TableFeatures,
 } from '@tanstack/vue-table'
-
-declare module '@tanstack/vue-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
 
 interface MyColumnMeta {
   filterVariant?: 'text' | 'range' | 'select'
 }
 
-const features = tableFeatures({
-  ...stockFeatures,
-  columnMeta: metaHelper<MyColumnMeta>(),
-})
+interface KitchenSinkFilterMeta {
+  itemRank?: RankingInfo
+}
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+type KitchenSinkFeatures = TableFeatures & { filterMeta: KitchenSinkFilterMeta }
+
+const fuzzyFilter: FilterFn<KitchenSinkFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -65,24 +58,45 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<KitchenSinkFeatures, Person> = (
+  rowA,
+  rowB,
+  columnId,
+) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId].itemRank!,
-      rowB.columnFiltersMeta[columnId].itemRank!,
+      rowA.columnFiltersMeta[columnId].itemRank as RankingInfo,
+      rowB.columnFiltersMeta[columnId].itemRank as RankingInfo,
     )
   }
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<KitchenSinkFeatures, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
     statusOrder.indexOf(rowB.original.status)
   )
 }
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filterMeta: metaHelper<KitchenSinkFilterMeta>(),
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort, status: sortStatusFn },
+  aggregationFns,
+})
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -110,7 +124,7 @@ const columns = ref(
       size: 200,
       header: 'First Name',
       filterFn: 'fuzzy',
-      sortFn: fuzzySort,
+      sortFn: 'fuzzy',
       meta: { filterVariant: 'text' },
       getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
     }),
@@ -141,7 +155,7 @@ const columns = ref(
       id: 'status',
       size: 200,
       header: 'Status',
-      sortFn: sortStatusFn,
+      sortFn: 'status',
       meta: { filterVariant: 'select' },
     }),
     columnHelper.accessor('progress', {
@@ -162,19 +176,6 @@ const data = ref(makeData(1_000))
 const table = useTable({
   key: 'kitchen-sink', // needed for devtools
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      fuzzy: fuzzyFilter,
-    }),
-    facetedRowModel: createFacetedRowModel(),
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   data,
   get columns() {
     return columns.value

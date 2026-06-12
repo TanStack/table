@@ -404,12 +404,12 @@ export type AppSvelteTable<
  *     rowPaginationFeature,
  *     rowSortingFeature,
  *     columnFilteringFeature,
- *   }),
- *   rowModels: {
  *     paginatedRowModel: createPaginatedRowModel(),
- *     sortedRowModel: createSortedRowModel(sortFns),
- *     filteredRowModel: createFilteredRowModel(filterFns),
- *   },
+ *     sortedRowModel: createSortedRowModel(),
+ *     filteredRowModel: createFilteredRowModel(),
+ *     sortFns,
+ *     filterFns,
+ *   }),
  *   tableComponents: { PaginationControls, RowCount },
  *   cellComponents: { TextCell, NumberCell },
  *   headerComponents: { SortIndicator, ColumnFilter },
@@ -527,10 +527,7 @@ export function createTableHook<
     TData extends RowData,
     TSelected = TableState<TFeatures>,
   >(
-    tableOptions: Omit<
-      TableOptions<TFeatures, TData>,
-      'features' | 'rowModels'
-    >,
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
     selector?: (state: TableState<TFeatures>) => TSelected,
   ): AppSvelteTable<
     TFeatures,

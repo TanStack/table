@@ -56,7 +56,12 @@ import {
 import { useVirtualizer } from '@tanstack/vue-virtual'
 import { makeData, type Person } from './makeData'
 
-const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const columns: ColumnDef<typeof features, Person>[] = [
   { accessorKey: 'firstName' },
@@ -68,7 +73,6 @@ const data = ref<Person[]>(makeData(50_000))
 
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -322,8 +326,8 @@ in Vue, not a plain object.
 ### "API missing" — `getRowModel` returns nothing (CRITICAL — v9-specific)
 
 If `table.getRowModel().rows` is empty when data is loaded, the row-model feature for whatever
-slice you need (filtering/sorting/grouping) isn't registered. Add it to `tableFeatures({...})`
-and `rowModels`.
+slice you need (filtering/sorting/grouping) isn't registered. Add the feature, its factory, and
+its fn registry to `tableFeatures({...})`.
 
 ### Reimplementing virtualization manually (CRITICAL — #1 AI tell)
 

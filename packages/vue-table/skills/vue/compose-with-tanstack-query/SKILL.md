@@ -4,12 +4,12 @@ description: >
   Server-side / async data flow for `@tanstack/vue-table` v9 + `@tanstack/vue-query`. Key the
   `useQuery` query on the table state that drives the request (pagination + sorting + filters).
   Set `manualPagination` / `manualSorting` / `manualFiltering` for slices the server owns.
-  Drop the matching `rowModels` factory (don't ship `paginatedRowModel` when the server
-  paginates). Pass `rowCount` so `table.getPageCount()` works without all rows in memory. Pass
-  `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages. The cleanest
-  wiring uses external `createAtom`s + `options.atoms` so the table writes through to the atom
-  and the query refetches with no `on[State]Change` plumbing. The canonical Vue example is at
-  `examples/vue/with-tanstack-query/`.
+  Omit the matching row model factory from `tableFeatures` (don't ship `paginatedRowModel` when
+  the server paginates). Pass `rowCount` so `table.getPageCount()` works without all rows in
+  memory. Pass `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages. The
+  cleanest wiring uses external `createAtom`s + `options.atoms` so the table writes through to
+  the atom and the query refetches with no `on[State]Change` plumbing. The canonical Vue example
+  is at `examples/vue/with-tanstack-query/`.
 type: composition
 library: tanstack-table
 framework: vue
@@ -87,10 +87,9 @@ watchEffect(() => {
   if (next != null) rowCount.value = next
 })
 
-// 5) Manual pagination. No paginatedRowModel — server paginates.
+// 5) Manual pagination. No paginatedRowModel in features — server paginates.
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: tableData,
   rowCount,
@@ -219,12 +218,12 @@ const dataQuery = useQuery(() => ({
 }))
 
 const table = useTable({
+  // server owns all three slices — no row model factories registered
   features: tableFeatures({
     rowSortingFeature,
     rowPaginationFeature,
     columnFilteringFeature,
   }),
-  rowModels: {}, // server owns all three
   columns,
   data: computed(() => dataQuery.data.value?.rows ?? EMPTY),
   rowCount,
@@ -265,7 +264,6 @@ Query tells it. Always invalidate on writes.
 // ❌ Table re-paginates the already-paginated server response.
 useTable({
   features,
-  rowModels: {},
   columns,
   data: tableData,
   rowCount,
@@ -286,13 +284,10 @@ server already paginated. The pager locks at "Page 1 of 1".
 
 ```ts
 // ❌ Ships the factory for nothing AND it tries to paginate server-paginated data.
-rowModels: {
-  paginatedRowModel: createPaginatedRowModel()
-}
+const features = tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })
 
-// ✅
-rowModels: {
-}
+// ✅ Omit the factory when the server paginates.
+const features = tableFeatures({ rowPaginationFeature })
 ```
 
 ### Forgetting controlled state in `queryKey` (CRITICAL)
@@ -350,14 +345,14 @@ Same hooks names, different reactivity model (function-returning-options instead
 
 ### Hallucinating pre-v9 table APIs (CRITICAL)
 
-`useVueTable` + `getCoreRowModel: getCoreRowModel()` is v8. v9 uses `useTable` +
-`features` + `rowModels`. See `tanstack-table/vue/migrate-v8-to-v9`.
+`useVueTable` + `getCoreRowModel: getCoreRowModel()` is v8. v9 uses `useTable` + `features`
+with row model factories as slots. See `tanstack-table/vue/migrate-v8-to-v9`.
 
 ### "API missing" because feature not in `features` (CRITICAL — v9-specific)
 
 Server-side pagination still needs `rowPaginationFeature` in `tableFeatures({...})`. The
-feature gives you `table.nextPage` / `table.setPageIndex` / `table.getPageCount`. The
-`rowModels` factory is what you drop; the feature stays.
+feature gives you `table.nextPage` / `table.setPageIndex` / `table.getPageCount`. The row
+model factory (`paginatedRowModel`) is what you omit; the feature stays.
 
 ### Reimplementing pagination loop manually (CRITICAL — #1 AI tell)
 

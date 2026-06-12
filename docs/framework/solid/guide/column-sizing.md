@@ -19,7 +19,6 @@ const features = tableFeatures({ columnSizingFeature })
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data()
@@ -60,7 +59,6 @@ const columns = [
 
 const table = createTable({
   features,
-  rowModels: {},
   defaultColumn: {
     size: 200, // starting column size
     minSize: 50, // enforced during column resizing
@@ -142,7 +140,6 @@ const columnSizing = useSelector(columnSizingAtom) // subscribe wherever it is n
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   data,
   atoms: {
@@ -160,7 +157,6 @@ const [columnSizing, setColumnSizing] = createSignal<ColumnSizingState>({})
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: {

@@ -24,6 +24,9 @@ interface MyColumnMeta {
 const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
   columnMeta: metaHelper<MyColumnMeta>(),
 })
 
@@ -145,10 +148,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          filteredRowModel: createFilteredRowModel(filterFns),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
         data: this._data,
         columns,
         debugTable: true,

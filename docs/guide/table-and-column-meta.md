@@ -18,7 +18,6 @@ There are two kinds of meta:
 ```ts
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   meta: {
@@ -37,7 +36,6 @@ table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```ts
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   meta: {
@@ -56,7 +54,6 @@ table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```ts
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   meta: {
@@ -75,7 +72,6 @@ table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```ts
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data()
@@ -96,7 +92,6 @@ table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```ts
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data
@@ -117,7 +112,6 @@ table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data: this.data(),
   meta: {
@@ -136,7 +130,6 @@ table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   meta: {
@@ -155,7 +148,6 @@ table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```ts
 const table = constructTable({
   features,
-  rowModels: {},
   columns,
   data,
   meta: {
@@ -340,6 +332,74 @@ const features = tableFeatures({
 ```
 
 Both forms are equivalent. Prefer `metaHelper`: it reads as type-only at a glance, and it avoids false positives from the `@typescript-eslint/no-unnecessary-type-assertion` lint rule, which flags the `{} as` form when your meta type has only optional properties (and whose auto-fix would silently erase your meta type).
+
+### Filter Meta (`filterMeta` Slot)
+
+The `filterMeta` slot lets you declare the shape of arbitrary metadata that a custom filter function attaches to a row during filtering. This is most useful for filter functions that produce a by-product (such as a ranking score) that you want to read in a column's sort function or cell renderer.
+
+The pattern mirrors `tableMeta` and `columnMeta`: declare your meta interface, register it with `metaHelper`, and then intersect `TableFeatures` with your meta type when annotating your filter and sort functions.
+
+```ts
+import {
+  metaHelper,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  createPaginatedRowModel,
+  filterFns,
+  sortFns,
+} from '@tanstack/react-table'
+import type { FilterFn, SortFn, RowData, TableFeatures } from '@tanstack/react-table'
+import { rankItem, type RankingInfo } from '@tanstack/match-sorter-utils'
+
+// 1. Define the metadata shape your filter function will attach
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+// 2. Intersect with TableFeatures to get a fully typed features surface
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+// 3. Annotate your filter and sort functions against the extended features type
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (row, columnId, value, addMeta) => {
+  const itemRank = rankItem(row.getValue(columnId), value)
+  addMeta({ itemRank })
+  return itemRank.passed
+}
+
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+  let dir = 0
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId]?.itemRank!,
+      rowB.columnFiltersMeta[columnId]?.itemRank!,
+    )
+  }
+  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+}
+
+// 4. Register everything on tableFeatures() — including the filterMeta slot
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+```
+
+Now `columnFiltersMeta` on every row is typed as `FuzzyFilterMeta` for tables built from this `features` object. The `filterMeta` slot is, like `tableMeta` and `columnMeta`, a phantom type-only entry: `metaHelper<FuzzyFilterMeta>()` returns `{}` at runtime and is stripped from the registered features.
+
+See the [React filters-fuzzy example](../framework/react/examples/filters-fuzzy) for a complete, runnable implementation.
 
 ### Typing Meta Globally with Declaration Merging (v8 Style)
 

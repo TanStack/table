@@ -2,11 +2,11 @@
 name: solid/getting-started
 description: >
   End-to-end first table with `@tanstack/solid-table` v9. Install, declare
-  `features` via `tableFeatures()`, declare `rowModels` with the matching
-  factories (e.g. `createSortedRowModel(sortFns)`), create a column helper
-  with `createColumnHelper<typeof features, TData>()`, build the table with
-  `createTable(options)` using reactive `get data() {...}` getters, and render
-  rows via `FlexRender` (or `table.FlexRender`).
+  `features` via `tableFeatures()` (including row model factories such as
+  `sortedRowModel: createSortedRowModel()` and the matching `sortFns` slot),
+  create a column helper with `createColumnHelper<typeof features, TData>()`,
+  build the table with `createTable(options)` using reactive `get data() {...}`
+  getters, and render rows via `FlexRender` (or `table.FlexRender`).
 type: lifecycle
 library: tanstack-table
 framework: solid
@@ -66,13 +66,18 @@ const features = tableFeatures({
 object used everywhere (column helper, table options, etc.). Use it even for a
 no-feature table: `tableFeatures({})`.
 
-## 3. Declare row-model factories (`rowModels`)
+## 3. Register row-model factories in `tableFeatures()`
 
-Each non-core row-model feature needs its factory called and registered. The
-core row model is included by default.
+Each non-core row-model feature needs its factory registered inside `tableFeatures()`.
+The core row model is included by default. Pass the matching `*Fns` registry as
+a slot so it is tree-shakeable too.
 
 ```tsx
 import {
+  tableFeatures,
+  rowPaginationFeature,
+  rowSortingFeature,
+  columnFilteringFeature,
   createPaginatedRowModel,
   createSortedRowModel,
   createFilteredRowModel,
@@ -80,16 +85,20 @@ import {
   filterFns,
 } from '@tanstack/solid-table'
 
-const rowModels = {
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+  columnFilteringFeature,
   paginatedRowModel: createPaginatedRowModel(),
-  sortedRowModel: createSortedRowModel(sortFns),
-  filteredRowModel: createFilteredRowModel(filterFns),
-}
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns,
+  filterFns,
+})
 ```
 
-`sortFns` and `filterFns` are the bundled `*Fns` registries. Pass only the
-registry you need — these are tree-shakeable too. You may also pass a narrowed
-object like `{ alphanumeric: sortFns.alphanumeric }`.
+You may also pass a narrowed fns object like `sortFns: { alphanumeric: sortFns.alphanumeric }`
+instead of the full registry.
 
 ## 4. Define columns
 
@@ -133,7 +142,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels,
     columns,
     get data() {
       return data() // reactive getter
@@ -191,7 +199,6 @@ import { createTableHook } from '@tanstack/solid-table'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
   features: tableFeatures({}),
-  rowModels: {},
 })
 
 const columnHelper = createAppColumnHelper<Person>()
@@ -216,12 +223,11 @@ function App(props: { data: Array<Person> }) {
 
 ```tsx
 // ❌ Reads once at construction — table never updates when data() changes
-createTable({ features, rowModels: {}, columns, data: data() })
+createTable({ features, columns, data: data() })
 
 // ✅ Tracked
 createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data()
@@ -263,7 +269,8 @@ rolling your own state update.
 
 ### Hallucinated names from older versions
 
-v9 is `createTable`, not `createSolidTable` (that was v8). Row models go under
-`rowModels`, not top-level `getCoreRowModel` / `getSortedRowModel` options.
+v9 is `createTable`, not `createSolidTable` (that was v8). Row model factories
+go inside `tableFeatures()`, not as top-level `getCoreRowModel` / `getSortedRowModel`
+options and not in a separate `rowModels` option.
 `createColumnHelper` takes `<typeof features, TData>` (two generics, features
 first).

@@ -68,9 +68,6 @@ function PeopleTable({ data }) {
 
   const table = useTable({
     features,
-    rowModels: {
-      /* … */
-    },
     columns,
     data,
     atoms: { sorting: sortingAtom, pagination: paginationAtom },
@@ -101,7 +98,6 @@ import { selectionAtom } from '../shared/atoms'
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   atoms: { rowSelection: selectionAtom },

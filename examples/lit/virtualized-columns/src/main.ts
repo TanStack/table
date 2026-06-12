@@ -21,6 +21,8 @@ const features = tableFeatures({
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const DEFAULT_ROW_COUNT = 1_000
@@ -97,9 +99,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
         columns: this._columns,
         data: this._data,
       },

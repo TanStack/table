@@ -25,7 +25,12 @@ import type { SortingState, Updater } from '@tanstack/angular-table'
 
 const fetchSize = 50
 
-const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -92,7 +97,6 @@ export class App {
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     data: this.flatData(),
     columns,
     state: {

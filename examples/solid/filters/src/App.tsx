@@ -25,6 +25,12 @@ export const features = tableFeatures({
   globalFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
@@ -89,13 +95,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels: {
-      facetedRowModel: createFacetedRowModel(),
-      facetedMinMaxValues: createFacetedMinMaxValues(),
-      facetedUniqueValues: createFacetedUniqueValues(),
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     get data() {
       return data()
     },

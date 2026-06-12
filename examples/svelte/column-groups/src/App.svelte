@@ -69,7 +69,6 @@
   const table = createTable({
     debugTable: true,
     features,
-    rowModels: {},
     get data() {
       return data
     },

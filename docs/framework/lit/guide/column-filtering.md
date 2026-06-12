@@ -17,7 +17,11 @@ import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import { TableController, tableFeatures, columnFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/lit-table'
 
-const features = tableFeatures({ columnFilteringFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 @customElement('my-table')
 class MyTable extends LitElement {
@@ -29,9 +33,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-      },
       columns,
       data: this.data,
     })
@@ -69,14 +70,13 @@ If you're not sure, you can always start with client-side filtering and paginati
 
 If you have decided that you need to implement server-side filtering instead of using the built-in client-side filtering, here's how you do that.
 
-No `filteredRowModel` is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
+No `filteredRowModel` is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have registered a `filteredRowModel` in your `features`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```ts
 const features = tableFeatures({ columnFilteringFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {}, // no filteredRowModel needed for manual server-side filtering
   data: this.data,
   columns,
   manualFiltering: true,
@@ -87,7 +87,7 @@ const table = this.tableController.table({
 
 ### Client-Side Filtering
 
-If you are using the built-in client-side filtering features, add the `columnFilteringFeature` to your features and the `filteredRowModel` to your row models. Import `createFilteredRowModel` and `filterFns` from TanStack Table:
+If you are using the built-in client-side filtering features, add the `columnFilteringFeature` to your features and the `filteredRowModel` factory as a slot on `tableFeatures`. Import `createFilteredRowModel` and `filterFns` from TanStack Table:
 
 ```ts
 import {
@@ -98,13 +98,14 @@ import {
   filterFns,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ columnFilteringFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
   data: this.data,
   columns,
 })
@@ -134,7 +135,6 @@ For reads in your `render` method, use `table.state.columnFilters` (the state se
 const table = this.tableController.table(
   {
     features,
-    rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
     columns,
     data: this.data,
     //...
@@ -162,7 +162,6 @@ const columnFiltersAtom = createAtom<ColumnFiltersState>([]) // can set initial 
 // inside your element's render method
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data: this.data,
   //...
@@ -182,7 +181,6 @@ private columnFilters: ColumnFiltersState = []
 //...
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data: this.data,
   //...
@@ -202,7 +200,6 @@ If you do not need to control the column filter state in your own state manageme
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data: this.data,
   //...
@@ -238,13 +235,13 @@ By default there are 12 built-in filter functions to choose from:
 - `between` - Exclusive min/max range (blank endpoints are open-ended)
 - `betweenInclusive` - Inclusive min/max range (blank endpoints are open-ended)
 
-You can also define your own custom filter functions, either inline as the `filterFn` column option, or by name in the filter function registry that you pass to `createFilteredRowModel`.
+You can also define your own custom filter functions, either inline as the `filterFn` column option, or by name in the `filterFns` slot on `tableFeatures`.
 
 #### Custom Filter Functions
 
 > **Note:** These filter functions only run during client-side filtering.
 
-Whether you register a custom filter function in the registry passed to `createFilteredRowModel` or pass it directly as a `filterFn` column option, it should have the following signature:
+Whether you register a custom filter function in the `filterFns` slot on `tableFeatures` or pass it directly as a `filterFn` column option, it should have the following signature:
 
 ```ts
 const myCustomFilterFn: FilterFn<typeof features, MyData> = (
@@ -278,7 +275,7 @@ const columns = [
   {
     header: () => 'Birthday',
     accessorKey: 'birthday',
-    filterFn: 'myCustomFilterFn', // reference a custom filter function registered with createFilteredRowModel
+    filterFn: 'myCustomFilterFn', // reference a custom filter function registered in the filterFns slot
   },
   {
     header: () => 'Profile',
@@ -290,33 +287,26 @@ const columns = [
   }
 ]
 //...
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: {
+    ...filterFns,
+    myCustomFilterFn: (row, columnId, filterValue) => {
+      return // true or false based on your custom logic
+    },
+    startsWith: startsWithFilterFn, // defined elsewhere
+  },
+})
+
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      myCustomFilterFn: (row, columnId, filterValue) => {
-        return // true or false based on your custom logic
-      },
-      startsWith: startsWithFilterFn, // defined elsewhere
-    }),
-  },
   columns,
   data: this.data,
 })
 ```
 
-> **TypeScript Note:** For `filterFn: 'myCustomFilterFn'` string references to typecheck, augment the `FilterFns` interface with a `declare module` block:
->
-> ```ts
-> declare module '@tanstack/lit-table' {
->   interface FilterFns {
->     myCustomFilterFn: FilterFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `filterFn` column option. See the [Fuzzy Search example](../examples/filters-fuzzy) for a complete registration with module augmentation.
+> **TypeScript Note:** String references like `filterFn: 'myCustomFilterFn'` are automatically typed when the function is registered in the `filterFns` slot on `tableFeatures`. The registry slot replaces the old `declare module` augmentation approach. Alternatively, skip the registry entirely by passing the function directly to the `filterFn` column option. See the [Fuzzy Search example](../examples/filters-fuzzy) for a complete registration example.
 
 ##### Customize Filter Function Behavior
 
@@ -368,7 +358,6 @@ const columns = [
 //...
 const table = this.tableController.table({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data: this.data,
   enableColumnFilters: false, // disable column filtering for all columns
@@ -386,14 +375,16 @@ By default, filtering is done from parent rows down, so if a parent row is filte
 However, if you want to allow sub-rows to be filtered and searched through, regardless of whether the parent row is filtered out, you can set the `filterFromLeafRows` table option to `true`. Setting this option to `true` will cause filtering to be done from leaf rows up, which means parent rows will be included so long as one of their child or grand-child rows is also included.
 
 ```ts
-const features = tableFeatures({ columnFilteringFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   columns,
   data: this.data,
   filterFromLeafRows: true, // filter and search through sub-rows
@@ -407,14 +398,16 @@ By default, filtering is done for all rows in a tree, no matter if they are root
 Use `maxLeafRowFilterDepth: 0` if you want to preserve a parent row's sub-rows from being filtered out while the parent row is passing the filter.
 
 ```ts
-const features = tableFeatures({ columnFilteringFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   columns,
   data: this.data,
   maxLeafRowFilterDepth: 0, // only filter root level parent rows out

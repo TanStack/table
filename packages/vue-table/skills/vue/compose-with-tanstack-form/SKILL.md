@@ -60,7 +60,10 @@ type Person = {
 }
 type FormRow = Omit<Person, 'subRows'> // <-- avoid TS2589 in form DeepKeys
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 const columnHelper = createColumnHelper<typeof features, FormRow>()
 
 // 2) Form owns the data array. The table reads it.
@@ -99,7 +102,6 @@ const columns = computed(() =>
 
 const table = useTable({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   get columns() {
     return columns.value
   },
@@ -191,7 +193,6 @@ const form = useForm({ defaultValues: { data: makeData(100) } })
 
 const table = useTable({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   get data() {
     return form.state.values.data
@@ -324,7 +325,6 @@ const columns = computed(() =>
 )
 const table = useTable({
   features,
-  rowModels: {},
   get columns() {
     return columns.value
   },

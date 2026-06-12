@@ -13,6 +13,7 @@ import type { Person } from './makeData'
 
 const features = tableFeatures({
   rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -82,9 +83,6 @@ function MyTable({
   const table = useTable(
     {
       features,
-      rowModels: {
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns,
       data,
       debugTable: true,

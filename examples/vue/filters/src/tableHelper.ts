@@ -28,12 +28,11 @@ export const { appFeatures, createAppColumnHelper, useAppTable } =
       globalFilteringFeature,
       columnFacetingFeature,
       rowPaginationFeature,
-    },
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
+      filteredRowModel: createFilteredRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),
+      filterFns,
     },
   })

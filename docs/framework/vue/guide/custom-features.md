@@ -264,7 +264,7 @@ const features = tableFeatures({ densityPlugin })
 
 const table = useTable({
   features,
-  rowModels: {},
+
   columns,
   data,
   //..
@@ -282,7 +282,7 @@ const density = ref<DensityState>('md')
 
 const table = useTable({
   features,
-  rowModels: {},
+
   columns,
   data,
   //...

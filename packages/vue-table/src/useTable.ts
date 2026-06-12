@@ -75,7 +75,6 @@ export type VueTable<
  * const table = useTable(
  *   {
  *     features,
- *     rowModels: {},
  *     columns,
  *     data,
  *   },

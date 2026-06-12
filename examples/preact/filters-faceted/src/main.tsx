@@ -31,6 +31,12 @@ const features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filterFns,
   columnMeta: metaHelper<MyColumnMeta>(),
 })
 
@@ -84,13 +90,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns), // client-side filtering
-        paginatedRowModel: createPaginatedRowModel(),
-        facetedRowModel: createFacetedRowModel(), // client-side faceting
-        facetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
-        facetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
-      },
       columns,
       data,
       debugTable: true,

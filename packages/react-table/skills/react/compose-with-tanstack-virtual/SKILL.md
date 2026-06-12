@@ -65,7 +65,12 @@ import { useVirtualizer } from '@tanstack/react-virtual'
 import type { ReactTable, Row } from '@tanstack/react-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 
-const features = { columnSizingFeature, rowSortingFeature }
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
@@ -84,7 +89,6 @@ function App() {
 
   const table = useTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
   })

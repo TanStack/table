@@ -99,7 +99,6 @@ export const sortingStore = new Store<SortingState>([])
 export class App {
   readonly table = injectTable(() => ({
     features,
-    rowModels: { /* … */ },
     columns,
     data: this.data(),
     atoms: {
@@ -188,9 +187,6 @@ export class PageRoute {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      /* … */
-    },
     columns,
     data: this.data(),
     atoms: {
@@ -236,10 +232,21 @@ import { Store } from '@tanstack/store'
 
 export const sharedFilter = new Store<string | null>(null)
 
+const featuresA = tableFeatures({
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
+
+const featuresB = tableFeatures({
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
+
 // Table A
 readonly tableA = injectTable(() => ({
-  features: tableFeatures({ globalFilteringFeature }),
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: featuresA,
   columns: columnsA,
   data: this.dataA(),
   atoms: { globalFilter: sharedFilter },
@@ -247,8 +254,7 @@ readonly tableA = injectTable(() => ({
 
 // Table B (separate component, same module)
 readonly tableB = injectTable(() => ({
-  features: tableFeatures({ globalFilteringFeature }),
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: featuresB,
   columns: columnsB,
   data: this.dataB(),
   atoms: { globalFilter: sharedFilter },

@@ -11,7 +11,7 @@ type StringOrTemplateHeader<TFeatures, TData, TValue> =
 | ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [types/ColumnDef.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L41)
+Defined in: [types/ColumnDef.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L64)
 
 ## Type Parameters
 

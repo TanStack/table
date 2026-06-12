@@ -107,7 +107,6 @@ const toggleRowSelection = () => {
 const table = useTable({
   key: 'row-selection', // needed for devtools
   features,
-  rowModels: {},
   data,
   columns,
   debugTable: true,

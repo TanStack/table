@@ -27,7 +27,6 @@ function makeTable(options: any = {}) {
       ...features,
       coreReactivityFeature: storeReactivityBindings(),
     },
-    rowModels: {},
     columns: [],
     data: [],
     ...options,
@@ -38,8 +37,8 @@ describe('three-layer atom architecture', () => {
   describe('baseAtoms (writable internal layer)', () => {
     it('stores initial feature state for each slice', () => {
       const table = makeTable()
-      expect(table.baseAtoms.sorting!.get()).toEqual([])
-      expect(table.baseAtoms.pagination!.get()).toEqual({
+      expect(table.baseAtoms.sorting.get()).toEqual([])
+      expect(table.baseAtoms.pagination.get()).toEqual({
         pageIndex: 0,
         pageSize: 10,
       })
@@ -48,7 +47,7 @@ describe('three-layer atom architecture', () => {
     it('writes from makeStateUpdater land on baseAtoms', () => {
       const table = makeTable()
       table.setSorting([{ id: 'name', desc: false }])
-      expect(table.baseAtoms.sorting!.get()).toEqual([
+      expect(table.baseAtoms.sorting.get()).toEqual([
         { id: 'name', desc: false },
       ])
     })
@@ -57,15 +56,15 @@ describe('three-layer atom architecture', () => {
   describe('atoms (readonly derived layer)', () => {
     it('reflects baseAtoms when no external state/atom is provided', () => {
       const table = makeTable()
-      table.baseAtoms.sorting!.set([{ id: 'age', desc: true }])
-      expect(table.atoms.sorting!.get()).toEqual([{ id: 'age', desc: true }])
+      table.baseAtoms.sorting.set([{ id: 'age', desc: true }])
+      expect(table.atoms.sorting.get()).toEqual([{ id: 'age', desc: true }])
     })
 
     it('options.state[key] syncs into baseAtoms', () => {
       const external: SortingState = [{ id: 'external', desc: false }]
       const table = makeTable({ state: { sorting: external } })
-      expect(table.baseAtoms.sorting!.get()).toEqual(external)
-      expect(table.atoms.sorting!.get()).toEqual(external)
+      expect(table.baseAtoms.sorting.get()).toEqual(external)
+      expect(table.atoms.sorting.get()).toEqual(external)
       expect(table.store.state.sorting).toEqual(external)
     })
 
@@ -77,7 +76,7 @@ describe('three-layer atom architecture', () => {
         state: { sorting: [{ id: 'fromState', desc: false }] },
         atoms: { sorting: externalAtom },
       })
-      expect(table.atoms.sorting!.get()).toEqual([
+      expect(table.atoms.sorting.get()).toEqual([
         { id: 'fromAtom', desc: true },
       ])
       expect(table.store.state.sorting).toEqual([
@@ -96,7 +95,7 @@ describe('three-layer atom architecture', () => {
         pageSize: 5,
       })
       externalAtom.set({ pageIndex: 2, pageSize: 5 })
-      expect(table.atoms.pagination!.get()).toEqual({
+      expect(table.atoms.pagination.get()).toEqual({
         pageIndex: 2,
         pageSize: 5,
       })
@@ -105,7 +104,7 @@ describe('three-layer atom architecture', () => {
         pageSize: 5,
       })
       // baseAtoms are untouched — external wins
-      expect(table.baseAtoms.pagination!.get()).toEqual({
+      expect(table.baseAtoms.pagination.get()).toEqual({
         pageIndex: 0,
         pageSize: 10,
       })
@@ -128,7 +127,7 @@ describe('three-layer atom architecture', () => {
         pageSize: 5,
       })
       // baseAtom stays at its initial default — external is the canonical source
-      expect(table.baseAtoms.pagination!.get()).toEqual({
+      expect(table.baseAtoms.pagination.get()).toEqual({
         pageIndex: 0,
         pageSize: 10,
       })
@@ -148,7 +147,7 @@ describe('three-layer atom architecture', () => {
       const table = makeTable()
       const observer = vi.fn()
       const sub = table.store.subscribe(observer)
-      table.baseAtoms.sorting!.set([{ id: 'x', desc: false }])
+      table.baseAtoms.sorting.set([{ id: 'x', desc: false }])
       expect(observer).toHaveBeenCalled()
       expect(table.store.state.sorting).toEqual([{ id: 'x', desc: false }])
       sub.unsubscribe()
@@ -160,8 +159,8 @@ describe('three-layer atom architecture', () => {
       const table = makeTable({
         initialState: { pagination: { pageIndex: 0, pageSize: 25 } },
       })
-      table.baseAtoms.pagination!.set({ pageIndex: 3, pageSize: 25 })
-      table.baseAtoms.sorting!.set([{ id: 'age', desc: true }])
+      table.baseAtoms.pagination.set({ pageIndex: 3, pageSize: 25 })
+      table.baseAtoms.sorting.set([{ id: 'age', desc: true }])
 
       const observer = vi.fn()
       const sub = table.store.subscribe(observer)
@@ -169,11 +168,11 @@ describe('three-layer atom architecture', () => {
       table.reset()
 
       // Values reset
-      expect(table.baseAtoms.pagination!.get()).toEqual({
+      expect(table.baseAtoms.pagination.get()).toEqual({
         pageIndex: 0,
         pageSize: 25,
       })
-      expect(table.baseAtoms.sorting!.get()).toEqual([])
+      expect(table.baseAtoms.sorting.get()).toEqual([])
       // Subscriber fired exactly once (batched) despite resetting multiple slices
       expect(observer).toHaveBeenCalledTimes(1)
 

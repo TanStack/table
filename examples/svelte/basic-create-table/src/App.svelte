@@ -54,8 +54,6 @@
   const table = createTable({
     debugTable: true,
     features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-    rowModels: {
-    }, // `Core` row model is now included by default, but you can still override it here
     columns,
     get data() {
       return data

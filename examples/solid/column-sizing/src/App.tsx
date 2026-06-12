@@ -52,20 +52,16 @@ function App() {
   const refreshData = () => setData(makeData(20))
   const stressTest = () => setData(makeData(1_000))
 
-  const table = createTable(
-    {
-      features,
-      rowModels: {},
-      columns,
-      get data() {
-        return data()
-      },
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   return (
     <div class="demo-root">

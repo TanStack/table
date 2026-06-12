@@ -20,6 +20,9 @@ const features = tableFeatures({
   rowSelectionFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
@@ -88,10 +91,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          filteredRowModel: createFilteredRowModel(filterFns),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
         data: this._data,
         columns,
         enableRowSelection: true,

@@ -27,7 +27,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this.data,
     })
@@ -63,7 +62,6 @@ const columnVisibilityAtom = createAtom<ColumnVisibilityState>({
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   atoms: {
     columnVisibility: columnVisibilityAtom,
@@ -87,7 +85,6 @@ private columnVisibility: ColumnVisibilityState = {
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   state: {
     columnVisibility: this.columnVisibility,
@@ -108,7 +105,6 @@ const features = tableFeatures({ columnVisibilityFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnVisibility: {

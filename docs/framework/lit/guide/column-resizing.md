@@ -28,7 +28,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this.data,
     })
@@ -72,7 +71,6 @@ const columns = [
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
 })
@@ -192,7 +190,6 @@ const columnResizingAtom = createAtom<columnResizingState>({
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   atoms: {
@@ -216,7 +213,6 @@ private columnResizing: columnResizingState = {
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   state: {

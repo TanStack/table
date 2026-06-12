@@ -3,7 +3,7 @@ name: vue/client-to-server
 description: >
   Convert a client-side `@tanstack/vue-table` to server-side. Set `manualPagination` /
   `manualSorting` / `manualFiltering` / `manualGrouping` / `manualExpanding` for whichever
-  slices the server owns; drop the matching `rowModels` factories (don't ship
+  slices the server owns; omit the matching row model factory from `tableFeatures` (don't ship
   `paginatedRowModel` when the server paginates); supply `rowCount` so `table.getPageCount()`
   works; own the relevant state slices via either external atoms (`@tanstack/vue-store`
   `createAtom` + `options.atoms`) or `state` + `on[State]Change` with getter wrappers. Key any
@@ -87,10 +87,9 @@ watchEffect(() => {
   if (next != null) rowCount.value = next // keep last known total for pager UI
 })
 
-// 3) Manual pagination + `rowCount`. NO paginatedRowModel in `rowModels` — server paginates.
+// 3) Manual pagination + `rowCount`. No paginatedRowModel in features — server paginates.
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: tableData,
   rowCount,
@@ -104,18 +103,19 @@ Source: `examples/vue/with-tanstack-query/src/App.tsx`, `examples/vue/basic-exte
 
 ## Core Patterns
 
-### 1. The `manual*` flag + `rowModels` drop pair
+### 1. The `manual*` flag + factory omission pair
 
-Pick which slices live server-side and flip the matching `manual*` flag. **Also drop the
-matching `rowModels` factory** — otherwise the table re-processes server-processed rows.
+Pick which slices live server-side and flip the matching `manual*` flag. **Also omit the
+matching row model factory from `tableFeatures`** — otherwise the table re-processes
+server-processed rows.
 
-| Server owns | Set                      | Drop from `rowModels` |
-| ----------- | ------------------------ | --------------------- |
-| Pagination  | `manualPagination: true` | `paginatedRowModel`   |
-| Sorting     | `manualSorting: true`    | `sortedRowModel`      |
-| Filtering   | `manualFiltering: true`  | `filteredRowModel`    |
-| Grouping    | `manualGrouping: true`   | `groupedRowModel`     |
-| Expanding   | `manualExpanding: true`  | `expandedRowModel`    |
+| Server owns | Set                      | Omit from `tableFeatures` |
+| ----------- | ------------------------ | ------------------------- |
+| Pagination  | `manualPagination: true` | `paginatedRowModel`       |
+| Sorting     | `manualSorting: true`    | `sortedRowModel`          |
+| Filtering   | `manualFiltering: true`  | `filteredRowModel`        |
+| Grouping    | `manualGrouping: true`   | `groupedRowModel`         |
+| Expanding   | `manualExpanding: true`  | `expandedRowModel`        |
 
 Column visibility / ordering / pinning / row selection are client-side state and stay as-is.
 
@@ -127,7 +127,6 @@ Without `rowCount`, `getPageCount()` falls back to `Math.ceil(data.length / page
 ```ts
 useTable({
   features,
-  rowModels: {},
   columns,
   data: tableData,
   rowCount: dataQuery.data.value?.rowCount, // or a stable ref/computed
@@ -151,7 +150,6 @@ const paginationAtom = createAtom<PaginationState>({
 })
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   rowCount,
@@ -169,7 +167,6 @@ const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   rowCount,
@@ -230,7 +227,6 @@ the table will paginate that 10-row slice again and show "Page 1 of 1".
 // ❌
 useTable({
   features,
-  rowModels: {},
   columns,
   data: serverPage.rows,
   rowCount,
@@ -243,13 +239,10 @@ useTable({
 
 ```ts
 // ❌ Factory ships for nothing AND the table re-paginates server-sliced data.
-rowModels: {
-  paginatedRowModel: createPaginatedRowModel()
-}
+const features = tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })
 
-// ✅
-rowModels: {
-}
+// ✅ Omit the factory when the server paginates; keep the feature for its API.
+const features = tableFeatures({ rowPaginationFeature })
 ```
 
 Same applies to `sortedRowModel`, `filteredRowModel`, `groupedRowModel`, `expandedRowModel`
@@ -267,7 +260,6 @@ when the server owns the slice.
 const pagination = ref({ pageIndex: 0, pageSize: 10 })
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   rowCount,
@@ -350,8 +342,8 @@ table.setColumnFilters(/* ... */)
 ### "API missing" because the feature isn't in `features` (CRITICAL — v9-specific)
 
 Server-side pagination still needs `rowPaginationFeature` in `tableFeatures({...})` — that's
-what surfaces `table.setPageIndex`, `table.nextPage`, `table.getPageCount`. The factory in
-`rowModels` is what you drop; the feature stays.
+what surfaces `table.setPageIndex`, `table.nextPage`, `table.getPageCount`. The row model
+factory (`paginatedRowModel`) is what you omit; the feature stays.
 
 ```ts
 const features = tableFeatures({ rowPaginationFeature }) // ✅ even with manualPagination

@@ -4,7 +4,8 @@ description: >
   Mechanical breaking-change migration from `@tanstack/react-table` v8 to v9.
   Every v8-shaped option, type, or method an agent will reproduce from muscle
   memory has a v9 equivalent enumerated below: `useReactTable` → `useTable`,
-  root `get*RowModel` options → `rowModels` with factory + *Fns parameter,
+  root `get*RowModel` options → row model factories on `tableFeatures({...})`
+  alongside their *Fns registries,
   `createColumnHelper<TData>` → `createColumnHelper<typeof features, TData>`,
   `table.getState()` → `table.state` / `table.store.state` / `table.atoms.X.get()`,
   `sortingFn` → `sortFn`, `enablePinning` → split, `_`-prefixed APIs unprefixed,
@@ -28,7 +29,7 @@ sources:
   - TanStack/table:examples/react/basic-use-table/src/main.tsx
 ---
 
-This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `state-management` explains _why_ v9 split out `features` / `rowModels`, and `table-state` shows the new reactivity model.
+This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `state-management` explains the v9 `features`-first design (where row model factories and *Fns registries live on `tableFeatures()`), and `table-state` shows the new reactivity model.
 
 ## Two migration paths
 
@@ -102,11 +103,14 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // factory takes *Fns
   columns,
   data,
 })
@@ -261,32 +265,36 @@ Correct:
 ```tsx
 import { useTable, tableFeatures } from '@tanstack/react-table'
 const features = tableFeatures({})
-const table = useTable({ features, rowModels: {}, data, columns })
+const table = useTable({ features, data, columns })
 ```
 
-`useReactTable` is the v8 entry point and won't have `table.Subscribe` / `table.atoms`. `getCoreRowModel()` as an option was removed — core is automatic; non-core models move into `rowModels` as factories that take their \*Fns parameter.
+`useReactTable` is the v8 entry point and won't have `table.Subscribe` / `table.atoms`. `getCoreRowModel()` as an option was removed — core is automatic; non-core models move into `tableFeatures()` as factory slots alongside their \*Fns registries.
 Source: PR #6202; `packages/react-table/src/useTable.ts`.
 
-### CRITICAL `createSortedRowModel()` without `sortFns`
+### CRITICAL `createSortedRowModel` without registering `sortFns`
 
 Wrong:
 
 ```tsx
-rowModels: {
-  sortedRowModel: createSortedRowModel()
-}
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  // missing sortFns — built-in sort functions not available
+})
 ```
 
 Correct:
 
 ```tsx
 import { createSortedRowModel, sortFns } from '@tanstack/react-table'
-rowModels: {
-  sortedRowModel: createSortedRowModel(sortFns)
-}
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns, // registers built-in sort functions for tree-shaking
+})
 ```
 
-Each row-model factory in v9 takes its functions registry as a parameter so they can be tree-shaken: `createFilteredRowModel(filterFns)`, `createGroupedRowModel(aggregationFns)`, `createSortedRowModel(sortFns)`.
+The `sortFns` slot on `tableFeatures()` is what makes the built-in sort functions tree-shakeable: `filterFns` for `createFilteredRowModel()`, `aggregationFns` for `createGroupedRowModel()`.
 Source: `docs/framework/react/guide/migrating.md`.
 
 ### CRITICAL `createColumnHelper<Person>()` (v8 arity)
@@ -337,7 +345,7 @@ Source: `docs/framework/react/guide/migrating.md`; `examples/react/basic-subscri
 Wrong:
 
 ```tsx
-useTable({ features, rowModels: {}, columns, data, enablePinning: true })
+useTable({ features, columns, data, enablePinning: true })
 ```
 
 Correct:
@@ -345,7 +353,6 @@ Correct:
 ```tsx
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   enableColumnPinning: true,
@@ -468,10 +475,13 @@ import {
   createSortedRowModel,
   sortFns,
 } from '@tanstack/react-table'
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })

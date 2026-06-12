@@ -58,11 +58,11 @@ const features = tableFeatures({
 })
 ```
 
-Same idea for `rowModels` — only register the row-model factory for features that need one and that you have registered.
+The same idea applies to row-model factories: only register factories for features that need one and that you have registered, by including them in the same `tableFeatures({...})` call.
 
 Source: `docs/guide/features.md`; `docs/framework/preact/preact-table.md`.
 
-## 2. Stable References for `features`, `columns`, `data`, `rowModels`
+## 2. Stable References for `features`, `columns`, and `data`
 
 Identity drives every internal memo. Declare these at module scope when possible; otherwise wrap with `useMemo`.
 
@@ -76,7 +76,7 @@ const EMPTY: Person[] = []
 
 function MyTable({ rows }: { rows: Person[] | undefined }) {
   const data = rows ?? EMPTY
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 
 // Okay — useMemo for dynamic columns.
@@ -182,9 +182,6 @@ Use `initialState` for starting values. Setting state in an effect after mount t
 ```tsx
 const table = useTable({
   features,
-  rowModels: {
-    /* … */
-  },
   columns,
   data,
   initialState: {
@@ -198,7 +195,7 @@ Source: `docs/framework/preact/guide/table-state.md`.
 
 ## 7. Reach for `createTableHook` for Multi-Table Apps
 
-When several screens share the same `features`, `rowModels`, and conventions, `createTableHook` centralizes the configuration and lets you ship pre-bound cell/header components. Tables collapse to columns + data.
+When several screens share the same `features` (including row model factories) and conventions, `createTableHook` centralizes the configuration and lets you ship pre-bound cell/header components. Tables collapse to columns + data.
 
 Source: `docs/framework/preact/guide/create-table-hook.md`.
 
@@ -211,7 +208,7 @@ Wrong:
 ```tsx
 function MyTable() {
   const features = tableFeatures({ rowSortingFeature }) // new object every render
-  useTable({ features, rowModels: {}, columns, data })
+  useTable({ features, columns, data })
 }
 ```
 
@@ -221,7 +218,7 @@ Correct:
 const features = tableFeatures({ rowSortingFeature }) // module scope
 
 function MyTable() {
-  useTable({ features, rowModels: {}, columns, data })
+  useTable({ features, columns, data })
 }
 ```
 
@@ -239,13 +236,12 @@ const sorted = useMemo(() => [...data].sort(/* … */), [data, sorting])
 Correct:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 v9 ships built-ins for sorting, filtering, pagination, grouping, expanding, faceting, row selection, column visibility/order/pinning/sizing, and row pinning. Hand-rolling these is the #1 AI tell.

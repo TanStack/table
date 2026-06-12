@@ -85,12 +85,11 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: {}, // server owns slicing
       columns,
       data: dataQuery.data?.rows ?? defaultData,
       rowCount: dataQuery.data?.rowCount,
       atoms: { pagination: paginationAtom },
-      manualPagination: true,
+      manualPagination: true, // server owns slicing; no row-model factory needed
     },
     (state) => state,
   )
@@ -171,7 +170,6 @@ const dataQuery = useQuery({
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: dataQuery.data?.rows ?? defaultData,
   rowCount: dataQuery.data?.rowCount,
@@ -254,20 +252,24 @@ useTable({ /* … */, data: dataQuery.data?.rows ?? defaultData })
 
 A new empty array each render busts row-model memos.
 
-### HIGH Keeping the client-side `rowModels` when manual
+### HIGH Keeping a client-side row-model factory when the server owns that stage
 
 Wrong:
 
 ```tsx
-useTable({
-  features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() }, // wasted work
-  /* … */,
-  manualPagination: true,
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(), // wasted work when manual
 })
+useTable({ features, /* … */, manualPagination: true })
 ```
 
-Correct: drop the row-model factory whose stage the server owns. With `manualPagination: true`, the server returns the page slice already.
+Correct: omit the row-model factory for stages the server owns. With `manualPagination: true`, the server returns the page slice already.
+
+```tsx
+const features = tableFeatures({ rowPaginationFeature }) // no paginatedRowModel
+useTable({ features, /* … */, manualPagination: true })
+```
 
 ### MEDIUM Creating a new `paginationAtom` per render
 

@@ -21,7 +21,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))
@@ -55,7 +54,6 @@ const features = tableFeatures({ columnOrderingFeature })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnOrder: ['columnId1', 'columnId2', 'columnId3'],
@@ -88,7 +86,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     //...
     atoms: {
       columnOrder: this.columnOrderAtom,
@@ -109,7 +106,6 @@ readonly columnOrder = signal<ColumnOrderState>(['columnId1', 'columnId2', 'colu
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   state: {
     columnOrder: this.columnOrder(),
@@ -138,7 +134,6 @@ const features = tableFeatures({ columnOrderingFeature })
 export class App {
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
     initialState: {

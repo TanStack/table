@@ -333,10 +333,7 @@ export type CreateTableHookResult<
     TValue extends CellData,
   >() => CellContext<TFeatures, TData, TValue>
   injectAppTable: <TData extends RowData>(
-    tableOptions: () => Omit<
-      TableOptions<TFeatures, TData>,
-      'features' | 'rowModels'
-    >,
+    tableOptions: () => Omit<TableOptions<TFeatures, TData>, 'features'>,
   ) => AppAngularTable<
     TFeatures,
     TData,
@@ -358,7 +355,6 @@ export type CreateTableHookResult<
  * ```ts
  * const { injectAppTable, createAppColumnHelper } = createTableHook({
  *   features,
- *   rowModels: {},
  *   tableComponents: {},
  *   cellComponents: {},
  *   headerComponents: {},
@@ -424,10 +420,7 @@ export function createTableHook<
     TData extends RowData,
     TSelected = TableState<TFeatures>,
   >(
-    tableOptions: () => Omit<
-      TableOptions<TFeatures, TData>,
-      'features' | 'rowModels'
-    >,
+    tableOptions: () => Omit<TableOptions<TFeatures, TData>, 'features'>,
   ): AppAngularTable<
     TFeatures,
     TData,

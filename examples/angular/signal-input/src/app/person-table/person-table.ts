@@ -13,6 +13,7 @@ import type { Person } from '../makeData'
 const features = tableFeatures({
   rowPaginationFeature,
   columnVisibilityFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
 @Component({
@@ -43,9 +44,6 @@ export class PersonTable {
   readonly table = injectTable(() => {
     return {
       features,
-      rowModels: {
-        paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
-      },
       data: this.data(),
       columns: this.columns,
       state: {

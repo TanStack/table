@@ -70,7 +70,6 @@ export class PersonTable extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {}, // the core row model is included by default
         columns,
         data: this.data,
       },
@@ -123,7 +122,7 @@ export class PersonTable extends LitElement {
 A few things to note:
 
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
-- `rowModels: {}` is fine for a basic table because the core row model is always included. Feature row models (sorting, filtering, pagination) are registered here when you need them.
+- The core row model is always included automatically. Feature row models (sorting, filtering, pagination) are registered as slots directly on the `tableFeatures({...})` call when you need them.
 - `FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values or Lit templates. It is also attached to the instance as `table.FlexRender` if you prefer not to import it.
 - The second argument to `tableController.table(...)` is a state selector. It controls what `table.state` contains; an empty selector is fine until you use feature state.
 
@@ -131,7 +130,7 @@ See the full [Basic TableController example](./examples/basic-table-controller) 
 
 ## Add a Feature: Sorting
 
-Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` in `tableFeatures`, register a sorted row model under `rowModels`, and wire the header click handler.
+Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` and the `sortedRowModel` factory in `tableFeatures`, then wire the header click handler.
 
 ```ts
 import {
@@ -145,6 +144,8 @@ import {
 
 const features = tableFeatures({
   rowSortingFeature, // enables sorting APIs and state
+  sortedRowModel: createSortedRowModel(), // client-side sorting
+  sortFns,
 })
 
 @customElement('person-table')
@@ -155,9 +156,6 @@ export class PersonTable extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
-        },
         columns,
         data: this.data,
       },
@@ -204,7 +202,7 @@ export class PersonTable extends LitElement {
 }
 ```
 
-Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature, register its row model if it has one, and use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting.md) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
+Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature (and its row model factory as a slot on `tableFeatures` if it has one), then use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting.md) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
 
 ## Where to Go Next
 
@@ -215,12 +213,13 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 **Composable tables.** When multiple tables in your app share features, row models, and component conventions, define them once with `createTableHook`:
 
 ```ts
-const features = tableFeatures({ rowSortingFeature })
-
-const { useAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+
+const { useAppTable, createAppColumnHelper } = createTableHook({ features })
 ```
 
 Then call `useAppTable(this, { columns, data })` from your components instead of managing a `TableController` directly. See the [Composable Tables Guide](./guide/composable-tables.md) for the full pattern, including pre-bound cell and header components.

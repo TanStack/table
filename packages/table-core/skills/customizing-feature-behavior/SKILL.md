@@ -3,8 +3,7 @@ name: customizing-feature-behavior
 description: >
   Override per-column `sortFn`, `filterFn`, `aggregationFn` and table-level
   `globalFilterFn` in TanStack Table v9. Covers built-in `filterFns` / `sortFns` /
-  `aggregationFns` registries (passed to `createFilteredRowModel(filterFns)` /
-  `createSortedRowModel(sortFns)` / `createGroupedRowModel(aggregationFns)`),
+  `aggregationFns` registries (registered as slots on `tableFeatures({...})`),
   authoring custom functions with the `FilterFn` / `SortFn` / `AggregationFn`
   signatures, chaining filter→sort via the `addMeta` callback +
   `row.columnFiltersMeta`, `resolveFilterValue`, `autoRemove`, `invertSorting`,
@@ -31,7 +30,7 @@ This skill builds on `tanstack-table/state-management`. Read it first for how fe
 
 v9 customization happens in three places:
 
-1. **Built-in function registries** — `filterFns`, `sortFns`, `aggregationFns` — passed as arguments to row-model factories so unused fns tree-shake away.
+1. **Built-in function registries** — `filterFns`, `sortFns`, `aggregationFns` — registered as named slots on `tableFeatures({...})` so unused fns tree-shake away.
 2. **Per-column overrides** — `columnDef.filterFn`, `columnDef.sortFn`, `columnDef.aggregationFn` (string name OR inline function).
 3. **Table-level overrides** — `tableOptions.globalFilterFn`.
 
@@ -50,9 +49,10 @@ import {
   filterFns,
   sortFns,
   aggregationFns,
+  metaHelper,
   createColumnHelper,
 } from '@tanstack/table-core'
-import type { FilterFn, SortFn, AggregationFn } from '@tanstack/table-core'
+import type { FilterFn, SortFn, AggregationFn, TableFeatures } from '@tanstack/table-core'
 import {
   rankItem,
   compareItems,
@@ -67,25 +67,15 @@ type Person = {
   status: 'single' | 'complicated' | 'relationship'
 }
 
-const features = tableFeatures({
-  rowSortingFeature,
-  columnFilteringFeature,
-  globalFilteringFeature,
-  columnGroupingFeature,
-  rowExpandingFeature,
-})
-
-// Module augmentation registers custom fn names so columnDef.filterFn typechecks.
-declare module '@tanstack/table-core' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, Person>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
+// 1. Describe meta shape for the fuzzy filter.
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
 }
 
-const fuzzyFilter: FilterFn<typeof features, Person> = (
+// 2. Extend TableFeatures so FilterFn / SortFn can reference filterMeta types.
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilter: FilterFn<FuzzyFeatures, Person> = (
   row,
   columnId,
   value,
@@ -96,11 +86,28 @@ const fuzzyFilter: FilterFn<typeof features, Person> = (
   return itemRank.passed
 }
 
+// 3. Register everything on features — fn registries are named slots.
+const features = tableFeatures({
+  rowSortingFeature,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  columnGroupingFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter }, // keep built-ins + add custom
+  sortFns,
+  aggregationFns,
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
-    filterFn: 'fuzzy', // ← refers to registered name
+    filterFn: 'fuzzy', // ← string ref typechecks because 'fuzzy' is in features.filterFns
     sortFn: 'alphanumeric',
   }),
   columnHelper.accessor('revenue', {
@@ -111,15 +118,6 @@ const columns = columnHelper.columns([
 
 const table = constructTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns, // keep built-ins
-      fuzzy: fuzzyFilter, // add custom
-    }),
-    sortedRowModel: createSortedRowModel(sortFns),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   columns,
   data,
   globalFilterFn: 'fuzzy',
@@ -198,12 +196,16 @@ const weightedMean: AggregationFn<typeof features, Person> = (
   return totalWeight === 0 ? 0 : weightedSum / totalWeight
 }
 
+const customFeatures = tableFeatures({
+  columnGroupingFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns: { ...aggregationFns, weightedMean },
+})
+
 const table = constructTable({
-  features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel({ ...aggregationFns, weightedMean }),
-    expandedRowModel: createExpandedRowModel(),
-  },
+  features: customFeatures,
   columns: columnHelper.columns([
     columnHelper.accessor('revenue', {
       aggregationFn: 'weightedMean',
@@ -221,13 +223,15 @@ const table = constructTable({
 Wrong:
 
 ```ts
-// "fuzzy" string never registered
+// "fuzzy" string never registered in features.filterFns
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns, // ❌ built-ins only — no fuzzy
+})
 const table = useTable({
   features,
   columns: [columnHelper.accessor('fullName', { filterFn: 'fuzzy' })],
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns), // ❌ no fuzzy
-  },
   data,
 })
 ```
@@ -235,13 +239,7 @@ const table = useTable({
 Correct:
 
 ```ts
-declare module '@tanstack/react-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, Person>
-  }
-}
-
-const fuzzyFilter: FilterFn<typeof features, Person> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, Person> = (
   row,
   columnId,
   value,
@@ -252,20 +250,21 @@ const fuzzyFilter: FilterFn<typeof features, Person> = (
   return itemRank.passed
 }
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter }, // ✅ registered
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
 const table = useTable({
   features,
   columns: [columnHelper.accessor('fullName', { filterFn: 'fuzzy' })],
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      fuzzy: fuzzyFilter,
-    }),
-  },
   data,
 })
 ```
 
-String values are looked up in `table._rowModelFns.filterFns`. Unregistered names log `Could not find a valid 'column.filterFn' …` in dev and silently no-op in prod.
+String values are looked up in `features.filterFns`. Unregistered names log `Could not find a valid 'column.filterFn' …` in dev and silently no-op in prod.
 
 Source: examples/react/filters-fuzzy/src/main.tsx; packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts
 
@@ -399,8 +398,11 @@ Correct:
 
 ```ts
 const table = useTable({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({
+    rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  }),
   columns,
   data,
 })

@@ -51,7 +51,6 @@ export type SvelteTable<
  *   const table = createTable(
  *     {
  *       features,
- *       rowModels: {},
  *       columns,
  *       data,
  *     },

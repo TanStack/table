@@ -19,7 +19,12 @@ import type { Virtualizer } from '@tanstack/solid-virtual'
 
 const fetchSize = 50
 
-const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -107,7 +112,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     get data() {
       return flatData()
     },

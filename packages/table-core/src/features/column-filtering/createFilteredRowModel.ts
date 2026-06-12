@@ -13,8 +13,6 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
-  FilterFn,
-  FilterFns,
   ResolvedColumnFilter,
   Row_ColumnFiltering,
 } from './columnFilteringFeature.types'
@@ -23,16 +21,16 @@ import type {
  * Creates a memoized filtered row model factory.
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ *
+ * Register filter functions with the `filterFns` slot on the `features` option:
+ * `tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`.
  */
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(
-  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, RowData>>,
-): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
     const table = _table as unknown as Table_Internal<TFeatures, TData>
-    if (!table._rowModelFns.filterFns) table._rowModelFns.filterFns = filterFns
     return tableMemo({
       feature: 'columnFilteringFeature',
       table,

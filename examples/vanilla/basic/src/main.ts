@@ -125,7 +125,6 @@ const renderTable = () => {
 const table = constructTable({
   debugTable: true,
   features,
-  rowModels: {},
   columns,
   data,
   debugAll: true,

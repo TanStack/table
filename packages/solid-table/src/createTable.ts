@@ -59,7 +59,6 @@ export type SolidTable<
  * const table = createTable(
  *   {
  *     features,
- *     rowModels: {},
  *     columns,
  *     data,
  *   },

@@ -8,12 +8,11 @@ title: AggregationFnOption
 ```ts
 type AggregationFnOption<TFeatures, TData> = 
   | "auto"
-  | keyof AggregationFns
-  | BuiltInAggregationFn
+  | ExtractAggregationFnKeys<TFeatures>
 | AggregationFn<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L44)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L60)
 
 ## Type Parameters
 

@@ -14,16 +14,16 @@ Want to skip to the implementation? Check out these Angular examples:
 import { signal } from '@angular/core'
 import { injectTable, tableFeatures, rowExpandingFeature, createExpandedRowModel } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 export class App {
   readonly data = signal(defaultData)
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-    },
     columns,
     data: this.data(),
   }))
@@ -43,7 +43,7 @@ There are multiple use cases for expanding features in TanStack Table that will 
 
 ### Enable Client-Side Expanding
 
-To use the client-side expanding features, add the `rowExpandingFeature` to your features and the `expandedRowModel` to your row models:
+To use the client-side expanding features, add the `rowExpandingFeature` and the `expandedRowModel` factory to your features:
 
 ```ts
 import {
@@ -53,13 +53,13 @@ import {
   createExpandedRowModel,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   // other options...
 }))
 ```
@@ -104,9 +104,6 @@ Then you can use the getSubRows function to return the children array in each ro
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   getSubRows: (row) => row.children, // return the children array as sub-rows
   // other options...
 }))
@@ -153,7 +150,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: { expandedRowModel: createExpandedRowModel() },
     // other options...
     atoms: {
       expanded: this.expandedAtom, // expanding APIs now update expandedAtom
@@ -171,7 +167,6 @@ readonly expanded = signal<ExpandedState>({})
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   state: {
     expanded: this.expanded(),
@@ -255,15 +250,17 @@ Use `table.setExpanded` to update the expanded state directly. `table.resetExpan
 By default, the filtering process starts from the parent rows and moves downwards. This means if a parent row is excluded by the filter, all its child rows will also be excluded. However, you can change this behavior by using the `filterFromLeafRows` option. When this option is enabled, the filtering process starts from the leaf (child) rows and moves upwards. This ensures that a parent row will be included in the filtered results as long as at least one of its child or grandchild rows meets the filter criteria. Additionally, you can control how deep into the child hierarchy the filter process goes by using the `maxLeafRowFilterDepth` option. This option allows you to specify the maximum depth of child rows that the filter should consider.
 
 ```ts
-const features = tableFeatures({ columnFilteringFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   getSubRows: (row) => row.subRows,
   filterFromLeafRows: true, // search through the expanded rows
   maxLeafRowFilterDepth: 1, // limit the depth of the expanded rows that are searched
@@ -278,7 +275,6 @@ By default, expanded rows are paginated along with the rest of the table (which 
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   paginateExpandedRows: false,
 }))
@@ -299,16 +295,18 @@ If you are also using the grouping feature, the `expanded` state is automaticall
 A common reason to set `autoResetExpanded: false` is editing data while viewing the table (for example, inline cell editing). Every edit updates `data`, which recomputes the row models and would otherwise collapse the user's expanded rows. If you also use the pagination feature, pair it with `autoResetPageIndex: false` so the current page is kept as well.
 
 ```ts
-const features = tableFeatures({ rowExpandingFeature, columnGroupingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  columnGroupingFeature,
+  expandedRowModel: createExpandedRowModel(),
+  // the auto-reset only fires when the grouped row model recomputes
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 
 export class App {
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-      // the auto-reset only fires when the grouped row model recomputes
-      groupedRowModel: createGroupedRowModel(aggregationFns),
-    },
     // other options...
     autoResetExpanded: false, // keep expanded state when data changes
     // autoResetAll: false, // or turn off all auto resets at once
@@ -325,7 +323,6 @@ const features = tableFeatures({ rowExpandingFeature })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {}, // no expandedRowModel needed for manual expanding
   // other options...
   manualExpanding: true,
 }))

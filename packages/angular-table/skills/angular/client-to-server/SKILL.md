@@ -3,12 +3,13 @@ name: angular/client-to-server
 description: >
   Convert an Angular Table v9 from client-side to server-side processing. Flip
   `manualPagination` / `manualSorting` / `manualFiltering` / `manualGrouping` / `manualExpanding`
-  for the slices the server now owns; drop the corresponding `rowModels` row-model factories the
-  server replaces; supply `rowCount` (server total) so pagination computes correctly; hoist
-  `pagination` / `sorting` / `columnFilters` / `globalFilter` to Angular signals with `state` +
-  `on[State]Change`; fetch via `rxResource` / `httpResource` / `@tanstack/angular-query`; preserve
-  previous data on refetch with `linkedSignal` (or `placeholderData: keepPreviousData` for Query);
-  set `getRowId` for stable selection across refetches.
+  for the slices the server now owns; drop the corresponding row-model factory slots from the
+  `features` object for the factories the server replaces; supply `rowCount` (server total) so
+  pagination computes correctly; hoist `pagination` / `sorting` / `columnFilters` / `globalFilter`
+  to Angular signals with `state` + `on[State]Change`; fetch via `rxResource` / `httpResource` /
+  `@tanstack/angular-query`; preserve previous data on refetch with `linkedSignal` (or
+  `placeholderData: keepPreviousData` for Query); set `getRowId` for stable selection across
+  refetches.
 type: lifecycle
 library: tanstack-table
 framework: angular
@@ -44,7 +45,7 @@ For each slice the server now owns:
 
 1. **Flip `manualX: true`** in table options. This tells the table "don't
    process this on the client — trust the data you receive."
-2. **Drop the matching client-side row-model factory** from `rowModels`
+2. **Drop the matching client-side row-model factory slot** from `features`
    (or keep it if you still want the feature's _state_ but no client
    recomputation — see §3).
 3. **Hoist the slice to an Angular signal**, control it via `state.x` +
@@ -198,12 +199,11 @@ export class App {
     }),
   ]
 
-  // 4. Wire the table — manualX flags, drop row-model factories, supply rowCount
+  // 4. Wire the table — manualX flags, features without row-model factories, supply rowCount
   readonly table = injectTable(() => {
     const data = this.dataWithLatest()
     return {
-      features,
-      rowModels: {}, // ← dropped paginatedRowModel, sortedRowModel, filteredRowModel
+      features, // ← features has no paginatedRowModel/sortedRowModel/filteredRowModel slots
       columns: this.columns,
       data: data.items,
       getRowId: (row) => String(row.id),
@@ -245,8 +245,8 @@ export class App {
 
 ### What changed from the client-side version
 
-- `rowModels: {}` — no `paginatedRowModel`, no `sortedRowModel`, no
-  `filteredRowModel`. The server is the source of truth.
+- `features` has no `paginatedRowModel`, `sortedRowModel`, or `filteredRowModel`
+  slots — the server is the source of truth for those.
 - `manualPagination` / `manualSorting` / `manualFiltering: true`.
 - `rowCount: data.totalCount` — required for correct `getPageCount()` and the
   next/prev buttons.
@@ -359,13 +359,12 @@ edits (toggle the flag around the update).
 
 ## Failure modes
 
-### 1. (CRITICAL) Flipping `manualPagination: true` but keeping
-
-`paginatedRowModel` in `rowModels`
+### 1. (CRITICAL) Flipping `manualPagination: true` but keeping `paginatedRowModel` on `features`
 
 The client row-model factory will re-paginate the (already-paginated) data,
 chopping the visible rows down to the first `pageSize` of the page slice.
-**Drop the factory** when going manual — or accept double-pagination.
+**Remove the `paginatedRowModel` slot from `features`** when going manual — or
+accept double-pagination.
 
 ### 2. (CRITICAL) Forgetting `rowCount` under `manualPagination`
 
@@ -409,12 +408,12 @@ the fetch itself).
 
 ```ts
 manualPagination: true,
-// columnFilteringFeature still registered, filteredRowModel still attached
+// columnFilteringFeature still registered, filteredRowModel slot still on features
 ```
 
 The filtered row model now filters only the _current page_ — useless. If the
 server paginates, the server must also filter; flip `manualFiltering: true`
-and drop the client `filteredRowModel`.
+and remove the `filteredRowModel` slot from `features`.
 
 ### 8. (HIGH) Forgetting to depend on the controlled signals in your fetch
 
@@ -448,11 +447,11 @@ the new filtered result set only has 2 pages. They have to manually click back
 to page 1. Always reset `pageIndex` to 0 in `onGlobalFilterChange` /
 `onColumnFiltersChange`.
 
-### 11. (MEDIUM) Treating `rowModels: {}` as "no row models work"
+### 11. (MEDIUM) Thinking that omitting all row-model slots means "no row models work"
 
 Core row model is always automatic. `table.getRowModel().rows` returns the
-data array as `Row<...>` objects no matter what — `rowModels: {}` just means
-no client-side processing on top.
+data array as `Row<...>` objects no matter what — a `features` object with no
+factory slots just means no client-side processing on top.
 
 ---
 

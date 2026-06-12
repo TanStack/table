@@ -19,6 +19,8 @@ import type { Person } from './makeData'
 const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const search = ref('')
@@ -101,9 +103,6 @@ const columns = computed<Array<ColumnDef<typeof features, Person>>>(() => [
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   get data() {
     return filteredData.value
   },

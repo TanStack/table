@@ -2,7 +2,7 @@
 name: sorting
 description: >
   Sort rows in TanStack Table v9 with the `sortedRowModel` stage. Covers
-  `rowSortingFeature` + `createSortedRowModel(sortFns)`, the built-in `sortFns`
+  `rowSortingFeature` + `createSortedRowModel()` (registered on `features`), the built-in `sortFns`
   registry (renamed from v8 `sortingFns`), `state.sorting` (SortingState =
   Array<{ id, desc }>), `onSortingChange`, `columnDef.sortFn`
   (string | function | 'auto'), `sortDescFirst`, `sortUndefined`
@@ -47,7 +47,11 @@ type Person = {
   status: 'single' | 'complicated' | 'relationship'
 }
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
@@ -61,9 +65,6 @@ const columns = columnHelper.columns([
 
 const table = constructTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
   initialState: { sorting: [] satisfies SortingState },
@@ -143,7 +144,7 @@ const { data } = useQuery({
 
 const table = useTable({
   features: tableFeatures({ rowSortingFeature }),
-  rowModels: {}, // omit sortedRowModel — server sorts
+  // omit sortedRowModel from features — server sorts
   columns,
   data,
   manualSorting: true,
@@ -175,20 +176,19 @@ columnHelper.accessor('firstName', {
   sortFn: 'alphanumeric',
 })
 
-const table = useTable({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: {
-    sortedRowModel: createSortedRowModel({
-      ...sortFns,
-      myCustom: (a, b, id) => a.original[id] - b.original[id],
-    }),
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    ...sortFns,
+    myCustom: (a, b, id) => a.original[id] - b.original[id],
   },
-  columns,
-  data,
 })
+
+const table = useTable({ features, columns, data })
 ```
 
-v9 renamed `columnDef.sortingFn → sortFn`, `tableOptions.sortingFns → sortFns`, exported registry `sortingFns → sortFns`. The new column option defaults to `'auto'` and falls back to `sortFn_basic` when lookup misses — wrong names sort wrong, silently.
+v9 renamed `columnDef.sortingFn → sortFn`, the fn registry slot `sortingFns → sortFns` (now registered on `features`), exported registry `sortingFns → sortFns`. The new column option defaults to `'auto'` and falls back to `sortFn_basic` when lookup misses — wrong names sort wrong, silently.
 
 Source: packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts
 
@@ -326,12 +326,12 @@ const sortedData = useMemo(
 Correct:
 
 ```ts
-const table = useTable({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 // table.setSorting(...), column.toggleSorting(), header.getToggleSortingHandler()
 ```
 

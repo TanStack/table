@@ -18,6 +18,8 @@ let data = makeData(1_000)
 const features = tableFeatures({
   rowSortingFeature,
   coreReactivityFeature: storeReactivityBindings(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 // Custom sorting logic for one of our enum columns
@@ -166,9 +168,6 @@ const renderTable = () => {
 
 const table = constructTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   data,
   columns,
   debugTable: true,

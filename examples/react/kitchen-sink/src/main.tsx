@@ -57,21 +57,9 @@ import type {
   Row,
   RowData,
   SortFn,
+  TableFeatures,
 } from '@tanstack/react-table'
 import './index.css'
-
-// =====================================================================
-// Module augmentations
-// =====================================================================
-
-declare module '@tanstack/react-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
 
 // =====================================================================
 // Features (with type-only column meta slot)
@@ -82,16 +70,19 @@ interface MyColumnMeta {
   filterVariant?: 'text' | 'range' | 'select'
 }
 
-const features = tableFeatures({
-  ...stockFeatures,
-  columnMeta: metaHelper<MyColumnMeta>(),
-})
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+// Broad features type for writing custom fns before `features` exists,
+// with the filter meta type plugged in
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 // =====================================================================
 // Custom fuzzy filter / sort (from filters-fuzzy example)
 // =====================================================================
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -102,7 +93,7 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {
@@ -113,6 +104,23 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   }
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  aggregationFns,
+})
 
 // =====================================================================
 // Custom status sort (from sorting example)
@@ -599,7 +607,7 @@ function App() {
         size: 200,
         header: 'First Name',
         filterFn: 'fuzzy',
-        sortFn: fuzzySort,
+        sortFn: 'fuzzy',
         meta: { filterVariant: 'text' },
         // override grouping value so first+last combine as a group key
         getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
@@ -673,19 +681,6 @@ function App() {
     {
       key: 'kitchen-sink', // needed for devtools
       features,
-      rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        facetedRowModel: createFacetedRowModel(),
-        facetedMinMaxValues: createFacetedMinMaxValues(),
-        facetedUniqueValues: createFacetedUniqueValues(),
-        groupedRowModel: createGroupedRowModel(aggregationFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data,
       getSubRows: (row) => row.subRows,

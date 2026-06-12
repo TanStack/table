@@ -16,13 +16,14 @@ Vanilla examples use the core table package directly with store reactivity bindi
 import { constructTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/table-core'
 import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 
-const features = tableFeatures({ rowPaginationFeature, coreReactivityFeature: storeReactivityBindings() })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  coreReactivityFeature: storeReactivityBindings(),
+})
 
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -56,7 +57,7 @@ Alternatively, instead of paginating the data, you can render all rows of a larg
 
 #### Pagination Row Model
 
-If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` to your features and the `paginatedRowModel` to your row models:
+If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` and `paginatedRowModel` to your features:
 
 ```jsx
 import {
@@ -66,13 +67,13 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/table-core'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -99,7 +100,6 @@ const features = tableFeatures({ rowPaginationFeature })
 
 const table = constructTable({
   features,
-  rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data,
   manualPagination: true, // turn off client-side pagination
@@ -129,7 +129,10 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/table-core'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 let pagination = {
   pageIndex: 0, // initial page index
@@ -143,9 +146,6 @@ const setPagination = (updater) => {
 
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   onPaginationChange: setPagination,
@@ -160,9 +160,6 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 ```jsx
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -187,9 +184,6 @@ By default, `pageIndex` is reset to `0` when page-altering state changes occur, 
 ```jsx
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   autoResetPageIndex: false, // turn off auto reset of pageIndex

@@ -25,6 +25,9 @@
   const features = tableFeatures({
     rowPaginationFeature,
     columnFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filterFns,
   })
 
   // Create column helper with features and Person type
@@ -136,10 +139,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns,
       get data() {
         return form.state.values.data

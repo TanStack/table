@@ -9,8 +9,8 @@ TanStack Table v9 is a major release that makes table setup more explicit and mo
 ### 1. Tree-shaking
 
 - **Features are tree-shakeable**: register only the features a table uses.
-- **Row models are explicit**: client-side row processing moved from root `get*RowModel` options to the `rowModels` object.
-- **Function registries moved to factories**: pass `sortFns`, `filterFns`, and `aggregationFns` to the row model factories that need them.
+- **Row models are explicit**: client-side row processing moved from root `get*RowModel` options into `tableFeatures` as row model factory slots.
+- **Function registries moved to features**: `sortFns`, `filterFns`, and `aggregationFns` are now slots on `tableFeatures` instead of arguments to row model factories.
 
 ### 2. State Management
 
@@ -50,7 +50,7 @@ import { createTable } from '@tanstack/solid-table'
 const table = createTable(options)
 ```
 
-### New Required Options: `features` and `rowModels`
+### New Required Option: `features`
 
 ```tsx
 // v8
@@ -74,7 +74,6 @@ const features = tableFeatures({})
 
 const table = createTable({
   features,
-  rowModels: {}, // core row model is automatic
   columns,
   get data() {
     return data()
@@ -82,7 +81,7 @@ const table = createTable({
 })
 ```
 
-Keep `features`, `rowModels`, and column definitions outside reactive component work when they are static.
+Keep `features` and column definitions outside reactive component work when they are static.
 
 ---
 
@@ -122,7 +121,6 @@ import { createTable, stockFeatures } from '@tanstack/solid-table'
 
 const table = createTable({
   features: stockFeatures,
-  rowModels,
   columns,
   get data() {
     return data()
@@ -153,20 +151,20 @@ Use it as a migration shortcut, not as the preferred production end state.
 
 ---
 
-## The `rowModels` Option
+## Row Model Factories
 
-Row models now live under `rowModels`.
+Row model factories now live inside `tableFeatures` alongside feature objects. Function registries (`filterFns`, `sortFns`, `aggregationFns`) are also passed as slots in `tableFeatures` rather than as arguments to the factory functions.
 
 ### Migration Mapping
 
-| v8 Option | v9 `rowModels` Key | v9 Factory Function |
+| v8 Option | v9 `tableFeatures` Key | v9 Factory Function |
 |---|---|---|
 | `getCoreRowModel()` | (automatic) | Not needed |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel(sortFns)` |
+| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel()` |
+| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel()` |
 | `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
 | `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel(aggregationFns)` |
+| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel()` |
 | `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
 | `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
@@ -216,17 +214,15 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
-})
-
-const rowModels = {
-  filteredRowModel: createFilteredRowModel(filterFns),
-  sortedRowModel: createSortedRowModel(sortFns),
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-}
+  filterFns,
+  sortFns,
+})
 
 const table = createTable({
   features,
-  rowModels,
   columns,
   get data() {
     return data()
@@ -308,7 +304,6 @@ const [pagination, setPagination] = createSignal<PaginationState>({
 
 const table = createTable({
   features,
-  rowModels,
   columns,
   get data() {
     return data()
@@ -347,7 +342,6 @@ function MyTable() {
 
   const table = createTable({
     features,
-    rowModels,
     columns,
     get data() {
       return data()
@@ -427,7 +421,6 @@ import { tableOptions } from '@tanstack/solid-table'
 
 const baseOptions = tableOptions({
   features,
-  rowModels,
   defaultColumn: {
     minSize: 40,
   },
@@ -453,7 +446,6 @@ import { createTableHook } from '@tanstack/solid-table'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
   features,
-  rowModels,
 })
 
 const columnHelper = createAppColumnHelper<Person>()
@@ -587,9 +579,9 @@ type Person = {
 
 - [ ] Replace `createSolidTable` with `createTable`.
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`).
-- [ ] Move every `get*RowModel` option into `rowModels`.
+- [ ] Move every `get*RowModel` factory into `tableFeatures` as a slot (e.g. `sortedRowModel: createSortedRowModel()`).
 - [ ] Remove `getCoreRowModel`; the core row model is automatic.
-- [ ] Pass `sortFns`, `filterFns`, and `aggregationFns` to row model factories.
+- [ ] Move `sortFns`, `filterFns`, and `aggregationFns` into `tableFeatures` as slots (not as factory arguments).
 - [ ] Rename `sortingFn` to `sortFn`.
 - [ ] Add `typeof features` to column helpers and table types.
 - [ ] Use getters for reactive `data` and controlled `state` slices.

@@ -17,6 +17,7 @@ import type {
   ExpandedState,
   Row,
   RowPinningState,
+  SolidTable,
   Table,
 } from '@tanstack/solid-table'
 import type { Person } from './makeData'
@@ -26,6 +27,10 @@ const features = tableFeatures({
   rowExpandingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 function App() {
@@ -121,38 +126,30 @@ function App() {
     { accessorKey: 'progress', header: 'Profile Progress', size: 80 },
   ])
 
-  const table = createTable(
-    {
-      debugTable: true,
-      features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        expandedRowModel: createExpandedRowModel(),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
-      get columns() {
-        return columns()
-      },
-      get data() {
-        return data()
-      },
-      initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
-      get state() {
-        return {
-          expanded: expanded(),
-          rowPinning: rowPinning(),
-        }
-      },
-      onExpandedChange: setExpanded,
-      onRowPinningChange: setRowPinning,
-      getSubRows: (row) => row.subRows,
-      get keepPinnedRows() {
-        return keepPinnedRows()
-      },
-      debugAll: true,
+  const table = createTable({
+    debugTable: true,
+    features,
+    get columns() {
+      return columns()
     },
-    (state) => state,
-  )
+    get data() {
+      return data()
+    },
+    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+    get state() {
+      return {
+        expanded: expanded(),
+        rowPinning: rowPinning(),
+      }
+    },
+    onExpandedChange: setExpanded,
+    onRowPinningChange: setRowPinning,
+    getSubRows: (row) => row.subRows,
+    get keepPinnedRows() {
+      return keepPinnedRows()
+    },
+    debugAll: true,
+  })
 
   return (
     <div class="app">
@@ -331,7 +328,7 @@ function App() {
 
 function PinnedRow(props: {
   row: Row<typeof features, Person>
-  table: Table<typeof features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   return (
     <tr

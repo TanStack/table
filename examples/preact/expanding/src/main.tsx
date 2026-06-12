@@ -28,6 +28,12 @@ const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -118,12 +124,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data,
       getSubRows: (row) => row.subRows,

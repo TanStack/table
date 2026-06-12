@@ -63,7 +63,6 @@ export default function Table<T extends Record<string, string | number>>({
     {
       debugTable: true,
       features,
-      rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
       columns,
       data,
       manualFiltering: true,

@@ -16,6 +16,7 @@ import type { Person } from './makeData'
 const features = tableFeatures({
   rowPaginationFeature,
   densityPlugin, // pass in our plugin just like any other stock feature
+  paginatedRowModel: createPaginatedRowModel(),
 })
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -60,9 +61,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
-    },
     columns,
     data: this.data(),
     debugTable: true,

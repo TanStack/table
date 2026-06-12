@@ -21,7 +21,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))
@@ -54,7 +53,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     //...
     atoms: {
       columnVisibility: this.columnVisibilityAtom,
@@ -78,7 +76,6 @@ readonly columnVisibility = signal<ColumnVisibilityState>({
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   state: {
     columnVisibility: this.columnVisibility(),
@@ -100,7 +97,6 @@ const features = tableFeatures({ columnVisibilityFeature })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnVisibility: {

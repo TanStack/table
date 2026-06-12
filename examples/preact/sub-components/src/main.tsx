@@ -20,6 +20,7 @@ import type { JSX } from 'preact'
 
 const features = tableFeatures({
   rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -95,9 +96,6 @@ function Table({
     {
       debugTable: true,
       features,
-      rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-      },
       columns,
       data,
       getRowCanExpand,

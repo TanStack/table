@@ -30,6 +30,10 @@
     rowExpandingFeature,
     columnFilteringFeature,
     rowPaginationFeature,
+    filteredRowModel: createFilteredRowModel(),
+    expandedRowModel: createExpandedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filterFns,
   })
 
   const [rowPinning, setRowPinning] = createTableState<RowPinningState>({
@@ -51,11 +55,6 @@
     {
       debugTable: true,
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        expandedRowModel: createExpandedRowModel(),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns: [
         {
           id: 'pin',

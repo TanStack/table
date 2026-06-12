@@ -15,13 +15,14 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 ```ts
 import { createTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   get data() {
     return data
@@ -54,7 +55,6 @@ For reactive reads that should update your UI, use `table.state.sorting` (select
 ```ts
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -80,7 +80,6 @@ const sorting = useSelector(sortingAtom) // read it reactively with sorting.curr
 
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   get data() {
     return data
@@ -101,7 +100,6 @@ const [sorting, setSorting] = createTableState<SortingState>([])
 
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   get data() {
     return data
@@ -123,7 +121,6 @@ If you do not need to control the sorting state in your own state management or 
 ```ts
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -160,7 +157,6 @@ const sorting = useSelector(sortingAtom)
 
 const table = createTable({
   features,
-  rowModels: {}, // no sortedRowModel needed for manual sorting
   columns,
   get data() {
     return data
@@ -189,13 +185,14 @@ import {
   sortFns,
 } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -266,35 +263,28 @@ const columns = [
   }
 ]
 //...
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    ...sortFns,
+    myCustomSortFn: (rowA, rowB, columnId) =>
+      rowA.original[columnId] > rowB.original[columnId]
+        ? 1
+        : rowA.original[columnId] < rowB.original[columnId]
+          ? -1
+          : 0,
+  },
+})
+
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel({
-      ...sortFns,
-      myCustomSortFn: (rowA, rowB, columnId) =>
-        rowA.original[columnId] > rowB.original[columnId]
-          ? 1
-          : rowA.original[columnId] < rowB.original[columnId]
-            ? -1
-            : 0,
-    }),
-  },
   columns,
   data,
 })
 ```
 
-> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, augment the `SortFns` interface with a `declare module` block:
->
-> ```ts
-> declare module '@tanstack/svelte-table' {
->   interface SortFns {
->     myCustomSortFn: SortFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `sortFn` column option.
+> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, register the function in the `sortFns` slot of `tableFeatures({...})` as shown above. TypeScript infers the available sort function names from that registry. Alternatively, skip the registry entirely by passing the function directly to the `sortFn` column option.
 
 ### Customize Sorting
 
@@ -320,7 +310,7 @@ const columns = [
 //...
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -348,7 +338,7 @@ const columns = [
 //...
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -415,7 +405,7 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 ```ts
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (sorting can never return to 'none' once applied)
@@ -442,7 +432,7 @@ const columns = [
 //...
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -456,7 +446,7 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 ```ts
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -472,7 +462,7 @@ By default, there is no limit to the number of columns that can be sorted at onc
 ```ts
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -486,7 +476,7 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 ```ts
 const table = createTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

@@ -19,7 +19,6 @@ const features = tableFeatures({ rowSelectionFeature })
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data
@@ -69,7 +68,6 @@ const rowSelection = useSelector(rowSelectionAtom) // read it reactively with ro
 
 const table = createTable({
   features,
-  rowModels: {},
   //...
   atoms: {
     rowSelection: rowSelectionAtom, // selection APIs now update rowSelectionAtom
@@ -86,7 +84,6 @@ const [rowSelection, setRowSelection] = createTableState<RowSelectionState>({})
 
 const table = createTable({
   features,
-  rowModels: {},
   //...
   onRowSelectionChange: setRowSelection,
   state: {
@@ -104,7 +101,6 @@ By default, the row id for each row is simply the `row.index`. If you are using 
 ```ts
 const table = createTable({
   features,
-  rowModels: {},
   //...
   getRowId: (row) => row.uuid, // use the row's uuid from your database as the row id
 })

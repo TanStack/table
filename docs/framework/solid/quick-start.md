@@ -64,7 +64,6 @@ export function PersonTable() {
   const table = createTable({
     key: 'person-table', // registers this table with the devtools
     features,
-    rowModels: {}, // the core row model is included by default
     columns,
     get data() {
       return data()
@@ -114,7 +113,6 @@ export function PersonTable() {
 A few things to note:
 
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
-- `rowModels: {}` is fine for a basic table because the core row model is always included. Feature row models (sorting, filtering, pagination) are registered here when you need them.
 - The `get data()` getter keeps the table reactive: when the signal updates, the table sees the new data. Passing `data: data()` would capture a one-time snapshot.
 - `FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values or Solid components. It is also available on the table instance as `table.FlexRender`.
 - The `key` option is optional unless you use the [TanStack Table Devtools](../../devtools). The devtools identify tables by `key`, and you register a table by calling `useTanStackTableDevtools(table)` from `@tanstack/solid-table-devtools`.
@@ -123,7 +121,7 @@ See the full [Basic createTable example](./examples/basic-use-table) for a runna
 
 ## Add a Feature: Sorting
 
-Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` in `tableFeatures`, register a sorted row model under `rowModels`, and wire the header click handler.
+Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` and the sorted row model factory in `tableFeatures`, then wire the header click handler.
 
 ```tsx
 import {
@@ -138,6 +136,8 @@ import { For, Show, createSignal } from 'solid-js'
 
 const features = tableFeatures({
   rowSortingFeature, // enables sorting APIs and state
+  sortedRowModel: createSortedRowModel(), // client-side sorting
+  sortFns,
 })
 
 export function PersonTable() {
@@ -146,9 +146,6 @@ export function PersonTable() {
   const table = createTable({
     key: 'person-table',
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
-    },
     columns,
     get data() {
       return data()
@@ -193,7 +190,7 @@ export function PersonTable() {
 }
 ```
 
-Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature, register its row model if it has one, and use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting.md) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
+Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature and its row model factory (if it has one) in `tableFeatures`, then use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting.md) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
 
 ## Where to Go Next
 
@@ -204,12 +201,13 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 **Composable tables.** When multiple tables in your app share features, row models, and component conventions, define them once with `createTableHook`:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-
-const { createAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+
+const { createAppTable, createAppColumnHelper } = createTableHook({ features })
 ```
 
 See the [Composable Tables Guide](./guide/composable-tables.md) for the full pattern, including pre-bound cell and header components.

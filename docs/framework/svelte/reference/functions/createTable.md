@@ -9,7 +9,7 @@ title: createTable
 function createTable<TFeatures, TData, TSelected>(tableOptions, selector?): SvelteTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [packages/svelte-table/src/createTable.svelte.ts:65](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L65)
+Defined in: [packages/svelte-table/src/createTable.svelte.ts:64](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L64)
 
 Creates a Svelte 5 table instance backed by rune-aware TanStack Store atoms.
 
@@ -53,7 +53,6 @@ updates read table APIs such as `getRowModel()`.
   const table = createTable(
     {
       features,
-      rowModels: {},
       columns,
       data,
     },

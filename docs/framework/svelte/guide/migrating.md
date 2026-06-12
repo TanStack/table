@@ -9,8 +9,8 @@ TanStack Table v9 is a major release with explicit feature registration, row mod
 ### 1. Tree-shaking
 
 - **Features are tree-shakeable**: register only the table features you use.
-- **Row models are explicit**: move root `get*RowModel` options into the `rowModels` object.
-- **Function registries moved to factories**: pass `sortFns`, `filterFns`, and `aggregationFns` into row model factories instead of root table options.
+- **Row models are explicit**: register row model factories as slots inside `tableFeatures({...})`.
+- **Function registries moved to features**: pass `sortFns`, `filterFns`, and `aggregationFns` as slots inside `tableFeatures({...})` instead of as factory arguments or root table options.
 
 ### 2. State Management
 
@@ -30,7 +30,7 @@ TanStack Table v9 is a major release with explicit feature registration, row mod
 - Feature APIs like `table.nextPage()`, `column.toggleSorting()`, and `row.toggleSelected()` remain the preferred way to change state.
 - Markup still renders header groups, rows, and cells from the table instance.
 
-The main changes are the Svelte 5 requirement, the new `createTable` entrypoint, explicit `features` and `rowModels`, and the move from v8 writable-store patterns to v9 runes and atoms.
+The main changes are the Svelte 5 requirement, the new `createTable` entrypoint, explicit `features` (including row models registered as feature slots), and the move from v8 writable-store patterns to v9 runes and atoms.
 
 ---
 
@@ -63,7 +63,7 @@ import { createTable } from '@tanstack/svelte-table'
 const table = createTable(options)
 ```
 
-### New Required Options: `features` and `rowModels`
+### New Required Option: `features`
 
 ```ts
 // v8
@@ -85,7 +85,6 @@ const features = tableFeatures({})
 
 const table = createTable({
   features,
-  rowModels: {}, // core row model is automatic
   columns,
   get data() {
     return data
@@ -133,7 +132,6 @@ import { createTable, stockFeatures } from '@tanstack/svelte-table'
 
 const table = createTable({
   features: stockFeatures,
-  rowModels,
   columns,
   get data() {
     return data
@@ -164,23 +162,25 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 
 ---
 
-## The `rowModels` Option
+## Row Models
 
-Row models now live under `rowModels`.
+Row model factories now live as slots directly inside `tableFeatures({...})`. The `rowModels` option no longer exists.
 
 ### Migration Mapping
 
-| v8 Option | v9 `rowModels` Key | v9 Factory Function |
+| v8 Option | v9 `tableFeatures` Slot | v9 Factory Function |
 |---|---|---|
 | `getCoreRowModel()` | (automatic) | Not needed |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel(sortFns)` |
+| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel()` |
+| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel()` |
 | `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
 | `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel(aggregationFns)` |
+| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel()` |
 | `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
 | `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
+
+Function registries move to slots too: pass `filterFns`, `sortFns`, and `aggregationFns` directly to `tableFeatures` instead of as factory arguments.
 
 ### Full Migration Example
 
@@ -230,19 +230,17 @@ Row models now live under `rowModels`.
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
-  })
-
-  const rowModels = {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
+    filteredRowModel: createFilteredRowModel(),
+    sortedRowModel: createSortedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-  }
+    filterFns,
+    sortFns,
+  })
 
   let data = $state(makeData(1000))
 
   const table = createTable({
     features,
-    rowModels,
     columns,
     get data() {
       return data
@@ -283,7 +281,6 @@ By default, `table.state` contains the full registered table state.
 ```ts
 const table = createTable({
   features,
-  rowModels,
   columns,
   get data() {
     return data
@@ -299,7 +296,6 @@ Pass a second-argument selector when you want `table.state` to contain only the 
 const table = createTable(
   {
     features,
-    rowModels,
     columns,
     get data() {
       return data
@@ -358,7 +354,6 @@ Use `createTableState` for Svelte-owned state slices that need to accept TanStac
 
   const table = createTable({
     features,
-    rowModels,
     columns,
     get data() {
       return data
@@ -402,7 +397,6 @@ Use external atoms when the app should own and share state slices outside the ta
 
   const table = createTable({
     features,
-    rowModels,
     columns,
     get data() {
       return data
@@ -506,7 +500,6 @@ import { tableOptions } from '@tanstack/svelte-table'
 
 const baseOptions = tableOptions({
   features,
-  rowModels,
   defaultColumn: {
     minSize: 40,
   },
@@ -525,15 +518,12 @@ const table = createTable({
 
 ## `createTableHook`: Composable Table Patterns
 
-`createTableHook` creates shared Svelte table helpers with features, row models, and registered components already bound.
+`createTableHook` creates shared Svelte table helpers with features (including row model slots) and registered components already bound.
 
 ```ts
 import { createTableHook } from '@tanstack/svelte-table'
 
-export const { createAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels,
-})
+export const { createAppTable, createAppColumnHelper } = createTableHook({ features })
 
 const columnHelper = createAppColumnHelper<Person>()
 
@@ -668,9 +658,9 @@ type Person = {
 - [ ] Replace `createSvelteTable` with `createTable`.
 - [ ] Replace Svelte 3/4 writable-store table patterns with runes and getters.
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`).
-- [ ] Move root `get*RowModel` options into `rowModels`.
+- [ ] Move row model factories into `tableFeatures({...})` as slots (e.g. `filteredRowModel: createFilteredRowModel()`).
 - [ ] Remove `getCoreRowModel`; the core row model is automatic.
-- [ ] Pass `sortFns`, `filterFns`, and `aggregationFns` to row model factories.
+- [ ] Pass `sortFns`, `filterFns`, and `aggregationFns` as slots in `tableFeatures({...})` instead of as factory arguments.
 - [ ] Rename `sortingFn` to `sortFn`.
 - [ ] Add `typeof features` to column helpers and types.
 - [ ] Pass reactive `data` and controlled `state` slices through getters.

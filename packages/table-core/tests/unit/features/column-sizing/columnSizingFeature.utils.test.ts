@@ -25,8 +25,7 @@ function makeTable(opts: {
   columnSizing?: Record<string, number>
 }): any {
   return constructTable({
-    features,
-    rowModels: { coreRowModel: createCoreRowModel() },
+    features: { ...features, coreRowModel: createCoreRowModel() },
     columns: opts.columns,
     data,
     state: opts.columnSizing ? { columnSizing: opts.columnSizing } : undefined,

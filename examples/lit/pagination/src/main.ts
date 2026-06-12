@@ -14,6 +14,7 @@ import type { Person } from './makeData'
 
 const features = tableFeatures({
   rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -58,9 +59,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          paginatedRowModel: createPaginatedRowModel(),
-        },
         columns,
         data: this._data,
         debugTable: true,

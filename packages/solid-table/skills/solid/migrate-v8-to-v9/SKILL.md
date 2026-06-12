@@ -3,8 +3,8 @@ name: solid/migrate-v8-to-v9
 description: >
   Mechanical breaking-change migration from `@tanstack/solid-table` v8 to v9.
   Renames (`createSolidTable` → `createTable`, `getCoreRowModel`/`getSortedRowModel`/...
-  → `rowModels` + factories), new required `features` registration via
-  `tableFeatures()`, two-generic `createColumnHelper<typeof features, TData>`,
+  → row model factories registered inside `tableFeatures()`), new required `features`
+  registration via `tableFeatures()`, two-generic `createColumnHelper<typeof features, TData>`,
   the v9 atom state model, and the lack of a `/legacy` entrypoint for Solid
   (full rewrite, no `useLegacyTable`).
 type: lifecycle
@@ -32,10 +32,10 @@ direct rewrite. Plan to do it incrementally per table, not per file.
 
 1. **Adapter API renamed.** `createSolidTable(...)` → `createTable(...)`.
 2. **Features must be registered.** v9 introduced `features` via `tableFeatures({...})`. Without it, feature APIs and state slices don't exist (TS error + runtime undefined).
-3. **Row models moved to `rowModels`.** No more top-level `getCoreRowModel: getCoreRowModel()` options; instead `rowModels: { paginatedRowModel: createPaginatedRowModel(), ... }`.
+3. **Row model factories moved into `tableFeatures()`.** No more top-level `getCoreRowModel: getCoreRowModel()` options; instead pass factories like `paginatedRowModel: createPaginatedRowModel()` directly inside `tableFeatures({...})`.
 4. **State is atom-based.** Powered by TanStack Store. The classic `state`+`on*Change` pattern still works for compatibility, but `atoms` is the new recommended hand-off for per-slice external ownership.
 5. **`createColumnHelper` takes two generics.** `createColumnHelper<typeof features, TData>()` (features first).
-6. **Some method/option renames.** Most notably `sortingFn` → `sortFn`; the `*Fns` registries (`sortFns`, `filterFns`, `aggregationFns`) are now passed to row-model factories.
+6. **Some method/option renames.** Most notably `sortingFn` → `sortFn`; the `*Fns` registries (`sortFns`, `filterFns`, `aggregationFns`) are now registered as slots inside `tableFeatures()`.
 7. **No `onStateChange` top-level callback.** Use per-slice `on[State]Change` paired with `state.<slice>`, or use `atoms`.
 
 ## Rename map
@@ -43,13 +43,13 @@ direct rewrite. Plan to do it incrementally per table, not per file.
 | v8 (Solid)                                                                 | v9 (Solid)                                                                                                 |
 | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
 | `createSolidTable(options)`                                                | `createTable(options, selector?)`                                                                          |
-| `getCoreRowModel: getCoreRowModel()`                                       | (core row model included by default; pass `rowModels: {}`)                                                 |
-| `getSortedRowModel: getSortedRowModel()`                                   | `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }` + register `rowSortingFeature`              |
-| `getFilteredRowModel: getFilteredRowModel()`                               | `rowModels: { filteredRowModel: createFilteredRowModel(filterFns) }` + register `columnFilteringFeature`   |
-| `getPaginationRowModel: getPaginationRowModel()`                           | `rowModels: { paginatedRowModel: createPaginatedRowModel() }` + register `rowPaginationFeature`            |
-| `getGroupedRowModel: getGroupedRowModel()`                                 | `rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) }` + register `columnGroupingFeature` |
-| `getExpandedRowModel: getExpandedRowModel()`                               | `rowModels: { expandedRowModel: createExpandedRowModel() }` + register `rowExpandingFeature`               |
-| `getFacetedRowModel` / `getFacetedUniqueValues` / `getFacetedMinMaxValues` | `rowModels: { facetedRowModel, facetedUniqueValues, facetedMinMaxValues }` + faceting features             |
+| `getCoreRowModel: getCoreRowModel()`                                       | (core row model included by default; no option needed)                                                                                            |
+| `getSortedRowModel: getSortedRowModel()`                                   | `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`                                                           |
+| `getFilteredRowModel: getFilteredRowModel()`                               | `tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`                                                |
+| `getPaginationRowModel: getPaginationRowModel()`                           | `tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })`                                                           |
+| `getGroupedRowModel: getGroupedRowModel()`                                 | `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })`                                              |
+| `getExpandedRowModel: getExpandedRowModel()`                               | `tableFeatures({ rowExpandingFeature, expandedRowModel: createExpandedRowModel() })`                                                              |
+| `getFacetedRowModel` / `getFacetedUniqueValues` / `getFacetedMinMaxValues` | `tableFeatures({ ...facetingFeatures, facetedRowModel, facetedUniqueValues, facetedMinMaxValues })`                                               |
 | `createColumnHelper<TData>()`                                              | `createColumnHelper<typeof features, TData>()`                                                             |
 | `sortingFn: 'alphanumeric'` on a column                                    | `sortFn: 'alphanumeric'` on a column                                                                       |
 | `onStateChange` (whole-state)                                              | (gone — use per-slice `on*Change` or `atoms`)                                                              |
@@ -122,6 +122,9 @@ import { For, createSignal } from 'solid-js'
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -136,10 +139,6 @@ function App(props: { data: Person[] }) {
 
   const table = createTable({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     get data() {
       return props.data
@@ -198,7 +197,6 @@ table.state().sorting
 
   createTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     get data() {
       return data()
@@ -212,15 +210,32 @@ table.state().sorting
 ## Filter / sort / aggregation `*Fns`
 
 v9 separates the registry (what comparator functions are bundled) from the row
-model factory. Pass exactly what you need so the rest tree-shakes.
+model factory. Register the `*Fns` maps as slots in `tableFeatures()` alongside
+the factory, so they are tree-shakeable.
 
 ```tsx
-import { sortFns, filterFns, aggregationFns } from '@tanstack/solid-table'
+import {
+  sortFns,
+  filterFns,
+  aggregationFns,
+  createSortedRowModel,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  tableFeatures,
+} from '@tanstack/solid-table'
 
-createSortedRowModel(sortFns) // all sort fns
-createSortedRowModel({ alphanumeric: sortFns.alphanumeric }) // narrowed
-createFilteredRowModel(filterFns)
-createGroupedRowModel(aggregationFns)
+// All sort fns
+tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
+
+// Narrowed — only the comparators you use
+tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: { alphanumeric: sortFns.alphanumeric },
+})
+
+tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })
+tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })
 ```
 
 On columns, the option name is now `sortFn`, `filterFn`, `aggregationFn`
@@ -245,8 +260,9 @@ no such requirement.
 ### CRITICAL — `getCoreRowModel: getCoreRowModel()` pattern
 
 v9 has no such option. The core row model is included by default. Move every
-`get*RowModel` option to a key under `rowModels` and call the matching
-`create*RowModel()` factory. Don't leave the v8 options in place.
+`get*RowModel` option to a factory slot inside `tableFeatures()` — call the
+matching `create*RowModel()` factory and register it alongside the feature.
+Don't leave the v8 options in place.
 
 ### CRITICAL — `createColumnHelper<Person>()` missing the features generic
 

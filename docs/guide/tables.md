@@ -10,7 +10,7 @@ The `table` instance returned from one of these functions is the main object tha
 
 ### Creating a Table Instance
 
-To create a table instance, 3 `options` are required: `columns`, `data`, and `features`. The `features` option declares which table features your table uses (enabling tree-shaking, so you only bundle what you use). The core row model is included automatically; add additional row models via `rowModels` when you need filtering, sorting, pagination, etc. There are dozens of other table options to configure features and behavior.
+To create a table instance, 3 `options` are required: `columns`, `data`, and `features`. The `features` option declares which table features your table uses (enabling tree-shaking, so you only bundle what you use). The core row model is included automatically; add additional row model factories as slots on the `tableFeatures()` call when you need filtering, sorting, pagination, etc. There are dozens of other table options to configure features and behavior.
 
 #### Defining Data
 
@@ -31,7 +31,7 @@ The column definitions are where we will tell TanStack Table how each column sho
 
 #### Defining Features and Row Models
 
-This is explained in much more detail in the [Row Models Guide](./row-models). In v9, you declare which features your table uses via `features` (using `tableFeatures()`), and which row models to apply via `rowModels`. The core row model is always included automatically. For a basic table with no filtering, sorting, or pagination, pass an empty features object and empty row models:
+This is explained in much more detail in the [Row Models Guide](./row-models). In v9, you declare which features your table uses via `features` (using `tableFeatures()`), and row model factories live as slots on that same features object. The core row model is always included automatically. For a basic table with no filtering, sorting, or pagination, pass an empty features object:
 
 <!-- ::start:framework -->
 
@@ -44,7 +44,6 @@ const features = tableFeatures({}) // Core features only; add columnFilteringFea
 
 const table = useTable({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   data,
 })
@@ -59,7 +58,6 @@ const features = tableFeatures({}) // Core features only; add columnFilteringFea
 
 const table = useTable({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   data,
 })
@@ -74,7 +72,6 @@ const features = tableFeatures({}) // Core features only; add columnFilteringFea
 
 const table = useTable({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   data,
 })
@@ -89,7 +86,6 @@ const features = tableFeatures({}) // Core features only; add columnFilteringFea
 
 const table = createTable({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   get data() {
     return data()
@@ -106,7 +102,6 @@ const features = tableFeatures({}) // Core features only; add columnFilteringFea
 
 const table = createTable({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   get data() {
     return data
@@ -123,7 +118,6 @@ const features = tableFeatures({}) // Core features only; add columnFilteringFea
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   data: this.data(),
 }))
@@ -139,7 +133,6 @@ const features = tableFeatures({}) // Core features only; add columnFilteringFea
 // inside your LitElement render():
 const table = this.tableController.table({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   data: this.data,
 })
@@ -157,7 +150,6 @@ const features = tableFeatures({
 
 const table = constructTable({
   features,
-  rowModels: {}, // Core row model is automatic; add filteredRowModel, sortedRowModel, etc. as needed
   columns,
   data,
 })
@@ -167,7 +159,7 @@ const table = constructTable({
 
 #### Initializing the Table Instance
 
-With our `features`, `columns`, `data`, and `rowModels` defined, we can now create our basic table instance, alongside any other table options that we want to pass in.
+With our `features`, `columns`, and `data` defined, we can now create our basic table instance, alongside any other table options that we want to pass in.
 
 > **Framework note:** Each framework adapter has its own table creation function, but they all accept the same core options:
 
@@ -176,19 +168,19 @@ With our `features`, `columns`, `data`, and `rowModels` defined, we can now crea
 # React
 
 ```ts
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 ```
 
 # Preact
 
 ```ts
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 ```
 
 # Vue
 
 ```ts
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 ```
 
 # Solid
@@ -196,7 +188,6 @@ const table = useTable({ features, rowModels: {}, columns, data })
 ```ts
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data()
@@ -209,7 +200,6 @@ const table = createTable({
 ```ts
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data
@@ -222,7 +212,6 @@ const table = createTable({
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data: this.data(),
 }))
@@ -233,7 +222,6 @@ readonly table = injectTable(() => ({
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
 })
@@ -242,7 +230,7 @@ const table = this.tableController.table({
 # Vanilla
 
 ```ts
-const table = constructTable({ features, rowModels: {}, columns, data })
+const table = constructTable({ features, columns, data })
 ```
 
 <!-- ::end:framework -->
@@ -310,4 +298,4 @@ API reference docs for the core table instance and all other feature APIs can be
 
 ### Table Row Models
 
-There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models that you can pass in as a table option, see the [Row Models Guide](./row-models).
+There is a special set of table instance APIs for reading rows out of the table instance called row models. TanStack Table has advanced features where the rows that are generated may be very different than the array of `data` that you originally passed in. To learn more about the different row models and how to register them, see the [Row Models Guide](./row-models).

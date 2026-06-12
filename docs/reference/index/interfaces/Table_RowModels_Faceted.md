@@ -29,7 +29,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:36](https:/
 
 Computes min/max numeric facet values for the active faceting context.
 
-Requires a `facetedMinMaxValues` row-model factory in `rowModels`.
+Requires a `facetedMinMaxValues` row-model factory on the `features` option.
 
 #### Returns
 
@@ -47,7 +47,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:42](https:/
 
 Computes the row model used to derive facet values.
 
-Requires a `facetedRowModel` row-model factory in `rowModels`.
+Requires a `facetedRowModel` row-model factory on the `features` option.
 
 #### Returns
 
@@ -65,7 +65,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:48](https:/
 
 Computes unique facet values and occurrence counts.
 
-Requires a `facetedUniqueValues` row-model factory in `rowModels`.
+Requires a `facetedUniqueValues` row-model factory on the `features` option.
 
 #### Returns
 

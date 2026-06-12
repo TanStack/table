@@ -41,9 +41,10 @@ v8 name `useVueTable` no longer exists.
 
 ## Setup
 
-Every Vue table call requires `features` (built from `tableFeatures({...})`) and `rowModels`.
-Core row model is automatic; only register `paginatedRowModel`, `sortedRowModel`, etc. when you
-use the matching feature.
+Every Vue table call requires `features` (built from `tableFeatures({...})`). Row model
+factories now live on the features object alongside the feature itself. Core row model is
+automatic; only register `paginatedRowModel`, `sortedRowModel`, etc. when you use the matching
+feature.
 
 ```vue
 <script setup lang="ts">
@@ -61,7 +62,11 @@ import {
 type Person = { firstName: string; lastName: string; age: number }
 
 // Stable identity — declare outside the component or at module scope.
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -73,7 +78,6 @@ const data = ref<Person[]>([])
 
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   // Reactive data: pass the ref directly OR a getter — the adapter unwraps.
   data,
@@ -133,7 +137,6 @@ const snapshot = table.state
 const table = useTable(
   {
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
   },
@@ -155,12 +158,11 @@ The adapter accepts a `ref`/`computed` for any option. The idiomatic shapes are:
 ```ts
 // (a) Pass the ref directly — adapter unwraps via `unref()`
 const data = ref(makeData(100))
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 
 // (b) Use a getter when `data` is owned by a parent object
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data.value
@@ -171,7 +173,6 @@ const table = useTable({
 const filtered = computed(() => data.value.filter(/* … */))
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return filtered.value
@@ -199,7 +200,10 @@ import {
   type PaginationState,
 } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const paginationAtom = createAtom<PaginationState>({
   pageIndex: 0,
@@ -210,7 +214,6 @@ const pagination = useSelector(paginationAtom) // reactive ref-like
 const data = ref([] as Person[])
 const table = useTable({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -240,10 +243,6 @@ const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   state: {
@@ -302,7 +301,6 @@ return () => (
 const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: { pagination },
@@ -311,7 +309,6 @@ const table = useTable({
 // ✅ Use a getter so Vue tracks `.value`.
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: {
@@ -355,17 +352,16 @@ import { useTable } from '@tanstack/vue-table'
 ```ts
 // ❌ `rowSortingFeature` not registered → `table.setSorting` and `table.atoms.sorting` do not exist.
 const features = tableFeatures({})
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 table.setSorting([{ id: 'age', desc: true }]) // TS error / runtime no-op
 
-// ✅ Register the feature; add the matching row model factory if it's a row-model feature.
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+// ✅ Register the feature and its matching row model factory inside tableFeatures.
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 ### Reimplementing built-in state transitions (CRITICAL — #1 AI tell)

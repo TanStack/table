@@ -16,13 +16,15 @@ Vanilla examples use the core table package directly with store reactivity bindi
 import { constructTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/table-core'
 import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 
-const features = tableFeatures({ rowSortingFeature, coreReactivityFeature: storeReactivityBindings() })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+  coreReactivityFeature: storeReactivityBindings(),
+})
 
 const table = constructTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -53,7 +55,6 @@ You can access the sorting state directly from the table instance with `table.at
 ```tsx
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -75,7 +76,6 @@ let sorting: SortingState = [] // can set initial sorting state here
 //...
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -96,7 +96,6 @@ If you do not need to control the sorting state in your own state management or 
 ```jsx
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -128,7 +127,6 @@ let sorting: SortingState = []
 //...
 const table = constructTable({
   features,
-  rowModels: {}, // no sortedRowModel needed for manual sorting
   columns,
   data,
   manualSorting: true, // use pre-sorted row model instead of sorted row model
@@ -146,7 +144,7 @@ const table = constructTable({
 
 ### Client-Side Sorting
 
-To implement client-side sorting, add the `rowSortingFeature` to your features and the `sortedRowModel` to your row models. Import `createSortedRowModel` and `sortFns` from TanStack Table:
+To implement client-side sorting, add the `rowSortingFeature`, `sortedRowModel`, and `sortFns` to your features. Import `createSortedRowModel` and `sortFns` from TanStack Table:
 
 ```jsx
 import {
@@ -157,13 +155,14 @@ import {
   sortFns,
 } from '@tanstack/table-core'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = constructTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -184,11 +183,11 @@ By default, there are 6 built-in sorting functions to choose from:
 - `datetime` - Sorts by time, use this if your values are `Date` objects.
 - `basic` - Sorts using a basic/standard `a > b ? 1 : a < b ? -1 : 0` comparison. This is the fastest sorting function, but may not be the most accurate.
 
-You can also define your own custom sorting functions either as the `sortFn` column option, or as a global sorting function using the `sortFns` table option.
+You can also define your own custom sorting functions either as the `sortFn` column option, or as a global sorting function using the `sortFns` features slot.
 
 #### Custom Sorting Functions
 
-When defining a custom sorting function in either the `sortFns` table option or as a `sortFn` column option, it should have the following signature:
+When defining a custom sorting function in either the `sortFns` features slot or as a `sortFn` column option, it should have the following signature:
 
 ```tsx
 //optionally use the SortFn to infer the parameter types
@@ -233,20 +232,21 @@ const columns = [
     },
   }
 ]
+const myCustomSortFn: SortFn<typeof features, Person> = (rowA, rowB, columnId) =>
+  rowA.original[columnId] > rowB.original[columnId]
+    ? 1
+    : rowA.original[columnId] < rowB.original[columnId]
+      ? -1
+      : 0
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: { ...sortFns, myCustomSortFn },
+})
 //...
 const table = constructTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel({
-      ...sortFns,
-      myCustomSortFn: (rowA, rowB, columnId) =>
-        rowA.original[columnId] > rowB.original[columnId]
-          ? 1
-          : rowA.original[columnId] < rowB.original[columnId]
-            ? -1
-            : 0,
-    }),
-  },
   columns,
   data,
 })
@@ -276,7 +276,7 @@ const columns = [
 //...
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -304,7 +304,7 @@ const columns = [
 //...
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -371,7 +371,7 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 ```jsx
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (always none -> asc -> desc -> asc)
@@ -398,7 +398,7 @@ const columns = [
 //...
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -412,7 +412,7 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 ```jsx
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -428,7 +428,7 @@ By default, there is no limit to the number of columns that can be sorted at onc
 ```jsx
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -442,7 +442,7 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 ```jsx
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

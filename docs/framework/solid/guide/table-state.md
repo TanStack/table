@@ -43,14 +43,13 @@ State slices are only created for the features that are registered in `features`
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   get data() {
     return data()
@@ -99,9 +98,6 @@ Use Solid's native primitives to derive reactive values from table atoms or the 
 ```tsx
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data()
@@ -211,10 +207,6 @@ If you only need to customize the starting value for some table state, use `init
 ```tsx
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data()
@@ -283,7 +275,6 @@ const dataQuery = useQuery(() => ({
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? []
@@ -313,10 +304,6 @@ const [pagination, setPagination] = createSignal<PaginationState>({
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data()

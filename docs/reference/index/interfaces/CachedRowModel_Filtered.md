@@ -5,7 +5,7 @@ title: CachedRowModel_Filtered
 
 # Interface: CachedRowModel\_Filtered\<TFeatures, TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:227](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L227)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:243](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L243)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:227](http
 filteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:231](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L231)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:247](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L247)
 
 #### Returns
 

@@ -29,6 +29,9 @@ type FormRow = Omit<Person, 'subRows'>
 const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 // Create column helper with features and row type
@@ -170,10 +173,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns,
       data: form.state.values.data,
       debugTable: true,

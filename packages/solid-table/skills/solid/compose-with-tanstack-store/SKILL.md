@@ -132,9 +132,6 @@ const sorting = useSelector(sortingAtom)
 
 const table = createTable({
   features,
-  rowModels: {
-    /* ... */
-  },
   columns,
   get data() {
     return data()
@@ -190,7 +187,6 @@ export function PageStatus() {
 // UsersTable.tsx
 const table = createTable({
   features,
-  rowModels,
   columns,
   get data() {
     return data()

@@ -15,13 +15,13 @@ Vue refs can be passed directly where the adapter expects reactive table options
 ```ts
 import { useTable, tableFeatures, rowExpandingFeature, createExpandedRowModel } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   columns,
   data,
 })
@@ -40,7 +40,7 @@ There are multiple use cases for expanding features in TanStack Table that will 
 
 ### Enable Client-Side Expanding
 
-To use the client-side expanding features, add the `rowExpandingFeature` to your features and the `expandedRowModel` to your row models:
+To use the client-side expanding features, add the `rowExpandingFeature` and `expandedRowModel` to your `tableFeatures` call:
 
 ```ts
 import {
@@ -50,13 +50,13 @@ import {
   createExpandedRowModel,
 } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   // other options...
 })
 ```
@@ -101,9 +101,6 @@ Then you can use the getSubRows function to return the children array in each ro
 ```ts
 const table = useTable({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   getSubRows: (row) => row.children, // return the children array as sub-rows
   // other options...
 })
@@ -148,7 +145,7 @@ const expanded = useSelector(expandedAtom) // a Vue ref
 
 const table = useTable({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
+
   // other options...
   atoms: {
     expanded: expandedAtom, // expanding APIs now update expandedAtom
@@ -163,7 +160,7 @@ const expanded = ref<ExpandedState>({})
 
 const table = useTable({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
+
   // other options...
   state: {
     get expanded() {
@@ -259,15 +256,17 @@ Use `table.setExpanded` to update the expanded state directly. `table.resetExpan
 By default, the filtering process starts from the parent rows and moves downwards. This means if a parent row is excluded by the filter, all its child rows will also be excluded. However, you can change this behavior by using the `filterFromLeafRows` option. When this option is enabled, the filtering process starts from the leaf (child) rows and moves upwards. This ensures that a parent row will be included in the filtered results as long as at least one of its child or grandchild rows meets the filter criteria. Additionally, you can control how deep into the child hierarchy the filter process goes by using the `maxLeafRowFilterDepth` option. This option allows you to specify the maximum depth of child rows that the filter should consider.
 
 ```ts
-const features = tableFeatures({ columnFilteringFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 
 //...
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   getSubRows: (row) => row.subRows,
   filterFromLeafRows: true, // search through the expanded rows
   maxLeafRowFilterDepth: 1, // limit the depth of the expanded rows that are searched
@@ -282,7 +281,7 @@ By default, expanded rows are paginated along with the rest of the table (which 
 ```ts
 const table = useTable({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
+
   // other options...
   paginateExpandedRows: false,
 })
@@ -305,7 +304,7 @@ A common reason to set `autoResetExpanded: false` is editing data while viewing 
 ```ts
 const table = useTable({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
+
   // other options...
   autoResetExpanded: false, // keep expanded state when data changes
   // autoResetAll: false, // or turn off all auto resets at once
@@ -321,7 +320,6 @@ const features = tableFeatures({ rowExpandingFeature })
 
 const table = useTable({
   features,
-  rowModels: {}, // no expandedRowModel needed for manual expanding
   // other options...
   manualExpanding: true,
 })

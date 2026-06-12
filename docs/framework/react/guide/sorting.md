@@ -13,13 +13,14 @@ Want to skip to the implementation? Check out these React examples:
 ```tsx
 import { useTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/react-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -50,7 +51,6 @@ For reactive reads that should re-render your UI, use `table.state.sorting` (sel
 ```tsx
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -76,7 +76,6 @@ const sorting = useSelector(sortingAtom)
 
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -93,7 +92,6 @@ const [sorting, setSorting] = useState<SortingState>([])
 //...
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -111,7 +109,6 @@ If you do not need to control the sorting state in your own state management or 
 ```tsx
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -148,7 +145,6 @@ const sorting = useSelector(sortingAtom)
 //...
 const table = useTable({
   features,
-  rowModels: {}, // no sortedRowModel needed for manual sorting
   columns,
   data,
   manualSorting: true, // use pre-sorted row model instead of sorted row model
@@ -164,7 +160,7 @@ Hoisting the sorting state into your own scope (with an external atom or the `st
 
 ### Client-Side Sorting
 
-To implement client-side sorting, add the `rowSortingFeature` to your features and the `sortedRowModel` to your row models. Import `createSortedRowModel` and `sortFns` from TanStack Table:
+To implement client-side sorting, add the `rowSortingFeature` and the `sortedRowModel` factory to your features. Import `createSortedRowModel` and `sortFns` from TanStack Table:
 
 ```tsx
 import {
@@ -175,13 +171,14 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -226,6 +223,19 @@ Every sorting function receives 2 rows and a column ID and are expected to compa
 | `1`    | `a > b`         |
 
 ```tsx
+const myCustomSortFn: SortFn<typeof features, MyData> = (rowA, rowB, columnId) =>
+  rowA.original[columnId] > rowB.original[columnId]
+    ? 1
+    : rowA.original[columnId] < rowB.original[columnId]
+      ? -1
+      : 0
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: { ...sortFns, myCustomSortFn },
+})
+
 const columns = [
   {
     header: () => 'Name',
@@ -235,7 +245,7 @@ const columns = [
   {
     header: () => 'Age',
     accessorKey: 'age',
-    sortFn: 'myCustomSortFn', // reference a custom sorting function registered with createSortedRowModel
+    sortFn: 'myCustomSortFn', // reference a custom sorting function registered in features
   },
   {
     header: () => 'Birthday',
@@ -254,33 +264,12 @@ const columns = [
 //...
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel({
-      ...sortFns,
-      myCustomSortFn: (rowA, rowB, columnId) =>
-        rowA.original[columnId] > rowB.original[columnId]
-          ? 1
-          : rowA.original[columnId] < rowB.original[columnId]
-            ? -1
-            : 0,
-    }),
-  },
   columns,
   data,
 })
 ```
 
-> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, augment the `SortFns` interface with a `declare module` block:
->
-> ```tsx
-> declare module '@tanstack/react-table' {
->   interface SortFns {
->     myCustomSortFn: SortFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `sortFn` column option.
+> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, register the function in the `sortFns` slot on `tableFeatures` (as shown above). Alternatively, skip the registry entirely by passing the function directly to the `sortFn` column option.
 
 ### Customize Sorting
 
@@ -306,7 +295,6 @@ const columns = [
 //...
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -334,7 +322,6 @@ const columns = [
 //...
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -401,7 +388,6 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 ```tsx
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (sorting can never return to 'none' once applied)
@@ -428,7 +414,6 @@ const columns = [
 //...
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -442,7 +427,6 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 ```tsx
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -458,7 +442,6 @@ By default, there is no limit to the number of columns that can be sorted at onc
 ```tsx
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -472,7 +455,6 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 ```tsx
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

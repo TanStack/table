@@ -11,7 +11,6 @@ function projectOptionsForTree(full: unknown) {
     state: _s,
     data: _d,
     features: _f,
-    rowModels: _r,
     ...options
   } = full as Record<string, unknown>
   return options

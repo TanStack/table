@@ -222,14 +222,14 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     enableToolbarInternalActions,
     enableTopToolbar,
     filterFns,
-    features: stockFeatures,
-    rowModels: {
+    features: {
+      ...stockFeatures,
       ...((enableColumnFilters || enableGlobalFilter || enableFilters) &&
       !manualFiltering
-        ? { filteredRowModel: createFilteredRowModel(filterFns as any) }
+        ? { filteredRowModel: createFilteredRowModel(), filterFns }
         : {}),
       ...(enableSorting && !manualSorting
-        ? { sortedRowModel: createSortedRowModel(sortFns as any) }
+        ? { sortedRowModel: createSortedRowModel(), sortFns }
         : {}),
       ...(enablePagination && !manualPagination
         ? { paginatedRowModel: createPaginatedRowModel() }
@@ -238,7 +238,10 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
         ? { expandedRowModel: createExpandedRowModel() }
         : {}),
       ...(enableGrouping && !manualGrouping
-        ? { groupedRowModel: createGroupedRowModel(aggregationFns as any) }
+        ? {
+            groupedRowModel: createGroupedRowModel(),
+            aggregationFns,
+          }
         : {}),
       ...(enableFacetedValues
         ? {

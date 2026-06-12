@@ -59,14 +59,13 @@ import { VirtualizerController } from '@tanstack/lit-virtual'
 const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 // in your LitElement's render method:
 const table = this.tableController.table({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data: this.data,
 })

@@ -42,16 +42,15 @@ State slices are only created for the features that are registered in `features`
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = constructTable({
   features: {
     coreReactivityFeature: storeReactivityBindings(),
     ...features,
-  },
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
   },
   columns,
   data,
@@ -151,10 +150,6 @@ const table = constructTable({
     coreReactivityFeature: storeReactivityBindings(),
     ...features,
   },
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -218,7 +213,6 @@ const table = constructTable({
     coreReactivityFeature: storeReactivityBindings(),
     ...features,
   },
-  rowModels: {},
   columns,
   data,
   atoms: {
@@ -239,6 +233,11 @@ When using the `atoms` option for a slice, you do not need to add the matching `
 The classic `state` plus `on[State]Change` pattern is still supported. This can be convenient when you already have a plain external state object, but it is less atomic than external atoms.
 
 ```ts
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
+
 let pagination: PaginationState = {
   pageIndex: 0,
   pageSize: 10,
@@ -248,9 +247,6 @@ const table = constructTable({
   features: {
     coreReactivityFeature: storeReactivityBindings(),
     ...features,
-  },
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
   },
   columns,
   data,

@@ -9,6 +9,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -19,22 +20,29 @@ import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
-import type { Column, FilterFn, RowData, SortFn } from '@tanstack/react-table'
+import type {
+  Column,
+  FilterFn,
+  RowData,
+  SortFn,
+  TableFeatures,
+} from '@tanstack/react-table'
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-const features = tableFeatures({
-  columnFilteringFeature,
-  globalFilteringFeature,
-  rowSortingFeature,
-  rowPaginationFeature,
-})
+// The filter meta that the fuzzy filter attaches to rows, declared per-table
+// via the `filterMeta` slot below. No declaration merging needed!
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
-const columnHelper = createColumnHelper<typeof features, Person>()
+// Broad features type for writing the custom fns below before the `features`
+// object exists, with the filter meta type plugged in
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -53,15 +61,15 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
 }
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
-      rowA.columnFiltersMeta[columnId].itemRank!,
-      rowB.columnFiltersMeta[columnId].itemRank!,
+      rowA.columnFiltersMeta[columnId].itemRank as RankingInfo,
+      rowB.columnFiltersMeta[columnId].itemRank as RankingInfo,
     )
   }
 
@@ -69,15 +77,20 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-declare module '@tanstack/react-table' {
-  // add fuzzy filter to the filterFns
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const rerender = React.useReducer(() => ({}), {})[1]
@@ -102,9 +115,8 @@ function App() {
           id: 'fullName',
           header: 'Full Name',
           cell: (info) => info.getValue(),
-          filterFn: 'fuzzy', // using our custom fuzzy filter function
-          // filterFn: fuzzyFilter, //or just define with the function
-          sortFn: fuzzySort, // sort by fuzzy rank (falls back to alphanumeric)
+          filterFn: 'fuzzy', // using our custom fuzzy filter function registered in `features`
+          sortFn: 'fuzzy', // sort by fuzzy rank (falls back to alphanumeric)
         }),
       ]),
     [],
@@ -117,14 +129,6 @@ function App() {
   const table = useTable<typeof features, Person>(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data,
       globalFilterFn: 'fuzzy', // apply fuzzy filter to the global filter (most common use case for fuzzy filter)

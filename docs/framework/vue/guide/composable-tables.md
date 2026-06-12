@@ -63,15 +63,15 @@ const features = tableFeatures({
   globalFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const _hook = createTableHook({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   getRowId: (row) => row.id,
   tableComponents: {
     PaginationControls,

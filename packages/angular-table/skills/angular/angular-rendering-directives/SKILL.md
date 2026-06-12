@@ -297,10 +297,10 @@ column defs short and typed.
 
 ```ts
 export const { injectAppTable, createAppColumnHelper } = createTableHook({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: {
-    /* … */
-  },
+  features: tableFeatures({
+    rowSortingFeature,
+    /* row-model factories and fn registries also go here */
+  }),
   tableComponents: { PaginationControls, RowCount },
   cellComponents: { TextCell, NumberCell, StatusCell },
   headerComponents: { SortIndicator, ColumnFilter },

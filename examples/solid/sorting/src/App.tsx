@@ -11,7 +11,11 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
@@ -72,9 +76,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
     get data() {
       return data()
     },

@@ -44,14 +44,13 @@ State slices are only created for the features that are registered in `features`
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data: this._data,
 })
@@ -99,9 +98,6 @@ The second argument to `tableController.table(...)` is a TanStack Store selector
 const table = this.tableController.table(
   {
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data: this._data,
   },
@@ -165,10 +161,6 @@ If you only need to customize the starting value for some table state, use `init
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this._data,
   initialState: {
@@ -228,7 +220,6 @@ const paginationAtom = createAtom<PaginationState>({
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this._data,
   atoms: {
@@ -253,9 +244,6 @@ private _sorting: SortingState = []
 protected render() {
   const table = this.tableController.table({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
     columns,
     data: this._data,
     state: {

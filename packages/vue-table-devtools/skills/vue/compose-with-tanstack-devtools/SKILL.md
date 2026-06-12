@@ -67,7 +67,6 @@ import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 
 const table = useTable({
   features,
-  rowModels,
   key: 'users-table',
   columns,
   data,

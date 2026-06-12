@@ -19,7 +19,6 @@ const features = tableFeatures({ columnVisibilityFeature })
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data()
@@ -54,7 +53,6 @@ const columnVisibility = useSelector(columnVisibilityAtom) // subscribe wherever
 
 const table = createTable({
   features,
-  rowModels: {},
   //...
   atoms: {
     columnVisibility: columnVisibilityAtom,
@@ -75,7 +73,6 @@ const [columnVisibility, setColumnVisibility] = createSignal<ColumnVisibilitySta
 
 const table = createTable({
   features,
-  rowModels: {},
   //...
   state: {
     get columnVisibility() {
@@ -96,7 +93,6 @@ const features = tableFeatures({ columnVisibilityFeature })
 
 const table = createTable({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnVisibility: {

@@ -35,12 +35,14 @@ import {
 } from '@tanstack/table-core'
 import type { ExpandedState } from '@tanstack/table-core'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 // Tree mode — data has nested subRows
 const table = constructTable({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   columns,
   data,
   getSubRows: (row) => row.subRows,
@@ -50,7 +52,6 @@ const table = constructTable({
 // Or detail-panel mode — every row can expand to a sub-component
 const detailTable = constructTable({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   columns,
   data,
   getRowCanExpand: () => true,
@@ -120,11 +121,12 @@ const detailTable = constructTable({
 
 ```ts
 const table = constructTable({
-  features: tableFeatures({ rowExpandingFeature, rowPaginationFeature }),
-  rowModels: {
+  features: tableFeatures({
+    rowExpandingFeature,
+    rowPaginationFeature,
     expandedRowModel: createExpandedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-  },
+  }),
   columns,
   data,
   getSubRows: (r) => r.subRows,
@@ -138,11 +140,13 @@ const table = constructTable({
 
 ```ts
 const table = constructTable({
-  features: tableFeatures({ rowExpandingFeature, columnFilteringFeature }),
-  rowModels: {
+  features: tableFeatures({
+    rowExpandingFeature,
+    columnFilteringFeature,
     expandedRowModel: createExpandedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
+    filteredRowModel: createFilteredRowModel(),
+    filterFns,
+  }),
   columns,
   data,
   getSubRows: (r) => r.subRows,
@@ -171,7 +175,6 @@ Correct:
 // For pure tree data, omit getRowCanExpand and let it auto-detect:
 const table = useTable({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   columns,
   data,
   getSubRows: (row) => row.subRows,
@@ -180,8 +183,10 @@ const table = useTable({
 
 // For pure detail panels, override and skip getSubRows:
 const table = useTable({
-  features: tableFeatures({ rowExpandingFeature }),
-  rowModels: { expandedRowModel: createExpandedRowModel() },
+  features: tableFeatures({
+    rowExpandingFeature,
+    expandedRowModel: createExpandedRowModel(),
+  }),
   columns,
   data,
   getRowCanExpand: () => true,
@@ -210,10 +215,6 @@ Correct:
 // Default behavior — children flow through pagination, pageSize is enforced:
 const table = useTable({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   getSubRows: (r) => r.subRows,
@@ -268,8 +269,10 @@ Wrong:
 ```ts
 // manualExpanding bypasses the expanded row model; sub-rows are never flattened
 const table = useTable({
-  features: tableFeatures({ rowExpandingFeature }),
-  rowModels: { expandedRowModel: createExpandedRowModel() }, // ignored
+  features: tableFeatures({
+    rowExpandingFeature,
+    expandedRowModel: createExpandedRowModel(), // ignored when manualExpanding: true
+  }),
   columns,
   data,
   getSubRows: (r) => r.subRows,
@@ -284,7 +287,7 @@ Correct:
 // a pre-flattened view based on which rows are expanded.
 const table = useTable({
   features: tableFeatures({ rowExpandingFeature }),
-  rowModels: {}, // no expandedRowModel for manual mode
+  // no expandedRowModel registered for manual mode
   columns,
   data: dataQuery.data, // server returns flattened rows when expanded
   manualExpanding: true,
@@ -294,8 +297,10 @@ const table = useTable({
 
 // For client-side tree, omit manualExpanding:
 const clientTable = useTable({
-  features: tableFeatures({ rowExpandingFeature }),
-  rowModels: { expandedRowModel: createExpandedRowModel() },
+  features: tableFeatures({
+    rowExpandingFeature,
+    expandedRowModel: createExpandedRowModel(),
+  }),
   columns,
   data,
   getSubRows: (r) => r.subRows,
@@ -329,9 +334,12 @@ Correct:
 
 ```ts
 const table = useTable({
-  features: tableFeatures({ rowExpandingFeature }),
-  rowModels: { expandedRowModel: createExpandedRowModel() },
-  columns, data,
+  features: tableFeatures({
+    rowExpandingFeature,
+    expandedRowModel: createExpandedRowModel(),
+  }),
+  columns,
+  data,
   getSubRows: (r) => r.subRows,
 })
 

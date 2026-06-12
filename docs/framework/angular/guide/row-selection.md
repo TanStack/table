@@ -22,7 +22,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))
@@ -69,7 +68,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     //...
     atoms: {
       rowSelection: this.rowSelectionAtom, // selection APIs now update rowSelectionAtom
@@ -87,7 +85,6 @@ readonly rowSelection = signal<RowSelectionState>({})
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   onRowSelectionChange: (updater) =>
     typeof updater === 'function'
@@ -106,7 +103,6 @@ By default, the row id for each row is simply the `row.index`. If you are using 
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   //...
   getRowId: (row) => row.uuid, // use the row's uuid from your database as the row id
 }))

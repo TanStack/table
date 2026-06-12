@@ -6,14 +6,17 @@ title: createFilteredRowModel
 # Function: createFilteredRowModel()
 
 ```ts
-function createFilteredRowModel<TFeatures, TData>(filterFns): (table) => () => RowModel<TFeatures, TData>;
+function createFilteredRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/createFilteredRowModel.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/createFilteredRowModel.ts#L27)
+Defined in: [features/column-filtering/createFilteredRowModel.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/createFilteredRowModel.ts#L28)
 
 Creates a memoized filtered row model factory.
 
 The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+
+Register filter functions with the `filterFns` slot on the `features` option:
+`tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`.
 
 ## Type Parameters
 
@@ -24,12 +27,6 @@ The factory reads the relevant table state atoms and options, then returns a row
 ### TData
 
 `TData` *extends* [`RowData`](../type-aliases/RowData.md) = `any`
-
-## Parameters
-
-### filterFns
-
-`Record`\<keyof [`FilterFns`](../interfaces/FilterFns.md), [`FilterFn`](../interfaces/FilterFn.md)\<`TFeatures`, [`RowData`](../type-aliases/RowData.md)\>\>
 
 ## Returns
 

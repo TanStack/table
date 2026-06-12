@@ -65,14 +65,12 @@ export const {
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
-  }),
-
-  // Row models are set once here
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
+    sortedRowModel: createSortedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-  },
+    filterFns,
+    sortFns,
+  }),
 
   // set any default table options here too
   getRowId: (row) => row.id,

@@ -37,48 +37,27 @@ import type {
   Row,
   RowData,
   SortFn,
+  TableFeatures,
 } from '@tanstack/solid-table'
 
-declare module '@tanstack/solid-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
 }
 
-interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select'
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilterFn: FilterFn<FuzzyFeatures, RowData> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
+  const itemRank = rankItem(row.getValue(columnId), value)
+  addMeta?.({ itemRank })
+  return itemRank.passed
 }
 
-const features = tableFeatures({
-  ...stockFeatures,
-  columnMeta: metaHelper<MyColumnMeta>(),
-})
-
-const { createAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      fuzzy: (row, columnId, value, addMeta) => {
-        const itemRank = rankItem(row.getValue(columnId), value)
-        addMeta?.({ itemRank })
-        return itemRank.passed
-      },
-    }),
-    facetedRowModel: createFacetedRowModel(),
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
-})
-
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySortFn: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -88,6 +67,31 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   }
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
+
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilterFn },
+  sortFns: { ...sortFns, fuzzy: fuzzySortFn },
+  aggregationFns,
+})
+
+const { createAppTable, createAppColumnHelper } = createTableHook({
+  features,
+})
 
 const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -463,7 +467,7 @@ const columns = columnHelper.columns([
     size: 200,
     header: 'First Name',
     filterFn: 'fuzzy',
-    sortFn: fuzzySort,
+    sortFn: 'fuzzy',
     meta: { filterVariant: 'text' },
     getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
     cell: ({ row, getValue }) => (
@@ -528,27 +532,24 @@ function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const [, setRenderTick] = createSignal({})
 
-  const table = createAppTable(
-    {
-      key: 'kitchen-sink', // needed for devtools
-      columns,
-      get data() {
-        return data()
-      },
-      getSubRows: (row) => row.subRows,
-      globalFilterFn: 'fuzzy',
-      columnResizeMode: 'onChange',
-      defaultColumn: { minSize: 200, maxSize: 800 },
-      initialState: {
-        columnOrder: columns.map((c) => c.id!),
-        columnPinning: { left: ['select'], right: [] },
-        pagination: { pageIndex: 0, pageSize: 20 },
-      },
-      keepPinnedRows: true,
-      debugTable: true,
+  const table = createAppTable({
+    key: 'kitchen-sink', // needed for devtools
+    columns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    getSubRows: (row) => row.subRows,
+    globalFilterFn: 'fuzzy',
+    columnResizeMode: 'onChange',
+    defaultColumn: { minSize: 200, maxSize: 800 },
+    initialState: {
+      columnOrder: columns.map((c) => c.id!),
+      columnPinning: { left: ['select'], right: [] },
+      pagination: { pageIndex: 0, pageSize: 20 },
+    },
+    keepPinnedRows: true,
+    debugTable: true,
+  })
 
   useTanStackTableDevtools(table)
 

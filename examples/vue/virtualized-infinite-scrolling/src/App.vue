@@ -23,6 +23,8 @@ const isDev = import.meta.env.DEV
 const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -114,9 +116,6 @@ onMounted(() => {
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   get data() {
     return flatData.value
   },

@@ -5,7 +5,7 @@ title: StringHeaderIdentifier
 
 # Interface: StringHeaderIdentifier
 
-Defined in: [types/ColumnDef.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L47)
+Defined in: [types/ColumnDef.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L70)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [types/ColumnDef.ts:47](https://github.com/TanStack/table/blob/main/
 header: string;
 ```
 
-Defined in: [types/ColumnDef.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L51)
+Defined in: [types/ColumnDef.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L74)
 
 Header text used both for rendering and as a fallback column id.
 
@@ -27,6 +27,6 @@ Header text used both for rendering and as a fallback column id.
 optional id: string;
 ```
 
-Defined in: [types/ColumnDef.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L55)
+Defined in: [types/ColumnDef.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L78)
 
 Optional explicit id that overrides the header-derived id.

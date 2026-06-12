@@ -27,6 +27,12 @@
     rowPaginationFeature,
     rowSortingFeature,
     rowSelectionFeature,
+    expandedRowModel: createExpandedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+    filterFns,
+    sortFns,
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()
@@ -79,12 +85,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       get data() {
         return data

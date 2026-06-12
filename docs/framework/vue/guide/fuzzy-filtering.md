@@ -6,27 +6,31 @@ title: Fuzzy Filtering (Vue) Guide
 
 Want to skip to the implementation? Check out these Vue examples:
 
-- [Kitchen Sink](../examples/kitchen-sink) (includes a complete fuzzy filter with registry registration and module augmentation)
+- [Kitchen Sink](../examples/kitchen-sink) (includes a complete fuzzy filter with registry registration)
 
 Vue refs can be passed directly where the adapter expects reactive table options.
 
 ### Vue Setup
 
 ```ts
-import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns } from '@tanstack/vue-table'
+import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns, metaHelper } from '@tanstack/vue-table'
+import type { FilterFn, SortFn, RowData } from '@tanstack/vue-table'
+
+interface FuzzyFilterMeta { itemRank?: RankingInfo }
 
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -52,9 +56,12 @@ Here's an example of a custom fuzzy filter function:
 ```typescript
 import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type { FilterFn, RowData } from '@tanstack/vue-table'
+import type { FilterFn, RowData, TableFeatures } from '@tanstack/vue-table'
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+interface FuzzyFilterMeta { itemRank?: RankingInfo }
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -73,18 +80,21 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
 
 In this function, we're using the `rankItem` function from the `@tanstack/match-sorter-utils` library to rank the item. We then store the ranking information in the filter meta of the row (the `addMeta` callback is optional, so call it with optional chaining), and return whether the item passed the ranking criteria.
 
-To reference this filter function by the string name `'fuzzy'` (and to type the stored filter meta), augment the `FilterFns` and `FilterMeta` interfaces with a `declare module` block:
+To reference this filter function by the string name `'fuzzy'` and to type the stored filter meta, register the function and the meta shape in the `tableFeatures` call. The `filterFns` slot registers the function, and the `filterMeta` slot (using `metaHelper`) types the per-row meta that `addMeta` stores:
 
 ```typescript
-declare module '@tanstack/vue-table' {
-  // add the fuzzy filter to the filterFns registry types
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+import { metaHelper } from '@tanstack/vue-table'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
 ```
 
 ### Using Fuzzy Filtering with Global Filtering
@@ -102,23 +112,22 @@ import {
   createSortedRowModel,
   filterFns,
   sortFns,
+  metaHelper,
 } from '@tanstack/vue-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(), // needed if you want sorting with fuzzy rank
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns,
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      fuzzy: fuzzyFilter,
-    }),
-    sortedRowModel: createSortedRowModel(sortFns), // needed if you want sorting with fuzzy rank
-  },
   columns,
   data,
   globalFilterFn: 'fuzzy',
@@ -127,7 +136,7 @@ const table = useTable({
 
 ### Using Fuzzy Filtering with Column Filtering
 
-To use fuzzy filtering with column filtering, pass your fuzzy filter function to `createFilteredRowModel` (merging it with the built-in `filterFns`). You can then specify the fuzzy filter by name in the `filterFn` option of the column definition:
+To use fuzzy filtering with column filtering, register your fuzzy filter function in the `filterFns` slot of `tableFeatures` (merging it with the built-in `filterFns`). You can then specify the fuzzy filter by name in the `filterFn` option of the column definition:
 
 ```typescript
 const column = [
@@ -151,9 +160,11 @@ When using fuzzy filtering with column filtering, you might also want to sort th
 ```typescript
 import { compareItems } from '@tanstack/match-sorter-utils'
 import { sortFns } from '@tanstack/vue-table'
-import type { SortFn } from '@tanstack/vue-table'
+import type { SortFn, TableFeatures } from '@tanstack/vue-table'
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -184,4 +195,4 @@ You can then pass this sorting function directly to the `sortFn` option of the c
 }
 ```
 
-> **Note:** Unlike `filterFn: 'fuzzy'` above, `fuzzySort` is passed as a function rather than a string. A string reference like `sortFn: 'fuzzySort'` would only work if you also registered the function in the registry passed to `createSortedRowModel` (e.g. `createSortedRowModel({ ...sortFns, fuzzySort })`) and augmented the `SortFns` interface the same way as `FilterFns`. Passing the function directly skips both steps.
+> **Note:** Unlike `filterFn: 'fuzzy'` above, `fuzzySort` is passed as a function rather than a string. A string reference like `sortFn: 'fuzzySort'` would only work if you also added `fuzzySort` to the `sortFns` slot in `tableFeatures` (e.g. `sortFns: { ...sortFns, fuzzySort }`). Passing the function directly skips that step.

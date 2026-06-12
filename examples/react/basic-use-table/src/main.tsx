@@ -106,7 +106,6 @@ function App() {
       key: 'basic-use-table', // needed for devtools, omit if you don't want to use the devtools
       debugTable: true, // optionally, enable console logging debug messages
       features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-      rowModels: {}, // `Core` row model is now included by default, but you can still override it here
       columns,
       data,
       // add additional table options here

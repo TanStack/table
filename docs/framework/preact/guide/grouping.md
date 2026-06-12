@@ -13,13 +13,14 @@ Want to skip to the implementation? Check out these Preact examples:
 ```tsx
 import { useTable, tableFeatures, columnGroupingFeature, createGroupedRowModel, aggregationFns } from '@tanstack/preact-table'
 
-const features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-  },
   columns,
   data,
 })
@@ -35,7 +36,7 @@ Grouping can also affect column order. There are 3 table features that can reord
 2. Manual [Column Ordering](./column-ordering) - A manually specified column order is applied.
 3. **Grouping** - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
-To use the grouping feature, add the `columnGroupingFeature` to your features and the `groupedRowModel` to your row models. The grouped row model is responsible for grouping the rows based on the grouping state.
+To use the grouping feature, add the `columnGroupingFeature`, the `groupedRowModel` factory, and `aggregationFns` to your `tableFeatures` call. The grouped row model is responsible for grouping the rows based on the grouping state.
 
 ```tsx
 import {
@@ -46,13 +47,14 @@ import {
   aggregationFns,
 } from '@tanstack/preact-table'
 
-const features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-  },
   // other options...
 })
 ```
@@ -61,14 +63,16 @@ When grouping state is active, the table will add matching rows as subRows to th
 To allow the user to expand and collapse the grouped rows, you can use the expanding feature.
 
 ```tsx
-const features = tableFeatures({ columnGroupingFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   // other options...
 })
 ```
@@ -92,7 +96,6 @@ By default, when a column is grouped, it is moved to the start of the table. You
 ```tsx
 const table = useTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   groupedColumnMode: 'reorder',
 })
@@ -128,16 +131,21 @@ There are several built-in aggregation functions that you can use:
 You can define custom aggregation functions in the registry that you pass to `createGroupedRowModel`. The registry is a record where the keys are the names of the aggregation functions, and the values are the aggregation functions themselves. You can then reference these aggregation functions by name in a column's `aggregationFn` option.
 
 ```tsx
+const myCustomAggregation: AggregationFn<typeof features, MyData> = (columnId, leafRows, childRows) => {
+  // return the aggregated value
+}
+
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: {
+    ...aggregationFns,
+    myCustomAggregation,
+  },
+})
+
 const table = useTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel({
-      ...aggregationFns,
-      myCustomAggregation: (columnId, leafRows, childRows) => {
-        // return the aggregated value
-      },
-    }),
-  },
   // other options...
 })
 ```
@@ -150,28 +158,17 @@ const column = columnHelper.accessor('key', {
 })
 ```
 
-> **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, augment the `AggregationFns` interface with a `declare module` block:
->
-> ```tsx
-> declare module '@tanstack/preact-table' {
->   interface AggregationFns {
->     myCustomAggregation: AggregationFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `aggregationFn` column option.
+> **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, register the function in the `aggregationFns` slot on `tableFeatures` (as shown above). TypeScript infers the registered names from the slot automatically. Alternatively, skip the registry entirely by passing the function directly to the `aggregationFn` column option.
 
 ### Manual Grouping
 
 If you are doing server-side grouping and aggregation, you can enable manual grouping using the manualGrouping option. When this option is set to true, the table will not automatically group rows using getGroupedRowModel() and instead will expect you to manually group the rows before passing them to the table.
 
 ```tsx
-const features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({ columnGroupingFeature }) // no groupedRowModel for manual grouping
 
 const table = useTable({
   features,
-  rowModels: {}, // no groupedRowModel needed for manual grouping
   // other options...
   manualGrouping: true,
 })
@@ -194,7 +191,6 @@ const grouping = useSelector(groupingAtom)
 
 const table = useTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   atoms: {
     grouping: groupingAtom, // grouping APIs now update groupingAtom
@@ -209,7 +205,6 @@ const [grouping, setGrouping] = useState<GroupingState>([])
 
 const table = useTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   state: {
     grouping,

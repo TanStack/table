@@ -15,7 +15,10 @@ import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import { TableController, tableFeatures, rowExpandingFeature, createExpandedRowModel } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 @customElement('my-table')
 class MyTable extends LitElement {
@@ -27,9 +30,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-      },
       columns,
       data: this.data,
     })
@@ -62,13 +62,13 @@ import {
   createExpandedRowModel,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   // other options...
 })
 ```
@@ -113,9 +113,6 @@ Then you can use the getSubRows function to return the children array in each ro
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   getSubRows: (row) => row.children, // return the children array as sub-rows
   // other options...
 })
@@ -132,9 +129,6 @@ By default, the `row.getCanExpand()` row instance API will return false unless i
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {
-    expandedRowModel: createExpandedRowModel(),
-  },
   getRowCanExpand: (row) => true, // Add your logic to determine if a row can be expanded. True means all rows include expanded data
   // other options...
 })
@@ -174,7 +168,6 @@ const expandedAtom = createAtom<ExpandedState>({})
 
 const table = this.tableController.table({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   atoms: {
     expanded: expandedAtom, // expanding APIs now update expandedAtom
@@ -192,7 +185,6 @@ private expanded: ExpandedState = {}
 
 const table = this.tableController.table({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   state: {
     expanded: this.expanded,
@@ -274,15 +266,17 @@ Use `table.setExpanded` to update the expanded state directly. `table.resetExpan
 By default, the filtering process starts from the parent rows and moves downwards. This means if a parent row is excluded by the filter, all its child rows will also be excluded. However, you can change this behavior by using the `filterFromLeafRows` option. When this option is enabled, the filtering process starts from the leaf (child) rows and moves upwards. This ensures that a parent row will be included in the filtered results as long as at least one of its child or grandchild rows meets the filter criteria. Additionally, you can control how deep into the child hierarchy the filter process goes by using the `maxLeafRowFilterDepth` option. This option allows you to specify the maximum depth of child rows that the filter should consider.
 
 ```ts
-const features = tableFeatures({ columnFilteringFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 
 //...
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   getSubRows: (row) => row.subRows,
   filterFromLeafRows: true, // search through the expanded rows
   maxLeafRowFilterDepth: 1, // limit the depth of the expanded rows that are searched
@@ -297,7 +291,6 @@ By default, expanded rows are paginated along with the rest of the table (which 
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   paginateExpandedRows: false,
 })
@@ -320,7 +313,6 @@ A common reason to set `autoResetExpanded: false` is editing data while viewing 
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { expandedRowModel: createExpandedRowModel() },
   // other options...
   autoResetExpanded: false, // keep expanded state when data changes
   // autoResetAll: false, // or turn off all auto resets at once
@@ -336,7 +328,6 @@ const features = tableFeatures({ rowExpandingFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {}, // no expandedRowModel needed for manual expanding
   // other options...
   manualExpanding: true,
 })

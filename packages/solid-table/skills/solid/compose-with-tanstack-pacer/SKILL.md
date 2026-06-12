@@ -51,7 +51,11 @@ import {
 import { useDebouncedCallback } from '@tanstack/solid-pacer/debouncer'
 import { For, createSignal } from 'solid-js'
 
-const features = tableFeatures({ columnFilteringFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 function FirstNameFilter(props: {
@@ -92,7 +96,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
     columns,
     get data() {
       return data()
@@ -140,7 +143,6 @@ import { useThrottledCallback } from '@tanstack/solid-pacer/throttler'
 
 const table = createTable({
   features: tableFeatures({ columnSizingFeature, columnResizingFeature }),
-  rowModels: {},
   columns,
   get data() {
     return data()

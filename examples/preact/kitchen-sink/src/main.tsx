@@ -38,28 +38,25 @@ import type {
   Row,
   RowData,
   SortFn,
+  TableFeatures,
 } from '@tanstack/preact-table'
 import './index.css'
-
-declare module '@tanstack/preact-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
 
 interface MyColumnMeta {
   filterVariant?: 'text' | 'range' | 'select'
 }
 
-const features = tableFeatures({
-  ...stockFeatures,
-  columnMeta: metaHelper<MyColumnMeta>(),
-})
+// The filter meta that the fuzzy filter attaches to rows, declared per-table
+// via the `filterMeta` slot below. No declaration merging needed!
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+// Broad features type for writing the custom fns below before the `features`
+// object exists, with the filter meta type plugged in
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -70,7 +67,7 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -81,13 +78,32 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
-  const statusOrder = ['single', 'complicated', 'relationship']
-  return (
-    statusOrder.indexOf(rowA.original.status) -
-    statusOrder.indexOf(rowB.original.status)
-  )
-}
+const features = tableFeatures({
+  ...stockFeatures,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: {
+    ...sortFns,
+    fuzzy: fuzzySort,
+    sortStatus: (rowA: any, rowB: any) => {
+      const statusOrder = ['single', 'complicated', 'relationship']
+      return (
+        statusOrder.indexOf(rowA.original.status) -
+        statusOrder.indexOf(rowB.original.status)
+      )
+    },
+  },
+  aggregationFns,
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
 
 const getCommonPinningStyles = (
   column: Column<typeof features, Person>,
@@ -470,7 +486,7 @@ function App() {
         size: 200,
         header: 'First Name',
         filterFn: 'fuzzy',
-        sortFn: fuzzySort,
+        sortFn: 'fuzzy',
         meta: { filterVariant: 'text' },
         getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
         cell: ({ row, getValue }) => (
@@ -516,7 +532,7 @@ function App() {
         id: 'status',
         size: 200,
         header: 'Status',
-        sortFn: sortStatusFn,
+        sortFn: 'sortStatus',
         meta: { filterVariant: 'select' },
       }),
       columnHelper.accessor('progress', {
@@ -543,19 +559,6 @@ function App() {
     {
       key: 'kitchen-sink', // needed for devtools
       features,
-      rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        facetedRowModel: createFacetedRowModel(),
-        facetedMinMaxValues: createFacetedMinMaxValues(),
-        facetedUniqueValues: createFacetedUniqueValues(),
-        groupedRowModel: createGroupedRowModel(aggregationFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data,
       getSubRows: (row) => row.subRows,

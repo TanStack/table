@@ -14,7 +14,6 @@ import type {
   FilterOperator,
   JoinOperator,
 } from '@/types'
-import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { FilterFn, RowData } from '@tanstack/react-table'
 import type { features } from '../main'
 
@@ -29,15 +28,6 @@ export const fuzzyFilter: FilterFn<typeof features, RowData> = (
   addMeta?.({ itemRank })
 
   return itemRank.passed
-}
-
-declare module '@tanstack/react-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
 }
 
 function isFalsy(val: unknown) {
@@ -116,11 +106,10 @@ const filterFn_enhancedGreaterThan: FilterFn<typeof features, RowData> = (
 
 filterFn_enhancedGreaterThan.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<typeof features, RowData> = (
-  row,
-  columnId: string,
-  filterValue: unknown,
-) => {
+const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<
+  typeof features,
+  RowData
+> = (row, columnId: string, filterValue: unknown) => {
   const rowValue = row.getValue(columnId)
 
   if (isValidDate(rowValue) && isValidDate(filterValue)) {

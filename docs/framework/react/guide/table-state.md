@@ -47,14 +47,13 @@ For example, if `features` includes `rowPaginationFeature`, TypeScript exposes p
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -104,9 +103,6 @@ You can pass your own selector to make `table.state` contain only the reactive s
 const table = useTable(
   {
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data,
   },
@@ -124,7 +120,6 @@ For large tables, you can also opt the parent table component out of table-state
 const table = useTable(
   {
     features,
-    rowModels: {},
     columns,
     data,
   },
@@ -144,10 +139,6 @@ Without a `source` prop, `table.Subscribe` subscribes to `table.store` and requi
 const table = useTable(
   {
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data,
   },
@@ -291,10 +282,6 @@ If you only need to customize the starting value for some table state, use `init
 ```tsx
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -364,7 +351,6 @@ function App() {
 
   const table = useTable({
     features,
-    rowModels: {},
     columns,
     data: dataQuery.data?.rows ?? [],
     rowCount: dataQuery.data?.rowCount,
@@ -395,10 +381,6 @@ const [pagination, setPagination] = React.useState<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   state: {
@@ -423,9 +405,6 @@ const [sorting, setSorting] = React.useState<SortingState>([])
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
   state: {
@@ -445,9 +424,6 @@ const [pagination, setPagination] = React.useState<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   state: {

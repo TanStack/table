@@ -5,10 +5,11 @@ description: >
   `@tanstack/preact-table`. Maps every old-shaped option, helper, type, and
   method an agent will reproduce from v8 muscle memory to its v9 equivalent:
   `useReactTable` → `useTable`, per-row-model `get*RowModel` options →
-  `features` + `rowModels`, plain column helpers → typed column helpers,
-  `state` + `on*Change` → `atoms`, `flexRender` → `table.FlexRender`, and core
-  type renames. Routing keywords: v8 to v9, migration, useReactTable, table
-  v8 preact, get*RowModel, features.
+  row-model factories registered in `tableFeatures({...})`, plain column
+  helpers → typed column helpers, `state` + `on*Change` → `atoms`,
+  `flexRender` → `table.FlexRender`, and core type renames.
+  Routing keywords: v8 to v9, migration, useReactTable, table v8 preact,
+  get*RowModel, features.
 type: lifecycle
 library: tanstack-table
 framework: preact
@@ -28,21 +29,21 @@ The Preact adapter mirrors the React v9 surface, so any v8 → v9 migration guid
 
 ## The Core Mapping
 
-| v8 (Preact / React-compatible)                                           | v9 (`@tanstack/preact-table`)                                                                                                                                                                                                          |
-| ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `useReactTable(opts)`                                                    | `useTable(opts, selector?)`                                                                                                                                                                                                            |
-| `getCoreRowModel: getCoreRowModel()`                                     | included by default — `rowModels: {}` is valid                                                                                                                                                                                         |
-| `getSortedRowModel: getSortedRowModel()`                                 | `features: { rowSortingFeature }` + `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }`                                                                                                                                     |
-| `getFilteredRowModel: getFilteredRowModel()`                             | `features: { columnFilteringFeature, globalFilteringFeature }` + `rowModels: { filteredRowModel: createFilteredRowModel(filterFns) }`                                                                                                  |
-| `getPaginationRowModel: getPaginationRowModel()`                         | `features: { rowPaginationFeature }` + `rowModels: { paginatedRowModel: createPaginatedRowModel() }`                                                                                                                                   |
-| `getGroupedRowModel: getGroupedRowModel()`                               | `features: { columnGroupingFeature }` + `rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) }`                                                                                                                        |
-| `getExpandedRowModel: getExpandedRowModel()`                             | `features: { rowExpandingFeature }` + `rowModels: { expandedRowModel: createExpandedRowModel() }`                                                                                                                                      |
-| `getFacetedRowModel`, `getFacetedUniqueValues`, `getFacetedMinMaxValues` | `features: { columnFacetingFeature, globalFacetingFeature }` + `rowModels: { facetedRowModel: createFacetedRowModel(facetedFns), facetedUniqueValues: createFacetedUniqueValues(), facetedMinMaxValues: createFacetedMinMaxValues() }` |
-| `flexRender(def, ctx)`                                                   | `<table.FlexRender cell={cell} />` / `header={...}` / `footer={...}`                                                                                                                                                                   |
-| `state`, `on*Change` (only)                                              | still supported, plus `atoms` (preferred per slice)                                                                                                                                                                                    |
-| `createColumnHelper<TData>()`                                            | `createColumnHelper<typeof features, TData>()` — both generics required                                                                                                                                                                |
-| `ColumnDef<TData, TValue>`                                               | `ColumnDef<TFeatures, TData, TValue>` — `TFeatures` is now the first generic                                                                                                                                                           |
-| `Table<TData>`                                                           | `Table<TFeatures, TData>`                                                                                                                                                                                                              |
+| v8 (Preact / React-compatible)                                           | v9 (`@tanstack/preact-table`)                                                                                                                                                                                                                                                   |
+| ------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `useReactTable(opts)`                                                    | `useTable(opts, selector?)`                                                                                                                                                                                                                                                     |
+| `getCoreRowModel: getCoreRowModel()`                                     | included by default; no factory needed                                                                                                                                                                                                                                          |
+| `getSortedRowModel: getSortedRowModel()`                                 | `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`                                                                                                                                                                                         |
+| `getFilteredRowModel: getFilteredRowModel()`                             | `tableFeatures({ columnFilteringFeature, globalFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`                                                                                                                                                      |
+| `getPaginationRowModel: getPaginationRowModel()`                         | `tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })`                                                                                                                                                                                         |
+| `getGroupedRowModel: getGroupedRowModel()`                               | `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })`                                                                                                                                                                            |
+| `getExpandedRowModel: getExpandedRowModel()`                             | `tableFeatures({ rowExpandingFeature, expandedRowModel: createExpandedRowModel() })`                                                                                                                                                                                            |
+| `getFacetedRowModel`, `getFacetedUniqueValues`, `getFacetedMinMaxValues` | `tableFeatures({ columnFacetingFeature, globalFacetingFeature, facetedRowModel: createFacetedRowModel(), facetedUniqueValues: createFacetedUniqueValues(), facetedMinMaxValues: createFacetedMinMaxValues() })` |
+| `flexRender(def, ctx)`                                                   | `<table.FlexRender cell={cell} />` / `header={...}` / `footer={...}`                                                                                                                                                                                                           |
+| `state`, `on*Change` (only)                                              | still supported, plus `atoms` (preferred per slice)                                                                                                                                                                                                                             |
+| `createColumnHelper<TData>()`                                            | `createColumnHelper<typeof features, TData>()` — both generics required                                                                                                                                                                                                         |
+| `ColumnDef<TData, TValue>`                                               | `ColumnDef<TFeatures, TData, TValue>` — `TFeatures` is now the first generic                                                                                                                                                                                                   |
+| `Table<TData>`                                                           | `Table<TFeatures, TData>`                                                                                                                                                                                                                                                       |
 
 Source: `docs/framework/preact/preact-table.md`; `docs/framework/preact/guide/table-state.md`.
 
@@ -71,9 +72,9 @@ import {
 } from '@tanstack/preact-table'
 ```
 
-### 2. Declare `features` and `rowModels`
+### 2. Declare `features` with row model factories
 
-Replace each `get*RowModel: get*RowModel()` option with a feature import + a row-model factory.
+Replace each `get*RowModel: get*RowModel()` option with a feature import and its row-model factory registered directly in `tableFeatures({...})`.
 
 ```tsx
 // v8
@@ -91,18 +92,14 @@ const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
-const table = useTable({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
-  columns,
-  data,
-})
+const table = useTable({ features, columns, data })
 ```
 
 Move `features` to module scope. Reference stability matters — see `tanstack-table/preact/production-readiness`.
@@ -152,7 +149,6 @@ Source: `packages/preact-table/src/FlexRender.tsx`.
 const [sorting, setSorting] = useState<SortingState>([])
 const table = useTable({
   features,
-  rowModels,
   columns,
   data,
   state: { sorting },
@@ -164,7 +160,6 @@ import { useCreateAtom } from '@tanstack/preact-store'
 const sortingAtom = useCreateAtom<SortingState>([])
 const table = useTable({
   features,
-  rowModels,
   columns,
   data,
   atoms: { sorting: sortingAtom },
@@ -189,7 +184,6 @@ Wrong:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   getSortedRowModel: getSortedRowModel(), // v8 leftover — silently ignored
@@ -200,16 +194,15 @@ table.setSorting([{ id: 'age', desc: true }]) // rows are NOT sorted
 Correct:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
-v9 doesn't read the `get*RowModel` options. The row model only runs for stages registered in `rowModels`, and the feature only mounts if it is in `features`.
+v9 doesn't read the `get*RowModel` options. The row model only runs for stages registered in `tableFeatures`, and the feature only mounts if it is also in `tableFeatures`.
 Source: `docs/framework/preact/preact-table.md`.
 
 ### CRITICAL Forgetting to register a feature whose API you are calling
@@ -218,7 +211,7 @@ Wrong:
 
 ```tsx
 const features = tableFeatures({}) // no rowSelectionFeature
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 table.getIsAllRowsSelected() // TypeScript error / runtime no-op
 row.toggleSelected(true) // same
 ```
@@ -227,13 +220,7 @@ Correct:
 
 ```tsx
 const features = tableFeatures({ rowSelectionFeature })
-const table = useTable({
-  features,
-  rowModels: {},
-  columns,
-  data,
-  enableRowSelection: true,
-})
+const table = useTable({ features, columns, data, enableRowSelection: true })
 table.getIsAllRowsSelected()
 ```
 
@@ -247,7 +234,6 @@ Wrong:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   getCoreRowModel: getCoreRowModel(), // no-op in v9
@@ -257,7 +243,7 @@ const table = useTable({
 Correct:
 
 ```tsx
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 ```
 
 The core row model is always included in v9. There is no `getCoreRowModel` option.
@@ -294,7 +280,7 @@ Wrong:
 // Manual sorting, manual filtering, manual pagination, manual row-selection objects
 ```
 
-Correct: register the matching feature in `features`, register its factory in `rowModels`, and use the feature API. v9 ships built-ins for sorting, filtering, pagination, grouping, expanding, faceting, row selection, column visibility/order/pinning/sizing, and row pinning.
+Correct: register the matching feature and its row-model factory in `tableFeatures({...})`, then use the feature API. v9 ships built-ins for sorting, filtering, pagination, grouping, expanding, faceting, row selection, column visibility/order/pinning/sizing, and row pinning.
 Source: `docs/guide/features.md`.
 
 ### MEDIUM Calling `flexRender` directly when grouping is on

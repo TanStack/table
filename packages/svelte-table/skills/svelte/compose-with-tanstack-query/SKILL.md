@@ -58,7 +58,6 @@ the affected pipeline stages, pipe the result back through reactive getters.
 
   const table = createTable({
     features,
-    rowModels: {},
     columns,
     get data() {
       return dataQuery.data?.rows ?? []
@@ -115,7 +114,6 @@ const dataQuery = createQuery(() => ({
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? []
@@ -152,7 +150,6 @@ const table = createTable({
     rowSortingFeature,
     columnFilteringFeature,
   }),
-  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? []

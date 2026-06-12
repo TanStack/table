@@ -2,14 +2,14 @@
 name: angular/production-readiness
 description: >
   Ship-ready optimizations for Angular Table v9: register only the `features` you actually use
-  (tree-shake the bundle); keep `columns` / `features` / `rowModels` / feature-fn maps as
-  stable references OUTSIDE the `injectTable` initializer; pass only the `*Fns` your data needs
-  to `createSortedRowModel` / `createFilteredRowModel` / `createGroupedRowModel`; use
-  `ChangeDetectionStrategy.OnPush`; lean on signal-backed atoms (`table.atoms.<slice>.get()`)
-  instead of broad `table.state` reads where granularity matters; use `{ equal: shallow }`
-  on object/array `computed` selectors; set `getRowId` for stable identity; track by `id` in
-  every `@for`; defer cell components with `flexRenderComponent` only when you need its options;
-  scope DI tokens via `[tanStackTable*]` directives to kill prop drilling.
+  (tree-shake the bundle); keep `columns` / `features` (which carries row-model factories and
+  fn registries) as stable references OUTSIDE the `injectTable` initializer; pass only the `*Fns`
+  your data needs as slots on the features object; use `ChangeDetectionStrategy.OnPush`; lean on
+  signal-backed atoms (`table.atoms.<slice>.get()`) instead of broad `table.state` reads where
+  granularity matters; use `{ equal: shallow }` on object/array `computed` selectors; set
+  `getRowId` for stable identity; track by `id` in every `@for`; defer cell components with
+  `flexRenderComponent` only when you need its options; scope DI tokens via `[tanStackTable*]`
+  directives to kill prop drilling.
 type: lifecycle
 library: tanstack-table
 framework: angular
@@ -59,10 +59,11 @@ Use `stockFeatures` to bootstrap during a v8 → v9 migration, then **come back
 and curate**. The bundle wins only land once you do.
 
 The same applies to feature-fn registries — pass only the `*Fns` your data
-needs:
+needs as slots on the features object:
 
 ```ts
 import {
+  tableFeatures,
   createSortedRowModel,
   createFilteredRowModel,
   sortFns,
@@ -70,16 +71,20 @@ import {
 } from '@tanstack/angular-table'
 
 // ❌ pulls in every built-in sort + filter fn
-rowModels: {
-  sortedRowModel:   createSortedRowModel(sortFns),
-  filteredRowModel: createFilteredRowModel(filterFns),
-}
+const features = tableFeatures({
+  sortedRowModel:   createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns,
+  filterFns,
+})
 
 // ✅ only what you use
-rowModels: {
-  sortedRowModel:   createSortedRowModel({ basic: sortFns.basic, datetime: sortFns.datetime }),
-  filteredRowModel: createFilteredRowModel({ includesString: filterFns.includesString }),
-}
+const features = tableFeatures({
+  sortedRowModel:   createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns: { basic: sortFns.basic, datetime: sortFns.datetime },
+  filterFns: { includesString: filterFns.includesString },
+})
 ```
 
 Same logic for `aggregationFns` if you use grouping.
@@ -91,30 +96,28 @@ Same logic for `aggregationFns` if you use grouping.
 `injectTable(() => ({...}))` **re-runs the initializer every time a signal read
 inside it changes** and then calls `table.setOptions({ ...prev, ...new })`.
 Anything you create inside the initializer is recreated on every signal
-change.
+change. Because row-model factories and fn registries live on the `features`
+object, keeping `features` stable at module scope covers all of them.
 
 ```ts
-// ❌ columns / features / rowModels / feature fns recreated on every data() change
+// ❌ columns / features recreated on every data() change
 @Component({...})
 export class App {
   readonly table = injectTable(() => ({
-    features: tableFeatures({ rowSortingFeature }),           // ← new ref each run
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // ← new ref each run
-    columns: [/* … */],                                        // ← new ref each run
+    features: tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns }),
+    columns: [/* … */],
     data: this.data(),
   }))
 }
 
 // ✅ stable references outside; only reactive reads inside
-const features = tableFeatures({ rowSortingFeature })
-const rowModels = { sortedRowModel: createSortedRowModel(sortFns) }
+const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
 const columns: Array<ColumnDef<typeof features, Person>> = [/* … */]
 
 @Component({...})
 export class App {
   readonly table = injectTable(() => ({
     features,
-    rowModels,
     columns,
     data: this.data(),
   }))
@@ -125,7 +128,7 @@ Same rule for the controlled-state pattern — keep `state: { pagination: this.p
 inside the initializer, but keep the signal definitions on the class.
 
 For shared infrastructure across multiple tables, `createTableHook(...)` lets
-you define `features` / `rowModels` / default options once at module scope.
+you define `features` / default options once at module scope.
 
 ---
 
@@ -337,11 +340,11 @@ the wiring cost. Pick exactly one source of truth per slice (see
 ## 13. Quick wins checklist
 
 - [ ] `features` listed explicitly (no `stockFeatures` in production).
-- [ ] `*Fns` registries passed only what you use to
-      `createSortedRowModel` / `createFilteredRowModel` /
-      `createGroupedRowModel`.
-- [ ] `columns`, `features`, `rowModels`, feature fns are at module scope
-      or stable class fields — never inside the `injectTable` initializer.
+- [ ] `*Fns` registry slots on `features` pass only what you use (not the full
+      `sortFns` / `filterFns` / `aggregationFns` spread when you can narrow it).
+- [ ] `columns` and `features` are at module scope or stable class fields —
+      never inside the `injectTable` initializer (factories and fn registries
+      live on `features`, so this covers them too).
 - [ ] Component is `ChangeDetectionStrategy.OnPush`.
 - [ ] `getRowId` set when rows have a stable primary key.
 - [ ] All `@for` blocks track by `id`.
@@ -366,13 +369,12 @@ the wiring cost. Pick exactly one source of truth per slice (see
 calls this out — `stockFeatures` is a v8 → v9 bootstrap, not a production
 end-state.
 
-### 2. (CRITICAL) Recreating `columns` / `features` / `rowModels` inside the
+### 2. (CRITICAL) Recreating `columns` / `features` inside the `injectTable` initializer
 
-`injectTable` initializer
-
-The initializer re-runs on every signal read change. New `columns` reference
+The initializer re-runs on every signal read change. A new `columns` reference
 triggers full column-model rebuilds — for big tables this is visibly slow.
-Module-scope it.
+Module-scope both `columns` and `features` (which carries the factories and fn
+registries).
 
 ### 3. (CRITICAL) Reimplementing what the table already does
 
@@ -386,7 +388,8 @@ Symptoms:
 
 All of these are far slower than the built-in row models (which memoize and
 short-circuit) and ship more code. Use `table.setSorting(...)`,
-`table.setColumnFilters(...)`, the registered `rowModels` factories.
+`table.setColumnFilters(...)`, and the row-model factories registered on the
+`features` object.
 
 ### 4. (HIGH) `OnPush` not set
 

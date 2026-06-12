@@ -11,7 +11,6 @@ describe('TableController', () => {
 
     const table = controller.table({
       features: {},
-      rowModels: {},
       columns: [],
       data: [],
     })

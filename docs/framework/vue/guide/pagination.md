@@ -15,13 +15,13 @@ Vue refs can be passed directly where the adapter expects reactive table options
 ```ts
 import { useTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -55,7 +55,7 @@ Alternatively, instead of paginating the data, you can render all rows of a larg
 
 #### Pagination Row Model
 
-If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` to your features and the `paginatedRowModel` to your row models:
+If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` and `paginatedRowModel` to your `tableFeatures` call:
 
 ```ts
 import {
@@ -65,13 +65,13 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -98,7 +98,6 @@ const features = tableFeatures({ rowPaginationFeature })
 
 const table = useTable({
   features,
-  rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data,
   manualPagination: true, // turn off client-side pagination
@@ -144,9 +143,7 @@ const pagination = useSelector(paginationAtom) // a Vue ref
 
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   data,
   atoms: {
@@ -165,9 +162,7 @@ const pagination = ref<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   data,
   onPaginationChange: (updater) => {
@@ -186,9 +181,7 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 ```ts
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   data,
   initialState: {
@@ -213,9 +206,7 @@ By default, `pageIndex` is reset to `0` whenever the client-side row models reco
 ```ts
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   data,
   autoResetPageIndex: false, // turn off auto reset of pageIndex

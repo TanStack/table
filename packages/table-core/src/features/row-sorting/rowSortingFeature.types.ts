@@ -1,8 +1,7 @@
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table } from '../../types/Table'
 import type { BuiltInSortFn } from '../../fns/sortFns'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { IsAny, TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 
 export type SortDirection = 'asc' | 'desc'
@@ -22,7 +21,7 @@ export interface RowModelFns_RowSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>
+  sortFns: Record<string, SortFn<TFeatures, TData>>
 }
 
 export interface SortFns {}
@@ -43,10 +42,26 @@ export type CustomSortFns<
   TData extends RowData,
 > = Record<string, SortFn<TFeatures, TData>>
 
+/**
+ * Resolves the valid string names for `columnDef.sortFn` for a feature set.
+ *
+ * When the features object declares a `sortFns` registry
+ * (`tableFeatures({ ..., sortFns })`), its keys are the only valid names; a
+ * name is only assignable if a sorting function is actually registered for it.
+ * Otherwise this falls back to the global declaration-merged `SortFns`
+ * interface.
+ */
+export type ExtractSortFnKeys<TFeatures extends TableFeatures> =
+  IsAny<TFeatures> extends true
+    ? keyof SortFns | BuiltInSortFn
+    : TFeatures extends { sortFns: infer TSortFns extends object }
+      ? Extract<keyof TSortFns, string>
+      : keyof SortFns
+
 export type SortFnOption<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = 'auto' | keyof SortFns | BuiltInSortFn | SortFn<TFeatures, TData>
+> = 'auto' | ExtractSortFnKeys<TFeatures> | SortFn<TFeatures, TData>
 
 export interface ColumnDef_RowSorting<
   TFeatures extends TableFeatures,
@@ -211,20 +226,6 @@ export interface Table_RowModels_Sorted<
    * Resolves the row model after sorting has been applied.
    */
   getSortedRowModel: () => RowModel<TFeatures, TData>
-}
-
-export interface CreateRowModel_Sorted<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * Factory used to retrieve the sorted row model. If using server-side
-   * sorting, this is not required. To use client-side sorting, pass the
-   * exported `createSortedRowModel()` or implement your own factory.
-   */
-  sortedRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
 }
 
 export interface CachedRowModel_Sorted<

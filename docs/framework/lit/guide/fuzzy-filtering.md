@@ -19,6 +19,10 @@ const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 @customElement('my-table')
@@ -31,10 +35,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data: this.data,
     })
@@ -64,9 +64,17 @@ Here's an example of a custom fuzzy filter function:
 ```typescript
 import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type { FilterFn, RowData } from '@tanstack/lit-table'
+import type { FilterFn, RowData, TableFeatures, metaHelper } from '@tanstack/lit-table'
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+// Define the shape of filter meta stored by the fuzzy filter
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+// Extend TableFeatures to attach the filterMeta slot for type inference
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -85,23 +93,26 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
 
 In this function, we're using the `rankItem` function from the `@tanstack/match-sorter-utils` library to rank the item. We then store the ranking information in the filter meta of the row (the `addMeta` callback is optional, so call it with optional chaining), and return whether the item passed the ranking criteria.
 
-To reference this filter function by the string name `'fuzzy'` (and to type the stored filter meta), augment the `FilterFns` and `FilterMeta` interfaces with a `declare module` block:
+To reference this filter function by the string name `'fuzzy'` and type the stored filter meta, register it in the `filterFns` slot on `tableFeatures` and use the `filterMeta` slot:
 
 ```typescript
-declare module '@tanstack/lit-table' {
-  // add the fuzzy filter to the filterFns registry types
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+import { metaHelper } from '@tanstack/lit-table'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns,
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
 ```
 
 ### Using Fuzzy Filtering with Global Filtering
 
-To use fuzzy filtering with global filtering, register the fuzzy filter function in the registry passed to `createFilteredRowModel` and reference it in the `globalFilterFn` option of the table:
+To use fuzzy filtering with global filtering, register the fuzzy filter function in the `filterFns` slot on `tableFeatures` and reference it in the `globalFilterFn` option of the table:
 
 ```typescript
 import {
@@ -114,23 +125,22 @@ import {
   createSortedRowModel,
   filterFns,
   sortFns,
+  metaHelper,
 } from '@tanstack/lit-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(), // needed if you want sorting with fuzzy rank
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns,
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      fuzzy: fuzzyFilter,
-    }),
-    sortedRowModel: createSortedRowModel(sortFns), // needed if you want sorting with fuzzy rank
-  },
   columns,
   data: this.data,
   globalFilterFn: 'fuzzy',
@@ -139,7 +149,7 @@ const table = this.tableController.table({
 
 ### Using Fuzzy Filtering with Column Filtering
 
-To use fuzzy filtering with column filtering, pass your fuzzy filter function to `createFilteredRowModel` (merging it with the built-in `filterFns`). You can then specify the fuzzy filter by name in the `filterFn` option of the column definition:
+To use fuzzy filtering with column filtering, register the fuzzy filter in the `filterFns` slot on `tableFeatures`. You can then specify the fuzzy filter by name in the `filterFn` option of the column definition:
 
 ```typescript
 const column = [
@@ -165,7 +175,7 @@ import { compareItems } from '@tanstack/match-sorter-utils'
 import { sortFns } from '@tanstack/lit-table'
 import type { SortFn } from '@tanstack/lit-table'
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -196,4 +206,4 @@ You can then pass this sorting function directly to the `sortFn` option of the c
 }
 ```
 
-> **Note:** Unlike `filterFn: 'fuzzy'` above, `fuzzySort` is passed as a function rather than a string. A string reference like `sortFn: 'fuzzySort'` would only work if you also registered the function in the registry passed to `createSortedRowModel` (e.g. `createSortedRowModel({ ...sortFns, fuzzySort })`) and augmented the `SortFns` interface the same way as `FilterFns`. Passing the function directly skips both steps.
+> **Note:** Unlike `filterFn: 'fuzzy'` above, `fuzzySort` is passed as a function rather than a string. A string reference like `sortFn: 'fuzzySort'` would only work if you also registered the function in the `sortFns` slot on `tableFeatures` (e.g. `sortFns: { ...sortFns, fuzzySort }`). Passing the function directly skips registration entirely.

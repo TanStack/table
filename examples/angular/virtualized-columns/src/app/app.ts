@@ -25,6 +25,8 @@ const features = tableFeatures({
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -63,7 +65,6 @@ export class App {
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns: this.columns(),
     data: this.data(),
     debugTable: true,

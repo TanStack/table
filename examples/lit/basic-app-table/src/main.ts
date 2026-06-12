@@ -17,10 +17,9 @@ import type { Person } from './makeData'
 const { useAppTable, createAppColumnHelper } = createTableHook({
   features: tableFeatures({
     rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
   }),
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   debugTable: true,
 })
 

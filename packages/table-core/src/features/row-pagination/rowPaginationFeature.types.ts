@@ -130,20 +130,6 @@ export interface Table_RowModels_Paginated<
   getPrePaginatedRowModel: () => RowModel<TFeatures, TData>
 }
 
-export interface CreateRowModel_Paginated<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * Factory used to retrieve the paginated row model. If using server-side
-   * pagination, this is not required. To use client-side pagination, pass
-   * `createPaginatedRowModel()` or implement your own factory.
-   */
-  paginatedRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
-}
-
 export interface CachedRowModel_Paginated<
   TFeatures extends TableFeatures,
   TData extends RowData,

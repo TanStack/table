@@ -77,7 +77,7 @@ Before diving into the object model, it helps to understand three concepts that 
 
 - **Opt-in features**: Every table feature (sorting, filtering, row selection, and so on) is now opt-in. You declare exactly which features your table uses via the `features` table option, built with the `tableFeatures()` helper. This enables tree-shaking, so you only bundle the code for the features you actually use. If you want every feature enabled, v8-style, you can pass the provided `stockFeatures` object instead.
 - **State atoms backed by TanStack Store**: Each slice of table state (sorting, pagination, column visibility, and so on) lives in its own reactive atom powered by [TanStack Store](https://tanstack.com/store/latest). Adapters subscribe to only the atoms you actually read, enabling fine-grained re-rendering, and you can supply your own external atoms to take full control of any state slice.
-- **Row models as explicit opt-ins**: Data transformations such as filtering, sorting, grouping, expanding, and pagination are performed by row models that you register explicitly via the `rowModels` table option, using factories like `createSortedRowModel()` and `createFilteredRowModel()`. If you do not register a row model, its processing code never ships in your bundle.
+- **Row models as explicit opt-ins**: Data transformations such as filtering, sorting, grouping, expanding, and pagination are performed by row models that you register explicitly as factory slots on the `tableFeatures()` call, using factories like `createSortedRowModel()` and `createFilteredRowModel()`. If you do not register a row model, its processing code never ships in your bundle.
 
 The table core then uses the following abstractions, commonly exposed by adapters:
 

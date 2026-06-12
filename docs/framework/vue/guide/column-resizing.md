@@ -20,7 +20,6 @@ const features = tableFeatures({ columnResizingFeature })
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -60,7 +59,6 @@ const columns = [
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -177,7 +175,6 @@ const columnResizing = useSelector(columnResizingAtom) // subscribe wherever it 
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   atoms: {
@@ -200,7 +197,6 @@ const columnResizing = ref<columnResizingState>({
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: {

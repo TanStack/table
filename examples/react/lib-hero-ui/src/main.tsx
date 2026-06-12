@@ -33,6 +33,11 @@ const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   globalFilteringFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns,
+  filterFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -114,11 +119,6 @@ function App() {
     {
       debugTable: true,
       features,
-      rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-      },
       columns,
       data,
       globalFilterFn: 'includesString',

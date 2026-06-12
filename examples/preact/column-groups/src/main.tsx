@@ -70,7 +70,6 @@ function App() {
     {
       debugTable: true,
       features,
-      rowModels: {},
       columns,
       data,
     },

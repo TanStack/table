@@ -26,6 +26,8 @@ const features = {
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 }
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -73,7 +75,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data,
       debugTable: true,

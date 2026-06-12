@@ -30,17 +30,16 @@ export const features = tableFeatures({
   columnFacetingFeature,
   rowPaginationFeature,
   columnMeta: metaHelper<MyColumnMeta>(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
   features,
-  rowModels: {
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedRowModel: createFacetedRowModel(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   debugTable: true,
   debugHeaders: true,
   debugColumns: false,

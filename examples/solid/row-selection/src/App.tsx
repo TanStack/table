@@ -27,6 +27,9 @@ export const features = tableFeatures({
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 function App() {
@@ -114,10 +117,6 @@ function App() {
   const table = createTable({
     key: 'row-selection', // needed for devtools
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     get data() {
       return data()
     },

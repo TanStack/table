@@ -96,7 +96,6 @@ export default defineComponent({
       key: 'basic-use-table', // needed for devtools
       debugTable: true,
       features,
-      rowModels: {},
       columns,
       get data() {
         return data.value

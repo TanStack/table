@@ -14,6 +14,8 @@ import type { ColumnDef, SortFn } from '@tanstack/lit-table'
 
 const features = tableFeatures({
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const sortStatusFn: SortFn<typeof features, Person> = (
@@ -84,9 +86,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
         columns,
         data: this._data,
       },

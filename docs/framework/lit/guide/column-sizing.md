@@ -27,7 +27,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this.data,
     })
@@ -70,7 +69,6 @@ const columns = [
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   defaultColumn: {
     size: 200, // starting column size
     minSize: 50, // enforced during column resizing
@@ -151,7 +149,6 @@ const columnSizingAtom = createAtom<ColumnSizingState>({})
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   atoms: {
@@ -172,7 +169,6 @@ private columnSizing: ColumnSizingState = {}
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   state: {

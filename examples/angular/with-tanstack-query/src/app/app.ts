@@ -51,7 +51,6 @@ export class App {
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.dataQuery.data()?.rows ?? defaultData,
     rowCount: this.dataQuery.data()?.rowCount,

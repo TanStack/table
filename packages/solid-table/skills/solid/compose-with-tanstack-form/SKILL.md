@@ -140,6 +140,9 @@ import { useAppForm } from './form'
 const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -189,10 +192,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     get columns() {
       return columns()
     },

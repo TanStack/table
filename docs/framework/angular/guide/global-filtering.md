@@ -15,16 +15,17 @@ Want to skip to the implementation? Check out these Angular examples:
 import { signal } from '@angular/core'
 import { injectTable, tableFeatures, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/angular-table'
 
-const features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 export class App {
   readonly data = signal(defaultData)
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-    },
     columns,
     data: this.data(),
   }))
@@ -57,7 +58,7 @@ If you're not sure, you can always start with client-side filtering and paginati
 
 If you have decided that you need to implement server-side global filtering instead of using the built-in client-side global filtering, here's how you do that.
 
-No `filteredRowModel` is needed for manual server-side global filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
+No `filteredRowModel` is needed for manual server-side global filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to features, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```ts
 import {
@@ -70,7 +71,6 @@ const features = tableFeatures({ globalFilteringFeature })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {}, // no filteredRowModel needed for manual server-side global filtering
   data,
   columns,
   manualFiltering: true,
@@ -81,7 +81,7 @@ Note: When using manual global filtering, many of the options that are discussed
 
 ### Client-Side Global Filtering
 
-If you are using the built-in client-side global filtering, add the `globalFilteringFeature` to your features and the `filteredRowModel` to your row models:
+If you are using the built-in client-side global filtering, add the `globalFilteringFeature` and the `filteredRowModel` factory to your features:
 
 ```ts
 import {
@@ -92,27 +92,26 @@ import {
   filterFns,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({ globalFilteringFeature })
+const features = tableFeatures({
+  globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
   // other options...
 }))
 ```
 
 ### Global Filter Function
 
-The `globalFilterFn` option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a built-in filter function, a string that references a custom filter function registered in the registry passed to `createFilteredRowModel`, or a custom filter function passed directly.
+The `globalFilterFn` option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a built-in filter function, a string that references a custom filter function registered in the `filterFns` slot of `tableFeatures`, or a custom filter function passed directly.
 
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
+  // filteredRowModel and filterFns are registered in features
   data,
   columns,
   globalFilterFn: 'includesString', // built-in filter function
@@ -150,7 +149,7 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+    // filteredRowModel and filterFns are registered in features
     // other options...
     atoms: {
       globalFilter: this.globalFilterAtom, // table.setGlobalFilter now updates globalFilterAtom
@@ -169,7 +168,7 @@ readonly globalFilter = signal<string>('')
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  // filteredRowModel and filterFns are registered in features
   // other options...
   state: {
     globalFilter: this.globalFilter(),
@@ -207,7 +206,7 @@ const customFilterFn = (row, columnId, filterValue) => {
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  // filteredRowModel and filterFns are registered in features
   // other options...
   globalFilterFn: customFilterFn,
 }))
@@ -220,7 +219,7 @@ If you want to set an initial global filter state when the table is initialized,
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  // filteredRowModel and filterFns are registered in features
   // other options...
   initialState: {
     globalFilter: 'search term', // if not controlling globalFilter state, set initial state here
@@ -248,7 +247,7 @@ const columns = [
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  // filteredRowModel and filterFns are registered in features
   // other options...
   columns,
   enableGlobalFilter: false, // disable global filtering for all columns

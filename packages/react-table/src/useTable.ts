@@ -129,7 +129,6 @@ export type ReactTable<
  * const table = useTable(
  *   {
  *     features,
- *     rowModels: {},
  *     columns,
  *     data,
  *   },

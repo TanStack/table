@@ -10,7 +10,10 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
   {
@@ -75,9 +78,6 @@ export class App {
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
-    },
     columns,
     data: this.data(),
     debugTable: true,

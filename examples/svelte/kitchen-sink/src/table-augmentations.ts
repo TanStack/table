@@ -1,12 +1,4 @@
-import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type { FilterFn, RowData, stockFeatures } from '@tanstack/svelte-table'
-
-declare module '@tanstack/svelte-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof stockFeatures, RowData>
-  }
-
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+// Table type augmentations have been moved to the features object in App.svelte.
+// Custom fns (fuzzy filter/sort) are registered via filterFns/sortFns slots,
+// and filterMeta is part of stockFeatures.
+export {}

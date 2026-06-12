@@ -53,15 +53,18 @@ const features = tableFeatures({
 })
 ```
 
-Same rule for the `*Fns` registries:
+Same rule for the `*Fns` registries: register only the comparators you use as a `sortFns` slot on `tableFeatures`:
 
 ```tsx
-// Only the comparators you actually use
-const sortRegistry = {
-  alphanumeric: sortFns.alphanumeric,
-  basic: sortFns.basic,
-}
-createSortedRowModel(sortRegistry)
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  // Only the comparators you actually use
+  sortFns: {
+    alphanumeric: sortFns.alphanumeric,
+    basic: sortFns.basic,
+  },
+})
 ```
 
 ## 2. Keep `features`, `data`, `columns` stable
@@ -76,15 +79,18 @@ two patterns still break things:
   constant so identity is stable.
 
 ```tsx
-const features = tableFeatures({ rowPaginationFeature, rowSortingFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const EMPTY_ROWS: Array<Person> = []
 
 function App() {
   const table = createTable({
-    features, // stable
-    rowModels: {
-      /* stable factories OK module-scoped */
-    },
+    features, // stable — factories are registered on the features object
     columns, // module-scope constant
     get data() {
       return query.data?.rows ?? EMPTY_ROWS
@@ -104,7 +110,6 @@ const columns = createMemo(() =>
 )
 createTable({
   features,
-  rowModels,
   get columns() {
     return columns()
   },
@@ -123,7 +128,6 @@ The default `createTable(options)` selector is identity. Anything reading
 const table = createTable(
   {
     features,
-    rowModels,
     columns,
     get data() {
       return data()

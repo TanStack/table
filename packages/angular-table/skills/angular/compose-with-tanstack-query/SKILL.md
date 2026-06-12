@@ -5,10 +5,10 @@ description: >
   Key the query on the controlled table state that drives the request (pagination, sorting,
   filters); use `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages;
   set `manualPagination` / `manualSorting` / `manualFiltering` for the slices the server owns;
-  drop the matching client `rowModels` factories; pass `rowCount` from the server response;
-  set `getRowId` for stable selection across refetches; hoist controlled slices to Angular
-  signals + `state` + `on[State]Change`. Alternative — `rxResource` / `httpResource` if you
-  don't want to add the Query dependency (see `client-to-server`).
+  drop the matching client row-model factory slots from `features`; pass `rowCount` from the
+  server response; set `getRowId` for stable selection across refetches; hoist controlled slices
+  to Angular signals + `state` + `on[State]Change`. Alternative: `rxResource` / `httpResource`
+  if you don't want to add the Query dependency (see `client-to-server`).
 type: composition
 library: tanstack-table
 framework: angular
@@ -165,12 +165,11 @@ export class App {
     }),
   ]
 
-  // 4. Wire the table — manual flags, no client row models, rowCount, getRowId
+  // 4. Wire the table — manual flags, features without row-model factories, rowCount, getRowId
   readonly table = injectTable(() => {
     const data = this.todosQuery.data() ?? { items: [], totalCount: 0 }
     return {
-      features,
-      rowModels: {}, // ← dropped paginatedRowModel / sortedRowModel / filteredRowModel
+      features, // ← features has no paginatedRowModel/sortedRowModel/filteredRowModel slots
       columns: this.columns,
       data: data.items,
       getRowId: (row) => String(row.id),
@@ -219,8 +218,8 @@ For server-driven Table + Query to work correctly:
    during refetches. Without it, `todosQuery.data()` becomes `undefined`
    mid-fetch, your table shows 0 rows for a frame, the user notices.
 3. **`manualPagination` / `manualSorting` / `manualFiltering: true`** for
-   slices the server owns + **drop the matching `rowModels` factories** so
-   the table doesn't re-process the data the server already filtered/sorted/paged.
+   slices the server owns + **remove the matching factory slots from `features`**
+   so the table doesn't re-process the data the server already filtered/sorted/paged.
 4. **`rowCount: data.totalCount`** (or `pageCount`) so `getPageCount()`
    computes correctly under `manualPagination`.
 
@@ -407,15 +406,18 @@ visible until the new one resolves.
 `getPageCount()` returns `-1`, "next" never disables. The server tells you
 how many rows exist — pass it.
 
-### 4. (CRITICAL) Keeping client row models for slices the server owns
+### 4. (CRITICAL) Keeping client row-model factory slots for slices the server owns
 
 ```ts
 // ❌ Double-processes the data
 manualPagination: true,
-rowModels: { paginatedRowModel: createPaginatedRowModel() }, // re-paginates server page
+// features still has paginatedRowModel slot → re-paginates server page
 
-// ✅
-rowModels: {} // (or just keep the ones still client-side)
+// ✅ remove the factory slot from features for server-owned slices
+const features = tableFeatures({
+  rowPaginationFeature,
+  // paginatedRowModel intentionally omitted — server handles it
+})
 ```
 
 Same applies to `sortedRowModel` under `manualSorting` and `filteredRowModel`

@@ -5,7 +5,7 @@ title: TableFeature
 
 # Interface: TableFeature
 
-Defined in: [types/TableFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L30)
+Defined in: [types/TableFeatures.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L219)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [types/TableFeatures.ts:30](https://github.com/TanStack/table/blob/m
 optional assignCellPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L35)
+Defined in: [types/TableFeatures.ts:224](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L224)
 
 Assigns Cell APIs to the cell prototype for memory-efficient method sharing.
 This is called once per table to build a shared prototype for all cells.
@@ -52,7 +52,7 @@ This is called once per table to build a shared prototype for all cells.
 optional assignColumnPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L46)
+Defined in: [types/TableFeatures.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L235)
 
 Assigns Column APIs to the column prototype for memory-efficient method sharing.
 This is called once per table to build a shared prototype for all columns.
@@ -89,7 +89,7 @@ This is called once per table to build a shared prototype for all columns.
 optional assignHeaderPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L57)
+Defined in: [types/TableFeatures.ts:246](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L246)
 
 Assigns Header APIs to the header prototype for memory-efficient method sharing.
 This is called once per table to build a shared prototype for all headers.
@@ -126,7 +126,7 @@ This is called once per table to build a shared prototype for all headers.
 optional assignRowPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L68)
+Defined in: [types/TableFeatures.ts:257](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L257)
 
 Assigns Row APIs to the row prototype for memory-efficient method sharing.
 This is called once per table to build a shared prototype for all rows.
@@ -163,7 +163,7 @@ This is called once per table to build a shared prototype for all rows.
 optional constructTableAPIs: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L76)
+Defined in: [types/TableFeatures.ts:265](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L265)
 
 Assigns Table APIs to the table instance.
 Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
@@ -196,7 +196,7 @@ Unlike row/cell/column/header, the table is a singleton so methods are assigned 
 optional getDefaultColumnDef: <TFeatures, TData, TValue>() => ColumnDefBase_All<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/TableFeatures.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L79)
+Defined in: [types/TableFeatures.ts:268](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L268)
 
 #### Type Parameters
 
@@ -224,7 +224,7 @@ Defined in: [types/TableFeatures.ts:79](https://github.com/TanStack/table/blob/m
 optional getDefaultTableOptions: <TFeatures, TData>(table) => Partial<TableOptions_All<TFeatures, TData>>;
 ```
 
-Defined in: [types/TableFeatures.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L84)
+Defined in: [types/TableFeatures.ts:273](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L273)
 
 #### Type Parameters
 
@@ -254,7 +254,7 @@ Defined in: [types/TableFeatures.ts:84](https://github.com/TanStack/table/blob/m
 optional getInitialState: (initialState) => TableState_All;
 ```
 
-Defined in: [types/TableFeatures.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L90)
+Defined in: [types/TableFeatures.ts:279](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L279)
 
 #### Parameters
 
@@ -274,7 +274,7 @@ Defined in: [types/TableFeatures.ts:90](https://github.com/TanStack/table/blob/m
 optional initRowInstanceData: <TFeatures, TData>(row) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L95)
+Defined in: [types/TableFeatures.ts:284](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L284)
 
 Initializes instance-specific data on each row (e.g., caches).
 Methods should be assigned via assignRowPrototype instead.

@@ -264,7 +264,6 @@ const features = tableFeatures({ densityPlugin })
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   data,
   //..
@@ -282,7 +281,6 @@ const [density, setDensity] = createSignal<DensityState>('md')
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   data,
   //...

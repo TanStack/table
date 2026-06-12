@@ -36,14 +36,16 @@ import {
   sortFns,
 } from '@tanstack/table-core'
 
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+})
 
 const table = constructTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   // 1. initialState — set starting values; read once at construction
@@ -79,7 +81,6 @@ The four ownership patterns per slice:
 ```ts
 const table = constructTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   initialState: { sorting: [{ id: 'age', desc: false }] },
@@ -95,7 +96,6 @@ const [sorting, setSorting] = React.useState<SortingState>([])
 
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: { sorting },
@@ -119,7 +119,6 @@ function MyTable() {
 
   const table = useTable({
     features,
-    rowModels: { paginatedRowModel: createPaginatedRowModel() },
     columns,
     data,
     atoms: { pagination: paginationAtom },
@@ -146,7 +145,7 @@ const dataQuery = useQuery({
 
 const table = useTable({
   features: tableFeatures({ rowPaginationFeature }),
-  rowModels: {}, // can drop paginatedRowModel — server paginates
+  // no paginatedRowModel registered — server paginates
   columns,
   data: dataQuery.data?.rows ?? EMPTY,
   rowCount: dataQuery.data?.rowCount, // server tells the table the total
@@ -170,7 +169,9 @@ const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 
 const [pagination, setPagination] = React.useState(...)
 
 const table = useTable({
-  features, rowModels: {...}, columns, data,
+  features,
+  columns,
+  data,
   state: { pagination },                  // ignored
   onPaginationChange: setPagination,
   atoms: { pagination: paginationAtom },  // wins
@@ -184,7 +185,9 @@ Correct:
 const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 10 })
 
 const table = useTable({
-  features, rowModels: {...}, columns, data,
+  features,
+  columns,
+  data,
   atoms: { pagination: paginationAtom },
 })
 ```
@@ -201,7 +204,6 @@ Wrong:
 const [sorting, setSorting] = React.useState<SortingState>([])
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: { sorting }, // no onSortingChange
@@ -214,7 +216,6 @@ Correct:
 const [sorting, setSorting] = React.useState<SortingState>([])
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: { sorting },
@@ -235,7 +236,6 @@ Wrong:
 function MyTable({ defaultSort }: { defaultSort: SortingState }) {
   const table = useTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
     initialState: { sorting: defaultSort }, // later changes never sync
@@ -250,7 +250,6 @@ function MyTable({ defaultSort }: { defaultSort: SortingState }) {
   const [sorting, setSorting] = React.useState(defaultSort)
   const table = useTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data,
     state: { sorting },
@@ -269,7 +268,7 @@ Wrong:
 
 ```ts
 const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 10 })
-const table = useTable({ features, rowModels: {...}, columns, data, atoms: { pagination: paginationAtom } })
+const table = useTable({ features, columns, data, atoms: { pagination: paginationAtom } })
 
 table.baseAtoms.pagination.set((old) => ({ ...old, pageIndex: 0 }))
 // baseAtom updated, but table.atoms.pagination still reads from paginationAtom
@@ -298,9 +297,9 @@ const dataQuery = useQuery({
   queryKey: ['data', pagination],
   queryFn: fetchPage,
 })
+// features has paginatedRowModel registered
 const table = useTable({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: dataQuery.data?.rows ?? [],
   rowCount: dataQuery.data?.rowCount,
@@ -312,9 +311,9 @@ const table = useTable({
 Correct:
 
 ```tsx
+// Use features WITHOUT paginatedRowModel for fully server-side pagination
 const table = useTable({
-  features,
-  rowModels: {}, // drop paginatedRowModel if fully server-side
+  features: tableFeatures({ rowPaginationFeature }),
   columns,
   data: dataQuery.data?.rows ?? [],
   rowCount: dataQuery.data?.rowCount,
@@ -335,7 +334,9 @@ Wrong:
 // external atom keeps its current value; only baseAtoms reset
 const sortingAtom = useCreateAtom<SortingState>([])
 const table = useTable({
-  features, rowModels: {...}, columns, data,
+  features,
+  columns,
+  data,
   atoms: { sorting: sortingAtom },
 })
 table.reset() // sortingAtom is NOT cleared
@@ -369,8 +370,11 @@ Correct:
 
 ```ts
 const table = useTable({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({
+    rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  }),
   columns,
   data,
 })
@@ -383,6 +387,6 @@ Source: maintainer interview (Phase 4, 2026-05-17)
 
 ## See also
 
-- `tanstack-table/setup` — how `features` and `rowModels` are wired
+- `tanstack-table/setup` — how `features` (with row model factory and fn slots) is wired
 - `tanstack-table/pagination`, `tanstack-table/sorting`, `tanstack-table/filtering` — feature-specific `manual*` and reset semantics
 - `tanstack-table/migrate-v8-to-v9` — `table.getState()` → `table.store.state` / `table.atoms.<slice>.get()`

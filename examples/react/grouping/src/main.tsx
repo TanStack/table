@@ -28,13 +28,14 @@ const { useAppTable, createAppColumnHelper } = createTableHook({
     rowExpandingFeature,
     rowPaginationFeature,
     rowSortingFeature,
-  },
-  rowModels: {
     expandedRowModel: createExpandedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
+    filteredRowModel: createFilteredRowModel(),
+    groupedRowModel: createGroupedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
+    sortedRowModel: createSortedRowModel(),
+    filterFns,
+    sortFns,
+    aggregationFns,
   },
 })
 

@@ -15,13 +15,13 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 ```tsx
 import { createTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/solid-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data()
@@ -57,7 +57,7 @@ Alternatively, instead of paginating the data, you can render all rows of a larg
 
 #### Pagination Row Model
 
-If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` to your features and the `paginatedRowModel` to your row models:
+If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` and the `paginatedRowModel` factory to your features:
 
 ```tsx
 import {
@@ -67,13 +67,13 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/solid-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -100,7 +100,6 @@ const features = tableFeatures({ rowPaginationFeature })
 
 const table = createTable({
   features,
-  rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data,
   manualPagination: true, // turn off client-side pagination
@@ -146,9 +145,6 @@ const pagination = useSelector(paginationAtom)
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   atoms: {
@@ -167,9 +163,6 @@ const [pagination, setPagination] = createSignal<PaginationState>({
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   state: {
@@ -186,9 +179,6 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 ```tsx
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -213,9 +203,6 @@ By default, `pageIndex` is reset to `0` whenever the client-side row models reco
 ```tsx
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   autoResetPageIndex: false, // turn off auto reset of pageIndex

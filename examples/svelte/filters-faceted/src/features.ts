@@ -1,6 +1,12 @@
 import {
   columnFacetingFeature,
   columnFilteringFeature,
+  createFacetedMinMaxValues,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
+  createPaginatedRowModel,
+  filterFns,
   globalFilteringFeature,
   rowPaginationFeature,
   tableFeatures,
@@ -11,4 +17,10 @@ export const features = tableFeatures({
   globalFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })

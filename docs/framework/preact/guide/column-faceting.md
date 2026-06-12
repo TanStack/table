@@ -13,16 +13,18 @@ Want to skip to the implementation? Check out these Preact examples:
 ```tsx
 import { useTable, tableFeatures, columnFacetingFeature, columnFilteringFeature, createFacetedRowModel, createFacetedUniqueValues, createFacetedMinMaxValues, createFilteredRowModel, filterFns } from '@tanstack/preact-table'
 
-const features = tableFeatures({ columnFacetingFeature, columnFilteringFeature })
+const features = tableFeatures({
+  columnFacetingFeature,
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  filterFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    facetedRowModel: createFacetedRowModel(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-  },
   columns,
   data,
 })
@@ -34,7 +36,7 @@ Faceting is a feature that generates lists of values from your table's data, eit
 
 ### Column Faceting Row Models
 
-In order to use any of the column faceting features, add the `columnFacetingFeature` to your features and the appropriate faceted row models to `rowModels`. Faceting exists to power filter UIs, so in practice you will also register the `columnFilteringFeature` and a `filteredRowModel`. Without a filtered row model, the faceted row models fall back to the pre-filtered rows and the facet values will not react to other columns' filters.
+In order to use any of the column faceting features, add the `columnFacetingFeature` and the appropriate faceted row model factories to your `tableFeatures` call. Faceting exists to power filter UIs, so in practice you will also register the `columnFilteringFeature` and a `filteredRowModel`. Without a filtered row model, the faceted row models fall back to the pre-filtered rows and the facet values will not react to other columns' filters.
 
 ```ts
 import {
@@ -49,16 +51,18 @@ import {
   filterFns,
 } from '@tanstack/preact-table'
 
-const features = tableFeatures({ columnFacetingFeature, columnFilteringFeature })
+const features = tableFeatures({
+  columnFacetingFeature,
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(), // facet values react to other columns' filters
+  facetedRowModel: createFacetedRowModel(), // required for faceting (other faceted row models depend on this)
+  facetedMinMaxValues: createFacetedMinMaxValues(), // if you need min/max values
+  facetedUniqueValues: createFacetedUniqueValues(), // if you need a list of unique values
+  filterFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns), // facet values react to other columns' filters
-    facetedRowModel: createFacetedRowModel(), // required for faceting (other faceted row models depend on this)
-    facetedMinMaxValues: createFacetedMinMaxValues(), // if you need min/max values
-    facetedUniqueValues: createFacetedUniqueValues(), // if you need a list of unique values
-  },
   columns,
   data,
 })
@@ -108,26 +112,28 @@ const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1];
 
 ### Custom (Server-Side) Faceting
 
-Instead of using the built-in client-side faceting features, you can implement your own faceting logic on the server-side and pass the faceted values to the client-side. Supply custom `rowModels.facetedUniqueValues` and `rowModels.facetedMinMaxValues` factories. Each factory receives the table and a column ID and returns a thunk that resolves the faceted values. The column instance APIs (`column.getFacetedUniqueValues()` and `column.getFacetedMinMaxValues()`) will then return your server-provided values.
+Instead of using the built-in client-side faceting features, you can implement your own faceting logic on the server-side and pass the faceted values to the client-side. Supply custom `facetedUniqueValues` and `facetedMinMaxValues` factory slots on `tableFeatures`. Each factory receives the table and a column ID and returns a thunk that resolves the faceted values. The column instance APIs (`column.getFacetedUniqueValues()` and `column.getFacetedMinMaxValues()`) will then return your server-provided values.
 
 ```ts
 const facetingQuery = useQuery(
   //...
 )
 
+const features = tableFeatures({
+  columnFacetingFeature,
+  facetedUniqueValues: (_table, columnId) => () => {
+    const uniqueValueMap = new Map<string, number>()
+    //... populate from facetingQuery data for this columnId
+    return uniqueValueMap
+  },
+  facetedMinMaxValues: (_table, columnId) => () => {
+    //... read from facetingQuery data for this columnId
+    return [min, max]
+  },
+})
+
 const table = useTable({
   features,
-  rowModels: {
-    facetedUniqueValues: (_table, columnId) => () => {
-      const uniqueValueMap = new Map<string, number>()
-      //... populate from facetingQuery data for this columnId
-      return uniqueValueMap
-    },
-    facetedMinMaxValues: (_table, columnId) => () => {
-      //... read from facetingQuery data for this columnId
-      return [min, max]
-    },
-  },
   columns,
   data,
   //...

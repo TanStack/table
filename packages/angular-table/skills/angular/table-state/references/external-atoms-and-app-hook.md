@@ -24,7 +24,6 @@ const paginationAtom = new Store<PaginationState>({ pageIndex: 0, pageSize: 10 }
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: { /* … */ },
   columns,
   data: this.data(),
   atoms: {
@@ -68,7 +67,7 @@ type MyTableState = TableState<typeof features>
 
 ## `createTableHook` — app-wide table infrastructure
 
-When multiple tables in an app share the same `features`, `rowModels`, and
+When multiple tables in an app share the same `features` object and
 component conventions, factor them into a `createTableHook(...)` call once and
 import the resulting `injectAppTable` / `createAppColumnHelper`.
 
@@ -91,11 +90,13 @@ export const {
   injectTableCellContext,
   injectTableHeaderContext,
 } = createTableHook({
-  features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
+  features: tableFeatures({
+    rowSortingFeature,
+    rowPaginationFeature,
+    sortedRowModel: createSortedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-  },
+    sortFns,
+  }),
   getRowId: (row) => row.id,
 })
 ```
@@ -110,7 +111,7 @@ const columnHelper = createAppColumnHelper<Person>() // only TData generic neede
 readonly table = injectAppTable(() => ({
   columns,
   data: this.data(),
-})) // features & rowModels inherited
+})) // features (including row-model factories) inherited
 ```
 
 `createTableHook` also lets you register `tableComponents` / `cellComponents` /

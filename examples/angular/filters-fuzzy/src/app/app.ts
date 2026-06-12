@@ -13,32 +13,27 @@ import {
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
+  metaHelper,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { DebouncedInput } from './debounced-input/debounced-input'
 import { makeData } from './makeData'
-import type { FilterFn, RowData, SortFn } from '@tanstack/angular-table'
+import type {
+  FilterFn,
+  RowData,
+  SortFn,
+  TableFeatures,
+} from '@tanstack/angular-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
-const features = tableFeatures({
-  columnFilteringFeature,
-  globalFilteringFeature,
-  rowSortingFeature,
-  rowPaginationFeature,
-})
-const columnHelper = createColumnHelper<typeof features, Person>()
-
-declare module '@tanstack/angular-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
 }
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -49,7 +44,7 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -60,19 +55,33 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+const columnHelper = createColumnHelper<typeof features, Person>()
+
 const columns = columnHelper.columns([
   columnHelper.accessor('id', { header: 'ID' }),
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
     filterFn: 'fuzzy',
-    sortFn: fuzzySort,
+    sortFn: 'fuzzy',
   }),
   columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     cell: (info) => info.getValue(),
     header: () => 'Last Name',
     filterFn: 'fuzzy',
-    sortFn: fuzzySort,
+    sortFn: 'fuzzy',
   }),
   columnHelper.accessor('age', { header: () => 'Age' }),
   columnHelper.accessor('visits', { header: () => 'Visits' }),
@@ -90,14 +99,6 @@ export class App {
   readonly data = signal(makeData(1_000))
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel({
-        ...filterFns,
-        fuzzy: fuzzyFilter,
-      }),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
     columns,
     data: this.data(),
     globalFilterFn: 'fuzzy',

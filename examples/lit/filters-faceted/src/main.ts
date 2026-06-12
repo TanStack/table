@@ -32,6 +32,12 @@ const features = tableFeatures({
   globalFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
@@ -193,13 +199,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          facetedRowModel: createFacetedRowModel(),
-          facetedMinMaxValues: createFacetedMinMaxValues(),
-          facetedUniqueValues: createFacetedUniqueValues(),
-          filteredRowModel: createFilteredRowModel(filterFns),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
         data: this._data,
         columns,
         globalFilterFn: 'includesString',

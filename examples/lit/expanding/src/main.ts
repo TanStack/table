@@ -27,6 +27,12 @@ const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 function indeterminateCheckbox(options: {
@@ -174,12 +180,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          expandedRowModel: createExpandedRowModel(),
-          filteredRowModel: createFilteredRowModel(filterFns),
-          paginatedRowModel: createPaginatedRowModel(),
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
         columns,
         data: this._data,
         getSubRows: (row) => row.subRows,

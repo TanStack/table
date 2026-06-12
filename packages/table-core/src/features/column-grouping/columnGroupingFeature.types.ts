@@ -1,5 +1,4 @@
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table } from '../../types/Table'
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import type {
   CellData,
@@ -7,7 +6,7 @@ import type {
   RowData,
   Updater,
 } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { IsAny, TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { ColumnDefTemplate } from '../../types/ColumnDef'
@@ -22,7 +21,7 @@ export interface RowModelFns_ColumnGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>
+  aggregationFns: Record<string, AggregationFn<TFeatures, TData>>
 }
 
 export interface AggregationFns {}
@@ -41,13 +40,29 @@ export type CustomAggregationFns<
   TData extends RowData,
 > = Record<string, AggregationFn<TFeatures, TData>>
 
+/**
+ * Resolves the valid string names for `columnDef.aggregationFn` for a feature
+ * set.
+ *
+ * When the features object declares an `aggregationFns` registry
+ * (`tableFeatures({ ..., aggregationFns })`), its keys are the only valid
+ * names; a name is only assignable if an aggregation function is actually
+ * registered for it. Otherwise this falls back to the global
+ * declaration-merged `AggregationFns` interface.
+ */
+export type ExtractAggregationFnKeys<TFeatures extends TableFeatures> =
+  IsAny<TFeatures> extends true
+    ? keyof AggregationFns | BuiltInAggregationFn
+    : TFeatures extends { aggregationFns: infer TAggregationFns extends object }
+      ? Extract<keyof TAggregationFns, string>
+      : keyof AggregationFns
+
 export type AggregationFnOption<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > =
   | 'auto'
-  | keyof AggregationFns
-  | BuiltInAggregationFn
+  | ExtractAggregationFnKeys<TFeatures>
   | AggregationFn<TFeatures, TData>
 
 export interface ColumnDef_ColumnGrouping<
@@ -202,20 +217,6 @@ export interface Table_RowModels_Grouped<
    * Reads the row model immediately before grouping.
    */
   getPreGroupedRowModel: () => RowModel<TFeatures, TData>
-}
-
-export interface CreateRowModel_Grouped<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * Factory used to retrieve the grouped row model. If using server-side
-   * grouping, this is not required. To use client-side grouping, pass
-   * `createGroupedRowModel()` or implement your own factory.
-   */
-  groupedRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
 }
 
 export interface CachedRowModel_Grouped<

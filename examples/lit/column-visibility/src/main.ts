@@ -78,7 +78,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {},
         columns,
         data: this._data,
         debugTable: true,

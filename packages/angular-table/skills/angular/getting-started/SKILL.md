@@ -2,12 +2,11 @@
 name: angular/getting-started
 description: >
   End-to-end first-table journey for TanStack Table v9 in Angular: install
-  `@tanstack/angular-table`, declare `features` with `tableFeatures()`, register row-model
-  factories under `rowModels` with explicit `*Fns` parameters, build columns with the
-  `TFeatures, TData` generic order, call `injectTable(() => ({...}))` from an injection context,
-  and render with `FlexRender` / `*flexRenderHeader` / `*flexRenderCell` / `*flexRenderFooter`.
-  Covers the minimum-viable signal-backed table plus the upgrade path to sorting + filtering +
-  pagination.
+  `@tanstack/angular-table`, declare `features` with `tableFeatures()` (row-model factories and
+  fn registries live on the features object), build columns with the `TFeatures, TData` generic
+  order, call `injectTable(() => ({...}))` from an injection context, and render with `FlexRender` /
+  `*flexRenderHeader` / `*flexRenderCell` / `*flexRenderFooter`. Covers the minimum-viable
+  signal-backed table plus the upgrade path to sorting + filtering + pagination.
 type: lifecycle
 library: tanstack-table
 framework: angular
@@ -31,9 +30,9 @@ sources:
 > Goal: from zero to a working signal-backed, sorted + paginated, type-safe
 > table in Angular ≥19.
 >
-> v9 is **explicit**: tell the table which features you want with `features`,
-> tell it which row models you want with `rowModels`. That explicitness is what
-> makes the v9 bundle tree-shakeable.
+> v9 is **explicit**: tell the table which features you want with `features`.
+> Row-model factories and fn registries live on the features object alongside
+> the feature flags. That explicitness is what makes the v9 bundle tree-shakeable.
 
 ---
 
@@ -104,8 +103,7 @@ export class App {
 
   // 3. injectTable in an injection context (a class field qualifies)
   readonly table = injectTable(() => ({
-    features, // required in v9
-    rowModels: {}, // {} = core only; that's fine
+    features, // required in v9; core row model is automatic
     columns, // stable ref
     data: this.data(), // signal read → re-syncs the table on change
   }))
@@ -156,11 +154,9 @@ driven by the row model.
   (`getRowModel()`) is always available. With `features: tableFeatures({})`,
   `table.atoms.*` only contains the slices core ships with — no `pagination`,
   no `sorting`, no `rowSelection` until you add the matching features.
-- `rowModels: {}` does not register any feature-specific row models. Core
-  row model is included automatically.
 - `injectTable(() => ({...}))` runs the initializer, builds the table, and
   re-runs the initializer whenever any signal read inside changes. Stable
-  references outside the initializer keep `columns` / `features` / `rowModels`
+  references outside the initializer keep `columns` / `features`
   from getting recreated on every data update.
 
 ---
@@ -171,7 +167,7 @@ Each opt-in feature has two pieces in v9:
 
 1. The **feature** itself (`rowSortingFeature`) in `features` — adds APIs
    like `column.toggleSorting()` and the `sorting` state slice.
-2. The **row-model factory** (`createSortedRowModel(sortFns)`) in `rowModels`
+2. The **row-model factory** (`createSortedRowModel()`) on the features object
    — produces the sorted output. Without it, `table.getRowModel().rows` is
    unsorted regardless of sort state.
 
@@ -187,13 +183,12 @@ import {
 
 const features = tableFeatures({
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(), // <-- enables sorting output
+  sortFns,
 })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns), // <-- enables sorting output
-  },
   columns,
   data: this.data(),
 }))
@@ -220,7 +215,7 @@ In the template, drive sorting from the header:
 
 `sortFns` is the registry of built-in sort functions
 (`alphanumeric`, `basic`, `datetime`, etc.). Pass only the ones you use to
-tree-shake (`createSortedRowModel({ basic: sortFns.basic })`), or pass `sortFns`
+tree-shake (`sortFns: { basic: sortFns.basic }`), or pass `sortFns`
 in its entirety for all of them.
 
 ---
@@ -246,15 +241,15 @@ const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data(),
   initialState: {
@@ -323,8 +318,8 @@ const columns = columnHelper.columns([
 > v9 changed the generic order: `createColumnHelper<typeof features, Person>()`,
 > **not** `createColumnHelper<Person>()`. Same for `ColumnDef<typeof features, Person>`.
 
-If multiple components share the same `features` / `rowModels`, factor them
-into a `createTableHook(...)` call — see
+If multiple components share the same `features` object, factor them into a
+`createTableHook(...)` call — see
 `tanstack-table/angular/angular-rendering-directives` §10 and the
 `composable-tables` example.
 
@@ -338,7 +333,6 @@ row pinning, and refetch-based updates correct.
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { /* … */ },
   columns,
   data: this.data(),
   getRowId: (row) => row.id, // ← stable ID across re-fetches
@@ -360,7 +354,6 @@ and `table.setSorting(...)` to drive updates.
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { /* … */ },
   columns,
   data: this.data(),
   initialState: {
@@ -404,8 +397,8 @@ import { injectTable, tableFeatures } from '@tanstack/angular-table'
 
 There is no `getCoreRowModel()` / `getSortedRowModel()` / `getFilteredRowModel()`
 in v9. Core row model is automatic; the rest are
-`createSortedRowModel(sortFns)` / `createFilteredRowModel(filterFns)` / etc.
-registered under `rowModels`.
+`createSortedRowModel()` / `createFilteredRowModel()` / etc.
+registered as slots on the `features` object alongside `sortFns` / `filterFns`.
 
 ### 3. (CRITICAL) Reimplementing what the table API already does
 
@@ -424,37 +417,35 @@ The table already does all of this. Use it.
 ### 4. (HIGH) Feature without its row model (or vice versa)
 
 ```ts
-// ❌ rowSortingFeature without createSortedRowModel → sort state changes, rows don't reorder
-features: tableFeatures({ rowSortingFeature })
-rowModels: {
-}
+// ❌ rowSortingFeature without sortedRowModel → sort state changes, rows don't reorder
+const features = tableFeatures({ rowSortingFeature })
 
-// ✅
-rowModels: {
-  sortedRowModel: createSortedRowModel(sortFns)
-}
+// ✅ factory and fn registry on the features object
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 ```
 
 Full mapping table → [`references/feature-row-model-mapping.md`](references/feature-row-model-mapping.md).
 
-### 5. (HIGH) Declaring `columns` / `features` / `rowModels` inside the initializer
+### 5. (HIGH) Declaring `columns` / `features` inside the initializer
 
 ```ts
 // ❌ Recreated on every signal change
 readonly table = injectTable(() => ({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns }),
   columns: [/* … */],
   data: this.data(),
 }))
 
 // ✅ Stable references outside, signal reads inside
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
 const columns: Array<ColumnDef<typeof features, Person>> = [/* … */]
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data(),
 }))

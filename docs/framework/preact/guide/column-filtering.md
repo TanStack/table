@@ -15,13 +15,14 @@ Want to skip to the implementation? Check out these Preact examples:
 ```tsx
 import { useTable, tableFeatures, columnFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/preact-table'
 
-const features = tableFeatures({ columnFilteringFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
   columns,
   data,
 })
@@ -55,14 +56,13 @@ If you're not sure, you can always start with client-side filtering and paginati
 
 If you have decided that you need to implement server-side filtering instead of using the built-in client-side filtering, here's how you do that.
 
-No `filteredRowModel` is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `rowModels`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
+No `filteredRowModel` is needed for manual server-side filtering. Instead, the `data` that you pass to the table should already be filtered. However, if you have added a `filteredRowModel` to `tableFeatures`, you can tell the table to skip it by setting the `manualFiltering` option to `true`.
 
 ```tsx
-const features = tableFeatures({ columnFilteringFeature })
+const features = tableFeatures({ columnFilteringFeature }) // no filteredRowModel for manual server-side filtering
 
 const table = useTable({
   features,
-  rowModels: {}, // no filteredRowModel needed for manual server-side filtering
   data,
   columns,
   manualFiltering: true,
@@ -73,7 +73,7 @@ const table = useTable({
 
 ### Client-Side Filtering
 
-If you are using the built-in client-side filtering features, add the `columnFilteringFeature` to your features and the `filteredRowModel` to your row models. Import `createFilteredRowModel` and `filterFns` from TanStack Table:
+If you are using the built-in client-side filtering features, add the `columnFilteringFeature`, the `filteredRowModel` factory, and `filterFns` to your `tableFeatures` call. Import `createFilteredRowModel` and `filterFns` from TanStack Table:
 
 ```tsx
 import {
@@ -84,13 +84,14 @@ import {
   filterFns,
 } from '@tanstack/preact-table'
 
-const features = tableFeatures({ columnFilteringFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
   data,
   columns,
 })
@@ -119,7 +120,6 @@ For reactive reads that should re-render your UI, use `table.state.columnFilters
 ```tsx
 const table = useTable({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -145,7 +145,6 @@ const columnFilters = useSelector(columnFiltersAtom)
 
 const table = useTable({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -162,7 +161,6 @@ const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
 //...
 const table = useTable({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -180,7 +178,6 @@ If you do not need to control the column filter state in your own state manageme
 ```tsx
 const table = useTable({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   //...
@@ -268,33 +265,28 @@ const columns = [
   }
 ]
 //...
+const myCustomFilterFn: FilterFn<typeof features, MyData> = (row, columnId, filterValue) => {
+  return // true or false based on your custom logic
+}
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: {
+    ...filterFns,
+    myCustomFilterFn,
+    startsWith: startsWithFilterFn, // defined elsewhere
+  },
+})
+
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      myCustomFilterFn: (row, columnId, filterValue) => {
-        return // true or false based on your custom logic
-      },
-      startsWith: startsWithFilterFn, // defined elsewhere
-    }),
-  },
   columns,
   data,
 })
 ```
 
-> **TypeScript Note:** For `filterFn: 'myCustomFilterFn'` string references to typecheck, augment the `FilterFns` interface with a `declare module` block:
->
-> ```tsx
-> declare module '@tanstack/preact-table' {
->   interface FilterFns {
->     myCustomFilterFn: FilterFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `filterFn` column option. See the [Fuzzy Search example](../examples/filters-fuzzy) for a complete registration with module augmentation.
+> **TypeScript Note:** For `filterFn: 'myCustomFilterFn'` string references to typecheck, register the function in the `filterFns` slot on `tableFeatures` (as shown above). TypeScript infers the registered names from the slot automatically. Alternatively, skip the registry entirely by passing the function directly to the `filterFn` column option. See the [Fuzzy Search example](../examples/filters-fuzzy) for a complete registration example.
 
 ##### Customize Filter Function Behavior
 
@@ -346,7 +338,6 @@ const columns = [
 //...
 const table = useTable({
   features,
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
   columns,
   data,
   enableColumnFilters: false, // disable column filtering for all columns
@@ -364,14 +355,16 @@ By default, filtering is done from parent rows down, so if a parent row is filte
 However, if you want to allow sub-rows to be filtered and searched through, regardless of whether the parent row is filtered out, you can set the `filterFromLeafRows` table option to `true`. Setting this option to `true` will cause filtering to be done from leaf rows up, which means parent rows will be included so long as one of their child or grand-child rows is also included.
 
 ```tsx
-const features = tableFeatures({ columnFilteringFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   columns,
   data,
   filterFromLeafRows: true, // filter and search through sub-rows
@@ -385,14 +378,16 @@ By default, filtering is done for all rows in a tree, no matter if they are root
 Use `maxLeafRowFilterDepth: 0` if you want to preserve a parent row's sub-rows from being filtered out while the parent row is passing the filter.
 
 ```tsx
-const features = tableFeatures({ columnFilteringFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   columns,
   data,
   maxLeafRowFilterDepth: 0, // only filter root level parent rows out

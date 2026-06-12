@@ -54,6 +54,11 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 export const {
@@ -64,11 +69,6 @@ export const {
   useHeaderContext,
 } = createTableHook({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   getRowId: (row) => row.id,
   tableComponents: {
     PaginationControls,
@@ -137,7 +137,7 @@ Registered cell components use `useCellContext()` internally, and registered hea
 
 ## Table Rendering
 
-Create each table with `useAppTable`. You pass table-specific options like `key`, `columns`, and `data`; the shared `features`, `rowModels`, `getRowId`, and component registries come from the hook.
+Create each table with `useAppTable`. You pass table-specific options like `key`, `columns`, and `data`; the shared `features` (which includes row model factories), `getRowId`, and component registries come from the hook.
 
 ```tsx
 const table = useAppTable(

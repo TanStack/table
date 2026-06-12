@@ -13,6 +13,7 @@
 
   const features = tableFeatures({
     rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()
@@ -53,9 +54,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns,
       get data() {
         return data

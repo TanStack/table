@@ -14,16 +14,16 @@ Want to skip to the implementation? Check out these Angular examples:
 import { signal } from '@angular/core'
 import { injectTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 export class App {
   readonly data = signal(defaultData)
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data: this.data(),
   }))
@@ -58,7 +58,7 @@ Alternatively, instead of paginating the data, you can render all rows of a larg
 
 #### Pagination Row Model
 
-If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` to your features and the `paginatedRowModel` to your row models:
+If you want to take advantage of the built-in client-side pagination in TanStack Table, add the `rowPaginationFeature` and the `paginatedRowModel` factory to your features:
 
 ```ts
 import {
@@ -68,13 +68,13 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 }))
@@ -101,7 +101,6 @@ const features = tableFeatures({ rowPaginationFeature })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data,
   manualPagination: true, // turn off client-side pagination
@@ -145,9 +144,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data: this.data(),
     atoms: {
@@ -169,9 +165,6 @@ readonly pagination = signal<PaginationState>({
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data(),
   onPaginationChange: (updater) =>
@@ -189,9 +182,6 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -216,9 +206,6 @@ By default, `pageIndex` is reset to `0` whenever the client-side row models reco
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   autoResetPageIndex: false, // turn off auto reset of pageIndex

@@ -22,6 +22,9 @@
   const features = tableFeatures({
     rowPaginationFeature,
     rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortFns,
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()
@@ -62,10 +65,6 @@
   const table = createTable({
     debugTable: true,
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     get data() {
       return data

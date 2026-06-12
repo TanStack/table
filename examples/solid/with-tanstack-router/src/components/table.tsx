@@ -55,7 +55,6 @@ export default function Table<T extends Record<string, string | number>>(
     {
       debugTable: true,
       features,
-      rowModels: {},
       get columns() {
         return props.columns
       },

@@ -62,7 +62,11 @@ import {
 } from '@tanstack/preact-table'
 import type { JSX } from 'preact'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 // Minimal Preact hook around the framework-agnostic Virtualizer.
 function useVirtualizer<TScrollEl extends Element, TItemEl extends Element>(
@@ -110,7 +114,6 @@ function BigTable({ data }) {
   const table = useTable(
     {
       features,
-      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data,
     },

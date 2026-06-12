@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  columnFilteringFeature,
   constructTable,
   coreFeatures,
   metaHelper,
@@ -11,7 +12,11 @@ import type {
   CellData,
   ColumnMeta,
   ExtractColumnMeta,
+  ExtractFilterMeta,
   ExtractTableMeta,
+  FilterFn,
+  FilterMeta,
+  Row,
   TableMeta,
   TableOptions,
 } from '../../../../src'
@@ -123,5 +128,78 @@ describe('tableMeta/columnMeta type-only feature slots', () => {
     >
 
     expect(true).toBe(true)
+  })
+
+  describe('filterMeta type-only slot', () => {
+    interface MyFilterMeta {
+      itemRank: number
+    }
+
+    const filteringFeatures = tableFeatures({
+      columnFilteringFeature,
+      filterMeta: metaHelper<MyFilterMeta>(),
+    })
+
+    it('strips the filterMeta slot from the registered features at runtime', () => {
+      const table = constructTable({
+        features: {
+          ...coreFeatures,
+          coreReactivityFeature: storeReactivityBindings(),
+          ...filteringFeatures,
+        },
+        columns: [],
+        data: [] as Array<Person>,
+      })
+
+      expect(table._features).not.toHaveProperty('filterMeta')
+      expect(table._features).toHaveProperty('columnFilteringFeature')
+    })
+
+    it('flows the declared type into addMeta and columnFiltersMeta', () => {
+      type _extractedFilterMeta = Expect<
+        Equal<ExtractFilterMeta<typeof filteringFeatures>, MyFilterMeta>
+      >
+
+      // FilterFn's addMeta callback receives the declared meta type
+      type _addMetaParam = Expect<
+        Equal<
+          Parameters<
+            NonNullable<
+              Parameters<FilterFn<typeof filteringFeatures, Person>>[3]
+            >
+          >[0],
+          MyFilterMeta
+        >
+      >
+
+      // row.columnFiltersMeta values resolve to the declared meta type
+      type _rowFilterMeta = Expect<
+        Equal<
+          Row<typeof filteringFeatures, Person>['columnFiltersMeta'],
+          Record<string, MyFilterMeta>
+        >
+      >
+
+      // fallback to the declaration-merged FilterMeta interface
+      const plainFeatures = tableFeatures({ columnFilteringFeature })
+      type _filterMetaFallback = Expect<
+        Equal<ExtractFilterMeta<typeof plainFeatures>, FilterMeta>
+      >
+      type _anyFilterMetaFallback = Expect<
+        Equal<ExtractFilterMeta<any>, FilterMeta>
+      >
+
+      expect(true).toBe(true)
+    })
+
+    it('requires a filtering feature to be registered', () => {
+      const invalid = tableFeatures({
+        rowSortingFeature,
+        // @ts-expect-error - filterMeta requires a filtering feature
+        filterMeta: metaHelper<MyFilterMeta>(),
+      })
+
+      expect(invalid).toBeDefined()
+    })
   })
 })

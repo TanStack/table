@@ -17,7 +17,11 @@ import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinning
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { RowData, UnionToIntersection } from './type-utils'
-import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
+import type {
+  ExtractFeatureMapTypes,
+  NonFeatureKeys,
+  TableFeatures,
+} from './TableFeatures'
 
 /**
  * Core options that are always available on a table, before optional feature
@@ -36,7 +40,7 @@ export interface TableOptions_Core<
 type DebugKeysFor<TFeatures extends TableFeatures> = {
   [K in Exclude<
     keyof TFeatures & string,
-    'tableMeta' | 'columnMeta' // type-only slots, not real features
+    NonFeatureKeys // meta, row model, and fn registry slots, not real features
   > as `debug${Capitalize<K>}`]?: boolean
 }
 

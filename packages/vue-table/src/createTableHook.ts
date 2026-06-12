@@ -281,7 +281,6 @@ export const AppFlexRender = defineComponent({
  * ```ts
  * const { useAppTable, createAppColumnHelper } = createTableHook({
  *   features,
- *   rowModels: {},
  *   tableComponents: {},
  *   cellComponents: {},
  *   headerComponents: {},
@@ -404,7 +403,7 @@ export function createTableHook<
   function useAppTable<TData extends RowData>(
     tableOptions: Omit<
       TableOptionsWithReactiveData<TFeatures, TData>,
-      'features' | 'rowModels'
+      'features'
     >,
   ): AppVueTable<
     TFeatures,

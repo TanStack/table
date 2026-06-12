@@ -54,14 +54,18 @@ import {
 } from '@tanstack/solid-virtual'
 import { For, createSignal } from 'solid-js'
 
-const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 function App() {
   const [data] = createSignal(makeData(200_000))
 
   const table = createTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     get data() {
       return data()

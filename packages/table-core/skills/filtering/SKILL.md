@@ -3,7 +3,7 @@ name: filtering
 description: >
   Filter rows in TanStack Table v9 with the `filteredRowModel` pipeline stage.
   Covers `columnFilteringFeature` + `globalFilteringFeature` + `columnFacetingFeature`,
-  `createFilteredRowModel(filterFns)`, `createFacetedRowModel()` /
+  `createFilteredRowModel()` (registered on `features` with `filterFns` slot), `createFacetedRowModel()` /
   `createFacetedUniqueValues()` / `createFacetedMinMaxValues()`, fuzzy filtering
   with `@tanstack/match-sorter-utils`, the built-in `filterFns` registry, custom
   `filterFn` + module augmentation, `state.columnFilters` (Array<{ id, value }>),
@@ -38,7 +38,7 @@ Filtering has five subsystems in v9 — register only the features you need:
 
 | Subsystem        | Feature                  | Row-model                           |
 | ---------------- | ------------------------ | ----------------------------------- |
-| column-filtering | `columnFilteringFeature` | `createFilteredRowModel(filterFns)` |
+| column-filtering | `columnFilteringFeature` | `createFilteredRowModel()` + `filterFns` slot |
 | global-filtering | `globalFilteringFeature` | (same `filteredRowModel`)           |
 | column-faceting  | `columnFacetingFeature`  | `createFacetedRowModel()` + helpers |
 | global-faceting  | `globalFacetingFeature`  | global versions of the helpers      |
@@ -60,14 +60,13 @@ const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const table = constructTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -130,7 +129,7 @@ function Filter({ column }) {
 
 ### Faceted filter UIs and fuzzy global search
 
-Faceting requires `createFacetedRowModel()` as the base plus `createFacetedUniqueValues()` / `createFacetedMinMaxValues()`; fuzzy filtering wires a custom `FilterFn` backed by `@tanstack/match-sorter-utils` (`rankItem` / `compareItems`) with module augmentation for `FilterFns` + `FilterMeta`. Full examples in [faceting-and-fuzzy.md](references/faceting-and-fuzzy.md).
+Faceting requires `createFacetedRowModel()` as the base plus `createFacetedUniqueValues()` / `createFacetedMinMaxValues()` — all registered on the `features` object; fuzzy filtering wires a custom `FilterFn` backed by `@tanstack/match-sorter-utils` (`rankItem` / `compareItems`) with the `filterFns` registry slot and `filterMeta` slot for type-safe meta. Full examples in [faceting-and-fuzzy.md](references/faceting-and-fuzzy.md).
 
 ### Server-side filtering
 
@@ -143,7 +142,7 @@ const { data } = useQuery({
 })
 const table = useTable({
   features: tableFeatures({ columnFilteringFeature }),
-  rowModels: {}, // no filteredRowModel needed for manual filtering
+  // no filteredRowModel registered — server filters
   data,
   columns,
   manualFiltering: true,
@@ -155,12 +154,15 @@ const table = useTable({
 ### Filter tree data and keep matching descendants visible
 
 ```ts
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowExpandingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns,
+})
 const table = constructTable({
-  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
+  features,
   columns,
   data,
   getSubRows: (r) => r.subRows,
@@ -176,13 +178,15 @@ Wrong:
 
 ```tsx
 const table = useTable({
-  features: tableFeatures({ columnFacetingFeature, columnFilteringFeature }),
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
+  features: tableFeatures({
+    columnFacetingFeature,
+    columnFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
     // BUG: missing facetedRowModel
     facetedUniqueValues: createFacetedUniqueValues(),
     facetedMinMaxValues: createFacetedMinMaxValues(),
-  },
+    filterFns,
+  }),
   columns,
   data,
 })
@@ -196,14 +200,13 @@ const table = useTable({
     columnFacetingFeature,
     columnFilteringFeature,
     rowPaginationFeature,
-  }),
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
+    filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
     facetedRowModel: createFacetedRowModel(), // REQUIRED base
     facetedMinMaxValues: createFacetedMinMaxValues(),
     facetedUniqueValues: createFacetedUniqueValues(),
-  },
+    filterFns,
+  }),
   columns,
   data,
 })
@@ -220,8 +223,11 @@ Wrong:
 ```tsx
 // manualFiltering bypasses the filteredRowModel — filter UI changes do nothing
 const table = useTable({
-  features: tableFeatures({ columnFilteringFeature }),
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({
+    columnFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    filterFns,
+  }),
   data,
   columns,
   manualFiltering: true,
@@ -241,7 +247,7 @@ const { data } = useQuery({
 
 const table = useTable({
   features: tableFeatures({ columnFilteringFeature }),
-  rowModels: {}, // no filteredRowModel needed
+  // no filteredRowModel registered for manual mode
   data,
   columns,
   manualFiltering: true,
@@ -260,9 +266,11 @@ Wrong:
 
 ```tsx
 // drops the built-in registry
-filteredRowModel: createFilteredRowModel({
-  fuzzy: fuzzyFilter,
-}),
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { fuzzy: fuzzyFilter }, // BUG: drops built-ins
+})
 // Column with filterFn: 'includesString' now warns and never filters
 ```
 
@@ -271,13 +279,17 @@ Correct:
 ```tsx
 import { filterFns } from '@tanstack/react-table'
 
-filteredRowModel: createFilteredRowModel({
-  ...filterFns, // KEEP built-ins
-  fuzzy: fuzzyFilter, // ADD custom
-}),
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: {
+    ...filterFns, // KEEP built-ins
+    fuzzy: fuzzyFilter, // ADD custom
+  },
+})
 ```
 
-`createFilteredRowModel` replaces the registry with whatever you pass. Any column using a built-in name like `'includesString'` becomes a no-op.
+The `filterFns` slot replaces the registry with whatever you provide. Any column using a built-in name like `'includesString'` becomes a no-op if the built-ins are dropped.
 
 Source: examples/react/filters-fuzzy/src/main.tsx
 
@@ -298,8 +310,11 @@ Correct:
 
 ```tsx
 const table = useTable({
-  features: tableFeatures({ globalFilteringFeature }),
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({
+    globalFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    filterFns,
+  }),
   columns,
   data,
   globalFilterFn: 'includesString',
@@ -333,8 +348,11 @@ Correct:
 
 ```ts
 const table = useTable({
-  features: tableFeatures({ columnFilteringFeature }),
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({
+    columnFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    filterFns,
+  }),
   columns,
   data,
 })

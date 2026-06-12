@@ -19,7 +19,6 @@ const features = tableFeatures({ rowSelectionFeature })
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -65,7 +64,6 @@ const rowSelection = useSelector(rowSelectionAtom) // a Vue ref
 
 const table = useTable({
   features,
-  rowModels: {},
   //...
   atoms: {
     rowSelection: rowSelectionAtom, // selection APIs now update rowSelectionAtom
@@ -80,7 +78,6 @@ const rowSelection = ref<RowSelectionState>({})
 
 const table = useTable({
   features,
-  rowModels: {},
   //...
   onRowSelectionChange: (updater) => {
     rowSelection.value = updater instanceof Function ? updater(rowSelection.value) : updater
@@ -100,7 +97,6 @@ By default, the row id for each row is simply the `row.index`. If you are using 
 ```ts
 const table = useTable({
   features,
-  rowModels: {},
   //...
   getRowId: (row) => row.uuid, // use the row's uuid from your database as the row id
 })

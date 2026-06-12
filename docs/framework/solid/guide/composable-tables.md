@@ -54,6 +54,11 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 export const {
@@ -64,11 +69,6 @@ export const {
   useHeaderContext,
 } = createTableHook({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   getRowId: (row) => row.id,
   tableComponents: {
     PaginationControls,

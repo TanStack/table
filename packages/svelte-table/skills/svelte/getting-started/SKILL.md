@@ -2,8 +2,8 @@
 name: svelte/getting-started
 description: >
   End-to-end first-table journey for `@tanstack/svelte-table@9` on Svelte 5. Install the adapter,
-  declare `features` with `tableFeatures()`, register `rowModels` factories with their `*Fns`
-  parameters, build a typed column helper with both `TFeatures` and `TData` generics, instantiate
+  declare `features` with `tableFeatures()` (including row-model factories and `*Fns` registries as
+  feature slots), build a typed column helper with both `TFeatures` and `TData` generics, instantiate
   the table with `createTable(options)` using `$state` data and `get data()` reactive option getters,
   and render with `FlexRender`. Svelte 5+ only — Svelte 3/4 must use v8.
 type: lifecycle
@@ -51,18 +51,17 @@ pnpm add @tanstack/svelte-store
 You do **not** install `@tanstack/table-core` separately — the Svelte adapter re-exports
 everything you need (column helpers, feature objects, row-model factories, types).
 
-## 2. Define `features` and `rowModels`
+## 2. Define `features`
 
 v9 is explicit. You opt in to every feature and every row model. The core row model is
 included by default, so the minimum viable table is:
 
 ```ts
 const features = tableFeatures({})
-const rowModels = {}
 ```
 
-For anything beyond a flat table, register the features you'll use **and** the matching
-row-model factories. Row-model factories take `*Fns` registries as parameters:
+For anything beyond a flat table, register the features you'll use along with the matching
+row-model factories and `*Fns` registries — all as slots inside `tableFeatures`:
 
 ```ts
 import {
@@ -81,13 +80,12 @@ const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
   columnFilteringFeature,
-})
-
-const rowModels = {
   paginatedRowModel: createPaginatedRowModel(),
-  sortedRowModel: createSortedRowModel(sortFns),
-  filteredRowModel: createFilteredRowModel(filterFns),
-}
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns,
+  filterFns,
+})
 ```
 
 **Skipping a feature** in `features` means its state slice does not exist on `table.atoms`,
@@ -166,7 +164,6 @@ option (`columns`, `rowCount`, `state.*`).
 
   const table = createTable({
     features,
-    rowModels: {},
     columns,
     get data() {
       return data
@@ -230,13 +227,13 @@ focus, scroll, and any per-row component state.
     tableFeatures,
   } from '@tanstack/svelte-table'
 
-  const features = tableFeatures({ rowPaginationFeature })
+  const features = tableFeatures({
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  })
 
   const table = createTable({
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     get data() {
       return data
@@ -273,8 +270,7 @@ const pagination = subscribeTable(table.atoms.pagination)
 
 ## 7. `createTableHook` (when you have more than one table)
 
-For apps with multiple tables, define the `features`, `rowModels`, and shared components
-once:
+For apps with multiple tables, define `features` (including row-model factories) and shared components once:
 
 ```ts
 // hooks/table.ts
@@ -289,11 +285,13 @@ import {
 } from '@tanstack/svelte-table'
 
 export const { createAppTable, createAppColumnHelper } = createTableHook({
-  features: tableFeatures({ rowPaginationFeature, rowSortingFeature }),
-  rowModels: {
+  features: tableFeatures({
+    rowPaginationFeature,
+    rowSortingFeature,
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  }),
 })
 ```
 
@@ -319,7 +317,7 @@ export const { createAppTable, createAppColumnHelper } = createTableHook({
 
 - **Svelte 3/4.** Adapter will not work. See top of file.
 - **`createSvelteTable` / `useSvelteTable` / `getCoreRowModel`** — all v8 names. v9 uses
-  `createTable` and `rowModels: { paginatedRowModel: createPaginatedRowModel(), ... }`.
+  `createTable` with row-model factories registered as slots in `tableFeatures({ paginatedRowModel: createPaginatedRowModel(), ... })`.
 - **Plain `data` instead of `get data()` getter.** Table will not see data updates. Always
   pass a reactive getter for state that lives in `$state`.
 - **Missing feature in `features`.** `table.setSorting` / `column.getCanSort` won't exist.

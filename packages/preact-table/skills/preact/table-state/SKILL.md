@@ -32,11 +32,11 @@ sources:
   - TanStack/table:examples/preact/basic-use-app-table/src/main.tsx
 ---
 
-This skill builds on `tanstack-table/state-management` and `tanstack-table/setup`. Read those first — `state-management` explains the v9 atom model (per-slice readonly `table.atoms`, internal writable `table.baseAtoms`, flat `table.store`). The Preact adapter closely mirrors the React adapter: `useTable` returns a `PreactTable<TFeatures, TData, TSelected>` whose state is backed by TanStack Store atoms, and `<table.Subscribe>` lets components subscribe to slices fine-grained.
+This skill builds on `tanstack-table/state-management` and `tanstack-table/setup`. Read those first: `state-management` explains the v9 atom model (per-slice readonly `table.atoms`, internal writable `table.baseAtoms`, flat `table.store`). The Preact adapter closely mirrors the React adapter: `useTable` returns a `PreactTable<TFeatures, TData, TSelected>` whose state is backed by TanStack Store atoms, and `<table.Subscribe>` lets components subscribe to slices fine-grained.
 
 ## Setup
 
-Every Preact v9 table follows the same shape. Define `features`, `rowModels`, and `columns` at module scope so their references are stable, then call `useTable` and render with `<table.FlexRender>`.
+Every Preact v9 table follows the same shape. Define `features` (including row model factories and \*Fns slots) and `columns` at module scope so their references are stable, then call `useTable` and render with `<table.FlexRender>`.
 
 ```tsx
 import { render } from 'preact'
@@ -53,7 +53,11 @@ import {
 type Person = { firstName: string; lastName: string; age: number }
 
 // Module-scope = stable identity. Critical for re-render perf.
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
@@ -66,7 +70,6 @@ function PeopleTable({ data }: { data: Person[] }) {
   const table = useTable(
     {
       features,
-      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data,
     },
@@ -117,9 +120,6 @@ The Preact adapter uses `useSelector` from `@tanstack/preact-store` with `shallo
 const table = useTable(
   {
     features,
-    rowModels: {
-      /*…*/
-    },
     columns,
     data,
   },
@@ -206,10 +206,6 @@ function MyTable({ data }) {
 
   const table = useTable({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data,
     atoms: { sorting: sortingAtom, pagination: paginationAtom },
@@ -222,7 +218,7 @@ Source: `examples/preact/basic-external-atoms/src/main.tsx`.
 
 ### 4. External state with `state` + `on*Change` and `createTableHook`
 
-Classic `useState` + `on*Change` integration (v8 migration paths) and the `createTableHook` factory for packaging shared `features` / `rowModels` / cell components into `useAppTable` + `createAppColumnHelper` + `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries — see [advanced-state-patterns.md](references/advanced-state-patterns.md).
+Classic `useState` + `on*Change` integration (v8 migration paths) and the `createTableHook` factory for packaging shared `features` (with row model factories) and cell components into `useAppTable` + `createAppColumnHelper` + `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries — see [advanced-state-patterns.md](references/advanced-state-patterns.md).
 
 ## Common Mistakes
 
@@ -262,7 +258,6 @@ Wrong:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -276,7 +271,6 @@ Correct:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },
@@ -331,7 +325,6 @@ function MyTable() {
   const sortingAtom = createAtom<SortingState>([]) // new atom every render
   useTable({
     features,
-    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -346,7 +339,6 @@ function MyTable() {
   const sortingAtom = useCreateAtom<SortingState>([]) // stable across renders
   useTable({
     features,
-    rowModels: {},
     columns,
     data,
     atoms: { sorting: sortingAtom },
@@ -369,7 +361,6 @@ function MyTable({ rows }) {
   ] // new every render
   const table = useTable({
     features,
-    rowModels: {},
     columns,
     data: rows ?? [],
   })
@@ -388,7 +379,7 @@ const EMPTY: Person[] = []
 
 function MyTable({ rows }) {
   const data = rows ?? EMPTY
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -407,17 +398,16 @@ const sorted = useMemo(() => [...data].sort(/* … */), [data, sorting])
 Correct:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 const rows = table.getRowModel().rows // already sorted
 ```
 
-TanStack Table v9 ships built-ins for sorting, filtering, pagination, grouping, expanding, faceting, row selection, column visibility/order/pinning/sizing, and row pinning. Register the matching `*Feature` in `features`, register its row-model factory in `rowModels`, and call the feature APIs (`setSorting`, `setColumnFilters`, etc.). Re-implementing these by hand is the #1 AI tell.
+TanStack Table v9 ships built-ins for sorting, filtering, pagination, grouping, expanding, faceting, row selection, column visibility/order/pinning/sizing, and row pinning. Register the matching `*Feature` and its row-model factory in `tableFeatures`, then call the feature APIs (`setSorting`, `setColumnFilters`, etc.). Re-implementing these by hand is the #1 AI tell.
 Source: `docs/guide/features.md`.
 
 ## See Also

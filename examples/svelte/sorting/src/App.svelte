@@ -2,10 +2,8 @@
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createSortedRowModel,
     createTable,
     renderComponent,
-    sortFns,
   } from '@tanstack/svelte-table'
   import Header from './Header.svelte'
   import './index.css'
@@ -77,9 +75,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       get data() {
         return data
       },

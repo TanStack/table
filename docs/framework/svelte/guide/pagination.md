@@ -15,13 +15,13 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 ```ts
 import { createTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data
@@ -67,13 +67,13 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -100,7 +100,6 @@ const features = tableFeatures({ rowPaginationFeature })
 
 const table = createTable({
   features,
-  rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data,
   manualPagination: true, // turn off client-side pagination
@@ -146,9 +145,7 @@ const pagination = useSelector(paginationAtom) // read it reactively with pagina
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   get data() {
     return data
@@ -171,9 +168,7 @@ const [pagination, setPagination] = createTableState<PaginationState>({
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   get data() {
     return data
@@ -192,9 +187,7 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 ```ts
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   data,
   initialState: {
@@ -219,9 +212,7 @@ By default, `pageIndex` is reset to `0` whenever the client-side row models reco
 ```ts
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+
   columns,
   data,
   autoResetPageIndex: false, // turn off auto reset of pageIndex

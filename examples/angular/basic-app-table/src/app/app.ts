@@ -54,7 +54,6 @@ const defaultData: Array<Person> = [
 // In this case, this will be a basic table with no additional features
 const { injectAppTable, createAppColumnHelper } = createTableHook({
   features: {},
-  rowModels: {},
   debugTable: true,
 })
 

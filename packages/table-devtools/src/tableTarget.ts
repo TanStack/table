@@ -19,8 +19,8 @@ export interface TableDevtoolsTable {
   options: {
     atoms?: Record<string, unknown>
     data?: unknown
+    features?: Record<string, unknown>
     key?: string
-    rowModels?: Record<string, unknown>
     state?: Record<string, unknown>
     [key: string]: unknown
   }

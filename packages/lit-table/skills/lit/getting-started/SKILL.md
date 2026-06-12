@@ -3,12 +3,12 @@ name: lit/getting-started
 description: >
   End-to-end first-table journey for `@tanstack/lit-table` v9: install the
   adapter (plus required `lit` and `@lit/context` peers), declare `features`
-  via `tableFeatures()`, declare `rowModels` with their factories, build a
-  typed column helper, construct one `TableController` per LitElement host,
-  call `.table(options, selector?)` inside `render()`, and render with
-  `FlexRender({ cell|header|footer })`. Routing keywords: install lit-table,
-  first table, getting started, TableController, basic-table-controller,
-  tableFeatures.
+  via `tableFeatures()` (row model factories live as slots on the features
+  object), build a typed column helper, construct one `TableController` per
+  LitElement host, call `.table(options, selector?)` inside `render()`, and
+  render with `FlexRender({ cell|header|footer })`. Routing keywords: install
+  lit-table, first table, getting started, TableController,
+  basic-table-controller, tableFeatures.
 type: lifecycle
 library: tanstack-table
 framework: lit
@@ -62,24 +62,32 @@ If `features` does not include `rowSelectionFeature`, then `table.atoms.rowSelec
 
 Source: `docs/framework/lit/lit-table.md`; `docs/guide/features.md`.
 
-## Step 2 — Declare `rowModels`
+## Step 2 — Add row model factories to `features`
 
-Each registered feature that needs a row-model stage maps to a factory under `rowModels`. The factory takes a record of \*Fns for that stage.
+Each registered feature that needs a row-model stage gets its factory as a slot directly on the `tableFeatures({...})` call. Pass any associated `*Fns` maps as additional slots.
 
 ```ts
 import {
+  tableFeatures,
+  rowPaginationFeature,
+  rowSortingFeature,
   createPaginatedRowModel,
   createSortedRowModel,
   sortFns,
 } from '@tanstack/lit-table'
 
-const rowModels = {
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
   paginatedRowModel: createPaginatedRowModel(),
-  sortedRowModel: createSortedRowModel(sortFns),
-}
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 ```
 
-The core row model is always included — `rowModels: {}` is valid for a feature-free table.
+The core row model is always included. A feature-free table needs only `tableFeatures({})`.
+
+Update the `features` declaration from Step 1 to include these slots instead of keeping a separate object.
 
 ## Step 3 — Type your data and build columns
 
@@ -151,7 +159,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels,
         columns,
         data: this.data,
       },
@@ -261,7 +268,6 @@ Wrong:
 const features = tableFeatures({}) // no rowPaginationFeature
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
 })
@@ -271,10 +277,12 @@ table.setPageIndex(0) // TypeScript error AND runtime no-op
 Correct:
 
 ```ts
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 const table = this.tableController.table({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: this.data,
 })
@@ -283,13 +291,13 @@ const table = this.tableController.table({
 v9 generates feature APIs and state slices only for registered features. #1 v9 trap.
 Source: `docs/guide/features.md`.
 
-### HIGH Forgetting the matching row-model factory
+### HIGH Forgetting the matching row-model factory slot
 
 Wrong:
 
 ```ts
-const features = tableFeatures({ rowSortingFeature })
-const table = this.tableController.table({ features, rowModels: {} /* … */ })
+const features = tableFeatures({ rowSortingFeature }) // no sortedRowModel slot
+const table = this.tableController.table({ features /* … */ })
 table.setSorting([{ id: 'age', desc: true }])
 // rows are NOT sorted — no sortedRowModel registered
 ```
@@ -297,10 +305,13 @@ table.setSorting([{ id: 'age', desc: true }])
 Correct:
 
 ```ts
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   /* … */
 })
 ```

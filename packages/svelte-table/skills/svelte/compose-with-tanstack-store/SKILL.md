@@ -83,7 +83,6 @@ The second argument to `createTable` is a TanStack Store selector. The result is
   const table = createTable(
     {
       features,
-      rowModels: { paginatedRowModel: createPaginatedRowModel() },
       columns,
       get data() {
         return data
@@ -161,9 +160,6 @@ const pagination = useSelector(paginationAtom)
 
 const table = createTable({
   features,
-  rowModels: {
-    /* ... */
-  },
   columns,
   get data() {
     return data
@@ -215,9 +211,6 @@ export const rowSelectionAtom = createAtom<RowSelectionState>({})
 
   const table = createTable({
     features,
-    rowModels: {
-      /* ... */
-    },
     columns,
     get data() {
       return data

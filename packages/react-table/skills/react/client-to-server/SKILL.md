@@ -5,8 +5,8 @@ description: >
   (manual modes). Pass server-paginated/sorted/filtered rows as `data`, set
   `manualPagination` / `manualSorting` / `manualFiltering` / `manualGrouping` /
   `manualExpanding` for whatever the server now owns, supply `rowCount` so
-  `getPageCount()` works, and DROP the matching `rowModels` entry (no
-  `paginatedRowModel` if the server paginates). Own the relevant state slices
+  `getPageCount()` works, and DROP the matching factory from `tableFeatures()` (no
+  `paginatedRowModel` slot if the server paginates). Own the relevant state slices
   via external atoms (`useCreateAtom` + `options.atoms`) so a query can key on
   the slice and refetch automatically — OR via classic `state` + `on*Change`
   controlled state.
@@ -35,7 +35,7 @@ A client-side table sees every row, sorts/filters/paginates them locally, and re
 Four moves convert any client table to a server table:
 
 1. **`manualX: true`** for whichever operations the server owns.
-2. **Drop the matching factory** from `rowModels` so it doesn't ship in your bundle.
+2. **Drop the matching factory** from `tableFeatures()` so it doesn't ship in your bundle.
 3. **Provide `rowCount`** so `table.getPageCount()` / `getCanNextPage()` work.
 4. **Own the slice state externally** so your data fetcher can key on it.
 
@@ -88,10 +88,9 @@ function ServerTable() {
     }
   }, [pagination])
 
-  // 3) Manual pagination + rowCount. No paginatedRowModel in rowModels.
+  // 3) Manual pagination + rowCount. No paginatedRowModel in features.
   const table = useTable({
     features,
-    rowModels: {}, // core only — server slices
     columns,
     data: serverPage?.rows ?? EMPTY, // EMPTY at module scope
     rowCount: serverPage?.rowCount,
@@ -114,7 +113,6 @@ const [pagination, setPagination] = React.useState<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: serverPage?.rows ?? EMPTY,
   rowCount: serverPage?.rowCount,
@@ -156,8 +154,7 @@ const serverArgs = { sorting, pagination, columnFilters }
 // ... fetch keyed on serverArgs
 
 const table = useTable({
-  features,
-  rowModels: {}, // no sorted/filtered/paginated factories — server owns them
+  features, // no sorted/filtered/paginated factories — server owns them
   columns,
   data: serverPage?.rows ?? EMPTY,
   rowCount: serverPage?.rowCount,
@@ -185,9 +182,12 @@ If the server returns the **entire** dataset, leave the table client-side. Manua
 Wrong:
 
 ```tsx
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(), // factory registered — but server already paginated
+})
 const table = useTable({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: serverPage.rows,
   // missing manualPagination
@@ -197,9 +197,12 @@ const table = useTable({
 Correct:
 
 ```tsx
+const features = tableFeatures({
+  rowPaginationFeature,
+  // no paginatedRowModel — server paginates
+})
 const table = useTable({
   features,
-  rowModels: {}, // dropped — server paginates
   columns,
   data: serverPage.rows,
   rowCount: serverPage.rowCount,
@@ -217,7 +220,6 @@ Wrong:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: serverPage.rows,
   manualPagination: true,
@@ -231,7 +233,6 @@ Correct:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: serverPage.rows,
   rowCount: serverPage.rowCount, // ← required for accurate pager
@@ -253,7 +254,6 @@ const [pagination] = React.useState<PaginationState>({
 })
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: { pagination },
@@ -271,7 +271,6 @@ const [pagination, setPagination] = React.useState<PaginationState>({
 })
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: { pagination },
@@ -289,9 +288,12 @@ Source: `docs/framework/react/guide/table-state.md`.
 Wrong:
 
 ```tsx
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(), // ships for nothing
+})
 useTable({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() }, // ships for nothing
   columns,
   data: serverPage.rows,
   manualPagination: true,
@@ -301,9 +303,12 @@ useTable({
 Correct:
 
 ```tsx
+const features = tableFeatures({
+  rowPaginationFeature,
+  // drop paginatedRowModel — server owns pagination
+})
 useTable({
   features,
-  rowModels: {}, // drop it — server owns pagination
   columns,
   data: serverPage.rows,
   rowCount: serverPage.rowCount,
@@ -321,7 +326,6 @@ Wrong:
 ```tsx
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: { pagination }, // silently ignored
@@ -337,7 +341,6 @@ Correct:
 // Pick one ownership mechanism per slice.
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   atoms: { pagination: paginationAtom },

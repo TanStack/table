@@ -59,14 +59,13 @@ import { injectVirtualizer } from '@tanstack/angular-virtual'
 const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 export class App {
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
     columns,
     data: this.data(),
   }))

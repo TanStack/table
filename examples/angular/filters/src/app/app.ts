@@ -25,14 +25,13 @@ export const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   columnMeta: metaHelper<MyColumnMeta>(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   debugTable: true,
   debugHeaders: true,
   debugColumns: false,

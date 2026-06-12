@@ -105,7 +105,6 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 function EditableTable({ data }: { data: Person[] }) {
   const table = useTable({
     features,
-    rowModels: {},
     columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
         header: 'First Name',
@@ -187,7 +186,7 @@ The bulk-edit alternative is a single top-level form with `<form.Field name={\`r
 Wrong:
 
 ```tsx
-useTable({ features, rowModels: {}, columns, data /* no getRowId */ })
+useTable({ features, columns, data /* no getRowId */ })
 ```
 
 Correct:
@@ -195,7 +194,6 @@ Correct:
 ```tsx
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,

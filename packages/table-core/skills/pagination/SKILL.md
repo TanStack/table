@@ -34,13 +34,13 @@ import {
 } from '@tanstack/table-core'
 import type { PaginationState } from '@tanstack/table-core'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -126,7 +126,7 @@ const { data: dataQuery } = useQuery({
 
 const table = useTable({
   features: tableFeatures({ rowPaginationFeature }),
-  rowModels: {}, // no paginatedRowModel — server paginates
+  // no paginatedRowModel registered — server paginates
   data: dataQuery?.rows ?? EMPTY,
   columns,
   manualPagination: true,
@@ -141,12 +141,15 @@ const table = useTable({
 ### Disable auto page reset when filters change
 
 ```ts
+const features = tableFeatures({
+  rowPaginationFeature,
+  columnFilteringFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
 const table = constructTable({
-  features: tableFeatures({ rowPaginationFeature, columnFilteringFeature }),
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
+  features,
   columns,
   data,
   autoResetPageIndex: false, // keep current page while user types in a filter
@@ -174,7 +177,6 @@ Wrong:
 // getPageCount() returns 1, next/prev buttons are disabled
 const table = useTable({
   features: tableFeatures({ rowPaginationFeature }),
-  rowModels: {},
   data, // only 10 rows for the current page
   columns,
   manualPagination: true,
@@ -189,7 +191,6 @@ Correct:
 ```tsx
 const table = useTable({
   features: tableFeatures({ rowPaginationFeature }),
-  rowModels: {},
   data: dataQuery.rows,
   columns,
   manualPagination: true,
@@ -223,8 +224,10 @@ Correct:
 ```tsx
 const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
 const table = useTable({
-  features: tableFeatures({ rowPaginationFeature }),
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features: tableFeatures({
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  }),
   columns,
   data,
   state: { pagination },
@@ -241,12 +244,9 @@ Source: docs/guide/pagination.md
 Wrong:
 
 ```ts
+// features already has paginatedRowModel + filteredRowModel registered
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
   columns,
   data,
   autoResetPageIndex: false, // user on page 5, then filters down to 2 pages
@@ -366,8 +366,10 @@ Correct:
 
 ```ts
 const table = useTable({
-  features: tableFeatures({ rowPaginationFeature }),
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features: tableFeatures({
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  }),
   columns,
   data,
 })

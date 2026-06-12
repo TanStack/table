@@ -66,7 +66,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {},
       columns,
       get data() {
         return data

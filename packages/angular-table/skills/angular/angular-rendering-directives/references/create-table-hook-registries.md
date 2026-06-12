@@ -26,10 +26,10 @@ export const {
   injectTableCellContext,
   injectTableHeaderContext,
 } = createTableHook({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: {
-    /* … */
-  },
+  features: tableFeatures({
+    rowSortingFeature,
+    /* row-model factories and fn registries also go here */
+  }),
   tableComponents: { PaginationControls, RowCount },
   cellComponents: { TextCell, NumberCell, StatusCell },
   headerComponents: { SortIndicator, ColumnFilter },

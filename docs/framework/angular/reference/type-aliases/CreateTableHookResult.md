@@ -69,7 +69,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:335](https://
 
 ##### tableOptions
 
-() => `Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"` \| `"rowModels"`\>
+() => `Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"`\>
 
 #### Returns
 

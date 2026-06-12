@@ -116,6 +116,9 @@ Each cell type is a small Svelte component that knows which row + field it edits
   const features = tableFeatures({
     rowPaginationFeature,
     columnFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filterFns,
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()
@@ -170,10 +173,6 @@ Each cell type is a small Svelte component that knows which row + field it edits
 
   const table = createTable({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     get data() {
       // The form is the source of truth.

@@ -44,7 +44,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -73,7 +72,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -102,7 +100,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -130,7 +127,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -161,7 +157,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -187,7 +182,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -212,7 +206,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -237,7 +230,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -262,7 +254,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -283,7 +274,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -304,7 +294,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -328,7 +317,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -354,7 +342,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,
@@ -380,7 +367,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: (row: Row<typeof features, Person>) =>
           row.index === 0, // only first row is selectable (of 2 sub-rows)
         renderFallbackValue: '',
@@ -406,7 +392,6 @@ describe('rowSelectionFeature', () => {
 
       const table = constructTable<typeof features, Person>({
         features,
-        rowModels: {},
         enableRowSelection: true,
         renderFallbackValue: '',
         data,

@@ -30,6 +30,9 @@ const features = tableFeatures({
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -104,10 +107,6 @@ function App() {
     {
       key: 'row-selection', // needed for devtools
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       atoms: {
         rowSelection: rowSelectionAtom,
       },

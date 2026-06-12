@@ -61,13 +61,12 @@ import { createVirtualizer } from '@tanstack/svelte-virtual'
 const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   get data() {
     return data

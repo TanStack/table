@@ -8,12 +8,11 @@ title: FilterFnOption
 ```ts
 type FilterFnOption<TFeatures, TData> = 
   | "auto"
-  | BuiltInFilterFn
-  | keyof FilterFns
+  | ExtractFilterFnKeys<TFeatures>
 | FilterFn<TFeatures, RowData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L76)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L107)
 
 ## Type Parameters
 

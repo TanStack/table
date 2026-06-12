@@ -78,7 +78,6 @@ const columns = columnHelper.columns([
 ```ts
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id, // ← stable from row's own data
@@ -209,7 +208,7 @@ function MyTable() {
     columnHelper.accessor('firstName', { header: 'First' }),
     columnHelper.accessor('lastName', { header: 'Last' }),
   ]
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -225,7 +224,7 @@ function MyTable() {
       ]),
     [],
   )
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -241,7 +240,6 @@ Wrong:
 // no getRowId — rowSelection survives data updates but maps to wrong rows
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   enableRowSelection: true,
@@ -253,7 +251,6 @@ Correct:
 ```ts
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,
@@ -328,6 +325,6 @@ Source: https://github.com/TanStack/table/issues/5860
 
 ## See also
 
-- `tanstack-table/setup` — how `features` and `rowModels` thread through `useTable`
+- `tanstack-table/setup` — how `features` (with row model factory slots) threads through `useTable`
 - `tanstack-table/customizing-feature-behavior` — per-column `sortFn`/`filterFn`/`aggregationFn`
 - `tanstack-table/row-selection` — why `getRowId` is essentially mandatory

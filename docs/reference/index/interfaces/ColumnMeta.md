@@ -5,7 +5,7 @@ title: ColumnMeta
 
 # Interface: ColumnMeta\<TFeatures, TData, TValue\>
 
-Defined in: [types/ColumnDef.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L14)
+Defined in: [types/ColumnDef.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L18)
 
 ## Type Parameters
 

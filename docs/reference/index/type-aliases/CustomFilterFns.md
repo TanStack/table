@@ -9,7 +9,7 @@ title: CustomFilterFns
 type CustomFilterFns<TFeatures, TData> = Record<string, FilterFn<TFeatures, RowData>>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L71)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L85)
 
 ## Type Parameters
 

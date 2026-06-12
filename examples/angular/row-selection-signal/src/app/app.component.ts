@@ -33,6 +33,9 @@ export const features = tableFeatures({
   columnVisibilityFeature,
   rowPaginationFeature,
   rowSelectionFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 @Component({
@@ -117,10 +120,6 @@ export class AppComponent {
   table = injectTable<typeof features, Person>(() => ({
     key: 'row-selection-signal', // needed for devtools
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns: this.columns,
     data: this.data(),
     state: {

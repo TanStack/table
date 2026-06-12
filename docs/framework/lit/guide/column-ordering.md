@@ -27,7 +27,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this.data,
     })
@@ -64,7 +63,6 @@ const features = tableFeatures({ columnOrderingFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnOrder: ['columnId1', 'columnId2', 'columnId3'],
@@ -97,7 +95,6 @@ const columnOrderAtom = createAtom<ColumnOrderState>([
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   atoms: {
     columnOrder: columnOrderAtom,
@@ -118,7 +115,6 @@ private columnOrder: ColumnOrderState = ['columnId1', 'columnId2', 'columnId3']
 //...
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   state: {
     columnOrder: this.columnOrder,

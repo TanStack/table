@@ -81,14 +81,13 @@ import {
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   get data() {
     return data
@@ -122,7 +121,6 @@ exposed as `table.state`. The default selector returns the full registered state
   const table = createTable(
     {
       features,
-      rowModels: { paginatedRowModel: createPaginatedRowModel() },
       columns,
       get data() {
         return data
@@ -186,7 +184,6 @@ The default: set starting values, let the table own the rest. `initialState` als
 ```ts
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data
@@ -231,7 +228,6 @@ const pagination = useSelector(paginationAtom)
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data
@@ -266,7 +262,6 @@ updates.
 
   const table = createTable({
     features,
-    rowModels: {},
     columns,
     get data() {
       return data
@@ -340,8 +335,7 @@ Always key `{#each}` blocks on stable ids (`headerGroup.id`, `header.id`, `row.i
 
 ## `createTableHook` — app-wide composition
 
-Create one configured hook per app: shared `features`, `rowModels`, defaults, and pre-bound
-component registries.
+Create one configured hook per app: shared `features` (including row-model factories), defaults, and pre-bound component registries.
 
 ```ts
 import {
@@ -363,11 +357,13 @@ export const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  features: tableFeatures({ rowPaginationFeature, rowSortingFeature }),
-  rowModels: {
+  features: tableFeatures({
+    rowPaginationFeature,
+    rowSortingFeature,
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  }),
   cellComponents: { TextCell },
   headerComponents: { SortIndicator },
 })

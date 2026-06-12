@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:368](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L368)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:364](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L364)
 
 Creates app-scoped Angular table helpers with features, row models, and
 renderable component maps pre-bound.
@@ -51,7 +51,6 @@ helpers without repeating the same feature and component generics.
 ```ts
 const { injectAppTable, createAppColumnHelper } = createTableHook({
   features,
-  rowModels: {},
   tableComponents: {},
   cellComponents: {},
   headerComponents: {},

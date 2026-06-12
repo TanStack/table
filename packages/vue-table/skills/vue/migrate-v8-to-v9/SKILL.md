@@ -2,12 +2,12 @@
 name: vue/migrate-v8-to-v9
 description: >
   Mechanical breaking-change migration from `@tanstack/vue-table` v8 to v9. Rename `useVueTable`
-  → `useTable`, move `getCoreRowModel`/`getSortedRowModel`/etc. options into `rowModels`
-  factories, add the mandatory `features` via `tableFeatures({...})`, update
-  `createColumnHelper<TData>()` → `createColumnHelper<typeof features, TData>()`, rename
+  → `useTable`, move `getCoreRowModel`/`getSortedRowModel`/etc. options into the `tableFeatures`
+  object as row model factory slots, add the mandatory `features` via `tableFeatures({...})`,
+  update `createColumnHelper<TData>()` → `createColumnHelper<typeof features, TData>()`, rename
   `sortingFn`/`sortingFns` → `sortFn`/`sortFns`, swap `table.getState()` for `table.state`
-  / `table.state` / `table.atoms.<slice>.get()`, and prefer `<FlexRender :cell="cell" />` over the
-  legacy `:render`/`:props` shape. Vue has NO `/legacy` entrypoint — migration is a direct
+  / `table.state` / `table.atoms.<slice>.get()`, and prefer `<FlexRender :cell="cell" />` over
+  the legacy `:render`/`:props` shape. Vue has NO `/legacy` entrypoint — migration is a direct
   rewrite. The Vue adapter installs `vueReactivity()` automatically.
 type: lifecycle
 library: tanstack-table
@@ -89,7 +89,13 @@ import {
   useTable,
 } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('age', { header: 'Age', sortFn: 'alphanumeric' }), // sortingFn → sortFn
@@ -97,10 +103,6 @@ const columns = columnHelper.columns([
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -118,10 +120,10 @@ const table = useTable({
 | ----------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `useVueTable(opts)`                                                                       | `useTable(opts, selector?)`                                                           |
 | `getCoreRowModel: getCoreRowModel()`                                                      | implicit; not an option                                                               |
-| `getSortedRowModel: getSortedRowModel()`                                                  | `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }`                        |
-| `getFilteredRowModel: getFilteredRowModel()`                                              | `rowModels: { filteredRowModel: createFilteredRowModel(filterFns) }`                  |
-| `getPaginationRowModel: getPaginationRowModel()`                                          | `rowModels: { paginatedRowModel: createPaginatedRowModel() }`                         |
-| `getGroupedRowModel: getGroupedRowModel()`                                                | `rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) }`               |
+| `getSortedRowModel: getSortedRowModel()`                                                  | `tableFeatures({ sortedRowModel: createSortedRowModel(), sortFns })`                  |
+| `getFilteredRowModel: getFilteredRowModel()`                                              | `tableFeatures({ filteredRowModel: createFilteredRowModel(), filterFns })`             |
+| `getPaginationRowModel: getPaginationRowModel()`                                          | `tableFeatures({ paginatedRowModel: createPaginatedRowModel() })`                     |
+| `getGroupedRowModel: getGroupedRowModel()`                                                | `tableFeatures({ groupedRowModel: createGroupedRowModel(), aggregationFns })`         |
 | `createColumnHelper<TData>()`                                                             | `createColumnHelper<typeof features, TData>()`                                        |
 | `ColumnDef<TData, TValue>`                                                                | `ColumnDef<TFeatures, TData, TValue>`                                                 |
 | `Column<TData, TValue>` / `Row<TData>` / `Cell<TData, TValue>`                            | `…<TFeatures, TData, TValue>`                                                         |
@@ -143,19 +145,28 @@ non-Vue-specific renames are shared across adapters).
 
 ## Core Patterns
 
-### 1. Convert `getXRowModel` options to `rowModels` factories
+### 1. Convert `getXRowModel` options to features-slot factories
 
-Every row-model factory now requires its `*Fns` parameter — this is what makes the registries
-tree-shakeable in v9.
+Row model factories now live on the `tableFeatures({...})` object alongside the feature
+they belong to. The `*Fns` registries move there too — this is what makes them tree-shakeable
+in v9.
 
 ```ts
-rowModels: {
-  sortedRowModel:    createSortedRowModel(sortFns),
-  filteredRowModel:  createFilteredRowModel(filterFns),
+const features = tableFeatures({
+  rowSortingFeature,
+  columnFilteringFeature,
+  rowPaginationFeature,
+  rowGroupingFeature,
+  rowExpandingFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  groupedRowModel:   createGroupedRowModel(aggregationFns),
-  expandedRowModel:  createExpandedRowModel(),
-}
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  sortFns,
+  filterFns,
+  aggregationFns,
+})
 ```
 
 The `*Fns` registries are open-ended; do not cite a number of built-in fns.
@@ -214,7 +225,6 @@ const sorting = ref<SortingState>([])
 
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   state: {
@@ -276,14 +286,15 @@ const table = useTable({
   getCoreRowModel: getCoreRowModel(),
 })
 
-// ✅ Core row model is implicit. `rowModels: {}` is fine.
-const table = useTable({ features, rowModels: {}, columns, data })
+// ✅ Core row model is implicit. No `rowModels` option needed.
+const table = useTable({ features, columns, data })
 ```
 
 ### Forgetting `features` (CRITICAL)
 
 `features` is required even for a no-features migration. Pass `tableFeatures({})` for empty,
-or list everything you use. Without it: `'features' is missing in type`.
+or list everything you use (features + row model factories + fn registries). Without it:
+`'features' is missing in type`.
 
 ### Wrong `createColumnHelper` generic arity (CRITICAL)
 
@@ -298,14 +309,18 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 Same applies to type annotations: `ColumnDef<typeof features, Person>`,
 `Row<typeof features, Person>`, `Cell<typeof features, Person, unknown>`.
 
-### Forgetting to pass `sortFns` / `filterFns` to row-model factories (CRITICAL)
+### Forgetting to register `sortFns` / `filterFns` in the features object (CRITICAL)
 
 ```ts
 // ❌ Runtime: no sort fns registered, sort is a no-op.
-sortedRowModel: createSortedRowModel()
+const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel() })
 
-// ✅
-sortedRowModel: createSortedRowModel(sortFns)
+// ✅ Register the fn map as a slot on the features object.
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 ```
 
 ### Missed `sortingFn` → `sortFn` rename (HIGH)
@@ -371,5 +386,5 @@ etc.
 - `tanstack-table/vue/getting-started` — the v9 minimum-viable shape
 - `tanstack-table/vue/table-state` — reactivity model + reading state
 - `tanstack-table/vue/production-readiness` — finish the migration with bundle + identity audits
-- `tanstack-table/table-core/setup` — `features` / `rowModels` deep dive
+- `tanstack-table/table-core/setup` — `features` / row model factory slots deep dive
 - `tanstack-table/table-core/column-definitions` — column helper + generics

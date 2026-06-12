@@ -18,6 +18,7 @@ let data = makeData(200_000)
 const features = tableFeatures({
   rowPaginationFeature,
   coreReactivityFeature: storeReactivityBindings(),
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -225,9 +226,6 @@ const renderTable = (table: Table<typeof features, Person>) => {
 
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   data,
   columns,
   initialState: {

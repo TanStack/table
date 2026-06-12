@@ -78,13 +78,12 @@ function App() {
 
   const table = useTable(
     {
-      features,
-      rowModels: {}, // no client-side pagination factory
+      features, // no paginatedRowModel factory — server owns the slicing
       columns,
       data: rowsPayload?.rows ?? defaultData,
       rowCount: rowsPayload?.rowCount, // makes getPageCount() correct
       atoms: { pagination: paginationAtom },
-      manualPagination: true, // server owns the slicing
+      manualPagination: true,
     },
     (state) => state,
   )
@@ -126,8 +125,7 @@ const { data } = useSomeServerFetcher({
 })
 
 const table = useTable({
-  features,
-  rowModels: {}, // server owns every stage
+  features, // no row-model factories — server owns every stage
   columns,
   data: data?.rows ?? EMPTY,
   rowCount: data?.rowCount,
@@ -154,7 +152,6 @@ Wrong:
 ```tsx
 useTable({
   features,
-  rowModels: {},
   columns,
   data: response?.rows ?? [],
   atoms: { pagination: paginationAtom },
@@ -169,7 +166,6 @@ Correct:
 ```tsx
 useTable({
   features,
-  rowModels: {},
   columns,
   data: response?.rows ?? [],
   rowCount: response?.rowCount,
@@ -181,32 +177,31 @@ useTable({
 Without `rowCount` the table cannot know how many pages exist.
 Source: `examples/preact/with-tanstack-query/src/main.tsx`.
 
-### HIGH Keeping the client-side row model when going manual
+### HIGH Keeping a client-side row-model factory when the server owns that stage
 
 Wrong:
 
 ```tsx
-useTable({
-  features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() }, // still runs
-  data: server.rows,
-  manualPagination: true,
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(), // still runs; wasted work
 })
+useTable({ features, data: server.rows, manualPagination: true })
 ```
 
 Correct:
 
 ```tsx
+const features = tableFeatures({ rowPaginationFeature }) // no paginatedRowModel
 useTable({
   features,
-  rowModels: {}, // server owns pagination
   data: server.rows,
   rowCount: server.rowCount,
   manualPagination: true,
 })
 ```
 
-With `manualPagination`, the paginated row model has nothing useful to do — drop it. Same for `sortedRowModel` under `manualSorting`, `filteredRowModel` under `manualFiltering`.
+With `manualPagination`, the paginated row model has nothing useful to do; omit it from `tableFeatures`. Same for `sortedRowModel` under `manualSorting`, `filteredRowModel` under `manualFiltering`.
 Source: `examples/preact/with-tanstack-query/src/main.tsx`.
 
 ### HIGH Forgetting to key the request on the slices the server owns
@@ -252,7 +247,6 @@ const { data } = useQuery({
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: data?.rows ?? defaultData,
   rowCount: data?.rowCount,
@@ -271,7 +265,6 @@ Wrong:
 const features = tableFeatures({}) // dropped rowPaginationFeature
 useTable({
   features,
-  rowModels: {},
   data: server.rows,
   rowCount: server.rowCount,
   manualPagination: true,

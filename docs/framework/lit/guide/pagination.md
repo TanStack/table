@@ -15,7 +15,10 @@ import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import { TableController, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 @customElement('my-table')
 class MyTable extends LitElement {
@@ -27,9 +30,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns,
       data: this.data,
     })
@@ -77,13 +77,13 @@ import {
   createPaginatedRowModel,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data,
 })
@@ -110,7 +110,6 @@ const features = tableFeatures({ rowPaginationFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {}, // no paginatedRowModel needed for server-side pagination
   columns,
   data: this.data,
   manualPagination: true, // turn off client-side pagination
@@ -154,9 +153,6 @@ const paginationAtom = createAtom<PaginationState>({
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data,
   atoms: {
@@ -178,9 +174,6 @@ private pagination: PaginationState = {
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data,
   onPaginationChange: (updater) => {
@@ -197,9 +190,6 @@ Alternatively, if you have no need for managing the `pagination` state in your o
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data,
   initialState: {
@@ -224,9 +214,6 @@ By default, `pageIndex` is reset to `0` whenever the client-side row models reco
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data,
   autoResetPageIndex: false, // turn off auto reset of pageIndex

@@ -110,7 +110,6 @@ export class App {
     key: 'basic-inject-table', // needed for devtools
     debugTable: true,
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))

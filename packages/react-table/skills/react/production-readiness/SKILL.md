@@ -34,15 +34,17 @@ The default `useTable` selector is `(state) => state` — the component re-rende
 
 ## Setup — stable references
 
-The biggest single perf win is keeping `features`, `rowModels`, `columns`, and `data` references stable across renders. Internal memoization keys off identity, so a new object every render forces full recomputation.
+The biggest single perf win is keeping `features` and `columns` references stable across renders. Internal memoization keys off identity, so a new object every render forces full recomputation. Row model factories live on `features`, so they are also stable at module scope.
 
 ```tsx
 // ✓ Module scope = stable identity
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-const rowModels = {
-  sortedRowModel: createSortedRowModel(sortFns),
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-}
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -55,7 +57,6 @@ const EMPTY: Person[] = []
 function MyTable({ data }: { data: Person[] | undefined }) {
   const table = useTable({
     features,
-    rowModels,
     columns,
     data: data ?? EMPTY,
   })
@@ -88,7 +89,7 @@ Source: `docs/guide/features.md`; maintainer guidance.
 
 ```tsx
 // Narrow to specific slices at the table level.
-const table = useTable({ features, rowModels, columns, data }, (state) => ({
+const table = useTable({ features, columns, data }, (state) => ({
   sorting: state.sorting,
   pagination: state.pagination,
 }))
@@ -106,7 +107,7 @@ A noisy footer that re-renders on every keystroke in a filter doesn't need to re
 ```tsx
 function MyTable({ data, columns }) {
   const table = useTable(
-    { features, rowModels, columns, data },
+    { features, columns, data },
     () => null, // top-level opt-out
   )
   return (
@@ -173,15 +174,18 @@ const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 Tree-shaking via `features` is one of the headline reasons for the v9 rewrite. `stockFeatures` exists for migration / "everything on" smoke tests, not production.
 Source: maintainer guidance; `docs/guide/features.md`.
 
-### HIGH Unstable `features` / `rowModels` / `columns` references
+### HIGH Unstable `features` / `columns` references
 
 Wrong:
 
 ```tsx
 function MyTable({ data }) {
-  const features = tableFeatures({ rowSortingFeature }) // new every render
-  const rowModels = { sortedRowModel: createSortedRowModel(sortFns) } // new every render
-  const table = useTable({ features, rowModels, columns, data })
+  const features = tableFeatures({ // new every render
+    rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -189,11 +193,14 @@ Correct:
 
 ```tsx
 // Module scope — declared once.
-const features = tableFeatures({ rowSortingFeature })
-const rowModels = { sortedRowModel: createSortedRowModel(sortFns) }
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 function MyTable({ data }) {
-  const table = useTable({ features, rowModels, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -325,7 +332,7 @@ header: ({ table }) => (
 Correct:
 
 ```tsx
-const table = useTable({ features, rowModels, columns, data })
+const table = useTable({ features, columns, data })
 // Reach for Subscribe later, scoped to actual hotspots.
 ```
 

@@ -58,7 +58,6 @@ const features = tableFeatures({
 
 const table = constructTable({
   features,
-  rowModels: {}, // no row model needed for these features
   columns,
   data,
   initialState: {
@@ -306,7 +305,6 @@ Correct:
 ```ts
 const table = useTable({
   features: tableFeatures({ columnVisibilityFeature }),
-  rowModels: {},
   columns,
   data,
 })

@@ -32,7 +32,6 @@ import './index.css'
 
 const { appFeatures, useAppTable, createAppColumnHelper } = createTableHook({
   features: { columnOrderingFeature, columnSizingFeature },
-  rowModels: {},
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

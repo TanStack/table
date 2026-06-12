@@ -8,11 +8,7 @@ import {
   row_getGroupingValue,
 } from './columnGroupingFeature.utils'
 import type { Column } from '../../types/Column'
-import type {
-  AggregationFn,
-  AggregationFns,
-  Row_ColumnGrouping,
-} from './columnGroupingFeature.types'
+import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -23,17 +19,17 @@ import type { RowData } from '../../types/type-utils'
  * Creates a memoized grouped row model factory.
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ *
+ * Register aggregation functions with the `aggregationFns` slot on the
+ * `features` option:
+ * `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })`.
  */
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(
-  aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>,
-): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
     const table = _table as unknown as Table_Internal<TFeatures, TData>
-    if (!table._rowModelFns.aggregationFns)
-      table._rowModelFns.aggregationFns = aggregationFns
     return tableMemo({
       feature: 'columnGroupingFeature',
       table,

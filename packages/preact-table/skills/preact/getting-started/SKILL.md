@@ -2,11 +2,11 @@
 name: preact/getting-started
 description: >
   End-to-end first-table journey for `@tanstack/preact-table` v9: install the
-  adapter, declare `features` via `tableFeatures()`, declare `rowModels` with
-  their factories and *Fns parameters, build a typed column helper, call
+  adapter, declare `features` via `tableFeatures()` with row model factories
+  and *Fns slots on the features object, build a typed column helper, call
   `useTable` with stable references, and render with `table.FlexRender`.
   Routing keywords: install preact-table, first table, getting started,
-  tableFeatures, features, rowModels, useTable, FlexRender, basic-use-table.
+  tableFeatures, features, useTable, FlexRender, basic-use-table.
 type: lifecycle
 library: tanstack-table
 framework: preact
@@ -51,6 +51,7 @@ import {
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  // row model factories and *Fns slots are added here in Step 2
 })
 ```
 
@@ -58,24 +59,30 @@ If `features` does not include `rowSelectionFeature`, then `table.atoms.rowSelec
 
 Source: `docs/framework/preact/preact-table.md`; `docs/guide/features.md`.
 
-## Step 2 — Declare `rowModels`
+## Step 2 — Register row model factories on `features`
 
-Each registered feature that needs a row-model stage maps to a factory under `rowModels`. The factory takes a record of \*Fns (predicates, comparators, etc.) for that stage.
+Each registered feature that needs a row-model stage maps to a factory added directly to the `tableFeatures({...})` call. Pass \*Fns maps (predicates, comparators, etc.) as slots on the same object.
 
 ```tsx
 import {
+  tableFeatures,
+  rowPaginationFeature,
+  rowSortingFeature,
   createPaginatedRowModel,
   createSortedRowModel,
   sortFns,
 } from '@tanstack/preact-table'
 
-const rowModels = {
+const features = tableFeatures({
+  rowPaginationFeature,
+  rowSortingFeature,
   paginatedRowModel: createPaginatedRowModel(),
-  sortedRowModel: createSortedRowModel(sortFns),
-}
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 ```
 
-The core row model is always included — `rowModels: {}` is valid for a feature-free table.
+The core row model is always included. A `tableFeatures({})` call with no row-model factories is valid for a feature-free table.
 
 Source: `docs/framework/preact/preact-table.md`.
 
@@ -146,7 +153,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels,
       columns,
       data,
       debugTable: true,
@@ -217,7 +223,7 @@ Wrong:
 
 ```tsx
 const features = tableFeatures({}) // no rowPaginationFeature
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 
 table.setPageIndex(0) // TypeScript error AND runtime no-op
 ```
@@ -225,13 +231,11 @@ table.setPageIndex(0) // TypeScript error AND runtime no-op
 Correct:
 
 ```tsx
-const features = tableFeatures({ rowPaginationFeature })
-const table = useTable({
-  features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
-  columns,
-  data,
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
+const table = useTable({ features, columns, data })
 
 table.setPageIndex(0)
 ```
@@ -244,8 +248,8 @@ Source: `docs/guide/features.md`; `docs/framework/preact/guide/table-state.md`.
 Wrong:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({ features, rowModels: {}, columns, data })
+const features = tableFeatures({ rowSortingFeature }) // no sortedRowModel
+const table = useTable({ features, columns, data })
 table.setSorting([{ id: 'age', desc: true }])
 // table.getRowModel().rows is still unsorted — no sortedRowModel registered
 ```
@@ -253,16 +257,15 @@ table.setSorting([{ id: 'age', desc: true }])
 Correct:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
-Each row-model feature (sorting, filtering, pagination, grouping, expanding, faceting) requires its row-model factory in `rowModels` to actually transform the rows.
+Each row-model feature (sorting, filtering, pagination, grouping, expanding, faceting) requires its row-model factory registered in `tableFeatures` to actually transform the rows.
 Source: `docs/framework/preact/preact-table.md`.
 
 ### HIGH Unstable `features` / `columns` / `data` references
@@ -276,7 +279,7 @@ function MyTable({ rows }) {
     /* … */
   ] // new every render
   const data = rows ?? [] // new [] every render
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -291,7 +294,7 @@ const EMPTY: Person[] = []
 
 function MyTable({ rows }) {
   const data = rows ?? EMPTY
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -309,13 +312,12 @@ const sorted = useMemo(() => [...data].sort(/* … */), [data, sorting]) // dupl
 Correct:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 const rows = table.getRowModel().rows // already sorted
 ```
 
@@ -351,17 +353,16 @@ import {
   sortFns,
 } from '@tanstack/preact-table'
 
-const features = tableFeatures({ rowSortingFeature })
-
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+
+const table = useTable({ features, columns, data })
 ```
 
-v8 used `useReactTable` and `get*RowModel` options. v9 uses `useTable` plus `features` + `rowModels`. See `tanstack-table/preact/migrate-v8-to-v9` for the full mapping.
+v8 used `useReactTable` and `get*RowModel` options. v9 uses `useTable` with `features` (which now also carries row model factories and \*Fns slots). See `tanstack-table/preact/migrate-v8-to-v9` for the full mapping.
 Source: `docs/framework/preact/preact-table.md`.
 
 ## See Also

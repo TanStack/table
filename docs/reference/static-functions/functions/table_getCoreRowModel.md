@@ -13,7 +13,7 @@ Defined in: [core/row-models/coreRowModelsFeature.utils.ts:18](https://github.co
 
 Resolves the table's unmodified core row model.
 
-The factory is created once per table, either from `options.rowModels.coreRowModel`
+The factory is created once per table, either from the `coreRowModel` slot on the `features` option
 or the built-in `createCoreRowModel()`, then reused for later calls.
 
 ## Type Parameters

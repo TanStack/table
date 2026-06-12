@@ -264,7 +264,6 @@ const features = tableFeatures({ densityPlugin })
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   data,
   //..

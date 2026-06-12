@@ -36,27 +36,20 @@ import type {
   Row,
   RowData,
   SortFn,
+  TableFeatures,
 } from '@tanstack/lit-table'
 
-declare module '@tanstack/lit-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
 }
+
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 interface MyColumnMeta {
   filterVariant?: 'text' | 'range' | 'select'
 }
 
-const features = tableFeatures({
-  ...stockFeatures,
-  columnMeta: metaHelper<MyColumnMeta>(),
-})
-
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -67,7 +60,7 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -77,6 +70,23 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   }
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
+
+const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  aggregationFns,
+})
 
 const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -107,7 +117,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
       size: 200,
       header: 'First Name',
       filterFn: 'fuzzy',
-      sortFn: fuzzySort,
+      sortFn: 'fuzzy',
       meta: { filterVariant: 'text' },
       getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
     }),
@@ -167,19 +177,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          expandedRowModel: createExpandedRowModel(),
-          filteredRowModel: createFilteredRowModel({
-            ...filterFns,
-            fuzzy: fuzzyFilter,
-          }),
-          facetedRowModel: createFacetedRowModel(),
-          facetedMinMaxValues: createFacetedMinMaxValues(),
-          facetedUniqueValues: createFacetedUniqueValues(),
-          groupedRowModel: createGroupedRowModel(aggregationFns),
-          paginatedRowModel: createPaginatedRowModel(),
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
         columns,
         data: this._data,
         getSubRows: (row) => row.subRows,

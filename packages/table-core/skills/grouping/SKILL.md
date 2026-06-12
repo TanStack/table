@@ -2,7 +2,7 @@
 name: grouping
 description: >
   Group rows by column values in TanStack Table v9 with the `groupedRowModel`
-  stage. Covers `columnGroupingFeature` + `createGroupedRowModel(aggregationFns)`,
+  stage. Covers `columnGroupingFeature` + `createGroupedRowModel()` (registered on `features` with `aggregationFns` slot),
   `state.grouping` (GroupingState = Array<string>), `onGroupingChange`,
   `columnDef.aggregationFn` ('auto'|name|fn) — distinct signature
   `(columnId, leafRows, childRows)` — `columnDef.aggregatedCell`,
@@ -49,6 +49,10 @@ const features = tableFeatures({
   columnGroupingFeature,
   rowExpandingFeature,
   rowPaginationFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  aggregationFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -66,11 +70,6 @@ const columns = columnHelper.columns([
 
 const table = constructTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: { grouping: [] satisfies GroupingState },
@@ -144,15 +143,16 @@ const weightedAverage: AggregationFn<typeof features, Person> = (
   return totalWeight === 0 ? 0 : weightedSum / totalWeight
 }
 
+const customFeatures = tableFeatures({
+  columnGroupingFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns: { ...aggregationFns, weightedAverage },
+})
+
 const table = constructTable({
-  features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel({
-      ...aggregationFns,
-      weightedAverage,
-    }),
-    expandedRowModel: createExpandedRowModel(),
-  },
+  features: customFeatures,
   columns: columnHelper.columns([
     columnHelper.accessor('progress', {
       aggregationFn: 'weightedAverage',
@@ -177,10 +177,6 @@ columnHelper.accessor('firstName', {
 ```ts
 const table = constructTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   columns,
   data,
   groupedColumnMode: 'reorder', // default — grouped columns lead
@@ -197,13 +193,12 @@ Wrong:
 
 ```ts
 // grouped rows show aggregates but can't be expanded
-const features = tableFeatures({ columnGroupingFeature })
-const table = useTable({
-  features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
 })
+const table = useTable({ features, columns, data })
 // row.getToggleExpandedHandler() → TS error or undefined
 ```
 
@@ -221,16 +216,12 @@ import {
 const features = tableFeatures({
   columnGroupingFeature,
   rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns,
 })
 
-const table = useTable({
-  features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
-  columns, data,
-})
+const table = useTable({ features, columns, data })
 
 // In cell renderer:
 {cell.getIsGrouped() && (
@@ -250,8 +241,11 @@ Wrong:
 
 ```ts
 const table = useTable({
-  features: tableFeatures({ columnGroupingFeature }),
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+  features: tableFeatures({
+    columnGroupingFeature,
+    groupedRowModel: createGroupedRowModel(),
+    aggregationFns,
+  }),
   columns, data,
   // @ts-ignore - this property doesn't exist on v9 TableOptions
   aggregationFns: {
@@ -265,26 +259,26 @@ Correct:
 ```ts
 import { aggregationFns, createGroupedRowModel } from '@tanstack/react-table'
 
-const table = useTable({
-  features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
-  rowModels: {
-    groupedRowModel: createGroupedRowModel({
-      ...aggregationFns,
-      myCustomAggregation: (columnId, leafRows, childRows) => {
-        return /* aggregated value */
-      },
-    }),
-    expandedRowModel: createExpandedRowModel(),
+const features = tableFeatures({
+  columnGroupingFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns: {
+    ...aggregationFns,
+    myCustomAggregation: (columnId, leafRows, childRows) => {
+      return /* aggregated value */
+    },
   },
-  columns,
-  data,
 })
+
+const table = useTable({ features, columns, data })
 
 // Then on a column:
 columnHelper.accessor('sales', { aggregationFn: 'myCustomAggregation' })
 ```
 
-In v9, the aggregation registry is the FIRST argument to `createGroupedRowModel`. There is no top-level `tableOptions.aggregationFns`.
+In v9, the aggregation registry is the `aggregationFns` slot on `features`. There is no top-level `tableOptions.aggregationFns`.
 
 Source: packages/table-core/src/features/column-grouping/createGroupedRowModel.ts
 
@@ -345,7 +339,6 @@ Wrong:
 ```ts
 const table = useTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   columns,
   data,
   initialState: {
@@ -361,7 +354,6 @@ Correct:
 ```ts
 const table = useTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   columns,
   data,
   initialState: {
@@ -424,12 +416,15 @@ const grouped = useMemo(() => {
 Correct:
 
 ```ts
+const features = tableFeatures({
+  columnGroupingFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns,
+})
 const table = useTable({
-  features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
+  features,
   columns: columnHelper.columns([
     columnHelper.accessor('status', { enableGrouping: true }),
     columnHelper.accessor('age', { aggregationFn: 'mean' }),

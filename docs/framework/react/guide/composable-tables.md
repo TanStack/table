@@ -54,6 +54,11 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 export const {
@@ -64,11 +69,6 @@ export const {
   useHeaderContext,
 } = createTableHook({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   getRowId: (row) => row.id,
   tableComponents: {
     PaginationControls,
@@ -97,7 +97,7 @@ export const {
 
 | Helper | Purpose |
 |---|---|
-| `useAppTable` | Creates a table with shared features, row models, defaults, and registered components. |
+| `useAppTable` | Creates a table with shared features (including row model factories), defaults, and registered components. |
 | `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound. |
 | `useTableContext` | Reads the current table inside registered table components. |
 | `useCellContext` | Reads the current cell inside registered cell components. |
@@ -137,7 +137,7 @@ Registered cell components use `useCellContext()` internally, and registered hea
 
 ## Table Rendering
 
-Create each table with `useAppTable`. You pass table-specific options like `key`, `columns`, and `data`; the shared `features`, `rowModels`, `getRowId`, and component registries come from the hook.
+Create each table with `useAppTable`. You pass table-specific options like `key`, `columns`, and `data`; the shared `features`, `getRowId`, and component registries come from the hook.
 
 ```tsx
 const table = useAppTable(

@@ -25,7 +25,12 @@ import type { OnChangeFn, SortingState } from '@tanstack/react-table'
 
 const fetchSize = 50
 
-const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -126,7 +131,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       data: flatData,
       columns,
       state: {

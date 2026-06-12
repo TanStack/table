@@ -1,4 +1,3 @@
-import type { Table } from '../../types/Table'
 import type { BuiltInFilterFn } from '../../fns/filterFns'
 import type {
   CellData,
@@ -6,12 +5,27 @@ import type {
   RowData,
   Updater,
 } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { IsAny, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { Column } from '../../types/Column'
 
 export interface FilterMeta {}
+
+/**
+ * Resolves the type of the filter meta attached to rows for a feature set.
+ *
+ * When the features object declares a `filterMeta` type-only slot
+ * (`tableFeatures({ ..., filterMeta: {} as MyFilterMeta })`), that type wins.
+ * Otherwise this falls back to the global declaration-merged `FilterMeta`
+ * interface.
+ */
+export type ExtractFilterMeta<TFeatures extends TableFeatures> =
+  IsAny<TFeatures> extends true
+    ? FilterMeta
+    : TFeatures extends { filterMeta: infer TFilterMeta extends object }
+      ? TFilterMeta
+      : FilterMeta
 
 export interface FilterFns {}
 
@@ -39,7 +53,7 @@ export interface RowModelFns_ColumnFiltering<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > {
-  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, RowData>>
+  filterFns: Record<string, FilterFn<TFeatures, RowData>>
 }
 
 export interface FilterFn<
@@ -50,7 +64,7 @@ export interface FilterFn<
     row: Row<TFeatures, TData>,
     columnId: string,
     filterValue: any,
-    addMeta?: (meta: FilterMeta) => void,
+    addMeta?: (meta: ExtractFilterMeta<TFeatures>) => void,
   ): boolean
   autoRemove?: ColumnFilterAutoRemoveTestFn<TFeatures, TData>
   resolveFilterValue?: TransformFilterValueFn<TFeatures, TData>
@@ -73,10 +87,27 @@ export type CustomFilterFns<
   TData extends RowData,
 > = Record<string, FilterFn<TFeatures, RowData>>
 
+/**
+ * Resolves the valid string names for `columnDef.filterFn` and
+ * `options.globalFilterFn` for a feature set.
+ *
+ * When the features object declares a `filterFns` registry
+ * (`tableFeatures({ ..., filterFns })`), its keys are the only valid names; a
+ * name is only assignable if a filter function is actually registered for it.
+ * Otherwise this falls back to the global declaration-merged `FilterFns`
+ * interface.
+ */
+export type ExtractFilterFnKeys<TFeatures extends TableFeatures> =
+  IsAny<TFeatures> extends true
+    ? keyof FilterFns | BuiltInFilterFn
+    : TFeatures extends { filterFns: infer TFilterFns extends object }
+      ? Extract<keyof TFilterFns, string>
+      : keyof FilterFns
+
 export type FilterFnOption<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = 'auto' | BuiltInFilterFn | keyof FilterFns | FilterFn<TFeatures, RowData>
+> = 'auto' | ExtractFilterFnKeys<TFeatures> | FilterFn<TFeatures, RowData>
 
 export interface ColumnDef_ColumnFiltering<
   TFeatures extends TableFeatures,
@@ -143,7 +174,7 @@ export interface Row_ColumnFiltering<
   /**
    * The column filters meta map for the row. This object tracks any filter meta for a row as optionally provided during the filtering process.
    */
-  columnFiltersMeta: Record<string, FilterMeta>
+  columnFiltersMeta: Record<string, ExtractFilterMeta<TFeatures>>
 }
 
 export interface TableOptions_ColumnFiltering<
@@ -207,21 +238,6 @@ export interface Table_RowModels_Filtered<
    * Reads the row model immediately before filtering.
    */
   getPreFilteredRowModel: () => RowModel<TFeatures, TData>
-}
-
-export interface CreateRowModel_Filtered<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * If provided, this factory is called once per table and should return a
-   * function that calculates the filtered row model.
-   * - For server-side filtering, this function is unnecessary and can be ignored since the server should already return the filtered row model.
-   * - For client-side filtering, pass the exported `createFilteredRowModel()` or implement your own factory.
-   */
-  filteredRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
 }
 
 export interface CachedRowModel_Filtered<

@@ -9,7 +9,7 @@ title: TableOptions_FeatureMap_All
 type TableOptions_FeatureMap_All<TFeatures, TData> = UnionToIntersection<TableOptions_FeatureMap<TFeatures, TData>[keyof TableOptions_FeatureMap<TFeatures, TData>]>;
 ```
 
-Defined in: [types/TableOptions.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L69)
+Defined in: [types/TableOptions.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L76)
 
 ## Type Parameters
 

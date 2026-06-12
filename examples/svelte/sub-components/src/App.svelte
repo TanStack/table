@@ -12,7 +12,10 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const features = tableFeatures({ rowExpandingFeature })
+  const features = tableFeatures({
+    rowExpandingFeature,
+    expandedRowModel: createExpandedRowModel(),
+  })
 
   const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -64,9 +67,6 @@
     {
       debugTable: true,
       features,
-      rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-      },
       columns,
       get data() {
         return data

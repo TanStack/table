@@ -91,7 +91,6 @@ import {
   columnSizingFeature,
   columnVisibilityFeature,
   createColumnHelper,
-  createCoreRowModel,
   createExpandedRowModel,
   createFacetedRowModel,
   createFacetedUniqueValues,
@@ -125,11 +124,8 @@ import type {
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 
-import {
-  dynamicFilterFn,
-  fuzzyFilter,
-  getFilterOperators,
-} from '@/lib/data-table'
+import { dynamicFilterFn, getFilterOperators } from '@/lib/data-table'
+import { rankItem } from '@tanstack/match-sorter-utils'
 import { departments, makeData, statuses } from '@/lib/make-data'
 import './styles/globals.css'
 
@@ -137,6 +133,19 @@ interface MyColumnMeta {
   label?: string
   variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
   options?: Array<{ label: string; value: string; count?: number }>
+}
+
+// Local fuzzy filter implementation for the filterFns registry slot.
+// Defined here to avoid a circular type dependency with data-table.ts.
+const fuzzyFilterFn = (
+  row: { getValue: (id: string) => unknown },
+  columnId: string,
+  value: unknown,
+  addMeta?: (meta: object) => void,
+) => {
+  const itemRank = rankItem(row.getValue(columnId), value as string)
+  addMeta?.({ itemRank })
+  return itemRank.passed
 }
 
 export const features = tableFeatures({
@@ -154,6 +163,16 @@ export const features = tableFeatures({
   columnGroupingFeature,
   globalFilteringFeature,
   columnMeta: metaHelper<MyColumnMeta>(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilterFn },
+  sortFns,
+  aggregationFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -1384,19 +1403,6 @@ function App({
     {
       key: 'kitchen-sink-material-ui', // needed for devtools
       features,
-      rowModels: {
-        coreRowModel: createCoreRowModel(),
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        facetedRowModel: createFacetedRowModel(),
-        facetedUniqueValues: createFacetedUniqueValues(),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-        groupedRowModel: createGroupedRowModel(aggregationFns),
-        expandedRowModel: createExpandedRowModel(),
-      },
       columns,
       data,
       defaultColumn: {

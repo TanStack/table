@@ -21,7 +21,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))
@@ -61,7 +60,6 @@ const columns = [
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   defaultColumn: {
     size: 200, // starting column size
     minSize: 50, // enforced during column resizing
@@ -142,7 +140,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
     atoms: {
@@ -163,7 +160,6 @@ readonly columnSizing = signal<ColumnSizingState>({})
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data: this.data(),
   state: {

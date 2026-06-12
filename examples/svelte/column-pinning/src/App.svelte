@@ -27,6 +27,8 @@
     columnPinningFeature,
     columnVisibilityFeature,
     rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
   })
 
   const columns: ColumnDef<typeof features, Person>[] = [
@@ -101,9 +103,6 @@
 
   const table = createTable({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
     get data() {
       return data
     },

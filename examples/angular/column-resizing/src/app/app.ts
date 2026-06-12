@@ -83,7 +83,6 @@ export class App {
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
     columnResizeMode: this.columnResizeMode(),

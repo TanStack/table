@@ -2,11 +2,11 @@
 name: vue/getting-started
 description: >
   End-to-end first-table walkthrough for `@tanstack/vue-table` v9. Install the adapter, declare
-  `features` via `tableFeatures({})`, declare `rowModels` with their `*Fns` parameters
-  (`createSortedRowModel(sortFns)`, `createPaginatedRowModel()`, …), build a column helper with
-  both `TFeatures` and `TData` generics, instantiate `useTable(options, selector?)` from a
-  `<script setup>` block, and render with `<FlexRender :cell="cell" />` / `:header="header"`.
-  New users land here, not on legacy v8 names like `useVueTable`.
+  `features` via `tableFeatures({})` (row model factories and fn registries live here as slots),
+  build a column helper with both `TFeatures` and `TData` generics, instantiate
+  `useTable(options, selector?)` from a `<script setup>` block, and render with
+  `<FlexRender :cell="cell" />` / `:header="header"`. New users land here, not on legacy v8
+  names like `useVueTable`.
 type: lifecycle
 library: tanstack-table
 framework: vue
@@ -69,7 +69,6 @@ const data = ref<Person[]>([
 
 const table = useTable({
   features,
-  rowModels: {}, // required — core row model is automatic
   columns,
   data,
 })
@@ -100,8 +99,8 @@ Source: `examples/vue/basic-use-table/src/App.tsx`, `docs/framework/vue/vue-tabl
 ### What's mandatory in v9
 
 - `features` — built via `tableFeatures({...})`. Empty object is fine for a no-features table,
-  but the option key must exist.
-- `rowModels` — `{}` is fine (core row model is automatic). Register factories per feature.
+  but the option key must exist. Row model factories and fn registries go here as slots, not
+  as a separate `rowModels` option.
 - `createColumnHelper<typeof features, Person>()` — two generics, in that order. The v8 single
   generic does not compile.
 
@@ -122,7 +121,11 @@ import {
   useTable,
 } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -133,7 +136,6 @@ const data = ref<Person[]>([])
 
 const table = useTable({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
@@ -159,10 +161,10 @@ const table = useTable({
 
 Three rules:
 
-1. Register the feature in `features` (`rowSortingFeature`).
-2. Provide the matching row model factory in `rowModels`
-   (`sortedRowModel: createSortedRowModel(sortFns)`). The factory **requires its `*Fns`
-   parameter** in v9 — this is what makes filter/sort registries tree-shakeable.
+1. Register the feature in `features` (`rowSortingFeature`) along with its row model factory
+   and fn registry as slots on the same object.
+2. The fn registry (`sortFns`) is what makes filter/sort registries tree-shakeable in v9 — do
+   not drop it.
 3. Wire UI to the built-in API: `column.getToggleSortingHandler()`, `column.getIsSorted()`.
    Do not reimplement sort logic.
 
@@ -187,13 +189,12 @@ const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
-})
-
-const rowModels = {
-  sortedRowModel: createSortedRowModel(sortFns),
-  filteredRowModel: createFilteredRowModel(filterFns),
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-}
+  sortFns,
+  filterFns,
+})
 ```
 
 Then use `table.nextPage()`, `table.setPageIndex(0)`, `table.setColumnFilters(...)`,
@@ -201,7 +202,7 @@ Then use `table.nextPage()`, `table.setPageIndex(0)`, `table.setColumnFilters(..
 
 ### 3. App-scoped tables with `createTableHook`
 
-If multiple tables in your app share `features`, `rowModels`, and conventions, prefer
+If multiple tables in your app share a `features` object (with its row model factories and conventions), prefer
 `createTableHook`. The hook factory returns `useAppTable`, `createAppColumnHelper`, plus
 context helpers (`useTableContext`, `useCellContext`, `useHeaderContext`).
 
@@ -217,15 +218,15 @@ import {
   tableFeatures,
 } from '@tanstack/vue-table'
 
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-
-export const { useAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
+
+export const { useAppTable, createAppColumnHelper } = createTableHook({ features })
 ```
 
 ```vue
@@ -274,7 +275,6 @@ export default defineComponent({
     const data = ref<Person[]>([])
     const table = useTable({
       features,
-      rowModels: {},
       columns,
       get data() {
         return data.value
@@ -304,7 +304,7 @@ Source: `examples/vue/basic-use-table/src/App.tsx`.
 
 ## Common Mistakes
 
-### Omitting `features` or `rowModels` (CRITICAL)
+### Omitting `features` (CRITICAL)
 
 ```ts
 // ❌ TS error: Property 'features' is missing in type ...
@@ -312,10 +312,10 @@ const table = useTable({ columns, data })
 
 // ✅
 const features = tableFeatures({})
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 ```
 
-Both keys are required even for the simplest table.
+`features` is required even for the simplest table.
 
 ### Wrong `createColumnHelper` arity (CRITICAL)
 
@@ -327,20 +327,25 @@ const columnHelper = createColumnHelper<Person>()
 const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
-### Calling row-model factories without their `*Fns` parameter (CRITICAL)
+### Omitting the `*Fns` registry from `tableFeatures` (CRITICAL)
 
 ```ts
-// ❌ TS error / runtime missing fns.
-rowModels: {
-  sortedRowModel:   createSortedRowModel(),
-  filteredRowModel: createFilteredRowModel(),
-}
+// ❌ TS error / runtime missing fns — sort is a no-op.
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  // sortFns missing!
+})
 
-// ✅ Pass the matching registry.
-rowModels: {
-  sortedRowModel:   createSortedRowModel(sortFns),
-  filteredRowModel: createFilteredRowModel(filterFns),
-}
+// ✅ Register the fn map as a slot alongside the factory.
+const features = tableFeatures({
+  rowSortingFeature,
+  columnFilteringFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns,
+  filterFns,
+})
 ```
 
 This is what makes v9 tree-shakeable. Filter/sort/aggregation registries are open-ended — do
@@ -351,17 +356,16 @@ not cite a number of built-in fns; just pass `filterFns` / `sortFns` / `aggregat
 ```ts
 // ❌ `rowSortingFeature` not registered → `table.setSorting` is `undefined` and a TS error.
 const features = tableFeatures({})
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 table.setSorting([{ id: 'age', desc: true }]) // missing
 
-// ✅ Register the feature AND its row model.
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+// ✅ Register the feature, its row model factory, and its fn registry in tableFeatures.
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 This is the #1 v9-specific failure mode — features must be declared to surface their APIs.

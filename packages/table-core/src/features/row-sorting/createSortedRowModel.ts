@@ -6,23 +6,23 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { SortFn, SortFns } from './rowSortingFeature.types'
+import type { SortFn } from './rowSortingFeature.types'
 import type { RowData } from '../../types/type-utils'
 
 /**
  * Creates a memoized sorted row model factory.
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ *
+ * Register sorting functions with the `sortFns` slot on the `features` option:
+ * `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`.
  */
 export function createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>,
-): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
     const table = _table as unknown as Table_Internal<TFeatures, TData>
-    if (!table._rowModelFns.sortFns) table._rowModelFns.sortFns = sortFns
     return tableMemo({
       feature: 'rowSortingFeature',
       table,

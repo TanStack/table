@@ -8,17 +8,21 @@ exhaustive lookup.
 
 ## Row-model migration table
 
-| v8 option                  | v9 `rowModels` key    | v9 factory                              |
-| -------------------------- | --------------------- | --------------------------------------- |
-| `getCoreRowModel()`        | (automatic)           | —                                       |
-| `getFilteredRowModel()`    | `filteredRowModel`    | `createFilteredRowModel(filterFns)`     |
-| `getSortedRowModel()`      | `sortedRowModel`      | `createSortedRowModel(sortFns)`         |
-| `getPaginationRowModel()`  | `paginatedRowModel`   | `createPaginatedRowModel()`             |
-| `getExpandedRowModel()`    | `expandedRowModel`    | `createExpandedRowModel()`              |
-| `getGroupedRowModel()`     | `groupedRowModel`     | `createGroupedRowModel(aggregationFns)` |
-| `getFacetedRowModel()`     | `facetedRowModel`     | `createFacetedRowModel()`               |
-| `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()`           |
-| `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()`           |
+Row-model factories and fn registries are now **slots on the `features` object**,
+not a separate `rowModels` option. Factory calls no longer take fn arguments;
+pass the fn map as a sibling slot instead.
+
+| v8 option                  | v9 `features` slot key | v9 factory call                  | v9 fn registry slot              |
+| -------------------------- | ---------------------- | -------------------------------- | -------------------------------- |
+| `getCoreRowModel()`        | (automatic)            | —                                | —                                |
+| `getFilteredRowModel()`    | `filteredRowModel`     | `createFilteredRowModel()`       | `filterFns`                      |
+| `getSortedRowModel()`      | `sortedRowModel`       | `createSortedRowModel()`         | `sortFns`                        |
+| `getPaginationRowModel()`  | `paginatedRowModel`    | `createPaginatedRowModel()`      | —                                |
+| `getExpandedRowModel()`    | `expandedRowModel`     | `createExpandedRowModel()`       | —                                |
+| `getGroupedRowModel()`     | `groupedRowModel`      | `createGroupedRowModel()`        | `aggregationFns`                 |
+| `getFacetedRowModel()`     | `facetedRowModel`      | `createFacetedRowModel()`        | —                                |
+| `getFacetedMinMaxValues()` | `facetedMinMaxValues`  | `createFacetedMinMaxValues()`    | —                                |
+| `getFacetedUniqueValues()` | `facetedUniqueValues`  | `createFacetedUniqueValues()`    | —                                |
 
 ## Feature registration table
 
@@ -116,7 +120,7 @@ declare module '@tanstack/angular-table' {
 | `SortingFns` interface              | `SortFns`                |
 | `sortingFns` (built-in fn registry) | `sortFns`                |
 
-Find-and-replace, then update `createSortedRowModel(sortFns)`.
+Find-and-replace, then verify `sortFns` is a slot on `features` alongside `sortedRowModel: createSortedRowModel()`.
 
 ---
 
@@ -171,13 +175,16 @@ during migration if you have shared base config:
 import { tableOptions, tableFeatures, rowSortingFeature } from '@tanstack/angular-table'
 
 const baseOptions = tableOptions({
-  features: tableFeatures({ rowSortingFeature }),
+  features: tableFeatures({
+    rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  }),
   debugTable: isDevMode(),
 })
 
 readonly table = injectTable(() => ({
   ...baseOptions,
-  rowModels: { /* … */ },
   columns: this.columns,
   data: this.data(),
 }))

@@ -59,6 +59,20 @@ const ROW_MODEL_SIZE_ESTIMATES_BYTES: Record<string, number> = {
   paginatedRowModel: 209,
 }
 
+// Row model factories live as slots on the `features` option alongside the
+// feature modules themselves
+const ROW_MODEL_FEATURE_SLOTS = [
+  'coreRowModel',
+  'filteredRowModel',
+  'groupedRowModel',
+  'sortedRowModel',
+  'expandedRowModel',
+  'paginatedRowModel',
+  'facetedRowModel',
+  'facetedMinMaxValues',
+  'facetedUniqueValues',
+]
+
 const ROW_MODEL_SHARED_SIZE_LABELS: Record<string, string> = {
   preFilteredRowModel: 'shared',
   preGroupedRowModel: 'shared',
@@ -165,7 +179,9 @@ export function FeaturesPanel() {
     tableState()
     tableOptions()
 
-    return Object.keys(tableInstance.options.rowModels ?? {})
+    return Object.keys(tableInstance.options.features ?? {}).filter((key) =>
+      ROW_MODEL_FEATURE_SLOTS.includes(key),
+    )
   })
 
   const getFnNames = (

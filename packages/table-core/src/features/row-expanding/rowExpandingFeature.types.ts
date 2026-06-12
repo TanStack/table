@@ -125,20 +125,6 @@ export interface Table_RowModels_Expanded<
   getPreExpandedRowModel: () => RowModel<TFeatures, TData>
 }
 
-export interface CreateRowModel_Expanded<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * Factory used to retrieve the expanded row model. If this function is not
-   * provided, the table will not expand rows. To use client-side expansion,
-   * pass `createExpandedRowModel()` or implement your own factory.
-   */
-  expandedRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
-}
-
 export interface CachedRowModel_Expanded<
   TFeatures extends TableFeatures,
   TData extends RowData,

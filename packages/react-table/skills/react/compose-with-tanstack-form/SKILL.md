@@ -92,6 +92,9 @@ type FormRow = Omit<Person, 'subRows'>
 const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 const columnHelper = createColumnHelper<typeof features, FormRow>()
 
@@ -152,10 +155,6 @@ function App() {
 
   const table = useTable({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data: form.state.values.data, // table reads fresh form values each render
   })
@@ -296,9 +295,6 @@ Wrong:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {
-    /* … */
-  },
   columns,
   data: form, // wrong — table only needs the row array
 })
@@ -309,9 +305,6 @@ Correct:
 ```tsx
 const table = useTable({
   features,
-  rowModels: {
-    /* … */
-  },
   columns,
   data: form.state.values.data,
 })
@@ -344,9 +337,6 @@ Correct:
 const form = useAppForm({ defaultValues: { data } })
 const table = useTable({
   features,
-  rowModels: {
-    /* … */
-  },
   columns,
   data: form.state.values.data,
 })

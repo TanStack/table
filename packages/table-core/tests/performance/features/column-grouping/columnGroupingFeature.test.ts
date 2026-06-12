@@ -20,6 +20,8 @@ const features = {
   ...coreFeatures,
   columnGroupingFeature,
   coreReactivityFeature: storeReactivityBindings(),
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
 }
 
 type PersonColumn = ColumnDef<typeof features, Person, any>
@@ -51,9 +53,6 @@ describe('#getGroupedRowModel', () => {
 
     const table = constructTable<typeof features, Person>({
       features,
-      rowModels: {
-        groupedRowModel: createGroupedRowModel(aggregationFns),
-      },
       renderFallbackValue: '',
       data,
       initialState: { grouping },

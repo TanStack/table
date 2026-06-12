@@ -9,7 +9,7 @@ title: isRowSelected
 function isRowSelected<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:689](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L689)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:694](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L694)
 
 Returns whether a row id is selected in the current row selection state.
 

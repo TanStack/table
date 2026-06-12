@@ -23,6 +23,8 @@ export const features = tableFeatures({
   rowExpandingFeature: rowExpandingFeature,
   rowPaginationFeature: rowPaginationFeature,
   rowSelectionFeature: rowSelectionFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
 })
 
 const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
@@ -77,10 +79,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
-      expandedRowModel: createExpandedRowModel<typeof features, Person>(),
-    },
     data: this.data(),
     columns: defaultColumns,
     state: {

@@ -8,12 +8,11 @@ title: SortFnOption
 ```ts
 type SortFnOption<TFeatures, TData> = 
   | "auto"
-  | keyof SortFns
-  | BuiltInSortFn
+  | ExtractSortFnKeys<TFeatures>
 | SortFn<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L46)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L61)
 
 ## Type Parameters
 

@@ -42,6 +42,7 @@ import type {
   Row,
   RowData,
   SortFn,
+  TableFeatures,
 } from '@tanstack/angular-table'
 
 // allows us to define custom properties for our columns
@@ -49,21 +50,15 @@ interface MyColumnMeta {
   filterVariant?: 'text' | 'range' | 'select'
 }
 
-export const features = tableFeatures({
-  ...stockFeatures,
-  columnMeta: metaHelper<MyColumnMeta>(),
-})
-
-declare module '@tanstack/angular-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
 }
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+type KitchenSinkFeatures = TableFeatures & {
+  filterMeta: FuzzyFilterMeta
+}
+
+const fuzzyFilter: FilterFn<KitchenSinkFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -74,7 +69,11 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<KitchenSinkFeatures, Person> = (
+  rowA,
+  rowB,
+  columnId,
+) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -85,13 +84,30 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
+const sortStatusFn: SortFn<KitchenSinkFeatures, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
     statusOrder.indexOf(rowB.original.status)
   )
 }
+
+export const features = tableFeatures({
+  ...stockFeatures,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort, sortStatus: sortStatusFn },
+  aggregationFns,
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -114,7 +130,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
       size: 200,
       header: 'First Name',
       filterFn: 'fuzzy',
-      sortFn: fuzzySort,
+      sortFn: 'fuzzy',
       meta: { filterVariant: 'text' },
       getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
     }),
@@ -145,7 +161,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
       id: 'status',
       size: 200,
       header: 'Status',
-      sortFn: sortStatusFn,
+      sortFn: 'sortStatus',
       meta: { filterVariant: 'select' },
     }),
     columnHelper.accessor('progress', {
@@ -179,19 +195,6 @@ export class App {
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-      filteredRowModel: createFilteredRowModel({
-        ...filterFns,
-        fuzzy: fuzzyFilter,
-      }),
-      facetedRowModel: createFacetedRowModel(),
-      facetedMinMaxValues: createFacetedMinMaxValues(),
-      facetedUniqueValues: createFacetedUniqueValues(),
-      groupedRowModel: createGroupedRowModel(aggregationFns),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
     columns,
     data: this.data(),
     getSubRows: (row) => row.subRows,

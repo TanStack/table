@@ -19,6 +19,8 @@
     columnSizingFeature,
     columnVisibilityFeature,
     rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
   })
 
   const DEFAULT_ROW_COUNT = 1_000
@@ -46,7 +48,6 @@
 
   const table = createTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     get columns() {
       return columns
     },

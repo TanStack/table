@@ -32,6 +32,10 @@ const features = tableFeatures({
   columnFilteringFeature,
   columnSizingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -153,11 +157,6 @@ function App() {
     {
       debugTable: true,
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        expandedRowModel: createExpandedRowModel(),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns,
       data,
       initialState: { pagination: { pageSize: 20, pageIndex: 0 } },

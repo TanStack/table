@@ -21,7 +21,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))
@@ -39,7 +38,7 @@ There are 2 table features that can reorder rows, which happen in the following 
 
 ### Enable Row Pinning
 
-To use row pinning, add `rowPinningFeature` to your features. Row pinning does not require a row model factory, so `rowModels` can stay empty unless your table uses other row-model features.
+To use row pinning, add `rowPinningFeature` to your features. Row pinning does not require a row model factory.
 
 ```ts
 import {
@@ -52,7 +51,6 @@ const features = tableFeatures({ rowPinningFeature })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
 }))
@@ -74,7 +72,6 @@ You can pin rows by default with `initialState.rowPinning`:
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
   initialState: {
@@ -100,7 +97,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
     atoms: {
@@ -122,7 +118,6 @@ readonly rowPinning = signal<RowPinningState>({
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
   state: {
@@ -222,7 +217,6 @@ By default, all rows can be pinned. You can disable row pinning for the whole ta
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
   enableRowPinning: row => row.original.status !== 'archived',
@@ -238,7 +232,6 @@ Set `keepPinnedRows` to `false` if pinned rows should only render when they are 
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
   keepPinnedRows: false,

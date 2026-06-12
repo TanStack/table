@@ -9,7 +9,7 @@ title: column_getCanSort
 function column_getCanSort<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:357](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L357)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:359](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L359)
 
 Checks whether this accessor column can participate in sorting.
 

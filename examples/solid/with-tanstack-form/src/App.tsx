@@ -19,6 +19,9 @@ import type { Person } from './makeData'
 const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 // Create column helper with features and Person type
@@ -152,10 +155,6 @@ function App() {
   // Create table using form state as data source
   const table = createTable({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     get columns() {
       return columns()
     },

@@ -9,7 +9,7 @@ title: CachedRowModels
 type CachedRowModels<TFeatures, TData> = object & ExtractFeatureMapTypes<TFeatures, CachedRowModels_FeatureMap<TFeatures, TData>>;
 ```
 
-Defined in: [types/RowModel.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L77)
+Defined in: [types/RowModel.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L26)
 
 ## Type Declaration
 

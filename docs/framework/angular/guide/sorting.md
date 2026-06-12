@@ -14,16 +14,17 @@ Want to skip to the implementation? Check out these Angular examples:
 import { signal } from '@angular/core'
 import { injectTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 export class App {
   readonly data = signal(defaultData)
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
     columns,
     data: this.data(),
   }))
@@ -55,7 +56,6 @@ You can access the sorting state directly from the table instance with `table.at
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -79,7 +79,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data: this.data(),
     //...
@@ -100,7 +99,6 @@ readonly sorting = signal<SortingState>([])
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data(),
   //...
@@ -121,7 +119,6 @@ If you do not need to control the sorting state in your own state management or 
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   //...
@@ -156,7 +153,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {}, // no sortedRowModel needed for manual sorting
     columns,
     data: this.data(),
     manualSorting: true, // use pre-sorted row model instead of sorted row model
@@ -175,7 +171,7 @@ Hoisting the sorting state into your own scope (with an external atom or the `st
 
 ### Client-Side Sorting
 
-To implement client-side sorting, add the `rowSortingFeature` to your features and the `sortedRowModel` to your row models. Import `createSortedRowModel` and `sortFns` from TanStack Table:
+To implement client-side sorting, add the `rowSortingFeature` and the `sortedRowModel` factory to your features. Import `createSortedRowModel` and `sortFns` from TanStack Table:
 
 ```ts
 import {
@@ -186,13 +182,14 @@ import {
   sortFns,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 }))
@@ -237,6 +234,22 @@ Every sorting function receives 2 rows and a column ID and are expected to compa
 | `1`    | `a > b`         |
 
 ```ts
+const myCustomSortFn: SortFn<typeof features, MyData> = (rowA, rowB, columnId) =>
+  rowA.original[columnId] > rowB.original[columnId]
+    ? 1
+    : rowA.original[columnId] < rowB.original[columnId]
+      ? -1
+      : 0
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    ...sortFns,
+    myCustomSortFn,
+  },
+})
+
 const columns = [
   {
     header: () => 'Name',
@@ -246,7 +259,7 @@ const columns = [
   {
     header: () => 'Age',
     accessorKey: 'age',
-    sortFn: 'myCustomSortFn', // reference a custom sorting function registered with createSortedRowModel
+    sortFn: 'myCustomSortFn', // reference a custom sorting function registered in the features sortFns slot
   },
   {
     header: () => 'Birthday',
@@ -265,33 +278,12 @@ const columns = [
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel({
-      ...sortFns,
-      myCustomSortFn: (rowA, rowB, columnId) =>
-        rowA.original[columnId] > rowB.original[columnId]
-          ? 1
-          : rowA.original[columnId] < rowB.original[columnId]
-            ? -1
-            : 0,
-    }),
-  },
   columns,
   data,
 }))
 ```
 
-> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, augment the `SortFns` interface with a `declare module` block:
->
-> ```ts
-> declare module '@tanstack/angular-table' {
->   interface SortFns {
->     myCustomSortFn: SortFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `sortFn` column option.
+> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, register the function in the `sortFns` slot on `tableFeatures` (as shown above). Alternatively, skip the registry entirely by passing the function directly to the `sortFn` column option.
 
 ### Customize Sorting
 
@@ -317,7 +309,6 @@ const columns = [
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSorting: false, // disable sorting for the entire table
@@ -345,7 +336,6 @@ const columns = [
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -412,7 +402,6 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (sorting can never return to 'none' once applied)
@@ -439,7 +428,6 @@ const columns = [
 //...
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -453,7 +441,6 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -469,7 +456,6 @@ By default, there is no limit to the number of columns that can be sorted at onc
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -483,7 +469,6 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

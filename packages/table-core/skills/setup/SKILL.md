@@ -2,12 +2,14 @@
 name: setup
 description: >
   Install a TanStack Table v9 framework adapter and wire up a first table with
-  `tableFeatures({...})` declaring `features`, an `rowModels` map of factory
-  results (`createSortedRowModel(sortFns)`, `createFilteredRowModel(filterFns)`,
-  `createPaginatedRowModel()`, …), a `createColumnHelper<typeof features, TData>()`
-  column set, and the framework `useTable` / `injectTable` / `createTable` /
-  `constructTable` entry point. Covers the registry model, why `features` must
-  be module-scoped, when to reach for `stockFeatures`, and `coreFeatures`.
+  `tableFeatures({...})` declaring `features` (which now also carries row model
+  factories like `sortedRowModel: createSortedRowModel()`, `filteredRowModel:
+  createFilteredRowModel()`, `paginatedRowModel: createPaginatedRowModel()`, and
+  fn registries like `sortFns`/`filterFns`), a
+  `createColumnHelper<typeof features, TData>()` column set, and the framework
+  `useTable` / `injectTable` / `createTable` / `constructTable` entry point.
+  Covers the registry model, why `features` must be module-scoped, when to reach
+  for `stockFeatures`, and `coreFeatures`.
 type: core
 library: tanstack-table
 library_version: '9.0.0-alpha.48'
@@ -27,7 +29,7 @@ This skill builds on `tanstack-table/state-management` and `tanstack-table/colum
 
 ## Setup
 
-TanStack Table v9 separates a framework-agnostic core (`@tanstack/table-core`) from per-framework adapters. Every table — vanilla or framework — must declare two new v9-required options at construction time: `features` (the registry of feature plugins) and `rowModels` (the map of pipeline factories).
+TanStack Table v9 separates a framework-agnostic core (`@tanstack/table-core`) from per-framework adapters. Every table — vanilla or framework — must declare the `features` option at construction time: the registry of feature plugins, row model factories, and fn registries.
 
 ```ts
 // Framework-agnostic, using @tanstack/table-core directly.
@@ -44,7 +46,12 @@ type Person = { firstName: string; lastName: string; age: number }
 
 // 1. Declare features at MODULE scope (stable reference). This is required —
 //    a fresh `features` object on every call destroys feature registration.
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  // Row model factories and fn registries live on the features object.
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 // 2. Build a column helper bound to BOTH TFeatures and TData.
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -62,10 +69,6 @@ const data: Person[] = [
 
 const table = constructTable({
   features,
-  rowModels: {
-    // Pair every feature with its matching row-model factory.
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -92,7 +95,6 @@ Framework adapters wrap this with reactivity:
 const features = tableFeatures({}) // core features only
 const table = constructTable({
   features,
-  rowModels: {}, // core row model auto-included
   columns,
   data,
 })
@@ -118,15 +120,15 @@ const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 const table = constructTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -144,10 +146,8 @@ const features = tableFeatures({})
 
 const table = constructTable({
   features,
-  rowModels: {},
   columns,
   data,
-  _rowModelFns: {},
   // Use the vanilla binding when no framework adapter exists
   _processingMode: 'core',
 })
@@ -178,24 +178,22 @@ Wrong:
 ```ts
 // rowSortingFeature missing — table.setSorting / state.sorting unavailable
 const features = tableFeatures({}) // empty
-const table = useTable({ features, rowModels: {}, columns, data })
+const table = useTable({ features, columns, data })
 table.setSorting([{ id: 'age', desc: true }]) // ❌ does not exist on this table type
 ```
 
 Correct:
 
 ```ts
-// Register every feature you intend to use; pair with its row model when applicable
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-const table = useTable({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
-  columns,
-  data,
+// Register every feature you intend to use; include its row model factory and fns
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 In v9, `features` is a tree-shakeable registry — TypeScript hides APIs for unregistered features and the runtime atom is never created. Agents who see `table.setColumnFilters` "missing" often incorrectly conclude the API was removed.
@@ -231,16 +229,15 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
-v7→v8 and v8→v9 both reshaped the API substantially. Agents trained on older data confidently emit v7/v8 shapes; v9 enforces `features` + `rowModels`.
+v7→v8 and v8→v9 both reshaped the API substantially. Agents trained on older data confidently emit v7/v8 shapes; v9 requires `features` with row model factories registered on it.
 
 Source: maintainer interview (Phase 4, 2026-05-17)
 
@@ -252,7 +249,7 @@ Wrong:
 function MyTable() {
   // ❌ new object every render — destroys stable feature registration
   const features = tableFeatures({ rowSortingFeature })
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -263,7 +260,7 @@ Correct:
 const features = tableFeatures({ rowSortingFeature })
 
 function MyTable() {
-  const table = useTable({ features, rowModels: {}, columns, data })
+  const table = useTable({ features, columns, data })
 }
 ```
 
@@ -277,31 +274,26 @@ Wrong:
 
 ```ts
 // rowSortingFeature missing — sortedRowModel is orphaned and never runs
-const features = tableFeatures({ rowPaginationFeature })
-const table = useTable({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns), // no-op
-    paginatedRowModel: createPaginatedRowModel(),
-  },
-  columns,
-  data,
+const features = tableFeatures({
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(), // no-op without rowSortingFeature
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 Correct:
 
 ```ts
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-const table = useTable({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 Row-model factories only run if their matching feature is in `features`. Runtime silently degrades.
@@ -322,12 +314,12 @@ const sortedData = useMemo(() => [...data].sort((a, b) => /* …custom… */), [
 Correct:
 
 ```ts
-const table = useTable({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 // then: table.setSorting(...), column.toggleSorting(), header.getToggleSortingHandler()
 ```
 
@@ -368,7 +360,6 @@ Wrong:
 // ❌ Fresh [] each render — infinite loop when items is undefined
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: items ?? [],
 })
@@ -382,7 +373,6 @@ const EMPTY: Person[] = []
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: items ?? EMPTY,
 })

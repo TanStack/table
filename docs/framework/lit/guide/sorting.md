@@ -16,7 +16,11 @@ import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import { TableController, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 @customElement('my-table')
 class MyTable extends LitElement {
@@ -28,9 +32,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data: this.data,
     })
@@ -66,7 +67,6 @@ For reads in your `render` method, use `table.state.sorting` (the state selected
 const table = this.tableController.table(
   {
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data: this.data,
     //...
@@ -98,7 +98,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data: this.data,
       //...
@@ -122,7 +121,6 @@ private sorting: SortingState = []
 //...
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   //...
@@ -142,7 +140,6 @@ If you do not need to control the sorting state in your own state management or 
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   //...
@@ -176,7 +173,6 @@ const sortingAtom = createAtom<SortingState>([])
 //...
 const table = this.tableController.table({
   features,
-  rowModels: {}, // no sortedRowModel needed for manual sorting
   columns,
   data: this.data,
   manualSorting: true, // use pre-sorted row model instead of sorted row model
@@ -205,13 +201,14 @@ import {
   sortFns,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data: this.data,
 })
@@ -232,11 +229,11 @@ By default, there are 6 built-in sorting functions to choose from:
 - `datetime` - Sorts by time, use this if your values are `Date` objects.
 - `basic` - Sorts using a basic/standard `a > b ? 1 : a < b ? -1 : 0` comparison. This is the fastest sorting function, but may not be the most accurate.
 
-You can also define your own custom sorting functions, either inline as the `sortFn` column option, or by name in the sorting function registry that you pass to `createSortedRowModel`.
+You can also define your own custom sorting functions, either inline as the `sortFn` column option, or by name in the `sortFns` slot on `tableFeatures`.
 
 #### Custom Sorting Functions
 
-Whether you register a custom sorting function in the registry passed to `createSortedRowModel` or pass it directly as a `sortFn` column option, it should have the following signature:
+Whether you register a custom sorting function in the `sortFns` slot on `tableFeatures` or pass it directly as a `sortFn` column option, it should have the following signature:
 
 ```ts
 //optionally use the SortFn to infer the parameter types
@@ -265,7 +262,7 @@ const columns = [
   {
     header: () => 'Age',
     accessorKey: 'age',
-    sortFn: 'myCustomSortFn', // reference a custom sorting function registered with createSortedRowModel
+    sortFn: 'myCustomSortFn', // reference a custom sorting function registered in the sortFns slot
   },
   {
     header: () => 'Birthday',
@@ -282,35 +279,28 @@ const columns = [
   }
 ]
 //...
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: {
+    ...sortFns,
+    myCustomSortFn: (rowA, rowB, columnId) =>
+      rowA.original[columnId] > rowB.original[columnId]
+        ? 1
+        : rowA.original[columnId] < rowB.original[columnId]
+          ? -1
+          : 0,
+  },
+})
+
 const table = this.tableController.table({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel({
-      ...sortFns,
-      myCustomSortFn: (rowA, rowB, columnId) =>
-        rowA.original[columnId] > rowB.original[columnId]
-          ? 1
-          : rowA.original[columnId] < rowB.original[columnId]
-            ? -1
-            : 0,
-    }),
-  },
   columns,
   data: this.data,
 })
 ```
 
-> **TypeScript Note:** For `sortFn: 'myCustomSortFn'` string references to typecheck, augment the `SortFns` interface with a `declare module` block:
->
-> ```ts
-> declare module '@tanstack/lit-table' {
->   interface SortFns {
->     myCustomSortFn: SortFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `sortFn` column option.
+> **TypeScript Note:** String references like `sortFn: 'myCustomSortFn'` are automatically typed when the function is registered in the `sortFns` slot on `tableFeatures`. The registry slot replaces the old `declare module` augmentation approach. Alternatively, skip the registry entirely by passing the function directly to the `sortFn` column option.
 
 ### Customize Sorting
 
@@ -336,7 +326,6 @@ const columns = [
 //...
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   enableSorting: false, // disable sorting for the entire table
@@ -364,7 +353,6 @@ const columns = [
 //...
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   sortDescFirst: true, //sort by all columns in descending order first (default is ascending for string columns and descending for number columns)
@@ -431,7 +419,6 @@ Once a column is sorted and `enableSortingRemoval` is `false`, toggling the sort
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   enableSortingRemoval: false, // disable the ability to remove sorting on columns (sorting can never return to 'none' once applied)
@@ -458,7 +445,6 @@ const columns = [
 //...
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   enableMultiSort: false, // disable multi-sorting for the entire table
@@ -472,7 +458,6 @@ By default, the `Shift` key is used to trigger multi-sorting. You can change thi
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   isMultiSortEvent: (e) => true, // normal click triggers multi-sorting
@@ -488,7 +473,6 @@ By default, there is no limit to the number of columns that can be sorted at onc
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   maxMultiSortColCount: 3, // only allow 3 columns to be sorted at once
@@ -502,7 +486,6 @@ By default, the ability to remove multi-sorts is enabled. You can disable this b
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data,
   enableMultiRemove: false, // disable the ability to remove multi-sorts

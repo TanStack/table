@@ -130,7 +130,6 @@ class PeopleTable extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {},
         columns,
         data: this.data,
       },
@@ -252,7 +251,7 @@ Wrong:
 ```ts
 connectedCallback() {
   super.connectedCallback()
-  this.cachedTable = this.tableController.table({ features, rowModels: {}, columns, data: this.data })
+  this.cachedTable = this.tableController.table({ features, columns, data: this.data })
 }
 
 protected render() {
@@ -264,7 +263,7 @@ Correct: call `.table()` each `render()`. The options are merged into the same l
 
 ```ts
 protected render() {
-  const table = this.tableController.table({ features, rowModels: {}, columns, data: this.data })
+  const table = this.tableController.table({ features, columns, data: this.data })
   return html`${table.getRowModel().rows.map(/* … */)}`
 }
 ```

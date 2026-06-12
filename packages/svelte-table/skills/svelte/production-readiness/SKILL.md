@@ -69,8 +69,9 @@ If you find yourself running a table without a feature's UI ever showing, drop t
 `createTable` syncs options in `$effect.pre`. If any of these identities flip every component
 run, the table re-syncs more than it needs to.
 
-- **`features` and `rowModels`**: declare at module scope, not inside the component
-  function, and never inside `$derived` / `$effect`.
+- **`features`**: declare at module scope, not inside the component function, and never
+  inside `$derived` / `$effect`. The `features` object now also carries row-model factories
+  and `*Fns` registries, so keeping it stable prevents unnecessary re-sync.
 - **`columns`**: same — module scope or `$state.frozen` / a non-reactive `const` in the
   component. Reactive recompute of columns is rare and almost always a bug.
 - **`data`**: pass with a getter (`get data()`) so the reference is stable when the data
@@ -80,8 +81,10 @@ run, the table re-syncs more than it needs to.
 ```svelte
 <script lang="ts">
   // module scope is fine in .svelte too, when truly static
-  const features = tableFeatures({ rowPaginationFeature })
-  const rowModels = { paginatedRowModel: createPaginatedRowModel() }
+  const features = tableFeatures({
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  })
   const columns = columnHelper.columns([
     /* ... */
   ])
@@ -91,7 +94,6 @@ run, the table re-syncs more than it needs to.
 
   const table = createTable({
     features,
-    rowModels,
     columns,
     get data() {
       return data

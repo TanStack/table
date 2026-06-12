@@ -15,7 +15,11 @@ import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
 import { TableController, tableFeatures, columnGroupingFeature, createGroupedRowModel, aggregationFns } from '@tanstack/lit-table'
 
-const features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 
 @customElement('my-table')
 class MyTable extends LitElement {
@@ -27,9 +31,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {
-        groupedRowModel: createGroupedRowModel(aggregationFns),
-      },
       columns,
       data: this.data,
     })
@@ -60,13 +61,14 @@ import {
   aggregationFns,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-  },
   // other options...
 })
 ```
@@ -75,14 +77,16 @@ When grouping state is active, the table will add matching rows as subRows to th
 To allow the user to expand and collapse the grouped rows, you can use the expanding feature.
 
 ```ts
-const features = tableFeatures({ columnGroupingFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns,
+})
 
 const table = this.tableController.table({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   // other options...
 })
 ```
@@ -106,7 +110,6 @@ By default, when a column is grouped, it is moved to the start of the table. You
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   groupedColumnMode: 'reorder',
 })
@@ -114,7 +117,7 @@ const table = this.tableController.table({
 
 ### Aggregations
 
-When rows are grouped, you can aggregate the data in the grouped rows by columns using the `aggregationFn` column option. This is a string that is the name of a built-in aggregation function, or a custom aggregation function registered in the registry passed to `createGroupedRowModel`.
+When rows are grouped, you can aggregate the data in the grouped rows by columns using the `aggregationFn` column option. This is a string that is the name of a built-in aggregation function, or a custom aggregation function registered in the `aggregationFns` slot on `tableFeatures`.
 
 ```ts
 const column = columnHelper.accessor('key', {
@@ -139,19 +142,22 @@ There are several built-in aggregation functions that you can use:
 
 #### Custom Aggregations
 
-You can define custom aggregation functions in the registry that you pass to `createGroupedRowModel`. The registry is a record where the keys are the names of the aggregation functions, and the values are the aggregation functions themselves. You can then reference these aggregation functions by name in a column's `aggregationFn` option.
+You can define custom aggregation functions in the `aggregationFns` slot on `tableFeatures`. The slot is a record where the keys are the names of the aggregation functions and the values are the aggregation functions themselves. You can then reference these aggregation functions by name in a column's `aggregationFn` option.
 
 ```ts
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: {
+    ...aggregationFns,
+    myCustomAggregation: (columnId, leafRows, childRows) => {
+      // return the aggregated value
+    },
+  },
+})
+
 const table = this.tableController.table({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel({
-      ...aggregationFns,
-      myCustomAggregation: (columnId, leafRows, childRows) => {
-        // return the aggregated value
-      },
-    }),
-  },
   // other options...
 })
 ```
@@ -164,17 +170,7 @@ const column = columnHelper.accessor('key', {
 })
 ```
 
-> **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, augment the `AggregationFns` interface with a `declare module` block:
->
-> ```ts
-> declare module '@tanstack/lit-table' {
->   interface AggregationFns {
->     myCustomAggregation: AggregationFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `aggregationFn` column option.
+> **TypeScript Note:** String references like `aggregationFn: 'myCustomAggregation'` are automatically typed when the function is registered in the `aggregationFns` slot on `tableFeatures`. The registry slot replaces the old `declare module` augmentation approach. Alternatively, skip the registry entirely by passing the function directly to the `aggregationFn` column option.
 
 ### Manual Grouping
 
@@ -185,7 +181,6 @@ const features = tableFeatures({ columnGroupingFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {}, // no groupedRowModel needed for manual grouping
   // other options...
   manualGrouping: true,
 })
@@ -206,7 +201,6 @@ const groupingAtom = createAtom<GroupingState>([])
 
 const table = this.tableController.table({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   atoms: {
     grouping: groupingAtom, // grouping APIs now update groupingAtom
@@ -224,7 +218,6 @@ private grouping: GroupingState = []
 
 const table = this.tableController.table({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   state: {
     grouping: this.grouping,

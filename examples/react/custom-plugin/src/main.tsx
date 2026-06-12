@@ -126,6 +126,11 @@ const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   densityPlugin, // pass in our plugin just like any other stock feature
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -172,11 +177,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data,
       debugTable: true,

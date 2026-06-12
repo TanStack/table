@@ -15,6 +15,9 @@ export const features = tableFeatures({
   globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 export const {
@@ -25,9 +28,5 @@ export const {
   injectFlexRenderHeaderContext,
 } = createTableHook({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   debugTable: true,
 })

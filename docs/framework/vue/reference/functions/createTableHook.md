@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:291](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L291)
+Defined in: [packages/vue-table/src/createTableHook.ts:290](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L290)
 
 Creates app-scoped Vue table helpers with features, row models, and
 renderable component maps pre-bound.
@@ -83,7 +83,7 @@ useAppTable: <TData>(tableOptions) => AppVueTable<TFeatures, TData, TableState<T
 
 ##### tableOptions
 
-`Omit`\<[`TableOptionsWithReactiveData`](../type-aliases/TableOptionsWithReactiveData.md)\<`TFeatures`, `TData`\>, `"features"` \| `"rowModels"`\>
+`Omit`\<[`TableOptionsWithReactiveData`](../type-aliases/TableOptionsWithReactiveData.md)\<`TFeatures`, `TData`\>, `"features"`\>
 
 #### Returns
 
@@ -142,7 +142,6 @@ useTableContext: <TData>() => VueTable<TFeatures, TData>;
 ```ts
 const { useAppTable, createAppColumnHelper } = createTableHook({
   features,
-  rowModels: {},
   tableComponents: {},
   cellComponents: {},
   headerComponents: {},

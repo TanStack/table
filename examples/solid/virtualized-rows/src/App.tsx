@@ -14,7 +14,12 @@ import type { Row, SolidTable } from '@tanstack/solid-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/solid-virtual'
 import type { Person } from './makeData'
 
-const features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
 // See https://tanstack.com/virtual/v3/docs/examples/solid/table for a simpler fixed row height example.
@@ -69,7 +74,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     get data() {
       return data()

@@ -19,6 +19,7 @@
     tableFeatures,
   } from '@tanstack/svelte-table'
   import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+  import type { RankingInfo } from '@tanstack/match-sorter-utils'
   import { makeData } from './makeData'
   import type { Person } from './makeData'
   import type {
@@ -29,6 +30,7 @@
     Row,
     RowData,
     SortFn,
+    TableFeatures,
   } from '@tanstack/svelte-table'
   import './index.css'
 
@@ -36,12 +38,13 @@
     filterVariant?: 'text' | 'range' | 'select'
   }
 
-  const features = tableFeatures({
-    ...stockFeatures,
-    columnMeta: metaHelper<MyColumnMeta>(),
-  })
+  interface FuzzyFilterMeta {
+    itemRank?: RankingInfo
+  }
 
-  const fuzzyFilter: FilterFn<typeof features, RowData> = (
+  type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+  const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
     row,
     columnId,
     value,
@@ -52,7 +55,7 @@
     return itemRank.passed
   }
 
-  const fuzzySort: SortFn<typeof features, Person> = (
+  const fuzzySort: SortFn<FuzzyFeatures, Person> = (
     rowA,
     rowB,
     columnId,
@@ -67,7 +70,7 @@
     return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
   }
 
-  const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
+  const sortStatusFn: SortFn<TableFeatures, Person> = (rowA, rowB) => {
     const statusOrder = ['single', 'complicated', 'relationship']
     return (
       statusOrder.indexOf(rowA.original.status) -
@@ -75,21 +78,25 @@
     )
   }
 
+  const features = tableFeatures({
+    ...stockFeatures,
+    columnMeta: metaHelper<MyColumnMeta>(),
+    filterMeta: metaHelper<FuzzyFilterMeta>(),
+    expandedRowModel: createExpandedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    facetedRowModel: createFacetedRowModel(),
+    facetedMinMaxValues: createFacetedMinMaxValues(),
+    facetedUniqueValues: createFacetedUniqueValues(),
+    groupedRowModel: createGroupedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+    filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+    sortFns: { ...sortFns, fuzzy: fuzzySort, status: sortStatusFn },
+    aggregationFns,
+  })
+
   const { createAppTable, createAppColumnHelper } = createTableHook({
     features,
-    rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-      filteredRowModel: createFilteredRowModel({
-        ...filterFns,
-        fuzzy: fuzzyFilter,
-      }),
-      facetedRowModel: createFacetedRowModel(),
-      facetedMinMaxValues: createFacetedMinMaxValues(),
-      facetedUniqueValues: createFacetedUniqueValues(),
-      groupedRowModel: createGroupedRowModel(aggregationFns),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
   })
 
   const columnHelper = createAppColumnHelper<Person>()
@@ -117,7 +124,7 @@
       size: 200,
       header: 'First Name',
       filterFn: 'fuzzy',
-      sortFn: fuzzySort,
+      sortFn: 'fuzzy',
       meta: { filterVariant: 'text' },
       getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
     }),
@@ -148,7 +155,7 @@
       id: 'status',
       size: 200,
       header: 'Status',
-      sortFn: sortStatusFn,
+      sortFn: 'status',
       meta: { filterVariant: 'select' },
     }),
     columnHelper.accessor('progress', {

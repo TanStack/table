@@ -57,7 +57,13 @@ import {
 
 type Person = { firstName: string; lastName: string; age: number }
 
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', { header: 'First' }),
@@ -82,10 +88,6 @@ const data = ref<Person[]>([])
 //    `table.setSorting()` writes through to your atom.
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   atoms: {
@@ -141,7 +143,6 @@ options.atoms[slice]    >  options.state[slice]  >  table.baseAtoms[slice]
 // ❌ Passing both for the SAME slice. `atoms.sorting` wins; `state.sorting` is silently dead.
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: {

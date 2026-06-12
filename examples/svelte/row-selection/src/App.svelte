@@ -25,6 +25,9 @@
     rowSelectionFeature,
     columnFilteringFeature,
     globalFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filterFns,
   })
 
   let data = $state(makeData(1_000))
@@ -45,10 +48,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       get data() {
         return data
       },

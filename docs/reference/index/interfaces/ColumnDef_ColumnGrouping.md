@@ -5,7 +5,7 @@ title: ColumnDef_ColumnGrouping
 
 # Interface: ColumnDef\_ColumnGrouping\<TFeatures, TData, TValue\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L53)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L68)
 
 ## Type Parameters
 
@@ -29,7 +29,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:53](https:/
 optional aggregatedCell: ColumnDefTemplate<ReturnType<Cell<TFeatures, TData, TValue>["getContext"]>>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L61)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L76)
 
 The cell to display each row for the column if the cell is an aggregate. If a function is passed, it will be passed a props object with the context of the cell and should return the property type for your adapter (the exact type depends on the adapter being used).
 
@@ -41,7 +41,7 @@ The cell to display each row for the column if the cell is an aggregate. If a fu
 optional aggregationFn: AggregationFnOption<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L67)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L82)
 
 The resolved aggregation function for the column.
 
@@ -53,7 +53,7 @@ The resolved aggregation function for the column.
 optional enableGrouping: boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L73)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L88)
 
 Allows this column to be added to grouping state.
 
@@ -67,7 +67,7 @@ Defaults to `true`; table-level `enableGrouping` must also allow grouping.
 optional getGroupingValue: (row) => any;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L77)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L92)
 
 Specify a value to be used for grouping rows on this column. If this option is not specified, the value derived from `accessorKey` / `accessorFn` will be used instead.
 

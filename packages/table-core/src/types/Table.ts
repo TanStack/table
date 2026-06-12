@@ -14,7 +14,7 @@ import type { Table_RowPagination } from '../features/row-pagination/rowPaginati
 import type { Table_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { Table_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
-import type { CachedRowModel_All, CreateRowModels_All } from './RowModel'
+import type { CachedRowModel_All } from './RowModel'
 import type { RowModelFns_All } from './RowModelFns'
 import type { TableState_All } from './TableState'
 import type { RowData } from './type-utils'
@@ -79,7 +79,6 @@ export type Table_Internal<
   _rowModels: CachedRowModel_All<TFeatures, TData>
   _rowModelFns: RowModelFns_All<TFeatures, TData>
   options: TableOptions_All<TFeatures, TData> & {
-    rowModels?: CreateRowModels_All<TFeatures, TData>
     state?: TableState_All
     initialState?: TableState_All
     atoms?: ExternalAtoms_All

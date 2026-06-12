@@ -78,7 +78,6 @@ export function createRowPinningTable(
 
   const table = constructTable<typeof features, Person>({
     features,
-    rowModels: {},
     data,
     columns,
     getSubRows: (row: any) => row.subRows,

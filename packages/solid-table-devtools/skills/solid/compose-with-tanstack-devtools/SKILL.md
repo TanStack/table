@@ -48,7 +48,6 @@ import {
 function UsersScreen() {
   const table = createTable({
     features,
-    rowModels,
     key: 'users-table',
     columns,
     data,

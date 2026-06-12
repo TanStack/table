@@ -22,7 +22,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
   }))
@@ -63,7 +62,6 @@ const columns = [
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
 }))
@@ -179,7 +177,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
     atoms: {
@@ -205,7 +202,6 @@ readonly columnResizing = signal<columnResizingState>({
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
   state: {

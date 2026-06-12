@@ -11,20 +11,21 @@ Want to skip to the implementation? Check out these React examples:
 ### React Setup
 
 ```tsx
-import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns } from '@tanstack/react-table'
+import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns, metaHelper } from '@tanstack/react-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -45,14 +46,21 @@ Using the match-sorter libraries is optional, but the TanStack Match Sorter Util
 
 ### Defining a Custom Fuzzy Filter Function
 
-Here's an example of a custom fuzzy filter function:
+Here's an example of a custom fuzzy filter function. First, define the filter meta shape and a features type that includes it:
 
 ```typescript
 import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type { FilterFn, RowData } from '@tanstack/react-table'
+import type { FilterFn, RowData, TableFeatures } from '@tanstack/react-table'
 
-const fuzzyFilter: FilterFn<typeof features, RowData> = (
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+// A features type that carries the filterMeta shape
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
   row,
   columnId,
   value,
@@ -71,23 +79,28 @@ const fuzzyFilter: FilterFn<typeof features, RowData> = (
 
 In this function, we're using the `rankItem` function from the `@tanstack/match-sorter-utils` library to rank the item. We then store the ranking information in the filter meta of the row (the `addMeta` callback is optional, so call it with optional chaining), and return whether the item passed the ranking criteria.
 
-To reference this filter function by the string name `'fuzzy'` (and to type the stored filter meta), augment the `FilterFns` and `FilterMeta` interfaces with a `declare module` block:
+To reference this filter function by the string name `'fuzzy'` and type the stored filter meta, register both in the `tableFeatures` call using the `filterFns` and `filterMeta` slots:
 
 ```typescript
-declare module '@tanstack/react-table' {
-  // add the fuzzy filter to the filterFns registry types
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+import { tableFeatures, metaHelper } from '@tanstack/react-table'
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
 ```
+
+No `declare module` augmentation is needed. The `filterFns` and `filterMeta` slots are scoped to this features object and only affect tables created with it.
 
 ### Using Fuzzy Filtering with Global Filtering
 
-To use fuzzy filtering with global filtering, register the fuzzy filter function in the registry passed to `createFilteredRowModel` and reference it in the `globalFilterFn` option of the table:
+To use fuzzy filtering with global filtering, register the fuzzy filter function in the `filterFns` slot on `tableFeatures` and reference it in the `globalFilterFn` option of the table:
 
 ```typescript
 import {
@@ -100,23 +113,22 @@ import {
   createSortedRowModel,
   filterFns,
   sortFns,
+  metaHelper,
 } from '@tanstack/react-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(), // needed if you want sorting with fuzzy rank
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
 const table = useTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      fuzzy: fuzzyFilter,
-    }),
-    sortedRowModel: createSortedRowModel(sortFns), // needed if you want sorting with fuzzy rank
-  },
   columns,
   data,
   globalFilterFn: 'fuzzy',
@@ -151,7 +163,7 @@ import { compareItems } from '@tanstack/match-sorter-utils'
 import { sortFns } from '@tanstack/react-table'
 import type { SortFn } from '@tanstack/react-table'
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -169,7 +181,7 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
 
 In this function, we're comparing the ranking information of the two rows. If the ranks are equal, we fall back to alphanumeric sorting.
 
-You can then pass this sorting function directly to the `sortFn` option of the column definition:
+Register `fuzzySort` in the `sortFns` slot on `tableFeatures` (as shown in the setup section above) and reference it by name in the column definition:
 
 ```typescript
 {
@@ -177,9 +189,9 @@ You can then pass this sorting function directly to the `sortFn` option of the c
   id: 'fullName',
   header: 'Full Name',
   cell: info => info.getValue(),
-  filterFn: 'fuzzy', // using our custom fuzzy filter function (registered above)
-  sortFn: fuzzySort, // pass our custom fuzzy sort function directly
+  filterFn: 'fuzzy', // using our custom fuzzy filter function (registered in features)
+  sortFn: 'fuzzy', // using our custom fuzzy sort function (registered in features)
 }
 ```
 
-> **Note:** Unlike `filterFn: 'fuzzy'` above, `fuzzySort` is passed as a function rather than a string. A string reference like `sortFn: 'fuzzySort'` would only work if you also registered the function in the registry passed to `createSortedRowModel` (e.g. `createSortedRowModel({ ...sortFns, fuzzySort })`) and augmented the `SortFns` interface the same way as `FilterFns`. Passing the function directly skips both steps.
+You can also pass `fuzzySort` directly as a function to the `sortFn` column option instead of a string reference, which skips the registration step.

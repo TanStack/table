@@ -4,11 +4,12 @@ description: >
   Mechanical breaking-change migration from TanStack Table v8 to v9 at the
   `@tanstack/table-core` level. Covers hook/entry rename
   (`useReactTable`/`createSolidTable`/… → `useTable`/`injectTable`/`createTable`/
-  `constructTable`), the new required `features` + `rowModels` options,
+  `constructTable`), the new required `features` option (which now carries row
+  model factories and fn registries — `rowModels` option is removed),
   `createColumnHelper<TData>()` → `createColumnHelper<typeof features, TData>()`,
   row-model factory rename (`getCoreRowModel()` → automatic; `getSortedRowModel()`
-  → `createSortedRowModel(sortFns)`; same for filtered/paginated/grouped/expanded/
-  faceted), `table.getState()` → `table.store.state` / `table.atoms.<slice>.get()`,
+  → `createSortedRowModel()` as a slot on `tableFeatures({...})` with `sortFns` also
+  a slot; same for filtered/paginated/grouped/expanded/faceted), `table.getState()` → `table.store.state` / `table.atoms.<slice>.get()`,
   sorting renames (`sortingFn` → `sortFn`, etc.), `enablePinning` split, column
   sizing/resizing split, underscore-prefixed APIs becoming public, `RowData`
   type tightening, TFeatures-first generics, the `useLegacyTable` React escape
@@ -32,9 +33,9 @@ sources:
 v9 is a substantial reshape, not a tweak. The breaking changes group into:
 
 1. **Hook/entry rename** per adapter.
-2. **`features` + `rowModels` are required** — features are tree-shaken.
+2. **`features` is required** — features are tree-shaken. Row model factories and fn registries (`sortFns`, `filterFns`, `aggregationFns`) now live as slots on the `features` object; the `rowModels` option is gone.
 3. **Column helper generic order** — `<TFeatures, TData>` not `<TData>`.
-4. **Row-model factories** moved out of root options, into `rowModels`, and now take their `*Fns` argument.
+4. **Row-model factories** moved out of root options and into `tableFeatures({...})` as named slots; factory args for `*Fns` are replaced by dedicated fn-registry slots on `features`.
 5. **State surface renamed** — `table.getState()` → `table.store.state` / `table.atoms.<slice>.get()` / `table.state` (selector).
 6. **Sorting names**: `sortingFn` → `sortFn`, `sortingFns` → `sortFns`, `getSortingFn()` → `getSortFn()`, type `SortingFn` → `SortFn`.
 7. **`enablePinning` split** into `enableColumnPinning` + `enableRowPinning` (table-level); per-column `enablePinning` stays.
@@ -75,6 +76,12 @@ const features = tableFeatures({
   columnFilteringFeature,
   columnSizingFeature,
   columnResizingFeature, // explicit — formerly part of ColumnSizing
+  // Row model factories and fn registries are slots on features, not rowModels.
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -88,11 +95,6 @@ const columns: ColumnDef<typeof features, Person>[] = columnHelper.columns([
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   enableColumnPinning: true, // split from enablePinning
@@ -200,13 +202,12 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 Every major release of TanStack Table has been a substantial upgrade. Agents trained on v7 or v8 will confidently emit shapes that no longer exist. This is the #2 AI failure (after reimplementing built-ins).
@@ -239,18 +240,15 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns), // factory takes sortFns argument
-  },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
-In v9, row models live under `rowModels` and the factories REQUIRE their \*Fns argument for tree-shaking: `createFilteredRowModel(filterFns)`, `createSortedRowModel(sortFns)`, `createGroupedRowModel(aggregationFns)`. Core is automatic.
+In v9, row model factories are slots on `features`: `filteredRowModel: createFilteredRowModel()`, `sortedRowModel: createSortedRowModel()`, `groupedRowModel: createGroupedRowModel()`. The fn registries move too: `filterFns`, `sortFns`, `aggregationFns` are named slots on `features`. Core is automatic.
 
 Source: PR #6234 (atoms refactor); packages/table-core/src/index.ts
 
@@ -307,11 +305,11 @@ Correct:
 
 ```ts
 columnHelper.accessor('age', { sortFn: 'alphanumeric' })
-createSortedRowModel(sortFns) // pass registry to the factory
+// sortFns is a slot on features: tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
 column.getSortFn()
 ```
 
-v9 renamed every sorting API: `sortingFn` → `sortFn`, `sortingFns` → `sortFns`, type `SortingFn` → `SortFn`, `getSortingFn()` → `getSortFn()`. TypeScript surfaces these but agents try v8 names first.
+v9 renamed every sorting API: `sortingFn` → `sortFn`, `sortingFns` → `sortFns` (now a features slot, not a factory arg), type `SortingFn` → `SortFn`, `getSortingFn()` → `getSortFn()`. TypeScript surfaces these but agents try v8 names first.
 
 Source: packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts
 
@@ -475,13 +473,12 @@ import {
   createSortedRowModel,
   sortFns,
 } from '@tanstack/react-table'
-const features = tableFeatures({ rowSortingFeature })
-const table = useTable({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-  columns,
-  data,
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+const table = useTable({ features, columns, data })
 ```
 
 `useLegacyTable` is React-only, deprecated, bundles every feature, doesn't support `table.Subscribe`, and is removed in v10. It exists to unblock incremental migration — not as a long-term API.

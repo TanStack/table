@@ -36,7 +36,7 @@ sources:
 
 ---
 
-## 1. Prerequisites — `features` and `rowModels` decide what state exists
+## 1. Prerequisites — `features` decides what state exists
 
 In v9, **a state slice only exists if its feature is registered in `features`**.
 This is the #1 v9-specific gotcha and the root cause of many "missing API"
@@ -57,14 +57,13 @@ import {
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data: this.data(),
 }))
@@ -91,7 +90,6 @@ run inside an Angular injection context (a component constructor / class field).
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data: this.data(),
 }))
@@ -105,25 +103,23 @@ That means:
 
 - **Reactive values that should re-sync the table** (`this.data()`, controlled
   state signals) go _inside_ the initializer.
-- **Stable references** (`columns`, `features`, `rowModels`, feature-fn maps)
-  go _outside_ — or you'll recreate the column model on every data update.
+- **Stable references** (`columns`, `features`) go _outside_ — or you'll
+  recreate the column model on every data update.
 
 ```ts
 // ❌ WRONG — columns + features recreated on every data change
 readonly table = injectTable(() => ({
-  features: tableFeatures({ rowSortingFeature }),     // new reference each run
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) }, // ditto
-  columns: [/* … */],                                  // ditto
+  features: tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns }),
+  columns: [/* … */],
   data: this.data(),
 }))
 
 // ✅ Stable references outside, signal reads inside
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
 const columns: Array<ColumnDef<typeof features, Person>> = [/* … */]
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data: this.data(), // ← only the signal read should be inside
 }))
@@ -230,7 +226,6 @@ the value that reset APIs reset to.
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: { /* … */ },
   columns,
   data: this.data(),
   initialState: {
@@ -276,9 +271,6 @@ export class Component {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      /* … */
-    },
     columns,
     data: this.data(),
     state: {
@@ -335,9 +327,9 @@ right ownership model.** When you need more, see
 - **State type imports** — `PaginationState`, `SortingState`,
   `RowSelectionState`, `TableState<typeof features>`, etc.
 - **`createTableHook(...)`** — app-wide `injectAppTable` /
-  `createAppColumnHelper` that pre-bind `features` and `rowModels`. Also
-  exposes `tableComponents` / `cellComponents` / `headerComponents` registries
-  (covered in `angular-rendering-directives`).
+  `createAppColumnHelper` that pre-bind `features` (which now carries row-model
+  factories and fn registries). Also exposes `tableComponents` / `cellComponents` /
+  `headerComponents` registries (covered in `angular-rendering-directives`).
 
 ---
 
@@ -359,15 +351,15 @@ import { injectTable, tableFeatures } from '@tanstack/angular-table'
 const features = tableFeatures({})
 const table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data: data(),
 }))
 ```
 
 Also retired: `getFilteredRowModel`, `getSortedRowModel`, `getPaginationRowModel`
-as top-level options → migrated to `rowModels: { filteredRowModel: ..., sortedRowModel: ..., paginatedRowModel: ... }`
-with explicit `*Fns` parameters.
+as top-level options → migrated to slots on the `features` object
+(`filteredRowModel: createFilteredRowModel()`, `sortedRowModel: createSortedRowModel()`,
+`paginatedRowModel: createPaginatedRowModel()`) with fn registries (`filterFns`, `sortFns`) also on `features`.
 
 ### 2. (CRITICAL) Missing API because feature not in `features`
 
@@ -394,9 +386,10 @@ Same for `setPageIndex`, `setPageSize`, `setSorting`, `toggleSorting`,
 ### 4. (HIGH) Expensive values declared **inside** the `injectTable` initializer
 
 Because the initializer re-runs when any reactive read inside it changes,
-declaring `columns`, `features`, `rowModels`, or feature-fn maps inside the
-function causes them to be recreated and re-applied on every data update.
-Move them outside the class or to stable class fields.
+declaring `columns` or `features` inside the function causes them to be
+recreated and re-applied on every data update (row-model factories and fn
+registries are part of `features`, so moving `features` outside covers all of
+them). Move them outside the class or to stable class fields.
 
 ### 5. (HIGH) Forgetting that the initializer re-runs
 

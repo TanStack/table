@@ -9,7 +9,7 @@ title: AccessorKeyColumnDef
 type AccessorKeyColumnDef<TFeatures, TData, TValue> = AccessorKeyColumnDefBase<TFeatures, TData, TValue> & Partial<ColumnIdentifiers<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [types/ColumnDef.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L198)
+Defined in: [types/ColumnDef.ts:224](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L224)
 
 ## Type Parameters
 

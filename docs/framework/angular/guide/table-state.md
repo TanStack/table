@@ -46,14 +46,13 @@ State slices are only created for the features that are registered in `features`
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data: this.data(),
 }))
@@ -103,9 +102,6 @@ import { shallow } from '@tanstack/angular-table'
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data(),
 }))
@@ -165,10 +161,6 @@ If you only need to customize the starting value for some table state, use `init
 ```ts
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data(),
   initialState: {
@@ -246,7 +238,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.dataQuery.data()?.rows ?? [],
     rowCount: this.dataQuery.data()?.rowCount,
@@ -277,10 +268,6 @@ readonly pagination = signal<PaginationState>({
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: this.data(),
   state: {

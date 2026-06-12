@@ -10,8 +10,8 @@ import type { Row } from '@tanstack/vue-table'
 import type { Person } from './makeData'
 
 const { appFeatures, createAppColumnHelper, useAppTable } = createTableHook({
-  features: { rowExpandingFeature },
-  rowModels: {
+  features: {
+    rowExpandingFeature,
     expandedRowModel: createExpandedRowModel(),
   },
 })

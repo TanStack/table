@@ -27,6 +27,7 @@ interface MyTableMeta {
 const features = tableFeatures({
   rowPaginationFeature,
   tableMeta: metaHelper<MyTableMeta>(),
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
 const defaultColumn: Partial<ColumnDef<typeof features, Person>> = {
@@ -97,9 +98,6 @@ export class App {
     data: this.data(),
     columns: defaultColumns,
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof features, Person>(),
-    },
     defaultColumn: defaultColumn,
     debugTable: true,
     autoResetPageIndex: this.autoResetPageIndex(),

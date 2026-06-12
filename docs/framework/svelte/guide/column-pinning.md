@@ -21,7 +21,6 @@ const features = tableFeatures({ columnPinningFeature })
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return data
@@ -65,7 +64,6 @@ const columnPinning = useSelector(columnPinningAtom) // subscribe wherever it is
 
 const table = createTable({
   features,
-  rowModels: {},
   //...
   atoms: {
     columnPinning: columnPinningAtom,
@@ -88,7 +86,6 @@ const [columnPinning, setColumnPinning] =
 
 const table = createTable({
   features,
-  rowModels: {},
   //...
   state: {
     get columnPinning() {
@@ -106,7 +103,6 @@ A very common use case is to pin some columns by default. You can do this by eit
 ```ts
 const table = createTable({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnPinning: {

@@ -125,7 +125,6 @@ export type LitTable<
  *     const table = this.tableController.table(
  *       {
  *         features,
- *         rowModels: {},
  *         columns,
  *         data,
  *       },
@@ -162,7 +161,7 @@ export class TableController<
    * @example
    * ```ts
    * const table = this.tableController.table(
-   *   { features, rowModels: {}, columns, data },
+   *   { features, columns, data },
    *   (state) => ({ sorting: state.sorting }),
    * )
    * ```

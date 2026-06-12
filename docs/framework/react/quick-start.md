@@ -61,7 +61,6 @@ export function PersonTable() {
   const table = useTable({
     key: 'person-table', // needed for devtools, omit if you don't want to use the devtools
     features,
-    rowModels: {}, // the core row model is included by default
     columns,
     data,
   })
@@ -101,7 +100,7 @@ export function PersonTable() {
 A few things to note:
 
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
-- `rowModels: {}` is fine for a basic table because the core row model is always included. Feature row models (sorting, filtering, pagination) are registered here when you need them.
+- The core row model is always included automatically. Feature row models (sorting, filtering, pagination) are registered as slots on the features object when you need them.
 - `table.FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values or React components.
 - The `key` option is optional unless you use the [TanStack Table Devtools](../../devtools). The devtools identify tables by `key`, and you register a table by calling `useTanStackTableDevtools(table)` from `@tanstack/react-table-devtools`.
 
@@ -109,7 +108,7 @@ See the full [Basic useTable example](./examples/basic-use-table) for a runnable
 
 ## Add a Feature: Sorting
 
-Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` in `tableFeatures`, register a sorted row model under `rowModels`, and wire the header click handler.
+Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` and the sorted row model in `tableFeatures`, then wire the header click handler.
 
 ```tsx
 import {
@@ -122,15 +121,14 @@ import {
 
 const features = tableFeatures({
   rowSortingFeature, // enables sorting APIs and state
+  sortedRowModel: createSortedRowModel(), // client-side sorting
+  sortFns,
 })
 
 export function PersonTable() {
   const table = useTable({
     key: 'person-table',
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
-    },
     columns,
     data,
   })
@@ -167,7 +165,7 @@ export function PersonTable() {
 }
 ```
 
-Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature, register its row model if it has one, and use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
+Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature and its row model factory (if it has one) in `tableFeatures`, then use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
 
 ## Where to Go Next
 
@@ -178,12 +176,13 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 **Composable tables.** When multiple tables in your app share features, row models, and component conventions, define them once with `createTableHook`:
 
 ```tsx
-const features = tableFeatures({ rowSortingFeature })
-
-const { useAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+
+const { useAppTable, createAppColumnHelper } = createTableHook({ features })
 ```
 
 See the [Composable Tables Guide](./guide/composable-tables) for the full pattern, including pre-bound cell and header components.

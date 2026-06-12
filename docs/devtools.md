@@ -61,7 +61,6 @@ The devtools identify each table by the `key` table option. Registration require
 const table = useTable({
   key: 'users-table', // needed for devtools, omit if you don't want to use the devtools
   features,
-  rowModels: {},
   columns,
   data,
 })

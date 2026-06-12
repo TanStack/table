@@ -5,7 +5,7 @@ title: CachedRowModel_Grouped
 
 # Interface: CachedRowModel\_Grouped\<TFeatures, TData\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L221)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:222](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L222)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:221](https:
 groupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:225](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L225)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:226](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L226)
 
 #### Returns
 

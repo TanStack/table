@@ -2,48 +2,15 @@
   import {
     FlexRender,
     createColumnHelper,
-    createFilteredRowModel,
-    createPaginatedRowModel,
-    createSortedRowModel,
     createTable,
-    filterFns,
-    sortFns,
   } from '@tanstack/svelte-table'
-  import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
   import DebouncedInput from './DebouncedInput.svelte'
   import './index.css'
   import { features } from './features'
   import { makeData, type Person } from './makeData'
-  import type { Column, FilterFn, RowData, SortFn } from '@tanstack/svelte-table'
+  import type { Column } from '@tanstack/svelte-table'
 
   const columnHelper = createColumnHelper<typeof features, Person>()
-
-  const fuzzyFilter: FilterFn<typeof features, RowData> = (
-    row,
-    columnId,
-    value,
-    addMeta,
-  ) => {
-    const itemRank = rankItem(row.getValue(columnId), value)
-    addMeta?.({ itemRank })
-    return itemRank.passed
-  }
-
-  const fuzzySort: SortFn<typeof features, Person> = (
-    rowA,
-    rowB,
-    columnId,
-  ) => {
-    let dir = 0
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (rowA.columnFiltersMeta[columnId]) {
-      dir = compareItems(
-        rowA.columnFiltersMeta[columnId].itemRank!,
-        rowB.columnFiltersMeta[columnId].itemRank!,
-      )
-    }
-    return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
-  }
 
   const columns = columnHelper.columns([
     columnHelper.accessor('id', {
@@ -64,7 +31,7 @@
       header: 'Full Name',
       cell: (info) => info.getValue(),
       filterFn: 'fuzzy',
-      sortFn: fuzzySort,
+      sortFn: 'fuzzy',
     }),
   ])
 
@@ -75,14 +42,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       get data() {
         return data

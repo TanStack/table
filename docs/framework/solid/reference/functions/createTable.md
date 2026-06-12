@@ -9,7 +9,7 @@ title: createTable
 function createTable<TFeatures, TData>(tableOptions): SolidTable<TFeatures, TData>;
 ```
 
-Defined in: [createTable.ts:69](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L69)
+Defined in: [createTable.ts:68](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L68)
 
 Creates a Solid table instance backed by Solid-aware TanStack Store atoms.
 
@@ -43,7 +43,6 @@ unrelated UI. Use `table.Subscribe` to create atom-tracked render boundaries.
 const table = createTable(
   {
     features,
-    rowModels: {},
     columns,
     data,
   },

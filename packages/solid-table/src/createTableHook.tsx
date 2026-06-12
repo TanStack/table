@@ -429,12 +429,12 @@ export type AppSolidTable<
  *     rowPaginationFeature,
  *     rowSortingFeature,
  *     columnFilteringFeature,
- *   }),
- *   rowModels: {
  *     paginatedRowModel: createPaginatedRowModel(),
- *     sortedRowModel: createSortedRowModel(sortFns),
- *     filteredRowModel: createFilteredRowModel(filterFns),
- *   },
+ *     sortedRowModel: createSortedRowModel(),
+ *     filteredRowModel: createFilteredRowModel(),
+ *     sortFns,
+ *     filterFns,
+ *   }),
  *   tableComponents: { PaginationControls, RowCount },
  *   cellComponents: { TextCell, NumberCell },
  *   headerComponents: { SortIndicator, ColumnFilter },
@@ -718,10 +718,7 @@ export function createTableHook<
    * TFeatures is already known from the createTableHook call; TData is inferred from the data prop.
    */
   function createAppTable<TData extends RowData>(
-    tableOptions: Omit<
-      TableOptions<TFeatures, TData>,
-      'features' | 'rowModels'
-    >,
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
   ): AppSolidTable<
     TFeatures,
     TData,

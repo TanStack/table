@@ -36,7 +36,7 @@ This skill builds on `tanstack-table/state-management` and `tanstack-table/setup
 
 ## Setup
 
-The shape every Lit v9 table follows: register `features` and `rowModels` at module scope, construct `TableController` once per host element, and call `.table(options, selector?)` from inside `render()`.
+The shape every Lit v9 table follows: register `features` (including row model factories) at module scope, construct `TableController` once per host element, and call `.table(options, selector?)` from inside `render()`.
 
 ```ts
 import { LitElement, html } from 'lit'
@@ -54,7 +54,11 @@ import {
 
 type Person = { firstName: string; lastName: string; age: number }
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
   {
@@ -78,7 +82,6 @@ export class PeopleTable extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
         columns,
         data: this.data,
       },
@@ -145,7 +148,7 @@ The selector is a function from full table state to whatever you want exposed on
 
 ```ts
 const table = this.tableController.table(
-  { features, rowModels: {}, columns, data: this._data },
+  { features, columns, data: this._data },
   (state) => ({ pagination: state.pagination }),
 )
 
@@ -198,7 +201,7 @@ import {
   type PaginationState,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })
 
 // Module-scope atoms — stable identity, shareable across components.
 const paginationAtom = createAtom<PaginationState>({
@@ -213,7 +216,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this._data,
       atoms: { pagination: paginationAtom },
@@ -238,7 +240,6 @@ private _sorting: SortingState = []
 protected render() {
   const table = this.tableController.table({
     features,
-    rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
     columns,
     data: this._data,
     state: { sorting: this._sorting },
@@ -253,12 +254,15 @@ Source: `docs/framework/lit/guide/table-state.md`.
 
 ### 7. `createTableHook` for reusable shared config
 
-Bundle `features`, `rowModels`, default options, and pre-bound cell/header components. You get `useAppTable(host, options, selector?)`, `createAppColumnHelper`, and `useTableContext` / `useCellContext` / `useHeaderContext` (Lit Context consumers).
+Bundle `features` (including row model factories), default options, and pre-bound cell/header components. You get `useAppTable(host, options, selector?)`, `createAppColumnHelper`, and `useTableContext` / `useCellContext` / `useHeaderContext` (Lit Context consumers).
 
 ```ts
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  features: tableFeatures({ rowSortingFeature }),
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+  features: tableFeatures({
+    rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  }),
 })
 
 const columnHelper = createAppColumnHelper<Person>()
@@ -349,7 +353,6 @@ Wrong:
 const features = tableFeatures({}) // no rowPaginationFeature
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this._data,
 })
@@ -359,10 +362,12 @@ table.setPageIndex(0) // TypeScript error AND runtime no-op
 Correct:
 
 ```ts
-const features = tableFeatures({ rowPaginationFeature })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 const table = this.tableController.table({
   features,
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
   columns,
   data: this._data,
 })
@@ -411,7 +416,7 @@ Source: `docs/framework/lit/guide/table-state.md` (FAQ #1).
 
 Wrong: hand-rolled sorting / filtering / pagination outside the table.
 
-Correct: register the matching `*Feature` in `features`, register its row-model factory in `rowModels`, and use the feature APIs (`setSorting`, `setColumnFilters`, etc.). This is the #1 AI tell.
+Correct: register the matching `*Feature` and its row model factory in `tableFeatures({...})`, then use the feature APIs (`setSorting`, `setColumnFilters`, etc.). This is the #1 AI tell.
 Source: `docs/guide/features.md`.
 
 ### MEDIUM Passing the same slice via `atoms` AND `state`

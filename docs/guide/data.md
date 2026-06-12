@@ -210,7 +210,6 @@ export default function MyComponent() {
   // Columns and data have stable references, so the table only recomputes when they actually change
   const table = useTable({
     features,
-    rowModels: {},
     columns,
     data: data ?? fallbackData, //also good to use a fallback array that is defined outside of the component (stable reference)
   });
@@ -240,7 +239,6 @@ export default function MyComponent() {
   //❌ Columns and data are defined in the same scope as `useTable` without stable references
   const table = useTable({
     features,
-    rowModels: {},
     columns,
     data: data ?? [], //❌ Also bad because the fallback array is re-created on every render
   });
@@ -262,7 +260,6 @@ export default function MyComponent() {
 
   const table = useTable({
     features,
-    rowModels: {},
     columns,
     //❌ BAD: This creates a new array on every render (destroys the stable reference)
     data: data?.filter(d => d.isActive) ?? fallbackData,
@@ -286,7 +283,6 @@ export default function MyComponent() {
 
   const table = useTable({
     features,
-    rowModels: {},
     columns,
     data: filteredData, // stable reference!
   });

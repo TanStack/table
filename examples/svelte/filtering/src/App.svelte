@@ -2,13 +2,7 @@
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createFacetedMinMaxValues,
-    createFacetedRowModel,
-    createFacetedUniqueValues,
-    createFilteredRowModel,
-    createPaginatedRowModel,
     createTable,
-    filterFns,
   } from '@tanstack/svelte-table'
   import DebouncedInput from './DebouncedInput.svelte'
   import ColumnFilter from './ColumnFilter.svelte'
@@ -78,13 +72,6 @@
   const table = createTable(
     {
       features,
-      rowModels: {
-        facetedRowModel: createFacetedRowModel(),
-        facetedMinMaxValues: createFacetedMinMaxValues(),
-        facetedUniqueValues: createFacetedUniqueValues(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       get data() {
         return data
       },

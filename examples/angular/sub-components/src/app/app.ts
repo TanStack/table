@@ -19,6 +19,7 @@ import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 export const features = tableFeatures({
   rowExpandingFeature,
   columnVisibilityFeature,
+  expandedRowModel: createExpandedRowModel(),
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
@@ -104,9 +105,6 @@ export class App {
   readonly table = injectTable(() => ({
     debugTable: true,
     features,
-    rowModels: {
-      expandedRowModel: createExpandedRowModel<typeof features, Person>(),
-    },
     data: this.data(),
     columns,
     state: {

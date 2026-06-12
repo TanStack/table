@@ -35,13 +35,14 @@ import {
 } from '@tanstack/table-core'
 import type { RowPinningState } from '@tanstack/table-core'
 
-const features = tableFeatures({ rowPinningFeature, rowPaginationFeature })
+const features = tableFeatures({
+  rowPinningFeature,
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 const table = constructTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   getRowId: (row) => row.userId, // ← essentially mandatory
@@ -97,8 +98,12 @@ row.pin('top', /* includeLeafRows */ true, /* includeParentRows */ false)
 
 ```ts
 const table = constructTable({
-  features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({
+    rowPinningFeature,
+    columnFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    filterFns,
+  }),
   columns,
   data,
   getRowId: (row) => row.id,
@@ -247,7 +252,6 @@ Correct:
 ```ts
 const table = useTable({
   features: tableFeatures({ rowPinningFeature }),
-  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,

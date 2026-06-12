@@ -27,7 +27,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this.data,
     })
@@ -48,7 +47,7 @@ There are 2 table features that can reorder rows, which happen in the following 
 
 ### Enable Row Pinning
 
-To use row pinning, add `rowPinningFeature` to your features. Row pinning does not require a row model factory, so `rowModels` can stay empty unless your table uses other row-model features.
+To use row pinning, add `rowPinningFeature` to your features. Row pinning does not require a row model factory; no row model slot is needed in `tableFeatures` unless your table uses other row-model features.
 
 ```ts
 import {
@@ -61,7 +60,6 @@ const features = tableFeatures({ rowPinningFeature })
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
 })
@@ -83,7 +81,6 @@ You can pin rows by default with `initialState.rowPinning`:
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   initialState: {
@@ -109,7 +106,6 @@ const rowPinningAtom = createAtom<RowPinningState>({
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   atoms: {
@@ -131,7 +127,6 @@ private rowPinning: RowPinningState = {
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   state: {
@@ -222,7 +217,6 @@ By default, all rows can be pinned. You can disable row pinning for the whole ta
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   enableRowPinning: row => row.original.status !== 'archived',
@@ -238,7 +232,6 @@ Set `keepPinnedRows` to `false` if pinned rows should only render when they are 
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data: this.data,
   keepPinnedRows: false,

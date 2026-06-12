@@ -15,9 +15,6 @@ const [pagination, setPagination] = useState<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels: {
-    /* … */
-  },
   columns,
   data,
   state: { sorting, pagination },
@@ -30,7 +27,7 @@ Source: `docs/framework/preact/guide/table-state.md`.
 
 ## `createTableHook` for reusable shared config
 
-When you ship the same `features` / `rowModels` / cell components across many tables, package them with `createTableHook`. You get `useAppTable`, `createAppColumnHelper`, `useTableContext` / `useCellContext` / `useHeaderContext`, and `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries.
+When you ship the same `features` (including row model factories) and cell components across many tables, package them with `createTableHook`. You get `useAppTable`, `createAppColumnHelper`, `useTableContext` / `useCellContext` / `useHeaderContext`, and `table.AppTable` / `AppHeader` / `AppCell` / `AppFooter` boundaries.
 
 ```tsx
 import {
@@ -50,11 +47,13 @@ export const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  features: tableFeatures({ rowPaginationFeature, rowSortingFeature }),
-  rowModels: {
+  features: tableFeatures({
+    rowPaginationFeature,
+    rowSortingFeature,
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  }),
   tableComponents: { PaginationControls, RowCount },
   cellComponents: { TextCell, NumberCell },
   headerComponents: { SortIndicator },

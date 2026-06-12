@@ -112,11 +112,10 @@ export function table_setOptions<
 ): void {
   const newOptions = functionalUpdate(updater, table.options)
   // table static options that should never change after initialization
-  const { rowModels, features, atoms, initialState } = table.options
+  const { features, atoms, initialState } = table.options
   const mergedOptions = Object.assign(table_mergeOptions(table, newOptions), {
     // Once the table instance is created those properties should never change after initialization,
     // so we assign them back preserving the `table_mergeOptions` object reference
-    rowModels,
     features,
     atoms,
     initialState,

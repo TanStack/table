@@ -97,8 +97,8 @@ describe('injectTable', () => {
         const table = injectTable<typeof stockFeatures, Data>(() => ({
           data,
           columns: columns,
-          features: stockFeatures,
-          rowModels: {
+          features: {
+            ...stockFeatures,
             paginatedRowModel: createPaginatedRowModel(),
           },
           getRowId: (row) => row.id,

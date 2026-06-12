@@ -73,7 +73,6 @@ export default defineComponent({
 
     const table = useTable({
       features,
-      rowModels: {},
       columns,
       data: tableData,
       rowCount,

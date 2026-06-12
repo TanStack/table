@@ -268,7 +268,6 @@ const features = tableFeatures({ densityPlugin })
 
 readonly table = injectTable(() => ({
   features,
-  rowModels: {},
   columns,
   data,
   //..
@@ -287,8 +286,7 @@ export class App {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
-    columns,
+      columns,
     data: this.data(),
     //...
     state: {

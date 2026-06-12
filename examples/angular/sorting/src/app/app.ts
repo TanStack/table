@@ -11,7 +11,11 @@ import { makeData } from './makeData'
 import type { ColumnDef, SortFn } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
   const statusOrder = ['single', 'complicated', 'relationship']
@@ -55,9 +59,6 @@ export class App {
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: {
-      sortedRowModel: createSortedRowModel<typeof features, Person>(sortFns),
-    },
     columns,
     data: this.data(),
     debugTable: true,

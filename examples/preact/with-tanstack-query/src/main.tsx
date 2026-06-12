@@ -72,7 +72,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: {},
       columns,
       data: dataQuery.data?.rows ?? defaultData,
       rowCount: dataQuery.data?.rowCount,

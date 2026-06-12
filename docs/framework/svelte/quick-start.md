@@ -62,7 +62,6 @@ The component below is complete. Paste it into a Svelte 5 app and you will see a
   // 5. Create the table instance
   const table = createTable({
     features,
-    rowModels: {}, // the core row model is included by default
     columns,
     get data() {
       return data // a getter keeps the table in sync with the $state rune
@@ -102,7 +101,7 @@ The component below is complete. Paste it into a Svelte 5 app and you will see a
 A few things to note:
 
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
-- `rowModels: {}` is fine for a basic table because the core row model is always included. Feature row models (sorting, filtering, pagination) are registered here when you need them.
+- The core row model is always included automatically. Feature row models (sorting, filtering, pagination) are registered as slots directly on `tableFeatures({...})` when you need them.
 - Passing `data` through a getter (`get data() { return data }`) lets the table track the `$state` rune, so reassigning `data` updates the table.
 - The `FlexRender` component renders the `header`, `cell`, and `footer` definitions from your columns. It handles plain values, Svelte components wrapped with `renderComponent`, and snippets wrapped with `renderSnippet` (see the [Basic Snippets example](./examples/basic-snippets)).
 
@@ -110,7 +109,7 @@ See the full [Basic createTable example](./examples/basic-create-table) for a ru
 
 ## Add a Feature: Sorting
 
-Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` in `tableFeatures`, register a sorted row model under `rowModels`, and wire a click handler into the header markup.
+Features are opt-in in v9. To make columns sortable, register `rowSortingFeature` and `sortedRowModel` in `tableFeatures`, and wire a click handler into the header markup.
 
 ```svelte
 <script lang="ts">
@@ -125,14 +124,13 @@ Features are opt-in in v9. To make columns sortable, register `rowSortingFeature
 
   const features = tableFeatures({
     rowSortingFeature, // enables sorting APIs and state
+    sortedRowModel: createSortedRowModel(), // client-side sorting
+    sortFns,
   })
 
   const table = createTable(
     {
       features,
-      rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns), // client-side sorting
-      },
       columns,
       get data() {
         return data
@@ -171,7 +169,7 @@ Features are opt-in in v9. To make columns sortable, register `rowSortingFeature
 </table>
 ```
 
-Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature, register its row model if it has one, and use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting.md) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
+Clicking a header now toggles between ascending, descending, and unsorted. Every other feature follows this same pattern: register the feature and its row model together in `tableFeatures({...})`, then use the APIs it adds to the table, columns, and rows. See the [Sorting Guide](./guide/sorting.md) and the [Sorting example](./examples/sorting) for custom sort functions, multi-sorting, and per-column options.
 
 ## Where to Go Next
 
@@ -182,12 +180,13 @@ Clicking a header now toggles between ascending, descending, and unsorted. Every
 **Composable tables.** When multiple tables in your app share features, row models, and component conventions, define them once with `createTableHook`:
 
 ```ts
-const features = tableFeatures({ rowSortingFeature })
-
-const { createAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+
+const { createAppTable, createAppColumnHelper } = createTableHook({ features })
 ```
 
 See the [Composable Tables Guide](./guide/composable-tables.md) for the full pattern, including pre-bound cell and header components.

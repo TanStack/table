@@ -54,6 +54,11 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 export const {
@@ -64,11 +69,6 @@ export const {
   injectTableHeaderContext,
 } = createTableHook({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   getRowId: (row) => row.id,
   tableComponents: {
     PaginationControls,
@@ -99,7 +99,7 @@ This file is the source of truth for the feature set, row model pipeline, row ID
 
 | Helper | Purpose |
 |---|---|
-| `injectAppTable` | Creates a table with the app's shared `features`, `rowModels`, defaults, and registered components already attached. |
+| `injectAppTable` | Creates a table with the app's shared `features` (including row model factories), defaults, and registered components already attached. |
 | `createAppColumnHelper` | Creates column helpers where `cell`, `header`, and `footer` contexts know about the registered components. |
 | `injectTableContext` | Reads the current table inside registered table components like `PaginationControls`. |
 | `injectTableCellContext` | Reads the current cell inside registered cell components like `TextCell`. |

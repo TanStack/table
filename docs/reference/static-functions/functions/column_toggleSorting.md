@@ -12,7 +12,7 @@ function column_toggleSorting<TFeatures, TData, TValue>(
    multi?): void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L187)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L189)
 
 Applies the next sorting state for this column.
 

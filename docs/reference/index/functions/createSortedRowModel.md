@@ -6,14 +6,17 @@ title: createSortedRowModel
 # Function: createSortedRowModel()
 
 ```ts
-function createSortedRowModel<TFeatures, TData>(sortFns): (table) => () => RowModel<TFeatures, TData>;
+function createSortedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/createSortedRowModel.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/createSortedRowModel.ts#L17)
+Defined in: [features/row-sorting/createSortedRowModel.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/createSortedRowModel.ts#L20)
 
 Creates a memoized sorted row model factory.
 
 The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+
+Register sorting functions with the `sortFns` slot on the `features` option:
+`tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`.
 
 ## Type Parameters
 
@@ -24,12 +27,6 @@ The factory reads the relevant table state atoms and options, then returns a row
 ### TData
 
 `TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-## Parameters
-
-### sortFns
-
-`Record`\<keyof [`SortFns`](../interfaces/SortFns.md), [`SortFn`](../interfaces/SortFn.md)\<`TFeatures`, `TData`\>\>
 
 ## Returns
 

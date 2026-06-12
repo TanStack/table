@@ -26,6 +26,9 @@ interface MyColumnMeta {
 const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
   columnMeta: metaHelper<MyColumnMeta>(),
 })
 
@@ -85,10 +88,6 @@ function App() {
   const table = useTable(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns), // client side filtering
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       columns,
       data,
       debugTable: true,

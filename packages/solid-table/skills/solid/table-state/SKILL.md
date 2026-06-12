@@ -62,7 +62,6 @@ function App() {
 
   const table = createTable({
     features,
-    rowModels: {},
     columns,
     // Reactive getter — required so the table re-derives when data() changes.
     get data() {
@@ -98,7 +97,6 @@ Pass a selector to narrow what `table.state()` returns:
 const table = createTable(
   {
     features,
-    rowModels: {},
     columns,
     get data() {
       return data()
@@ -193,12 +191,16 @@ const [pagination, setPagination] = createSignal<PaginationState>({
   pageSize: 10,
 })
 
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+})
+
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data()
@@ -233,10 +235,6 @@ const pagination = useSelector(paginationAtom) // Accessor<PaginationState>
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data()
@@ -290,8 +288,8 @@ column-grouping feature is registered.
 
 ## `createTableHook` — app-level table conventions
 
-When multiple tables share `features`, `rowModels`, default options, and
-component conventions, use `createTableHook` to register them once.
+When multiple tables share `features`, default options, and component
+conventions, use `createTableHook` to register them once.
 
 ```tsx
 import {
@@ -308,8 +306,10 @@ const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  features: tableFeatures({ rowPaginationFeature }),
-  rowModels: { paginatedRowModel: createPaginatedRowModel() },
+  features: tableFeatures({
+    rowPaginationFeature,
+    paginatedRowModel: createPaginatedRowModel(),
+  }),
   tableComponents: { PaginationControls },
   cellComponents: { TextCell, NumberCell },
   headerComponents: { SortIndicator },
@@ -423,4 +423,4 @@ tracks. The same applies to any reactive option (`columns` when computed,
 
 There is no `createSolidTable` (v8 name). The Solid v9 API is `createTable`.
 There is no `getCoreRowModel`/`getSortedRowModel` factory option pattern — pass
-row models under `rowModels` (e.g. `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }`).
+row model factories directly into `tableFeatures()` (e.g. `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`).

@@ -40,7 +40,6 @@ const features = tableFeatures({ rowSelectionFeature })
 
 const table = constructTable({
   features,
-  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id, // ← essentially mandatory
@@ -80,7 +79,6 @@ columnHelper.display({
 ```tsx
 const table = useTable({
   features: tableFeatures({ rowSelectionFeature }),
-  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,
@@ -370,7 +368,6 @@ Correct:
 ```ts
 const table = useTable({
   features: tableFeatures({ rowSelectionFeature }),
-  rowModels: {},
   columns,
   data,
   getRowId: (row) => row.id,

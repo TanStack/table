@@ -25,13 +25,14 @@ const { createAppTable, createAppColumnHelper } = createTableHook({
     rowExpandingFeature,
     rowPaginationFeature,
     rowSortingFeature,
-  },
-  rowModels: {
     expandedRowModel: createExpandedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
+    filteredRowModel: createFilteredRowModel(),
+    groupedRowModel: createGroupedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
+    sortedRowModel: createSortedRowModel(),
+    filterFns,
+    sortFns,
+    aggregationFns,
   },
 })
 
@@ -80,16 +81,13 @@ function App() {
   const refreshData = () => setData(makeData(10_000))
   const stressTest = () => setData(makeData(200_000))
 
-  const table = createAppTable(
-    {
-      columns,
-      get data() {
-        return data()
-      },
-      debugTable: true,
+  const table = createAppTable({
+    columns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    debugTable: true,
+  })
 
   return (
     <div class="demo-root">

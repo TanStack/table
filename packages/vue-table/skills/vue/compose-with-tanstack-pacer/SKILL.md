@@ -150,7 +150,6 @@ const throttler = new Throttler(
 
 useTable({
   features,
-  rowModels: {},
   columns,
   data,
   state: {
@@ -301,8 +300,12 @@ useTable({ ..., data: filtered })
 ```ts
 // ✅ Use the table's filter feature; debounce the writer.
 useTable({
-  features: tableFeatures({ columnFilteringFeature, globalFilteringFeature }),
-  rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+  features: tableFeatures({
+    columnFilteringFeature,
+    globalFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    filterFns,
+  }),
   columns,
   data,
 })

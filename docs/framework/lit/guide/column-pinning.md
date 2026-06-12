@@ -29,7 +29,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this.data,
     })
@@ -74,7 +73,6 @@ const columnPinningAtom = createAtom<ColumnPinningState>({
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   atoms: {
     columnPinning: columnPinningAtom,
@@ -96,7 +94,6 @@ private columnPinning: ColumnPinningState = {
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   state: {
     columnPinning: this.columnPinning,
@@ -116,7 +113,6 @@ A very common use case is to pin some columns by default. You can do this by eit
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnPinning: {

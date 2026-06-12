@@ -23,6 +23,10 @@ const features = tableFeatures({
   rowExpandingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 function renderFilter(
@@ -177,11 +181,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          filteredRowModel: createFilteredRowModel(filterFns),
-          expandedRowModel: createExpandedRowModel(),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
         columns,
         data: this._data,
         initialState: {

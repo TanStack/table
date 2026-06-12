@@ -23,7 +23,6 @@ import type {
   Column,
   ColumnDef,
   ColumnHelper,
-  CreateRowModels_All,
   FilterFns,
   Header,
   HeaderGroup,
@@ -33,6 +32,7 @@ import type {
   SortFns,
   StockFeatures,
   Table,
+  TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
@@ -46,7 +46,7 @@ import type { ReactTable } from './useTable'
 // =============================================================================
 
 /**
- * @deprecated Use `createFilteredRowModel(filterFns)` with the new `useTable` hook instead.
+ * @deprecated Use `createFilteredRowModel()` in the `filteredRowModel` feature slot with the new `useTable` hook instead.
  *
  * This is a stub function for v8 API compatibility with `useLegacyTable`.
  * It acts as a marker to enable the filtered row model.
@@ -58,7 +58,7 @@ export function getFilteredRowModel<
 }
 
 /**
- * @deprecated Use `createSortedRowModel(sortFns)` with the new `useTable` hook instead.
+ * @deprecated Use `createSortedRowModel()` in the `sortedRowModel` feature slot with the new `useTable` hook instead.
  *
  * This is a stub function for v8 API compatibility with `useLegacyTable`.
  * It acts as a marker to enable the sorted row model.
@@ -94,7 +94,7 @@ export function getExpandedRowModel<
 }
 
 /**
- * @deprecated Use `createGroupedRowModel(aggregationFns)` with the new `useTable` hook instead.
+ * @deprecated Use `createGroupedRowModel()` in the `groupedRowModel` feature slot with the new `useTable` hook instead.
  *
  * This is a stub function for v8 API compatibility with `useLegacyTable`.
  * It acts as a marker to enable the grouped row model.
@@ -199,57 +199,57 @@ export interface LegacyRowModelOptions<TData extends RowData> {
   getCoreRowModel?: RowModelFactory<TData>
   /**
    * Returns the filtered row model for the table.
-   * @deprecated Use `rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
+   * @deprecated Use the `filteredRowModel`/`filterFns` slots on the `features` option with `createFilteredRowModel()` instead.
    */
   getFilteredRowModel?: RowModelFactory<TData>
   /**
    * Returns the sorted row model for the table.
-   * @deprecated Use `rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
+   * @deprecated Use the `sortedRowModel`/`sortFns` slots on the `features` option with `createSortedRowModel()` instead.
    */
   getSortedRowModel?: RowModelFactory<TData>
   /**
    * Returns the paginated row model for the table.
-   * @deprecated Use `rowModels.paginatedRowModel` with `createPaginatedRowModel()` instead.
+   * @deprecated Use the `paginatedRowModel` slot on the `features` option with `createPaginatedRowModel()` instead.
    */
   getPaginationRowModel?: RowModelFactory<TData>
   /**
    * Returns the expanded row model for the table.
-   * @deprecated Use `rowModels.expandedRowModel` with `createExpandedRowModel()` instead.
+   * @deprecated Use the `expandedRowModel` slot on the `features` option with `createExpandedRowModel()` instead.
    */
   getExpandedRowModel?: RowModelFactory<TData>
   /**
    * Returns the grouped row model for the table.
-   * @deprecated Use `rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
+   * @deprecated Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
    */
   getGroupedRowModel?: RowModelFactory<TData>
   /**
    * Returns the faceted row model for a column.
-   * @deprecated Use `rowModels.facetedRowModel` with `createFacetedRowModel()` instead.
+   * @deprecated Use the `facetedRowModel` slot on the `features` option with `createFacetedRowModel()` instead.
    */
   getFacetedRowModel?: FacetedRowModelFactory<TData>
   /**
    * Returns the faceted min/max values for a column.
-   * @deprecated Use `rowModels.facetedMinMaxValues` with `createFacetedMinMaxValues()` instead.
+   * @deprecated Use the `facetedMinMaxValues` slot on the `features` option with `createFacetedMinMaxValues()` instead.
    */
   getFacetedMinMaxValues?: FacetedMinMaxValuesFactory<TData>
   /**
    * Returns the faceted unique values for a column.
-   * @deprecated Use `rowModels.facetedUniqueValues` with `createFacetedUniqueValues()` instead.
+   * @deprecated Use the `facetedUniqueValues` slot on the `features` option with `createFacetedUniqueValues()` instead.
    */
   getFacetedUniqueValues?: FacetedUniqueValuesFactory<TData>
   /**
    * Additional filter functions to apply to the table.
-   * @deprecated Use `rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
+   * @deprecated Use the `filteredRowModel`/`filterFns` slots on the `features` option with `createFilteredRowModel()` instead.
    */
   filterFns?: FilterFns
   /**
    * Additional sort functions to apply to the table.
-   * @deprecated Use `rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
+   * @deprecated Use the `sortedRowModel`/`sortFns` slots on the `features` option with `createSortedRowModel()` instead.
    */
   sortFns?: SortFns
   /**
    * Additional aggregation functions to apply to the table.
-   * @deprecated Use `rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
+   * @deprecated Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
    */
   aggregationFns?: AggregationFns
 }
@@ -257,14 +257,14 @@ export interface LegacyRowModelOptions<TData extends RowData> {
 /**
  * Legacy v8-style table options that work with useLegacyTable.
  *
- * This type omits `features` and `rowModels` and instead accepts the v8-style
+ * This type omits `features` and instead accepts the v8-style
  * `get*RowModel` function options.
  *
- * @deprecated This is a compatibility layer for migrating from v8. Use `useTable` with explicit `features` and `rowModels` instead.
+ * @deprecated This is a compatibility layer for migrating from v8. Use `useTable` with an explicit `features` option instead.
  */
 export type LegacyTableOptions<TData extends RowData> = Omit<
   TableOptions<StockFeatures, TData>,
-  'features' | 'rowModels'
+  'features'
 > &
   LegacyRowModelOptions<TData>
 
@@ -357,7 +357,7 @@ export function legacyCreateColumnHelper<TData extends RowData>(): ColumnHelper<
 /**
  * @deprecated This hook is provided as a compatibility layer for migrating from TanStack Table v8.
  *
- * Use the new `useTable` hook instead with explicit `features` and `rowModels`:
+ * Use the new `useTable` hook instead with an explicit `features` option:
  *
  * ```tsx
  * // New v9 API
@@ -365,15 +365,15 @@ export function legacyCreateColumnHelper<TData extends RowData>(): ColumnHelper<
  *   columnFilteringFeature,
  *   rowSortingFeature,
  *   rowPaginationFeature,
+ *   filteredRowModel: createFilteredRowModel(),
+ *   sortedRowModel: createSortedRowModel(),
+ *   paginatedRowModel: createPaginatedRowModel(),
+ *   filterFns,
+ *   sortFns,
  * })
  *
  * const table = useTable({
  *   features,
- *   rowModels: {
- *     filteredRowModel: createFilteredRowModel(filterFns),
- *     sortedRowModel: createSortedRowModel(sortFns),
- *     paginatedRowModel: createPaginatedRowModel(),
- *   },
  *   columns,
  *   data,
  * })
@@ -381,7 +381,7 @@ export function legacyCreateColumnHelper<TData extends RowData>(): ColumnHelper<
  *
  * Key differences from v8:
  * - Features are tree-shakeable - only import what you use
- * - Row models are explicitly passed via `rowModels`
+ * - Row models and fn registries are explicitly passed on the `features` option
  * - Use `table.Subscribe` for fine-grained re-renders
  * - State is accessed via `table.state` after selecting with the 2nd argument
  *
@@ -406,62 +406,56 @@ export function useLegacyTable<TData extends RowData>(
     ...restOptions
   } = options
 
-  const [rowModels] = useState(() => {
-    const rowModels: CreateRowModels_All<StockFeatures, TData> = {}
-
+  const [features] = useState(() => {
     // Legacy row model options are setup-only. Capture the first render's
     // marker options to match the table instance lifecycle.
+    const legacyFeatures: StockFeatures & Partial<TableFeatures> = {
+      ...stockFeatures,
+      filterFns: { ...filterFns, ...options.filterFns },
+      sortFns: { ...sortFns, ...options.sortFns },
+      aggregationFns: { ...aggregationFns, ...options.aggregationFns },
+    }
 
     if (getFilteredRowModel) {
-      rowModels.filteredRowModel = createFilteredRowModel({
-        ...filterFns,
-        ...options.filterFns,
-      })
+      legacyFeatures.filteredRowModel = createFilteredRowModel()
     }
 
     if (getSortedRowModel) {
-      rowModels.sortedRowModel = createSortedRowModel({
-        ...sortFns,
-        ...options.sortFns,
-      })
+      legacyFeatures.sortedRowModel = createSortedRowModel()
     }
 
     if (getPaginationRowModel) {
-      rowModels.paginatedRowModel = createPaginatedRowModel()
+      legacyFeatures.paginatedRowModel = createPaginatedRowModel()
     }
 
     if (getExpandedRowModel) {
-      rowModels.expandedRowModel = createExpandedRowModel()
+      legacyFeatures.expandedRowModel = createExpandedRowModel()
     }
 
     if (getGroupedRowModel) {
-      rowModels.groupedRowModel = createGroupedRowModel({
-        ...aggregationFns,
-        ...options.aggregationFns,
-      })
+      legacyFeatures.groupedRowModel = createGroupedRowModel()
     }
 
     if (getFacetedRowModel) {
-      rowModels.facetedRowModel = createFacetedRowModel()
+      legacyFeatures.facetedRowModel = createFacetedRowModel()
     }
 
     if (getFacetedMinMaxValues) {
-      rowModels.facetedMinMaxValues = createFacetedMinMaxValues()
+      legacyFeatures.facetedMinMaxValues = createFacetedMinMaxValues()
     }
 
     if (getFacetedUniqueValues) {
-      rowModels.facetedUniqueValues = createFacetedUniqueValues()
+      legacyFeatures.facetedUniqueValues = createFacetedUniqueValues()
     }
 
-    return rowModels
+    return legacyFeatures
   })
 
   // Call useTable with the v9 API, subscribing to all state changes
   const table = useTable<StockFeatures, TData, TableState<StockFeatures>>(
     {
       ...restOptions,
-      features: stockFeatures,
-      rowModels,
+      features,
     },
     (state) => state,
   )

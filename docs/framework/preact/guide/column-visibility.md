@@ -16,7 +16,6 @@ const features = tableFeatures({ columnVisibilityFeature })
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -49,7 +48,6 @@ const columnVisibility = useSelector(columnVisibilityAtom) // subscribe wherever
 
 const table = useTable({
   features,
-  rowModels: {},
   //...
   atoms: {
     columnVisibility: columnVisibilityAtom,
@@ -70,7 +68,6 @@ const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>(
 
 const table = useTable({
   features,
-  rowModels: {},
   //...
   state: {
     columnVisibility,
@@ -89,7 +86,6 @@ const features = tableFeatures({ columnVisibilityFeature })
 
 const table = useTable({
   features,
-  rowModels: {},
   //...
   initialState: {
     columnVisibility: {

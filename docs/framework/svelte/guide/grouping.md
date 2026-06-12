@@ -15,13 +15,14 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 ```ts
 import { createTable, tableFeatures, columnGroupingFeature, createGroupedRowModel, aggregationFns } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-  },
   columns,
   get data() {
     return data
@@ -50,13 +51,14 @@ import {
   aggregationFns,
 } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ columnGroupingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-  },
   // other options...
 })
 ```
@@ -65,14 +67,16 @@ When grouping state is active, the table will add matching rows as subRows to th
 To allow the user to expand and collapse the grouped rows, you can use the expanding feature.
 
 ```ts
-const features = tableFeatures({ columnGroupingFeature, rowExpandingFeature })
+const features = tableFeatures({
+  columnGroupingFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  aggregationFns,
+})
 
 const table = createTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    expandedRowModel: createExpandedRowModel(),
-  },
   // other options...
 })
 ```
@@ -96,7 +100,6 @@ By default, when a column is grouped, it is moved to the start of the table. You
 ```ts
 const table = createTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
   // other options...
   groupedColumnMode: 'reorder',
 })
@@ -132,16 +135,19 @@ There are several built-in aggregation functions that you can use:
 You can define custom aggregation functions in the registry that you pass to `createGroupedRowModel`. The registry is a record where the keys are the names of the aggregation functions, and the values are the aggregation functions themselves. You can then reference these aggregation functions by name in a column's `aggregationFn` option.
 
 ```ts
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: {
+    ...aggregationFns,
+    myCustomAggregation: (columnId, leafRows, childRows) => {
+      // return the aggregated value
+    },
+  },
+})
+
 const table = createTable({
   features,
-  rowModels: {
-    groupedRowModel: createGroupedRowModel({
-      ...aggregationFns,
-      myCustomAggregation: (columnId, leafRows, childRows) => {
-        // return the aggregated value
-      },
-    }),
-  },
   // other options...
 })
 ```
@@ -154,17 +160,7 @@ const column = columnHelper.accessor('key', {
 })
 ```
 
-> **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, augment the `AggregationFns` interface with a `declare module` block:
->
-> ```ts
-> declare module '@tanstack/svelte-table' {
->   interface AggregationFns {
->     myCustomAggregation: AggregationFn<typeof features, MyData>
->   }
-> }
-> ```
->
-> Alternatively, skip the registry and the augmentation entirely by passing the function directly to the `aggregationFn` column option.
+> **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, register the function in the `aggregationFns` slot of `tableFeatures({...})` as shown above. TypeScript infers the available aggregation function names from that registry. Alternatively, skip the registry entirely by passing the function directly to the `aggregationFn` column option.
 
 ### Manual Grouping
 
@@ -175,7 +171,6 @@ const features = tableFeatures({ columnGroupingFeature })
 
 const table = createTable({
   features,
-  rowModels: {}, // no groupedRowModel needed for manual grouping
   // other options...
   manualGrouping: true,
 })
@@ -198,7 +193,7 @@ const grouping = useSelector(groupingAtom) // read it reactively with grouping.c
 
 const table = createTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+
   // other options...
   atoms: {
     grouping: groupingAtom, // grouping APIs now update groupingAtom
@@ -216,7 +211,7 @@ const [grouping, setGrouping] = createTableState<GroupingState>([])
 
 const table = createTable({
   features,
-  rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+
   // other options...
   state: {
     get grouping() {

@@ -31,54 +31,21 @@ export interface Table_RowModels_Faceted<
   /**
    * Computes min/max numeric facet values for the active faceting context.
    *
-   * Requires a `facetedMinMaxValues` row-model factory in `rowModels`.
+   * Requires a `facetedMinMaxValues` row-model factory on the `features` option.
    */
   getFacetedMinMaxValues: () => undefined | [number, number]
   /**
    * Computes the row model used to derive facet values.
    *
-   * Requires a `facetedRowModel` row-model factory in `rowModels`.
+   * Requires a `facetedRowModel` row-model factory on the `features` option.
    */
   getFacetedRowModel: () => RowModel<TFeatures, TData>
   /**
    * Computes unique facet values and occurrence counts.
    *
-   * Requires a `facetedUniqueValues` row-model factory in `rowModels`.
+   * Requires a `facetedUniqueValues` row-model factory on the `features` option.
    */
   getFacetedUniqueValues: () => Map<any, number>
-}
-
-export interface CreateRowModel_Faceted<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * Factory used to retrieve faceted min/max values. If using server-side
-   * faceting, this is not required. To use client-side faceting, pass
-   * `createFacetedMinMaxValues()` or implement your own factory.
-   */
-  facetedMinMaxValues?: (
-    table: Table<TFeatures, TData>,
-    columnId: string,
-  ) => () => [number, number] | undefined
-  /**
-   * Factory used to retrieve the faceted row model. If using server-side
-   * faceting, this is not required. To use client-side faceting, pass
-   * `createFacetedRowModel()` or implement your own factory.
-   */
-  facetedRowModel?: (
-    table: Table<TFeatures, TData>,
-    columnId: string,
-  ) => () => RowModel<TFeatures, TData>
-  /**
-   * Factory used to retrieve faceted unique values. If using server-side
-   * faceting, this is not required. To use client-side faceting, pass
-   * `createFacetedUniqueValues()` or implement your own factory.
-   */
-  facetedUniqueValues?: (
-    table: Table<TFeatures, TData>,
-    columnId: string,
-  ) => () => Map<any, number>
 }
 
 export interface CachedRowModel_Faceted<

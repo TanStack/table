@@ -16,17 +16,16 @@ const features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  facetedRowModel: createFacetedRowModel(), // REQUIRED base
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filterFns,
 })
 
 const table = constructTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-    facetedRowModel: createFacetedRowModel(), // REQUIRED base
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-  },
   columns,
   data,
 })
@@ -44,18 +43,28 @@ import {
   compareItems,
   type RankingInfo,
 } from '@tanstack/match-sorter-utils'
-import type { FilterFn, SortFn } from '@tanstack/table-core'
+import {
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFns,
+  sortFns,
+  metaHelper,
+} from '@tanstack/table-core'
+import type { FilterFn, SortFn, TableFeatures } from '@tanstack/table-core'
 
-declare module '@tanstack/react-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof features, Person>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
+// 1. Describe the filterMeta shape for this feature set.
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
 }
 
-const fuzzyFilter: FilterFn<typeof features, Person> = (
+// 2. Extend TableFeatures so FilterFn / SortFn can read filterMeta types.
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+const fuzzyFilter: FilterFn<FuzzyFeatures, Person> = (
   row,
   columnId,
   value,
@@ -66,7 +75,7 @@ const fuzzyFilter: FilterFn<typeof features, Person> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -77,18 +86,32 @@ const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
+// 3. Register everything on features — no rowModels option needed.
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
 const table = constructTable({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel({
-      ...filterFns,
-      fuzzy: fuzzyFilter,
-    }),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
   globalFilterFn: 'fuzzy',
+})
+```
+
+Use string refs in column defs when the fn is registered:
+
+```ts
+columnHelper.accessor('fullName', {
+  filterFn: 'fuzzy', // string ref — typechecks because 'fuzzy' is in features.filterFns
+  sortFn: 'fuzzy',
 })
 ```
 
@@ -131,11 +154,13 @@ Wrong:
 ```tsx
 // filterFromLeafRows hides children that don't match individually
 const table = useTable({
-  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
+  features: tableFeatures({
+    columnFilteringFeature,
+    rowExpandingFeature,
+    filteredRowModel: createFilteredRowModel(),
     expandedRowModel: createExpandedRowModel(),
-  },
+    filterFns,
+  }),
   columns,
   data,
   getSubRows: (r) => r.subRows,
@@ -150,11 +175,13 @@ Correct:
 ```tsx
 // Filter root-only to preserve all sub-rows under a matching parent
 const table = useTable({
-  features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
+  features: tableFeatures({
+    columnFilteringFeature,
+    rowExpandingFeature,
+    filteredRowModel: createFilteredRowModel(),
     expandedRowModel: createExpandedRowModel(),
-  },
+    filterFns,
+  }),
   columns,
   data,
   getSubRows: (r) => r.subRows,

@@ -82,7 +82,6 @@ export class VirtualTable {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: {},
     columns,
     data: this.data(),
     getRowId: (row) => row.id,
@@ -217,7 +216,7 @@ caches that, scrollbar adjusts.)
 Combine with `rowExpandingFeature` for "click to expand details":
 
 - Register `rowExpandingFeature` in `features` and
-  `expandedRowModel: createExpandedRowModel()` in `rowModels`.
+  `expandedRowModel: createExpandedRowModel()` as a slot on `features`.
 - Use `table.getExpandedRowModel().rows` (or `getRowModel().rows`, which
   already includes expansion under `paginateExpandedRows: true` semantics —
   see `tanstack-table/core/row-expanding`).

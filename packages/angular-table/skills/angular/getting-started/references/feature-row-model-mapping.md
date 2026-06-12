@@ -10,19 +10,22 @@ Every opt-in v9 feature has two pieces:
 
 1. The **feature** itself in `features` — adds APIs (e.g.
    `column.toggleSorting()`) and the matching state slice.
-2. A **row-model factory** in `rowModels` — produces the derived row output.
-   Without it, sort/filter/paginate UI updates but rows don't reorder.
+2. A **row-model factory slot** on the `features` object — produces the derived
+   row output. Without it, sort/filter/paginate UI updates but rows don't reorder.
 
-| Feature                                                                                                                                              | Row model needed                                                                             |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| `rowSortingFeature`                                                                                                                                  | `sortedRowModel: createSortedRowModel(sortFns)`                                              |
-| `columnFilteringFeature` / `globalFilteringFeature`                                                                                                  | `filteredRowModel: createFilteredRowModel(filterFns)`                                        |
-| `rowPaginationFeature`                                                                                                                               | `paginatedRowModel: createPaginatedRowModel()`                                               |
-| `rowExpandingFeature`                                                                                                                                | `expandedRowModel: createExpandedRowModel()`                                                 |
-| `columnGroupingFeature`                                                                                                                              | `groupedRowModel: createGroupedRowModel(aggregationFns)`                                     |
-| `columnFacetingFeature`                                                                                                                              | `facetedRowModel: createFacetedRowModel()` (+ `facetedMinMaxValues` / `facetedUniqueValues`) |
-| `rowSelectionFeature`                                                                                                                                | (no row model needed)                                                                        |
-| `columnVisibilityFeature` / `columnOrderingFeature` / `columnPinningFeature` / `columnSizingFeature` / `columnResizingFeature` / `rowPinningFeature` | (no row model needed)                                                                        |
+Fn registries (`sortFns`, `filterFns`, `aggregationFns`) are also slots on the
+`features` object, not parameters to the factory calls.
+
+| Feature                                                                                                                                              | Slot needed on `features`                                                                                        |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
+| `rowSortingFeature`                                                                                                                                  | `sortedRowModel: createSortedRowModel()` + `sortFns`                                                             |
+| `columnFilteringFeature` / `globalFilteringFeature`                                                                                                  | `filteredRowModel: createFilteredRowModel()` + `filterFns`                                                       |
+| `rowPaginationFeature`                                                                                                                               | `paginatedRowModel: createPaginatedRowModel()`                                                                   |
+| `rowExpandingFeature`                                                                                                                                | `expandedRowModel: createExpandedRowModel()`                                                                     |
+| `columnGroupingFeature`                                                                                                                              | `groupedRowModel: createGroupedRowModel()` + `aggregationFns`                                                    |
+| `columnFacetingFeature`                                                                                                                              | `facetedRowModel: createFacetedRowModel()` (+ `facetedMinMaxValues` / `facetedUniqueValues`)                     |
+| `rowSelectionFeature`                                                                                                                                | (no row model needed)                                                                                            |
+| `columnVisibilityFeature` / `columnOrderingFeature` / `columnPinningFeature` / `columnSizingFeature` / `columnResizingFeature` / `rowPinningFeature` | (no row model needed)                                                                                            |
 
 ---
 

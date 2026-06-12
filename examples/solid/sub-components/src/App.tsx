@@ -15,7 +15,10 @@ import type {
 } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -78,9 +81,6 @@ function TableComponent(props: TableProps<typeof features, Person>) {
   const table = createTable({
     debugTable: true,
     features,
-    rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-    },
     columns: props.columns,
     get data() {
       return props.data

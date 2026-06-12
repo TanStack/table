@@ -298,7 +298,6 @@ describe('angularReactivityFeature', () => {
         injectTable(() => ({
           data: data(),
           features: stockFeatures,
-          rowModels: {},
           columns: columns,
           getRowId: (row) => row.id,
           initialState: {

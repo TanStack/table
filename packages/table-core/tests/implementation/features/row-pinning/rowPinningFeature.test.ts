@@ -173,14 +173,12 @@ describe('table methods', () => {
         rowPinningFeature,
         rowPaginationFeature,
         coreReactivityFeature: storeReactivityBindings(),
+        paginatedRowModel: createPaginatedRowModel(),
       }
       const columns = generateColumnDefs<typeof _featuresWithPagination>(data)
 
       const table = constructTable<typeof _featuresWithPagination, Person>({
         features: _featuresWithPagination,
-        rowModels: {
-          paginatedRowModel: createPaginatedRowModel(),
-        },
         data,
         columns,
         getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
@@ -212,14 +210,12 @@ describe('table methods', () => {
       rowPinningFeature,
       rowPaginationFeature,
       coreReactivityFeature: storeReactivityBindings(),
+      paginatedRowModel: createPaginatedRowModel(),
     }
     const columns = generateColumnDefs<typeof _featuresWithPagination>(data)
 
     const table = constructTable<typeof _featuresWithPagination, Person>({
       features: _featuresWithPagination,
-      rowModels: {
-        paginatedRowModel: createPaginatedRowModel(),
-      },
       data,
       columns,
       getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,

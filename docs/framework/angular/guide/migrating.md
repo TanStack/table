@@ -18,7 +18,7 @@ TanStack Table v9 is a major release that introduces significant architectural i
 
 ### 3. Composability
 
-- **`tableOptions`**: New utilities let you compose and share table configurations. Define `features`, `rowModels`, and default options once, then reuse them across tables or pass them through `createTableHook`.
+- **`tableOptions`**: New utilities let you compose and share table configurations. Define `features` (including row model factories) and default options once, then reuse them across tables or pass them through `createTableHook`.
 - **`createTableHook`** (optional, advanced): Create reusable, strongly typed Angular table factories with pre-bound features, row models, default options, and component registries.
 
 ### The Good News: Most Upgrades Are Opt-in
@@ -28,7 +28,7 @@ While v9 is a significant upgrade, **you don't have to adopt everything at once*
 - **Don't want to think about tree-shaking yet?** You can start with `stockFeatures` to include most commonly used features.
 - **Your table markup is largely unchanged.** How you render `<table>`, `<thead>`, `<tr>`, `<td>`, etc. remains the same.
 
-The main change is **how you define a table** with the Angular adapter, specifically the new `features` and `rowModels` options.
+The main change is **how you define a table** with the Angular adapter, specifically the new `features` option and how row model factories are registered inside it.
 
 ## Core Breaking Changes
 
@@ -53,11 +53,11 @@ const v9Table = injectTable(() => ({
 ```
 
 > Note: `injectTable` evaluates your initializer whenever any Angular signal read inside of it changes.
-> Keep expensive/static values (like `columns`, `features`, and `rowModels`) as stable references outside the initializer.
+> Keep expensive/static values (like `columns` and `features`) as stable references outside the initializer.
 
-### New Required Options: `features` and `rowModels`
+### New Required Option: `features`
 
-In v9, you must explicitly declare which features and row models your table uses:
+In v9, you must explicitly declare which features and row model factories your table uses via `tableFeatures`:
 
 ```ts
 // v8
@@ -80,7 +80,6 @@ const features = tableFeatures({}) // Empty = core features only
 // Define stable references outside the initializer
 const v9Table = injectTable(() => ({
   features,
-  rowModels: {}, // Core row model is automatic
   columns: this.columns,
   data: this.data(),
 }))
@@ -125,7 +124,6 @@ import { injectTable, stockFeatures } from '@tanstack/angular-table'
 class TableCmp {
   readonly table = injectTable(() => ({
     features: stockFeatures, // All features included
-    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
   }))
@@ -153,31 +151,31 @@ class TableCmp {
 
 ---
 
-## The `rowModels` Option
+## Row Model Factories
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, they're configured via `rowModels` instead of `get*RowModel` options.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories and their `*Fns` registries move from a separate `rowModels` option into `tableFeatures`.
 
 ### Migration Mapping
 
-| v8 Option | v9 `rowModels` Key | v9 Factory Function |
-|-----------|---------------------|---------------------|
+| v8 Option | v9 `tableFeatures` slot | v9 Factory Function |
+|-----------|--------------------------|---------------------|
 | `getCoreRowModel()` | (automatic) | Not needed, always included |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel(sortFns)` |
+| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel()` |
+| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel()` |
 | `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
 | `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel(aggregationFns)` |
+| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel()` |
 | `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
 | `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
 
-### Key Change: Row Model Functions Now Accept Parameters
+The `filterFns`, `sortFns`, and `aggregationFns` objects are now registered as named slots on `tableFeatures` rather than passed as arguments to the factory functions.
 
-Several row model factories now accept their processing functions as parameters. This enables better tree-shaking and explicit configuration:
+### Key Change: Row Model Factories and Fn Registries Move into `tableFeatures`
 
 ```ts
 import {
-  injectTable,
+  tableFeatures,
   createFilteredRowModel,
   createSortedRowModel,
   createGroupedRowModel,
@@ -187,15 +185,23 @@ import {
   aggregationFns, // Built-in aggregation functions
 } from '@tanstack/angular-table'
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  columnGroupingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
+  aggregationFns,
+})
+
 class TableCmp {
   readonly table = injectTable(() => ({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      sortedRowModel: createSortedRowModel(sortFns),
-      groupedRowModel: createGroupedRowModel(aggregationFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns: this.columns,
     data: this.data(),
   }))
@@ -245,15 +251,15 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const v9Table = injectTable(() => ({
   features,
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data: data(),
 }))
@@ -300,7 +306,6 @@ import { shallow } from '@tanstack/angular-table'
 class TableCmp {
   readonly table = injectTable(() => ({
     features,
-    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
   }))
@@ -331,7 +336,6 @@ import { shallow } from '@tanstack/angular-table'
 class TableCmp {
   readonly table = injectTable(() => ({
     features,
-    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
   }))
@@ -366,7 +370,6 @@ class TableCmp {
 
   readonly table = injectTable(() => ({
     features,
-    rowModels: { /* ... */ },
     columns: this.columns,
     data: this.data(),
     state: {
@@ -437,14 +440,15 @@ const columns = columnHelper.columns([
 When using `createTableHook`, you get a pre-bound `createAppColumnHelper` that only requires `TData`:
 
 ```ts
-import { createTableHook, tableFeatures, rowSortingFeature } from '@tanstack/angular-table'
+import { createTableHook, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowSortingFeature })
-
-const { injectAppTable, createAppColumnHelper } = createTableHook({
-  features,
-  rowModels: { /* ... */ },
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
+
+const { injectAppTable, createAppColumnHelper } = createTableHook({ features })
 
 // TFeatures is already bound, only need TData!
 const columnHelper = createAppColumnHelper<Person>()
@@ -514,7 +518,6 @@ class TableCmp {
     ...baseOptions,
     columns: this.columns,
     data: this.data(),
-    rowModels: {},
   }))
 }
 ```
@@ -538,26 +541,21 @@ import {
 const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns,
+  filterFns,
 })
 
 // Partial options without data or columns
-const featureOptions = tableOptions({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
-})
+const featureOptions = tableOptions({ features })
 ```
 
 ```ts
 import { injectTable, tableOptions, createPaginatedRowModel } from '@tanstack/angular-table'
 
-// Another partial without features (inherits from spread)
+// Another partial (inherits features from spread)
 const paginationDefaults = tableOptions({
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   initialState: {
     pagination: { pageIndex: 0, pageSize: 25 },
   },
@@ -589,15 +587,15 @@ import {
   sortFns,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
-
-const sharedOptions = tableOptions({
-  features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
+
+const sharedOptions = tableOptions({ features })
 
 const { injectAppTable } = createTableHook(sharedOptions)
 ```
@@ -754,8 +752,8 @@ This change improves type safety. If you were passing unusual data types, ensure
 ## Migration Checklist
 
 - [ ] Update your table setup to v9 and define `features` using `tableFeatures()` (or use `stockFeatures`)
-- [ ] Migrate `get*RowModel()` options to `rowModels`
-- [ ] Update row model factories to include `Fns` parameters where needed
+- [ ] Migrate `get*RowModel()` options: move row model factories into `tableFeatures` as named slots
+- [ ] Move `filterFns`, `sortFns`, and `aggregationFns` into `tableFeatures` as named slots (no longer passed as factory arguments)
 - [ ] Update TypeScript types to include `TFeatures` generic
 - [ ] Update state access: `table.getState().slice` → `table.atoms.<slice>.get()` where possible; use `table.store.get()` for full-state/debug reads
 - [ ] Update `createColumnHelper<TData>()` → `createColumnHelper<TFeatures, TData>()`

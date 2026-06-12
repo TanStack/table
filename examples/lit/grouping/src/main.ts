@@ -30,6 +30,14 @@ const features = tableFeatures({
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
+  aggregationFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -81,13 +89,6 @@ class LitTableExample extends LitElement {
     const table = this.tableController.table(
       {
         features,
-        rowModels: {
-          expandedRowModel: createExpandedRowModel(),
-          filteredRowModel: createFilteredRowModel(filterFns),
-          groupedRowModel: createGroupedRowModel(aggregationFns),
-          paginatedRowModel: createPaginatedRowModel(),
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
         columns,
         data: this._data,
         debugTable: true,

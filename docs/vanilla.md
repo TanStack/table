@@ -18,7 +18,6 @@ const features = tableFeatures({
 
 const table = constructTable({
   features,
-  rowModels: {},
   columns,
   data,
 })

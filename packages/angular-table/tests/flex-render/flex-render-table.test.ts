@@ -307,8 +307,8 @@ describe('FlexRenderDirective', () => {
         return {
           columns: columns,
           data: defaultData,
-          features: stockFeatures,
-          rowModels: {
+          features: {
+            ...stockFeatures,
             coreRowModel: createCoreRowModel(),
           },
           state: { expanded: this.expandState() },
@@ -408,8 +408,8 @@ describe('FlexRenderDirective', () => {
         return {
           columns: columns,
           data: defaultData,
-          features: stockFeatures,
-          rowModels: {
+          features: {
+            ...stockFeatures,
             coreRowModel: createCoreRowModel(),
           },
           state: { expanded: this.expandState() },

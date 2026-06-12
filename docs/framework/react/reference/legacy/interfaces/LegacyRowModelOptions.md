@@ -29,7 +29,7 @@ Additional aggregation functions to apply to the table.
 
 #### Deprecated
 
-Use `rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
+Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
 
 ***
 
@@ -45,7 +45,7 @@ Additional filter functions to apply to the table.
 
 #### Deprecated
 
-Use `rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
+Use the `filteredRowModel`/`filterFns` slots on the `features` option with `createFilteredRowModel()` instead.
 
 ***
 
@@ -77,7 +77,7 @@ Returns the expanded row model for the table.
 
 #### Deprecated
 
-Use `rowModels.expandedRowModel` with `createExpandedRowModel()` instead.
+Use the `expandedRowModel` slot on the `features` option with `createExpandedRowModel()` instead.
 
 ***
 
@@ -93,7 +93,7 @@ Returns the faceted min/max values for a column.
 
 #### Deprecated
 
-Use `rowModels.facetedMinMaxValues` with `createFacetedMinMaxValues()` instead.
+Use the `facetedMinMaxValues` slot on the `features` option with `createFacetedMinMaxValues()` instead.
 
 ***
 
@@ -109,7 +109,7 @@ Returns the faceted row model for a column.
 
 #### Deprecated
 
-Use `rowModels.facetedRowModel` with `createFacetedRowModel()` instead.
+Use the `facetedRowModel` slot on the `features` option with `createFacetedRowModel()` instead.
 
 ***
 
@@ -125,7 +125,7 @@ Returns the faceted unique values for a column.
 
 #### Deprecated
 
-Use `rowModels.facetedUniqueValues` with `createFacetedUniqueValues()` instead.
+Use the `facetedUniqueValues` slot on the `features` option with `createFacetedUniqueValues()` instead.
 
 ***
 
@@ -141,7 +141,7 @@ Returns the filtered row model for the table.
 
 #### Deprecated
 
-Use `rowModels.filteredRowModel` with `createFilteredRowModel(filterFns)` instead.
+Use the `filteredRowModel`/`filterFns` slots on the `features` option with `createFilteredRowModel()` instead.
 
 ***
 
@@ -157,7 +157,7 @@ Returns the grouped row model for the table.
 
 #### Deprecated
 
-Use `rowModels.groupedRowModel` with `createGroupedRowModel(aggregationFns)` instead.
+Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
 
 ***
 
@@ -173,7 +173,7 @@ Returns the paginated row model for the table.
 
 #### Deprecated
 
-Use `rowModels.paginatedRowModel` with `createPaginatedRowModel()` instead.
+Use the `paginatedRowModel` slot on the `features` option with `createPaginatedRowModel()` instead.
 
 ***
 
@@ -189,7 +189,7 @@ Returns the sorted row model for the table.
 
 #### Deprecated
 
-Use `rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
+Use the `sortedRowModel`/`sortFns` slots on the `features` option with `createSortedRowModel()` instead.
 
 ***
 
@@ -205,4 +205,4 @@ Additional sort functions to apply to the table.
 
 #### Deprecated
 
-Use `rowModels.sortedRowModel` with `createSortedRowModel(sortFns)` instead.
+Use the `sortedRowModel`/`sortFns` slots on the `features` option with `createSortedRowModel()` instead.

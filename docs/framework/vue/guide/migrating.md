@@ -9,8 +9,8 @@ TanStack Table v9 is a major release with explicit feature registration, row mod
 ### 1. Tree-shaking
 
 - **Features are tree-shakeable**: register only the table features you use.
-- **Row models are explicit**: move root `get*RowModel` options into `rowModels`.
-- **Function registries moved to factories**: row model factories receive `sortFns`, `filterFns`, and `aggregationFns` directly.
+- **Row model factories are explicit**: register row model factories as slots on the `features` object via `tableFeatures`.
+- **Function registries moved to features**: `sortFns`, `filterFns`, and `aggregationFns` are slots on the features object.
 
 ### 2. State Management
 
@@ -50,7 +50,7 @@ import { useTable } from '@tanstack/vue-table'
 const table = useTable(options)
 ```
 
-### New Required Options: `features` and `rowModels`
+### New Required Option: `features`
 
 ```ts
 // v8
@@ -72,7 +72,6 @@ const features = tableFeatures({})
 
 const table = useTable({
   features,
-  rowModels: {}, // core row model is automatic
   columns,
   data,
 })
@@ -118,7 +117,6 @@ import { stockFeatures, useTable } from '@tanstack/vue-table'
 
 const table = useTable({
   features: stockFeatures,
-  rowModels,
   columns,
   data,
 })
@@ -147,20 +145,20 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 
 ---
 
-## The `rowModels` Option
+## Row Model Factories
 
-Row models now live under `rowModels`.
+Row model factories now live on the `features` object (passed to `tableFeatures`). The `rowModels` option has been removed. Function registries (`filterFns`, `sortFns`, `aggregationFns`) are also slots on the features object.
 
 ### Migration Mapping
 
-| v8 Option | v9 `rowModels` Key | v9 Factory Function |
+| v8 Option | v9 `tableFeatures` Slot | v9 Factory Function |
 |---|---|---|
 | `getCoreRowModel()` | (automatic) | Not needed |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel(sortFns)` |
+| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel()` |
+| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel()` |
 | `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
 | `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel(aggregationFns)` |
+| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel()` |
 | `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
 | `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
@@ -208,17 +206,15 @@ const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
-})
-
-const rowModels = {
-  filteredRowModel: createFilteredRowModel(filterFns),
-  sortedRowModel: createSortedRowModel(sortFns),
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-}
+  filterFns,
+  sortFns,
+})
 
 const table = useTable({
   features,
-  rowModels,
   columns,
   data,
 })
@@ -273,7 +269,6 @@ const data = ref(makeData(100))
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -286,7 +281,6 @@ Getter-based options also work:
 ```ts
 const table = useTable({
   features,
-  rowModels,
   columns,
   get data() {
     return data.value
@@ -338,7 +332,6 @@ const pagination = ref<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels,
   columns,
   get data() {
     return data.value
@@ -380,7 +373,6 @@ const pagination = useSelector(paginationAtom)
 
 const table = useTable({
   features,
-  rowModels,
   columns,
   get data() {
     return data.value
@@ -456,7 +448,6 @@ import { tableOptions } from '@tanstack/vue-table'
 
 const baseOptions = tableOptions({
   features,
-  rowModels,
   defaultColumn: {
     minSize: 40,
   },
@@ -480,7 +471,6 @@ import { createTableHook } from '@tanstack/vue-table'
 
 const { useAppTable, createAppColumnHelper } = createTableHook({
   features,
-  rowModels,
 })
 
 const columnHelper = createAppColumnHelper<Person>()
@@ -612,9 +602,9 @@ type Person = {
 
 - [ ] Replace `useVueTable` with `useTable`.
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`).
-- [ ] Move root `get*RowModel` options into `rowModels`.
+- [ ] Move row model factories into `tableFeatures` as slots (e.g. `filteredRowModel: createFilteredRowModel()`).
 - [ ] Remove `getCoreRowModel`; the core row model is automatic.
-- [ ] Pass `sortFns`, `filterFns`, and `aggregationFns` to row model factories.
+- [ ] Move `sortFns`, `filterFns`, and `aggregationFns` into `tableFeatures` as slots.
 - [ ] Rename `sortingFn` to `sortFn`.
 - [ ] Add `typeof features` to column helpers and types.
 - [ ] Replace `table.getState()` reads with `table.atoms.<slice>.get()` or `table.store.get()`.

@@ -99,7 +99,7 @@ TFeatures is already known from the createTableHook call; TData is inferred from
 
 ##### tableOptions
 
-`Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"` \| `"rowModels"`\>
+`Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"`\>
 
 ##### selector?
 
@@ -184,12 +184,12 @@ export const {
     rowPaginationFeature,
     rowSortingFeature,
     columnFilteringFeature,
-  }),
-  rowModels: {
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
+    sortedRowModel: createSortedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    sortFns,
+    filterFns,
+  }),
   tableComponents: { PaginationControls, RowCount },
   cellComponents: { TextCell, NumberCell },
   headerComponents: { SortIndicator, ColumnFilter },

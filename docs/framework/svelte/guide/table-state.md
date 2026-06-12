@@ -44,14 +44,13 @@ State slices are only created for the features that are registered in `features`
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = createTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   get data() {
     return data
@@ -101,9 +100,6 @@ The second argument to `createTable` is a TanStack Store selector. The selected 
 const table = createTable(
   {
     features,
-    rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     get data() {
       return data
@@ -172,10 +168,6 @@ If you only need to customize the starting value for some table state, use `init
 ```ts
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data
@@ -239,7 +231,6 @@ const pagination = useSelector(paginationAtom)
 
 const table = createTable({
   features,
-  rowModels: {},
   columns,
   get data() {
     return dataQuery.data?.rows ?? []
@@ -271,10 +262,6 @@ let pagination: PaginationState = $state({
 
 const table = createTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   get data() {
     return data

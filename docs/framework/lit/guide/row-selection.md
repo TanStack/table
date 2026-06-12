@@ -27,7 +27,6 @@ class MyTable extends LitElement {
   protected render() {
     const table = this.tableController.table({
       features,
-      rowModels: {},
       columns,
       data: this.data,
     })
@@ -77,7 +76,6 @@ const rowSelectionAtom = createAtom<RowSelectionState>({})
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   atoms: {
     rowSelection: rowSelectionAtom, // selection APIs now update rowSelectionAtom
@@ -95,7 +93,6 @@ private rowSelection: RowSelectionState = {}
 
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   onRowSelectionChange: (updater) => {
     this.rowSelection = typeof updater === 'function' ? updater(this.rowSelection) : updater
@@ -113,7 +110,6 @@ By default, the row id for each row is simply the `row.index`. If you are using 
 ```ts
 const table = this.tableController.table({
   features,
-  rowModels: {},
   //...
   getRowId: (row) => row.uuid, // use the row's uuid from your database as the row id
 })

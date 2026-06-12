@@ -3,9 +3,9 @@ name: svelte/client-to-server
 description: >
   Convert a client-side Svelte table to server-side (manual) modes. Toggle `manualPagination`,
   `manualSorting`, `manualFiltering`, `manualGrouping`, `manualExpanding` for whatever the server
-  owns, drop the matching `rowModels` factories and `features` you no longer need, supply
-  `rowCount` for the pager, then drive the request from `table.atoms.pagination` /
-  `table.atoms.sorting` / etc. (or external atoms you own) — using rune-aware getters
+  owns, drop the matching row-model factory slots from `tableFeatures` and any `features` you no
+  longer need, supply `rowCount` for the pager, then drive the request from `table.atoms.pagination`
+  / `table.atoms.sorting` / etc. (or external atoms you own) using rune-aware getters
   (`get data()`, `get rowCount()`) so the table re-syncs in `$effect.pre`. Svelte 5+ only.
 type: lifecycle
 library: tanstack-table
@@ -44,8 +44,7 @@ already-paged window is perfectly valid for medium datasets.
 | `manualGrouping`   | Server returns already-grouped rows          | Pre-shaped data                                             |
 | `manualExpanding`  | Server resolves sub-rows                     | Server-provided sub-row tree                                |
 
-When a stage is manual, you can drop its row-model factory. `manualPagination: true` does not
-need `paginatedRowModel: createPaginatedRowModel()`.
+When a stage is manual, you can drop its row-model factory slot from `tableFeatures`. `manualPagination: true` does not need `paginatedRowModel: createPaginatedRowModel()` in the features object.
 
 ## Step 1 — Identify what's moving server-side
 
@@ -111,7 +110,6 @@ const filters = useSelector(filtersAtom)
   // No row-model factories for these — server owns them.
   const table = createTable({
     features,
-    rowModels: {},
     columns,
     get data() {
       return query.data?.rows ?? []
@@ -196,11 +194,11 @@ const table = createTable({
     columnFilteringFeature,
     rowPaginationFeature,
     rowSortingFeature,
+    filteredRowModel: createFilteredRowModel(), // client filters the page
+    sortedRowModel: createSortedRowModel(), // client sorts the page
+    filterFns,
+    sortFns,
   }),
-  rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns), // client filters the page
-    sortedRowModel: createSortedRowModel(sortFns), // client sorts the page
-  },
   columns,
   get data() {
     return query.data?.rows ?? []

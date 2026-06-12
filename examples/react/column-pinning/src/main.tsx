@@ -18,7 +18,6 @@ const { useAppTable, createAppColumnHelper } = createTableHook({
     columnPinningFeature,
     columnOrderingFeature,
   },
-  rowModels: {},
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,

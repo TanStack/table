@@ -43,14 +43,13 @@ State slices are only created for the features that are registered in `features`
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   columns,
   data,
 })
@@ -97,9 +96,6 @@ Use Vue's native primitives to derive reactive values from table atoms or the fl
 ```ts
 const table = useTable({
   features,
-  rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
 })
@@ -119,7 +115,6 @@ const data = ref(makeData(100))
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -206,10 +201,6 @@ If you only need to customize the starting value for some table state, use `init
 ```ts
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   initialState: {
@@ -271,7 +262,6 @@ const pagination = useSelector(paginationAtom)
 
 const table = useTable({
   features,
-  rowModels: {},
   columns,
   data: tableData,
   rowCount,
@@ -299,10 +289,6 @@ const pagination = ref<PaginationState>({
 
 const table = useTable({
   features,
-  rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns,
   data,
   state: {

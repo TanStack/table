@@ -24,6 +24,9 @@ import type { Person } from './makeData'
 const features = tableFeatures({
   rowPaginationFeature,
   columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -63,10 +66,6 @@ export class App {
   readonly data = signal(makeData(100))
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
-    rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
     columns,
     data: this.data(),
     debugTable: true,

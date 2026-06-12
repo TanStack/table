@@ -4,8 +4,9 @@ description: >
   Mechanical breaking-change migration from TanStack Table v8 to v9 for
   `@tanstack/lit-table`. v8's `TableController(host, () => options)` shape
   collapses to v9's `new TableController(host)` + `.table(options, selector?)`;
-  per-row-model `get*RowModel` options become `features` + `rowModels`;
-  `flexRender(def, ctx)` becomes `FlexRender({ cell|header|footer })`; core
+  per-row-model `get*RowModel` options become `tableFeatures({...})` slots
+  (row model factories live on the features object, not a separate `rowModels`
+  map); `flexRender(def, ctx)` becomes `FlexRender({ cell|header|footer })`; core
   types gain a `TFeatures` first generic. Routing keywords: lit v8 to v9,
   migration, TableController v8, get*RowModel, features lit.
 type: lifecycle
@@ -25,7 +26,7 @@ sources:
 
 > **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill may change in a future beta. The patterns below match `9.0.0-alpha.48`.
 
-The Lit v9 adapter mirrors v9's React surface (atoms, `features`, `rowModels`, FlexRender) wrapped in a `ReactiveController`. There is no `useLegacyTable` shim — migrate directly.
+The Lit v9 adapter mirrors v9's React surface (atoms, `features` with row model factory slots, FlexRender) wrapped in a `ReactiveController`. There is no `useLegacyTable` shim; migrate directly.
 
 ## The Core Mapping
 
@@ -33,9 +34,9 @@ The Lit v9 adapter mirrors v9's React surface (atoms, `features`, `rowModels`, F
 | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
 | `new TableController(host, () => options)`           | `new TableController<typeof features, TData>(host)` then `.table(options, selector?)`              |
 | `controller.table` (property)                        | `controller.table(opts, selector?)` (method, called each `render()`)                               |
-| `getCoreRowModel: getCoreRowModel()` option          | core row model included by default — `rowModels: {}` valid                                         |
-| `getSortedRowModel: getSortedRowModel()`             | `features: { rowSortingFeature }` + `rowModels: { sortedRowModel: createSortedRowModel(sortFns) }` |
-| `getFilteredRowModel`, `getPaginationRowModel`, etc. | matching `*Feature` + matching `rowModels` factory                                                 |
+| `getCoreRowModel: getCoreRowModel()` option          | core row model included by default — no extra slot needed                                          |
+| `getSortedRowModel: getSortedRowModel()`             | `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`            |
+| `getFilteredRowModel`, `getPaginationRowModel`, etc. | matching `*Feature` + matching row model factory slot in `tableFeatures({...})`                    |
 | `flexRender(def, ctx)`                               | `FlexRender({ cell })` / `FlexRender({ header })` / `FlexRender({ footer })`                       |
 | `state` + `on*Change` only                           | still supported; new `atoms` per-slice option preferred                                            |
 | `createColumnHelper<TData>()`                        | `createColumnHelper<typeof features, TData>()`                                                     |
@@ -71,7 +72,6 @@ protected render() {
   const table = this.tableController.table(
     {
       features,
-      rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
       columns,
       data: this.data,
     },
@@ -82,7 +82,7 @@ protected render() {
 }
 ```
 
-### 2. Replace `get*RowModel` options with `features` + `rowModels`
+### 2. Replace `get*RowModel` options with `tableFeatures({...})` slots
 
 ```ts
 // v8
@@ -94,20 +94,20 @@ protected render() {
   getPaginationRowModel: getPaginationRowModel(),
 }
 
-// v9
+// v9 — row model factories and fn maps live on the features object
 const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  sortedRowModel:    createSortedRowModel(),
+  filteredRowModel:  createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
+  filterFns,
 })
 
 {
   features,
-  rowModels: {
-    sortedRowModel:    createSortedRowModel(sortFns),
-    filteredRowModel:  createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   columns, data,
 }
 ```
@@ -211,7 +211,6 @@ Wrong:
 ```ts
 this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data,
   getSortedRowModel: getSortedRowModel(), // ignored
@@ -221,16 +220,19 @@ this.tableController.table({
 Correct:
 
 ```ts
-const features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 this.tableController.table({
   features,
-  rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
   columns,
   data,
 })
 ```
 
-v9 doesn't read `get*RowModel` options. Features need both registration in `features` and a factory in `rowModels`.
+v9 doesn't read `get*RowModel` options. Features and their row model factories are registered together in `tableFeatures({...})`.
 
 ### CRITICAL Calling a feature API without registering the feature
 
@@ -240,7 +242,6 @@ Wrong:
 const features = tableFeatures({}) // no rowSelectionFeature
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data,
 })
@@ -253,7 +254,6 @@ Correct:
 const features = tableFeatures({ rowSelectionFeature })
 const table = this.tableController.table({
   features,
-  rowModels: {},
   columns,
   data,
   enableRowSelection: true,
@@ -267,7 +267,7 @@ Source: `docs/guide/features.md`.
 
 Wrong: still passing `getCoreRowModel` — v9 includes the core row model automatically.
 
-Correct: drop it. `rowModels: {}` is valid.
+Correct: drop it. The core row model is always included automatically.
 
 ### HIGH Single-generic column helper / `ColumnDef`
 
