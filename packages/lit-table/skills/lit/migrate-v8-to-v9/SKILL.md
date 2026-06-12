@@ -30,18 +30,18 @@ The Lit v9 adapter mirrors v9's React surface (atoms, `features` with row model 
 
 ## The Core Mapping
 
-| v8 (`@tanstack/lit-table`)                           | v9 (`@tanstack/lit-table`)                                                                         |
-| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `new TableController(host, () => options)`           | `new TableController<typeof features, TData>(host)` then `.table(options, selector?)`              |
-| `controller.table` (property)                        | `controller.table(opts, selector?)` (method, called each `render()`)                               |
-| `getCoreRowModel: getCoreRowModel()` option          | core row model included by default — no extra slot needed                                          |
-| `getSortedRowModel: getSortedRowModel()`             | `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`            |
-| `getFilteredRowModel`, `getPaginationRowModel`, etc. | matching `*Feature` + matching row model factory slot in `tableFeatures({...})`                    |
-| `flexRender(def, ctx)`                               | `FlexRender({ cell })` / `FlexRender({ header })` / `FlexRender({ footer })`                       |
-| `state` + `on*Change` only                           | still supported; new `atoms` per-slice option preferred                                            |
-| `createColumnHelper<TData>()`                        | `createColumnHelper<typeof features, TData>()`                                                     |
-| `ColumnDef<TData, TValue>`                           | `ColumnDef<TFeatures, TData, TValue>`                                                              |
-| `Table<TData>`                                       | `Table<TFeatures, TData>`                                                                          |
+| v8 (`@tanstack/lit-table`)                           | v9 (`@tanstack/lit-table`)                                                              |
+| ---------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| `new TableController(host, () => options)`           | `new TableController<typeof features, TData>(host)` then `.table(options, selector?)`   |
+| `controller.table` (property)                        | `controller.table(opts, selector?)` (method, called each `render()`)                    |
+| `getCoreRowModel: getCoreRowModel()` option          | core row model included by default — no extra slot needed                               |
+| `getSortedRowModel: getSortedRowModel()`             | `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })` |
+| `getFilteredRowModel`, `getPaginationRowModel`, etc. | matching `*Feature` + matching row model factory slot in `tableFeatures({...})`         |
+| `flexRender(def, ctx)`                               | `FlexRender({ cell })` / `FlexRender({ header })` / `FlexRender({ footer })`            |
+| `state` + `on*Change` only                           | still supported; new `atoms` per-slice option preferred                                 |
+| `createColumnHelper<TData>()`                        | `createColumnHelper<typeof features, TData>()`                                          |
+| `ColumnDef<TData, TValue>`                           | `ColumnDef<TFeatures, TData, TValue>`                                                   |
+| `Table<TData>`                                       | `Table<TFeatures, TData>`                                                               |
 
 Source: `docs/framework/lit/lit-table.md`; `packages/lit-table/src/TableController.ts`.
 

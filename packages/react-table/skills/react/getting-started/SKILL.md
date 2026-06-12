@@ -39,7 +39,7 @@ npm install @tanstack/react-table
 
 Three things are non-negotiable, even for the simplest possible table:
 
-1. `features: tableFeatures({...})` — required even if empty (`tableFeatures({})`). Row model factories and *Fns registries live on this object alongside feature flags.
+1. `features: tableFeatures({...})` — required even if empty (`tableFeatures({})`). Row model factories and \*Fns registries live on this object alongside feature flags.
 2. `createColumnHelper<typeof features, TData>()` — generic order is `<TFeatures, TData>` in v9 (changed from v8).
 3. The **core** row model is automatic; register sorted/filtered/paginated/grouped/etc. models by adding their factory to `tableFeatures(...)` when you use them.
 

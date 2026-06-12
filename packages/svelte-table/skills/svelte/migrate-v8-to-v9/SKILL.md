@@ -47,11 +47,11 @@ There is no third option. Trying to install v9 on a Svelte 4 codebase will error
 | -------------------------------------------------- | ------------------------------------------------------------------------------------- |
 | `createSvelteTable(options)`                       | `createTable(options, selector?)`                                                     |
 | `getCoreRowModel()`                                | included by default; no factory                                                       |
-| `getPaginationRowModel()`                          | `tableFeatures({ paginatedRowModel: createPaginatedRowModel() })`                    |
-| `getSortedRowModel()`                              | `tableFeatures({ sortedRowModel: createSortedRowModel(), sortFns })`                 |
-| `getFilteredRowModel()`                            | `tableFeatures({ filteredRowModel: createFilteredRowModel(), filterFns })`           |
-| `getExpandedRowModel()`                            | `tableFeatures({ expandedRowModel: createExpandedRowModel() })`                      |
-| `getGroupedRowModel()`                             | `tableFeatures({ groupedRowModel: createGroupedRowModel(), aggregationFns })`        |
+| `getPaginationRowModel()`                          | `tableFeatures({ paginatedRowModel: createPaginatedRowModel() })`                     |
+| `getSortedRowModel()`                              | `tableFeatures({ sortedRowModel: createSortedRowModel(), sortFns })`                  |
+| `getFilteredRowModel()`                            | `tableFeatures({ filteredRowModel: createFilteredRowModel(), filterFns })`            |
+| `getExpandedRowModel()`                            | `tableFeatures({ expandedRowModel: createExpandedRowModel() })`                       |
+| `getGroupedRowModel()`                             | `tableFeatures({ groupedRowModel: createGroupedRowModel(), aggregationFns })`         |
 | `getFacetedRowModel()` / `MinMax` / `UniqueValues` | facet APIs auto-derived when `*Facet*Feature` registered                              |
 | `flexRender(template, ctx)` helper                 | `<FlexRender header={h} />` / `<FlexRender cell={c} />` / `<FlexRender footer={h} />` |
 | `ColumnDef<TData>`                                 | `ColumnDef<TFeatures, TData>` (extra generic)                                         |
@@ -131,10 +131,16 @@ const table = createTable({
   const table = createTable({
     features,
     columns,
-    get data() { return data },
+    get data() {
+      return data
+    },
     state: {
-      get sorting() { return sorting },
-      get pagination() { return pagination },
+      get sorting() {
+        return sorting
+      },
+      get pagination() {
+        return pagination
+      },
     },
     onSortingChange: (updater) => {
       sorting = updater instanceof Function ? updater(sorting) : updater
@@ -152,7 +158,10 @@ const table = createTable({
 import { createAtom, useSelector } from '@tanstack/svelte-store'
 
 const sortingAtom = createAtom<SortingState>([])
-const paginationAtom = createAtom<PaginationState>({ pageIndex: 0, pageSize: 10 })
+const paginationAtom = createAtom<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
 
 const sorting = useSelector(sortingAtom)
 const pagination = useSelector(paginationAtom)
@@ -160,7 +169,9 @@ const pagination = useSelector(paginationAtom)
 const table = createTable({
   features,
   columns,
-  get data() { return data },
+  get data() {
+    return data
+  },
   atoms: {
     sorting: sortingAtom,
     pagination: paginationAtom,

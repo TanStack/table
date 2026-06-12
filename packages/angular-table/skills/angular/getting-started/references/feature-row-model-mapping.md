@@ -16,16 +16,16 @@ Every opt-in v9 feature has two pieces:
 Fn registries (`sortFns`, `filterFns`, `aggregationFns`) are also slots on the
 `features` object, not parameters to the factory calls.
 
-| Feature                                                                                                                                              | Slot needed on `features`                                                                                        |
-| ---------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
-| `rowSortingFeature`                                                                                                                                  | `sortedRowModel: createSortedRowModel()` + `sortFns`                                                             |
-| `columnFilteringFeature` / `globalFilteringFeature`                                                                                                  | `filteredRowModel: createFilteredRowModel()` + `filterFns`                                                       |
-| `rowPaginationFeature`                                                                                                                               | `paginatedRowModel: createPaginatedRowModel()`                                                                   |
-| `rowExpandingFeature`                                                                                                                                | `expandedRowModel: createExpandedRowModel()`                                                                     |
-| `columnGroupingFeature`                                                                                                                              | `groupedRowModel: createGroupedRowModel()` + `aggregationFns`                                                    |
-| `columnFacetingFeature`                                                                                                                              | `facetedRowModel: createFacetedRowModel()` (+ `facetedMinMaxValues` / `facetedUniqueValues`)                     |
-| `rowSelectionFeature`                                                                                                                                | (no row model needed)                                                                                            |
-| `columnVisibilityFeature` / `columnOrderingFeature` / `columnPinningFeature` / `columnSizingFeature` / `columnResizingFeature` / `rowPinningFeature` | (no row model needed)                                                                                            |
+| Feature                                                                                                                                              | Slot needed on `features`                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
+| `rowSortingFeature`                                                                                                                                  | `sortedRowModel: createSortedRowModel()` + `sortFns`                                         |
+| `columnFilteringFeature` / `globalFilteringFeature`                                                                                                  | `filteredRowModel: createFilteredRowModel()` + `filterFns`                                   |
+| `rowPaginationFeature`                                                                                                                               | `paginatedRowModel: createPaginatedRowModel()`                                               |
+| `rowExpandingFeature`                                                                                                                                | `expandedRowModel: createExpandedRowModel()`                                                 |
+| `columnGroupingFeature`                                                                                                                              | `groupedRowModel: createGroupedRowModel()` + `aggregationFns`                                |
+| `columnFacetingFeature`                                                                                                                              | `facetedRowModel: createFacetedRowModel()` (+ `facetedMinMaxValues` / `facetedUniqueValues`) |
+| `rowSelectionFeature`                                                                                                                                | (no row model needed)                                                                        |
+| `columnVisibilityFeature` / `columnOrderingFeature` / `columnPinningFeature` / `columnSizingFeature` / `columnResizingFeature` / `rowPinningFeature` | (no row model needed)                                                                        |
 
 ---
 

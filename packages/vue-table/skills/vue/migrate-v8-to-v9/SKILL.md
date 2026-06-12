@@ -121,7 +121,7 @@ const table = useTable({
 | `useVueTable(opts)`                                                                       | `useTable(opts, selector?)`                                                           |
 | `getCoreRowModel: getCoreRowModel()`                                                      | implicit; not an option                                                               |
 | `getSortedRowModel: getSortedRowModel()`                                                  | `tableFeatures({ sortedRowModel: createSortedRowModel(), sortFns })`                  |
-| `getFilteredRowModel: getFilteredRowModel()`                                              | `tableFeatures({ filteredRowModel: createFilteredRowModel(), filterFns })`             |
+| `getFilteredRowModel: getFilteredRowModel()`                                              | `tableFeatures({ filteredRowModel: createFilteredRowModel(), filterFns })`            |
 | `getPaginationRowModel: getPaginationRowModel()`                                          | `tableFeatures({ paginatedRowModel: createPaginatedRowModel() })`                     |
 | `getGroupedRowModel: getGroupedRowModel()`                                                | `tableFeatures({ groupedRowModel: createGroupedRowModel(), aggregationFns })`         |
 | `createColumnHelper<TData>()`                                                             | `createColumnHelper<typeof features, TData>()`                                        |
@@ -313,7 +313,10 @@ Same applies to type annotations: `ColumnDef<typeof features, Person>`,
 
 ```ts
 // ❌ Runtime: no sort fns registered, sort is a no-op.
-const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel() })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+})
 
 // ✅ Register the fn map as a slot on the features object.
 const features = tableFeatures({

@@ -239,7 +239,10 @@ useTable({
 
 ```ts
 // ❌ Factory ships for nothing AND the table re-paginates server-sliced data.
-const features = tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 // ✅ Omit the factory when the server paginates; keep the feature for its API.
 const features = tableFeatures({ rowPaginationFeature })

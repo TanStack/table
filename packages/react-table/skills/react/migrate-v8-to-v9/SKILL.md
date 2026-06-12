@@ -29,7 +29,7 @@ sources:
   - TanStack/table:examples/react/basic-use-table/src/main.tsx
 ---
 
-This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `state-management` explains the v9 `features`-first design (where row model factories and *Fns registries live on `tableFeatures()`), and `table-state` shows the new reactivity model.
+This skill builds on `tanstack-table/state-management` and `tanstack-table/react/table-state`. Read those first — `state-management` explains the v9 `features`-first design (where row model factories and \*Fns registries live on `tableFeatures()`), and `table-state` shows the new reactivity model.
 
 ## Two migration paths
 

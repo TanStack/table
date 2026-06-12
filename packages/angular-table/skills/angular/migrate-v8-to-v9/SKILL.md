@@ -113,7 +113,7 @@ const features = tableFeatures({
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filterFns, // fn registry is also a features slot
-  sortFns,   // note rename: sortingFns → sortFns
+  sortFns, // note rename: sortingFns → sortFns
 })
 
 injectTable(() => ({

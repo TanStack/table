@@ -284,7 +284,10 @@ server already paginated. The pager locks at "Page 1 of 1".
 
 ```ts
 // ❌ Ships the factory for nothing AND it tries to paginate server-paginated data.
-const features = tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 // ✅ Omit the factory when the server paginates.
 const features = tableFeatures({ rowPaginationFeature })

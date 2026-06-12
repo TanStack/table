@@ -36,13 +36,13 @@ This skill builds on `tanstack-table/state-management` and `tanstack-table/custo
 
 Filtering has five subsystems in v9 — register only the features you need:
 
-| Subsystem        | Feature                  | Row-model                           |
-| ---------------- | ------------------------ | ----------------------------------- |
+| Subsystem        | Feature                  | Row-model                                     |
+| ---------------- | ------------------------ | --------------------------------------------- |
 | column-filtering | `columnFilteringFeature` | `createFilteredRowModel()` + `filterFns` slot |
-| global-filtering | `globalFilteringFeature` | (same `filteredRowModel`)           |
-| column-faceting  | `columnFacetingFeature`  | `createFacetedRowModel()` + helpers |
-| global-faceting  | `globalFacetingFeature`  | global versions of the helpers      |
-| fuzzy-filtering  | (custom filterFn)        | `@tanstack/match-sorter-utils`      |
+| global-filtering | `globalFilteringFeature` | (same `filteredRowModel`)                     |
+| column-faceting  | `columnFacetingFeature`  | `createFacetedRowModel()` + helpers           |
+| global-faceting  | `globalFacetingFeature`  | global versions of the helpers                |
+| fuzzy-filtering  | (custom filterFn)        | `@tanstack/match-sorter-utils`                |
 
 ```ts
 import {

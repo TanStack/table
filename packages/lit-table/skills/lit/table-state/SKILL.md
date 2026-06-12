@@ -201,7 +201,10 @@ import {
   type PaginationState,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
 
 // Module-scope atoms — stable identity, shareable across components.
 const paginationAtom = createAtom<PaginationState>({

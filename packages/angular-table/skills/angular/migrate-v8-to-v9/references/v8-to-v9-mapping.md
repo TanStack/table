@@ -12,17 +12,17 @@ Row-model factories and fn registries are now **slots on the `features` object**
 not a separate `rowModels` option. Factory calls no longer take fn arguments;
 pass the fn map as a sibling slot instead.
 
-| v8 option                  | v9 `features` slot key | v9 factory call                  | v9 fn registry slot              |
-| -------------------------- | ---------------------- | -------------------------------- | -------------------------------- |
-| `getCoreRowModel()`        | (automatic)            | —                                | —                                |
-| `getFilteredRowModel()`    | `filteredRowModel`     | `createFilteredRowModel()`       | `filterFns`                      |
-| `getSortedRowModel()`      | `sortedRowModel`       | `createSortedRowModel()`         | `sortFns`                        |
-| `getPaginationRowModel()`  | `paginatedRowModel`    | `createPaginatedRowModel()`      | —                                |
-| `getExpandedRowModel()`    | `expandedRowModel`     | `createExpandedRowModel()`       | —                                |
-| `getGroupedRowModel()`     | `groupedRowModel`      | `createGroupedRowModel()`        | `aggregationFns`                 |
-| `getFacetedRowModel()`     | `facetedRowModel`      | `createFacetedRowModel()`        | —                                |
-| `getFacetedMinMaxValues()` | `facetedMinMaxValues`  | `createFacetedMinMaxValues()`    | —                                |
-| `getFacetedUniqueValues()` | `facetedUniqueValues`  | `createFacetedUniqueValues()`    | —                                |
+| v8 option                  | v9 `features` slot key | v9 factory call               | v9 fn registry slot |
+| -------------------------- | ---------------------- | ----------------------------- | ------------------- |
+| `getCoreRowModel()`        | (automatic)            | —                             | —                   |
+| `getFilteredRowModel()`    | `filteredRowModel`     | `createFilteredRowModel()`    | `filterFns`         |
+| `getSortedRowModel()`      | `sortedRowModel`       | `createSortedRowModel()`      | `sortFns`           |
+| `getPaginationRowModel()`  | `paginatedRowModel`    | `createPaginatedRowModel()`   | —                   |
+| `getExpandedRowModel()`    | `expandedRowModel`     | `createExpandedRowModel()`    | —                   |
+| `getGroupedRowModel()`     | `groupedRowModel`      | `createGroupedRowModel()`     | `aggregationFns`    |
+| `getFacetedRowModel()`     | `facetedRowModel`      | `createFacetedRowModel()`     | —                   |
+| `getFacetedMinMaxValues()` | `facetedMinMaxValues`  | `createFacetedMinMaxValues()` | —                   |
+| `getFacetedUniqueValues()` | `facetedUniqueValues`  | `createFacetedUniqueValues()` | —                   |
 
 ## Feature registration table
 

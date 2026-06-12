@@ -40,21 +40,21 @@ direct rewrite. Plan to do it incrementally per table, not per file.
 
 ## Rename map
 
-| v8 (Solid)                                                                 | v9 (Solid)                                                                                                 |
-| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| `createSolidTable(options)`                                                | `createTable(options, selector?)`                                                                          |
-| `getCoreRowModel: getCoreRowModel()`                                       | (core row model included by default; no option needed)                                                                                            |
-| `getSortedRowModel: getSortedRowModel()`                                   | `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`                                                           |
-| `getFilteredRowModel: getFilteredRowModel()`                               | `tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`                                                |
-| `getPaginationRowModel: getPaginationRowModel()`                           | `tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })`                                                           |
-| `getGroupedRowModel: getGroupedRowModel()`                                 | `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })`                                              |
-| `getExpandedRowModel: getExpandedRowModel()`                               | `tableFeatures({ rowExpandingFeature, expandedRowModel: createExpandedRowModel() })`                                                              |
-| `getFacetedRowModel` / `getFacetedUniqueValues` / `getFacetedMinMaxValues` | `tableFeatures({ ...facetingFeatures, facetedRowModel, facetedUniqueValues, facetedMinMaxValues })`                                               |
-| `createColumnHelper<TData>()`                                              | `createColumnHelper<typeof features, TData>()`                                                             |
-| `sortingFn: 'alphanumeric'` on a column                                    | `sortFn: 'alphanumeric'` on a column                                                                       |
-| `onStateChange` (whole-state)                                              | (gone — use per-slice `on*Change` or `atoms`)                                                              |
-| `state: { ... }` + `onStateChange`                                         | `state: { ... }` + `on[State]Change`, OR `atoms: { ... }`                                                  |
-| (no atoms)                                                                 | `atoms: { sorting: someAtom, pagination: someAtom, ... }`                                                  |
+| v8 (Solid)                                                                 | v9 (Solid)                                                                                           |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `createSolidTable(options)`                                                | `createTable(options, selector?)`                                                                    |
+| `getCoreRowModel: getCoreRowModel()`                                       | (core row model included by default; no option needed)                                               |
+| `getSortedRowModel: getSortedRowModel()`                                   | `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`              |
+| `getFilteredRowModel: getFilteredRowModel()`                               | `tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`   |
+| `getPaginationRowModel: getPaginationRowModel()`                           | `tableFeatures({ rowPaginationFeature, paginatedRowModel: createPaginatedRowModel() })`              |
+| `getGroupedRowModel: getGroupedRowModel()`                                 | `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })` |
+| `getExpandedRowModel: getExpandedRowModel()`                               | `tableFeatures({ rowExpandingFeature, expandedRowModel: createExpandedRowModel() })`                 |
+| `getFacetedRowModel` / `getFacetedUniqueValues` / `getFacetedMinMaxValues` | `tableFeatures({ ...facetingFeatures, facetedRowModel, facetedUniqueValues, facetedMinMaxValues })`  |
+| `createColumnHelper<TData>()`                                              | `createColumnHelper<typeof features, TData>()`                                                       |
+| `sortingFn: 'alphanumeric'` on a column                                    | `sortFn: 'alphanumeric'` on a column                                                                 |
+| `onStateChange` (whole-state)                                              | (gone — use per-slice `on*Change` or `atoms`)                                                        |
+| `state: { ... }` + `onStateChange`                                         | `state: { ... }` + `on[State]Change`, OR `atoms: { ... }`                                            |
+| (no atoms)                                                                 | `atoms: { sorting: someAtom, pagination: someAtom, ... }`                                            |
 
 ## Before → after
 
@@ -225,7 +225,11 @@ import {
 } from '@tanstack/solid-table'
 
 // All sort fns
-tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
+tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 // Narrowed — only the comparators you use
 tableFeatures({
@@ -234,8 +238,16 @@ tableFeatures({
   sortFns: { alphanumeric: sortFns.alphanumeric },
 })
 
-tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })
-tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })
+tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+})
+tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns,
+})
 ```
 
 On columns, the option name is now `sortFn`, `filterFn`, `aggregationFn`

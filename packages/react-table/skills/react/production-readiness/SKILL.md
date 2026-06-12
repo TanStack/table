@@ -180,7 +180,8 @@ Wrong:
 
 ```tsx
 function MyTable({ data }) {
-  const features = tableFeatures({ // new every render
+  const features = tableFeatures({
+    // new every render
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
     sortFns,

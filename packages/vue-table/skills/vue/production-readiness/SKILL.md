@@ -99,7 +99,11 @@ only pay for what you use.
 ```ts
 // ❌ Inside <script setup> — every component instance creates new identities, which churns
 //    the table's option-watcher and triggers a `setOptions` on every reactive tick.
-const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   /* ... */
@@ -108,7 +112,11 @@ const columns = columnHelper.columns([
 
 ```ts
 // ✅ Module scope — one identity, shared across instances, GC-friendly.
-const features = tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 const columnHelper = createColumnHelper<typeof features, Person>()
 export const columns = columnHelper.columns([
   /* ... */

@@ -226,7 +226,9 @@ const features = tableFeatures({
   sortFns,
 })
 
-export const { useAppTable, createAppColumnHelper } = createTableHook({ features })
+export const { useAppTable, createAppColumnHelper } = createTableHook({
+  features,
+})
 ```
 
 ```vue

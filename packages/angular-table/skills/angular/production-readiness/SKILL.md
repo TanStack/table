@@ -72,7 +72,7 @@ import {
 
 // ❌ pulls in every built-in sort + filter fn
 const features = tableFeatures({
-  sortedRowModel:   createSortedRowModel(),
+  sortedRowModel: createSortedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   sortFns,
   filterFns,
@@ -80,7 +80,7 @@ const features = tableFeatures({
 
 // ✅ only what you use
 const features = tableFeatures({
-  sortedRowModel:   createSortedRowModel(),
+  sortedRowModel: createSortedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   sortFns: { basic: sortFns.basic, datetime: sortFns.datetime },
   filterFns: { includesString: filterFns.includesString },

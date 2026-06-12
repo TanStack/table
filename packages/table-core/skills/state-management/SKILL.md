@@ -182,7 +182,10 @@ Correct:
 
 ```tsx
 // pick one ownership path per slice — here, external atoms
-const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 10 })
+const paginationAtom = useCreateAtom<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
 
 const table = useTable({
   features,
@@ -267,8 +270,16 @@ Source: docs/framework/vanilla/guide/table-state.md; docs/framework/react/guide/
 Wrong:
 
 ```ts
-const paginationAtom = useCreateAtom<PaginationState>({ pageIndex: 0, pageSize: 10 })
-const table = useTable({ features, columns, data, atoms: { pagination: paginationAtom } })
+const paginationAtom = useCreateAtom<PaginationState>({
+  pageIndex: 0,
+  pageSize: 10,
+})
+const table = useTable({
+  features,
+  columns,
+  data,
+  atoms: { pagination: paginationAtom },
+})
 
 table.baseAtoms.pagination.set((old) => ({ ...old, pageIndex: 0 }))
 // baseAtom updated, but table.atoms.pagination still reads from paginationAtom

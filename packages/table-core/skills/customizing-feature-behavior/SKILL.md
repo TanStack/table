@@ -52,7 +52,12 @@ import {
   metaHelper,
   createColumnHelper,
 } from '@tanstack/table-core'
-import type { FilterFn, SortFn, AggregationFn, TableFeatures } from '@tanstack/table-core'
+import type {
+  FilterFn,
+  SortFn,
+  AggregationFn,
+  TableFeatures,
+} from '@tanstack/table-core'
 import {
   rankItem,
   compareItems,
