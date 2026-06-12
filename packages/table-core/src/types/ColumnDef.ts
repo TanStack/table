@@ -16,8 +16,8 @@ import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/glo
 import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
 export interface ColumnMeta<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {}
 
@@ -79,8 +79,8 @@ export interface StringHeaderIdentifier {
 }
 
 export interface IdIdentifier<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -127,8 +127,8 @@ interface ColumnDefBase_Core<
 }
 
 export interface ColumnDef_FeatureMap<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData,
 > {
   columnVisibilityFeature: ColumnDef_ColumnVisibility

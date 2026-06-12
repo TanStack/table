@@ -6,8 +6,8 @@ import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
 
 export interface Table_Headers<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Builds the visible header groups for the current column tree, visibility,
@@ -30,8 +30,8 @@ export interface Table_Headers<
 }
 
 export interface HeaderContext<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -49,8 +49,8 @@ export interface HeaderContext<
 }
 
 export interface Header_CoreProperties<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -100,8 +100,8 @@ export interface Header_CoreProperties<
 }
 
 export interface Header_Header<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > extends Header_CoreProperties<TFeatures, TData, TValue> {
   /**
@@ -115,8 +115,8 @@ export interface Header_Header<
 }
 
 export interface HeaderGroup_Header<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   depth: number

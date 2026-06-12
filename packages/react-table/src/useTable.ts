@@ -147,7 +147,10 @@ export function useTable<
   selector?: (state: TableState<TFeatures>) => TSelected,
 ): ReactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
-    const tableInstance = constructTable({
+    // Explicit type arguments skip generic inference from the spread object (a
+    // type-check hot spot); the spread only adds the react reactivity binding
+    // to `features`.
+    const tableInstance = constructTable<TFeatures, TData>({
       ...tableOptions,
       features: {
         coreReactivityFeature: reactReactivity(),

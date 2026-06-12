@@ -10,13 +10,13 @@ import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Row_Row } from '../core/rows/coreRowsFeature.types'
 
 export interface Row_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > extends Row_Row<TFeatures, TData> {}
 
 export interface Row_FeatureMap<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   columnFilteringFeature: Row_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: Row_ColumnGrouping

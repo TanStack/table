@@ -4,6 +4,7 @@ import { constructColumn } from '../../../../src/core/columns/constructColumn'
 import { constructTable } from '../../../../src'
 import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { ColumnDef } from '../../../../src/types/ColumnDef'
+import type { Table_Internal } from '../../../../src/types/Table'
 
 const features = {
   coreColumnsFeature,
@@ -20,7 +21,7 @@ describe('constructColumn', () => {
       features,
       columns: [],
       data: [],
-    })
+    }) as unknown as Table_Internal<typeof features, TestRow>
 
     const columnDef = {
       id: 'test-column',

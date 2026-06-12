@@ -202,5 +202,5 @@ export function constructTable<
     featuresList[i]!.constructTableAPIs?.(table)
   }
 
-  return table
+  return table as unknown as Table<TFeatures, TData>
 }

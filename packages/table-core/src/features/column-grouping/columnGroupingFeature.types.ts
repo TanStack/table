@@ -18,8 +18,8 @@ export interface TableState_ColumnGrouping {
 }
 
 export interface RowModelFns_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   aggregationFns: Record<string, AggregationFn<TFeatures, TData>>
 }
@@ -66,8 +66,8 @@ export type AggregationFnOption<
   | AggregationFn<TFeatures, TData>
 
 export interface ColumnDef_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -93,8 +93,8 @@ export interface ColumnDef_ColumnGrouping<
 }
 
 export interface Column_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns the aggregation function for the column.
@@ -190,8 +190,8 @@ export interface TableOptions_ColumnGrouping {
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export interface Table_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Resets `grouping` to `initialState.grouping`.
@@ -206,8 +206,8 @@ export interface Table_ColumnGrouping<
 }
 
 export interface Table_RowModels_Grouped<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Resolves the row model after grouping and aggregation have been applied.
@@ -220,8 +220,8 @@ export interface Table_RowModels_Grouped<
 }
 
 export interface CachedRowModel_Grouped<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   groupedRowModel: () => RowModel<TFeatures, TData>
 }

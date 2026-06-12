@@ -10,8 +10,8 @@ export interface TableState_RowSelection {
 }
 
 export interface TableOptions_RowSelection<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Allows rows to be selected alongside other rows.
@@ -87,8 +87,8 @@ export interface Row_RowSelection {
 }
 
 export interface Table_RowSelection<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Builds a selected-row model from rows after filtering.

@@ -33,8 +33,8 @@ export interface Column_GlobalFiltering {
 }
 
 export interface TableOptions_GlobalFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Enables global filtering across columns that allow it.
@@ -67,8 +67,8 @@ export interface TableOptions_GlobalFiltering<
 }
 
 export interface Table_GlobalFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.

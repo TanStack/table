@@ -14,14 +14,14 @@ import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
 
 export interface Column_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue = unknown,
 > extends Column_Column<TFeatures, TData, TValue> {}
 
 export interface Column_FeatureMap<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   columnFacetingFeature: Column_ColumnFaceting<TFeatures, TData>
   columnFilteringFeature: Column_ColumnFiltering<TFeatures, TData>

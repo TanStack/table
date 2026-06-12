@@ -4,8 +4,8 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 
 export interface Column_ColumnFaceting<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Computes min/max numeric facet values for this column.
@@ -25,8 +25,8 @@ export interface Column_ColumnFaceting<
 }
 
 export interface Table_RowModels_Faceted<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Computes min/max numeric facet values for the active faceting context.
@@ -49,8 +49,8 @@ export interface Table_RowModels_Faceted<
 }
 
 export interface CachedRowModel_Faceted<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   facetedRowModel?: (columnId: string) => () => RowModel<TFeatures, TData>
   facetedMinMaxValues?: (columnId: string) => [number, number]
@@ -58,8 +58,8 @@ export interface CachedRowModel_Faceted<
 }
 
 export interface Table_ColumnFaceting<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns the min and max values for the global filter.

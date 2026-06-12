@@ -5,8 +5,8 @@ import type { Header_Header } from '../core/headers/coreHeadersFeature.types'
 import type { Header_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 
 export interface Header_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > extends Header_Header<TFeatures, TData, TValue> {}
 

@@ -1,4 +1,4 @@
-import type { Table, Table_Internal } from './types/Table'
+import type { Table_Internal } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
@@ -53,7 +53,16 @@ export function cloneState<T>(value: T): T {
 export function makeStateUpdater<
   TFeatures extends TableFeatures,
   K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
->(key: K, instance: Table<TFeatures, any>) {
+>(
+  key: K,
+  // Minimal structural shape so any table view (public `Table`,
+  // `Table_Internal`, or a custom plugin table) can be passed without forcing
+  // the compiler to relate the full table types.
+  instance: {
+    readonly options: { readonly atoms?: object | undefined }
+    readonly baseAtoms: object
+  },
+) {
   return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
     const externalAtom = (instance.options as any).atoms?.[key]
     const targetAtom = externalAtom ?? (instance.baseAtoms as any)[key]

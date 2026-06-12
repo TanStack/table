@@ -35,8 +35,8 @@ export interface Row_RowExpanding {
 }
 
 export interface TableOptions_RowExpanding<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Enables automatic expanded-state resets when page-altering table state changes.
@@ -71,8 +71,8 @@ export interface TableOptions_RowExpanding<
 }
 
 export interface Table_RowExpanding<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   autoResetExpanded: () => void
   /**
@@ -112,8 +112,8 @@ export interface Table_RowExpanding<
 }
 
 export interface Table_RowModels_Expanded<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Resolves the row model after expanded rows have been flattened into view.
@@ -126,8 +126,8 @@ export interface Table_RowModels_Expanded<
 }
 
 export interface CachedRowModel_Expanded<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   expandedRowModel: () => RowModel<TFeatures, TData>
 }

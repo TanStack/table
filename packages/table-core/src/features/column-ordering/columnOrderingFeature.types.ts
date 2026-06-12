@@ -44,8 +44,8 @@ export interface ColumnOrderDefaultOptions {
 }
 
 export interface Table_ColumnOrdering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Resets `columnOrder` to `initialState.columnOrder`.

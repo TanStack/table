@@ -7,8 +7,8 @@ import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 export interface RowModelFns_Core {}
 
 export interface RowModelFns_FeatureMap<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   columnFilteringFeature: RowModelFns_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: RowModelFns_ColumnGrouping<TFeatures, TData>

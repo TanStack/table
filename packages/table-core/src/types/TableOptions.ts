@@ -28,8 +28,8 @@ import type {
  * options are mixed in.
  */
 export interface TableOptions_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 >
   extends
     TableOptions_Table<TFeatures, TData>,
@@ -55,8 +55,8 @@ export type DebugOptions<TFeatures extends TableFeatures> = {
 } & DebugKeysFor<CoreFeatures & TFeatures>
 
 export interface TableOptions_FeatureMap<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   columnFilteringFeature: TableOptions_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: TableOptions_ColumnGrouping
@@ -73,15 +73,42 @@ export interface TableOptions_FeatureMap<
   rowSortingFeature: TableOptions_RowSorting
 }
 
-export type TableOptions_FeatureMap_All<
+type TableOptions_StockFeatureKeys =
+  | 'columnFilteringFeature'
+  | 'columnGroupingFeature'
+  | 'columnOrderingFeature'
+  | 'columnPinningFeature'
+  | 'columnResizingFeature'
+  | 'columnSizingFeature'
+  | 'columnVisibilityFeature'
+  | 'globalFilteringFeature'
+  | 'rowExpandingFeature'
+  | 'rowPaginationFeature'
+  | 'rowPinningFeature'
+  | 'rowSelectionFeature'
+  | 'rowSortingFeature'
+
+/**
+ * Plugin entries declaration-merged into `TableOptions_FeatureMap`, i.e. keys
+ * beyond the stock set. Resolves to `unknown` (an intersection no-op) when no
+ * plugins are merged so the common case skips the union-to-intersection work.
+ */
+type TableOptions_PluginFeatureMapTypes<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = UnionToIntersection<
-  TableOptions_FeatureMap<TFeatures, TData>[keyof TableOptions_FeatureMap<
-    TFeatures,
-    TData
-  >]
->
+> = [
+  Exclude<
+    keyof TableOptions_FeatureMap<TFeatures, TData>,
+    TableOptions_StockFeatureKeys
+  >,
+] extends [never]
+  ? unknown
+  : UnionToIntersection<
+      TableOptions_FeatureMap<TFeatures, TData>[Exclude<
+        keyof TableOptions_FeatureMap<TFeatures, TData>,
+        TableOptions_StockFeatureKeys
+      >]
+    >
 
 /**
  * Complete table options for a specific feature set.
@@ -105,4 +132,19 @@ export type TableOptions_All<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
-  Partial<TableOptions_FeatureMap_All<TFeatures, TData>>
+  Partial<
+    TableOptions_ColumnFiltering<TFeatures, TData> &
+      TableOptions_ColumnGrouping &
+      TableOptions_ColumnOrdering &
+      TableOptions_ColumnPinning &
+      TableOptions_ColumnResizing &
+      TableOptions_ColumnSizing &
+      TableOptions_ColumnVisibility &
+      TableOptions_GlobalFiltering<TFeatures, TData> &
+      TableOptions_RowExpanding<TFeatures, TData> &
+      TableOptions_RowPagination &
+      TableOptions_RowPinning<TFeatures, TData> &
+      TableOptions_RowSelection<TFeatures, TData> &
+      TableOptions_RowSorting &
+      TableOptions_PluginFeatureMapTypes<TFeatures, TData>
+  >

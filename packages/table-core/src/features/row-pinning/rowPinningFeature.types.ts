@@ -14,8 +14,8 @@ export interface TableState_RowPinning {
 }
 
 export interface TableOptions_RowPinning<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Allows rows to be pinned to top or bottom regions.
@@ -63,8 +63,8 @@ export interface Row_RowPinning {
 }
 
 export interface Table_RowPinning<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Gets rows pinned to the bottom region.

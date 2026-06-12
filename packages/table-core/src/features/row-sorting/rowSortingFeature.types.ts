@@ -18,8 +18,8 @@ export interface TableState_RowSorting {
 }
 
 export interface RowModelFns_RowSorting<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   sortFns: Record<string, SortFn<TFeatures, TData>>
 }
@@ -27,8 +27,8 @@ export interface RowModelFns_RowSorting<
 export interface SortFns {}
 
 export interface SortFn<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   (
     rowA: Row<TFeatures, TData>,
@@ -64,8 +64,8 @@ export type SortFnOption<
 > = 'auto' | ExtractSortFnKeys<TFeatures> | SortFn<TFeatures, TData>
 
 export interface ColumnDef_RowSorting<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Enables/Disables multi-sorting for this column.
@@ -102,8 +102,8 @@ export interface ColumnDef_RowSorting<
 }
 
 export interface Column_RowSorting<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Removes this column from the table's sorting state
@@ -199,8 +199,8 @@ export interface TableOptions_RowSorting {
 }
 
 export interface Table_RowSorting<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Resets `sorting` to `initialState.sorting`.
@@ -215,8 +215,8 @@ export interface Table_RowSorting<
 }
 
 export interface Table_RowModels_Sorted<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Reads the row model immediately before sorting.
@@ -229,8 +229,8 @@ export interface Table_RowModels_Sorted<
 }
 
 export interface CachedRowModel_Sorted<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   sortedRowModel: () => RowModel<TFeatures, TData>
 }

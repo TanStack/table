@@ -4,8 +4,8 @@ import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Cell_Cell } from '../core/cells/coreCellsFeature.types'
 
 export interface Cell_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > extends Cell_Cell<TFeatures, TData, TValue> {}
 

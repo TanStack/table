@@ -5,8 +5,8 @@ import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 
 export interface Row_CoreProperties<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
@@ -45,8 +45,8 @@ export interface Row_CoreProperties<
 }
 
 export interface Row_Row<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > extends Row_CoreProperties<TFeatures, TData> {
   /**
    * Builds a lookup of this row's cells keyed by leaf column id.
@@ -83,8 +83,8 @@ export interface Row_Row<
 }
 
 export interface TableOptions_Rows<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
@@ -106,8 +106,8 @@ export interface TableOptions_Rows<
 }
 
 export interface Table_Rows<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   getRowId: (_: TData, index: number, parent?: Row<TFeatures, TData>) => string
   /**

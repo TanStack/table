@@ -42,8 +42,8 @@ export interface PaginationDefaultOptions {
 }
 
 export interface Table_RowPagination<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   _autoResetPageIndex: () => void
   /**
@@ -117,8 +117,8 @@ export interface Table_RowPagination<
 }
 
 export interface Table_RowModels_Paginated<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Resolves the row model after pagination has sliced the current page.
@@ -131,8 +131,8 @@ export interface Table_RowModels_Paginated<
 }
 
 export interface CachedRowModel_Paginated<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   paginatedRowModel: () => RowModel<TFeatures, TData>
 }

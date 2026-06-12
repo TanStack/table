@@ -5,8 +5,8 @@ import type { AccessorFn, ColumnDef } from '../../types/ColumnDef'
 import type { Column } from '../../types/Column'
 
 export interface Column_CoreProperties<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -43,8 +43,8 @@ export interface Column_CoreProperties<
 }
 
 export interface Column_Column<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > extends Column_CoreProperties<TFeatures, TData, TValue> {
   /**
@@ -59,8 +59,8 @@ export interface Column_Column<
 }
 
 export interface TableOptions_Columns<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -74,8 +74,8 @@ export interface TableOptions_Columns<
 }
 
 export interface Table_Columns<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns a map of all flat columns by their ID.

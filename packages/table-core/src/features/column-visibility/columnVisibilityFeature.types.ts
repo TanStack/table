@@ -28,8 +28,8 @@ export type VisibilityDefaultOptions = Pick<
 >
 
 export interface Table_ColumnVisibility<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Checks whether every leaf column is currently visible.
@@ -76,8 +76,8 @@ export interface ColumnDef_ColumnVisibility {
 }
 
 export interface Row_ColumnVisibility<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Gets this row's cells for currently visible columns.

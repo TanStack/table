@@ -83,7 +83,10 @@ export function table_mergeOptions<
   newOptions: TableOptions<TFeatures, TData>,
 ) {
   if (table.options.mergeOptions) {
-    return table.options.mergeOptions(table.options, newOptions)
+    return table.options.mergeOptions(
+      table.options as TableOptions<TFeatures, TData>,
+      newOptions,
+    )
   }
 
   return {
@@ -110,7 +113,10 @@ export function table_setOptions<
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
-  const newOptions = functionalUpdate(updater, table.options)
+  const newOptions = functionalUpdate(
+    updater,
+    table.options as TableOptions<TFeatures, TData>,
+  )
   // table static options that should never change after initialization
   const { features, atoms, initialState } = table.options
   const mergedOptions = Object.assign(table_mergeOptions(table, newOptions), {

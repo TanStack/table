@@ -41,8 +41,8 @@ export interface ColumnFilter {
 }
 
 export interface ResolvedColumnFilter<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   filterFn: FilterFn<TFeatures, TData>
   id: string
@@ -50,15 +50,15 @@ export interface ResolvedColumnFilter<
 }
 
 export interface RowModelFns_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   filterFns: Record<string, FilterFn<TFeatures, TData>>
 }
 
 export interface FilterFn<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   (
     row: Row<TFeatures, TData>,
@@ -110,8 +110,8 @@ export type FilterFnOption<
 > = 'auto' | ExtractFilterFnKeys<TFeatures> | FilterFn<TFeatures, TData>
 
 export interface ColumnDef_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Enables this column to participate in column-specific filtering.
@@ -127,8 +127,8 @@ export interface ColumnDef_ColumnFiltering<
 }
 
 export interface Column_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns an automatically calculated filter function for the column based off of the columns first known value.
@@ -164,8 +164,8 @@ export interface Column_ColumnFiltering<
 }
 
 export interface Row_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * The column filters map for the row. This object tracks whether a row is passing/failing specific filters by their column ID.
@@ -178,8 +178,8 @@ export interface Row_ColumnFiltering<
 }
 
 export interface TableOptions_ColumnFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Enables column-specific filtering for all columns that also allow it.
@@ -227,8 +227,8 @@ export interface Table_ColumnFiltering {
 }
 
 export interface Table_RowModels_Filtered<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Resolves the row model after column and global filters have been applied.
@@ -241,8 +241,8 @@ export interface Table_RowModels_Filtered<
 }
 
 export interface CachedRowModel_Filtered<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   filteredRowModel: () => RowModel<TFeatures, TData>
 }

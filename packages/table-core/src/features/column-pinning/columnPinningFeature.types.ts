@@ -67,8 +67,8 @@ export interface Column_ColumnPinning {
 }
 
 export interface Row_ColumnPinning<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Gets visible row cells whose columns are not pinned left or right.
@@ -85,8 +85,8 @@ export interface Row_ColumnPinning<
 }
 
 export interface Table_ColumnPinning<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Builds flat center-region headers for columns that are not pinned,

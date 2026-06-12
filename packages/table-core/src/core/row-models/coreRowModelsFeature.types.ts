@@ -10,8 +10,8 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
 export interface RowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   rows: Array<Row<TFeatures, TData>>
   flatRows: Array<Row<TFeatures, TData>>
@@ -19,15 +19,15 @@ export interface RowModel<
 }
 
 export interface CachedRowModel_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   coreRowModel: () => RowModel<TFeatures, TData>
 }
 
 export interface Table_RowModels_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns the core row model before any processing has been applied.

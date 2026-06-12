@@ -13,8 +13,8 @@ import type { TableOptions } from '../../types/TableOptions'
 import type { TableState, TableState_All } from '../../types/TableState'
 
 export interface TableMeta<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {}
 
 /**
@@ -84,8 +84,8 @@ export type ExternalAtoms_All = Partial<{
 }>
 
 export interface TableOptions_Table<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * The feature modules registered on this table instance.
@@ -152,8 +152,8 @@ export interface TableOptions_Table<
 }
 
 export interface Table_CoreProperties<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Table reactivity bindings for interacting with TanStack Store.
@@ -220,8 +220,8 @@ export interface Table_CoreProperties<
 }
 
 export interface Table_Table<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > extends Table_CoreProperties<TFeatures, TData> {
   /**
    * Resets the table's internal base atoms to `table.initialState`.

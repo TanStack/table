@@ -12,8 +12,8 @@ import type { RowData } from './type-utils'
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 
 export interface CachedRowModels_FeatureMap<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   columnFacetingFeature: CachedRowModel_Faceted<TFeatures, TData>
   columnFilteringFeature: CachedRowModel_Filtered<TFeatures, TData>
