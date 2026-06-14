@@ -486,7 +486,7 @@ describe('row_pin', () => {
   it('should unpin a row when position is false', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.baseAtoms.rowPinning!.set({
+    table.baseAtoms.rowPinning.set({
       top: [ROW[0]],
       bottom: [],
     })
@@ -508,9 +508,7 @@ describe('row_pin', () => {
       createTableWithMockOnPinningChange()
     const row = table.getRow('0')
     const leafRows = [{ id: LEAF[1] }, { id: LEAF[2] }]
-    vi.spyOn(row, 'getLeafRows').mockReturnValue(
-      leafRows as unknown as Array<Row<TableFeatures, Person>>,
-    )
+    vi.spyOn(row, 'getLeafRows').mockReturnValue(leafRows as any)
 
     row_pin(row, 'top', true)
 
@@ -528,9 +526,7 @@ describe('row_pin', () => {
       createTableWithMockOnPinningChange()
     const row = table.getRow('0')
     const parentRows = [{ id: PARENT[1] }, { id: PARENT[2] }]
-    vi.spyOn(row, 'getParentRows').mockReturnValue(
-      parentRows as unknown as Array<Row<TableFeatures, Person>>,
-    )
+    vi.spyOn(row, 'getParentRows').mockReturnValue(parentRows as any)
 
     row_pin(row, 'top', false, true)
 
@@ -546,7 +542,7 @@ describe('row_pin', () => {
   it('should maintain existing pinned rows when pinning additional rows', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.baseAtoms.rowPinning!.set({
+    table.baseAtoms.rowPinning.set({
       top: [ROW[1]],
       bottom: [ROW[2]],
     })
@@ -569,7 +565,7 @@ describe('row_pin', () => {
   it('should remove row from other position when moving between top and bottom', () => {
     const { table, onRowPinningChangeMock } =
       createTableWithMockOnPinningChange()
-    table.baseAtoms.rowPinning!.set({
+    table.baseAtoms.rowPinning.set({
       top: [ROW[0]],
       bottom: [],
     })

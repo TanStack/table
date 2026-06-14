@@ -113,7 +113,9 @@ export function buildHeaderGroups<
         pendingParentHeaders.push(header)
       }
 
-      headerGroup.headers.push(headerToGroup)
+      headerGroup.headers.push(
+        headerToGroup as Header<TFeatures, TData, unknown>,
+      )
       headerToGroup.headerGroup = headerGroup
     })
 

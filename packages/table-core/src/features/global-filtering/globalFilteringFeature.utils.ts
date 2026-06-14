@@ -26,7 +26,7 @@ export function column_getCanGlobalFilter<
     (column.columnDef.enableGlobalFilter ?? true) &&
     (column.table.options.enableGlobalFilter ?? true) &&
     (column.table.options.enableFilters ?? true) &&
-    (column.table.options.getColumnCanGlobalFilter?.(column) ?? true) &&
+    (column.table.options.getColumnCanGlobalFilter?.(column as any) ?? true) &&
     !!column.accessorFn
   )
 }

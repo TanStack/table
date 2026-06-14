@@ -693,6 +693,7 @@ function App() {
       },
       keepPinnedRows: true,
       debugTable: true,
+      autoResetExpanded: false, // keep expanded rows during filtering changes
     },
     (state) => state, // default selector
   )

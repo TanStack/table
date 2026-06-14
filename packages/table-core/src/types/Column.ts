@@ -42,10 +42,10 @@ export type Column<
 > = Column_Core<TFeatures, TData, TValue> &
   ExtractFeatureMapTypes<TFeatures, Column_FeatureMap<TFeatures, TData>>
 
-export type Column_Internal<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+export interface Column_Internal<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue = unknown,
-> = Column<TFeatures, TData, TValue> & {
+> extends Omit<Column_Core<TFeatures, TData, TValue>, 'columnDef'> {
   columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
 }

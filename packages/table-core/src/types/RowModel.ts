@@ -33,10 +33,10 @@ export type CachedRowModels<
   CachedRowModels_FeatureMap<TFeatures, TData>
 >
 
-export type CachedRowModel_All<
-  TFeatures extends TableFeatures,
-  TData extends RowData = any,
-> = Partial<
+export interface CachedRowModel_All<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData = any,
+> extends Partial<
   CachedRowModel_Core<TFeatures, TData> &
     CachedRowModel_Expanded<TFeatures, TData> &
     CachedRowModel_Faceted<TFeatures, TData> &
@@ -44,4 +44,4 @@ export type CachedRowModel_All<
     CachedRowModel_Grouped<TFeatures, TData> &
     CachedRowModel_Paginated<TFeatures, TData> &
     CachedRowModel_Sorted<TFeatures, TData>
->
+> {}

@@ -1,5 +1,9 @@
+import { table } from 'node:console'
 import { vi } from 'vitest'
-import { getDefaultRowPinningState } from '../../src/features/row-pinning/rowPinningFeature.utils'
+import {
+  getDefaultRowPinningState,
+  table_setRowPinning,
+} from '../../src/features/row-pinning/rowPinningFeature.utils'
 import {
   constructTable,
   coreFeatures,
@@ -9,7 +13,14 @@ import {
 import { generateTestData } from '../fixtures/data/generateTestData'
 import { storeReactivityBindings } from '../../src/store-reactivity-bindings'
 import { generateTestTableWithData } from './generateTestTable'
-import type { ColumnDef, RowPinningState, TableOptions } from '../../src'
+import type {
+  ColumnDef,
+  RowPinningState,
+  StockFeatures,
+  TableOptions,
+  Table_Internal,
+  Table_RowPinning,
+} from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 // Define feature set with proper typing
@@ -52,7 +63,8 @@ export function createTableWithPinningState(
 }
 
 export function createTableWithMockOnPinningChange(rowCount = 10): {
-  table: ReturnType<typeof generateTestTableWithData>
+  table: Table_Internal<StockFeatures, Person> &
+    Table_RowPinning<StockFeatures, Person>
   onRowPinningChangeMock: ReturnType<typeof vi.fn>
 } {
   const onRowPinningChangeMock = vi.fn()
@@ -60,7 +72,8 @@ export function createTableWithMockOnPinningChange(rowCount = 10): {
     features: {
       rowPinning: rowPinningFeature,
     },
-  } as any)
+  } as any) as Table_Internal<StockFeatures, Person> &
+    Table_RowPinning<StockFeatures, Person>
   table.options.onRowPinningChange = onRowPinningChangeMock
   return { table, onRowPinningChangeMock }
 }

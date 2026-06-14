@@ -13,7 +13,7 @@ import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
-import type { Column_Internal } from '../../types/Column'
+import type { Column, Column_Internal } from '../../types/Column'
 import type {
   ColumnPinningPosition,
   ColumnPinningState,
@@ -364,15 +364,11 @@ export function table_getLeftHeaderGroups<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
-  const leafColumnsById = table.getAllLeafColumnsById() as Record<
-    string,
-    Column_Internal<TFeatures, TData, unknown>
-  >
+  const leafColumnsById = table.getAllLeafColumnsById()
   const { left } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
-  const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
-    []
+  const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < left.length; i++) {
     const column = leafColumnsById[left[i]!]
     if (
@@ -402,15 +398,11 @@ export function table_getRightHeaderGroups<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
-  const leafColumnsById = table.getAllLeafColumnsById() as Record<
-    string,
-    Column_Internal<TFeatures, TData, unknown>
-  >
+  const leafColumnsById = table.getAllLeafColumnsById()
   const { right } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
-  const orderedLeafColumns: Array<Column_Internal<TFeatures, TData, unknown>> =
-    []
+  const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < right.length; i++) {
     const column = leafColumnsById[right[i]!]
     if (
@@ -446,7 +438,7 @@ export function table_getCenterHeaderGroups<
     table,
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
-  ) as unknown as Array<Column_Internal<TFeatures, TData, unknown>>
+  )
   const { left, right } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]

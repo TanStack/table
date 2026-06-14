@@ -332,7 +332,7 @@ describe('row methods', () => {
       const { table, onRowPinningChangeMock } =
         createTableWithMockOnPinningChange()
       // Set up initial state with a pinned row
-      table.baseAtoms.rowPinning!.set({
+      table.baseAtoms.rowPinning.set({
         top: [ROW[0]],
         bottom: [],
       })

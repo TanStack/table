@@ -36,14 +36,16 @@ import type { DebugOptions, TableOptions_All } from './TableOptions'
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
  * No features are included.
  */
-export type Table_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = Table_Table<TFeatures, TData> &
-  Table_Columns<TFeatures, TData> &
-  Table_Rows<TFeatures, TData> &
-  Table_RowModels<TFeatures, TData> &
-  Table_Headers<TFeatures, TData>
+export interface Table_Core<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+>
+  extends
+    Table_Table<TFeatures, TData>,
+    Table_Columns<TFeatures, TData>,
+    Table_Rows<TFeatures, TData>,
+    Table_RowModels<TFeatures, TData>,
+    Table_Headers<TFeatures, TData> {}
 
 export interface Table_FeatureMap<
   in out TFeatures extends TableFeatures,
@@ -88,15 +90,6 @@ type Table_InternalBroadenedKeys =
 
 /**
  * Internal broad table shape used by feature implementations.
- *
- * Declared as an interface extending every stock feature's table API (rather
- * than the feature-conditional `Table` intersection) so that the compiler can
- * relate `Table_Internal` instantiations nominally instead of structurally
- * re-expanding the feature-map conditional for every internal call site.
- * Mirrors the `*_All` convention used for options, state, and row models.
- * Type parameters are annotated `in out` (invariant) so the checker can relate
- * instantiations by their type arguments without measuring variance or falling
- * back to member-by-member structural comparison.
  */
 export interface Table_Internal<
   in out TFeatures extends TableFeatures,
@@ -107,21 +100,7 @@ export interface Table_Internal<
     Table_Columns<TFeatures, TData>,
     Table_Rows<TFeatures, TData>,
     Table_RowModels<TFeatures, TData>,
-    Table_Headers<TFeatures, TData>,
-    Table_ColumnFiltering,
-    Table_ColumnGrouping<TFeatures, TData>,
-    Table_ColumnOrdering<TFeatures, TData>,
-    Table_ColumnPinning<TFeatures, TData>,
-    Table_ColumnResizing,
-    Table_ColumnSizing,
-    Table_ColumnVisibility<TFeatures, TData>,
-    Table_ColumnFaceting<TFeatures, TData>,
-    Table_GlobalFiltering<TFeatures, TData>,
-    Table_RowExpanding<TFeatures, TData>,
-    Table_RowPagination<TFeatures, TData>,
-    Table_RowPinning<TFeatures, TData>,
-    Table_RowSelection<TFeatures, TData>,
-    Table_RowSorting<TFeatures, TData> {
+    Table_Headers<TFeatures, TData> {
   _rowModels: CachedRowModel_All<TFeatures, TData>
   _rowModelFns: RowModelFns_All<TFeatures, TData>
   options: DebugOptions<TableFeatures> &

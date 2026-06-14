@@ -11,7 +11,10 @@ import { storeReactivityBindings } from '../../../src/store-reactivity-bindings'
 import type {
   PaginationState,
   SortingState,
+  TableFeatures,
   Table_Internal,
+  Table_RowPagination,
+  Table_RowSorting,
 } from '../../../src'
 
 const features = {
@@ -20,7 +23,11 @@ const features = {
   rowSortingFeature,
 }
 
-function makeTable(options: any = {}) {
+function makeTable<TFeatures extends TableFeatures>(
+  options: any = {},
+): Table_Internal<TFeatures, any> &
+  Table_RowSorting<TFeatures, any> &
+  Table_RowPagination<TFeatures, any> {
   return constructTable({
     features: {
       ...coreFeatures,
@@ -30,7 +37,9 @@ function makeTable(options: any = {}) {
     columns: [],
     data: [],
     ...options,
-  }) as unknown as Table_Internal<typeof features, any>
+  }) as unknown as Table_Internal<TFeatures, any> &
+    Table_RowSorting<TFeatures, any> &
+    Table_RowPagination<TFeatures, any>
 }
 
 describe('three-layer atom architecture', () => {

@@ -218,7 +218,7 @@ export function table_getAllLeafColumns<
     table,
     'getOrderColumns',
     table_getOrderColumnsFn,
-  )(leafColumns)
+  )(leafColumns) as Array<Column<TFeatures, TData, unknown>>
 }
 
 /**

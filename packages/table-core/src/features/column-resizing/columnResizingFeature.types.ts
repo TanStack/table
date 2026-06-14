@@ -54,11 +54,8 @@ export interface Table_ColumnResizing {
   resetHeaderSizeInfo: (defaultState?: boolean) => void
   /**
    * Updates transient resize interaction state with a next state or updater function.
-   *
-   * The lowercase `c` in this API name matches the current generated v9 table
-   * API for the `columnResizing` state slice.
    */
-  setcolumnResizing: (updater: Updater<columnResizingState>) => void
+  setColumnResizing: (updater: Updater<columnResizingState>) => void
 }
 
 export interface ColumnDef_ColumnResizing {

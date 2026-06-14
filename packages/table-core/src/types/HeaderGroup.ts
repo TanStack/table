@@ -7,7 +7,7 @@ export interface HeaderGroup_Core<
   in out TData extends RowData,
 > extends HeaderGroup_Header<TFeatures, TData> {}
 
-export type HeaderGroup<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = HeaderGroup_Core<TFeatures, TData>
+export interface HeaderGroup<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> extends HeaderGroup_Core<TFeatures, TData> {}

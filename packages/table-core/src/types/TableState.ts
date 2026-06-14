@@ -44,4 +44,18 @@ export type TableState<TFeatures extends TableFeatures> =
  * Feature internals use this when they may need to inspect optional slices owned
  * by other features.
  */
-export type TableState_All = Partial<TableState<TableFeatures>>
+export interface TableState_All extends Partial<
+  TableState_ColumnFiltering &
+    TableState_ColumnGrouping &
+    TableState_ColumnOrdering &
+    TableState_ColumnPinning &
+    TableState_ColumnResizing &
+    TableState_ColumnSizing &
+    TableState_ColumnVisibility &
+    TableState_GlobalFiltering &
+    TableState_RowExpanding &
+    TableState_RowPagination &
+    TableState_RowPinning &
+    TableState_RowSelection &
+    TableState_RowSorting
+> {}

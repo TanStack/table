@@ -10,10 +10,10 @@ import type {
   IdentifiedColumnDef,
 } from '../types/ColumnDef'
 
-export type ColumnHelper<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = {
+export interface ColumnHelper<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
   /**
    * Creates a data column definition with an accessor key or function to extract the cell value.
    * @example
