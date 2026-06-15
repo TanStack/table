@@ -7,7 +7,7 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
-import type { TableState, TableState_All } from '../../types/TableState'
+import type { TableState } from '../../types/TableState'
 
 /**
  * Builds the initial table state from registered features and user initial state.
@@ -19,9 +19,11 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   initialState: Partial<TableState<TFeatures>> | undefined = {},
 ): TableState<TFeatures> {
   Object.values(features).forEach((feature) => {
-    initialState = feature.getInitialState?.(initialState) ?? initialState
+    initialState =
+      feature.getInitialState?.(initialState as Partial<TableState<any>>) ??
+      initialState
   })
-  return cloneState(initialState)
+  return cloneState(initialState) as TableState<TFeatures>
 }
 
 /**
@@ -65,11 +67,15 @@ export function constructTable<
     baseAtoms: {},
     atoms: {},
   } as unknown as Table<TFeatures, TData>
+  const mutableTable = table as any
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
 
   const defaultOptions = featuresList.reduce((obj, feature) => {
-    return Object.assign(obj, feature.getDefaultTableOptions?.(table))
+    return Object.assign(
+      obj,
+      feature.getDefaultTableOptions?.(table as unknown as Table<any, any>),
+    )
   }, {}) as TableOptions<TFeatures, TData>
 
   const mergedOptions = { ...defaultOptions, ...tableOptions }
@@ -113,10 +119,10 @@ export function constructTable<
       },
     })
   } else {
-    table.options = mergedOptions
+    mutableTable.options = mergedOptions
   }
 
-  table.initialState = getInitialTableState(
+  mutableTable.initialState = getInitialTableState(
     table._features,
     table.options.initialState,
   )
@@ -125,22 +131,24 @@ export function constructTable<
 
   for (let i = 0; i < stateKeys.length; i++) {
     const key = stateKeys[i]!
-    table.baseAtoms[key] = _reactivity.createWritableAtom(
-      table.initialState[key],
+    mutableTable.baseAtoms[key] = _reactivity.createWritableAtom(
+      mutableTable.initialState[key],
       {
         debugName: `table/baseAtoms/${key}`,
       },
     ) as any
 
     // create readonly derived atom: on each get(), read either external atom or base atom
-    ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
+    mutableTable.atoms[key] = _reactivity.createReadonlyAtom(
       () => {
         const externalAtoms = table.options.atoms
-        const externalAtom = externalAtoms?.[key]
+        const externalAtom = (externalAtoms as Record<string, Atom<any>> | undefined)?.[
+          key
+        ]
         if (externalAtom) {
           return externalAtom.get()
         }
-        return table.baseAtoms[key]!.get()
+        return mutableTable.baseAtoms[key]!.get()
       },
       { debugName: `table/atoms/${key}` },
     )
@@ -148,13 +156,15 @@ export function constructTable<
 
   table_syncExternalStateToBaseAtoms(table)
 
-  table.store = atomToStore(
+  mutableTable.store = atomToStore(
     _reactivity.createReadonlyAtom(
       () => {
-        const snapshot = {} as TableState<TFeatures> & TableState_All
+        const snapshot = {} as TableState<TFeatures>
         for (let i = 0; i < stateKeys.length; i++) {
           const key = stateKeys[i]!
-          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key]!.get()
+          ;(snapshot as Record<string, unknown>)[key] = mutableTable.atoms[
+            key
+          ]!.get()
         }
         return snapshot
       },
@@ -195,7 +205,7 @@ export function constructTable<
   }
 
   for (let i = 0; i < featuresList.length; i++) {
-    featuresList[i]!.constructTableAPIs?.(table)
+    featuresList[i]!.constructTableAPIs?.(table as unknown as Table<any, any>)
   }
 
   return table as unknown as Table<TFeatures, TData>

@@ -2,7 +2,7 @@ import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table } from '../../types/Table'
-import type { Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 
 /**
  * Computes min and max numeric facet values for one column.
@@ -20,7 +20,7 @@ export function column_getFacetedMinMaxValues<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column_Internal<TFeatures, TData, TValue>,
+  column: Column<TFeatures, TData, TValue>,
   table: Table<TFeatures, TData>,
 ): [number, number] | undefined {
   const facetedMinMaxValuesFn =
@@ -46,7 +46,7 @@ export function column_getFacetedRowModel<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column_Internal<TFeatures, TData, TValue> | undefined,
+  column: Column<TFeatures, TData, TValue> | undefined,
   table: Table<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const facetedRowModelFn =
@@ -71,7 +71,7 @@ export function column_getFacetedUniqueValues<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column_Internal<TFeatures, TData, TValue>,
+  column: Column<TFeatures, TData, TValue>,
   table: Table<TFeatures, TData>,
 ): Map<any, number> {
   const facetedUniqueValuesFn =

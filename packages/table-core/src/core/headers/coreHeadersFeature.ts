@@ -8,11 +8,19 @@ import {
   table_getLeafHeaders,
 } from './coreHeadersFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
+import type { CoreFeatures } from '../coreFeatures'
+
+type CoreHeadersFeature = CoreFeatures & {
+  columnGroupingFeature: TableFeature
+  columnOrderingFeature: TableFeature
+  columnPinningFeature: TableFeature
+  columnVisibilityFeature: TableFeature
+}
 
 /**
  * Core feature that builds header groups and exposes header context APIs.
  */
-export const coreHeadersFeature: TableFeature = {
+export const coreHeadersFeature: TableFeature<CoreHeadersFeature> = {
   assignHeaderPrototype: (prototype, table) => {
     assignPrototypeAPIs('coreHeadersFeature', prototype, table, {
       header_getLeafHeaders: {

@@ -136,7 +136,7 @@ export function buildHeaderGroups<
   headerGroups.reverse()
 
   const recurseHeadersForSpans = (
-    headers: Array<Header<TFeatures, TData, TValue>>,
+    headers: Array<Header<TFeatures, TData, unknown>>,
   ): Array<{ colSpan: number; rowSpan: number }> => {
     const results: Array<{ colSpan: number; rowSpan: number }> = []
 

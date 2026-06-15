@@ -5,6 +5,7 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
+type ExpandedRowModelFeatures = Partial<{ rowExpandingFeature: TableFeature }>
 
 /**
  * Creates a memoized expanded row model factory.
@@ -16,8 +17,8 @@ export function createExpandedRowModel<
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) => {
-    const typedTable = table as unknown as Table<
-      { rowExpandingFeature: TableFeature },
+    const featureTable = table as unknown as Table<
+      ExpandedRowModelFeatures,
       TData
     >
     return tableMemo({
@@ -25,9 +26,9 @@ export function createExpandedRowModel<
       table,
       fnName: 'table.getExpandedRowModel',
       memoDeps: () => [
-        typedTable.atoms.expanded?.get(),
-        typedTable.getPreExpandedRowModel(),
-        typedTable.options.paginateExpandedRows,
+        featureTable.atoms.expanded?.get(),
+        table.getPreExpandedRowModel(),
+        featureTable.options.paginateExpandedRows,
       ],
       fn: () => _createExpandedRowModel(table),
     })
@@ -38,8 +39,9 @@ function _createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const featureTable = table as unknown as Table<ExpandedRowModelFeatures, TData>
   const rowModel = table.getPreExpandedRowModel()
-  const expanded = table.atoms.expanded?.get()
+  const expanded = featureTable.atoms.expanded?.get()
 
   if (
     !rowModel.rows.length ||
@@ -48,7 +50,7 @@ function _createExpandedRowModel<
     return rowModel
   }
 
-  if (!table.options.paginateExpandedRows) {
+  if (!featureTable.options.paginateExpandedRows) {
     // Only expand rows at this point if they are being paginated
     return rowModel
   }

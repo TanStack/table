@@ -8,7 +8,6 @@ import type { Column_ColumnPinning } from '../features/column-pinning/columnPinn
 import type { Column_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Column_ColumnSizing } from '../features/column-sizing/columnSizingFeature.types'
 import type { Column_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
-import type { ColumnDefBase_All } from './ColumnDef'
 import type { RowData } from './type-utils'
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Column_Column } from '../core/columns/coreColumnsFeature.types'
@@ -41,11 +40,3 @@ export type Column<
   TValue = unknown,
 > = Column_Core<TFeatures, TData, TValue> &
   ExtractFeatureMapTypes<TFeatures, Column_FeatureMap<TFeatures, TData>>
-
-export interface Column_Internal<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
-  TValue = unknown,
-> extends Omit<Column_Core<TFeatures, TData, TValue>, 'columnDef'> {
-  columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
-}

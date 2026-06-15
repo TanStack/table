@@ -12,11 +12,12 @@ import {
   table_getRowId,
 } from './coreRowsFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
+import type { CoreFeatures } from '../coreFeatures'
 
 /**
  * Core feature that creates row APIs for values, cells, and tree traversal.
  */
-export const coreRowsFeature: TableFeature = {
+export const coreRowsFeature: TableFeature<CoreFeatures> = {
   assignRowPrototype: (prototype, table) => {
     assignPrototypeAPIs('coreRowsFeature', prototype, table, {
       row_getAllCellsByColumnId: {

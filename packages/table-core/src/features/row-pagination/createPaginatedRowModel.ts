@@ -7,6 +7,11 @@ import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
+type PaginatedRowModelFeatures = Partial<{
+  rowPaginationFeature: TableFeature
+  rowExpandingFeature: TableFeature
+}>
+
 /**
  * Creates a memoized paginated row model factory.
  *
@@ -17,11 +22,8 @@ export function createPaginatedRowModel<
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) => {
-    const typedTable = table as unknown as Table<
-      {
-        rowExpandingFeature: TableFeature
-        rowPaginationFeature: TableFeature
-      },
+    const featureTable = table as unknown as Table<
+      PaginatedRowModelFeatures,
       TData
     >
     return tableMemo({
@@ -29,10 +31,10 @@ export function createPaginatedRowModel<
       table,
       fnName: 'table.getPaginatedRowModel',
       memoDeps: () => [
-        typedTable.getPrePaginatedRowModel(),
-        typedTable.atoms.pagination?.get(),
-        typedTable.options.paginateExpandedRows
-          ? typedTable.atoms.expanded?.get()
+        table.getPrePaginatedRowModel(),
+        featureTable.atoms.pagination?.get(),
+        featureTable.options.paginateExpandedRows
+          ? featureTable.atoms.expanded?.get()
           : undefined,
       ],
       fn: () => _createPaginatedRowModel(table),
@@ -44,8 +46,12 @@ function _createPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const featureTable = table as unknown as Table<
+    PaginatedRowModelFeatures,
+    TData
+  >
   const prePaginatedRowModel = table.getPrePaginatedRowModel()
-  const pagination = table.atoms.pagination?.get()
+  const pagination = featureTable.atoms.pagination?.get()
 
   if (!prePaginatedRowModel.rows.length) {
     return prePaginatedRowModel
@@ -60,7 +66,7 @@ function _createPaginatedRowModel<
 
   let paginatedRowModel: RowModel<TFeatures, TData>
 
-  if (!table.options.paginateExpandedRows) {
+  if (!featureTable.options.paginateExpandedRows) {
     paginatedRowModel = expandRows({
       rows: paginatedRows,
       flatRows,

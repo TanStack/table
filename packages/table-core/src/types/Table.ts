@@ -14,23 +14,14 @@ import type { Table_RowPagination } from '../features/row-pagination/rowPaginati
 import type { Table_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { Table_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { Table_RowModels } from '../core/row-models/coreRowModelsFeature.types'
-import type { CachedRowModel_All } from './RowModel'
-import type { RowModelFns_All } from './RowModelFns'
-import type { TableState, TableState_All } from './TableState'
 import type { RowData } from './type-utils'
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
 import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
 import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
 import type {
-  Atoms,
-  Atoms_All,
-  BaseAtoms,
-  BaseAtoms_All,
-  ExternalAtoms_All,
   Table_Table,
 } from '../core/table/coreTablesFeature.types'
-import type { DebugOptions, TableOptions_All } from './TableOptions'
 
 /**
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
@@ -75,15 +66,3 @@ export type Table<
   TData extends RowData,
 > = Table_Core<TFeatures, TData> &
   ExtractFeatureMapTypes<TFeatures, Table_FeatureMap<TFeatures, TData>>
-
-/**
- * `Table_Table` members that `Table_Internal` re-declares with broadened
- * (all-features) types so internal code can read any feature's slots and
- * construction code can assign them.
- */
-type Table_InternalBroadenedKeys =
-  | '_rowModels'
-  | '_rowModelFns'
-  | 'options'
-  | 'initialState'
-  | 'store'

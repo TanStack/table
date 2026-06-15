@@ -12,21 +12,21 @@ const features = tableFeatures({
 })
 
 export const optionsWithFeaturesOnly = tableOptions({
-  features,
+  features: features,
 })
 
 export const optionsWithFeaturesAndData = tableOptions({
-  features,
+  features: features,
   data: [] as Array<Person>,
 })
 
 export const optionsWithFeaturesAndColumns = tableOptions({
-  features,
+  features: features,
   columns: [],
 })
 
 export const optionsWithFeaturesDataAndColumns = tableOptions({
-  features,
+  features: features,
   data: [] as Array<Person>,
   columns: [],
 })

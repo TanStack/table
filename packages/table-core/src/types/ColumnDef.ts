@@ -151,22 +151,6 @@ export type ColumnDefBase<
     ColumnDef_FeatureMap<TFeatures, TData, TValue>
   >
 
-export type ColumnDefBase_All<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData = CellData,
-> = ColumnDefBase_Core<TFeatures, TData, TValue> &
-  Partial<
-    ColumnDef_ColumnVisibility &
-      ColumnDef_ColumnPinning &
-      ColumnDef_ColumnFiltering<TFeatures, TData> &
-      ColumnDef_GlobalFiltering &
-      ColumnDef_RowSorting<TFeatures, TData> &
-      ColumnDef_ColumnGrouping<TFeatures, TData, TValue> &
-      ColumnDef_ColumnSizing &
-      ColumnDef_ColumnResizing
-  >
-
 export type IdentifiedColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,

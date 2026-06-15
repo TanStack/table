@@ -1,8 +1,10 @@
 import { cloneState, functionalUpdate } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { PaginationState } from './rowPaginationFeature.types'
+
+type RowPaginationFeatures = Partial<{ rowPaginationFeature: TableFeature }>
 
 const defaultPageIndex = 0
 const defaultPageSize = 10
@@ -41,10 +43,11 @@ export function table_autoResetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
   if (
     table.options.autoResetAll ??
-    table.options.autoResetPageIndex ??
-    !table.options.manualPagination
+    featureTable.options.autoResetPageIndex ??
+    !featureTable.options.manualPagination
   ) {
     table_resetPageIndex(table)
   }
@@ -66,13 +69,14 @@ export function table_setPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<PaginationState>) {
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
   const safeUpdater: Updater<PaginationState> = (old) => {
     const newState = functionalUpdate(updater, old)
 
     return newState
   }
 
-  return table.options.onPaginationChange?.(safeUpdater)
+  return featureTable.options.onPaginationChange?.(safeUpdater)
 }
 
 /**
@@ -92,12 +96,13 @@ export function table_resetPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
   table_setPagination(
     table,
     defaultState
       ? getDefaultPaginationState()
       : cloneState(
-          table.initialState.pagination ?? getDefaultPaginationState(),
+          featureTable.initialState.pagination ?? getDefaultPaginationState(),
         ),
   )
 }
@@ -117,14 +122,15 @@ export function table_setPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<number>) {
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
   table_setPagination(table, (old) => {
     let pageIndex = functionalUpdate(updater, old.pageIndex)
 
     const maxPageIndex =
-      typeof table.options.pageCount === 'undefined' ||
-      table.options.pageCount === -1
+      typeof featureTable.options.pageCount === 'undefined' ||
+      featureTable.options.pageCount === -1
         ? Number.MAX_SAFE_INTEGER
-        : table.options.pageCount - 1
+        : featureTable.options.pageCount - 1
 
     pageIndex = Math.max(0, Math.min(pageIndex, maxPageIndex))
 
@@ -151,11 +157,12 @@ export function table_resetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
   const currentPageIndex =
-    table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+    featureTable.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
   const newPageIndex = defaultState
     ? defaultPageIndex
-    : (table.initialState.pagination?.pageIndex ?? defaultPageIndex)
+    : (featureTable.initialState.pagination?.pageIndex ?? defaultPageIndex)
   if (newPageIndex === currentPageIndex) return
   table_setPageIndex(table, newPageIndex)
 }
@@ -176,11 +183,12 @@ export function table_resetPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
   const currentPageSize =
-    table.atoms.pagination?.get()?.pageSize ?? defaultPageSize
+    featureTable.atoms.pagination?.get()?.pageSize ?? defaultPageSize
   const newPageSize = defaultState
     ? defaultPageSize
-    : (table.initialState.pagination?.pageSize ?? defaultPageSize)
+    : (featureTable.initialState.pagination?.pageSize ?? defaultPageSize)
   if (newPageSize === currentPageSize) return
   table_setPageSize(table, newPageSize)
 }
@@ -251,7 +259,8 @@ export function table_getCanPreviousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  return (table.atoms.pagination?.get()?.pageIndex ?? 0) > 0
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
+  return (featureTable.atoms.pagination?.get()?.pageIndex ?? 0) > 0
 }
 
 /**
@@ -269,7 +278,9 @@ export function table_getCanNextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const pageIndex = table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
+  const pageIndex =
+    featureTable.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
 
   const pageCount = table_getPageCount(table)
 
@@ -371,11 +382,12 @@ export function table_getPageCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
   return (
-    table.options.pageCount ??
+    featureTable.options.pageCount ??
     Math.ceil(
       table_getRowCount(table) /
-        (table.atoms.pagination?.get()?.pageSize ?? defaultPageSize),
+        (featureTable.atoms.pagination?.get()?.pageSize ?? defaultPageSize),
     )
   )
 }
@@ -396,5 +408,8 @@ export function table_getRowCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  return table.options.rowCount ?? table.getPrePaginatedRowModel().rows.length
+  const featureTable = table as unknown as Table<RowPaginationFeatures, TData>
+  return (
+    featureTable.options.rowCount ?? table.getPrePaginatedRowModel().rows.length
+  )
 }

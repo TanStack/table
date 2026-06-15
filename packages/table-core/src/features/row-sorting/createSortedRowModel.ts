@@ -1,13 +1,15 @@
 import { tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
-import type { Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { SortFn } from './rowSortingFeature.types'
+import type { ColumnDef_RowSorting, SortFn } from './rowSortingFeature.types'
 import type { RowData } from '../../types/type-utils'
+
+type SortedRowModelFeatures = Partial<{ rowSortingFeature: TableFeature }>
 
 /**
  * Creates a memoized sorted row model factory.
@@ -22,8 +24,8 @@ export function createSortedRowModel<
   TData extends RowData,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) => {
-    const typedTable = table as unknown as Table<
-      { rowSortingFeature: TableFeature },
+    const featureTable = table as unknown as Table<
+      SortedRowModelFeatures,
       TData
     >
     return tableMemo({
@@ -31,8 +33,8 @@ export function createSortedRowModel<
       table: table,
       fnName: 'table.getSortedRowModel',
       memoDeps: () => [
-        typedTable.atoms.sorting?.get(),
-        typedTable.getPreSortedRowModel(),
+        featureTable.atoms.sorting?.get(),
+        table.getPreSortedRowModel(),
       ],
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -44,12 +46,9 @@ function _createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const typedTable = table as unknown as Table<
-    { rowSortingFeature: TableFeature },
-    TData
-  >
+  const featureTable = table as unknown as Table<SortedRowModelFeatures, TData>
   const preSortedRowModel = table.getPreSortedRowModel()
-  const sorting = typedTable.atoms.sorting?.get()
+  const sorting = featureTable.atoms.sorting?.get()
 
   if (!preSortedRowModel.rows.length || !sorting?.length) {
     return preSortedRowModel
@@ -59,9 +58,7 @@ function _createSortedRowModel<
 
   // Filter out sortings that correspond to non existing columns
   const availableSorting = sorting.filter((sort) =>
-    column_getCanSort(
-      table.getColumn(sort.id) as Column_Internal<TFeatures, TData>,
-    ),
+    column_getCanSort(table.getColumn(sort.id) as Column<TFeatures, TData>),
   )
 
   const columnInfoById: Record<
@@ -74,13 +71,15 @@ function _createSortedRowModel<
   > = {}
 
   availableSorting.forEach((sortEntry) => {
-    const column: Column_Internal<TFeatures, TData> | undefined =
-      table.getColumn(sortEntry.id)
+    const column: Column<TFeatures, TData> | undefined = table.getColumn(
+      sortEntry.id,
+    )
     if (!column) return
+    const columnDef = column.columnDef as ColumnDef_RowSorting<TFeatures, TData>
 
     columnInfoById[sortEntry.id] = {
-      sortUndefined: column.columnDef.sortUndefined,
-      invertSorting: column.columnDef.invertSorting,
+      sortUndefined: columnDef.sortUndefined,
+      invertSorting: columnDef.invertSorting,
       sortFn: column_getSortFn(column),
     }
   })

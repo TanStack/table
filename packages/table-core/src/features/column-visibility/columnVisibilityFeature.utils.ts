@@ -1,12 +1,17 @@
 import { callMemoOrStaticFn, cloneState } from '../../utils'
 import { getDefaultColumnPinningState } from '../column-pinning/columnPinningFeature.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Cell } from '../../types/Cell'
-import type { Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 import type { ColumnVisibilityState } from './columnVisibilityFeature.types'
 import type { Row } from '../../types/Row'
+
+type ColumnVisibilityFeatures = Partial<{
+  columnVisibilityFeature: TableFeature
+  columnPinningFeature: TableFeature
+}>
 
 /**
  * Creates the default column visibility state.
@@ -38,7 +43,7 @@ export function column_toggleVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>, visible?: boolean): void {
+>(column: Column<TFeatures, TData, TValue>, visible?: boolean): void {
   if (column_getCanHide(column)) {
     table_setColumnVisibility(column.table, (old) => ({
       ...old,
@@ -65,14 +70,19 @@ export function column_getIsVisible<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): boolean {
+>(column: Column<TFeatures, TData, TValue>): boolean {
+  const featureColumn = column as unknown as Column<
+    ColumnVisibilityFeatures,
+    TData,
+    TValue
+  >
   const childColumns = column.columns
   return (
     (childColumns.length
       ? childColumns.some((childColumn) =>
           callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
         )
-      : column.table.atoms.columnVisibility?.get()?.[column.id]) ?? true
+      : featureColumn.table.atoms.columnVisibility?.get()?.[column.id]) ?? true
   )
 }
 
@@ -90,10 +100,15 @@ export function column_getCanHide<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
+  const featureColumn = column as unknown as Column<
+    ColumnVisibilityFeatures,
+    TData,
+    TValue
+  >
   return (
-    (column.columnDef.enableHiding ?? true) &&
-    (column.table.options.enableHiding ?? true)
+    (featureColumn.columnDef.enableHiding ?? true) &&
+    (featureColumn.table.options.enableHiding ?? true)
   )
 }
 
@@ -112,7 +127,7 @@ export function column_getToggleVisibilityHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
   return (e: unknown) => {
     column_toggleVisibility(
       column,
@@ -136,6 +151,10 @@ export function row_getVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
+  const featureTable = row.table as unknown as Table<
+    ColumnVisibilityFeatures,
+    TData
+  >
   const allCells = row.getAllCells()
   const visibleCells: Array<Cell<TFeatures, TData, unknown>> = []
   for (let i = 0; i < allCells.length; i++) {
@@ -146,7 +165,7 @@ export function row_getVisibleCells<
   }
 
   const { left, right } =
-    row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (!left.length && !right.length) return visibleCells // no pinning, return early
 
   const visibleCellsByColumnId = callMemoOrStaticFn(
@@ -262,7 +281,11 @@ export function table_setColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<ColumnVisibilityState>) {
-  table.options.onColumnVisibilityChange?.(updater)
+  const featureTable = table as unknown as Table<
+    ColumnVisibilityFeatures,
+    TData
+  >
+  featureTable.options.onColumnVisibilityChange?.(updater)
 }
 
 /**
@@ -281,9 +304,15 @@ export function table_resetColumnVisibility<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<
+    ColumnVisibilityFeatures,
+    TData
+  >
   table_setColumnVisibility(
     table,
-    defaultState ? {} : cloneState(table.initialState.columnVisibility ?? {}),
+    defaultState
+      ? {}
+      : cloneState(featureTable.initialState.columnVisibility ?? {}),
   )
 }
 

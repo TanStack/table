@@ -56,9 +56,16 @@ function _createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const typedTable = table as unknown as Table<
+    {
+      columnFilteringFeature: TableFeature
+      globalFilteringFeature: TableFeature
+    },
+    TData
+  >
   const rowModel = table.getPreFilteredRowModel()
-  const columnFilters = table.atoms.columnFilters?.get()
-  const globalFilter = table.atoms.globalFilter?.get()
+  const columnFilters = typedTable.atoms.columnFilters?.get()
+  const globalFilter = typedTable.atoms.globalFilter?.get()
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
     const flatRows = rowModel.flatRows as Array<

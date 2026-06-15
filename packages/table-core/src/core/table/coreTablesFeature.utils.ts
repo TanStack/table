@@ -121,7 +121,7 @@ export function table_setOptions<
   if (table.optionsStore) {
     table.optionsStore.set(() => mergedOptions)
   } else {
-    table.options = mergedOptions
+    ;(table as any).options = mergedOptions
   }
   table_syncExternalStateToBaseAtoms(table)
 }

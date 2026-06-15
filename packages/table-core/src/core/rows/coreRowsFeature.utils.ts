@@ -173,7 +173,7 @@ export function row_getAllCells<
     columns.length,
   )
   for (let i = 0; i < columns.length; i++) {
-    cells[i] = constructCell(columns[i], row, row.table)
+    cells[i] = constructCell(columns[i]!, row, row.table)
   }
   return cells
 }

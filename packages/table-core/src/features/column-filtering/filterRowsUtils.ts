@@ -3,8 +3,12 @@ import type { Row_ColumnFiltering } from './columnFilteringFeature.types'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { Table } from '../../types/Table'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
+
+type ColumnFilteringFeatures = Partial<{
+  columnFilteringFeature: TableFeature
+}>
 
 /**
  * Filters a row model with the supplied row predicate.
@@ -19,7 +23,8 @@ export function filterRows<
   filterRowImpl: (row: Row<TFeatures, TData>) => any,
   table: Table<TFeatures, TData>,
 ) {
-  if (table.options.filterFromLeafRows) {
+  const featureTable = table as unknown as Table<ColumnFilteringFeatures, TData>
+  if (featureTable.options.filterFromLeafRows) {
     return filterRowModelFromLeafs(rows, filterRowImpl, table)
   }
 
@@ -38,7 +43,8 @@ function filterRowModelFromLeafs<
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}
-  const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
+  const featureTable = table as unknown as Table<ColumnFilteringFeatures, TData>
+  const maxDepth = featureTable.options.maxLeafRowFilterDepth ?? 100
 
   const recurseFilterRows = (
     rowsToFilter: Array<
@@ -110,7 +116,8 @@ function filterRowModelFromRoot<
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}
-  const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
+  const featureTable = table as unknown as Table<ColumnFilteringFeatures, TData>
+  const maxDepth = featureTable.options.maxLeafRowFilterDepth ?? 100
 
   // Filters top level and nested rows
   const recurseFilterRows = (

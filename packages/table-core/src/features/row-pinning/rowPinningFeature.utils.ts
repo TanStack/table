@@ -1,13 +1,15 @@
 import { row_getIsAllParentsExpanded } from '../row-expanding/rowExpandingFeature.utils'
 import { callMemoOrStaticFn, cloneState } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   RowPinningPosition,
   RowPinningState,
 } from './rowPinningFeature.types'
+
+type RowPinningFeatures = Partial<{ rowPinningFeature: TableFeature }>
 
 // State Utils
 
@@ -44,7 +46,8 @@ export function table_setRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<RowPinningState>): void {
-  table.options.onRowPinningChange?.(updater)
+  const featureTable = table as unknown as Table<RowPinningFeatures, TData>
+  featureTable.options.onRowPinningChange?.(updater)
 }
 
 /**
@@ -64,12 +67,13 @@ export function table_resetRowPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean): void {
+  const featureTable = table as unknown as Table<RowPinningFeatures, TData>
   table_setRowPinning(
     table,
     defaultState
       ? getDefaultRowPinningState()
       : cloneState(
-          table.initialState.rowPinning ?? getDefaultRowPinningState(),
+          featureTable.initialState.rowPinning ?? getDefaultRowPinningState(),
         ),
   )
 }
@@ -91,7 +95,8 @@ export function table_getIsSomeRowsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, position?: RowPinningPosition): boolean {
-  const rowPinning = table.atoms.rowPinning?.get()
+  const featureTable = table as unknown as Table<RowPinningFeatures, TData>
+  const rowPinning = featureTable.atoms.rowPinning?.get()
 
   if (!position) {
     return Boolean(rowPinning?.top.length || rowPinning?.bottom.length)
@@ -106,9 +111,10 @@ function table_getPinnedRows<
   table: Table<TFeatures, TData>,
   position: 'top' | 'bottom',
 ): Array<Row<TFeatures, TData>> {
+  const featureTable = table as unknown as Table<RowPinningFeatures, TData>
   const visibleRows = table.getRowModel().rows
-  const pinnedRowIds = table.atoms.rowPinning?.get()?.[position] ?? []
-  const keepPinnedRows = table.options.keepPinnedRows ?? true
+  const pinnedRowIds = featureTable.atoms.rowPinning?.get()?.[position] ?? []
+  const keepPinnedRows = featureTable.options.keepPinnedRows ?? true
 
   const result: Array<Row<TFeatures, TData>> = []
   for (let i = 0; i < pinnedRowIds.length; i++) {
@@ -183,8 +189,9 @@ export function table_getCenterRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): Array<Row<TFeatures, TData>> {
+  const featureTable = table as unknown as Table<RowPinningFeatures, TData>
   const { top, bottom } =
-    table.atoms.rowPinning?.get() ?? getDefaultRowPinningState()
+    featureTable.atoms.rowPinning?.get() ?? getDefaultRowPinningState()
   const allRows = table.getRowModel().rows
 
   const topAndBottom = new Set([...top, ...bottom])
@@ -208,9 +215,10 @@ export function row_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
-  const { enableRowPinning } = row.table.options
+  const featureTable = row.table as unknown as Table<RowPinningFeatures, TData>
+  const { enableRowPinning } = featureTable.options
   if (typeof enableRowPinning === 'function') {
-    return enableRowPinning(row)
+    return enableRowPinning(row as unknown as Row<RowPinningFeatures, TData>)
   }
   return enableRowPinning ?? true
 }
@@ -230,8 +238,9 @@ export function row_getIsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): RowPinningPosition {
+  const featureTable = row.table as unknown as Table<RowPinningFeatures, TData>
   const { top, bottom } =
-    row.table.atoms.rowPinning?.get() ?? getDefaultRowPinningState()
+    featureTable.atoms.rowPinning?.get() ?? getDefaultRowPinningState()
 
   return top.includes(row.id)
     ? 'top'

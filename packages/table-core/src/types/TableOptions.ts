@@ -16,7 +16,7 @@ import type { TableOptions_RowPagination } from '../features/row-pagination/rowP
 import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinningFeature.types'
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-import type { RowData, UnionToIntersection } from './type-utils'
+import type { RowData } from './type-utils'
 import type {
   ExtractFeatureMapTypes,
   NonFeatureKeys,
@@ -73,43 +73,6 @@ export interface TableOptions_FeatureMap<
   rowSortingFeature: TableOptions_RowSorting
 }
 
-type TableOptions_StockFeatureKeys =
-  | 'columnFilteringFeature'
-  | 'columnGroupingFeature'
-  | 'columnOrderingFeature'
-  | 'columnPinningFeature'
-  | 'columnResizingFeature'
-  | 'columnSizingFeature'
-  | 'columnVisibilityFeature'
-  | 'globalFilteringFeature'
-  | 'rowExpandingFeature'
-  | 'rowPaginationFeature'
-  | 'rowPinningFeature'
-  | 'rowSelectionFeature'
-  | 'rowSortingFeature'
-
-/**
- * Plugin entries declaration-merged into `TableOptions_FeatureMap`, i.e. keys
- * beyond the stock set. Resolves to `unknown` (an intersection no-op) when no
- * plugins are merged so the common case skips the union-to-intersection work.
- */
-type TableOptions_PluginFeatureMapTypes<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = [
-  Exclude<
-    keyof TableOptions_FeatureMap<TFeatures, TData>,
-    TableOptions_StockFeatureKeys
-  >,
-] extends [never]
-  ? unknown
-  : UnionToIntersection<
-      TableOptions_FeatureMap<TFeatures, TData>[Exclude<
-        keyof TableOptions_FeatureMap<TFeatures, TData>,
-        TableOptions_StockFeatureKeys
-      >]
-    >
-
 /**
  * Complete table options for a specific feature set.
  *
@@ -123,28 +86,3 @@ export type TableOptions<
 > = TableOptions_Core<TFeatures, TData> &
   ExtractFeatureMapTypes<TFeatures, TableOptions_FeatureMap<TFeatures, TData>> &
   DebugOptions<TFeatures>
-
-/**
- * Internal broad option shape used where feature code may need to read options
- * from features that are not present in the current generic feature set.
- */
-export type TableOptions_All<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = TableOptions_Core<TFeatures, TData> &
-  Partial<
-    TableOptions_ColumnFiltering<TFeatures, TData> &
-      TableOptions_ColumnGrouping &
-      TableOptions_ColumnOrdering &
-      TableOptions_ColumnPinning &
-      TableOptions_ColumnResizing &
-      TableOptions_ColumnSizing &
-      TableOptions_ColumnVisibility &
-      TableOptions_GlobalFiltering<TFeatures, TData> &
-      TableOptions_RowExpanding<TFeatures, TData> &
-      TableOptions_RowPagination &
-      TableOptions_RowPinning<TFeatures, TData> &
-      TableOptions_RowSelection<TFeatures, TData> &
-      TableOptions_RowSorting &
-      TableOptions_PluginFeatureMapTypes<TFeatures, TData>
-  >

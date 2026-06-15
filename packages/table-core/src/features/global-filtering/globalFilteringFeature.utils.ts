@@ -1,10 +1,15 @@
 import { filterFn_includesString } from '../../fns/filterFns'
 import { cloneState, isFunction } from '../../utils'
-import type { Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 import type { FilterFn } from '../column-filtering/columnFilteringFeature.types'
 import type { CellData, RowData } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
+
+type GlobalFilteringFeatures = Partial<{
+  globalFilteringFeature: TableFeature
+  columnFilteringFeature: TableFeature
+}>
 
 /**
  * Checks whether this accessor column participates in global filtering.
@@ -21,12 +26,18 @@ export function column_getCanGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): boolean {
+>(column: Column<TFeatures, TData, TValue>): boolean {
+  const featureColumn = column as unknown as Column<
+    GlobalFilteringFeatures,
+    TData,
+    TValue
+  >
   return (
-    (column.columnDef.enableGlobalFilter ?? true) &&
-    (column.table.options.enableGlobalFilter ?? true) &&
-    (column.table.options.enableFilters ?? true) &&
-    (column.table.options.getColumnCanGlobalFilter?.(column as any) ?? true) &&
+    (featureColumn.columnDef.enableGlobalFilter ?? true) &&
+    (featureColumn.table.options.enableGlobalFilter ?? true) &&
+    (featureColumn.table.options.enableFilters ?? true) &&
+    (featureColumn.table.options.getColumnCanGlobalFilter?.(column as any) ??
+      true) &&
     !!column.accessorFn
   )
 }
@@ -62,17 +73,22 @@ export function table_getGlobalFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): FilterFn<TFeatures, TData> | undefined {
-  const { globalFilterFn: globalFilterFn } = table.options
+  const featureTable = table as unknown as Table<GlobalFilteringFeatures, TData>
+  const { globalFilterFn: globalFilterFn } = featureTable.options
   const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
-    table._rowModelFns.filterFns
+    featureTable._rowModelFns.filterFns as
+      | Record<string, FilterFn<TFeatures, TData>>
+      | undefined
 
   const filterFn = isFunction(globalFilterFn)
     ? globalFilterFn
     : globalFilterFn === 'auto'
       ? table_getGlobalAutoFilterFn()
-      : filterFns?.[globalFilterFn as string]
+      : globalFilterFn
+        ? filterFns?.[globalFilterFn]
+        : undefined
 
-  return filterFn
+  return filterFn as FilterFn<TFeatures, TData> | undefined
 }
 
 /**
@@ -90,7 +106,8 @@ export function table_setGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: any) {
-  table.options.onGlobalFilterChange?.(updater)
+  const featureTable = table as unknown as Table<GlobalFilteringFeatures, TData>
+  featureTable.options.onGlobalFilterChange?.(updater)
 }
 
 /**
@@ -109,8 +126,11 @@ export function table_resetGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<GlobalFilteringFeatures, TData>
   table_setGlobalFilter(
     table,
-    defaultState ? undefined : cloneState(table.initialState.globalFilter),
+    defaultState
+      ? undefined
+      : cloneState(featureTable.initialState.globalFilter),
   )
 }

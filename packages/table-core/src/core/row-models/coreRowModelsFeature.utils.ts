@@ -1,8 +1,17 @@
 import { createCoreRowModel } from './createCoreRowModel'
 import type { Table } from '../../types/Table'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 import type { RowModel } from './coreRowModelsFeature.types'
+
+type RowModelFeatures = Partial<{
+  coreRowModelsFeature: TableFeature
+  columnFilteringFeature: TableFeature
+  columnGroupingFeature: TableFeature
+  rowSortingFeature: TableFeature
+  rowExpandingFeature: TableFeature
+  rowPaginationFeature: TableFeature
+}>
 
 /**
  * Resolves the table's unmodified core row model.
@@ -19,13 +28,18 @@ export function table_getCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.coreRowModel) {
-    table._rowModels.coreRowModel =
+  const featureTable = table as unknown as Table<RowModelFeatures, TData>
+  if (!featureTable._rowModels.coreRowModel) {
+    featureTable._rowModels.coreRowModel =
       table.options.features.coreRowModel?.(table) ??
-      createCoreRowModel<TFeatures, TData>()(table)
+      (createCoreRowModel<TFeatures, TData>()(table) as unknown as () =>
+        RowModel<RowModelFeatures, TData>)
   }
 
-  return table._rowModels.coreRowModel()
+  return featureTable._rowModels.coreRowModel() as unknown as RowModel<
+    TFeatures,
+    TData
+  >
 }
 
 /**
@@ -62,16 +76,23 @@ export function table_getFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.filteredRowModel) {
-    table._rowModels.filteredRowModel =
+  const featureTable = table as unknown as Table<RowModelFeatures, TData>
+  if (!featureTable._rowModels.filteredRowModel) {
+    ;(featureTable._rowModels as any).filteredRowModel =
       table.options.features.filteredRowModel?.(table)
   }
 
-  if (table.options.manualFiltering || !table._rowModels.filteredRowModel) {
+  if (
+    featureTable.options.manualFiltering ||
+    !featureTable._rowModels.filteredRowModel
+  ) {
     return table.getPreFilteredRowModel()
   }
 
-  return table._rowModels.filteredRowModel()
+  return featureTable._rowModels.filteredRowModel() as unknown as RowModel<
+    TFeatures,
+    TData
+  >
 }
 
 /**
@@ -106,16 +127,23 @@ export function table_getGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.groupedRowModel) {
-    table._rowModels.groupedRowModel =
+  const featureTable = table as unknown as Table<RowModelFeatures, TData>
+  if (!featureTable._rowModels.groupedRowModel) {
+    ;(featureTable._rowModels as any).groupedRowModel =
       table.options.features.groupedRowModel?.(table)
   }
 
-  if (table.options.manualGrouping || !table._rowModels.groupedRowModel) {
+  if (
+    featureTable.options.manualGrouping ||
+    !featureTable._rowModels.groupedRowModel
+  ) {
     return table.getPreGroupedRowModel()
   }
 
-  return table._rowModels.groupedRowModel()
+  return featureTable._rowModels.groupedRowModel() as unknown as RowModel<
+    TFeatures,
+    TData
+  >
 }
 
 /**
@@ -151,16 +179,23 @@ export function table_getSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.sortedRowModel) {
-    table._rowModels.sortedRowModel =
+  const featureTable = table as unknown as Table<RowModelFeatures, TData>
+  if (!featureTable._rowModels.sortedRowModel) {
+    ;(featureTable._rowModels as any).sortedRowModel =
       table.options.features.sortedRowModel?.(table)
   }
 
-  if (table.options.manualSorting || !table._rowModels.sortedRowModel) {
+  if (
+    featureTable.options.manualSorting ||
+    !featureTable._rowModels.sortedRowModel
+  ) {
     return table.getPreSortedRowModel()
   }
 
-  return table._rowModels.sortedRowModel()
+  return featureTable._rowModels.sortedRowModel() as unknown as RowModel<
+    TFeatures,
+    TData
+  >
 }
 
 /**
@@ -195,16 +230,23 @@ export function table_getExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.expandedRowModel) {
-    table._rowModels.expandedRowModel =
+  const featureTable = table as unknown as Table<RowModelFeatures, TData>
+  if (!featureTable._rowModels.expandedRowModel) {
+    ;(featureTable._rowModels as any).expandedRowModel =
       table.options.features.expandedRowModel?.(table)
   }
 
-  if (table.options.manualExpanding || !table._rowModels.expandedRowModel) {
+  if (
+    featureTable.options.manualExpanding ||
+    !featureTable._rowModels.expandedRowModel
+  ) {
     return table.getPreExpandedRowModel()
   }
 
-  return table._rowModels.expandedRowModel()
+  return featureTable._rowModels.expandedRowModel() as unknown as RowModel<
+    TFeatures,
+    TData
+  >
 }
 
 /**
@@ -241,16 +283,23 @@ export function table_getPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  if (!table._rowModels.paginatedRowModel) {
-    table._rowModels.paginatedRowModel =
+  const featureTable = table as unknown as Table<RowModelFeatures, TData>
+  if (!featureTable._rowModels.paginatedRowModel) {
+    ;(featureTable._rowModels as any).paginatedRowModel =
       table.options.features.paginatedRowModel?.(table)
   }
 
-  if (table.options.manualPagination || !table._rowModels.paginatedRowModel) {
+  if (
+    featureTable.options.manualPagination ||
+    !featureTable._rowModels.paginatedRowModel
+  ) {
     return table.getPrePaginatedRowModel()
   }
 
-  return table._rowModels.paginatedRowModel()
+  return featureTable._rowModels.paginatedRowModel() as unknown as RowModel<
+    TFeatures,
+    TData
+  >
 }
 
 /**

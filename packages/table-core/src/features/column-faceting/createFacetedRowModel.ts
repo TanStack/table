@@ -10,6 +10,12 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
+type FacetedRowModelFeatures = Partial<{
+  columnFacetingFeature: TableFeature
+  columnFilteringFeature: TableFeature
+  globalFilteringFeature: TableFeature
+}>
+
 /**
  * Creates a memoized faceted row model factory.
  *
@@ -23,12 +29,8 @@ export function createFacetedRowModel<
   columnId: string,
 ) => () => RowModel<TFeatures, TData> {
   return (table, columnId) => {
-    const typedTable = table as unknown as Table<
-      {
-        columnFacetingFeature: TableFeature
-        columnFilteringFeature: TableFeature
-        globalFilteringFeature: TableFeature
-      },
+    const featureTable = table as unknown as Table<
+      FacetedRowModelFeatures,
       TData
     >
     return tableMemo({
@@ -36,10 +38,10 @@ export function createFacetedRowModel<
       table,
       fnName: 'createFacetedRowModel',
       memoDeps: () => [
-        typedTable.getPreFilteredRowModel(),
-        typedTable.atoms.columnFilters?.get(),
-        typedTable.atoms.globalFilter?.get(),
-        typedTable.getFilteredRowModel(),
+        table.getPreFilteredRowModel(),
+        featureTable.atoms.columnFilters?.get(),
+        featureTable.atoms.globalFilter?.get(),
+        table.getFilteredRowModel(),
       ],
       fn: (preRowModel, columnFilters, globalFilter) =>
         _createFacetedRowModel(
@@ -88,5 +90,8 @@ function _createFacetedRowModel<
     return true
   }
 
-  return filterRows(preRowModel.rows, filterRowsImpl, table)
+  return filterRows(preRowModel.rows, filterRowsImpl, table) as RowModel<
+    TFeatures,
+    TData
+  >
 }

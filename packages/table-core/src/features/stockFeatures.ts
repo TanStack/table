@@ -12,6 +12,7 @@ import { rowPaginationFeature } from './row-pagination/rowPaginationFeature'
 import { rowPinningFeature } from './row-pinning/rowPinningFeature'
 import { rowSelectionFeature } from './row-selection/rowSelectionFeature'
 import { rowSortingFeature } from './row-sorting/rowSortingFeature'
+import type { TableFeature } from '../types/TableFeatures'
 
 export interface StockFeatures {
   columnFacetingFeature: typeof columnFacetingFeature
@@ -26,7 +27,7 @@ export interface StockFeatures {
   rowExpandingFeature: typeof rowExpandingFeature
   rowPaginationFeature: typeof rowPaginationFeature
   rowPinningFeature: typeof rowPinningFeature
-  rowSelectionFeature: typeof rowSelectionFeature
+  rowSelectionFeature: TableFeature
   rowSortingFeature: typeof rowSortingFeature
 }
 

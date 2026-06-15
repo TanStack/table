@@ -29,11 +29,14 @@ import {
   table_toggleAllRowsSelected,
 } from './rowSelectionFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
+import './rowSelectionFeature.types'
 
 /**
  * Feature that adds row selection state and APIs for row and page selection.
  */
-export const rowSelectionFeature: TableFeature = {
+export const rowSelectionFeature: TableFeature<{
+  rowSelectionFeature: TableFeature
+}> = {
   getInitialState: (initialState) => {
     return {
       rowSelection: getDefaultRowSelectionState(),

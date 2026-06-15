@@ -5,12 +5,14 @@ import {
 } from '../column-sizing/columnSizingFeature.utils'
 import { cloneState } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
-import type { Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.types'
 import type { columnResizingState } from './columnResizingFeature.types'
+
+type ColumnResizingFeatures = Partial<{ columnResizingFeature: TableFeature }>
 
 /**
  * Creates the default transient column resizing state.
@@ -49,10 +51,15 @@ export function column_getCanResize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
+  const featureColumn = column as unknown as Column<
+    ColumnResizingFeatures,
+    TData,
+    TValue
+  >
   return (
-    (column.columnDef.enableResizing ?? true) &&
-    (column.table.options.enableColumnResizing ?? true)
+    (featureColumn.columnDef.enableResizing ?? true) &&
+    (featureColumn.table.options.enableColumnResizing ?? true)
   )
 }
 
@@ -70,9 +77,13 @@ export function column_getIsResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
+  const featureTable = column.table as unknown as Table<
+    ColumnResizingFeatures,
+    TData
+  >
   return (
-    column.table.atoms.columnResizing?.get()?.isResizingColumn === column.id
+    featureTable.atoms.columnResizing?.get()?.isResizingColumn === column.id
   )
 }
 
@@ -94,6 +105,10 @@ export function header_getResizeHandler<
   TValue extends CellData = CellData,
 >(header: Header<TFeatures, TData, TValue>, _contextDocument?: Document) {
   const column = header.table.getColumn(header.column.id)!
+  const featureTable = column.table as unknown as Table<
+    ColumnResizingFeatures,
+    TData
+  >
   const canResize = column_getCanResize(column)
 
   return (event: unknown) => {
@@ -132,7 +147,7 @@ export function header_getResizeHandler<
 
       table_setColumnResizing(column.table, (old) => {
         const deltaDirection =
-          column.table.options.columnResizeDirection === 'rtl' ? -1 : 1
+          featureTable.options.columnResizeDirection === 'rtl' ? -1 : 1
         const deltaOffset =
           (clientXPos - (old.startOffset ?? 0)) * deltaDirection
         const startSize = old.startSize ?? 0
@@ -161,7 +176,7 @@ export function header_getResizeHandler<
       })
 
       if (
-        column.table.options.columnResizeMode === 'onChange' ||
+        featureTable.options.columnResizeMode === 'onChange' ||
         eventType === 'end'
       ) {
         table_setColumnSizing(column.table, (old) => ({
@@ -280,7 +295,8 @@ export function table_setColumnResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<columnResizingState>) {
-  table.options.onColumnResizingChange?.(updater)
+  const featureTable = table as unknown as Table<ColumnResizingFeatures, TData>
+  featureTable.options.onColumnResizingChange?.(updater)
 }
 
 /**
@@ -300,12 +316,14 @@ export function table_resetHeaderSizeInfo<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<ColumnResizingFeatures, TData>
   table_setColumnResizing(
     table,
     defaultState
       ? getDefaultColumnResizingState()
       : cloneState(
-          table.initialState.columnResizing ?? getDefaultColumnResizingState(),
+          featureTable.initialState.columnResizing ??
+            getDefaultColumnResizingState(),
         ),
   )
 }

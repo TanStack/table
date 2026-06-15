@@ -14,11 +14,12 @@ import {
   table_getSortedRowModel,
 } from './coreRowModelsFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
+import type { CoreFeatures } from '../coreFeatures'
 
 /**
  * Core feature that wires table row-model accessors and row-model caches.
  */
-export const coreRowModelsFeature: TableFeature = {
+export const coreRowModelsFeature: TableFeature<CoreFeatures> = {
   constructTableAPIs: (table) => {
     assignTableAPIs('coreRowModelsFeature', table, {
       table_getCoreRowModel: {

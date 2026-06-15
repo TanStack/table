@@ -15,6 +15,8 @@ import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
+type GroupedRowModelFeatures = Partial<{ columnGroupingFeature: TableFeature }>
+
 /**
  * Creates a memoized grouped row model factory.
  *
@@ -29,17 +31,14 @@ export function createGroupedRowModel<
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) => {
-    const typedTable = table as unknown as Table<
-      { columnGroupingFeature: TableFeature },
-      TData
-    >
+    const featureTable = table as unknown as Table<GroupedRowModelFeatures, TData>
     return tableMemo({
       feature: 'columnGroupingFeature',
       table,
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
-        typedTable.atoms.grouping?.get(),
-        typedTable.getPreGroupedRowModel(),
+        featureTable.atoms.grouping?.get(),
+        table.getPreGroupedRowModel(),
       ],
       fn: () => _createGroupedRowModel(table),
       onAfterUpdate: () => {
@@ -54,8 +53,9 @@ function _createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const featureTable = table as unknown as Table<GroupedRowModelFeatures, TData>
   const rowModel = table.getPreGroupedRowModel()
-  const grouping = table.atoms.grouping?.get()
+  const grouping = featureTable.atoms.grouping?.get()
 
   if (!rowModel.rows.length || !grouping?.length) {
     rowModel.rows.forEach((row) => {
@@ -156,9 +156,11 @@ function _createGroupedRowModel<
 
             // Aggregate the values
             const column = table.getColumn(colId)
-            const aggregateFn = column_getAggregationFn(
-              column as Column<TFeatures, TData, unknown>,
-            )
+            const aggregateFn = column
+              ? column_getAggregationFn(
+                  column as Column<TFeatures, TData, unknown>,
+                )
+              : undefined
 
             if (!row._groupingValuesCache) row._groupingValuesCache = {}
 

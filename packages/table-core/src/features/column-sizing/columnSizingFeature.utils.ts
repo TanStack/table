@@ -8,11 +8,13 @@ import { column_getIndex } from '../column-ordering/columnOrderingFeature.utils'
 import { callMemoOrStaticFn, cloneState } from '../../utils'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
-import type { Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 import type { ColumnSizingState } from './columnSizingFeature.types'
+
+type ColumnSizingFeatures = Partial<{ columnSizingFeature: TableFeature }>
 
 /**
  * Creates the default committed column sizing state.
@@ -64,16 +66,21 @@ export function column_getSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): number {
+>(column: Column<TFeatures, TData, TValue>): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = column.table.atoms.columnSizing?.get()?.[column.id]
+  const featureColumn = column as unknown as Column<
+    ColumnSizingFeatures,
+    TData,
+    TValue
+  >
+  const columnSize = featureColumn.table.atoms.columnSizing?.get()?.[column.id]
 
   return Math.min(
     Math.max(
-      column.columnDef.minSize ?? defaultSizes.minSize,
-      columnSize ?? column.columnDef.size ?? defaultSizes.size,
+      featureColumn.columnDef.minSize ?? defaultSizes.minSize,
+      columnSize ?? featureColumn.columnDef.size ?? defaultSizes.size,
     ),
-    column.columnDef.maxSize ?? defaultSizes.maxSize,
+    featureColumn.columnDef.maxSize ?? defaultSizes.maxSize,
   )
 }
 
@@ -93,7 +100,7 @@ export function column_getStart<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column_Internal<TFeatures, TData, TValue>,
+  column: Column<TFeatures, TData, TValue>,
   position: ColumnPinningPosition | 'center',
 ): number {
   const index = callMemoOrStaticFn(
@@ -134,7 +141,7 @@ export function column_getAfter<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  column: Column_Internal<TFeatures, TData, TValue>,
+  column: Column<TFeatures, TData, TValue>,
   position: ColumnPinningPosition | 'center',
 ): number {
   const visibleLeafColumns = callMemoOrStaticFn(
@@ -173,7 +180,7 @@ export function column_resetSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
   table_setColumnSizing(column.table, ({ [column.id]: _, ...rest }) => {
     return rest
   })
@@ -256,7 +263,8 @@ export function table_setColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<ColumnSizingState>) {
-  table.options.onColumnSizingChange?.(updater)
+  const featureTable = table as unknown as Table<ColumnSizingFeatures, TData>
+  featureTable.options.onColumnSizingChange?.(updater)
 }
 
 /**
@@ -275,9 +283,12 @@ export function table_resetColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<ColumnSizingFeatures, TData>
   table_setColumnSizing(
     table,
-    defaultState ? {} : cloneState(table.initialState.columnSizing ?? {}),
+    defaultState
+      ? {}
+      : cloneState(featureTable.initialState.columnSizing ?? {}),
   )
 }
 

@@ -37,25 +37,3 @@ export interface TableState_FeatureMap {
  */
 export type TableState<TFeatures extends TableFeatures> =
   ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>
-
-/**
- * Internal broad state shape containing every registered feature state slice.
- *
- * Feature internals use this when they may need to inspect optional slices owned
- * by other features.
- */
-export interface TableState_All extends Partial<
-  TableState_ColumnFiltering &
-    TableState_ColumnGrouping &
-    TableState_ColumnOrdering &
-    TableState_ColumnPinning &
-    TableState_ColumnResizing &
-    TableState_ColumnSizing &
-    TableState_ColumnVisibility &
-    TableState_GlobalFiltering &
-    TableState_RowExpanding &
-    TableState_RowPagination &
-    TableState_RowPinning &
-    TableState_RowSelection &
-    TableState_RowSorting
-> {}

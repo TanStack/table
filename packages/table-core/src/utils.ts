@@ -1,7 +1,7 @@
 import type { Table } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
-import type { TableState, TableState_All } from './types/TableState'
+import type { TableState } from './types/TableState'
 
 /**
  * Applies a TanStack updater to a value.
@@ -52,12 +52,11 @@ export function cloneState<T>(value: T): T {
  */
 export function makeStateUpdater<
   TFeatures extends TableFeatures,
-  K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
+  K extends (string & {}) | keyof TableState<TFeatures>,
 >(
   key: K,
-  // Minimal structural shape so any table view (public `Table`,
-  // `Table_Internal`, or a custom plugin table) can be passed without forcing
-  // the compiler to relate the full table types.
+  // Minimal structural shape so public tables and custom plugin tables can be
+  // passed without forcing the compiler to relate the full table types.
   instance: {
     readonly options: { readonly atoms?: object | undefined }
     readonly baseAtoms: object

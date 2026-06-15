@@ -8,9 +8,12 @@ import { buildHeaderGroups } from './buildHeaderGroups'
 import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Header_Header } from './coreHeadersFeature.types'
-import type { Column } from '../../types/Column'
+
+type HeaderFeatures = Partial<{
+  columnPinningFeature: TableFeature
+}>
 
 /**
  * Walks a header tree and collects all descendant leaf headers.
@@ -79,8 +82,9 @@ export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<HeaderFeatures, TData>
   const { left, right } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
   const leafColumns = callMemoOrStaticFn(
     table,
@@ -167,7 +171,7 @@ export function table_getFlatHeaders<
   for (let i = 0; i < headerGroups.length; i++) {
     const headers = headerGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j])
+      result.push(headers[j] as Header<TFeatures, TData, unknown>)
     }
   }
   return result
@@ -193,7 +197,7 @@ export function table_getLeafHeaders<
   for (let i = 0; i < topHeaders.length; i++) {
     const leafHeaders = topHeaders[i]!.getLeafHeaders()
     for (let j = 0; j < leafHeaders.length; j++) {
-      result.push(leafHeaders[j])
+      result.push(leafHeaders[j] as Header<TFeatures, TData, unknown>)
     }
   }
   return result

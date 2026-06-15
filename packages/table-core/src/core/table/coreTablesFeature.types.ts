@@ -10,7 +10,7 @@ import type {
 } from '../../types/TableFeatures'
 import type { CachedRowModels } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
-import type { TableState, TableState_All } from '../../types/TableState'
+import type { TableState } from '../../types/TableState'
 
 export interface TableMeta<
   in out TFeatures extends TableFeatures,
@@ -61,26 +61,6 @@ export type Atoms<TFeatures extends TableFeatures> = {
  */
 export type ExternalAtoms<TFeatures extends TableFeatures> = Partial<{
   [K in keyof TableState<TFeatures>]: Atom<TableState<TFeatures>[K]>
-}>
-
-/**
- * Internal "all features" flat variants of the atom types. `Table_Internal`
- * uses these so feature code (written generically over `TFeatures`) can access
- * any slice atom (e.g. `table.atoms.columnPinning`) without TypeScript
- * narrowing away slices that aren't in the current `TFeatures` union.
- *
- * Keys are optional: feature code can read atoms from slices it doesn't own,
- * but those slices may not be registered on the current table. Consumers must
- * use optional chaining (`table.atoms.columnPinning?.get() ?? default`).
- */
-export type BaseAtoms_All = {
-  [K in keyof TableState_All]?: Atom<TableState_All[K]>
-}
-export type Atoms_All = {
-  [K in keyof TableState_All]?: ReadonlyAtom<TableState_All[K]>
-}
-export type ExternalAtoms_All = Partial<{
-  [K in keyof TableState_All]: Atom<TableState_All[K]>
 }>
 
 export interface TableOptions_Table<

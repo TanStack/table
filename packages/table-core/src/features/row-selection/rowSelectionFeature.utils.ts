@@ -1,10 +1,12 @@
 import { cloneState } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowSelectionState } from './rowSelectionFeature.types'
+
+type RowSelectionFeatures = Partial<{ rowSelectionFeature: TableFeature }>
 
 // State APIs
 
@@ -38,7 +40,8 @@ export function table_setRowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<RowSelectionState>) {
-  table.options.onRowSelectionChange?.(updater)
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
+  featureTable.options.onRowSelectionChange?.(updater)
 }
 
 /**
@@ -57,9 +60,10 @@ export function table_resetRowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   table_setRowSelection(
     table,
-    defaultState ? {} : cloneState(table.initialState.rowSelection ?? {}),
+    defaultState ? {} : cloneState(featureTable.initialState.rowSelection ?? {}),
   )
 }
 
@@ -171,9 +175,10 @@ export function table_getSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (!Object.keys(featureTable.atoms.rowSelection?.get() ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -199,9 +204,10 @@ export function table_getFilteredSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (!Object.keys(featureTable.atoms.rowSelection?.get() ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -227,9 +233,10 @@ export function table_getGroupedSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (!Object.keys(featureTable.atoms.rowSelection?.get() ?? {}).length) {
     return {
       rows: [],
       flatRows: [],
@@ -255,8 +262,10 @@ export function table_getIsAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   const preGroupedFlatRows = table.getFilteredRowModel().flatRows
-  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
+  const rowSelection: RowSelectionState =
+    featureTable.atoms.rowSelection?.get() ?? {}
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -289,10 +298,12 @@ export function table_getIsAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   const paginationFlatRows = table
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
-  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
+  const rowSelection: RowSelectionState =
+    featureTable.atoms.rowSelection?.get() ?? {}
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
 
@@ -321,8 +332,9 @@ export function table_getIsSomeRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   const totalSelected = Object.keys(
-    table.atoms.rowSelection?.get() ?? {},
+    featureTable.atoms.rowSelection?.get() ?? {},
   ).length
   return (
     totalSelected > 0 &&
@@ -511,9 +523,12 @@ export function row_getCanSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row.table.options
+  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  const options = featureTable.options
   if (typeof options.enableRowSelection === 'function') {
-    return options.enableRowSelection(row)
+    return options.enableRowSelection(
+      row as unknown as Row<RowSelectionFeatures, TData>,
+    )
   }
 
   return options.enableRowSelection ?? true
@@ -534,9 +549,12 @@ export function row_getCanSelectSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row.table.options
+  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  const options = featureTable.options
   if (typeof options.enableSubRowSelection === 'function') {
-    return options.enableSubRowSelection(row)
+    return options.enableSubRowSelection(
+      row as unknown as Row<RowSelectionFeatures, TData>,
+    )
   }
 
   return options.enableSubRowSelection ?? true
@@ -557,9 +575,12 @@ export function row_getCanMultiSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const options = row.table.options
+  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  const options = featureTable.options
   if (typeof options.enableMultiRowSelection === 'function') {
-    return options.enableMultiRowSelection(row)
+    return options.enableMultiRowSelection(
+      row as unknown as Row<RowSelectionFeatures, TData>,
+    )
   }
 
   return options.enableMultiRowSelection ?? true
@@ -692,7 +713,8 @@ export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
-  return (row.table.atoms.rowSelection?.get() ?? {})[row.id] ?? false
+  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  return (featureTable.atoms.rowSelection?.get() ?? {})[row.id] ?? false
 }
 
 /**

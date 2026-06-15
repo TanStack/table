@@ -21,12 +21,3 @@ export type RowModelFns<
 > = Partial<
   ExtractFeatureMapTypes<TFeatures, RowModelFns_FeatureMap<TFeatures, TData>>
 >
-
-export interface RowModelFns_All<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
-> extends Partial<
-  RowModelFns_ColumnFiltering<TFeatures, TData> &
-    RowModelFns_ColumnGrouping<TFeatures, TData> &
-    RowModelFns_RowSorting<TFeatures, TData>
-> {}

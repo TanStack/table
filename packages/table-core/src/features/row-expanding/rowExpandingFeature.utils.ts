@@ -1,12 +1,14 @@
 import { cloneState } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   ExpandedState,
   ExpandedStateList,
 } from './rowExpandingFeature.types'
+
+type RowExpandingFeatures = Partial<{ rowExpandingFeature: TableFeature }>
 
 /**
  * Creates the default expanded state.
@@ -39,10 +41,11 @@ export function table_autoResetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowExpandingFeatures, TData>
   if (
     table.options.autoResetAll ??
-    table.options.autoResetExpanded ??
-    !table.options.manualExpanding
+    featureTable.options.autoResetExpanded ??
+    !featureTable.options.manualExpanding
   ) {
     table._reactivity.schedule(() => table_resetExpanded(table))
   }
@@ -63,7 +66,8 @@ export function table_setExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<ExpandedState>) {
-  table.options.onExpandedChange?.(updater)
+  const featureTable = table as unknown as Table<RowExpandingFeatures, TData>
+  featureTable.options.onExpandedChange?.(updater)
 }
 
 /**
@@ -105,9 +109,10 @@ export function table_resetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<RowExpandingFeatures, TData>
   table_setExpanded(
     table,
-    defaultState ? {} : cloneState(table.initialState.expanded ?? {}),
+    defaultState ? {} : cloneState(featureTable.initialState.expanded ?? {}),
   )
 }
 
@@ -166,7 +171,8 @@ export function table_getIsSomeRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const expanded = table.atoms.expanded?.get() ?? {}
+  const featureTable = table as unknown as Table<RowExpandingFeatures, TData>
+  const expanded = featureTable.atoms.expanded?.get() ?? {}
   return expanded === true || Object.values(expanded).some(Boolean)
 }
 
@@ -185,7 +191,8 @@ export function table_getIsAllRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
-  const expanded = table.atoms.expanded?.get() ?? {}
+  const featureTable = table as unknown as Table<RowExpandingFeatures, TData>
+  const expanded = featureTable.atoms.expanded?.get() ?? {}
 
   // If expanded is true, save some cycles and return true
   if (expanded === true) {
@@ -220,12 +227,13 @@ export function table_getExpandedDepth<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<RowExpandingFeatures, TData>
   let maxDepth = 0
 
   const rowIds =
-    table.atoms.expanded?.get() === true
+    featureTable.atoms.expanded?.get() === true
       ? Object.keys(table.getRowModel().rowsById)
-      : Object.keys(table.atoms.expanded?.get() ?? {})
+      : Object.keys(featureTable.atoms.expanded?.get() ?? {})
 
   rowIds.forEach((id) => {
     const splitId = id.split('.')
@@ -297,10 +305,13 @@ export function row_getIsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const expanded: ExpandedState = row.table.atoms.expanded?.get() ?? {}
+  const featureTable = row.table as unknown as Table<RowExpandingFeatures, TData>
+  const expanded: ExpandedState = featureTable.atoms.expanded?.get() ?? {}
 
   return !!(
-    row.table.options.getIsRowExpanded?.(row) ??
+    featureTable.options.getIsRowExpanded?.(
+      row as unknown as Row<RowExpandingFeatures, TData>,
+    ) ??
     (expanded === true || expanded[row.id])
   )
 }
@@ -320,9 +331,12 @@ export function row_getCanExpand<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  const featureTable = row.table as unknown as Table<RowExpandingFeatures, TData>
   return (
-    row.table.options.getRowCanExpand?.(row) ??
-    ((row.table.options.enableExpanding ?? true) && !!row.subRows.length)
+    featureTable.options.getRowCanExpand?.(
+      row as unknown as Row<RowExpandingFeatures, TData>,
+    ) ??
+    ((featureTable.options.enableExpanding ?? true) && !!row.subRows.length)
   )
 }
 

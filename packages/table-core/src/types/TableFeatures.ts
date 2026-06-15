@@ -1,15 +1,15 @@
 import type { CoreFeatures } from '../core/coreFeatures'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
-import type { ColumnDefBase_All } from './ColumnDef'
 import type { Row } from './Row'
 import type { Table } from './Table'
-import type { TableOptions_All } from './TableOptions'
-import type { TableState_All } from './TableState'
+import type { TableOptions } from './TableOptions'
+import type { TableState } from './TableState'
 import type { StockFeatures } from '../features/stockFeatures'
 import type { RowModel } from '../core/row-models/coreRowModelsFeature.types'
 import type { FilterFn } from '../features/column-filtering/columnFilteringFeature.types'
 import type { SortFn } from '../features/row-sorting/rowSortingFeature.types'
 import type { AggregationFn } from '../features/column-grouping/columnGroupingFeature.types'
+import type { ColumnDefBase } from './ColumnDef'
 
 export type IsAny<T> = 0 extends 1 & T ? true : false
 type UnionToIntersectionOrEmpty<T> = [T] extends [never]
@@ -221,75 +221,63 @@ export interface TableFeatures
   tableMeta?: object
 }
 
-export interface TableFeature {
+export interface TableFeature<
+  TFeatureContext extends TableFeatures = any,
+> {
   /**
    * Assigns Cell APIs to the cell prototype for memory-efficient method sharing.
    * This is called once per table to build a shared prototype for all cells.
    */
-  assignCellPrototype?: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
+  assignCellPrototype?: <TData extends RowData>(
     prototype: Record<string, any>,
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatureContext, TData>,
   ) => void
   /**
    * Assigns Column APIs to the column prototype for memory-efficient method sharing.
    * This is called once per table to build a shared prototype for all columns.
    */
-  assignColumnPrototype?: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
+  assignColumnPrototype?: <TData extends RowData>(
     prototype: Record<string, any>,
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatureContext, TData>,
   ) => void
   /**
    * Assigns Header APIs to the header prototype for memory-efficient method sharing.
    * This is called once per table to build a shared prototype for all headers.
    */
-  assignHeaderPrototype?: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
+  assignHeaderPrototype?: <TData extends RowData>(
     prototype: Record<string, any>,
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatureContext, TData>,
   ) => void
   /**
    * Assigns Row APIs to the row prototype for memory-efficient method sharing.
    * This is called once per table to build a shared prototype for all rows.
    */
-  assignRowPrototype?: <TFeatures extends TableFeatures, TData extends RowData>(
+  assignRowPrototype?: <TData extends RowData>(
     prototype: Record<string, any>,
-    table: Table<TFeatures, TData>,
+    table: Table<TFeatureContext, TData>,
   ) => void
   /**
    * Assigns Table APIs to the table instance.
    * Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
    */
-  constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData>,
+  constructTableAPIs?: <TData extends RowData>(
+    table: Table<TFeatureContext, TData>,
   ) => void
   getDefaultColumnDef?: <
-    TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
-  >() => ColumnDefBase_All<TFeatures, TData, TValue>
-  getDefaultTableOptions?: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    table: Table<TFeatures, TData>,
-  ) => Partial<TableOptions_All<TFeatures, TData>>
-  getInitialState?: (initialState: Partial<TableState_All>) => TableState_All
+  >() => ColumnDefBase<TFeatureContext, TData, TValue>
+  getDefaultTableOptions?: <TData extends RowData>(
+    table: Table<TFeatureContext, TData>,
+  ) => Partial<TableOptions<TFeatureContext, TData>>
+  getInitialState?: (
+    initialState: Partial<TableState<TFeatureContext>>,
+  ) => Partial<TableState<TFeatureContext>>
   /**
    * Initializes instance-specific data on each row (e.g., caches).
    * Methods should be assigned via assignRowPrototype instead.
    */
-  initRowInstanceData?: <
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-  >(
-    row: Row<TFeatures, TData>,
+  initRowInstanceData?: <TData extends RowData>(
+    row: Row<TFeatureContext, TData>,
   ) => void
 }

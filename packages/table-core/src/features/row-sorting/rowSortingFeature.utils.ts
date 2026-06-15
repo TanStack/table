@@ -1,14 +1,17 @@
 import { reSplitAlphaNumeric, sortFn_basic } from '../../fns/sortFns'
 import { cloneState, isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
-import type { Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 import type {
+  ColumnDef_RowSorting,
   SortDirection,
   SortFn,
   SortingState,
 } from './rowSortingFeature.types'
+
+type RowSortingFeatures = Partial<{ rowSortingFeature: TableFeature }>
 
 // State Utils
 
@@ -42,7 +45,8 @@ export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<SortingState>) {
-  table.options.onSortingChange?.(updater)
+  const featureTable = table as unknown as Table<RowSortingFeatures, TData>
+  featureTable.options.onSortingChange?.(updater)
 }
 
 /**
@@ -61,9 +65,10 @@ export function table_resetSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<RowSortingFeatures, TData>
   table_setSorting(
     table,
-    defaultState ? [] : cloneState(table.initialState.sorting ?? []),
+    defaultState ? [] : cloneState(featureTable.initialState.sorting ?? []),
   )
 }
 
@@ -85,9 +90,16 @@ export function column_getAutoSortFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
+>(column: Column<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
+  const columnDef = column.columnDef as ColumnDef_RowSorting<TFeatures, TData>
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   const sortFns: Record<string, SortFn<TFeatures, TData>> | undefined =
-    column.table._rowModelFns.sortFns
+    featureTable._rowModelFns.sortFns as
+      | Record<string, SortFn<TFeatures, TData>>
+      | undefined
 
   const firstRows = column.table.getFilteredRowModel().flatRows.slice(0, 10)
 
@@ -135,7 +147,7 @@ export function column_getAutoSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
   const firstRow = column.table.getFilteredRowModel().flatRows[0]
 
   const value = firstRow ? firstRow.getValue(column.id) : undefined
@@ -163,15 +175,22 @@ export function column_getSortFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
+>(column: Column<TFeatures, TData, TValue>): SortFn<TFeatures, TData> {
+  const columnDef = column.columnDef as ColumnDef_RowSorting<TFeatures, TData>
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   const sortFns: Record<string, SortFn<TFeatures, TData>> | undefined =
-    column.table._rowModelFns.sortFns
+    featureTable._rowModelFns.sortFns as
+      | Record<string, SortFn<TFeatures, TData>>
+      | undefined
 
-  return isFunction(column.columnDef.sortFn)
-    ? column.columnDef.sortFn
-    : column.columnDef.sortFn === 'auto'
+  return isFunction(columnDef.sortFn)
+    ? columnDef.sortFn
+    : columnDef.sortFn === 'auto'
       ? column_getAutoSortFn(column)
-      : (sortFns?.[column.columnDef.sortFn as string] ?? sortFn_basic)
+      : (sortFns?.[columnDef.sortFn as string] ?? sortFn_basic)
 }
 
 /**
@@ -190,11 +209,11 @@ export function column_toggleSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  desc?: boolean,
-  multi?: boolean,
-) {
+>(column: Column<TFeatures, TData, TValue>, desc?: boolean, multi?: boolean) {
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   // if (column.columns.length) {
   //   column.columns.forEach((c, i) => {
   //     if (c.id) {
@@ -260,7 +279,7 @@ export function column_toggleSorting<
       newSorting.splice(
         0,
         newSorting.length -
-          (column.table.options.maxMultiSortColCount ??
+          (featureTable.options.maxMultiSortColCount ??
             Number.MAX_SAFE_INTEGER),
       )
     } else if (sortAction === 'toggle') {
@@ -304,10 +323,15 @@ export function column_getFirstSortDir<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
+  const columnDef = column.columnDef as ColumnDef_RowSorting<TFeatures, TData>
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   const sortDescFirst =
-    column.columnDef.sortDescFirst ??
-    column.table.options.sortDescFirst ??
+    columnDef.sortDescFirst ??
+    featureTable.options.sortDescFirst ??
     column_getAutoSortDir(column) === 'desc'
   return sortDescFirst ? 'desc' : 'asc'
 }
@@ -327,7 +351,11 @@ export function column_getNextSortingOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>, multi?: boolean) {
+>(column: Column<TFeatures, TData, TValue>, multi?: boolean) {
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   const firstSortDirection = column_getFirstSortDir(column)
   const isSorted = column_getIsSorted(column)
 
@@ -337,8 +365,8 @@ export function column_getNextSortingOrder<
 
   if (
     isSorted !== firstSortDirection &&
-    (column.table.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
-    (multi ? (column.table.options.enableMultiRemove ?? true) : true) // If multi, don't allow if enableMultiRemove))
+    (featureTable.options.enableSortingRemoval ?? true) && // If enableSortRemove, enable in general
+    (multi ? (featureTable.options.enableMultiRemove ?? true) : true) // If multi, don't allow if enableMultiRemove))
   ) {
     return false
   }
@@ -360,10 +388,15 @@ export function column_getCanSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
+  const columnDef = column.columnDef as ColumnDef_RowSorting<TFeatures, TData>
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   return (
-    (column.columnDef.enableSorting ?? true) &&
-    (column.table.options.enableSorting ?? true) &&
+    (columnDef.enableSorting ?? true) &&
+    (featureTable.options.enableSorting ?? true) &&
     !!column.accessorFn
   )
 }
@@ -383,10 +416,15 @@ export function column_getCanMultiSort<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): boolean {
+>(column: Column<TFeatures, TData, TValue>): boolean {
+  const columnDef = column.columnDef as ColumnDef_RowSorting<TFeatures, TData>
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   return (
-    column.columnDef.enableMultiSort ??
-    column.table.options.enableMultiSort ??
+    columnDef.enableMultiSort ??
+    featureTable.options.enableMultiSort ??
     !!column.accessorFn
   )
 }
@@ -406,8 +444,12 @@ export function column_getIsSorted<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): false | SortDirection {
-  const columnSort = column.table.atoms.sorting
+>(column: Column<TFeatures, TData, TValue>): false | SortDirection {
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
+  const columnSort = featureTable.atoms.sorting
     ?.get()
     ?.find((d) => d.id === column.id)
   return !columnSort ? false : columnSort.desc ? 'desc' : 'asc'
@@ -427,9 +469,13 @@ export function column_getSortIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>): number {
+>(column: Column<TFeatures, TData, TValue>): number {
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   return (
-    column.table.atoms.sorting?.get()?.findIndex((d) => d.id === column.id) ??
+    featureTable.atoms.sorting?.get()?.findIndex((d) => d.id === column.id) ??
     -1
   )
 }
@@ -448,7 +494,7 @@ export function column_clearSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
   // clear sorting for just 1 column
   table_setSorting(column.table, (old) =>
     old.length ? old.filter((d) => d.id !== column.id) : [],
@@ -471,7 +517,11 @@ export function column_getToggleSortingHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
+  const featureTable = column.table as unknown as Table<
+    RowSortingFeatures,
+    TData
+  >
   const canSort = column_getCanSort(column)
 
   return (e: unknown) => {
@@ -482,7 +532,7 @@ export function column_getToggleSortingHandler<
 
       undefined,
       column_getCanMultiSort(column)
-        ? column.table.options.isMultiSortEvent?.(e)
+        ? featureTable.options.isMultiSortEvent?.(e)
         : false,
     )
   }

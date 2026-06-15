@@ -11,11 +11,17 @@ import {
   table_getDefaultColumnDef,
 } from './coreColumnsFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
+import type { CoreFeatures } from '../coreFeatures'
+
+type CoreColumnsFeature = {
+  coreColumnsFeature: TableFeature
+  columnOrderingFeature: TableFeature
+}
 
 /**
  * Core feature that builds the column tree and exposes table/column column APIs.
  */
-export const coreColumnsFeature: TableFeature = {
+export const coreColumnsFeature: TableFeature<CoreColumnsFeature> = {
   assignColumnPrototype: (prototype, table) => {
     assignPrototypeAPIs('coreColumnsFeature', prototype, table, {
       column_getFlatColumns: {

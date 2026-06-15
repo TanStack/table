@@ -11,13 +11,17 @@ import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Cell } from '../../types/Cell'
 import type { Row } from '../../types/Row'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { Table } from '../../types/Table'
-import type { Column, Column_Internal } from '../../types/Column'
+import type { Column } from '../../types/Column'
 import type {
   ColumnPinningPosition,
   ColumnPinningState,
 } from './columnPinningFeature.types'
+
+type ColumnPinningFeatures = Partial<{
+  columnPinningFeature: TableFeature
+}>
 
 // State
 
@@ -57,10 +61,7 @@ export function column_pin<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-  position: ColumnPinningPosition,
-) {
+>(column: Column<TFeatures, TData, TValue>, position: ColumnPinningPosition) {
   // Single pass: collect non-empty leaf-column ids.
   const leafColumns = column.getLeafColumns()
   const columnIds: Array<string> = []
@@ -109,16 +110,24 @@ export function column_getCanPin<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
-  const leafColumns = column.getLeafColumns() as Array<
-    Column_Internal<TFeatures, TData, TValue>
+>(column: Column<TFeatures, TData, TValue>) {
+  const featureTable = column.table as unknown as Table<
+    ColumnPinningFeatures,
+    TData
   >
+  const leafColumns = column.getLeafColumns()
 
-  return leafColumns.some(
-    (leafColumn) =>
-      (leafColumn.columnDef.enablePinning ?? true) &&
-      (column.table.options.enableColumnPinning ?? true),
-  )
+  return leafColumns.some((leafColumn) => {
+    const featureColumn = leafColumn as unknown as Column<
+      ColumnPinningFeatures,
+      TData,
+      TValue
+    >
+    return (
+      (featureColumn.columnDef.enablePinning ?? true) &&
+      (featureTable.options.enableColumnPinning ?? true)
+    )
+  })
 }
 
 /**
@@ -136,13 +145,15 @@ export function column_getIsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  column: Column_Internal<TFeatures, TData, TValue>,
-): ColumnPinningPosition | false {
+>(column: Column<TFeatures, TData, TValue>): ColumnPinningPosition | false {
+  const featureTable = column.table as unknown as Table<
+    ColumnPinningFeatures,
+    TData
+  >
   const leafColumnIds = column.getLeafColumns().map((d) => d.id)
 
   const { left, right } =
-    column.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
   const isLeft = leafColumnIds.some((d) => left.includes(d))
   const isRight = leafColumnIds.some((d) => right.includes(d))
@@ -165,11 +176,15 @@ export function column_getPinnedIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(column: Column_Internal<TFeatures, TData, TValue>) {
+>(column: Column<TFeatures, TData, TValue>) {
+  const featureTable = column.table as unknown as Table<
+    ColumnPinningFeatures,
+    TData
+  >
   const position = column_getIsPinned(column)
 
   return position
-    ? (column.table.atoms.columnPinning?.get()?.[position].indexOf(column.id) ??
+    ? (featureTable.atoms.columnPinning?.get()?.[position].indexOf(column.id) ??
         -1)
     : 0
 }
@@ -190,13 +205,17 @@ export function row_getCenterVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  const featureTable = row.table as unknown as Table<
+    ColumnPinningFeatures,
+    TData
+  >
   const allCells = callMemoOrStaticFn(
     row,
     'getVisibleCells',
     row_getVisibleCells,
   )
   const { left, right } =
-    row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]
   return allCells.filter((d) => !leftAndRight.includes(d.column.id))
 }
@@ -216,8 +235,12 @@ export function row_getLeftVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
+  const featureTable = row.table as unknown as Table<
+    ColumnPinningFeatures,
+    TData
+  >
   const { left } =
-    row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (!left.length) return []
   const allVisibleCells = callMemoOrStaticFn(
     row,
@@ -252,8 +275,12 @@ export function row_getRightVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
+  const featureTable = row.table as unknown as Table<
+    ColumnPinningFeatures,
+    TData
+  >
   const { right } =
-    row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (!right.length) return [] as Array<Cell<TFeatures, TData, unknown>>
   const allVisibleCells = callMemoOrStaticFn(
     row,
@@ -290,7 +317,8 @@ export function table_setColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, updater: Updater<ColumnPinningState>) {
-  table.options.onColumnPinningChange?.(updater)
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
+  featureTable.options.onColumnPinningChange?.(updater)
 }
 
 /**
@@ -310,12 +338,14 @@ export function table_resetColumnPinning<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, defaultState?: boolean) {
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
   table_setColumnPinning(
     table,
     defaultState
       ? getDefaultColumnPinningState()
       : cloneState(
-          table.initialState.columnPinning ?? getDefaultColumnPinningState(),
+          featureTable.initialState.columnPinning ??
+            getDefaultColumnPinningState(),
         ),
   )
 }
@@ -335,7 +365,8 @@ export function table_getIsSomeColumnsPinned<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>, position?: ColumnPinningPosition) {
-  const pinningState = table.atoms.columnPinning?.get()
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
+  const pinningState = featureTable.atoms.columnPinning?.get()
 
   if (!position) {
     return Boolean(pinningState?.left.length || pinningState?.right.length)
@@ -360,10 +391,11 @@ export function table_getLeftHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
   const allColumns = table.getAllColumns()
   const leafColumnsById = table.getAllLeafColumnsById()
   const { left } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
   const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < left.length; i++) {
@@ -394,10 +426,11 @@ export function table_getRightHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
   const allColumns = table.getAllColumns()
   const leafColumnsById = table.getAllLeafColumnsById()
   const { right } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
   const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < right.length; i++) {
@@ -428,6 +461,7 @@ export function table_getCenterHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>): Array<HeaderGroup<TFeatures, TData>> {
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
   const allColumns = table.getAllColumns()
   let leafColumns = callMemoOrStaticFn(
     table,
@@ -435,7 +469,7 @@ export function table_getCenterHeaderGroups<
     table_getVisibleLeafColumns,
   )
   const { left, right } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]
 
   leafColumns = leafColumns.filter(
@@ -537,7 +571,7 @@ export function table_getLeftFlatHeaders<
   for (let i = 0; i < leftHeaderGroups.length; i++) {
     const headers = leftHeaderGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j])
+      result.push(headers[j] as Header<TFeatures, TData, unknown>)
     }
   }
   return result
@@ -566,7 +600,7 @@ export function table_getRightFlatHeaders<
   for (let i = 0; i < rightHeaderGroups.length; i++) {
     const headers = rightHeaderGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j])
+      result.push(headers[j] as Header<TFeatures, TData, unknown>)
     }
   }
   return result
@@ -595,7 +629,7 @@ export function table_getCenterFlatHeaders<
   for (let i = 0; i < centerHeaderGroups.length; i++) {
     const headers = centerHeaderGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j])
+      result.push(headers[j] as Header<TFeatures, TData, unknown>)
     }
   }
   return result
@@ -683,10 +717,11 @@ export function table_getLeftLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
   const { left } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
-  const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
+  const result: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < left.length; i++) {
     const column = leafColumnsById[left[i]!]
     if (column) result.push(column)
@@ -709,10 +744,11 @@ export function table_getRightLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
   const { right } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
-  const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
+  const result: Array<Column<TFeatures, TData, unknown>> = []
   for (let i = 0; i < right.length; i++) {
     const column = leafColumnsById[right[i]!]
     if (column) result.push(column)
@@ -734,8 +770,9 @@ export function table_getCenterLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table<TFeatures, TData>) {
+  const featureTable = table as unknown as Table<ColumnPinningFeatures, TData>
   const { left, right } =
-    table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+    featureTable.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leftAndRight: Array<string> = [...left, ...right]
   return table.getAllLeafColumns().filter((d) => !leftAndRight.includes(d.id))
 }
