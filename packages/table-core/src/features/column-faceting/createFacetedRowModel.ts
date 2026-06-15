@@ -90,8 +90,5 @@ function _createFacetedRowModel<
     return true
   }
 
-  return filterRows(preRowModel.rows, filterRowsImpl, table) as RowModel<
-    TFeatures,
-    TData
-  >
+  return filterRows(preRowModel.rows, filterRowsImpl, table)
 }

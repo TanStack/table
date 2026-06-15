@@ -32,14 +32,13 @@ export function table_getCoreRowModel<
   if (!featureTable._rowModels.coreRowModel) {
     featureTable._rowModels.coreRowModel =
       table.options.features.coreRowModel?.(table) ??
-      (createCoreRowModel<TFeatures, TData>()(table) as unknown as () =>
-        RowModel<RowModelFeatures, TData>)
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+      (createCoreRowModel<TFeatures, TData>()(
+        table,
+      ) as unknown as () => RowModel<RowModelFeatures, TData>)
   }
 
-  return featureTable._rowModels.coreRowModel() as unknown as RowModel<
-    TFeatures,
-    TData
-  >
+  return featureTable._rowModels.coreRowModel()
 }
 
 /**
@@ -73,13 +72,16 @@ export function table_getPreFilteredRowModel<
  * ```
  */
 export function table_getFilteredRowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  TFeatures extends TableFeatures = any,
+  TData extends RowData = any,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const featureTable = table as unknown as Table<RowModelFeatures, TData>
-  if (!featureTable._rowModels.filteredRowModel) {
-    ;(featureTable._rowModels as any).filteredRowModel =
-      table.options.features.filteredRowModel?.(table)
+  if (
+    !featureTable._rowModels.filteredRowModel &&
+    table.options.features.filteredRowModel
+  ) {
+    featureTable._rowModels.filteredRowModel =
+      table.options.features.filteredRowModel(table)
   }
 
   if (
@@ -128,9 +130,12 @@ export function table_getGroupedRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const featureTable = table as unknown as Table<RowModelFeatures, TData>
-  if (!featureTable._rowModels.groupedRowModel) {
-    ;(featureTable._rowModels as any).groupedRowModel =
-      table.options.features.groupedRowModel?.(table)
+  if (
+    !featureTable._rowModels.groupedRowModel &&
+    table.options.features.groupedRowModel
+  ) {
+    featureTable._rowModels.groupedRowModel =
+      table.options.features.groupedRowModel(table)
   }
 
   if (
@@ -180,9 +185,12 @@ export function table_getSortedRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const featureTable = table as unknown as Table<RowModelFeatures, TData>
-  if (!featureTable._rowModels.sortedRowModel) {
-    ;(featureTable._rowModels as any).sortedRowModel =
-      table.options.features.sortedRowModel?.(table)
+  if (
+    !featureTable._rowModels.sortedRowModel &&
+    table.options.features.sortedRowModel
+  ) {
+    featureTable._rowModels.sortedRowModel =
+      table.options.features.sortedRowModel(table)
   }
 
   if (
@@ -231,9 +239,12 @@ export function table_getExpandedRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const featureTable = table as unknown as Table<RowModelFeatures, TData>
-  if (!featureTable._rowModels.expandedRowModel) {
-    ;(featureTable._rowModels as any).expandedRowModel =
-      table.options.features.expandedRowModel?.(table)
+  if (
+    !featureTable._rowModels.expandedRowModel &&
+    table.options.features.expandedRowModel
+  ) {
+    featureTable._rowModels.expandedRowModel =
+      table.options.features.expandedRowModel(table)
   }
 
   if (
@@ -284,9 +295,12 @@ export function table_getPaginatedRowModel<
   TData extends RowData,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const featureTable = table as unknown as Table<RowModelFeatures, TData>
-  if (!featureTable._rowModels.paginatedRowModel) {
-    ;(featureTable._rowModels as any).paginatedRowModel =
-      table.options.features.paginatedRowModel?.(table)
+  if (
+    !featureTable._rowModels.paginatedRowModel &&
+    table.options.features.paginatedRowModel
+  ) {
+    featureTable._rowModels.paginatedRowModel =
+      table.options.features.paginatedRowModel(table)
   }
 
   if (

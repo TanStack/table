@@ -31,7 +31,7 @@ export function createFacetedUniqueValues<
             'getFacetedRowModel',
             column_getFacetedRowModel,
             table,
-          ).flatRows as Array<Row<TFeatures, TData>>,
+          ).flatRows,
         ]
       },
       fn: (flatRows) => _createFacetedUniqueValues(columnId, flatRows),

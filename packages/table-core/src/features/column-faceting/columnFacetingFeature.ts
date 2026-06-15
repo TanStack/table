@@ -13,10 +13,16 @@ import {
 } from './columnFacetingFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 
+type ColumnFacetingFeature = {
+  columnFacetingFeature: TableFeature
+  columnFilteringFeature: TableFeature
+  globalFilteringFeature: TableFeature
+}
+
 /**
  * Feature that derives faceted row models, unique values, and min/max values for filters.
  */
-export const columnFacetingFeature: TableFeature = {
+export const columnFacetingFeature: TableFeature<ColumnFacetingFeature> = {
   assignColumnPrototype: (prototype, table) => {
     assignPrototypeAPIs('columnFacetingFeature', prototype, table, {
       column_getFacetedRowModel: {

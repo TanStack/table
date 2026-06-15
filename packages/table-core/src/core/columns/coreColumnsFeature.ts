@@ -11,12 +11,12 @@ import {
   table_getDefaultColumnDef,
 } from './coreColumnsFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
-import type { CoreFeatures } from '../coreFeatures'
 
-type CoreColumnsFeature = {
+type CoreColumnsFeature = Partial<{
   coreColumnsFeature: TableFeature
   columnOrderingFeature: TableFeature
-}
+  columnGroupingFeature: TableFeature
+}>
 
 /**
  * Core feature that builds the column tree and exposes table/column column APIs.

@@ -197,7 +197,7 @@ export function table_getLeafHeaders<
   for (let i = 0; i < topHeaders.length; i++) {
     const leafHeaders = topHeaders[i]!.getLeafHeaders()
     for (let j = 0; j < leafHeaders.length; j++) {
-      result.push(leafHeaders[j] as Header<TFeatures, TData, unknown>)
+      result.push(leafHeaders[j]!)
     }
   }
   return result

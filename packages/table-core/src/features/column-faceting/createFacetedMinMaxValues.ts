@@ -31,7 +31,7 @@ export function createFacetedMinMaxValues<
             'getFacetedRowModel',
             column_getFacetedRowModel,
             table,
-          ).flatRows as Array<Row<TFeatures, TData>>,
+          ).flatRows,
         ]
       },
       table,
