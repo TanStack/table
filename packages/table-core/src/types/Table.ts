@@ -19,9 +19,7 @@ import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Table_Columns } from '../core/columns/coreColumnsFeature.types'
 import type { Table_Headers } from '../core/headers/coreHeadersFeature.types'
 import type { Table_Rows } from '../core/rows/coreRowsFeature.types'
-import type {
-  Table_Table,
-} from '../core/table/coreTablesFeature.types'
+import type { Table_Table } from '../core/table/coreTablesFeature.types'
 
 /**
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.

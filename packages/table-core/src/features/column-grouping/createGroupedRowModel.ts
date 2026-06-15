@@ -31,7 +31,10 @@ export function createGroupedRowModel<
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (table) => {
-    const featureTable = table as unknown as Table<GroupedRowModelFeatures, TData>
+    const featureTable = table as unknown as Table<
+      GroupedRowModelFeatures,
+      TData
+    >
     return tableMemo({
       feature: 'columnGroupingFeature',
       table,

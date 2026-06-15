@@ -63,7 +63,9 @@ export function table_resetRowSelection<
   const featureTable = table as unknown as Table<RowSelectionFeatures, TData>
   table_setRowSelection(
     table,
-    defaultState ? {} : cloneState(featureTable.initialState.rowSelection ?? {}),
+    defaultState
+      ? {}
+      : cloneState(featureTable.initialState.rowSelection ?? {}),
   )
 }
 
@@ -523,7 +525,10 @@ export function row_getCanSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  const featureTable = row.table as unknown as Table<
+    RowSelectionFeatures,
+    TData
+  >
   const options = featureTable.options
   if (typeof options.enableRowSelection === 'function') {
     return options.enableRowSelection(
@@ -549,7 +554,10 @@ export function row_getCanSelectSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  const featureTable = row.table as unknown as Table<
+    RowSelectionFeatures,
+    TData
+  >
   const options = featureTable.options
   if (typeof options.enableSubRowSelection === 'function') {
     return options.enableSubRowSelection(
@@ -575,7 +583,10 @@ export function row_getCanMultiSelect<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  const featureTable = row.table as unknown as Table<
+    RowSelectionFeatures,
+    TData
+  >
   const options = featureTable.options
   if (typeof options.enableMultiRowSelection === 'function') {
     return options.enableMultiRowSelection(
@@ -713,7 +724,10 @@ export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
-  const featureTable = row.table as unknown as Table<RowSelectionFeatures, TData>
+  const featureTable = row.table as unknown as Table<
+    RowSelectionFeatures,
+    TData
+  >
   return (featureTable.atoms.rowSelection?.get() ?? {})[row.id] ?? false
 }
 

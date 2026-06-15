@@ -305,7 +305,10 @@ export function row_getIsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const featureTable = row.table as unknown as Table<RowExpandingFeatures, TData>
+  const featureTable = row.table as unknown as Table<
+    RowExpandingFeatures,
+    TData
+  >
   const expanded: ExpandedState = featureTable.atoms.expanded?.get() ?? {}
 
   return !!(
@@ -331,7 +334,10 @@ export function row_getCanExpand<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const featureTable = row.table as unknown as Table<RowExpandingFeatures, TData>
+  const featureTable = row.table as unknown as Table<
+    RowExpandingFeatures,
+    TData
+  >
   return (
     featureTable.options.getRowCanExpand?.(
       row as unknown as Row<RowExpandingFeatures, TData>,

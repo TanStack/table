@@ -39,7 +39,10 @@ function _createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const featureTable = table as unknown as Table<ExpandedRowModelFeatures, TData>
+  const featureTable = table as unknown as Table<
+    ExpandedRowModelFeatures,
+    TData
+  >
   const rowModel = table.getPreExpandedRowModel()
   const expanded = featureTable.atoms.expanded?.get()
 

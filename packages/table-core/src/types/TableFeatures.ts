@@ -221,9 +221,7 @@ export interface TableFeatures
   tableMeta?: object
 }
 
-export interface TableFeature<
-  TFeatureContext extends TableFeatures = any,
-> {
+export interface TableFeature<TFeatureContext extends TableFeatures = any> {
   /**
    * Assigns Cell APIs to the cell prototype for memory-efficient method sharing.
    * This is called once per table to build a shared prototype for all cells.
