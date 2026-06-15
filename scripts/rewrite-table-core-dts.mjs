@@ -71,12 +71,16 @@ function removeExportedInterface(source, interfaceName) {
 }
 
 function removeTypeAlias(source, typeName) {
-  const start = source.indexOf(`type ${typeName}`)
+  const aliasPattern = new RegExp(
+    String.raw`\b(?:export\s+)?type\s+${typeName}\b`,
+  )
+  const match = aliasPattern.exec(source)
 
-  if (start === -1) {
+  if (!match) {
     return source
   }
 
+  const start = match.index
   const end = source.indexOf(';', start)
 
   if (end === -1) {
@@ -86,17 +90,24 @@ function removeTypeAlias(source, typeName) {
   return source.slice(0, start) + source.slice(end + 1)
 }
 
+function getSpecifierName(specifier) {
+  return specifier
+    .replace(/^type\s+/, '')
+    .split(/\s+as\s+/)[0]
+    ?.trim()
+}
+
 function removeNamedSpecifiers(source, names) {
   return source
     .replace(
-      /\b(import|export)\s+\{([^}]+)\}\s+from\s+([^;\n]+);/g,
-      (statement, kind, specifiers, fromClause) => {
+      /\b(import|export)(\s+type)?\s+\{([^}]+)\}\s+from\s+([^;\n]+);/g,
+      (statement, kind, typeKeyword = '', specifiers, fromClause) => {
         const nextSpecifiers = specifiers
           .split(',')
           .map((specifier) => specifier.trim())
           .filter(Boolean)
           .filter((specifier) => {
-            const importedName = specifier.split(/\s+as\s+/)[0]?.trim()
+            const importedName = getSpecifierName(specifier)
             return importedName && !names.includes(importedName)
           })
 
@@ -104,25 +115,30 @@ function removeNamedSpecifiers(source, names) {
           return ''
         }
 
-        return `${kind} { ${nextSpecifiers.join(', ')} } from ${fromClause};`
+        return `${kind}${typeKeyword} { ${nextSpecifiers.join(
+          ', ',
+        )} } from ${fromClause};`
       },
     )
-    .replace(/\bexport\s+\{([^}]+)\};/g, (statement, specifiers) => {
-      const nextSpecifiers = specifiers
-        .split(',')
-        .map((specifier) => specifier.trim())
-        .filter(Boolean)
-        .filter((specifier) => {
-          const exportedName = specifier.split(/\s+as\s+/)[0]?.trim()
-          return exportedName && !names.includes(exportedName)
-        })
+    .replace(
+      /\bexport(\s+type)?\s+\{([^}]+)\};/g,
+      (statement, typeKeyword = '', specifiers) => {
+        const nextSpecifiers = specifiers
+          .split(',')
+          .map((specifier) => specifier.trim())
+          .filter(Boolean)
+          .filter((specifier) => {
+            const exportedName = getSpecifierName(specifier)
+            return exportedName && !names.includes(exportedName)
+          })
 
-      if (!nextSpecifiers.length) {
-        return ''
-      }
+        if (!nextSpecifiers.length) {
+          return ''
+        }
 
-      return `export { ${nextSpecifiers.join(', ')} };`
-    })
+        return `export${typeKeyword} { ${nextSpecifiers.join(', ')} };`
+      },
+    )
 }
 
 function rewriteDeclaration(source) {
