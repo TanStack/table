@@ -70,7 +70,7 @@
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc && tsc -p tests/tsconfig.declaration-emit.json",
     "test:build": "publint --strict",
-    "build": "tsdown"
+    "build": "tsdown && node ../../scripts/rewrite-table-core-dts.mjs"
   },
   "dependencies": {
     "@tanstack/store": "^0.11.0"

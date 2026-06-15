@@ -1,6 +1,6 @@
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
@@ -96,7 +96,7 @@ export interface Header_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  table: Table<TFeatures, TData>
+  table: Table_Internal<TFeatures, TData>
 }
 
 export interface Header_Header<

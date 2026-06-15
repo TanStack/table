@@ -1,3 +1,4 @@
+import type { Table_Internal } from './Table'
 import type { Column_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { Column_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Column_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -46,6 +47,7 @@ export interface Column_Internal<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
   TValue = unknown,
-> extends Omit<Column_Core<TFeatures, TData, TValue>, 'columnDef'> {
+> extends Omit<Column_Core<TFeatures, TData, TValue>, 'columnDef' | 'table'> {
   columnDef: ColumnDefBase_All<TFeatures, TData, TValue>
+  table: Table_Internal<TFeatures, TData>
 }
