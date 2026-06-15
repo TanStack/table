@@ -171,7 +171,7 @@ export function table_getFlatHeaders<
   for (let i = 0; i < headerGroups.length; i++) {
     const headers = headerGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j] as Header<TFeatures, TData, unknown>)
+      result.push(headers[j]!)
     }
   }
   return result

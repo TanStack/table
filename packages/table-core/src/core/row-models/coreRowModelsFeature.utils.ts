@@ -32,13 +32,15 @@ export function table_getCoreRowModel<
   if (!featureTable._rowModels.coreRowModel) {
     featureTable._rowModels.coreRowModel =
       table.options.features.coreRowModel?.(table) ??
-      // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
       (createCoreRowModel<TFeatures, TData>()(
         table,
       ) as unknown as () => RowModel<RowModelFeatures, TData>)
   }
 
-  return featureTable._rowModels.coreRowModel()
+  return featureTable._rowModels.coreRowModel() as unknown as RowModel<
+    TFeatures,
+    TData
+  >
 }
 
 /**
