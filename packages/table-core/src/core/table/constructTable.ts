@@ -5,7 +5,7 @@ import { table_syncExternalStateToBaseAtoms } from './coreTablesFeature.utils'
 import type { Atom } from '@tanstack/store'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState, TableState_All } from '../../types/TableState'
 
@@ -21,7 +21,7 @@ export function getInitialTableState<TFeatures extends TableFeatures>(
   Object.values(features).forEach((feature) => {
     initialState = feature.getInitialState?.(initialState) ?? initialState
   })
-  return cloneState(initialState) as TableState<TFeatures>
+  return cloneState(initialState)
 }
 
 /**
@@ -64,7 +64,7 @@ export function constructTable<
     _rowModelFns: { aggregationFns, filterFns, sortFns },
     baseAtoms: {},
     atoms: {},
-  } as unknown as Table_Internal<TFeatures, TData>
+  } as unknown as Table<TFeatures, TData>
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
 
@@ -121,9 +121,7 @@ export function constructTable<
     table.options.initialState,
   )
 
-  const stateKeys = Object.keys(table.initialState) as Array<
-    string & keyof TableState_All
-  >
+  const stateKeys = Object.keys(table.initialState)
 
   for (let i = 0; i < stateKeys.length; i++) {
     const key = stateKeys[i]!
@@ -137,9 +135,7 @@ export function constructTable<
     // create readonly derived atom: on each get(), read either external atom or base atom
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {
-        const externalAtoms = table.options.atoms as
-          | Partial<Record<keyof TableState_All, Atom<unknown>>>
-          | undefined
+        const externalAtoms = table.options.atoms
         const externalAtom = externalAtoms?.[key]
         if (externalAtom) {
           return externalAtom.get()

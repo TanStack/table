@@ -1,8 +1,8 @@
 import { callMemoOrStaticFn, tableMemo } from '../../utils'
 import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
 import type { Row } from '../../types/Row'
-import type { Table, Table_Internal } from '../../types/Table'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { Table } from '../../types/Table'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
 /**
@@ -17,21 +17,27 @@ export function createFacetedUniqueValues<
   table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => Map<any, number> {
-  return (_table, columnId) => {
-    const table = _table as unknown as Table_Internal<TFeatures, TData>
+  return (table, columnId) => {
+    const typedTable = table as unknown as Table<
+      {
+        columnFacetingFeature: TableFeature
+        columnFilteringFeature: TableFeature
+      },
+      TData
+    >
     return tableMemo({
       feature: 'columnFacetingFeature',
       table,
       fnName: 'table.getFacetedUniqueValues',
       memoDeps: () => {
-        const column = table.getColumn(columnId)
-        if (!column) return [table.getPreFilteredRowModel().flatRows]
+        const column = typedTable.getColumn(columnId)
+        if (!column) return [typedTable.getPreFilteredRowModel().flatRows]
         return [
           callMemoOrStaticFn(
             column,
             'getFacetedRowModel',
             column_getFacetedRowModel,
-            table,
+            typedTable,
           ).flatRows,
         ]
       },

@@ -1,4 +1,4 @@
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -41,7 +41,7 @@ export interface Row_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  table: Table_Internal<TFeatures, TData>
+  table: Table<TFeatures, TData>
 }
 
 export interface Row_Row<

@@ -5,7 +5,7 @@ import {
 } from '../../features/column-visibility/columnVisibilityFeature.utils'
 import { callMemoOrStaticFn } from '../../utils'
 import { buildHeaderGroups } from './buildHeaderGroups'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -78,7 +78,7 @@ export function header_getContext<
 export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const { left, right } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
@@ -142,7 +142,7 @@ export function table_getHeaderGroups<
 export function table_getFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
   return [...headerGroups].reverse()
 }
@@ -161,13 +161,13 @@ export function table_getFooterGroups<
 export function table_getFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const headerGroups = table.getHeaderGroups()
   const result: Array<Header<TFeatures, TData, unknown>> = []
   for (let i = 0; i < headerGroups.length; i++) {
     const headers = headerGroups[i]!.headers
     for (let j = 0; j < headers.length; j++) {
-      result.push(headers[j]!)
+      result.push(headers[j])
     }
   }
   return result
@@ -187,13 +187,13 @@ export function table_getFlatHeaders<
 export function table_getLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const topHeaders = table.getHeaderGroups()[0]?.headers ?? []
   const result: Array<Header<TFeatures, TData, unknown>> = []
   for (let i = 0; i < topHeaders.length; i++) {
     const leafHeaders = topHeaders[i]!.getLeafHeaders()
     for (let j = 0; j < leafHeaders.length; j++) {
-      result.push(leafHeaders[j]!)
+      result.push(leafHeaders[j])
     }
   }
   return result

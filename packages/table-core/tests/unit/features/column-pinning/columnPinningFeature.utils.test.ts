@@ -37,9 +37,9 @@ import type { Person } from '../../../fixtures/data/types'
 import type {
   Header,
   StockFeatures,
+  Table,
   Table_ColumnOrdering,
   Table_ColumnPinning,
-  Table_Internal,
 } from '../../../../src'
 
 describe('getDefaultColumnPinningState', () => {
@@ -557,7 +557,7 @@ describe('table_getPinnedLeafColumns', () => {
           right: [],
         },
       },
-    }) as Table_Internal<StockFeatures, Person> &
+    }) as Table<StockFeatures, Person> &
       Table_ColumnPinning<StockFeatures, Person>
 
     const leafColumns = table_getPinnedLeafColumns(table, 'left')
@@ -652,7 +652,7 @@ describe('column pinning table instance APIs', () => {
           age: false,
         },
       },
-    }) as Table_Internal<StockFeatures, Person> &
+    }) as Table<StockFeatures, Person> &
       Table_ColumnPinning<StockFeatures, Person>
 
     expect(
@@ -682,7 +682,7 @@ describe('column pinning table instance APIs', () => {
   it('should update center visible columns when column order changes', () => {
     const table = generateTestTableWithDataAndState(1, {
       features: stockFeatures,
-    }) as Table_Internal<StockFeatures, Person> &
+    }) as Table<StockFeatures, Person> &
       Table_ColumnPinning<StockFeatures, Person> &
       Table_ColumnOrdering<StockFeatures, Person>
 

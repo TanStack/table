@@ -8,9 +8,9 @@ import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature
 import { filterRows } from './filterRowsUtils'
 import { column_getFilterFn } from './columnFilteringFeature.utils'
 import type { RowData } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
   ResolvedColumnFilter,
@@ -29,16 +29,22 @@ export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (_table) => {
-    const table = _table as unknown as Table_Internal<TFeatures, TData>
+  return (table) => {
+    const typedTable = table as unknown as Table<
+      {
+        columnFilteringFeature: TableFeature
+        globalFilteringFeature: TableFeature
+      },
+      TData
+    >
     return tableMemo({
       feature: 'columnFilteringFeature',
       table,
       fnName: 'table.getFilteredRowModel',
       memoDeps: () => [
-        table.getPreFilteredRowModel(),
-        table.atoms.columnFilters?.get(),
-        table.atoms.globalFilter?.get(),
+        typedTable.getPreFilteredRowModel(),
+        typedTable.atoms.columnFilters?.get(),
+        typedTable.atoms.globalFilter?.get(),
       ],
       fn: () => _createFilteredRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -49,7 +55,7 @@ export function createFilteredRowModel<
 function _createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreFilteredRowModel()
   const columnFilters = table.atoms.columnFilters?.get()
   const globalFilter = table.atoms.globalFilter?.get()

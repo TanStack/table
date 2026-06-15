@@ -1,8 +1,8 @@
 import { tableMemo } from '../../utils'
 import { row_getIsExpanded } from './rowExpandingFeature.utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
@@ -15,16 +15,19 @@ export function createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (_table) => {
-    const table = _table as unknown as Table_Internal<TFeatures, TData>
+  return (table) => {
+    const typedTable = table as unknown as Table<
+      { rowExpandingFeature: TableFeature },
+      TData
+    >
     return tableMemo({
       feature: 'rowExpandingFeature',
       table,
       fnName: 'table.getExpandedRowModel',
       memoDeps: () => [
-        table.atoms.expanded?.get(),
-        table.getPreExpandedRowModel(),
-        table.options.paginateExpandedRows,
+        typedTable.atoms.expanded?.get(),
+        typedTable.getPreExpandedRowModel(),
+        typedTable.options.paginateExpandedRows,
       ],
       fn: () => _createExpandedRowModel(table),
     })
@@ -34,7 +37,7 @@ export function createExpandedRowModel<
 function _createExpandedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreExpandedRowModel()
   const expanded = table.atoms.expanded?.get()
 

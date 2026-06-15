@@ -2,9 +2,9 @@ import { tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { SortFn } from './rowSortingFeature.types'
 import type { RowData } from '../../types/type-utils'
@@ -21,15 +21,18 @@ export function createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (_table) => {
-    const table = _table as unknown as Table_Internal<TFeatures, TData>
+  return (table) => {
+    const typedTable = table as unknown as Table<
+      { rowSortingFeature: TableFeature },
+      TData
+    >
     return tableMemo({
       feature: 'rowSortingFeature',
-      table,
+      table: table,
       fnName: 'table.getSortedRowModel',
       memoDeps: () => [
-        table.atoms.sorting?.get(),
-        table.getPreSortedRowModel(),
+        typedTable.atoms.sorting?.get(),
+        typedTable.getPreSortedRowModel(),
       ],
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
@@ -40,9 +43,13 @@ export function createSortedRowModel<
 function _createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
+  const typedTable = table as unknown as Table<
+    { rowSortingFeature: TableFeature },
+    TData
+  >
   const preSortedRowModel = table.getPreSortedRowModel()
-  const sorting = table.atoms.sorting?.get()
+  const sorting = typedTable.atoms.sorting?.get()
 
   if (!preSortedRowModel.rows.length || !sorting?.length) {
     return preSortedRowModel

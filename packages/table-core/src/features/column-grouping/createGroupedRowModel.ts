@@ -9,9 +9,9 @@ import {
 } from './columnGroupingFeature.utils'
 import type { Column } from '../../types/Column'
 import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
@@ -28,15 +28,18 @@ export function createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (_table) => {
-    const table = _table as unknown as Table_Internal<TFeatures, TData>
+  return (table) => {
+    const typedTable = table as unknown as Table<
+      { columnGroupingFeature: TableFeature },
+      TData
+    >
     return tableMemo({
       feature: 'columnGroupingFeature',
       table,
       fnName: 'table.getGroupedRowModel',
       memoDeps: () => [
-        table.atoms.grouping?.get(),
-        table.getPreGroupedRowModel(),
+        typedTable.atoms.grouping?.get(),
+        typedTable.getPreGroupedRowModel(),
       ],
       fn: () => _createGroupedRowModel(table),
       onAfterUpdate: () => {
@@ -50,7 +53,7 @@ export function createGroupedRowModel<
 function _createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const rowModel = table.getPreGroupedRowModel()
   const grouping = table.atoms.grouping?.get()
 

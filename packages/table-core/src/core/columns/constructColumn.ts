@@ -1,5 +1,5 @@
 import {} from '../../utils'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type {
@@ -17,7 +17,7 @@ import type { Column_CoreProperties } from './coreColumnsFeature.types'
 function getColumnPrototype<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): object {
+>(table: Table<TFeatures, TData>): object {
   if (!table._columnPrototype) {
     table._columnPrototype = { table }
     const features = Object.values(table._features)
@@ -38,7 +38,7 @@ export function constructColumn<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnDef: ColumnDef<TFeatures, TData, TValue>,
   depth: number,
   parent?: Column<TFeatures, TData, TValue>,

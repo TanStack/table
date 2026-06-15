@@ -1,6 +1,6 @@
 import { flattenBy } from '../../utils'
 import { constructCell } from '../cells/constructCell'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -173,7 +173,7 @@ export function row_getAllCells<
     columns.length,
   )
   for (let i = 0; i < columns.length; i++) {
-    cells[i] = constructCell(columns[i]!, row, row.table)
+    cells[i] = constructCell(columns[i], row, row.table)
   }
   return cells
 }
@@ -217,7 +217,7 @@ export function table_getRowId<
   TData extends RowData,
 >(
   originalRow: TData,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   index: number,
   parent?: Row<TFeatures, TData>,
 ) {
@@ -242,7 +242,7 @@ export function table_getRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   rowId: string,
   searchAll?: boolean,
 ): Row<TFeatures, TData> {

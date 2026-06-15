@@ -4,7 +4,7 @@ import type { Column_Internal } from '../../types/Column'
 import type { FilterFn } from '../column-filtering/columnFilteringFeature.types'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 
 /**
  * Checks whether this accessor column participates in global filtering.
@@ -61,9 +61,7 @@ export function table_getGlobalAutoFilterFn() {
 export function table_getGlobalFilterFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-): FilterFn<TFeatures, TData> | undefined {
+>(table: Table<TFeatures, TData>): FilterFn<TFeatures, TData> | undefined {
   const { globalFilterFn: globalFilterFn } = table.options
   const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
     table._rowModelFns.filterFns
@@ -91,7 +89,7 @@ export function table_getGlobalFilterFn<
 export function table_setGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: any) {
+>(table: Table<TFeatures, TData>, updater: any) {
   table.options.onGlobalFilterChange?.(updater)
 }
 
@@ -110,7 +108,7 @@ export function table_setGlobalFilter<
 export function table_resetGlobalFilter<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setGlobalFilter(
     table,
     defaultState ? undefined : cloneState(table.initialState.globalFilter),

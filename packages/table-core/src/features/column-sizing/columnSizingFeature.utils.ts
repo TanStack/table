@@ -9,7 +9,7 @@ import { callMemoOrStaticFn, cloneState } from '../../utils'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column_Internal } from '../../types/Column'
 import type { ColumnSizingState } from './columnSizingFeature.types'
@@ -255,10 +255,7 @@ export function header_getStart<
 export function table_setColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  updater: Updater<ColumnSizingState>,
-) {
+>(table: Table<TFeatures, TData>, updater: Updater<ColumnSizingState>) {
   table.options.onColumnSizingChange?.(updater)
 }
 
@@ -277,7 +274,7 @@ export function table_setColumnSizing<
 export function table_resetColumnSizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
     defaultState ? {} : cloneState(table.initialState.columnSizing ?? {}),
@@ -297,7 +294,7 @@ export function table_resetColumnSizing<
 export function table_getTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (
     table.getHeaderGroups()[0]?.headers.reduce((sum, header) => {
       return sum + header_getSize(header)
@@ -318,7 +315,7 @@ export function table_getTotalSize<
 export function table_getLeftTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (
     callMemoOrStaticFn(
       table,
@@ -343,7 +340,7 @@ export function table_getLeftTotalSize<
 export function table_getCenterTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (
     callMemoOrStaticFn(
       table,
@@ -368,7 +365,7 @@ export function table_getCenterTotalSize<
 export function table_getRightTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (
     callMemoOrStaticFn(
       table,

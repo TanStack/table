@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { coreRowsFeature } from '../../../../src/core/rows/coreRowsFeature'
 import { constructRow } from '../../../../src/core/rows/constructRow'
-import type { Table_Internal } from '../../../../src/types/Table'
+import type { Table } from '../../../../src/types/Table'
 import type { Row } from '../../../../src/types/Row'
 
 type TestFeatures = {
@@ -17,7 +17,7 @@ describe('constructRow', () => {
     const table = {
       _features: { coreRowsFeature },
       options: {},
-    } as unknown as Table_Internal<TestFeatures, Person>
+    } as unknown as Table<TestFeatures, Person>
     const id = 'test-row'
     const original = { firstName: 'Tanner' }
     const rowIndex = 0

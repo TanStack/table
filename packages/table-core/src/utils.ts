@@ -1,4 +1,4 @@
-import type { Table_Internal } from './types/Table'
+import type { Table } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
@@ -172,7 +172,7 @@ interface TableMemoOptions<
   fnName: string
   objectId?: string
   onAfterUpdate?: () => void
-  table: Table_Internal<TFeatures, any>
+  table: Table<TFeatures, any>
 }
 
 const pad = (str: number | string, num: number) => {
@@ -353,7 +353,7 @@ export function assignTableAPIs<
   TDepArgs,
 >(
   feature: keyof TFeatures & string,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   apis: APIObject<TDeps, NoInfer<TDepArgs>>,
 ): void {
   for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {
@@ -396,7 +396,7 @@ export function assignPrototypeAPIs<
 >(
   feature: keyof TFeatures & string,
   prototype: Record<string, any>,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   apis: PrototypeAPIObject<TDeps, NoInfer<TDepArgs>>,
 ): void {
   for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {

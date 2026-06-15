@@ -1,7 +1,7 @@
 import { callMemoOrStaticFn } from '../../utils'
 import { table_getOrderColumnsFn } from '../../features/column-ordering/columnOrderingFeature.utils'
 import { constructColumn } from './constructColumn'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type {
@@ -81,7 +81,7 @@ export function table_getDefaultColumnDef<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ): Partial<ColumnDef<TFeatures, TData, unknown>> {
   return {
     header: (props) => {
@@ -120,9 +120,7 @@ export function table_getDefaultColumnDef<
 export function table_getAllColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-): Array<Column<TFeatures, TData, unknown>> {
+>(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
   const recurseColumns = (
     colDefs: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>,
     parent?: Column<TFeatures, TData, unknown>,
@@ -162,9 +160,7 @@ export function table_getAllColumns<
 export function table_getAllFlatColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-): Array<Column<TFeatures, TData, unknown>> {
+>(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
   return table.getAllColumns().flatMap((column) => column.getFlatColumns())
 }
 
@@ -183,7 +179,7 @@ export function table_getAllFlatColumnsById<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   const result: Record<string, Column<TFeatures, TData, unknown>> = {}
   const flatColumns = table.getAllFlatColumns()
@@ -208,9 +204,7 @@ export function table_getAllFlatColumnsById<
 export function table_getAllLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-): Array<Column<TFeatures, TData, unknown>> {
+>(table: Table<TFeatures, TData>): Array<Column<TFeatures, TData, unknown>> {
   const leafColumns = table.getAllColumns().flatMap(
     (c) => c.getLeafColumns(), // recursive
   )
@@ -236,7 +230,7 @@ export function table_getAllLeafColumnsById<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
   const result: Record<string, Column<TFeatures, TData, unknown>> = {}
   const leafColumns = table.getAllLeafColumns()
@@ -262,7 +256,7 @@ export function table_getColumn<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
 ): Column<TFeatures, TData, unknown> | undefined {
   const column = table.getAllFlatColumnsById()[columnId]

@@ -17,8 +17,8 @@ import type {
   ColumnDef,
   RowPinningState,
   StockFeatures,
+  Table,
   TableOptions,
-  Table_Internal,
   Table_RowPinning,
 } from '../../src'
 import type { Person } from '../fixtures/data/types'
@@ -63,8 +63,7 @@ export function createTableWithPinningState(
 }
 
 export function createTableWithMockOnPinningChange(rowCount = 10): {
-  table: Table_Internal<StockFeatures, Person> &
-    Table_RowPinning<StockFeatures, Person>
+  table: Table<StockFeatures, Person> & Table_RowPinning<StockFeatures, Person>
   onRowPinningChangeMock: ReturnType<typeof vi.fn>
 } {
   const onRowPinningChangeMock = vi.fn()
@@ -72,7 +71,7 @@ export function createTableWithMockOnPinningChange(rowCount = 10): {
     features: {
       rowPinning: rowPinningFeature,
     },
-  } as any) as Table_Internal<StockFeatures, Person> &
+  } as any) as Table<StockFeatures, Person> &
     Table_RowPinning<StockFeatures, Person>
   table.options.onRowPinningChange = onRowPinningChangeMock
   return { table, onRowPinningChangeMock }

@@ -1,9 +1,9 @@
 import { tableMemo } from '../../utils'
 import { expandRows } from '../row-expanding/createExpandedRowModel'
 import { getDefaultPaginationState } from './rowPaginationFeature.utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
 
@@ -16,17 +16,23 @@ export function createPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (_table) => {
-    const table = _table as unknown as Table_Internal<TFeatures, TData>
+  return (table) => {
+    const typedTable = table as unknown as Table<
+      {
+        rowExpandingFeature: TableFeature
+        rowPaginationFeature: TableFeature
+      },
+      TData
+    >
     return tableMemo({
       feature: 'rowPaginationFeature',
       table,
       fnName: 'table.getPaginatedRowModel',
       memoDeps: () => [
-        table.getPrePaginatedRowModel(),
-        table.atoms.pagination?.get(),
-        table.options.paginateExpandedRows
-          ? table.atoms.expanded?.get()
+        typedTable.getPrePaginatedRowModel(),
+        typedTable.atoms.pagination?.get(),
+        typedTable.options.paginateExpandedRows
+          ? typedTable.atoms.expanded?.get()
           : undefined,
       ],
       fn: () => _createPaginatedRowModel(table),
@@ -37,7 +43,7 @@ export function createPaginatedRowModel<
 function _createPaginatedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   const prePaginatedRowModel = table.getPrePaginatedRowModel()
   const pagination = table.atoms.pagination?.get()
 

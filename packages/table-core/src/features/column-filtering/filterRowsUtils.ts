@@ -2,7 +2,7 @@ import { constructRow } from '../../core/rows/constructRow'
 import type { Row_ColumnFiltering } from './columnFilteringFeature.types'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
@@ -17,7 +17,7 @@ export function filterRows<
 >(
   rows: Array<Row<TFeatures, TData>>,
   filterRowImpl: (row: Row<TFeatures, TData>) => any,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ) {
   if (table.options.filterFromLeafRows) {
     return filterRowModelFromLeafs(rows, filterRowImpl, table)
@@ -34,7 +34,7 @@ function filterRowModelFromLeafs<
   filterRow: (
     row: Row<TFeatures, TData>,
   ) => Array<Row<TFeatures, TData>> | undefined,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}
@@ -106,7 +106,7 @@ function filterRowModelFromRoot<
 >(
   rowsToFilter: Array<Row<TFeatures, TData>>,
   filterRow: (row: Row<TFeatures, TData>) => any,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
   const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}

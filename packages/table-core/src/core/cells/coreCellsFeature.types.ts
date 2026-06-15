@@ -1,6 +1,6 @@
 import type { CellData, Getter, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
@@ -38,7 +38,7 @@ export interface Cell_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  table: Table_Internal<TFeatures, TData>
+  table: Table<TFeatures, TData>
 }
 
 export interface Cell_Cell<

@@ -3,7 +3,7 @@ import { constructCell } from '../../../../src/core/cells/constructCell'
 import { coreCellsFeature } from '../../../../src/core/cells/coreCellsFeature'
 import type { Row } from '../../../../src/types/Row'
 import type { Column } from '../../../../src/types/Column'
-import type { Table_Internal } from '../../../../src/types/Table'
+import type { Table } from '../../../../src/types/Table'
 
 type TestData = Record<string, unknown>
 type TestFeatures = {
@@ -20,7 +20,7 @@ describe('constructCell', () => {
     const table = {
       _features: { coreCellsFeature },
       options: {},
-    } as unknown as Table_Internal<TestFeatures, TestData>
+    } as unknown as Table<TestFeatures, TestData>
     const coreCell = constructCell(column, row, table)
 
     expect(coreCell).toBeDefined()

@@ -1,7 +1,7 @@
 import { cloneState, functionalUpdate } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { PaginationState } from './rowPaginationFeature.types'
 
 const defaultPageIndex = 0
@@ -40,7 +40,7 @@ export function getDefaultPaginationState(): PaginationState {
 export function table_autoResetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   if (
     table.options.autoResetAll ??
     table.options.autoResetPageIndex ??
@@ -65,7 +65,7 @@ export function table_autoResetPageIndex<
 export function table_setPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<PaginationState>) {
+>(table: Table<TFeatures, TData>, updater: Updater<PaginationState>) {
   const safeUpdater: Updater<PaginationState> = (old) => {
     const newState = functionalUpdate(updater, old)
 
@@ -91,7 +91,7 @@ export function table_setPagination<
 export function table_resetPagination<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setPagination(
     table,
     defaultState
@@ -116,7 +116,7 @@ export function table_resetPagination<
 export function table_setPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<number>) {
+>(table: Table<TFeatures, TData>, updater: Updater<number>) {
   table_setPagination(table, (old) => {
     let pageIndex = functionalUpdate(updater, old.pageIndex)
 
@@ -150,7 +150,7 @@ export function table_setPageIndex<
 export function table_resetPageIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   const currentPageIndex =
     table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
   const newPageIndex = defaultState
@@ -175,7 +175,7 @@ export function table_resetPageIndex<
 export function table_resetPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   const currentPageSize =
     table.atoms.pagination?.get()?.pageSize ?? defaultPageSize
   const newPageSize = defaultState
@@ -199,7 +199,7 @@ export function table_resetPageSize<
 export function table_setPageSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<number>) {
+>(table: Table<TFeatures, TData>, updater: Updater<number>) {
   table_setPagination(table, (old) => {
     const pageSize = Math.max(1, functionalUpdate(updater, old.pageSize))
     const topRowIndex = old.pageSize * old.pageIndex
@@ -227,7 +227,7 @@ export function table_setPageSize<
 export function table_getPageOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const pageCount = table_getPageCount(table)
   let pageOptions: Array<number> = []
   if (pageCount && pageCount > 0) {
@@ -250,7 +250,7 @@ export function table_getPageOptions<
 export function table_getCanPreviousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (table.atoms.pagination?.get()?.pageIndex ?? 0) > 0
 }
 
@@ -268,7 +268,7 @@ export function table_getCanPreviousPage<
 export function table_getCanNextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const pageIndex = table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
 
   const pageCount = table_getPageCount(table)
@@ -298,7 +298,7 @@ export function table_getCanNextPage<
 export function table_previousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return table_setPageIndex(table, (old) => old - 1)
 }
 
@@ -316,7 +316,7 @@ export function table_previousPage<
 export function table_nextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return table_setPageIndex(table, (old) => {
     return old + 1
   })
@@ -335,7 +335,7 @@ export function table_nextPage<
 export function table_firstPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return table_setPageIndex(table, 0)
 }
 
@@ -352,7 +352,7 @@ export function table_firstPage<
 export function table_lastPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return table_setPageIndex(table, table_getPageCount(table) - 1)
 }
 
@@ -370,7 +370,7 @@ export function table_lastPage<
 export function table_getPageCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (
     table.options.pageCount ??
     Math.ceil(
@@ -395,6 +395,6 @@ export function table_getPageCount<
 export function table_getRowCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return table.options.rowCount ?? table.getPrePaginatedRowModel().rows.length
 }

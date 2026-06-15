@@ -2,7 +2,7 @@ import { cloneState, isFunction } from '../../utils'
 import type { Column_Internal } from '../../types/Column'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type {
@@ -210,7 +210,7 @@ export function column_getAggregationFn<
 export function table_setGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<GroupingState>) {
+>(table: Table<TFeatures, TData>, updater: Updater<GroupingState>) {
   table.options.onGroupingChange?.(updater)
 }
 
@@ -229,7 +229,7 @@ export function table_setGrouping<
 export function table_resetGrouping<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setGrouping(
     table,
     defaultState ? [] : cloneState(table.initialState.grouping ?? []),
@@ -305,7 +305,7 @@ export function cell_getIsGrouped<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>) {
-  const row = cell.row as Row<TFeatures, TData> & Partial<Row_ColumnGrouping>
+  const row = cell.row
   return (
     column_getIsGrouped(cell.column) && cell.column.id === row.groupingColumnId
   )

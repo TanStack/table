@@ -1,4 +1,4 @@
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -13,7 +13,7 @@ import type { Cell_CoreProperties } from './coreCellsFeature.types'
 function getCellPrototype<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): object {
+>(table: Table<TFeatures, TData>): object {
   if (!table._cellPrototype) {
     table._cellPrototype = { table }
     const features = Object.values(table._features)
@@ -36,7 +36,7 @@ export function constructCell<
 >(
   column: Column<TFeatures, TData, TValue>,
   row: Row<TFeatures, TData>,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ): Cell<TFeatures, TData, TValue> {
   // Create cell with shared prototype for memory efficiency
   const cellPrototype = getCellPrototype(table)

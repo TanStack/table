@@ -1,4 +1,4 @@
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { AccessorFn, ColumnDef } from '../../types/ColumnDef'
@@ -39,7 +39,7 @@ export interface Column_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  table: Table_Internal<TFeatures, TData>
+  table: Table<TFeatures, TData>
 }
 
 export interface Column_Column<

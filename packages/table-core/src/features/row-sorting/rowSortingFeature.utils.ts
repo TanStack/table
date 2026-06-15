@@ -2,7 +2,7 @@ import { reSplitAlphaNumeric, sortFn_basic } from '../../fns/sortFns'
 import { cloneState, isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Column_Internal } from '../../types/Column'
 import type {
   SortDirection,
@@ -41,7 +41,7 @@ export function getDefaultSortingState(): SortingState {
 export function table_setSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<SortingState>) {
+>(table: Table<TFeatures, TData>, updater: Updater<SortingState>) {
   table.options.onSortingChange?.(updater)
 }
 
@@ -60,7 +60,7 @@ export function table_setSorting<
 export function table_resetSorting<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setSorting(
     table,
     defaultState ? [] : cloneState(table.initialState.sorting ?? []),

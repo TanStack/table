@@ -1,7 +1,7 @@
 import { cloneState, functionalUpdate, isFunction } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Column_Internal } from '../../types/Column'
 import type {
   ColumnFiltersState,
@@ -255,10 +255,7 @@ export function column_setFilterValue<
 export function table_setColumnFilters<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  updater: Updater<ColumnFiltersState>,
-) {
+>(table: Table<TFeatures, TData>, updater: Updater<ColumnFiltersState>) {
   const leafColumnsById = table.getAllLeafColumnsById()
 
   const updateFn = (old: ColumnFiltersState) => {
@@ -295,7 +292,7 @@ export function table_setColumnFilters<
 export function table_resetColumnFilters<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnFilters(
     table,
     defaultState ? [] : cloneState(table.initialState.columnFilters ?? []),

@@ -1,7 +1,7 @@
 import { cloneState, functionalUpdate } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 
 /**
@@ -18,7 +18,7 @@ import type { TableOptions } from '../../types/TableOptions'
 export function table_syncExternalStateToBaseAtoms<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): void {
+>(table: Table<TFeatures, TData>): void {
   const state = table.options.state
   if (!state) {
     return
@@ -53,7 +53,7 @@ export function table_syncExternalStateToBaseAtoms<
 export function table_reset<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): void {
+>(table: Table<TFeatures, TData>): void {
   const snap = cloneState(table.initialState)
   table._reactivity.batch(() => {
     const keys = Object.keys(snap) as Array<keyof typeof snap>
@@ -78,15 +78,9 @@ export function table_reset<
 export function table_mergeOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  newOptions: TableOptions<TFeatures, TData>,
-) {
+>(table: Table<TFeatures, TData>, newOptions: TableOptions<TFeatures, TData>) {
   if (table.options.mergeOptions) {
-    return table.options.mergeOptions(
-      table.options as TableOptions<TFeatures, TData>,
-      newOptions,
-    )
+    return table.options.mergeOptions(table.options, newOptions)
   }
 
   return {
@@ -110,13 +104,10 @@ export function table_setOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   updater: Updater<TableOptions<TFeatures, TData>>,
 ): void {
-  const newOptions = functionalUpdate(
-    updater,
-    table.options as TableOptions<TFeatures, TData>,
-  )
+  const newOptions = functionalUpdate(updater, table.options)
   // table static options that should never change after initialization
   const { features, atoms, initialState } = table.options
   const mergedOptions = Object.assign(table_mergeOptions(table, newOptions), {

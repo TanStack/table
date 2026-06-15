@@ -87,30 +87,3 @@ type Table_InternalBroadenedKeys =
   | 'options'
   | 'initialState'
   | 'store'
-
-/**
- * Internal broad table shape used by feature implementations.
- */
-export interface Table_Internal<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData = any,
->
-  extends
-    Omit<Table_Table<TFeatures, TData>, Table_InternalBroadenedKeys>,
-    Table_Columns<TFeatures, TData>,
-    Table_Rows<TFeatures, TData>,
-    Table_RowModels<TFeatures, TData>,
-    Table_Headers<TFeatures, TData> {
-  _rowModels: CachedRowModel_All<TFeatures, TData>
-  _rowModelFns: RowModelFns_All<TFeatures, TData>
-  options: DebugOptions<TableFeatures> &
-    TableOptions_All<TFeatures, TData> & {
-      state?: TableState_All
-      initialState?: TableState_All
-      atoms?: ExternalAtoms_All
-    }
-  initialState: TableState<TFeatures> & TableState_All
-  baseAtoms: BaseAtoms<TFeatures> & BaseAtoms_All
-  atoms: Atoms<TFeatures> & Atoms_All
-  store: ReadonlyStore<TableState<TFeatures>> & ReadonlyStore<TableState_All>
-}

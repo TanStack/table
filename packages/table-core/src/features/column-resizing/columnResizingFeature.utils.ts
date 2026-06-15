@@ -6,7 +6,7 @@ import {
 import { cloneState } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column_Internal } from '../../types/Column'
 import type { ColumnSizingState } from '../column-sizing/columnSizingFeature.types'
@@ -279,10 +279,7 @@ export function header_getResizeHandler<
 export function table_setColumnResizing<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  updater: Updater<columnResizingState>,
-) {
+>(table: Table<TFeatures, TData>, updater: Updater<columnResizingState>) {
   table.options.onColumnResizingChange?.(updater)
 }
 
@@ -302,7 +299,7 @@ export function table_setColumnResizing<
 export function table_resetHeaderSizeInfo<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnResizing(
     table,
     defaultState

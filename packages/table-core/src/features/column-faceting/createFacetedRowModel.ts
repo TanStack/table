@@ -1,11 +1,11 @@
 import { tableMemo } from '../../utils'
 import { filterRows } from '../column-filtering/filterRowsUtils'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type {
   ColumnFiltersState,
   Row_ColumnFiltering,
 } from '../column-filtering/columnFilteringFeature.types'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 import type { RowData } from '../../types/type-utils'
@@ -22,17 +22,24 @@ export function createFacetedRowModel<
   table: Table<TFeatures, TData>,
   columnId: string,
 ) => () => RowModel<TFeatures, TData> {
-  return (_table, columnId) => {
-    const table = _table as unknown as Table_Internal<TFeatures, TData>
+  return (table, columnId) => {
+    const typedTable = table as unknown as Table<
+      {
+        columnFacetingFeature: TableFeature
+        columnFilteringFeature: TableFeature
+        globalFilteringFeature: TableFeature
+      },
+      TData
+    >
     return tableMemo({
       feature: 'columnFacetingFeature',
       table,
       fnName: 'createFacetedRowModel',
       memoDeps: () => [
-        table.getPreFilteredRowModel(),
-        table.atoms.columnFilters?.get(),
-        table.atoms.globalFilter?.get(),
-        table.getFilteredRowModel(),
+        typedTable.getPreFilteredRowModel(),
+        typedTable.atoms.columnFilters?.get(),
+        typedTable.atoms.globalFilter?.get(),
+        typedTable.getFilteredRowModel(),
       ],
       fn: (preRowModel, columnFilters, globalFilter) =>
         _createFacetedRowModel(
@@ -50,7 +57,7 @@ function _createFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   columnId: string,
   preRowModel: RowModel<TFeatures, TData>,
   columnFilters?: ColumnFiltersState,

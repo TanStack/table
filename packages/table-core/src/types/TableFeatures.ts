@@ -2,7 +2,7 @@ import type { CoreFeatures } from '../core/coreFeatures'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
 import type { ColumnDefBase_All } from './ColumnDef'
 import type { Row } from './Row'
-import type { Table_Internal } from './Table'
+import type { Table } from './Table'
 import type { TableOptions_All } from './TableOptions'
 import type { TableState_All } from './TableState'
 import type { StockFeatures } from '../features/stockFeatures'
@@ -231,7 +231,7 @@ export interface TableFeature {
     TData extends RowData,
   >(
     prototype: Record<string, any>,
-    table: Table_Internal<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => void
   /**
    * Assigns Column APIs to the column prototype for memory-efficient method sharing.
@@ -242,7 +242,7 @@ export interface TableFeature {
     TData extends RowData,
   >(
     prototype: Record<string, any>,
-    table: Table_Internal<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => void
   /**
    * Assigns Header APIs to the header prototype for memory-efficient method sharing.
@@ -253,7 +253,7 @@ export interface TableFeature {
     TData extends RowData,
   >(
     prototype: Record<string, any>,
-    table: Table_Internal<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => void
   /**
    * Assigns Row APIs to the row prototype for memory-efficient method sharing.
@@ -261,14 +261,14 @@ export interface TableFeature {
    */
   assignRowPrototype?: <TFeatures extends TableFeatures, TData extends RowData>(
     prototype: Record<string, any>,
-    table: Table_Internal<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => void
   /**
    * Assigns Table APIs to the table instance.
    * Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
    */
   constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table_Internal<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => void
   getDefaultColumnDef?: <
     TFeatures extends TableFeatures,
@@ -279,7 +279,7 @@ export interface TableFeature {
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
-    table: Table_Internal<TFeatures, TData>,
+    table: Table<TFeatures, TData>,
   ) => Partial<TableOptions_All<TFeatures, TData>>
   getInitialState?: (initialState: Partial<TableState_All>) => TableState_All
   /**

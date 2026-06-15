@@ -1,4 +1,4 @@
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -11,7 +11,7 @@ import type { Row_CoreProperties } from './coreRowsFeature.types'
 function getRowPrototype<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): object {
+>(table: Table<TFeatures, TData>): object {
   if (!table._rowPrototype) {
     table._rowPrototype = { table }
     const features = Object.values(table._features)
@@ -31,7 +31,7 @@ export const constructRow = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   id: string,
   original: TData,
   rowIndex: number,

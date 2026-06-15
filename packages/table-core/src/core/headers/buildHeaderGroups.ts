@@ -1,7 +1,7 @@
 import { callMemoOrStaticFn } from '../../utils'
 import { column_getIsVisible } from '../../features/column-visibility/columnVisibilityFeature.utils'
 import { constructHeader } from './constructHeader'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Header } from '../../types/Header'
@@ -20,7 +20,7 @@ export function buildHeaderGroups<
 >(
   allColumns: Array<Column<TFeatures, TData, TValue>>,
   columnsToGroup: Array<Column<TFeatures, TData, TValue>>,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   headerFamily?: 'center' | 'left' | 'right',
 ) {
   // Find the max depth of the columns:
@@ -113,9 +113,7 @@ export function buildHeaderGroups<
         pendingParentHeaders.push(header)
       }
 
-      headerGroup.headers.push(
-        headerToGroup as Header<TFeatures, TData, unknown>,
-      )
+      headerGroup.headers.push(headerToGroup)
       headerToGroup.headerGroup = headerGroup
     })
 
@@ -176,9 +174,7 @@ export function buildHeaderGroups<
     return results
   }
 
-  recurseHeadersForSpans(
-    (headerGroups[0]?.headers ?? []) as Array<Header<TFeatures, TData, TValue>>,
-  )
+  recurseHeadersForSpans(headerGroups[0]?.headers ?? [])
 
   return headerGroups
 }

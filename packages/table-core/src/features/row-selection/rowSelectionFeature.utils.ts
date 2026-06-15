@@ -2,7 +2,7 @@ import { cloneState } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type { RowSelectionState } from './rowSelectionFeature.types'
 
@@ -37,10 +37,7 @@ export function getDefaultRowSelectionState(): RowSelectionState {
 export function table_setRowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  updater: Updater<RowSelectionState>,
-) {
+>(table: Table<TFeatures, TData>, updater: Updater<RowSelectionState>) {
   table.options.onRowSelectionChange?.(updater)
 }
 
@@ -59,7 +56,7 @@ export function table_setRowSelection<
 export function table_resetRowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setRowSelection(
     table,
     defaultState ? {} : cloneState(table.initialState.rowSelection ?? {}),
@@ -82,7 +79,7 @@ export function table_resetRowSelection<
 export function table_toggleAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, value?: boolean) {
+>(table: Table<TFeatures, TData>, value?: boolean) {
   table_setRowSelection(table, (old) => {
     value =
       typeof value !== 'undefined' ? value : !table_getIsAllRowsSelected(table)
@@ -124,7 +121,7 @@ export function table_toggleAllRowsSelected<
 export function table_toggleAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, value?: boolean) {
+>(table: Table<TFeatures, TData>, value?: boolean) {
   table_setRowSelection(table, (old) => {
     const resolvedValue =
       typeof value !== 'undefined'
@@ -155,7 +152,7 @@ export function table_toggleAllPageRowsSelected<
 export function table_getPreSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(table: Table<TFeatures, TData>): RowModel<TFeatures, TData> {
   return table.getCoreRowModel()
 }
 
@@ -173,7 +170,7 @@ export function table_getPreSelectedRowModel<
 export function table_getSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
   if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
@@ -201,7 +198,7 @@ export function table_getSelectedRowModel<
 export function table_getFilteredSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
   if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
@@ -229,7 +226,7 @@ export function table_getFilteredSelectedRowModel<
 export function table_getGroupedSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
   if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
@@ -257,7 +254,7 @@ export function table_getGroupedSelectedRowModel<
 export function table_getIsAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const preGroupedFlatRows = table.getFilteredRowModel().flatRows
   const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
 
@@ -291,7 +288,7 @@ export function table_getIsAllRowsSelected<
 export function table_getIsAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const paginationFlatRows = table
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
@@ -323,7 +320,7 @@ export function table_getIsAllPageRowsSelected<
 export function table_getIsSomeRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const totalSelected = Object.keys(
     table.atoms.rowSelection?.get() ?? {},
   ).length
@@ -347,7 +344,7 @@ export function table_getIsSomeRowsSelected<
 export function table_getIsSomePageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const paginationFlatRows = table.getPaginatedRowModel().flatRows
   return table_getIsAllPageRowsSelected(table)
     ? false
@@ -370,7 +367,7 @@ export function table_getIsSomePageRowsSelected<
 export function table_getToggleAllRowsSelectedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (e: unknown) => {
     table_toggleAllRowsSelected(
       table,
@@ -393,7 +390,7 @@ export function table_getToggleAllRowsSelectedHandler<
 export function table_getToggleAllPageRowsSelectedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   return (e: unknown) => {
     table_toggleAllPageRowsSelected(
       table,
@@ -602,7 +599,7 @@ const mutateRowIsSelected = <
   rowId: string,
   value: boolean,
   includeChildren: boolean,
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
 ) => {
   const row = table.getRow(rowId, true)
 

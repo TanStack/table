@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { coreHeadersFeature } from '../../../../src/core/headers/coreHeadersFeature'
 import { constructHeader } from '../../../../src/core/headers/constructHeader'
 import type { Column } from '../../../../src/types/Column'
-import type { Table_Internal } from '../../../../src/types/Table'
+import type { Table } from '../../../../src/types/Table'
 
 type TestData = Record<string, unknown>
 type TestFeatures = {
@@ -14,7 +14,7 @@ describe('constructHeader', () => {
     const table = {
       _features: { coreHeadersFeature },
       options: {},
-    } as unknown as Table_Internal<TestFeatures, TestData>
+    } as unknown as Table<TestFeatures, TestData>
     const column = {
       id: 'test-column',
       columnDef: { id: 'test-column-def' },

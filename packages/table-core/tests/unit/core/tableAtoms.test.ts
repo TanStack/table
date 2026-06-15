@@ -11,8 +11,8 @@ import { storeReactivityBindings } from '../../../src/store-reactivity-bindings'
 import type {
   PaginationState,
   SortingState,
+  Table,
   TableFeatures,
-  Table_Internal,
   Table_RowPagination,
   Table_RowSorting,
 } from '../../../src'
@@ -25,7 +25,7 @@ const features = {
 
 function makeTable<TFeatures extends TableFeatures>(
   options: any = {},
-): Table_Internal<TFeatures, any> &
+): Table<TFeatures, any> &
   Table_RowSorting<TFeatures, any> &
   Table_RowPagination<TFeatures, any> {
   return constructTable({
@@ -37,7 +37,7 @@ function makeTable<TFeatures extends TableFeatures>(
     columns: [],
     data: [],
     ...options,
-  }) as unknown as Table_Internal<TFeatures, any> &
+  }) as unknown as Table<TFeatures, any> &
     Table_RowSorting<TFeatures, any> &
     Table_RowPagination<TFeatures, any>
 }

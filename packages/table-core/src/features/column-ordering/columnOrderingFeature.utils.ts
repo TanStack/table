@@ -3,7 +3,7 @@ import { cloneState } from '../../utils'
 import type { GroupingState } from '../column-grouping/columnGroupingFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table_Internal } from '../../types/Table'
+import type { Table } from '../../types/Table'
 import type { Column_Internal } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { ColumnOrderState } from './columnOrderingFeature.types'
@@ -104,7 +104,7 @@ export function column_getIsLastColumn<
 export function table_setColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
+>(table: Table<TFeatures, TData>, updater: Updater<ColumnOrderState>) {
   table.options.onColumnOrderChange?.(updater)
 }
 
@@ -123,7 +123,7 @@ export function table_setColumnOrder<
 export function table_resetColumnOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+>(table: Table<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnOrder(
     table,
     defaultState ? [] : cloneState(table.initialState.columnOrder ?? []),
@@ -144,7 +144,7 @@ export function table_resetColumnOrder<
 export function table_getOrderColumnsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>) {
+>(table: Table<TFeatures, TData>) {
   const columnOrder = table.atoms.columnOrder?.get()
 
   return (columns: Array<Column_Internal<TFeatures, TData, unknown>>) => {
@@ -204,7 +204,7 @@ export function orderColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  table: Table_Internal<TFeatures, TData>,
+  table: Table<TFeatures, TData>,
   leafColumns: Array<Column_Internal<TFeatures, TData, unknown>>,
 ) {
   const grouping = table.atoms.grouping?.get() ?? ([] as GroupingState)
@@ -233,7 +233,7 @@ export function orderColumns<
 
   const groupingColumns: Array<Column_Internal<TFeatures, TData, unknown>> = []
   for (let i = 0; i < grouping.length; i++) {
-    const col = leafColumnsById.get(grouping[i]!)
+    const col = leafColumnsById.get(grouping[i])
     if (col) groupingColumns.push(col)
   }
 
