@@ -85,15 +85,23 @@ export function table_mergeOptions<
   newOptions: TableOptions<TFeatures, TData>,
 ) {
   const { features, atoms, initialState } = table.options
-  const mergedOptions = table.options.mergeOptions
-    ? table.options.mergeOptions(
-        table.options as TableOptions<TFeatures, TData>,
-        newOptions,
-      )
-    : {
-        ...table.options,
-        ...newOptions,
-      }
+
+  // simple merge if no mergeOptions is provided - performant
+  if (!table.options.mergeOptions) {
+    return {
+      ...table.options,
+      ...newOptions,
+      features,
+      atoms,
+      initialState,
+    }
+  }
+
+  // else use the mergeOptions function and preserve getters/setters
+  const mergedOptions = table.options.mergeOptions(
+    table.options as TableOptions<TFeatures, TData>,
+    newOptions,
+  )
   const descriptors: PropertyDescriptorMap = {
     ...Object.getOwnPropertyDescriptors(mergedOptions),
   }
