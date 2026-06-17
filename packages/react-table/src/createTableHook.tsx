@@ -1,6 +1,6 @@
 'use client'
 /* eslint-disable @eslint-react/no-context-provider */
-import React, { createContext, useContext, useMemo } from 'react'
+import React, { createContext, useContext, useMemo, useRef } from 'react'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import { FlexRender } from './FlexRender'
@@ -823,6 +823,16 @@ export function createTableHook<
       selector,
     )
 
+    // `useTable` returns a fresh `table` reference on every render (required for
+    // the React Compiler). The App wrapper components below must NOT depend on
+    // that reference, or they would be recreated each render and React would
+    // remount their entire subtree on every state update (e.g. a controlled
+    // input in a toolbar would lose focus on each keystroke). Instead we keep
+    // the components stable (created once) and read the current table from a
+    // ref that we refresh on every render.
+    const tableRef = useRef(table)
+    tableRef.current = table
+
     // AppTable - Root wrapper that provides table context with optional Subscribe
     const AppTable = useMemo(() => {
       function AppTableImpl(props: AppTablePropsWithoutSelector): ReactNode
@@ -835,15 +845,16 @@ export function createTableHook<
           | AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
       ): ReactNode {
         const { children, selector: appTableSelector } = props
+        const currentTable = tableRef.current
 
         return (
-          <TableContext.Provider value={table}>
+          <TableContext.Provider value={currentTable}>
             {appTableSelector ? (
-              <table.Subscribe selector={appTableSelector}>
+              <currentTable.Subscribe selector={appTableSelector}>
                 {(state: TAppTableSelected) =>
                   (children as (state: TAppTableSelected) => ReactNode)(state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               children
             )}
@@ -851,7 +862,7 @@ export function createTableHook<
         )
       }
       return AppTableImpl as AppTableComponent<TFeatures>
-    }, [table])
+    }, [])
 
     // AppCell - Wraps cell with context, pre-bound cellComponents, and optional Subscribe
     const AppCell = useMemo(() => {
@@ -895,6 +906,7 @@ export function createTableHook<
             >,
       ): ReactNode {
         const { cell, children, selector: appCellSelector } = props as any
+        const currentTable = tableRef.current
         const extendedCell = Object.assign(cell, {
           FlexRender: CellFlexRender,
           ...cellComponents,
@@ -903,7 +915,7 @@ export function createTableHook<
         return (
           <CellContext.Provider value={cell}>
             {appCellSelector ? (
-              <table.Subscribe selector={appCellSelector}>
+              <currentTable.Subscribe selector={appCellSelector}>
                 {(state: TAppCellSelected) =>
                   (
                     children as (
@@ -913,7 +925,7 @@ export function createTableHook<
                     ) => ReactNode
                   )(extendedCell, state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               (
                 children as (
@@ -926,7 +938,7 @@ export function createTableHook<
         )
       }
       return AppCellImpl as AppCellComponent<TFeatures, TData, TCellComponents>
-    }, [table])
+    }, [])
 
     // AppHeader - Wraps header with context, pre-bound headerComponents, and optional Subscribe
     const AppHeader = useMemo(() => {
@@ -970,6 +982,7 @@ export function createTableHook<
             >,
       ): ReactNode {
         const { header, children, selector: appHeaderSelector } = props as any
+        const currentTable = tableRef.current
         const extendedHeader = Object.assign(header, {
           FlexRender: HeaderFlexRender,
           ...headerComponents,
@@ -978,7 +991,7 @@ export function createTableHook<
         return (
           <HeaderContext.Provider value={header}>
             {appHeaderSelector ? (
-              <table.Subscribe selector={appHeaderSelector}>
+              <currentTable.Subscribe selector={appHeaderSelector}>
                 {(state: TAppHeaderSelected) =>
                   (
                     children as (
@@ -988,7 +1001,7 @@ export function createTableHook<
                     ) => ReactNode
                   )(extendedHeader, state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               (
                 children as (
@@ -1005,7 +1018,7 @@ export function createTableHook<
         TData,
         THeaderComponents
       >
-    }, [table])
+    }, [])
 
     // AppFooter - Same as AppHeader (footers use Header type)
     const AppFooter = useMemo(() => {
@@ -1049,6 +1062,7 @@ export function createTableHook<
             >,
       ): ReactNode {
         const { header, children, selector: appFooterSelector } = props as any
+        const currentTable = tableRef.current
         const extendedHeader = Object.assign(header, {
           FlexRender: FooterFlexRender,
           ...headerComponents,
@@ -1057,7 +1071,7 @@ export function createTableHook<
         return (
           <HeaderContext.Provider value={header}>
             {appFooterSelector ? (
-              <table.Subscribe selector={appFooterSelector}>
+              <currentTable.Subscribe selector={appFooterSelector}>
                 {(state: TAppFooterSelected) =>
                   (
                     children as (
@@ -1067,7 +1081,7 @@ export function createTableHook<
                     ) => ReactNode
                   )(extendedHeader, state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               (
                 children as (
@@ -1084,7 +1098,7 @@ export function createTableHook<
         TData,
         THeaderComponents
       >
-    }, [table])
+    }, [])
 
     // Combine everything into the extended table API
     const extendedTable = useMemo(() => {
