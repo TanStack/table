@@ -25,6 +25,11 @@
   // NOTE: You must use `createAppColumnHelper` instead of `createColumnHelper`
   // when using pre-bound components like cell.TextCell
   const columns = personColumnHelper.columns([
+    personColumnHelper.display({
+      id: 'select',
+      header: ({ header }) => renderComponent(header.SelectHeader),
+      cell: ({ cell }) => renderComponent(cell.SelectCell),
+    }),
     personColumnHelper.accessor('firstName', {
       header: 'First Name',
       footer: (props) => props.column.id,
@@ -68,6 +73,7 @@
     get data() {
       return data
     },
+    enableRowSelection: true,
     debugTable: true,
   })
 
@@ -96,6 +102,7 @@
     />
 
     <!-- Table element -->
+    <div class="table-scroll">
     <table>
       <thead>
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
@@ -180,6 +187,7 @@
         {/each}
       </tfoot>
     </table>
+    </div>
 
     <!-- Pagination using pre-bound component -->
     <table.PaginationControls />

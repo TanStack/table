@@ -13,6 +13,26 @@ const personColumnHelper = createAppColumnHelper<Person>()
 // NOTE: Use createAppColumnHelper (not createColumnHelper) to get pre-bound
 // component types on cell/header objects (e.g., cell.TextCell, header.SortIndicator).
 const columns = personColumnHelper.columns([
+  personColumnHelper.display({
+    id: 'select',
+    header: ({ table }) => html`
+      <input
+        type="checkbox"
+        @change=${table.getToggleAllRowsSelectedHandler()}
+        .checked=${table.getIsAllRowsSelected()}
+        .indeterminate=${table.getIsSomeRowsSelected()}
+      />
+    `,
+    cell: ({ row }) => html`
+      <input
+        type="checkbox"
+        @change=${row.getToggleSelectedHandler()}
+        .checked=${row.getIsSelected()}
+        ?disabled=${!row.getCanSelect()}
+        .indeterminate=${row.getIsSomeSelected()}
+      />
+    `,
+  }),
   personColumnHelper.accessor('firstName', {
     header: 'First Name',
     footer: (props) => props.column.id,
@@ -68,12 +88,14 @@ export class UsersTable extends LitElement {
         get data() {
           return host.data
         },
+        enableRowSelection: true,
         debugTable: true,
       },
       (state) => ({
         pagination: state.pagination,
         sorting: state.sorting,
         columnFilters: state.columnFilters,
+        rowSelection: state.rowSelection,
       }),
     )
   })()
@@ -102,106 +124,110 @@ export class UsersTable extends LitElement {
         ></table-toolbar>
 
         <!-- Table element -->
-        <table>
-          <thead>
-            ${table.getHeaderGroups().map(
-              (headerGroup) => html`
-                <tr>
-                  ${headerGroup.headers.map((h) =>
-                    table.AppHeader(
-                      h,
-                      (header) => html`
-                        <th
-                          colspan=${header.colSpan}
-                          class=${header.column.getCanSort()
-                            ? 'sortable-header'
-                            : ''}
-                          @click=${header.column.getToggleSortingHandler()}
-                        >
-                          ${header.isPlaceholder
-                            ? nothing
-                            : html`
-                                ${header.FlexRender()} ${header.SortIndicator()}
-                                ${header.ColumnFilter()}
-                                ${sorting.length > 1 &&
-                                sorting.findIndex(
-                                  (s) => s.id === header.column.id,
-                                ) > -1
-                                  ? html`<span class="sort-order"
-                                      >${sorting.findIndex(
-                                        (s) => s.id === header.column.id,
-                                      ) + 1}</span
-                                    >`
-                                  : nothing}
-                              `}
-                        </th>
-                      `,
-                    ),
-                  )}
-                </tr>
-              `,
-            )}
-          </thead>
-          <tbody>
-            ${table.getRowModel().rows.map(
-              (row) => html`
-                <tr>
-                  ${row
-                    .getAllCells()
-                    .map((c) =>
-                      table.AppCell(
-                        c,
-                        (cell) => html` <td>${cell.FlexRender()}</td> `,
-                      ),
-                    )}
-                </tr>
-              `,
-            )}
-          </tbody>
-          <tfoot>
-            ${table.getFooterGroups().map(
-              (footerGroup) => html`
-                <tr>
-                  ${footerGroup.headers.map((f) =>
-                    table.AppFooter(f, (footer) => {
-                      const columnId = footer.column.id
-                      const hasFilter = columnFilters.some(
-                        (cf) => cf.id === columnId,
-                      )
-                      return html`
-                        <td colspan=${footer.colSpan}>
-                          ${footer.isPlaceholder
-                            ? nothing
-                            : columnId === 'age' ||
-                                columnId === 'visits' ||
-                                columnId === 'progress'
-                              ? html`
-                                  ${footer.FooterSum()}
-                                  ${hasFilter
-                                    ? html`<span class="filtered-indicator">
-                                        (filtered)</span
+        <div class="table-scroll">
+          <table>
+            <thead>
+              ${table.getHeaderGroups().map(
+                (headerGroup) => html`
+                  <tr>
+                    ${headerGroup.headers.map((h) =>
+                      table.AppHeader(
+                        h,
+                        (header) => html`
+                          <th
+                            colspan=${header.colSpan}
+                            class=${header.column.getCanSort()
+                              ? 'sortable-header'
+                              : ''}
+                            @click=${header.column.getToggleSortingHandler()}
+                          >
+                            ${header.isPlaceholder
+                              ? nothing
+                              : html`
+                                  ${header.FlexRender()}
+                                  ${header.SortIndicator()}
+                                  ${header.ColumnFilter()}
+                                  ${sorting.length > 1 &&
+                                  sorting.findIndex(
+                                    (s) => s.id === header.column.id,
+                                  ) > -1
+                                    ? html`<span class="sort-order"
+                                        >${sorting.findIndex(
+                                          (s) => s.id === header.column.id,
+                                        ) + 1}</span
                                       >`
                                     : nothing}
-                                `
-                              : columnId === 'actions'
-                                ? nothing
-                                : html`
-                                    ${footer.FooterColumnId()}
+                                `}
+                          </th>
+                        `,
+                      ),
+                    )}
+                  </tr>
+                `,
+              )}
+            </thead>
+            <tbody>
+              ${table.getRowModel().rows.map(
+                (row) => html`
+                  <tr>
+                    ${row
+                      .getAllCells()
+                      .map((c) =>
+                        table.AppCell(
+                          c,
+                          (cell) => html` <td>${cell.FlexRender()}</td> `,
+                        ),
+                      )}
+                  </tr>
+                `,
+              )}
+            </tbody>
+            <tfoot>
+              ${table.getFooterGroups().map(
+                (footerGroup) => html`
+                  <tr>
+                    ${footerGroup.headers.map((f) =>
+                      table.AppFooter(f, (footer) => {
+                        const columnId = footer.column.id
+                        const hasFilter = columnFilters.some(
+                          (cf) => cf.id === columnId,
+                        )
+                        return html`
+                          <td colspan=${footer.colSpan}>
+                            ${footer.isPlaceholder
+                              ? nothing
+                              : columnId === 'age' ||
+                                  columnId === 'visits' ||
+                                  columnId === 'progress'
+                                ? html`
+                                    ${footer.FooterSum()}
                                     ${hasFilter
                                       ? html`<span class="filtered-indicator">
-                                          ✓</span
+                                          (filtered)</span
                                         >`
                                       : nothing}
-                                  `}
-                        </td>
-                      `
-                    }),
-                  )}
-                </tr>
-              `,
-            )}
-          </tfoot>
-        </table>
+                                  `
+                                : columnId === 'actions' ||
+                                    columnId === 'select'
+                                  ? nothing
+                                  : html`
+                                      ${footer.FooterColumnId()}
+                                      ${hasFilter
+                                        ? html`<span class="filtered-indicator">
+                                            ✓</span
+                                          >`
+                                        : nothing}
+                                    `}
+                          </td>
+                        `
+                      }),
+                    )}
+                  </tr>
+                `,
+              )}
+            </tfoot>
+          </table>
+        </div>
 
         <!-- Pagination and row count using context-based custom elements -->
         <pagination-controls></pagination-controls>

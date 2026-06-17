@@ -1,5 +1,22 @@
 import { computed, defineComponent, h } from 'vue'
 import { useHeaderContext } from '../hooks/table'
+import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
+
+// Select-all checkbox used in the header of the row-selection column.
+export const SelectAllHeader = defineComponent({
+  name: 'SelectAllHeader',
+  setup() {
+    const header = useHeaderContext()
+    return () => {
+      const table = header.getContext().table
+      return h(IndeterminateCheckbox, {
+        checked: table.getIsAllRowsSelected(),
+        indeterminate: table.getIsSomeRowsSelected(),
+        onChange: table.getToggleAllRowsSelectedHandler(),
+      })
+    }
+  },
+})
 
 export const SortIndicator = defineComponent({
   name: 'SortIndicator',

@@ -68,7 +68,9 @@ export function table_reset<
  * Merges new table options with the current resolved options.
  *
  * If `options.mergeOptions` is provided, it owns the merge behavior; otherwise
- * options are shallow-merged.
+ * options are shallow-merged. Static options that should never change after
+ * initialization are restored on a fresh object so framework merge helpers may
+ * return readonly getter/proxy objects.
  *
  * @example
  * ```ts
@@ -82,17 +84,52 @@ export function table_mergeOptions<
   table: Table_Internal<TFeatures, TData>,
   newOptions: TableOptions<TFeatures, TData>,
 ) {
-  if (table.options.mergeOptions) {
-    return table.options.mergeOptions(
-      table.options as TableOptions<TFeatures, TData>,
-      newOptions,
-    )
+  const { features, atoms, initialState } = table.options
+
+  // simple merge if no mergeOptions is provided - performant
+  if (!table.options.mergeOptions) {
+    return {
+      ...table.options,
+      ...newOptions,
+      features,
+      atoms,
+      initialState,
+    }
   }
 
-  return {
-    ...table.options,
-    ...newOptions,
+  // else use the mergeOptions function and preserve getters/setters
+  const mergedOptions = table.options.mergeOptions(
+    table.options as TableOptions<TFeatures, TData>,
+    newOptions,
+  )
+  const descriptors: PropertyDescriptorMap = {
+    ...Object.getOwnPropertyDescriptors(mergedOptions),
   }
+
+  return Object.defineProperties(
+    Object.create(Object.getPrototypeOf(mergedOptions)),
+    {
+      ...descriptors,
+      features: {
+        value: features,
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      },
+      atoms: {
+        value: atoms,
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      },
+      initialState: {
+        value: initialState,
+        enumerable: true,
+        configurable: true,
+        writable: true,
+      },
+    },
+  ) as TableOptions<TFeatures, TData>
 }
 
 /**
@@ -117,15 +154,7 @@ export function table_setOptions<
     updater,
     table.options as TableOptions<TFeatures, TData>,
   )
-  // table static options that should never change after initialization
-  const { features, atoms, initialState } = table.options
-  const mergedOptions = Object.assign(table_mergeOptions(table, newOptions), {
-    // Once the table instance is created those properties should never change after initialization,
-    // so we assign them back preserving the `table_mergeOptions` object reference
-    features,
-    atoms,
-    initialState,
-  })
+  const mergedOptions = table_mergeOptions(table, newOptions)
 
   if (table.optionsStore) {
     table.optionsStore.set(() => mergedOptions)

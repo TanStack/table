@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
 import { injectFlexRenderContext } from '@tanstack/angular-table'
 import { CurrencyPipe } from '@angular/common'
 import { injectTableCellContext } from '../table'
@@ -18,6 +18,27 @@ import type { Person } from '../makeData'
 export class TextCell {
   readonly cell =
     injectFlexRenderContext<CellContext<TableFeatures, any, string>>()
+}
+
+@Component({
+  selector: 'table-select-cell',
+  host: {
+    class: 'selection-cell',
+  },
+  template: `
+    <input
+      type="checkbox"
+      [checked]="row().getIsSelected()"
+      [disabled]="!row().getCanSelect()"
+      [indeterminate]="row().getIsSomeSelected()"
+      (change)="row().getToggleSelectedHandler()($event)"
+    />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SelectCell {
+  readonly cell = injectTableCellContext()
+  readonly row = computed(() => this.cell().row)
 }
 
 @Component({

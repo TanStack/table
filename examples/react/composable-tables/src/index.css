@@ -43,6 +43,21 @@ tfoot th {
   border-spacing: 0;
 }
 
+/* Fixed-height, scrollable region around the table. With a page size larger
+   than ~12 rows the body overflows and scrolls; this is what makes any
+   remounting of the App wrappers visible (the scroll position would reset). */
+.table-scroll {
+  max-height: 400px;
+  overflow: auto;
+  border: 1px solid lightgray;
+}
+
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .pagination {
   display: flex;
   align-items: center;

@@ -7,6 +7,7 @@ import {
   filterFns,
   globalFilteringFeature,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -17,6 +18,7 @@ import {
   PriceCell,
   ProgressCell,
   RowActionsCell,
+  SelectCell,
   StatusCell,
   TextCell,
 } from '../components/cell-components'
@@ -24,6 +26,7 @@ import {
   ColumnFilter,
   FooterColumnId,
   FooterSum,
+  SelectAllHeader,
   SortIndicator,
 } from '../components/header-components'
 import {
@@ -47,6 +50,7 @@ const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
@@ -71,12 +75,14 @@ const _hook = createTableHook({
     RowActionsCell,
     PriceCell,
     CategoryCell,
+    SelectCell,
   },
   headerComponents: {
     SortIndicator,
     ColumnFilter,
     FooterColumnId,
     FooterSum,
+    SelectAllHeader,
   },
 })
 
