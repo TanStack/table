@@ -10,6 +10,11 @@ const columnHelper = createAppColumnHelper<Person>()
 const data = ref(makeData(1_000))
 
 const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'select',
+    header: ({ header }) => header.SelectAllHeader,
+    cell: ({ cell }) => cell.SelectCell,
+  }),
   columnHelper.accessor('firstName', {
     header: 'First Name',
     footer: (props) => props.column.id,
@@ -58,6 +63,7 @@ function stressTest() {
 const table = useAppTable({
   key: 'users-table', // needed for devtools
   debugTable: true,
+  enableRowSelection: true,
   columns,
   data,
   initialState: {
@@ -89,85 +95,90 @@ function tableSelector(state: ReturnType<typeof table.store.get>) {
         :onStressTest="stressTest"
       />
 
-      <table>
-        <thead>
-          <tr
-            v-for="headerGroup in table.getHeaderGroups()"
-            :key="headerGroup.id"
-          >
-            <component
-              :is="table.AppHeader"
-              v-for="header in headerGroup.headers"
-              :key="header.id"
-              :header="header"
-              v-slot="{ header: appHeader }"
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr
+              v-for="headerGroup in table.getHeaderGroups()"
+              :key="headerGroup.id"
             >
-              <th
-                :colspan="appHeader.colSpan"
-                :class="{ 'sortable-header': appHeader.column.getCanSort() }"
-                @click="appHeader.column.getToggleSortingHandler()?.($event)"
+              <component
+                :is="table.AppHeader"
+                v-for="header in headerGroup.headers"
+                :key="header.id"
+                :header="header"
+                v-slot="{ header: appHeader }"
               >
-                <template v-if="!appHeader.isPlaceholder">
-                  <component :is="appHeader.FlexRender" />
-                  <component :is="appHeader.SortIndicator" />
-                  <component :is="appHeader.ColumnFilter" />
-                  <span v-if="state.sorting.length > 1" class="sort-indicator">
-                    {{
-                      state.sorting.findIndex(
-                        (sort: { id: string }) =>
-                          sort.id === appHeader.column.id,
-                      ) + 1 || ''
-                    }}
-                  </span>
-                </template>
-              </th>
-            </component>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="row in table.getRowModel().rows" :key="row.id">
-            <component
-              :is="table.AppCell"
-              v-for="cell in row.getAllCells()"
-              :key="cell.id"
-              :cell="cell"
-              v-slot="{ cell: appCell }"
+                <th
+                  :colspan="appHeader.colSpan"
+                  :class="{ 'sortable-header': appHeader.column.getCanSort() }"
+                  @click="appHeader.column.getToggleSortingHandler()?.($event)"
+                >
+                  <template v-if="!appHeader.isPlaceholder">
+                    <component :is="appHeader.FlexRender" />
+                    <component :is="appHeader.SortIndicator" />
+                    <component :is="appHeader.ColumnFilter" />
+                    <span
+                      v-if="state.sorting.length > 1"
+                      class="sort-indicator"
+                    >
+                      {{
+                        state.sorting.findIndex(
+                          (sort: { id: string }) =>
+                            sort.id === appHeader.column.id,
+                        ) + 1 || ''
+                      }}
+                    </span>
+                  </template>
+                </th>
+              </component>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="row in table.getRowModel().rows" :key="row.id">
+              <component
+                :is="table.AppCell"
+                v-for="cell in row.getAllCells()"
+                :key="cell.id"
+                :cell="cell"
+                v-slot="{ cell: appCell }"
+              >
+                <td>
+                  <component :is="appCell.FlexRender" />
+                </td>
+              </component>
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr
+              v-for="footerGroup in table.getFooterGroups()"
+              :key="footerGroup.id"
             >
-              <td>
-                <component :is="appCell.FlexRender" />
-              </td>
-            </component>
-          </tr>
-        </tbody>
-        <tfoot>
-          <tr
-            v-for="footerGroup in table.getFooterGroups()"
-            :key="footerGroup.id"
-          >
-            <component
-              :is="table.AppFooter"
-              v-for="header in footerGroup.headers"
-              :key="header.id"
-              :header="header"
-              v-slot="{ header: appFooter }"
-            >
-              <td :colspan="appFooter.colSpan">
-                <template v-if="!appFooter.isPlaceholder">
-                  <component
-                    :is="
-                      ['age', 'visits', 'progress'].includes(
-                        appFooter.column.id,
-                      )
-                        ? appFooter.FooterSum
-                        : appFooter.FooterColumnId
-                    "
-                  />
-                </template>
-              </td>
-            </component>
-          </tr>
-        </tfoot>
-      </table>
+              <component
+                :is="table.AppFooter"
+                v-for="header in footerGroup.headers"
+                :key="header.id"
+                :header="header"
+                v-slot="{ header: appFooter }"
+              >
+                <td :colspan="appFooter.colSpan">
+                  <template v-if="!appFooter.isPlaceholder">
+                    <component
+                      :is="
+                        ['age', 'visits', 'progress'].includes(
+                          appFooter.column.id,
+                        )
+                          ? appFooter.FooterSum
+                          : appFooter.FooterColumnId
+                      "
+                    />
+                  </template>
+                </td>
+              </component>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
       <component :is="table.PaginationControls" />
       <component :is="table.RowCount" />

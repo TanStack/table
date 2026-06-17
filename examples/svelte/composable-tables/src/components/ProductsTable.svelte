@@ -24,6 +24,11 @@
 
   // Define columns using the column helper - different structure than Users table
   const columns = productColumnHelper.columns([
+    productColumnHelper.display({
+      id: 'select',
+      header: ({ header }) => renderComponent(header.SelectHeader),
+      cell: ({ cell }) => renderComponent(cell.SelectCell),
+    }),
     productColumnHelper.accessor('name', {
       header: 'Product Name',
       footer: (props) => props.column.id,
@@ -59,6 +64,7 @@
       return data
     },
     getRowId: (row) => row.id,
+    enableRowSelection: true,
   })
 
   // Reactive derived values from table state
@@ -84,6 +90,7 @@
     />
 
     <!-- Table element -->
+    <div class="table-scroll">
     <table>
       <thead>
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
@@ -166,6 +173,7 @@
         {/each}
       </tfoot>
     </table>
+    </div>
 
     <!-- Pagination using the same pre-bound component -->
     <table.PaginationControls />

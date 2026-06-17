@@ -13,6 +13,7 @@ import {
   createTableHook,
   filterFns,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -29,6 +30,7 @@ import NumberCell from '../components/NumberCell.svelte'
 import PriceCell from '../components/PriceCell.svelte'
 import ProgressCell from '../components/ProgressCell.svelte'
 import RowActionsCell from '../components/RowActionsCell.svelte'
+import SelectCell from '../components/SelectCell.svelte'
 import StatusCell from '../components/StatusCell.svelte'
 import TextCell from '../components/TextCell.svelte'
 
@@ -36,6 +38,7 @@ import TextCell from '../components/TextCell.svelte'
 import ColumnFilter from '../components/ColumnFilter.svelte'
 import FooterColumnId from '../components/FooterColumnId.svelte'
 import FooterSum from '../components/FooterSum.svelte'
+import SelectHeader from '../components/SelectHeader.svelte'
 import SortIndicator from '../components/SortIndicator.svelte'
 
 /**
@@ -58,6 +61,7 @@ export const {
   features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
+    rowSelectionFeature,
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
     filteredRowModel: createFilteredRowModel(),
@@ -78,6 +82,7 @@ export const {
 
   // Register cell-level components (accessible via cell.ComponentName in AppCell)
   cellComponents: {
+    SelectCell,
     TextCell,
     NumberCell,
     StatusCell,
@@ -89,6 +94,7 @@ export const {
 
   // Register header/footer-level components (accessible via header.ComponentName in AppHeader/AppFooter)
   headerComponents: {
+    SelectHeader,
     SortIndicator,
     ColumnFilter,
     FooterColumnId,

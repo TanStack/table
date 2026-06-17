@@ -13,6 +13,7 @@ import {
   createTableHook,
   filterFns,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -32,6 +33,7 @@ import {
   PriceCell,
   ProgressCell,
   RowActionsCell,
+  SelectCell,
   StatusCell,
   TextCell,
 } from '../components/cell-components'
@@ -64,6 +66,7 @@ export const {
   features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
+    rowSelectionFeature,
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
     filteredRowModel: createFilteredRowModel(),
@@ -84,6 +87,7 @@ export const {
 
   // Register cell-level components (accessible via cell.ComponentName in AppCell)
   cellComponents: {
+    SelectCell,
     TextCell,
     NumberCell,
     StatusCell,

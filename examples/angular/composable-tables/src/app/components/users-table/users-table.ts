@@ -35,6 +35,11 @@ export class UsersTable {
   readonly data = signal(makeData(1_000))
 
   readonly columns = personColumnHelper.columns([
+    personColumnHelper.display({
+      id: 'select',
+      header: ({ header }) => flexRenderComponent(header.SelectHeader),
+      cell: ({ cell }) => flexRenderComponent(cell.SelectCell),
+    }),
     personColumnHelper.accessor('firstName', {
       header: 'First Name',
       footer: ({ header }) => flexRenderComponent(header.FooterColumnId),
@@ -77,6 +82,7 @@ export class UsersTable {
     columns: this.columns,
     data: this.data(),
     debugTable: true,
+    enableRowSelection: true,
     // more table options
   }))
 

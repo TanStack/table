@@ -5,7 +5,6 @@ import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/preact-table-devtools'
-import { Subscribe } from '@tanstack/preact-table'
 import { createAppColumnHelper, useAppTable } from './hooks/table'
 import { IndeterminateCheckbox } from './components/indeterminate-checkbox'
 import { makeData, makeProductData } from './makeData'
@@ -39,16 +38,11 @@ function UsersTable() {
         personColumnHelper.display({
           id: 'select',
           header: ({ table }) => (
-            // Subscribe keeps the select-all checkbox in sync with selection state (see SelectCell)
-            <Subscribe source={table.atoms.rowSelection}>
-              {() => (
-                <IndeterminateCheckbox
-                  checked={table.getIsAllRowsSelected()}
-                  indeterminate={table.getIsSomeRowsSelected()}
-                  onChange={table.getToggleAllRowsSelectedHandler()}
-                />
-              )}
-            </Subscribe>
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
           ),
           // Cell uses the pre-bound SelectCell component via AppCell
           cell: ({ cell }) => <cell.SelectCell />,
@@ -271,16 +265,11 @@ function ProductsTable() {
         productColumnHelper.display({
           id: 'select',
           header: ({ table }) => (
-            // Subscribe keeps the select-all checkbox in sync with selection state (see SelectCell)
-            <Subscribe source={table.atoms.rowSelection}>
-              {() => (
-                <IndeterminateCheckbox
-                  checked={table.getIsAllRowsSelected()}
-                  indeterminate={table.getIsSomeRowsSelected()}
-                  onChange={table.getToggleAllRowsSelectedHandler()}
-                />
-              )}
-            </Subscribe>
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
           ),
           // Cell uses the pre-bound SelectCell component via AppCell
           cell: ({ cell }) => <cell.SelectCell />,

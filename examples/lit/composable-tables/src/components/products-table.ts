@@ -11,6 +11,26 @@ const productColumnHelper = createAppColumnHelper<Product>()
 
 // Define columns — different structure than Users table, same reusable components
 const columns = productColumnHelper.columns([
+  productColumnHelper.display({
+    id: 'select',
+    header: ({ table }) => html`
+      <input
+        type="checkbox"
+        @change=${table.getToggleAllRowsSelectedHandler()}
+        .checked=${table.getIsAllRowsSelected()}
+        .indeterminate=${table.getIsSomeRowsSelected()}
+      />
+    `,
+    cell: ({ row }) => html`
+      <input
+        type="checkbox"
+        @change=${row.getToggleSelectedHandler()}
+        .checked=${row.getIsSelected()}
+        ?disabled=${!row.getCanSelect()}
+        .indeterminate=${row.getIsSomeSelected()}
+      />
+    `,
+  }),
   productColumnHelper.accessor('name', {
     header: 'Product Name',
     footer: (props) => props.column.id,
@@ -55,11 +75,13 @@ export class ProductsTable extends LitElement {
         get data() {
           return host.data
         },
+        enableRowSelection: true,
       },
       (state) => ({
         pagination: state.pagination,
         sorting: state.sorting,
         columnFilters: state.columnFilters,
+        rowSelection: state.rowSelection,
       }),
     )
   })()
@@ -88,104 +110,109 @@ export class ProductsTable extends LitElement {
         ></table-toolbar>
 
         <!-- Table element -->
-        <table>
-          <thead>
-            ${table.getHeaderGroups().map(
-              (headerGroup) => html`
-                <tr>
-                  ${headerGroup.headers.map((h) =>
-                    table.AppHeader(
-                      h,
-                      (header) => html`
-                        <th
-                          colspan=${header.colSpan}
-                          class=${header.column.getCanSort()
-                            ? 'sortable-header'
-                            : ''}
-                          @click=${header.column.getToggleSortingHandler()}
-                        >
-                          ${header.isPlaceholder
-                            ? nothing
-                            : html`
-                                ${header.FlexRender()} ${header.SortIndicator()}
-                                ${header.ColumnFilter()}
-                                ${sorting.length > 1 &&
-                                sorting.findIndex(
-                                  (s) => s.id === header.column.id,
-                                ) > -1
-                                  ? html`<span class="sort-order"
-                                      >${sorting.findIndex(
-                                        (s) => s.id === header.column.id,
-                                      ) + 1}</span
-                                    >`
-                                  : nothing}
-                              `}
-                        </th>
-                      `,
-                    ),
-                  )}
-                </tr>
-              `,
-            )}
-          </thead>
-          <tbody>
-            ${table.getRowModel().rows.map(
-              (row) => html`
-                <tr>
-                  ${row
-                    .getAllCells()
-                    .map((c) =>
-                      table.AppCell(
-                        c,
-                        (cell) => html` <td>${cell.FlexRender()}</td> `,
-                      ),
-                    )}
-                </tr>
-              `,
-            )}
-          </tbody>
-          <tfoot>
-            ${table.getFooterGroups().map(
-              (footerGroup) => html`
-                <tr>
-                  ${footerGroup.headers.map((f) =>
-                    table.AppFooter(f, (footer) => {
-                      const columnId = footer.column.id
-                      const hasFilter = columnFilters.some(
-                        (cf) => cf.id === columnId,
-                      )
-                      return html`
-                        <td colspan=${footer.colSpan}>
-                          ${footer.isPlaceholder
-                            ? nothing
-                            : columnId === 'price' ||
-                                columnId === 'stock' ||
-                                columnId === 'rating'
-                              ? html`
-                                  ${footer.FooterSum()}
-                                  ${hasFilter
-                                    ? html`<span class="filtered-indicator">
-                                        (filtered)</span
-                                      >`
-                                    : nothing}
-                                `
+        <div class="table-scroll">
+          <table>
+            <thead>
+              ${table.getHeaderGroups().map(
+                (headerGroup) => html`
+                  <tr>
+                    ${headerGroup.headers.map((h) =>
+                      table.AppHeader(
+                        h,
+                        (header) => html`
+                          <th
+                            colspan=${header.colSpan}
+                            class=${header.column.getCanSort()
+                              ? 'sortable-header'
+                              : ''}
+                            @click=${header.column.getToggleSortingHandler()}
+                          >
+                            ${header.isPlaceholder
+                              ? nothing
                               : html`
-                                  ${footer.FooterColumnId()}
-                                  ${hasFilter
-                                    ? html`<span class="filtered-indicator">
-                                        ✓</span
+                                  ${header.FlexRender()}
+                                  ${header.SortIndicator()}
+                                  ${header.ColumnFilter()}
+                                  ${sorting.length > 1 &&
+                                  sorting.findIndex(
+                                    (s) => s.id === header.column.id,
+                                  ) > -1
+                                    ? html`<span class="sort-order"
+                                        >${sorting.findIndex(
+                                          (s) => s.id === header.column.id,
+                                        ) + 1}</span
                                       >`
                                     : nothing}
                                 `}
-                        </td>
-                      `
-                    }),
-                  )}
-                </tr>
-              `,
-            )}
-          </tfoot>
-        </table>
+                          </th>
+                        `,
+                      ),
+                    )}
+                  </tr>
+                `,
+              )}
+            </thead>
+            <tbody>
+              ${table.getRowModel().rows.map(
+                (row) => html`
+                  <tr>
+                    ${row
+                      .getAllCells()
+                      .map((c) =>
+                        table.AppCell(
+                          c,
+                          (cell) => html` <td>${cell.FlexRender()}</td> `,
+                        ),
+                      )}
+                  </tr>
+                `,
+              )}
+            </tbody>
+            <tfoot>
+              ${table.getFooterGroups().map(
+                (footerGroup) => html`
+                  <tr>
+                    ${footerGroup.headers.map((f) =>
+                      table.AppFooter(f, (footer) => {
+                        const columnId = footer.column.id
+                        const hasFilter = columnFilters.some(
+                          (cf) => cf.id === columnId,
+                        )
+                        return html`
+                          <td colspan=${footer.colSpan}>
+                            ${footer.isPlaceholder
+                              ? nothing
+                              : columnId === 'price' ||
+                                  columnId === 'stock' ||
+                                  columnId === 'rating'
+                                ? html`
+                                    ${footer.FooterSum()}
+                                    ${hasFilter
+                                      ? html`<span class="filtered-indicator">
+                                          (filtered)</span
+                                        >`
+                                      : nothing}
+                                  `
+                                : columnId === 'select'
+                                  ? nothing
+                                  : html`
+                                      ${footer.FooterColumnId()}
+                                      ${hasFilter
+                                        ? html`<span class="filtered-indicator">
+                                            ✓</span
+                                          >`
+                                        : nothing}
+                                    `}
+                          </td>
+                        `
+                      }),
+                    )}
+                  </tr>
+                `,
+              )}
+            </tfoot>
+          </table>
+        </div>
 
         <!-- Pagination and row count using the same context-based custom elements -->
         <pagination-controls></pagination-controls>

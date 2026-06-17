@@ -4,34 +4,28 @@
  * These components can be used via the pre-bound cellComponents
  * in AppCell children, e.g., <cell.TextCell />
  */
-import { Subscribe } from '@tanstack/preact-table'
-import { useCellContext, useTableContext } from '../hooks/table'
+import { useCellContext } from '../hooks/table'
 import { IndeterminateCheckbox } from './indeterminate-checkbox'
 
 /**
  * Row-selection checkbox cell - toggles selection for the current row.
  *
- * The `Subscribe` boundary keeps the checkbox in sync with the row-selection
- * state. It reads `row.getIsSelected()` (a table API call, not a reactive prop
- * or hook), so subscribing to the selection state ensures it re-renders when
- * selection changes without depending on a parent re-render.
+ * Unlike React (which needs a `Subscribe` boundary to work around React
+ * Compiler memoization), Preact re-renders this cell when selection state
+ * changes via the parent table's subscription, so reading `row.getIsSelected()`
+ * directly is enough.
  */
 export function SelectCell() {
   const cell = useCellContext()
-  const table = useTableContext()
   const row = cell.row
 
   return (
-    <Subscribe source={table.atoms.rowSelection}>
-      {() => (
-        <IndeterminateCheckbox
-          checked={row.getIsSelected()}
-          disabled={!row.getCanSelect()}
-          indeterminate={row.getIsSomeSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      )}
-    </Subscribe>
+    <IndeterminateCheckbox
+      checked={row.getIsSelected()}
+      disabled={!row.getCanSelect()}
+      indeterminate={row.getIsSomeSelected()}
+      onChange={row.getToggleSelectedHandler()}
+    />
   )
 }
 
