@@ -143,7 +143,7 @@ export const filterFn_greaterThan = Object.assign(
     const stringFilterValue = String(filterValue).toLowerCase().trim()
     return stringValue > stringFilterValue
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: true },
 )
 
 /**
@@ -162,7 +162,7 @@ export const filterFn_greaterThanOrEqualTo = Object.assign(
       filterFn_equals(row, columnId, filterValue)
     )
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: true },
 )
 
 /**
@@ -178,7 +178,7 @@ export const filterFn_lessThan = Object.assign(
   ) => {
     return !filterFn_greaterThanOrEqualTo(row, columnId, filterValue)
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: true },
 )
 
 /**
@@ -194,7 +194,7 @@ export const filterFn_lessThanOrEqualTo = Object.assign(
   ) => {
     return !filterFn_greaterThan(row, columnId, filterValue)
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: true },
 )
 
 // Range filters
