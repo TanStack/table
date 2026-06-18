@@ -217,7 +217,10 @@ const filterFn_between = Object.assign(
       Number(filterValues[0]) > Number(filterValues[1])) ||
       (['', undefined] as Array<any>).includes(filterValues[1]) ||
       filterFn_lessThan(row, columnId, filterValues[1])),
-  { autoRemove: (val: any) => !val },
+  {
+    autoRemove: (val: any) =>
+      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
+  },
 )
 
 /**
@@ -238,7 +241,10 @@ const filterFn_betweenInclusive = Object.assign(
       Number(filterValues[0]) > Number(filterValues[1])) ||
       (['', undefined] as Array<any>).includes(filterValues[1]) ||
       filterFn_lessThanOrEqualTo(row, columnId, filterValues[1])),
-  { autoRemove: (val: any) => !val },
+  {
+    autoRemove: (val: any) =>
+      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
+  },
 )
 
 /**
