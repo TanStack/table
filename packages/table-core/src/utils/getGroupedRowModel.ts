@@ -94,7 +94,12 @@ export function getGroupedRowModel<TData extends RowData>(): (
                 getValue: (columnId: string) => {
                   // Don't aggregate columns that are in the grouping
                   if (existingGrouping.includes(columnId)) {
-                    if (row._valuesCache.hasOwnProperty(columnId)) {
+                    if (
+                      Object.prototype.hasOwnProperty.call(
+                        row._valuesCache,
+                        columnId,
+                      )
+                    ) {
                       return row._valuesCache[columnId]
                     }
 
@@ -106,7 +111,12 @@ export function getGroupedRowModel<TData extends RowData>(): (
                     return row._valuesCache[columnId]
                   }
 
-                  if (row._groupingValuesCache.hasOwnProperty(columnId)) {
+                  if (
+                    Object.prototype.hasOwnProperty.call(
+                      row._groupingValuesCache,
+                      columnId,
+                    )
+                  ) {
                     return row._groupingValuesCache[columnId]
                   }
 

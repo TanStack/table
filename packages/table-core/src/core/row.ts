@@ -107,10 +107,10 @@ export const createRow = <TData extends RowData>(
     original,
     depth,
     parentId,
-    _valuesCache: {},
-    _uniqueValuesCache: {},
+    _valuesCache: Object.create(null),
+    _uniqueValuesCache: Object.create(null),
     getValue: (columnId) => {
-      if (row._valuesCache.hasOwnProperty(columnId)) {
+      if (Object.prototype.hasOwnProperty.call(row._valuesCache, columnId)) {
         return row._valuesCache[columnId]
       }
 
@@ -128,7 +128,9 @@ export const createRow = <TData extends RowData>(
       return row._valuesCache[columnId] as any
     },
     getUniqueValues: (columnId) => {
-      if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
+      if (
+        Object.prototype.hasOwnProperty.call(row._uniqueValuesCache, columnId)
+      ) {
         return row._uniqueValuesCache[columnId]
       }
 
@@ -185,7 +187,7 @@ export const createRow = <TData extends RowData>(
             acc[cell.column.id] = cell
             return acc
           },
-          {} as Record<string, Cell<TData, unknown>>,
+          Object.create(null) as Record<string, Cell<TData, unknown>>,
         )
       },
       getMemoOptions(table.options, 'debugRows', 'getAllCellsByColumnId'),

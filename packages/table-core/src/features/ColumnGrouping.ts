@@ -363,7 +363,12 @@ export const ColumnGrouping: TableFeature = {
   ): void => {
     row.getIsGrouped = () => !!row.groupingColumnId
     row.getGroupingValue = (columnId) => {
-      if (row._groupingValuesCache.hasOwnProperty(columnId)) {
+      if (
+        Object.prototype.hasOwnProperty.call(
+          row._groupingValuesCache,
+          columnId,
+        )
+      ) {
         return row._groupingValuesCache[columnId]
       }
 
@@ -379,7 +384,7 @@ export const ColumnGrouping: TableFeature = {
 
       return row._groupingValuesCache[columnId]
     }
-    row._groupingValuesCache = {}
+    row._groupingValuesCache = Object.create(null)
   },
 
   createCell: <TData extends RowData, TValue>(
