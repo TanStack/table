@@ -102,7 +102,9 @@ export const densityPlugin: TableFeature = {
             const newState = functionalUpdate(updater, old)
             return newState
           }
-          return table.options.onDensityChange?.(safeUpdater)
+          return (table.options as TableOptions_Density).onDensityChange?.(
+            safeUpdater,
+          )
         },
       },
       table_toggleDensity: {
@@ -111,7 +113,9 @@ export const densityPlugin: TableFeature = {
             if (value) return value
             return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
           }
-          return table.options.onDensityChange?.(safeUpdater)
+          return (table.options as TableOptions_Density).onDensityChange?.(
+            safeUpdater,
+          )
         },
       },
     })

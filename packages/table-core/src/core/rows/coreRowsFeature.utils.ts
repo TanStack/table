@@ -1,4 +1,4 @@
-import { flattenBy } from '../../utils'
+import { flattenBy, hasOwn, makeObjectMap } from '../../utils'
 import { constructCell } from '../cells/constructCell'
 import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
@@ -21,7 +21,7 @@ export function row_getValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, columnId: string) {
-  if (row._valuesCache.hasOwnProperty(columnId)) {
+  if (hasOwn(row._valuesCache, columnId)) {
     return row._valuesCache[columnId]
   }
 
@@ -51,7 +51,7 @@ export function row_getUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, columnId: string) {
-  if (row._uniqueValuesCache.hasOwnProperty(columnId)) {
+  if (hasOwn(row._uniqueValuesCache, columnId)) {
     return row._uniqueValuesCache[columnId]
   }
 
@@ -192,7 +192,7 @@ export function row_getAllCellsByColumnId<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const result: Record<string, Cell<TFeatures, TData, unknown>> = {}
+  const result = makeObjectMap<Cell<TFeatures, TData, unknown>>()
   const cells = row.getAllCells()
   for (let i = 0; i < cells.length; i++) {
     const cell = cells[i]!
