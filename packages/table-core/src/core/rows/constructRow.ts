@@ -1,3 +1,4 @@
+import { makeObjectMap } from '../../utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -47,8 +48,8 @@ export const constructRow = <
   >
 
   // Only assign instance-specific properties
-  row._uniqueValuesCache = {}
-  row._valuesCache = {}
+  row._uniqueValuesCache = makeObjectMap()
+  row._valuesCache = makeObjectMap()
   row.depth = depth
   row.id = id
   row.index = rowIndex

@@ -1,4 +1,4 @@
-import { callMemoOrStaticFn } from '../../utils'
+import { callMemoOrStaticFn, makeObjectMap } from '../../utils'
 import { table_getOrderColumnsFn } from '../../features/column-ordering/columnOrderingFeature.utils'
 import { constructColumn } from './constructColumn'
 import type { Table_Internal } from '../../types/Table'
@@ -185,7 +185,7 @@ export function table_getAllFlatColumnsById<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
-  const result: Record<string, Column<TFeatures, TData, unknown>> = {}
+  const result = makeObjectMap<Column<TFeatures, TData, unknown>>()
   const flatColumns = table.getAllFlatColumns()
   for (let i = 0; i < flatColumns.length; i++) {
     const column = flatColumns[i]!
@@ -238,7 +238,7 @@ export function table_getAllLeafColumnsById<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Record<string, Column<TFeatures, TData, unknown>> {
-  const result: Record<string, Column<TFeatures, TData, unknown>> = {}
+  const result = makeObjectMap<Column<TFeatures, TData, unknown>>()
   const leafColumns = table.getAllLeafColumns()
   for (let i = 0; i < leafColumns.length; i++) {
     const column = leafColumns[i]!

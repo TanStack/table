@@ -5,7 +5,12 @@ import {
   table_getRightHeaderGroups,
 } from '../column-pinning/columnPinningFeature.utils'
 import { column_getIndex } from '../column-ordering/columnOrderingFeature.utils'
-import { callMemoOrStaticFn, cloneState } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  hasOwn,
+  makeObjectMap,
+} from '../../utils'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -26,7 +31,7 @@ import type { ColumnSizingState } from './columnSizingFeature.types'
  * ```
  */
 export function getDefaultColumnSizingState(): ColumnSizingState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
@@ -66,7 +71,11 @@ export function column_getSize<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = column.table.atoms.columnSizing?.get()?.[column.id]
+  const columnSizing = column.table.atoms.columnSizing?.get()
+  const columnSize =
+    columnSizing && hasOwn(columnSizing, column.id)
+      ? columnSizing[column.id]
+      : undefined
 
   return Math.min(
     Math.max(
@@ -174,7 +183,15 @@ export function column_resetSize<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  table_setColumnSizing(column.table, ({ [column.id]: _, ...rest }) => {
+  table_setColumnSizing(column.table, (old) => {
+    const rest = makeObjectMap<number>()
+    const columnIds = Object.keys(old)
+    for (let i = 0; i < columnIds.length; i++) {
+      const columnId = columnIds[i]!
+      if (columnId !== column.id) {
+        rest[columnId] = old[columnId]!
+      }
+    }
     return rest
   })
 }
@@ -280,7 +297,12 @@ export function table_resetColumnSizing<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
-    defaultState ? {} : cloneState(table.initialState.columnSizing ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : Object.assign(
+          makeObjectMap<number>(),
+          cloneState(table.initialState.columnSizing ?? {}),
+        ),
   )
 }
 

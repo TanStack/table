@@ -1,4 +1,4 @@
-import { tableMemo } from '../../utils'
+import { makeObjectMap, tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -57,14 +57,11 @@ function _createSortedRowModel<
     ),
   )
 
-  const columnInfoById: Record<
-    string,
-    {
-      sortUndefined?: false | -1 | 1 | 'first' | 'last'
-      invertSorting?: boolean
-      sortFn: SortFn<TFeatures, TData>
-    }
-  > = {}
+  const columnInfoById = makeObjectMap<{
+    sortUndefined?: false | -1 | 1 | 'first' | 'last'
+    invertSorting?: boolean
+    sortFn: SortFn<TFeatures, TData>
+  }>()
 
   availableSorting.forEach((sortEntry) => {
     const column: Column_Internal<TFeatures, TData> | undefined =

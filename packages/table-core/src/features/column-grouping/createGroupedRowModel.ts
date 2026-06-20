@@ -1,4 +1,4 @@
-import { flattenBy, tableMemo } from '../../utils'
+import { flattenBy, hasOwn, makeObjectMap, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
@@ -69,7 +69,7 @@ function _createGroupedRowModel<
 
   const groupedFlatRows: Array<Row<TFeatures, TData>> &
     Partial<Row_ColumnGrouping> = []
-  const groupedRowsById: Record<string, Row<TFeatures, TData>> = {}
+  const groupedRowsById = makeObjectMap<Row<TFeatures, TData>>()
 
   // Recursively group the data
   const groupUpRecursively = (
@@ -135,7 +135,7 @@ function _createGroupedRowModel<
           getValue: (colId: string) => {
             // Don't aggregate columns that are in the grouping
             if (existingGrouping.includes(colId)) {
-              if (row._valuesCache.hasOwnProperty(colId)) {
+              if (hasOwn(row._valuesCache, colId)) {
                 return row._valuesCache[colId]
               }
 
@@ -147,7 +147,10 @@ function _createGroupedRowModel<
               return row._valuesCache[colId]
             }
 
-            if (row._groupingValuesCache?.hasOwnProperty(colId)) {
+            if (
+              row._groupingValuesCache &&
+              hasOwn(row._groupingValuesCache, colId)
+            ) {
               return row._groupingValuesCache[colId]
             }
 
@@ -157,7 +160,9 @@ function _createGroupedRowModel<
               column as Column<TFeatures, TData, unknown>,
             )
 
-            if (!row._groupingValuesCache) row._groupingValuesCache = {}
+            if (!row._groupingValuesCache) {
+              row._groupingValuesCache = makeObjectMap()
+            }
 
             if (aggregateFn) {
               row._groupingValuesCache[colId] = aggregateFn(

@@ -1,4 +1,4 @@
-import { cloneState } from '../../utils'
+import { cloneState, hasOwn, makeObjectMap } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -20,7 +20,7 @@ import type { RowSelectionState } from './rowSelectionFeature.types'
  * ```
  */
 export function getDefaultRowSelectionState(): RowSelectionState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
@@ -62,7 +62,12 @@ export function table_resetRowSelection<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setRowSelection(
     table,
-    defaultState ? {} : cloneState(table.initialState.rowSelection ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : Object.assign(
+          makeObjectMap<boolean | undefined>(),
+          cloneState(table.initialState.rowSelection ?? {}),
+        ),
   )
 }
 
@@ -87,7 +92,10 @@ export function table_toggleAllRowsSelected<
     value =
       typeof value !== 'undefined' ? value : !table_getIsAllRowsSelected(table)
 
-    const rowSelection = { ...old }
+    const rowSelection = Object.assign(
+      makeObjectMap<boolean | undefined>(),
+      old,
+    )
 
     const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
 
@@ -131,7 +139,10 @@ export function table_toggleAllPageRowsSelected<
         ? value
         : !table_getIsAllPageRowsSelected(table)
 
-    const rowSelection: RowSelectionState = { ...old }
+    const rowSelection: RowSelectionState = Object.assign(
+      makeObjectMap<boolean | undefined>(),
+      old,
+    )
 
     table.getRowModel().rows.forEach((row) => {
       mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
@@ -180,7 +191,7 @@ export function table_getSelectedRowModel<
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
@@ -208,7 +219,7 @@ export function table_getFilteredSelectedRowModel<
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
@@ -236,7 +247,7 @@ export function table_getGroupedSelectedRowModel<
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
@@ -268,7 +279,8 @@ export function table_getIsAllRowsSelected<
   if (isAllRowsSelected) {
     if (
       preGroupedFlatRows.some(
-        (row) => row_getCanSelect(row) && !rowSelection[row.id],
+        (row) =>
+          row_getCanSelect(row) && !isRowIdSelected(rowSelection, row.id),
       )
     ) {
       isAllRowsSelected = false
@@ -301,7 +313,7 @@ export function table_getIsAllPageRowsSelected<
 
   if (
     isAllPageRowsSelected &&
-    paginationFlatRows.some((row) => !rowSelection[row.id])
+    paginationFlatRows.some((row) => !isRowIdSelected(rowSelection, row.id))
   ) {
     isAllPageRowsSelected = false
   }
@@ -434,7 +446,10 @@ export function row_toggleSelected<
       return old
     }
 
-    const selectedRowIds = { ...old }
+    const selectedRowIds = Object.assign(
+      makeObjectMap<boolean | undefined>(),
+      old,
+    )
 
     mutateRowIsSelected(
       selectedRowIds,
@@ -640,7 +655,7 @@ export function selectRowsFn<
   TData extends RowData,
 >(rowModel: RowModel<TFeatures, TData>): RowModel<TFeatures, TData> {
   const newSelectedFlatRows: Array<Row<TFeatures, TData>> = []
-  const newSelectedRowsById: Record<string, Row<TFeatures, TData>> = {}
+  const newSelectedRowsById = makeObjectMap<Row<TFeatures, TData>>()
 
   // Filters top level and nested rows.
   const recurseRows = (
@@ -695,7 +710,14 @@ export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean {
-  return (row.table.atoms.rowSelection?.get() ?? {})[row.id] ?? false
+  return isRowIdSelected(row.table.atoms.rowSelection?.get(), row.id)
+}
+
+function isRowIdSelected(
+  rowSelection: RowSelectionState | undefined,
+  rowId: string,
+): boolean {
+  return !!(rowSelection && hasOwn(rowSelection, rowId) && rowSelection[rowId])
 }
 
 /**

@@ -1,6 +1,7 @@
 import {
   assignPrototypeAPIs,
   assignTableAPIs,
+  makeObjectMap,
   makeStateUpdater,
 } from '../../utils'
 import {
@@ -69,8 +70,8 @@ export const columnFilteringFeature: TableFeature = {
   },
 
   initRowInstanceData: (row) => {
-    ;(row as any).columnFilters = {}
-    ;(row as any).columnFiltersMeta = {}
+    ;(row as any).columnFilters = makeObjectMap()
+    ;(row as any).columnFiltersMeta = makeObjectMap()
   },
 
   constructTableAPIs: (table) => {
