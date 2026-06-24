@@ -31,6 +31,12 @@ import type {
 
 export type ComponentType<T extends Record<string, any>> = (props: T) => any
 
+export type BoundComponents<
+  TComponents extends Record<string, ComponentType<any>>,
+> = {
+  [TKey in keyof TComponents]: () => ReturnType<TComponents[TKey]>
+}
+
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
 // =============================================================================
@@ -46,7 +52,7 @@ export type AppCellContext<
   TCellComponents extends Record<string, ComponentType<any>>,
 > = {
   cell: Cell<TFeatures, TData, TValue> &
-    TCellComponents & {
+    BoundComponents<TCellComponents> & {
       FlexRender: () => TemplateResult | string | null
     }
   column: Column<TFeatures, TData, TValue>
@@ -68,7 +74,7 @@ export type AppHeaderContext<
 > = {
   column: Column<TFeatures, TData, TValue>
   header: Header<TFeatures, TData, TValue> &
-    THeaderComponents & {
+    BoundComponents<THeaderComponents> & {
       FlexRender: () => TemplateResult | string | null
     }
   table: Table<TFeatures, TData>
@@ -299,7 +305,7 @@ export type AppLitTable<
       cell: Cell<TFeatures, TData, TValue>,
       renderFn: (
         cell: Cell<TFeatures, TData, TValue> &
-          TCellComponents & {
+          BoundComponents<TCellComponents> & {
             FlexRender: () => TemplateResult | string | null
           },
       ) => TemplateResult | string,
@@ -315,7 +321,7 @@ export type AppLitTable<
       header: Header<TFeatures, TData, TValue>,
       renderFn: (
         header: Header<TFeatures, TData, TValue> &
-          THeaderComponents & {
+          BoundComponents<THeaderComponents> & {
             FlexRender: () => TemplateResult | string | null
           },
       ) => TemplateResult | string,
@@ -331,7 +337,7 @@ export type AppLitTable<
       header: Header<TFeatures, TData, TValue>,
       renderFn: (
         header: Header<TFeatures, TData, TValue> &
-          THeaderComponents & {
+          BoundComponents<THeaderComponents> & {
             FlexRender: () => TemplateResult | string | null
           },
       ) => TemplateResult | string,
@@ -657,7 +663,7 @@ export function createTableHook<
           cell: Cell<TFeatures, TData, TValue>,
           renderFn: (
             cell: Cell<TFeatures, TData, TValue> &
-              TCellComponents & {
+              BoundComponents<TCellComponents> & {
                 FlexRender: () => TemplateResult | string | null
               },
           ) => TemplateResult | string,
@@ -677,7 +683,7 @@ export function createTableHook<
             FlexRender: cellFlexRender,
             ...boundCellComponents,
           }) as Cell<TFeatures, TData, TValue> &
-            TCellComponents & {
+            BoundComponents<TCellComponents> & {
               FlexRender: () => TemplateResult | string | null
             }
 
@@ -689,7 +695,7 @@ export function createTableHook<
           header: Header<TFeatures, TData, TValue>,
           renderFn: (
             header: Header<TFeatures, TData, TValue> &
-              THeaderComponents & {
+              BoundComponents<THeaderComponents> & {
                 FlexRender: () => TemplateResult | string | null
               },
           ) => TemplateResult | string,
@@ -707,7 +713,7 @@ export function createTableHook<
             FlexRender: headerFlexRender,
             ...boundHeaderComponents,
           }) as Header<TFeatures, TData, TValue> &
-            THeaderComponents & {
+            BoundComponents<THeaderComponents> & {
               FlexRender: () => TemplateResult | string | null
             }
 
@@ -719,7 +725,7 @@ export function createTableHook<
           header: Header<TFeatures, TData, TValue>,
           renderFn: (
             header: Header<TFeatures, TData, TValue> &
-              THeaderComponents & {
+              BoundComponents<THeaderComponents> & {
                 FlexRender: () => TemplateResult | string | null
               },
           ) => TemplateResult | string,
@@ -737,7 +743,7 @@ export function createTableHook<
             FlexRender: footerFlexRender,
             ...boundFooterComponents,
           }) as Header<TFeatures, TData, TValue> &
-            THeaderComponents & {
+            BoundComponents<THeaderComponents> & {
               FlexRender: () => TemplateResult | string | null
             }
 

@@ -8767,6 +8767,9 @@ importers:
       '@analogjs/vitest-angular':
         specifier: ^2.6.0
         version: 2.6.0(@analogjs/vite-plugin-angular@2.6.0(@angular-devkit/build-angular@22.0.0(db8615a542877e474234efea00860010))(@angular/build@22.0.0(dbe0ff1be37d13feca4899b3e3464db9))(@emnapi/core@1.10.0)(@emnapi/runtime@1.10.0)(vite@8.0.16(@types/node@25.9.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)))(@angular-devkit/architect@0.2200.0(chokidar@5.0.0))(@angular-devkit/schematics@22.0.0(chokidar@5.0.0))(vitest@4.1.8(@types/node@25.9.2)(jsdom@29.1.1)(vite@8.0.16(@types/node@25.9.2)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)))
+      '@angular/compiler':
+        specifier: ^22.0.0
+        version: 22.0.0
       '@angular/core':
         specifier: ^22.0.0
         version: 22.0.0(@angular/compiler@22.0.0)(rxjs@7.8.2)
