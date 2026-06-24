@@ -18,10 +18,12 @@ export function aggregationFn_sum<
 ) {
   // It's faster to just add the aggregations together instead of
   // process leaf nodes individually
-  return childRows.reduce((sumValue, next) => {
-    const nextValue = next.getValue(columnId)
-    return sumValue + (typeof nextValue === 'number' ? nextValue : 0)
-  }, 0)
+  let sumValue = 0
+  for (let i = 0; i < childRows.length; i++) {
+    const nextValue = childRows[i]!.getValue(columnId)
+    if (typeof nextValue === 'number') sumValue += nextValue
+  }
+  return sumValue;
 }
 
 /**
@@ -38,10 +40,10 @@ export function aggregationFn_min<
   _leafRows: Array<Row<TFeatures, TData>>,
   childRows: Array<Row<TFeatures, TData>>,
 ) {
-  let minValue: number | undefined
+  let minValue: number | undefined;
 
-  childRows.forEach((row) => {
-    const value = row.getValue(columnId)
+  for (let i = 0; i < childRows.length; i++) {
+    const value = childRows[i]!.getValue(columnId)
 
     if (
       value != null &&
@@ -50,7 +52,7 @@ export function aggregationFn_min<
     ) {
       minValue = value
     }
-  })
+  }
 
   return minValue
 }
@@ -71,8 +73,9 @@ export function aggregationFn_max<
 ) {
   let maxValue: number | undefined
 
-  childRows.forEach((row) => {
-    const value = row.getValue(columnId)
+  for (let i = 0; i < childRows.length; i++) {
+    const value = childRows[i]!.getValue(columnId)
+
     if (
       value != null &&
       typeof value === 'number' &&
@@ -80,7 +83,7 @@ export function aggregationFn_max<
     ) {
       maxValue = value
     }
-  })
+  }
 
   return maxValue
 }
@@ -102,8 +105,8 @@ export function aggregationFn_extent<
   let minValue: number | undefined
   let maxValue: number | undefined
 
-  childRows.forEach((row) => {
-    const value = row.getValue(columnId)
+  for (let i = 0; i < childRows.length; i++) {
+    const value = childRows[i]!.getValue(columnId)
     if (value != null && typeof value === 'number') {
       if (minValue === undefined) {
         minValue = maxValue = value
@@ -112,7 +115,7 @@ export function aggregationFn_extent<
         if (maxValue! < value) maxValue = value
       }
     }
-  })
+  }
 
   return [minValue, maxValue]
 }
@@ -130,23 +133,23 @@ export function aggregationFn_mean<
   let count = 0
   let sumValue = 0
 
-  leafRows.forEach((row) => {
-    const value = row.getValue(columnId)
-    if (value != null && typeof value === 'number') {
-      ++count
-      sumValue += value
-    } else if (value != null) {
-      const numValue = +value
-      if (!Number.isNaN(numValue)) {
+  for (let i = 0; i < leafRows.length; i++) {
+    let value = leafRows[i]!.getValue(columnId)
+    if (value != null) {
+      if (typeof value === 'number') {
         ++count
-        sumValue += numValue
+        sumValue += value
+      } else {
+        const numValue = +value
+        if (!Number.isNaN(numValue)) {
+          ++count
+          sumValue += numValue
+        }
       }
     }
-  })
+  }
 
   if (count) return sumValue / count
-
-  return
 }
 
 /**
@@ -159,24 +162,26 @@ export function aggregationFn_median<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(columnId: string, leafRows: Array<Row<TFeatures, TData>>) {
-  if (!leafRows.length) {
+  const len = leafRows.length;
+
+  if (len === 0) {
     return
   }
+  if (len === 1) {
+    const v = leafRows[0]!.getValue(columnId);
+    return typeof v === 'number' ? v : undefined;
+  }
 
-  const values: Array<number> = new Array(leafRows.length)
-  for (let i = 0; i < leafRows.length; i++) {
+  const values: Array<number> = new Array(len)
+  for (let i = 0; i < len; i++) {
     const v = leafRows[i]!.getValue(columnId)
     if (typeof v !== 'number') return
     values[i] = v
   }
 
-  if (values.length === 1) {
-    return values[0]
-  }
-
-  const mid = Math.floor(values.length / 2)
+  const mid = len >>> 1; // Divide by 2 and floor
   values.sort((a, b) => a - b)
-  return values.length % 2 !== 0
+  return (len & 1) === 1
     ? values[mid]
     : (values[mid - 1]! + values[mid]!) / 2
 }

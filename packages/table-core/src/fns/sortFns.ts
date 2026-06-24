@@ -136,10 +136,7 @@ function compareBasic(a: any, b: any) {
 
 function toString(a: any) {
   if (typeof a === 'number') {
-    if (isNaN(a) || a === Infinity || a === -Infinity) {
-      return ''
-    }
-    return String(a)
+    return Number.isFinite(a) ? '' + a : '';
   }
   if (typeof a === 'string') {
     return a
