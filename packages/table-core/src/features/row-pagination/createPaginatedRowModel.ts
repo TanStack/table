@@ -25,7 +25,7 @@ export function createPaginatedRowModel<
       memoDeps: () => [
         table.getPrePaginatedRowModel(),
         table.atoms.pagination?.get(),
-        table.options.paginateExpandedRows
+        !table.options.paginateExpandedRows
           ? table.atoms.expanded?.get()
           : undefined,
       ],
