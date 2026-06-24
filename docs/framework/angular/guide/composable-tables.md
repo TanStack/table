@@ -1,17 +1,147 @@
 ---
-title: Composable Tables Guide
+title: Composable Tables (createTableHook) Guide
 ---
 
-Composable tables are app-level table factories built with `createTableHook`. Instead of repeating the same features, row models, default options, and table/cell/header components in every Angular table, you define that shared infrastructure once and consume it from each table component.
+`createTableHook` creates an app-specific table factory. Use it to define shared features, row models, and default table options once, then create each Angular table with the columns and data that are unique to that table.
 
-Use this pattern when multiple tables in an Angular app share behavior or rendering conventions. For a single isolated table, `injectTable` is usually enough.
+The same API can also register reusable table, cell, and header components, but component registration is optional. Start with shared options and features first; add reusable components only when your app needs standardized table UI pieces.
 
 ## Examples
 
-- [Composable Tables](../examples/composable-tables) - Two tables sharing one app table setup from `src/app/table.ts`.
 - [Basic App Table](../examples/basic-app-table) - Minimal `createTableHook` usage without the larger component registry.
+- [Composable Tables](../examples/composable-tables) - Richer Users and Products tables sharing `src/app/table.ts` and reusable components.
 
-## Setup
+## Start With Shared Features and Options
+
+Create one app table hook and put the feature set, row models, and shared defaults there. This example makes sorting available to every table created by `injectAppTable`.
+
+```ts
+import {
+  createSortedRowModel,
+  createTableHook,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/angular-table'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
+
+const { injectAppTable, createAppColumnHelper } = createTableHook({
+  features,
+  debugTable: true,
+  enableSortingRemoval: false,
+})
+```
+
+Options passed to `createTableHook` become defaults for every table created by `injectAppTable`. The `features` option is also bound to the returned column helper, so column definitions know that sorting APIs are available.
+
+## Create App Columns
+
+Create one column helper per row type. The helper is already bound to your app's feature set, so each table does not need to thread `typeof features` through its column definitions.
+
+```ts
+type Person = {
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+}
+
+const columnHelper = createAppColumnHelper<Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    header: () => 'Last Name',
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+  }),
+  columnHelper.accessor('visits', {
+    header: 'Visits',
+  }),
+])
+```
+
+## Create A Table
+
+Create each table with `injectAppTable`. The call site provides table-specific inputs such as `columns` and `data`; shared features and defaults come from the hook.
+
+```ts
+export class UsersTable {
+  readonly data = signal<Array<Person>>([])
+
+  readonly table = injectAppTable(() => ({
+    key: 'users-table',
+    columns,
+    data: this.data(),
+  }))
+}
+```
+
+## Render With The Normal Table APIs
+
+You can render the table with the same table instance APIs used by a standalone `injectTable` table. This simple path does not require `appCell`, `appHeader`, `appFooter`, or registered components.
+
+```html
+<table>
+  <thead>
+    @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+      <tr>
+        @for (header of headerGroup.headers; track header.id) {
+          <th (click)="header.column.getToggleSortingHandler()?.($event)">
+            @if (!header.isPlaceholder) {
+              <ng-container *flexRenderHeader="header; let headerCell">
+                {{ headerCell }}
+              </ng-container>
+            }
+          </th>
+        }
+      </tr>
+    }
+  </thead>
+  <tbody>
+    @for (row of table.getRowModel().rows; track row.id) {
+      <tr>
+        @for (cell of row.getAllCells(); track cell.id) {
+          <td>
+            <ng-container *flexRenderCell="cell; let renderCell">
+              {{ renderCell }}
+            </ng-container>
+          </td>
+        }
+      </tr>
+    }
+  </tbody>
+</table>
+```
+
+## Override Shared Defaults Per Table
+
+Options passed to `injectAppTable` override defaults from `createTableHook`. Use this for the few tables that need different behavior without creating a separate app hook.
+
+```ts
+readonly table = injectAppTable(() => ({
+  key: 'sortable-users-table',
+  columns,
+  data: this.data(),
+  enableSortingRemoval: true,
+}))
+```
+
+## Optional: Reusable Components
+
+The richer composable-tables example also uses `createTableHook` as a component registry. Use this when several tables should share the same toolbar controls, cell renderers, header renderers, or footer renderers.
+
+### Component Registry Setup
 
 The composable tables example keeps the shared setup in `src/app/table.ts`. That file creates one app-specific table factory and exports the helpers used by the rest of the example.
 
@@ -95,7 +225,7 @@ export const {
 
 This file is the source of truth for the feature set, row model pipeline, row IDs, and registered components used by both tables in the example.
 
-## Returned Helpers
+### Returned Helpers
 
 | Helper | Purpose |
 |---|---|
@@ -105,7 +235,7 @@ This file is the source of truth for the feature set, row model pipeline, row ID
 | `injectTableCellContext` | Reads the current cell inside registered cell components like `TextCell`. |
 | `injectTableHeaderContext` | Reads the current header/footer inside registered header components like `SortIndicator`. |
 
-## Columns
+### Component Columns
 
 Use `createAppColumnHelper<TData>()` instead of the base column helper when column definitions should render registered components.
 
@@ -132,7 +262,7 @@ readonly columns = personColumnHelper.columns([
 
 The registered components are available through the enhanced `cell` and `header` objects because the column helper is bound to the `createTableHook` configuration.
 
-## Table Rendering
+### Component Table Rendering
 
 Create each table with `injectAppTable`. Per-table options provide the data and columns; shared features and row models come from `src/app/table.ts`.
 
@@ -179,8 +309,12 @@ In templates, use the Angular rendering helpers with the app wrappers:
 }
 ```
 
-## Reusing The Hook
+### Reusing The Component Registry
 
 The example has separate Users and Products table components. Both import `createAppColumnHelper` and `injectAppTable` from `src/app/table.ts`, so they share sorting, filtering, pagination, row IDs, toolbar controls, cell renderers, and header/footer renderers while keeping their own data and columns.
 
 If different product areas need incompatible defaults, create another `createTableHook` setup file and export a second set of app helpers from there.
+
+## When To Use This Pattern
+
+Use `createTableHook` when multiple tables should share features, row models, default options, or conventions. Use the standalone `injectTable` API for a one-off table. Add the component registry only when the app wants standardized reusable table UI pieces.

@@ -68,6 +68,7 @@
   "devDependencies": {
     "@analogjs/vite-plugin-angular": "^2.6.1",
     "@analogjs/vitest-angular": "^2.6.1",
+    "@angular/compiler": "^22.0.2",
     "@angular/core": "^22.0.2",
     "@angular/platform-browser": "^22.0.2",
     "ng-packagr": "^22.0.0",

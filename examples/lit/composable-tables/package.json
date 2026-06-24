@@ -6,6 +6,7 @@
     "build": "vite build",
     "serve": "vite preview",
     "start": "vite",
+    "test:types": "tsc --noEmit",
     "lint": "eslint ./src"
   },
   "dependencies": {

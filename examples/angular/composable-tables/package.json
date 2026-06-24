@@ -5,6 +5,7 @@
     "start": "ng serve --port 5173",
     "dev": "ng serve --port 5173",
     "build": "ng build",
+    "test:types": "ng build",
     "lint": "eslint ./src",
     "watch": "ng build --watch --configuration development"
   },

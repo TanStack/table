@@ -67,23 +67,14 @@ export class ProductsTable extends LitElement {
   // NOTE: Capture `this` as `host` to avoid infinite recursion in the getter
   private appTable = (() => {
     const host = this
-    return useAppTable(
-      this,
-      {
-        debugTable: true,
-        columns,
-        get data() {
-          return host.data
-        },
-        enableRowSelection: true,
+    return useAppTable(this, {
+      debugTable: true,
+      columns,
+      get data() {
+        return host.data
       },
-      (state) => ({
-        pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-        rowSelection: state.rowSelection,
-      }),
-    )
+      enableRowSelection: true,
+    })
   })()
 
   private refreshData = () => {
