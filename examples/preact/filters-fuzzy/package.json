@@ -11,7 +11,7 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.0",
     "@tanstack/preact-pacer": "^0.22.1",
     "@tanstack/preact-table": "^9.0.0-beta.18",
@@ -20,6 +20,6 @@
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
     "typescript": "6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.1.0"
   }
 }

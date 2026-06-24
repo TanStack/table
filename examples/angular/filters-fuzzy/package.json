@@ -11,13 +11,13 @@
   "private": true,
   "packageManager": "pnpm@11.9.0",
   "dependencies": {
-    "@angular/common": "^22.0.0",
-    "@angular/compiler": "^22.0.0",
-    "@angular/core": "^22.0.0",
-    "@angular/forms": "^22.0.0",
-    "@angular/platform-browser": "^22.0.0",
-    "@angular/router": "^22.0.0",
-    "@faker-js/faker": "^10.4.0",
+    "@angular/common": "^22.0.2",
+    "@angular/compiler": "^22.0.2",
+    "@angular/core": "^22.0.2",
+    "@angular/forms": "^22.0.2",
+    "@angular/platform-browser": "^22.0.2",
+    "@angular/router": "^22.0.2",
+    "@faker-js/faker": "^10.5.0",
     "@tanstack/angular-pacer": "^0.23.1",
     "@tanstack/angular-table": "^9.0.0-beta.18",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.0",
@@ -27,7 +27,7 @@
   "devDependencies": {
     "@angular/build": "^22.0.0",
     "@angular/cli": "^22.0.0",
-    "@angular/compiler-cli": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.2",
     "typescript": "6.0.3"
   }
 }

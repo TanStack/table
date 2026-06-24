@@ -32,6 +32,7 @@ allowBuilds:
 
   # @tanstack/vue-store
   vue-demi: false # only required for vue 2 support
+  core-js-pure: false
 
 cleanupUnusedCatalogs: true
 minimumReleaseAge: 1440

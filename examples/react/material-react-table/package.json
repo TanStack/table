@@ -13,15 +13,15 @@
   "dependencies": {
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
-    "@faker-js/faker": "^10.4.0",
-    "@mui/icons-material": "^9.0.1",
-    "@mui/material": "^9.0.1",
-    "@mui/x-date-pickers": "^9.4.0",
+    "@faker-js/faker": "^10.5.0",
+    "@mui/icons-material": "^9.1.1",
+    "@mui/material": "^9.1.2",
+    "@mui/x-date-pickers": "^9.6.0",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.0",
     "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-store": "^0.11.0",
     "@tanstack/react-table": "^9.0.0-beta.18",
-    "@tanstack/react-virtual": "^3.14.2",
+    "@tanstack/react-virtual": "^3.14.3",
     "highlight-words": "^2.0.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
@@ -31,9 +31,9 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.0.3",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.1.0"
   }
 }
