@@ -180,7 +180,7 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 
 ## Row Model and Function Registry Migration
 
-Row model factories and function registries are now slots on `tableFeatures({...})`. The separate `rowModels` option is removed.
+Row model factories and function registries are now slots on `tableFeatures({...})`. The separate `rowModels` option is removed. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 

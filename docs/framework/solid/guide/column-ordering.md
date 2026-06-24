@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Solid examples:
 
 Use getters for reactive inputs such as `data` when passing Solid signals to `createTable`.
 
-### Solid Setup
+### Column Ordering Setup
+
+Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```tsx
 import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/solid-table'

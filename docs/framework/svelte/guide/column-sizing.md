@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Column Sizing Setup
+
+Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```ts
 import { createTable, tableFeatures, columnSizingFeature } from '@tanstack/svelte-table'

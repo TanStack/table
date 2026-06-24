@@ -10,14 +10,16 @@ Want to skip to the implementation? Check out these React examples:
 - [Faceted Filters](../examples/filters-faceted)
 - [Fuzzy Search](../examples/filters-fuzzy)
 
-### React Setup
+### Column Filtering Setup
+
+Here's how you set up your table to use column filtering features. Adding the column filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
 import { useTable, tableFeatures, columnFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/react-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
+  filteredRowModel: createFilteredRowModel(), // if using client-side filtering
   filterFns,
 })
 

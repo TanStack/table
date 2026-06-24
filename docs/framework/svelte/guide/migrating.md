@@ -174,7 +174,7 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 
 ## Row Models
 
-Row model factories now live as slots directly inside `tableFeatures({...})`. The `rowModels` option no longer exists.
+Row model factories now live as slots directly inside `tableFeatures({...})`. The `rowModels` option no longer exists. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 

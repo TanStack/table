@@ -8,14 +8,16 @@ Want to skip to the implementation? Check out these React examples:
 
 - [Sorting](../examples/sorting)
 
-### React Setup
+### Sorting Setup
+
+Here's how you set up your table to use sorting features. Adding the sorting feature enables the related APIs. Additionally, if using client-side sorting, you also need to set up `sortedRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
 import { useTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/react-table'
 
 const features = tableFeatures({
   rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
+  sortedRowModel: createSortedRowModel(), // if using client-side sorting
   sortFns,
 })
 

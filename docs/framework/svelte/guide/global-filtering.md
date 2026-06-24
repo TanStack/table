@@ -11,7 +11,9 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Global Filtering Setup
+
+Here's how you set up your table to use global filtering features. Global filtering depends on column filtering, so add `columnFilteringFeature` before `globalFilteringFeature`. Adding the global filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { createTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/svelte-table'
@@ -19,7 +21,7 @@ import { createTable, tableFeatures, columnFilteringFeature, globalFilteringFeat
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
+  filteredRowModel: createFilteredRowModel(), // if using client-side filtering
   filterFns,
 })
 

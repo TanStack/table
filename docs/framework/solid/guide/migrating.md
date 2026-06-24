@@ -163,7 +163,7 @@ Use it as a migration shortcut, not as the preferred production end state.
 
 ## Row Model Factories
 
-Row model factories now live inside `tableFeatures` alongside feature objects. Function registries (`filterFns`, `sortFns`, `aggregationFns`) are also passed as slots in `tableFeatures` rather than as arguments to the factory functions.
+Row model factories now live inside `tableFeatures` alongside feature objects. Function registries (`filterFns`, `sortFns`, `aggregationFns`) are also passed as slots in `tableFeatures` rather than as arguments to the factory functions. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 

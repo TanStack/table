@@ -157,7 +157,7 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 
 ## Row Model Factories
 
-Row model factories now live on the `features` object (passed to `tableFeatures`). The `rowModels` option has been removed. Function registries (`filterFns`, `sortFns`, `aggregationFns`) are also slots on the features object.
+Row model factories now live on the `features` object (passed to `tableFeatures`). The `rowModels` option has been removed. Function registries (`filterFns`, `sortFns`, `aggregationFns`) are also slots on the features object. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 

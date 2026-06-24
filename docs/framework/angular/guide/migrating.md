@@ -163,7 +163,7 @@ class TableCmp {
 
 ## Row Model Factories
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories and their `*Fns` registries move from a separate `rowModels` option into `tableFeatures`.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories and their `*Fns` registries move from a separate `rowModels` option into `tableFeatures`. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 

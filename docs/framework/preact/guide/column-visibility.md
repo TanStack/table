@@ -7,7 +7,10 @@ title: Column Visibility (Preact) Guide
 Want to skip to the implementation? Check out these Preact examples:
 
 - [Column Visibility](../examples/column-visibility)
-### Preact Setup
+
+### Column Visibility Setup
+
+Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```tsx
 import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/preact-table'

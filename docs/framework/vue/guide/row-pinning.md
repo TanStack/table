@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Vue examples:
 
 Vue refs can be passed directly where the adapter expects reactive table options.
 
-### Vue Setup
+### Row Pinning Setup
+
+Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```ts
 import { useTable, tableFeatures, rowPinningFeature } from '@tanstack/vue-table'

@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Fuzzy Filtering Setup
+
+Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. Additionally, if using client-side fuzzy filtering and sorting, you also need to set up `filteredRowModel` and `sortedRowModel` after their associated features because row model slots are type-checked.
 
 ```ts
 import { createTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns, metaHelper } from '@tanstack/svelte-table'
@@ -19,8 +21,8 @@ const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(), // if using client-side filtering
+  sortedRowModel: createSortedRowModel(), // if using client-side sorting
   filterFns: { ...filterFns, fuzzy: fuzzyFilter },
   sortFns: { ...sortFns, fuzzy: fuzzySort },
   filterMeta: metaHelper<FuzzyFilterMeta>(),

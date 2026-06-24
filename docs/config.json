@@ -302,13 +302,6 @@
             { "label": "Virtualization", "to": "framework/vue/guide/virtualization" },
             { "label": "Custom Features", "to": "framework/vue/guide/custom-features" }
           ]
-        },
-        {
-          "label": "vanilla",
-          "children": [
-            { "label": "Pagination", "to": "framework/vanilla/guide/pagination" },
-            { "label": "Sorting", "to": "framework/vanilla/guide/sorting" }
-          ]
         }
       ]
     },

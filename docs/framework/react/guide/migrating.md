@@ -177,7 +177,7 @@ const table = useTable({
 
 ## Row Model Factories
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories live on the `tableFeatures({})` call rather than a separate `rowModels` option. The processing function registries (`filterFns`, `sortFns`, `aggregationFns`) are also registered on features.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories live on the `tableFeatures({})` call rather than a separate `rowModels` option. The processing function registries (`filterFns`, `sortFns`, `aggregationFns`) are also registered on features. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 

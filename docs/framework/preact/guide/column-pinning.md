@@ -9,7 +9,10 @@ Want to skip to the implementation? Check out these Preact examples:
 - [Column Pinning](../examples/column-pinning)
 - [Column Pinning Split](../examples/column-pinning-split)
 - [Sticky Column Pinning](../examples/column-pinning-sticky)
-### Preact Setup
+
+### Column Pinning Setup
+
+Here's how you set up your table to use column pinning features. Adding the column pinning feature enables the related APIs.
 
 ```tsx
 import { useTable, tableFeatures, columnPinningFeature } from '@tanstack/preact-table'

@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Vue examples:
 
 Vue refs can be passed directly where the adapter expects reactive table options.
 
-### Vue Setup
+### Faceting Setup
+
+Here's how you set up your table to use faceting features. Adding the faceting feature enables the related APIs. Additionally, if using client-side faceting, you also need to set up `filteredRowModel` and `facetedRowModel` after their associated features because row model slots are type-checked.
 
 ```ts
 import { useTable, tableFeatures, columnFacetingFeature, columnFilteringFeature, createFacetedRowModel, createFacetedUniqueValues, createFacetedMinMaxValues, createFilteredRowModel, filterFns } from '@tanstack/vue-table'
@@ -18,8 +20,8 @@ import { useTable, tableFeatures, columnFacetingFeature, columnFilteringFeature,
 const features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
-  facetedRowModel: createFacetedRowModel(),
+  filteredRowModel: createFilteredRowModel(), // if using client-side filtering
+  facetedRowModel: createFacetedRowModel(), // if using client-side faceting
   facetedUniqueValues: createFacetedUniqueValues(),
   facetedMinMaxValues: createFacetedMinMaxValues(),
   filterFns,

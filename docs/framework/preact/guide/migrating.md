@@ -158,7 +158,7 @@ const table = useTable({
 
 ## Row Model Factories
 
-Row models process data for features like filtering, sorting, grouping, expanding, faceting, and pagination. In v9, row model factories and function registries are slots on `tableFeatures` rather than a separate `rowModels` option.
+Row models process data for features like filtering, sorting, grouping, expanding, faceting, and pagination. In v9, row model factories and function registries are slots on `tableFeatures` rather than a separate `rowModels` option. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 
