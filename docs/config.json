@@ -92,49 +92,56 @@
           "label": "angular",
           "children": [
             { "label": "Table State", "to": "framework/angular/guide/table-state" },
-            { "label": "Composable Tables", "to": "framework/angular/guide/composable-tables" }
+            { "label": "Composable Tables (createTableHook)", "to": "framework/angular/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/angular/guide/custom-features" }
           ]
         },
         {
           "label": "lit",
           "children": [
             { "label": "Table State", "to": "framework/lit/guide/table-state" },
-            { "label": "Composable Tables", "to": "framework/lit/guide/composable-tables" }
+            { "label": "Composable Tables (createTableHook)", "to": "framework/lit/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/lit/guide/custom-features" }
           ]
         },
         {
           "label": "react",
           "children": [
             { "label": "Table State", "to": "framework/react/guide/table-state" },
-            { "label": "Composable Tables", "to": "framework/react/guide/composable-tables" }
+            { "label": "Composable Tables (createTableHook)", "to": "framework/react/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/react/guide/custom-features" }
           ]
         },
         {
           "label": "preact",
           "children": [
             { "label": "Table State", "to": "framework/preact/guide/table-state" },
-            { "label": "Composable Tables", "to": "framework/preact/guide/composable-tables" }
+            { "label": "Composable Tables (createTableHook)", "to": "framework/preact/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/preact/guide/custom-features" }
           ]
         },
         {
           "label": "solid",
           "children": [
             { "label": "Table State", "to": "framework/solid/guide/table-state" },
-            { "label": "Composable Tables", "to": "framework/solid/guide/composable-tables" }
+            { "label": "Composable Tables (createTableHook)", "to": "framework/solid/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/solid/guide/custom-features" }
           ]
         },
         {
           "label": "svelte",
           "children": [
             { "label": "Table State", "to": "framework/svelte/guide/table-state" },
-            { "label": "Composable Tables", "to": "framework/svelte/guide/composable-tables" }
+            { "label": "Composable Tables (createTableHook)", "to": "framework/svelte/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/svelte/guide/custom-features" }
           ]
         },
         {
           "label": "vue",
           "children": [
             { "label": "Table State", "to": "framework/vue/guide/table-state" },
-            { "label": "Composable Tables", "to": "framework/vue/guide/composable-tables" }
+            { "label": "Composable Tables (createTableHook)", "to": "framework/vue/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/vue/guide/custom-features" }
           ]
         },
         {
@@ -167,8 +174,7 @@
             { "label": "Row Pinning", "to": "framework/angular/guide/row-pinning" },
             { "label": "Row Selection", "to": "framework/angular/guide/row-selection" },
             { "label": "Sorting", "to": "framework/angular/guide/sorting" },
-            { "label": "Virtualization", "to": "framework/angular/guide/virtualization" },
-            { "label": "Custom Features", "to": "framework/angular/guide/custom-features" }
+            { "label": "Virtualization", "to": "framework/angular/guide/virtualization" }
           ]
         },
         {
@@ -189,8 +195,7 @@
             { "label": "Row Pinning", "to": "framework/lit/guide/row-pinning" },
             { "label": "Row Selection", "to": "framework/lit/guide/row-selection" },
             { "label": "Sorting", "to": "framework/lit/guide/sorting" },
-            { "label": "Virtualization", "to": "framework/lit/guide/virtualization" },
-            { "label": "Custom Features", "to": "framework/lit/guide/custom-features" }
+            { "label": "Virtualization", "to": "framework/lit/guide/virtualization" }
           ]
         },
         {
@@ -211,8 +216,7 @@
             { "label": "Row Pinning", "to": "framework/react/guide/row-pinning" },
             { "label": "Row Selection", "to": "framework/react/guide/row-selection" },
             { "label": "Sorting", "to": "framework/react/guide/sorting" },
-            { "label": "Virtualization", "to": "framework/react/guide/virtualization" },
-            { "label": "Custom Features", "to": "framework/react/guide/custom-features" }
+            { "label": "Virtualization", "to": "framework/react/guide/virtualization" }
           ]
         },
         {
@@ -233,8 +237,7 @@
             { "label": "Row Pinning", "to": "framework/preact/guide/row-pinning" },
             { "label": "Row Selection", "to": "framework/preact/guide/row-selection" },
             { "label": "Sorting", "to": "framework/preact/guide/sorting" },
-            { "label": "Virtualization", "to": "framework/preact/guide/virtualization" },
-            { "label": "Custom Features", "to": "framework/preact/guide/custom-features" }
+            { "label": "Virtualization", "to": "framework/preact/guide/virtualization" }
           ]
         },
         {
@@ -255,8 +258,7 @@
             { "label": "Row Pinning", "to": "framework/solid/guide/row-pinning" },
             { "label": "Row Selection", "to": "framework/solid/guide/row-selection" },
             { "label": "Sorting", "to": "framework/solid/guide/sorting" },
-            { "label": "Virtualization", "to": "framework/solid/guide/virtualization" },
-            { "label": "Custom Features", "to": "framework/solid/guide/custom-features" }
+            { "label": "Virtualization", "to": "framework/solid/guide/virtualization" }
           ]
         },
         {
@@ -277,8 +279,7 @@
             { "label": "Row Pinning", "to": "framework/svelte/guide/row-pinning" },
             { "label": "Row Selection", "to": "framework/svelte/guide/row-selection" },
             { "label": "Sorting", "to": "framework/svelte/guide/sorting" },
-            { "label": "Virtualization", "to": "framework/svelte/guide/virtualization" },
-            { "label": "Custom Features", "to": "framework/svelte/guide/custom-features" }
+            { "label": "Virtualization", "to": "framework/svelte/guide/virtualization" }
           ]
         },
         {
@@ -299,8 +300,7 @@
             { "label": "Row Pinning", "to": "framework/vue/guide/row-pinning" },
             { "label": "Row Selection", "to": "framework/vue/guide/row-selection" },
             { "label": "Sorting", "to": "framework/vue/guide/sorting" },
-            { "label": "Virtualization", "to": "framework/vue/guide/virtualization" },
-            { "label": "Custom Features", "to": "framework/vue/guide/custom-features" }
+            { "label": "Virtualization", "to": "framework/vue/guide/virtualization" }
           ]
         }
       ]
@@ -868,6 +868,7 @@
         {
           "label": "angular",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/angular/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/angular/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/angular/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/angular/examples/filters-fuzzy" },
@@ -880,17 +881,18 @@
             { "label": "Performant Column Resizing", "to": "framework/angular/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/angular/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/angular/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/angular/examples/sub-components" },
             { "label": "Grouping", "to": "framework/angular/examples/grouping" },
             { "label": "Pagination", "to": "framework/angular/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/angular/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/angular/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/angular/examples/sorting" },
-            { "label": "Kitchen Sink (All Features)", "to": "framework/angular/examples/kitchen-sink" }
+            { "label": "Sorting", "to": "framework/angular/examples/sorting" }
           ]
         },
         {
           "label": "lit",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/lit/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/lit/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/lit/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/lit/examples/filters-fuzzy" },
@@ -903,18 +905,19 @@
             { "label": "Performant Column Resizing", "to": "framework/lit/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/lit/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/lit/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/lit/examples/sub-components" },
             { "label": "Grouping", "to": "framework/lit/examples/grouping" },
             { "label": "Pagination", "to": "framework/lit/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/lit/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/lit/examples/row-selection" },
             { "label": "Sorting", "to": "framework/lit/examples/sorting" },
-            { "label": "Sorting (Dynamic Data)", "to": "framework/lit/examples/sorting-dynamic-data" },
-            { "label": "Kitchen Sink (All Features)", "to": "framework/lit/examples/kitchen-sink" }
+            { "label": "Sorting (Dynamic Data)", "to": "framework/lit/examples/sorting-dynamic-data" }
           ]
         },
         {
           "label": "react",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/react/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/react/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/react/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/react/examples/filters-fuzzy" },
@@ -928,18 +931,19 @@
             { "label": "Performant Column Resizing", "to": "framework/react/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/react/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/react/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/react/examples/sub-components" },
             { "label": "Grouping", "to": "framework/react/examples/grouping" },
             { "label": "Pagination", "to": "framework/react/examples/pagination" },
             { "label": "Row DnD", "to": "framework/react/examples/row-dnd" },
             { "label": "Row Pinning", "to": "framework/react/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/react/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/react/examples/sorting" },
-            { "label": "Kitchen Sink (All Features)", "to": "framework/react/examples/kitchen-sink" }
+            { "label": "Sorting", "to": "framework/react/examples/sorting" }
           ]
         },
         {
           "label": "solid",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/solid/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/solid/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/solid/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/solid/examples/filters-fuzzy" },
@@ -952,17 +956,18 @@
             { "label": "Performant Column Resizing", "to": "framework/solid/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/solid/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/solid/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/solid/examples/sub-components" },
             { "label": "Grouping", "to": "framework/solid/examples/grouping" },
             { "label": "Pagination", "to": "framework/solid/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/solid/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/solid/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/solid/examples/sorting" },
-            { "label": "Kitchen Sink (All Features)", "to": "framework/solid/examples/kitchen-sink" }
+            { "label": "Sorting", "to": "framework/solid/examples/sorting" }
           ]
         },
         {
           "label": "svelte",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/svelte/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/svelte/examples/filtering" },
             { "label": "Column Filters (Faceted)", "to": "framework/svelte/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/svelte/examples/filters-fuzzy" },
@@ -975,17 +980,18 @@
             { "label": "Performant Column Resizing", "to": "framework/svelte/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/svelte/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/svelte/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/svelte/examples/sub-components" },
             { "label": "Grouping", "to": "framework/svelte/examples/grouping" },
             { "label": "Pagination", "to": "framework/svelte/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/svelte/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/svelte/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/svelte/examples/sorting" },
-            { "label": "Kitchen Sink (All Features)", "to": "framework/svelte/examples/kitchen-sink" }
+            { "label": "Sorting", "to": "framework/svelte/examples/sorting" }
           ]
         },
         {
           "label": "vue",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/vue/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/vue/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/vue/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/vue/examples/filters-fuzzy" },
@@ -998,17 +1004,18 @@
             { "label": "Performant Column Resizing", "to": "framework/vue/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/vue/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/vue/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/vue/examples/sub-components" },
             { "label": "Grouping", "to": "framework/vue/examples/grouping" },
             { "label": "Pagination", "to": "framework/vue/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/vue/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/vue/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/vue/examples/sorting" },
-            { "label": "Kitchen Sink (All Features)", "to": "framework/vue/examples/kitchen-sink" }
+            { "label": "Sorting", "to": "framework/vue/examples/sorting" }
           ]
         },
         {
           "label": "preact",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/preact/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/preact/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/preact/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/preact/examples/filters-fuzzy" },
@@ -1021,12 +1028,12 @@
             { "label": "Performant Column Resizing", "to": "framework/preact/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/preact/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/preact/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/preact/examples/sub-components" },
             { "label": "Grouping", "to": "framework/preact/examples/grouping" },
             { "label": "Pagination", "to": "framework/preact/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/preact/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/preact/examples/row-selection" },
-            { "label": "Sorting", "to": "framework/preact/examples/sorting" },
-            { "label": "Kitchen Sink (All Features)", "to": "framework/preact/examples/kitchen-sink" }
+            { "label": "Sorting", "to": "framework/preact/examples/sorting" }
           ]
         },
         {
@@ -1045,9 +1052,8 @@
         {
           "label": "angular",
           "children": [
-            { "label": "Composable Tables", "to": "framework/angular/examples/composable-tables" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/angular/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/angular/examples/custom-plugin" },
-            { "label": "Sub Components", "to": "framework/angular/examples/sub-components" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/angular/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/angular/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/angular/examples/virtualized-infinite-scrolling" },
@@ -1063,8 +1069,7 @@
         {
           "label": "lit",
           "children": [
-            { "label": "Composable Tables", "to": "framework/lit/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/lit/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/lit/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/lit/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/lit/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/lit/examples/virtualized-infinite-scrolling" }
@@ -1073,9 +1078,8 @@
         {
           "label": "react",
           "children": [
-            { "label": "Composable Tables", "to": "framework/react/examples/composable-tables" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/react/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/react/examples/custom-plugin" },
-            { "label": "Sub Components", "to": "framework/react/examples/sub-components" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/react/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Columns (Exp)", "to": "framework/react/examples/virtualized-columns-experimental" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/react/examples/virtualized-rows" },
@@ -1089,8 +1093,7 @@
         {
           "label": "solid",
           "children": [
-            { "label": "Composable Tables", "to": "framework/solid/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/solid/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/solid/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/solid/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/solid/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/solid/examples/virtualized-infinite-scrolling" },
@@ -1102,8 +1105,7 @@
         {
           "label": "svelte",
           "children": [
-            { "label": "Composable Tables", "to": "framework/svelte/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/svelte/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/svelte/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/svelte/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/svelte/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/svelte/examples/virtualized-infinite-scrolling" },
@@ -1114,8 +1116,7 @@
         {
           "label": "vue",
           "children": [
-            { "label": "Composable Tables", "to": "framework/vue/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/vue/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/vue/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/vue/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/vue/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/vue/examples/virtualized-infinite-scrolling" },
@@ -1126,9 +1127,8 @@
         {
           "label": "preact",
           "children": [
-            { "label": "Composable Tables", "to": "framework/preact/examples/composable-tables" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/preact/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/preact/examples/custom-plugin" },
-            { "label": "Sub Components", "to": "framework/preact/examples/sub-components" },
             { "label": "With TanStack Query", "to": "framework/preact/examples/with-tanstack-query" }
           ]
         }
