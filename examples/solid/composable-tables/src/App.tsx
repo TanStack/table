@@ -20,7 +20,7 @@ function UsersTable() {
     setData(() => makeData(1_000))
   }
   const stressTest = () => {
-    setData(() => makeData(200_000))
+    setData(() => makeData(1_000_000))
   }
 
   // Define columns using the column helper

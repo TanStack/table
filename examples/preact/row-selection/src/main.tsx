@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { render } from 'preact'
 import { TanStackDevtools } from '@tanstack/preact-devtools'
 import {
@@ -42,8 +42,6 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -102,7 +100,7 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(1_000))
-  const stressTest = () => setData(() => makeData(200_000))
+  const stressTest = () => setData(() => makeData(1_000_000))
 
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
 
@@ -130,7 +128,7 @@ function App() {
       <div className="demo-root">
         <div>
           <button onClick={() => refreshData()}>Regenerate Data</button>
-          <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+          <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
         </div>
         <div>
           <input
@@ -273,14 +271,7 @@ function App() {
         </div>
         <hr />
         <br />
-        <div>
-          <button
-            className="demo-button demo-button-spaced"
-            onClick={() => rerender(0)}
-          >
-            Force Rerender
-          </button>
-        </div>
+        <div></div>
         <div>
           <button
             className="demo-button demo-button-spaced"

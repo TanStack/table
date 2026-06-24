@@ -1,7 +1,7 @@
 <div class="demo-root">
   <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
   <button class="demo-button demo-button-spaced" (click)="stressTest()">
-    Stress Test (200k rows)
+    Stress Test (1M rows)
   </button>
   <div class="spacer-sm"></div>
   <table>
@@ -111,6 +111,4 @@
   <pre>{{ stringifiedState() }}</pre>
 </div>
 <hr />
-<div>
-  <button (click)="rerender()">Force Rerender</button>
-</div>
+<div></div>

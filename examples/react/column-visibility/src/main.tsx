@@ -64,7 +64,6 @@ function App() {
   const [data, setData] = React.useState(() => makeData(20))
   const refreshData = () => setData(makeData(20))
   const stressTest = () => setData(makeData(1_000))
-  const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable(
     {
@@ -156,9 +155,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
       <div className="spacer-md" />
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>

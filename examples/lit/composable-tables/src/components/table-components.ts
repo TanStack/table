@@ -133,7 +133,7 @@ export class TableToolbar extends LitElement {
             : nothing}
           ${this.onStressTest
             ? html`<button @click=${this.onStressTest}>
-                Stress Test (200k rows)
+                Stress Test (1M rows)
               </button>`
             : nothing}
           <button @click=${() => table.resetColumnFilters()}>

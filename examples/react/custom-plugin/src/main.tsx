@@ -175,7 +175,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
   const [density, setDensity] = React.useState<DensityState>('md')
 
   const table = useTable(
@@ -199,7 +199,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} className="demo-button">
-          Stress Test (200k rows)
+          Stress Test (1M rows)
         </button>
       </div>
       <div className="spacer-sm" />

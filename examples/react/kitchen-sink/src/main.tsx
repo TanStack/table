@@ -541,8 +541,6 @@ function PinnedRow({
 // =====================================================================
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(() => {
     const columnHelper = createColumnHelper<typeof features, Person>()
     return columnHelper.columns([
@@ -773,12 +771,6 @@ function App() {
               className="demo-button demo-button-sm"
             >
               Reset Table
-            </button>
-            <button
-              onClick={() => rerender()}
-              className="demo-button demo-button-sm"
-            >
-              Force Rerender
             </button>
             <span className="nowrap">
               {selectedCount.toLocaleString()} of{' '}

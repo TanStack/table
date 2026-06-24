@@ -1,7 +1,7 @@
 <div class="demo-root">
   <button (click)="refreshData()" class="demo-button demo-button-spaced">Regenerate Data</button>
   <button (click)="stressTest()" class="demo-button demo-button-spaced">
-    Stress Test (200k rows)
+    Stress Test (1M rows)
   </button>
   <div>
     <input
@@ -126,9 +126,7 @@
   </div>
   <hr />
   <br />
-  <div>
-    <button class="demo-button demo-button-spaced" (click)="rerender()">Force Rerender</button>
-  </div>
+  <div></div>
   <div>
     <button class="demo-button demo-button-spaced" (click)="logSelectedFlatRows()">
       Log table.getSelectedRowModel().flatRows

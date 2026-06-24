@@ -65,9 +65,9 @@ const renderTable = (table: Table<typeof features, Person>) => {
   })
 
   const stressTestBtn = document.createElement('button')
-  stressTestBtn.textContent = 'Stress Test (200k rows)'
+  stressTestBtn.textContent = 'Stress Test (1M rows)'
   stressTestBtn.addEventListener('click', () => {
-    data = makeData(200_000)
+    data = makeData(1_000_000)
     table.setOptions((prev) => ({ ...prev, data }))
   })
 

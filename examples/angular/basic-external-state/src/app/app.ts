@@ -67,7 +67,6 @@ export class App {
   readonly data = signal(makeData(1_000))
   readonly sorting = signal<SortingState>([])
   readonly pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
-  readonly renderCount = signal(0)
 
   readonly table = injectTable(() => ({
     key: 'basic-external-state', // needed for devtools
@@ -100,13 +99,8 @@ export class App {
   }
 
   stressTest() {
-    this.data.set(makeData(200_000))
+    this.data.set(makeData(1_000_000))
   }
-
-  rerender() {
-    this.renderCount.update((count) => count + 1)
-  }
-
   onPageInputChange(event: Event) {
     const input = event.target as HTMLInputElement
     const page = input.value ? Number(input.value) - 1 : 0

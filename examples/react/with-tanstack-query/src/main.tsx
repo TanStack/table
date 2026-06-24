@@ -50,8 +50,6 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   // Create a stable external atom for the pagination slice.
   const paginationAtom = useCreateAtom<PaginationState>({
     pageIndex: 0,
@@ -182,9 +180,7 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {dataQuery.data?.rowCount.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

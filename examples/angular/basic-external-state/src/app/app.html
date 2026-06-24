@@ -1,7 +1,7 @@
 <div class="demo-root">
   <div>
     <button (click)="refreshData()" class="demo-button">Regenerate Data</button>
-    <button (click)="stressTest()" class="demo-button">Stress Test (200k rows)</button>
+    <button (click)="stressTest()" class="demo-button">Stress Test (1M rows)</button>
   </div>
   <div class="spacer-md"></div>
   <table>
@@ -100,7 +100,5 @@
     </select>
   </div>
   <div class="spacer-md"></div>
-  <button (click)="rerender()" class="demo-button">Rerender</button>
-  <span>Render count: {{ renderCount() }}</span>
   <pre>{{ stringifiedState() }}</pre>
 </div>

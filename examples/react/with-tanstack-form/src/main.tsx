@@ -186,7 +186,7 @@ function App() {
   }
 
   const stressTest = () => {
-    const data: Array<FormRow> = makeData(200_000)
+    const data: Array<FormRow> = makeData(1_000_000)
     form.reset({ data })
   }
 
@@ -237,7 +237,7 @@ function App() {
             onClick={stressTest}
             className="demo-button secondary-action"
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
 

@@ -59,8 +59,6 @@ function App() {
     [],
   )
 
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const table = useTable(
     {
       features,
@@ -268,9 +266,6 @@ function App() {
         </div>
       </div>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

@@ -71,7 +71,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(500_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = createAppTable({
     debugTable: true,
@@ -124,7 +124,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} class="demo-button demo-button-sm">
-          Stress Test (500k rows)
+          Stress Test (1M rows)
         </button>
         <button
           onClick={() => randomizeColumns()}

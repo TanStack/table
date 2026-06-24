@@ -107,7 +107,7 @@ export class App {
     ])
   }
   refreshData = () => this.data.set(makeData(100))
-  stressTest = () => this.data.set(makeData(200_000))
+  stressTest = () => this.data.set(makeData(1_000_000))
   submit() {
     alert(`Submitted ${this.data().length} records!`)
   }
