@@ -134,7 +134,7 @@ export function aggregationFn_mean<
   let sumValue = 0
 
   for (let i = 0; i < leafRows.length; i++) {
-    let value = leafRows[i]!.getValue(columnId)
+    const value = leafRows[i]!.getValue(columnId)
     if (value != null) {
       if (typeof value === 'number') {
         ++count

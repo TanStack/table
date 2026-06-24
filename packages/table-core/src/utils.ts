@@ -157,25 +157,29 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   const memoizedFn = (depArgs?: TDepArgs): TResult => {
     onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
-    let depsChanged = !newDeps || newDeps.length !== deps?.length
-    if (!depsChanged && newDeps) {
+
+    if (!newDeps || newDeps.length !== deps?.length) {
+      onAfterCompare?.(true);
+    } else {
+      let depsChanged = false;
       for (let i = 0; i < newDeps.length; i++) {
-        if (newDeps[i] !== deps![i]) {
+        if (newDeps[i] !== deps[i]) {
           depsChanged = true
           break
         }
       }
-    }
-    onAfterCompare?.(depsChanged)
 
-    if (!depsChanged) {
-      return result!
+      onAfterCompare?.(depsChanged)
+      if (!depsChanged)
+        return result!
     }
 
     deps = newDeps
 
     onBeforeUpdate?.()
-    result = fn(...(newDeps ?? ([] as any)))
+    result = deps
+      // @ts-expect-error no correct type for this
+      ? fn(...deps) : fn()
     onAfterUpdate?.(result)
 
     return result
@@ -197,13 +201,7 @@ interface TableMemoOptions<
   table: Table_Internal<TFeatures, any>
 }
 
-const pad = (str: number | string, num: number) => {
-  str = String(str)
-  while (str.length < num) {
-    str = ' ' + str
-  }
-  return str
-}
+const noopCallback = () => {}
 
 /**
  * Creates a table-aware memoized function.
@@ -232,8 +230,6 @@ export function tableMemo<
   let debugCache: boolean | undefined
 
   if (process.env.NODE_ENV === 'development') {
-    const { debugCache: _debugCache, debugAll } = table.options
-    debugCache = _debugCache
     const { parentName } = getFunctionNameInfo(fnName, '.')
 
     const debugByParent =
@@ -241,17 +237,18 @@ export function tableMemo<
       table.options[
         `debug${(parentName != 'table' ? parentName + 's' : parentName).replace(
           parentName,
-          parentName.charAt(0).toUpperCase() + parentName.slice(1),
+          parentName[0]!.toUpperCase() + parentName.slice(1),
         )}`
       ]
     const debugByFeature = feature
       ? // @ts-expect-error
         table.options[
-          `debug${feature.charAt(0).toUpperCase() + feature.slice(1)}`
+          `debug${feature[0]!.toUpperCase() + feature.slice(1)}`
         ]
       : false
 
-    debug = debugAll || debugByParent || debugByFeature
+    debug = table.options.debugAll || debugByParent || debugByFeature
+    debugCache = table.options.debugCache;
   }
 
   function logTime(time: number, depsChanged: boolean) {
@@ -264,7 +261,7 @@ export function tableMemo<
     runCount++
 
     console.groupCollapsed(
-      `%c⏱ ${pad(`${time.toFixed(1)} ms`, 12)} %c${runType}%c ${fnName}%c ${objectId ? `(${fnName.split('.')[0]}Id: ${objectId})` : ''}`,
+      `%c⏱ ${`${time.toFixed(1)} ms`.padStart(12)} %c${runType}%c ${fnName}%c ${objectId ? `(${fnName.split('.')[0]}Id: ${objectId})` : ''}`,
       `font-size: .6rem; font-weight: bold; ${
         depsChanged
           ? `color: hsl(
@@ -284,58 +281,51 @@ export function tableMemo<
     console.groupEnd()
   }
 
-  const onAfterUpdateHandler = () => {
-    if (!onAfterUpdate) {
-      return
+  const onAfterUpdateHandler = onAfterUpdate
+    ? () => {
+      const { schedule, untrack } = table._reactivity
+      schedule(() => untrack(() => onAfterUpdate()))
     }
+    : noopCallback
 
-    const { schedule, untrack } = table._reactivity
-    schedule(() => untrack(() => onAfterUpdate()))
-  }
-
-  const debugOptions =
+  const allOptions =
     process.env.NODE_ENV === 'development'
       ? {
-          onBeforeCompare: () => {
-            if (debugCache) {
+        ...memoOptions,
+          onBeforeCompare: debugCache
+            ? () => {
               beforeCompareTime = performance.now()
             }
-          },
-          onAfterCompare: (depsChanged: boolean) => {
-            if (debugCache) {
+            : noopCallback,
+          onAfterCompare: debugCache
+            ? (depsChanged: boolean) => {
               afterCompareTime = performance.now()
-              const compareTime =
-                Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
               if (!depsChanged) {
+                const compareTime = Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
                 logTime(compareTime, depsChanged)
               }
             }
-          },
-          onBeforeUpdate: () => {
-            if (debug) {
+            : noopCallback,
+          onBeforeUpdate: debug
+            ? () => {
               startCalcTime = performance.now()
             }
-          },
-          onAfterUpdate: () => {
-            if (debug) {
+            : noopCallback,
+          onAfterUpdate: debug
+            ? () => {
               endCalcTime = performance.now()
-              const executionTime =
-                Math.round((endCalcTime - startCalcTime) * 100) / 100
+              const executionTime = Math.round((endCalcTime - startCalcTime) * 100) / 100
               logTime(executionTime, true)
+              onAfterUpdateHandler()
             }
-            onAfterUpdateHandler()
-          },
+            : onAfterUpdateHandler,
         }
       : {
-          onAfterUpdate: () => {
-            onAfterUpdateHandler()
-          },
+        ...memoOptions,
+          onAfterUpdate: onAfterUpdateHandler,
         }
 
-  return memo({
-    ...memoOptions,
-    ...debugOptions,
-  })
+  return memo(allOptions)
 }
 
 export interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
