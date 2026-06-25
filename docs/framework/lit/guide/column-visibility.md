@@ -8,7 +8,9 @@ Want to skip to the implementation? Check out these Lit examples:
 
 - [Column Visibility](../examples/column-visibility)
 
-### Lit Setup
+### Column Visibility Setup
+
+Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```ts
 import { LitElement, html } from 'lit'

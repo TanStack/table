@@ -216,24 +216,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Row Selection](./framework/lit/guide/row-selection) - Select/deselect rows (checkboxes)
 - [Row Sorting](./framework/lit/guide/sorting) - Sort rows by column values
 
-# Vanilla
-
-- Column Faceting - List unique lists of column values or min/max values for a column
-- Column Filtering - Filter rows based on search values for a column
-- Column Grouping - Group columns together, run aggregations, and more
-- Column Ordering - Dynamically change the order of columns
-- Column Pinning - Pin (Freeze) columns to the left or right of the table
-- Column Resizing - Let users resize columns with drag handles
-- Column Sizing - Dynamically change the size of columns
-- Column Visibility - Hide/show columns
-- Global Faceting - List unique lists of column values or min/max values for the entire table
-- Global Filtering - Filter rows based on search values for the entire table
-- Row Expanding - Expand/collapse rows (sub-rows)
-- [Row Pagination](./framework/vanilla/guide/pagination) - Paginate rows
-- Row Pinning - Pin (Freeze) rows to the top or bottom of the table
-- Row Selection - Select/deselect rows (checkboxes)
-- [Row Sorting](./framework/vanilla/guide/sorting) - Sort rows by column values
-
 <!-- ::end:framework -->
 
 These are just some of the capabilities that you can build with TanStack Table. There are many more features that are possible with TanStack Table that you can add along-side the built-in features.

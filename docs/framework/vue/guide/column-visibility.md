@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Vue examples:
 
 Vue refs can be passed directly where the adapter expects reactive table options.
 
-### Vue Setup
+### Column Visibility Setup
+
+Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```ts
 import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/vue-table'

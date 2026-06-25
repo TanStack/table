@@ -20,7 +20,7 @@ function UsersTable() {
     setData(() => makeData(1_000))
   }
   const stressTest = () => {
-    setData(() => makeData(200_000))
+    setData(() => makeData(1_000_000))
   }
 
   // Define columns using the column helper
@@ -92,18 +92,10 @@ function UsersTable() {
   useTanStackTableDevtools(table)
 
   return (
-    // Main selector on AppTable - selects all needed state in one place
-    <table.AppTable
-      selector={(state) => ({
-        // subscribe to specific states for re-rendering if you are optimizing for maximum performance
-        pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-      })}
-    >
-      {(state) => {
-        const sorting = () => state().sorting
-        const columnFilters = () => state().columnFilters
+    <table.AppTable>
+      {(() => {
+        const sorting = () => table.atoms.sorting.get()
+        const columnFilters = () => table.atoms.columnFilters.get()
         return (
           <div class="table-container">
             {/* Table toolbar using pre-bound component */}
@@ -244,7 +236,7 @@ function UsersTable() {
             <table.RowCount />
           </div>
         )
-      }}
+      })()}
     </table.AppTable>
   )
 }
@@ -319,16 +311,10 @@ function ProductsTable() {
   useTanStackTableDevtools(table)
 
   return (
-    <table.AppTable
-      selector={(state) => ({
-        pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-      })}
-    >
-      {(state) => {
-        const sorting = () => state().sorting
-        const columnFilters = () => state().columnFilters
+    <table.AppTable>
+      {(() => {
+        const sorting = () => table.atoms.sorting.get()
+        const columnFilters = () => table.atoms.columnFilters.get()
         return (
           <div class="table-container">
             {/* Table toolbar using the same pre-bound component */}
@@ -468,7 +454,7 @@ function ProductsTable() {
             <table.RowCount />
           </div>
         )
-      }}
+      })()}
     </table.AppTable>
   )
 }

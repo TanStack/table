@@ -81,23 +81,14 @@ export class UsersTable extends LitElement {
   // (causing infinite recursion if we wrote `get data() { return this.data }`).
   private appTable = (() => {
     const host = this
-    return useAppTable(
-      this,
-      {
-        columns,
-        get data() {
-          return host.data
-        },
-        enableRowSelection: true,
-        debugTable: true,
+    return useAppTable(this, {
+      columns,
+      get data() {
+        return host.data
       },
-      (state) => ({
-        pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-        rowSelection: state.rowSelection,
-      }),
-    )
+      enableRowSelection: true,
+      debugTable: true,
+    })
   })()
 
   private refreshData = () => {
@@ -119,7 +110,7 @@ export class UsersTable extends LitElement {
           .title=${'Users Table'}
           .onRefresh=${this.refreshData}
           .onStressTest=${() => {
-            this.data = makeData(200_000)
+            this.data = makeData(1_000_000)
           }}
         ></table-toolbar>
 

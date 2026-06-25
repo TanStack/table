@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Solid examples:
 
 Use getters for reactive inputs such as `data` when passing Solid signals to `createTable`.
 
-### Solid Setup
+### Column Visibility Setup
+
+Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```tsx
 import { createTable, tableFeatures, columnVisibilityFeature } from '@tanstack/solid-table'

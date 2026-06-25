@@ -67,8 +67,6 @@ export class App {
     return JSON.stringify(this.table.store.get(), null, 2)
   }
 
-  rerender = () => this.pagination.update((pagination) => ({ ...pagination }))
-
   onPageInputChange(event: Event): void {
     const page = (event.target as HTMLInputElement).value
       ? Number((event.target as HTMLInputElement).value) - 1

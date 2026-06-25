@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Row Pinning Setup
+
+Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```ts
 import { createTable, tableFeatures, rowPinningFeature } from '@tanstack/svelte-table'

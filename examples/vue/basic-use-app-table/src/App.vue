@@ -98,10 +98,6 @@ const columns = columnHelper.columns([
 // 6. Store data with a stable reference
 const data = ref([...defaultData])
 
-function rerender() {
-  data.value = [...data.value].sort((a, b) => a.age - b.age)
-}
-
 // 7. Create the table instance with the required columns and data.
 // Features and row models are already defined in the createTableHook call above
 const table = useAppTable({
@@ -147,10 +143,6 @@ useTanStackTableDevtools(table)
         </tr>
       </tfoot>
     </table>
-    <div class="spacer-md" />
-    <button @click="rerender" class="demo-button">
-      Rerender (sort by age)
-    </button>
   </div>
 </template>
 

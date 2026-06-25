@@ -1,6 +1,6 @@
 import { render } from 'preact'
 import { TanStackDevtools } from '@tanstack/preact-devtools'
-import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { faker } from '@faker-js/faker'
 import {
   aggregationFns,
@@ -438,8 +438,6 @@ function PinnedRow({
 }
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<typeof features, Person>()
     return columnHelper.columns([
@@ -631,12 +629,6 @@ function App() {
             className="demo-button demo-button-sm"
           >
             Shuffle Columns
-          </button>
-          <button
-            onClick={() => rerender(undefined)}
-            className="demo-button demo-button-sm"
-          >
-            Force Rerender
           </button>
           <span className="nowrap">
             {selectedCount.toLocaleString()} of{' '}

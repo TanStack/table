@@ -529,7 +529,6 @@ const columns = columnHelper.columns([
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
-  const [, setRenderTick] = createSignal({})
 
   const table = createAppTable({
     key: 'kitchen-sink', // needed for devtools
@@ -606,12 +605,6 @@ function App() {
           </button>
           <button onClick={shuffleColumns} class="demo-button demo-button-sm">
             Shuffle Columns
-          </button>
-          <button
-            onClick={() => setRenderTick({})}
-            class="demo-button demo-button-sm"
-          >
-            Force Rerender
           </button>
           <span class="nowrap">
             {table.getSelectedRowModel().flatRows.length.toLocaleString()} of{' '}

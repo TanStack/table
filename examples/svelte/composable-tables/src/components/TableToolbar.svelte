@@ -23,7 +23,7 @@
       <button onclick={onRefresh}>Regenerate Data</button>
     {/if}
     {#if onStressTest}
-      <button onclick={onStressTest}>Stress Test (200k rows)</button>
+      <button onclick={onStressTest}>Stress Test (1M rows)</button>
     {/if}
     <button onclick={() => table.resetColumnFilters()}>
       Clear Filters

@@ -12,7 +12,7 @@
     "serve:ssr:remote-data": "node dist/remote-data/server/server.mjs"
   },
   "private": true,
-  "packageManager": "pnpm@11.5.2",
+  "packageManager": "pnpm@11.9.0",
   "dependencies": {
     "@angular/common": "^22.0.0",
     "@angular/compiler": "^22.0.0",
@@ -23,7 +23,7 @@
     "@angular/platform-server": "^22.0.0",
     "@angular/router": "^22.0.0",
     "@angular/ssr": "^22.0.0",
-    "@tanstack/angular-table": "^9.0.0-beta.17",
+    "@tanstack/angular-table": "^9.0.0-beta.19",
     "express": "^5.2.1",
     "rxjs": "~7.8.2"
   },

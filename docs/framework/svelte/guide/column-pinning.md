@@ -12,7 +12,9 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Column Pinning Setup
+
+Here's how you set up your table to use column pinning features. Adding the column pinning feature enables the related APIs.
 
 ```ts
 import { createTable, tableFeatures, columnPinningFeature } from '@tanstack/svelte-table'

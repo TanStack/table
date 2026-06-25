@@ -9,13 +9,18 @@ Want to skip to the implementation? Check out these Angular examples:
 - [Column Resizing](../examples/column-resizing)
 - [Performant Column Resizing](../examples/column-resizing-performant)
 
-### Angular Setup
+### Column Resizing Setup
+
+Here's how you set up your table to use column resizing features. Column resizing depends on column sizing, so add `columnSizingFeature` before `columnResizingFeature`. Adding the column resizing feature enables the related APIs.
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnResizingFeature } from '@tanstack/angular-table'
+import { injectTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/angular-table'
 
-const features = tableFeatures({ columnResizingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+})
 
 export class App {
   readonly data = signal(defaultData)
@@ -36,7 +41,7 @@ Column resizing builds on column sizing. If you only need to define starting, mi
 
 ### Enable Column Resizing
 
-To use column resizing, add `columnResizingFeature` to your features. The `column.getCanResize()` API will return `true` by default for all columns, but you can either disable column resizing for all columns with the `enableColumnResizing` table option, or disable column resizing on a per-column basis with the `enableResizing` column option.
+To use column resizing, add `columnSizingFeature` and then `columnResizingFeature` to your features. The `column.getCanResize()` API will return `true` by default for all columns, but you can either disable column resizing for all columns with the `enableColumnResizing` table option, or disable column resizing on a per-column basis with the `enableResizing` column option.
 
 ```ts
 import {

@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Angular examples:
 - [Virtualized Rows](../examples/virtualized-rows)
 - [Virtualized Infinite Scrolling](../examples/virtualized-infinite-scrolling)
 
-### Angular Setup
+### Virtualization Setup
+
+Here's how you set up your table to use virtualization with TanStack Table. Virtualization is a rendering strategy, so TanStack Table does not need a feature or row model for it.
 
 Install and import the Angular virtualizer adapter from `@tanstack/angular-virtual`. TanStack Table still owns rows, columns, and table state; the virtualizer owns scroll indexes and measurements.
 Also see the [TanStack Virtual table example](https://tanstack.com/virtual/latest/docs/framework/angular/examples/table).

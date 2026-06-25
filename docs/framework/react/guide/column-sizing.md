@@ -7,7 +7,10 @@ title: Column Sizing (React) Guide
 Want to skip to the implementation? Check out these React examples:
 
 - [Column Sizing](../examples/column-sizing)
-### React Setup
+
+### Column Sizing Setup
+
+Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```tsx
 import { useTable, tableFeatures, columnSizingFeature } from '@tanstack/react-table'

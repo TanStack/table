@@ -8,7 +8,9 @@ Want to skip to the implementation? Check out these React examples:
 
 - [Row Selection](../examples/row-selection)
 
-### React Setup
+### Row Selection Setup
+
+Here's how you set up your table to use row selection features. Adding the row selection feature enables the related APIs.
 
 ```tsx
 import { useTable, tableFeatures, rowSelectionFeature } from '@tanstack/react-table'

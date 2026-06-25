@@ -79,7 +79,6 @@ export class App {
   readonly data = signal(makeData(10))
   readonly columnResizeMode = signal<ColumnResizeMode>('onChange')
   readonly columnResizeDirection = signal<ColumnResizeDirection>('ltr')
-  readonly rerenders = signal(0)
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
@@ -108,7 +107,6 @@ export class App {
   }
   refreshData = () => this.data.set(makeData(10))
   stressTest = () => this.data.set(makeData(100))
-  rerender = () => this.rerenders.update((value) => value + 1)
 
   getResizeTransform(header: Header<typeof features, Person, unknown>) {
     if (this.columnResizeMode() !== 'onEnd' || !header.column.getIsResizing()) {

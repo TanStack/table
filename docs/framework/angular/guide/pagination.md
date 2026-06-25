@@ -8,7 +8,9 @@ Want to skip to the implementation? Check out these Angular examples:
 
 - [Pagination](../examples/pagination)
 
-### Angular Setup
+### Pagination Setup
+
+Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. Additionally, if using client-side pagination, you also need to set up `paginatedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { signal } from '@angular/core'
@@ -16,7 +18,7 @@ import { injectTable, tableFeatures, rowPaginationFeature, createPaginatedRowMod
 
 const features = tableFeatures({
   rowPaginationFeature,
-  paginatedRowModel: createPaginatedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(), // if using client-side pagination
 })
 
 export class App {

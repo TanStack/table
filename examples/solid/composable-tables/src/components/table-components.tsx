@@ -109,7 +109,7 @@ export function TableToolbar({
       <div class="table-toolbar-actions">
         {onRefresh && <button onClick={onRefresh}>Regenerate Data</button>}
         {onStressTest && (
-          <button onClick={onStressTest}>Stress Test (200k rows)</button>
+          <button onClick={onStressTest}>Stress Test (1M rows)</button>
         )}
         <button onClick={() => table.resetColumnFilters()}>
           Clear Filters

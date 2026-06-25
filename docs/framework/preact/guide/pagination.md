@@ -8,14 +8,16 @@ Want to skip to the implementation? Check out these Preact examples:
 
 - [Pagination](../examples/pagination)
 
-### Preact Setup
+### Pagination Setup
+
+Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. Additionally, if using client-side pagination, you also need to set up `paginatedRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
 import { useTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/preact-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
-  paginatedRowModel: createPaginatedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(), // if using client-side pagination
 })
 
 const table = useTable({

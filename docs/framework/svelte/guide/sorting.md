@@ -10,14 +10,16 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Sorting Setup
+
+Here's how you set up your table to use sorting features. Adding the sorting feature enables the related APIs. Additionally, if using client-side sorting, you also need to set up `sortedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { createTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/svelte-table'
 
 const features = tableFeatures({
   rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
+  sortedRowModel: createSortedRowModel(), // if using client-side sorting
   sortFns,
 })
 

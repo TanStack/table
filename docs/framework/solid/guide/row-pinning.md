@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Solid examples:
 
 Use getters for reactive inputs such as `data` when passing Solid signals to `createTable`.
 
-### Solid Setup
+### Row Pinning Setup
+
+Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```tsx
 import { createTable, tableFeatures, rowPinningFeature } from '@tanstack/solid-table'

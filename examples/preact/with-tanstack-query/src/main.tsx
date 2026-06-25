@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from 'preact/hooks'
+import { useMemo } from 'preact/hooks'
 import { render } from 'preact'
 import {
   QueryClient,
@@ -50,8 +50,6 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   // Create a stable external atom for the pagination slice.
   const paginationAtom = useCreateAtom<PaginationState>({
     pageIndex: 0,
@@ -184,9 +182,7 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {dataQuery.data?.rowCount.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

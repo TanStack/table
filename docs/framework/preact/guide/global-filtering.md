@@ -9,7 +9,9 @@ Want to skip to the implementation? Check out these Preact examples:
 - [Column Filters](../examples/filters)
 - [Fuzzy Search](../examples/filters-fuzzy)
 
-### Preact Setup
+### Global Filtering Setup
+
+Here's how you set up your table to use global filtering features. Global filtering depends on column filtering, so add `columnFilteringFeature` before `globalFilteringFeature`. Adding the global filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
 import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/preact-table'
@@ -17,7 +19,7 @@ import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
+  filteredRowModel: createFilteredRowModel(), // if using client-side filtering
   filterFns,
 })
 

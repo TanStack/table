@@ -99,7 +99,7 @@ table uses ... })`.
 <script lang="ts">
   // v8
   import { writable } from 'svelte/store'
-  const options = writable({ ... })
+  const options = writable({ data, columns })
   $: $options.state = $state
 </script>
 ```

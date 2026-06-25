@@ -1,6 +1,6 @@
 import { render } from 'preact'
 import { TanStackDevtools } from '@tanstack/preact-devtools'
-import { useReducer, useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import { tableFeatures, useTable } from '@tanstack/preact-table'
 import {
   tableDevtoolsPlugin,
@@ -98,7 +98,6 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 function App() {
   // 5. Store data with a stable reference
   const [data, _setData] = useState(() => [...defaultData])
-  const rerender = useReducer(() => ({}), {})[1]
 
   // 6. Create the table instance with required features, columns, and data
   const table = useTable(
@@ -158,9 +157,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
     </div>
   )
 }

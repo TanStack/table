@@ -18,7 +18,7 @@
     data = makeData(1_000)
   }
   function stressTest() {
-    data = makeData(200_000)
+    data = makeData(1_000_000)
   }
 
   // Define columns using the column helper

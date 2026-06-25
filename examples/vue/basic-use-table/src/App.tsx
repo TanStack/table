@@ -104,10 +104,6 @@ export default defineComponent({
 
     useTanStackTableDevtools(table)
 
-    const rerender = () => {
-      data.value = [...defaultData]
-    }
-
     return () => (
       <div class="demo-root">
         <table>
@@ -161,10 +157,6 @@ export default defineComponent({
               ))}
           </tfoot>
         </table>
-        <div class="spacer-md" />
-        <button onClick={rerender} class="demo-button">
-          Rerender
-        </button>
       </div>
     )
   },

@@ -10,14 +10,16 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Grouping Setup
+
+Here's how you set up your table to use grouping features. Adding the grouping feature enables the related APIs. Additionally, if using client-side grouping, you also need to set up `groupedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { createTable, tableFeatures, columnGroupingFeature, createGroupedRowModel, aggregationFns } from '@tanstack/svelte-table'
 
 const features = tableFeatures({
   columnGroupingFeature,
-  groupedRowModel: createGroupedRowModel(),
+  groupedRowModel: createGroupedRowModel(), // if using client-side grouping
   aggregationFns,
 })
 

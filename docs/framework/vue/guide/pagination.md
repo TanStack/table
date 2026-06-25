@@ -10,14 +10,16 @@ Want to skip to the implementation? Check out these Vue examples:
 
 Vue refs can be passed directly where the adapter expects reactive table options.
 
-### Vue Setup
+### Pagination Setup
+
+Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. Additionally, if using client-side pagination, you also need to set up `paginatedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { useTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/vue-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
-  paginatedRowModel: createPaginatedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(), // if using client-side pagination
 })
 
 const table = useTable({

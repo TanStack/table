@@ -40,8 +40,6 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   // table states
   const [rowPinning, setRowPinning] = React.useState<RowPinningState>({
     top: [],
@@ -356,14 +354,7 @@ function App() {
           </label>
         </div>
       </div>
-      <div>
-        <button
-          className="demo-button demo-button-spaced"
-          onClick={() => rerender()}
-        >
-          Force Rerender
-        </button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

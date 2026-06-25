@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Column Ordering Setup
+
+Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```ts
 import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/svelte-table'

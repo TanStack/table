@@ -10,14 +10,16 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Pagination Setup
+
+Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. Additionally, if using client-side pagination, you also need to set up `paginatedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { createTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/svelte-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
-  paginatedRowModel: createPaginatedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(), // if using client-side pagination
 })
 
 const table = createTable({

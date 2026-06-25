@@ -60,7 +60,6 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
 })
 export class App {
   readonly data = signal<Array<Person>>(makeData(20))
-  readonly rerenders = signal(0)
 
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
@@ -75,7 +74,6 @@ export class App {
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))
-  rerender = () => this.rerenders.update((value) => value + 1)
 
   setColumnSize(columnId: string, event: Event) {
     // Don't actually do this to resize columns. This is just for demonstration purposes.

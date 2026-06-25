@@ -175,8 +175,6 @@ function getCommonPinningStyles(
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const [rowSelection, setRowSelection] = React.useState({})
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<
@@ -405,7 +403,7 @@ function App() {
   )
 
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
@@ -469,10 +467,7 @@ function App() {
           Regenerate Data
         </Button>
         <Button variant="outline" size="sm" onClick={() => stressTest()}>
-          Stress Test (200k rows)
-        </Button>
-        <Button variant="outline" size="sm" onClick={() => rerender()}>
-          Force Rerender
+          Stress Test (1M rows)
         </Button>
         <Button
           variant="outline"

@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Solid examples:
 
 Use getters for reactive inputs such as `data` when passing Solid signals to `createTable`.
 
-### Solid Setup
+### Column Sizing Setup
+
+Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```tsx
 import { createTable, tableFeatures, columnSizingFeature } from '@tanstack/solid-table'

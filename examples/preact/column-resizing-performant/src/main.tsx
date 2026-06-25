@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { memo } from 'preact/compat'
 import { render } from 'preact'
 import {
@@ -71,8 +71,6 @@ function App() {
   const refreshData = () => setData(makeData(200))
   const stressTest = () => setData(makeData(2_000))
 
-  const rerender = useReducer(() => ({}), {})[1]
-
   const table = useTable(
     {
       features,
@@ -133,9 +131,6 @@ function App() {
         />
       </label>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
       <pre style={{ minHeight: '10rem' }}>
         {JSON.stringify(table.state, null, 2)}
       </pre>

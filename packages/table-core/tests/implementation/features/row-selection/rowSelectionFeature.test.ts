@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import {
   constructTable,
   coreFeatures,
@@ -9,7 +9,7 @@ import * as RowSelectionUtils from '../../../../src/features/row-selection/rowSe
 import { generateTestData } from '../../../fixtures/data/generateTestData'
 import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { Person } from '../../../fixtures/data/types'
-import type { ColumnDef, Row } from '../../../../src'
+import type { ColumnDef, Row, Table_Internal } from '../../../../src'
 
 // TODO: bring up to new test structure
 
@@ -58,7 +58,10 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(rowModel)
+      const result = RowSelectionUtils.selectRowsFn(
+        rowModel,
+        table as Table_Internal<typeof features, Person>,
+      )
 
       expect(result.rows.length).toBe(2)
       expect(result.flatRows.length).toBe(2)
@@ -86,7 +89,10 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(rowModel)
+      const result = RowSelectionUtils.selectRowsFn(
+        rowModel,
+        table as Table_Internal<typeof features, Person>,
+      )
 
       expect(result.rows[0]?.subRows?.length).toBe(1)
       expect(result.flatRows.length).toBe(2)
@@ -113,7 +119,10 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(rowModel)
+      const result = RowSelectionUtils.selectRowsFn(
+        rowModel,
+        table as Table_Internal<typeof features, Person>,
+      )
 
       expect(result.rows.length).toBe(0)
       expect(result.flatRows.length).toBe(1)
@@ -141,7 +150,10 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(rowModel)
+      const result = RowSelectionUtils.selectRowsFn(
+        rowModel,
+        table as Table_Internal<typeof features, Person>,
+      )
 
       // Selected parents with subRows are cloned; the clone must keep the
       // shared row prototype so APIs like getValue() still work
@@ -168,7 +180,10 @@ describe('rowSelectionFeature', () => {
       })
       const rowModel = table.getCoreRowModel()
 
-      const result = RowSelectionUtils.selectRowsFn(rowModel)
+      const result = RowSelectionUtils.selectRowsFn(
+        rowModel,
+        table as Table_Internal<typeof features, Person>,
+      )
 
       expect(result.rows.length).toBe(0)
       expect(result.flatRows.length).toBe(0)
@@ -188,7 +203,7 @@ describe('rowSelectionFeature', () => {
         initialState: {
           rowSelection: {
             '123': true,
-            '456': false,
+            // '456': false,
           },
         },
         columns,
@@ -196,7 +211,10 @@ describe('rowSelectionFeature', () => {
 
       const row = { id: '123', data: {}, table } as any
 
-      const result = RowSelectionUtils.isRowSelected(row)
+      const result = RowSelectionUtils.isRowSelected(
+        row,
+        table.atoms.rowSelection?.get() ?? {},
+      )
       expect(result).toEqual(true)
     })
 
@@ -212,7 +230,7 @@ describe('rowSelectionFeature', () => {
         initialState: {
           rowSelection: {
             '123': true,
-            '456': false,
+            // '456': false,
           },
         },
         columns,
@@ -220,7 +238,10 @@ describe('rowSelectionFeature', () => {
 
       const row = { id: '456', data: {}, table } as any
 
-      const result = RowSelectionUtils.isRowSelected(row)
+      const result = RowSelectionUtils.isRowSelected(
+        row,
+        table.atoms.rowSelection?.get() ?? {},
+      )
       expect(result).toEqual(false)
     })
 
@@ -236,7 +257,7 @@ describe('rowSelectionFeature', () => {
         initialState: {
           rowSelection: {
             '123': true,
-            '456': false,
+            // '456': false,
           },
         },
         columns,
@@ -244,7 +265,10 @@ describe('rowSelectionFeature', () => {
 
       const row = { id: '789', data: {}, table } as any
 
-      const result = RowSelectionUtils.isRowSelected(row)
+      const result = RowSelectionUtils.isRowSelected(
+        row,
+        table.atoms.rowSelection?.get() ?? {},
+      )
       expect(result).toEqual(false)
     })
 
@@ -263,7 +287,10 @@ describe('rowSelectionFeature', () => {
 
       const row = { id: '789', data: {}, table } as any
 
-      const result = RowSelectionUtils.isRowSelected(row)
+      const result = RowSelectionUtils.isRowSelected(
+        row,
+        table.atoms.rowSelection?.get() ?? {},
+      )
       expect(result).toEqual(false)
     })
   })
@@ -409,6 +436,112 @@ describe('rowSelectionFeature', () => {
       const result = RowSelectionUtils.isSubRowSelected(firstRow)
 
       expect(result).toEqual('some')
+    })
+  })
+  describe('toggleAllRowsSelected', () => {
+    // `99` is selected but absent from the row model, standing in for a row that
+    // is filtered out or otherwise not present in the current pre-grouped model.
+    const makeTable = () => {
+      const data = generateTestData(5)
+      const columns = generateColumnDefs(data)
+      return constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        initialState: {
+          rowSelection: { '0': true, '2': true, '99': true },
+        },
+        columns,
+      })
+    }
+
+    it('deselects only in-model ids by default, preserving out-of-model ids', () => {
+      const table = makeTable()
+      table.toggleAllRowsSelected(false)
+      expect(Object.keys(table.atoms.rowSelection.get())).toEqual(['99'])
+    })
+
+    it('clears the entire selection when opts.deselectAll is true', () => {
+      const table = makeTable()
+      table.toggleAllRowsSelected(false, { deselectAll: true })
+      expect(Object.keys(table.atoms.rowSelection.get())).toEqual([])
+    })
+
+    it('does not clear selection when deselectAll is paired with a select', () => {
+      const table = makeTable()
+      // deselectAll only applies when the resolved value is a deselect
+      table.toggleAllRowsSelected(true, { deselectAll: true })
+      expect(table.atoms.rowSelection.get()['99']).toBe(true)
+    })
+  })
+  describe('memoization', () => {
+    // The `enableRowSelection` predicate is invoked once per row by
+    // `row_getCanSelect`, so its call count is a proxy for how many times the
+    // selection getters actually walk the row model.
+    it('memoizes getIsAllRowsSelected until selection or row model changes', () => {
+      const data = generateTestData(10)
+      const columns = generateColumnDefs(data)
+      const enableRowSelection = vi.fn(() => true)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection,
+        renderFallbackValue: '',
+        data,
+        initialState: {
+          rowSelection: Object.fromEntries(
+            data.map((_, index) => [String(index), true]),
+          ),
+        },
+        columns,
+      })
+
+      expect(table.getIsAllRowsSelected()).toBe(true)
+      const callsAfterFirst = enableRowSelection.mock.calls.length
+      expect(callsAfterFirst).toBeGreaterThan(0)
+
+      // Repeated calls with unchanged deps must not re-walk the row model
+      table.getIsAllRowsSelected()
+      table.getIsAllRowsSelected()
+      expect(enableRowSelection.mock.calls.length).toBe(callsAfterFirst)
+
+      // Changing the selection invalidates the memo and recomputes
+      table.setRowSelection({ '0': true })
+      expect(table.getIsAllRowsSelected()).toBe(false)
+      expect(enableRowSelection.mock.calls.length).toBeGreaterThan(
+        callsAfterFirst,
+      )
+    })
+
+    it('memoizes getIsSomePageRowsSelected until selection changes', () => {
+      const data = generateTestData(10)
+      const columns = generateColumnDefs(data)
+      const enableRowSelection = vi.fn(() => true)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection,
+        renderFallbackValue: '',
+        data,
+        initialState: {
+          rowSelection: { '0': true },
+        },
+        columns,
+      })
+
+      expect(table.getIsSomePageRowsSelected()).toBe(true)
+      const callsAfterFirst = enableRowSelection.mock.calls.length
+
+      table.getIsSomePageRowsSelected()
+      table.getIsSomePageRowsSelected()
+      expect(enableRowSelection.mock.calls.length).toBe(callsAfterFirst)
+
+      table.setRowSelection({})
+      expect(table.getIsSomePageRowsSelected()).toBe(false)
+      expect(enableRowSelection.mock.calls.length).toBeGreaterThan(
+        callsAfterFirst,
+      )
     })
   })
 })

@@ -89,8 +89,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 
 function App() {
   // 5. Store data with a reactive reference
-  const [data, setData] = createSignal([...defaultData])
-  const rerender = () => setData([...defaultData])
+  const [data] = createSignal([...defaultData])
 
   // 6. Create the table instance with required features, columns, and data
   const table = createTable({
@@ -159,10 +158,6 @@ function App() {
           </For>
         </tfoot>
       </table>
-      <div class="spacer-md" />
-      <button onClick={rerender} class="demo-button">
-        Rerender
-      </button>
     </div>
   )
 }

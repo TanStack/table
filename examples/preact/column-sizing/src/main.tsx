@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnSizingFeature,
@@ -58,8 +58,6 @@ function App() {
       ]),
     [],
   )
-
-  const rerender = useReducer(() => ({}), {})[1]
 
   const table = useTable(
     {
@@ -263,9 +261,6 @@ function App() {
         </div>
       </div>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

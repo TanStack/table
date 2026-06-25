@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Row Selection Setup
+
+Here's how you set up your table to use row selection features. Adding the row selection feature enables the related APIs.
 
 ```ts
 import { createTable, tableFeatures, rowSelectionFeature } from '@tanstack/svelte-table'

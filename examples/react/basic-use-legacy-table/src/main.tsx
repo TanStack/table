@@ -55,8 +55,6 @@ declare module '@tanstack/react-table' {
 const columnHelper = legacyCreateColumnHelper<Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -275,9 +273,7 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
+      <div></div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
