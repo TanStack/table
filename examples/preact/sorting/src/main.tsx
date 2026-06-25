@@ -1,5 +1,5 @@
 import { render } from 'preact'
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import {
   createColumnHelper,
   createSortedRowModel,
@@ -32,8 +32,6 @@ const sortStatusFn: SortFn<typeof features, Person> = (
 }
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -74,7 +72,7 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(1_000))
-  const stressTest = () => setData(() => makeData(500_000))
+  const stressTest = () => setData(() => makeData(1_000_000))
 
   // optionally, manage sorting state in your own state management (although preact state causes more re-renders here than necessary)
   const [sorting, setSorting] = useState<SortingState>([])
@@ -106,7 +104,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <>
         <div className="spacer-sm" />
@@ -166,9 +164,7 @@ function App() {
           </tbody>
         </table>
         <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-        <div>
-          <button onClick={() => rerender(0)}>Force Rerender</button>
-        </div>
+        <div></div>
         {/* Store mode: full state for debugging */}
         <pre>{JSON.stringify(table.state, null, 2)}</pre>
       </>

@@ -77,7 +77,7 @@
       "label": "Core Guides",
       "children": [
         { "label": "Data", "to": "guide/data" },
-        { "label": "Column Definitions", "to": "guide/column-definitions" },
+        { "label": "Column Definitions", "to": "guide/column-defs" },
         { "label": "Table Instance", "to": "guide/tables" },
         { "label": "Row Models", "to": "guide/row-models" },
         { "label": "Rows", "to": "guide/rows" },

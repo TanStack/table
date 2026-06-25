@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import { render } from 'preact'
 import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { createTableHook } from '@tanstack/preact-table'
@@ -103,7 +103,6 @@ const columns = columnHelper.columns([
 function App() {
   // 6. Store data with a stable reference
   const [data, _setData] = useState(() => [...defaultData])
-  const rerender = useReducer(() => ({}), {})[1]
 
   // 7. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
@@ -163,9 +162,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
     </div>
   )
 }

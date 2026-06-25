@@ -35,7 +35,7 @@ export const features = tableFeatures({
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
   const [enableRowSelection, setEnableRowSelection] = createSignal(true)
 
   const tableRef: { current?: SolidTable<typeof features, Person> } = {}
@@ -135,7 +135,7 @@ function App() {
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div>
         <input

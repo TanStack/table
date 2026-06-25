@@ -103,7 +103,6 @@ export class App {
   }
   // 5. Store data with a stable reference
   readonly data = signal<Array<Person>>([...defaultData])
-  readonly renderCount = signal(0)
 
   // 6. Create the table instance with required features, columns, and data
   readonly table = injectTable(() => ({
@@ -113,8 +112,4 @@ export class App {
     columns,
     data: this.data(),
   }))
-
-  rerender() {
-    this.renderCount.update((count) => count + 1)
-  }
 }

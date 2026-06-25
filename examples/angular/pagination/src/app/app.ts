@@ -88,8 +88,7 @@ export class App {
   }
 
   refreshData = () => this.data.set(makeData(100_000))
-  stressTest = () => this.data.set(makeData(200_000))
-  rerender = () => this.data.update((data) => [...data])
+  stressTest = () => this.data.set(makeData(1_000_000))
 
   onPageInputChange(event: Event): void {
     const page = (event.target as HTMLInputElement).value

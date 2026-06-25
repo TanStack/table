@@ -34,8 +34,6 @@ const sortStatusFn: SortFn<typeof features, Person> = (
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -80,7 +78,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(500_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
@@ -103,7 +101,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div className="spacer-sm" />
       <table>
@@ -162,9 +160,7 @@ function App() {
         </tbody>
       </table>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
+      <div></div>
       {/* Store mode: dump full table state for debugging */}
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>

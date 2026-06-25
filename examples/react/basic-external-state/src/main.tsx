@@ -64,9 +64,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
-
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const stressTest = () => setData(makeData(1_000_000))
 
   // Manage sorting state with React.useState (although react state causes more re-renders here than necessary compared to using a store)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -107,7 +105,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} className="demo-button">
-          Stress Test (200k rows)
+          Stress Test (1M rows)
         </button>
       </div>
       <div className="spacer-md" />
@@ -213,9 +211,6 @@ function App() {
         </select>
       </div>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

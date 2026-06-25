@@ -16,7 +16,7 @@ import { injectTableContext } from '../table'
           <button (click)="onRefresh()">Regenerate Data</button>
         }
         @if (onStressTest(); as onStressTest) {
-          <button (click)="onStressTest()">Stress Test (200k rows)</button>
+          <button (click)="onStressTest()">Stress Test (1M rows)</button>
         }
         <button (click)="table().resetColumnFilters()">Clear Filters</button>
         <button (click)="table().resetSorting()">Clear Sorting</button>

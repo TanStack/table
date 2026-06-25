@@ -1,7 +1,7 @@
 <div class="demo-root">
   <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
   <button class="demo-button demo-button-spaced" (click)="stressTest()">
-    Stress Test (500k rows)
+    Stress Test (1M rows)
   </button>
   <div class="spacer-sm"></div>
   <table>
@@ -57,9 +57,7 @@
     </tfoot>
   </table>
   <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-  <div>
-    <button (click)="rerender()">Force Rerender</button>
-  </div>
+  <div></div>
   <!-- Store mode: dump full table state for debugging -->
   <pre>{{ stringifiedState() }}</pre>
 </div>

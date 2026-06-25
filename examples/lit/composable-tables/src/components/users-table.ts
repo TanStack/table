@@ -110,7 +110,7 @@ export class UsersTable extends LitElement {
           .title=${'Users Table'}
           .onRefresh=${this.refreshData}
           .onStressTest=${() => {
-            this.data = makeData(200_000)
+            this.data = makeData(1_000_000)
           }}
         ></table-toolbar>
 

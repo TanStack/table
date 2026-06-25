@@ -144,7 +144,7 @@ export const TableToolbar = defineComponent({
             ? h(
                 'button',
                 { onClick: () => props.onStressTest?.() },
-                'Stress Test (200k rows)',
+                'Stress Test (1M rows)',
               )
             : null,
           h(

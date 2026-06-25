@@ -49,8 +49,6 @@ const columnHelper = createColumnHelper<typeof features, Person>()
  * We recommend only using these patterns when you run into specific performance issues.
  */
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -131,7 +129,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   // optionally, raise the selection state to your own atom
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
@@ -168,7 +166,7 @@ function App() {
           className="demo-button demo-button-spaced"
           onClick={() => stressTest()}
         >
-          Stress Test (200k rows)
+          Stress Test (1M rows)
         </button>
       </div>
       <div>
@@ -341,14 +339,6 @@ function App() {
       </table.Subscribe>
       <hr />
       <br />
-      <div>
-        <button
-          className="demo-button demo-button-spaced"
-          onClick={() => rerender()}
-        >
-          Force Rerender
-        </button>
-      </div>
       <div>
         <button
           className="demo-button demo-button-spaced"

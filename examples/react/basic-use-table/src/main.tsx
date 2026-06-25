@@ -98,7 +98,6 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 function App() {
   // 5. Store data with a stable reference
   const [data, _setData] = React.useState(() => [...defaultData])
-  const rerender = React.useReducer(() => ({}), {})[1]
 
   // 6. Create the table instance with required features, columns, and data
   const table = useTable(
@@ -159,9 +158,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
     </div>
   )
 }

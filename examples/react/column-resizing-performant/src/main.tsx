@@ -70,8 +70,6 @@ function App() {
   const refreshData = () => setData(makeData(200))
   const stressTest = () => setData(makeData(2_000))
 
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const table = useTable(
     {
       features,
@@ -136,9 +134,6 @@ function App() {
         />
       </label>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
       <pre style={{ minHeight: '10rem' }}>
         {JSON.stringify(table.state, null, 2)}
       </pre>
