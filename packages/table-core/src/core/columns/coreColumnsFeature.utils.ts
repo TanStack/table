@@ -29,7 +29,9 @@ export function column_getFlatColumns<
 >(
   column: Column<TFeatures, TData, TValue>,
 ): Array<Column<TFeatures, TData, TValue>> {
-  return [column, ...column.columns.flatMap((col) => col.getFlatColumns())]
+  const arr = column.columns.flatMap((col) => col.getFlatColumns());
+  arr.unshift(column);
+  return arr;
 }
 
 /**
@@ -65,6 +67,24 @@ export function column_getLeafColumns<
   return [column]
 }
 
+const DefaultColumnDef = {
+  header: (props) => {
+    const resolvedColumnDef = props.header.column
+      .columnDef as ColumnDefResolved<{}, any>
+
+    if (resolvedColumnDef.accessorKey) {
+      return resolvedColumnDef.accessorKey
+    }
+
+    if (resolvedColumnDef.accessorFn) {
+      return resolvedColumnDef.id
+    }
+
+    return null
+  },
+  cell: (props) => props.renderValue<any>()?.toString?.() ?? null,
+} as Partial<ColumnDef<any, any, unknown>>
+
 /**
  * Merges built-in, feature, and user default column definitions.
  *
@@ -83,27 +103,45 @@ export function table_getDefaultColumnDef<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Partial<ColumnDef<TFeatures, TData, unknown>> {
-  return {
-    header: (props) => {
-      const resolvedColumnDef = props.header.column
-        .columnDef as ColumnDefResolved<{}, TData>
+  const defaultColumn = Object.create(DefaultColumnDef);
 
-      if (resolvedColumnDef.accessorKey) {
-        return resolvedColumnDef.accessorKey
-      }
+  for (let i = 0, features = Object.values(table._features); i < features.length; i++) {
+    Object.assign(defaultColumn, features[i].getDefaultColumnDef?.());
+  }
 
-      if (resolvedColumnDef.accessorFn) {
-        return resolvedColumnDef.id
-      }
+  return Object.assign(defaultColumn, table.options.defaultColumn);
+}
 
-      return null
-    },
-    cell: (props) => props.renderValue<any>()?.toString?.() ?? null,
-    ...Object.values(table._features).reduce((obj, feature) => {
-      return Object.assign(obj, feature.getDefaultColumnDef?.())
-    }, {}),
-    ...table.options.defaultColumn,
-  } as Partial<ColumnDef<TFeatures, TData, unknown>>
+const table_getAllColumns_recurseColumns = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  colDefs: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>,
+  parent: Column<TFeatures, TData, unknown> | undefined,
+  depth: number,
+): Array<Column<TFeatures, TData, unknown>> => {
+  const result: Array<Column<TFeatures, TData, unknown>> = new Array(colDefs.length)
+
+  for (let i = 0; i < colDefs.length; i++) {
+    const columnDef = colDefs[i]!;
+
+    const column = constructColumn(table, columnDef, depth, parent)
+
+    const groupingColumnDef = columnDef as GroupColumnDef<
+      TFeatures,
+      TData,
+      unknown
+    >
+
+    column.columns = groupingColumnDef.columns
+      ? table_getAllColumns_recurseColumns(table, groupingColumnDef.columns, column, depth + 1)
+      : []
+
+    result[i] = column
+  }
+
+  return result
 }
 
 /**
@@ -123,29 +161,7 @@ export function table_getAllColumns<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, unknown>> {
-  const recurseColumns = (
-    colDefs: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>,
-    parent?: Column<TFeatures, TData, unknown>,
-    depth = 0,
-  ): Array<Column<TFeatures, TData, unknown>> => {
-    return colDefs.map((columnDef) => {
-      const column = constructColumn(table, columnDef, depth, parent)
-
-      const groupingColumnDef = columnDef as GroupColumnDef<
-        TFeatures,
-        TData,
-        unknown
-      >
-
-      column.columns = groupingColumnDef.columns
-        ? recurseColumns(groupingColumnDef.columns, column, depth + 1)
-        : []
-
-      return column
-    })
-  }
-
-  return recurseColumns(table.options.columns)
+  return table_getAllColumns_recurseColumns(table, table.options.columns, undefined, 0);
 }
 
 /**

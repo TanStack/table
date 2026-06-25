@@ -112,7 +112,7 @@ export function constructColumn<
   column.columnDef = resolvedColumnDef as ColumnDef<TFeatures, TData, TValue>
   column.columns = []
   column.depth = depth
-  column.id = `${String(id)}`
+  column.id = '' + id
   column.parent = parent
 
   return column as Column<TFeatures, TData, TValue>
