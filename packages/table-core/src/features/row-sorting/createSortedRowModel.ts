@@ -56,13 +56,15 @@ function _createSortedRowModel<
     sortFn: SortFn<TFeatures, TData>
   }>()
 
-  const availableSorting: typeof sorting = [];
+  const availableSorting: typeof sorting = []
   for (let i = 0; i < sorting.length; i++) {
-    const { id } = sorting[i]!;
+    const { id } = sorting[i]!
 
-    const column = table.getColumn(id) as Column_Internal<TFeatures, TData> | undefined;
+    const column = table.getColumn(id) as
+      | Column_Internal<TFeatures, TData>
+      | undefined
     if (column && column_getCanSort(column)) {
-      availableSorting.push(column as any);
+      availableSorting.push(column as any)
       columnInfoById[id] = {
         sortUndefined: column.columnDef.sortUndefined,
         invertSorting: column.columnDef.invertSorting,
@@ -72,24 +74,29 @@ function _createSortedRowModel<
   }
 
   return {
-    rows: sortData(preSortedRowModel.rows, sortedFlatRows, availableSorting, columnInfoById),
+    rows: sortData(
+      preSortedRowModel.rows,
+      sortedFlatRows,
+      availableSorting,
+      columnInfoById,
+    ),
     flatRows: sortedFlatRows,
     rowsById: preSortedRowModel.rowsById,
   }
 }
 
-const sortData = <
-  TFeatures extends TableFeatures,
-  TData extends RowData = any,
->(
+const sortData = <TFeatures extends TableFeatures, TData extends RowData = any>(
   rows: Array<Row<TFeatures, TData>>,
   sortedFlatRows: Array<Row<TFeatures, TData>>,
   availableSorting: Array<ColumnSort>,
-  columnInfoById: Record<string, {
-    sortUndefined?: false | -1 | 1 | "first" | "last";
-    invertSorting?: boolean;
-    sortFn: SortFn<TFeatures, TData>;
-  }>
+  columnInfoById: Record<
+    string,
+    {
+      sortUndefined?: false | -1 | 1 | 'first' | 'last'
+      invertSorting?: boolean
+      sortFn: SortFn<TFeatures, TData>
+    }
+  >,
 ) => {
   const sortedData = rows.slice()
 
@@ -150,7 +157,12 @@ const sortData = <
       // Preserve prototype chain so methods like getValue() remain accessible
       const cloned = Object.create(Object.getPrototypeOf(row))
       Object.assign(cloned, row)
-      cloned.subRows = sortData(row.subRows, sortedFlatRows, availableSorting, columnInfoById)
+      cloned.subRows = sortData(
+        row.subRows,
+        sortedFlatRows,
+        availableSorting,
+        columnInfoById,
+      )
       sortedData[i] = cloned
       sortedFlatRows.push(cloned)
     } else {

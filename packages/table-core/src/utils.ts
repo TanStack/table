@@ -159,9 +159,9 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
     const newDeps = memoDeps?.(depArgs)
 
     if (!newDeps || newDeps.length !== deps?.length) {
-      onAfterCompare?.(true);
+      onAfterCompare?.(true)
     } else {
-      let depsChanged = false;
+      let depsChanged = false
       for (let i = 0; i < newDeps.length; i++) {
         if (newDeps[i] !== deps[i]) {
           depsChanged = true
@@ -170,16 +170,16 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
       }
 
       onAfterCompare?.(depsChanged)
-      if (!depsChanged)
-        return result!
+      if (!depsChanged) return result!
     }
 
     deps = newDeps
 
     onBeforeUpdate?.()
     result = deps
-      // @ts-expect-error no correct type for this
-      ? fn(...deps) : fn()
+      ? // @ts-expect-error no correct type for this
+        fn(...deps)
+      : fn()
     onAfterUpdate?.(result)
 
     return result
@@ -242,13 +242,11 @@ export function tableMemo<
       ]
     const debugByFeature = feature
       ? // @ts-expect-error
-        table.options[
-          `debug${feature[0]!.toUpperCase() + feature.slice(1)}`
-        ]
+        table.options[`debug${feature[0]!.toUpperCase() + feature.slice(1)}`]
       : false
 
     debug = table.options.debugAll || debugByParent || debugByFeature
-    debugCache = table.options.debugCache;
+    debugCache = table.options.debugCache
   }
 
   function logTime(time: number, depsChanged: boolean) {
@@ -283,45 +281,48 @@ export function tableMemo<
 
   const onAfterUpdateHandler = onAfterUpdate
     ? () => {
-      const { schedule, untrack } = table._reactivity
-      schedule(() => untrack(() => onAfterUpdate()))
-    }
+        const { schedule, untrack } = table._reactivity
+        schedule(() => untrack(() => onAfterUpdate()))
+      }
     : noopCallback
 
   const allOptions =
     process.env.NODE_ENV === 'development'
       ? {
-        ...memoOptions,
+          ...memoOptions,
           onBeforeCompare: debugCache
             ? () => {
-              beforeCompareTime = performance.now()
-            }
+                beforeCompareTime = performance.now()
+              }
             : noopCallback,
           onAfterCompare: debugCache
             ? (depsChanged: boolean) => {
-              afterCompareTime = performance.now()
-              if (!depsChanged) {
-                const compareTime = Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
-                logTime(compareTime, depsChanged)
+                afterCompareTime = performance.now()
+                if (!depsChanged) {
+                  const compareTime =
+                    Math.round((afterCompareTime - beforeCompareTime) * 100) /
+                    100
+                  logTime(compareTime, depsChanged)
+                }
               }
-            }
             : noopCallback,
           onBeforeUpdate: debug
             ? () => {
-              startCalcTime = performance.now()
-            }
+                startCalcTime = performance.now()
+              }
             : noopCallback,
           onAfterUpdate: debug
             ? () => {
-              endCalcTime = performance.now()
-              const executionTime = Math.round((endCalcTime - startCalcTime) * 100) / 100
-              logTime(executionTime, true)
-              onAfterUpdateHandler()
-            }
+                endCalcTime = performance.now()
+                const executionTime =
+                  Math.round((endCalcTime - startCalcTime) * 100) / 100
+                logTime(executionTime, true)
+                onAfterUpdateHandler()
+              }
             : onAfterUpdateHandler,
         }
       : {
-        ...memoOptions,
+          ...memoOptions,
           onAfterUpdate: onAfterUpdateHandler,
         }
 

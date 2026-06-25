@@ -136,7 +136,7 @@ function compareBasic(a: any, b: any) {
 
 function toString(a: any) {
   if (typeof a === 'number') {
-    return Number.isFinite(a) ? '' + a : '';
+    return Number.isFinite(a) ? '' + a : ''
   }
   if (typeof a === 'string') {
     return a

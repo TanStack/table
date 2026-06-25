@@ -23,7 +23,7 @@ export function aggregationFn_sum<
     const nextValue = childRows[i]!.getValue(columnId)
     if (typeof nextValue === 'number') sumValue += nextValue
   }
-  return sumValue;
+  return sumValue
 }
 
 /**
@@ -40,7 +40,7 @@ export function aggregationFn_min<
   _leafRows: Array<Row<TFeatures, TData>>,
   childRows: Array<Row<TFeatures, TData>>,
 ) {
-  let minValue: number | undefined;
+  let minValue: number | undefined
 
   for (let i = 0; i < childRows.length; i++) {
     const value = childRows[i]!.getValue(columnId)
@@ -162,14 +162,14 @@ export function aggregationFn_median<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(columnId: string, leafRows: Array<Row<TFeatures, TData>>) {
-  const len = leafRows.length;
+  const len = leafRows.length
 
   if (len === 0) {
     return
   }
   if (len === 1) {
-    const v = leafRows[0]!.getValue(columnId);
-    return typeof v === 'number' ? v : undefined;
+    const v = leafRows[0]!.getValue(columnId)
+    return typeof v === 'number' ? v : undefined
   }
 
   const values: Array<number> = new Array(len)
@@ -179,11 +179,9 @@ export function aggregationFn_median<
     values[i] = v
   }
 
-  const mid = len >>> 1; // Divide by 2 and floor
+  const mid = len >>> 1 // Divide by 2 and floor
   values.sort((a, b) => a - b)
-  return (len & 1) === 1
-    ? values[mid]
-    : (values[mid - 1]! + values[mid]!) / 2
+  return (len & 1) === 1 ? values[mid] : (values[mid - 1]! + values[mid]!) / 2
 }
 
 /**
