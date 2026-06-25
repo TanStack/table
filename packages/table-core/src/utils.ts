@@ -101,6 +101,22 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
 }
 
+const flattenBy_recurse = <TNode>(
+  subArr: Array<TNode>,
+  getChildren: (item: TNode) => Array<TNode>,
+  flat: Array<TNode>
+) => {
+  for (let i = 0; i < subArr.length; i++) {
+    const item = subArr[i]!
+
+    flat.push(item)
+    const children = getChildren(item)
+    if (children.length) {
+      flattenBy_recurse(children, getChildren, flat);
+    }
+  }
+}
+
 /**
  * Flattens a tree of nodes by recursively reading child nodes.
  *
@@ -111,19 +127,7 @@ export function flattenBy<TNode>(
   getChildren: (item: TNode) => Array<TNode>,
 ) {
   const flat: Array<TNode> = []
-
-  const recurse = (subArr: Array<TNode>) => {
-    subArr.forEach((item) => {
-      flat.push(item)
-      const children = getChildren(item)
-      if (children.length) {
-        recurse(children)
-      }
-    })
-  }
-
-  recurse(arr)
-
+  flattenBy_recurse(arr, getChildren, flat);
   return flat
 }
 
@@ -179,7 +183,8 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
     result = deps
       ? // @ts-expect-error no correct type for this
         fn(...deps)
-      : fn()
+      : // @ts-expect-error no correct type for this
+        fn()
     onAfterUpdate?.(result)
 
     return result
