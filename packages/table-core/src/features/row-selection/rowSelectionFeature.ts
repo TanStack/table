@@ -20,6 +20,7 @@ import {
   table_getIsSomePageRowsSelected,
   table_getIsSomeRowsSelected,
   table_getPreSelectedRowModel,
+  table_getSelectedRowIds,
   table_getSelectedRowModel,
   table_getToggleAllPageRowsSelectedHandler,
   table_getToggleAllRowsSelectedHandler,
@@ -88,10 +89,11 @@ export const rowSelectionFeature: TableFeature = {
         fn: (defaultState) => table_resetRowSelection(table, defaultState),
       },
       table_toggleAllRowsSelected: {
-        fn: (value) => table_toggleAllRowsSelected(table, value),
+        fn: (value, opts) => table_toggleAllRowsSelected(table, value, opts),
       },
       table_toggleAllPageRowsSelected: {
-        fn: (value) => table_toggleAllPageRowsSelected(table, value),
+        fn: (value, opts) =>
+          table_toggleAllPageRowsSelected(table, value, opts),
       },
       table_getPreSelectedRowModel: {
         fn: () => table_getPreSelectedRowModel(table),
@@ -117,17 +119,37 @@ export const rowSelectionFeature: TableFeature = {
           table.getSortedRowModel(),
         ],
       },
+      table_getSelectedRowIds: {
+        fn: () => table_getSelectedRowIds(table),
+        memoDeps: () => [table.atoms.rowSelection?.get()],
+      },
       table_getIsAllRowsSelected: {
         fn: () => table_getIsAllRowsSelected(table),
+        memoDeps: () => [
+          table.atoms.rowSelection?.get(),
+          table.getFilteredRowModel(),
+          table.options.enableRowSelection,
+        ],
       },
       table_getIsAllPageRowsSelected: {
         fn: () => table_getIsAllPageRowsSelected(table),
+        memoDeps: () => [
+          table.atoms.rowSelection?.get(),
+          table.getPaginatedRowModel(),
+          table.options.enableRowSelection,
+        ],
       },
       table_getIsSomeRowsSelected: {
         fn: () => table_getIsSomeRowsSelected(table),
+        memoDeps: () => [table.atoms.rowSelection?.get()],
       },
       table_getIsSomePageRowsSelected: {
         fn: () => table_getIsSomePageRowsSelected(table),
+        memoDeps: () => [
+          table.atoms.rowSelection?.get(),
+          table.getPaginatedRowModel(),
+          table.options.enableRowSelection,
+        ],
       },
       table_getToggleAllRowsSelectedHandler: {
         fn: () => table_getToggleAllRowsSelectedHandler(table),

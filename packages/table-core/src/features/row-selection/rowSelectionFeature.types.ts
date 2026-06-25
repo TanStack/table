@@ -3,7 +3,7 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
 
-export type RowSelectionState = Record<string, boolean | undefined>
+export type RowSelectionState = Record<string, true>
 
 export interface TableState_RowSelection {
   rowSelection: RowSelectionState
@@ -99,6 +99,10 @@ export interface Table_RowSelection<
    */
   getGroupedSelectedRowModel: () => RowModel<TFeatures, TData>
   /**
+   * Returns the ids of all selected rows.
+   */
+  getSelectedRowIds: () => Array<string>
+  /**
    * Checks whether every selectable row on the current page is selected.
    */
   getIsAllPageRowsSelected: () => boolean
@@ -143,9 +147,15 @@ export interface Table_RowSelection<
   /**
    * Selects/deselects all rows on the current page.
    */
-  toggleAllPageRowsSelected: (value?: boolean) => void
+  toggleAllPageRowsSelected: (
+    value?: boolean,
+    opts?: { deselectAll?: boolean },
+  ) => void
   /**
    * Selects/deselects all rows in the table.
    */
-  toggleAllRowsSelected: (value?: boolean) => void
+  toggleAllRowsSelected: (
+    value?: boolean,
+    opts?: { deselectAll?: boolean },
+  ) => void
 }
