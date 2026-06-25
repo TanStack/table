@@ -289,8 +289,10 @@ function App() {
           </button>
         </div>
         <div>
-          <label>Row Selection State:</label>
-          <pre>{JSON.stringify(table.state, null, 2)}</pre>
+          <label>State:</label>
+          <pre>
+            {data.length < 1_001 && JSON.stringify(table.state, null, 2)}
+          </pre>
         </div>
       </div>
     </>
