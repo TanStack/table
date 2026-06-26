@@ -67,9 +67,13 @@ export function column_getLeafColumns<
   return [column]
 }
 
-const defaultColumnDef_header: Partial<ColumnDef<any, any, unknown>>['header'] = (props) => {
-  const resolvedColumnDef = props.header.column
-    .columnDef as ColumnDefResolved<{}, any>
+const defaultColumnDef_header: Partial<
+  ColumnDef<any, any, unknown>
+>['header'] = (props) => {
+  const resolvedColumnDef = props.header.column.columnDef as ColumnDefResolved<
+    {},
+    any
+  >
 
   if (resolvedColumnDef.accessorKey) {
     return resolvedColumnDef.accessorKey
@@ -81,7 +85,9 @@ const defaultColumnDef_header: Partial<ColumnDef<any, any, unknown>>['header'] =
 
   return null
 }
-const defaultColumnDef_cell: Partial<ColumnDef<any, any, unknown>>['cell'] = (props) => props.renderValue<any>()?.toString?.() ?? null
+const defaultColumnDef_cell: Partial<ColumnDef<any, any, unknown>>['cell'] = (
+  props,
+) => props.renderValue<any>()?.toString?.() ?? null
 
 /**
  * Merges built-in, feature, and user default column definitions.
@@ -103,8 +109,8 @@ export function table_getDefaultColumnDef<
 ): Partial<ColumnDef<TFeatures, TData, unknown>> {
   const defaultColumn = {
     header: defaultColumnDef_header,
-    cell: defaultColumnDef_cell
-  };
+    cell: defaultColumnDef_cell,
+  }
 
   for (
     let i = 0, features = Object.values(table._features);

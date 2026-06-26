@@ -58,7 +58,7 @@ function _createSortedRowModel<
 
   const availableSorting: typeof sorting = []
   for (let i = 0; i < sorting.length; i++) {
-    const sort = sorting[i]!;
+    const sort = sorting[i]!
 
     const column = table.getColumn(sort.id) as
       | Column_Internal<TFeatures, TData>
