@@ -13,7 +13,7 @@
     "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/vue-query": "^5.101.1",
     "@tanstack/vue-store": "^0.11.0",
-    "@tanstack/vue-table": "^9.0.0-beta.19",
+    "@tanstack/vue-table": "^9.0.0-beta.20",
     "vue": "^3.5.38"
   },
   "devDependencies": {
