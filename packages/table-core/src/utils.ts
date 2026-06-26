@@ -101,22 +101,6 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
 }
 
-const flattenBy_recurse = <TNode>(
-  subArr: Array<TNode>,
-  getChildren: (item: TNode) => Array<TNode>,
-  flat: Array<TNode>,
-) => {
-  for (let i = 0; i < subArr.length; i++) {
-    const item = subArr[i]!
-
-    flat.push(item)
-    const children = getChildren(item)
-    if (children.length) {
-      flattenBy_recurse(children, getChildren, flat)
-    }
-  }
-}
-
 /**
  * Flattens a tree of nodes by recursively reading child nodes.
  *
@@ -125,9 +109,16 @@ const flattenBy_recurse = <TNode>(
 export function flattenBy<TNode>(
   arr: Array<TNode>,
   getChildren: (item: TNode) => Array<TNode>,
+  flat: Array<TNode> = []
 ) {
-  const flat: Array<TNode> = []
-  flattenBy_recurse(arr, getChildren, flat)
+  for (let i = 0; i < arr.length; i++) {
+    const item = arr[i]!
+
+    flat.push(item)
+    const children = getChildren(item)
+    children.length && flattenBy(children, getChildren, flat)
+  }
+
   return flat
 }
 
@@ -180,7 +171,7 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
     deps = newDeps
 
     onBeforeUpdate?.()
-    result = deps
+    result = deps?.length
       ? // @ts-expect-error no correct type for this
         fn(...deps)
       : // @ts-expect-error no correct type for this
