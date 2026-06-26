@@ -58,14 +58,14 @@ function _createSortedRowModel<
 
   const availableSorting: typeof sorting = []
   for (let i = 0; i < sorting.length; i++) {
-    const { id } = sorting[i]!
+    const sort = sorting[i]!;
 
-    const column = table.getColumn(id) as
+    const column = table.getColumn(sort.id) as
       | Column_Internal<TFeatures, TData>
       | undefined
     if (column && column_getCanSort(column)) {
-      availableSorting.push(column as any)
-      columnInfoById[id] = {
+      availableSorting.push(sort)
+      columnInfoById[sort.id] = {
         sortUndefined: column.columnDef.sortUndefined,
         invertSorting: column.columnDef.invertSorting,
         sortFn: column_getSortFn(column),
