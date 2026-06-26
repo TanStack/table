@@ -52,10 +52,10 @@ function _createFacetedUniqueValues<
     for (let j = 0; j < values.length; j++) {
       const value = values[j]
 
-      const facetedUniqueValue = facetedUniqueValues.get(value)
+      const prevValue = facetedUniqueValues.get(value)
       facetedUniqueValues.set(
         value,
-        facetedUniqueValue ? (facetedUniqueValue + 1) : 1,
+        prevValue ? (prevValue + 1) : 1,
       )
     }
   }
