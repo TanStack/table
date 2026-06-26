@@ -29,9 +29,9 @@ export function column_getFlatColumns<
 >(
   column: Column<TFeatures, TData, TValue>,
 ): Array<Column<TFeatures, TData, TValue>> {
-  const arr = column.columns.flatMap((col) => col.getFlatColumns());
-  arr.unshift(column);
-  return arr;
+  const arr = column.columns.flatMap((col) => col.getFlatColumns())
+  arr.unshift(column)
+  return arr
 }
 
 /**
@@ -103,13 +103,17 @@ export function table_getDefaultColumnDef<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Partial<ColumnDef<TFeatures, TData, unknown>> {
-  const defaultColumn = Object.create(DefaultColumnDef);
+  const defaultColumn = Object.create(DefaultColumnDef)
 
-  for (let i = 0, features = Object.values(table._features); i < features.length; i++) {
-    Object.assign(defaultColumn, features[i].getDefaultColumnDef?.());
+  for (
+    let i = 0, features = Object.values(table._features);
+    i < features.length;
+    i++
+  ) {
+    Object.assign(defaultColumn, features[i].getDefaultColumnDef?.())
   }
 
-  return Object.assign(defaultColumn, table.options.defaultColumn);
+  return Object.assign(defaultColumn, table.options.defaultColumn)
 }
 
 const table_getAllColumns_recurseColumns = <
@@ -121,10 +125,12 @@ const table_getAllColumns_recurseColumns = <
   parent: Column<TFeatures, TData, unknown> | undefined,
   depth: number,
 ): Array<Column<TFeatures, TData, unknown>> => {
-  const result: Array<Column<TFeatures, TData, unknown>> = new Array(colDefs.length)
+  const result: Array<Column<TFeatures, TData, unknown>> = new Array(
+    colDefs.length,
+  )
 
   for (let i = 0; i < colDefs.length; i++) {
-    const columnDef = colDefs[i]!;
+    const columnDef = colDefs[i]!
 
     const column = constructColumn(table, columnDef, depth, parent)
 
@@ -135,7 +141,12 @@ const table_getAllColumns_recurseColumns = <
     >
 
     column.columns = groupingColumnDef.columns
-      ? table_getAllColumns_recurseColumns(table, groupingColumnDef.columns, column, depth + 1)
+      ? table_getAllColumns_recurseColumns(
+          table,
+          groupingColumnDef.columns,
+          column,
+          depth + 1,
+        )
       : []
 
     result[i] = column
@@ -161,7 +172,12 @@ export function table_getAllColumns<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, unknown>> {
-  return table_getAllColumns_recurseColumns(table, table.options.columns, undefined, 0);
+  return table_getAllColumns_recurseColumns(
+    table,
+    table.options.columns,
+    undefined,
+    0,
+  )
 }
 
 /**

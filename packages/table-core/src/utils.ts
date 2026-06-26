@@ -104,7 +104,7 @@ export function isFunction<T extends AnyFunction>(d: any): d is T {
 const flattenBy_recurse = <TNode>(
   subArr: Array<TNode>,
   getChildren: (item: TNode) => Array<TNode>,
-  flat: Array<TNode>
+  flat: Array<TNode>,
 ) => {
   for (let i = 0; i < subArr.length; i++) {
     const item = subArr[i]!
@@ -112,7 +112,7 @@ const flattenBy_recurse = <TNode>(
     flat.push(item)
     const children = getChildren(item)
     if (children.length) {
-      flattenBy_recurse(children, getChildren, flat);
+      flattenBy_recurse(children, getChildren, flat)
     }
   }
 }
@@ -127,7 +127,7 @@ export function flattenBy<TNode>(
   getChildren: (item: TNode) => Array<TNode>,
 ) {
   const flat: Array<TNode> = []
-  flattenBy_recurse(arr, getChildren, flat);
+  flattenBy_recurse(arr, getChildren, flat)
   return flat
 }
 
