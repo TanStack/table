@@ -1753,12 +1753,12 @@ table_getIsSomeRowsSelected: {
 
 **Scale impact** (`getIsAllRowsSelected` `.some()` scans saved during scroll/render churn — dimension: renders × filtered rows, selection unchanged):
 
-| Renders × Rows  | Scan walks before | After (steady state) | Saved      |
-| --------------- | ----------------- | -------------------- | ---------- |
-| 10 × 1,000      | 10,000            | 0                    | 10,000     |
-| 100 × 10,000    | 1,000,000         | 0                    | 1,000,000  |
-| 60 × 100,000    | 6,000,000         | 0                    | 6,000,000  |
-| 60 × 500,000    | 30,000,000        | 0                    | 30,000,000 |
+| Renders × Rows | Scan walks before | After (steady state) | Saved      |
+| -------------- | ----------------- | -------------------- | ---------- |
+| 10 × 1,000     | 10,000            | 0                    | 10,000     |
+| 100 × 10,000   | 1,000,000         | 0                    | 1,000,000  |
+| 60 × 100,000   | 6,000,000         | 0                    | 6,000,000  |
+| 60 × 500,000   | 30,000,000        | 0                    | 30,000,000 |
 
 **Risk:** Low. Memo deps capture every input the getters read (selection, row model, `enableRowSelection`). The `getIsSome*` semantic change is intentional and documented.
 
