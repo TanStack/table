@@ -23,10 +23,7 @@ export function column_getFacetedMinMaxValues<
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): [number, number] | undefined {
-  const facetedMinMaxValuesFn =
-    table.options.features.facetedMinMaxValues?.(table, column.id) ??
-    (() => undefined)
-  return facetedMinMaxValuesFn()
+  return table.options.features.facetedMinMaxValues?.(table, column.id)?.()
 }
 
 /**
@@ -49,10 +46,7 @@ export function column_getFacetedRowModel<
   column: Column_Internal<TFeatures, TData, TValue> | undefined,
   table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
-  const facetedRowModelFn =
-    table.options.features.facetedRowModel?.(table, column?.id ?? '') ??
-    (() => table.getPreFilteredRowModel())
-  return facetedRowModelFn()
+  return table.options.features.facetedRowModel?.(table, column?.id ?? '')?.() ?? table.getPreFilteredRowModel()
 }
 
 /**
@@ -74,10 +68,7 @@ export function column_getFacetedUniqueValues<
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): Map<any, number> {
-  const facetedUniqueValuesFn =
-    table.options.features.facetedUniqueValues?.(table, column.id) ??
-    (() => new Map<any, number>())
-  return facetedUniqueValuesFn()
+  return table.options.features.facetedUniqueValues?.(table, column.id)?.() ?? new Map<any, number>()
 }
 
 /**
@@ -95,10 +86,7 @@ export function table_getGlobalFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): undefined | [number, number] {
-  const facetedMinMaxValuesFn =
-    table.options.features.facetedMinMaxValues?.(table, '__global__') ??
-    (() => undefined)
-  return facetedMinMaxValuesFn()
+  return table.options.features.facetedMinMaxValues?.(table, '__global__')?.()
 }
 
 /**
@@ -117,10 +105,7 @@ export function table_getGlobalFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const facetedRowModelFn =
-    table.options.features.facetedRowModel?.(table, '__global__') ??
-    (() => table.getPreFilteredRowModel())
-  return facetedRowModelFn()
+  return table.options.features.facetedRowModel?.(table, '__global__')?.() ?? table.getPreFilteredRowModel()
 }
 
 /**
@@ -138,8 +123,5 @@ export function table_getGlobalFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): Map<any, number> {
-  const facetedUniqueValuesFn =
-    table.options.features.facetedUniqueValues?.(table, '__global__') ??
-    (() => new Map())
-  return facetedUniqueValuesFn()
+  return table.options.features.facetedUniqueValues?.(table, '__global__')?.() ?? new Map()
 }
