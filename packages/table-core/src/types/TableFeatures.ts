@@ -1,5 +1,6 @@
 import type { CoreFeatures } from '../core/coreFeatures'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
+import type { Column } from './Column'
 import type { ColumnDefBase_All } from './ColumnDef'
 import type { Row } from './Row'
 import type { Table_Internal } from './Table'
@@ -11,11 +12,31 @@ import type { FilterFn } from '../features/column-filtering/columnFilteringFeatu
 import type { SortFn } from '../features/row-sorting/rowSortingFeature.types'
 import type { AggregationFn } from '../features/column-grouping/columnGroupingFeature.types'
 
+/**
+ * Detects whether a type is `any`.
+ *
+ * Several feature-map helpers need a separate `any` path so broad generic
+ * usage still exposes all known feature APIs instead of narrowing to no keys.
+ */
 export type IsAny<T> = 0 extends 1 & T ? true : false
+
+/**
+ * Converts a union to an intersection, returning `{}` for `never`.
+ *
+ * This keeps empty feature-map lookups usable as an intersection member.
+ */
 type UnionToIntersectionOrEmpty<T> = [T] extends [never]
   ? {}
   : UnionToIntersection<T> & {}
 
+/**
+ * Extracts the API/types contributed by the features present in `TFeatures`.
+ *
+ * `TFeatureMap` maps feature keys to the types they contribute. When
+ * `TFeatures` is `any`, all feature-map entries are included to preserve the
+ * permissive behavior expected by broad table types. Otherwise, only entries
+ * whose keys are present in `TFeatures` are intersected together.
+ */
 export type ExtractFeatureMapTypes<
   TFeatures extends TableFeatures,
   TFeatureMap extends object,
@@ -27,7 +48,11 @@ export type ExtractFeatureMapTypes<
       >
 
 /**
- * This is an interface that you can delcaration-merge into to allow for custom plugins to be added to the table.
+ * Declaration-merge target for custom table features.
+ *
+ * Add custom feature keys here so `TableFeatures` can accept them in the
+ * `features` option and use the same feature-map extraction system as built-in
+ * features.
  */
 export interface Plugins {}
 
@@ -64,19 +89,61 @@ export type NonFeatureKeys =
  * interface to get the same validation from `tableFeatures()`.
  */
 export interface FeatureSlotPrereqs {
+  /**
+   * Named aggregation functions are only meaningful when grouping is enabled.
+   */
   aggregationFns: 'columnGroupingFeature'
-  columnResizingFeature: 'columnSizingFeature' // columnSizingFeature is required for columnResizingFeature
+  /**
+   * Column resizing builds on the column sizing state and APIs.
+   */
+  columnResizingFeature: 'columnSizingFeature'
+  /**
+   * Expanded row-model factories require row expanding APIs and state.
+   */
   expandedRowModel: 'rowExpandingFeature'
+  /**
+   * Faceted min/max factories require column faceting APIs.
+   */
   facetedMinMaxValues: 'columnFacetingFeature'
+  /**
+   * Faceted row-model factories require column faceting APIs.
+   */
   facetedRowModel: 'columnFacetingFeature'
+  /**
+   * Faceted unique-value factories require column faceting APIs.
+   */
   facetedUniqueValues: 'columnFacetingFeature'
+  /**
+   * Filtered row-model factories require column filtering APIs and state.
+   */
   filteredRowModel: 'columnFilteringFeature'
+  /**
+   * Named filter functions are only meaningful when column filtering is enabled.
+   */
   filterFns: 'columnFilteringFeature'
+  /**
+   * Filter metadata types are only read and written by filtering features.
+   */
   filterMeta: 'columnFilteringFeature'
-  globalFilteringFeature: 'columnFilteringFeature' // columnFilteringFeature is required for globalFilteringFeature
+  /**
+   * Global filtering builds on column filtering state and filter functions.
+   */
+  globalFilteringFeature: 'columnFilteringFeature'
+  /**
+   * Grouped row-model factories require column grouping APIs and state.
+   */
   groupedRowModel: 'columnGroupingFeature'
+  /**
+   * Paginated row-model factories require row pagination APIs and state.
+   */
   paginatedRowModel: 'rowPaginationFeature'
+  /**
+   * Sorted row-model factories require row sorting APIs and state.
+   */
   sortedRowModel: 'rowSortingFeature'
+  /**
+   * Named sorting functions are only meaningful when row sorting is enabled.
+   */
   sortFns: 'rowSortingFeature'
 }
 
@@ -102,6 +169,15 @@ export type ValidateFeatureSlots<TFeatures extends TableFeatures> =
           : never
       }
 
+/**
+ * Complete feature registry for a table.
+ *
+ * This type combines core features, stock features, declaration-merged custom
+ * plugins, row-model factory slots, function registries, and type-only meta
+ * slots. The concrete `features` object passed to `tableFeatures()` determines
+ * which feature APIs are included throughout table, row, column, cell, header,
+ * options, and state types.
+ */
 export interface TableFeatures
   extends Partial<CoreFeatures>, Partial<StockFeatures>, Partial<Plugins> {
   /**
@@ -221,10 +297,22 @@ export interface TableFeatures
   tableMeta?: object
 }
 
+/**
+ * Lifecycle hooks and defaults contributed by a table feature.
+ *
+ * Feature objects are registered in the table's `features` option. They can
+ * contribute default state/options, default column definitions, table APIs,
+ * shared prototype APIs for rows/columns/headers/cells, and per-instance row
+ * or column data.
+ */
 export interface TableFeature {
   /**
-   * Assigns Cell APIs to the cell prototype for memory-efficient method sharing.
-   * This is called once per table to build a shared prototype for all cells.
+   * Adds feature methods to the shared cell prototype for a table.
+   *
+   * This runs lazily the first time a cell is constructed for a table. Methods
+   * assigned here are shared by every cell instance created by that table, so
+   * this hook should be used for APIs and memoized methods rather than
+   * per-cell mutable data.
    */
   assignCellPrototype?: <
     TFeatures extends TableFeatures,
@@ -234,8 +322,12 @@ export interface TableFeature {
     table: Table_Internal<TFeatures, TData>,
   ) => void
   /**
-   * Assigns Column APIs to the column prototype for memory-efficient method sharing.
-   * This is called once per table to build a shared prototype for all columns.
+   * Adds feature methods to the shared column prototype for a table.
+   *
+   * This runs lazily the first time a column is constructed for a table.
+   * Methods assigned here are shared by every column instance created by that
+   * table, so this hook should be used for APIs and memoized methods rather
+   * than per-column mutable data.
    */
   assignColumnPrototype?: <
     TFeatures extends TableFeatures,
@@ -245,8 +337,12 @@ export interface TableFeature {
     table: Table_Internal<TFeatures, TData>,
   ) => void
   /**
-   * Assigns Header APIs to the header prototype for memory-efficient method sharing.
-   * This is called once per table to build a shared prototype for all headers.
+   * Adds feature methods to the shared header prototype for a table.
+   *
+   * This runs lazily the first time a header is constructed for a table.
+   * Methods assigned here are shared by every header instance created by that
+   * table, so this hook should be used for APIs and memoized methods rather
+   * than per-header mutable data.
    */
   assignHeaderPrototype?: <
     TFeatures extends TableFeatures,
@@ -256,35 +352,85 @@ export interface TableFeature {
     table: Table_Internal<TFeatures, TData>,
   ) => void
   /**
-   * Assigns Row APIs to the row prototype for memory-efficient method sharing.
-   * This is called once per table to build a shared prototype for all rows.
+   * Adds feature methods to the shared row prototype for a table.
+   *
+   * This runs lazily the first time a row is constructed for a table. Methods
+   * assigned here are shared by every row instance created by that table, so
+   * this hook should be used for APIs and memoized methods rather than per-row
+   * mutable data.
    */
   assignRowPrototype?: <TFeatures extends TableFeatures, TData extends RowData>(
     prototype: Record<string, any>,
     table: Table_Internal<TFeatures, TData>,
   ) => void
   /**
-   * Assigns Table APIs to the table instance.
-   * Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
+   * Adds feature APIs directly to the table instance.
+   *
+   * The table is a singleton, unlike rows, columns, headers, and cells, so
+   * table APIs are assigned directly instead of through a shared prototype.
+   * This runs while the table is being constructed, after options and initial
+   * state have been resolved.
    */
   constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData>,
   ) => void
+  /**
+   * Returns default column definition options contributed by this feature.
+   *
+   * These defaults are merged into the table's default column definition before
+   * `options.defaultColumn` and before each user-supplied column definition is
+   * resolved, so users can override values supplied here.
+   */
   getDefaultColumnDef?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
     TValue extends CellData = CellData,
   >() => ColumnDefBase_All<TFeatures, TData, TValue>
+  /**
+   * Returns default table options contributed by this feature.
+   *
+   * This runs while table options are being resolved. Use it for option
+   * defaults such as feature enablement flags and default state-updater
+   * callbacks. User-supplied table options take precedence over values returned
+   * here.
+   */
   getDefaultTableOptions?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
     table: Table_Internal<TFeatures, TData>,
   ) => Partial<TableOptions_All<TFeatures, TData>>
+  /**
+   * Returns this feature's initial table state.
+   *
+   * The incoming `initialState` contains state accumulated from earlier
+   * features and user-provided initial state. Return a complete state object
+   * for this feature, preserving `initialState` so user-provided values can
+   * override feature defaults.
+   */
   getInitialState?: (initialState: Partial<TableState_All>) => TableState_All
   /**
-   * Initializes instance-specific data on each row (e.g., caches).
-   * Methods should be assigned via assignRowPrototype instead.
+   * Initializes instance-specific data on each column.
+   *
+   * This runs for every constructed column after core column fields such as
+   * `id`, `depth`, `parent`, `columnDef`, and `columns` have been assigned.
+   * Use this for per-column mutable data, caches, or annotations. Shared
+   * methods should be assigned via `assignColumnPrototype` instead.
+   */
+  initColumnInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+  ) => void
+  /**
+   * Initializes instance-specific data on each row.
+   *
+   * This runs for every constructed row after core row fields such as `id`,
+   * `index`, `depth`, `original`, `parentId`, and `subRows` have been assigned.
+   * Use this for per-row mutable data, caches, or annotations. Shared methods
+   * should be assigned via `assignRowPrototype` instead.
    */
   initRowInstanceData?: <
     TFeatures extends TableFeatures,

@@ -115,5 +115,11 @@ export function constructColumn<
   column.id = '' + id
   column.parent = parent
 
+  // Initialize instance-specific data for features that need it
+  const features = Object.values(table._features)
+  for (let i = 0; i < features.length; i++) {
+    features[i]!.initColumnInstanceData?.(column)
+  }
+
   return column as Column<TFeatures, TData, TValue>
 }
