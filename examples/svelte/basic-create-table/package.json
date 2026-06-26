@@ -10,7 +10,7 @@
     "lint": "eslint ./src"
   },
   "devDependencies": {
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "@rollup/plugin-replace": "^6.0.3",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
     "@tanstack/svelte-table": "^9.0.0-beta.19",
@@ -18,6 +18,6 @@
     "svelte": "^5.56.2",
     "svelte-check": "^4.6.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.1.0"
   }
 }

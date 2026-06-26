@@ -10,13 +10,13 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.16",
+    "vite": "^8.1.0",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "@tanstack/match-sorter-utils": "^9.0.0-beta.0",
+    "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
     "@tanstack/solid-devtools": "^0.8.5",
     "@tanstack/solid-table": "^9.0.0-beta.19",
     "@tanstack/solid-table-devtools": "^9.0.0-beta.19",
