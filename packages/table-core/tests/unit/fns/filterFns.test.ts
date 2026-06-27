@@ -563,4 +563,40 @@ describe('Filter Functions', () => {
       })
     })
   })
+    describe('filterFns.inNumberRange.autoRemove', () => {
+      const autoRemove = filterFns.inNumberRange.autoRemove!
+
+      it('should auto-remove when value is undefined', () => {
+        expect(autoRemove(undefined)).toBe(true)
+      })
+      it('should auto-remove when value is null', () => {
+        expect(autoRemove(null)).toBe(true)
+      })
+      it('should auto-remove when value is empty string', () => {
+        expect(autoRemove('')).toBe(true)
+      })
+      it('should auto-remove when both endpoints are undefined', () => {
+        expect(autoRemove([undefined, undefined])).toBe(true)
+      })
+      it('should auto-remove when both endpoints are null', () => {
+        expect(autoRemove([null, null])).toBe(true)
+      })
+      it('should NOT auto-remove when both endpoints are valid numbers', () => {
+        expect(autoRemove([5, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when lower bound is 0 (falsy number)', () => {
+        expect(autoRemove([0, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when only one endpoint is provided', () => {
+        expect(autoRemove([undefined, 10])).toBe(false)
+        expect(autoRemove([5, undefined])).toBe(false)
+      })
+      it('should NOT auto-remove a scalar number (issue #5949 — non-array value must not be silently dropped)', () => {
+        // Without Array.isArray guard: val[0] and val[1] are both undefined for
+        // a scalar, so testFalsy returns true for both, causing the filter to be
+        // incorrectly removed even though 99 is a perfectly valid filter value.
+        expect(autoRemove(99)).toBe(false)
+        expect(autoRemove(0)).toBe(false)
+      })
+    })
 })

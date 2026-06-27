@@ -219,7 +219,7 @@ const filterFn_between = Object.assign(
       filterFn_lessThan(row, columnId, filterValues[1])),
   {
     autoRemove: (val: any) =>
-      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
+      testFalsy(val) || (Array.isArray(val) && testFalsy(val[0]) && testFalsy(val[1])),
   },
 )
 
@@ -243,7 +243,7 @@ const filterFn_betweenInclusive = Object.assign(
       filterFn_lessThanOrEqualTo(row, columnId, filterValues[1])),
   {
     autoRemove: (val: any) =>
-      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
+      testFalsy(val) || (Array.isArray(val) && testFalsy(val[0]) && testFalsy(val[1])),
   },
 )
 
@@ -287,7 +287,7 @@ export const filterFn_inNumberRange = Object.assign(
       return [min, max] as const
     },
     autoRemove: (val: any) =>
-      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
+      testFalsy(val) || (Array.isArray(val) && testFalsy(val[0]) && testFalsy(val[1])),
   },
 )
 
