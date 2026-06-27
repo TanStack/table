@@ -16,9 +16,9 @@
     "vite-plugin-solid": "^3.0.0-next.5"
   },
   "dependencies": {
+    "@solidjs/web": "2.0.0-beta.15",
     "@tanstack/solid-table": "^9.0.0-alpha.42",
     "@tanstack/solid-virtual": "^3.13.24",
-    "solid-js": "2.0.0-beta.10",
-    "@solidjs/web": "2.0.0-beta.10"
+    "solid-js": "2.0.0-beta.15"
   }
 }

@@ -88,7 +88,7 @@ function signalToReadonlyAtom<T>(
   return Object.assign(signal, {
     get: () => signal(),
     subscribe: makeSubscribe(signal, owner),
-  }) as unknown as ReadonlyAtom<T>
+  })
 }
 
 function signalToWritableAtom<T>(
@@ -107,7 +107,7 @@ function signalToWritableAtom<T>(
     set,
     get: () => signal(),
     subscribe: makeSubscribe(signal, owner),
-  }) as unknown as Atom<T>
+  })
 }
 
 export function solidReactivity(owner: Owner): TableReactivityBindings {

@@ -6,3 +6,11 @@ cleanupUnusedCatalogs: true
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true
+
+overrides:
+  # Keep the Solid v2 JSX compiler in lockstep with the @solidjs/web runtime.
+  # vite-plugin-solid allows the whole beta range, but the lockfile pinned the
+  # compiler to beta.10, which emits an `addEventListener` import that the
+  # beta.15 runtime renamed to `addEvent`. Scoped to the v2-beta range so the
+  # v1 devtools (babel-preset-solid@1.9.x) are untouched.
+  babel-preset-solid@>=2.0.0-beta.0 <2.0.0-experimental.0: 2.0.0-beta.15

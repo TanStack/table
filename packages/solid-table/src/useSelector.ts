@@ -2,7 +2,7 @@ import { createSignal, onCleanup } from 'solid-js'
 import type { Accessor } from 'solid-js'
 import type { Subscribable } from '@tanstack/store'
 
-export interface UseSelectorOptions<TSelected> {
+interface UseSelectorOptions<TSelected> {
   compare?: (a: TSelected, b: TSelected) => boolean
 }
 

@@ -61,13 +61,13 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@solidjs/web": "2.0.0-beta.10",
-    "solid-js": "2.0.0-beta.10",
+    "@solidjs/web": "2.0.0-beta.15",
+    "solid-js": "2.0.0-beta.15",
     "vite-plugin-solid": "^3.0.0-next.5"
   },
   "peerDependencies": {
-    "@solidjs/web": "^2.0.0-beta.10",
-    "solid-js": "^2.0.0-beta.10"
+    "@solidjs/web": "^2.0.0-beta.15",
+    "solid-js": "^2.0.0-beta.15"
   },
   "main": "./dist/index.cjs"
 }

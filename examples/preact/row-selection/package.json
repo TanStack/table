@@ -20,6 +20,7 @@
     "@preact/preset-vite": "^2.10.5",
     "@tanstack/preact-devtools": "^0.10.2",
     "@tanstack/preact-table-devtools": "^9.0.0-alpha.42",
+    "solid-js": "^1.9.7",
     "typescript": "6.0.3",
     "vite": "^8.0.10"
   }

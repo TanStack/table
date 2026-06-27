@@ -31,7 +31,7 @@
     "test:lib": "nx affected --targets=test:lib",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:pr": "nx affected --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",
-    "test:sherif": "sherif",
+    "test:sherif": "sherif --ignore-dependency solid-js --ignore-dependency vite-plugin-solid",
     "test:types": "nx affected --targets=test:types",
     "watch": "pnpm run build:all && nx watch --all -- pnpm run build:all"
   },
