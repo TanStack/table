@@ -6,10 +6,13 @@ title: table_toggleAllPageRowsSelected
 # Function: table\_toggleAllPageRowsSelected()
 
 ```ts
-function table_toggleAllPageRowsSelected<TFeatures, TData>(table, value?): void;
+function table_toggleAllPageRowsSelected<TFeatures, TData>(
+   table, 
+   value?, 
+   opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L124)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L147)
 
 Selects or deselects every selectable row on the current page.
 
@@ -30,9 +33,15 @@ Child rows are included when sub-row selection allows it.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### value?
+
+`boolean`
+
+### opts?
+
+#### deselectAll?
 
 `boolean`
 

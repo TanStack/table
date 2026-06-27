@@ -31,7 +31,7 @@ helpers only return column definition objects.
 
 ## Returns
 
-[`ColumnHelper`](../type-aliases/ColumnHelper.md)\<`TFeatures`, `TData`\>
+[`ColumnHelper`](../interfaces/ColumnHelper.md)\<`TFeatures`, `TData`\>
 
 ## Example
 

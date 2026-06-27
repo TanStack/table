@@ -19,6 +19,7 @@ title: "@tanstack/lit-table"
 - [AppGroupColumnDef](type-aliases/AppGroupColumnDef.md)
 - [AppHeaderContext](type-aliases/AppHeaderContext.md)
 - [AppLitTable](type-aliases/AppLitTable.md)
+- [BoundComponents](type-aliases/BoundComponents.md)
 - [ComponentType](type-aliases/ComponentType.md)
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)
 - [FlexRenderProps](type-aliases/FlexRenderProps.md)

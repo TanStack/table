@@ -9,12 +9,11 @@ title: table_getIsSomeRowsSelected
 function table_getIsSomeRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:323](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L323)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:394](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L394)
 
 Checks whether selection is partially applied across filtered rows.
 
-The result is true when at least one row id is selected but fewer ids are
-selected than the current filtered flat row count.
+The result is true when at least one row id is selected
 
 ## Type Parameters
 
@@ -30,7 +29,7 @@ selected than the current filtered flat row count.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

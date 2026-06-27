@@ -5,7 +5,7 @@ title: Column_FeatureMap
 
 # Interface: Column\_FeatureMap\<TFeatures, TData\>
 
-Defined in: [types/Column.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L22)
+Defined in: [types/Column.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L23)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [types/Column.ts:22](https://github.com/TanStack/table/blob/main/pac
 columnFacetingFeature: Column_ColumnFaceting<TFeatures, TData>;
 ```
 
-Defined in: [types/Column.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L26)
+Defined in: [types/Column.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L27)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [types/Column.ts:26](https://github.com/TanStack/table/blob/main/pac
 columnFilteringFeature: Column_ColumnFiltering<TFeatures, TData>;
 ```
 
-Defined in: [types/Column.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L27)
+Defined in: [types/Column.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L28)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [types/Column.ts:27](https://github.com/TanStack/table/blob/main/pac
 columnGroupingFeature: Column_ColumnGrouping<TFeatures, TData>;
 ```
 
-Defined in: [types/Column.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L28)
+Defined in: [types/Column.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L29)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [types/Column.ts:28](https://github.com/TanStack/table/blob/main/pac
 columnOrderingFeature: Column_ColumnOrdering;
 ```
 
-Defined in: [types/Column.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L29)
+Defined in: [types/Column.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L30)
 
 ***
 
@@ -65,7 +65,7 @@ Defined in: [types/Column.ts:29](https://github.com/TanStack/table/blob/main/pac
 columnPinningFeature: Column_ColumnPinning;
 ```
 
-Defined in: [types/Column.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L30)
+Defined in: [types/Column.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L31)
 
 ***
 
@@ -75,7 +75,7 @@ Defined in: [types/Column.ts:30](https://github.com/TanStack/table/blob/main/pac
 columnResizingFeature: Column_ColumnResizing;
 ```
 
-Defined in: [types/Column.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L31)
+Defined in: [types/Column.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L32)
 
 ***
 
@@ -85,7 +85,7 @@ Defined in: [types/Column.ts:31](https://github.com/TanStack/table/blob/main/pac
 columnSizingFeature: Column_ColumnSizing;
 ```
 
-Defined in: [types/Column.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L32)
+Defined in: [types/Column.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L33)
 
 ***
 
@@ -95,7 +95,7 @@ Defined in: [types/Column.ts:32](https://github.com/TanStack/table/blob/main/pac
 columnVisibilityFeature: Column_ColumnVisibility;
 ```
 
-Defined in: [types/Column.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L33)
+Defined in: [types/Column.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L34)
 
 ***
 
@@ -105,7 +105,7 @@ Defined in: [types/Column.ts:33](https://github.com/TanStack/table/blob/main/pac
 globalFilteringFeature: Column_GlobalFiltering;
 ```
 
-Defined in: [types/Column.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L34)
+Defined in: [types/Column.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L35)
 
 ***
 
@@ -115,4 +115,4 @@ Defined in: [types/Column.ts:34](https://github.com/TanStack/table/blob/main/pac
 rowSortingFeature: Column_RowSorting<TFeatures, TData>;
 ```
 
-Defined in: [types/Column.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L35)
+Defined in: [types/Column.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L36)

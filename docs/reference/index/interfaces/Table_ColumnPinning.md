@@ -48,7 +48,7 @@ Builds footer groups for the center region of unpinned columns.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 
@@ -64,7 +64,7 @@ Builds header groups for the center region of unpinned columns.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 
@@ -167,7 +167,7 @@ Builds footer groups for left-pinned columns.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 
@@ -183,7 +183,7 @@ Builds header groups for left-pinned columns.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 
@@ -308,7 +308,7 @@ Builds footer groups for right-pinned columns.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 
@@ -324,7 +324,7 @@ Builds header groups for right-pinned columns.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 

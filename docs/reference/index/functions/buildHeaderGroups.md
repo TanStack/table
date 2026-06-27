@@ -45,7 +45,7 @@ The result accounts for visible leaf columns, pinned column groups, and placehol
 
 ### table
 
-[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### headerFamily?
 
@@ -53,4 +53,4 @@ The result accounts for visible leaf columns, pinned column groups, and placehol
 
 ## Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](../interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]

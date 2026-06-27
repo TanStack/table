@@ -6,10 +6,16 @@ title: table_getFilteredSelectedRowModel
 # Function: table\_getFilteredSelectedRowModel()
 
 ```ts
-function table_getFilteredSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
+function table_getFilteredSelectedRowModel<TFeatures, TData>(table): 
+  | RowModel<TFeatures, TData>
+  | {
+  flatRows: never[];
+  rows: never[];
+  rowsById: Record<string, unknown>;
+};
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L201)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:246](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L246)
 
 Builds a row model containing selected rows from the filtered row model.
 
@@ -30,11 +36,16 @@ the rows.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`RowModel`](../../index/interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+  \| [`RowModel`](../../index/interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+  \| \{
+  `flatRows`: `never`[];
+  `rows`: `never`[];
+  `rowsById`: `Record`\<`string`, `unknown`\>;
+\}
 
 ## Example
 

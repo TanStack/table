@@ -9,7 +9,7 @@ title: table_getIsAllRowsSelected
 function table_getIsAllRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:257](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L257)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:329](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L329)
 
 Checks whether every selectable filtered row is selected.
 
@@ -30,7 +30,7 @@ empty.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

@@ -9,7 +9,7 @@ title: table_getRightFlatHeaders
 function table_getRightFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:569](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L569)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:561](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L561)
 
 Flattens every header from the right pinned header groups.
 
@@ -29,7 +29,7 @@ Parent headers and placeholder headers are included.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

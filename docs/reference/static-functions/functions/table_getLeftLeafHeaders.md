@@ -9,7 +9,7 @@ title: table_getLeftLeafHeaders
 function table_getLeftLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:629](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L629)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:621](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L621)
 
 Collects leaf headers for the left pinned region.
 
@@ -29,7 +29,7 @@ Parent headers are filtered out from the left flat header list.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

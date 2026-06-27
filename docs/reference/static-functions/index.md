@@ -197,6 +197,7 @@ title: static-functions
 - [table\_getRowCount](functions/table_getRowCount.md)
 - [table\_getRowId](functions/table_getRowId.md)
 - [table\_getRowModel](functions/table_getRowModel.md)
+- [table\_getSelectedRowIds](functions/table_getSelectedRowIds.md)
 - [table\_getSelectedRowModel](functions/table_getSelectedRowModel.md)
 - [table\_getSortedRowModel](functions/table_getSortedRowModel.md)
 - [table\_getToggleAllColumnsVisibilityHandler](functions/table_getToggleAllColumnsVisibilityHandler.md)

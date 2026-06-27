@@ -9,7 +9,7 @@ title: table_getIsSomeColumnsVisible
 function table_getIsSomeColumnsVisible<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:352](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L352)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:368](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L368)
 
 Checks whether at least one leaf column is currently visible.
 
@@ -29,7 +29,7 @@ This is useful for tri-state "show all columns" controls.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

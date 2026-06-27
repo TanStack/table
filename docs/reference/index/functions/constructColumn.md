@@ -37,7 +37,7 @@ This wires core properties, feature prototype APIs, and instance data used by ta
 
 ### table
 
-[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### columnDef
 

@@ -9,7 +9,7 @@ title: AppCellContext
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
 
-Defined in: [createTableHook.ts:42](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L42)
+Defined in: [createTableHook.ts:48](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L48)
 
 Enhanced CellContext with pre-bound cell components.
 The `cell` property includes the registered cellComponents.
@@ -37,10 +37,10 @@ The `cell` property includes the registered cellComponents.
 ### cell
 
 ```ts
-cell: Cell<TFeatures, TData, TValue> & TCellComponents & object;
+cell: Cell<TFeatures, TData, TValue> & BoundComponents<TCellComponents> & object;
 ```
 
-Defined in: [createTableHook.ts:48](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L48)
+Defined in: [createTableHook.ts:54](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L54)
 
 #### Type Declaration
 
@@ -62,7 +62,7 @@ FlexRender: () => TemplateResult | string | null;
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.ts:52](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L52)
+Defined in: [createTableHook.ts:58](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L58)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [createTableHook.ts:52](https://github.com/TanStack/table/blob/main/
 getValue: CellContext<TFeatures, TData, TValue>["getValue"];
 ```
 
-Defined in: [createTableHook.ts:53](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L53)
+Defined in: [createTableHook.ts:59](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L59)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [createTableHook.ts:53](https://github.com/TanStack/table/blob/main/
 renderValue: CellContext<TFeatures, TData, TValue>["renderValue"];
 ```
 
-Defined in: [createTableHook.ts:54](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L54)
+Defined in: [createTableHook.ts:60](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L60)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [createTableHook.ts:54](https://github.com/TanStack/table/blob/main/
 row: Row<TFeatures, TData>;
 ```
 
-Defined in: [createTableHook.ts:55](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L55)
+Defined in: [createTableHook.ts:61](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L61)
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: [createTableHook.ts:55](https://github.com/TanStack/table/blob/main/
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [createTableHook.ts:56](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L56)
+Defined in: [createTableHook.ts:62](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L62)

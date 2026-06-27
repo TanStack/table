@@ -9,7 +9,7 @@ title: table_getToggleAllPageRowsSelectedHandler
 function table_getToggleAllPageRowsSelectedHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:393](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L393)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:456](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L456)
 
 Creates a checkbox-style handler that selects or deselects current page rows.
 
@@ -30,7 +30,7 @@ checked state means "all page rows selected".
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

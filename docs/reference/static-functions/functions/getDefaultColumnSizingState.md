@@ -9,7 +9,7 @@ title: getDefaultColumnSizingState
 function getDefaultColumnSizingState(): ColumnSizingState;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L28)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L33)
 
 Creates the default committed column sizing state.
 

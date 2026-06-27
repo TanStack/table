@@ -16,7 +16,7 @@ function constructRow<TFeatures, TData>(
 parentId?): Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/constructRow.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/constructRow.ts#L30)
+Defined in: [core/rows/constructRow.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/constructRow.ts#L31)
 
 Constructs a row instance from normalized table internals.
 
@@ -36,7 +36,7 @@ This wires core properties, feature prototype APIs, and instance data used by ta
 
 ### table
 
-[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### id
 

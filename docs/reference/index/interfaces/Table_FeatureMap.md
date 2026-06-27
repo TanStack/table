@@ -5,7 +5,7 @@ title: Table_FeatureMap
 
 # Interface: Table\_FeatureMap\<TFeatures, TData\>
 
-Defined in: [types/Table.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L46)
+Defined in: [types/Table.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L50)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [types/Table.ts:46](https://github.com/TanStack/table/blob/main/pack
 columnFacetingFeature: Table_ColumnFaceting<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L57)
+Defined in: [types/Table.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L61)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [types/Table.ts:57](https://github.com/TanStack/table/blob/main/pack
 columnFilteringFeature: Table_ColumnFiltering;
 ```
 
-Defined in: [types/Table.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L50)
+Defined in: [types/Table.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L54)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [types/Table.ts:50](https://github.com/TanStack/table/blob/main/pack
 columnGroupingFeature: Table_ColumnGrouping<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L51)
+Defined in: [types/Table.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L55)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [types/Table.ts:51](https://github.com/TanStack/table/blob/main/pack
 columnOrderingFeature: Table_ColumnOrdering<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L52)
+Defined in: [types/Table.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L56)
 
 ***
 
@@ -65,7 +65,7 @@ Defined in: [types/Table.ts:52](https://github.com/TanStack/table/blob/main/pack
 columnPinningFeature: Table_ColumnPinning<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L53)
+Defined in: [types/Table.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L57)
 
 ***
 
@@ -75,7 +75,7 @@ Defined in: [types/Table.ts:53](https://github.com/TanStack/table/blob/main/pack
 columnResizingFeature: Table_ColumnResizing;
 ```
 
-Defined in: [types/Table.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L54)
+Defined in: [types/Table.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L58)
 
 ***
 
@@ -85,7 +85,7 @@ Defined in: [types/Table.ts:54](https://github.com/TanStack/table/blob/main/pack
 columnSizingFeature: Table_ColumnSizing;
 ```
 
-Defined in: [types/Table.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L55)
+Defined in: [types/Table.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L59)
 
 ***
 
@@ -95,7 +95,7 @@ Defined in: [types/Table.ts:55](https://github.com/TanStack/table/blob/main/pack
 columnVisibilityFeature: Table_ColumnVisibility<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L56)
+Defined in: [types/Table.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L60)
 
 ***
 
@@ -105,7 +105,7 @@ Defined in: [types/Table.ts:56](https://github.com/TanStack/table/blob/main/pack
 globalFilteringFeature: Table_GlobalFiltering<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L58)
+Defined in: [types/Table.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L62)
 
 ***
 
@@ -115,7 +115,7 @@ Defined in: [types/Table.ts:58](https://github.com/TanStack/table/blob/main/pack
 rowExpandingFeature: Table_RowExpanding<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L59)
+Defined in: [types/Table.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L63)
 
 ***
 
@@ -125,7 +125,7 @@ Defined in: [types/Table.ts:59](https://github.com/TanStack/table/blob/main/pack
 rowPaginationFeature: Table_RowPagination<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L60)
+Defined in: [types/Table.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L64)
 
 ***
 
@@ -135,7 +135,7 @@ Defined in: [types/Table.ts:60](https://github.com/TanStack/table/blob/main/pack
 rowPinningFeature: Table_RowPinning<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L61)
+Defined in: [types/Table.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L65)
 
 ***
 
@@ -145,7 +145,7 @@ Defined in: [types/Table.ts:61](https://github.com/TanStack/table/blob/main/pack
 rowSelectionFeature: Table_RowSelection<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L62)
+Defined in: [types/Table.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L66)
 
 ***
 
@@ -155,4 +155,4 @@ Defined in: [types/Table.ts:62](https://github.com/TanStack/table/blob/main/pack
 rowSortingFeature: Table_RowSorting<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L63)
+Defined in: [types/Table.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L67)

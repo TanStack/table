@@ -9,7 +9,7 @@ title: table_getCanSomeRowsExpand
 function table_getCanSomeRowsExpand<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L125)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L133)
 
 Checks whether at least one pre-paginated row can expand.
 
@@ -30,7 +30,7 @@ that may not be on the current page.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

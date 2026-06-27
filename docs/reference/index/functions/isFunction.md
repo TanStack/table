@@ -9,7 +9,7 @@ title: isFunction
 function isFunction<T>(d): d is T;
 ```
 
-Defined in: [utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L69)
+Defined in: [utils.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L100)
 
 Returns whether a value is a function.
 

@@ -9,7 +9,7 @@ title: column_getStart
 function column_getStart<TFeatures, TData, TValue>(column, position): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L91)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L100)
 
 Computes the offset from the start edge of a pinning region to this column.
 
@@ -34,7 +34,7 @@ requested `'left'`, `'center'`, or `'right'` region.
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ### position
 

@@ -11,6 +11,10 @@ Defined in: [core/table/coreTablesFeature.types.ts:222](https://github.com/TanSt
 
 - [`Table_CoreProperties`](Table_CoreProperties.md)\<`TFeatures`, `TData`\>
 
+## Extended by
+
+- [`Table_Core`](Table_Core.md)
+
 ## Type Parameters
 
 ### TFeatures

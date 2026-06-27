@@ -6,10 +6,16 @@ title: table_getGroupedSelectedRowModel
 # Function: table\_getGroupedSelectedRowModel()
 
 ```ts
-function table_getGroupedSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
+function table_getGroupedSelectedRowModel<TFeatures, TData>(table): 
+  | RowModel<TFeatures, TData>
+  | {
+  flatRows: never[];
+  rows: never[];
+  rowsById: Record<string, unknown>;
+};
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:229](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L229)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:280](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L280)
 
 Builds a row model containing selected rows from the grouped row model.
 
@@ -30,11 +36,16 @@ the rows.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`RowModel`](../../index/interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+  \| [`RowModel`](../../index/interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+  \| \{
+  `flatRows`: `never`[];
+  `rows`: `never`[];
+  `rowsById`: `Record`\<`string`, `unknown`\>;
+\}
 
 ## Example
 

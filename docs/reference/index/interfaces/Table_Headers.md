@@ -7,6 +7,11 @@ title: Table_Headers
 
 Defined in: [core/headers/coreHeadersFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L8)
 
+## Extended by
+
+- [`Table_Core`](Table_Core.md)
+- [`Table_Internal`](Table_Internal.md)
+
 ## Type Parameters
 
 ### TFeatures
@@ -48,7 +53,7 @@ Builds footer groups by reversing the current header group order.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 
@@ -65,7 +70,7 @@ and pinning state.
 
 #### Returns
 
-[`HeaderGroup`](../type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ***
 

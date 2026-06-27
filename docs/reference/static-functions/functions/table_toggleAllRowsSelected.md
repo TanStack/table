@@ -6,10 +6,13 @@ title: table_toggleAllRowsSelected
 # Function: table\_toggleAllRowsSelected()
 
 ```ts
-function table_toggleAllRowsSelected<TFeatures, TData>(table, value?): void;
+function table_toggleAllRowsSelected<TFeatures, TData>(
+   table, 
+   value?, 
+   opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L82)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L92)
 
 Selects or deselects every selectable row before grouping.
 
@@ -30,9 +33,15 @@ Deselecting removes matching ids from the existing selection map.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### value?
+
+`boolean`
+
+### opts?
+
+#### deselectAll?
 
 `boolean`
 

@@ -12,7 +12,7 @@ function filterFn_arrHas<TFeatures, TData>(
    filterValue): boolean;
 ```
 
-Defined in: [fns/filterFns.ts:293](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L293)
+Defined in: [fns/filterFns.ts:299](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L299)
 
 Keeps rows whose scalar column value equals at least one filter value.
 

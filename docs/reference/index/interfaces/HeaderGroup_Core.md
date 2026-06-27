@@ -11,6 +11,10 @@ Defined in: [types/HeaderGroup.ts:5](https://github.com/TanStack/table/blob/main
 
 - [`HeaderGroup_Header`](HeaderGroup_Header.md)\<`TFeatures`, `TData`\>
 
+## Extended by
+
+- [`HeaderGroup`](HeaderGroup.md)
+
 ## Type Parameters
 
 ### TFeatures

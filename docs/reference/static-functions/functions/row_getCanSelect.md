@@ -9,7 +9,7 @@ title: row_getCanSelect
 function row_getCanSelect<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:513](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L513)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:581](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L581)
 
 Checks whether this row can be selected.
 
