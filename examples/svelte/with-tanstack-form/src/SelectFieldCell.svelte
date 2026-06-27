@@ -1,6 +1,4 @@
 <script lang="ts">
-  import type { AnyFormApi } from '@tanstack/form-core'
-
   const { form, rowIndex }: {
     form: any
     rowIndex: number

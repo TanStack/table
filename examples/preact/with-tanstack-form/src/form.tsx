@@ -1,7 +1,7 @@
 import {
   createFormHook,
   createFormHookContexts,
-} from '@tanstack/react-form'
+} from '@tanstack/preact-form'
 
 // Create form and field contexts
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
@@ -45,7 +45,7 @@ function TextField() {
       <input
         className="text-input"
         value={field.state.value}
-        onChange={(e) => field.handleChange(e.target.value)}
+        onChange={(e) => field.handleChange(e.currentTarget.value)}
         onBlur={field.handleBlur}
       />
       <FieldErrors
@@ -68,7 +68,7 @@ function NumberField() {
         type="number"
         className="number-input"
         value={field.state.value}
-        onChange={(e) => field.handleChange(Number(e.target.value))}
+        onChange={(e) => field.handleChange(Number(e.currentTarget.value))}
         onBlur={field.handleBlur}
       />
       <FieldErrors
@@ -92,7 +92,7 @@ function SelectField() {
       <select
         className="compact-input"
         value={field.state.value}
-        onChange={(e) => field.handleChange(e.target.value)}
+        onChange={(e) => field.handleChange(e.currentTarget.value)}
         onBlur={field.handleBlur}
       >
         {statusOptions.map((status) => (

@@ -1781,12 +1781,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.4
+        version: 0.0.4(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(solid-js@1.9.13)
       '@tanstack/angular-form':
         specifier: ^1.33.0
         version: 1.33.0(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))
       '@tanstack/angular-table':
         specifier: workspace:*
         version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table-devtools
       rxjs:
         specifier: ~7.8.2
         version: 7.8.2
@@ -2528,7 +2534,7 @@ importers:
         version: 10.5.0
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
@@ -2559,7 +2565,7 @@ importers:
         version: 10.5.0
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
@@ -2590,7 +2596,7 @@ importers:
         version: 10.5.0
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
@@ -2618,7 +2624,7 @@ importers:
     dependencies:
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
@@ -2643,7 +2649,7 @@ importers:
     dependencies:
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
@@ -2869,7 +2875,7 @@ importers:
         version: 10.5.0
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
@@ -3053,7 +3059,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
@@ -3128,7 +3134,7 @@ importers:
         version: 10.5.0
       '@tanstack/preact-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(preact@10.29.2)(solid-js@1.9.13)
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
       '@tanstack/preact-store':
         specifier: ^0.13.1
         version: 0.13.1(preact@10.29.2)
@@ -3196,6 +3202,46 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/preact/with-tanstack-form:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
+      '@tanstack/preact-form':
+        specifier: ^1.30.0
+        version: 1.30.0(preact@10.29.2)
+      '@tanstack/preact-pacer':
+        specifier: ^0.22.1
+        version: 0.22.1(preact@10.29.2)
+      '@tanstack/preact-table':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
+      '@tanstack/react-form-devtools':
+        specifier: ^0.2.29
+        version: 0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+      zod:
+        specifier: ^4.4.3
+        version: 4.4.3
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(rollup@4.61.1)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
+
   examples/preact/with-tanstack-query:
     dependencies:
       '@faker-js/faker':
@@ -3231,7 +3277,7 @@ importers:
         version: 10.5.0
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3280,7 +3326,7 @@ importers:
         version: 10.5.0
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3329,7 +3375,7 @@ importers:
         version: 10.5.0
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3378,7 +3424,7 @@ importers:
     dependencies:
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
@@ -3424,7 +3470,7 @@ importers:
         version: 10.5.0
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -3470,7 +3516,7 @@ importers:
     dependencies:
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
@@ -3928,7 +3974,7 @@ importers:
         version: 10.5.0
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4256,7 +4302,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4332,7 +4378,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4411,7 +4457,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4499,7 +4545,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4569,7 +4615,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4648,7 +4694,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -4742,7 +4788,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5450,7 +5496,7 @@ importers:
         version: 10.5.0
       '@tanstack/react-devtools':
         specifier: ^0.10.5
-        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
@@ -5798,15 +5844,24 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.5
+        version: 0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
       '@tanstack/react-form':
         specifier: ^1.33.0
         version: 1.33.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@tanstack/react-form-devtools':
+        specifier: ^0.2.29
+        version: 0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
       '@tanstack/react-pacer':
         specifier: ^0.22.1
         version: 0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
       '@tanstack/react-table':
         specifier: workspace:*
         version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
       react:
         specifier: ^19.2.7
         version: 19.2.7
@@ -5947,7 +6002,7 @@ importers:
         version: 10.5.0
       '@tanstack/solid-devtools':
         specifier: ^0.8.5
-        version: 0.8.5(solid-js@1.9.13)
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
@@ -5972,7 +6027,7 @@ importers:
     dependencies:
       '@tanstack/solid-devtools':
         specifier: ^0.8.5
-        version: 0.8.5(solid-js@1.9.13)
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-store':
         specifier: ^0.11.0
         version: 0.11.0(solid-js@1.9.13)
@@ -6003,7 +6058,7 @@ importers:
     dependencies:
       '@tanstack/solid-devtools':
         specifier: ^0.8.5
-        version: 0.8.5(solid-js@1.9.13)
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
@@ -6031,7 +6086,7 @@ importers:
     dependencies:
       '@tanstack/solid-devtools':
         specifier: ^0.8.5
-        version: 0.8.5(solid-js@1.9.13)
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
@@ -6254,7 +6309,7 @@ importers:
     dependencies:
       '@tanstack/solid-devtools':
         specifier: ^0.8.5
-        version: 0.8.5(solid-js@1.9.13)
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
@@ -6404,7 +6459,7 @@ importers:
         version: link:../../../packages/match-sorter-utils
       '@tanstack/solid-devtools':
         specifier: ^0.8.5
-        version: 0.8.5(solid-js@1.9.13)
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
@@ -6476,7 +6531,7 @@ importers:
     dependencies:
       '@tanstack/solid-devtools':
         specifier: ^0.8.5
-        version: 0.8.5(solid-js@1.9.13)
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
@@ -6627,12 +6682,21 @@ importers:
 
   examples/solid/with-tanstack-form:
     dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.5
+        version: 0.8.5(csstype@3.2.3)(solid-js@1.9.13)
       '@tanstack/solid-form':
         specifier: ^1.33.0
         version: 1.33.0(solid-js@1.9.13)
+      '@tanstack/solid-form-devtools':
+        specifier: ^0.2.29
+        version: 0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
       '@tanstack/solid-table':
         specifier: workspace:*
         version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
       solid-js:
         specifier: ^1.9.13
         version: 1.9.13
@@ -8680,12 +8744,18 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.19
+        version: 0.2.19(solid-js@1.9.13)
       '@tanstack/vue-form':
         specifier: ^1.33.0
         version: 1.33.0(vue@3.5.38(typescript@6.0.3))
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
       vue:
         specifier: ^3.5.38
         version: 3.5.38(typescript@6.0.3)
@@ -13715,6 +13785,28 @@ packages:
     peerDependencies:
       solid-js: '>=1.9.7'
 
+  '@tanstack/devtools-utils@0.4.0':
+    resolution: {integrity: sha512-KsGzYhA8L/fCNgyyMyoUy+TKtx+DjNbzWwqH6wXL48Llzo7kvV9RynYJlaO8Qkzwm+NdHXSgsljQNjQ3CKPpZA==}
+    engines: {node: '>=18'}
+    hasBin: true
+    peerDependencies:
+      '@types/react': 19.2.16
+      preact: '>=10.0.0'
+      react: '>=17.0.0'
+      solid-js: '>=1.9.7'
+      vue: '>=3.2.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      preact:
+        optional: true
+      react:
+        optional: true
+      solid-js:
+        optional: true
+      vue:
+        optional: true
+
   '@tanstack/devtools-utils@0.6.0':
     resolution: {integrity: sha512-ebYkWwe/OqzkgQzqGlJ5fyjaNX/CSBKluGOAW9KvhKeAM6+/kQ7+BQGqWQUnXE5CQ6pjtjyyLkYBEQ2vmctaug==}
     engines: {node: '>=18'}
@@ -13759,6 +13851,11 @@ packages:
   '@tanstack/form-core@1.33.0':
     resolution: {integrity: sha512-AV4Pw9Dk4orFsuPBcDssfWMJFs+yMYBae7zZ4oTqrCf4ftNGQKxvrQRZeqKHG6A4TkiLeSvf2kzIjcVkrW7E6w==}
 
+  '@tanstack/form-devtools@0.2.29':
+    resolution: {integrity: sha512-1HLwhmmPKn0/NxI9sXsSn64G/jtcIoPeMUe7AA5/i4MXKk9h2wfpOLRO74XSzbB/sUs3D0oCjoRfWylGSHL0WQ==}
+    peerDependencies:
+      solid-js: '>=1.9.9'
+
   '@tanstack/history@1.162.0':
     resolution: {integrity: sha512-79pf/RkhteYZTRgcR4F9kbk84P2N8rugQJswxfIqovlbRiT3yI7eBE+5QorIrZaOKktsgzRlXh1l/du/xpl4iA==}
     engines: {node: '>=20.19'}
@@ -13785,6 +13882,11 @@ packages:
     engines: {node: '>=18'}
     peerDependencies:
       preact: '>=10.0.0'
+
+  '@tanstack/preact-form@1.30.0':
+    resolution: {integrity: sha512-eV2DqO6Ue6Jgnb1RpPwF4ErPrtV5XwQCqU73+fFwZpl/YeEPoxEaSWdZqYzDR4yb99ViU/RDXffM132g7jpTUw==}
+    peerDependencies:
+      preact: '>10.11.0'
 
   '@tanstack/preact-pacer@0.22.1':
     resolution: {integrity: sha512-nuwU1WSGloLzlzpQMvPpppeyutVjVrSAn9NMM66YJWXmVtfQE7E0z2VQPIZF4n2+jDSi7238QClbiptwn7At/w==}
@@ -13820,6 +13922,11 @@ packages:
       '@types/react-dom': '>=16.8'
       react: '>=16.8'
       react-dom: '>=16.8'
+
+  '@tanstack/react-form-devtools@0.2.29':
+    resolution: {integrity: sha512-Dn0ohhUZaFvgwqZkPhJID1uDyThtbXE+lCRobOK1Vphc4vZp0+uashWHuRLF9CC+Eu0zugcWEeoU/41ihwjfsw==}
+    peerDependencies:
+      react: ^17.0.0 || ^18.0.0 || ^19.0.0
 
   '@tanstack/react-form@1.33.0':
     resolution: {integrity: sha512-unaee+VS4MvKo+s1dmgGUXI4902VeAhuaUbKsQbhFe3MceOpB3JpAUGCDpyzjQPXVFkFY0COKfLrUNX2XZYW4g==}
@@ -13906,6 +14013,12 @@ packages:
 
   '@tanstack/solid-devtools@0.8.5':
     resolution: {integrity: sha512-nWvLVjO5Grwf1zyZezcF2mwJKAHiz8PhQM+wHy28Isi4alPmAo41dPlbadZu0uRnvoUi/PUX1BLseOKjnja36A==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: '>=1.9.7'
+
+  '@tanstack/solid-form-devtools@0.2.29':
+    resolution: {integrity: sha512-7q/Xm7MrtO2DUOoPt63JkLJTgPnfd3ENCwpcvWtxm+/Cv7HJjEUbqLMzjXiSUV7U01gibg1avl2TnaBwj8G11w==}
     engines: {node: '>=18'}
     peerDependencies:
       solid-js: '>=1.9.7'
@@ -23844,6 +23957,14 @@ snapshots:
     transitivePeerDependencies:
       - csstype
 
+  '@tanstack/devtools-utils@0.4.0(@types/react@19.2.16)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))':
+    optionalDependencies:
+      '@types/react': 19.2.16
+      preact: 10.29.2
+      react: 19.2.7
+      solid-js: 1.9.13
+      vue: 3.5.38(typescript@6.0.3)
+
   '@tanstack/devtools-utils@0.6.0(@angular/core@22.0.0(@angular/compiler@22.0.0)(rxjs@7.8.2))(@types/react@19.2.16)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(svelte@5.56.2(@typescript-eslint/types@8.62.0))(vue@3.5.38(typescript@6.0.3))':
     optionalDependencies:
       '@angular/core': 22.0.0(@angular/compiler@22.0.0)(rxjs@7.8.2)
@@ -23902,6 +24023,22 @@ snapshots:
       '@tanstack/pacer-lite': 0.1.1
       '@tanstack/store': 0.11.0
 
+  '@tanstack/form-devtools@0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/devtools-ui': 0.5.2(csstype@3.2.3)(solid-js@1.9.13)
+      '@tanstack/devtools-utils': 0.4.0(@types/react@19.2.16)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
+      '@tanstack/form-core': 1.33.0
+      clsx: 2.1.1
+      dayjs: 1.11.21
+      goober: 2.1.19(csstype@3.2.3)
+      solid-js: 1.9.13
+    transitivePeerDependencies:
+      - '@types/react'
+      - csstype
+      - preact
+      - react
+      - vue
+
   '@tanstack/history@1.162.0': {}
 
   '@tanstack/intent@0.3.2':
@@ -23924,7 +24061,7 @@ snapshots:
       '@tanstack/devtools-event-client': 0.4.3
       '@tanstack/store': 0.11.0
 
-  '@tanstack/preact-devtools@0.10.5(preact@10.29.2)(solid-js@1.9.13)':
+  '@tanstack/preact-devtools@0.10.5(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)':
     dependencies:
       '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.13)
       preact: 10.29.2
@@ -23933,6 +24070,12 @@ snapshots:
       - csstype
       - solid-js
       - utf-8-validate
+
+  '@tanstack/preact-form@1.30.0(preact@10.29.2)':
+    dependencies:
+      '@tanstack/form-core': 1.33.0
+      '@tanstack/preact-store': 0.13.1(preact@10.29.2)
+      preact: 10.29.2
 
   '@tanstack/preact-pacer@0.22.1(preact@10.29.2)':
     dependencies:
@@ -23964,6 +24107,19 @@ snapshots:
   '@tanstack/query-devtools@5.101.1':
     optional: true
 
+  '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)':
+    dependencies:
+      '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.13)
+      '@types/react': 19.2.16
+      '@types/react-dom': 19.2.3(@types/react@19.2.16)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
+    transitivePeerDependencies:
+      - bufferutil
+      - csstype
+      - solid-js
+      - utf-8-validate
+
   '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.6(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)':
     dependencies:
       '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.13)
@@ -23977,18 +24133,17 @@ snapshots:
       - solid-js
       - utf-8-validate
 
-  '@tanstack/react-devtools@0.10.5(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)':
+  '@tanstack/react-form-devtools@0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))':
     dependencies:
-      '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.13)
-      '@types/react': 19.2.16
-      '@types/react-dom': 19.2.3(@types/react@19.2.16)
+      '@tanstack/devtools-utils': 0.4.0(@types/react@19.2.16)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
+      '@tanstack/form-devtools': 0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
       react: 19.2.7
-      react-dom: 19.2.7(react@19.2.7)
     transitivePeerDependencies:
-      - bufferutil
+      - '@types/react'
       - csstype
+      - preact
       - solid-js
-      - utf-8-validate
+      - vue
 
   '@tanstack/react-form@1.33.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
@@ -24102,7 +24257,7 @@ snapshots:
       - vite-plugin-solid
       - webpack
 
-  '@tanstack/solid-devtools@0.8.5(solid-js@1.9.13)':
+  '@tanstack/solid-devtools@0.8.5(csstype@3.2.3)(solid-js@1.9.13)':
     dependencies:
       '@tanstack/devtools': 0.12.2(csstype@3.2.3)(solid-js@1.9.13)
       solid-js: 1.9.13
@@ -24110,6 +24265,18 @@ snapshots:
       - bufferutil
       - csstype
       - utf-8-validate
+
+  '@tanstack/solid-form-devtools@0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/devtools-utils': 0.4.0(@types/react@19.2.16)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
+      '@tanstack/form-devtools': 0.2.29(@types/react@19.2.16)(csstype@3.2.3)(preact@10.29.2)(react@19.2.7)(solid-js@1.9.13)(vue@3.5.38(typescript@6.0.3))
+      solid-js: 1.9.13
+    transitivePeerDependencies:
+      - '@types/react'
+      - csstype
+      - preact
+      - react
+      - vue
 
   '@tanstack/solid-form@1.33.0(solid-js@1.9.13)':
     dependencies:

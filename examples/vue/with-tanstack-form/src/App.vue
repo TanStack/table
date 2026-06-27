@@ -1,245 +1,350 @@
 <script setup lang="ts">
-import {
-  FlexRender,
-  createColumnHelper,
-  createPaginatedRowModel,
-  rowPaginationFeature,
-  tableFeatures,
-  useTable,
-} from '@tanstack/vue-table'
-import { ref } from 'vue'
+import { useForm } from '@tanstack/vue-form'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
+import { ref, watch } from 'vue'
+import FormStateIndicator from './FormStateIndicator.vue'
+import NumberField from './NumberField.vue'
+import RowSubmitTableRow from './RowSubmitTableRow.vue'
+import SelectField from './SelectField.vue'
+import SubmitButton from './SubmitButton.vue'
+import TextField from './TextField.vue'
 import { makeData } from './makeData'
-import type { Person } from './makeData'
+import { formSchema } from './schema'
+import { createAppColumnHelper, useAppTable } from './table'
+import type { FormData, FormRow } from './schema'
 
-const features = tableFeatures({
-  rowPaginationFeature,
-  paginatedRowModel: createPaginatedRowModel(),
+const columnHelper = createAppColumnHelper<FormRow>()
+
+const blankRow = (): FormRow => ({
+  firstName: '',
+  lastName: '',
+  age: 0,
+  visits: 0,
+  progress: 0,
+  status: 'single',
 })
 
-const columnHelper = createColumnHelper<typeof features, Person>()
+const fullData = ref<Array<FormRow>>(makeData(100))
 
-const INITIAL_PAGE_INDEX = 0
+const fullTableForm = useForm({
+  defaultValues: {
+    data: fullData.value,
+  } satisfies FormData,
+  onSubmit: ({ value }: { value: FormData }) => {
+    alert(
+      `Submitted ${value.data.length} records!\n\nFirst record: ${JSON.stringify(value.data[0], null, 2)}`,
+    )
+  },
+  validators: {
+    onChange: formSchema,
+  },
+})
 
-const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
-const pageSizes = [10, 20, 30, 40, 50]
-const data = ref(makeData(1_000))
-
-const columns = ref(
-  columnHelper.columns([
-    columnHelper.group({
-      header: 'Name',
-      footer: (props) => props.column.id,
-      columns: columnHelper.columns([
-        columnHelper.accessor('firstName', {
-          cell: (info) => info.getValue(),
-          footer: (props) => props.column.id,
-        }),
-        columnHelper.accessor((row) => row.lastName, {
-          id: 'lastName',
-          cell: (info) => info.getValue(),
-          header: () => 'Last Name',
-          footer: (props) => props.column.id,
-        }),
-      ]),
-    }),
-    columnHelper.group({
-      header: 'Info',
-      footer: (props) => props.column.id,
-      columns: columnHelper.columns([
-        columnHelper.accessor('age', {
-          header: () => 'Age',
-          footer: (props) => props.column.id,
-        }),
-        columnHelper.group({
-          header: 'More Info',
-          columns: columnHelper.columns([
-            columnHelper.accessor('visits', {
-              header: () => 'Visits',
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.accessor('status', {
-              header: 'Status',
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.accessor('progress', {
-              header: 'Profile Progress',
-              footer: (props) => props.column.id,
-            }),
-          ]),
-        }),
-      ]),
-    }),
-  ]),
+watch(
+  fullData,
+  (data) => {
+    fullTableForm.reset({ data })
+  },
+  { flush: 'sync' },
 )
 
-const table = useTable({
-  features,
-  data,
-  get columns() {
-    return columns.value
-  },
+const fullColumns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('lastName', {
+    header: 'Last Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: 'Visits',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
+
+const fullTable = useAppTable({
+  key: 'with-tanstack-form-full-table',
+  columns: fullColumns,
+  data: fullData,
   debugTable: true,
 })
 
-const refreshData = () => {
-  data.value = makeData(1_000)
+useTanStackTableDevtools(fullTable)
+
+function refreshFullData() {
+  fullData.value = makeData(100)
 }
 
-const stressTest = () => {
-  data.value = makeData(200_000)
+function stressTest() {
+  fullData.value = makeData(1_000_000)
 }
 
-function handleGoToPage(e: any) {
-  const page = e.target.value ? Number(e.target.value) - 1 : 0
-  goToPageNumber.value = page + 1
-  table.setPageIndex(page)
+function addRow() {
+  fullData.value = [blankRow(), ...fullTableForm.store.get().values.data]
+  fullTable.firstPage()
 }
 
-function handlePageSizeChange(e: any) {
-  table.setPageSize(Number(e.target.value))
+const rowData = ref<Array<FormRow>>(makeData(100))
+
+const rowColumns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('lastName', {
+    header: 'Last Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: 'Visits',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.display({
+    id: 'save',
+    header: '',
+    cell: () => null,
+  }),
+])
+
+const rowTable = useAppTable({
+  key: 'with-tanstack-form-row-submit',
+  columns: rowColumns,
+  data: rowData,
+  debugTable: true,
+})
+
+useTanStackTableDevtools(rowTable)
+
+function refreshRowData() {
+  rowData.value = makeData(100)
+}
+
+function saveRow(originalRow: FormRow, value: FormRow) {
+  rowData.value = rowData.value.map((row) => {
+    return row === originalRow ? value : row
+  })
+}
+
+function handleSubmit(event: Event) {
+  event.preventDefault()
+  event.stopPropagation()
+  fullTableForm.handleSubmit()
+}
+
+function getSortTitle(column: ReturnType<typeof fullTable.getAllColumns>[number]) {
+  if (!column.getCanSort()) return undefined
+
+  const nextOrder = column.getNextSortingOrder()
+  if (nextOrder === 'asc') return 'Sort ascending'
+  if (nextOrder === 'desc') return 'Sort descending'
+
+  return 'Clear sort'
 }
 </script>
 
 <template>
   <div class="demo-root">
-    <div class="button-row">
-      <button @click="refreshData" class="demo-button">Regenerate Data</button>
-      <button @click="stressTest" class="demo-button">
-        Stress Test (200k rows)
-      </button>
-    </div>
+    <section class="example-section">
+      <h2 class="section-title">Single form around the table</h2>
+      <form @submit="handleSubmit">
+        <div class="form-actions">
+          <FormStateIndicator :form="fullTableForm" />
+          <SubmitButton :form="fullTableForm" label="Save All Changes" />
+          <button
+            type="button"
+            class="demo-button success-action"
+            @click="addRow"
+          >
+            Add Row
+          </button>
+          <button
+            type="button"
+            class="demo-button secondary-action"
+            @click="refreshFullData"
+          >
+            Regenerate Data
+          </button>
+          <button
+            type="button"
+            class="demo-button secondary-action"
+            @click="stressTest"
+          >
+            Stress Test (1M rows)
+          </button>
+        </div>
+
+        <component :is="fullTable.AppTable">
+          <div class="spacer-sm" />
+          <div class="scroll-container">
+            <table>
+              <thead>
+                <tr
+                  v-for="headerGroup in fullTable.getHeaderGroups()"
+                  :key="headerGroup.id"
+                >
+                  <component
+                    :is="fullTable.AppHeader"
+                    v-for="header in headerGroup.headers"
+                    :key="header.id"
+                    :header="header"
+                    v-slot="{ header: appHeader }"
+                  >
+                    <th :colSpan="appHeader.colSpan">
+                      <div
+                        v-if="!appHeader.isPlaceholder"
+                        :class="
+                          appHeader.column.getCanSort()
+                            ? 'sortable-header'
+                            : undefined
+                        "
+                        :title="getSortTitle(appHeader.column)"
+                        @click="
+                          appHeader.column.getToggleSortingHandler()?.($event)
+                        "
+                      >
+                        <component :is="appHeader.FlexRender" />
+                        <component :is="appHeader.SortIndicator" />
+                        <component :is="appHeader.ColumnFilter" />
+                      </div>
+                    </th>
+                  </component>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="row in fullTable.getRowModel().rows" :key="row.id">
+                  <td v-for="cell in row.getAllCells()" :key="cell.id">
+                    <TextField
+                      v-if="cell.column.id === 'firstName'"
+                      :form="fullTableForm"
+                      :name="`data[${row.index}].firstName`"
+                    />
+                    <TextField
+                      v-else-if="cell.column.id === 'lastName'"
+                      :form="fullTableForm"
+                      :name="`data[${row.index}].lastName`"
+                    />
+                    <NumberField
+                      v-else-if="cell.column.id === 'age'"
+                      :form="fullTableForm"
+                      :name="`data[${row.index}].age`"
+                    />
+                    <NumberField
+                      v-else-if="cell.column.id === 'visits'"
+                      :form="fullTableForm"
+                      :name="`data[${row.index}].visits`"
+                    />
+                    <SelectField
+                      v-else-if="cell.column.id === 'status'"
+                      :form="fullTableForm"
+                      :name="`data[${row.index}].status`"
+                    />
+                    <NumberField
+                      v-else-if="cell.column.id === 'progress'"
+                      :form="fullTableForm"
+                      :name="`data[${row.index}].progress`"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <component :is="fullTable.PaginationControls" />
+          <component :is="fullTable.RowCount" />
+        </component>
+      </form>
+    </section>
+
     <div class="spacer-md" />
-    <table>
-      <thead>
-        <tr
-          v-for="headerGroup in table.getHeaderGroups()"
-          :key="headerGroup.id"
-        >
-          <th
-            v-for="header in headerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
-          >
-            <FlexRender v-if="!header.isPlaceholder" :header="header" />
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getAllCells()" :key="cell.id">
-            <FlexRender :cell="cell" />
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr
-          v-for="footerGroup in table.getFooterGroups()"
-          :key="footerGroup.id"
-        >
-          <th
-            v-for="header in footerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
-          >
-            <FlexRender v-if="!header.isPlaceholder" :footer="header" />
-          </th>
-        </tr>
-      </tfoot>
-    </table>
-    <div>
-      <div class="controls">
+
+    <section class="example-section">
+      <h2 class="section-title">Form submission per row</h2>
+      <div class="form-actions">
         <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(0)"
-          :disabled="!table.getCanPreviousPage()"
+          type="button"
+          class="demo-button secondary-action"
+          @click="refreshRowData"
         >
-          «
+          Regenerate Data
         </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.previousPage()"
-          :disabled="!table.getCanPreviousPage()"
-        >
-          ‹
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.nextPage()"
-          :disabled="!table.getCanNextPage()"
-        >
-          ›
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
-          :disabled="!table.getCanNextPage()"
-        >
-          »
-        </button>
-        <span class="inline-controls">
-          <div>Page</div>
-          <strong>
-            {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }}
-            of
-            {{ table.getPageCount().toLocaleString() }}
-          </strong>
-        </span>
-        <span class="inline-controls">
-          | Go to page:
-          <input
-            type="number"
-            :value="goToPageNumber"
-            @change="handleGoToPage"
-            class="page-size-input"
-          />
-        </span>
-        <select
-          :value="table.atoms.pagination.get().pageSize"
-          @change="handlePageSizeChange"
-        >
-          <option
-            :key="pageSize"
-            :value="pageSize"
-            v-for="pageSize in pageSizes"
-          >
-            Show {{ pageSize }}
-          </option>
-        </select>
       </div>
-      <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
-    </div>
-    <div class="spacer-sm" />
+
+      <component :is="rowTable.AppTable">
+        <div class="spacer-sm" />
+        <div class="scroll-container">
+          <table>
+            <thead>
+              <tr
+                v-for="headerGroup in rowTable.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <component
+                  :is="rowTable.AppHeader"
+                  v-for="header in headerGroup.headers"
+                  :key="header.id"
+                  :header="header"
+                  v-slot="{ header: appHeader }"
+                >
+                  <th :colSpan="appHeader.colSpan">
+                    <div
+                      v-if="!appHeader.isPlaceholder"
+                      :class="
+                        appHeader.column.getCanSort()
+                          ? 'sortable-header'
+                          : undefined
+                      "
+                      :title="getSortTitle(appHeader.column)"
+                      @click="
+                        appHeader.column.getToggleSortingHandler()?.($event)
+                      "
+                    >
+                      <component :is="appHeader.FlexRender" />
+                      <component :is="appHeader.SortIndicator" />
+                      <component :is="appHeader.ColumnFilter" />
+                    </div>
+                  </th>
+                </component>
+              </tr>
+            </thead>
+            <tbody>
+              <RowSubmitTableRow
+                v-for="row in rowTable.getRowModel().rows"
+                :key="row.id"
+                :row="row"
+                :save="saveRow"
+              />
+            </tbody>
+          </table>
+        </div>
+
+        <component :is="rowTable.PaginationControls" />
+        <component :is="rowTable.RowCount" />
+      </component>
+    </section>
   </div>
 </template>
-
-<style>
-html {
-  font-family: sans-serif;
-  font-size: 14px;
-}
-
-table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  border: 1px solid lightgray;
-}
-
-tbody {
-  border-bottom: 1px solid lightgray;
-}
-
-th {
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  padding: 2px 4px;
-}
-
-tfoot {
-  color: gray;
-}
-
-tfoot th {
-  font-weight: normal;
-}
-</style>

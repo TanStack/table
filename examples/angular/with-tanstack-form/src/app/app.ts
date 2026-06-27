@@ -1,114 +1,209 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
+  effect,
   signal,
+  untracked,
 } from '@angular/core'
+import { NgComponentOutlet } from '@angular/common'
 import {
   FlexRender,
-  columnFilteringFeature,
-  createColumnHelper,
-  createFilteredRowModel,
-  createPaginatedRowModel,
-  filterFns,
-  injectTable,
-  rowPaginationFeature,
-  tableFeatures,
+  TanStackTable,
+  TanStackTableCell,
+  TanStackTableHeader,
 } from '@tanstack/angular-table'
-import { injectForm, injectStore } from '@tanstack/angular-form'
-import { z } from 'zod'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
+import { TanStackField, injectForm, injectStore } from '@tanstack/angular-form'
 import { makeData } from './makeData'
-import type { Person } from './makeData'
+import { RowSubmitTableRow } from './row-submit-table-row'
+import { blankRow, formSchema } from './schema'
+import { createAppColumnHelper, injectAppTable } from './table'
+import type { FormData, FormRow } from './schema'
+import type { DeepKeys } from '@tanstack/angular-form'
 
-// Define table features
-const features = tableFeatures({
-  rowPaginationFeature,
-  columnFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
-  paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
-})
-const columnHelper = createColumnHelper<typeof features, Person>()
-
-// Zod validation schema for a person
-const personSchema = z.object({
-  firstName: z.string().min(1, 'First name is required'),
-  lastName: z.string().min(1, 'Last name is required'),
-  age: z
-    .number()
-    .min(0, 'Age must be positive')
-    .max(150, 'Age must be realistic'),
-  visits: z.number().min(0, 'Visits must be positive'),
-  progress: z
-    .number()
-    .min(0, 'Progress must be 0-100')
-    .max(100, 'Progress must be 0-100'),
-  status: z.enum(['relationship', 'complicated', 'single']),
-})
+const columnHelper = createAppColumnHelper<FormRow>()
 
 const columns = columnHelper.columns([
-  columnHelper.accessor('firstName', { header: 'First Name' }),
-  columnHelper.accessor('lastName', { header: 'Last Name' }),
-  columnHelper.accessor('age', { header: 'Age' }),
-  columnHelper.accessor('visits', { header: 'Visits' }),
-  columnHelper.accessor('status', { header: 'Status' }),
-  columnHelper.accessor('progress', { header: 'Profile Progress' }),
+  columnHelper.accessor('firstName', {
+    header: 'First Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('lastName', {
+    header: 'Last Name',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('age', {
+    header: 'Age',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('visits', {
+    header: 'Visits',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('status', {
+    header: 'Status',
+    footer: (props) => props.column.id,
+  }),
+  columnHelper.accessor('progress', {
+    header: 'Profile Progress',
+    footer: (props) => props.column.id,
+  }),
+])
+
+const rowColumns = columnHelper.columns([
+  ...columns,
+  columnHelper.display({
+    id: 'save',
+    header: '',
+    cell: () => null,
+  }),
 ])
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRender],
+  imports: [
+    FlexRender,
+    NgComponentOutlet,
+    RowSubmitTableRow,
+    TanStackField,
+    TanStackTable,
+    TanStackTableCell,
+    TanStackTableHeader,
+  ],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  // Create table using form state as data source.
-  readonly data = signal(makeData(100))
-  readonly table = injectTable<typeof features, Person>(() => ({
-    features,
+  readonly data = signal<Array<FormRow>>(makeData(100))
+  readonly rowData = signal<Array<FormRow>>(makeData(100))
+
+  readonly fullTableForm = injectForm({
+    defaultValues: {
+      data: this.data(),
+    },
+    validators: {
+      onChange: formSchema,
+    },
+    onSubmit: ({ value }) => {
+      alert(
+        `Submitted ${value.data.length} records!\n\nFirst record: ${JSON.stringify(value.data[0], null, 2)}`,
+      )
+    },
+  })
+
+  readonly fullFormState = injectStore(this.fullTableForm, (state) => ({
+    canSubmit: state.canSubmit,
+    isDirty: state.isDirty,
+    isSubmitting: state.isSubmitting,
+    isValid: state.isValid,
+  }))
+
+  readonly table = injectAppTable<FormRow>(() => ({
+    key: 'with-tanstack-form-full-table',
     columns,
     data: this.data(),
     debugTable: true,
   }))
-  readonly validation = computed(() =>
-    z.array(personSchema).safeParse(this.data()),
-  )
-  stringifiedState() {
-    return JSON.stringify(this.table.store.get(), null, 2)
+
+  readonly rowTable = injectAppTable<FormRow>(() => ({
+    key: 'with-tanstack-form-row-submit',
+    columns: rowColumns,
+    data: this.rowData(),
+    debugTable: true,
+  }))
+
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+    injectTanStackTableDevtools(() => ({
+      table: this.rowTable,
+    }))
+
+    effect(() => {
+      const data = this.data()
+      untracked(() => this.fullTableForm.reset({ data }))
+    })
   }
 
-  update(rowIndex: number, key: keyof Person, event: Event) {
-    const value = (event.target as HTMLInputElement | HTMLSelectElement).value
-    this.data.update((rows) =>
-      rows.map((row, index) =>
-        index === rowIndex
-          ? {
-              ...row,
-              [key]:
-                key === 'age' || key === 'visits' || key === 'progress'
-                  ? Number(value)
-                  : value,
-            }
-          : row,
-      ),
+  refreshData = () => {
+    this.data.set(makeData(100))
+  }
+
+  stressTest = () => {
+    this.data.set(makeData(1_000_000))
+  }
+
+  refreshRowData = () => {
+    this.rowData.set(makeData(100))
+  }
+
+  addRow() {
+    this.data.set([blankRow(), ...this.fullTableForm.state.values.data])
+    this.table.firstPage()
+  }
+
+  saveRow = (originalRow: FormRow, value: FormRow) => {
+    this.rowData.update((rows) =>
+      rows.map((row) => (row === originalRow ? value : row)),
     )
   }
-  addRow() {
-    this.data.update((rows) => [
-      ...rows,
-      {
-        firstName: '',
-        lastName: '',
-        age: 0,
-        visits: 0,
-        progress: 0,
-        status: 'single',
-      },
-    ])
+
+  submitFullTable(event: Event) {
+    event.preventDefault()
+    event.stopPropagation()
+    this.fullTableForm.handleSubmit()
   }
-  refreshData = () => this.data.set(makeData(100))
-  stressTest = () => this.data.set(makeData(1_000_000))
-  submit() {
-    alert(`Submitted ${this.data().length} records!`)
+
+  fullFieldName(rowIndex: number, key: keyof FormRow): DeepKeys<FormData> {
+    return `data[${rowIndex}].${key}`
+  }
+
+  textValue(event: Event) {
+    return (event.target as HTMLInputElement).value
+  }
+
+  numberValue(event: Event) {
+    return Number((event.target as HTMLInputElement).value)
+  }
+
+  statusValue(event: Event) {
+    return (event.target as HTMLSelectElement).value as FormRow['status']
+  }
+
+  showErrors(meta: {
+    isBlurred: boolean
+    isTouched: boolean
+    errors: ReadonlyArray<unknown>
+  }) {
+    return (meta.isTouched || meta.isBlurred) && meta.errors.length > 0
+  }
+
+  errorText(errors: ReadonlyArray<unknown>) {
+    return errors.map((error) => this.getErrorMessage(error)).join(', ')
+  }
+
+  getErrorMessage(error: unknown) {
+    if (typeof error === 'string') return error
+
+    if (error && typeof error === 'object' && 'message' in error) {
+      const message = error.message
+      if (typeof message === 'string') return message
+    }
+
+    return String(error)
+  }
+
+  getSortTitle(column: {
+    getCanSort: () => boolean
+    getNextSortingOrder: () => false | 'asc' | 'desc'
+  }) {
+    if (!column.getCanSort()) return undefined
+
+    const nextOrder = column.getNextSortingOrder()
+    if (nextOrder === 'asc') return 'Sort ascending'
+    if (nextOrder === 'desc') return 'Sort descending'
+
+    return 'Clear sort'
   }
 }

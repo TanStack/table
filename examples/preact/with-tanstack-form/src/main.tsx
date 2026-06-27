@@ -1,17 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { TanStackDevtools } from '@tanstack/react-devtools'
+import { render } from 'preact'
+import { useCallback, useEffect, useMemo, useState } from 'preact/hooks'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
-} from '@tanstack/react-table-devtools'
+} from '@tanstack/preact-table-devtools'
 import { z } from 'zod'
 import { makeData } from './makeData'
 import { useAppForm } from './form'
 import { createAppColumnHelper, useAppTable } from './table'
 import type { appFeatures } from './table'
-import type { Row } from '@tanstack/react-table'
+import type { Row } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 import './index.css'
 
@@ -57,7 +57,7 @@ function App() {
 
 function FullTableFormExample() {
   // Keep `data` typed as FormRow[] (not Person[]) so form field paths do not carry recursive `subRows` (TS2589).
-  const [data, setData] = React.useState<Array<FormRow>>(() => makeData(100))
+  const [data, setData] = useState<Array<FormRow>>(() => makeData(100))
 
   const form = useAppForm({
     defaultValues: {
@@ -73,7 +73,7 @@ function FullTableFormExample() {
     },
   })
 
-  const columns = React.useMemo(
+  const columns = useMemo(
     () =>
       columnHelper.columns([
         columnHelper.accessor('firstName', {
@@ -286,9 +286,9 @@ function FullTableFormExample() {
 }
 
 function RowSubmitFormExample() {
-  const [data, setData] = React.useState<Array<FormRow>>(() => makeData(100))
+  const [data, setData] = useState<Array<FormRow>>(() => makeData(100))
 
-  const columns = React.useMemo(
+  const columns = useMemo(
     () =>
       columnHelper.columns([
         columnHelper.accessor('firstName', {
@@ -340,7 +340,7 @@ function RowSubmitFormExample() {
     setData(makeData(100))
   }
 
-  const saveRow = React.useCallback((originalRow: FormRow, value: FormRow) => {
+  const saveRow = useCallback((originalRow: FormRow, value: FormRow) => {
     setData((old) =>
       old.map((row) => {
         return row === originalRow ? value : row
@@ -450,7 +450,7 @@ function RowSubmitTableRow({
     },
   })
 
-  React.useEffect(() => {
+  useEffect(() => {
     form.reset(row.original)
   }, [form, row.original])
 
@@ -534,9 +534,10 @@ function RowSubmitTableRow({
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-ReactDOM.createRoot(rootElement).render(
-  <React.StrictMode>
+render(
+  <>
     <App />
     <TanStackDevtools plugins={[tableDevtoolsPlugin(), formDevtoolsPlugin()]} />
-  </React.StrictMode>,
+  </>,
+  rootElement,
 )

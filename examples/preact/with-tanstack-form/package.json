@@ -1,0 +1,29 @@
+{
+  "name": "tanstack-preact-table-example-with-tanstack-form",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src",
+    "test:types": "tsc"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/preact-devtools": "^0.10.5",
+    "@tanstack/preact-form": "^1.30.0",
+    "@tanstack/preact-pacer": "^0.22.1",
+    "@tanstack/preact-table": "^9.0.0-beta.21",
+    "@tanstack/preact-table-devtools": "^9.0.0-beta.21",
+    "@tanstack/react-form-devtools": "^0.2.29",
+    "preact": "^10.29.2",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@preact/preset-vite": "^2.10.5",
+    "typescript": "6.0.3",
+    "vite": "^8.1.0"
+  }
+}
