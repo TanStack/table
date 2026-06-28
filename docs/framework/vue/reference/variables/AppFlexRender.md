@@ -52,4 +52,4 @@ const AppFlexRender: DefineComponent<ExtractPropTypes<{
 }, any>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:229](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L229)
+Defined in: [packages/vue-table/src/createTableHook.ts:300](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L300)

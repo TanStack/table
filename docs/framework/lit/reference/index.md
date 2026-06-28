@@ -9,6 +9,10 @@ title: "@tanstack/lit-table"
 
 - [TableController](classes/TableController.md)
 
+## Interfaces
+
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
+
 ## Type Aliases
 
 - [AppCellContext](type-aliases/AppCellContext.md)

@@ -9,7 +9,7 @@ title: AppColumnDefTemplate
 type AppColumnDefTemplate<TProps> = string | (props) => any;
 ```
 
-Defined in: [createTableHook.tsx:79](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L79)
+Defined in: [createTableHook.tsx:83](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L83)
 
 Template type for column definitions that can be a string or a function.
 

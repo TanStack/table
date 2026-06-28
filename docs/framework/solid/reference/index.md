@@ -13,6 +13,7 @@ title: "@tanstack/solid-table"
 - [AppHeaderProps](interfaces/AppHeaderProps.md)
 - [AppTableComponent](interfaces/AppTableComponent.md)
 - [AppTableProps](interfaces/AppTableProps.md)
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
 
 ## Type Aliases
 

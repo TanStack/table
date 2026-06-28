@@ -9,7 +9,7 @@ title: CreateTableHookOptions
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [createTableHook.tsx:242](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L242)
+Defined in: [createTableHook.tsx:249](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L249)
 
 Options for creating a table hook with pre-bound components and default table options.
 Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initialState'.
@@ -32,6 +32,18 @@ Use `useCellContext()` inside these components.
 { TextCell, NumberCell, DateCell, CurrencyCell }
 ```
 
+### cellContext?
+
+```ts
+optional cellContext: Context<Cell<any, any, any>>;
+```
+
+A custom React context for the cell instance, used inside your `cellComponents`.
+
+#### See
+
+CreateTableHookOptions.tableContext
+
 ### headerComponents?
 
 ```ts
@@ -48,6 +60,19 @@ Use `useHeaderContext()` inside these components.
 { SortIndicator, ColumnFilter, ResizeHandle }
 ```
 
+### headerContext?
+
+```ts
+optional headerContext: Context<Header<any, any, any>>;
+```
+
+A custom React context for the header instance, used inside your
+`headerComponents` (and footer components).
+
+#### See
+
+CreateTableHookOptions.tableContext
+
 ### tableComponents?
 
 ```ts
@@ -63,6 +88,17 @@ Use `useTableContext()` inside these components.
 ```ts
 { PaginationControls, GlobalFilter, RowCount }
 ```
+
+### tableContext?
+
+```ts
+optional tableContext: Context<ReactTable<any, any>>;
+```
+
+A custom React context for the table instance (read with `useContext` inside
+your `tableComponents`). Optional: defaults to a shared module-scoped context.
+Only pass your own (created via `createContext`) when you need to isolate this
+table's context from other tables, e.g. when nesting one table inside another.
 
 ## Type Parameters
 
