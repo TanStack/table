@@ -296,16 +296,16 @@ export const filterFn_inNumberRange = Object.assign(
 /**
  * Keeps rows whose scalar column value equals at least one filter value.
  */
-export const filterFn_arrHas = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: Array<unknown>,
-) => {
-  return filterValue.some((val) => row.getValue<unknown>(columnId) === val)
-}
+export const filterFn_arrHas = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: Array<unknown>,
+  ) => {
+    return filterValue.some((val) => row.getValue<unknown>(columnId) === val)
+  },
+  { autoRemove: (val: any) => testFalsy(val) || !val?.length },
+)
 
 /**
  * Keeps rows whose array or string column value includes at least one filter value.

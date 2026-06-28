@@ -563,4 +563,26 @@ describe('Filter Functions', () => {
       })
     })
   })
+
+  describe('Array Filters', () => {
+    describe('filterFns.arrHas.autoRemove', () => {
+      const autoRemove = filterFns.arrHas.autoRemove!
+
+      it('should auto-remove when the filter value is undefined', () => {
+        expect(autoRemove(undefined)).toBe(true)
+      })
+      it('should auto-remove when the filter value is null', () => {
+        expect(autoRemove(null)).toBe(true)
+      })
+      it('should auto-remove when the filter value is an empty string', () => {
+        expect(autoRemove('')).toBe(true)
+      })
+      it('should auto-remove when the filter value is an empty array', () => {
+        expect(autoRemove([])).toBe(true)
+      })
+      it('should NOT auto-remove when the filter value is a non-empty array', () => {
+        expect(autoRemove(['a'])).toBe(false)
+      })
+    })
+  })
 })
