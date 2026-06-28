@@ -11,12 +11,7 @@ import {
   tableFeatures,
 } from '@tanstack/vue-table'
 import { computed, defineComponent, h } from 'vue'
-import type {
-  CellData,
-  Header,
-  RowData,
-  VueTable,
-} from '@tanstack/vue-table'
+import type { CellData, Header, RowData, VueTable } from '@tanstack/vue-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
@@ -75,10 +70,7 @@ const ColumnFilter = defineComponent({
               onInput: (event: Event) => {
                 const nextValue = (event.target as HTMLInputElement).value
                 header.column.setFilterValue(
-                  (old: [number, number] | undefined) => [
-                    nextValue,
-                    old?.[1],
-                  ],
+                  (old: [number, number] | undefined) => [nextValue, old?.[1]],
                 )
               },
             }),
@@ -90,10 +82,7 @@ const ColumnFilter = defineComponent({
               onInput: (event: Event) => {
                 const nextValue = (event.target as HTMLInputElement).value
                 header.column.setFilterValue(
-                  (old: [number, number] | undefined) => [
-                    old?.[0],
-                    nextValue,
-                  ],
+                  (old: [number, number] | undefined) => [old?.[0], nextValue],
                 )
               },
             }),

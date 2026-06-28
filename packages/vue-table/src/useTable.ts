@@ -7,7 +7,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 import type { MaybeRef, VNode } from 'vue'
 
@@ -47,13 +46,7 @@ function getReactiveOptionDeps<
 export type VueTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Omit<Table<TFeatures, TData>, 'store'> & {
-  /**
-   * @deprecated Prefer `table.atoms.<slice>.get()` for slice snapshots, or
-   * `table.Subscribe` for explicit subscriptions. `table.store.state` is a
-   * current-value snapshot and is easy to misuse in render code.
-   */
-  readonly store: Table<TFeatures, TData>['store']
+> = Table<TFeatures, TData> & {
   /** Creates a reactive render boundary. The child function reads the table
    * atoms it needs, so Vue only tracks those atom reads.
    */
@@ -173,7 +166,7 @@ export function useTable<
   table.Subscribe = (props: {
     children: (atoms: Table<TFeatures, TData>['atoms']) => VNode | Array<VNode>
   }) => {
-    return props.children(table.atoms)
+    return props.children(table.atoms as Table<TFeatures, TData>['atoms'])
   }
 
   return table

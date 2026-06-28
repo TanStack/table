@@ -110,6 +110,7 @@
           "children": [
             { "label": "Table State", "to": "framework/react/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/react/guide/composable-tables" },
+            { "label": "Table Context", "to": "framework/react/guide/table-context" },
             { "label": "Custom Plugins", "to": "framework/react/guide/custom-features" }
           ]
         },
@@ -118,6 +119,7 @@
           "children": [
             { "label": "Table State", "to": "framework/preact/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/preact/guide/composable-tables" },
+            { "label": "Table Context", "to": "framework/preact/guide/table-context" },
             { "label": "Custom Plugins", "to": "framework/preact/guide/custom-features" }
           ]
         },

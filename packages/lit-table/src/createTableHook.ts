@@ -355,6 +355,76 @@ export type AppLitTable<
     FlexRender: typeof FlexRender
   }
 
+export interface CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, ComponentType<any>>,
+  TCellComponents extends Record<string, ComponentType<any>>,
+  THeaderComponents extends Record<string, ComponentType<any>>,
+> {
+  /** The features object that was passed to `createTableHook`. */
+  appFeatures: TFeatures
+  /**
+   * A column helper pre-bound to `TFeatures` and the registered components, so
+   * the cell/header/footer render props expose the bound components.
+   */
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Creates a controller-like object whose `table()` method returns a table with
+   * the `App*` wrapper functions, a bound `FlexRender`, and the registered
+   * `tableComponents` attached. `TData` is inferred from the `data` option.
+   */
+  useAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
+    host: ReactiveControllerHost & HTMLElement,
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => {
+    table: () => AppLitTable<
+      TFeatures,
+      TData,
+      TSelected,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
+  }
+  /**
+   * Reads the table provided by the nearest ancestor that called `useAppTable`,
+   * via a `@lit/context` `ContextConsumer`. This is the BARE `LitTable` written
+   * to the provider, not the extended `AppLitTable`.
+   */
+  useTableContext: <TData extends RowData = RowData>(
+    host: ReactiveControllerHost & HTMLElement,
+  ) => ContextConsumer<
+    Context<symbol, LitTable<TFeatures, TData, any>>,
+    ReactiveControllerHost & HTMLElement
+  >
+  /**
+   * Reads the cell instance from a `@lit/context` `ContextConsumer`. lit never
+   * provides an extended cell through context, so this is a BARE `Cell`.
+   */
+  useCellContext: <TValue extends CellData = CellData>(
+    host: ReactiveControllerHost & HTMLElement,
+  ) => ContextConsumer<
+    Context<symbol, Cell<TFeatures, any, TValue>>,
+    ReactiveControllerHost & HTMLElement
+  >
+  /**
+   * Reads the header instance from a `@lit/context` `ContextConsumer`. lit never
+   * provides an extended header through context, so this is a BARE `Header`.
+   */
+  useHeaderContext: <TValue extends CellData = CellData>(
+    host: ReactiveControllerHost & HTMLElement,
+  ) => ContextConsumer<
+    Context<symbol, Header<TFeatures, any, TValue>>,
+    ReactiveControllerHost & HTMLElement
+  >
+}
+
 /**
  * Creates a custom table hook with pre-bound components for composition.
  *
@@ -445,7 +515,12 @@ export function createTableHook<
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
   // Create context keys for @lit/context
   const tableContext = createContext<LitTable<TFeatures, any, any>>(
     Symbol('tanstack-table'),
@@ -770,7 +845,7 @@ export function createTableHook<
   }
 
   return {
-    appFeatures: defaultTableOptions.features as TFeatures,
+    appFeatures: defaultTableOptions.features,
     createAppColumnHelper,
     useAppTable,
     useTableContext,

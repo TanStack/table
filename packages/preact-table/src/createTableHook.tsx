@@ -27,8 +27,12 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { ComponentChildren, ComponentType } from 'preact'
+import type { ComponentChildren, ComponentType, Context } from 'preact'
 import type { PreactTable } from './useTable'
+
+const sharedTableContext = createContext<PreactTable<any, any> | null>(null)
+const sharedCellContext = createContext<Cell<any, any, any> | null>(null)
+const sharedHeaderContext = createContext<Header<any, any, any> | null>(null)
 
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
@@ -269,6 +273,93 @@ export type CreateTableHookOptions<
    * @example { SortIndicator, ColumnFilter, ResizeHandle }
    */
   headerComponents?: THeaderComponents
+  /**
+   * A custom Preact context for the table instance (read with `useContext` inside
+   * your `tableComponents`). Optional: defaults to a shared module-scoped context.
+   * Only pass your own (created via `createContext`) when you need to isolate this
+   * table's context from other tables, e.g. when nesting one table inside another.
+   */
+  tableContext?: Context<PreactTable<any, any>>
+  /**
+   * A custom Preact context for the cell instance, used inside your `cellComponents`.
+   * @see {@link CreateTableHookOptions.tableContext}
+   */
+  cellContext?: Context<Cell<any, any, any>>
+  /**
+   * A custom Preact context for the header instance, used inside your
+   * `headerComponents` (and footer components).
+   * @see {@link CreateTableHookOptions.tableContext}
+   */
+  headerContext?: Context<Header<any, any, any>>
+}
+
+export interface CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, ComponentType<any>>,
+  TCellComponents extends Record<string, ComponentType<any>>,
+  THeaderComponents extends Record<string, ComponentType<any>>,
+> {
+  /** The features object that was passed to `createTableHook`. */
+  appFeatures: TFeatures
+  /**
+   * A column helper pre-bound to `TFeatures` and the registered components, so
+   * the cell/header/footer render props expose the bound components.
+   */
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Creates a table with the `App*` wrapper components and registered
+   * `tableComponents` attached. `TData` is inferred from the `data` option.
+   */
+  useAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => AppPreactTable<
+    TFeatures,
+    TData,
+    TSelected,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the table provided by the nearest `<table.AppTable>`. This is the same
+   * extended instance `useAppTable` returns, so the `App*` components and your
+   * `tableComponents` are available on it.
+   */
+  useTableContext: <TData extends RowData = RowData>() => AppPreactTable<
+    TFeatures,
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the cell provided by the nearest `<table.AppCell>`, extended with your
+   * `cellComponents` and a context-bound `FlexRender`.
+   */
+  useCellContext: <TValue extends CellData = CellData>() => Cell<
+    TFeatures,
+    any,
+    TValue
+  > &
+    TCellComponents & { FlexRender: () => ComponentChildren }
+  /**
+   * Reads the header provided by the nearest `<table.AppHeader>` /
+   * `<table.AppFooter>`, extended with your `headerComponents` and a
+   * context-bound `FlexRender`.
+   */
+  useHeaderContext: <TValue extends CellData = CellData>() => Header<
+    TFeatures,
+    any,
+    TValue
+  > &
+    THeaderComponents & { FlexRender: () => ComponentChildren }
 }
 
 /**
@@ -598,21 +689,33 @@ export function createTableHook<
   tableComponents,
   cellComponents,
   headerComponents,
+  tableContext = sharedTableContext as Context<PreactTable<any, any>>,
+  cellContext = sharedCellContext as Context<Cell<any, any, any>>,
+  headerContext = sharedHeaderContext as Context<Header<any, any, any>>,
   ...defaultTableOptions
 }: CreateTableHookOptions<
   TFeatures,
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
-  // Create contexts internally with TFeatures baked in
-  const TableContext = createContext<PreactTable<TFeatures, any, any>>(
-    null as never,
-  )
-  const CellContext = createContext<Cell<TFeatures, any, any>>(null as never)
-  const HeaderContext = createContext<Header<TFeatures, any, any>>(
-    null as never,
-  )
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
+  // Re-narrow the (loosely typed) incoming contexts to this hook's TFeatures.
+  // The contexts themselves are never created here; see the module-scoped
+  // singletons above for why.
+  const TableContext = tableContext as unknown as Context<
+    PreactTable<TFeatures, any, any>
+  >
+  const CellContext = cellContext as unknown as Context<
+    Cell<TFeatures, any, any>
+  >
+  const HeaderContext = headerContext as unknown as Context<
+    Header<TFeatures, any, any>
+  >
 
   /**
    * Create a column helper pre-bound to the features and components configured in this table hook.
@@ -672,9 +775,13 @@ export function createTableHook<
    * }
    * ```
    */
-  function useTableContext<TData extends RowData = RowData>(): PreactTable<
+  function useTableContext<TData extends RowData = RowData>(): AppPreactTable<
     TFeatures,
-    TData
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
   > {
     const table = useContext(TableContext)
 
@@ -686,7 +793,17 @@ export function createTableHook<
       )
     }
 
-    return table as PreactTable<TFeatures, TData>
+    // The value provided by `<table.AppTable>` is the extended table (the App*
+    // wrapper components and `tableComponents` are Object.assign-ed onto the same
+    // instance `useAppTable` returns), so this asserts the runtime shape.
+    return table as unknown as AppPreactTable<
+      TFeatures,
+      TData,
+      TableState<TFeatures>,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
   }
 
   /**
@@ -718,7 +835,10 @@ export function createTableHook<
       )
     }
 
-    return cell as Cell<TFeatures, any, TValue>
+    // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
+    // the same cell instance it provides, so this asserts the runtime shape.
+    return cell as unknown as Cell<TFeatures, any, TValue> &
+      TCellComponents & { FlexRender: () => ComponentChildren }
   }
 
   /**
@@ -757,7 +877,10 @@ export function createTableHook<
       )
     }
 
-    return header as Header<TFeatures, any, TValue>
+    // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
+    // and `FlexRender` onto the same header instance they provide.
+    return header as unknown as Header<TFeatures, any, TValue> &
+      THeaderComponents & { FlexRender: () => ComponentChildren }
   }
 
   /**
@@ -1124,7 +1247,7 @@ export function createTableHook<
   }
 
   return {
-    appFeatures: defaultTableOptions.features as TFeatures,
+    appFeatures: defaultTableOptions.features,
     createAppColumnHelper,
     useAppTable,
     useTableContext,

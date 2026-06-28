@@ -376,6 +376,75 @@ export type AppSvelteTable<
     FlexRender: typeof FlexRenderSvelte
   }
 
+export interface CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, ComponentType<any>>,
+  TCellComponents extends Record<string, ComponentType<any>>,
+  THeaderComponents extends Record<string, ComponentType<any>>,
+> {
+  /** The features object that was passed to `createTableHook`. */
+  appFeatures: TFeatures
+  /**
+   * A column helper pre-bound to `TFeatures` and the registered components, so
+   * the cell/header/footer render props expose the bound components.
+   */
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Creates a table with the `App*` wrapper components and registered
+   * `tableComponents` attached. `TData` is inferred from the `data` option.
+   */
+  createAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => AppSvelteTable<
+    TFeatures,
+    TData,
+    TSelected,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the table provided by the nearest `<table.AppTable>`. This is the same
+   * extended instance `createAppTable` returns, so the `App*` components and your
+   * `tableComponents` are available on it.
+   */
+  useTableContext: <TData extends RowData = RowData>() => AppSvelteTable<
+    TFeatures,
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the cell provided by the nearest `<table.AppCell>`, extended with your
+   * `cellComponents` and a context-bound `FlexRender`.
+   */
+  useCellContext: <TValue extends CellData = CellData>() => Cell<
+    TFeatures,
+    any,
+    TValue
+  > &
+    TCellComponents & { FlexRender: typeof FlexRenderSvelte }
+  /**
+   * Reads the header provided by the nearest `<table.AppHeader>` /
+   * `<table.AppFooter>`, extended with your `headerComponents` and a
+   * context-bound `FlexRender`.
+   */
+  useHeaderContext: <TValue extends CellData = CellData>() => Header<
+    TFeatures,
+    any,
+    TValue
+  > &
+    THeaderComponents & { FlexRender: typeof FlexRenderSvelte }
+}
+
 // =============================================================================
 // createTableHook Factory
 // =============================================================================
@@ -431,7 +500,12 @@ export function createTableHook<
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
   /**
    * Create a column helper pre-bound to the features and components configured in this table hook.
    * The cell, header, and footer contexts include pre-bound components (e.g., `cell.TextCell`).
@@ -455,9 +529,13 @@ export function createTableHook<
    * Use this in custom `tableComponents` passed to `createTableHook`.
    * TFeatures is already known from the createTableHook call.
    */
-  function useTableContext<TData extends RowData = RowData>(): SvelteTable<
+  function useTableContext<TData extends RowData = RowData>(): AppSvelteTable<
     TFeatures,
-    TData
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
   > {
     const table = getContext(tableContextKey)
 
@@ -468,7 +546,17 @@ export function createTableHook<
       )
     }
 
-    return table as SvelteTable<TFeatures, TData>
+    // `<table.AppTable>` provides the extended table (the App* wrapper
+    // components and `tableComponents` are Object.assign-ed onto the same
+    // instance `createAppTable` returns), so this asserts the runtime shape.
+    return table as unknown as AppSvelteTable<
+      TFeatures,
+      TData,
+      TableState<TFeatures>,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
   }
 
   /**
@@ -480,7 +568,8 @@ export function createTableHook<
     TFeatures,
     any,
     TValue
-  > {
+  > &
+    TCellComponents & { FlexRender: typeof FlexRenderSvelte } {
     const cell = getContext(cellContextKey)
 
     if (!cell) {
@@ -490,7 +579,11 @@ export function createTableHook<
       )
     }
 
-    return cell as Cell<TFeatures, any, TValue>
+    // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
+    // the same cell instance it puts in context, so this asserts the runtime
+    // shape.
+    return cell as unknown as Cell<TFeatures, any, TValue> &
+      TCellComponents & { FlexRender: typeof FlexRenderSvelte }
   }
 
   /**
@@ -502,7 +595,8 @@ export function createTableHook<
     TFeatures,
     any,
     TValue
-  > {
+  > &
+    THeaderComponents & { FlexRender: typeof FlexRenderSvelte } {
     const header = getContext(headerContextKey)
 
     if (!header) {
@@ -511,7 +605,10 @@ export function createTableHook<
       )
     }
 
-    return header as Header<TFeatures, any, TValue>
+    // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
+    // and `FlexRender` onto the same header instance they put in context.
+    return header as unknown as Header<TFeatures, any, TValue> &
+      THeaderComponents & { FlexRender: typeof FlexRenderSvelte }
   }
 
   /**
@@ -626,7 +723,7 @@ export function createTableHook<
   }
 
   return {
-    appFeatures: defaultTableOptions.features as TFeatures,
+    appFeatures: defaultTableOptions.features,
     createAppColumnHelper,
     createAppTable,
     useTableContext,

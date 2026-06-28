@@ -240,6 +240,9 @@ export const {
 | `useCellContext` | Reads the current cell inside registered cell components. |
 | `useHeaderContext` | Reads the current header/footer inside registered header components. |
 
+> [!IMPORTANT]
+> Import `useTableContext`, `useCellContext`, and `useHeaderContext` from the same module where you called `createTableHook` (as shown above). Those hooks are typed with your `TFeatures` and your registered component maps, so values like `table.PaginationControls`, `cell.TextCell`, and `header.SortIndicator` are typed. See the [Table Context guide](./table-context) for details and for the scoped-context escape hatch.
+
 ### Component Columns
 
 Create one column helper per row type. The helper is bound to the app table setup, so column definitions can reference registered components directly.
@@ -347,6 +350,10 @@ The returned table includes `AppTable`, `AppHeader`, `AppCell`, and `AppFooter` 
 ### Reusing The Component Registry
 
 The example creates both `personColumnHelper` and `productColumnHelper` from the same `createAppColumnHelper`, then renders Users and Products tables with the same `useAppTable` factory. Each table owns its data and columns, while the app hook owns table infrastructure and component conventions.
+
+### Scoped Contexts
+
+Registered components read the current table, cell, or header from Preact context. By default `createTableHook` wires this up for you with a shared context, and you do not need to think about it. If you nest different table setups and need their contexts isolated, create a scoped context with `createTableHookContexts` and pass it into `createTableHook`. See the [Table Context guide](./table-context) for the full explanation and examples.
 
 ## When To Use This Pattern
 

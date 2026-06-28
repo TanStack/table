@@ -1,7 +1,4 @@
-import {
-  createFormHook,
-  createFormHookContexts,
-} from '@tanstack/preact-form'
+import { createFormHook, createFormHookContexts } from '@tanstack/preact-form'
 
 // Create form and field contexts
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
