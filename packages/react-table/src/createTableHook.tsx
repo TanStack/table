@@ -37,6 +37,51 @@ const sharedCellContext = createContext<Cell<any, any, any> | null>(null)
 // eslint-disable-next-line @eslint-react/naming-convention-context-name
 const sharedHeaderContext = createContext<Header<any, any, any> | null>(null)
 
+// Headers and footers share a single `table._headerPrototype`, but a header
+// needs `FlexRender` to render `columnDef.header` while a footer needs it to
+// render `columnDef.footer`. Since the same prototype (and even the same header
+// instance) can be used in both a `<thead>` and a `<tfoot>`, the header/footer
+// distinction can't be a static prototype value — it's read from this context.
+// Defaults to `'header'`, so only `AppFooter` has to provide the override.
+// eslint-disable-next-line @eslint-react/naming-convention-context-name
+const sharedHeaderRenderMode = createContext<'header' | 'footer'>('header')
+
+/**
+ * Assigns the pre-bound `FlexRender` and registered components onto the shared
+ * prototype of a cell/header instance (i.e. `table._cellPrototype` /
+ * `table._headerPrototype`) instead of onto every instance.
+ *
+ * The components are stable for the lifetime of the table hook, so a single
+ * assignment per prototype lets all (potentially millions of) cells — and all
+ * headers/footers — inherit them, rather than each instance carrying its own
+ * copies. This mirrors the prototype-based memory optimization in table-core.
+ *
+ * Idempotent: it bails as soon as the prototype already carries `FlexRender`,
+ * so it's safe to call on every render and from both `AppHeader`/`AppFooter`,
+ * which share one header prototype.
+ */
+function assignComponentsToPrototype(
+  instance: object,
+  flexRender: ComponentType<any>,
+  components: Record<string, ComponentType<any>> | undefined,
+  label: 'cell' | 'header',
+): void {
+  const proto = Object.getPrototypeOf(instance) as Record<string, unknown>
+  if (Object.prototype.hasOwnProperty.call(proto, 'FlexRender')) return
+
+  if (process.env.NODE_ENV === 'development' && components) {
+    for (const key of Object.keys(components)) {
+      if (Object.prototype.hasOwnProperty.call(proto, key)) {
+        console.error(
+          `[createTableHook] The ${label} component "${key}" has the same name as a built-in ${label} property/method and will override it for every ${label}. Rename the component to avoid breaking the table.`,
+        )
+      }
+    }
+  }
+
+  Object.assign(proto, { FlexRender: flexRender, ...components })
+}
+
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
 // =============================================================================
@@ -909,21 +954,23 @@ export function createTableHook<
   }
 
   /**
-   * Context-aware FlexRender component for headers.
-   * Uses the header from context, so no need to pass header prop.
+   * Context-aware FlexRender component for headers and footers.
+   * Uses the header from context, so no need to pass a header/footer prop.
+   *
+   * Headers and footers share one prototype, so this single component lives on
+   * it and reads `sharedHeaderRenderMode` to decide whether to render the
+   * header or the footer definition (`AppFooter` provides `'footer'`).
    */
   function HeaderFlexRender() {
     const header = useHeaderContext()
-    return <FlexRender header={header} />
-  }
-
-  /**
-   * Context-aware FlexRender component for footers.
-   * Uses the header from context, so no need to pass footer prop.
-   */
-  function FooterFlexRender() {
-    const header = useHeaderContext()
-    return <FlexRender footer={header} />
+    // `useContext` keeps React 18 support; `use(Context)` is React 19+ only.
+    // eslint-disable-next-line @eslint-react/no-use-context -- intentional for React 18
+    const mode = useContext(sharedHeaderRenderMode)
+    return mode === 'footer' ? (
+      <FlexRender footer={header} />
+    ) : (
+      <FlexRender header={header} />
+    )
   }
 
   /**
@@ -1042,10 +1089,9 @@ export function createTableHook<
       ): ReactNode {
         const { cell, children, selector: appCellSelector } = props as any
         const currentTable = tableRef.current
-        const extendedCell = Object.assign(cell, {
-          FlexRender: CellFlexRender,
-          ...cellComponents,
-        })
+        // Attach FlexRender + cellComponents to the shared cell prototype once,
+        // so every cell inherits them instead of carrying its own copies.
+        assignComponentsToPrototype(cell, CellFlexRender, cellComponents, 'cell')
 
         return (
           <CellContext.Provider value={cell}>
@@ -1058,7 +1104,7 @@ export function createTableHook<
                         TCellComponents & { FlexRender: () => ReactNode },
                       state: TAppCellSelected,
                     ) => ReactNode
-                  )(extendedCell, state)
+                  )(cell, state)
                 }
               </currentTable.Subscribe>
             ) : (
@@ -1067,7 +1113,7 @@ export function createTableHook<
                   cell: Cell<TFeatures, TData, TValue> &
                     TCellComponents & { FlexRender: () => ReactNode },
                 ) => ReactNode
-              )(extendedCell)
+              )(cell)
             )}
           </CellContext.Provider>
         )
@@ -1118,10 +1164,14 @@ export function createTableHook<
       ): ReactNode {
         const { header, children, selector: appHeaderSelector } = props as any
         const currentTable = tableRef.current
-        const extendedHeader = Object.assign(header, {
-          FlexRender: HeaderFlexRender,
-          ...headerComponents,
-        })
+        // Attach FlexRender + headerComponents to the shared header prototype
+        // once (shared with AppFooter); FlexRender is mode-aware via context.
+        assignComponentsToPrototype(
+          header,
+          HeaderFlexRender,
+          headerComponents,
+          'header',
+        )
 
         return (
           <HeaderContext.Provider value={header}>
@@ -1134,7 +1184,7 @@ export function createTableHook<
                         THeaderComponents & { FlexRender: () => ReactNode },
                       state: TAppHeaderSelected,
                     ) => ReactNode
-                  )(extendedHeader, state)
+                  )(header, state)
                 }
               </currentTable.Subscribe>
             ) : (
@@ -1143,7 +1193,7 @@ export function createTableHook<
                   header: Header<TFeatures, TData, TValue> &
                     THeaderComponents & { FlexRender: () => ReactNode },
                 ) => ReactNode
-              )(extendedHeader)
+              )(header)
             )}
           </HeaderContext.Provider>
         )
@@ -1198,33 +1248,39 @@ export function createTableHook<
       ): ReactNode {
         const { header, children, selector: appFooterSelector } = props as any
         const currentTable = tableRef.current
-        const extendedHeader = Object.assign(header, {
-          FlexRender: FooterFlexRender,
-          ...headerComponents,
-        })
+        // Same shared header prototype as AppHeader; `sharedHeaderRenderMode`
+        // below makes the inherited FlexRender render the footer definition.
+        assignComponentsToPrototype(
+          header,
+          HeaderFlexRender,
+          headerComponents,
+          'header',
+        )
 
         return (
           <HeaderContext.Provider value={header}>
-            {appFooterSelector ? (
-              <currentTable.Subscribe selector={appFooterSelector}>
-                {(state: TAppFooterSelected) =>
-                  (
-                    children as (
-                      header: Header<TFeatures, TData, TValue> &
-                        THeaderComponents & { FlexRender: () => ReactNode },
-                      state: TAppFooterSelected,
-                    ) => ReactNode
-                  )(extendedHeader, state)
-                }
-              </currentTable.Subscribe>
-            ) : (
-              (
-                children as (
-                  header: Header<TFeatures, TData, TValue> &
-                    THeaderComponents & { FlexRender: () => ReactNode },
-                ) => ReactNode
-              )(extendedHeader)
-            )}
+            <sharedHeaderRenderMode.Provider value="footer">
+              {appFooterSelector ? (
+                <currentTable.Subscribe selector={appFooterSelector}>
+                  {(state: TAppFooterSelected) =>
+                    (
+                      children as (
+                        header: Header<TFeatures, TData, TValue> &
+                          THeaderComponents & { FlexRender: () => ReactNode },
+                        state: TAppFooterSelected,
+                      ) => ReactNode
+                    )(header, state)
+                  }
+                </currentTable.Subscribe>
+              ) : (
+                (
+                  children as (
+                    header: Header<TFeatures, TData, TValue> &
+                      THeaderComponents & { FlexRender: () => ReactNode },
+                  ) => ReactNode
+                )(header)
+              )}
+            </sharedHeaderRenderMode.Provider>
           </HeaderContext.Provider>
         )
       }
