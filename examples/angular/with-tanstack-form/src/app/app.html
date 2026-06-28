@@ -4,10 +4,16 @@
     <form (submit)="submitFullTable($event)">
       <div class="form-actions">
         <div class="form-status">
-          <span [class.warning-text]="fullFormState().isDirty" [class.muted-text]="!fullFormState().isDirty">
+          <span
+            [class.warning-text]="fullFormState().isDirty"
+            [class.muted-text]="!fullFormState().isDirty"
+          >
             {{ fullFormState().isDirty ? 'Modified' : 'Pristine' }}
           </span>
-          <span [class.success-text]="fullFormState().isValid" [class.error-text]="!fullFormState().isValid">
+          <span
+            [class.success-text]="fullFormState().isValid"
+            [class.error-text]="!fullFormState().isValid"
+          >
             {{ fullFormState().isValid ? 'Valid' : 'Invalid' }}
           </span>
         </div>
@@ -18,9 +24,7 @@
         >
           {{ fullFormState().isSubmitting ? 'Submitting...' : 'Save All Changes' }}
         </button>
-        <button class="demo-button success-action" type="button" (click)="addRow()">
-          Add Row
-        </button>
+        <button class="demo-button success-action" type="button" (click)="addRow()">Add Row</button>
         <button class="demo-button secondary-action" type="button" (click)="refreshData()">
           Regenerate Data
         </button>

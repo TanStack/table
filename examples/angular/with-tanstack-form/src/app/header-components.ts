@@ -61,22 +61,28 @@ export class _ColumnFilter {
       .getPreFilteredRowModel()
       .flatRows[0]?.getValue(this.header().column.id),
   )
-  readonly isNumberColumn = computed(() => typeof this.firstValue() === 'number')
+  readonly isNumberColumn = computed(
+    () => typeof this.firstValue() === 'number',
+  )
   readonly filterValue = computed(() => this.header().column.getFilterValue())
   readonly numberFilterValue = computed(
     () => this.filterValue() as [number, number] | undefined,
   )
-  readonly textFilterValue = computed(() => (this.filterValue() ?? '') as string)
+  readonly textFilterValue = computed(
+    () => (this.filterValue() ?? '') as string,
+  )
 
   setMin(value: string | number) {
-    this.header().column.setFilterValue(
-      (old: [number, number] | undefined) => [value, old?.[1]],
-    )
+    this.header().column.setFilterValue((old: [number, number] | undefined) => [
+      value,
+      old?.[1],
+    ])
   }
 
   setMax(value: string | number) {
-    this.header().column.setFilterValue(
-      (old: [number, number] | undefined) => [old?.[0], value],
-    )
+    this.header().column.setFilterValue((old: [number, number] | undefined) => [
+      old?.[0],
+      value,
+    ])
   }
 }

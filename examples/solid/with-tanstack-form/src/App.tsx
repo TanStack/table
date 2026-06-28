@@ -394,9 +394,7 @@ function RowSubmitFormExample() {
             </thead>
             <tbody>
               <For each={table.getRowModel().rows}>
-                {(row) => (
-                  <RowSubmitTableRow row={row} onSave={saveRow} />
-                )}
+                {(row) => <RowSubmitTableRow row={row} onSave={saveRow} />}
               </For>
             </tbody>
           </table>
