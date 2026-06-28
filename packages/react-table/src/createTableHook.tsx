@@ -1091,7 +1091,12 @@ export function createTableHook<
         const currentTable = tableRef.current
         // Attach FlexRender + cellComponents to the shared cell prototype once,
         // so every cell inherits them instead of carrying its own copies.
-        assignComponentsToPrototype(cell, CellFlexRender, cellComponents, 'cell')
+        assignComponentsToPrototype(
+          cell,
+          CellFlexRender,
+          cellComponents,
+          'cell',
+        )
 
         return (
           <CellContext.Provider value={cell}>
