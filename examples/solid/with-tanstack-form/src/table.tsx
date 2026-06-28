@@ -52,8 +52,7 @@ function ColumnFilter() {
             <DebouncedInput
               type="number"
               value={
-                (columnFilterValue() as [number, number] | undefined)?.[0] ??
-                ''
+                (columnFilterValue() as [number, number] | undefined)?.[0] ?? ''
               }
               onChange={(value) =>
                 header.column.setFilterValue(
@@ -66,8 +65,7 @@ function ColumnFilter() {
             <DebouncedInput
               type="number"
               value={
-                (columnFilterValue() as [number, number] | undefined)?.[1] ??
-                ''
+                (columnFilterValue() as [number, number] | undefined)?.[1] ?? ''
               }
               onChange={(value) =>
                 header.column.setFilterValue(

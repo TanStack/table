@@ -314,16 +314,16 @@ export type CreateTableHookResult<
     THeaderComponents
   >
   injectTableContext: <TData extends RowData = RowData>() => Signal<
-    AngularTable<TFeatures, TData>
+    AngularTable<TFeatures, TData> & TTableComponents
   >
   injectTableHeaderContext: <
     TValue extends CellData = CellData,
     TRowData extends RowData = RowData,
-  >() => Signal<Header<TFeatures, TRowData, TValue>>
+  >() => Signal<Header<TFeatures, TRowData, TValue> & THeaderComponents>
   injectTableCellContext: <
     TValue extends CellData = CellData,
     TRowData extends RowData = RowData,
-  >() => Signal<Cell<TFeatures, TRowData, TValue>>
+  >() => Signal<Cell<TFeatures, TRowData, TValue> & TCellComponents>
   injectFlexRenderHeaderContext: <
     TData extends RowData,
     TValue extends CellData,
@@ -383,23 +383,46 @@ export function createTableHook<
   THeaderComponents
 > {
   function injectTableContext<TData extends RowData = RowData>(): Signal<
-    AngularTable<TFeatures, TData>
+    AngularTable<TFeatures, TData> & TTableComponents
   > {
-    return _injectTableContext<TFeatures, TData>()
+    // `injectAppTable` Object.assign-es `tableComponents` onto the same table
+    // instance it returns (via `constructTableAPIs`), and that instance is what
+    // gets provided to DI, so this asserts the runtime shape.
+    return _injectTableContext<TFeatures, TData>() as unknown as Signal<
+      AngularTable<TFeatures, TData> & TTableComponents
+    >
   }
 
   function injectTableHeaderContext<
     TValue extends CellData = CellData,
     TRowData extends RowData = RowData,
-  >(): Signal<Header<TFeatures, TRowData, TValue>> {
-    return _injectTableHeaderContext<TFeatures, TRowData, TValue>()
+  >(): Signal<Header<TFeatures, TRowData, TValue> & THeaderComponents> {
+    // `injectAppTable` Object.assign-es `headerComponents` onto the header
+    // prototype (via `assignHeaderPrototype`), so every header instance carries
+    // them. This asserts the runtime shape.
+    return _injectTableHeaderContext<
+      TFeatures,
+      TRowData,
+      TValue
+    >() as unknown as Signal<
+      Header<TFeatures, TRowData, TValue> & THeaderComponents
+    >
   }
 
   function injectTableCellContext<
     TValue extends CellData = CellData,
     TRowData extends RowData = RowData,
-  >(): Signal<Cell<TFeatures, TRowData, TValue>> {
-    return _injectTableCellContext<TFeatures, TRowData, TValue>()
+  >(): Signal<Cell<TFeatures, TRowData, TValue> & TCellComponents> {
+    // `injectAppTable` Object.assign-es `cellComponents` onto the cell prototype
+    // (via `assignCellPrototype`), so every cell instance carries them. This
+    // asserts the runtime shape.
+    return _injectTableCellContext<
+      TFeatures,
+      TRowData,
+      TValue
+    >() as unknown as Signal<
+      Cell<TFeatures, TRowData, TValue> & TCellComponents
+    >
   }
 
   function injectFlexRenderHeaderContext<

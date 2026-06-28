@@ -156,7 +156,9 @@ function handleSubmit(event: Event) {
   fullTableForm.handleSubmit()
 }
 
-function getSortTitle(column: ReturnType<typeof fullTable.getAllColumns>[number]) {
+function getSortTitle(
+  column: ReturnType<typeof fullTable.getAllColumns>[number],
+) {
   if (!column.getCanSort()) return undefined
 
   const nextOrder = column.getNextSortingOrder()

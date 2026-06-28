@@ -16,6 +16,8 @@ title: "@tanstack/preact-table"
 - [AppTableComponent](interfaces/AppTableComponent.md)
 - [AppTablePropsWithoutSelector](interfaces/AppTablePropsWithoutSelector.md)
 - [AppTablePropsWithSelector](interfaces/AppTablePropsWithSelector.md)
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
+- [TableHookContexts](interfaces/TableHookContexts.md)
 
 ## Type Aliases
 
@@ -41,6 +43,7 @@ title: "@tanstack/preact-table"
 ## Functions
 
 - [createTableHook](functions/createTableHook.md)
+- [createTableHookContexts](functions/createTableHookContexts.md)
 - [flexRender](functions/flexRender.md)
 - [FlexRender](functions/FlexRender-1.md)
 - [Subscribe](functions/Subscribe.md)

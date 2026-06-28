@@ -226,6 +226,77 @@ export type AppVueTable<
     FlexRender: typeof AppFlexRender
   }
 
+export interface CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, ComponentType<any>>,
+  TCellComponents extends Record<string, ComponentType<any>>,
+  THeaderComponents extends Record<string, ComponentType<any>>,
+> {
+  /** The features object that was passed to `createTableHook`. */
+  appFeatures: TFeatures
+  /**
+   * A column helper pre-bound to `TFeatures` and the registered components, so
+   * the cell/header/footer render props expose the bound components.
+   */
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Creates a table with the `App*` wrapper components and registered
+   * `tableComponents` attached. `TData` is inferred from the `data` option.
+   */
+  useAppTable: <TData extends RowData>(
+    tableOptions: Omit<
+      TableOptionsWithReactiveData<TFeatures, TData>,
+      'features'
+    >,
+  ) => AppVueTable<
+    TFeatures,
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the table provided by the nearest `<table.AppTable>`. This is the same
+   * extended instance `useAppTable` returns, so the `App*` components and your
+   * `tableComponents` are available on it.
+   */
+  useTableContext: <TData extends RowData = RowData>() => AppVueTable<
+    TFeatures,
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the cell provided by the nearest `<table.AppCell>`, extended with your
+   * `cellComponents` and a context-bound `FlexRender`.
+   */
+  useCellContext: <TValue extends CellData = CellData>() => Cell<
+    TFeatures,
+    any,
+    TValue
+  > &
+    TCellComponents & { FlexRender: Component }
+  /**
+   * Reads the header provided by the nearest `<table.AppHeader>` /
+   * `<table.AppFooter>`, extended with your `headerComponents` and a
+   * context-bound `FlexRender`.
+   */
+  useHeaderContext: <TValue extends CellData = CellData>() => Header<
+    TFeatures,
+    any,
+    TValue
+  > &
+    THeaderComponents & { FlexRender: Component }
+}
+
 export const AppFlexRender = defineComponent({
   name: 'TableFlexRender',
   props: {
@@ -302,7 +373,12 @@ export function createTableHook<
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
   const TableContext = Symbol('TableContext') as InjectionKey<
     VueTable<TFeatures, any>
   >
@@ -327,9 +403,13 @@ export function createTableHook<
     >
   }
 
-  function useTableContext<TData extends RowData = RowData>(): VueTable<
+  function useTableContext<TData extends RowData = RowData>(): AppVueTable<
     TFeatures,
-    TData
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
   > {
     const table = inject(TableContext)
 
@@ -340,14 +420,25 @@ export function createTableHook<
       )
     }
 
-    return table as VueTable<TFeatures, TData>
+    // The value provided by `<table.AppTable>` is the extended table (the App*
+    // wrapper components and `tableComponents` are Object.assign-ed onto the same
+    // instance `useAppTable` returns), so this asserts the runtime shape.
+    return table as unknown as AppVueTable<
+      TFeatures,
+      TData,
+      TableState<TFeatures>,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
   }
 
   function useCellContext<TValue extends CellData = CellData>(): Cell<
     TFeatures,
     any,
     TValue
-  > {
+  > &
+    TCellComponents & { FlexRender: Component } {
     const cell = inject(CellContext)
 
     if (!cell) {
@@ -357,14 +448,18 @@ export function createTableHook<
       )
     }
 
-    return cell as Cell<TFeatures, any, TValue>
+    // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
+    // the same cell instance it provides, so this asserts the runtime shape.
+    return cell as unknown as Cell<TFeatures, any, TValue> &
+      TCellComponents & { FlexRender: Component }
   }
 
   function useHeaderContext<TValue extends CellData = CellData>(): Header<
     TFeatures,
     any,
     TValue
-  > {
+  > &
+    THeaderComponents & { FlexRender: Component } {
     const header = inject(HeaderContext)
 
     if (!header) {
@@ -373,7 +468,10 @@ export function createTableHook<
       )
     }
 
-    return header as Header<TFeatures, any, TValue>
+    // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
+    // and `FlexRender` onto the same header instance they provide.
+    return header as unknown as Header<TFeatures, any, TValue> &
+      THeaderComponents & { FlexRender: Component }
   }
 
   const CellFlexRender = defineComponent({
@@ -523,6 +621,8 @@ export function createTableHook<
   }
 
   return {
+    // `TableOptionsWithReactiveData` widens `features` to allow a reactive ref,
+    // so this narrows it back to the resolved `TFeatures` for `appFeatures`.
     appFeatures: defaultTableOptions.features as TFeatures,
     createAppColumnHelper,
     useAppTable,

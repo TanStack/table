@@ -146,7 +146,9 @@ import type { Row } from '@tanstack/angular-table'
                 <button
                   type="button"
                   class="demo-button demo-button-sm primary-action"
-                  [disabled]="!formState().canSubmit || formState().isSubmitting"
+                  [disabled]="
+                    !formState().canSubmit || formState().isSubmitting
+                  "
                   (click)="form.handleSubmit()"
                 >
                   {{ formState().isSubmitting ? 'Saving...' : 'Save' }}

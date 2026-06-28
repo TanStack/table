@@ -5,7 +5,7 @@ title: AppHeaderPropsWithSelector
 
 # Interface: AppHeaderPropsWithSelector\<TFeatures, TData, TValue, THeaderComponents, TSelected\>
 
-Defined in: [createTableHook.tsx:349](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L349)
+Defined in: [createTableHook.tsx:449](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L449)
 
 Props for AppHeader/AppFooter component - with selector
 
@@ -39,7 +39,7 @@ Props for AppHeader/AppFooter component - with selector
 children: (header, state) => ComponentChildren;
 ```
 
-Defined in: [createTableHook.tsx:357](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L357)
+Defined in: [createTableHook.tsx:457](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L457)
 
 #### Parameters
 
@@ -63,7 +63,7 @@ Defined in: [createTableHook.tsx:357](https://github.com/TanStack/table/blob/mai
 header: Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:356](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L356)
+Defined in: [createTableHook.tsx:456](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L456)
 
 ***
 
@@ -73,7 +73,7 @@ Defined in: [createTableHook.tsx:356](https://github.com/TanStack/table/blob/mai
 selector: (state) => TSelected;
 ```
 
-Defined in: [createTableHook.tsx:362](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L362)
+Defined in: [createTableHook.tsx:462](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L462)
 
 #### Parameters
 

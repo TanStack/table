@@ -85,18 +85,14 @@ export class PaginationControls {
   }
 
   onPageSizeChange(event: Event) {
-    this.table().setPageSize(
-      Number((event.target as HTMLSelectElement).value),
-    )
+    this.table().setPageSize(Number((event.target as HTMLSelectElement).value))
   }
 }
 
 @Component({
   selector: 'app-row-count',
   template: `
-    <div class="row-count">
-      Showing {{ length() }} of {{ rowCount() }} Rows
-    </div>
+    <div class="row-count">Showing {{ length() }} of {{ rowCount() }} Rows</div>
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
