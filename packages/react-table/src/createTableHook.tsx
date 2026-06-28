@@ -333,11 +333,20 @@ export interface CreateTableHookResult<
    * Reads the table provided by the nearest `<table.AppTable>`. This is the same
    * extended instance `useAppTable` returns, so the `App*` components and your
    * `tableComponents` are available on it.
+   *
+   * Pass `TSelected` to match the selector you gave `useAppTable`, so
+   * `table.state` is typed as the selected slice. It cannot be inferred
+   * automatically (React context does not carry the provider's generics), so it
+   * defaults to the full table state, which is correct for the common case of
+   * `useAppTable` without a selector.
    */
-  useTableContext: <TData extends RowData = RowData>() => AppReactTable<
+  useTableContext: <
+    TData extends RowData = RowData,
+    TSelected = TableState<TFeatures>,
+  >() => AppReactTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
+    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -773,10 +782,13 @@ export function createTableHook<
    * }
    * ```
    */
-  function useTableContext<TData extends RowData = RowData>(): AppReactTable<
+  function useTableContext<
+    TData extends RowData = RowData,
+    TSelected = TableState<TFeatures>,
+  >(): AppReactTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
+    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -799,7 +811,7 @@ export function createTableHook<
     return table as unknown as AppReactTable<
       TFeatures,
       TData,
-      TableState<TFeatures>,
+      TSelected,
       TTableComponents,
       TCellComponents,
       THeaderComponents

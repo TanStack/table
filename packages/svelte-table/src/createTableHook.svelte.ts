@@ -413,11 +413,20 @@ export interface CreateTableHookResult<
    * Reads the table provided by the nearest `<table.AppTable>`. This is the same
    * extended instance `createAppTable` returns, so the `App*` components and your
    * `tableComponents` are available on it.
+   *
+   * Pass `TSelected` to match the selector you gave `createAppTable`, so
+   * `table.state` is typed as the selected slice. It cannot be inferred
+   * automatically (context does not carry the provider's generics), so it
+   * defaults to the full table state, which is correct for the common case of
+   * `createAppTable` without a selector.
    */
-  useTableContext: <TData extends RowData = RowData>() => AppSvelteTable<
+  useTableContext: <
+    TData extends RowData = RowData,
+    TSelected = TableState<TFeatures>,
+  >() => AppSvelteTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
+    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -529,10 +538,13 @@ export function createTableHook<
    * Use this in custom `tableComponents` passed to `createTableHook`.
    * TFeatures is already known from the createTableHook call.
    */
-  function useTableContext<TData extends RowData = RowData>(): AppSvelteTable<
+  function useTableContext<
+    TData extends RowData = RowData,
+    TSelected = TableState<TFeatures>,
+  >(): AppSvelteTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
+    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -552,7 +564,7 @@ export function createTableHook<
     return table as unknown as AppSvelteTable<
       TFeatures,
       TData,
-      TableState<TFeatures>,
+      TSelected,
       TTableComponents,
       TCellComponents,
       THeaderComponents
