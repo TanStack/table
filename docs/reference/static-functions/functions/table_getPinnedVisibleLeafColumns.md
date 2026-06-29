@@ -6,10 +6,12 @@ title: table_getPinnedVisibleLeafColumns
 # Function: table\_getPinnedVisibleLeafColumns()
 
 ```ts
-function table_getPinnedVisibleLeafColumns<TFeatures, TData>(table, position?): Column<TFeatures, TData, unknown>[];
+function table_getPinnedVisibleLeafColumns<TFeatures, TData>(table, position?): 
+  | Column<TFeatures, TData, unknown>[]
+  | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:878](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L878)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:870](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L870)
 
 Resolves visible leaf columns for a requested pinning region.
 
@@ -30,7 +32,7 @@ or `'right'` to get one partition.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### position?
 
@@ -38,7 +40,8 @@ or `'right'` to get one partition.
 
 ## Returns
 
-[`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+  \| [`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+  \| [`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 

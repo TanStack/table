@@ -3,6 +3,7 @@ packages:
   - packages/*
 
 overrides:
+  '@types/react': 19.2.16
   '@tanstack/angular-table-devtools': 'workspace:*'
   '@tanstack/angular-table': 'workspace:*'
   '@tanstack/lit-table': 'workspace:*'
@@ -19,6 +20,14 @@ overrides:
   '@tanstack/vue-table-devtools': 'workspace:*'
   '@tanstack/vue-table': 'workspace:*'
 
+packageExtensions:
+  '@analogjs/vite-plugin-angular':
+    peerDependencies:
+      '@angular/compiler': '^17.0.0 || ^18.0.0 || ^19.0.0 || ^20.0.0 || ^21.0.0 || ^22.0.0'
+    peerDependenciesMeta:
+      '@angular/compiler':
+        optional: true
+
 allowBuilds:
   # root dependency
   nx: true
@@ -32,8 +41,10 @@ allowBuilds:
 
   # @tanstack/vue-store
   vue-demi: false # only required for vue 2 support
+  core-js-pure: false
 
 cleanupUnusedCatalogs: true
+minimumReleaseAge: 1440
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true

@@ -1,4 +1,4 @@
-import { cloneState } from '../../utils'
+import { cloneState, hasOwn, makeObjectMap } from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -20,7 +20,7 @@ import type {
  * ```
  */
 export function getDefaultExpandedState(): ExpandedState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
@@ -85,7 +85,7 @@ export function table_toggleAllRowsExpanded<
   if (expanded ?? !table_getIsAllRowsExpanded(table)) {
     table_setExpanded(table, true)
   } else {
-    table_setExpanded(table, {})
+    table_setExpanded(table, makeObjectMap())
   }
 }
 
@@ -105,9 +105,17 @@ export function table_resetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+  const initialExpanded = table.initialState.expanded
   table_setExpanded(
     table,
-    defaultState ? {} : cloneState(table.initialState.expanded ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : initialExpanded === true
+        ? true
+        : Object.assign(
+            makeObjectMap<boolean | undefined>(),
+            cloneState(initialExpanded ?? {}),
+          ),
   )
 }
 
@@ -252,29 +260,34 @@ export function row_toggleExpanded<
   TData extends RowData,
 >(row: Row<TFeatures, TData>, expanded?: boolean) {
   table_setExpanded(row.table, (old) => {
-    const exists = old === true ? true : !!old[row.id]
+    const exists = old === true ? true : isExpandedRowId(old, row.id)
 
-    let oldExpanded: ExpandedStateList = {}
+    let oldExpanded: ExpandedStateList = makeObjectMap()
 
     if (old === true) {
       Object.keys(row.table.getRowModel().rowsById).forEach((rowId) => {
         oldExpanded[rowId] = true
       })
     } else {
-      oldExpanded = old
+      oldExpanded = Object.assign(makeObjectMap<boolean | undefined>(), old)
     }
 
     expanded = expanded ?? !exists
 
     if (!exists && expanded) {
-      return {
-        ...oldExpanded,
-        [row.id]: true,
-      }
+      oldExpanded[row.id] = true
+      return oldExpanded
     }
 
     if (exists && !expanded) {
-      const { [row.id]: _, ...rest } = oldExpanded
+      const rest: ExpandedStateList = makeObjectMap()
+      const rowIds = Object.keys(oldExpanded)
+      for (let i = 0; i < rowIds.length; i++) {
+        const rowId = rowIds[i]!
+        if (rowId !== row.id && oldExpanded[rowId]) {
+          rest[rowId] = true
+        }
+      }
       return rest
     }
 
@@ -301,7 +314,19 @@ export function row_getIsExpanded<
 
   return !!(
     row.table.options.getIsRowExpanded?.(row) ??
-    (expanded === true || expanded[row.id])
+    (expanded === true || isExpandedRowId(expanded, row.id))
+  )
+}
+
+function isExpandedRowId(
+  expanded: ExpandedState | undefined,
+  rowId: string,
+): boolean {
+  return !!(
+    expanded &&
+    expanded !== true &&
+    hasOwn(expanded, rowId) &&
+    expanded[rowId]
   )
 }
 

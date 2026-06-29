@@ -8,7 +8,9 @@ Want to skip to the implementation? Check out these Lit examples:
 
 - [Column Ordering](../examples/column-ordering)
 
-### Lit Setup
+### Column Ordering Setup
+
+Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```ts
 import { LitElement, html } from 'lit'

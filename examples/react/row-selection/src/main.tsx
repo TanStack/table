@@ -38,8 +38,6 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -98,7 +96,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   // optionally, raise the selection state to your own atom
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
@@ -136,7 +134,7 @@ function App() {
             className="demo-button demo-button-spaced"
             onClick={() => stressTest()}
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <div>
@@ -276,14 +274,7 @@ function App() {
         </div>
         <hr />
         <br />
-        <div>
-          <button
-            className="demo-button demo-button-spaced"
-            onClick={() => rerender()}
-          >
-            Force Rerender
-          </button>
-        </div>
+        <div></div>
         <div>
           <button
             className="demo-button demo-button-spaced"
@@ -298,8 +289,10 @@ function App() {
           </button>
         </div>
         <div>
-          <label>Row Selection State:</label>
-          <pre>{JSON.stringify(table.state, null, 2)}</pre>
+          <label>State:</label>
+          <pre>
+            {data.length < 1_001 && JSON.stringify(table.state, null, 2)}
+          </pre>
         </div>
       </div>
     </>

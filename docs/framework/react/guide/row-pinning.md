@@ -7,7 +7,10 @@ title: Row Pinning (React) Guide
 Want to skip to the implementation? Check out these React examples:
 
 - [Row Pinning](../examples/row-pinning)
-### React Setup
+
+### Row Pinning Setup
+
+Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```tsx
 import { useTable, tableFeatures, rowPinningFeature } from '@tanstack/react-table'

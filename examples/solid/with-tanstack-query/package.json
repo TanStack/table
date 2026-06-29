@@ -10,15 +10,15 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.16",
+    "vite": "^8.1.0",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "@tanstack/solid-query": "^5.101.0",
+    "@tanstack/solid-query": "^5.101.1",
     "@tanstack/solid-store": "^0.11.0",
-    "@tanstack/solid-table": "^9.0.0-beta.16",
+    "@tanstack/solid-table": "^9.0.0-beta.23",
     "solid-js": "^1.9.13"
   }
 }

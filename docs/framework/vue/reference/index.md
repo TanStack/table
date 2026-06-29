@@ -10,6 +10,7 @@ title: "@tanstack/vue-table"
 - [AppCellProps](interfaces/AppCellProps.md)
 - [AppHeaderProps](interfaces/AppHeaderProps.md)
 - [AppTableProps](interfaces/AppTableProps.md)
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
 - [FlexRenderCell](interfaces/FlexRenderCell.md)
 - [FlexRenderHeader](interfaces/FlexRenderHeader.md)
 

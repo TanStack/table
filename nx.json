@@ -11,6 +11,7 @@
     "sharedGlobals": [
       "{workspaceRoot}/.nvmrc",
       "{workspaceRoot}/package.json",
+      "{workspaceRoot}/scripts/rewrite-table-core-dts.mjs",
       "{workspaceRoot}/tsconfig.json"
     ],
     "default": [

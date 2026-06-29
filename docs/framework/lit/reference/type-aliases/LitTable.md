@@ -9,7 +9,7 @@ title: LitTable
 type LitTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:20](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/TableController.ts#L20)
+Defined in: [packages/lit-table/src/TableController.ts:20](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L20)
 
 The extended table type returned by the Lit adapter.
 Includes a `Subscribe` method for fine-grained state subscriptions

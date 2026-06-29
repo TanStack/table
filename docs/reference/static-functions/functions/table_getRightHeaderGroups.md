@@ -9,7 +9,7 @@ title: table_getRightHeaderGroups
 function table_getRightHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:400](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L400)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L396)
 
 Builds header groups for visible columns pinned to the right region.
 
@@ -30,11 +30,11 @@ passed through the same header-group builder as the unpinned table.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`HeaderGroup`](../../index/type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](../../index/interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ## Example
 

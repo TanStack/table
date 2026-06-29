@@ -30,7 +30,7 @@ Unknown or empty page counts return an empty array; otherwise the result is
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

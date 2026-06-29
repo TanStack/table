@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnVisibilityFeature,
@@ -64,7 +64,6 @@ function App() {
   const [data, setData] = useState(() => makeData(20))
   const refreshData = () => setData(makeData(20))
   const stressTest = () => setData(makeData(1_000))
-  const rerender = useReducer(() => ({}), {})[1]
 
   const table = useTable(
     {
@@ -152,9 +151,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
       <div className="spacer-md" />
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>

@@ -1,5 +1,5 @@
 import { readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs'
-import { join } from 'node:path'
+import { dirname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const packageRoot = fileURLToPath(
@@ -141,7 +141,140 @@ function removeNamedSpecifiers(source, names) {
     )
 }
 
-function rewriteDeclaration(source) {
+function rewriteInternalImportSpecifiers(source) {
+  const replacements = new Map([
+    ['Table_Internal', 'Table'],
+    ['Column_Internal', 'Column'],
+  ])
+
+  return source.replace(
+    /\bimport(\s+type)?\s+\{([^}]+)\}\s+from\s+([^;\n]+);/g,
+    (statement, typeKeyword = '', specifiers, fromClause) => {
+      const seen = new Set()
+      const nextSpecifiers = []
+
+      for (const rawSpecifier of specifiers.split(',')) {
+        const specifier = rawSpecifier.trim()
+
+        if (!specifier) {
+          continue
+        }
+
+        const isTypeSpecifier = specifier.startsWith('type ')
+        const specifierName = getSpecifierName(specifier)
+        const replacement = replacements.get(specifierName)
+        const nextSpecifier = replacement
+          ? `${isTypeSpecifier ? 'type ' : ''}${replacement}`
+          : specifier
+        const nextSpecifierName = getSpecifierName(nextSpecifier)
+
+        if (seen.has(nextSpecifierName)) {
+          continue
+        }
+
+        seen.add(nextSpecifierName)
+        nextSpecifiers.push(nextSpecifier)
+      }
+
+      return `import${typeKeyword} { ${nextSpecifiers.join(
+        ', ',
+      )} } from ${fromClause};`
+    },
+  )
+}
+
+function getImportPath(fromFile, typeName) {
+  const runtimeExtension = fromFile.endsWith('.d.cts') ? '.cjs' : '.js'
+  const target = join(distDir, 'types', `${typeName}${runtimeExtension}`)
+  let importPath = relative(dirname(fromFile), target).replaceAll('\\', '/')
+
+  if (!importPath.startsWith('.')) {
+    importPath = `./${importPath}`
+  }
+
+  return importPath
+}
+
+function hasNamedImport(source, name, importPath) {
+  const importPattern =
+    /\bimport(?:\s+type)?\s+\{([^}]+)\}\s+from\s+["']([^"']+)["'];/g
+
+  for (const match of source.matchAll(importPattern)) {
+    const specifiers = match[1] ?? ''
+    const fromClause = match[2]
+
+    if (fromClause !== importPath) {
+      continue
+    }
+
+    if (
+      specifiers
+        .split(',')
+        .map((specifier) => getSpecifierName(specifier.trim()))
+        .includes(name)
+    ) {
+      return true
+    }
+  }
+
+  return false
+}
+
+function ensureNamedImport(source, name, importPath) {
+  if (hasNamedImport(source, name, importPath)) {
+    return source
+  }
+
+  const importPattern = new RegExp(
+    String.raw`\bimport(\s+type)?\s+\{([^}]+)\}\s+from\s+["']${importPath.replace(
+      /[.*+?^${}()|[\]\\]/g,
+      '\\$&',
+    )}["'];`,
+  )
+  const match = importPattern.exec(source)
+
+  if (match) {
+    const [statement, typeKeyword = '', specifiers] = match
+    const nextStatement = `import${typeKeyword} { ${[
+      ...specifiers.split(',').map((specifier) => specifier.trim()),
+      name,
+    ]
+      .filter(Boolean)
+      .join(', ')} } from "${importPath}";`
+
+    return (
+      source.slice(0, match.index) +
+      nextStatement +
+      source.slice(match.index + statement.length)
+    )
+  }
+
+  return `import { ${name} } from "${importPath}";\n${source}`
+}
+
+function ensurePublicTypeImports(source, file) {
+  let next = source
+
+  if (
+    !file.endsWith('/types/Table.d.ts') &&
+    !file.endsWith('/types/Table.d.cts') &&
+    /\bTable</.test(next)
+  ) {
+    next = ensureNamedImport(next, 'Table', getImportPath(file, 'Table'))
+  }
+
+  if (
+    !file.endsWith('/types/Column.d.ts') &&
+    !file.endsWith('/types/Column.d.cts') &&
+    /\bColumn</.test(next)
+  ) {
+    next = ensureNamedImport(next, 'Column', getImportPath(file, 'Column'))
+  }
+
+  return next
+}
+
+function rewriteDeclaration(source, file) {
   let next = source
 
   for (const typeName of forbiddenTypeNames) {
@@ -149,12 +282,15 @@ function rewriteDeclaration(source) {
   }
 
   next = removeTypeAlias(next, 'Table_InternalBroadenedKeys')
+  next = rewriteInternalImportSpecifiers(next)
   next = removeNamedSpecifiers(next, forbiddenTypeNames)
 
   next = next.replaceAll('Table_Internal<', 'Table<')
   next = next.replaceAll('Column_Internal<', 'Column<')
   next = next.replaceAll('Table_Internal', 'Table')
   next = next.replaceAll('Column_Internal', 'Column')
+
+  next = ensurePublicTypeImports(next, file)
 
   return next
 }
@@ -163,7 +299,7 @@ const files = walkDeclarationFiles(distDir)
 
 for (const file of files) {
   const source = readFileSync(file, 'utf8')
-  const next = rewriteDeclaration(source)
+  const next = rewriteDeclaration(source, file)
 
   if (next !== source) {
     writeFileSync(file, next)

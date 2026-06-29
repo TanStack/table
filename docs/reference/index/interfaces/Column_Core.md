@@ -5,7 +5,7 @@ title: Column_Core
 
 # Interface: Column\_Core\<TFeatures, TData, TValue\>
 
-Defined in: [types/Column.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L16)
+Defined in: [types/Column.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L17)
 
 ## Extends
 

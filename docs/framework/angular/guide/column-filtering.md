@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Angular examples:
 - [Faceted Filters](../examples/filters-faceted)
 - [Fuzzy Search](../examples/filters-fuzzy)
 
-### Angular Setup
+### Column Filtering Setup
+
+Here's how you set up your table to use column filtering features. Adding the column filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { signal } from '@angular/core'
@@ -18,7 +20,7 @@ import { injectTable, tableFeatures, columnFilteringFeature, createFilteredRowMo
 
 const features = tableFeatures({
   columnFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
+  filteredRowModel: createFilteredRowModel(), // if using client-side filtering
   filterFns,
 })
 

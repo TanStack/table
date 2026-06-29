@@ -7,7 +7,10 @@ title: Column Visibility (React) Guide
 Want to skip to the implementation? Check out these React examples:
 
 - [Column Visibility](../examples/column-visibility)
-### React Setup
+
+### Column Visibility Setup
+
+Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```tsx
 import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/react-table'

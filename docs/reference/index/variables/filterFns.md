@@ -9,7 +9,7 @@ title: filterFns
 const filterFns: object;
 ```
 
-Defined in: [fns/filterFns.ts:361](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L361)
+Defined in: [fns/filterFns.ts:367](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L367)
 
 The built-in filter function registry.
 
@@ -17,39 +17,27 @@ Pass this object to filtered row model creation or extend it with custom filter 
 
 ## Type Declaration
 
-### arrHas()
+### arrHas
 
 ```ts
-arrHas: <TFeatures, TData>(row, columnId, filterValue) => boolean = filterFn_arrHas;
+arrHas: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrHas;
 ```
 
-Keeps rows whose scalar column value equals at least one filter value.
+#### Type Declaration
 
-#### Type Parameters
+##### autoRemove()
 
-##### TFeatures
+```ts
+autoRemove: (val) => boolean;
+```
 
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+###### Parameters
 
-##### TData
+###### val
 
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+`any`
 
-#### Parameters
-
-##### row
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### columnId
-
-`string`
-
-##### filterValue
-
-`unknown`[]
-
-#### Returns
+###### Returns
 
 `boolean`
 

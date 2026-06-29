@@ -5,7 +5,7 @@ title: Header_ColumnResizing
 
 # Interface: Header\_ColumnResizing
 
-Defined in: [features/column-resizing/columnResizingFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L82)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L79)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-resizing/columnResizingFeature.types.ts:82](https:/
 getResizeHandler: (context?) => (event) => void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L88)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L85)
 
 Creates the `onMouseDown`/`onTouchStart` handler for a resize handle.
 

@@ -8,7 +8,9 @@ Want to skip to the implementation? Check out these Lit examples:
 
 - [Column Sizing](../examples/column-sizing)
 
-### Lit Setup
+### Column Sizing Setup
+
+Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```ts
 import { LitElement, html } from 'lit'

@@ -7,7 +7,7 @@ title: column_getAutoFilterFn
 
 ```ts
 function column_getAutoFilterFn<TFeatures, TData, TValue>(column): 
-  | FilterFn<TFeatures, RowData>
+  | FilterFn<TFeatures, TData>
   | undefined;
 ```
 
@@ -37,11 +37,11 @@ to `weakEquals`.
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 
-  \| [`FilterFn`](../../index/interfaces/FilterFn.md)\<`TFeatures`, [`RowData`](../../index/type-aliases/RowData.md)\>
+  \| [`FilterFn`](../../index/interfaces/FilterFn.md)\<`TFeatures`, `TData`\>
   \| `undefined`
 
 ## Example

@@ -1142,7 +1142,6 @@ function DebouncedTextInput({
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
   const [rowSelection, setRowSelection] = React.useState({})
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<
@@ -1379,7 +1378,7 @@ function App() {
   }, [table.state.columnSizing])
 
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   return (
     <SortingContext.Provider value={sorting}>
@@ -1392,10 +1391,7 @@ function App() {
                 Regenerate Data
               </Button>
               <Button variant="secondary" size="sm" onPress={stressTest}>
-                Stress Test (200k rows)
-              </Button>
-              <Button variant="secondary" size="sm" onPress={() => rerender()}>
-                Force Rerender
+                Stress Test (1M rows)
               </Button>
               <Button
                 variant="secondary"

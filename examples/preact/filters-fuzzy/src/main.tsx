@@ -1,5 +1,5 @@
 import { render } from 'preact'
-import { useEffect, useMemo, useReducer, useState } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
 import './index.css'
 import {
   columnFilteringFeature,
@@ -93,8 +93,6 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -125,7 +123,7 @@ function App() {
 
   const [data, setData] = useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(5_000))
-  const stressTest = () => setData((_old) => makeData(200_000))
+  const stressTest = () => setData((_old) => makeData(1_000_000))
 
   const table = useTable<typeof features, Person>(
     {
@@ -153,7 +151,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div>
         <DebouncedInput
@@ -281,9 +279,7 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

@@ -64,18 +64,29 @@ Defaults to `true`; table-level `enableGrouping` must also allow grouping.
 ### getGroupingValue()?
 
 ```ts
-optional getGroupingValue: (row) => any;
+optional getGroupingValue: (originalRow, index, row) => any;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L92)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L95)
 
-Specify a value to be used for grouping rows on this column. If this option is not specified, the value derived from `accessorKey` / `accessorFn` will be used instead.
+Returns the value used to group rows for this column.
+
+When omitted, grouping uses the value derived from this column's
+`accessorKey` or `accessorFn`.
 
 #### Parameters
 
-##### row
+##### originalRow
 
 `TData`
+
+##### index
+
+`number`
+
+##### row
+
+[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
 
 #### Returns
 

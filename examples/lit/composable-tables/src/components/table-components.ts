@@ -48,7 +48,7 @@ export class PaginationControls extends LitElement {
         <span>
           Page
           <strong>
-            ${(table.getState().pagination.pageIndex + 1).toLocaleString()} of
+            ${(table.state.pagination.pageIndex + 1).toLocaleString()} of
             ${table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -56,7 +56,7 @@ export class PaginationControls extends LitElement {
           | Go to page:
           <input
             type="number"
-            .value=${String(table.getState().pagination.pageIndex + 1)}
+            .value=${String(table.state.pagination.pageIndex + 1)}
             @change=${(e: Event) => {
               const page = (e.target as HTMLInputElement).value
                 ? Number((e.target as HTMLInputElement).value) - 1
@@ -67,7 +67,7 @@ export class PaginationControls extends LitElement {
           />
         </span>
         <select
-          .value=${String(table.getState().pagination.pageSize)}
+          .value=${String(table.state.pagination.pageSize)}
           @change=${(e: Event) => {
             table.setPageSize(Number((e.target as HTMLSelectElement).value))
           }}
@@ -133,7 +133,7 @@ export class TableToolbar extends LitElement {
             : nothing}
           ${this.onStressTest
             ? html`<button @click=${this.onStressTest}>
-                Stress Test (200k rows)
+                Stress Test (1M rows)
               </button>`
             : nothing}
           <button @click=${() => table.resetColumnFilters()}>

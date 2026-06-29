@@ -1,6 +1,6 @@
 import { render } from 'preact'
 import { TanStackDevtools } from '@tanstack/preact-devtools'
-import { useReducer, useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import './index.css'
 import {
   createColumnHelper,
@@ -64,9 +64,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
-
-  const rerender = useReducer(() => ({}), {})[1]
+  const stressTest = () => setData(makeData(1_000_000))
 
   // Manage sorting state with useState (although state causes more re-renders here than necessary compared to using a store)
   const [sorting, setSorting] = useState<SortingState>([])
@@ -104,7 +102,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <table>
         <thead>
@@ -210,9 +208,6 @@ function App() {
         </select>
       </div>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

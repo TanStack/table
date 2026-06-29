@@ -32,15 +32,7 @@ export type SubscribeSource<TValue> =
 export type AngularTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Table<TFeatures, TData> & {
-  /**
-   * @deprecated Prefer `table.atoms.<slice>.get()` for template/render reads
-   * of a specific state slice, or Angular computed values around explicit
-   * selectors. `table.store.state` is a current-value snapshot and is easy to
-   * misuse in render code.
-   */
-  readonly store: Table<TFeatures, TData>['store']
-}
+> = Table<TFeatures, TData>
 
 /**
  * Creates and returns an Angular-reactive table instance.
@@ -119,7 +111,7 @@ export function injectTable<
           coreReactivityFeature: angularReactivity(injector),
           ...options().features,
         },
-      }) as AngularTable<TFeatures, TData>
+      })
 
       injector.get(DestroyRef).onDestroy(() => {
         table._reactivity.unmount?.()

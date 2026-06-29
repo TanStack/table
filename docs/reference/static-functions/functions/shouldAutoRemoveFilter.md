@@ -44,7 +44,7 @@ This checks the filter function's `autoRemove` hook and built-in empty-value rul
 
 ### column?
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 

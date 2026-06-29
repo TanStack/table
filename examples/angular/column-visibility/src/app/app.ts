@@ -100,5 +100,4 @@ export class App {
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))
-  rerender = () => this.data.update((data) => [...data])
 }

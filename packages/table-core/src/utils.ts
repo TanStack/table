@@ -31,18 +31,40 @@ export function cloneState<T>(value: T): T {
       return value
     }
 
-    const copy: Record<string, unknown> = {}
+    const copy: Record<string, unknown> = proto === null ? makeObjectMap() : {}
     const keys = Object.keys(value)
 
     for (let i = 0; i < keys.length; i++) {
       const key = keys[i]!
-      copy[key] = cloneState((value as Record<string, unknown>)[key])
+      Object.defineProperty(copy, key, {
+        configurable: true,
+        enumerable: true,
+        value: cloneState((value as Record<string, unknown>)[key]),
+        writable: true,
+      })
     }
 
     return copy as T
   }
 
   return value
+}
+
+/**
+ * Creates an object intended only for string-keyed dictionary lookups.
+ *
+ * The null prototype keeps user-controlled ids such as `__proto__` and
+ * `hasOwnProperty` as plain data keys.
+ */
+export function makeObjectMap<TValue = unknown>(): Record<string, TValue> {
+  return Object.create(null) as Record<string, TValue>
+}
+
+/**
+ * Checks whether an object owns a key, including null-prototype dictionaries.
+ */
+export function hasOwn(obj: object, key: PropertyKey): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key)
 }
 
 /**

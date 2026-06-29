@@ -58,10 +58,6 @@ class LitTableExample extends LitElement {
 
   private tableController = new TableController<typeof features, Person>(this)
 
-  private rerender() {
-    this.data = makeData(20)
-  }
-
   protected render(): unknown {
     const data = this.data
 
@@ -154,10 +150,6 @@ class LitTableExample extends LitElement {
             )}
           </tfoot>
         </table>
-        <div class="spacer-md"></div>
-        <button @click=${() => this.rerender()} class="demo-button">
-          Rerender
-        </button>
       </div>
       <style>
         * {

@@ -5,7 +5,7 @@ title: SubscribeDirective
 
 # Class: SubscribeDirective
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:46](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L46)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:46](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L46)
 
 An asynchronous Lit directive that subscribes to a `@tanstack/lit-store`
 source and triggers re-renders specifically for the template portion it wraps.
@@ -129,7 +129,7 @@ AsyncDirective._$initialize
 disconnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:141](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L141)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:141](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L141)
 
 Cleans up the controller subscription when the directive is removed from the DOM.
 
@@ -151,7 +151,7 @@ AsyncDirective.disconnected
 reconnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:146](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L146)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:146](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L146)
 
 Restores the controller subscription when the directive is re-attached to the DOM.
 
@@ -175,7 +175,7 @@ AsyncDirective.reconnected
 render<TSource>(source, template): unknown;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:64](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L64)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:64](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L64)
 
 Renders the entire state of the source without a selector.
 
@@ -218,7 +218,7 @@ render<TSource, TSelected>(
    template): unknown;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:75](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L75)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:75](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L75)
 
 Renders a specific slice of state derived via a selector function.
 
@@ -304,7 +304,7 @@ AsyncDirective.setValue
 update(_part, args): unknown;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:90](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L90)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:90](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L90)
 
 #### Parameters
 

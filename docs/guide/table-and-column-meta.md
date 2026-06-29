@@ -11,6 +11,8 @@ There are two kinds of meta:
 - **Table meta** - The `meta` table option. Pass any object and read it back anywhere via `table.options.meta`. A classic use case is passing an `updateData` function down to editable cells.
 - **Column meta** - The `meta` property on a column definition. Read it back anywhere a column is available via `column.columnDef.meta`. A classic use case is declaring which filter UI variant a column's header should render.
 
+### Table Meta
+
 <!-- ::start:framework -->
 
 # React

@@ -88,10 +88,6 @@ class LitTableExample extends LitElement {
     )
   })()
 
-  private rerender() {
-    this.data = makeData(20)
-  }
-
   // 8. Render your table markup from the table instance APIs
   protected render(): unknown {
     const table = this.appTable.table()
@@ -189,10 +185,6 @@ class LitTableExample extends LitElement {
             )}
           </tfoot>
         </table>
-        <div class="spacer-md"></div>
-        <button @click=${() => this.rerender()} class="demo-button">
-          Rerender (sort by age)
-        </button>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>

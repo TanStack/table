@@ -13,7 +13,7 @@ type SelectionSource<TValue> =
 | ReadonlyStore<TValue>;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:13](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L13)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:13](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L13)
 
 ## Type Parameters
 

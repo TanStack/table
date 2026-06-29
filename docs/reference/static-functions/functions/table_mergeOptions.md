@@ -9,12 +9,14 @@ title: table_mergeOptions
 function table_mergeOptions<TFeatures, TData>(table, newOptions): TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.utils.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L78)
+Defined in: [core/table/coreTablesFeature.utils.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L80)
 
 Merges new table options with the current resolved options.
 
 If `options.mergeOptions` is provided, it owns the merge behavior; otherwise
-options are shallow-merged.
+options are shallow-merged. Static options that should never change after
+initialization are restored on a fresh object so framework merge helpers may
+return readonly getter/proxy objects.
 
 ## Type Parameters
 
@@ -30,7 +32,7 @@ options are shallow-merged.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### newOptions
 

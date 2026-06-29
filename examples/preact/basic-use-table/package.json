@@ -12,13 +12,13 @@
   },
   "dependencies": {
     "@tanstack/preact-devtools": "^0.10.5",
-    "@tanstack/preact-table": "^9.0.0-beta.16",
-    "@tanstack/preact-table-devtools": "^9.0.0-beta.16",
+    "@tanstack/preact-table": "^9.0.0-beta.23",
+    "@tanstack/preact-table-devtools": "^9.0.0-beta.23",
     "preact": "^10.29.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
     "typescript": "6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.1.0"
   }
 }

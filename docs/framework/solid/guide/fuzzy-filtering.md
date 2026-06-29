@@ -10,7 +10,9 @@ Want to skip to the implementation? Check out these Solid examples:
 
 Use getters for reactive inputs such as `data` when passing Solid signals to `createTable`.
 
-### Solid Setup
+### Fuzzy Filtering Setup
+
+Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. Additionally, if using client-side fuzzy filtering and sorting, you also need to set up `filteredRowModel` and `sortedRowModel` after their associated features because row model slots are type-checked.
 
 ```tsx
 import { createTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns } from '@tanstack/solid-table'
@@ -19,8 +21,8 @@ const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowSortingFeature,
-  filteredRowModel: createFilteredRowModel(),
-  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(), // if using client-side filtering
+  sortedRowModel: createSortedRowModel(), // if using client-side sorting
   filterFns,
   sortFns,
 })

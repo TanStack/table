@@ -7,6 +7,11 @@ title: Table_Columns
 
 Defined in: [core/columns/coreColumnsFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L76)
 
+## Extended by
+
+- [`Table_Core`](Table_Core.md)
+- [`Table_Internal`](Table_Internal.md)
+
 ## Type Parameters
 
 ### TFeatures

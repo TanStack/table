@@ -14,6 +14,7 @@ export type {
   AppSvelteTable,
   ComponentType,
   CreateTableHookOptions,
+  CreateTableHookResult,
 } from './createTableHook.svelte'
 export { createTableState } from './createTableState.svelte'
 export { default as FlexRender } from './FlexRender.svelte'

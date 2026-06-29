@@ -9,7 +9,7 @@ title: PrototypeAPIObject
 type PrototypeAPIObject<TDeps, TDepArgs> = Record<string, PrototypeAPI<TDeps, TDepArgs>>;
 ```
 
-Defined in: [utils.ts:370](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L370)
+Defined in: [utils.ts:401](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L401)
 
 ## Type Parameters
 

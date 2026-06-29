@@ -9,7 +9,7 @@ title: table_getLeftTotalSize
 function table_getLeftTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:318](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L318)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:340](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L340)
 
 Sums the rendered size of the left pinned header region.
 
@@ -29,7 +29,7 @@ An empty left pinning region returns `0`.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

@@ -94,10 +94,10 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 ## Progress
 
 - **Total findings:** 61
-- **Done `[x]`:** 20
-- **Partial `[~]`:** 2
+- **Done `[x]`:** 21
+- **Partial `[~]`:** 3
 - **Skipped `[-]`:** 5
-- **Not started `[ ]`:** 34
+- **Not started `[ ]`:** 32
 
 _(Update these counters as you go.)_
 
@@ -1697,8 +1697,8 @@ return Array.from({ length: pageCount }, (_, i) => i)
 
 ## 46. `table_toggleAllRowsSelected` clones entire selection on deselect — Score: 3
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[~]` partial
+**Implementation note:** Added an opt-in `opts.deselectAll` argument to `table_toggleAllRowsSelected` / `table_toggleAllPageRowsSelected`. When the resolved value is a deselect and `deselectAll` is set, the function returns a fresh empty map in O(1) instead of spreading `old` and `delete`-ing each id. The default path is intentionally unchanged (spread + per-id delete) because an unconditional `{}` return is a **breaking** behavior change — it also drops selected ids that are absent from the current pre-grouped model (e.g. filtered-out rows), which v8 preserved. So the spread/delete cost is only avoided when the caller opts in. Tests added in `rowSelectionFeature.test.ts` (`deselectAll: true` clears an out-of-model id; default preserves it). The behavior change is noted in the framework migration guides.
 
 **Location:** `src/features/row-selection/rowSelectionFeature.utils.ts:78–107`
 **Category:** `micro`
@@ -1718,17 +1718,49 @@ When deselecting all, the function spreads `old`, then `delete`s every row id. J
 
 ---
 
-## 47. `table_getIsAllRowsSelected` / `getIsAllPageRowsSelected` flow cleanup — Score: 2
+## 47. Table-level selection getters not memoized + per-row atom re-reads — Score: 7
 
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
+**Status:** `[x]` done
+**Implementation note:** Several changes landed together (motivated by a profiled hang: a select-all checkbox column over 500k rows re-running selection scans on every virtualizer scroll frame):
 
-**Location:** `src/features/row-selection/rowSelectionFeature.utils.ts:247–300`
-**Category:** `micro`
+- **Memoized the four table getters** `getIsAllRowsSelected`, `getIsAllPageRowsSelected`, `getIsSomeRowsSelected`, `getIsSomePageRowsSelected`, and added a new memoized `getSelectedRowIds` primitive. Previously these had **no `memoDeps`**, and `memo()` with no deps recomputes on _every_ call — so the header "select all" checkbox re-ran an O(filtered-rows) `.some()` scan on every render. Deps are `rowSelection` + the relevant row model (`getFilteredRowModel()` / `getPaginatedRowModel()`), plus `table.options.enableRowSelection` on the three getters that consult `row_getCanSelect`. `getIsSomeRowsSelected` depends on `rowSelection` only (it delegates to `getSelectedRowIds`).
+- **Eliminated per-row atom re-reads** in the scans. `isRowSelected` now takes the already-fetched `rowSelection` map as a parameter instead of calling `table.atoms.rowSelection.get()` once per row. The single fetched map is threaded through `getIsAllRowsSelected`, `getIsAllPageRowsSelected`, `selectRowsFn`, and `isSubRowSelected`; the redundant `isRowIdSelected` helper was removed.
+- **Routed internal calls through `callMemoOrStaticFn`** so they hit the instance memo, and fixed a key bug: one call site passed the prefixed name `'table_getIsAllPageRowsSelected'`, which never matches the stripped instance method `getIsAllPageRowsSelected`, so it silently fell back to the un-memoized static fn every time.
+- **Simplified `getIsSome*`** to "≥1 selected" (delegating to `getSelectedRowIds`). This is a deliberate behavior change from v8's "some but not all" semantics; documented in the migration guides. The three `get*SelectedRowModel` getters reuse the same emptiness short-circuit via `getIsSomeRowsSelected`.
+- `RowSelectionState` narrowed to `Record<string, true>` (delete-on-deselect invariant), letting `getSelectedRowIds` use a bare `Object.keys`.
+- The originally-proposed `return !preGroupedFlatRows.some(...)` flow tweak was **not** the win and was not adopted; the `let/if/return` shape is retained for the empty-selection short-circuit. Tests added asserting the getters memoize (a `vi.fn` `enableRowSelection` call-count probe) and invalidate on selection change.
 
-Replace `let isAll = …; if (cond) isAll = false; return isAll` with `return !preGroupedFlatRows.some(...)`. Engine inlining better.
+**Location:** `src/features/row-selection/rowSelectionFeature.ts:120–155`, `rowSelectionFeature.utils.ts` (`isRowSelected`, `getIsAll*`, `getIsSome*`, `getSelectedRowIds`, `selectRowsFn`)
+**Category:** `memoization`, `micro`
 
-**Risk:** None.
+```ts
+table_getIsAllRowsSelected: {
+  fn: () => table_getIsAllRowsSelected(table),
+  memoDeps: () => [
+    table.atoms.rowSelection?.get(),
+    table.getFilteredRowModel(),
+    table.options.enableRowSelection,
+  ],
+},
+// getIsAllPageRowsSelected / getIsSomePageRowsSelected: same shape with getPaginatedRowModel()
+table_getIsSomeRowsSelected: {
+  fn: () => table_getIsSomeRowsSelected(table),
+  memoDeps: () => [table.atoms.rowSelection?.get()], // delegates to memoized getSelectedRowIds
+},
+```
+
+**Big-O:** O(filtered-rows) per call → O(1) until selection or the row model changes. Within the (now memo-gated) first scan, per-row atom reads drop from N to 1.
+
+**Scale impact** (`getIsAllRowsSelected` `.some()` scans saved during scroll/render churn — dimension: renders × filtered rows, selection unchanged):
+
+| Renders × Rows | Scan walks before | After (steady state) | Saved      |
+| -------------- | ----------------- | -------------------- | ---------- |
+| 10 × 1,000     | 10,000            | 0                    | 10,000     |
+| 100 × 10,000   | 1,000,000         | 0                    | 1,000,000  |
+| 60 × 100,000   | 6,000,000         | 0                    | 6,000,000  |
+| 60 × 500,000   | 30,000,000        | 0                    | 30,000,000 |
+
+**Risk:** Low. Memo deps capture every input the getters read (selection, row model, `enableRowSelection`). The `getIsSome*` semantic change is intentional and documented.
 
 ---
 

@@ -7,6 +7,11 @@ title: Table_Rows
 
 Defined in: [core/rows/coreRowsFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L108)
 
+## Extended by
+
+- [`Table_Core`](Table_Core.md)
+- [`Table_Internal`](Table_Internal.md)
+
 ## Type Parameters
 
 ### TFeatures

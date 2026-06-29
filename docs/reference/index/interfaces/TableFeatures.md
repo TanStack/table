@@ -5,7 +5,15 @@ title: TableFeatures
 
 # Interface: TableFeatures
 
-Defined in: [types/TableFeatures.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L100)
+Defined in: [types/TableFeatures.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L181)
+
+Complete feature registry for a table.
+
+This type combines core features, stock features, declaration-merged custom
+plugins, row-model factory slots, function registries, and type-only meta
+slots. The concrete `features` object passed to `tableFeatures()` determines
+which feature APIs are included throughout table, row, column, cell, header,
+options, and state types.
 
 ## Extends
 
@@ -19,7 +27,7 @@ Defined in: [types/TableFeatures.ts:100](https://github.com/TanStack/table/blob/
 optional aggregationFns: Record<string, AggregationFn<any, any>>;
 ```
 
-Defined in: [types/TableFeatures.ts:216](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L216)
+Defined in: [types/TableFeatures.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L191)
 
 Registry of aggregation functions available to this table by name.
 
@@ -78,7 +86,7 @@ Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blo
 optional columnMeta: object;
 ```
 
-Defined in: [types/TableFeatures.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L122)
+Defined in: [types/TableFeatures.ts:202](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L202)
 
 Type-only slot for declaring the type of `columnDef.meta` for all columns
 of this table.
@@ -223,7 +231,7 @@ Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/mai
 optional coreRowModel: (table) => () => RowModel<any, any>;
 ```
 
-Defined in: [types/TableFeatures.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L139)
+Defined in: [types/TableFeatures.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L207)
 
 Factory for the table's core (unmodified) row model. Defaults to the
 built-in `createCoreRowModel()` when omitted.
@@ -294,7 +302,7 @@ Defined in: [core/coreFeatures.ts:16](https://github.com/TanStack/table/blob/mai
 optional expandedRowModel: (table) => () => RowModel<any, any>;
 ```
 
-Defined in: [types/TableFeatures.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L163)
+Defined in: [types/TableFeatures.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L213)
 
 Factory for the client-side expanded row model. Pass the exported
 `createExpandedRowModel()` or implement your own. Not needed for
@@ -324,7 +332,7 @@ server-side expansion.
 optional facetedMinMaxValues: (table, columnId) => () => [number, number] | undefined;
 ```
 
-Defined in: [types/TableFeatures.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L181)
+Defined in: [types/TableFeatures.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L219)
 
 Factory for per-column faceted min/max values. Pass the exported
 `createFacetedMinMaxValues()` or implement your own. Not needed for
@@ -358,7 +366,7 @@ server-side faceting.
 optional facetedRowModel: (table, columnId) => () => RowModel<any, any>;
 ```
 
-Defined in: [types/TableFeatures.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L175)
+Defined in: [types/TableFeatures.ts:228](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L228)
 
 Factory for the per-column faceted row model. Pass the exported
 `createFacetedRowModel()` or implement your own. Not needed for
@@ -392,7 +400,7 @@ server-side faceting.
 optional facetedUniqueValues: (table, columnId) => () => Map<any, number>;
 ```
 
-Defined in: [types/TableFeatures.ts:190](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L190)
+Defined in: [types/TableFeatures.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L234)
 
 Factory for per-column faceted unique values. Pass the exported
 `createFacetedUniqueValues()` or implement your own. Not needed for
@@ -426,7 +434,7 @@ server-side faceting.
 optional filteredRowModel: (table) => () => RowModel<any, any>;
 ```
 
-Defined in: [types/TableFeatures.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L145)
+Defined in: [types/TableFeatures.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L240)
 
 Factory for the client-side filtered row model. Pass the exported
 `createFilteredRowModel()` or implement your own. Not needed for
@@ -456,7 +464,7 @@ server-side filtering.
 optional filterFns: Record<string, FilterFn<any, any>>;
 ```
 
-Defined in: [types/TableFeatures.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L199)
+Defined in: [types/TableFeatures.ts:249](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L249)
 
 Registry of filter functions available to this table by name.
 
@@ -473,7 +481,7 @@ Spread the exported `filterFns` to register the built-in filter functions:
 optional filterMeta: object;
 ```
 
-Defined in: [types/TableFeatures.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L134)
+Defined in: [types/TableFeatures.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L261)
 
 Type-only slot for declaring the type of the filter meta that filter
 functions attach to rows via `addMeta` and that is read back from
@@ -507,7 +515,7 @@ Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blo
 optional groupedRowModel: (table) => () => RowModel<any, any>;
 ```
 
-Defined in: [types/TableFeatures.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L151)
+Defined in: [types/TableFeatures.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L267)
 
 Factory for the client-side grouped row model. Pass the exported
 `createGroupedRowModel()` or implement your own. Not needed for
@@ -537,7 +545,7 @@ server-side grouping.
 optional paginatedRowModel: (table) => () => RowModel<any, any>;
 ```
 
-Defined in: [types/TableFeatures.ts:169](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L169)
+Defined in: [types/TableFeatures.ts:273](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L273)
 
 Factory for the client-side paginated row model. Pass the exported
 `createPaginatedRowModel()` or implement your own. Not needed for
@@ -637,7 +645,7 @@ Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blo
 optional sortedRowModel: (table) => () => RowModel<any, any>;
 ```
 
-Defined in: [types/TableFeatures.ts:157](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L157)
+Defined in: [types/TableFeatures.ts:279](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L279)
 
 Factory for the client-side sorted row model. Pass the exported
 `createSortedRowModel()` or implement your own. Not needed for
@@ -667,7 +675,7 @@ server-side sorting.
 optional sortFns: Record<string, SortFn<any, any>>;
 ```
 
-Defined in: [types/TableFeatures.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L207)
+Defined in: [types/TableFeatures.ts:287](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L287)
 
 Registry of sorting functions available to this table by name.
 
@@ -683,7 +691,7 @@ the built-in sorting functions: `sortFns: { ...sortFns, myCustomSortFn }`.
 optional tableMeta: object;
 ```
 
-Defined in: [types/TableFeatures.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L111)
+Defined in: [types/TableFeatures.ts:297](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L297)
 
 Type-only slot for declaring the type of this table's `options.meta`.
 

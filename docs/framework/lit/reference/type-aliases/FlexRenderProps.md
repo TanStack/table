@@ -24,7 +24,7 @@ type FlexRenderProps<TFeatures, TData, TValue> =
 };
 ```
 
-Defined in: [packages/lit-table/src/flexRender.ts:56](https://github.com/fredericbahr/table/blob/main/packages/lit-table/src/flexRender.ts#L56)
+Defined in: [packages/lit-table/src/flexRender.ts:56](https://github.com/TanStack/table/blob/main/packages/lit-table/src/flexRender.ts#L56)
 
 Simplified component wrapper of `flexRender`. Use this utility function to render headers, cells, or footers with custom markup.
 Only one prop (`cell`, `header`, or `footer`) may be passed.

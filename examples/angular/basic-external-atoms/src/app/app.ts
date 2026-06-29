@@ -60,7 +60,6 @@ export class App {
   }
 
   readonly data = signal(makeData(1_000))
-  readonly renderCount = signal(0)
   readonly sortingAtom = createAtom<SortingState>([])
   readonly paginationAtom = createAtom<PaginationState>({
     pageIndex: 0,
@@ -84,13 +83,8 @@ export class App {
   }
 
   stressTest() {
-    this.data.set(makeData(200_000))
+    this.data.set(makeData(1_000_000))
   }
-
-  rerender() {
-    this.renderCount.update((count) => count + 1)
-  }
-
   onPageInputChange(event: Event) {
     const input = event.target as HTMLInputElement
     const page = input.value ? Number(input.value) - 1 : 0

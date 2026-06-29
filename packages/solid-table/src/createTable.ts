@@ -4,7 +4,6 @@ import {
   getOwner,
   mergeProps,
   onCleanup,
-  runWithOwner,
   untrack,
 } from 'solid-js'
 import { FlexRender } from './FlexRender'
@@ -20,13 +19,7 @@ import type {
 export type SolidTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-> = Omit<Table<TFeatures, TData>, 'store'> & {
-  /**
-   * @deprecated Prefer `table.atoms.<slice>.get()` for slice-level reactive
-   * reads, or `table.Subscribe` for explicit subscriptions. `table.store.state`
-   * is a current-value snapshot and is easy to misuse in render code.
-   */
-  readonly store: Table<TFeatures, TData>['store']
+> = Table<TFeatures, TData> & {
   /**
    * Creates a reactive render boundary. The child function reads the table
    * atoms it needs, so Solid only tracks those atom reads.
@@ -116,7 +109,7 @@ export function createTable<
   table.Subscribe = (props: {
     children: (atoms: Table<TFeatures, TData>['atoms']) => JSX.Element
   }) => {
-    return props.children(table.atoms)
+    return props.children(table.atoms as Table<TFeatures, TData>['atoms'])
   }
 
   table.FlexRender = FlexRender

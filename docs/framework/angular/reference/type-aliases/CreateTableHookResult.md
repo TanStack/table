@@ -128,7 +128,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:327](https://
 ### injectTableCellContext()
 
 ```ts
-injectTableCellContext: <TValue, TRowData>() => Signal<Cell<TFeatures, TRowData, TValue>>;
+injectTableCellContext: <TValue, TRowData>() => Signal<Cell<TFeatures, TRowData, TValue> & TCellComponents>;
 ```
 
 Defined in: [packages/angular-table/src/helpers/createTableHook.ts:323](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L323)
@@ -145,14 +145,14 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:323](https://
 
 #### Returns
 
-`Signal`\<`Cell`\<`TFeatures`, `TRowData`, `TValue`\>\>
+`Signal`\<`Cell`\<`TFeatures`, `TRowData`, `TValue`\> & `TCellComponents`\>
 
 ***
 
 ### injectTableContext()
 
 ```ts
-injectTableContext: <TData>() => Signal<AngularTable<TFeatures, TData>>;
+injectTableContext: <TData>() => Signal<AngularTable<TFeatures, TData> & TTableComponents>;
 ```
 
 Defined in: [packages/angular-table/src/helpers/createTableHook.ts:316](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L316)
@@ -165,14 +165,14 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:316](https://
 
 #### Returns
 
-`Signal`\<[`AngularTable`](AngularTable.md)\<`TFeatures`, `TData`\>\>
+`Signal`\<[`AngularTable`](AngularTable.md)\<`TFeatures`, `TData`\> & `TTableComponents`\>
 
 ***
 
 ### injectTableHeaderContext()
 
 ```ts
-injectTableHeaderContext: <TValue, TRowData>() => Signal<Header<TFeatures, TRowData, TValue>>;
+injectTableHeaderContext: <TValue, TRowData>() => Signal<Header<TFeatures, TRowData, TValue> & THeaderComponents>;
 ```
 
 Defined in: [packages/angular-table/src/helpers/createTableHook.ts:319](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L319)
@@ -189,4 +189,4 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:319](https://
 
 #### Returns
 
-`Signal`\<`Header`\<`TFeatures`, `TRowData`, `TValue`\>\>
+`Signal`\<`Header`\<`TFeatures`, `TRowData`, `TValue`\> & `THeaderComponents`\>

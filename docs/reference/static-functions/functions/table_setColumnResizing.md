@@ -9,7 +9,7 @@ title: table_setColumnResizing
 function table_setColumnResizing<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.utils.ts:279](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L279)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:278](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L278)
 
 Routes a transient column resizing updater through the table's resize handler.
 
@@ -30,7 +30,7 @@ This state tracks the active drag interaction; committed widths live in
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### updater
 

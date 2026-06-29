@@ -9,7 +9,7 @@ title: table_toggleAllColumnsVisible
 function table_toggleAllColumnsVisible<TFeatures, TData>(table, value?): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:303](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L303)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:319](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L319)
 
 Shows or hides every hideable leaf column.
 
@@ -29,7 +29,7 @@ Columns that cannot hide stay visible when toggling all columns off.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### value?
 

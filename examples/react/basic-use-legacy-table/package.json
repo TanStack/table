@@ -10,11 +10,11 @@
     "test:types": "tsc"
   },
   "dependencies": {
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "@tanstack/react-devtools": "^0.10.5",
     "@tanstack/react-pacer": "^0.22.1",
-    "@tanstack/react-table": "^9.0.0-beta.16",
-    "@tanstack/react-table-devtools": "^9.0.0-beta.16",
+    "@tanstack/react-table": "^9.0.0-beta.23",
+    "@tanstack/react-table-devtools": "^9.0.0-beta.23",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
@@ -23,9 +23,9 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.2",
+    "@vitejs/plugin-react": "^6.0.3",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.16"
+    "vite": "^8.1.0"
   }
 }

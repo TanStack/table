@@ -33,7 +33,7 @@ The same `position` semantics as `column_getIndex` apply.
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ### position?
 

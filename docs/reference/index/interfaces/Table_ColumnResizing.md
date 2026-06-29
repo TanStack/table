@@ -33,18 +33,15 @@ Pass `true` to ignore initial state and reset to the no-drag default state.
 
 ***
 
-### setcolumnResizing()
+### setColumnResizing()
 
 ```ts
-setcolumnResizing: (updater) => void;
+setColumnResizing: (updater) => void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L61)
+Defined in: [features/column-resizing/columnResizingFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.types.ts#L58)
 
 Updates transient resize interaction state with a next state or updater function.
-
-The lowercase `c` in this API name matches the current generated v9 table
-API for the `columnResizing` state slice.
 
 #### Parameters
 

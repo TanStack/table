@@ -8,7 +8,10 @@ Want to skip to the implementation? Check out these React examples:
 
 - [Column Ordering](../examples/column-ordering)
 - [Column DnD](../examples/column-dnd)
-### React Setup
+
+### Column Ordering Setup
+
+Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```tsx
 import { useTable, tableFeatures, columnOrderingFeature } from '@tanstack/react-table'

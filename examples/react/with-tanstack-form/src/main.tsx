@@ -1,21 +1,17 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { TanStackDevtools } from '@tanstack/react-devtools'
+import { formDevtoolsPlugin } from '@tanstack/react-form-devtools'
 import {
-  columnFilteringFeature,
-  createColumnHelper,
-  createFilteredRowModel,
-  createPaginatedRowModel,
-  filterFns,
-  rowPaginationFeature,
-  tableFeatures,
-  useTable,
-} from '@tanstack/react-table'
-import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
-import { useStore } from '@tanstack/react-form'
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { z } from 'zod'
 import { makeData } from './makeData'
 import { useAppForm } from './form'
-import type { Column, Table } from '@tanstack/react-table'
+import { createAppColumnHelper, useAppTable } from './table'
+import type { appFeatures } from './table'
+import type { Row } from '@tanstack/react-table'
 import type { Person } from './makeData'
 import './index.css'
 
@@ -25,17 +21,8 @@ import './index.css'
  */
 type FormRow = Omit<Person, 'subRows'>
 
-// Define table features
-const features = tableFeatures({
-  rowPaginationFeature,
-  columnFilteringFeature,
-  filteredRowModel: createFilteredRowModel(),
-  paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
-})
-
 // Create column helper with features and row type
-const columnHelper = createColumnHelper<typeof features, FormRow>()
+const columnHelper = createAppColumnHelper<FormRow>()
 
 // Zod validation schema for a person
 const personSchema = z.object({
@@ -59,12 +46,22 @@ const formSchema = z.object({
 })
 
 function App() {
+  return (
+    <div className="demo-root">
+      <FullTableFormExample />
+      <div className="spacer-md" />
+      <RowSubmitFormExample />
+    </div>
+  )
+}
+
+function FullTableFormExample() {
   // Keep `data` typed as FormRow[] (not Person[]) so form field paths do not carry recursive `subRows` (TS2589).
-  const initialData: Array<FormRow> = makeData(100)
+  const [data, setData] = React.useState<Array<FormRow>>(() => makeData(100))
 
   const form = useAppForm({
     defaultValues: {
-      data: initialData,
+      data,
     },
     onSubmit: ({ value }) => {
       alert(
@@ -76,7 +73,6 @@ function App() {
     },
   })
 
-  // Create columns with form fields for editing
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -84,12 +80,7 @@ function App() {
           header: 'First Name',
           footer: (props) => props.column.id,
           cell: ({ row }) => (
-            <form.AppField
-              name={`data[${row.index}].firstName`}
-              validators={{
-                onChange: z.string().min(1, 'Required'),
-              }}
-            >
+            <form.AppField name={`data[${row.index}].firstName`}>
               {(field) => <field.TextField />}
             </form.AppField>
           ),
@@ -98,12 +89,7 @@ function App() {
           header: () => <span>Last Name</span>,
           footer: (props) => props.column.id,
           cell: ({ row }) => (
-            <form.AppField
-              name={`data[${row.index}].lastName`}
-              validators={{
-                onChange: z.string().min(1, 'Required'),
-              }}
-            >
+            <form.AppField name={`data[${row.index}].lastName`}>
               {(field) => <field.TextField />}
             </form.AppField>
           ),
@@ -112,12 +98,7 @@ function App() {
           header: () => 'Age',
           footer: (props) => props.column.id,
           cell: ({ row }) => (
-            <form.AppField
-              name={`data[${row.index}].age`}
-              validators={{
-                onChange: z.number().min(0, 'Must be positive'),
-              }}
-            >
+            <form.AppField name={`data[${row.index}].age`}>
               {(field) => <field.NumberField />}
             </form.AppField>
           ),
@@ -126,12 +107,7 @@ function App() {
           header: () => <span>Visits</span>,
           footer: (props) => props.column.id,
           cell: ({ row }) => (
-            <form.AppField
-              name={`data[${row.index}].visits`}
-              validators={{
-                onChange: z.number().min(0, 'Must be positive'),
-              }}
-            >
+            <form.AppField name={`data[${row.index}].visits`}>
               {(field) => <field.NumberField />}
             </form.AppField>
           ),
@@ -149,12 +125,7 @@ function App() {
           header: 'Profile Progress',
           footer: (props) => props.column.id,
           cell: ({ row }) => (
-            <form.AppField
-              name={`data[${row.index}].progress`}
-              validators={{
-                onChange: z.number().min(0).max(100, 'Must be 0-100'),
-              }}
-            >
+            <form.AppField name={`data[${row.index}].progress`}>
               {(field) => <field.NumberField />}
             </form.AppField>
           ),
@@ -163,46 +134,44 @@ function App() {
     [form],
   )
 
-  // Subscribe only to array length to trigger re-renders when rows are added/removed
-  // This avoids infinite loops from subscribing to the entire data array
-  const dataLength = useStore(form.store, (state) => state.values.data.length)
-  void dataLength // Used to trigger re-renders, value not needed
-
-  // Create table using form state as data source
-  // The table gets fresh data on each render, cells handle their own field state
-  const table = useTable(
+  const table = useAppTable(
     {
-      features,
+      key: 'with-tanstack-form-full-table',
       columns,
-      data: form.state.values.data,
+      data,
       debugTable: true,
     },
-    (state) => state, // default selector
+    (state) => state,
   )
 
+  useTanStackTableDevtools(table)
+
   const refreshData = () => {
-    const data: Array<FormRow> = makeData(100)
-    form.reset({ data })
+    setData(makeData(100))
   }
 
   const stressTest = () => {
-    const data: Array<FormRow> = makeData(200_000)
-    form.reset({ data })
+    setData(makeData(1_000_000))
   }
 
   const addRow = () => {
-    form.pushFieldValue('data', {
-      firstName: '',
-      lastName: '',
-      age: 0,
-      visits: 0,
-      progress: 0,
-      status: 'single',
-    })
+    setData([
+      {
+        firstName: '',
+        lastName: '',
+        age: 0,
+        visits: 0,
+        progress: 0,
+        status: 'single',
+      },
+      ...form.state.values.data,
+    ])
+    table.firstPage()
   }
 
   return (
-    <div className="demo-root">
+    <section className="example-section">
+      <h2 className="section-title">Single form around the table</h2>
       <form
         onSubmit={(e) => {
           e.preventDefault()
@@ -210,12 +179,9 @@ function App() {
           form.handleSubmit()
         }}
       >
-        {/* Form state indicators */}
         <div className="form-actions">
           <form.AppForm>
             <form.FormStateIndicator />
-          </form.AppForm>
-          <form.AppForm>
             <form.SubmitButton label="Save All Changes" />
           </form.AppForm>
           <button
@@ -237,205 +203,331 @@ function App() {
             onClick={stressTest}
             className="demo-button secondary-action"
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
 
-        {/* Table */}
-        <>
-          <div className="spacer-sm" />
-          <table>
-            <thead>
-              {table.getHeaderGroups().map((headerGroup) => (
-                <tr key={headerGroup.id}>
-                  {headerGroup.headers.map((header) => {
-                    return (
-                      <th key={header.id} colSpan={header.colSpan}>
-                        {header.isPlaceholder ? null : (
-                          <div>
-                            <table.FlexRender header={header} />
-                            {header.column.getCanFilter() ? (
-                              <div>
-                                <Filter column={header.column} table={table} />
-                              </div>
-                            ) : null}
-                          </div>
-                        )}
-                      </th>
-                    )
-                  })}
-                </tr>
-              ))}
-            </thead>
-            <tbody>
-              {table.getRowModel().rows.map((row) => {
-                return (
-                  <tr key={row.id}>
-                    {row.getAllCells().map((cell) => {
-                      return (
-                        <td key={cell.id}>
-                          <table.FlexRender cell={cell} />
-                        </td>
-                      )
-                    })}
-                  </tr>
-                )
-              })}
-            </tbody>
-          </table>
+        <table.AppTable
+          selector={(state) => ({
+            columnFilters: state.columnFilters,
+            pagination: state.pagination,
+            sorting: state.sorting,
+          })}
+        >
+          {() => (
+            <>
+              <div className="spacer-sm" />
+              <div className="scroll-container">
+                <table>
+                  <thead>
+                    {table.getHeaderGroups().map((headerGroup) => (
+                      <tr key={headerGroup.id}>
+                        {headerGroup.headers.map((header) => (
+                          <table.AppHeader header={header} key={header.id}>
+                            {(appHeader) => (
+                              <th
+                                key={appHeader.id}
+                                colSpan={appHeader.colSpan}
+                              >
+                                {appHeader.isPlaceholder ? null : (
+                                  <div
+                                    className={
+                                      appHeader.column.getCanSort()
+                                        ? 'sortable-header'
+                                        : ''
+                                    }
+                                    onClick={appHeader.column.getToggleSortingHandler()}
+                                    title={
+                                      appHeader.column.getCanSort()
+                                        ? appHeader.column.getNextSortingOrder() ===
+                                          'asc'
+                                          ? 'Sort ascending'
+                                          : appHeader.column.getNextSortingOrder() ===
+                                              'desc'
+                                            ? 'Sort descending'
+                                            : 'Clear sort'
+                                        : undefined
+                                    }
+                                  >
+                                    <appHeader.FlexRender />
+                                    <appHeader.SortIndicator />
+                                    <appHeader.ColumnFilter />
+                                  </div>
+                                )}
+                              </th>
+                            )}
+                          </table.AppHeader>
+                        ))}
+                      </tr>
+                    ))}
+                  </thead>
+                  <tbody>
+                    {table.getRowModel().rows.map((row) => (
+                      <tr key={row.id}>
+                        {row.getAllCells().map((cell) => (
+                          <td key={cell.id}>
+                            <table.FlexRender cell={cell} />
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
 
-          {/* Pagination controls */}
-          <div className="spacer-sm" />
-          <div className="controls">
-            <button
-              type="button"
-              className="demo-button demo-button-sm"
-              onClick={() => table.firstPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<<'}
-            </button>
-            <button
-              type="button"
-              className="demo-button demo-button-sm"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              {'<'}
-            </button>
-            <button
-              type="button"
-              className="demo-button demo-button-sm"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>'}
-            </button>
-            <button
-              type="button"
-              className="demo-button demo-button-sm"
-              onClick={() => table.lastPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              {'>>'}
-            </button>
-            <span className="inline-controls">
-              <div>Page</div>
-              <strong>
-                {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
-                {table.getPageCount().toLocaleString()}
-              </strong>
-            </span>
-            <span className="inline-controls">
-              | Go to page:
-              <input
-                type="number"
-                min="1"
-                max={table.getPageCount()}
-                defaultValue={table.state.pagination.pageIndex + 1}
-                onChange={(e) => {
-                  const page = e.target.value ? Number(e.target.value) - 1 : 0
-                  table.setPageIndex(page)
-                }}
-                className="page-size-input"
-              />
-            </span>
-            <select
-              value={table.state.pagination.pageSize}
-              onChange={(e) => {
-                table.setPageSize(Number(e.target.value))
-              }}
-            >
-              {[10, 20, 30, 40, 50].map((pageSize) => (
-                <option key={pageSize} value={pageSize}>
-                  Show {pageSize}
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-            {table.getRowCount().toLocaleString()} Rows
-          </div>
-        </>
+              <table.PaginationControls />
+              <table.RowCount />
+            </>
+          )}
+        </table.AppTable>
       </form>
-    </div>
+    </section>
   )
 }
 
-function Filter({
-  column,
-  table,
-}: {
-  column: Column<typeof features, FormRow>
-  table: Table<typeof features, FormRow>
-}) {
-  const firstValue = table
-    .getPreFilteredRowModel()
-    .flatRows[0]?.getValue(column.id)
+function RowSubmitFormExample() {
+  const [data, setData] = React.useState<Array<FormRow>>(() => makeData(100))
 
-  const columnFilterValue = column.getFilterValue()
-
-  return typeof firstValue === 'number' ? (
-    <div className="filter-row">
-      <DebouncedInput
-        type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[0] ?? ''}
-        onChange={(value) =>
-          column.setFilterValue((old: [number, number]) => [value, old?.[1]])
-        }
-        placeholder={`Min`}
-        className="filter-input"
-      />
-      <DebouncedInput
-        type="number"
-        value={(columnFilterValue as [number, number] | undefined)?.[1] ?? ''}
-        onChange={(value) =>
-          column.setFilterValue((old: [number, number]) => [old?.[0], value])
-        }
-        placeholder={`Max`}
-        className="filter-input"
-      />
-    </div>
-  ) : (
-    <DebouncedInput
-      type="text"
-      value={(columnFilterValue ?? '') as string}
-      onChange={(value) => column.setFilterValue(value)}
-      placeholder={`Search...`}
-      className="filter-select"
-    />
+  const columns = React.useMemo(
+    () =>
+      columnHelper.columns([
+        columnHelper.accessor('firstName', {
+          header: 'First Name',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('lastName', {
+          header: () => <span>Last Name</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('age', {
+          header: () => 'Age',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('visits', {
+          header: () => <span>Visits</span>,
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('status', {
+          header: 'Status',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.accessor('progress', {
+          header: 'Profile Progress',
+          footer: (props) => props.column.id,
+        }),
+        columnHelper.display({
+          id: 'save',
+          header: '',
+          cell: () => null,
+        }),
+      ]),
+    [],
   )
-}
 
-// A debounced input react component
-function DebouncedInput({
-  value: initialValue,
-  onChange,
-  debounce = 500,
-  ...props
-}: {
-  value: string | number
-  onChange: (value: string | number) => void
-  debounce?: number
-} & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
-  const [value, setValue] = React.useState(initialValue)
+  const table = useAppTable(
+    {
+      key: 'with-tanstack-form-row-submit',
+      columns,
+      data,
+      debugTable: true,
+    },
+    (state) => state,
+  )
 
-  React.useEffect(() => {
-    setValue(initialValue)
-  }, [initialValue])
+  useTanStackTableDevtools(table)
 
-  const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
+  const refreshData = () => {
+    setData(makeData(100))
+  }
+
+  const saveRow = React.useCallback((originalRow: FormRow, value: FormRow) => {
+    setData((old) =>
+      old.map((row) => {
+        return row === originalRow ? value : row
+      }),
+    )
+  }, [])
 
   return (
-    <input
-      {...props}
-      value={value}
-      onChange={(e) => {
-        setValue(e.target.value)
-        debouncedOnChange(e.target.value)
-      }}
-    />
+    <section className="example-section">
+      <h2 className="section-title">Form submission per row</h2>
+      <div className="form-actions">
+        <button
+          type="button"
+          onClick={refreshData}
+          className="demo-button secondary-action"
+        >
+          Regenerate Data
+        </button>
+      </div>
+      <table.AppTable
+        selector={(state) => ({
+          columnFilters: state.columnFilters,
+          pagination: state.pagination,
+          sorting: state.sorting,
+        })}
+      >
+        {() => (
+          <>
+            <div className="spacer-sm" />
+            <div className="scroll-container">
+              <table>
+                <thead>
+                  {table.getHeaderGroups().map((headerGroup) => (
+                    <tr key={headerGroup.id}>
+                      {headerGroup.headers.map((header) => (
+                        <table.AppHeader header={header} key={header.id}>
+                          {(appHeader) => (
+                            <th key={appHeader.id} colSpan={appHeader.colSpan}>
+                              {appHeader.isPlaceholder ? null : (
+                                <div
+                                  className={
+                                    appHeader.column.getCanSort()
+                                      ? 'sortable-header'
+                                      : ''
+                                  }
+                                  onClick={appHeader.column.getToggleSortingHandler()}
+                                  title={
+                                    appHeader.column.getCanSort()
+                                      ? appHeader.column.getNextSortingOrder() ===
+                                        'asc'
+                                        ? 'Sort ascending'
+                                        : appHeader.column.getNextSortingOrder() ===
+                                            'desc'
+                                          ? 'Sort descending'
+                                          : 'Clear sort'
+                                      : undefined
+                                  }
+                                >
+                                  <appHeader.FlexRender />
+                                  <appHeader.SortIndicator />
+                                  <appHeader.ColumnFilter />
+                                </div>
+                              )}
+                            </th>
+                          )}
+                        </table.AppHeader>
+                      ))}
+                    </tr>
+                  ))}
+                </thead>
+                <tbody>
+                  {table.getRowModel().rows.map((row) => (
+                    <RowSubmitTableRow
+                      key={row.id}
+                      row={row}
+                      onSave={saveRow}
+                    />
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            <table.PaginationControls />
+            <table.RowCount />
+          </>
+        )}
+      </table.AppTable>
+    </section>
+  )
+}
+
+function RowSubmitTableRow({
+  row,
+  onSave,
+}: {
+  row: Row<typeof appFeatures, FormRow>
+  onSave: (originalRow: FormRow, value: FormRow) => void
+}) {
+  const form = useAppForm({
+    defaultValues: row.original,
+    onSubmit: ({ value }) => {
+      onSave(row.original, value)
+      form.reset(value)
+    },
+    validators: {
+      onChange: personSchema,
+    },
+  })
+
+  React.useEffect(() => {
+    form.reset(row.original)
+  }, [form, row.original])
+
+  const renderCell = (columnId: string) => {
+    switch (columnId) {
+      case 'firstName':
+        return (
+          <form.AppField name="firstName">
+            {(field) => <field.TextField />}
+          </form.AppField>
+        )
+      case 'lastName':
+        return (
+          <form.AppField name="lastName">
+            {(field) => <field.TextField />}
+          </form.AppField>
+        )
+      case 'age':
+        return (
+          <form.AppField name="age">
+            {(field) => <field.NumberField />}
+          </form.AppField>
+        )
+      case 'visits':
+        return (
+          <form.AppField name="visits">
+            {(field) => <field.NumberField />}
+          </form.AppField>
+        )
+      case 'status':
+        return (
+          <form.AppField name="status">
+            {(field) => <field.SelectField />}
+          </form.AppField>
+        )
+      case 'progress':
+        return (
+          <form.AppField name="progress">
+            {(field) => <field.NumberField />}
+          </form.AppField>
+        )
+      case 'save':
+        return (
+          <form.Subscribe
+            selector={(state) => ({
+              canSubmit: state.canSubmit,
+              isDirty: state.isDirty,
+              isSubmitting: state.isSubmitting,
+            })}
+          >
+            {({ canSubmit, isDirty, isSubmitting }) => (
+              <div className="row-action-cell">
+                {isDirty ? (
+                  <button
+                    type="button"
+                    disabled={!canSubmit || isSubmitting}
+                    onClick={() => form.handleSubmit()}
+                    className="demo-button demo-button-sm primary-action"
+                  >
+                    {isSubmitting ? 'Saving...' : 'Save'}
+                  </button>
+                ) : null}
+              </div>
+            )}
+          </form.Subscribe>
+        )
+      default:
+        return null
+    }
+  }
+
+  return (
+    <tr>
+      {row.getAllCells().map((cell) => (
+        <td key={cell.id}>{renderCell(cell.column.id)}</td>
+      ))}
+    </tr>
   )
 }
 
@@ -445,5 +537,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin(), formDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

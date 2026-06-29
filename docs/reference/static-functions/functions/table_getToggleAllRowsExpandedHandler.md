@@ -9,7 +9,7 @@ title: table_getToggleAllRowsExpandedHandler
 function table_getToggleAllRowsExpandedHandler<TFeatures, TData>(table): (e) => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L145)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L153)
 
 Creates an event handler that toggles all rows expanded.
 
@@ -30,7 +30,7 @@ is toggled.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

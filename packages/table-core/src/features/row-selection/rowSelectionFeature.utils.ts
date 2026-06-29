@@ -1,4 +1,9 @@
-import { cloneState } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  hasOwn,
+  makeObjectMap,
+} from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -20,7 +25,7 @@ import type { RowSelectionState } from './rowSelectionFeature.types'
  * ```
  */
 export function getDefaultRowSelectionState(): RowSelectionState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
@@ -62,7 +67,12 @@ export function table_resetRowSelection<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setRowSelection(
     table,
-    defaultState ? {} : cloneState(table.initialState.rowSelection ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : Object.assign(
+          makeObjectMap<true>(),
+          cloneState(table.initialState.rowSelection ?? {}),
+        ),
   )
 }
 
@@ -82,23 +92,36 @@ export function table_resetRowSelection<
 export function table_toggleAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, value?: boolean) {
+>(
+  table: Table_Internal<TFeatures, TData>,
+  value?: boolean,
+  opts?: { deselectAll?: boolean },
+) {
   table_setRowSelection(table, (old) => {
     value =
-      typeof value !== 'undefined' ? value : !table_getIsAllRowsSelected(table)
+      typeof value !== 'undefined'
+        ? value
+        : !callMemoOrStaticFn(
+            table,
+            'getIsAllRowsSelected',
+            table_getIsAllRowsSelected,
+          )
 
-    const rowSelection = { ...old }
+    if (opts?.deselectAll && !value) {
+      // deselectAll opt: clear the whole selection map instead of deleting ids one-by-one
+      return makeObjectMap<true>()
+    }
 
+    const rowSelection = Object.assign(makeObjectMap<true>(), old)
     const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
 
     // We don't use `mutateRowIsSelected` here for performance reasons.
     // All of the rows are flat already, so it wouldn't be worth it
     if (value) {
       preGroupedFlatRows.forEach((row) => {
-        if (!row_getCanSelect(row)) {
-          return
+        if (row_getCanSelect(row)) {
+          rowSelection[row.id] = true
         }
-        rowSelection[row.id] = true
       })
     } else {
       preGroupedFlatRows.forEach((row) => {
@@ -124,14 +147,30 @@ export function table_toggleAllRowsSelected<
 export function table_toggleAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, value?: boolean) {
+>(
+  table: Table_Internal<TFeatures, TData>,
+  value?: boolean,
+  opts?: { deselectAll?: boolean },
+) {
   table_setRowSelection(table, (old) => {
     const resolvedValue =
       typeof value !== 'undefined'
         ? value
-        : !table_getIsAllPageRowsSelected(table)
+        : !callMemoOrStaticFn(
+            table,
+            'getIsAllPageRowsSelected',
+            table_getIsAllPageRowsSelected,
+          )
 
-    const rowSelection: RowSelectionState = { ...old }
+    if (opts?.deselectAll && !resolvedValue) {
+      // deselectAll opt: clear the whole selection map instead of deleting ids one-by-one
+      return makeObjectMap<true>()
+    }
+
+    const rowSelection: RowSelectionState = Object.assign(
+      makeObjectMap<true>(),
+      old,
+    )
 
     table.getRowModel().rows.forEach((row) => {
       mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
@@ -176,15 +215,21 @@ export function table_getSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (
+    !callMemoOrStaticFn(
+      table,
+      'getIsSomeRowsSelected',
+      table_getIsSomeRowsSelected,
+    )
+  ) {
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
-  return selectRowsFn(rowModel)
+  return selectRowsFn(rowModel, table)
 }
 
 /**
@@ -204,15 +249,21 @@ export function table_getFilteredSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (
+    !callMemoOrStaticFn(
+      table,
+      'getIsSomeRowsSelected',
+      table_getIsSomeRowsSelected,
+    )
+  ) {
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
-  return selectRowsFn(rowModel)
+  return selectRowsFn(rowModel, table)
 }
 
 /**
@@ -232,15 +283,36 @@ export function table_getGroupedSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (
+    !callMemoOrStaticFn(
+      table,
+      'getIsSomeRowsSelected',
+      table_getIsSomeRowsSelected,
+    )
+  ) {
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
-  return selectRowsFn(rowModel)
+  return selectRowsFn(rowModel, table)
+}
+
+/**
+ * Returns the ids of all selected rows.
+ *
+ * @example
+ * ```ts
+ * const selectedRowIds = table_getSelectedRowIds(table)
+ * ```
+ */
+export function table_getSelectedRowIds<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): Array<string> {
+  return Object.keys(table.atoms.rowSelection?.get() ?? {})
 }
 
 /**
@@ -259,7 +331,7 @@ export function table_getIsAllRowsSelected<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const preGroupedFlatRows = table.getFilteredRowModel().flatRows
-  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -268,7 +340,7 @@ export function table_getIsAllRowsSelected<
   if (isAllRowsSelected) {
     if (
       preGroupedFlatRows.some(
-        (row) => row_getCanSelect(row) && !rowSelection[row.id],
+        (row) => row_getCanSelect(row) && !isRowSelected(row, rowSelection),
       )
     ) {
       isAllRowsSelected = false
@@ -295,13 +367,13 @@ export function table_getIsAllPageRowsSelected<
   const paginationFlatRows = table
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
-  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
 
   if (
     isAllPageRowsSelected &&
-    paginationFlatRows.some((row) => !rowSelection[row.id])
+    paginationFlatRows.some((row) => !isRowSelected(row, rowSelection))
   ) {
     isAllPageRowsSelected = false
   }
@@ -312,8 +384,7 @@ export function table_getIsAllPageRowsSelected<
 /**
  * Checks whether selection is partially applied across filtered rows.
  *
- * The result is true when at least one row id is selected but fewer ids are
- * selected than the current filtered flat row count.
+ * The result is true when at least one row id is selected
  *
  * @example
  * ```ts
@@ -324,20 +395,14 @@ export function table_getIsSomeRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const totalSelected = Object.keys(
-    table.atoms.rowSelection?.get() ?? {},
-  ).length
   return (
-    totalSelected > 0 &&
-    totalSelected < table.getFilteredRowModel().flatRows.length
+    callMemoOrStaticFn(table, 'getSelectedRowIds', table_getSelectedRowIds)
+      .length > 0
   )
 }
 
 /**
  * Checks whether the current page has a partial selection.
- *
- * This is false when all selectable page rows are selected. Otherwise it is true
- * if any selectable page row or descendant is selected.
  *
  * @example
  * ```ts
@@ -348,12 +413,10 @@ export function table_getIsSomePageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const paginationFlatRows = table.getPaginatedRowModel().flatRows
-  return table_getIsAllPageRowsSelected(table)
-    ? false
-    : paginationFlatRows
-        .filter((row) => row_getCanSelect(row))
-        .some((row) => row_getIsSelected(row) || row_getIsSomeSelected(row))
+  return table
+    .getPaginatedRowModel()
+    .flatRows.filter((row) => row_getCanSelect(row))
+    .some((row) => row_getIsSelected(row) || row_getIsSomeSelected(row))
 }
 
 /**
@@ -413,6 +476,10 @@ export function table_getToggleAllPageRowsSelectedHandler<
  * @example
  * ```ts
  * row_toggleSelected(row)
+ * row_toggleSelected(row, true)
+ * row_toggleSelected(row, false)
+ * row_toggleSelected(row, true, { selectChildren: false })
+ * row_toggleSelected(row, false, { selectChildren: false })
  * ```
  */
 export function row_toggleSelected<
@@ -434,17 +501,17 @@ export function row_toggleSelected<
       return old
     }
 
-    const selectedRowIds = { ...old }
+    const rowSelection = Object.assign(makeObjectMap<true>(), old)
 
     mutateRowIsSelected(
-      selectedRowIds,
+      rowSelection,
       row.id,
       value,
       opts?.selectChildren ?? true,
       row.table,
     )
 
-    return selectedRowIds
+    return rowSelection
   })
 }
 
@@ -462,7 +529,8 @@ export function row_getIsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  return isRowSelected(row)
+  const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
+  return isRowSelected(row, rowSelection)
 }
 
 /**
@@ -598,28 +666,28 @@ const mutateRowIsSelected = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  selectedRowIds: Record<string, boolean | undefined>,
+  rowSelection: RowSelectionState,
   rowId: string,
   value: boolean,
   includeChildren: boolean,
   table: Table_Internal<TFeatures, TData>,
-) => {
+): void => {
   const row = table.getRow(rowId, true)
 
   if (value) {
     if (!row_getCanMultiSelect(row)) {
-      Object.keys(selectedRowIds).forEach((key) => delete selectedRowIds[key])
+      Object.keys(rowSelection).forEach((key) => delete rowSelection[key])
     }
     if (row_getCanSelect(row)) {
-      selectedRowIds[rowId] = true
+      rowSelection[rowId] = true
     }
   } else {
-    delete selectedRowIds[rowId]
+    delete rowSelection[rowId]
   }
 
   if (includeChildren && row.subRows.length && row_getCanSelectSubRows(row)) {
     row.subRows.forEach((r) =>
-      mutateRowIsSelected(selectedRowIds, r.id, value, includeChildren, table),
+      mutateRowIsSelected(rowSelection, r.id, value, includeChildren, table),
     )
   }
 }
@@ -638,10 +706,13 @@ const mutateRowIsSelected = <
 export function selectRowsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(rowModel: RowModel<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(
+  rowModel: RowModel<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
+): RowModel<TFeatures, TData> {
   const newSelectedFlatRows: Array<Row<TFeatures, TData>> = []
-  const newSelectedRowsById: Record<string, Row<TFeatures, TData>> = {}
-
+  const newSelectedRowsById = makeObjectMap<Row<TFeatures, TData>>()
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
   // Filters top level and nested rows.
   const recurseRows = (
     rows: Array<Row<TFeatures, TData>>,
@@ -650,7 +721,7 @@ export function selectRowsFn<
     const result: Array<Row<TFeatures, TData>> = []
     for (let i = 0; i < rows.length; i++) {
       const row = rows[i]!
-      const isSelected = isRowSelected(row)
+      const isSelected = isRowSelected(row, rowSelection)
 
       if (isSelected) {
         newSelectedFlatRows.push(row)
@@ -694,8 +765,8 @@ export function selectRowsFn<
 export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>): boolean {
-  return (row.table.atoms.rowSelection?.get() ?? {})[row.id] ?? false
+>(row: Row<TFeatures, TData>, rowSelection: RowSelectionState): boolean {
+  return !!(hasOwn(rowSelection, row.id) && rowSelection[row.id])
 }
 
 /**
@@ -714,6 +785,8 @@ export function isSubRowSelected<
 >(row: Row<TFeatures, TData>): boolean | 'some' | 'all' {
   if (!row.subRows.length) return false
 
+  const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
+
   let allChildrenSelected = true
   let someSelected = false
 
@@ -724,7 +797,7 @@ export function isSubRowSelected<
     }
 
     if (row_getCanSelect(subRow)) {
-      if (isRowSelected(subRow)) {
+      if (isRowSelected(subRow, rowSelection)) {
         someSelected = true
       } else {
         allChildrenSelected = false

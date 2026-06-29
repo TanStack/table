@@ -1,4 +1,9 @@
-import { callMemoOrStaticFn, cloneState } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  hasOwn,
+  makeObjectMap,
+} from '../../utils'
 import { getDefaultColumnPinningState } from '../column-pinning/columnPinningFeature.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -20,7 +25,7 @@ import type { Row } from '../../types/Row'
  * ```
  */
 export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
@@ -40,12 +45,13 @@ export function column_toggleVisibility<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>, visible?: boolean): void {
   if (column_getCanHide(column)) {
-    table_setColumnVisibility(column.table, (old) => ({
-      ...old,
-      [column.id]:
+    table_setColumnVisibility(column.table, (old) => {
+      const next = Object.assign(makeObjectMap<boolean>(), old)
+      next[column.id] =
         visible ??
-        !callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
-    }))
+        !callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+      return next
+    })
   }
 }
 
@@ -67,12 +73,17 @@ export function column_getIsVisible<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): boolean {
   const childColumns = column.columns
+  if (childColumns.length) {
+    return childColumns.some((childColumn) =>
+      callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
+    )
+  }
+
+  const columnVisibility = column.table.atoms.columnVisibility?.get()
   return (
-    (childColumns.length
-      ? childColumns.some((childColumn) =>
-          callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
-        )
-      : column.table.atoms.columnVisibility?.get()?.[column.id]) ?? true
+    (columnVisibility && hasOwn(columnVisibility, column.id)
+      ? columnVisibility[column.id]
+      : undefined) ?? true
   )
 }
 
@@ -192,7 +203,7 @@ export function row_getVisibleCellsByColumnId<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Record<string, Cell<TFeatures, TData, unknown>> {
-  const result: Record<string, Cell<TFeatures, TData, unknown>> = {}
+  const result = makeObjectMap<Cell<TFeatures, TData, unknown>>()
   const allCells = row.getAllCells()
   for (let i = 0; i < allCells.length; i++) {
     const cell = allCells[i]!
@@ -286,7 +297,12 @@ export function table_resetColumnVisibility<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : cloneState(table.initialState.columnVisibility ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : Object.assign(
+          makeObjectMap<boolean>(),
+          cloneState(table.initialState.columnVisibility ?? {}),
+        ),
   )
 }
 
@@ -306,7 +322,7 @@ export function table_toggleAllColumnsVisible<
 >(table: Table_Internal<TFeatures, TData>, value?: boolean) {
   value = value ?? !table_getIsAllColumnsVisible(table)
 
-  const visibility: Record<string, boolean> = {}
+  const visibility = makeObjectMap<boolean>()
   const leafColumns = table.getAllLeafColumns()
   for (let i = 0; i < leafColumns.length; i++) {
     const column = leafColumns[i]!

@@ -1,66 +1,25 @@
 <script lang="ts">
-  import {
-    columnFilteringFeature,
-    createColumnHelper,
-    createFilteredRowModel,
-    createPaginatedRowModel,
-    createTable,
-    filterFns,
-    FlexRender,
-    renderComponent,
-    rowPaginationFeature,
-    tableFeatures,
-  } from '@tanstack/svelte-table'
-  import type { Column, Table } from '@tanstack/svelte-table'
-  import { z } from 'zod'
-  import { makeData } from './makeData'
-  import type { Person } from './makeData'
+  import { FlexRender, renderComponent } from '@tanstack/svelte-table'
+  import { untrack } from 'svelte'
+  import { createAppColumnHelper, createAppTable } from './table'
   import { createAppForm } from './form'
-  import TextFieldCell from './TextFieldCell.svelte'
+  import { formSchema, personSchema } from './schema'
+  import { makeData } from './makeData'
   import NumberFieldCell from './NumberFieldCell.svelte'
+  import RowSubmitTableRow from './RowSubmitTableRow.svelte'
   import SelectFieldCell from './SelectFieldCell.svelte'
+  import TextFieldCell from './TextFieldCell.svelte'
+  import type { FormData, FormRow } from './schema'
   import './index.css'
 
-  // Define table features
-  const features = tableFeatures({
-    rowPaginationFeature,
-    columnFilteringFeature,
-    filteredRowModel: createFilteredRowModel(),
-    paginatedRowModel: createPaginatedRowModel(),
-    filterFns,
-  })
+  const columnHelper = createAppColumnHelper<FormRow>()
 
-  // Create column helper with features and Person type
-  const columnHelper = createColumnHelper<typeof features, Person>()
+  let fullData = $state<Array<FormRow>>(makeData(100))
 
-  // Zod validation schema for a person
-  const personSchema = z.object({
-    firstName: z.string().min(1, 'First name is required'),
-    lastName: z.string().min(1, 'Last name is required'),
-    age: z
-      .number()
-      .min(0, 'Age must be positive')
-      .max(150, 'Age must be realistic'),
-    visits: z.number().min(0, 'Visits must be positive'),
-    progress: z
-      .number()
-      .min(0, 'Progress must be 0-100')
-      .max(100, 'Progress must be 0-100'),
-    status: z.enum(['relationship', 'complicated', 'single']),
-  })
-
-  // Form data schema
-  const formSchema = z.object({
-    data: z.array(personSchema),
-  })
-
-  type FormData = z.infer<typeof formSchema>
-
-  // Initialize form with makeData
   const form = createAppForm(() => ({
     defaultValues: {
-      data: makeData(1_000),
-    } as FormData,
+      data: fullData,
+    },
     onSubmit: ({ value }: { value: FormData }) => {
       alert(
         `Submitted ${value.data.length} records!\n\nFirst record: ${JSON.stringify(value.data[0], null, 2)}`,
@@ -71,8 +30,12 @@
     },
   }))
 
-  // Create columns with form fields for editing
-  const columns = columnHelper.columns([
+  $effect(() => {
+    const nextData = fullData
+    untrack(() => form.reset({ data: nextData }))
+  })
+
+  const fullColumns = columnHelper.columns([
     columnHelper.accessor('firstName', {
       header: 'First Name',
       footer: (props) => props.column.id,
@@ -130,246 +93,273 @@
           form,
           rowIndex: row.index,
           fieldName: 'progress',
-          max: 100,
         }),
     }),
   ])
 
-  // Create table using form state as data source
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return form.state.values.data
-      },
-      debugTable: true,
+  const fullTable = createAppTable({
+    columns: fullColumns,
+    get data() {
+      return fullData
     },
-    (state) => state,
-  )
+    debugTable: true,
+  })
 
-  const refreshData = () => {
-    form.reset({ data: makeData(1_000) })
-  }
-  const stressTest = () => {
-    form.reset({ data: makeData(200_000) })
+  const fullHeaderGroups = $derived.by(() => {
+    JSON.stringify(fullTable.state)
+    return fullTable.getHeaderGroups()
+  })
+
+  const fullRows = $derived.by(() => {
+    JSON.stringify(fullTable.state)
+    return fullTable.getRowModel().rows
+  })
+
+  function refreshFullData() {
+    fullData = makeData(100)
   }
 
-  const addRow = () => {
-    form.pushFieldValue('data', {
-      firstName: '',
-      lastName: '',
-      age: 0,
-      visits: 0,
-      progress: 0,
-      status: 'single',
+  function stressTest() {
+    fullData = makeData(1_000_000)
+  }
+
+  function addRow() {
+    fullData = [
+      {
+        firstName: '',
+        lastName: '',
+        age: 0,
+        visits: 0,
+        progress: 0,
+        status: 'single',
+      },
+      ...form.state.values.data,
+    ]
+    fullTable.firstPage()
+  }
+
+  let rowData = $state<Array<FormRow>>(makeData(100))
+
+  const rowColumns = columnHelper.columns([
+    columnHelper.accessor('firstName', {
+      header: 'First Name',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('lastName', {
+      header: 'Last Name',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('age', {
+      header: 'Age',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('visits', {
+      header: 'Visits',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.accessor('progress', {
+      header: 'Profile Progress',
+      footer: (props) => props.column.id,
+    }),
+    columnHelper.display({
+      id: 'save',
+      header: '',
+      cell: () => null,
+    }),
+  ])
+
+  const rowTable = createAppTable({
+    columns: rowColumns,
+    get data() {
+      return rowData
+    },
+    debugTable: true,
+  })
+
+  const rowHeaderGroups = $derived.by(() => {
+    JSON.stringify(rowTable.state)
+    return rowTable.getHeaderGroups()
+  })
+
+  const rowRows = $derived.by(() => {
+    JSON.stringify(rowTable.state)
+    return rowTable.getRowModel().rows
+  })
+
+  function refreshRowData() {
+    rowData = makeData(100)
+  }
+
+  function saveRow(originalRow: FormRow, value: FormRow) {
+    rowData = rowData.map((row) => {
+      return row === originalRow ? value : row
     })
-  }
-
-  function getFilterValue(column: Column<typeof features, Person>): unknown {
-    return column.getFilterValue()
-  }
-
-  function getFirstValue(
-    tbl: Table<typeof features, Person>,
-    columnId: string,
-  ): unknown {
-    return tbl.getPreFilteredRowModel().flatRows[0]?.getValue(columnId)
   }
 </script>
 
-{#snippet filterSnippet(column: Column<typeof features, Person>)}
-  {@const firstValue = getFirstValue(table, column.id)}
-  {@const filterValue = getFilterValue(column)}
-  {#if typeof firstValue === 'number'}
-    <div class="filter-row">
-      <input
-        type="number"
-        value={((filterValue as [number, number] | undefined)?.[0] ?? '') as any}
-        oninput={(e: Event) =>
-          column.setFilterValue((old: [number, number]) => [
-            (e.target as HTMLInputElement).value,
-            old?.[1],
-          ])}
-        placeholder="Min"
-        class="filter-input"
-      />
-      <input
-        type="number"
-        value={((filterValue as [number, number] | undefined)?.[1] ?? '') as any}
-        oninput={(e: Event) =>
-          column.setFilterValue((old: [number, number]) => [
-            old?.[0],
-            (e.target as HTMLInputElement).value,
-          ])}
-        placeholder="Max"
-        class="filter-input"
-      />
-    </div>
-  {:else}
-    <input
-      class="filter-select"
-      oninput={(e: Event) =>
-        column.setFilterValue((e.target as HTMLInputElement).value)}
-      placeholder="Search..."
-      type="text"
-      value={(filterValue ?? '') as string}
-    />
-  {/if}
-{/snippet}
-
 <div class="demo-root">
-  <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
-  </div>
-  <form
-    onsubmit={(e) => {
-      e.preventDefault()
-      e.stopPropagation()
-      void form.handleSubmit()
-    }}
-  >
-    <!-- Form state indicators -->
+  <section class="example-section">
+    <h2 class="section-title">Single form around the table</h2>
+    <form
+      onsubmit={(event) => {
+        event.preventDefault()
+        event.stopPropagation()
+        void form.handleSubmit()
+      }}
+    >
+      <div class="form-actions">
+        <form.AppForm>
+          {#snippet children()}
+            <form.FormStateIndicator />
+            <form.SubmitButton label="Save All Changes" />
+          {/snippet}
+        </form.AppForm>
+        <button type="button" onclick={addRow} class="demo-button success-action">
+          Add Row
+        </button>
+        <button
+          type="button"
+          onclick={refreshFullData}
+          class="demo-button secondary-action"
+        >
+          Regenerate Data
+        </button>
+        <button
+          type="button"
+          onclick={stressTest}
+          class="demo-button secondary-action"
+        >
+          Stress Test (1M rows)
+        </button>
+      </div>
+
+      <fullTable.AppTable>
+        <div class="spacer-sm"></div>
+        <div class="scroll-container">
+          <table>
+            <thead>
+              {#each fullHeaderGroups as headerGroup (headerGroup.id)}
+                <tr>
+                  {#each headerGroup.headers as h (h.id)}
+                    <fullTable.AppHeader header={h}>
+                      {#snippet children(header)}
+                        <th colSpan={header.colSpan}>
+                          {#if !header.isPlaceholder}
+                            <!-- svelte-ignore a11y_click_events_have_key_events -->
+                            <!-- svelte-ignore a11y_no_static_element_interactions -->
+                            <div
+                              class={header.column.getCanSort()
+                                ? 'sortable-header'
+                                : ''}
+                              onclick={header.column.getToggleSortingHandler()}
+                              title={header.column.getCanSort()
+                                ? header.column.getNextSortingOrder() === 'asc'
+                                  ? 'Sort ascending'
+                                  : header.column.getNextSortingOrder() ===
+                                      'desc'
+                                    ? 'Sort descending'
+                                    : 'Clear sort'
+                                : undefined}
+                            >
+                              <header.FlexRender header={header} />
+                              <header.SortIndicator />
+                              <header.ColumnFilter />
+                            </div>
+                          {/if}
+                        </th>
+                      {/snippet}
+                    </fullTable.AppHeader>
+                  {/each}
+                </tr>
+              {/each}
+            </thead>
+            <tbody>
+              {#each fullRows as row (row.id)}
+                <tr>
+                  {#each row.getAllCells() as cell (cell.id)}
+                    <td>
+                      <FlexRender cell={cell} />
+                    </td>
+                  {/each}
+                </tr>
+              {/each}
+            </tbody>
+          </table>
+        </div>
+
+        <fullTable.PaginationControls />
+        <fullTable.RowCount />
+      </fullTable.AppTable>
+    </form>
+  </section>
+
+  <div class="spacer-md"></div>
+
+  <section class="example-section">
+    <h2 class="section-title">Form submission per row</h2>
     <div class="form-actions">
-      <form.AppForm>
-        {#snippet children()}
-          <form.FormStateIndicator />
-        {/snippet}
-      </form.AppForm>
-      <form.AppForm>
-        {#snippet children()}
-          <form.SubmitButton label="Save All Changes" />
-        {/snippet}
-      </form.AppForm>
       <button
         type="button"
-        onclick={addRow}
-        class="demo-button success-action"
-      >
-        Add Row
-      </button>
-      <button
-        type="button"
-        onclick={refreshData}
+        onclick={refreshRowData}
         class="demo-button secondary-action"
       >
-        Reset Data
+        Regenerate Data
       </button>
     </div>
 
-    <!-- Table -->
-    <div>
+    <rowTable.AppTable>
       <div class="spacer-sm"></div>
-      <table>
-        <thead>
-          {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
-          }
-            <tr>
-              {#each headerGroup.headers as header (header.id)}
-                <th colSpan={header.colSpan}>
-                  {#if !header.isPlaceholder}
-                    <div>
-                      <FlexRender header={header} />
-                      {#if header.column.getCanFilter()}
-                        <div>
-                          {@render filterSnippet(header.column)}
-                        </div>
-                      {/if}
-                    </div>
-                  {/if}
-                </th>
-              {/each}
-            </tr>
-          {/each}
-        </thead>
-        <tbody>
-          {#each table.getRowModel().rows as row (row.id)}
-            <tr>
-              {#each row.getAllCells() as cell (cell.id)}
-                <td>
-                  <FlexRender cell={cell} />
-                </td>
-              {/each}
-            </tr>
-          {/each}
-        </tbody>
-      </table>
+      <div class="scroll-container">
+        <table>
+          <thead>
+            {#each rowHeaderGroups as headerGroup (headerGroup.id)}
+              <tr>
+                {#each headerGroup.headers as h (h.id)}
+                  <rowTable.AppHeader header={h}>
+                    {#snippet children(header)}
+                      <th colSpan={header.colSpan}>
+                        {#if !header.isPlaceholder}
+                          <!-- svelte-ignore a11y_click_events_have_key_events -->
+                          <!-- svelte-ignore a11y_no_static_element_interactions -->
+                          <div
+                            class={header.column.getCanSort()
+                              ? 'sortable-header'
+                              : ''}
+                            onclick={header.column.getToggleSortingHandler()}
+                            title={header.column.getCanSort()
+                              ? header.column.getNextSortingOrder() === 'asc'
+                                ? 'Sort ascending'
+                                : header.column.getNextSortingOrder() === 'desc'
+                                  ? 'Sort descending'
+                                  : 'Clear sort'
+                              : undefined}
+                          >
+                            <header.FlexRender header={header} />
+                            <header.SortIndicator />
+                            <header.ColumnFilter />
+                          </div>
+                        {/if}
+                      </th>
+                    {/snippet}
+                  </rowTable.AppHeader>
+                {/each}
+              </tr>
+            {/each}
+          </thead>
+          <tbody>
+            {#each rowRows as row (row.id)}
+              <RowSubmitTableRow row={row} onSave={saveRow} />
+            {/each}
+          </tbody>
+        </table>
+      </div>
 
-      <!-- Pagination controls -->
-      <div class="spacer-sm"></div>
-      <div class="controls">
-        <button
-          type="button"
-          class="demo-button demo-button-sm"
-          onclick={() => table.firstPage()
-          }
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<<'}
-        </button>
-        <button
-          type="button"
-          class="demo-button demo-button-sm"
-          onclick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          {'<'}
-        </button>
-        <button
-          type="button"
-          class="demo-button demo-button-sm"
-          onclick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>'}
-        </button>
-        <button
-          type="button"
-          class="demo-button demo-button-sm"
-          onclick={() => table.lastPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          {'>>'}
-        </button>
-        <span class="inline-controls">
-          <div>Page</div>
-          <strong>
-            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
-            {table.getPageCount().toLocaleString()}
-          </strong>
-        </span>
-        <span class="inline-controls">
-          | Go to page:
-          <input
-            type="number"
-            min="1"
-            max={table.getPageCount()}
-            value={table.state.pagination.pageIndex + 1}
-            oninput={(e: Event) => {
-              const page = (e.target as HTMLInputElement).value
-                ? Number((e.target as HTMLInputElement).value) - 1
-                : 0
-              table.setPageIndex(page)
-            }}
-            class="page-size-input"
-          />
-        </span>
-        <select
-          value={table.state.pagination.pageSize}
-          onchange={(e: Event) => {
-            table.setPageSize(Number((e.target as HTMLSelectElement).value))
-          }}
-        >
-          {#each [10, 20, 30, 40, 50] as pageSize}
-            <option value={pageSize}>Show {pageSize}</option>
-          {/each}
-        </select>
-      </div>
-      <div>
-        Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
-        {table.getRowCount().toLocaleString()} Rows
-      </div>
-    </div>
-  </form>
+      <rowTable.PaginationControls />
+      <rowTable.RowCount />
+    </rowTable.AppTable>
+  </section>
 </div>

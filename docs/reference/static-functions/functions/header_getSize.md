@@ -9,7 +9,7 @@ title: header_getSize
 function header_getSize<TFeatures, TData, TValue>(header): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L193)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:210](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L210)
 
 Computes a header's rendered size from its leaf headers.
 

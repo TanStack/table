@@ -9,7 +9,7 @@ title: row_getToggleExpandedHandler
 function row_getToggleExpandedHandler<TFeatures, TData>(row): () => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:364](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L364)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:389](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L389)
 
 Creates a row control handler that toggles this row's expanded state.
 

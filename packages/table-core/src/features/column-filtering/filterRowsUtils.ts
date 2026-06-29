@@ -1,4 +1,5 @@
 import { constructRow } from '../../core/rows/constructRow'
+import { makeObjectMap } from '../../utils'
 import type { Row_ColumnFiltering } from './columnFilteringFeature.types'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Row } from '../../types/Row'
@@ -37,7 +38,7 @@ function filterRowModelFromLeafs<
   table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
-  const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}
+  const newFilteredRowsById = makeObjectMap<Row<TFeatures, TData>>()
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
   const recurseFilterRows = (
@@ -109,7 +110,7 @@ function filterRowModelFromRoot<
   table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
   const newFilteredFlatRows: Array<Row<TFeatures, TData>> = []
-  const newFilteredRowsById: Record<string, Row<TFeatures, TData>> = {}
+  const newFilteredRowsById = makeObjectMap<Row<TFeatures, TData>>()
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
   // Filters top level and nested rows

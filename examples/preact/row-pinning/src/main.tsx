@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnFilteringFeature,
@@ -39,8 +39,6 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   // table states
   const [rowPinning, setRowPinning] = useState<RowPinningState>({
     top: [],
@@ -341,14 +339,7 @@ function App() {
           </label>
         </div>
       </div>
-      <div>
-        <button
-          className="demo-button demo-button-spaced"
-          onClick={() => rerender(0)}
-        >
-          Force Rerender
-        </button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

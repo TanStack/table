@@ -3,7 +3,7 @@ import {
   header_getSize,
   table_setColumnSizing,
 } from '../column-sizing/columnSizingFeature.utils'
-import { cloneState } from '../../utils'
+import { cloneState, makeObjectMap } from '../../utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -123,7 +123,7 @@ export function header_getResizeHandler<
       ? Math.round(event.touches[0]!.clientX)
       : (event as MouseEvent).clientX
 
-    const newColumnSizing: ColumnSizingState = {}
+    const newColumnSizing: ColumnSizingState = makeObjectMap()
 
     const updateOffset = (eventType: 'move' | 'end', clientXPos?: number) => {
       if (typeof clientXPos !== 'number') {
@@ -164,10 +164,9 @@ export function header_getResizeHandler<
         column.table.options.columnResizeMode === 'onChange' ||
         eventType === 'end'
       ) {
-        table_setColumnSizing(column.table, (old) => ({
-          ...old,
-          ...newColumnSizing,
-        }))
+        table_setColumnSizing(column.table, (old) =>
+          Object.assign(makeObjectMap<number>(), old, newColumnSizing),
+        )
       }
     }
 

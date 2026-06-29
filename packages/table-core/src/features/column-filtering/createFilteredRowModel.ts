@@ -1,4 +1,4 @@
-import { tableMemo } from '../../utils'
+import { makeObjectMap, tableMemo } from '../../utils'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import {
   column_getCanGlobalFilter,
@@ -60,8 +60,8 @@ function _createFilteredRowModel<
     >
     for (let i = 0; i < flatRows.length; i++) {
       const row = flatRows[i]!
-      row.columnFilters = {}
-      row.columnFiltersMeta = {}
+      row.columnFilters = makeObjectMap()
+      row.columnFiltersMeta = makeObjectMap()
     }
     return rowModel
   }
@@ -115,7 +115,8 @@ function _createFilteredRowModel<
   >
   for (let i = 0; i < flatRows.length; i++) {
     const row = flatRows[i]!
-    row.columnFilters = {}
+    row.columnFilters = makeObjectMap()
+    row.columnFiltersMeta = makeObjectMap()
 
     if (resolvedColumnFilters.length) {
       for (let j = 0; j < resolvedColumnFilters.length; j++) {
@@ -128,9 +129,10 @@ function _createFilteredRowModel<
           id,
           currentColumnFilter.resolvedValue,
           (filterMeta) => {
-            !row.columnFiltersMeta
-              ? (row.columnFiltersMeta = {})
-              : (row.columnFiltersMeta[id] = filterMeta)
+            if (!row.columnFiltersMeta) {
+              row.columnFiltersMeta = makeObjectMap()
+            }
+            row.columnFiltersMeta[id] = filterMeta
           },
         )
       }
@@ -147,9 +149,10 @@ function _createFilteredRowModel<
             id,
             currentGlobalFilter.resolvedValue,
             (filterMeta) => {
-              !row.columnFiltersMeta
-                ? (row.columnFiltersMeta = {})
-                : (row.columnFiltersMeta[id] = filterMeta)
+              if (!row.columnFiltersMeta) {
+                row.columnFiltersMeta = makeObjectMap()
+              }
+              row.columnFiltersMeta[id] = filterMeta
             },
           )
         ) {

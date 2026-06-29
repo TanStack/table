@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { createAppColumnHelper, useAppTable } from '../hooks/table'
 import { makeData } from '../makeData'
 import type { Person } from '../makeData'
@@ -76,17 +76,11 @@ const table = useAppTable({
 
 useTanStackTableDevtools(table)
 
-// Typed selector — avoids implicit 'any' for `state` in the template
-function tableSelector(state: ReturnType<typeof table.store.get>) {
-  return {
-    sorting: state.sorting,
-    columnFilters: state.columnFilters,
-  }
-}
+const sorting = computed(() => table.atoms.sorting.get())
 </script>
 
 <template>
-  <component :is="table.AppTable" :selector="tableSelector" v-slot="{ state }">
+  <component :is="table.AppTable">
     <section class="table-container">
       <component
         :is="table.TableToolbar"
@@ -118,12 +112,9 @@ function tableSelector(state: ReturnType<typeof table.store.get>) {
                     <component :is="appHeader.FlexRender" />
                     <component :is="appHeader.SortIndicator" />
                     <component :is="appHeader.ColumnFilter" />
-                    <span
-                      v-if="state.sorting.length > 1"
-                      class="sort-indicator"
-                    >
+                    <span v-if="sorting.length > 1" class="sort-indicator">
                       {{
-                        state.sorting.findIndex(
+                        sorting.findIndex(
                           (sort: { id: string }) =>
                             sort.id === appHeader.column.id,
                         ) + 1 || ''

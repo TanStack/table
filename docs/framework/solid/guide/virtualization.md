@@ -12,7 +12,9 @@ Want to skip to the implementation? Check out these Solid examples:
 
 Use getters for reactive inputs such as `data` when passing Solid signals to `createTable`.
 
-### Solid Setup
+### Virtualization Setup
+
+Here's how you set up your table to use virtualization with TanStack Table. Virtualization is a rendering strategy, so TanStack Table does not need a feature or row model for it.
 
 Install and import the Solid virtualizer adapter from `@tanstack/solid-virtual`. TanStack Table still owns rows, columns, and table state; the virtualizer owns scroll indexes and measurements.
 Also see the [TanStack Virtual table example](https://tanstack.com/virtual/latest/docs/framework/react/examples/table) (a React example, but the virtualizer options translate directly to `createVirtualizer`).

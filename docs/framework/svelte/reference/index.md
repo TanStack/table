@@ -5,6 +5,10 @@ title: "@tanstack/svelte-table"
 
 # @tanstack/svelte-table
 
+## Interfaces
+
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
+
 ## Type Aliases
 
 - [AppCellContext](type-aliases/AppCellContext.md)

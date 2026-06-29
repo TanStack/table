@@ -11,12 +11,17 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-### Svelte Setup
+### Column Resizing Setup
+
+Here's how you set up your table to use column resizing features. Column resizing depends on column sizing, so add `columnSizingFeature` before `columnResizingFeature`. Adding the column resizing feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnResizingFeature } from '@tanstack/svelte-table'
+import { createTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/svelte-table'
 
-const features = tableFeatures({ columnResizingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+})
 
 const table = createTable({
   features,
@@ -35,7 +40,7 @@ Column resizing builds on column sizing. If you only need to define starting, mi
 
 ### Enable Column Resizing
 
-To use column resizing, add `columnResizingFeature` to your features. The `column.getCanResize()` API will return `true` by default for all columns, but you can either disable column resizing for all columns with the `enableColumnResizing` table option, or disable column resizing on a per-column basis with the `enableResizing` column option.
+To use column resizing, add `columnSizingFeature` and then `columnResizingFeature` to your features. The `column.getCanResize()` API will return `true` by default for all columns, but you can either disable column resizing for all columns with the `enableColumnResizing` table option, or disable column resizing on a per-column basis with the `enableResizing` column option.
 
 ```ts
 import {

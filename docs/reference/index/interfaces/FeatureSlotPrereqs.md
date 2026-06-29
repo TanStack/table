@@ -5,7 +5,7 @@ title: FeatureSlotPrereqs
 
 # Interface: FeatureSlotPrereqs
 
-Defined in: [types/TableFeatures.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L63)
+Defined in: [types/TableFeatures.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L91)
 
 Maps each row model and fn registry slot to the feature(s) that must be
 registered alongside it in the same features object.
@@ -21,7 +21,21 @@ interface to get the same validation from `tableFeatures()`.
 aggregationFns: "columnGroupingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L64)
+Defined in: [types/TableFeatures.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L95)
+
+Named aggregation functions are only meaningful when grouping is enabled.
+
+***
+
+### columnResizingFeature
+
+```ts
+columnResizingFeature: "columnSizingFeature";
+```
+
+Defined in: [types/TableFeatures.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L99)
+
+Column resizing builds on the column sizing state and APIs.
 
 ***
 
@@ -31,7 +45,9 @@ Defined in: [types/TableFeatures.ts:64](https://github.com/TanStack/table/blob/m
 expandedRowModel: "rowExpandingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L65)
+Defined in: [types/TableFeatures.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L103)
+
+Expanded row-model factories require row expanding APIs and state.
 
 ***
 
@@ -41,7 +57,9 @@ Defined in: [types/TableFeatures.ts:65](https://github.com/TanStack/table/blob/m
 facetedMinMaxValues: "columnFacetingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L66)
+Defined in: [types/TableFeatures.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L107)
+
+Faceted min/max factories require column faceting APIs.
 
 ***
 
@@ -51,7 +69,9 @@ Defined in: [types/TableFeatures.ts:66](https://github.com/TanStack/table/blob/m
 facetedRowModel: "columnFacetingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L67)
+Defined in: [types/TableFeatures.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L111)
+
+Faceted row-model factories require column faceting APIs.
 
 ***
 
@@ -61,37 +81,57 @@ Defined in: [types/TableFeatures.ts:67](https://github.com/TanStack/table/blob/m
 facetedUniqueValues: "columnFacetingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L68)
+Defined in: [types/TableFeatures.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L115)
+
+Faceted unique-value factories require column faceting APIs.
 
 ***
 
 ### filteredRowModel
 
 ```ts
-filteredRowModel: "columnFilteringFeature" | "globalFilteringFeature";
+filteredRowModel: "columnFilteringFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L71)
+Defined in: [types/TableFeatures.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L119)
+
+Filtered row-model factories require column filtering APIs and state.
 
 ***
 
 ### filterFns
 
 ```ts
-filterFns: "columnFilteringFeature" | "globalFilteringFeature";
+filterFns: "columnFilteringFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L69)
+Defined in: [types/TableFeatures.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L123)
+
+Named filter functions are only meaningful when column filtering is enabled.
 
 ***
 
 ### filterMeta
 
 ```ts
-filterMeta: "columnFilteringFeature" | "globalFilteringFeature";
+filterMeta: "columnFilteringFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L70)
+Defined in: [types/TableFeatures.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L127)
+
+Filter metadata types are only read and written by filtering features.
+
+***
+
+### globalFilteringFeature
+
+```ts
+globalFilteringFeature: "columnFilteringFeature";
+```
+
+Defined in: [types/TableFeatures.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L131)
+
+Global filtering builds on column filtering state and filter functions.
 
 ***
 
@@ -101,7 +141,9 @@ Defined in: [types/TableFeatures.ts:70](https://github.com/TanStack/table/blob/m
 groupedRowModel: "columnGroupingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L72)
+Defined in: [types/TableFeatures.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L135)
+
+Grouped row-model factories require column grouping APIs and state.
 
 ***
 
@@ -111,7 +153,9 @@ Defined in: [types/TableFeatures.ts:72](https://github.com/TanStack/table/blob/m
 paginatedRowModel: "rowPaginationFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L73)
+Defined in: [types/TableFeatures.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L139)
+
+Paginated row-model factories require row pagination APIs and state.
 
 ***
 
@@ -121,7 +165,9 @@ Defined in: [types/TableFeatures.ts:73](https://github.com/TanStack/table/blob/m
 sortedRowModel: "rowSortingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L75)
+Defined in: [types/TableFeatures.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L143)
+
+Sorted row-model factories require row sorting APIs and state.
 
 ***
 
@@ -131,4 +177,6 @@ Defined in: [types/TableFeatures.ts:75](https://github.com/TanStack/table/blob/m
 sortFns: "rowSortingFeature";
 ```
 
-Defined in: [types/TableFeatures.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L74)
+Defined in: [types/TableFeatures.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L147)
+
+Named sorting functions are only meaningful when row sorting is enabled.

@@ -102,7 +102,9 @@ export const densityPlugin: TableFeature = {
             const newState = functionalUpdate(updater, old)
             return newState
           }
-          return table.options.onDensityChange?.(safeUpdater)
+          return (table.options as TableOptions_Density).onDensityChange?.(
+            safeUpdater,
+          )
         },
       },
       table_toggleDensity: {
@@ -111,7 +113,9 @@ export const densityPlugin: TableFeature = {
             if (value) return value
             return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
           }
-          return table.options.onDensityChange?.(safeUpdater)
+          return (table.options as TableOptions_Density).onDensityChange?.(
+            safeUpdater,
+          )
         },
       },
     })
@@ -170,7 +174,7 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
   const [density, setDensity] = useState<DensityState>('md')
 
   const table = useTable(
@@ -191,7 +195,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div className="spacer-sm" />
       <button

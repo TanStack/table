@@ -10,14 +10,16 @@ Want to skip to the implementation? Check out these Vue examples:
 
 Vue refs can be passed directly where the adapter expects reactive table options.
 
-### Vue Setup
+### Sorting Setup
+
+Here's how you set up your table to use sorting features. Adding the sorting feature enables the related APIs. Additionally, if using client-side sorting, you also need to set up `sortedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { useTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/vue-table'
 
 const features = tableFeatures({
   rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
+  sortedRowModel: createSortedRowModel(), // if using client-side sorting
   sortFns,
 })
 

@@ -3,11 +3,7 @@ id: ColumnHelper
 title: ColumnHelper
 ---
 
-# Type Alias: ColumnHelper\<TFeatures, TData\>
-
-```ts
-type ColumnHelper<TFeatures, TData> = object;
-```
+# Interface: ColumnHelper\<TFeatures, TData\>
 
 Defined in: [helpers/columnHelper.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L13)
 
@@ -15,11 +11,11 @@ Defined in: [helpers/columnHelper.ts:13](https://github.com/TanStack/table/blob/
 
 ### TFeatures
 
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
 
 ### TData
 
-`TData` *extends* [`RowData`](RowData.md)
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
 
 ## Properties
 
@@ -37,13 +33,11 @@ Creates a data column definition with an accessor key or function to extract the
 
 ##### TAccessor
 
-`TAccessor` *extends* 
-  \| [`AccessorFn`](AccessorFn.md)\<`TData`\>
-  \| [`DeepKeys`](DeepKeys.md)\<`TData`\>
+`TAccessor` *extends* `string` \| [`AccessorFn`](../type-aliases/AccessorFn.md)\<`TData`\>
 
 ##### TValue
 
-`TValue` *extends* `TAccessor` *extends* [`AccessorFn`](AccessorFn.md)\<`TData`, infer TReturn\> ? `TReturn` : `TAccessor` *extends* [`DeepKeys`](DeepKeys.md)\<`TData`\> ? [`DeepValue`](DeepValue.md)\<`TData`, `TAccessor`\> : `never`
+`TValue` *extends* `unknown`
 
 #### Parameters
 
@@ -53,11 +47,11 @@ Creates a data column definition with an accessor key or function to extract the
 
 ##### column
 
-`TAccessor` *extends* [`AccessorFn`](AccessorFn.md)\<`TData`\> ? [`DisplayColumnDef`](DisplayColumnDef.md)\<`TFeatures`, `TData`, `TValue`\> : [`IdentifiedColumnDef`](IdentifiedColumnDef.md)\<`TFeatures`, `TData`, `TValue`\>
+`TAccessor` *extends* [`AccessorFn`](../type-aliases/AccessorFn.md)\<`TData`\> ? [`DisplayColumnDef`](../type-aliases/DisplayColumnDef.md)\<`TFeatures`, `TData`, `TValue`\> : [`IdentifiedColumnDef`](../type-aliases/IdentifiedColumnDef.md)\<`TFeatures`, `TData`, `TValue`\>
 
 #### Returns
 
-`TAccessor` *extends* [`AccessorFn`](AccessorFn.md)\<`TData`\> ? [`AccessorFnColumnDef`](AccessorFnColumnDef.md)\<`TFeatures`, `TData`, `TValue`\> : [`AccessorKeyColumnDef`](AccessorKeyColumnDef.md)\<`TFeatures`, `TData`, `TValue`\>
+`TAccessor` *extends* [`AccessorFn`](../type-aliases/AccessorFn.md)\<`TData`\> ? [`AccessorFnColumnDef`](../type-aliases/AccessorFnColumnDef.md)\<`TFeatures`, `TData`, `TValue`\> : [`AccessorKeyColumnDef`](../type-aliases/AccessorKeyColumnDef.md)\<`TFeatures`, `TData`, `TValue`\>
 
 #### Example
 
@@ -71,7 +65,7 @@ helper.accessor((row) => row.lastName, { id: 'lastName' })
 ### columns()
 
 ```ts
-columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
+columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns[]];
 ```
 
 Defined in: [helpers/columnHelper.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/columnHelper.ts#L48)
@@ -83,17 +77,17 @@ Uses variadic tuple types to infer element types before checking constraints, pr
 
 ##### TColumns
 
-`TColumns` *extends* `ReadonlyArray`\<[`ColumnDef`](ColumnDef.md)\<`TFeatures`, `TData`, `any`\>\>
+`TColumns` *extends* readonly [`ColumnDef`](../type-aliases/ColumnDef.md)\<`TFeatures`, `TData`, `any`\>[]
 
 #### Parameters
 
 ##### columns
 
-\[`...TColumns`\]
+\[`...TColumns[]`\]
 
 #### Returns
 
-[`ColumnDef`](ColumnDef.md)\<`TFeatures`, `TData`, `any`\>[] & \[`...TColumns`\]
+[`ColumnDef`](../type-aliases/ColumnDef.md)\<`TFeatures`, `TData`, `any`\>[] & \[`...TColumns[]`\]
 
 #### Example
 
@@ -117,11 +111,11 @@ Creates a display column definition for non-data columns like actions or row sel
 
 ##### column
 
-[`DisplayColumnDef`](DisplayColumnDef.md)\<`TFeatures`, `TData`\>
+[`DisplayColumnDef`](../type-aliases/DisplayColumnDef.md)\<`TFeatures`, `TData`\>
 
 #### Returns
 
-[`DisplayColumnDef`](DisplayColumnDef.md)\<`TFeatures`, `TData`, `unknown`\>
+[`DisplayColumnDef`](../type-aliases/DisplayColumnDef.md)\<`TFeatures`, `TData`, `unknown`\>
 
 #### Example
 
@@ -145,11 +139,11 @@ Creates a group column definition that contains nested child columns.
 
 ##### column
 
-[`GroupColumnDef`](GroupColumnDef.md)\<`TFeatures`, `TData`, `unknown`\>
+[`GroupColumnDef`](../type-aliases/GroupColumnDef.md)\<`TFeatures`, `TData`, `unknown`\>
 
 #### Returns
 
-[`GroupColumnDef`](GroupColumnDef.md)\<`TFeatures`, `TData`, `unknown`\>
+[`GroupColumnDef`](../type-aliases/GroupColumnDef.md)\<`TFeatures`, `TData`, `unknown`\>
 
 #### Example
 

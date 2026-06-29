@@ -106,7 +106,6 @@ export class App {
   }
   // 6. Store data with a stable reference
   readonly data = signal<Array<Person>>([...defaultData])
-  readonly renderCount = signal(0)
 
   // 7. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
@@ -116,8 +115,4 @@ export class App {
     columns,
     data: this.data(),
   }))
-
-  rerender() {
-    this.renderCount.update((count) => count + 1)
-  }
 }

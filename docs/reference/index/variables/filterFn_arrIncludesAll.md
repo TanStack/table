@@ -9,7 +9,7 @@ title: filterFn_arrIncludesAll
 const filterFn_arrIncludesAll: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:325](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L325)
+Defined in: [fns/filterFns.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L331)
 
 Keeps rows whose array column value includes every filter value.
 

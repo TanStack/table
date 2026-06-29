@@ -12,7 +12,7 @@ function assignTableAPIs<TFeatures, TData, TDeps, TDepArgs>(
    apis): void;
 ```
 
-Defined in: [utils.ts:340](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L340)
+Defined in: [utils.ts:371](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L371)
 
 Assigns Table API methods directly to the table instance.
 Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
@@ -43,7 +43,7 @@ keyof `TFeatures` & `string`
 
 ### table
 
-[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### apis
 

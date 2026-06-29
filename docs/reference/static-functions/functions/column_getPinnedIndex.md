@@ -34,7 +34,7 @@ Unpinned columns return `0`; pinned columns return their position in
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 

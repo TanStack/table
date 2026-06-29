@@ -9,7 +9,7 @@ title: table_getIsSomeRowsExpanded
 function table_getIsSomeRowsExpanded<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L165)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L173)
 
 Checks whether any row is expanded.
 
@@ -29,7 +29,7 @@ The special expanded-all value `true` counts as some rows expanded.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

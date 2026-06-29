@@ -70,7 +70,7 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(500_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createTable(
     {
@@ -88,7 +88,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <div class="spacer-sm"></div>
   <table>

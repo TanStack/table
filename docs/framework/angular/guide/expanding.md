@@ -8,7 +8,9 @@ Want to skip to the implementation? Check out these Angular examples:
 
 - [Expanding](../examples/expanding)
 
-### Angular Setup
+### Expanding Setup
+
+Here's how you set up your table to use expanding features. Adding the expanding feature enables the related APIs. Additionally, if using client-side expanding, you also need to set up `expandedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { signal } from '@angular/core'
@@ -16,7 +18,7 @@ import { injectTable, tableFeatures, rowExpandingFeature, createExpandedRowModel
 
 const features = tableFeatures({
   rowExpandingFeature,
-  expandedRowModel: createExpandedRowModel(),
+  expandedRowModel: createExpandedRowModel(), // if using client-side expanding
 })
 
 export class App {

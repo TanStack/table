@@ -8,7 +8,9 @@ Want to skip to the implementation? Check out these Angular examples:
 
 - [Row Pinning](../examples/row-pinning)
 
-### Angular Setup
+### Row Pinning Setup
+
+Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```ts
 import { signal } from '@angular/core'

@@ -9,7 +9,9 @@ Want to skip to the implementation? Check out these Angular examples:
 - [Row Selection](../examples/row-selection)
 - [Row Selection (Signals)](../examples/row-selection-signal)
 
-### Angular Setup
+### Row Selection Setup
+
+Here's how you set up your table to use row selection features. Adding the row selection feature enables the related APIs.
 
 ```ts
 import { signal } from '@angular/core'

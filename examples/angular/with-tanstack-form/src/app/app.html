@@ -1,92 +1,276 @@
 <div class="demo-root">
-  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
-  <button class="demo-button demo-button-spaced" (click)="stressTest()">
-    Stress Test (200k rows)
-  </button>
-  <button class="demo-button success-action" type="button" (click)="addRow()">Add Row</button>
-  <button
-    class="demo-button primary-action"
-    type="button"
-    [disabled]="!validation().success"
-    (click)="submit()"
-  >
-    Save All Changes
-  </button>
-  <span [class.success-text]="validation().success" [class.error-text]="!validation().success">{{
-    validation().success ? 'Valid' : 'Invalid'
-  }}</span>
-  <div class="spacer-sm"></div>
-  <table>
-    <thead>
-      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-        <tr>
-          @for (header of headerGroup.headers; track header.id) {
-            <th [attr.colSpan]="header.colSpan">
-              @if (!header.isPlaceholder) {
-                <ng-container *flexRenderHeader="header; let headerCell">{{
-                  headerCell
-                }}</ng-container>
+  <section class="example-section">
+    <h2 class="section-title">Single form around the table</h2>
+    <form (submit)="submitFullTable($event)">
+      <div class="form-actions">
+        <div class="form-status">
+          <span
+            [class.warning-text]="fullFormState().isDirty"
+            [class.muted-text]="!fullFormState().isDirty"
+          >
+            {{ fullFormState().isDirty ? 'Modified' : 'Pristine' }}
+          </span>
+          <span
+            [class.success-text]="fullFormState().isValid"
+            [class.error-text]="!fullFormState().isValid"
+          >
+            {{ fullFormState().isValid ? 'Valid' : 'Invalid' }}
+          </span>
+        </div>
+        <button
+          class="demo-button primary-action submit-button"
+          type="submit"
+          [disabled]="!fullFormState().canSubmit || fullFormState().isSubmitting"
+        >
+          {{ fullFormState().isSubmitting ? 'Submitting...' : 'Save All Changes' }}
+        </button>
+        <button class="demo-button success-action" type="button" (click)="addRow()">Add Row</button>
+        <button class="demo-button secondary-action" type="button" (click)="refreshData()">
+          Regenerate Data
+        </button>
+        <button class="demo-button secondary-action" type="button" (click)="stressTest()">
+          Stress Test (1M rows)
+        </button>
+      </div>
+
+      <div [tanStackTable]="table">
+        <div class="spacer-sm"></div>
+        <div class="scroll-container">
+          <table>
+            <thead>
+              @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+                <tr>
+                  @for (_header of headerGroup.headers; track _header.id) {
+                    @let header = table.appHeader(_header);
+                    @if (!header.isPlaceholder) {
+                      <th
+                        [attr.colSpan]="header.colSpan"
+                        [tanStackTableHeader]="header"
+                        [class.sortable-header]="header.column.getCanSort()"
+                        [title]="getSortTitle(header.column)"
+                        (click)="header.column.toggleSorting()"
+                      >
+                        <ng-container *flexRenderHeader="header; let headerCell">
+                          {{ headerCell }}
+                        </ng-container>
+
+                        <ng-container
+                          *flexRender="header.SortIndicator; props: header.getContext(); let value"
+                        >
+                          <div [innerHTML]="value"></div>
+                        </ng-container>
+
+                        <ng-container
+                          *flexRender="header.ColumnFilter; props: header.getContext(); let value"
+                        >
+                          <div [innerHTML]="value"></div>
+                        </ng-container>
+                      </th>
+                    }
+                  }
+                </tr>
               }
-            </th>
-          }
-        </tr>
-      }
-    </thead>
-    <tbody>
-      @for (row of table.getRowModel().rows; track row.id) {
-        <tr>
-          <td>
-            <input
-              class="text-input"
-              [value]="row.original.firstName"
-              (input)="update(row.index, 'firstName', $event)"
-            />
-          </td>
-          <td>
-            <input
-              class="text-input"
-              [value]="row.original.lastName"
-              (input)="update(row.index, 'lastName', $event)"
-            />
-          </td>
-          <td>
-            <input
-              class="number-input"
-              type="number"
-              [value]="row.original.age"
-              (input)="update(row.index, 'age', $event)"
-            />
-          </td>
-          <td>
-            <input
-              class="number-input"
-              type="number"
-              [value]="row.original.visits"
-              (input)="update(row.index, 'visits', $event)"
-            />
-          </td>
-          <td>
-            <select
-              class="compact-input"
-              [value]="row.original.status"
-              (change)="update(row.index, 'status', $event)"
-            >
-              <option value="relationship">relationship</option>
-              <option value="complicated">complicated</option>
-              <option value="single">single</option>
-            </select>
-          </td>
-          <td>
-            <input
-              class="number-input"
-              type="number"
-              [value]="row.original.progress"
-              (input)="update(row.index, 'progress', $event)"
-            />
-          </td>
-        </tr>
-      }
-    </tbody>
-  </table>
-  <pre>{{ stringifiedState() }}</pre>
+            </thead>
+            <tbody>
+              @for (row of table.getRowModel().rows; track row.id) {
+                <tr>
+                  @for (cell of row.getAllCells(); track cell.id) {
+                    <td [tanStackTableCell]="cell">
+                      @switch (cell.column.id) {
+                        @case ('firstName') {
+                          <ng-container
+                            [tanstackField]="fullTableForm"
+                            [name]="fullFieldName(row.index, 'firstName')"
+                            #field="field"
+                          >
+                            <input
+                              class="text-input"
+                              [value]="field.api.state.value"
+                              (input)="field.api.handleChange(textValue($event))"
+                              (blur)="field.api.handleBlur()"
+                            />
+                            @if (showErrors(field.api.state.meta)) {
+                              <div class="error-text">
+                                {{ errorText(field.api.state.meta.errors) }}
+                              </div>
+                            }
+                          </ng-container>
+                        }
+                        @case ('lastName') {
+                          <ng-container
+                            [tanstackField]="fullTableForm"
+                            [name]="fullFieldName(row.index, 'lastName')"
+                            #field="field"
+                          >
+                            <input
+                              class="text-input"
+                              [value]="field.api.state.value"
+                              (input)="field.api.handleChange(textValue($event))"
+                              (blur)="field.api.handleBlur()"
+                            />
+                            @if (showErrors(field.api.state.meta)) {
+                              <div class="error-text">
+                                {{ errorText(field.api.state.meta.errors) }}
+                              </div>
+                            }
+                          </ng-container>
+                        }
+                        @case ('age') {
+                          <ng-container
+                            [tanstackField]="fullTableForm"
+                            [name]="fullFieldName(row.index, 'age')"
+                            #field="field"
+                          >
+                            <input
+                              class="number-input"
+                              type="number"
+                              [value]="field.api.state.value"
+                              (input)="field.api.handleChange(numberValue($event))"
+                              (blur)="field.api.handleBlur()"
+                            />
+                            @if (showErrors(field.api.state.meta)) {
+                              <div class="error-text">
+                                {{ errorText(field.api.state.meta.errors) }}
+                              </div>
+                            }
+                          </ng-container>
+                        }
+                        @case ('visits') {
+                          <ng-container
+                            [tanstackField]="fullTableForm"
+                            [name]="fullFieldName(row.index, 'visits')"
+                            #field="field"
+                          >
+                            <input
+                              class="number-input"
+                              type="number"
+                              [value]="field.api.state.value"
+                              (input)="field.api.handleChange(numberValue($event))"
+                              (blur)="field.api.handleBlur()"
+                            />
+                            @if (showErrors(field.api.state.meta)) {
+                              <div class="error-text">
+                                {{ errorText(field.api.state.meta.errors) }}
+                              </div>
+                            }
+                          </ng-container>
+                        }
+                        @case ('status') {
+                          <ng-container
+                            [tanstackField]="fullTableForm"
+                            [name]="fullFieldName(row.index, 'status')"
+                            #field="field"
+                          >
+                            <select
+                              class="compact-input"
+                              [value]="field.api.state.value"
+                              (change)="field.api.handleChange(statusValue($event))"
+                              (blur)="field.api.handleBlur()"
+                            >
+                              <option value="relationship">relationship</option>
+                              <option value="complicated">complicated</option>
+                              <option value="single">single</option>
+                            </select>
+                            @if (showErrors(field.api.state.meta)) {
+                              <div class="error-text">
+                                {{ errorText(field.api.state.meta.errors) }}
+                              </div>
+                            }
+                          </ng-container>
+                        }
+                        @case ('progress') {
+                          <ng-container
+                            [tanstackField]="fullTableForm"
+                            [name]="fullFieldName(row.index, 'progress')"
+                            #field="field"
+                          >
+                            <input
+                              class="number-input"
+                              type="number"
+                              [value]="field.api.state.value"
+                              (input)="field.api.handleChange(numberValue($event))"
+                              (blur)="field.api.handleBlur()"
+                            />
+                            @if (showErrors(field.api.state.meta)) {
+                              <div class="error-text">
+                                {{ errorText(field.api.state.meta.errors) }}
+                              </div>
+                            }
+                          </ng-container>
+                        }
+                      }
+                    </td>
+                  }
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <ng-container *ngComponentOutlet="table.PaginationControls" />
+        <ng-container *ngComponentOutlet="table.RowCount" />
+      </div>
+    </form>
+  </section>
+
+  <div class="spacer-md"></div>
+
+  <section class="example-section">
+    <h2 class="section-title">Form submission per row</h2>
+    <div class="form-actions">
+      <button class="demo-button secondary-action" type="button" (click)="refreshRowData()">
+        Regenerate Data
+      </button>
+    </div>
+
+    <div [tanStackTable]="rowTable">
+      <div class="spacer-sm"></div>
+      <div class="scroll-container">
+        <table>
+          <thead>
+            @for (headerGroup of rowTable.getHeaderGroups(); track headerGroup.id) {
+              <tr>
+                @for (_header of headerGroup.headers; track _header.id) {
+                  @let header = rowTable.appHeader(_header);
+                  @if (!header.isPlaceholder) {
+                    <th
+                      [attr.colSpan]="header.colSpan"
+                      [tanStackTableHeader]="header"
+                      [class.sortable-header]="header.column.getCanSort()"
+                      [title]="getSortTitle(header.column)"
+                      (click)="header.column.toggleSorting()"
+                    >
+                      <ng-container *flexRenderHeader="header; let headerCell">
+                        {{ headerCell }}
+                      </ng-container>
+
+                      <ng-container
+                        *flexRender="header.SortIndicator; props: header.getContext(); let value"
+                      >
+                        <div [innerHTML]="value"></div>
+                      </ng-container>
+
+                      <ng-container
+                        *flexRender="header.ColumnFilter; props: header.getContext(); let value"
+                      >
+                        <div [innerHTML]="value"></div>
+                      </ng-container>
+                    </th>
+                  }
+                }
+              </tr>
+            }
+          </thead>
+          <tbody>
+            @for (row of rowTable.getRowModel().rows; track row.id) {
+              <tr appRowSubmitTableRow [row]="row" [save]="saveRow"></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <ng-container *ngComponentOutlet="rowTable.PaginationControls" />
+      <ng-container *ngComponentOutlet="rowTable.RowCount" />
+    </div>
+  </section>
 </div>

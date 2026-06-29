@@ -1,6 +1,7 @@
 import {
   assignPrototypeAPIs,
   assignTableAPIs,
+  makeObjectMap,
   makeStateUpdater,
 } from '../../utils'
 import {
@@ -99,7 +100,7 @@ export const columnGroupingFeature: TableFeature = {
   },
 
   initRowInstanceData: (row) => {
-    ;(row as any)._groupingValuesCache = {}
+    ;(row as any)._groupingValuesCache = makeObjectMap()
   },
 
   constructTableAPIs: (table) => {

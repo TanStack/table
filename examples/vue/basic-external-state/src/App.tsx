@@ -72,7 +72,7 @@ export default defineComponent({
     }
 
     const stressTest = () => {
-      data.value = makeData(200_000)
+      data.value = makeData(1_000_000)
     }
 
     const sorting = ref<SortingState>([])
@@ -114,7 +114,7 @@ export default defineComponent({
             Regenerate Data
           </button>
           <button class="demo-button" onClick={stressTest}>
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <div class="spacer-md" />

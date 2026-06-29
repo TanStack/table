@@ -9,7 +9,7 @@ title: table_setOptions
 function table_setOptions<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [core/table/coreTablesFeature.utils.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L106)
+Defined in: [core/table/coreTablesFeature.utils.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L146)
 
 Updates the table options object.
 
@@ -30,7 +30,7 @@ immediately assigned to the table instance.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### updater
 

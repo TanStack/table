@@ -9,7 +9,7 @@ title: column_resetSize
 function column_resetSize<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:172](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L172)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L181)
 
 Removes this column's committed size override.
 
@@ -34,7 +34,7 @@ defaults again.
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 

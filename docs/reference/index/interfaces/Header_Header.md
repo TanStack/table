@@ -114,9 +114,7 @@ Returns the leaf headers hierarchically nested under this header.
 ### headerGroup
 
 ```ts
-headerGroup: 
-  | HeaderGroup<TFeatures, TData>
-  | null;
+headerGroup: HeaderGroup<TFeatures, TData> | null;
 ```
 
 Defined in: [core/headers/coreHeadersFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L71)
@@ -228,7 +226,7 @@ The header's hierarchical sub/child headers. Will be empty if the header's assoc
 ### table
 
 ```ts
-table: Table<TFeatures, TData>;
+table: Table_Internal<TFeatures, TData>;
 ```
 
 Defined in: [core/headers/coreHeadersFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L99)

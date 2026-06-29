@@ -6,10 +6,12 @@ title: table_getPinnedLeafColumns
 # Function: table\_getPinnedLeafColumns()
 
 ```ts
-function table_getPinnedLeafColumns<TFeatures, TData>(table, position): Column<TFeatures, TData, unknown>[];
+function table_getPinnedLeafColumns<TFeatures, TData>(table, position): 
+  | Column<TFeatures, TData, unknown>[]
+  | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:767](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L767)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:759](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L759)
 
 Resolves leaf columns for a requested pinning region.
 
@@ -30,7 +32,7 @@ read all leaf columns without partitioning.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### position
 
@@ -38,7 +40,8 @@ read all leaf columns without partitioning.
 
 ## Returns
 
-[`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+  \| [`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+  \| [`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 

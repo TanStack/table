@@ -163,7 +163,7 @@ class TableCmp {
 
 ## Row Model Factories
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories and their `*Fns` registries move from a separate `rowModels` option into `tableFeatures`.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories and their `*Fns` registries move from a separate `rowModels` option into `tableFeatures`. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 
@@ -676,6 +676,19 @@ Some row APIs have changed from private to public:
 | v8 | v9 |
 |----|-----|
 | `row._getAllCellsByColumnId()` (private) | `row.getAllCellsByColumnId()` (public) |
+
+### Row Selection API Changes
+
+The "some rows selected" checks were simplified to mean "at least one row is selected":
+
+| API | v8 | v9 |
+|-----|-----|-----|
+| `table.getIsSomeRowsSelected()` | `true` when some but not all rows are selected | `true` when at least one row is selected |
+| `table.getIsSomePageRowsSelected()` | `true` when some but not all page rows are selected | `true` when at least one page row is selected |
+
+In v8 these returned `false` once every row was selected; in v9 they stay `true`. If you use them to drive an indeterminate "select all" checkbox, gate the indeterminate state on the matching all-selected check so it clears at full selection:
+
+`getIsSomeRowsSelected() && !getIsAllRowsSelected()`
 
 ---
 

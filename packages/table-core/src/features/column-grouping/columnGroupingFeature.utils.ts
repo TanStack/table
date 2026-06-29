@@ -1,4 +1,4 @@
-import { cloneState, isFunction } from '../../utils'
+import { cloneState, hasOwn, isFunction } from '../../utils'
 import type { Column_Internal } from '../../types/Column'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -268,7 +268,7 @@ export function row_getGroupingValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData> & Partial<Row_ColumnGrouping>, columnId: string) {
-  if (row._groupingValuesCache?.hasOwnProperty(columnId)) {
+  if (row._groupingValuesCache && hasOwn(row._groupingValuesCache, columnId)) {
     return row._groupingValuesCache[columnId]
   }
 
@@ -284,6 +284,8 @@ export function row_getGroupingValue<
   if (row._groupingValuesCache) {
     row._groupingValuesCache[columnId] = column.columnDef.getGroupingValue(
       row.original,
+      row.index,
+      row,
     )
   }
 

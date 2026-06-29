@@ -9,7 +9,7 @@ title: row_getToggleSelectedHandler
 function row_getToggleSelectedHandler<TFeatures, TData>(row): (e) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:582](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L582)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:650](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L650)
 
 Creates a checkbox-style handler that selects or deselects this row.
 

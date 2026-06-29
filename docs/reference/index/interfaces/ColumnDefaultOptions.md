@@ -5,7 +5,7 @@ title: ColumnDefaultOptions
 
 # Interface: ColumnDefaultOptions
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L164)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:171](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L171)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:164](https:
 enableGrouping: boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L165)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:172](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L172)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:165](https:
 onGroupingChange: OnChangeFn<GroupingState>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:166](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L166)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L173)

@@ -10,14 +10,16 @@ Want to skip to the implementation? Check out these Vue examples:
 
 Vue refs can be passed directly where the adapter expects reactive table options.
 
-### Vue Setup
+### Expanding Setup
+
+Here's how you set up your table to use expanding features. Adding the expanding feature enables the related APIs. Additionally, if using client-side expanding, you also need to set up `expandedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
 import { useTable, tableFeatures, rowExpandingFeature, createExpandedRowModel } from '@tanstack/vue-table'
 
 const features = tableFeatures({
   rowExpandingFeature,
-  expandedRowModel: createExpandedRowModel(),
+  expandedRowModel: createExpandedRowModel(), // if using client-side expanding
 })
 
 const table = useTable({

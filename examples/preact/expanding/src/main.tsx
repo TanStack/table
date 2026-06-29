@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnFilteringFeature,
@@ -39,8 +39,6 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -247,9 +245,7 @@ function App() {
         </select>
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
