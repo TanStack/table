@@ -52,5 +52,6 @@ preferWorkspacePackages: true
 blockExoticSubdeps: true
 trustPolicy: 'no-downgrade'
 trustPolicyExclude:
+  - ember-modifier@4.3.0
   - chokidar@4.0.3
   - semver@5.7.2 || 6.3.1
