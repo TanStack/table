@@ -55,10 +55,9 @@
   },
   "dependencies": {
     "@embroider/addon-shim": "^1.8.9",
+    "@tanstack/store": "^0.11.0",
     "@tanstack/table-core": "workspace:^",
-    "decorator-transforms": "^2.2.2",
-    "ember-resources": "^7.0.8",
-    "tracked-built-ins": "^4.1.2"
+    "decorator-transforms": "^2.2.2"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
