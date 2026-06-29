@@ -9991,18 +9991,15 @@ importers:
       '@embroider/addon-shim':
         specifier: ^1.8.9
         version: 1.10.3
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
       decorator-transforms:
         specifier: ^2.2.2
         version: 2.4.0(@babel/core@7.29.7)
-      ember-resources:
-        specifier: ^7.0.8
-        version: 7.0.8(@glimmer/component@2.1.1)(@glint/template@1.7.8)
-      tracked-built-ins:
-        specifier: ^4.1.2
-        version: 4.1.2(@babel/core@7.29.7)
     devDependencies:
       '@babel/core':
         specifier: ^7.25.2
@@ -17981,17 +17978,6 @@ packages:
       '@ember/test-helpers': '>=3.0.3'
       qunit: ^2.13.0
 
-  ember-resources@7.0.8:
-    resolution: {integrity: sha512-ducprg1ia5p0ElBSx1yY4DZyuKZwTBYcokCSr5yxzxkjKOzP+XIiB8NX2lFLGmMOX/4zALHax2WMPAKMxZ7z5A==}
-    peerDependencies:
-      '@glimmer/component': '>= 1.1.2 || >= 2.0.0'
-      '@glint/template': '>= 1.0.0'
-    peerDependenciesMeta:
-      '@glimmer/component':
-        optional: true
-      '@glint/template':
-        optional: true
-
   ember-rfc176-data@0.3.18:
     resolution: {integrity: sha512-JtuLoYGSjay1W3MQAxt3eINWXNYYQliK90tLwtb8aeCuQK8zKGCRbBodVIrkcTqshULMnRuTOS6t1P7oQk3g6Q==}
 
@@ -22035,9 +22021,6 @@ packages:
   tr46@6.0.0:
     resolution: {integrity: sha512-bLVMLPtstlZ4iMQHpFHTR7GAGj2jxi8Dg0s2h2MafAE4uSWF98FC/3MomU51iQAMf8/qDUbKWf5GxuvvVcXEhw==}
     engines: {node: '>=20'}
-
-  tracked-built-ins@4.1.2:
-    resolution: {integrity: sha512-KiiV/Pzi7VNKTn9Fip6Ic54AjKgFfqows1Jq3L0WLVqZcvfswdhVxQ9yqqhTXsmgLhVzIgtdzNBH4ExqWf34BQ==}
 
   tree-dump@1.1.0:
     resolution: {integrity: sha512-rMuvhU4MCDbcbnleZTFezWsaZXRFemSqAM+7jPnzUl1fo9w3YEKOxAeui0fz3OI4EU4hf23iyA7uQRVko+UaBA==}
@@ -32371,15 +32354,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  ember-resources@7.0.8(@glimmer/component@2.1.1)(@glint/template@1.7.8):
-    dependencies:
-      '@embroider/addon-shim': 1.10.3
-    optionalDependencies:
-      '@glimmer/component': 2.1.1
-      '@glint/template': 1.7.8
-    transitivePeerDependencies:
-      - supports-color
-
   ember-rfc176-data@0.3.18: {}
 
   ember-router-generator@2.0.0:
@@ -35286,7 +35260,7 @@ snapshots:
       call-bind: 1.0.9
       call-bound: 1.0.4
       define-properties: 1.2.1
-      es-object-atoms: 1.1.1
+      es-object-atoms: 1.1.2
 
   object.fromentries@2.0.8:
     dependencies:
@@ -37490,14 +37464,6 @@ snapshots:
   tr46@6.0.0:
     dependencies:
       punycode: 2.3.1
-
-  tracked-built-ins@4.1.2(@babel/core@7.29.7):
-    dependencies:
-      '@embroider/addon-shim': 1.10.3
-      decorator-transforms: 2.4.0(@babel/core@7.29.7)
-    transitivePeerDependencies:
-      - '@babel/core'
-      - supports-color
 
   tree-dump@1.1.0(tslib@2.8.1):
     dependencies:
