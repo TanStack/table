@@ -154,57 +154,55 @@ class LitTableExample extends LitElement {
       .flatRows[0]?.getValue(column.id)
 
     // Re-render the filter inputs only when the column filters change.
-    return subscribe(
-      table.atoms.columnFilters,
-      () =>
-        typeof firstValue === 'number'
-          ? html`
-              <div class="filter-row">
-                <input
-                  type="number"
-                  .value=${String(
-                    (column.getFilterValue() as [unknown, unknown])?.[0] ?? '',
-                  )}
-                  @input=${(e: InputEvent) => {
-                    const value = (e.currentTarget as HTMLInputElement).value
-                    column.setFilterValue((old: [unknown, unknown]) => [
-                      value,
-                      old?.[1],
-                    ])
-                  }}
-                  placeholder="Min"
-                  class="filter-input"
-                />
-                <input
-                  type="number"
-                  .value=${String(
-                    (column.getFilterValue() as [unknown, unknown])?.[1] ?? '',
-                  )}
-                  @input=${(e: InputEvent) => {
-                    const value = (e.currentTarget as HTMLInputElement).value
-                    column.setFilterValue((old: [unknown, unknown]) => [
-                      old?.[0],
-                      value,
-                    ])
-                  }}
-                  placeholder="Max"
-                  class="filter-input"
-                />
-              </div>
-            `
-          : html`
+    return subscribe(table.atoms.columnFilters, () =>
+      typeof firstValue === 'number'
+        ? html`
+            <div class="filter-row">
               <input
-                type="text"
-                .value=${String(column.getFilterValue() ?? '')}
+                type="number"
+                .value=${String(
+                  (column.getFilterValue() as [unknown, unknown])?.[0] ?? '',
+                )}
                 @input=${(e: InputEvent) => {
-                  column.setFilterValue(
-                    (e.currentTarget as HTMLInputElement).value,
-                  )
+                  const value = (e.currentTarget as HTMLInputElement).value
+                  column.setFilterValue((old: [unknown, unknown]) => [
+                    value,
+                    old?.[1],
+                  ])
                 }}
-                placeholder="Search..."
+                placeholder="Min"
                 class="filter-input"
               />
-            `,
+              <input
+                type="number"
+                .value=${String(
+                  (column.getFilterValue() as [unknown, unknown])?.[1] ?? '',
+                )}
+                @input=${(e: InputEvent) => {
+                  const value = (e.currentTarget as HTMLInputElement).value
+                  column.setFilterValue((old: [unknown, unknown]) => [
+                    old?.[0],
+                    value,
+                  ])
+                }}
+                placeholder="Max"
+                class="filter-input"
+              />
+            </div>
+          `
+        : html`
+            <input
+              type="text"
+              .value=${String(column.getFilterValue() ?? '')}
+              @input=${(e: InputEvent) => {
+                column.setFilterValue(
+                  (e.currentTarget as HTMLInputElement).value,
+                )
+              }}
+              placeholder="Search..."
+              class="filter-input"
+            />
+          `,
     )
   }
 

@@ -60,20 +60,18 @@ function App() {
   const refreshData = () => setData(makeData(200))
   const stressTest = () => setData(makeData(2_000))
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return data()
-      },
-      defaultColumn: { minSize: 60, maxSize: 800 },
-      columnResizeMode: 'onChange',
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data()
     },
-  )
+    defaultColumn: { minSize: 60, maxSize: 800 },
+    columnResizeMode: 'onChange',
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   const columnSizeVars = createMemo(() => {
     const headers = table.getFlatHeaders()
