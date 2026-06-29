@@ -1,0 +1,21 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectName": "@tanstack/ember-table",
+  "packages": [
+    {
+      "name": "@ember/addon-blueprint",
+      "version": "0.17.1",
+      "blueprints": [
+        {
+          "name": "@ember/addon-blueprint",
+          "isBaseBlueprint": true,
+          "options": [
+            "--ci-provider=github",
+            "--pnpm",
+            "--typescript"
+          ]
+        }
+      ]
+    }
+  ]
+}

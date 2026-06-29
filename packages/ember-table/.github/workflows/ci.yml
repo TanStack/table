@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request: {}
+
+concurrency:
+  group: ci-${{ github.head_ref || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: "Lints"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Lint
+        run: pnpm lint
+
+  test:
+    name: "Tests"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run Tests
+        run: pnpm test
+      # For the Try Scenarios
+      - id: set-matrix
+        run: |
+           echo "matrix=$(pnpm -s dlx @embroider/try list)" >> $GITHUB_OUTPUT
+          
+
+  floating:
+    name: "Floating Dependencies"
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Install Dependencies
+        run: pnpm install --no-lockfile
+      - name: Run Tests
+        run: pnpm test
+
+  try-scenarios:
+    name: ${{ matrix.name }}
+    runs-on: ubuntu-latest
+    needs: "test"
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix: ${{fromJson(needs.test.outputs.matrix)}}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+      - name: Apply Scenario
+        run: |
+           pnpm dlx @embroider/try apply ${{ matrix.name }}
+          
+      - name: Install Dependencies
+        run: pnpm install --no-lockfile
+      - name: Run Tests
+        run: |
+          pnpm test
+          
+        env: ${{ matrix.env }}
