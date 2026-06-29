@@ -62,7 +62,7 @@ function App() {
     {
       accessorKey: 'createdAt',
       header: 'Created At',
-      cell: (info: any) => info.getValue<Date>().toLocaleString(),
+      cell: (info: any) => (info.getValue() as Date).toLocaleString(),
       size: 250,
     },
   ]

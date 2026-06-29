@@ -9,7 +9,7 @@ title: LitTable
 type LitTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
-Defined in: [TableController.ts:30](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L30)
+Defined in: [packages/lit-table/src/TableController.ts:20](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L20)
 
 The extended table type returned by the Lit adapter.
 Includes a `Subscribe` method for fine-grained state subscriptions
@@ -63,129 +63,42 @@ readonly store: Table<TFeatures, TData>["store"];
 #### Deprecated
 
 Prefer `table.state` for render reads,
-`table.atoms.<slice>.get()` for slice snapshots, or `table.Subscribe` for
+`table.atoms.<slice>.get()` for slice snapshots, or `table.subscribe` for
 explicit subscriptions. `table.store.state` is a current-value snapshot and
 is easy to misuse in render code.
 
-### Subscribe()
+### subscribe
 
 ```ts
-Subscribe: {
-<TSourceValue>  (props): string | TemplateResult;
-<TSourceValue, TSubscribeSelected>  (props): string | TemplateResult;
-<TSubscribeSelected>  (props): string | TemplateResult;
-};
+subscribe: typeof subscribe;
 ```
 
-Subscribe to a selected slice of table state, or to a single source (atom or store).
-
-**Lit note:** `TableController` still wires host updates via the full `table.store`
-subscription — source mode matches the React API and reads `source.get()` at render
-time. True source-only invalidation can be added later via `source.subscribe`.
-
-#### Call Signature
-
-```ts
-<TSourceValue>(props): string | TemplateResult;
-```
-
-##### Type Parameters
-
-###### TSourceValue
-
-`TSourceValue`
-
-##### Parameters
-
-###### props
-
-###### children
-
-(`state`) => `TemplateResult` \| `string` \| `TemplateResult` \| `string`
-
-###### selector?
-
-`undefined`
-
-###### source
-
-[`SubscribeSource`](SubscribeSource.md)\<`TSourceValue`\>
-
-##### Returns
-
-`string` \| `TemplateResult`
-
-#### Call Signature
-
-```ts
-<TSourceValue, TSubscribeSelected>(props): string | TemplateResult;
-```
-
-##### Type Parameters
-
-###### TSourceValue
-
-`TSourceValue`
-
-###### TSubscribeSelected
-
-`TSubscribeSelected`
-
-##### Parameters
-
-###### props
-
-###### children
-
-(`state`) => `TemplateResult` \| `string` \| `TemplateResult` \| `string`
-
-###### selector
-
-(`state`) => `TSubscribeSelected`
-
-###### source
-
-[`SubscribeSource`](SubscribeSource.md)\<`TSourceValue`\>
-
-##### Returns
-
-`string` \| `TemplateResult`
-
-#### Call Signature
-
-```ts
-<TSubscribeSelected>(props): string | TemplateResult;
-```
-
-##### Type Parameters
-
-###### TSubscribeSelected
-
-`TSubscribeSelected`
-
-##### Parameters
-
-###### props
-
-###### children
-
-(`state`) => `TemplateResult` \| `string` \| `TemplateResult` \| `string`
-
-###### selector
-
-(`state`) => `TSubscribeSelected`
-
-##### Returns
-
-`string` \| `TemplateResult`
+Subscribes to the table's underlying state store within a Lit template.
+Re-renders only the targeted template slice when the observed state changes.
 
 #### Example
 
 ```ts
-table.Subscribe({
-  selector: (state) => ({ rowSelection: state.rowSelection }),
-  children: (state) => html`<div>${JSON.stringify(state)}</div>`,
-})
+// 1. Subscribe to a specific state slice (re-renders ONLY when rowSelection changes)
+html`
+<div>
+${table.subscribe(
+table.store,
+(state) => state.rowSelection,
+(rowSelection) => html`<span>Selected: ${JSON.stringify(rowSelection)}</span>`
+)}
+</div>
+`
+
+// 2. Subscribe to the full state (re-renders on any state mutation)
+html`
+<div>
+${table.subscribe(
+table.store,
+(state) => html`<span>Total rows: ${state.rowModel.rows.length}</span>`
+)}
+</div>
+`
 ```
 
 ## Type Parameters

@@ -24,6 +24,7 @@ import {
   createMemo,
   createSignal,
   onCleanup,
+  splitProps,
 } from 'solid-js'
 import { makeData } from './makeData'
 import type { JSX } from 'solid-js'
@@ -146,6 +147,7 @@ function DebouncedInput(
   } & Omit<JSX.InputHTMLAttributes<HTMLInputElement>, 'onChange' | 'value'>,
 ) {
   const [value, setValue] = createSignal(props.value)
+  const [, rest] = splitProps(props, ['value', 'onChange', 'debounce'])
 
   createEffect(() => {
     setValue(props.value)
@@ -162,7 +164,7 @@ function DebouncedInput(
 
   return (
     <input
-      {...props}
+      {...rest}
       value={value()}
       onInput={(e) => setValue(e.currentTarget.value)}
     />

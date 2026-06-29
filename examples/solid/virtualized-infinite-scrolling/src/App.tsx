@@ -15,7 +15,6 @@ import { For, Show, createMemo, onMount } from 'solid-js'
 import { fetchData } from './makeData'
 import type { Person, PersonApiResponse } from './makeData'
 import type { SortingState } from '@tanstack/solid-table'
-import type { Virtualizer } from '@tanstack/solid-virtual'
 
 const fetchSize = 50
 

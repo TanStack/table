@@ -1,26 +1,16 @@
 import { constructTable } from '@tanstack/table-core'
 import { litReactivity } from './reactivity'
 import { FlexRender } from './flexRender'
-import type { Atom, ReadonlyAtom, ReadonlyStore, Store } from '@tanstack/store'
+
+import { subscribe } from './subscribe-directive'
 import type {
-  NoInfer,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type {
-  ReactiveController,
-  ReactiveControllerHost,
-  TemplateResult,
-} from 'lit'
-
-export type SubscribeSource<TValue> =
-  | Atom<TValue>
-  | ReadonlyAtom<TValue>
-  | Store<TValue>
-  | ReadonlyStore<TValue>
+import type { ReactiveController, ReactiveControllerHost } from 'lit'
 
 /**
  * The extended table type returned by the Lit adapter.
@@ -34,51 +24,40 @@ export type LitTable<
 > = Omit<Table<TFeatures, TData>, 'store'> & {
   /**
    * @deprecated Prefer `table.state` for render reads,
-   * `table.atoms.<slice>.get()` for slice snapshots, or `table.Subscribe` for
+   * `table.atoms.<slice>.get()` for slice snapshots, or `table.subscribe` for
    * explicit subscriptions. `table.store.state` is a current-value snapshot and
    * is easy to misuse in render code.
    */
   readonly store: Table<TFeatures, TData>['store']
   /**
-   * Subscribe to a selected slice of table state, or to a single source (atom or store).
-   *
-   * **Lit note:** `TableController` still wires host updates via the full `table.store`
-   * subscription — source mode matches the React API and reads `source.get()` at render
-   * time. True source-only invalidation can be added later via `source.subscribe`.
+   * Subscribes to the table's underlying state store within a Lit template.
+   * Re-renders only the targeted template slice when the observed state changes.
    *
    * @example
    * ```ts
-   * table.Subscribe({
-   *   selector: (state) => ({ rowSelection: state.rowSelection }),
-   *   children: (state) => html`<div>${JSON.stringify(state)}</div>`,
-   * })
+   * // 1. Subscribe to a specific state slice (re-renders ONLY when rowSelection changes)
+   * html`
+   * <div>
+   * ${table.subscribe(
+   * table.store,
+   * (state) => state.rowSelection,
+   * (rowSelection) => html`<span>Selected: ${JSON.stringify(rowSelection)}</span>`
+   * )}
+   * </div>
+   * `
+   *
+   * // 2. Subscribe to the full state (re-renders on any state mutation)
+   * html`
+   * <div>
+   * ${table.subscribe(
+   * table.store,
+   * (state) => html`<span>Total rows: ${state.rowModel.rows.length}</span>`
+   * )}
+   * </div>
+   * `
    * ```
    */
-  Subscribe: {
-    <TSourceValue>(props: {
-      source: SubscribeSource<TSourceValue>
-      selector?: undefined
-      children:
-        | ((state: Readonly<TSourceValue>) => TemplateResult | string)
-        | TemplateResult
-        | string
-    }): TemplateResult | string
-    <TSourceValue, TSubscribeSelected>(props: {
-      source: SubscribeSource<TSourceValue>
-      selector: (state: TSourceValue) => TSubscribeSelected
-      children:
-        | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
-        | TemplateResult
-        | string
-    }): TemplateResult | string
-    <TSubscribeSelected>(props: {
-      selector: (state: NoInfer<TableState<TFeatures>>) => TSubscribeSelected
-      children:
-        | ((state: Readonly<TSubscribeSelected>) => TemplateResult | string)
-        | TemplateResult
-        | string
-    }): TemplateResult | string
-  }
+  subscribe: typeof subscribe
   /**
    * The selected state of the table. This state may not match the structure of
    * the full table state because it is selected by the selector function that
@@ -203,28 +182,9 @@ export class TableController<
     // Capture for closure
     const tableInstance = this._table
 
-    // Attach Subscribe function
-    const Subscribe = function Subscribe(props: {
-      source?: SubscribeSource<unknown>
-      selector?: (state: unknown) => unknown
-      children:
-        | ((state: Readonly<unknown>) => TemplateResult | string)
-        | TemplateResult
-        | string
-    }): TemplateResult | string {
-      const source = props.source ?? tableInstance.store
-      const value = source.get()
-      const selectedState =
-        props.selector !== undefined ? props.selector(value) : value
-      if (typeof props.children === 'function') {
-        return props.children(selectedState as Readonly<unknown>)
-      }
-      return props.children
-    } as LitTable<TFeatures, TData, TSelected>['Subscribe']
-
     return {
       ...this._table,
-      Subscribe,
+      subscribe,
       FlexRender,
       get state() {
         return (selector?.(tableInstance.store.state) ??

@@ -18,11 +18,12 @@ sources:
   - TanStack/table:docs/framework/lit/lit-table.md
   - TanStack/table:docs/framework/lit/guide/table-state.md
   - TanStack/table:packages/lit-table/src/TableController.ts
+  - TanStack/table:packages/lit-table/src/subscribe-directive.ts
   - TanStack/table:packages/lit-table/src/reactivity.ts
   - TanStack/table:examples/lit/basic-table-controller/src/main.ts
 ---
 
-> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. `TableController`'s invalidation model and `Subscribe` mode may change in a future beta. The patterns below match `9.0.0-alpha.48`.
+> **Maintainer note:** the Lit adapter now runs on `@tanstack/lit-store`. `TableController` still wires host invalidation to the full `table.store`/`table.optionsStore`; the new `table.subscribe(source, selector?, template)` directive (replacing the old `table.Subscribe` helper) is what narrows re-rendering to a single template region. Further changes may land during the v9 beta cycle.
 
 `TableController` is the Lit-specific entry point for `@tanstack/lit-table`. It implements the Lit `ReactiveController` interface, hosts the underlying core `Table` instance, and bridges TanStack Store atom changes to `host.requestUpdate()` calls. This skill explains the lifecycle in detail.
 
@@ -81,7 +82,7 @@ Key points:
 1. **One core table per controller.** The first `.table(options)` call constructs it; later calls merge options into the same instance.
 2. **Two subscriptions:** `table.store` (state) and `table.optionsStore` (options). Both call `host.requestUpdate()`.
 3. **Subscriptions are torn down on `hostDisconnected`** and reset on `hostConnected`.
-4. **`Subscribe` is whole-store.** The current adapter does not split host invalidation by source; `table.Subscribe` reads its source at render time, but the host still re-renders on any store change.
+4. **The host re-renders on any store change.** `TableController` itself does not split invalidation by source. To narrow re-rendering to a single template region, wrap it in the `table.subscribe(source, selector?, template)` directive, which updates only that region when its selected value's reference changes (identity comparison). See the `lit/table-state` skill, Core Pattern 4.
 
 ## Lifecycle Diagram
 
@@ -96,7 +97,7 @@ host.addController(this)     this.tableController.table(opts)     unsubscribe(st
               (later calls) table.setOptions(prev => ({ ...prev, ...opts }))
                                 │
                                 ▼
-                       returns { ...table, Subscribe, FlexRender, state }
+                       returns { ...table, subscribe, FlexRender, state }
 ```
 
 ## Canonical Setup
@@ -270,12 +271,12 @@ protected render() {
 
 Source: `packages/lit-table/src/TableController.ts`.
 
-### HIGH Forgetting that `Subscribe` re-renders the host on any store change
+### HIGH Expecting `table.subscribe` to stop the host from re-rendering
 
-Wrong: assuming `table.Subscribe({ source: table.atoms.rowSelection, … })` makes the host invalidate only on selection changes.
+Wrong: assuming `table.subscribe(table.atoms.rowSelection, …)` makes the host invalidate only on selection changes.
 
-Correct: in the current adapter, the host's `requestUpdate()` is wired to the full `table.store` and `table.optionsStore`. `Subscribe` is a render-time projection convenience; it does not narrow host invalidation. Plan accordingly for large lists.
-Source: `packages/lit-table/src/TableController.ts` (lines 200–218 + `_setupSubscriptions`).
+Correct: the host's `requestUpdate()` is wired to the full `table.store` and `table.optionsStore`, so `render()` still runs on every store change. What `table.subscribe` narrows is the _wrapped template region_: it skips re-rendering that region (and re-running its template function) when its selected slice is unchanged. Wrap expensive regions (large `tbody` lists) in `table.subscribe` with a stable selector to get the benefit.
+Source: `packages/lit-table/src/TableController.ts` (`_setupSubscriptions`); `packages/lit-table/src/subscribe-directive.ts`.
 
 ### HIGH Building `features` inside `render()`
 

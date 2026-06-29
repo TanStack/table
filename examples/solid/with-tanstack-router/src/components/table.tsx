@@ -51,39 +51,33 @@ type Props<TData extends Record<string, string | number>> = {
 export default function Table<T extends Record<string, string | number>>(
   props: Props<T>,
 ) {
-  const table = createTable(
-    {
-      debugTable: true,
-      features,
-      get columns() {
-        return props.columns
-      },
-      get data() {
-        return props.data
-      },
-      manualFiltering: true,
-      manualPagination: true,
-      manualSorting: true,
-      get onSortingChange() {
-        return props.onSortingChange
-      },
-      get onPaginationChange() {
-        return props.paginationOptions.onPaginationChange
-      },
-      get rowCount() {
-        return props.paginationOptions.rowCount
-      },
+  const table = createTable({
+    debugTable: true,
+    features,
+    get columns() {
+      return props.columns
     },
-    (state) => state,
-  )
+    get data() {
+      return props.data
+    },
+    manualFiltering: true,
+    manualPagination: true,
+    manualSorting: true,
+    get onSortingChange() {
+      return props.onSortingChange
+    },
+    get onPaginationChange() {
+      return props.paginationOptions.onPaginationChange
+    },
+    get rowCount() {
+      return props.paginationOptions.rowCount
+    },
+  })
 
   // Sync controlled state with table store
   createEffect(() => {
-    table.baseStore.setState((prev) => ({
-      ...prev,
-      pagination: props.pagination,
-      sorting: props.sorting,
-    }))
+    table.baseAtoms.pagination.set(props.pagination)
+    table.baseAtoms.sorting.set(props.sorting)
   })
 
   return (

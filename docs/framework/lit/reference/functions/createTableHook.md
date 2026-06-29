@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.ts:503](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L503)
+Defined in: [packages/lit-table/src/createTableHook.ts:503](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L503)
 
 Creates a custom table hook with pre-bound components for composition.
 

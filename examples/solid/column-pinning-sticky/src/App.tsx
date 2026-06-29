@@ -98,20 +98,17 @@ function App() {
   const refreshData = () => setData(makeData(20))
   const stressTest = () => setData(makeData(1_000))
 
-  const table = createTable(
-    {
-      features,
-      columns: defaultColumns,
-      get data() {
-        return data()
-      },
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
-      columnResizeMode: 'onChange',
+  const table = createTable({
+    features,
+    columns: defaultColumns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+    columnResizeMode: 'onChange',
+  })
 
   const randomizeColumns = () => {
     table.setColumnOrder(

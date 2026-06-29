@@ -9,7 +9,7 @@ title: flexRender
 function flexRender<TProps>(Comp, props): string | TemplateResult | null;
 ```
 
-Defined in: [flexRender.ts:22](https://github.com/TanStack/table/blob/main/packages/lit-table/src/flexRender.ts#L22)
+Defined in: [packages/lit-table/src/flexRender.ts:22](https://github.com/TanStack/table/blob/main/packages/lit-table/src/flexRender.ts#L22)
 
 Renders a Lit table template value with the provided context props.
 

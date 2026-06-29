@@ -211,10 +211,10 @@ Same shape, but the virtualizer's `count` is `columns.length` (or visible column
 
 Always use `table.getRowModel().rows.length` as the count — that's the post-feature row array (sorted, filtered, paginated). The virtualizer should never wrap the raw `data` array.
 
-## With `@tanstack/lit-table`'s `Subscribe`
+## With `@tanstack/lit-table`'s `subscribe`
 
-The current Lit adapter wires host invalidation through the full store, so re-renders are already triggered when slices change. Use `table.Subscribe` for render-time projections; don't expect source-mode invalidation savings yet.
-Source: `packages/lit-table/src/TableController.ts`.
+`subscribe` is an [async Lit directive](https://lit.dev/docs/api/custom-directives/#AsyncDirective) that enables fine-grained reactivity by updating only when the selected part of the store or atom changes. Rather than triggering a full re-render whenever the table state updates, you can use `subscribe` to watch specific slices of state and update only the affected parts of the template. This reduces unnecessary renders and improves performance for large tables or complex UI hierarchies.
+Source: `packages/lit-table/src/subscribe-directive.ts`.
 
 ## Common Mistakes
 

@@ -9,7 +9,7 @@ title: AppHeaderContext
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```
 
-Defined in: [createTableHook.ts:69](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L69)
+Defined in: [packages/lit-table/src/createTableHook.ts:69](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L69)
 
 Enhanced HeaderContext with pre-bound header components.
 The `header` property includes the registered headerComponents.
@@ -40,7 +40,7 @@ The `header` property includes the registered headerComponents.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.ts:75](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L75)
+Defined in: [packages/lit-table/src/createTableHook.ts:75](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L75)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [createTableHook.ts:75](https://github.com/TanStack/table/blob/main/
 header: Header<TFeatures, TData, TValue> & BoundComponents<THeaderComponents> & object;
 ```
 
-Defined in: [createTableHook.ts:76](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L76)
+Defined in: [packages/lit-table/src/createTableHook.ts:76](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L76)
 
 #### Type Declaration
 
@@ -72,4 +72,4 @@ FlexRender: () => TemplateResult | string | null;
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [createTableHook.ts:80](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L80)
+Defined in: [packages/lit-table/src/createTableHook.ts:80](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L80)

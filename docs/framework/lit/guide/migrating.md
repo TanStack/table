@@ -272,7 +272,7 @@ Lit v9 table state is atom-backed and controller-driven. The controller requests
 | `table.state` | Full registered table state by default, or selected state from the second argument to `tableController.table(...)`. |
 | `table.store.state` | Current full table state snapshot. |
 | `table.atoms.<slice>.get()` | Narrow current-value read for one state slice. |
-| `table.Subscribe` | Template helper for selecting table state while rendering. |
+| `table.subscribe` | Template helper for selecting table state while rendering. |
 | `table.baseAtoms.<slice>` | Internal writable atoms. Prefer feature APIs or external atoms. |
 
 ### Accessing State
@@ -319,20 +319,23 @@ table.state.pagination
 
 Passing `(state) => state` is equivalent to the default selector and is no longer necessary.
 
-### Selecting State with `table.Subscribe`
+### Selecting State with `table.subscribe`
 
 ```ts
-${table.Subscribe({
-  selector: (state) => ({
-    pagination: state.pagination,
-  }),
-  children: ({ pagination }) => html`
+private paginationSelector = (state) => ({
+  pagination: state.pagination,
+})
+
+${table.subscribe(
+  table.store,
+  this.paginationSelector,
+  ({ pagination }) => html`
     <span>Page ${pagination.pageIndex + 1}</span>
   `,
-})}
+)}
 ```
 
-`table.Subscribe` can also accept a `source`, but the current Lit adapter invalidates the host through the table store subscription. Treat source mode as render-time selection convenience.
+It is advised to use a stable reference for the selector function, such as a class method or an arrow function defined outside of render, to avoid unnecessary re-renders.
 
 ### Controlled State
 

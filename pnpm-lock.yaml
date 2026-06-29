@@ -1937,6 +1937,31 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/lit/basic-subscribe:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/lit-store':
+        specifier: ^0.14.0
+        version: 0.14.0(lit@3.3.3)
+      '@tanstack/lit-table':
+        specifier: workspace:*
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.3
+        version: 3.3.3
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
+
   examples/lit/basic-table-controller:
     dependencies:
       '@faker-js/faker':
@@ -8873,9 +8898,9 @@ importers:
 
   packages/lit-table:
     dependencies:
-      '@tanstack/store':
-        specifier: ^0.11.0
-        version: 0.11.0
+      '@tanstack/lit-store':
+        specifier: ^0.14.0
+        version: 0.14.0(lit@3.3.3)
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -13863,6 +13888,11 @@ packages:
   '@tanstack/intent@0.3.2':
     resolution: {integrity: sha512-Apyfkf0O8QqHQJjy/cB1QW2GpYTOyjf98nFAaYtzjBc0V5YzJoy0wnmZSLvwBJxE8/Hhy0Bsa+EPt/fdeJyXkw==}
     hasBin: true
+
+  '@tanstack/lit-store@0.14.0':
+    resolution: {integrity: sha512-Y7aS5V8b5IdAhJQ+Jx+pNAuHLIyuZlI/qybIEFBOXVivsx/GSYUuQNCesLoiEH9RrBi8+pU5D+UeHPmpnNSIQg==}
+    peerDependencies:
+      lit: ^3.0.0
 
   '@tanstack/lit-virtual@3.13.30':
     resolution: {integrity: sha512-JT/ooOEIJLieZqLyRF09t8iG/XhW2BzkHkO6MeFfa5UOdEPuRwMUBeivFYWLUX3gzq9tMnluzPslFF3xIa66qw==}
@@ -24048,6 +24078,11 @@ snapshots:
       semver: 7.8.5
       std-env: 4.1.0
       yaml: 2.9.0
+
+  '@tanstack/lit-store@0.14.0(lit@3.3.3)':
+    dependencies:
+      '@tanstack/store': 0.11.0
+      lit: 3.3.3
 
   '@tanstack/lit-virtual@3.13.30(lit@3.3.3)':
     dependencies:
