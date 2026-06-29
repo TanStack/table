@@ -1,13 +1,26 @@
 {
   "name": "@tanstack/ember-table",
-  "version": "0.0.0",
-  "description": "The default blueprint for Embroider v2 addons.",
-  "keywords": [
-    "ember-addon"
-  ],
-  "repository": "",
+  "version": "9.0.0-beta.21",
+  "description": "Headless UI for building powerful tables & datagrids for Ember.",
+  "author": "Tanner Linsley",
   "license": "MIT",
-  "author": "",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TanStack/table.git",
+    "directory": "packages/ember-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "ember-addon",
+    "table",
+    "ember-table",
+    "datagrid",
+    "tanstack-intent"
+  ],
   "imports": {
     "#src/*": "./src/*"
   },
@@ -16,12 +29,7 @@
       "types": "./declarations/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./addon-main.js": "./addon-main.cjs",
-    "./*.css": "./dist/*.css",
-    "./*": {
-      "types": "./declarations/*.d.ts",
-      "default": "./dist/*.js"
-    }
+    "./addon-main.js": "./addon-main.cjs"
   },
   "files": [
     "addon-main.cjs",
