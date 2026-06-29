@@ -470,6 +470,9 @@
             { "label": "LitTable", "to": "framework/lit/reference/type-aliases/LitTable" },
             { "label": "AppLitTable", "to": "framework/lit/reference/type-aliases/AppLitTable" },
             { "label": "CreateTableHookOptions", "to": "framework/lit/reference/type-aliases/CreateTableHookOptions" },
+            { "label": "subscribe", "to": "framework/lit/reference/variables/subscribe" },
+            { "label": "SubscribeDirective", "to": "framework/lit/reference/classes/SubscribeDirective" },
+            { "label": "SelectionSource", "to": "framework/lit/reference/type-aliases/SelectionSource" },
             { "label": "FlexRender", "to": "framework/lit/reference/functions/FlexRender-1" },
             { "label": "flexRender", "to": "framework/lit/reference/functions/flexRender" }
           ]
@@ -799,6 +802,7 @@
             { "label": "Basic (useAppTable)", "to": "framework/lit/examples/basic-app-table" },
             { "label": "Basic (External State)", "to": "framework/lit/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/lit/examples/basic-external-atoms" },
+            { "label": "Basic (Subscribe)", "to": "framework/lit/examples/basic-subscribe" },
             { "label": "Header Groups", "to": "framework/lit/examples/column-groups" }
           ]
         },

@@ -9,6 +9,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "lint": "eslint ./src",
+    "test:types": "ng build",
     "serve:ssr:remote-data": "node dist/remote-data/server/server.mjs"
   },
   "private": true,

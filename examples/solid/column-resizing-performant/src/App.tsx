@@ -73,10 +73,6 @@ function App() {
       debugHeaders: true,
       debugColumns: true,
     },
-    (state) => ({
-      columnSizing: state.columnSizing,
-      columnResizing: state.columnResizing,
-    }),
   )
 
   const columnSizeVars = createMemo(() => {

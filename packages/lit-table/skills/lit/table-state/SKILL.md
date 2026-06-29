@@ -5,7 +5,7 @@ description: >
   (constructed once per LitElement host, `.table(options, selector?)` called per
   render), reading state via `table.state` / `table.store` / `table.atoms.<slice>`,
   rendering with `table.FlexRender` / `FlexRender`, fine-grained subscriptions
-  via `table.Subscribe`, owning slices with external atoms via `createAtom` +
+  via the `table.subscribe` directive, owning slices with external atoms via `createAtom` +
   `options.atoms`, and packaging shared config into `createTableHook`
   (`useAppTable`, `createAppColumnHelper`, `useTableContext`,
   `table.AppCell` / `table.AppHeader` / `table.AppFooter`). Routing keywords:
@@ -22,15 +22,17 @@ sources:
   - TanStack/table:docs/framework/lit/guide/table-state.md
   - TanStack/table:docs/framework/lit/lit-table.md
   - TanStack/table:packages/lit-table/src/TableController.ts
+  - TanStack/table:packages/lit-table/src/subscribe-directive.ts
   - TanStack/table:packages/lit-table/src/createTableHook.ts
   - TanStack/table:packages/lit-table/src/flexRender.ts
   - TanStack/table:packages/lit-table/src/reactivity.ts
   - TanStack/table:examples/lit/basic-table-controller/src/main.ts
   - TanStack/table:examples/lit/basic-external-atoms/src/main.ts
+  - TanStack/table:examples/lit/basic-subscribe/src/main.ts
   - TanStack/table:examples/lit/basic-app-table/src/main.ts
 ---
 
-> **Maintainer note:** the Lit adapter is scheduled for a rewrite alongside TanStack Lit Store during the v9 beta cycle. APIs in this skill (especially `table.Subscribe` and the `TableController` invalidation strategy) may change in a future beta. The patterns below match `9.0.0-alpha.48`.
+> **Maintainer note:** the Lit adapter now runs on `@tanstack/lit-store`. The old `table.Subscribe({ source, selector, children })` helper has been replaced by the `table.subscribe(source, selector?, template)` directive (see Core Pattern 4). Further changes may land during the v9 beta cycle.
 
 This skill builds on `tanstack-table/state-management` and `tanstack-table/setup`. Read those first — `state-management` explains the v9 atom model. The Lit adapter wires that atom model into a `ReactiveController` (`TableController`) attached to a `LitElement` host.
 
@@ -144,7 +146,7 @@ Source: `packages/lit-table/src/TableController.ts`.
 
 ### 2. `.table(options, selector?)` second argument
 
-The selector is a function from full table state to whatever you want exposed on `table.state`. Default is full state. Narrowing helps document the host's actual data dependencies; **host invalidation is still routed through the full `table.store` subscription**, so source-scoped subscriptions are not yet a guarantee of source-only re-renders.
+The selector is a function from full table state to whatever you want exposed on `table.state`. Default is full state. Narrowing documents the host's actual data dependencies. Note this selector only shapes `table.state`; **the host `render()` still re-runs on every `table.store` change** because `TableController` subscribes to the full store. To skip re-rendering an expensive template region when its slice is unchanged, wrap it in the `table.subscribe` directive (Core Pattern 4).
 
 ```ts
 const table = this.tableController.table(
@@ -167,24 +169,44 @@ const sorting = table.atoms.sorting.get()
 const snapshot = table.state
 ```
 
-### 4. `table.Subscribe` in templates
+### 4. `table.subscribe` directive for fine-grained updates
 
-Use `table.Subscribe` to project a slice during render. It reads the current value at template time. **In the current Lit adapter, host invalidation is wired through the full `table.store` subscription** — treat source mode as a render-time selection convenience.
+`table.subscribe` is a Lit async directive (backed by `@tanstack/lit-store`'s `TanStackStoreSelector`). It subscribes the wrapped template to a single source and re-renders **only that template region**, leaving the rest of the host template untouched. The region re-renders whenever the selected value's reference changes (identity comparison). Return a specific slice (e.g. `state => state.pagination`) to update only when that slice changes; a selector that builds a fresh object every call re-renders on every store emit. Unlike `table.state`, it can update its slice without re-running the whole host template.
+
+Two call signatures:
 
 ```ts
-${table.Subscribe({
-  selector: (s) => s.pagination,
-  children: (pagination) => html`<span>Page ${pagination.pageIndex + 1}</span>`,
-})}
+// 1. Selected slice — re-renders only when the `pagination` reference changes
+${table.subscribe(
+  table.store,
+  (state) => state.pagination,
+  (pagination) => html`<span>Page ${pagination.pageIndex + 1}</span>`,
+)}
 
-// source mode
-${table.Subscribe({
-  source: table.atoms.rowSelection,
-  children: (rs) => html`<span>${Object.keys(rs).length} selected</span>`,
-})}
+// 2. Whole source — any source mutation re-renders the region
+${table.subscribe(
+  table.atoms.rowSelection,
+  (rowSelection) => html`<span>${Object.keys(rowSelection).length} selected</span>`,
+)}
 ```
 
-Source: `packages/lit-table/src/TableController.ts` (lines 200–218).
+`source` is any store or atom: `table.store` (full table state), `table.atoms.<slice>`, or an external atom you own.
+
+**Use a stable selector reference.** The directive memoizes on the identity of the `source` and `selector` you pass. Declare selectors as class fields/methods so the same reference is passed every render:
+
+```ts
+private getBodyState = (state: ReturnType<typeof this.table.store.get>) => ({
+  columnFilters: state.columnFilters,
+  pagination: state.pagination,
+})
+
+// ...in render():
+${this.table.subscribe(this.table.store, this.getBodyState, () => html`<tbody>…</tbody>`)}
+```
+
+An inline `(state) => ({ … })` allocates a new function every render, which forces the directive to re-subscribe and re-render every time, defeating the optimization.
+
+Source: `packages/lit-table/src/subscribe-directive.ts`; `examples/lit/basic-subscribe/src/main.ts`.
 
 ### 5. External atoms with `createAtom` + `options.atoms`
 
@@ -193,7 +215,7 @@ Move slice ownership to a TanStack Store atom. The table writes to your atom whe
 Precedence: `options.atoms[key]` > `options.state[key]` > internal `baseAtoms[key]`.
 
 ```ts
-import { createAtom } from '@tanstack/store'
+import { createAtom } from '@tanstack/lit-store'
 import {
   TableController,
   rowPaginationFeature,
@@ -379,12 +401,20 @@ const table = this.tableController.table({
 v9 generates feature APIs and state slices only for registered features. The missing-feature failure is the #1 v9 trap.
 Source: `docs/guide/features.md`.
 
-### HIGH Forgetting that `table.Subscribe` invalidates the host on any store change
+### HIGH Passing an inline selector to `table.subscribe`
 
-Wrong: assuming `<table.Subscribe source={table.atoms.rowSelection}>` only re-renders the host on row-selection changes.
+Wrong:
 
-Correct: in the current adapter, every store change invalidates the host. Selection inside `table.Subscribe` projects the value, but the host still re-renders whenever the `table.store` subscription fires. Source-only invalidation is noted as "can be added later" in source.
-Source: `packages/lit-table/src/TableController.ts`.
+```ts
+${table.subscribe(
+  table.store,
+  (state) => ({ columnFilters: state.columnFilters, pagination: state.pagination }), // new fn every render
+  () => html`<tbody>…</tbody>`,
+)}
+```
+
+Correct: declare the selector as a stable class field/method and pass that reference. The directive memoizes on `source` + `selector` identity; a fresh inline function forces it to re-subscribe and re-render every host update, so the wrapped region never gets skipped. Note also that the host `render()` itself still runs on every `table.store` change — `table.subscribe` only spares the _wrapped_ region from re-rendering, it does not stop the host update.
+Source: `packages/lit-table/src/subscribe-directive.ts`; `examples/lit/basic-subscribe/src/main.ts`.
 
 ### HIGH `this` binding in the options getter
 

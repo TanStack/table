@@ -110,7 +110,6 @@ function App() {
       debugColumns: true,
       columnResizeMode: 'onChange',
     },
-    (state) => state,
   )
 
   const randomizeColumns = () => {

@@ -58,7 +58,7 @@ console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side
 console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
 ```
 
-In event handlers or other non-render code, you can also read the current snapshot with `table.atoms.rowSelection.get()`. In your `render` method, prefer `table.state.rowSelection` (or `table.Subscribe`), since the `TableController` keeps the host updated through the table store subscription.
+In event handlers or other non-render code, you can also read the current snapshot with `table.atoms.rowSelection.get()`. In your `render` method, prefer `table.state.rowSelection` (or the `table.subscribe` directive), since the `TableController` keeps the host updated through the table store subscription.
 
 > Note: If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
 

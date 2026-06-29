@@ -6,7 +6,8 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit"
   },
   "license": "MIT",
   "devDependencies": {

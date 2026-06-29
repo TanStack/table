@@ -8,30 +8,25 @@ import {
   createColumnHelper,
   createFilteredRowModel,
   createPaginatedRowModel,
-  createSortedRowModel,
   filterFns,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
-  rowSortingFeature,
-  sortFns,
+  subscribe,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { createAtom } from '@tanstack/lit-store'
 import { makeData } from './makeData'
-import type {
-  ColumnFiltersState,
-  LitTable,
-  PaginationState,
-  RowSelectionState,
-  TableFeature,
-} from '@tanstack/lit-table'
+import type { HeaderContext, RowSelectionState } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
 /**
- * This example demonstrates fine-grained state subscriptions using table.subscribe.
- * Each part of the table subscribes only to the state it needs, optimizing re-renders.
- * External atoms give you full control over state management.
+ * This example mirrors the React `basic-subscribe` example: it shows fine-grained
+ * re-rendering with `table.subscribe`. Each part of the UI subscribes only to the
+ * slice of state it needs, so toggling one row, typing in a filter, or paging only
+ * re-renders the affected region instead of the whole table.
+ *
+ * Reach for these patterns only when you hit a real performance issue.
  */
 
 const features = tableFeatures({
@@ -39,7 +34,11 @@ const features = tableFeatures({
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
-  rowSortingFeature,
+  // Row models must be registered as part of the features so the table actually
+  // filters and paginates `table.getRowModel()`.
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -47,29 +46,54 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 const columns = columnHelper.columns([
   columnHelper.display({
     id: 'select',
-    header: 'Select',
-    cell: ({ row }) => html`
-      <input
-        type="checkbox"
-        .checked=${row.getIsSelected()}
-        ?disabled=${!row.getCanSelect()}
-        @change=${row.getToggleSelectedHandler()}
-      />
-    `,
+    // Select-all checkbox re-renders only when filtering or row selection changes.
+    header: ({ table }) =>
+      subscribe(
+        table.store,
+        (state) => ({
+          columnFilters: state.columnFilters,
+          globalFilter: state.globalFilter,
+          rowSelection: state.rowSelection,
+        }),
+        () => html`
+          <input
+            type="checkbox"
+            .checked=${table.getIsAllRowsSelected()}
+            .indeterminate=${table.getIsSomeRowsSelected()}
+            @change=${table.getToggleAllRowsSelectedHandler()}
+          />
+        `,
+      ),
+    // Each row's checkbox subscribes only to its own selection value, so toggling
+    // one row re-renders just that checkbox.
+    cell: ({ row, table }) =>
+      subscribe(
+        table.atoms.rowSelection,
+        (rowSelection) => rowSelection[row.id],
+        (isRowSelected) => html`
+          <input
+            type="checkbox"
+            .checked=${!!isRowSelected}
+            ?disabled=${!row.getCanSelect()}
+            @change=${row.getToggleSelectedHandler()}
+          />
+        `,
+      ),
   }),
   columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('lastName', {
-    header: 'Last Name',
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    header: () => html`<span>Last Name</span>`,
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('age', {
-    header: 'Age',
+    header: () => 'Age',
   }),
   columnHelper.accessor('visits', {
-    header: 'Visits',
+    header: () => html`<span>Visits</span>`,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
@@ -79,13 +103,9 @@ const columns = columnHelper.columns([
   }),
 ])
 
-// External state atoms for fine-grained control
+// Raise just the row selection slice to an external atom for full control over it,
+// matching the React example. Other slices stay internal to the table.
 const rowSelectionAtom = createAtom<RowSelectionState>({})
-const columnFiltersAtom = createAtom<ColumnFiltersState>([])
-const paginationAtom = createAtom<PaginationState>({
-  pageIndex: 0,
-  pageSize: 10,
-})
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
@@ -97,29 +117,20 @@ class LitTableExample extends LitElement {
   private table = this.tableController.table(
     {
       features,
-      rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
       columns,
       data: this._data,
       getRowId: (row) => row.id,
       enableRowSelection: true,
       atoms: {
         rowSelection: rowSelectionAtom,
-        columnFilters: columnFiltersAtom,
-        pagination: paginationAtom,
       },
       debugTable: true,
     },
-    () => null, // subscribe to no table state by default
+    () => null, // subscribe to no table state by default; use table.subscribe below
   )
 
-  private getPaginationState = (
-    state: ReturnType<typeof this.table.store.get>,
-  ) => state.pagination
-
+  // Stable selector references so the directive can skip re-running when the host
+  // re-renders with the same source + selector.
   private getBodyState = (state: ReturnType<typeof this.table.store.get>) => ({
     columnFilters: state.columnFilters,
     globalFilter: state.globalFilter,
@@ -130,6 +141,71 @@ class LitTableExample extends LitElement {
     if (changedProperties.has('_data')) {
       this.table.setOptions((prev) => ({ ...prev, data: this._data }))
     }
+  }
+
+  private renderColumnFilter(
+    context: HeaderContext<typeof features, Person, unknown>,
+  ) {
+    const { column, table } = context
+    if (!column.getCanFilter()) return null
+
+    const firstValue = table
+      .getPreFilteredRowModel()
+      .flatRows[0]?.getValue(column.id)
+
+    // Re-render the filter inputs only when the column filters change.
+    return subscribe(
+      table.atoms.columnFilters,
+      () =>
+        typeof firstValue === 'number'
+          ? html`
+              <div class="filter-row">
+                <input
+                  type="number"
+                  .value=${String(
+                    (column.getFilterValue() as [unknown, unknown])?.[0] ?? '',
+                  )}
+                  @input=${(e: InputEvent) => {
+                    const value = (e.currentTarget as HTMLInputElement).value
+                    column.setFilterValue((old: [unknown, unknown]) => [
+                      value,
+                      old?.[1],
+                    ])
+                  }}
+                  placeholder="Min"
+                  class="filter-input"
+                />
+                <input
+                  type="number"
+                  .value=${String(
+                    (column.getFilterValue() as [unknown, unknown])?.[1] ?? '',
+                  )}
+                  @input=${(e: InputEvent) => {
+                    const value = (e.currentTarget as HTMLInputElement).value
+                    column.setFilterValue((old: [unknown, unknown]) => [
+                      old?.[0],
+                      value,
+                    ])
+                  }}
+                  placeholder="Max"
+                  class="filter-input"
+                />
+              </div>
+            `
+          : html`
+              <input
+                type="text"
+                .value=${String(column.getFilterValue() ?? '')}
+                @input=${(e: InputEvent) => {
+                  column.setFilterValue(
+                    (e.currentTarget as HTMLInputElement).value,
+                  )
+                }}
+                placeholder="Search..."
+                class="filter-input"
+              />
+            `,
+    )
   }
 
   protected render() {
@@ -150,6 +226,26 @@ class LitTableExample extends LitElement {
           </button>
         </div>
 
+        <!-- Global filter - re-renders only when the global filter changes -->
+        <div>
+          ${this.table.subscribe(
+            this.table.store,
+            (state) => state.globalFilter,
+            (globalFilter) => html`
+              <input
+                type="text"
+                .value=${globalFilter ?? ''}
+                @input=${(e: InputEvent) =>
+                  this.table.setGlobalFilter(
+                    (e.currentTarget as HTMLInputElement).value,
+                  )}
+                class="summary-panel"
+                placeholder="Search all columns..."
+              />
+            `,
+          )}
+        </div>
+
         <div class="spacer-sm"></div>
 
         <table>
@@ -166,14 +262,12 @@ class LitTableExample extends LitElement {
                       <th colspan="${header.colSpan}">
                         ${header.isPlaceholder
                           ? null
-                          : html`<div
-                              class="${header.column.getCanSort()
-                                ? 'sortable-header'
-                                : ''}"
-                              @click="${header.column.getToggleSortingHandler()}"
-                            >
-                              ${FlexRender({ header })}
-                            </div>`}
+                          : html`
+                              <div>${FlexRender({ header })}</div>
+                              ${header.column.getCanFilter()
+                                ? this.renderColumnFilter(header.getContext())
+                                : null}
+                            `}
                       </th>
                     `,
                   )}
@@ -182,7 +276,7 @@ class LitTableExample extends LitElement {
             )}
           </thead>
 
-          <!-- Row Model Subscribe - re-render tbody only when filtering/pagination changes -->
+          <!-- Row model subscribe - re-render tbody only when filtering/pagination changes -->
           ${this.table.subscribe(
             this.table.store,
             this.getBodyState,
@@ -211,6 +305,7 @@ class LitTableExample extends LitElement {
                         <input
                           type="checkbox"
                           .checked=${this.table.getIsAllPageRowsSelected()}
+                          .indeterminate=${this.table.getIsSomePageRowsSelected()}
                           @change=${this.table.getToggleAllPageRowsSelectedHandler()}
                         />
                       `,
@@ -228,87 +323,82 @@ class LitTableExample extends LitElement {
 
         <div class="spacer-sm"></div>
 
-        <!-- Pagination Subscribe - re-renders only when pagination state changes -->
+        <!-- Pagination subscribe - re-renders only when pagination state changes -->
         ${this.table.subscribe(
           this.table.store,
-          this.getPaginationState,
-          (pagination) => {
-            console.log('rendering pagination')
-            return html`
-              <div class="controls">
-                <button
-                  class="demo-button demo-button-sm"
-                  @click=${() => this.table.setPageIndex(0)}
-                  ?disabled=${!this.table.getCanPreviousPage()}
-                >
-                  &lt;&lt;
-                </button>
-                <button
-                  class="demo-button demo-button-sm"
-                  @click=${() => this.table.previousPage()}
-                  ?disabled=${!this.table.getCanPreviousPage()}
-                >
-                  &lt;
-                </button>
-                <button
-                  class="demo-button demo-button-sm"
-                  @click=${() => this.table.nextPage()}
-                  ?disabled=${!this.table.getCanNextPage()}
-                >
-                  &gt;
-                </button>
-                <button
-                  class="demo-button demo-button-sm"
-                  @click=${() =>
-                    this.table.setPageIndex(this.table.getPageCount() - 1)}
-                  ?disabled=${!this.table.getCanNextPage()}
-                >
-                  &gt;&gt;
-                </button>
-                <span class="inline-controls">
-                  <div>Page</div>
-                  <strong>
-                    ${(pagination.pageIndex + 1).toLocaleString()} of
-                    ${this.table.getPageCount().toLocaleString()}
-                  </strong>
-                </span>
-                <span class="inline-controls">
-                  | Go to page:
-                  <input
-                    type="number"
-                    min="1"
-                    max="${this.table.getPageCount()}"
-                    .value="${String(pagination.pageIndex + 1)}"
-                    @input=${(e: InputEvent) => {
-                      const target = e.currentTarget as HTMLInputElement
-                      const page = target.value ? Number(target.value) - 1 : 0
-                      this.table.setPageIndex(page)
-                    }}
-                    class="page-size-input"
-                  />
-                </span>
-                <select
-                  .value="${String(pagination.pageSize)}"
-                  @change=${(e: Event) => {
-                    const target = e.currentTarget as HTMLSelectElement
-                    this.table.setPageSize(Number(target.value))
+          (state) => state.pagination,
+          (pagination) => html`
+            <div class="controls">
+              <button
+                class="demo-button demo-button-sm"
+                @click=${() => this.table.setPageIndex(0)}
+                ?disabled=${!this.table.getCanPreviousPage()}
+              >
+                &lt;&lt;
+              </button>
+              <button
+                class="demo-button demo-button-sm"
+                @click=${() => this.table.previousPage()}
+                ?disabled=${!this.table.getCanPreviousPage()}
+              >
+                &lt;
+              </button>
+              <button
+                class="demo-button demo-button-sm"
+                @click=${() => this.table.nextPage()}
+                ?disabled=${!this.table.getCanNextPage()}
+              >
+                &gt;
+              </button>
+              <button
+                class="demo-button demo-button-sm"
+                @click=${() =>
+                  this.table.setPageIndex(this.table.getPageCount() - 1)}
+                ?disabled=${!this.table.getCanNextPage()}
+              >
+                &gt;&gt;
+              </button>
+              <span class="inline-controls">
+                <div>Page</div>
+                <strong>
+                  ${(pagination.pageIndex + 1).toLocaleString()} of
+                  ${this.table.getPageCount().toLocaleString()}
+                </strong>
+              </span>
+              <span class="inline-controls">
+                | Go to page:
+                <input
+                  type="number"
+                  min="1"
+                  max="${this.table.getPageCount()}"
+                  .value="${String(pagination.pageIndex + 1)}"
+                  @input=${(e: InputEvent) => {
+                    const target = e.currentTarget as HTMLInputElement
+                    const page = target.value ? Number(target.value) - 1 : 0
+                    this.table.setPageIndex(page)
                   }}
-                >
-                  ${[10, 20, 30, 40, 50, 100].map(
-                    (pageSize) =>
-                      html`<option value="${pageSize}">
-                        Show ${pageSize}
-                      </option>`,
-                  )}
-                </select>
-              </div>
-            `
-          },
+                  class="page-size-input"
+                />
+              </span>
+              <select
+                .value="${String(pagination.pageSize)}"
+                @change=${(e: Event) => {
+                  const target = e.currentTarget as HTMLSelectElement
+                  this.table.setPageSize(Number(target.value))
+                }}
+              >
+                ${[10, 20, 30, 40, 50].map(
+                  (pageSize) =>
+                    html`<option value="${pageSize}">Show ${pageSize}</option>`,
+                )}
+              </select>
+            </div>
+          `,
         )}
 
         <br />
 
-        <!-- Row Selection Summary Subscribe - re-renders only when selection changes -->
+        <!-- Row selection summary subscribe - re-renders only when selection changes -->
         ${this.table.subscribe(
           rowSelectionAtom,
           (rowSelection) => html`
@@ -325,7 +415,7 @@ class LitTableExample extends LitElement {
         <hr />
         <br />
 
-        <!-- Full Table State Subscribe - for debugging -->
+        <!-- Full table state subscribe - for debugging -->
         <label>Table State:</label>
         ${this.table.subscribe(
           this.table.store,
@@ -353,15 +443,12 @@ class LitTableExample extends LitElement {
           border-bottom: 1px solid lightgray;
           border-right: 1px solid lightgray;
           padding: 2px 4px;
+          text-align: left;
+          vertical-align: top;
         }
 
         td {
           padding: 2px 4px;
-        }
-
-        .sortable-header {
-          cursor: pointer;
-          user-select: none;
         }
 
         .demo-root {
@@ -381,6 +468,19 @@ class LitTableExample extends LitElement {
 
         .inline-controls {
           gap: 0.25rem;
+        }
+
+        .filter-row {
+          display: flex;
+          gap: 0.25rem;
+        }
+
+        .filter-input {
+          border: 1px solid currentColor;
+          border-radius: 0.25rem;
+          padding: 0.25rem;
+          width: 6rem;
+          font-weight: normal;
         }
 
         .demo-button,
@@ -405,7 +505,7 @@ class LitTableExample extends LitElement {
 
         .summary-panel {
           border: 1px solid currentColor;
-          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+          border-radius: 0.25rem;
           padding: 0.5rem;
           width: 100%;
         }
