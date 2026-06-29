@@ -9,7 +9,7 @@ title: FacetedMinMaxValuesFactory
 type FacetedMinMaxValuesFactory<TData> = (table, columnId) => () => undefined | [number, number];
 ```
 
-Defined in: [useLegacyTable.ts:177](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L177)
+Defined in: [useLegacyTable.ts:178](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L178)
 
 Faceted min/max values factory function type from v8 API
 

@@ -11,11 +11,12 @@ import { ref } from 'vue'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const INITIAL_PAGE_INDEX = 0
 
@@ -71,20 +72,14 @@ const columns = ref(
   ]),
 )
 
-const table = useTable(
-  {
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-    data,
-    get columns() {
-      return columns.value
-    },
-    debugTable: true,
+const table = useTable({
+  features,
+  data,
+  get columns() {
+    return columns.value
   },
-  (state) => ({ pagination: state.pagination }),
-)
+  debugTable: true,
+})
 
 const refreshData = () => {
   data.value = makeData(1_000)
@@ -184,7 +179,8 @@ function handlePageSizeChange(e: any) {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{ (table.state.pagination.pageIndex + 1).toLocaleString() }} of
+            {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }}
+            of
             {{ table.getPageCount().toLocaleString() }}
           </strong>
         </span>
@@ -198,7 +194,7 @@ function handlePageSizeChange(e: any) {
           />
         </span>
         <select
-          :value="table.state.pagination.pageSize"
+          :value="table.atoms.pagination.get().pageSize"
           @change="handlePageSizeChange"
         >
           <option
@@ -211,7 +207,7 @@ function handlePageSizeChange(e: any) {
         </select>
       </div>
       <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.state.pagination, null, 2) }}</pre>
+      <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
     </div>
     <div class="spacer-sm" />
   </div>

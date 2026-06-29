@@ -6,16 +6,10 @@ title: CachedRowModels
 # Type Alias: CachedRowModels\<TFeatures, TData\>
 
 ```ts
-type CachedRowModels<TFeatures, TData> = object & UnionToIntersection<
-  | "columnFacetingFeature" extends keyof TFeatures ? CachedRowModel_Faceted<TFeatures, TData> : never
-  | "columnFilteringFeature" extends keyof TFeatures ? CachedRowModel_Filtered<TFeatures, TData> : never
-  | "rowExpandingFeature" extends keyof TFeatures ? CachedRowModel_Expanded<TFeatures, TData> : never
-  | "columnGroupingFeature" extends keyof TFeatures ? CachedRowModel_Grouped<TFeatures, TData> : never
-  | "rowPaginationFeature" extends keyof TFeatures ? CachedRowModel_Paginated<TFeatures, TData> : never
-| "rowSortingFeature" extends keyof TFeatures ? CachedRowModel_Sorted<TFeatures, TData> : never> & ExtractFeatureTypes<"CachedRowModel", TFeatures> & CachedRowModels_Plugins<TFeatures, TData>;
+type CachedRowModels<TFeatures, TData> = object & ExtractFeatureMapTypes<TFeatures, CachedRowModels_FeatureMap<TFeatures, TData>>;
 ```
 
-Defined in: [types/RowModel.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L92)
+Defined in: [types/RowModel.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L26)
 
 ## Type Declaration
 

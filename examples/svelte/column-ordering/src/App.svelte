@@ -16,12 +16,12 @@
   import './index.css'
   import { makeData, type Person } from './makeData'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnOrderingFeature,
     columnVisibilityFeature,
   })
 
-  const columns: ColumnDef<typeof _features, Person>[] = [
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -75,7 +75,7 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(500_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const [columnOrder, setColumnOrder] = createTableState<ColumnOrderState>([])
   const [columnVisibility, setColumnVisibility] =
@@ -88,8 +88,7 @@
   }
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
     get data() {
       return data
     },
@@ -111,7 +110,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <div class="column-toggle-panel">
     <div class="column-toggle-panel-header">
@@ -141,12 +140,6 @@
   </div>
   <div class="spacer-md"></div>
   <div class="button-row">
-    <button onclick={() => refreshData()} class="demo-button demo-button-sm">
-      Regenerate Data
-    </button>
-    <button onclick={() => stressTest()} class="demo-button demo-button-sm">
-      Stress Test (500k rows)
-    </button>
     <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>
@@ -179,6 +172,6 @@
       {/each}
     </tbody>
   </table>
-  <pre>{JSON.stringify(table.store.state.columnOrder, null, 2)
+  <pre>{JSON.stringify(table.state, null, 2)
   }</pre>
 </div>

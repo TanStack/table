@@ -603,3 +603,17 @@ tfoot th {
   font-size: 1.875rem;
   font-weight: 700;
 }
+
+/* Fixed-height scroll container for the table body. When the page size exceeds
+   ~12 rows the body overflows and scrolls, with sticky headers. */
+.table-scroll {
+  max-height: 400px;
+  overflow: auto;
+  border: 1px solid lightgray;
+}
+
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

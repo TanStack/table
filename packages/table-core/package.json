@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/table-core",
-  "version": "9.0.0-alpha.43",
+  "version": "9.0.0-beta.23",
   "description": "Headless UI for building powerful tables & datagrids for TS/JS.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -23,7 +23,8 @@
     "angular",
     "table",
     "table-core",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "types": "./dist/index.d.cts",
@@ -58,7 +59,8 @@
   },
   "files": [
     "dist/",
-    "src"
+    "src",
+    "skills"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -68,7 +70,7 @@
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc && tsc -p tests/tsconfig.declaration-emit.json",
     "test:build": "publint --strict",
-    "build": "tsdown"
+    "build": "tsdown && node ../../scripts/rewrite-table-core-dts.mjs"
   },
   "dependencies": {
     "@tanstack/store": "^0.11.0"

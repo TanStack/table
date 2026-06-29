@@ -26,38 +26,55 @@ const features = {
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 }
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
-function App() {
-  const columns = React.useMemo(
-    () =>
-      columnHelper.columns(
-        makeColumns(1_000).map((column) =>
-          columnHelper.accessor(column.accessorKey, {
-            header: column.header,
-            size: column.size,
-          }),
-        ),
-      ),
-    [],
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+const makeTableColumns = (columnCount: number) =>
+  columnHelper.columns(
+    makeColumns(columnCount).map((column) =>
+      columnHelper.accessor(column.accessorKey, {
+        header: column.header,
+        size: column.size,
+      }),
+    ),
   )
 
-  const [data, setData] = React.useState(() => makeData(1_000, columns))
+function App() {
+  const [columns, setColumns] = React.useState(() =>
+    makeTableColumns(DEFAULT_COLUMN_COUNT),
+  )
+
+  const [data, setData] = React.useState(() =>
+    makeData(DEFAULT_ROW_COUNT, columns),
+  )
 
   const refreshData = React.useCallback(() => {
-    setData(makeData(1_000, columns))
+    const nextColumns = makeTableColumns(DEFAULT_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(DEFAULT_ROW_COUNT, nextColumns))
+  }, [])
+
+  const stressTestRows = React.useCallback(() => {
+    setData(makeData(STRESS_ROW_COUNT, columns))
   }, [columns])
 
-  const stressTest = React.useCallback(() => {
-    setData(makeData(10_000, columns))
-  }, [columns])
+  const stressTestColumns = React.useCallback(() => {
+    const nextColumns = makeTableColumns(STRESS_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(data.length, nextColumns))
+  }, [data.length])
 
   const table = useTable(
     {
-      _features: features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
       columns,
       data,
       debugTable: true,
@@ -79,7 +96,8 @@ function App() {
       <div>({data.length.toLocaleString()} rows)</div>
       <div>
         <button onClick={refreshData}>Regenerate Data</button>
-        <button onClick={stressTest}>Stress Test (10k rows)</button>
+        <button onClick={stressTestRows}>Stress Test (10k rows)</button>
+        <button onClick={stressTestColumns}>Stress Test (10k columns)</button>
       </div>
       <TableContainer table={table} />
     </div>
@@ -87,7 +105,7 @@ function App() {
 }
 
 interface TableContainerProps {
-  table: ReactTable<any, Person>
+  table: ReactTable<typeof features, Person>
 }
 
 function TableContainer({ table }: TableContainerProps) {
@@ -189,7 +207,7 @@ function TableHead({
 
 interface TableHeadRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  headerGroup: HeaderGroup<any, Person>
+  headerGroup: HeaderGroup<typeof features, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
   table: ReactTable<typeof features, Person>
@@ -314,7 +332,7 @@ function TableBody({
 
 interface TableBodyRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  row: Row<any, Person>
+  row: Row<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
@@ -362,7 +380,7 @@ function TableBodyRow({
 }
 
 interface TableBodyCellProps {
-  cell: Cell<any, Person, unknown>
+  cell: Cell<typeof features, Person, unknown>
   table: ReactTable<typeof features, Person>
 }
 

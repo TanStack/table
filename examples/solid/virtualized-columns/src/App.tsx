@@ -21,23 +21,44 @@ import type {
 import type { VirtualItem, Virtualizer } from '@tanstack/solid-virtual'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
-function App() {
-  const columns = makeColumns(1_000)
-  const [data, setData] = createSignal(makeData(1_000, columns))
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
 
-  const refreshData = () => setData(makeData(1_000, columns))
-  const stressTest = () => setData(makeData(10_000, columns))
+function App() {
+  const [columns, setColumns] = createSignal(makeColumns(DEFAULT_COLUMN_COUNT))
+  const [data, setData] = createSignal(makeData(DEFAULT_ROW_COUNT, columns()))
+
+  const refreshData = () => {
+    const nextColumns = makeColumns(DEFAULT_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(DEFAULT_ROW_COUNT, nextColumns))
+  }
+
+  const stressTestRows = () => {
+    setData(makeData(STRESS_ROW_COUNT, columns()))
+  }
+
+  const stressTestColumns = () => {
+    const nextColumns = makeColumns(STRESS_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(data().length, nextColumns))
+  }
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
-    columns,
+    features,
+    get columns() {
+      return columns()
+    },
     get data() {
       return data()
     },
@@ -48,9 +69,12 @@ function App() {
     <div class="app">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (10k rows)</button>
+        <button onClick={() => stressTestRows()}>Stress Test (10k rows)</button>
+        <button onClick={() => stressTestColumns()}>
+          Stress Test (10k columns)
+        </button>
       </div>
-      <div>({columns.length.toLocaleString()} columns)</div>
+      <div>({columns().length.toLocaleString()} columns)</div>
       <div>({data().length.toLocaleString()} rows)</div>
       <TableContainer table={table} />
     </div>
@@ -60,9 +84,7 @@ function App() {
 // Important: Keep both virtualizers and the scroll container ref in the same component.
 // The ref must be undefined when createVirtualizer runs (before JSX return),
 // so that onMount can set up scroll observers after the element is in the DOM.
-function TableContainer(props: {
-  table: SolidTable<typeof _features, Person>
-}) {
+function TableContainer(props: { table: SolidTable<typeof features, Person> }) {
   const visibleColumns = () => props.table.getVisibleLeafColumns()
   const rows = () => props.table.getRowModel().rows
 
@@ -147,7 +169,7 @@ function TableContainer(props: {
 
 function TableHead(props: {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: SolidTable<typeof _features, Person>
+  table: SolidTable<typeof features, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
 }) {
@@ -177,10 +199,10 @@ function TableHead(props: {
 
 function TableHeadRow(props: {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  headerGroup: HeaderGroup<typeof _features, Person>
+  headerGroup: HeaderGroup<typeof features, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
-  table: SolidTable<typeof _features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   const virtualColumns = () => props.columnVirtualizer.getVirtualItems()
   return (
@@ -208,8 +230,8 @@ function TableHeadRow(props: {
 }
 
 function TableHeadCell(props: {
-  header: Header<typeof _features, Person, unknown>
-  table: SolidTable<typeof _features, Person>
+  header: Header<typeof features, Person, unknown>
+  table: SolidTable<typeof features, Person>
 }) {
   return (
     <th
@@ -237,8 +259,8 @@ function TableHeadCell(props: {
 function TableBody(props: {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
-  rows: () => Array<Row<typeof _features, Person>>
-  table: SolidTable<typeof _features, Person>
+  rows: () => Array<Row<typeof features, Person>>
+  table: SolidTable<typeof features, Person>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
 }) {
@@ -274,12 +296,12 @@ function TableBody(props: {
 
 function TableBodyRow(props: {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  row: Row<typeof _features, Person>
+  row: Row<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
   virtualRow: VirtualItem
-  table: SolidTable<typeof _features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   const visibleCells = () => props.row.getVisibleCells()
   const virtualColumns = () => props.columnVirtualizer.getVirtualItems()
@@ -317,8 +339,8 @@ function TableBodyRow(props: {
 }
 
 function TableBodyCell(props: {
-  cell: Cell<typeof _features, Person, unknown>
-  table: SolidTable<typeof _features, Person>
+  cell: Cell<typeof features, Person, unknown>
+  table: SolidTable<typeof features, Person>
 }) {
   return (
     <td

@@ -6,14 +6,18 @@ title: table_toggleAllRowsSelected
 # Function: table\_toggleAllRowsSelected()
 
 ```ts
-function table_toggleAllRowsSelected<TFeatures, TData>(table, value?): void;
+function table_toggleAllRowsSelected<TFeatures, TData>(
+   table, 
+   value?, 
+   opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L78)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L92)
 
-Toggles all rows selected for the table.
+Selects or deselects every selectable row before grouping.
 
-This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+Omitting `value` toggles based on `table_getIsAllRowsSelected(table)`.
+Deselecting removes matching ids from the existing selection map.
 
 ## Type Parameters
 
@@ -29,9 +33,15 @@ This is the table-level convenience API used by UI controls that affect many col
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### value?
+
+`boolean`
+
+### opts?
+
+#### deselectAll?
 
 `boolean`
 

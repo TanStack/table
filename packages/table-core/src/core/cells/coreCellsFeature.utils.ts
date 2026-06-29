@@ -3,9 +3,10 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Cell } from '../../types/Cell'
 
 /**
- * Returns value for a cell.
+ * Reads this cell's accessor value from its owning row and column.
  *
- * This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+ * This is the standalone implementation behind `cell.getValue()`, useful when
+ * importing static APIs instead of calling methods from the cell prototype.
  *
  * @example
  * ```ts
@@ -21,13 +22,14 @@ export function cell_getValue<
 }
 
 /**
- * Returns value for a cell.
+ * Reads the value that should be rendered for this cell.
  *
- * This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+ * Nullish accessor values are replaced with `table.options.renderFallbackValue`,
+ * matching the behavior of `cell.renderValue()`.
  *
  * @example
  * ```ts
- * const value = cell_renderValue(cell)
+ * const rendered = cell_renderValue(cell)
  * ```
  */
 export function cell_renderValue<
@@ -39,13 +41,14 @@ export function cell_renderValue<
 }
 
 /**
- * Returns context for a cell.
+ * Builds the render context passed to a column's `cell` template.
  *
- * This is the static implementation behind the matching cell instance API and uses the owning row and column context.
+ * The returned object includes stable references to the table, row, column, and
+ * cell, plus bound `getValue` and `renderValue` helpers for render functions.
  *
  * @example
  * ```ts
- * const value = cell_getContext(cell)
+ * const context = cell_getContext(cell)
  * ```
  */
 export function cell_getContext<

@@ -1,0 +1,337 @@
+<div class="demo-root">
+  <h1>Kitchen Sink - All Features</h1>
+
+  <div class="toolbar">
+    <div class="toolbar-row">
+      <input
+        debouncedInput
+        [debounce]="300"
+        class="global-filter-input"
+        placeholder="Fuzzy search all columns..."
+        [value]="table.atoms.globalFilter.get() ?? ''"
+        (changeEvent)="onGlobalFilterChange($event)"
+      />
+    </div>
+    <div class="toolbar-row">
+      <button class="demo-button demo-button-sm" (click)="refreshData()">Flat 1k</button>
+      <button class="demo-button demo-button-sm" (click)="nestedData()">Nested 100x5x3</button>
+      <button class="demo-button demo-button-sm" (click)="stress10k()">Stress 10k (flat)</button>
+      <button class="demo-button demo-button-sm" (click)="stress100k()">Stress 100k (flat)</button>
+      <button class="demo-button demo-button-sm" (click)="table.reset()">Reset Table</button>
+      <button class="demo-button demo-button-sm" (click)="shuffleColumns()">Shuffle Columns</button>
+      <span class="nowrap">
+        {{ table.getSelectedRowModel().flatRows.length.toLocaleString() }} of
+        {{ table.getCoreRowModel().flatRows.length.toLocaleString() }} selected
+      </span>
+    </div>
+    <details class="column-toggle-panel">
+      <summary class="column-toggle-panel-header">Column visibility</summary>
+      <div class="column-toggle-row">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="table.getIsAllColumnsVisible()"
+            (change)="table.getToggleAllColumnsVisibilityHandler()($event)"
+          />
+          Toggle All
+        </label>
+      </div>
+      @for (column of table.getAllLeafColumns(); track column.id) {
+        <div class="column-toggle-row">
+          <label>
+            <input
+              type="checkbox"
+              [checked]="column.getIsVisible()"
+              [disabled]="!column.getCanHide()"
+              (change)="column.getToggleVisibilityHandler()($event)"
+            />
+            {{ column.id }}
+          </label>
+        </div>
+      }
+    </details>
+  </div>
+
+  <div class="table-container">
+    <table [ngStyle]="columnSizeVars()" [style.width.px]="table.getTotalSize()">
+      <thead>
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+              <th
+                [attr.colSpan]="header.colSpan"
+                [ngStyle]="headerStyles(header)"
+                [tableResizableHeader]="header.id"
+              >
+                @if (!header.isPlaceholder) {
+                  <div class="header-row">
+                    <div class="header-content">
+                      <div class="header-controls">
+                        @if (header.column.getCanPin()) {
+                          <span class="pin-actions">
+                            @if (header.column.getIsPinned() !== 'left') {
+                              <button class="pin-button" (click)="header.column.pin('left')">
+                                <
+                              </button>
+                            }
+                            @if (header.column.getIsPinned()) {
+                              <button class="pin-button" (click)="header.column.pin(false)">
+                                x
+                              </button>
+                            }
+                            @if (header.column.getIsPinned() !== 'right') {
+                              <button class="pin-button" (click)="header.column.pin('right')">
+                                >
+                              </button>
+                            }
+                          </span>
+                        }
+                        @if (header.column.getCanGroup()) {
+                          <button
+                            class="pin-button"
+                            (click)="header.column.getToggleGroupingHandler()()"
+                          >
+                            @if (header.column.getIsGrouped()) {
+                              Stop ({{ header.column.getGroupedIndex() }})
+                            } @else {
+                              Group
+                            }
+                          </button>
+                        }
+                      </div>
+
+                      @if (header.column.id === 'select') {
+                        <input
+                          type="checkbox"
+                          [checked]="table.getIsAllPageRowsSelected()"
+                          [indeterminate]="table.getIsSomePageRowsSelected()"
+                          (change)="table.getToggleAllPageRowsSelectedHandler()($event)"
+                        />
+                      } @else if (header.column.getCanSort()) {
+                        <span
+                          class="sortable-header"
+                          (click)="header.column.getToggleSortingHandler()?.($event)"
+                        >
+                          <ng-container *flexRenderHeader="header; let headerCell">
+                            {{ headerCell }}
+                          </ng-container>
+                          @if (header.column.getIsSorted() === 'asc') {
+                            ▲
+                          } @else if (header.column.getIsSorted() === 'desc') {
+                            ▼
+                          }
+                        </span>
+                      } @else {
+                        <ng-container *flexRenderHeader="header; let headerCell">
+                          {{ headerCell }}
+                        </ng-container>
+                      }
+
+                      @if (header.column.getCanFilter()) {
+                        <div>
+                          <app-table-filter [column]="$any(header.column)" />
+                        </div>
+                      }
+                    </div>
+                  </div>
+                  @if (header.column.getCanResize()) {
+                    <div
+                      class="resizer"
+                      [class.isResizing]="header.column.getIsResizing()"
+                      (dblclick)="header.column.resetSize()"
+                      (mousedown)="header.getResizeHandler()($event)"
+                      (touchstart)="header.getResizeHandler()($event)"
+                    ></div>
+                  }
+                }
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of table.getTopRows(); track row.id) {
+          <tr class="pinned-row" [ngStyle]="pinnedRowStyles(row)">
+            @for (cell of row.getVisibleCells(); track cell.id) {
+              <td
+                [tableResizableCell]="cell.column.id"
+                [ngStyle]="cellStyles(cell)"
+                [class]="cellClass(cell)"
+              >
+                <ng-container
+                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let renderCell"
+                >
+                  {{ renderCell }}
+                </ng-container>
+              </td>
+            }
+          </tr>
+        }
+
+        @for (row of table.getCenterRows(); track row.id) {
+          <tr>
+            @for (cell of row.getVisibleCells(); track cell.id) {
+              <td
+                [tableResizableCell]="cell.column.id"
+                [ngStyle]="cellStyles(cell)"
+                [class]="cellClass(cell)"
+              >
+                @if (cell.column.id === 'select') {
+                  <div class="column-toggle-row">
+                    <input
+                      type="checkbox"
+                      [checked]="cell.row.getIsSelected()"
+                      [disabled]="!cell.row.getCanSelect()"
+                      [indeterminate]="cell.row.getIsSomeSelected()"
+                      (change)="cell.row.getToggleSelectedHandler()($event)"
+                    />
+                    <button
+                      class="pin-button"
+                      (click)="cell.row.pin(cell.row.getIsPinned() === 'top' ? false : 'top')"
+                    >
+                      {{ cell.row.getIsPinned() === 'top' ? 'Pinned' : 'Pin' }}
+                    </button>
+                  </div>
+                } @else if (cell.column.id === 'firstName') {
+                  <div [style.paddingLeft.rem]="cell.row.depth * 1.5">
+                    @if (cell.row.getCanExpand()) {
+                      <button
+                        (click)="cell.row.getToggleExpandedHandler()()"
+                        style="cursor: pointer; margin-right: 0.25rem"
+                      >
+                        {{ cell.row.getIsExpanded() ? 'v' : '>' }}
+                      </button>
+                    } @else {
+                      <span style="margin-right: 0.25rem">-</span>
+                    }
+                    <ng-container
+                      *flexRender="
+                        cell.column.columnDef.cell;
+                        props: cell.getContext();
+                        let renderCell
+                      "
+                    >
+                      {{ renderCell }}
+                    </ng-container>
+                  </div>
+                } @else if (cell.getIsGrouped()) {
+                  <button
+                    (click)="cell.row.getToggleExpandedHandler()()"
+                    [style.cursor]="cell.row.getCanExpand() ? 'pointer' : 'normal'"
+                  >
+                    {{ cell.row.getIsExpanded() ? 'v' : '>' }}
+                    <ng-container
+                      *flexRender="
+                        cell.column.columnDef.cell;
+                        props: cell.getContext();
+                        let renderCell
+                      "
+                    >
+                      {{ renderCell }}
+                    </ng-container>
+                    ({{ cell.row.subRows.length.toLocaleString() }})
+                  </button>
+                } @else {
+                  <ng-container
+                    *flexRender="
+                      cell.column.columnDef.cell;
+                      props: cell.getContext();
+                      let renderCell
+                    "
+                  >
+                    {{ renderCell }}
+                  </ng-container>
+                }
+              </td>
+            }
+          </tr>
+        }
+
+        @for (row of table.getBottomRows(); track row.id) {
+          <tr class="pinned-row" [ngStyle]="pinnedRowStyles(row)">
+            @for (cell of row.getVisibleCells(); track cell.id) {
+              <td
+                [tableResizableCell]="cell.column.id"
+                [ngStyle]="cellStyles(cell)"
+                [class]="cellClass(cell)"
+              >
+                <ng-container
+                  *flexRender="cell.column.columnDef.cell; props: cell.getContext(); let renderCell"
+                >
+                  {{ renderCell }}
+                </ng-container>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <div class="spacer-sm"></div>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.setPageIndex(0)"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;&lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.previousPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.nextPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.setPageIndex(table.getPageCount() - 1)"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;&gt;
+    </button>
+    <span class="inline-controls">
+      <div>Page</div>
+      <strong>
+        {{ (pageIndex() + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}
+      </strong>
+    </span>
+    <span class="inline-controls">
+      | Go to page:
+      <input
+        type="number"
+        [value]="pageIndex() + 1"
+        (input)="onPageInputChange($event)"
+        class="page-size-input"
+      />
+    </span>
+
+    <select [value]="pageSize()" (change)="onPageSizeChange($event)">
+      @for (size of [10, 20, 30, 50, 100]; track size) {
+        <option [value]="size" [selected]="pageSize() === size">Show {{ size }}</option>
+      }
+    </select>
+  </div>
+
+  <div class="spacer-sm"></div>
+  <div class="nowrap">
+    {{ table.getRowModel().rows.length.toLocaleString() }} rows on this page ({{
+      table.getFilteredRowModel().rows.length.toLocaleString()
+    }}
+    filtered of {{ table.getCoreRowModel().rows.length.toLocaleString() }} total)
+  </div>
+  <div class="spacer-md"></div>
+  <details>
+    <summary>Table state (live)</summary>
+    <pre class="state-dump">{{ stringifiedState() }}</pre>
+  </details>
+</div>

@@ -9,6 +9,7 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { createAtom, useSelector } from '@tanstack/solid-store'
 import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
@@ -20,12 +21,15 @@ import type { PaginationState, SortingState } from '@tanstack/solid-table'
 // reactive cell — you can read, write, or subscribe to it from anywhere,
 // which makes it convenient for sharing state across components or modules.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -53,7 +57,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   // Create stable external atoms for the individual state slices you want to
   // own. The table still creates internal base atoms for everything else.
@@ -64,16 +68,12 @@ function App() {
   })
 
   // Subscribe to each atom independently — fine-grained Solid reactivity.
-  const sorting = useSelector(sortingAtom)
   const pagination = useSelector(paginationAtom)
 
   // Create the table and pass your per-slice external atoms.
   const table = createTable({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    key: 'basic-external-atoms', // needed for devtools
+    features,
     columns,
     get data() {
       return data()
@@ -85,11 +85,13 @@ function App() {
     debugTable: true,
   })
 
+  useTanStackTableDevtools(table)
+
   return (
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <table>
         <thead>
@@ -201,13 +203,7 @@ function App() {
         </select>
       </div>
       <div class="spacer-md" />
-      <pre>
-        {JSON.stringify(
-          { sorting: sorting(), pagination: pagination() },
-          null,
-          2,
-        )}
-      </pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

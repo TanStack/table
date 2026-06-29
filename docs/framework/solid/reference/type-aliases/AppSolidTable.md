@@ -6,10 +6,10 @@ title: AppSolidTable
 # Type Alias: AppSolidTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
 
 ```ts
-type AppSolidTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = SolidTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
+type AppSolidTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = SolidTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [createTableHook.tsx:432](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L432)
+Defined in: [createTableHook.tsx:346](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L346)
 
 Extended table API returned by createAppTable with all App wrapper components
 
@@ -22,19 +22,12 @@ AppCell: AppCellComponent<TFeatures, TData, NoInfer<TCellComponents>>;
 ```
 
 Wraps a cell and provides cell context with pre-bound cellComponents.
-Optionally accepts a selector for Subscribe functionality.
 
 #### Example
 
 ```tsx
-// Without selector
 <table.AppCell cell={cell}>
   {(c) => <td><c.TextCell /></td>}
-</table.AppCell>
-
-// With selector - children receives cell and selected state
-<table.AppCell cell={cell} selector={(s) => s.columnFilters}>
-  {(c, filters) => <td>{filters.length}</td>}
 </table.AppCell>
 ```
 
@@ -45,7 +38,6 @@ AppFooter: AppHeaderComponent<TFeatures, TData, NoInfer<THeaderComponents>>;
 ```
 
 Wraps a footer and provides header context with pre-bound headerComponents.
-Optionally accepts a selector for Subscribe functionality.
 
 #### Example
 
@@ -62,19 +54,12 @@ AppHeader: AppHeaderComponent<TFeatures, TData, NoInfer<THeaderComponents>>;
 ```
 
 Wraps a header and provides header context with pre-bound headerComponents.
-Optionally accepts a selector for Subscribe functionality.
 
 #### Example
 
 ```tsx
-// Without selector
 <table.AppHeader header={header}>
   {(h) => <th><h.SortIndicator /></th>}
-</table.AppHeader>
-
-// With selector
-<table.AppHeader header={header} selector={(s) => s.sorting}>
-  {(h, sorting) => <th>{sorting.length} sorted</th>}
 </table.AppHeader>
 ```
 
@@ -84,19 +69,13 @@ Optionally accepts a selector for Subscribe functionality.
 AppTable: AppTableComponent<TFeatures>;
 ```
 
-Root wrapper component that provides table context with optional Subscribe.
+Root wrapper component that provides table context.
 
 #### Example
 
 ```tsx
-// Without selector - children is JSXElement
 <table.AppTable>
   <table>...</table>
-</table.AppTable>
-
-// With selector - children receives selected state
-<table.AppTable selector={(s) => s.pagination}>
-  {(pagination) => <div>Page {pagination.pageIndex}</div>}
 </table.AppTable>
 ```
 

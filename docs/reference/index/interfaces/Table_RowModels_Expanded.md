@@ -5,7 +5,7 @@ title: Table_RowModels_Expanded
 
 # Interface: Table\_RowModels\_Expanded\<TFeatures, TData\>
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L113)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L114)
 
 ## Type Parameters
 
@@ -25,9 +25,9 @@ Defined in: [features/row-expanding/rowExpandingFeature.types.ts:113](https://gi
 getExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L120)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L121)
 
-Returns the row model after expansion has been applied.
+Resolves the row model after expanded rows have been flattened into view.
 
 #### Returns
 
@@ -41,9 +41,9 @@ Returns the row model after expansion has been applied.
 getPreExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L124)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L125)
 
-Returns the row model before expansion has been applied.
+Reads the row model immediately before expansion.
 
 #### Returns
 

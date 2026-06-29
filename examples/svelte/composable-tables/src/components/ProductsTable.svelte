@@ -24,6 +24,11 @@
 
   // Define columns using the column helper - different structure than Users table
   const columns = productColumnHelper.columns([
+    productColumnHelper.display({
+      id: 'select',
+      header: ({ header }) => renderComponent(header.SelectHeader),
+      cell: ({ cell }) => renderComponent(cell.SelectCell),
+    }),
     productColumnHelper.accessor('name', {
       header: 'Product Name',
       footer: (props) => props.column.id,
@@ -59,17 +64,18 @@
       return data
     },
     getRowId: (row) => row.id,
+    enableRowSelection: true,
   })
 
   // Reactive derived values from table state
-  let sorting = $derived(table.store.state.sorting)
-  let columnFilters = $derived(table.store.state.columnFilters)
+  let sorting = $derived(table.state.sorting)
+  let columnFilters = $derived(table.state.columnFilters)
 
   // IMPORTANT: Derive rows from table state so Svelte tracks the dependency.
   // We must read a $state value that changes on every table update.
   // JSON.stringify forces a deep read, ensuring Svelte sees the dependency.
   const rows = $derived.by(() => {
-    JSON.stringify(table.store.state)
+    JSON.stringify(table.state)
     return table.getRowModel().rows
   })
 </script>
@@ -84,6 +90,7 @@
     />
 
     <!-- Table element -->
+    <div class="table-scroll">
     <table>
       <thead>
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
@@ -166,6 +173,7 @@
         {/each}
       </tfoot>
     </table>
+    </div>
 
     <!-- Pagination using the same pre-bound component -->
     <table.PaginationControls />

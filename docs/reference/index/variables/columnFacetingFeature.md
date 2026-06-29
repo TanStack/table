@@ -6,12 +6,9 @@ title: columnFacetingFeature
 # Variable: columnFacetingFeature
 
 ```ts
-const columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructors<TableFeatures, RowData>>;
+const columnFacetingFeature: TableFeature;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.ts#L120)
+Defined in: [features/column-faceting/columnFacetingFeature.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.ts#L19)
 
-The stock column faceting feature.
-
-Register this feature to add faceted row model, unique value, and min/max
-helpers for column and global filter UIs.
+Feature that derives faceted row models, unique values, and min/max values for filters.

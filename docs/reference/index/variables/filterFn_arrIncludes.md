@@ -6,9 +6,27 @@ title: filterFn_arrIncludes
 # Variable: filterFn\_arrIncludes
 
 ```ts
-const filterFn_arrIncludes: FilterFn<any, any>;
+const filterFn_arrIncludes: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L301)
+Defined in: [fns/filterFns.ts:313](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L313)
 
-Filter function for checking if an array includes a given value.
+Keeps rows whose array or string column value includes at least one filter value.
+
+## Type Declaration
+
+### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+#### Parameters
+
+##### val
+
+`any`
+
+#### Returns
+
+`boolean`

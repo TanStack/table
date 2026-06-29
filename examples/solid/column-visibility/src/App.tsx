@@ -9,9 +9,9 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnVisibilityFeature })
+const features = tableFeatures({ columnVisibilityFeature })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -70,7 +70,7 @@ function App() {
 
   const table = createTable({
     debugTable: true,
-    _features,
+    features,
     get data() {
       return data()
     },
@@ -163,7 +163,7 @@ function App() {
         </tfoot>
       </table>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

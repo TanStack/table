@@ -11,9 +11,10 @@ function table_getHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, 
 
 Defined in: [core/headers/coreHeadersFeature.utils.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L78)
 
-Returns header groups for the table.
+Builds visible header groups for the current column tree.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Column visibility and pinning are applied before groups are built. When no
+columns are pinned, the fast path skips pin partitioning.
 
 ## Type Parameters
 
@@ -29,14 +30,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`HeaderGroup`](../../index/type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](../../index/interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ## Example
 
 ```ts
-const value = table_getHeaderGroups(table)
+const headerGroups = table_getHeaderGroups(table)
 ```

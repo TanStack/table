@@ -1,65 +1,32 @@
 import { constructTable } from '@tanstack/table-core'
-import { createComputed, getOwner, mergeProps, untrack } from 'solid-js'
-import { shallow, useSelector } from '@tanstack/solid-store'
+import {
+  createComputed,
+  getOwner,
+  mergeProps,
+  onCleanup,
+  untrack,
+} from 'solid-js'
 import { FlexRender } from './FlexRender'
 import { solidReactivity } from './reactivity'
-import type {
-  Atom,
-  ReadonlyAtom,
-  ReadonlyStore,
-  Store,
-} from '@tanstack/solid-store'
-import type { Accessor, JSX } from 'solid-js'
+import type { JSX } from 'solid-js'
 import type {
   RowData,
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
-
-export type SubscribeSource<TValue> =
-  | Atom<TValue>
-  | ReadonlyAtom<TValue>
-  | Store<TValue>
-  | ReadonlyStore<TValue>
 
 export type SolidTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
-   * Subscribe to the store (selector required) or a single source (atom or store).
-   * Source **without** `selector` is a separate overload so children receive
-   * `Accessor<TSourceValue>` (identity projection). Source overloads are listed first
-   * for JSX contextual typing.
+   * Creates a reactive render boundary. The child function reads the table
+   * atoms it needs, so Solid only tracks those atom reads.
    */
-  Subscribe: {
-    <TSourceValue>(props: {
-      source: SubscribeSource<TSourceValue>
-      selector?: undefined
-      children: ((state: Accessor<TSourceValue>) => JSX.Element) | JSX.Element
-    }): JSX.Element
-    <TSourceValue, TSubSelected>(props: {
-      source: SubscribeSource<TSourceValue>
-      selector: (state: TSourceValue) => TSubSelected
-      children: ((state: Accessor<TSubSelected>) => JSX.Element) | JSX.Element
-    }): JSX.Element
-    <TSubSelected>(props: {
-      selector: (state: TableState<TFeatures>) => TSubSelected
-      children: ((state: Accessor<TSubSelected>) => JSX.Element) | JSX.Element
-    }): JSX.Element
-  }
-  /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
-   *
-   * @example
-   * const table = createTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
-   *
-   * console.log(table.state().globalFilter)
-   */
-  readonly state: Accessor<Readonly<TSelected>>
+  Subscribe: (props: {
+    children: (atoms: Table<TFeatures, TData>['atoms']) => JSX.Element
+  }) => JSX.Element
   /**
    * Convenience FlexRender component attached to the table instance for
    * rendering headers, cells, or footers with custom markup. Mirrors the
@@ -76,40 +43,32 @@ export type SolidTable<
 /**
  * Creates a Solid table instance backed by Solid-aware TanStack Store atoms.
  *
- * The optional selector projects from `table.store`; the selected value is
- * exposed as the `table.state` accessor. Table APIs and atom reads participate
- * in Solid dependency tracking, so computations that read a specific slice can
- * update without invalidating unrelated UI.
+ * Table APIs and atom reads participate in Solid dependency tracking, so
+ * computations that read a specific slice can update without invalidating
+ * unrelated UI. Use `table.Subscribe` to create atom-tracked render boundaries.
  *
  * @example
  * ```tsx
  * const table = createTable(
  *   {
- *     _features,
- *     _rowModels: {},
+ *     features,
  *     columns,
  *     data,
  *   },
- *   (state) => ({ pagination: state.pagination }),
  * )
- *
- * table.state().pagination
  * ```
  */
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
->(
-  tableOptions: TableOptions<TFeatures, TData>,
-  selector?: (state: TableState<TFeatures>) => TSelected,
-): SolidTable<TFeatures, TData, TSelected> {
+>(tableOptions: TableOptions<TFeatures, TData>): SolidTable<TFeatures, TData> {
   const owner = getOwner()!
+  const reactivity = solidReactivity(owner)
 
   const mergedOptions = mergeProps(tableOptions, {
-    _features: {
-      coreReativityFeature: solidReactivity(owner),
-      ...tableOptions._features,
+    features: {
+      coreReactivityFeature: reactivity,
+      ...tableOptions.features,
     },
   }) as any
 
@@ -125,10 +84,9 @@ export function createTable<
     mergedOptions,
   ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(resolvedOptions) as SolidTable<
+  const table = constructTable(resolvedOptions) as unknown as SolidTable<
     TFeatures,
-    TData,
-    TSelected
+    TData
   >
 
   createComputed(() => {
@@ -146,26 +104,15 @@ export function createTable<
     })
   })
 
-  table.Subscribe = ((props: {
-    source?: SubscribeSource<unknown>
-    selector?: ((state: unknown) => unknown) | undefined
-    children: ((state: Accessor<unknown>) => JSX.Element) | JSX.Element
-  }) => {
-    const source = props.source ?? table.store
-    const selected = useSelector(source as never, props.selector as never, {
-      compare: shallow,
-    })
-    return typeof props.children === 'function'
-      ? props.children(selected)
-      : props.children
-  }) as SolidTable<TFeatures, TData, TSelected>['Subscribe']
+  onCleanup(() => reactivity.unmount?.())
 
-  const state = useSelector(table.store, selector)
+  table.Subscribe = (props: {
+    children: (atoms: Table<TFeatures, TData>['atoms']) => JSX.Element
+  }) => {
+    return props.children(table.atoms as Table<TFeatures, TData>['atoms'])
+  }
 
   table.FlexRender = FlexRender
 
-  return {
-    ...table,
-    state,
-  }
+  return table
 }

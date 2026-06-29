@@ -5,7 +5,7 @@ title: Row_ColumnVisibility
 
 # Interface: Row\_ColumnVisibility\<TFeatures, TData\>
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L75)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L78)
 
 ## Type Parameters
 
@@ -19,15 +19,15 @@ Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:75](htt
 
 ## Properties
 
-### getAllVisibleCells()
+### getVisibleCells()
 
 ```ts
-getAllVisibleCells: () => Cell<TFeatures, TData, unknown>[];
+getVisibleCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L82)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L85)
 
-Returns all cells for the row whose columns are currently visible.
+Gets this row's cells for currently visible columns.
 
 #### Returns
 
@@ -35,16 +35,16 @@ Returns all cells for the row whose columns are currently visible.
 
 ***
 
-### getVisibleCells()
+### getVisibleCellsByColumnId()
 
 ```ts
-getVisibleCells: () => Cell<TFeatures, TData, unknown>[];
+getVisibleCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L86)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L89)
 
-Returns an array of cells that account for column visibility for the row.
+Maps this row's currently visible cells by column id.
 
 #### Returns
 
-[`Cell`](../type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
+`Record`\<`string`, [`Cell`](../type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>\>

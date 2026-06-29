@@ -2,22 +2,15 @@
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    createSortedRowModel,
     createTable,
-    rowSortingFeature,
     renderComponent,
-    sortFns,
-    tableFeatures,
   } from '@tanstack/svelte-table'
   import Header from './Header.svelte'
   import './index.css'
   import { makeData, type Person } from './makeData'
+  import { features } from './tableHelper.svelte'
 
-  const _features = tableFeatures({
-    rowSortingFeature,
-  })
-
-  const columns: ColumnDef<typeof _features, Person>[] = [
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -77,14 +70,11 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(500_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
+      features,
       get data() {
         return data
       },
@@ -98,7 +88,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <div class="spacer-sm"></div>
   <table>
@@ -143,9 +133,5 @@
   </table>
   <div>{table.getRowModel().rows.length.toLocaleString()
   } Rows</div>
-  <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
-  </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

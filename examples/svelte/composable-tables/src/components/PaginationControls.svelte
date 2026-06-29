@@ -38,7 +38,7 @@
   <span>
     Page
     <strong>
-      {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
+      {(table.state.pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
     </strong>
   </span>
   <span>
@@ -47,7 +47,7 @@
       type="number"
       min="1"
       max={table.getPageCount()}
-      value={table.store.state.pagination.pageIndex + 1}
+      value={table.state.pagination.pageIndex + 1}
       onchange={(e) => {
         const page = e.currentTarget.value ? Number(e.currentTarget.value) - 1 : 0
         table.setPageIndex(page)
@@ -55,7 +55,7 @@
     />
   </span>
   <select
-    value={table.store.state.pagination.pageSize}
+    value={table.state.pagination.pageSize}
     onchange={(e) => {
       table.setPageSize(Number(e.currentTarget.value))
     }}

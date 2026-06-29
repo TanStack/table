@@ -1,0 +1,51 @@
+<div class="demo-root">
+  <div>
+    <button class="demo-button" (click)="refreshData()">Regenerate Data</button>
+    <button class="demo-button" (click)="stressTest()">Stress Test (1k rows)</button>
+  </div>
+  <div class="spacer-md"></div>
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+                <ng-container *flexRenderHeader="header; let headerCell">{{
+                  headerCell
+                }}</ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td>
+              <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (footer of footerGroup.headers; track footer.id) {
+            <th [attr.colSpan]="footer.colSpan">
+              @if (!footer.isPlaceholder) {
+                <ng-container *flexRenderFooter="footer; let footerCell">{{
+                  footerCell
+                }}</ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+  <div class="spacer-md"></div>
+</div>

@@ -11,6 +11,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -18,20 +19,22 @@ import {
 } from '@tanstack/lit-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
-import type { Column, FilterFn, SortFn } from '@tanstack/lit-table'
+import type {
+  Column,
+  FilterFn,
+  SortFn,
+  TableFeatures,
+} from '@tanstack/lit-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
-  columnFilteringFeature,
-  globalFilteringFeature,
-  rowSortingFeature,
-  rowPaginationFeature,
-})
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -42,7 +45,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   if (rowA.columnFiltersMeta[columnId]) {
     dir = compareItems(
@@ -53,14 +56,20 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-declare module '@tanstack/lit-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('id', {
@@ -81,7 +90,7 @@ const columns = columnHelper.columns([
     header: 'Full Name',
     cell: (info) => info.getValue(),
     filterFn: 'fuzzy',
-    sortFn: fuzzySort,
+    sortFn: 'fuzzy',
   }),
 ])
 
@@ -129,7 +138,7 @@ class DebouncedInput extends LitElement {
 @customElement('column-filter')
 class ColumnFilterEl extends LitElement {
   @property({ attribute: false })
-  column!: Column<typeof _features, Person>
+  column!: Column<typeof features, Person>
 
   render() {
     const columnFilterValue = this.column.getFilterValue()
@@ -151,20 +160,12 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(5_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          filteredRowModel: createFilteredRowModel({
-            ...filterFns,
-            fuzzy: fuzzyFilter,
-          }),
-          paginatedRowModel: createPaginatedRowModel(),
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
+        features,
         columns,
         data: this._data,
         globalFilterFn: 'fuzzy',
@@ -199,10 +200,10 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click=${() => {
-              this._data = makeData(200_000)
+              this._data = makeData(1_000_000)
             }}
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <div>

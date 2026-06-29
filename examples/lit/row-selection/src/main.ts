@@ -16,13 +16,16 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSelectionFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'select',
     header: ({ table }) => html`
@@ -82,16 +85,12 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(50_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          filteredRowModel: createFilteredRowModel(filterFns),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
+        features,
         data: this._data,
         columns,
         enableRowSelection: true,
@@ -114,10 +113,10 @@ class LitTableExample extends LitElement {
         </button>
         <button
           @click=${() => {
-            this._data = makeData(200_000)
+            this._data = makeData(1_000_000)
           }}
         >
-          Stress Test (200k rows)
+          Stress Test (1M rows)
         </button>
       </div>
       <table>

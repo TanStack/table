@@ -14,12 +14,12 @@
   import { makeData, type Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnResizingFeature,
     columnSizingFeature,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.group({
@@ -76,8 +76,7 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       get data() {
         return data
@@ -99,7 +98,7 @@
     header: ReturnType<typeof table.getHeaderGroups>[number]['headers'][number],
   ) {
     if (columnResizeMode === 'onEnd' && header.column.getIsResizing()) {
-      const delta = table.store.state.columnResizing.deltaOffset ?? 0
+      const delta = table.state.columnResizing.deltaOffset ?? 0
       const dir = table.options.columnResizeDirection === 'rtl' ? -1 : 1
       return `translateX(${dir * delta
       }px)`
@@ -271,5 +270,5 @@
     </div>
   </div>
   <div class="spacer-md"></div>
-  <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

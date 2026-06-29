@@ -1,5 +1,5 @@
 import { render } from 'preact'
-import { useEffect, useMemo, useReducer, useState } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
 import './index.css'
 import {
   columnFilteringFeature,
@@ -9,6 +9,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -20,22 +21,28 @@ import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { makeData } from './makeData'
 import type { JSX } from 'preact'
 import type { Person } from './makeData'
-import type { Column, FilterFn, SortFn } from '@tanstack/preact-table'
+import type {
+  Column,
+  FilterFn,
+  SortFn,
+  TableFeatures,
+} from '@tanstack/preact-table'
 
 // A TanStack fork of Kent C. Dodds' match-sorter library that provides ranking information
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-const _features = tableFeatures({
-  columnFilteringFeature,
-  globalFilteringFeature,
-  rowSortingFeature,
-  rowPaginationFeature,
-})
+// The filter meta that the fuzzy filter attaches to rows, declared per-table
+// via the `filterMeta` slot below. No declaration merging needed!
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+// Broad features type for writing the custom fns below before the `features`
+// object exists, with the filter meta type plugged in
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 // Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -54,7 +61,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
 }
 
 // Define a custom fuzzy sort function that will sort by rank if the row has ranking information
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
 
   // Only sort by rank if the column has ranking information
@@ -70,19 +77,22 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-declare module '@tanstack/preact-table' {
-  // add fuzzy filter to the filterFns
-  interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -105,7 +115,7 @@ function App() {
           cell: (info) => info.getValue(),
           filterFn: 'fuzzy', // using our custom fuzzy filter function
           // filterFn: fuzzyFilter, //or just define with the function
-          sortFn: fuzzySort, // sort by fuzzy rank (falls back to alphanumeric)
+          sortFn: 'fuzzy', // sort by fuzzy rank (falls back to alphanumeric)
         }),
       ]),
     [],
@@ -113,19 +123,11 @@ function App() {
 
   const [data, setData] = useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(5_000))
-  const stressTest = () => setData((_old) => makeData(200_000))
+  const stressTest = () => setData((_old) => makeData(1_000_000))
 
-  const table = useTable<typeof _features, Person>(
+  const table = useTable<typeof features, Person>(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
+      features,
       columns,
       data,
       globalFilterFn: 'fuzzy', // apply fuzzy filter to the global filter (most common use case for fuzzy filter)
@@ -138,18 +140,18 @@ function App() {
 
   // apply the fuzzy sort if the fullName column is being filtered
   useEffect(() => {
-    if (table.store.state.columnFilters[0]?.id === 'fullName') {
-      if (table.store.state.sorting[0]?.id !== 'fullName') {
+    if (table.state.columnFilters[0]?.id === 'fullName') {
+      if (table.state.sorting[0]?.id !== 'fullName') {
         table.setSorting([{ id: 'fullName', desc: false }])
       }
     }
-  }, [table.store.state.columnFilters[0]?.id])
+  }, [table.state.columnFilters[0]?.id])
 
   return (
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div>
         <DebouncedInput
@@ -277,15 +279,13 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }
 
-function Filter({ column }: { column: Column<typeof _features, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const columnFilterValue = column.getFilterValue()
 
   return (

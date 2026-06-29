@@ -29,7 +29,7 @@
 
   <div class="button-row">
     <button (click)="refreshData()" class="demo-button demo-button-sm">Regenerate Data</button>
-    <button (click)="stressTest()" class="demo-button demo-button-sm">Stress Test (1k rows)</button>
+    <button (click)="stressTest()" class="demo-button demo-button-sm">Stress Test (1M rows)</button>
     <button (click)="randomizeColumns()" class="demo-button demo-button-sm">Shuffle Columns</button>
   </div>
   <div class="spacer-md"></div>
@@ -203,7 +203,7 @@
   </div>
 
   <div class="spacer-md"></div>
-  <pre>{{ stringifiedColumnPinning() }}</pre>
+  <pre>{{ stringifiedState() }}</pre>
 </div>
 
 <ng-template #headerContentTpl let-header>

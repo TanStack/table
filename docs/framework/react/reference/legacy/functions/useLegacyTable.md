@@ -9,7 +9,7 @@ title: useLegacyTable
 function useLegacyTable<TData>(options): LegacyReactTable<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:387](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L387)
+Defined in: [useLegacyTable.ts:391](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L391)
 
 ## Type Parameters
 
@@ -35,23 +35,23 @@ A table instance with the full state subscribed and a `getState()` method
 
 This hook is provided as a compatibility layer for migrating from TanStack Table v8.
 
-Use the new `useTable` hook instead with explicit `_features` and `_rowModels`:
+Use the new `useTable` hook instead with an explicit `features` option:
 
 ```tsx
 // New v9 API
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
 })
@@ -59,6 +59,6 @@ const table = useTable({
 
 Key differences from v8:
 - Features are tree-shakeable - only import what you use
-- Row models are explicitly passed via `_rowModels`
+- Row models and fn registries are explicitly passed on the `features` option
 - Use `table.Subscribe` for fine-grained re-renders
 - State is accessed via `table.state` after selecting with the 2nd argument

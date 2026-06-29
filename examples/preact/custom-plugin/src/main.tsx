@@ -2,6 +2,7 @@ import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
+  assignTableAPIs,
   columnFilteringFeature,
   createColumnHelper,
   createFilteredRowModel,
@@ -21,7 +22,9 @@ import type {
   Column,
   OnChangeFn,
   PreactTable,
+  RowData,
   TableFeature,
+  TableFeatures,
   Updater,
 } from '@tanstack/preact-table'
 import type { Person } from './makeData'
@@ -46,14 +49,32 @@ export interface Table_Density {
   toggleDensity: (value?: DensityState) => void
 }
 
-interface DensityPluginConstructors {
-  Table: Table_Density
-  TableOptions: TableOptions_Density
-  TableState: TableState_Density
+declare module '@tanstack/preact-table' {
+  interface Plugins {
+    densityPlugin: TableFeature
+  }
+
+  interface TableState_FeatureMap {
+    densityPlugin: TableState_Density
+  }
+
+  interface TableOptions_FeatureMap<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    densityPlugin: TableOptions_Density
+  }
+
+  interface Table_FeatureMap<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  > {
+    densityPlugin: Table_Density
+  }
 }
 
 // Here is all of the actual javascript code for our new feature
-export const densityPlugin: TableFeature<DensityPluginConstructors> = {
+export const densityPlugin: TableFeature = {
   // define the new feature's initial state
   getInitialState: (initialState) => {
     return {
@@ -74,44 +95,48 @@ export const densityPlugin: TableFeature<DensityPluginConstructors> = {
 
   // define the new feature's table instance methods
   constructTableAPIs: (table) => {
-    table.setDensity = (updater) => {
-      const safeUpdater: Updater<DensityState> = (old) => {
-        const newState = functionalUpdate(updater, old)
-        return newState
-      }
-      return table.options.onDensityChange?.(safeUpdater)
-    }
-    table.toggleDensity = (value) => {
-      table.setDensity?.((old) => {
-        if (value) return value
-        return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
-      })
-    }
+    assignTableAPIs('densityPlugin', table, {
+      table_setDensity: {
+        fn: (updater: Updater<DensityState>) => {
+          const safeUpdater: Updater<DensityState> = (old) => {
+            const newState = functionalUpdate(updater, old)
+            return newState
+          }
+          return (table.options as TableOptions_Density).onDensityChange?.(
+            safeUpdater,
+          )
+        },
+      },
+      table_toggleDensity: {
+        fn: (value?: DensityState) => {
+          const safeUpdater: Updater<DensityState> = (old) => {
+            if (value) return value
+            return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg' // cycle through the 3 options
+          }
+          return (table.options as TableOptions_Density).onDensityChange?.(
+            safeUpdater,
+          )
+        },
+      },
+    })
   },
-
-  // if you need to add row instance APIs...
-  // constructRowAPIs: (row) => {},
-
-  // if you need to add cell instance APIs...
-  // constructCellAPIs: (cell) => {},
-
-  // if you need to add column instance APIs...
-  // constructColumnAPIs: (column) => {},
-
-  // if you need to add header instance APIs...
-  // constructHeaderAPIs: (header) => {},
 }
 // end of custom feature code
 
 // app code
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
   densityPlugin, // pass in our plugin just like any other stock feature
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const columns = useMemo(
@@ -149,17 +174,12 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
   const [density, setDensity] = useState<DensityState>('md')
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
+      features,
       columns,
       data,
       debugTable: true,
@@ -175,7 +195,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div className="spacer-sm" />
       <button
@@ -288,7 +308,7 @@ function App() {
         <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -296,7 +316,7 @@ function App() {
           | Go to page:
           <input
             type="number"
-            defaultValue={table.store.state.pagination.pageIndex + 1}
+            defaultValue={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = (e.target as HTMLInputElement).value
                 ? Number((e.target as HTMLInputElement).value) - 1
@@ -307,7 +327,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number((e.target as HTMLInputElement).value))
           }}
@@ -332,8 +352,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: PreactTable<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: PreactTable<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

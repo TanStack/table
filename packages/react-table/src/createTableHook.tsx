@@ -1,6 +1,6 @@
 'use client'
 /* eslint-disable @eslint-react/no-context-provider */
-import React, { createContext, useContext, useMemo } from 'react'
+import React, { createContext, useContext, useMemo, useRef } from 'react'
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { useTable } from './useTable'
 import { FlexRender } from './FlexRender'
@@ -27,8 +27,15 @@ import type {
   TableOptions,
   TableState,
 } from '@tanstack/table-core'
-import type { ComponentType, ReactNode } from 'react'
+import type { ComponentType, Context, ReactNode } from 'react'
 import type { ReactTable } from './useTable'
+
+// eslint-disable-next-line @eslint-react/naming-convention-context-name
+const sharedTableContext = createContext<ReactTable<any, any> | null>(null)
+// eslint-disable-next-line @eslint-react/naming-convention-context-name
+const sharedCellContext = createContext<Cell<any, any, any> | null>(null)
+// eslint-disable-next-line @eslint-react/naming-convention-context-name
+const sharedHeaderContext = createContext<Header<any, any, any> | null>(null)
 
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
@@ -269,6 +276,102 @@ export type CreateTableHookOptions<
    * @example { SortIndicator, ColumnFilter, ResizeHandle }
    */
   headerComponents?: THeaderComponents
+  /**
+   * A custom React context for the table instance (read with `useContext` inside
+   * your `tableComponents`). Optional: defaults to a shared module-scoped context.
+   * Only pass your own (created via `createContext`) when you need to isolate this
+   * table's context from other tables, e.g. when nesting one table inside another.
+   */
+  tableContext?: Context<ReactTable<any, any>>
+  /**
+   * A custom React context for the cell instance, used inside your `cellComponents`.
+   * @see {@link CreateTableHookOptions.tableContext}
+   */
+  cellContext?: Context<Cell<any, any, any>>
+  /**
+   * A custom React context for the header instance, used inside your
+   * `headerComponents` (and footer components).
+   * @see {@link CreateTableHookOptions.tableContext}
+   */
+  headerContext?: Context<Header<any, any, any>>
+}
+
+export interface CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, ComponentType<any>>,
+  TCellComponents extends Record<string, ComponentType<any>>,
+  THeaderComponents extends Record<string, ComponentType<any>>,
+> {
+  /** The features object that was passed to `createTableHook`. */
+  appFeatures: TFeatures
+  /**
+   * A column helper pre-bound to `TFeatures` and the registered components, so
+   * the cell/header/footer render props expose the bound components.
+   */
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Creates a table with the `App*` wrapper components and registered
+   * `tableComponents` attached. `TData` is inferred from the `data` option.
+   */
+  useAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => AppReactTable<
+    TFeatures,
+    TData,
+    TSelected,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the table provided by the nearest `<table.AppTable>`. This is the same
+   * extended instance `useAppTable` returns, so the `App*` components and your
+   * `tableComponents` are available on it.
+   *
+   * Pass `TSelected` to match the selector you gave `useAppTable`, so
+   * `table.state` is typed as the selected slice. It cannot be inferred
+   * automatically (React context does not carry the provider's generics), so it
+   * defaults to the full table state, which is correct for the common case of
+   * `useAppTable` without a selector.
+   */
+  useTableContext: <
+    TData extends RowData = RowData,
+    TSelected = TableState<TFeatures>,
+  >() => AppReactTable<
+    TFeatures,
+    TData,
+    TSelected,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the cell provided by the nearest `<table.AppCell>`, extended with your
+   * `cellComponents` and a context-bound `FlexRender`.
+   */
+  useCellContext: <TValue extends CellData = CellData>() => Cell<
+    TFeatures,
+    any,
+    TValue
+  > &
+    TCellComponents & { FlexRender: () => ReactNode }
+  /**
+   * Reads the header provided by the nearest `<table.AppHeader>` /
+   * `<table.AppFooter>`, extended with your `headerComponents` and a
+   * context-bound `FlexRender`.
+   */
+  useHeaderContext: <TValue extends CellData = CellData>() => Header<
+    TFeatures,
+    any,
+    TValue
+  > &
+    THeaderComponents & { FlexRender: () => ReactNode }
 }
 
 /**
@@ -519,16 +622,16 @@ export type AppReactTable<
  *   useCellContext,
  *   useHeaderContext,
  * } = createTableHook({
- *   _features: tableFeatures({
+ *   features: tableFeatures({
  *     rowPaginationFeature,
  *     rowSortingFeature,
  *     columnFilteringFeature,
- *   }),
- *   _rowModels: {
  *     paginatedRowModel: createPaginatedRowModel(),
- *     sortedRowModel: createSortedRowModel(sortFns),
- *     filteredRowModel: createFilteredRowModel(filterFns),
- *   },
+ *     sortedRowModel: createSortedRowModel(),
+ *     filteredRowModel: createFilteredRowModel(),
+ *     sortFns,
+ *     filterFns,
+ *   }),
  *   tableComponents: { PaginationControls, RowCount },
  *   cellComponents: { TextCell, NumberCell },
  *   headerComponents: { SortIndicator, ColumnFilter },
@@ -596,21 +699,30 @@ export function createTableHook<
   tableComponents,
   cellComponents,
   headerComponents,
+  tableContext = sharedTableContext as Context<ReactTable<any, any>>,
+  cellContext = sharedCellContext as Context<Cell<any, any, any>>,
+  headerContext = sharedHeaderContext as Context<Header<any, any, any>>,
   ...defaultTableOptions
 }: CreateTableHookOptions<
   TFeatures,
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
-  // Create contexts internally with TFeatures baked in
-  const TableContext = createContext<ReactTable<TFeatures, any, any>>(
-    null as never,
-  )
-  const CellContext = createContext<Cell<TFeatures, any, any>>(null as never)
-  const HeaderContext = createContext<Header<TFeatures, any, any>>(
-    null as never,
-  )
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
+  const TableContext = tableContext as unknown as Context<
+    ReactTable<TFeatures, any, any>
+  >
+  const CellContext = cellContext as unknown as Context<
+    Cell<TFeatures, any, any>
+  >
+  const HeaderContext = headerContext as unknown as Context<
+    Header<TFeatures, any, any>
+  >
 
   /**
    * Create a column helper pre-bound to the features and components configured in this table hook.
@@ -670,9 +782,16 @@ export function createTableHook<
    * }
    * ```
    */
-  function useTableContext<TData extends RowData = RowData>(): ReactTable<
+  function useTableContext<
+    TData extends RowData = RowData,
+    TSelected = TableState<TFeatures>,
+  >(): AppReactTable<
     TFeatures,
-    TData
+    TData,
+    TSelected,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
   > {
     // `useContext` keeps React 18 support; `use(Context)` is React 19+ only.
     // eslint-disable-next-line @eslint-react/no-use-context -- intentional for React 18
@@ -686,7 +805,17 @@ export function createTableHook<
       )
     }
 
-    return table as ReactTable<TFeatures, TData>
+    // The value provided by `<table.AppTable>` is the extended table (the App*
+    // wrapper components and `tableComponents` are Object.assign-ed onto the same
+    // instance `useAppTable` returns), so this asserts the runtime shape.
+    return table as unknown as AppReactTable<
+      TFeatures,
+      TData,
+      TSelected,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
   }
 
   /**
@@ -720,7 +849,10 @@ export function createTableHook<
       )
     }
 
-    return cell as Cell<TFeatures, any, TValue>
+    // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
+    // the same cell instance it provides, so this asserts the runtime shape.
+    return cell as unknown as Cell<TFeatures, any, TValue> &
+      TCellComponents & { FlexRender: () => ReactNode }
   }
 
   /**
@@ -761,7 +893,10 @@ export function createTableHook<
       )
     }
 
-    return header as Header<TFeatures, any, TValue>
+    // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
+    // and `FlexRender` onto the same header instance they provide.
+    return header as unknown as Header<TFeatures, any, TValue> &
+      THeaderComponents & { FlexRender: () => ReactNode }
   }
 
   /**
@@ -804,10 +939,7 @@ export function createTableHook<
     TData extends RowData,
     TSelected = TableState<TFeatures>,
   >(
-    tableOptions: Omit<
-      TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels'
-    >,
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
     selector?: (state: TableState<TFeatures>) => TSelected,
   ): AppReactTable<
     TFeatures,
@@ -826,6 +958,16 @@ export function createTableHook<
       selector,
     )
 
+    // `useTable` returns a fresh `table` reference on every render (required for
+    // the React Compiler). The App wrapper components below must NOT depend on
+    // that reference, or they would be recreated each render and React would
+    // remount their entire subtree on every state update (e.g. a controlled
+    // input in a toolbar would lose focus on each keystroke). Instead we keep
+    // the components stable (created once) and read the current table from a
+    // ref that we refresh on every render.
+    const tableRef = useRef(table)
+    tableRef.current = table
+
     // AppTable - Root wrapper that provides table context with optional Subscribe
     const AppTable = useMemo(() => {
       function AppTableImpl(props: AppTablePropsWithoutSelector): ReactNode
@@ -838,15 +980,16 @@ export function createTableHook<
           | AppTablePropsWithSelector<TFeatures, TAppTableSelected>,
       ): ReactNode {
         const { children, selector: appTableSelector } = props
+        const currentTable = tableRef.current
 
         return (
-          <TableContext.Provider value={table}>
+          <TableContext.Provider value={currentTable}>
             {appTableSelector ? (
-              <table.Subscribe selector={appTableSelector}>
+              <currentTable.Subscribe selector={appTableSelector}>
                 {(state: TAppTableSelected) =>
                   (children as (state: TAppTableSelected) => ReactNode)(state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               children
             )}
@@ -854,7 +997,7 @@ export function createTableHook<
         )
       }
       return AppTableImpl as AppTableComponent<TFeatures>
-    }, [table])
+    }, [])
 
     // AppCell - Wraps cell with context, pre-bound cellComponents, and optional Subscribe
     const AppCell = useMemo(() => {
@@ -898,6 +1041,7 @@ export function createTableHook<
             >,
       ): ReactNode {
         const { cell, children, selector: appCellSelector } = props as any
+        const currentTable = tableRef.current
         const extendedCell = Object.assign(cell, {
           FlexRender: CellFlexRender,
           ...cellComponents,
@@ -906,7 +1050,7 @@ export function createTableHook<
         return (
           <CellContext.Provider value={cell}>
             {appCellSelector ? (
-              <table.Subscribe selector={appCellSelector}>
+              <currentTable.Subscribe selector={appCellSelector}>
                 {(state: TAppCellSelected) =>
                   (
                     children as (
@@ -916,7 +1060,7 @@ export function createTableHook<
                     ) => ReactNode
                   )(extendedCell, state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               (
                 children as (
@@ -929,7 +1073,7 @@ export function createTableHook<
         )
       }
       return AppCellImpl as AppCellComponent<TFeatures, TData, TCellComponents>
-    }, [table])
+    }, [])
 
     // AppHeader - Wraps header with context, pre-bound headerComponents, and optional Subscribe
     const AppHeader = useMemo(() => {
@@ -973,6 +1117,7 @@ export function createTableHook<
             >,
       ): ReactNode {
         const { header, children, selector: appHeaderSelector } = props as any
+        const currentTable = tableRef.current
         const extendedHeader = Object.assign(header, {
           FlexRender: HeaderFlexRender,
           ...headerComponents,
@@ -981,7 +1126,7 @@ export function createTableHook<
         return (
           <HeaderContext.Provider value={header}>
             {appHeaderSelector ? (
-              <table.Subscribe selector={appHeaderSelector}>
+              <currentTable.Subscribe selector={appHeaderSelector}>
                 {(state: TAppHeaderSelected) =>
                   (
                     children as (
@@ -991,7 +1136,7 @@ export function createTableHook<
                     ) => ReactNode
                   )(extendedHeader, state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               (
                 children as (
@@ -1008,7 +1153,7 @@ export function createTableHook<
         TData,
         THeaderComponents
       >
-    }, [table])
+    }, [])
 
     // AppFooter - Same as AppHeader (footers use Header type)
     const AppFooter = useMemo(() => {
@@ -1052,6 +1197,7 @@ export function createTableHook<
             >,
       ): ReactNode {
         const { header, children, selector: appFooterSelector } = props as any
+        const currentTable = tableRef.current
         const extendedHeader = Object.assign(header, {
           FlexRender: FooterFlexRender,
           ...headerComponents,
@@ -1060,7 +1206,7 @@ export function createTableHook<
         return (
           <HeaderContext.Provider value={header}>
             {appFooterSelector ? (
-              <table.Subscribe selector={appFooterSelector}>
+              <currentTable.Subscribe selector={appFooterSelector}>
                 {(state: TAppFooterSelected) =>
                   (
                     children as (
@@ -1070,7 +1216,7 @@ export function createTableHook<
                     ) => ReactNode
                   )(extendedHeader, state)
                 }
-              </table.Subscribe>
+              </currentTable.Subscribe>
             ) : (
               (
                 children as (
@@ -1087,7 +1233,7 @@ export function createTableHook<
         TData,
         THeaderComponents
       >
-    }, [table])
+    }, [])
 
     // Combine everything into the extended table API
     const extendedTable = useMemo(() => {
@@ -1111,7 +1257,7 @@ export function createTableHook<
   }
 
   return {
-    appFeatures: defaultTableOptions._features as TFeatures,
+    appFeatures: defaultTableOptions.features,
     createAppColumnHelper,
     useAppTable,
     useTableContext,

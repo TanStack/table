@@ -9,11 +9,12 @@ title: table_getCenterHeaderGroups
 function table_getCenterHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L396)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L430)
 
-Returns center header groups for the table.
+Builds header groups for visible columns that are not pinned.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Left- and right-pinned column ids are removed from the visible leaf column
+list before header groups are built for the center region.
 
 ## Type Parameters
 
@@ -29,14 +30,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`HeaderGroup`](../../index/type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](../../index/interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ## Example
 
 ```ts
-const value = table_getCenterHeaderGroups(table)
+const headerGroups = table_getCenterHeaderGroups(table)
 ```

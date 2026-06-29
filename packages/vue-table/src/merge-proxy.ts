@@ -53,7 +53,7 @@ type MergeProxy<T extends Array<any>> = UnboxIntersection<
 >
 
 function resolveSource(s: any) {
-  return 'value' in s ? s.value : s
+  return s && typeof s === 'object' && 'value' in s ? s.value : s
 }
 
 export function mergeProxy<T extends Array<any>>(...sources: T): MergeProxy<T>
@@ -95,4 +95,38 @@ export function mergeProxy(...sources: any): any {
     },
     propTraps,
   )
+}
+
+/**
+ * Merges objects together by eagerly resolving all values into a flat object.
+ *
+ * Unlike `mergeProxy`, this does not preserve lazy proxy getters. Use this for
+ * repeated option update paths so each merge produces a plain object instead
+ * of accumulating a longer source list over time.
+ */
+export function flatMerge<T>(source: T): T
+export function flatMerge<T, U>(source: T, source1: U): T & U
+export function flatMerge<T, U, V>(source: T, source1: U, source2: V): T & U & V
+export function flatMerge<T, U, V, W>(
+  source: T,
+  source1: U,
+  source2: V,
+  source3: W,
+): T & U & V & W
+export function flatMerge(...sources: any): any {
+  const result: Record<PropertyKey, unknown> = {}
+
+  for (let source of sources) {
+    source = resolveSource(source)
+    if (!source) continue
+
+    for (const key of Reflect.ownKeys(source)) {
+      const value = (source as Record<PropertyKey, unknown>)[key]
+      if (value !== undefined) {
+        result[key] = value
+      }
+    }
+  }
+
+  return result
 }

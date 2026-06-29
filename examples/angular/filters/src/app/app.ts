@@ -1,21 +1,13 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   FlexRender,
-  columnFacetingFeature,
   columnFilteringFeature,
-  createFacetedMinMaxValues,
-  createFacetedRowModel,
-  createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
   filterFns,
   isFunction,
+  metaHelper,
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
@@ -24,21 +16,22 @@ import { TableFilter } from './table-filter/table-filter'
 import type { ColumnFiltersState, Updater } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
-export const _features = tableFeatures({
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+export const features = tableFeatures({
   columnFilteringFeature,
-  columnFacetingFeature,
   rowPaginationFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
-  _features,
-  _rowModels: {
-    facetedMinMaxValues: createFacetedMinMaxValues(),
-    facetedRowModel: createFacetedRowModel(),
-    facetedUniqueValues: createFacetedUniqueValues(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   debugTable: true,
   debugHeaders: true,
   debugColumns: false,
@@ -104,9 +97,9 @@ export class App {
     },
   }))
 
-  readonly stringifiedFilters = computed(() =>
-    JSON.stringify(this.columnFilters(), null, 2),
-  )
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement
@@ -119,5 +112,5 @@ export class App {
   }
 
   refreshData = () => this.data.set(makeData(1_000))
-  stressTest = () => this.data.set(makeData(200_000))
+  stressTest = () => this.data.set(makeData(1_000_000))
 }

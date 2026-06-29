@@ -5,8 +5,8 @@ import type { AccessorFn, ColumnDef } from '../../types/ColumnDef'
 import type { Column } from '../../types/Column'
 
 export interface Column_CoreProperties<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -43,23 +43,24 @@ export interface Column_CoreProperties<
 }
 
 export interface Column_Column<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > extends Column_CoreProperties<TFeatures, TData, TValue> {
   /**
-   * Returns the flattened array of this column and all child/grand-child columns for this column.
+   * Flattens this column and every descendant column into a single array.
    */
   getFlatColumns: () => Array<Column<TFeatures, TData, TValue>>
   /**
-   * Returns an array of all leaf-node columns for this column. If a column has no children, it is considered the only leaf-node column.
+   * Collects the terminal leaf columns below this column, or the column itself
+   * when it has no children.
    */
   getLeafColumns: () => Array<Column<TFeatures, TData, TValue>>
 }
 
 export interface TableOptions_Columns<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -73,29 +74,33 @@ export interface TableOptions_Columns<
 }
 
 export interface Table_Columns<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns a map of all flat columns by their ID.
    */
   getAllFlatColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>
   /**
-   * Returns the default column options to use for all column defs supplied to the table.
+   * Resolves built-in, feature-level, and user-defined default column options.
    */
   getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>
   /**
-   * Returns all columns in the table in their normalized and nested hierarchy.
+   * Normalizes `options.columns` into the table's nested column hierarchy.
    */
   getAllColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Returns all columns in the table flattened to a single level.
+   * Flattens the nested column hierarchy, including parent/group columns.
    */
   getAllFlatColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
+   * Collects all terminal leaf columns, excluding parent/group columns.
    */
   getAllLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
+  /**
+   * Returns a map of all leaf-node columns by their ID. This does not include parent columns.
+   */
+  getAllLeafColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>
   /**
    * Returns a single column by its ID.
    */

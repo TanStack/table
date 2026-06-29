@@ -20,8 +20,9 @@ function getColumnPrototype<
 >(table: Table_Internal<TFeatures, TData>): object {
   if (!table._columnPrototype) {
     table._columnPrototype = { table }
-    for (const feature of Object.values(table._features)) {
-      feature.assignColumnPrototype?.(table._columnPrototype, table)
+    const features = Object.values(table._features)
+    for (let i = 0; i < features.length; i++) {
+      features[i]!.assignColumnPrototype?.(table._columnPrototype, table)
     }
   }
   return table._columnPrototype
@@ -65,10 +66,12 @@ export function constructColumn<
   } else if (accessorKey) {
     // Support deep accessor keys
     if (accessorKey.includes('.')) {
+      const keys = accessorKey.split('.')
       accessorFn = (originalRow: TData) => {
         let result = originalRow as Record<string, any> | undefined
 
-        for (const key of accessorKey.split('.')) {
+        for (let i = 0; i < keys.length; i++) {
+          const key = keys[i]!
           result = result?.[key]
           if (process.env.NODE_ENV === 'development' && result === undefined) {
             console.warn(
@@ -111,6 +114,12 @@ export function constructColumn<
   column.depth = depth
   column.id = `${String(id)}`
   column.parent = parent
+
+  // Initialize instance-specific data for features that need it
+  const features = Object.values(table._features)
+  for (let i = 0; i < features.length; i++) {
+    features[i]!.initColumnInstanceData?.(column)
+  }
 
   return column as Column<TFeatures, TData, TValue>
 }

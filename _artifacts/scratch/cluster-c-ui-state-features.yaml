@@ -1,0 +1,1110 @@
+# TanStack Intent — Cluster C: UI-State Features
+# Package: @tanstack/table-core (v9.0.0-alpha.48)
+# Domain: ui-state-features
+# Author: Kevin Vandy (deep-read sub-agent extraction)
+#
+# Notes on cluster scope decisions:
+# - `column-layout` is a multi-subsystem skill grouping the 5 UI-state-only
+#   column features Kevin approved: visibility, ordering, pinning, sizing,
+#   resizing. They share a common shape (state slice + opt-in feature import +
+#   API surface that drives layout) and frequently combine in real apps. The
+#   `column-pinning-sticky` example, for instance, registers all five.
+# - `row-pinning` is kept as its own skill (Kevin's bullet) but is genuinely
+#   small. See `gaps` for the question to flag in Phase 4.
+# - `row-selection` is its own skill — distinct state shape (`Record<rowId,
+#   boolean>`), its own row-model variants, and a separate enabling axis
+#   (multi vs sub-row).
+# - Deprecated guides (`docs/guide/pinning.md`, `docs/guide/filters.md`) are
+#   pure redirect stubs — call them out in version_context but no failure
+#   modes attach.
+
+skills:
+  # --------------------------------------------------------------------------
+  # 1. COLUMN-LAYOUT
+  # --------------------------------------------------------------------------
+  - slug: column-layout
+    type: core
+    domain: ui-state-features
+    packages:
+      - '@tanstack/table-core'
+    description: >
+      The five UI-state-only column features that shape how columns render:
+      visibility (show/hide), ordering (manual sequence), pinning (left/right
+      regions), sizing (px widths with min/max), and resizing (drag handle that
+      commits to columnSizing). All are opt-in via `tableFeatures({ ... })`,
+      share the consumer's state-management story (`initialState` vs hoisted
+      `state` + `on*Change`), and combine through a fixed reorder pipeline:
+      Column Pinning -> Manual Column Ordering -> Grouping. None of these
+      features require a row model — they only affect layout.
+    covers:
+      - columnVisibilityFeature (state, getCanHide, getIsVisible,
+        getToggleVisibilityHandler, table.getVisibleLeafColumns,
+        row.getVisibleCells, getIsAllColumnsVisible)
+      - columnOrderingFeature (columnOrder state, column.getIndex,
+        getIsFirstColumn, getIsLastColumn, setColumnOrder, the
+        Pinning/Ordering/Grouping reorder pipeline)
+      - columnPinningFeature (left/right ColumnPinningState, column.pin,
+        column.getIsPinned, column.getStart, column.getAfter,
+        column.getIsLastColumn/'left'|'right', split-table APIs
+        getLeftHeaderGroups/getCenterHeaderGroups/getRightHeaderGroups,
+        row.getLeftVisibleCells/getCenterVisibleCells/getRightVisibleCells)
+      - |-
+        columnSizingFeature (defaultColumnSizing {size: 150, minSize: 20, maxSize: MAX_SAFE_INTEGER}, columnDef.size/minSize/maxSize, column.getSize, header.getSize, table.getTotalSize, table.getCenterTotalSize/getLeftTotalSize/getRightTotalSize)
+      - columnResizingFeature (columnResizeMode 'onEnd' vs 'onChange',
+        columnResizeDirection 'ltr'|'rtl', header.getResizeHandler with
+        onMouseDown + onTouchStart, column.getIsResizing,
+        columnResizing.deltaOffset/isResizingColumn for resize-indicator UI,
+        CSS-variable + memoized-tbody perf pattern)
+      - Stable `columns` reference requirement (React FAQ pitfall) when these
+        features are driving re-renders
+    tasks:
+      - Add a column visibility toggle panel that hides/shows columns without
+        breaking header or cell render (`getVisibleLeafColumns`,
+        `row.getVisibleCells`).
+      - Pin specific columns left or right (e.g. a select column on the left,
+        an actions column on the right) via `initialState.columnPinning` or
+        an interactive pin button using `column.pin('left' | 'right' | false)`.
+      - Wire up drag-and-drop column reordering with `@dnd-kit/core` and
+        `setColumnOrder` (the canonical 2026 stack — react-dnd is incompatible
+        with React 18+ Strict Mode).
+      - Build draggable column resize handles that stay 60fps with large
+        tables (CSS variables + memoized TableBody during resize, per the
+        `column-resizing-performant` example).
+      - |-
+        Render a sticky-CSS pinning layout (one `<table>`, pinned columns positioned with `column.getStart('left')` / `getAfter('right')` and `position: sticky`).
+    subsystems:
+      - name: visibility
+        description: >
+          `columnVisibility: Record<columnId, boolean>` where missing or `true`
+          means visible. Driven by `enableHiding` (table-level) and
+          `columnDef.enableHiding` (column-level), both defaulting to `true`.
+          Rendering MUST go through `getVisibleLeafColumns` /
+          `row.getVisibleCells` — the `getAll*` variants do not respect this
+          state.
+        key_apis:
+          - 'table.getVisibleLeafColumns() / row.getVisibleCells()'
+          - 'column.getIsVisible / getCanHide / getToggleVisibilityHandler'
+          - 'table.getIsAllColumnsVisible / getToggleAllColumnsVisibilityHandler'
+
+      - name: ordering
+        description: >
+          `columnOrder: string[]` of leaf column ids. Empty array means
+          definition order. Ordering is **scoped to unpinned (center) columns**
+          when pinning is also active — pinned columns are sequenced inside
+          `columnPinning.left/right` arrays, not `columnOrder`. The reorder
+          pipeline executes in this fixed order: (1) Column Pinning splits
+          into left/center/right, (2) `columnOrder` reorders the center, then
+          (3) `groupedColumnMode: 'reorder' | 'remove'` may move grouped
+          columns to the front.
+        key_apis:
+          - 'table.setColumnOrder / onColumnOrderChange'
+          - 'column.getIndex(position?) / getIsFirstColumn / getIsLastColumn'
+
+      - name: pinning
+        description: >
+          `columnPinning: { left: string[]; right: string[] }`. Pinning a
+          group column pins every leaf. Two render strategies are supported:
+          (1) **split tables** using `getLeft*/getCenter*/getRight*` header,
+          column, and cell APIs (`column-pinning-split` example), and
+          (2) **single table + sticky CSS** using `column.getStart('left')` /
+          `column.getAfter('right')` + `position: sticky` plus
+          `getIsLastColumn('left')` / `getIsFirstColumn('right')` for the
+          shadow-edge indicator (`column-pinning-sticky` example).
+          IMPORTANT: in v9 the table-level option is `enableColumnPinning`,
+          not the v8 `enablePinning` — that name is now exclusively the
+          per-column `columnDef.enablePinning`.
+        key_apis:
+          - "column.pin('left' | 'right' | false) / column.getIsPinned / column.getCanPin"
+          - 'column.getStart(position) / column.getAfter(position) — sticky CSS offsets'
+          - 'table.getLeftHeaderGroups / getCenterHeaderGroups / getRightHeaderGroups'
+          - 'row.getLeftVisibleCells / getCenterVisibleCells / getRightVisibleCells'
+
+      - name: sizing
+        description: >
+          `columnSizing: Record<columnId, number>` (pixels). Static defaults
+          live in `defaultColumnSizing` (size 150, minSize 20, maxSize
+          Number.MAX_SAFE_INTEGER) and can be overridden globally via
+          `tableOptions.defaultColumn` or per-column via
+          `columnDef.size/minSize/maxSize`. `column.getSize()` clamps the
+          committed state value (or column-def fallback) between min and max.
+          Three layout styles work: semantic `<table>` with `width`, block
+          divs with strict widths, and absolutely positioned cells using
+          `getStart()` (no resize mode tied to layout — this is purely
+          consumer choice).
+        key_apis:
+          - 'column.getSize() / header.getSize() — size lookup'
+          - 'table.getTotalSize / getCenterTotalSize / getLeftTotalSize / getRightTotalSize'
+          - 'column.resetSize() — drop committed override, fall back to column def'
+          - 'tableOptions.defaultColumn for cross-column defaults'
+
+      - name: resizing
+        description: >
+          Layered on top of sizing. Two modes via `columnResizeMode`:
+          `'onEnd'` (default — commits the new size to `columnSizing` only
+          when the drag releases; safer for large React tables) and
+          `'onChange'` (commits live during drag; needs the CSS variable +
+          memoized TableBody pattern). `header.getResizeHandler()` returns a
+          single function wired to BOTH `onMouseDown` and `onTouchStart` for
+          mobile support. The transient `columnResizing` state carries
+          `isResizingColumn` and `deltaOffset` — the latter drives the
+          resize-indicator translation in `onEnd` mode.
+          `columnResizeDirection: 'rtl'` inverts the delta sign.
+        key_apis:
+          - 'header.getResizeHandler() — single handler for mouse + touch'
+          - 'column.getIsResizing / column.getCanResize'
+          - 'table.atoms.columnResizing.get() — deltaOffset, isResizingColumn'
+          - "columnResizeMode: 'onEnd' (default) | 'onChange'"
+          - "columnResizeDirection: 'ltr' (default) | 'rtl'"
+          - 'column.resetSize() (double-click handle) — provided by sizing subsystem'
+
+    failure_modes:
+      - mistake: >
+          Rendering header or body cells with `table.getAllLeafColumns()` and
+          `row.getAllCells()` while `columnVisibilityFeature` is registered.
+          Hidden columns still render.
+        mechanism: >
+          The `getAll*` accessors return every column/cell unconditionally —
+          they do not consult `columnVisibility` state. Only the `Visible`
+          variants (and the header-group APIs) filter by visibility. Users
+          who copy a v8-era body loop or a non-visibility example into a
+          visibility-enabled table will see no effect on the rendered table
+          regardless of how they toggle the checkbox panel.
+        wrong_pattern: |
+          // ❌ Toggling visibility has no effect on rendered cells
+          {table.getAllLeafColumns().map(column => (
+            <th key={column.id}>...</th>
+          ))}
+          {row.getAllCells().map(cell => (
+            <td key={cell.id}><table.FlexRender cell={cell} /></td>
+          ))}
+        correct_pattern: |
+          // ✅ From examples/react/column-visibility/src/main.tsx and the guide:
+          // Header groups already respect visibility; use them for headers.
+          // For body cells, swap getAllCells -> getVisibleCells.
+          <thead>
+            {table.getHeaderGroups().map(headerGroup => (
+              <tr key={headerGroup.id}>
+                {headerGroup.headers.map(header => (
+                  <th key={header.id} colSpan={header.colSpan}>
+                    {header.isPlaceholder ? null : (
+                      <table.FlexRender header={header} />
+                    )}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody>
+            {table.getRowModel().rows.map(row => (
+              <tr key={row.id}>
+                {row.getVisibleCells().map(cell => (  // <-- the fix
+                  <td key={cell.id}><table.FlexRender cell={cell} /></td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        source:
+          - 'docs/guide/column-visibility.md (Column Visibility Aware Table APIs)'
+          - 'examples/react/column-visibility/src/main.tsx'
+        priority: high
+        status: active
+        version_context: >
+          v9 names unchanged from v8 (`getVisibleLeafColumns`,
+          `getVisibleCells`). Still the #1 column-visibility footgun.
+        skills:
+          - column-layout
+
+      - mistake: >
+          Setting `columnResizeMode: 'onChange'` in a React table with many
+          rows or expensive cell renders, then complaining about jittery /
+          sub-30fps resize. Users typically call `column.getSize()` inside
+          every `<td>` and re-render the whole body on every move event.
+        mechanism: >
+          In `'onChange'` mode, the resize handler commits a new
+          `columnSizing` map on every pointer move. Each commit re-renders
+          the entire body. With `column.getSize()` evaluated on every cell,
+          you re-run an O(columns × rows) traversal per move event — far
+          beyond a 16ms frame budget. The performant pattern (a) caches
+          column widths once in a `useMemo` keyed on `columnResizing` +
+          `columnSizing`, (b) passes those widths down as CSS variables on
+          the table root so cells don't read from JS, and (c) wraps the
+          TableBody in `React.memo` and uses the memoized version only while
+          `state.columnResizing.isResizingColumn` is truthy. The guide also
+          recommends `'onEnd'` as a sane default when this perf budget can't
+          be met.
+        wrong_pattern: |
+          // ❌ Live resize + getSize() on every cell + un-memoized body
+          const table = useTable({
+            features: tableFeatures({ columnSizingFeature, columnResizingFeature }),
+            columnResizeMode: 'onChange',
+            //...
+          })
+          // ...
+          <td style={{ width: cell.column.getSize() }}>
+            {cell.renderValue()}
+          </td>
+        correct_pattern: |
+          // ✅ From examples/react/column-resizing-performant/src/main.tsx
+          // 1. Compute every column width once, keyed on resize state
+          const columnSizeVars = React.useMemo(() => {
+            const headers = table.getFlatHeaders()
+            const colSizes: { [key: string]: number } = {}
+            for (const header of headers) {
+              colSizes[`--header-${header.id}-size`] = header.getSize()
+              colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
+            }
+            return colSizes
+          }, [table.state.columnResizing, table.state.columnSizing])
+
+          // 2. Spread widths onto the table element as CSS variables
+          <div className="divTable" style={{ ...columnSizeVars, width: table.getTotalSize() }}>
+            <div className="thead">
+              {/* header cells read width from var(--header-${id}-size) */}
+            </div>
+
+            {/* 3. Swap to memoized body only while a drag is in progress */}
+            {table.store.state.columnResizing.isResizingColumn && enableMemo
+              ? <MemoizedTableBody table={table} />
+              : <TableBody table={table} />}
+          </div>
+
+          // Body cells use the CSS variable (no per-cell getSize() call)
+          <div className="td" style={{ width: `calc(var(--col-${cell.column.id}-size) * 1px)` }}>
+            {cell.renderValue()}
+          </div>
+
+          export const MemoizedTableBody = React.memo(
+            TableBody,
+            (prev, next) => prev.table.options.data === next.table.options.data,
+          )
+        source:
+          - 'docs/guide/column-resizing.md (Advanced Column Resizing Performance)'
+          - 'examples/react/column-resizing-performant/src/main.tsx'
+        priority: high
+        status: active
+        version_context: >
+          v9 surface unchanged from v8 for resize APIs. The performant
+          pattern is now the canonical reference — Svelte/Vue/Solid adapters
+          generally don't need it, but React does.
+        skills:
+          - column-layout
+
+      - mistake: >
+          Trying to control the order of pinned columns by mutating
+          `columnOrder` state. The pinned region keeps rendering in
+          pin-insertion order regardless of what `columnOrder` says.
+        mechanism: >
+          The fixed reorder pipeline is (1) Column Pinning split, (2)
+          `columnOrder` applied, (3) Grouping. After step (1) the pinned
+          columns are read **directly from `state.columnPinning.left` and
+          `.right`** by `table_getLeftHeaderGroups` / `_getRightHeaderGroups`.
+          `columnOrder` is only consulted by the unpinned center partition.
+          To reorder a pinned column you must edit the array inside
+          `columnPinning` itself (or unpin -> reorder -> repin).
+        wrong_pattern: |
+          // ❌ Won't move 'actions' relative to 'firstName' while it's pinned right
+          const [columnPinning] = useState({
+            left: ['select'],
+            right: ['actions'],
+          })
+          table.setColumnOrder(['actions', 'select', 'firstName', 'lastName'])
+        correct_pattern: |
+          // ✅ Reorder the pinning state itself
+          table.setColumnPinning(old => ({
+            left: ['select'],
+            right: ['summary', 'actions'],  // move 'summary' to render before 'actions'
+          }))
+
+          // Or for the unpinned center region, columnOrder works normally:
+          table.setColumnOrder(['firstName', 'lastName'])  // only affects center columns
+        source:
+          - "docs/guide/column-ordering.md ('Note: columnOrder state will only affect unpinned columns')"
+          - 'docs/guide/column-pinning.md (How Column Pinning Affects Column Order)'
+          - 'packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts (table_getLeftHeaderGroups reads from columnPinning.left directly)'
+        priority: medium
+        status: active
+        version_context: >
+          Behavior unchanged from v8. The 3-stage pipeline is documented
+          identically in both column-ordering.md and column-pinning.md in v9.
+        skills:
+          - column-layout
+
+      - mistake: >
+          Using the v8 table option `enablePinning` to disable column
+          pinning in v9 — option is ignored, columns remain pinnable.
+        mechanism: >
+          In v9 the umbrella `enablePinning` option was split into two
+          distinct options: `enableColumnPinning` (table level) and
+          `enableRowPinning` (table level). The string `enablePinning` is
+          still valid but now refers ONLY to the per-column
+          `columnDef.enablePinning` opt-out. Any agent or human ported from
+          v8 that writes `enablePinning: false` at the table level will see
+          no effect — `column_getCanPin` reads `column.table.options.enableColumnPinning ?? true`.
+        wrong_pattern: |
+          // ❌ v8 syntax — no longer disables pinning in v9
+          const table = useTable({
+            features: tableFeatures({ columnPinningFeature }),
+            enablePinning: false,   // ignored at table level in v9
+            //...
+          })
+        correct_pattern: |
+          // ✅ v9: split into two table-level options
+          const table = useTable({
+            features: tableFeatures({ columnPinningFeature, rowPinningFeature }),
+            enableColumnPinning: false,  // turns off column pinning
+            enableRowPinning: false,     // turns off row pinning (or row => row.original.locked)
+            //...
+          })
+
+          // Per-column opt-out is still spelled `enablePinning`:
+          columnHelper.accessor('id', {
+            enablePinning: false,  // this column can't be pinned
+          })
+        source:
+          - 'packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts (TableOptions_ColumnPinning.enableColumnPinning)'
+          - 'packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts (column_getCanPin reads enableColumnPinning)'
+          - 'packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts (TableOptions_RowPinning.enableRowPinning)'
+        priority: high
+        status: active
+        version_context: >
+          v9 breaking change vs v8. Agents trained on the v8 surface will
+          consistently produce `enablePinning` at the table level.
+        skills:
+          - column-layout
+          - row-pinning
+
+      - mistake: >
+          Using `react-dnd` or `react-beautiful-dnd` for column reordering
+          in a React 18+/Strict Mode app, or trying to wrap dnd-kit's
+          `DndContext` directly inside a `<table>` element.
+        mechanism: >
+          `react-dnd` has documented incompatibilities with React 18 Strict
+          Mode (its Provider creates effects that re-fire unpredictably) and
+          is no longer actively maintained against the latest React
+          internals. `react-beautiful-dnd` is in maintenance mode and has
+          known issues with `<table>` markup. The official TanStack examples
+          for column-dnd and row-dnd both use `@dnd-kit/core` + `@dnd-kit/sortable`
+          because dnd-kit's provider renders `<div>` wrappers — which
+          violates HTML if nested inside `<thead>` / `<tbody>`. The
+          `DndContext` MUST wrap the entire table from outside.
+        wrong_pattern: |
+          // ❌ react-dnd in React 18 Strict Mode — flicker and stale drags
+          import { DndProvider } from 'react-dnd'
+          import { HTML5Backend } from 'react-dnd-html5-backend'
+          // ...
+
+          // ❌ Nesting DndContext inside <table>
+          <table>
+            <DndContext onDragEnd={handleDragEnd}>
+              <thead>...</thead>
+            </DndContext>
+          </table>
+        correct_pattern: |
+          // ✅ From examples/react/column-dnd/src/main.tsx
+          import {
+            DndContext, KeyboardSensor, MouseSensor, TouchSensor,
+            closestCenter, useSensor, useSensors,
+          } from '@dnd-kit/core'
+          import { restrictToHorizontalAxis } from '@dnd-kit/modifiers'
+          import {
+            SortableContext, arrayMove,
+            horizontalListSortingStrategy, useSortable,
+          } from '@dnd-kit/sortable'
+
+          function handleDragEnd(event: DragEndEvent) {
+            const { active, over } = event
+            if (over && active.id !== over.id) {
+              table.setColumnOrder(prev => {
+                const oldIndex = prev.indexOf(active.id as string)
+                const newIndex = prev.indexOf(over.id as string)
+                return arrayMove(prev, oldIndex, newIndex)
+              })
+            }
+          }
+
+          // NOTE: DndContext renders divs, so it MUST wrap from outside <table>
+          <DndContext
+            collisionDetection={closestCenter}
+            modifiers={[restrictToHorizontalAxis]}
+            onDragEnd={handleDragEnd}
+            sensors={useSensors(useSensor(MouseSensor), useSensor(TouchSensor), useSensor(KeyboardSensor))}
+          >
+            <table>
+              <thead>
+                {table.getHeaderGroups().map(hg => (
+                  <tr key={hg.id}>
+                    <SortableContext
+                      items={table.store.state.columnOrder}
+                      strategy={horizontalListSortingStrategy}
+                    >
+                      {hg.headers.map(h => <DraggableTableHeader key={h.id} header={h} />)}
+                    </SortableContext>
+                  </tr>
+                ))}
+              </thead>
+              {/* ... */}
+            </table>
+          </DndContext>
+        source:
+          - 'docs/guide/column-ordering.md (Drag and Drop Column Reordering Suggestions)'
+          - "examples/react/column-dnd/src/main.tsx (the comment `// NOTE: This provider creates div elements, so don't nest inside of <table> elements`)"
+        priority: medium
+        status: active
+        version_context: >
+          The recommendation has been stable since v8.10. dnd-kit is the
+          recommended stack in v9 docs.
+        skills:
+          - column-layout
+
+      - mistake: >
+          Forgetting to wire `header.getResizeHandler()` to BOTH
+          `onMouseDown` AND `onTouchStart` — desktop drag resize works,
+          mobile users tap-and-drag but the column never resizes.
+        mechanism: >
+          `header_getResizeHandler` returns a single function that
+          internally branches on `isTouchStartEvent(event)`. The same
+          function is meant to be installed on both DOM event types so the
+          handler picks the correct branch. If a developer only wires
+          `onMouseDown` (the common copy-paste from a desktop-only example),
+          touch events never fire the handler at all — touch users can grab
+          the resizer visually but no `mousedown` event is synthesized for
+          a long drag on iOS Safari/Android Chrome. The handler installs
+          `touchmove` / `touchend` listeners on `document` only after it
+          receives the initial `touchstart`.
+        wrong_pattern: |
+          // ❌ Desktop only — mobile users can't resize
+          <div
+            onMouseDown={header.getResizeHandler()}
+            onDoubleClick={() => header.column.resetSize()}
+            className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+          />
+        correct_pattern: |
+          // ✅ From every column-resizing example: wire BOTH events
+          <div
+            onDoubleClick={() => header.column.resetSize()}
+            onMouseDown={header.getResizeHandler()}
+            onTouchStart={header.getResizeHandler()}
+            className={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''}`}
+          />
+        source:
+          - 'docs/guide/column-resizing.md (Column Resize APIs section)'
+          - 'examples/react/column-resizing/src/main.tsx'
+          - 'examples/react/column-pinning-sticky/src/main.tsx'
+          - 'packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts (header_getResizeHandler branches on isTouchStartEvent)'
+        priority: medium
+        status: active
+        version_context: >
+          v9 surface unchanged.
+        skills:
+          - column-layout
+
+      - mistake: >
+          Defining `columns` (or the column-helper array) inline in the
+          render body instead of stabilizing with `useMemo`/`useState`/module
+          scope. Triggers an infinite render loop once any of these
+          layout features re-render on state change.
+        mechanism: >
+          TanStack Table treats `columns` (and `data` and `state`) as
+          inputs that, when their reference changes, signal that the
+          underlying table model must be rebuilt. With visibility/pinning/
+          ordering/sizing/resizing registered, every interaction commits a
+          state slice; React re-runs the component; an inline `columns`
+          literal gets a new identity; the table rebuilds; that triggers
+          another render. The `column-pinning-split` and `column-dnd`
+          examples both use `useMemo(() => columnHelper.columns([...]), [])`
+          or define `defaultColumns` outside the component for exactly this
+          reason. The FAQ flags this as Pitfall 1.
+        wrong_pattern: |
+          // ❌ Infinite loop once column visibility / pinning / resizing fires
+          function App() {
+            const columns = [
+              columnHelper.accessor('firstName', { ... }),
+              columnHelper.accessor('lastName', { ... }),
+            ]
+            const table = useTable({
+              features: tableFeatures({ columnPinningFeature, columnResizingFeature }),
+              columns,
+              data,
+            })
+          }
+        correct_pattern: |
+          // ✅ Stable reference via module scope (column-pinning-split pattern)
+          const defaultColumns = columnHelper.columns([
+            columnHelper.accessor('firstName', { ... }),
+            columnHelper.accessor('lastName', { ... }),
+          ])
+          function App() {
+            const [columns] = React.useState(() => [...defaultColumns])
+            //...
+          }
+
+          // ✅ Or useMemo (column-dnd pattern)
+          function App() {
+            const columns = React.useMemo(
+              () => columnHelper.columns([
+                columnHelper.accessor('firstName', { ... }),
+                columnHelper.accessor('lastName', { ... }),
+              ]),
+              [],
+            )
+            //...
+          }
+        source:
+          - 'docs/faq.md (Pitfall 1: Creating new columns or data on every render)'
+          - 'examples/react/column-pinning-split/src/main.tsx (defaultColumns + useState)'
+          - 'examples/react/column-dnd/src/main.tsx (useMemo)'
+        priority: high
+        status: active
+        version_context: >
+          React-specific. Same FAQ entry applies across all of cluster C —
+          listed here because layout features are usually where users
+          first hit it.
+        skills:
+          - column-layout
+          - row-selection
+
+    gaps:
+      - >
+        Is `column-layout` too broad as a single skill? Five subsystems with
+        distinct config surfaces but a common pattern. Alternative: split
+        into `column-visibility-ordering` (state-only) + `column-pinning` +
+        `column-sizing-resizing` (interaction). Kevin approved combining —
+        keep unless Phase 4 reveals retrieval issues.
+      - >
+        No Angular-specific failure mode for column resizing perf. The
+        `angular/column-resizing-performant` example exists but I didn't
+        deep-read it; if signals make the React pattern unnecessary, a
+        clarifying note may belong on the resize subsystem.
+      - >
+        The `Table_ColumnResizing.setcolumnResizing` API name has a
+        deliberately lowercase `c` ("matches the current generated v9 table
+        API for the `columnResizing` state slice" per the JSDoc). This is
+        an oddity that might warrant a typo-tolerance failure mode if it's
+        stable enough to ship.
+
+  # --------------------------------------------------------------------------
+  # 2. ROW-PINNING
+  # --------------------------------------------------------------------------
+  - slug: row-pinning
+    type: core
+    domain: ui-state-features
+    packages:
+      - '@tanstack/table-core'
+    description: >
+      Pin specific rows to a top region or bottom region that stays visible
+      across pagination and filtering. State shape is `{ top: string[];
+      bottom: string[] }` keyed by `row.id`. Simpler pipeline than column
+      pinning — only one reorder step happens after row pinning (sorting)
+      and pinned rows are sorted within their region.
+    covers:
+      - rowPinningFeature (RowPinningState, row.pin, row.getIsPinned,
+        row.getPinnedIndex, row.getCanPin, table.getTopRows,
+        table.getBottomRows, table.getCenterRows, table.getIsSomeRowsPinned)
+      - enableRowPinning option (bool or row predicate)
+      - keepPinnedRows option (default true — pinned rows persist across
+        pagination/filtering even if they'd otherwise be filtered out;
+        false hides them when filtered/paginated away)
+      - row.pin(position, includeLeafRows?, includeParentRows?) signature —
+        the extra args matter for grouped/expanded data
+      - The reorder pipeline: Row Pinning -> Sorting
+    tasks:
+      - Add pin-top / pin-bottom buttons to a row that persist the pinned
+        rows even when the user paginates or filters the data.
+      - Render pinned rows in a sticky `<tr>` with calculated `top`/`bottom`
+        offsets based on `row.getPinnedIndex()` (see the example pattern).
+      - Choose between (a) splitting pinned vs center rows in render
+        (`getTopRows + getCenterRows + getBottomRows`) versus (b) leaving
+        pinned rows duplicated in the main flow (the `copyPinnedRows`
+        toggle in the example).
+
+    failure_modes:
+      - mistake: >
+          Setting `getRowId: (row) => row.id` (or omitting it), pinning a
+          row, then refetching/reordering the data — the wrong row stays
+          pinned because `row.id` defaulted to `row.index` and indices
+          shifted.
+        mechanism: >
+          `row.id` defaults to the row's positional `index` in the data
+          array. `rowPinning.top` and `rowPinning.bottom` are arrays of
+          string row ids. After a refetch that reorders the data, index 3
+          might now be a different record entirely, but the pinning state
+          still pins index 3. This is the same root cause as the row
+          selection ID pitfall — fix by supplying a stable
+          `getRowId: (row) => row.uuid` (or any unique primary key from the
+          domain data). The row-pinning example deliberately uses
+          `makeData(1_000, 2, 2)` with `subRows` and demonstrates the
+          `includeLeafRows`/`includeParentRows` args of `row.pin` to handle
+          grouped data.
+        wrong_pattern: |
+          // ❌ row.id defaults to row.index; pin survives wrong rows after refetch
+          const table = useTable({
+            features: tableFeatures({ rowPinningFeature, rowPaginationFeature }),
+            data, // refetched periodically
+            //...
+          })
+        correct_pattern: |
+          // ✅ Stable row identity
+          const table = useTable({
+            features: tableFeatures({ rowPinningFeature, rowPaginationFeature }),
+            data,
+            getRowId: row => row.userId,  // or row.uuid, row.id from API, etc.
+            //...
+          })
+
+          // For grouped/expanded data, pass the include flags too:
+          row.pin('top', includeLeafRows, includeParentRows)
+        source:
+          - 'docs/guide/row-selection.md (Useful Row Ids — same principle)'
+          - 'examples/react/row-pinning/src/main.tsx (uses makeData with subRows, demonstrates include flags)'
+        priority: high
+        status: active
+        version_context: >
+          v9 surface unchanged.
+        skills:
+          - row-pinning
+          - row-selection
+
+      - mistake: >
+          Leaving `keepPinnedRows: true` (the default) and being surprised
+          that pinned rows appear on every page during pagination — or
+          conversely, setting it to `false` and being surprised that pinned
+          rows disappear when filtered out.
+        mechanism: >
+          `keepPinnedRows` controls whether `table.getTopRows()` /
+          `table.getBottomRows()` use `table.getRow(id, true)` (which
+          searches the full pre-pagination row set) or `visibleRows.find(...)`
+          (which only finds rows currently in the row model). Default is
+          `true`, so pinned rows stick across pagination and filtering and
+          may render on every page. With `false`, pinned rows can disappear
+          if their underlying row is filtered or paginated out. The
+          row-pinning example exposes both via the "Keep/Persist Pinned
+          Rows" checkbox to make the contrast visible. The behavior is
+          deliberate — pick the one that matches the UX you want.
+        wrong_pattern: |
+          // ❌ Expecting pinned rows to vanish on filter, but they don't (default)
+          const table = useTable({
+            features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
+            //...
+            // keepPinnedRows defaults to true; pinned rows survive filtering
+          })
+        correct_pattern: |
+          // ✅ Be explicit about which UX you want
+          const table = useTable({
+            features: tableFeatures({ rowPinningFeature, columnFilteringFeature }),
+            keepPinnedRows: false,   // pinned rows disappear when filtered/paginated out
+            //...
+          })
+
+          // Or to keep the default but render pinned rows separately from the body:
+          <tbody>
+            {table.getTopRows().map(row => <PinnedRow row={row} ... />)}
+            {table.getCenterRows().map(row => <Row row={row} ... />)}
+            {table.getBottomRows().map(row => <PinnedRow row={row} ... />)}
+          </tbody>
+        source:
+          - 'docs/guide/row-pinning.md'
+          - 'packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts (table_getPinnedRows: const keepPinnedRows = table.options.keepPinnedRows ?? true)'
+          - 'examples/react/row-pinning/src/main.tsx (keepPinnedRows toggle)'
+        priority: medium
+        status: active
+        version_context: >
+          v9 default matches v8 (`true`). Same option name.
+        skills:
+          - row-pinning
+
+      - mistake: >
+          Iterating `table.getRowModel().rows` for the main tbody AND
+          rendering `getTopRows()`/`getBottomRows()` separately — pinned
+          rows render twice (once at top/bottom, once where they originally
+          appeared in the row model).
+        mechanism: >
+          `getRowModel()` returns the complete current row model with
+          pinned rows still in it (pinning doesn't remove rows from the
+          model, it just exposes a partition). The intended pattern is to
+          render either (a) `getTopRows + getCenterRows + getBottomRows`
+          (three loops, pinned rows appear once) or (b) `getTopRows +
+          getRowModel + getBottomRows` only if you explicitly want pinned
+          rows duplicated. The example toggles between these via
+          `copyPinnedRows` to make the difference explicit. The default
+          choice should be `getCenterRows`.
+        wrong_pattern: |
+          // ❌ Pinned rows render twice
+          <tbody>
+            {table.getTopRows().map(row => <PinnedRow row={row} />)}
+            {table.getRowModel().rows.map(row => (   // <-- still includes pinned rows
+              <tr key={row.id}>...</tr>
+            ))}
+            {table.getBottomRows().map(row => <PinnedRow row={row} />)}
+          </tbody>
+        correct_pattern: |
+          // ✅ From examples/react/row-pinning/src/main.tsx
+          <tbody>
+            {table.getTopRows().map(row => (
+              <PinnedRow key={row.id} row={row} table={table} />
+            ))}
+            {table.getCenterRows().map(row => (
+              <tr key={row.id}>
+                {row.getAllCells().map(cell => (
+                  <td key={cell.id}><table.FlexRender cell={cell} /></td>
+                ))}
+              </tr>
+            ))}
+            {table.getBottomRows().map(row => (
+              <PinnedRow key={row.id} row={row} table={table} />
+            ))}
+          </tbody>
+        source:
+          - 'examples/react/row-pinning/src/main.tsx (the copyPinnedRows demo toggle)'
+        priority: medium
+        status: active
+        version_context: >
+          v9 surface unchanged.
+        skills:
+          - row-pinning
+
+    gaps:
+      - >
+        Could fold into `column-layout` as a sixth subsystem given how
+        small the dedicated guide is (the row-pinning.md guide is *2
+        sentences* long after the deprecated `pinning.md` redirect). Kept
+        separate because Kevin approved it as its own bullet AND the
+        failure modes are genuinely different from column-pinning
+        (id-stability matters more, `keepPinnedRows` has no column-side
+        analogue, render order differs). **Flag for Phase 4 review.**
+      - >
+        Sticky-CSS row pinning pattern (the `PinnedRow` component in the
+        example with `position: sticky` + `top: row.getPinnedIndex() * 26
+        + 48px`) is non-trivial — magic numbers depend on row height +
+        header height. Worth deciding if this becomes its own reference
+        pattern or a callout in the existing failure mode.
+
+  # --------------------------------------------------------------------------
+  # 3. ROW-SELECTION
+  # --------------------------------------------------------------------------
+  - slug: row-selection
+    type: core
+    domain: ui-state-features
+    packages:
+      - '@tanstack/table-core'
+    description: >
+      Track which rows are selected via `rowSelection: Record<rowId,
+      boolean | undefined>` and derive selected-row models scoped to the
+      current data (`getSelectedRowModel`), to filtered data
+      (`getFilteredSelectedRowModel`), or to grouped data
+      (`getGroupedSelectedRowModel`). Supports single-select via
+      `enableMultiRowSelection: false`, conditional row-by-row enabling
+      via predicates, and parent->child propagation via
+      `enableSubRowSelection`. The row id used in the selection map
+      defaults to `row.index` — supplying a stable `getRowId` is
+      essentially mandatory for any real-world use.
+    covers:
+      - rowSelectionFeature (RowSelectionState, table.getSelectedRowModel,
+        getFilteredSelectedRowModel, getGroupedSelectedRowModel,
+        getPreSelectedRowModel, getIsAllRowsSelected, getIsSomeRowsSelected,
+        getIsAllPageRowsSelected, getIsSomePageRowsSelected,
+        toggleAllRowsSelected, toggleAllPageRowsSelected)
+      - row.toggleSelected, row.getIsSelected, row.getIsSomeSelected
+        (indeterminate), row.getIsAllSubRowsSelected, row.getCanSelect,
+        row.getCanMultiSelect, row.getCanSelectSubRows,
+        row.getToggleSelectedHandler
+      - enableRowSelection (bool or row predicate) — default true
+      - enableMultiRowSelection (bool or row predicate) — default true;
+        setting to false makes it radio-style (single-row at a time)
+      - enableSubRowSelection (bool or row predicate) — default true;
+        controls whether parent row toggle propagates to subRows
+      - The interaction with `getRowId`, `manualPagination`, atoms (via
+        `useCreateAtom`), and the indeterminate-checkbox UI pattern
+    tasks:
+      - Add a select-column with header "select all" + per-row checkbox
+        wired through `getToggleAllRowsSelectedHandler` /
+        `getToggleSelectedHandler`, including the indeterminate
+        (`getIsSomeRowsSelected`) state.
+      - Hoist selection state outside the table (via `useState` or an
+        atom from `useCreateAtom`) so the selected ids can be sent to an
+        API call or used in other components.
+      - |-
+        Build single-select / radio-style selection by setting `enableMultiRowSelection: false`.
+      - |-
+        Restrict selection conditionally (e.g. only adult records, non-archived rows) via `enableRowSelection: row => row.original.age > 18`.
+    failure_modes:
+      - mistake: >
+          Omitting `getRowId` and using `manualPagination` (server-side
+          paging). The user pages forward, selects a row, pages back,
+          and the wrong row appears selected — or selections evaporate
+          on page navigation.
+        mechanism: >
+          With no `getRowId` provided, `row.id` defaults to the row's
+          `index` within the data array. Under `manualPagination`, each
+          page receives only that page's rows, so `data[0]` is always
+          row.id "0", `data[1]` is always "1", etc. Selecting row 5 on
+          page 1 and paging to page 2 sets `rowSelection["5"] = true`,
+          but page 2's data also has a "5" — so a different record now
+          appears selected. The fix is universal: supply
+          `getRowId: row => row.someStablePrimaryKey`. The row-selection
+          guide flags this as the "Useful Row Ids" section and a separate
+          note covers the `manualPagination` interaction:
+          `getSelectedRowModel` only returns rows in the current `data`
+          array, so for cross-page totals you must read `rowSelection`
+          state directly instead of relying on the row model.
+        wrong_pattern: |
+          // ❌ Server-side pagination + default row.id = row.index
+          const table = useTable({
+            features: tableFeatures({ rowSelectionFeature, rowPaginationFeature }),
+            data,                  // only the current page from the server
+            manualPagination: true,
+            rowCount,              // server-provided total
+            //...
+          })
+          // After paging, `rowSelection: { '5': true }` is ambiguous —
+          // which page's row 5? Selection appears to move with the user.
+        correct_pattern: |
+          // ✅ Stable row id keyed to the primary key the server uses
+          const table = useTable({
+            features: tableFeatures({ rowSelectionFeature, rowPaginationFeature }),
+            data,
+            manualPagination: true,
+            rowCount,
+            getRowId: row => row.uuid,   // or row.id from your API
+            //...
+          })
+
+          // ✅ For "X of Y selected" with server-side pagination, read the
+          // rowSelection state directly — getSelectedRowModel only knows
+          // about rows in the current page's `data`:
+          const totalSelected = Object.keys(table.state.rowSelection).length
+
+          // (The selection state can hold ids that aren't in `data` —
+          // that's by design.)
+        source:
+          - 'docs/guide/row-selection.md (Useful Row Ids section; manualPagination note above Access Row Selection State)'
+          - 'packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts (RowSelectionState = Record<string, boolean | undefined>)'
+          - 'examples/react/row-selection/src/main.tsx (uses getRowId: row => row.id)'
+        priority: high
+        status: active
+        version_context: >
+          v9 surface unchanged from v8. Still the #1 row-selection
+          footgun, especially in any server-driven table.
+        skills:
+          - row-selection
+
+      - mistake: >
+          Setting `enableMultiRowSelection: false` to get radio-style
+          single selection, but rendering checkboxes via
+          `getToggleAllRowsSelectedHandler` and `getIsSomeRowsSelected`
+          for an indeterminate header — leaves a non-functional "select
+          all" UI that contradicts the single-select intent.
+        mechanism: >
+          When `enableMultiRowSelection` is false, the internal
+          `mutateRowIsSelected` helper clears all other ids from the
+          selection map before adding the new one — so "select all" is
+          effectively no-op (it sets one row, deselects all others, then
+          checks the next, in a fast loop that leaves only the last row
+          selected). The header indeterminate state is meaningless
+          because only zero or one rows can ever be selected. Use radio
+          inputs instead, drop the toggle-all header, and treat the
+          selection map as `{ [singleId]: true }`.
+        wrong_pattern: |
+          // ❌ Checkbox "select all" + single-select mode
+          const table = useTable({
+            features: tableFeatures({ rowSelectionFeature }),
+            enableMultiRowSelection: false,  // radio-like
+            //...
+          })
+
+          // Header still renders a checkbox + indeterminate
+          <Checkbox
+            checked={table.getIsAllRowsSelected()}
+            indeterminate={table.getIsSomeRowsSelected()}
+            onChange={table.getToggleAllRowsSelectedHandler()}
+          />
+        correct_pattern: |
+          // ✅ Radio inputs, no toggle-all header
+          const table = useTable({
+            features: tableFeatures({ rowSelectionFeature }),
+            enableMultiRowSelection: false,
+            getRowId: row => row.id,
+            //...
+          })
+
+          {
+            id: 'select',
+            header: '',  // no "select all" makes sense in single-select mode
+            cell: ({ row }) => (
+              <input
+                type="radio"
+                name="row-selection"
+                checked={row.getIsSelected()}
+                disabled={!row.getCanSelect()}
+                onChange={row.getToggleSelectedHandler()}
+              />
+            ),
+          }
+
+          // Or conditional single-select for only the sub-rows of certain
+          // parents (the guide's predicate form):
+          enableMultiRowSelection: row => row.original.age > 18,
+        source:
+          - 'docs/guide/row-selection.md (Single Row Selection section)'
+          - 'packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts (mutateRowIsSelected: if (!row_getCanMultiSelect(row)) Object.keys(selectedRowIds).forEach(key => delete selectedRowIds[key]))'
+        priority: medium
+        status: active
+        version_context: >
+          v9 surface unchanged.
+        skills:
+          - row-selection
+
+      - mistake: >
+          Calling `table.getSelectedRowModel().flatRows` on a paginated
+          server-side table to count or list "all selected rows" — gets
+          only the selected rows visible on the current page, missing
+          selections from previously visited pages.
+        mechanism: >
+          `getSelectedRowModel` is derived from `table.getCoreRowModel()`
+          via `selectRowsFn`, which recurses the core row tree filtering
+          by `isRowSelected`. Under `manualPagination`, the core row
+          model only knows about the rows in the current `data` prop —
+          previously-paged rows aren't materialized. The
+          `rowSelection` state map, however, can hold ids that aren't in
+          the current `data`. The guide says explicitly: "Row selection
+          state, however, can contain row ids that are not present in the
+          `data` array just fine." For server-side selection bookkeeping,
+          read `state.rowSelection` directly; for a count UI, use
+          `Object.keys(rowSelection).length` instead of
+          `.getSelectedRowModel().rows.length`.
+        wrong_pattern: |
+          // ❌ Under manualPagination, only counts the visible page's selected rows
+          const selectedCount = table.getSelectedRowModel().flatRows.length
+          //  ^ this stays small because flatRows is built from data, which
+          //    only contains the current page.
+
+          const handleBulkAction = () => {
+            const ids = table.getSelectedRowModel().flatRows
+              .map(row => row.original.id)
+            api.archive(ids)  // missing all selections from other pages!
+          }
+        correct_pattern: |
+          // ✅ For counts and id lists under manualPagination, read state directly
+          const selectedCount = Object.keys(table.state.rowSelection).length
+
+          const handleBulkAction = () => {
+            // rowSelection keys ARE the stable ids (you set getRowId: row => row.id)
+            const ids = Object.keys(table.state.rowSelection)
+            api.archive(ids)
+          }
+
+          // (Client-side / no manualPagination: getSelectedRowModel is fine,
+          //  because data contains every row.)
+        source:
+          - "docs/guide/row-selection.md ('Note: If you are using manualPagination ...')"
+          - 'packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts (selectRowsFn walks the supplied rowModel, can only materialize rows present in core data)'
+          - 'examples/react/row-selection/src/main.tsx (uses Object.keys(table.state.rowSelection).length for the count UI)'
+        priority: high
+        status: active
+        version_context: >
+          v9 surface unchanged from v8. This is the most common bug after
+          shipping a working "select rows" feature to a server-paginated
+          table.
+        skills:
+          - row-selection
+
+      - mistake: >
+          Toggling a parent row in a grouped/expanded table and being
+          surprised that all subRows also flip — or conversely, disabling
+          the propagation but having `getIsSomeSelected` return false
+          when only some children are selected.
+        mechanism: >
+          `enableSubRowSelection` defaults to `true`. The internal
+          `mutateRowIsSelected` recurses into `row.subRows` when this
+          option is truthy, applying the same `value` to each. This
+          enables the "select parent => select all children" UX. To
+          opt out, set `enableSubRowSelection: false` (or pass a row
+          predicate). The indeterminate state on a parent comes from
+          `row.getIsSomeSelected()` which calls `isSubRowSelected(row)`
+          and returns `'some'` when not all selectable descendants are
+          selected — but this only looks at subRows, so if you've
+          disabled propagation AND have separately selected mixed
+          subRows, the parent will correctly read "some". The UX
+          decision is yours; pick deliberately.
+        wrong_pattern: |
+          // ❌ Default behavior: clicking the parent selects all children
+          // (which is correct for most cases but surprising if you wanted
+          //  parent-only selection for a "select this group as a whole" UX)
+          const table = useTable({
+            features: tableFeatures({ rowSelectionFeature, rowExpandingFeature }),
+            getSubRows: row => row.subRows,
+            // enableSubRowSelection unset — defaults to true
+          })
+        correct_pattern: |
+          // ✅ Opt out of parent->child propagation explicitly
+          const table = useTable({
+            features: tableFeatures({ rowSelectionFeature, rowExpandingFeature }),
+            getSubRows: row => row.subRows,
+            enableSubRowSelection: false,    // toggling parent doesn't touch subRows
+          })
+
+          // ✅ Or selectively disable per row
+          enableSubRowSelection: row => row.depth > 0,  // top-level rows still propagate
+
+          // ✅ Drive an indeterminate parent checkbox from descendant state
+          <Checkbox
+            checked={row.getIsSelected()}
+            indeterminate={row.getIsSomeSelected()}   // 'some' descendants selected
+            disabled={!row.getCanSelect()}
+            onChange={row.getToggleSelectedHandler()}
+          />
+        source:
+          - 'docs/guide/row-selection.md (Sub-Row Selection section)'
+          - 'packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts (mutateRowIsSelected recursion gated by row_getCanSelectSubRows)'
+          - "packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts (isSubRowSelected: returns 'all' | 'some' | false)"
+        priority: medium
+        status: active
+        version_context: >
+          v9 surface unchanged.
+        skills:
+          - row-selection
+
+    gaps:
+      - >
+        The `examples/angular/row-selection-signal/` example uses a
+        signal-aware integration (`signal<RowSelectionState>({})` + manual
+        propagation through `onRowSelectionChange`). React's
+        `useCreateAtom` (from `@tanstack/react-store`) is shown in the
+        React example as the modern alternative to `useState` for
+        selection state. Worth flagging in Phase 4 whether a per-adapter
+        atom/signal pattern variant belongs in this skill or in a
+        framework-specific overlay.
+      - >
+        `getPreSelectedRowModel` exists but is rarely used in practice —
+        it returns the same thing as `getCoreRowModel` per the source.
+        No failure mode currently flags this as a noise API; left in
+        `covers` only.
+
+# --------------------------------------------------------------------------
+# Cross-cluster notes (not skills themselves):
+# --------------------------------------------------------------------------
+deprecated_guides:
+  - path: docs/guide/pinning.md
+    redirects_to:
+      - docs/guide/column-pinning.md
+      - docs/guide/row-pinning.md
+    note: >
+      Pure stub; both column-pinning and row-pinning guides are the canonical
+      sources. Agents should never link to `pinning.md`.
+  - path: docs/guide/filters.md
+    redirects_to:
+      - docs/guide/column-filtering.md
+      - docs/guide/global-filtering.md
+      - docs/guide/fuzzy-filtering.md
+      - docs/guide/column-faceting.md
+      - docs/guide/global-faceting.md
+    note: >
+      Pure stub; not part of cluster C, mentioned here for completeness
+      since the task brief asked to acknowledge it.
+
+reference_candidates: []
+# No file in this cluster is dense enough to warrant becoming a standalone
+# reference. Failure-mode wrong/correct patterns plus the in-skill subsystems
+# (especially for column-layout) cover the breadth. The
+# `column-resizing-performant` example is the closest candidate but it's a
+# pattern, not an API reference — captured fully inside the resize failure
+# mode.

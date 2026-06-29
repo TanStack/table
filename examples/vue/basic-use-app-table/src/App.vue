@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { createTableHook } from '@tanstack/vue-table'
 import { h, ref } from 'vue'
 
@@ -52,8 +53,7 @@ const defaultData: Array<Person> = [
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {},
-  _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
+  features: {},
   debugTable: true,
 })
 
@@ -98,18 +98,17 @@ const columns = columnHelper.columns([
 // 6. Store data with a stable reference
 const data = ref([...defaultData])
 
-function rerender() {
-  data.value = [...data.value].sort((a, b) => a.age - b.age)
-}
-
 // 7. Create the table instance with the required columns and data.
 // Features and row models are already defined in the createTableHook call above
 const table = useAppTable({
+  key: 'basic-use-app-table', // needed for devtools
   debugTable: true,
   columns,
   data,
   // add additional table options here or in the createTableHook call above
 })
+
+useTanStackTableDevtools(table)
 </script>
 
 <template>
@@ -144,10 +143,6 @@ const table = useAppTable({
         </tr>
       </tfoot>
     </table>
-    <div class="spacer-md" />
-    <button @click="rerender" class="demo-button">
-      Rerender (sort by age)
-    </button>
   </div>
 </template>
 

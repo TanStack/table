@@ -1,4 +1,4 @@
-import { flattenBy, tableMemo } from '../../utils'
+import { flattenBy, hasOwn, makeObjectMap, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
@@ -8,11 +8,7 @@ import {
   row_getGroupingValue,
 } from './columnGroupingFeature.utils'
 import type { Column } from '../../types/Column'
-import type {
-  AggregationFn,
-  AggregationFns,
-  Row_ColumnGrouping,
-} from './columnGroupingFeature.types'
+import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -23,17 +19,17 @@ import type { RowData } from '../../types/type-utils'
  * Creates a memoized grouped row model factory.
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ *
+ * Register aggregation functions with the `aggregationFns` slot on the
+ * `features` option:
+ * `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })`.
  */
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(
-  aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>,
-): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table: Table_Internal<TFeatures, TData> = _table
-    if (!table._rowModelFns.aggregationFns)
-      table._rowModelFns.aggregationFns = aggregationFns
+    const table = _table as unknown as Table_Internal<TFeatures, TData>
     return tableMemo({
       feature: 'columnGroupingFeature',
       table,
@@ -73,7 +69,7 @@ function _createGroupedRowModel<
 
   const groupedFlatRows: Array<Row<TFeatures, TData>> &
     Partial<Row_ColumnGrouping> = []
-  const groupedRowsById: Record<string, Row<TFeatures, TData>> = {}
+  const groupedRowsById = makeObjectMap<Row<TFeatures, TData>>()
 
   // Recursively group the data
   const groupUpRecursively = (
@@ -139,7 +135,7 @@ function _createGroupedRowModel<
           getValue: (colId: string) => {
             // Don't aggregate columns that are in the grouping
             if (existingGrouping.includes(colId)) {
-              if (row._valuesCache.hasOwnProperty(colId)) {
+              if (hasOwn(row._valuesCache, colId)) {
                 return row._valuesCache[colId]
               }
 
@@ -151,7 +147,10 @@ function _createGroupedRowModel<
               return row._valuesCache[colId]
             }
 
-            if (row._groupingValuesCache?.hasOwnProperty(colId)) {
+            if (
+              row._groupingValuesCache &&
+              hasOwn(row._groupingValuesCache, colId)
+            ) {
               return row._groupingValuesCache[colId]
             }
 
@@ -161,7 +160,9 @@ function _createGroupedRowModel<
               column as Column<TFeatures, TData, unknown>,
             )
 
-            if (!row._groupingValuesCache) row._groupingValuesCache = {}
+            if (!row._groupingValuesCache) {
+              row._groupingValuesCache = makeObjectMap()
+            }
 
             if (aggregateFn) {
               row._groupingValuesCache[colId] = aggregateFn(

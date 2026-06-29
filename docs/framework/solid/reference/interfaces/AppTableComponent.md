@@ -5,7 +5,7 @@ title: AppTableComponent
 
 # Interface: AppTableComponent()\<TFeatures\>
 
-Defined in: [createTableHook.tsx:422](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L422)
+Defined in: [createTableHook.tsx:339](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L339)
 
 Component type for AppTable - root wrapper with optional Subscribe
 
@@ -15,48 +15,20 @@ Component type for AppTable - root wrapper with optional Subscribe
 
 `TFeatures` *extends* `TableFeatures`
 
-## Call Signature
-
 ```ts
 AppTableComponent(props): Element;
 ```
 
-Defined in: [createTableHook.tsx:423](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L423)
+Defined in: [createTableHook.tsx:340](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L340)
 
 Component type for AppTable - root wrapper with optional Subscribe
 
-### Parameters
+## Parameters
 
-#### props
+### props
 
-[`AppTablePropsWithoutSelector`](AppTablePropsWithoutSelector.md)
+[`AppTableProps`](AppTableProps.md)
 
-### Returns
-
-`Element`
-
-## Call Signature
-
-```ts
-AppTableComponent<TSelected>(props): Element;
-```
-
-Defined in: [createTableHook.tsx:424](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L424)
-
-Component type for AppTable - root wrapper with optional Subscribe
-
-### Type Parameters
-
-#### TSelected
-
-`TSelected`
-
-### Parameters
-
-#### props
-
-[`AppTablePropsWithSelector`](AppTablePropsWithSelector.md)\<`TFeatures`, `TSelected`\>
-
-### Returns
+## Returns
 
 `Element`

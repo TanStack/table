@@ -17,24 +17,27 @@ export interface TableState_GlobalFiltering {
 
 export interface ColumnDef_GlobalFiltering {
   /**
-   * Enables/disables the **global** filter for this column.
+   * Allows this column to be scanned by global filtering.
+   *
+   * Defaults to `true`; table-level global filtering and `enableFilters` must
+   * also allow filtering.
    */
   enableGlobalFilter?: boolean
 }
 
 export interface Column_GlobalFiltering {
   /**
-   * Returns whether or not the column can be **globally** filtered. Set to `false` to disable a column from being scanned during global filtering.
+   * Checks whether this accessor column participates in global filtering.
    */
   getCanGlobalFilter: () => boolean
 }
 
 export interface TableOptions_GlobalFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
-   * Enables/disables **global** filtering for all columns.
+   * Enables global filtering across columns that allow it.
    */
   enableGlobalFilter?: boolean
   /**
@@ -64,8 +67,8 @@ export interface TableOptions_GlobalFiltering<
 }
 
 export interface Table_GlobalFiltering<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.
@@ -76,11 +79,13 @@ export interface Table_GlobalFiltering<
    */
   getGlobalFilterFn: () => FilterFn<TFeatures, TData> | undefined
   /**
-   * Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can be passed to force a default blank state reset to `undefined`.
+   * Resets `globalFilter` to `initialState.globalFilter`.
+   *
+   * Pass `true` to ignore initial state and reset to `undefined`.
    */
   resetGlobalFilter: (defaultState?: boolean) => void
   /**
-   * Sets global filter state using a value or updater.
+   * Updates global filter state with a next value or updater function.
    */
   setGlobalFilter: (updater: Updater<any>) => void
 }

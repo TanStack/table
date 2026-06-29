@@ -11,25 +11,26 @@ import {
   createPaginatedRowModel,
   flexRenderComponent,
   injectTable,
+  metaHelper,
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { EditableCell } from './editable-cell/editable-cell'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
-import type { ColumnDef, RowData, TableFeatures } from '@tanstack/angular-table'
+import type { ColumnDef } from '@tanstack/angular-table'
 
-declare module '@tanstack/angular-table' {
-  interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
-    updateData: (rowIndex: number, columnId: string, value: unknown) => void
-  }
+interface MyTableMeta {
+  updateData: (rowIndex: number, columnId: string, value: unknown) => void
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
+  tableMeta: metaHelper<MyTableMeta>(),
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
-const defaultColumn: Partial<ColumnDef<typeof _features, Person>> = {
+const defaultColumn: Partial<ColumnDef<typeof features, Person>> = {
   cell: ({ getValue, row, column, table }) => {
     const initialValue = getValue()
 
@@ -48,7 +49,7 @@ const defaultColumn: Partial<ColumnDef<typeof _features, Person>> = {
   },
 }
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     footer: (info) => info.column.id,
@@ -96,10 +97,7 @@ export class App {
   readonly table = injectTable(() => ({
     data: this.data(),
     columns: defaultColumns,
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
-    },
+    features,
     defaultColumn: defaultColumn,
     debugTable: true,
     autoResetPageIndex: this.autoResetPageIndex(),
@@ -129,5 +127,5 @@ export class App {
   }))
 
   refreshData = () => this.data.set(makeData(10_000))
-  stressTest = () => this.data.set(makeData(200_000))
+  stressTest = () => this.data.set(makeData(1_000_000))
 }

@@ -16,7 +16,7 @@ import { injectTableContext } from '../table'
           <button (click)="onRefresh()">Regenerate Data</button>
         }
         @if (onStressTest(); as onStressTest) {
-          <button (click)="onStressTest()">Stress Test (200k rows)</button>
+          <button (click)="onStressTest()">Stress Test (1M rows)</button>
         }
         <button (click)="table().resetColumnFilters()">Clear Filters</button>
         <button (click)="table().resetSorting()">Clear Sorting</button>
@@ -78,7 +78,9 @@ export class RowCount {
       <span>
         Page
         <strong>
-          {{ (pageIndex() + 1).toLocaleString() }} of {{ pageCount() }}
+          {{ (table().atoms.pagination.get().pageIndex + 1).toLocaleString() }}
+          of
+          {{ pageCount() }}
         </strong>
       </span>
       <span>
@@ -87,11 +89,14 @@ export class RowCount {
           type="number"
           min="1"
           [max]="table().getPageCount()"
-          [value]="pageIndex() + 1"
+          [value]="table().atoms.pagination.get().pageIndex + 1"
           (change)="onPageChange($event)"
         />
       </span>
-      <select [value]="pageSize()" (change)="onPageSizeChange($event)">
+      <select
+        [value]="table().atoms.pagination.get().pageSize"
+        (change)="onPageSizeChange($event)"
+      >
         @for (size of pageSizes; track size) {
           <option [value]="size">Show {{ size }}</option>
         }
@@ -107,8 +112,6 @@ export class PaginationControls {
 
   readonly canPreviousPage = computed(() => this.table().getCanPreviousPage())
   readonly canNextPage = computed(() => this.table().getCanNextPage())
-  readonly pageIndex = computed(() => this.table().state().pagination.pageIndex)
-  readonly pageSize = computed(() => this.table().state().pagination.pageSize)
   readonly pageCount = computed(() =>
     this.table().getPageCount().toLocaleString(),
   )

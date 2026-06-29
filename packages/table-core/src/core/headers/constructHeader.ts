@@ -15,8 +15,9 @@ function getHeaderPrototype<
 >(table: Table_Internal<TFeatures, TData>): object {
   if (!table._headerPrototype) {
     table._headerPrototype = { table }
-    for (const feature of Object.values(table._features)) {
-      feature.assignHeaderPrototype?.(table._headerPrototype, table)
+    const features = Object.values(table._features)
+    for (let i = 0; i < features.length; i++) {
+      features[i]!.assignHeaderPrototype?.(table._headerPrototype, table)
     }
   }
   return table._headerPrototype

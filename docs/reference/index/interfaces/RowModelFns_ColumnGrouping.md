@@ -5,7 +5,7 @@ title: RowModelFns_ColumnGrouping
 
 # Interface: RowModelFns\_ColumnGrouping\<TFeatures, TData\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L21)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L20)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:21](https:/
 ### aggregationFns
 
 ```ts
-aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>;
+aggregationFns: Record<string, AggregationFn<TFeatures, TData>>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L25)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L24)

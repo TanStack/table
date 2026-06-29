@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/solid-table-devtools",
-  "version": "9.0.0-alpha.43",
+  "version": "9.0.0-beta.23",
   "description": "Solid devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,7 +18,8 @@
     "solid",
     "tanstack",
     "table",
-    "devtools"
+    "devtools",
+    "tanstack-intent"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -44,20 +45,21 @@
   },
   "files": [
     "dist/",
-    "src"
+    "src",
+    "skills"
   ],
   "dependencies": {
-    "@tanstack/devtools": "^0.11.2",
-    "@tanstack/devtools-utils": "^0.4.0",
+    "@tanstack/devtools": "^0.12.2",
+    "@tanstack/devtools-utils": "^0.6.0",
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
     "@tanstack/table-core": "workspace:*",
-    "solid-js": "^1.9.12",
+    "solid-js": "^1.9.13",
     "vite-plugin-solid": "^2.11.12"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-beta.5",
     "solid-js": ">=1.9.7"
   }
 }

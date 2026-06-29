@@ -19,7 +19,7 @@ export function useFilters<T extends RouteIds<RegisteredRouter['routeTree']>>(
     navigate({
       search: () => ({}),
       replace: true,
-    } as Parameters<typeof navigate>[0])
+    } as unknown as Parameters<typeof navigate>[0])
 
   return { filters, setFilters, resetFilters }
 }

@@ -5,11 +5,15 @@ title: HeaderGroup_Core
 
 # Interface: HeaderGroup\_Core\<TFeatures, TData\>
 
-Defined in: [types/HeaderGroup.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/HeaderGroup.ts#L14)
+Defined in: [types/HeaderGroup.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/HeaderGroup.ts#L5)
 
 ## Extends
 
 - [`HeaderGroup_Header`](HeaderGroup_Header.md)\<`TFeatures`, `TData`\>
+
+## Extended by
+
+- [`HeaderGroup`](HeaderGroup.md)
 
 ## Type Parameters
 
@@ -29,7 +33,7 @@ Defined in: [types/HeaderGroup.ts:14](https://github.com/TanStack/table/blob/mai
 depth: number;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L120)
+Defined in: [core/headers/coreHeadersFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L122)
 
 #### Inherited from
 
@@ -43,7 +47,7 @@ Defined in: [core/headers/coreHeadersFeature.types.ts:120](https://github.com/Ta
 headers: Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L121)
+Defined in: [core/headers/coreHeadersFeature.types.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L123)
 
 #### Inherited from
 
@@ -57,7 +61,7 @@ Defined in: [core/headers/coreHeadersFeature.types.ts:121](https://github.com/Ta
 id: string;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L122)
+Defined in: [core/headers/coreHeadersFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L124)
 
 #### Inherited from
 

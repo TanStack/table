@@ -13,6 +13,7 @@ import {
   createTableHook,
   filterFns,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -29,6 +30,7 @@ import NumberCell from '../components/NumberCell.svelte'
 import PriceCell from '../components/PriceCell.svelte'
 import ProgressCell from '../components/ProgressCell.svelte'
 import RowActionsCell from '../components/RowActionsCell.svelte'
+import SelectCell from '../components/SelectCell.svelte'
 import StatusCell from '../components/StatusCell.svelte'
 import TextCell from '../components/TextCell.svelte'
 
@@ -36,6 +38,7 @@ import TextCell from '../components/TextCell.svelte'
 import ColumnFilter from '../components/ColumnFilter.svelte'
 import FooterColumnId from '../components/FooterColumnId.svelte'
 import FooterSum from '../components/FooterSum.svelte'
+import SelectHeader from '../components/SelectHeader.svelte'
 import SortIndicator from '../components/SortIndicator.svelte'
 
 /**
@@ -55,18 +58,17 @@ export const {
   useHeaderContext,
 } = createTableHook({
   // Features are set once here and shared across all tables
-  _features: tableFeatures({
+  features: tableFeatures({
     columnFilteringFeature,
     rowPaginationFeature,
+    rowSelectionFeature,
     rowSortingFeature,
-  }),
-
-  // Row models are set once here
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
+    sortedRowModel: createSortedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-  },
+    sortFns,
+    filterFns,
+  }),
 
   // set any default table options here too
   getRowId: (row) => row.id,
@@ -80,6 +82,7 @@ export const {
 
   // Register cell-level components (accessible via cell.ComponentName in AppCell)
   cellComponents: {
+    SelectCell,
     TextCell,
     NumberCell,
     StatusCell,
@@ -91,6 +94,7 @@ export const {
 
   // Register header/footer-level components (accessible via header.ComponentName in AppHeader/AppFooter)
   headerComponents: {
+    SelectHeader,
     SortIndicator,
     ColumnFilter,
     FooterColumnId,

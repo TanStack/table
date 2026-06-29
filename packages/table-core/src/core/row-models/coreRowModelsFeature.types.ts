@@ -10,41 +10,24 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowData } from '../../types/type-utils'
 
 export interface RowModel<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   rows: Array<Row<TFeatures, TData>>
   flatRows: Array<Row<TFeatures, TData>>
   rowsById: Record<string, Row<TFeatures, TData>>
 }
 
-export interface CreateRowModel_Plugins {}
-
-export interface CreateRowModel_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> extends CreateRowModel_Plugins {
-  /**
-   * Optional factory for the core row model. When omitted, the built-in
-   * `createCoreRowModel()` factory is used.
-   */
-  coreRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
-}
-
-export interface CachedRowModel_Plugins {}
-
 export interface CachedRowModel_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> extends CachedRowModel_Plugins {
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
   coreRowModel: () => RowModel<TFeatures, TData>
 }
 
 export interface Table_RowModels_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns the core row model before any processing has been applied.

@@ -23,17 +23,16 @@ export type Person = {
 
 export const { appFeatures, createAppColumnHelper, useAppTable } =
   createTableHook({
-    _features: {
+    features: {
       columnFilteringFeature,
       globalFilteringFeature,
       columnFacetingFeature,
       rowPaginationFeature,
-    },
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
+      filteredRowModel: createFilteredRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),
+      filterFns,
     },
   })

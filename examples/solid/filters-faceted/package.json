@@ -6,18 +6,19 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit"
   },
   "license": "MIT",
   "devDependencies": {
-    "@faker-js/faker": "^10.4.0",
+    "@faker-js/faker": "^10.5.0",
     "typescript": "6.0.3",
-    "vite": "^8.0.11",
+    "vite": "^8.1.0",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "@tanstack/solid-pacer": "^0.21.0",
-    "@tanstack/solid-table": "^9.0.0-alpha.45",
-    "solid-js": "^1.9.12"
+    "@tanstack/solid-pacer": "^0.21.1",
+    "@tanstack/solid-table": "^9.0.0-beta.23",
+    "solid-js": "^1.9.13"
   }
 }

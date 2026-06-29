@@ -11,14 +11,18 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ rowSortingFeature })
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(500_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -71,10 +75,7 @@ function App() {
   ]
 
   const table = createTable({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
+    features,
     get data() {
       return data()
     },
@@ -86,7 +87,7 @@ function App() {
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (500k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <table>
         <thead>
@@ -136,7 +137,7 @@ function App() {
         </tbody>
       </table>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

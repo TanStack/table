@@ -5,7 +5,7 @@ title: FlexRenderComponent
 
 # Interface: FlexRenderComponent\<TComponent\>
 
-Defined in: [flex-render/flexRenderComponent.ts:205](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L205)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:205](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L205)
 
 Wrapper interface for a component that will be used as content for [FlexRenderDirective](../classes/FlexRenderDirective.md).
 Can be created using [flexRenderComponent](../functions/flexRenderComponent.md) helper.
@@ -60,7 +60,7 @@ class MyComponent {
 readonly allowedInputNames: string[];
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:217](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L217)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:217](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L217)
 
 List of allowed input names.
 
@@ -72,7 +72,7 @@ List of allowed input names.
 readonly allowedOutputNames: string[];
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:221](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L221)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:221](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L221)
 
 List of allowed output names.
 
@@ -84,7 +84,7 @@ List of allowed output names.
 optional bindings: Binding[];
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:245](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L245)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:245](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L245)
 
 Bindings to apply to the root component
 
@@ -100,7 +100,7 @@ FlexRenderOptions#bindings
 readonly component: Type<TComponent>;
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:209](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L209)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:209](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L209)
 
 The component type
 
@@ -112,7 +112,7 @@ The component type
 optional directives: (Type<unknown> | DirectiveWithBindings<unknown>)[];
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:251](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L251)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:251](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L251)
 
 Directives that should be applied to the component.
 
@@ -126,7 +126,7 @@ Directives that should be applied to the component.
 readonly optional injector: Injector;
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:239](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L239)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:239](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L239)
 
 Optional Injector that will be used when rendering the component.
 
@@ -142,7 +142,7 @@ FlexRenderOptions#injector
 readonly optional inputs: Inputs<TComponent>;
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:233](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L233)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:233](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L233)
 
 Component instance inputs. Set via [componentRef.setInput API](https://angular.dev/api/core/ComponentRef#setInput))
 
@@ -158,7 +158,7 @@ FlexRenderOptions#inputs
 readonly mirror: ComponentMirror<TComponent>;
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:213](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L213)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:213](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L213)
 
 Reflected metadata about the component.
 
@@ -170,7 +170,7 @@ Reflected metadata about the component.
 readonly optional outputs: Outputs<TComponent>;
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:227](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L227)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:227](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L227)
 
 Component instance outputs. Subscribed via OutputEmitterRef#subscribe
 

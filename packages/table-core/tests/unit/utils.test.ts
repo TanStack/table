@@ -1,28 +1,46 @@
-import { describe, expect, it } from 'vitest'
-import { getFunctionNameInfo } from '../../src/utils'
+import { describe, expect, test, vi } from 'vitest'
+import { tableMemo } from '../../src/utils'
 
-// TODO: add unit tests for rest of utils
-
-describe('utils', () => {
-  describe('getFunctionNameInfo', () => {
-    it('should correctly parse a function name with underscore separator', () => {
-      const result = getFunctionNameInfo('table_getRowModel')
-
-      expect(result).toEqual({
-        parentName: 'table',
-        fnKey: 'getRowModel',
-        fnName: 'table.getRowModel',
-      })
+describe('tableMemo', () => {
+  test('does not schedule after-update work when no callback is provided', () => {
+    const schedule = vi.fn()
+    const memoized = tableMemo({
+      table: {
+        options: {},
+        _reactivity: {
+          schedule,
+          untrack: (fn: () => void) => fn(),
+        },
+      } as any,
+      fnName: 'table.getValue',
+      fn: (value?: number) => value ?? 0,
+      memoDeps: (value?: number) => [value],
     })
 
-    it('should handle different parent names', () => {
-      const result = getFunctionNameInfo('column_getWidth')
+    expect(memoized(1)).toBe(1)
+    expect(memoized(2)).toBe(2)
+    expect(schedule).not.toHaveBeenCalled()
+  })
 
-      expect(result).toEqual({
-        parentName: 'column',
-        fnKey: 'getWidth',
-        fnName: 'column.getWidth',
-      })
+  test('schedules after-update work when a callback is provided', () => {
+    const schedule = vi.fn((fn: () => void) => fn())
+    const onAfterUpdate = vi.fn()
+    const memoized = tableMemo({
+      table: {
+        options: {},
+        _reactivity: {
+          schedule,
+          untrack: (fn: () => void) => fn(),
+        },
+      } as any,
+      fnName: 'table.getValue',
+      fn: (value?: number) => value ?? 0,
+      memoDeps: (value?: number) => [value],
+      onAfterUpdate,
     })
+
+    expect(memoized(1)).toBe(1)
+    expect(schedule).toHaveBeenCalledTimes(1)
+    expect(onAfterUpdate).toHaveBeenCalledTimes(1)
   })
 })

@@ -9,11 +9,12 @@ title: table_setColumnSizing
 function table_setColumnSizing<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:227](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L227)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:272](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L272)
 
-Updates the table's column sizing state slice.
+Routes a committed column sizing updater through the table's sizing handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next size map or a function of the previous map,
+matching the instance `table.setColumnSizing` behavior.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ The updater follows TanStack Table updater semantics and is routed through the c
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### updater
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setColumnSizing(table, (old) => old)
+table_setColumnSizing(table, (old) => ({ ...old, age: 96 }))
 ```

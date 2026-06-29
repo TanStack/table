@@ -43,6 +43,18 @@ tfoot th {
   border-spacing: 0;
 }
 
+.table-scroll {
+  max-height: 400px;
+  overflow: auto;
+  border: 1px solid lightgray;
+}
+
+.table-scroll thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
 .pagination {
   display: flex;
   align-items: center;

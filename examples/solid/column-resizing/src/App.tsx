@@ -13,9 +13,9 @@ import type {
 } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnResizingFeature, columnSizingFeature })
+const features = tableFeatures({ columnResizingFeature, columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -72,32 +72,28 @@ function App() {
   const [columnResizeDirection, setColumnResizeDirection] =
     createSignal<ColumnResizeDirection>('ltr')
 
-  const table = createTable(
-    {
-      _features,
-      _rowModels: {},
-      columns,
-      get data() {
-        return data()
-      },
-      get columnResizeMode() {
-        return columnResizeMode()
-      },
-      get columnResizeDirection() {
-        return columnResizeDirection()
-      },
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    get columnResizeMode() {
+      return columnResizeMode()
+    },
+    get columnResizeDirection() {
+      return columnResizeDirection()
+    },
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   const resizerTransform = (
     header: ReturnType<typeof table.getHeaderGroups>[number]['headers'][number],
   ) => {
     if (columnResizeMode() === 'onEnd' && header.column.getIsResizing()) {
-      const delta = table.store.state.columnResizing.deltaOffset ?? 0
+      const delta = table.atoms.columnResizing.get().deltaOffset ?? 0
       const dir = table.options.columnResizeDirection === 'rtl' ? -1 : 1
       return `translateX(${dir * delta}px)`
     }
@@ -293,7 +289,7 @@ function App() {
         </div>
       </div>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

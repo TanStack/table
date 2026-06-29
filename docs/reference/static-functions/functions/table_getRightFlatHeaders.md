@@ -6,14 +6,14 @@ title: table_getRightFlatHeaders
 # Function: table\_getRightFlatHeaders()
 
 ```ts
-function table_getRightFlatHeaders<TFeatures, TData>(table): any[];
+function table_getRightFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:524](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L524)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:561](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L561)
 
-Returns right flat headers for the table.
+Flattens every header from the right pinned header groups.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent headers and placeholder headers are included.
 
 ## Type Parameters
 
@@ -29,14 +29,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`Header`](../../index/type-aliases/Header.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getRightFlatHeaders(table)
+const headers = table_getRightFlatHeaders(table)
 ```

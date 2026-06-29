@@ -20,12 +20,14 @@ import type { Person, PersonApiResponse } from './makeData'
 const fetchSize = 50
 const isDev = import.meta.env.DEV
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('id', {
@@ -113,10 +115,7 @@ onMounted(() => {
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   get data() {
     return flatData.value
   },

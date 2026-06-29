@@ -9,7 +9,7 @@ title: flexRenderComponent
 function flexRenderComponent<TComponent>(component, options?): FlexRenderComponent<TComponent>;
 ```
 
-Defined in: [flex-render/flexRenderComponent.ts:150](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L150)
+Defined in: [packages/angular-table/src/flex-render/flexRenderComponent.ts:150](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/flexRenderComponent.ts#L150)
 
 Helper function to create a [FlexRenderComponent](../interfaces/FlexRenderComponent.md) instance, with better type-safety.
 

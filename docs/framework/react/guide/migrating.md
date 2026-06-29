@@ -2,42 +2,52 @@
 title: Migrating to TanStack Table v9 (React)
 ---
 
+> [!NOTE]
+> `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Model Factories](#row-model-factories) section below for the new shape.
+
 ## What's New in TanStack Table v9
 
 TanStack Table v9 is a major release that introduces significant architectural improvements while maintaining the core table logic you're familiar with. Here are the key changes:
 
-### 1. Tree-shaking
+### 1. Tree Shaking and Extensibility
 
-- **Features are tree-shakeable**: Features are now treated as plugins—import only what you use. If your table only needs sorting, you won't ship filtering, pagination, or other feature code. Bundlers can eliminate unused code, so for smaller tables you can expect to bundle ~6–7kb compared to 15–20kb for the same table in v8. This also lets TanStack Table add more features over time without bloating everyone's bundles.
-- **Row models and their functions are refactored**: Row model factories (`createFilteredRowModel`, `createSortedRowModel`, etc.) now accept their processing functions (`filterFns`, `sortFns`, `aggregationFns`) as parameters. This enables tree-shaking of the functions themselves—if you use a custom filter, you don't pay for built-in filters you never use.
+- **Features are tree-shakeable**: Features are now treated as plugins, so you import only what you use. If your table only needs sorting, you won't ship filtering, pagination, or other feature code. Bundlers can eliminate unused code, so for smaller tables you can expect to bundle ~6–7kb compared to 15–20kb for the same table in v8. This also lets TanStack Table add more features over time without bloating everyone's bundles.
+- **Row models and their functions are refactored**: Row model factories (`createFilteredRowModel`, `createSortedRowModel`, etc.) are now slots on the `features` object, and their processing functions (`filterFns`, `sortFns`, `aggregationFns`) are registered as their own feature slots. This enables tree-shaking of the functions themselves: if you only register a custom filter, you don't pay for built-in filters you never use.
+- **Custom feature plugins with full type safety**: The same plugin architecture that powers the built-in features is open to your own code. Write a custom feature with its own state, options, and APIs, register it in `tableFeatures()` alongside the built-ins, and the table's types pick it all up automatically. See the [Custom Features Guide](./custom-features.md).
 
 ### 2. State Management
 
-- **Uses TanStack Store**: The internal state system has been rebuilt on [TanStack Store](https://tanstack.com/store), providing a reactive, framework-agnostic foundation. This works similarly to TanStack Form's state model.
-- **Three-layer atom architecture**: Each state slice (sorting, pagination, rowSelection, etc.) lives in its own [atom](https://tanstack.com/store/latest/docs/reference/atom) rather than a single monolithic state object. Internally, the library writes to per-slice `baseAtoms`; reads go through derived `table.atoms` and the flat `table.store`. This enables fine-grained reactivity — components can subscribe to just the slices they care about.
-- **Opt-in subscriptions instead of memo hacks**: Use `table.Subscribe` or pass a selector to `useTable` to subscribe to specific slices of state. Only re-render when the state you care about changes—no more `React.memo` or manual memoization. Pass `state => state` if you want v8-style behavior where any state change triggers a re-render.
+- **Compatible with the React Compiler**: The internal state system has been rebuilt on [TanStack Store](https://tanstack.com/store), providing a reactive, framework-agnostic foundation that works correctly under the React Compiler. This works similarly to TanStack Form's state model.
+- **Three-layer atom architecture**: Each state slice (sorting, pagination, rowSelection, etc.) lives in its own [atom](https://tanstack.com/store/latest/docs/quick-start) rather than a single monolithic state object. Internally, the library writes to per-slice `baseAtoms`; reads go through derived `table.atoms` and the flat `table.store`. This enables fine-grained reactivity, where components can subscribe to just the slices they care about.
+- **Default full-state subscription, optional narrower selectors**: By default, `useTable` selects all registered table state, so `table.state` contains the full state and the component re-renders when any registered state changes. Pass a narrower selector or use `table.Subscribe` when only part of the UI should re-render.
 - **Bring your own atoms (optional)**: For advanced use cases, you can own individual state slices by passing your own writable atoms via the new `atoms` option. This is great for sharing a slice across components or integrating with other atom-based tools. Precedence: `options.atoms[key]` > `options.state[key]` > internal `baseAtoms[key]`.
 
 ### 3. Composability
 
-- **`tableOptions`**: New utilities let you compose and share table configurations. Define `_features`, `_rowModels`, and default options once, then reuse them across tables or pass them through `createTableHook`.
-- **`createTableHook`** (optional, advanced): Create custom table hooks with pre-bound features, row models, and components—similar to TanStack Form's `createFormHook`. Define your table setup once and reuse it across many tables. You don't need this for most use cases; `useTable` is sufficient.
+- **`tableOptions`**: New utilities let you compose and share table configurations. Define `features` (including row model factories), and default options once, then reuse them across tables or pass them through `createTableHook`.
+- **`createTableHook`** (optional, advanced): Create custom table hooks with pre-bound features, row models, and components, similar to TanStack Form's `createFormHook`. Define your table setup once and reuse it across many tables. You don't need this for most use cases; `useTable` is sufficient.
+
+### 4. Improved Type Safety (No More Declaration Merging)
+
+- **Function registries replace `declare module` augmentation**: Custom filter, sort, and aggregation functions are registered by name in the `filterFns` / `sortFns` / `aggregationFns` slots on `tableFeatures()`. The registered keys become the valid, type-safe string values for `filterFn`, `sortFn`, `globalFilterFn`, and `aggregationFn` in your column definitions, with full inference. No more augmenting the `FilterFns` / `SortFns` / `AggregationFns` interfaces globally.
+- **Per-table meta slots**: The type-only `tableMeta`, `columnMeta`, and `filterMeta` slots declare meta types for a single table instead of merging into a global interface. The `filterMeta` slot types both the `addMeta` callback in filter functions and the values read back from `row.columnFiltersMeta`.
+- **Feature-gated APIs and validated prerequisites**: APIs like `table.setSorting` only exist on the table type when their feature is registered, and `tableFeatures()` validates slot prerequisites at the type level. Registering `sortFns` without `rowSortingFeature`, or `globalFilteringFeature` without `columnFilteringFeature`, is a typed error instead of a silent runtime no-op.
 
 ### The Good News: Most Upgrades Are Opt-in
 
 While v9 is a significant upgrade, **you don't have to adopt everything at once**:
 
-- **Don't want to optimize renders?** Pass `state => state` as the selector to `useTable` and rendering works like v8.
+- **Don't want to optimize renders yet?** Do nothing special. The default selector selects all registered state, so rendering works like v8.
 - **Don't want to think about tree-shaking?** Import `stockFeatures` to include all features, just like v8.
 - **Table markup is largely unchanged.** How you render `<table>`, `<thead>`, `<tr>`, `<td>`, etc. remains the same.
 
-The main change is **how you define a table** with the `useTable` hook — specifically the new `_features` and `_rowModels` options.
+The main change is **how you define a table** with the `useTable` hook, specifically the new `features` option and where row model factories are registered.
 
 ---
 
 ## Quick Legacy Migration
 
-Need to migrate incrementally? Use `useLegacyTable` — it accepts the v8-style API while using v9 under the hood. **This is deprecated** and intended only as a temporary migration aid. It includes all features by default, resulting in a larger bundle size.
+Need to migrate incrementally? Use `useLegacyTable`. It accepts the v8-style API while using v9 under the hood. **This is deprecated** and intended only as a temporary migration aid. It includes all features by default, resulting in a larger bundle size.
 
 Legacy APIs live in a separate export. Import core utilities from `@tanstack/react-table` and legacy-specific APIs from `@tanstack/react-table/legacy`:
 
@@ -75,9 +85,9 @@ import { useTable } from '@tanstack/react-table'
 const table = useTable(options)
 ```
 
-### New Required Options: `_features` and `_rowModels`
+### New Required Options: `features` and Row Model Factories
 
-In v9, you must explicitly declare which features and row models your table uses:
+In v9, you must explicitly declare which features your table uses. Row model factories now live on the features object instead of a separate `rowModels` option:
 
 ```tsx
 // v8
@@ -92,11 +102,10 @@ const table = useReactTable({
 // v9
 import { useTable, tableFeatures } from '@tanstack/react-table'
 
-const _features = tableFeatures({}) // Empty = core features only
+const features = tableFeatures({}) // Empty = core features only
 
 const table = useTable({
-  _features,
-  _rowModels: {}, // Core row model is automatic
+  features,
   columns,
   data,
 })
@@ -104,7 +113,7 @@ const table = useTable({
 
 ---
 
-## The `_features` Option
+## The `features` Option
 
 Features control what table functionality is available. In v8, all features were bundled. In v9, you import only what you need.
 
@@ -122,7 +131,7 @@ import {
 } from '@tanstack/react-table'
 
 // Create a features object (define this outside your component for stable reference)
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
@@ -139,8 +148,7 @@ If you want all features without thinking about it (like v8), import `stockFeatu
 import { useTable, stockFeatures } from '@tanstack/react-table'
 
 const table = useTable({
-  _features: stockFeatures, // All features included
-  _rowModels: { /* ... */ },
+  features: stockFeatures, // All features included
   columns,
   data,
 })
@@ -167,30 +175,31 @@ const table = useTable({
 
 ---
 
-## The `_rowModels` Option
+## Row Model Factories
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, they're configured via `_rowModels` instead of `get*RowModel` options.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories live on the `tableFeatures({})` call rather than a separate `rowModels` option. The processing function registries (`filterFns`, `sortFns`, `aggregationFns`) are also registered on features. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 
-| v8 Option | v9 `_rowModels` Key | v9 Factory Function |
-|-----------|---------------------|---------------------|
-| `getCoreRowModel()` | (automatic) | Not needed — always included |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel(filterFns)` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel(sortFns)` |
+| v8 Option | v9 `tableFeatures` Slot | v9 Factory Function |
+|-----------|------------------------|---------------------|
+| `getCoreRowModel()` | (automatic) | Not needed, always included |
+| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel()` |
+| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel()` |
 | `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
 | `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel(aggregationFns)` |
+| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel()` |
 | `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
 | `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
 
-### Key Change: Row Model Functions Now Accept Parameters
+### Key Change: Row Model Factories and Fns Registries Move to `tableFeatures`
 
-Several row model factories now accept their processing functions as parameters. This enables better tree-shaking and explicit configuration:
+Row model factories and their processing function registries are now slots on `tableFeatures`. This enables better tree-shaking: you only bundle the row model code and filter/sort/aggregation functions you actually register.
 
 ```tsx
 import {
+  tableFeatures,
   createFilteredRowModel,
   createSortedRowModel,
   createGroupedRowModel,
@@ -199,14 +208,22 @@ import {
   aggregationFns, // Built-in aggregation functions
 } from '@tanstack/react-table'
 
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  columnGroupingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
+  aggregationFns,
+})
+
 const table = useTable({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
 })
@@ -251,19 +268,19 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(), // now called "create*RowModel()" on the features object
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns, // fns registries move to features too
+  sortFns,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns), // now called "create*RowModel()" with a Fns parameter
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
 })
@@ -277,7 +294,7 @@ v9's state system is built on [TanStack Store](https://tanstack.com/store) and e
 
 | Surface | Type | When to use |
 |---------|------|-------------|
-| `table.state` | `TSelected` (the shape you return from your `useTable` selector) | The most ergonomic read surface inside a component rendered by `useTable`. |
+| `table.state` | `TSelected` (full registered table state by default, or the shape returned from your custom `useTable` selector) | The most ergonomic read surface inside a component rendered by `useTable`. |
 | `table.store` | `ReadonlyStore<TableState>` | A flat, framework-agnostic store of the entire table state. Use `table.store.state` for one-off reads, or pair with `useSelector` / `table.Subscribe` for fine-grained subscriptions. |
 | `table.atoms.<slice>` | `ReadonlyAtom<TableState[slice]>` | A per-slice readonly atom. Subscribe to a single slice (e.g. `table.atoms.sorting`) when you want the narrowest possible re-render surface. |
 
@@ -285,7 +302,7 @@ Writable counterparts (mostly internal):
 
 | Surface | Type | When to use |
 |---------|------|-------------|
-| `table.baseAtoms.<slice>` | `Atom<TableState[slice]>` | The library's internal write target. You generally don't touch these directly — use `table.setSorting(...)`, `table.setPagination(...)`, etc. |
+| `table.baseAtoms.<slice>` | `Atom<TableState[slice]>` | The library's internal write target. You generally don't touch these directly; use `table.setSorting(...)`, `table.setPagination(...)`, etc. |
 | `options.atoms` | `Partial<{ [slice]: Atom }>` | Pass in your own writable atom for any slice to take ownership of that state externally. See [External Atoms](#external-atoms-advanced) below. |
 
 ### Accessing State
@@ -301,13 +318,21 @@ const { sorting, pagination } = table.getState()
 const fullState = table.store.state
 const { sorting, pagination } = table.store.state
 
-// v9 - via table.state (selected state from your selector)
-const table = useTable(options, (state) => ({
+// v9 - via table.state (full selected state by default)
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+const { sorting, pagination } = table.state
+
+// v9 - via table.state with a custom selector
+const selectedTable = useTable(options, (state) => ({
   sorting: state.sorting,
   pagination: state.pagination,
 }))
-// Now table.state only contains sorting and pagination
-const { sorting, pagination } = table.state
+// Now selectedTable.state only contains sorting and pagination
+const { sorting, pagination } = selectedTable.state
 
 // v9 - via a single slice atom (framework-agnostic, ideal for fine-grained subscriptions)
 const sorting = table.atoms.sorting.get()
@@ -320,9 +345,8 @@ The biggest state management improvement is `table.Subscribe`, which enables fin
 ```tsx
 function MyTable() {
   const table = useTable({
-    _features,
-    _rowModels: { /* ... */ },
-    columns,
+    features,
+      columns,
     data,
   })
 
@@ -345,29 +369,26 @@ function MyTable() {
 }
 ```
 
-### Opt-Out: v8-Style Full State Subscription
+### Default: v8-Style Full State Subscription
 
-If you want v8-style behavior where the component re-renders on any state change, pass `state => state` as the selector:
+The default selector already gives v8-style behavior where the component re-renders on any registered table state change:
 
 ```tsx
-// Re-renders on ANY state change (like v8)
-const table = useTable(
-  {
-    _features,
-    _rowModels: { /* ... */ },
-    columns,
-    data,
-  },
-  (state) => state, // Subscribe to entire state
-)
+const table = useTable({
+  features,
+  columns,
+  data,
+})
 
-// table.state now contains the full state
+// table.state contains the full registered state
 const { sorting, pagination, columnFilters } = table.state
 ```
 
+Passing `(state) => state` is equivalent to the default and is no longer necessary. Pass a custom selector when you want `table.state` to contain only specific slices, or pass `() => null` and use `table.Subscribe` lower in the tree when the parent should not re-render for table state changes.
+
 ### Controlled State
 
-Controlled state patterns work similarly to v8:
+The v8-style `state` + `on[State]Change` controlled state patterns still work and remain convenient for simple integrations. For new v9 code, prefer owning state slices with external atoms (see [External Atoms](#external-atoms-advanced) below), which give you fine-grained subscriptions without mirroring state through React:
 
 ```tsx
 const [sorting, setSorting] = useState<SortingState>([])
@@ -377,8 +398,7 @@ const [pagination, setPagination] = useState<PaginationState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: { /* ... */ },
+  features,
   columns,
   data,
   state: {
@@ -398,7 +418,7 @@ Because each state slice is backed by its own atom, you can subscribe a componen
 import { useSelector } from '@tanstack/react-store'
 
 function PaginationFooter({ table }) {
-  // Re-renders only when pagination changes — sorting, filtering, selection, etc. are all ignored.
+  // Re-renders only when pagination changes. Sorting, filtering, selection, etc. are all ignored.
   const pagination = useSelector(table.atoms.pagination)
 
   return <div>Page {pagination.pageIndex + 1}</div>
@@ -411,7 +431,7 @@ This is the narrowest subscription surface available. Compared to `table.Subscri
 
 ### External Atoms (Advanced)
 
-For advanced patterns — sharing a slice across tables, integrating with atom-based libraries, or wiring a slice up to persistence — v9 lets you **own individual state slices yourself** by passing writable atoms via the new `atoms` option. See the [Basic External Atoms example](../examples/basic-external-atoms).
+For advanced patterns (sharing a slice across tables, integrating with atom-based libraries, or wiring a slice up to persistence), v9 lets you **own individual state slices yourself** by passing writable atoms via the new `atoms` option. See the [Basic External Atoms example](../examples/basic-external-atoms).
 
 ```tsx
 import { useCreateAtom, useSelector } from '@tanstack/react-store'
@@ -426,7 +446,7 @@ import {
 } from '@tanstack/react-table'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
 
 function MyTable({ data, columns }) {
   // Create stable external atoms for the slices you want to own.
@@ -436,19 +456,15 @@ function MyTable({ data, columns }) {
     pageSize: 10,
   })
 
-  // Subscribe to each atom independently — fine-grained reactivity.
+  // Subscribe to each atom independently for fine-grained reactivity.
   const sorting = useSelector(sortingAtom)
   const pagination = useSelector(paginationAtom)
 
   const table = useTable({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns,
     data,
-    // Per-slice external atoms — the library writes directly to these,
+    // Per-slice external atoms. The library writes directly to these,
     // bypassing the internal baseAtoms for those slices.
     atoms: {
       sorting: sortingAtom,
@@ -467,9 +483,9 @@ function MyTable({ data, columns }) {
 When you register an external atom for a slice:
 
 - **Reads**: The derived `table.atoms[slice]` and `table.store.state[slice]` both read from your external atom.
-- **Writes**: Library writes (e.g. `table.setSorting(...)`, `column.toggleSorting()`) go directly to your external atom's `set()`. You do **not** need a corresponding `onSortingChange` handler — owning the atom is the subscription.
+- **Writes**: Library writes (e.g. `table.setSorting(...)`, `column.toggleSorting()`) go directly to your external atom's `set()`. You do **not** need a corresponding `onSortingChange` handler; owning the atom is the subscription.
 - **Precedence**: If you pass both `options.atoms[key]` and `options.state[key]`, the atom wins. If you pass neither, v9 falls back to its internal `baseAtoms[key]` (v8-style self-managed state).
-- **Reset**: `table.reset()` does **not** clear external atoms — you own them, so you decide when to reset. Call `myAtom.set(defaultValue)` yourself if needed.
+- **Reset**: `table.reset()` does **not** clear external atoms. You own them, so you decide when to reset. Call `myAtom.set(defaultValue)` yourself if needed.
 
 #### When to Choose External Atoms vs. Controlled State
 
@@ -494,16 +510,16 @@ const columnHelper = createColumnHelper<Person>()
 // v9
 import { createColumnHelper, tableFeatures, rowSortingFeature } from '@tanstack/react-table'
 
-const _features = tableFeatures({ rowSortingFeature })
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const features = tableFeatures({ rowSortingFeature })
+const columnHelper = createColumnHelper<typeof features, Person>()
 ```
 
 ### New `columns()` Helper Method
 
-v9 adds a `columns()` helper for better type inference when wrapping column arrays. In v8, `TValue` wasn't always type-safe—especially with group columns, where nested column types could be lost or widened. The `columns()` helper uses variadic tuple types to preserve each column's individual `TValue` type, so `info.getValue()` and cell renderers stay correctly typed throughout nested structures:
+v9 adds a `columns()` helper for better type inference when wrapping column arrays. In v8, `TValue` wasn't always type-safe, especially with group columns, where nested column types could be lost or widened. The `columns()` helper uses variadic tuple types to preserve each column's individual `TValue` type, so `info.getValue()` and cell renderers stay correctly typed throughout nested structures:
 
 ```tsx
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // Wrap your columns array for better type inference
 const columns = columnHelper.columns([
@@ -529,12 +545,13 @@ const columns = columnHelper.columns([
 When using `createTableHook`, you get a pre-bound `createAppColumnHelper` that only requires `TData`:
 
 ```tsx
+const features = tableFeatures({ rowSortingFeature })
+
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({ rowSortingFeature }),
-  _rowModels: { /* ... */ },
+  features,
 })
 
-// TFeatures is already bound — only need TData!
+// TFeatures is already bound, only need TData!
 const columnHelper = createAppColumnHelper<Person>()
 ```
 
@@ -595,43 +612,42 @@ The `tableOptions()` helper provides type-safe composition of table options. It'
 ```tsx
 import { tableOptions, tableFeatures, rowSortingFeature } from '@tanstack/react-table'
 
+const features = tableFeatures({ rowSortingFeature })
+
 // Create a reusable options object with features pre-configured
 const baseOptions = tableOptions({
-  _features: tableFeatures({ rowSortingFeature }),
+  features,
   debugTable: process.env.NODE_ENV === 'development',
 })
 
-// Use in your table — columns, data, and other options can be added
+// Use in your table; columns, data, and other options can be added
 const table = useTable({
   ...baseOptions,
   columns,
   data,
-  _rowModels: {},
 })
 ```
 
 ### Composing Partial Options
 
-`tableOptions()` allows you to omit certain required fields (like `data`, `columns`, or `_features`) when creating partial configurations:
+`tableOptions()` allows you to omit certain required fields (like `data`, `columns`, or `features`) when creating partial configurations:
 
 ```tsx
-// Partial options without data or columns
-const featureOptions = tableOptions({
-  _features: tableFeatures({
-    rowSortingFeature,
-    columnFilteringFeature,
-  }),
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    filteredRowModel: createFilteredRowModel(filterFns),
-  },
+// Row model factories and fns registries are registered on the features object
+const features = tableFeatures({
+  rowSortingFeature,
+  columnFilteringFeature,
+  sortedRowModel: createSortedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  sortFns,
+  filterFns,
 })
 
-// Another partial without _features (inherits from spread)
+// Partial options without data or columns
+const featureOptions = tableOptions({ features })
+
+// Another partial without features (inherits from spread)
 const paginationDefaults = tableOptions({
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
   initialState: {
     pagination: { pageIndex: 0, pageSize: 25 },
   },
@@ -651,13 +667,15 @@ const table = useTable({
 `tableOptions()` pairs well with `createTableHook` for building composable table factories:
 
 ```tsx
-const sharedOptions = tableOptions({
-  _features: tableFeatures({ rowSortingFeature, rowPaginationFeature }),
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
+
+const sharedOptions = tableOptions({ features })
 
 const { useAppTable } = createTableHook(sharedOptions)
 ```
@@ -666,9 +684,9 @@ const { useAppTable } = createTableHook(sharedOptions)
 
 ## `createTableHook`: Composable Table Patterns
 
-**This is an advanced, optional feature.** You don't need to use `createTableHook`—`useTable` is sufficient for most use cases. If you're familiar with [TanStack Form](https://tanstack.com/form)'s `createFormHook`, `createTableHook` works almost the same way: it creates a custom hook with pre-bound configuration that you can reuse across many tables.
+**This is an advanced, optional feature.** You don't need to use `createTableHook`; `useTable` is sufficient for most use cases. If you're familiar with [TanStack Form](https://tanstack.com/form)'s `createFormHook`, `createTableHook` works almost the same way: it creates a custom hook with pre-bound configuration that you can reuse across many tables.
 
-For applications with multiple tables sharing the same configuration, `createTableHook` lets you define features, row models, and reusable components once:
+For applications with multiple tables sharing the same configuration, `createTableHook` lets you define features (including row model factories), and reusable components once:
 
 ```tsx
 // hooks/table.ts
@@ -688,6 +706,18 @@ import {
 // Import your reusable components
 import { PaginationControls, SortIndicator, TextCell } from './components'
 
+// Features and row model factories defined once
+const features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
+})
+
 export const {
   useAppTable,
   createAppColumnHelper,
@@ -695,19 +725,7 @@ export const {
   useCellContext,
   useHeaderContext,
 } = createTableHook({
-  // Features defined once
-  _features: tableFeatures({
-    columnFilteringFeature,
-    rowSortingFeature,
-    rowPaginationFeature,
-  }),
-
-  // Row models defined once
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
 
   // Default table options
   debugTable: process.env.NODE_ENV === 'development',
@@ -738,7 +756,7 @@ function UsersTable({ data }: { data: Person[] }) {
   const table = useAppTable({
     columns,
     data,
-    // _features and _rowModels already configured!
+    // features (including row model factories) already configured!
   })
 
   return (
@@ -860,7 +878,7 @@ In v8, column sizing and resizing were combined in a single feature. In v9, they
 |----|-----|
 | `ColumnSizing` (combined feature) | `columnSizingFeature` + `columnResizingFeature` |
 | `columnSizingInfo` state | `columnResizing` state |
-| `setColumnSizingInfo()` | `setColumnResizing()` |
+| `setColumnSizingInfo()` | `setcolumnResizing()` (note the lowercase `c`, the current v9 spelling) |
 | `onColumnSizingInfoChange` option | `onColumnResizingChange` option |
 
 If you only need column sizing (fixed widths) without interactive resizing, you can import just `columnSizingFeature`. If you need drag-to-resize functionality, import both:
@@ -868,7 +886,7 @@ If you only need column sizing (fixed widths) without interactive resizing, you 
 ```tsx
 import { columnSizingFeature, columnResizingFeature } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnResizingFeature, // Only if you need interactive resizing
 })
@@ -917,6 +935,19 @@ Some row APIs have changed from private to public:
 
 If you were accessing this internal API, you can now use it without the underscore prefix.
 
+### Row Selection API Changes
+
+The "some rows selected" checks were simplified to mean "at least one row is selected":
+
+| API | v8 | v9 |
+|-----|-----|-----|
+| `table.getIsSomeRowsSelected()` | `true` when some but not all rows are selected | `true` when at least one row is selected |
+| `table.getIsSomePageRowsSelected()` | `true` when some but not all page rows are selected | `true` when at least one page row is selected |
+
+In v8 these returned `false` once every row was selected; in v9 they stay `true`. If you use them to drive an indeterminate "select all" checkbox, gate the indeterminate state on the matching all-selected check so it clears at full selection:
+
+`getIsSomeRowsSelected() && !getIsAllRowsSelected()`
+
 ---
 
 ## TypeScript Changes Summary
@@ -941,22 +972,22 @@ type Row<TFeatures, TData>
 type Cell<TFeatures, TData, TValue>
 ```
 
-### Using `typeof _features`
+### Using `typeof features`
 
 The easiest way to get the `TFeatures` type is with `typeof`:
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
   columnFilteringFeature,
 })
 
 // Use typeof to get the type
-type MyFeatures = typeof _features
+type MyFeatures = typeof features
 
-const columns: ColumnDef<typeof _features, Person>[] = [...]
+const columns: ColumnDef<typeof features, Person>[] = [...]
 
-function Filter({ column }: { column: Column<typeof _features, Person, unknown> }) {
+function Filter({ column }: { column: Column<typeof features, Person, unknown> }) {
   // ...
 }
 ```
@@ -971,9 +1002,11 @@ import type { StockFeatures, ColumnDef } from '@tanstack/react-table'
 const columns: ColumnDef<StockFeatures, Person>[] = [...]
 ```
 
-### `ColumnMeta` Generic Change
+### `TableMeta`/`ColumnMeta` Typing Changes
 
-If you're using module augmentation to extend `ColumnMeta`, note that it now requires a `TFeatures` parameter:
+No more declaration merging required! (Although it still works if you want to keep using it)
+
+Global declaration merging to extend `TableMeta` or `ColumnMeta` works exactly like it did in v8. The only change you need to make is updating the generics shape: both interfaces now take `TFeatures` as the first type parameter.
 
 ```tsx
 // v8
@@ -991,13 +1024,59 @@ declare module '@tanstack/react-table' {
 }
 ```
 
+That's all that's required if you want to keep declaring meta types globally.
+
+Optionally, v9 also adds a new way to declare meta types **per-table** without declaration merging. You can use type-only `tableMeta`/`columnMeta` slots on the `features` option, which only affect tables created with that `features` object:
+
+```tsx
+const features = tableFeatures({
+  rowSortingFeature,
+  columnMeta: metaHelper<{ customProperty: string }>(),
+})
+```
+
+See the new [Table and Column Meta Guide](../../../guide/table-and-column-meta) for full details on both approaches.
+
+### `FilterFns`/`SortFns`/`AggregationFns`/`FilterMeta` Augmentation Replaced by Registry Slots
+
+In v8, making a custom function usable as a string reference (like `filterFn: 'fuzzy'`) required `declare module` augmentation of the `FilterFns` interface, and typing filter meta required augmenting `FilterMeta`. In v9, registering the function in the matching registry slot does both jobs with no global augmentation:
+
+```tsx
+// v8
+declare module '@tanstack/react-table' {
+  interface FilterFns {
+    fuzzy: FilterFn<unknown>
+  }
+  interface FilterMeta {
+    itemRank: RankingInfo
+  }
+}
+
+// v9 - register in the slot; the key becomes a valid string value
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
+// 'fuzzy' now typechecks in column defs for tables using these features
+columnHelper.accessor('name', { filterFn: 'fuzzy' })
+```
+
+The same pattern applies to `sortFns` (for `sortFn` string values) and `aggregationFns` (for `aggregationFn` string values). See the [Fuzzy Filtering Guide](./fuzzy-filtering.md) for a complete example.
+
 ### `RowData` Type Restriction
 
 The `RowData` type is now more restrictive:
 
 ```tsx
 // v8 - very permissive
-type RowData = unknown | object | any[]
+type RowData = unknown
 
 // v9 - must be a record or array
 type RowData = Record<string, any> | Array<any>
@@ -1010,9 +1089,10 @@ This change improves type safety. If you were passing unusual data types, ensure
 ## Migration Checklist
 
 - [ ] Update import: `useReactTable` → `useTable`
-- [ ] Define `_features` using `tableFeatures()` (or use `stockFeatures`)
-- [ ] Migrate `get*RowModel()` options to `_rowModels`
-- [ ] Update row model factories to include `Fns` parameters where needed
+- [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`)
+- [ ] Migrate `get*RowModel()` options to `tableFeatures` slots (e.g. `filteredRowModel: createFilteredRowModel()`)
+- [ ] Register `filterFns` / `sortFns` / `aggregationFns` registries as slots on `tableFeatures` (row model factories no longer take arguments)
+- [ ] Replace `declare module` augmentation of `FilterFns`/`SortFns`/`AggregationFns` with registry-slot registration, and `FilterMeta` augmentation with the `filterMeta` slot
 - [ ] Update TypeScript types to include `TFeatures` generic
 - [ ] Update state access: `table.getState()` → `table.store.state` or `table.state`
 - [ ] Update `createColumnHelper<TData>()` → `createColumnHelper<TFeatures, TData>()`
@@ -1020,7 +1100,7 @@ This change improves type safety. If you were passing unusual data types, ensure
 - [ ] Rename `sortingFn` → `sortFn` in column definitions
 - [ ] Split column sizing/resizing: use both `columnSizingFeature` and `columnResizingFeature` if needed
 - [ ] Rename `columnSizingInfo` state → `columnResizing` (and related options)
-- [ ] Update `ColumnMeta` module augmentation to include `TFeatures` generic (if used)
+- [ ] If you use `TableMeta`/`ColumnMeta` declaration merging, add the `TFeatures` generic to your augmentations (optionally, switch to the per-table `tableMeta`/`columnMeta` feature slots)
 - [ ] (Optional) Add `table.Subscribe` for render optimizations
 - [ ] (Optional) Subscribe to individual slices via `table.atoms.<slice>` + `useSelector` for the narrowest re-renders
 - [ ] (Optional) Pass writable atoms via the new `atoms` option to own specific state slices externally

@@ -1,29 +1,27 @@
 import {
+  DestroyRef,
   Injector,
+  NgZone,
   assertInInjectionContext,
-  computed,
   effect,
   inject,
   untracked,
 } from '@angular/core'
 import { constructTable } from '@tanstack/table-core'
-import { injectSelector, shallow } from '@tanstack/angular-store'
 import { lazyInit } from './lazySignalInitializer'
 import { angularReactivity } from './reactivity'
+import type {
+  RowData,
+  Table,
+  TableFeatures,
+  TableOptions,
+} from '@tanstack/table-core'
 import type {
   Atom,
   ReadonlyAtom,
   ReadonlyStore,
   Store,
 } from '@tanstack/angular-store'
-import type {
-  RowData,
-  Table,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '@tanstack/table-core'
-import type { Signal, ValueEqualityFn } from '@angular/core'
 
 export type SubscribeSource<TValue> =
   | Atom<TValue>
@@ -31,48 +29,10 @@ export type SubscribeSource<TValue> =
   | Store<TValue>
   | ReadonlyStore<TValue>
 
-/**
- * Store mode: pass `selector` (required) to project from full table state.
- * Source mode: pass `source` (atom or store); omit `selector` for the whole value
- * (identity), or pass `selector` to project. Split overloads match React `Subscribe`
- * inference.
- */
-export interface AngularTableComputed<TFeatures extends TableFeatures> {
-  <TSourceValue>(props: {
-    source: SubscribeSource<TSourceValue>
-    selector?: undefined
-    equal?: ValueEqualityFn<TSourceValue>
-  }): Signal<Readonly<TSourceValue>>
-  <TSourceValue, TSubSelected>(props: {
-    source: SubscribeSource<TSourceValue>
-    selector: (state: TSourceValue) => TSubSelected
-    equal?: ValueEqualityFn<TSubSelected>
-  }): Signal<Readonly<TSubSelected>>
-  <TSubSelected>(props: {
-    selector: (state: TableState<TFeatures>) => TSubSelected
-    equal?: ValueEqualityFn<TSubSelected>
-  }): Signal<Readonly<TSubSelected>>
-}
-
 export type AngularTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
-  /**
-   * The selected state from the table store, based on the selector provided.
-   */
-  readonly state: Signal<Readonly<TSelected>>
-  /**
-   * A signal that returns the entire table instance. Will update on table/options change.
-   */
-  readonly value: Signal<AngularTable<TFeatures, TData, TSelected>>
-  /**
-   * Creates a computed that subscribe to changes in the table store with a custom selector.
-   * Default equality function is "shallow".
-   */
-  computed: AngularTableComputed<TFeatures>
-}
+> = Table<TFeatures, TData>
 
 /**
  * Creates and returns an Angular-reactive table instance.
@@ -91,14 +51,14 @@ export type AngularTable<
  * ```ts
  * // Register only the features you need
  * import {tableFeatures, rowPaginationFeature} from '@tanstack/angular-table';
- * const _features = tableFeatures({
+ * const features = tableFeatures({
  *  rowPaginationFeature,
  *  // ...all other features you need
  * })
  *
  * // Use all table core features
  * import {stockFeatures} from '@tanstack/angular-table';
- * const _features = tableFeatures(stockFeatures);
+ * const features = tableFeatures(stockFeatures);
  * ```
  * 2. Prepare the table columns
  * ```ts
@@ -106,13 +66,13 @@ export type AngularTable<
  *
  * type MyData = {}
  *
- * const columns: ColumnDef<typeof _features, MyData>[] = [
+ * const columns: ColumnDef<typeof features, MyData>[] = [
  *   // ...column definitions
  * ]
  *
  * // or using createColumnHelper
  * import {createColumnHelper} from '@tanstack/angular-table';
- * const columnHelper = createColumnHelper<typeof _features, MyData>();
+ * const columnHelper = createColumnHelper<typeof features, MyData>();
  * const columns = columnHelper.columns([
  *  columnHelper.accessor(...),
  *  // ...other columns
@@ -122,7 +82,7 @@ export type AngularTable<
  * ```ts
  * const table = injectTable(() => {
  *   // ...table options,
- *   _features,
+ *   features,
  *   columns: columns,
  *   data: myDataSignal(),
  * })
@@ -133,68 +93,49 @@ export type AngularTable<
 export function injectTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
 >(
   options: () => TableOptions<TFeatures, TData>,
-  selector?: (state: TableState<TFeatures>) => TSelected,
-): AngularTable<TFeatures, TData, TSelected> {
+): AngularTable<TFeatures, TData> {
   assertInInjectionContext(injectTable)
   const injector = inject(Injector)
+  const ngZone = inject(NgZone)
 
-  return lazyInit(() => {
-    const table = constructTable({
-      ...options(),
-      _features: {
-        coreReativityFeature: angularReactivity(injector),
-        ...options()._features,
-      },
-    }) as AngularTable<TFeatures, TData, TSelected>
-
-    let isMount = true
-    effect(
-      () => {
-        const newOptions = options()
-        if (isMount) {
-          isMount = false
-          return
-        }
-        untracked(() =>
-          table.setOptions((previous) => ({
-            ...previous,
-            ...newOptions,
-          })),
-        )
-      },
-      { injector, debugName: 'tableOptionsUpdate' },
-    )
-
-    table.computed = function Subscribe(props: {
-      source?: SubscribeSource<unknown>
-      selector?: (state: unknown) => unknown
-      equal?: ValueEqualityFn<unknown>
-    }) {
-      const source = props.source ?? table.store
-      return injectSelector(source, props.selector as never, {
-        compare: props.equal ?? shallow,
-        injector,
-      })
-    } as AngularTableComputed<TFeatures>
-
-    Object.defineProperty(table, 'state', {
-      value: computed(() => selector?.(table.store.get()) ?? table.store.get()),
-    })
-
-    Object.defineProperty(table, 'value', {
-      value: computed(
-        () => {
-          table.store.get()
-          table.optionsStore!.get()
-          return table
+  return ngZone.runOutsideAngular(() =>
+    lazyInit(() => {
+      // Explicit type arguments skip generic inference from the spread object
+      // (a type-check hot spot); the spread only adds the angular reactivity
+      // binding to `features`.
+      const table = constructTable<TFeatures, TData>({
+        ...options(),
+        features: {
+          coreReactivityFeature: angularReactivity(injector),
+          ...options().features,
         },
-        { equal: () => false },
-      ),
-    })
+      })
 
-    return table
-  })
+      injector.get(DestroyRef).onDestroy(() => {
+        table._reactivity.unmount?.()
+      })
+
+      let isMount = true
+      effect(
+        () => {
+          const newOptions = options()
+          if (isMount) {
+            isMount = false
+            return
+          }
+          untracked(() =>
+            table.setOptions((previous) => ({
+              ...previous,
+              ...newOptions,
+            })),
+          )
+        },
+        { injector, debugName: 'tableOptionsUpdate' },
+      )
+
+      return table
+    }),
+  )
 }

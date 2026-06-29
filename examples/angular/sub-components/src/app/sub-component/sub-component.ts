@@ -1,6 +1,8 @@
 import { Component, input } from '@angular/core'
 import { JsonPipe } from '@angular/common'
 import type { Row } from '@tanstack/angular-table'
+import type { features } from '../app'
+import type { Person } from '../makeData'
 
 @Component({
   selector: 'app-sub',
@@ -14,5 +16,5 @@ import type { Row } from '@tanstack/angular-table'
   imports: [JsonPipe],
 })
 export class SubComponent {
-  readonly row = input.required<Row<any, any>>()
+  readonly row = input.required<Row<typeof features, Person>>()
 }

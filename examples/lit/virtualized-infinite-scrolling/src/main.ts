@@ -19,12 +19,14 @@ import type { ColumnDef, SortingState } from '@tanstack/lit-table'
 
 const fetchSize = 50
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'id',
     header: 'ID',
@@ -69,7 +71,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   private tableContainerRef: Ref = createRef()
 
@@ -139,10 +141,7 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
+        features,
         columns,
         data: this._data,
         state: {

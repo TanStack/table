@@ -1,5 +1,5 @@
 import { render } from 'preact'
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import './index.css'
 import {
   createColumnHelper,
@@ -11,15 +11,14 @@ import {
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -55,19 +54,17 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(1_000))
-  const stressTest = () => setData(() => makeData(200_000))
+  const stressTest = () => setData(() => makeData(1_000_000))
 
   return (
     <>
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <MyTable data={data} columns={columns} />
       <hr />
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
+      <div></div>
     </>
   )
 }
@@ -81,10 +78,7 @@ function MyTable({
 }) {
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      features,
       columns,
       data,
       debugTable: true,

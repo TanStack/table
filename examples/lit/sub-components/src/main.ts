@@ -12,9 +12,12 @@ import { makeData } from './makeData'
 import type { ColumnDef, Row } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'expander',
     header: () => null,
@@ -65,7 +68,7 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
   },
 ]
 
-function renderSubComponent(row: Row<typeof _features, Person>) {
+function renderSubComponent(row: Row<typeof features, Person>) {
   return html`
     <pre style="font-size:10px">
 <code>${JSON.stringify(row.original, null, 2)}</code></pre>
@@ -77,15 +80,12 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(10, 5)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          expandedRowModel: createExpandedRowModel(),
-        },
+        features,
         columns,
         data: this._data,
         getRowCanExpand: () => true,

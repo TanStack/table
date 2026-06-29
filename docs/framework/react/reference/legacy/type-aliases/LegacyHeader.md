@@ -9,7 +9,7 @@ title: LegacyHeader
 type LegacyHeader<TData, TValue> = Header<StockFeatures, TData, TValue>;
 ```
 
-Defined in: [useLegacyTable.ts:314](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L314)
+Defined in: [useLegacyTable.ts:315](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L315)
 
 ## Type Parameters
 

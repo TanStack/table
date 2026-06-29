@@ -9,11 +9,12 @@ import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -47,13 +48,13 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   return (
     <>
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <MyTable data={data()} columns={columns} />
     </>
@@ -65,10 +66,7 @@ function MyTable(props: {
   columns: ReturnType<typeof columnHelper.columns>
 }) {
   const table = createTable({
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns: props.columns,
     get data() {
       return props.data
@@ -146,7 +144,7 @@ function MyTable(props: {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -156,7 +154,7 @@ function MyTable(props: {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -167,7 +165,7 @@ function MyTable(props: {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.currentTarget.value))
           }}
@@ -181,7 +179,7 @@ function MyTable(props: {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

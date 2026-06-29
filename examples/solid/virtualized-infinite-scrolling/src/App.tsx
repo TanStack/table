@@ -15,13 +15,17 @@ import { For, Show, createMemo, onMount } from 'solid-js'
 import { fetchData } from './makeData'
 import type { Person, PersonApiResponse } from './makeData'
 import type { SortingState } from '@tanstack/solid-table'
-import type { Virtualizer } from '@tanstack/solid-virtual'
 
 const fetchSize = 50
 
-const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+const features = tableFeatures({
+  columnSizingFeature,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('id', {
@@ -106,8 +110,7 @@ function App() {
   })
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
     get data() {
       return flatData()
     },

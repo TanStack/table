@@ -1,19 +1,11 @@
 'use client'
 
-import * as React from 'react'
-import {
-  removeTableDevtoolsTarget,
-  upsertTableDevtoolsTarget,
-} from '@tanstack/table-devtools'
+import { upsertTableDevtoolsTarget } from '@tanstack/table-devtools'
+import { useEffect } from 'react'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 export interface UseTanStackTableDevtoolsOptions {
   enabled?: boolean
-}
-
-function normalizeName(name?: string) {
-  const trimmedName = name?.trim()
-  return trimmedName ? trimmedName : undefined
 }
 
 export function useTanStackTableDevtools<
@@ -21,28 +13,21 @@ export function useTanStackTableDevtools<
   TData extends RowData = RowData,
 >(
   table: Table<TFeatures, TData> | undefined,
-  name?: string,
   options?: UseTanStackTableDevtoolsOptions,
 ): void {
-  const registrationId = React.useId()
   const enabled = options?.enabled ?? true
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (!enabled || !table) {
-      removeTableDevtoolsTarget(registrationId)
       return
     }
 
-    upsertTableDevtoolsTarget({
-      id: registrationId,
-      table,
-      name: normalizeName(name),
-    })
+    const cleanup = upsertTableDevtoolsTarget({ table })
 
     return () => {
-      removeTableDevtoolsTarget(registrationId)
+      cleanup?.()
     }
-  }, [enabled, name, registrationId, table])
+  }, [enabled, table, table?.options.key])
 }
 
 export function useTanStackTableDevtoolsNoOp<
@@ -50,6 +35,5 @@ export function useTanStackTableDevtoolsNoOp<
   TData extends RowData = RowData,
 >(
   _table: Table<TFeatures, TData> | undefined,
-  _name?: string,
   _options?: UseTanStackTableDevtoolsOptions,
 ): void {}

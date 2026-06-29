@@ -6,12 +6,9 @@ title: columnVisibilityFeature
 # Variable: columnVisibilityFeature
 
 ```ts
-const columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstructors<TableFeatures, RowData>>;
+const columnVisibilityFeature: TableFeature;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L165)
+Defined in: [features/column-visibility/columnVisibilityFeature.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts#L28)
 
-The stock column visibility feature.
-
-Register this feature to add column visibility state and APIs for deriving
-visible columns and visible row cells.
+Feature that adds column visibility state and APIs for hiding and showing columns.

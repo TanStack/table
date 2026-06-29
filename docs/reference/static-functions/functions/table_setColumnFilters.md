@@ -9,11 +9,13 @@ title: table_setColumnFilters
 function table_setColumnFilters<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:245](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L245)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:255](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L255)
 
-Updates the table's column filters state slice.
+Routes a column filter updater through the table's filter change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The resolved filters are cleaned before they are emitted: filters for known
+columns are removed when their filter function says the value should be
+auto-removed.
 
 ## Type Parameters
 
@@ -29,7 +31,7 @@ The updater follows TanStack Table updater semantics and is routed through the c
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### updater
 
@@ -42,5 +44,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setColumnFilters(table, (old) => old)
+table_setColumnFilters(table, (old) => old.filter((filter) => filter.id !== 'age'))
 ```

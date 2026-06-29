@@ -5,9 +5,9 @@ title: AppCellComponent
 
 # Interface: AppCellComponent()\<TFeatures, TData, TCellComponents\>
 
-Defined in: [createTableHook.tsx:368](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L368)
+Defined in: [createTableHook.tsx:313](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L313)
 
-Component type for AppCell - wraps a cell and provides cell context with optional Subscribe
+Component type for AppCell - wraps a cell and provides cell context.
 
 ## Type Parameters
 
@@ -23,58 +23,26 @@ Component type for AppCell - wraps a cell and provides cell context with optiona
 
 `TCellComponents` *extends* `Record`\<`string`, [`ComponentType`](../type-aliases/ComponentType.md)\<`any`\>\>
 
-## Call Signature
-
 ```ts
 AppCellComponent<TValue>(props): Element;
 ```
 
-Defined in: [createTableHook.tsx:373](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L373)
+Defined in: [createTableHook.tsx:318](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L318)
 
-Component type for AppCell - wraps a cell and provides cell context with optional Subscribe
+Component type for AppCell - wraps a cell and provides cell context.
 
-### Type Parameters
+## Type Parameters
 
-#### TValue
-
-`TValue` *extends* `unknown` = `unknown`
-
-### Parameters
-
-#### props
-
-[`AppCellPropsWithoutSelector`](AppCellPropsWithoutSelector.md)\<`TFeatures`, `TData`, `TValue`, `TCellComponents`\>
-
-### Returns
-
-`Element`
-
-## Call Signature
-
-```ts
-AppCellComponent<TValue, TSelected>(props): Element;
-```
-
-Defined in: [createTableHook.tsx:381](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L381)
-
-Component type for AppCell - wraps a cell and provides cell context with optional Subscribe
-
-### Type Parameters
-
-#### TValue
+### TValue
 
 `TValue` *extends* `unknown` = `unknown`
 
-#### TSelected
+## Parameters
 
-`TSelected` = `unknown`
+### props
 
-### Parameters
+[`AppCellProps`](AppCellProps.md)\<`TFeatures`, `TData`, `TValue`, `TCellComponents`\>
 
-#### props
-
-[`AppCellPropsWithSelector`](AppCellPropsWithSelector.md)\<`TFeatures`, `TData`, `TValue`, `TCellComponents`, `TSelected`\>
-
-### Returns
+## Returns
 
 `Element`

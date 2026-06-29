@@ -1,4 +1,4 @@
-import { Component, computed, signal } from '@angular/core'
+import { Component, signal } from '@angular/core'
 import {
   FlexRender,
   columnOrderingFeature,
@@ -20,7 +20,7 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnPinningFeature,
   columnResizingFeature,
@@ -28,7 +28,7 @@ const _features = tableFeatures({
   columnVisibilityFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const defaultColumns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -88,7 +88,7 @@ export class App {
   readonly split = signal(false)
 
   table = injectTable(() => ({
-    _features,
+    features,
     columns: this.columns(),
     data: this.data(),
     debugTable: true,
@@ -97,12 +97,12 @@ export class App {
     columnResizeMode: 'onChange' as const,
   }))
 
-  stringifiedColumnPinning = computed(() => {
-    return JSON.stringify(this.table.state().columnPinning)
-  })
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   readonly getCommonPinningStyles = (
-    column: Column<any, Person>,
+    column: Column<typeof features, Person>,
   ): Record<string, any> => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =

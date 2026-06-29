@@ -1,17 +1,41 @@
-import {
-  createFormHook,
-  createFormHookContexts,
-  useStore,
-} from '@tanstack/react-form'
+import { createFormHook, createFormHookContexts } from '@tanstack/react-form'
 
 // Create form and field contexts
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()
 
+function getErrorMessage(error: unknown) {
+  if (typeof error === 'string') return error
+
+  if (error && typeof error === 'object' && 'message' in error) {
+    const message = error.message
+    if (typeof message === 'string') return message
+  }
+
+  return String(error)
+}
+
+function FieldErrors({
+  errors,
+  isBlurred,
+  isTouched,
+}: {
+  errors: ReadonlyArray<unknown>
+  isBlurred: boolean
+  isTouched: boolean
+}) {
+  if (!isTouched && !isBlurred) return null
+  if (errors.length === 0) return null
+
+  return (
+    <div className="error-text">{errors.map(getErrorMessage).join(', ')}</div>
+  )
+}
+
 // TextField component for string inputs
 function TextField() {
   const field = useFieldContext<string>()
-  const errors = useStore(field.store, (state) => state.meta.errors)
+  const { errors, isBlurred, isTouched } = field.state.meta
 
   return (
     <div>
@@ -21,9 +45,11 @@ function TextField() {
         onChange={(e) => field.handleChange(e.target.value)}
         onBlur={field.handleBlur}
       />
-      {errors.length > 0 && (
-        <div className="error-text">{errors.join(', ')}</div>
-      )}
+      <FieldErrors
+        errors={errors}
+        isBlurred={isBlurred}
+        isTouched={isTouched}
+      />
     </div>
   )
 }
@@ -31,7 +57,7 @@ function TextField() {
 // NumberField component for numeric inputs
 function NumberField() {
   const field = useFieldContext<number>()
-  const errors = useStore(field.store, (state) => state.meta.errors)
+  const { errors, isBlurred, isTouched } = field.state.meta
 
   return (
     <div>
@@ -42,9 +68,11 @@ function NumberField() {
         onChange={(e) => field.handleChange(Number(e.target.value))}
         onBlur={field.handleBlur}
       />
-      {errors.length > 0 && (
-        <div className="error-text">{errors.join(', ')}</div>
-      )}
+      <FieldErrors
+        errors={errors}
+        isBlurred={isBlurred}
+        isTouched={isTouched}
+      />
     </div>
   )
 }
@@ -54,7 +82,7 @@ const statusOptions = ['relationship', 'complicated', 'single'] as const
 
 function SelectField() {
   const field = useFieldContext<string>()
-  const errors = useStore(field.store, (state) => state.meta.errors)
+  const { errors, isBlurred, isTouched } = field.state.meta
 
   return (
     <div>
@@ -70,9 +98,11 @@ function SelectField() {
           </option>
         ))}
       </select>
-      {errors.length > 0 && (
-        <div className="error-text">{errors.join(', ')}</div>
-      )}
+      <FieldErrors
+        errors={errors}
+        isBlurred={isBlurred}
+        isTouched={isTouched}
+      />
     </div>
   )
 }
@@ -103,10 +133,9 @@ function FormStateIndicator() {
       selector={(state) => ({
         isDirty: state.isDirty,
         isValid: state.isValid,
-        errorMap: state.errorMap,
       })}
     >
-      {({ isDirty, isValid, errorMap }) => (
+      {({ isDirty, isValid }) => (
         <div className="form-status">
           <span className={isDirty ? 'warning-text' : 'muted-text'}>
             {isDirty ? '● Modified' : '○ Pristine'}
@@ -114,11 +143,6 @@ function FormStateIndicator() {
           <span className={isValid ? 'success-text' : 'error-text'}>
             {isValid ? '✓ Valid' : '✗ Invalid'}
           </span>
-          {Object.keys(errorMap).length > 0 && (
-            <span className="error-text">
-              Errors: {JSON.stringify(errorMap)}
-            </span>
-          )}
         </div>
       )}
     </form.Subscribe>

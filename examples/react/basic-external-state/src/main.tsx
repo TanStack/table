@@ -1,4 +1,5 @@
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
@@ -11,6 +12,10 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/react-table'
 
@@ -23,12 +28,15 @@ type Person = {
   progress: number
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -56,9 +64,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
-
-  const rerender = React.useReducer(() => ({}), {})[1]
+  const stressTest = () => setData(makeData(1_000_000))
 
   // Manage sorting state with React.useState (although react state causes more re-renders here than necessary compared to using a store)
   const [sorting, setSorting] = React.useState<SortingState>([])
@@ -75,12 +81,9 @@ function App() {
   // Create the table and pass state + onChange handlers
   const table = useTable(
     {
+      key: 'basic-external-state', // needed for devtools
       debugTable: true,
-      _features,
-      _rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      features,
       columns,
       data,
       state: {
@@ -93,6 +96,8 @@ function App() {
     (state) => state, // default selector
   )
 
+  useTanStackTableDevtools(table)
+
   return (
     <div className="demo-root">
       <div>
@@ -100,7 +105,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} className="demo-button">
-          Stress Test (200k rows)
+          Stress Test (1M rows)
         </button>
       </div>
       <div className="spacer-md" />
@@ -206,10 +211,7 @@ function App() {
         </select>
       </div>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
-      <pre>{JSON.stringify({ sorting, pagination }, null, 2)}</pre>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }
@@ -220,5 +222,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

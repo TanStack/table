@@ -1,6 +1,11 @@
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import { tableFeatures, useTable } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import type { ColumnDef } from '@tanstack/react-table'
 import './index.css'
 
@@ -53,10 +58,10 @@ const defaultData: Array<Person> = [
 ]
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
-const _features = tableFeatures({}) // util method to create sharable TFeatures object/type
+const features = tableFeatures({}) // util method to create sharable TFeatures object/type
 
 // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns. Alternatively, check out the createTableHelper/createColumnHelper util for an even more type-safe way to define columns.
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
     header: 'First Name',
@@ -93,20 +98,22 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 function App() {
   // 5. Store data with a stable reference
   const [data, _setData] = React.useState(() => [...defaultData])
-  const rerender = React.useReducer(() => ({}), {})[1]
 
-  // 6. Create the table instance with required _features, columns, and data
+  // 6. Create the table instance with required features, columns, and data
   const table = useTable(
     {
-      debugTable: true,
-      _features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-      _rowModels: {}, // `Core` row model is now included by default, but you can still override it here
+      key: 'basic-use-table', // needed for devtools, omit if you don't want to use the devtools
+      debugTable: true, // optionally, enable console logging debug messages
+      features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
       columns,
       data,
       // add additional table options here
     },
     (state) => state, // default selector
   )
+
+  // optionally, add this table instance to the devtools
+  useTanStackTableDevtools(table)
 
   // 7. Render your table markup from the table instance APIs
   return (
@@ -151,9 +158,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
     </div>
   )
 }
@@ -164,5 +168,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

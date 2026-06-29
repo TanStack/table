@@ -16,9 +16,9 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(500_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
-  const columns: ColumnDef<typeof _features, Person>[] = [
+  const columns: ColumnDef<typeof features, Person>[] = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -70,7 +70,7 @@
     },
   ]
 
-  const _features = tableFeatures({ columnVisibilityFeature })
+  const features = tableFeatures({ columnVisibilityFeature })
 
   let columnVisibility = $state<ColumnVisibilityState>({})
 
@@ -81,8 +81,7 @@
   }
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
     get data() {
       return data
     },
@@ -100,7 +99,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (500k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <div class="column-toggle-panel">
     <div class="column-toggle-panel-header">
@@ -170,6 +169,6 @@
     </tfoot>
   </table>
   <div class="spacer-md"></div>
-  <pre>{JSON.stringify(table.store.state.columnVisibility, null, 2)
+  <pre>{JSON.stringify(table.state, null, 2)
   }</pre>
 </div>

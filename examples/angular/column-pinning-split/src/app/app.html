@@ -1,0 +1,132 @@
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">Stress Test</button>
+
+  <div class="spacer-sm"></div>
+
+  <div class="button-row">
+    @for (column of table.getAllLeafColumns(); track column.id) {
+      <button class="demo-button" (click)="column.pin(column.getIsPinned() ? false : 'left')">
+        {{ column.id }}: {{ column.getIsPinned() || 'center' }}
+      </button>
+    }
+  </div>
+
+  <div class="spacer-md"></div>
+
+  <p class="demo-note">
+    This example takes advantage of the "splitting" APIs. (APIs that have "left", "center", and
+    "right" modifiers)
+  </p>
+
+  <div class="split-tables">
+    <table class="outlined-table">
+      <thead>
+        @for (headerGroup of leftHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+              <th [attr.colSpan]="header.colSpan">
+                <ng-container *ngTemplateOutlet="headerTpl; context: { $implicit: header }" />
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of visibleRows(); track row.id) {
+          <tr>
+            @for (cell of row.getLeftVisibleCells(); track cell.id) {
+              <td>
+                <ng-container *flexRenderCell="cell; let renderCell">
+                  {{ renderCell }}
+                </ng-container>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <table class="outlined-table">
+      <thead>
+        @for (headerGroup of centerHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+              <th [attr.colSpan]="header.colSpan">
+                <ng-container *ngTemplateOutlet="headerTpl; context: { $implicit: header }" />
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of visibleRows(); track row.id) {
+          <tr>
+            @for (cell of row.getCenterVisibleCells(); track cell.id) {
+              <td>
+                <ng-container *flexRenderCell="cell; let renderCell">
+                  {{ renderCell }}
+                </ng-container>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <table class="outlined-table">
+      <thead>
+        @for (headerGroup of rightHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+              <th [attr.colSpan]="header.colSpan">
+                <ng-container *ngTemplateOutlet="headerTpl; context: { $implicit: header }" />
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of visibleRows(); track row.id) {
+          <tr>
+            @for (cell of row.getRightVisibleCells(); track cell.id) {
+              <td>
+                <ng-container *flexRenderCell="cell; let renderCell">
+                  {{ renderCell }}
+                </ng-container>
+              </td>
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <pre>{{ stringifiedState() }}</pre>
+</div>
+
+<ng-template #headerTpl let-header>
+  <div class="nowrap">
+    @if (!header.isPlaceholder) {
+      <ng-container *flexRenderHeader="header; let headerCell">
+        {{ headerCell }}
+      </ng-container>
+    }
+  </div>
+
+  @if (!header.isPlaceholder && header.column.getCanPin()) {
+    <div class="pin-actions">
+      @if (header.column.getIsPinned() !== 'left') {
+        <button class="pin-button" (click)="header.column.pin('left')"><=</button>
+      }
+
+      @if (header.column.getIsPinned()) {
+        <button class="pin-button" (click)="header.column.pin(false)">X</button>
+      }
+
+      @if (header.column.getIsPinned() !== 'right') {
+        <button class="pin-button" (click)="header.column.pin('right')">=></button>
+      }
+    </div>
+  }
+</ng-template>

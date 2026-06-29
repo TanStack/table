@@ -9,15 +9,15 @@ title: AppFlexRender
 const AppFlexRender: DefineComponent<ExtractPropTypes<{
   cell: {
      default: undefined;
-     type: PropType<any>;
+     type: PropType<FlexRenderCell>;
   };
   footer: {
      default: undefined;
-     type: PropType<any>;
+     type: PropType<FlexRenderHeader>;
   };
   header: {
      default: undefined;
-     type: PropType<any>;
+     type: PropType<FlexRenderHeader>;
   };
 }>, () => 
   | VNode<RendererNode, RendererElement, {
@@ -30,21 +30,21 @@ const AppFlexRender: DefineComponent<ExtractPropTypes<{
 }, string, PublicProps, ToResolvedProps<ExtractPropTypes<{
   cell: {
      default: undefined;
-     type: PropType<any>;
+     type: PropType<FlexRenderCell>;
   };
   footer: {
      default: undefined;
-     type: PropType<any>;
+     type: PropType<FlexRenderHeader>;
   };
   header: {
      default: undefined;
-     type: PropType<any>;
+     type: PropType<FlexRenderHeader>;
   };
 }>, {
 }>, {
-  cell: any;
-  footer: any;
-  header: any;
+  cell: FlexRenderCell;
+  footer: FlexRenderHeader;
+  header: FlexRenderHeader;
 }, {
 }, {
 }, {
@@ -52,4 +52,4 @@ const AppFlexRender: DefineComponent<ExtractPropTypes<{
 }, any>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:238](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L238)
+Defined in: [packages/vue-table/src/createTableHook.ts:300](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L300)

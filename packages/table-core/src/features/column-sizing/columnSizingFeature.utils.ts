@@ -5,7 +5,12 @@ import {
   table_getRightHeaderGroups,
 } from '../column-pinning/columnPinningFeature.utils'
 import { column_getIndex } from '../column-ordering/columnOrderingFeature.utils'
-import { callMemoOrStaticFn, cloneState } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  hasOwn,
+  makeObjectMap,
+} from '../../utils'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -15,27 +20,30 @@ import type { Column_Internal } from '../../types/Column'
 import type { ColumnSizingState } from './columnSizingFeature.types'
 
 /**
- * Returns the default column sizing state.
+ * Creates the default committed column sizing state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty map, so columns fall back to their column def
+ * size or the built-in sizing defaults.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultColumnSizingState()
+ * const sizing = getDefaultColumnSizingState()
  * ```
  */
 export function getDefaultColumnSizingState(): ColumnSizingState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
- * Returns the default column sizing column def.
+ * Creates the built-in sizing defaults for column definitions.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * Columns default to `size: 150`, `minSize: 20`, and
+ * `maxSize: Number.MAX_SAFE_INTEGER` unless overridden by column definitions or
+ * table defaults.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultColumnSizingColumnDef()
+ * const defaults = getDefaultColumnSizingColumnDef()
  * ```
  */
 export function getDefaultColumnSizingColumnDef() {
@@ -47,13 +55,14 @@ export function getDefaultColumnSizingColumnDef() {
 }
 
 /**
- * Returns size for a column.
+ * Resolves a column's current pixel size.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Committed `state.columnSizing[column.id]` wins over `columnDef.size`, then the
+ * built-in default size. The result is clamped between min and max size.
  *
  * @example
  * ```ts
- * const value = column_getSize(column)
+ * const width = column_getSize(column)
  * ```
  */
 export function column_getSize<
@@ -62,7 +71,11 @@ export function column_getSize<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): number {
   const defaultSizes = getDefaultColumnSizingColumnDef()
-  const columnSize = column.table.atoms.columnSizing?.get()?.[column.id]
+  const columnSizing = column.table.atoms.columnSizing?.get()
+  const columnSize =
+    columnSizing && hasOwn(columnSizing, column.id)
+      ? columnSizing[column.id]
+      : undefined
 
   return Math.min(
     Math.max(
@@ -74,13 +87,14 @@ export function column_getSize<
 }
 
 /**
- * Returns start for a column.
+ * Computes the offset from the start edge of a pinning region to this column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The value is the sum of all previous visible leaf column sizes in the
+ * requested `'left'`, `'center'`, or `'right'` region.
  *
  * @example
  * ```ts
- * const value = column_getStart(column)
+ * const leftOffset = column_getStart(column, 'left')
  * ```
  */
 export function column_getStart<
@@ -91,6 +105,14 @@ export function column_getStart<
   column: Column_Internal<TFeatures, TData, TValue>,
   position: ColumnPinningPosition | 'center',
 ): number {
+  const index = callMemoOrStaticFn(
+    column,
+    'getIndex',
+    column_getIndex,
+    position,
+  )
+  if (index <= 0) return 0
+
   const visibleLeafColumns = callMemoOrStaticFn(
     column.table,
     'getPinnedVisibleLeafColumns',
@@ -98,19 +120,22 @@ export function column_getStart<
     position,
   )
 
-  return visibleLeafColumns
-    .slice(0, callMemoOrStaticFn(column, 'getIndex', column_getIndex, position))
-    .reduce((sum: number, c) => sum + column_getSize(c), 0)
+  const prevColumn = visibleLeafColumns[index - 1]!
+  return (
+    callMemoOrStaticFn(prevColumn, 'getStart', column_getStart, position) +
+    callMemoOrStaticFn(prevColumn, 'getSize', column_getSize)
+  )
 }
 
 /**
- * Returns after for a column.
+ * Computes the offset from the end edge of a pinning region after this column.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * The value is the sum of all following visible leaf column sizes in the
+ * requested region.
  *
  * @example
  * ```ts
- * const value = column_getAfter(column)
+ * const rightOffset = column_getAfter(column, 'right')
  * ```
  */
 export function column_getAfter<
@@ -127,22 +152,30 @@ export function column_getAfter<
     table_getPinnedVisibleLeafColumns,
     position,
   )
+  const index = callMemoOrStaticFn(
+    column,
+    'getIndex',
+    column_getIndex,
+    position,
+  )
+  if (index < 0 || index >= visibleLeafColumns.length - 1) return 0
 
-  return visibleLeafColumns
-    .slice(
-      callMemoOrStaticFn(column, 'getIndex', column_getIndex, position) + 1,
-    )
-    .reduce((sum: number, c) => sum + column_getSize(c), 0)
+  const nextColumn = visibleLeafColumns[index + 1]!
+  return (
+    callMemoOrStaticFn(nextColumn, 'getSize', column_getSize) +
+    callMemoOrStaticFn(nextColumn, 'getAfter', column_getAfter, position)
+  )
 }
 
 /**
- * Reset Size. for a column.
+ * Removes this column's committed size override.
  *
- * This is the static implementation behind the matching column instance API.
+ * After reset, the column resolves size from `columnDef.size` or built-in
+ * defaults again.
  *
  * @example
  * ```ts
- * const value = column_resetSize(column)
+ * column_resetSize(column)
  * ```
  */
 export function column_resetSize<
@@ -150,19 +183,28 @@ export function column_resetSize<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  table_setColumnSizing(column.table, ({ [column.id]: _, ...rest }) => {
+  table_setColumnSizing(column.table, (old) => {
+    const rest = makeObjectMap<number>()
+    const columnIds = Object.keys(old)
+    for (let i = 0; i < columnIds.length; i++) {
+      const columnId = columnIds[i]!
+      if (columnId !== column.id) {
+        rest[columnId] = old[columnId]!
+      }
+    }
     return rest
   })
 }
 
 /**
- * Returns size for a header.
+ * Computes a header's rendered size from its leaf headers.
  *
- * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ * Group headers sum the sizes of all descendant leaf columns. Leaf headers use
+ * their column's current size.
  *
  * @example
  * ```ts
- * const value = header_getSize(header)
+ * const width = header_getSize(header)
  * ```
  */
 export function header_getSize<
@@ -186,13 +228,14 @@ export function header_getSize<
 }
 
 /**
- * Returns start for a header.
+ * Computes a header's offset from the start of its header group.
  *
- * This is the static implementation behind the matching header instance API and can account for nested header groups.
+ * The offset is the previous sibling header's start plus size, or `0` for the
+ * first header in the group.
  *
  * @example
  * ```ts
- * const value = header_getStart(header)
+ * const offset = header_getStart(header)
  * ```
  */
 export function header_getStart<
@@ -204,7 +247,8 @@ export function header_getStart<
     const prevSiblingHeader = header.headerGroup?.headers[header.index - 1]
     if (prevSiblingHeader) {
       return (
-        header_getStart(prevSiblingHeader) + header_getSize(prevSiblingHeader)
+        callMemoOrStaticFn(prevSiblingHeader, 'getStart', header_getStart) +
+        callMemoOrStaticFn(prevSiblingHeader, 'getSize', header_getSize)
       )
     }
   }
@@ -215,13 +259,14 @@ export function header_getStart<
 // Table APIs
 
 /**
- * Updates the table's column sizing state slice.
+ * Routes a committed column sizing updater through the table's sizing handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next size map or a function of the previous map,
+ * matching the instance `table.setColumnSizing` behavior.
  *
  * @example
  * ```ts
- * table_setColumnSizing(table, (old) => old)
+ * table_setColumnSizing(table, (old) => ({ ...old, age: 96 }))
  * ```
  */
 export function table_setColumnSizing<
@@ -235,9 +280,10 @@ export function table_setColumnSizing<
 }
 
 /**
- * Resets the table's column sizing state slice.
+ * Resets `columnSizing` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.columnSizing` when it
+ * exists. Passing `true` ignores initial state and resets to `{}`.
  *
  * @example
  * ```ts
@@ -251,18 +297,23 @@ export function table_resetColumnSizing<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnSizing(
     table,
-    defaultState ? {} : cloneState(table.initialState.columnSizing ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : Object.assign(
+          makeObjectMap<number>(),
+          cloneState(table.initialState.columnSizing ?? {}),
+        ),
   )
 }
 
 /**
- * Returns total size for the table.
+ * Sums the rendered size of the full table header row.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * This includes left, center, and right columns in the main header group.
  *
  * @example
  * ```ts
- * const value = table_getTotalSize(table)
+ * const width = table_getTotalSize(table)
  * ```
  */
 export function table_getTotalSize<
@@ -277,13 +328,13 @@ export function table_getTotalSize<
 }
 
 /**
- * Returns left total size for the table.
+ * Sums the rendered size of the left pinned header region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * An empty left pinning region returns `0`.
  *
  * @example
  * ```ts
- * const value = table_getLeftTotalSize(table)
+ * const width = table_getLeftTotalSize(table)
  * ```
  */
 export function table_getLeftTotalSize<
@@ -302,13 +353,13 @@ export function table_getLeftTotalSize<
 }
 
 /**
- * Returns center total size for the table.
+ * Sums the rendered size of the center, unpinned header region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * An empty center region returns `0`.
  *
  * @example
  * ```ts
- * const value = table_getCenterTotalSize(table)
+ * const width = table_getCenterTotalSize(table)
  * ```
  */
 export function table_getCenterTotalSize<
@@ -327,13 +378,13 @@ export function table_getCenterTotalSize<
 }
 
 /**
- * Returns right total size for the table.
+ * Sums the rendered size of the right pinned header region.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * An empty right pinning region returns `0`.
  *
  * @example
  * ```ts
- * const value = table_getRightTotalSize(table)
+ * const width = table_getRightTotalSize(table)
  * ```
  */
 export function table_getRightTotalSize<

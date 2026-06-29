@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/vue-table-devtools",
-  "version": "9.0.0-alpha.43",
+  "version": "9.0.0-beta.23",
   "description": "Vue devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,7 +18,8 @@
     "vue",
     "tanstack",
     "table",
-    "devtools"
+    "devtools",
+    "tanstack-intent"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -52,19 +53,20 @@
   },
   "files": [
     "dist/",
-    "src"
+    "src",
+    "skills"
   ],
   "dependencies": {
-    "@tanstack/devtools-utils": "^0.4.0",
+    "@tanstack/devtools-utils": "^0.6.0",
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
     "@tanstack/table-core": "workspace:*",
-    "@vitejs/plugin-vue": "^6.0.6",
-    "vue": "^3.5.34"
+    "@vitejs/plugin-vue": "^6.0.7",
+    "vue": "^3.5.38"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-beta.5",
     "vue": ">=3.2"
   }
 }

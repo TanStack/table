@@ -5,9 +5,9 @@ title: AppHeaderComponent
 
 # Interface: AppHeaderComponent()\<TFeatures, TData, THeaderComponents\>
 
-Defined in: [createTableHook.tsx:395](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L395)
+Defined in: [createTableHook.tsx:326](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L326)
 
-Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
+Component type for AppHeader/AppFooter - wraps a header and provides header context.
 
 ## Type Parameters
 
@@ -23,58 +23,26 @@ Component type for AppHeader/AppFooter - wraps a header and provides header cont
 
 `THeaderComponents` *extends* `Record`\<`string`, [`ComponentType`](../type-aliases/ComponentType.md)\<`any`\>\>
 
-## Call Signature
-
 ```ts
 AppHeaderComponent<TValue>(props): Element;
 ```
 
-Defined in: [createTableHook.tsx:400](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L400)
+Defined in: [createTableHook.tsx:331](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L331)
 
-Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
+Component type for AppHeader/AppFooter - wraps a header and provides header context.
 
-### Type Parameters
+## Type Parameters
 
-#### TValue
-
-`TValue` *extends* `unknown` = `unknown`
-
-### Parameters
-
-#### props
-
-[`AppHeaderPropsWithoutSelector`](AppHeaderPropsWithoutSelector.md)\<`TFeatures`, `TData`, `TValue`, `THeaderComponents`\>
-
-### Returns
-
-`Element`
-
-## Call Signature
-
-```ts
-AppHeaderComponent<TValue, TSelected>(props): Element;
-```
-
-Defined in: [createTableHook.tsx:408](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L408)
-
-Component type for AppHeader/AppFooter - wraps a header and provides header context with optional Subscribe
-
-### Type Parameters
-
-#### TValue
+### TValue
 
 `TValue` *extends* `unknown` = `unknown`
 
-#### TSelected
+## Parameters
 
-`TSelected` = `unknown`
+### props
 
-### Parameters
+[`AppHeaderProps`](AppHeaderProps.md)\<`TFeatures`, `TData`, `TValue`, `THeaderComponents`\>
 
-#### props
-
-[`AppHeaderPropsWithSelector`](AppHeaderPropsWithSelector.md)\<`TFeatures`, `TData`, `TValue`, `THeaderComponents`, `TSelected`\>
-
-### Returns
+## Returns
 
 `Element`

@@ -4,15 +4,20 @@ import {
   createPaginatedRowModel,
   createTableHook,
   filterFns,
+  globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+export const features = tableFeatures({
   columnFilteringFeature,
+  globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 export const {
@@ -22,10 +27,6 @@ export const {
   injectFlexRenderCellContext,
   injectFlexRenderHeaderContext,
 } = createTableHook({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   debugTable: true,
 })

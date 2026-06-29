@@ -5,7 +5,7 @@ title: AppTablePropsWithoutSelector
 
 # Interface: AppTablePropsWithoutSelector
 
-Defined in: [createTableHook.tsx:277](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L277)
+Defined in: [createTableHook.tsx:380](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L380)
 
 Props for AppTable component - without selector
 
@@ -17,7 +17,7 @@ Props for AppTable component - without selector
 children: ReactNode;
 ```
 
-Defined in: [createTableHook.tsx:278](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L278)
+Defined in: [createTableHook.tsx:381](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L381)
 
 ***
 
@@ -27,4 +27,4 @@ Defined in: [createTableHook.tsx:278](https://github.com/TanStack/table/blob/mai
 optional selector: undefined;
 ```
 
-Defined in: [createTableHook.tsx:279](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L279)
+Defined in: [createTableHook.tsx:382](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L382)

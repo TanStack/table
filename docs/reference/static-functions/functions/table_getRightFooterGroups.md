@@ -6,14 +6,14 @@ title: table_getRightFooterGroups
 # Function: table\_getRightFooterGroups()
 
 ```ts
-function table_getRightFooterGroups<TFeatures, TData>(table): any[];
+function table_getRightFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:452](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L452)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:486](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L486)
 
-Returns right footer groups for the table.
+Builds footer groups for the right pinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Footer groups reuse the right header groups in reverse order.
 
 ## Type Parameters
 
@@ -29,14 +29,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`HeaderGroup`](../../index/interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ## Example
 
 ```ts
-const value = table_getRightFooterGroups(table)
+const footerGroups = table_getRightFooterGroups(table)
 ```

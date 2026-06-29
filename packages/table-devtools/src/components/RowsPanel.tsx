@@ -1,4 +1,4 @@
-import { For, createSignal } from 'solid-js'
+import { For, Show, createEffect, createMemo, createSignal } from 'solid-js'
 import { JsonTree } from '@tanstack/devtools-ui'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
@@ -47,35 +47,52 @@ function stringifyValue(value: unknown): string {
 export function RowsPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
-  const tableInstance = table()
   const tableState = useTableStore(
-    tableInstance ? tableInstance.store : undefined,
+    () => table()?.store,
     (state) => state,
+  )
+  const tableOptions = useTableStore(
+    () => {
+      const tableInstance = table()
+      return tableInstance?.optionsStore ?? tableInstance?.store
+    },
+    () => table()?.options as unknown,
   )
 
   const [selectedRowModel, setSelectedRowModel] =
     createSignal<(typeof ROW_MODEL_GETTERS)[number]>('getRowModel')
 
-  if (!tableInstance) {
-    return <NoTableConnected title="Rows" />
-  }
+  const rawData = createMemo((): unknown => {
+    const tableInstance = table()
+    if (!tableInstance) return undefined
 
-  const getRawData = (): unknown => {
-    tableState?.()
+    tableState()
+    tableOptions()
+
     const data = tableInstance.options.data as ReadonlyArray<unknown>
     if (!Array.isArray(data)) return data
     if (data.length <= ROW_LIMIT) return data as unknown
     return data.slice(0, ROW_LIMIT) as unknown
-  }
+  })
 
-  const getRawDataTotalCount = (): number => {
-    tableState?.()
+  const rawDataTotalCount = createMemo((): number => {
+    const tableInstance = table()
+    if (!tableInstance) return 0
+
+    tableState()
+    tableOptions()
+
     const data = tableInstance.options.data as ReadonlyArray<unknown>
     return Array.isArray(data) ? data.length : 0
-  }
+  })
 
-  const getColumns = (): Array<AnyColumn> => {
-    tableState?.()
+  const columns = createMemo((): Array<AnyColumn> => {
+    const tableInstance = table()
+    if (!tableInstance) return []
+
+    tableState()
+    tableOptions()
+
     const tableWithColumnFns = tableInstance as unknown as {
       getVisibleLeafColumns?: () => Array<AnyColumn>
       getAllLeafColumns?: () => Array<AnyColumn>
@@ -86,119 +103,144 @@ export function RowsPanel() {
       tableWithColumnFns.getAllLeafColumns?.() ??
       []
     )
-  }
+  })
 
-  const getAllRows = (): Array<AnyRow> => {
-    tableState?.()
-    selectedRowModel()
-    const getter = tableInstance?.[selectedRowModel()] as
+  const availableGetters = createMemo(
+    (): Array<(typeof ROW_MODEL_GETTERS)[number]> => {
+      const tableInstance = table()
+      if (!tableInstance) return []
+
+      const tableRecord = tableInstance as unknown as Record<string, unknown>
+
+      return ROW_MODEL_GETTERS.filter(
+        (name) => typeof tableRecord[name] === 'function',
+      )
+    },
+  )
+
+  createEffect(() => {
+    const getters = availableGetters()
+    if (getters.length === 0) return
+
+    const currentGetter = selectedRowModel()
+    if (!getters.includes(currentGetter)) {
+      setSelectedRowModel(getters[0]!)
+    }
+  })
+
+  const allRows = createMemo((): Array<AnyRow> => {
+    const tableInstance = table()
+    if (!tableInstance) return []
+
+    tableState()
+
+    const tableRecord = tableInstance as unknown as Record<string, unknown>
+    const getter = tableRecord[selectedRowModel()] as
       | (() => { rows: Array<AnyRow> })
       | undefined
+
     return getter?.().rows ?? []
-  }
+  })
 
-  const getRows = (): Array<AnyRow> => {
-    const rows = getAllRows()
-    return rows.length <= ROW_LIMIT ? rows : rows.slice(0, ROW_LIMIT)
-  }
+  const rows = createMemo((): Array<AnyRow> => {
+    const nextRows = allRows()
+    if (nextRows.length <= ROW_LIMIT) return nextRows
+    return nextRows.slice(0, ROW_LIMIT)
+  })
 
-  const getRowsTotalCount = (): number => getAllRows().length
+  const rowsTotalCount = createMemo(() => allRows().length)
 
   const getCells = (row: AnyRow): Array<AnyCell> => {
-    tableState?.()
     const rowWithMaybeVisibleCells = row as unknown as {
       getVisibleCells?: () => Array<AnyCell>
     }
     return rowWithMaybeVisibleCells.getVisibleCells?.() ?? row.getAllCells()
   }
 
-  const getAvailableGetters = (): Array<(typeof ROW_MODEL_GETTERS)[number]> => {
-    return ROW_MODEL_GETTERS.filter(
-      (name) => typeof tableInstance[name] === 'function',
-    )
-  }
-
   return (
-    <div class={styles().panelScroll}>
-      <ResizableSplit
-        left={
-          <>
-            <div class={styles().sectionTitle}>
-              Raw Data
-              {getRawDataTotalCount() > ROW_LIMIT && (
-                <span class={styles().rowLimitNote}>
-                  {' '}
-                  (First {ROW_LIMIT} rows)
-                </span>
-              )}
-            </div>
-            <JsonTree copyable value={getRawData()} />
-          </>
-        }
-        right={
-          <>
-            <div class={styles().sectionTitle}>
-              Rows ({getRows().length}
-              {getRowsTotalCount() > ROW_LIMIT && ` of ${getRowsTotalCount()}`})
-              {getRowsTotalCount() > ROW_LIMIT && (
-                <span class={styles().rowLimitNote}>
-                  {' '}
-                  — First {ROW_LIMIT} rows
-                </span>
-              )}
-            </div>
-            <div class={styles().rowModelSelectRow}>
-              <label for="row-model-select">View:</label>
-              <select
-                id="row-model-select"
-                class={styles().rowModelSelect}
-                value={selectedRowModel()}
-                onChange={(e) =>
-                  setSelectedRowModel(
-                    e.currentTarget.value as (typeof ROW_MODEL_GETTERS)[number],
-                  )
-                }
-              >
-                <For each={getAvailableGetters()}>
-                  {(getterName) => (
-                    <option value={getterName}>{getterName}</option>
-                  )}
-                </For>
-              </select>
-            </div>
-            <div class={styles().tableWrapper}>
-              <table class={styles().rowsTable}>
-                <thead>
-                  <tr>
-                    <th class={styles().headerCell}>#</th>
-                    <For each={getColumns()}>
-                      {(column) => (
-                        <th class={styles().headerCell}>{column.id}</th>
-                      )}
-                    </For>
-                  </tr>
-                </thead>
-                <tbody>
-                  <For each={getRows()}>
-                    {(row) => (
-                      <tr>
-                        <td class={styles().bodyCellMono}>{row.id}</td>
-                        <For each={getCells(row)}>
-                          {(cell) => (
-                            <td class={styles().bodyCell}>
-                              {stringifyValue(cell.getValue())}
-                            </td>
-                          )}
-                        </For>
-                      </tr>
+    <Show fallback={<NoTableConnected title="Rows" />} when={table()}>
+      <div class={styles().panelScroll}>
+        <ResizableSplit
+          left={
+            <>
+              <div class={styles().sectionTitle}>
+                Raw Data
+                {rawDataTotalCount() > ROW_LIMIT && (
+                  <span class={styles().rowLimitNote}>
+                    {' '}
+                    (First {ROW_LIMIT} rows)
+                  </span>
+                )}
+              </div>
+              <JsonTree copyable value={rawData()} />
+            </>
+          }
+          right={
+            <>
+              <div class={styles().sectionTitle}>
+                Rows ({rows().length}
+                {rowsTotalCount() > ROW_LIMIT && ` of ${rowsTotalCount()}`})
+                {rowsTotalCount() > ROW_LIMIT && (
+                  <span class={styles().rowLimitNote}>
+                    {' '}
+                    — First {ROW_LIMIT} rows
+                  </span>
+                )}
+              </div>
+              <div class={styles().rowModelSelectRow}>
+                <label for="row-model-select">View:</label>
+                <select
+                  id="row-model-select"
+                  class={styles().rowModelSelect}
+                  value={selectedRowModel()}
+                  onChange={(e) =>
+                    setSelectedRowModel(
+                      e.currentTarget
+                        .value as (typeof ROW_MODEL_GETTERS)[number],
+                    )
+                  }
+                >
+                  <For each={availableGetters()}>
+                    {(getterName) => (
+                      <option value={getterName}>{getterName}</option>
                     )}
                   </For>
-                </tbody>
-              </table>
-            </div>
-          </>
-        }
-      />
-    </div>
+                </select>
+              </div>
+              <div class={styles().tableWrapper}>
+                <table class={styles().rowsTable}>
+                  <thead>
+                    <tr>
+                      <th class={styles().headerCell}>#</th>
+                      <For each={columns()}>
+                        {(column) => (
+                          <th class={styles().headerCell}>{column.id}</th>
+                        )}
+                      </For>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <For each={rows()}>
+                      {(row) => (
+                        <tr>
+                          <td class={styles().bodyCellMono}>{row.id}</td>
+                          <For each={getCells(row)}>
+                            {(cell) => (
+                              <td class={styles().bodyCell}>
+                                {stringifyValue(cell.getValue())}
+                              </td>
+                            )}
+                          </For>
+                        </tr>
+                      )}
+                    </For>
+                  </tbody>
+                </table>
+              </div>
+            </>
+          }
+        />
+      </div>
+    </Show>
   )
 }

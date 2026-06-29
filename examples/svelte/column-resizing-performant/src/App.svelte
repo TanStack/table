@@ -11,12 +11,12 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnSizingFeature,
     columnResizingFeature,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.group({
@@ -65,8 +65,7 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       get data() {
         return data
@@ -111,7 +110,7 @@
   </i>
   <div class="spacer-md"></div>
   <pre style="min-height: 10rem">
-    {JSON.stringify(table.store.state, null, 2)}
+    {JSON.stringify(table.state, null, 2)}
   </pre>
   <div class="spacer-md"></div>
   ({data.length.toLocaleString()} rows)

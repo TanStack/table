@@ -10,11 +10,11 @@ This quick guide will discuss the different ways you can retrieve and interact w
 
 ### Where to Get Columns From
 
-You can find the `column` objects in many places. They are often attached
+You can find the `column` objects in many places. They are often attached to other objects like headers and cells, and they are also available from several `table` instance APIs.
 
 #### Header and Cell Objects
 
-Before you reach for one of the `table` instance APIs, consider if you actually need to retrieve either [headers](./headers) or [cells](./cells) instead of `columns`. If you are rending out the markup for your table, you will most likely want to reach for the APIs that return headers or cells instead of columns. The column objects themselves are not really meant to render out the headers or cells, but the `header` and `cell` objects will contain references to these `column` objects from which they can derive the necessary information to render their UI.
+Before you reach for one of the `table` instance APIs, consider if you actually need to retrieve either [headers](./headers) or [cells](./cells) instead of `columns`. If you are rendering out the markup for your table, you will most likely want to reach for the APIs that return headers or cells instead of columns. The column objects themselves are not really meant to render out the headers or cells, but the `header` and `cell` objects will contain references to these `column` objects from which they can derive the necessary information to render their UI.
 
 ```js
 const column = cell.column; // get column from cell
@@ -47,7 +47,7 @@ Every column must have a unique `id` defined in their associated [Column Definit
 
 #### ColumnDef
 
-A reference to the original `columnDef` object that was used to created the column is always available on the column object.
+A reference to the original `columnDef` object that was used to create the column is always available on the column object.
 
 #### Nested Grouped Columns Properties
 

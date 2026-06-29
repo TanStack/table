@@ -1,0 +1,1613 @@
+library:
+  name: '@tanstack/table'
+  version: 9.0.0-alpha.48
+  repository: https://github.com/TanStack/table
+  description:
+    Headless data-grid library for building powerful, type-safe tables and datagrids while keeping full control
+    of markup, styles, and behavior.
+generated_from:
+  domain_map: _artifacts/domain_map.yaml
+  skill_spec: _artifacts/skill_spec.md
+generated_at: '2026-05-17'
+structure: flat-per-package
+monorepo_layout: true
+maintainer_notes:
+  - Skills are co-located inside each package under packages/<pkg>/skills/<slug>/SKILL.md.
+  - Domain map artifacts stay at the repo root in _artifacts/.
+  - No router skill or core-overview skill — intent CLI list/show is sufficient for discovery.
+  - No per-UI-library composition skills (maintainer decision).
+  - compose-with-tanstack-hotkeys deferred to v1.1 (example coming) — not in this tree.
+  - Custom-feature authoring skill excluded from v1 (TData generics broken on plugin pattern).
+  - Composition skills for sibling TanStack libs (Store/Query/Virtual/Form/Pacer) live inside each framework adapter package
+    they apply to.
+skills:
+  - name: Setup
+    slug: setup
+    type: core
+    domain: core-foundations
+    path: packages/table-core/skills/setup/SKILL.md
+    package: packages/table-core
+    description: Install a table adapter and wire up a first working table with `features`, `rowModels`, columns, and data.
+    requires:
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/overview.md
+      - TanStack/table:docs/guide/tables.md
+      - TanStack/table:docs/guide/features.md
+      - TanStack/table:packages/table-core/src/index.ts
+  - name: Column Definitions
+    slug: column-definitions
+    type: core
+    domain: core-foundations
+    path: packages/table-core/skills/column-definitions/SKILL.md
+    package: packages/table-core
+    description: Define columns with `createColumnHelper<typeof features, TData>()` to extract data and render headers/cells/footers.
+    sources:
+      - TanStack/table:docs/guide/column-defs.md
+      - TanStack/table:docs/guide/columns.md
+  - name: State Management
+    slug: state-management
+    type: core
+    domain: core-foundations
+    path: packages/table-core/skills/state-management/SKILL.md
+    package: packages/table-core
+    description:
+      Coordinate table state slices (sorting, pagination, filters, selection, etc.) across `initialState`, `state`+`on*Change`,
+      and external `atoms`, with awareness of v9 atom precedence.
+    sources:
+      - TanStack/table:docs/framework/vanilla/guide/table-state.md
+      - TanStack/table:docs/framework/react/guide/table-state.md
+      - TanStack/table:packages/table-core/src/store-reactivity-bindings.ts
+      - TanStack/table:packages/table-core/src/reactivity.ts
+  - name: Customizing Feature Behavior
+    slug: customizing-feature-behavior
+    type: core
+    domain: core-foundations
+    path: packages/table-core/skills/customizing-feature-behavior/SKILL.md
+    package: packages/table-core
+    description:
+      Override per-column `sortFn`, `filterFn`, `aggregationFn`, and table-level `globalFilterFn` — and chain filter→sort
+      metadata via `addMeta`.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/guide/sorting.md
+      - TanStack/table:docs/guide/column-filtering.md
+      - TanStack/table:docs/guide/fuzzy-filtering.md
+      - TanStack/table:packages/table-core/src/fns/
+  - name: Filtering
+    slug: filtering
+    type: core
+    domain: row-model-features
+    path: packages/table-core/skills/filtering/SKILL.md
+    package: packages/table-core
+    description:
+      Filter rows in TanStack Table v9 — column filters, a global filter, faceted facet values for filter UIs, and
+      fuzzy ranking — using the `filteredRowModel` row-model pipeline stage.
+    requires:
+      - state-management
+      - customizing-feature-behavior
+    subsystems:
+      - column-filtering
+      - global-filtering
+      - column-faceting
+      - global-faceting
+      - fuzzy-filtering
+    references:
+      - references/content.md
+    sources:
+      - TanStack/table:docs/guide/column-filtering.md
+      - TanStack/table:docs/guide/global-filtering.md
+      - TanStack/table:docs/guide/column-faceting.md
+      - TanStack/table:docs/guide/global-faceting.md
+      - TanStack/table:docs/guide/fuzzy-filtering.md
+      - TanStack/table:examples/react/filters/
+      - TanStack/table:examples/react/filters-faceted/
+      - TanStack/table:examples/react/filters-fuzzy/
+  - name: Sorting
+    slug: sorting
+    type: core
+    domain: row-model-features
+    path: packages/table-core/skills/sorting/SKILL.md
+    package: packages/table-core
+    description:
+      Sort rows in TanStack Table v9 with the `sortedRowModel` stage — built-in sortFns, custom sortFns, multi-sort,
+      sortUndefined placement, invertSorting for "lower-is-better" scales, and manual server-side sorting.
+    requires:
+      - state-management
+      - customizing-feature-behavior
+    references:
+      - references/content.md
+    sources:
+      - TanStack/table:docs/guide/sorting.md
+      - TanStack/table:examples/react/sorting/
+  - name: Pagination
+    slug: pagination
+    type: core
+    domain: row-model-features
+    path: packages/table-core/skills/pagination/SKILL.md
+    package: packages/table-core
+    description:
+      Paginate rows in TanStack Table v9 with the `paginatedRowModel` stage — page navigation APIs, total row/page
+      count, automatic page reset on data changes, and manual server-side pagination.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/guide/pagination.md
+      - TanStack/table:examples/react/pagination/
+  - name: Grouping
+    slug: grouping
+    type: core
+    domain: row-model-features
+    path: packages/table-core/skills/grouping/SKILL.md
+    package: packages/table-core
+    description:
+      Group rows by column values in TanStack Table v9 with the `groupedRowModel` stage — the built-in aggregationFn
+      registry, custom aggregations, grouped-column placement modes, manual server-side grouping, and expand-grouped-rows interaction
+      with the expanding feature.
+    requires:
+      - state-management
+      - customizing-feature-behavior
+    references:
+      - references/content.md
+    sources:
+      - TanStack/table:docs/guide/grouping.md
+      - TanStack/table:examples/react/grouping/
+  - name: Row Expanding
+    slug: row-expanding
+    type: core
+    domain: row-model-features
+    path: packages/table-core/skills/row-expanding/SKILL.md
+    package: packages/table-core
+    description:
+      Expand and collapse rows in TanStack Table v9 with the `expandedRowModel` stage — tree sub-rows via `getSubRows`,
+      detail panels via `getRowCanExpand`, filter-from-leaf-rows interaction, expanded rows in pagination, and manual server-side
+      expansion.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/guide/expanding.md
+      - TanStack/table:examples/react/expanding/
+      - TanStack/table:examples/react/sub-components/
+  - name: Column Layout Features
+    slug: column-layout
+    type: core
+    domain: ui-state-features
+    path: packages/table-core/skills/column-layout/SKILL.md
+    package: packages/table-core
+    description:
+      "The five UI-state-only column features that shape how columns render: visibility (show/hide), ordering (manual
+      sequence), pinning (left/right regions), sizing (px widths with min/max), and resizing (drag handle that commits to columnSizing).
+      All are opt-in via `tableFeatures({ ... })`, share the consumer's state-management story (`initialState` vs hoisted `state`
+      + `on*Change`), and combine through a fixed reorder pipeline: Column Pinning -> Manual Column Ordering -> Grouping. None
+      of these features require a row model — they only affect layout."
+    requires:
+      - state-management
+    subsystems:
+      - visibility
+      - ordering
+      - pinning
+      - sizing
+      - resizing
+    sources:
+      - TanStack/table:docs/guide/column-visibility.md
+      - TanStack/table:docs/guide/column-ordering.md
+      - TanStack/table:docs/guide/column-pinning.md
+      - TanStack/table:docs/guide/column-sizing.md
+      - TanStack/table:docs/guide/column-resizing.md
+      - TanStack/table:examples/react/column-resizing-performant/
+  - name: Row Pinning
+    slug: row-pinning
+    type: core
+    domain: ui-state-features
+    path: packages/table-core/skills/row-pinning/SKILL.md
+    package: packages/table-core
+    description:
+      'Pin specific rows to a top region or bottom region that stays visible across pagination and filtering. State
+      shape is `{ top: string[]; bottom: string[] }` keyed by `row.id`. Simpler pipeline than column pinning — only one reorder
+      step happens after row pinning (sorting) and pinned rows are sorted within their region.'
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/guide/row-pinning.md
+      - TanStack/table:examples/react/row-pinning/
+  - name: Row Selection
+    slug: row-selection
+    type: core
+    domain: ui-state-features
+    path: packages/table-core/skills/row-selection/SKILL.md
+    package: packages/table-core
+    description:
+      'Track which rows are selected via `rowSelection: Record<rowId, boolean | undefined>` and derive selected-row
+      models scoped to the current data (`getSelectedRowModel`), to filtered data (`getFilteredSelectedRowModel`), or to grouped
+      data (`getGroupedSelectedRowModel`). Supports single-select via `enableMultiRowSelection: false`, conditional row-by-row
+      enabling via predicates, and parent->child propagation via `enableSubRowSelection`. The row id used in the selection map
+      defaults to `row.index` — supplying a stable `getRowId` is essentially mandatory for any real-world use.'
+    requires:
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/guide/row-selection.md
+      - TanStack/table:examples/react/row-selection/
+      - TanStack/table:examples/angular/row-selection-signal/
+  - name: React Table State, Subscribe & createTableHook
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: packages/react-table/skills/react/table-state/SKILL.md
+    package: packages/react-table
+    description:
+      Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook
+      composition for @tanstack/react-table.
+    requires:
+      - state-management
+      - setup
+    sources:
+      - TanStack/table:docs/framework/react/guide/table-state.md
+      - TanStack/table:packages/react-table/src/
+  - name: Vue Table State, Subscribe & createTableHook
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: packages/vue-table/skills/vue/table-state/SKILL.md
+    package: packages/vue-table
+    description:
+      Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook
+      composition for @tanstack/react-table.
+    requires:
+      - state-management
+      - setup
+    sources:
+      - TanStack/table:docs/framework/vue/guide/table-state.md
+      - TanStack/table:packages/vue-table/src/
+  - name: Solid Table State, Subscribe & createTableHook
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: packages/solid-table/skills/solid/table-state/SKILL.md
+    package: packages/solid-table
+    description:
+      Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook
+      composition for @tanstack/react-table.
+    requires:
+      - state-management
+      - setup
+    sources:
+      - TanStack/table:docs/framework/solid/guide/table-state.md
+      - TanStack/table:packages/solid-table/src/
+  - name: Svelte Table State, subscribeTable & createTableHook
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: packages/svelte-table/skills/svelte/table-state/SKILL.md
+    package: packages/svelte-table
+    description:
+      Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook
+      composition for @tanstack/react-table.
+    requires:
+      - state-management
+      - setup
+    sources:
+      - TanStack/table:docs/framework/svelte/guide/table-state.md
+      - TanStack/table:packages/svelte-table/src/
+  - name: Angular Table State & injectTable
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: packages/angular-table/skills/angular/table-state/SKILL.md
+    package: packages/angular-table
+    description:
+      Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook
+      composition for @tanstack/react-table.
+    requires:
+      - state-management
+      - setup
+    sources:
+      - TanStack/table:docs/framework/angular/guide/table-state.md
+      - TanStack/table:packages/angular-table/src/
+  - name: Lit Table State & createTableHook
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: packages/lit-table/skills/lit/table-state/SKILL.md
+    package: packages/lit-table
+    description:
+      Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook
+      composition for @tanstack/react-table.
+    requires:
+      - state-management
+      - setup
+    sources:
+      - TanStack/table:docs/framework/lit/guide/table-state.md
+      - TanStack/table:packages/lit-table/src/
+  - name: Preact Table State, Subscribe & createTableHook
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: packages/preact-table/skills/preact/table-state/SKILL.md
+    package: packages/preact-table
+    description:
+      Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook
+      composition for @tanstack/react-table.
+    requires:
+      - state-management
+      - setup
+    sources:
+      - TanStack/table:docs/framework/preact/guide/table-state.md
+      - TanStack/table:packages/preact-table/src/
+  - name: React Subscribe for React Compiler Compatibility
+    slug: react-subscribe-compiler-compat
+    type: framework
+    domain: framework-adapters
+    path: packages/react-table/skills/react/react-subscribe-compiler-compat/SKILL.md
+    package: packages/react-table
+    description: Use Subscribe / table.Subscribe to keep nested header and cell components correct under React Compiler memoization.
+    requires:
+      - react/table-state
+    sources:
+      - TanStack/table:docs/framework/react/guide/table-state.md
+      - TanStack/table:packages/react-table/src/Subscribe.ts
+      - TanStack/table:examples/react/basic-subscribe/
+  - name: Angular Rendering Directives & DI Context
+    slug: angular-rendering-directives
+    type: framework
+    domain: framework-adapters
+    path: packages/angular-table/skills/angular/angular-rendering-directives/SKILL.md
+    package: packages/angular-table
+    description:
+      Structural directives flexRender / flexRenderCell / flexRenderHeader / flexRenderFooter plus context tokens
+      for prop-drill-free Angular rendering.
+    requires:
+      - angular/table-state
+    sources:
+      - TanStack/table:docs/framework/angular/guide/rendering.md
+      - TanStack/table:docs/framework/angular/guide/table-composition.md
+      - TanStack/table:packages/angular-table/src/flexRender.ts
+  - name: Lit TableController Pattern
+    slug: lit-table-controller
+    type: framework
+    domain: framework-adapters
+    path: packages/lit-table/skills/lit/lit-table-controller/SKILL.md
+    package: packages/lit-table
+    description: TableController ReactiveController pattern for hosting a TanStack Table instance inside a LitElement.
+    requires:
+      - lit/table-state
+    sources:
+      - TanStack/table:docs/framework/lit/lit-table.md
+      - TanStack/table:docs/framework/lit/guide/table-state.md
+      - TanStack/table:packages/lit-table/src/
+  - name: Getting Started
+    slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    path: packages/react-table/skills/react/getting-started/SKILL.md
+    package: packages/react-table
+    description:
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.'
+    requires:
+      - setup
+      - column-definitions
+      - state-management
+      - react/table-state
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/framework/react/react-table.md
+      - TanStack/table:examples/react/basic-use-table/
+  - name: Getting Started
+    slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    path: packages/vue-table/skills/vue/getting-started/SKILL.md
+    package: packages/vue-table
+    description:
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.'
+    requires:
+      - setup
+      - column-definitions
+      - state-management
+      - vue/table-state
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/framework/vue/vue-table.md
+      - TanStack/table:examples/vue/basic-use-table/
+  - name: Getting Started
+    slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    path: packages/angular-table/skills/angular/getting-started/SKILL.md
+    package: packages/angular-table
+    description:
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.'
+    requires:
+      - setup
+      - column-definitions
+      - state-management
+      - angular/table-state
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/framework/angular/angular-table.md
+      - TanStack/table:examples/angular/basic-use-table/
+  - name: Getting Started
+    slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    path: packages/solid-table/skills/solid/getting-started/SKILL.md
+    package: packages/solid-table
+    description:
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.'
+    requires:
+      - setup
+      - column-definitions
+      - state-management
+      - solid/table-state
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/framework/solid/solid-table.md
+      - TanStack/table:examples/solid/basic-use-table/
+  - name: Getting Started
+    slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    path: packages/svelte-table/skills/svelte/getting-started/SKILL.md
+    package: packages/svelte-table
+    description:
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.'
+    requires:
+      - setup
+      - column-definitions
+      - state-management
+      - svelte/table-state
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/framework/svelte/svelte-table.md
+      - TanStack/table:examples/svelte/basic-use-table/
+  - name: Getting Started
+    slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    path: packages/preact-table/skills/preact/getting-started/SKILL.md
+    package: packages/preact-table
+    description:
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.'
+    requires:
+      - setup
+      - column-definitions
+      - state-management
+      - preact/table-state
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/framework/preact/preact-table.md
+      - TanStack/table:examples/preact/basic-use-table/
+  - name: Getting Started
+    slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    path: packages/lit-table/skills/lit/getting-started/SKILL.md
+    package: packages/lit-table
+    description:
+      'End-to-end first-table journey: install the framework adapter, declare `features` via `tableFeatures()`,
+      declare `rowModels` factories with their *Fns parameters, create a column helper with both `TFeatures` and `TData` generics,
+      instantiate `useTable` / `injectTable` / `createTable`, and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.'
+    requires:
+      - setup
+      - column-definitions
+      - state-management
+      - lit/table-state
+    sources:
+      - TanStack/table:docs/installation.md
+      - TanStack/table:docs/framework/lit/lit-table.md
+      - TanStack/table:examples/lit/basic-use-table/
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/react-table/skills/react/migrate-v8-to-v9/SKILL.md
+    package: packages/react-table
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/react/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/vue-table/skills/vue/migrate-v8-to-v9/SKILL.md
+    package: packages/vue-table
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/vue/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/angular-table/skills/angular/migrate-v8-to-v9/SKILL.md
+    package: packages/angular-table
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/angular/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/solid-table/skills/solid/migrate-v8-to-v9/SKILL.md
+    package: packages/solid-table
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/solid/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/svelte-table/skills/svelte/migrate-v8-to-v9/SKILL.md
+    package: packages/svelte-table
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/svelte/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/preact-table/skills/preact/migrate-v8-to-v9/SKILL.md
+    package: packages/preact-table
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/preact/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/lit-table/skills/lit/migrate-v8-to-v9/SKILL.md
+    package: packages/lit-table
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/lit/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Migrate V8 To V9
+    slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    path: packages/table-core/skills/migrate-v8-to-v9/SKILL.md
+    package: packages/table-core
+    description:
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across every adapter. Every old-shaped option,
+      type, or method an agent will try to reproduce from v8 muscle memory has a v9 equivalent enumerated below. For React projects
+      that cannot migrate every table at once, `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API shape
+      on top of the v9 engine — deprecated, ships every feature, no `table.Subscribe`, but lets you upgrade incrementally.
+    requires:
+      - setup
+      - state-management
+      - column-definitions
+    sources:
+      - TanStack/table:docs/framework/table-core/guide/migrating.md
+      - TanStack/table:docs/framework/react/guide/use-legacy-table.md
+      - TanStack/table:packages/react-table/src/legacy.ts
+  - name: Client To Server
+    slug: client-to-server
+    type: lifecycle
+    domain: lifecycle
+    path: packages/react-table/skills/react/client-to-server/SKILL.md
+    package: packages/react-table
+    description:
+      "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
+      / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
+      entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
+      owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
+      state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
+      it without `on*Change` plumbing."
+    requires:
+      - state-management
+      - pagination
+      - filtering
+      - sorting
+    sources:
+      - TanStack/table:examples/react/basic-external-atoms/
+  - name: Client To Server
+    slug: client-to-server
+    type: lifecycle
+    domain: lifecycle
+    path: packages/vue-table/skills/vue/client-to-server/SKILL.md
+    package: packages/vue-table
+    description:
+      "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
+      / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
+      entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
+      owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
+      state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
+      it without `on*Change` plumbing."
+    requires:
+      - state-management
+      - pagination
+      - filtering
+      - sorting
+    sources:
+      - TanStack/table:examples/vue/basic-external-atoms/
+  - name: Client To Server
+    slug: client-to-server
+    type: lifecycle
+    domain: lifecycle
+    path: packages/angular-table/skills/angular/client-to-server/SKILL.md
+    package: packages/angular-table
+    description:
+      "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
+      / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
+      entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
+      owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
+      state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
+      it without `on*Change` plumbing."
+    requires:
+      - state-management
+      - pagination
+      - filtering
+      - sorting
+    sources:
+      - TanStack/table:examples/angular/basic-external-atoms/
+  - name: Client To Server
+    slug: client-to-server
+    type: lifecycle
+    domain: lifecycle
+    path: packages/solid-table/skills/solid/client-to-server/SKILL.md
+    package: packages/solid-table
+    description:
+      "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
+      / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
+      entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
+      owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
+      state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
+      it without `on*Change` plumbing."
+    requires:
+      - state-management
+      - pagination
+      - filtering
+      - sorting
+    sources:
+      - TanStack/table:examples/solid/basic-external-atoms/
+  - name: Client To Server
+    slug: client-to-server
+    type: lifecycle
+    domain: lifecycle
+    path: packages/svelte-table/skills/svelte/client-to-server/SKILL.md
+    package: packages/svelte-table
+    description:
+      "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
+      / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
+      entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
+      owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
+      state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
+      it without `on*Change` plumbing."
+    requires:
+      - state-management
+      - pagination
+      - filtering
+      - sorting
+    sources:
+      - TanStack/table:examples/svelte/basic-external-atoms/
+  - name: Client To Server
+    slug: client-to-server
+    type: lifecycle
+    domain: lifecycle
+    path: packages/preact-table/skills/preact/client-to-server/SKILL.md
+    package: packages/preact-table
+    description:
+      "Convert a client-side table to server-side (a.k.a. manual modes). Pattern: pass server data, set `manualSorting`
+      / `manualFiltering` / `manualPagination` / `manualGrouping` / `manualExpanding` for whatever the server now owns, supply
+      `rowCount` (and/or `pageCount`) so the table can paginate without seeing all rows, and remove the corresponding `rowModels`
+      entries (you don't need `paginatedRowModel` if pagination is server-side). State for the server-managed slices is best
+      owned EITHER via external TanStack Store atoms (passed via `options.atoms`) OR via classic `state` + `on*Change` controlled
+      state — both work. With Query, the atom pattern lets you key your query on the atom and let the table write directly to
+      it without `on*Change` plumbing."
+    requires:
+      - state-management
+      - pagination
+      - filtering
+      - sorting
+    sources:
+      - TanStack/table:examples/preact/basic-external-atoms/
+  - name: Production Readiness
+    slug: production-readiness
+    type: lifecycle
+    domain: lifecycle
+    path: packages/react-table/skills/react/production-readiness/SKILL.md
+    package: packages/react-table
+    description:
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
+      (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
+      Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
+    requires:
+      - setup
+      - state-management
+      - react/table-state
+    sources:
+      - TanStack/table:docs/guide/features.md
+      - TanStack/table:docs/framework/react/guide/table-state.md
+  - name: Production Readiness
+    slug: production-readiness
+    type: lifecycle
+    domain: lifecycle
+    path: packages/vue-table/skills/vue/production-readiness/SKILL.md
+    package: packages/vue-table
+    description:
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
+      (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
+      Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
+    requires:
+      - setup
+      - state-management
+      - vue/table-state
+    sources:
+      - TanStack/table:docs/guide/features.md
+      - TanStack/table:docs/framework/react/guide/table-state.md
+  - name: Production Readiness
+    slug: production-readiness
+    type: lifecycle
+    domain: lifecycle
+    path: packages/angular-table/skills/angular/production-readiness/SKILL.md
+    package: packages/angular-table
+    description:
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
+      (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
+      Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
+    requires:
+      - setup
+      - state-management
+      - angular/table-state
+    sources:
+      - TanStack/table:docs/guide/features.md
+      - TanStack/table:docs/framework/react/guide/table-state.md
+  - name: Production Readiness
+    slug: production-readiness
+    type: lifecycle
+    domain: lifecycle
+    path: packages/solid-table/skills/solid/production-readiness/SKILL.md
+    package: packages/solid-table
+    description:
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
+      (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
+      Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
+    requires:
+      - setup
+      - state-management
+      - solid/table-state
+    sources:
+      - TanStack/table:docs/guide/features.md
+      - TanStack/table:docs/framework/react/guide/table-state.md
+  - name: Production Readiness
+    slug: production-readiness
+    type: lifecycle
+    domain: lifecycle
+    path: packages/svelte-table/skills/svelte/production-readiness/SKILL.md
+    package: packages/svelte-table
+    description:
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
+      (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
+      Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
+    requires:
+      - setup
+      - state-management
+      - svelte/table-state
+    sources:
+      - TanStack/table:docs/guide/features.md
+      - TanStack/table:docs/framework/react/guide/table-state.md
+  - name: Production Readiness
+    slug: production-readiness
+    type: lifecycle
+    domain: lifecycle
+    path: packages/preact-table/skills/preact/production-readiness/SKILL.md
+    package: packages/preact-table
+    description:
+      "Ship-ready optimizations for v9: tree-shake the bundle by registering ONLY the `features` you actually use;
+      memoize `features`, `data`, and `columns` for stable identity; replace `(state) => state` with narrow selectors or per-slice
+      `useSelector(table.atoms.<slice>)` subscriptions; and push state-driven re-renders down the tree with `<table.Subscribe>`
+      (or the standalone `<Subscribe>` import) so the expensive table body doesn't re-render every time you toggle a sort indicator.
+      Production builds of the table devtools are also a `/production` import flip — see `compose-with-tanstack-devtools`."
+    requires:
+      - setup
+      - state-management
+      - preact/table-state
+    sources:
+      - TanStack/table:docs/guide/features.md
+      - TanStack/table:docs/framework/react/guide/table-state.md
+  - name: Compose With Tanstack Store
+    slug: compose-with-tanstack-store
+    type: composition
+    domain: composition
+    path: packages/react-table/skills/react/compose-with-tanstack-store/SKILL.md
+    package: packages/react-table
+    description:
+      v9 is built on TanStack Store. Each state slice (sorting, pagination, rowSelection, columnFilters, ...) is
+      a separate atom. The table exposes three read surfaces — `table.atoms.<slice>` (per-slice readonly), `table.store` (flat
+      readonly view), and `table.state` (selector output from `useTable`) — and two write paths — internal `table.baseAtoms.<slice>`
+      OR YOUR `options.atoms[slice]` if you opt to own the slice. The `atoms` option lets a slice be shared across components,
+      persisted, or wired to a non-table subscriber. Use `useCreateAtom` to create the atom in React; `useSelector` to read
+      it in any component without going through the table; the table writes to your atom directly when you call `table.setSorting(...)`
+      etc.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/framework/react/guide/table-state.md
+      - TanStack/table:examples/react/basic-external-atoms/
+  - name: Compose With Tanstack Store
+    slug: compose-with-tanstack-store
+    type: composition
+    domain: composition
+    path: packages/vue-table/skills/vue/compose-with-tanstack-store/SKILL.md
+    package: packages/vue-table
+    description:
+      v9 is built on TanStack Store. Each state slice (sorting, pagination, rowSelection, columnFilters, ...) is
+      a separate atom. The table exposes three read surfaces — `table.atoms.<slice>` (per-slice readonly), `table.store` (flat
+      readonly view), and `table.state` (selector output from `useTable`) — and two write paths — internal `table.baseAtoms.<slice>`
+      OR YOUR `options.atoms[slice]` if you opt to own the slice. The `atoms` option lets a slice be shared across components,
+      persisted, or wired to a non-table subscriber. Use `useCreateAtom` to create the atom in React; `useSelector` to read
+      it in any component without going through the table; the table writes to your atom directly when you call `table.setSorting(...)`
+      etc.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/framework/vue/guide/table-state.md
+      - TanStack/table:examples/vue/basic-external-atoms/
+  - name: Compose With Tanstack Store
+    slug: compose-with-tanstack-store
+    type: composition
+    domain: composition
+    path: packages/angular-table/skills/angular/compose-with-tanstack-store/SKILL.md
+    package: packages/angular-table
+    description:
+      v9 is built on TanStack Store. Each state slice (sorting, pagination, rowSelection, columnFilters, ...) is
+      a separate atom. The table exposes three read surfaces — `table.atoms.<slice>` (per-slice readonly), `table.store` (flat
+      readonly view), and `table.state` (selector output from `useTable`) — and two write paths — internal `table.baseAtoms.<slice>`
+      OR YOUR `options.atoms[slice]` if you opt to own the slice. The `atoms` option lets a slice be shared across components,
+      persisted, or wired to a non-table subscriber. Use `useCreateAtom` to create the atom in React; `useSelector` to read
+      it in any component without going through the table; the table writes to your atom directly when you call `table.setSorting(...)`
+      etc.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/framework/angular/guide/table-state.md
+      - TanStack/table:examples/angular/basic-external-atoms/
+  - name: Compose With Tanstack Store
+    slug: compose-with-tanstack-store
+    type: composition
+    domain: composition
+    path: packages/solid-table/skills/solid/compose-with-tanstack-store/SKILL.md
+    package: packages/solid-table
+    description:
+      v9 is built on TanStack Store. Each state slice (sorting, pagination, rowSelection, columnFilters, ...) is
+      a separate atom. The table exposes three read surfaces — `table.atoms.<slice>` (per-slice readonly), `table.store` (flat
+      readonly view), and `table.state` (selector output from `useTable`) — and two write paths — internal `table.baseAtoms.<slice>`
+      OR YOUR `options.atoms[slice]` if you opt to own the slice. The `atoms` option lets a slice be shared across components,
+      persisted, or wired to a non-table subscriber. Use `useCreateAtom` to create the atom in React; `useSelector` to read
+      it in any component without going through the table; the table writes to your atom directly when you call `table.setSorting(...)`
+      etc.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/framework/solid/guide/table-state.md
+      - TanStack/table:examples/solid/basic-external-atoms/
+  - name: Compose With Tanstack Store
+    slug: compose-with-tanstack-store
+    type: composition
+    domain: composition
+    path: packages/svelte-table/skills/svelte/compose-with-tanstack-store/SKILL.md
+    package: packages/svelte-table
+    description:
+      v9 is built on TanStack Store. Each state slice (sorting, pagination, rowSelection, columnFilters, ...) is
+      a separate atom. The table exposes three read surfaces — `table.atoms.<slice>` (per-slice readonly), `table.store` (flat
+      readonly view), and `table.state` (selector output from `useTable`) — and two write paths — internal `table.baseAtoms.<slice>`
+      OR YOUR `options.atoms[slice]` if you opt to own the slice. The `atoms` option lets a slice be shared across components,
+      persisted, or wired to a non-table subscriber. Use `useCreateAtom` to create the atom in React; `useSelector` to read
+      it in any component without going through the table; the table writes to your atom directly when you call `table.setSorting(...)`
+      etc.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/framework/svelte/guide/table-state.md
+      - TanStack/table:examples/svelte/basic-external-atoms/
+  - name: Compose With Tanstack Store
+    slug: compose-with-tanstack-store
+    type: composition
+    domain: composition
+    path: packages/preact-table/skills/preact/compose-with-tanstack-store/SKILL.md
+    package: packages/preact-table
+    description:
+      v9 is built on TanStack Store. Each state slice (sorting, pagination, rowSelection, columnFilters, ...) is
+      a separate atom. The table exposes three read surfaces — `table.atoms.<slice>` (per-slice readonly), `table.store` (flat
+      readonly view), and `table.state` (selector output from `useTable`) — and two write paths — internal `table.baseAtoms.<slice>`
+      OR YOUR `options.atoms[slice]` if you opt to own the slice. The `atoms` option lets a slice be shared across components,
+      persisted, or wired to a non-table subscriber. Use `useCreateAtom` to create the atom in React; `useSelector` to read
+      it in any component without going through the table; the table writes to your atom directly when you call `table.setSorting(...)`
+      etc.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/framework/preact/guide/table-state.md
+      - TanStack/table:examples/preact/basic-external-atoms/
+  - name: Compose With Tanstack Query
+    slug: compose-with-tanstack-query
+    type: composition
+    domain: composition
+    path: packages/react-table/skills/react/compose-with-tanstack-query/SKILL.md
+    package: packages/react-table
+    description:
+      'Server-side / async data flow with TanStack Query. Key the query on the table state that drives the request
+      (pagination + sort + filters), pass `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages, set `manualPagination`
+      / `manualSorting` / `manualFiltering` so the table doesn''t re-process server-processed rows, and pass `rowCount` so `getPageCount()`
+      works without all rows in memory. The cleanest wiring uses an external pagination atom + `options.atoms.pagination` so
+      table writes auto-trigger Query refetches — no `onPaginationChange` handler required. Examples for React, Vue, Solid,
+      Svelte, and Preact all live in `examples/<framework>/with-tanstack-query`. Angular uses `rxResource` instead of Query
+      in `examples/angular/remote-data`.'
+    requires:
+      - react/client-to-server
+      - pagination
+      - state-management
+    sources:
+      - TanStack/table:examples/react/with-tanstack-query/src/main.tsx
+      - TanStack/table:examples/react/with-tanstack-query/src/fetchData.ts
+      - TanStack/table:examples/angular/remote-data/
+  - name: Compose With Tanstack Query
+    slug: compose-with-tanstack-query
+    type: composition
+    domain: composition
+    path: packages/vue-table/skills/vue/compose-with-tanstack-query/SKILL.md
+    package: packages/vue-table
+    description:
+      'Server-side / async data flow with TanStack Query. Key the query on the table state that drives the request
+      (pagination + sort + filters), pass `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages, set `manualPagination`
+      / `manualSorting` / `manualFiltering` so the table doesn''t re-process server-processed rows, and pass `rowCount` so `getPageCount()`
+      works without all rows in memory. The cleanest wiring uses an external pagination atom + `options.atoms.pagination` so
+      table writes auto-trigger Query refetches — no `onPaginationChange` handler required. Examples for React, Vue, Solid,
+      Svelte, and Preact all live in `examples/<framework>/with-tanstack-query`. Angular uses `rxResource` instead of Query
+      in `examples/angular/remote-data`.'
+    requires:
+      - vue/client-to-server
+      - pagination
+      - state-management
+    sources:
+      - TanStack/table:examples/react/with-tanstack-query/src/main.tsx
+      - TanStack/table:examples/react/with-tanstack-query/src/fetchData.ts
+      - TanStack/table:examples/angular/remote-data/
+  - name: Compose With Tanstack Query
+    slug: compose-with-tanstack-query
+    type: composition
+    domain: composition
+    path: packages/angular-table/skills/angular/compose-with-tanstack-query/SKILL.md
+    package: packages/angular-table
+    description:
+      'Server-side / async data flow with TanStack Query. Key the query on the table state that drives the request
+      (pagination + sort + filters), pass `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages, set `manualPagination`
+      / `manualSorting` / `manualFiltering` so the table doesn''t re-process server-processed rows, and pass `rowCount` so `getPageCount()`
+      works without all rows in memory. The cleanest wiring uses an external pagination atom + `options.atoms.pagination` so
+      table writes auto-trigger Query refetches — no `onPaginationChange` handler required. Examples for React, Vue, Solid,
+      Svelte, and Preact all live in `examples/<framework>/with-tanstack-query`. Angular uses `rxResource` instead of Query
+      in `examples/angular/remote-data`.'
+    requires:
+      - angular/client-to-server
+      - pagination
+      - state-management
+    sources:
+      - TanStack/table:examples/react/with-tanstack-query/src/main.tsx
+      - TanStack/table:examples/react/with-tanstack-query/src/fetchData.ts
+      - TanStack/table:examples/angular/remote-data/
+  - name: Compose With Tanstack Query
+    slug: compose-with-tanstack-query
+    type: composition
+    domain: composition
+    path: packages/solid-table/skills/solid/compose-with-tanstack-query/SKILL.md
+    package: packages/solid-table
+    description:
+      'Server-side / async data flow with TanStack Query. Key the query on the table state that drives the request
+      (pagination + sort + filters), pass `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages, set `manualPagination`
+      / `manualSorting` / `manualFiltering` so the table doesn''t re-process server-processed rows, and pass `rowCount` so `getPageCount()`
+      works without all rows in memory. The cleanest wiring uses an external pagination atom + `options.atoms.pagination` so
+      table writes auto-trigger Query refetches — no `onPaginationChange` handler required. Examples for React, Vue, Solid,
+      Svelte, and Preact all live in `examples/<framework>/with-tanstack-query`. Angular uses `rxResource` instead of Query
+      in `examples/angular/remote-data`.'
+    requires:
+      - solid/client-to-server
+      - pagination
+      - state-management
+    sources:
+      - TanStack/table:examples/react/with-tanstack-query/src/main.tsx
+      - TanStack/table:examples/react/with-tanstack-query/src/fetchData.ts
+      - TanStack/table:examples/angular/remote-data/
+  - name: Compose With Tanstack Query
+    slug: compose-with-tanstack-query
+    type: composition
+    domain: composition
+    path: packages/svelte-table/skills/svelte/compose-with-tanstack-query/SKILL.md
+    package: packages/svelte-table
+    description:
+      'Server-side / async data flow with TanStack Query. Key the query on the table state that drives the request
+      (pagination + sort + filters), pass `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages, set `manualPagination`
+      / `manualSorting` / `manualFiltering` so the table doesn''t re-process server-processed rows, and pass `rowCount` so `getPageCount()`
+      works without all rows in memory. The cleanest wiring uses an external pagination atom + `options.atoms.pagination` so
+      table writes auto-trigger Query refetches — no `onPaginationChange` handler required. Examples for React, Vue, Solid,
+      Svelte, and Preact all live in `examples/<framework>/with-tanstack-query`. Angular uses `rxResource` instead of Query
+      in `examples/angular/remote-data`.'
+    requires:
+      - svelte/client-to-server
+      - pagination
+      - state-management
+    sources:
+      - TanStack/table:examples/react/with-tanstack-query/src/main.tsx
+      - TanStack/table:examples/react/with-tanstack-query/src/fetchData.ts
+      - TanStack/table:examples/angular/remote-data/
+  - name: Compose With Tanstack Query
+    slug: compose-with-tanstack-query
+    type: composition
+    domain: composition
+    path: packages/preact-table/skills/preact/compose-with-tanstack-query/SKILL.md
+    package: packages/preact-table
+    description:
+      'Server-side / async data flow with TanStack Query. Key the query on the table state that drives the request
+      (pagination + sort + filters), pass `placeholderData: keepPreviousData` to avoid a "0 rows flash" between pages, set `manualPagination`
+      / `manualSorting` / `manualFiltering` so the table doesn''t re-process server-processed rows, and pass `rowCount` so `getPageCount()`
+      works without all rows in memory. The cleanest wiring uses an external pagination atom + `options.atoms.pagination` so
+      table writes auto-trigger Query refetches — no `onPaginationChange` handler required. Examples for React, Vue, Solid,
+      Svelte, and Preact all live in `examples/<framework>/with-tanstack-query`. Angular uses `rxResource` instead of Query
+      in `examples/angular/remote-data`.'
+    requires:
+      - preact/client-to-server
+      - pagination
+      - state-management
+    sources:
+      - TanStack/table:examples/react/with-tanstack-query/src/main.tsx
+      - TanStack/table:examples/react/with-tanstack-query/src/fetchData.ts
+      - TanStack/table:examples/angular/remote-data/
+  - name: Compose With Tanstack Virtual
+    slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    path: packages/react-table/skills/react/compose-with-tanstack-virtual/SKILL.md
+    package: packages/react-table
+    description:
+      "TanStack Table does NOT include virtualization — pair with TanStack Virtual (`@tanstack/<fw>-virtual`). The
+      standard pattern: get the row array from `table.getRowModel().rows`, feed `rows.length` to `useVirtualizer({ count, estimateSize,
+      getScrollElement, ... })`, iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`, absolute-position each row
+      with `transform: translateY(virtualRow.start)px`, and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't re-run when unrelated state changes. Column virtualization
+      uses the same shape but with `horizontal: true` and padding-left/padding-right placeholder `<th>`/`<td>` cells. Infinite
+      scroll combines this with `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using `rowVirtualizer.measureElement` + manual style application
+      for max perf."
+    requires:
+      - react/table-state
+      - row-expanding
+    sources:
+      - TanStack/table:docs/guide/virtualization.md
+      - TanStack/table:examples/react/virtualized-rows/
+      - TanStack/table:examples/react/virtualized-columns/
+      - TanStack/table:examples/react/virtualized-infinite-scrolling/
+      - TanStack/table:examples/react/virtualized-rows-experimental/
+  - name: Compose With Tanstack Virtual
+    slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    path: packages/vue-table/skills/vue/compose-with-tanstack-virtual/SKILL.md
+    package: packages/vue-table
+    description:
+      "TanStack Table does NOT include virtualization — pair with TanStack Virtual (`@tanstack/<fw>-virtual`). The
+      standard pattern: get the row array from `table.getRowModel().rows`, feed `rows.length` to `useVirtualizer({ count, estimateSize,
+      getScrollElement, ... })`, iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`, absolute-position each row
+      with `transform: translateY(virtualRow.start)px`, and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't re-run when unrelated state changes. Column virtualization
+      uses the same shape but with `horizontal: true` and padding-left/padding-right placeholder `<th>`/`<td>` cells. Infinite
+      scroll combines this with `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using `rowVirtualizer.measureElement` + manual style application
+      for max perf."
+    requires:
+      - vue/table-state
+      - row-expanding
+    sources:
+      - TanStack/table:docs/guide/virtualization.md
+      - TanStack/table:examples/react/virtualized-rows/
+      - TanStack/table:examples/react/virtualized-columns/
+      - TanStack/table:examples/react/virtualized-infinite-scrolling/
+      - TanStack/table:examples/react/virtualized-rows-experimental/
+  - name: Compose With Tanstack Virtual
+    slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    path: packages/angular-table/skills/angular/compose-with-tanstack-virtual/SKILL.md
+    package: packages/angular-table
+    description:
+      "TanStack Table does NOT include virtualization — pair with TanStack Virtual (`@tanstack/<fw>-virtual`). The
+      standard pattern: get the row array from `table.getRowModel().rows`, feed `rows.length` to `useVirtualizer({ count, estimateSize,
+      getScrollElement, ... })`, iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`, absolute-position each row
+      with `transform: translateY(virtualRow.start)px`, and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't re-run when unrelated state changes. Column virtualization
+      uses the same shape but with `horizontal: true` and padding-left/padding-right placeholder `<th>`/`<td>` cells. Infinite
+      scroll combines this with `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using `rowVirtualizer.measureElement` + manual style application
+      for max perf."
+    requires:
+      - angular/table-state
+      - row-expanding
+    sources:
+      - TanStack/table:docs/guide/virtualization.md
+      - TanStack/table:examples/react/virtualized-rows/
+      - TanStack/table:examples/react/virtualized-columns/
+      - TanStack/table:examples/react/virtualized-infinite-scrolling/
+      - TanStack/table:examples/react/virtualized-rows-experimental/
+  - name: Compose With Tanstack Virtual
+    slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    path: packages/solid-table/skills/solid/compose-with-tanstack-virtual/SKILL.md
+    package: packages/solid-table
+    description:
+      "TanStack Table does NOT include virtualization — pair with TanStack Virtual (`@tanstack/<fw>-virtual`). The
+      standard pattern: get the row array from `table.getRowModel().rows`, feed `rows.length` to `useVirtualizer({ count, estimateSize,
+      getScrollElement, ... })`, iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`, absolute-position each row
+      with `transform: translateY(virtualRow.start)px`, and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't re-run when unrelated state changes. Column virtualization
+      uses the same shape but with `horizontal: true` and padding-left/padding-right placeholder `<th>`/`<td>` cells. Infinite
+      scroll combines this with `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using `rowVirtualizer.measureElement` + manual style application
+      for max perf."
+    requires:
+      - solid/table-state
+      - row-expanding
+    sources:
+      - TanStack/table:docs/guide/virtualization.md
+      - TanStack/table:examples/react/virtualized-rows/
+      - TanStack/table:examples/react/virtualized-columns/
+      - TanStack/table:examples/react/virtualized-infinite-scrolling/
+      - TanStack/table:examples/react/virtualized-rows-experimental/
+  - name: Compose With Tanstack Virtual
+    slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    path: packages/svelte-table/skills/svelte/compose-with-tanstack-virtual/SKILL.md
+    package: packages/svelte-table
+    description:
+      "TanStack Table does NOT include virtualization — pair with TanStack Virtual (`@tanstack/<fw>-virtual`). The
+      standard pattern: get the row array from `table.getRowModel().rows`, feed `rows.length` to `useVirtualizer({ count, estimateSize,
+      getScrollElement, ... })`, iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`, absolute-position each row
+      with `transform: translateY(virtualRow.start)px`, and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't re-run when unrelated state changes. Column virtualization
+      uses the same shape but with `horizontal: true` and padding-left/padding-right placeholder `<th>`/`<td>` cells. Infinite
+      scroll combines this with `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using `rowVirtualizer.measureElement` + manual style application
+      for max perf."
+    requires:
+      - svelte/table-state
+      - row-expanding
+    sources:
+      - TanStack/table:docs/guide/virtualization.md
+      - TanStack/table:examples/react/virtualized-rows/
+      - TanStack/table:examples/react/virtualized-columns/
+      - TanStack/table:examples/react/virtualized-infinite-scrolling/
+      - TanStack/table:examples/react/virtualized-rows-experimental/
+  - name: Compose With Tanstack Virtual
+    slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    path: packages/preact-table/skills/preact/compose-with-tanstack-virtual/SKILL.md
+    package: packages/preact-table
+    description:
+      "TanStack Table does NOT include virtualization — pair with TanStack Virtual (`@tanstack/<fw>-virtual`). The
+      standard pattern: get the row array from `table.getRowModel().rows`, feed `rows.length` to `useVirtualizer({ count, estimateSize,
+      getScrollElement, ... })`, iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`, absolute-position each row
+      with `transform: translateY(virtualRow.start)px`, and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't re-run when unrelated state changes. Column virtualization
+      uses the same shape but with `horizontal: true` and padding-left/padding-right placeholder `<th>`/`<td>` cells. Infinite
+      scroll combines this with `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using `rowVirtualizer.measureElement` + manual style application
+      for max perf."
+    requires:
+      - preact/table-state
+      - row-expanding
+    sources:
+      - TanStack/table:docs/guide/virtualization.md
+      - TanStack/table:examples/react/virtualized-rows/
+      - TanStack/table:examples/react/virtualized-columns/
+      - TanStack/table:examples/react/virtualized-infinite-scrolling/
+      - TanStack/table:examples/react/virtualized-rows-experimental/
+  - name: Compose With Tanstack Virtual
+    slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    path: packages/lit-table/skills/lit/compose-with-tanstack-virtual/SKILL.md
+    package: packages/lit-table
+    description:
+      "TanStack Table does NOT include virtualization — pair with TanStack Virtual (`@tanstack/<fw>-virtual`). The
+      standard pattern: get the row array from `table.getRowModel().rows`, feed `rows.length` to `useVirtualizer({ count, estimateSize,
+      getScrollElement, ... })`, iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`, absolute-position each row
+      with `transform: translateY(virtualRow.start)px`, and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't re-run when unrelated state changes. Column virtualization
+      uses the same shape but with `horizontal: true` and padding-left/padding-right placeholder `<th>`/`<td>` cells. Infinite
+      scroll combines this with `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using `rowVirtualizer.measureElement` + manual style application
+      for max perf."
+    requires:
+      - lit/table-state
+      - row-expanding
+    sources:
+      - TanStack/table:docs/guide/virtualization.md
+      - TanStack/table:examples/react/virtualized-rows/
+      - TanStack/table:examples/react/virtualized-columns/
+      - TanStack/table:examples/react/virtualized-infinite-scrolling/
+      - TanStack/table:examples/react/virtualized-rows-experimental/
+  - name: Compose With Tanstack Form
+    slug: compose-with-tanstack-form
+    type: composition
+    domain: composition
+    path: packages/react-table/skills/react/compose-with-tanstack-form/SKILL.md
+    package: packages/react-table
+    description:
+      'Editable cells with TanStack Form. The table is the layout primitive; the form owns the state. Use `createFormHook`
+      to register reusable field components (`TextField`, `NumberField`, `SelectField`), then in each column''s `cell` renderer
+      return `<form.AppField name={`data[${row.index}].field`}>{(field) => <field.TextField />}</form.AppField>`. Important
+      typing gotcha: if your row type has a recursive `subRows`, `Omit<Row, ''subRows''>` to a flat shape before passing to
+      the form — TanStack Form''s `DeepKeys` chases the recursion and hits TS2589 ("type instantiation is excessively deep").
+      Subscribe to `form.state.values.data.length` (not the whole array) to trigger re-renders for row add/remove without infinite
+      loops. Pair with TanStack Pacer for debounced filter inputs on the same screen.'
+    requires:
+      - row-selection
+      - column-definitions
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Form
+    slug: compose-with-tanstack-form
+    type: composition
+    domain: composition
+    path: packages/vue-table/skills/vue/compose-with-tanstack-form/SKILL.md
+    package: packages/vue-table
+    description:
+      'Editable cells with TanStack Form. The table is the layout primitive; the form owns the state. Use `createFormHook`
+      to register reusable field components (`TextField`, `NumberField`, `SelectField`), then in each column''s `cell` renderer
+      return `<form.AppField name={`data[${row.index}].field`}>{(field) => <field.TextField />}</form.AppField>`. Important
+      typing gotcha: if your row type has a recursive `subRows`, `Omit<Row, ''subRows''>` to a flat shape before passing to
+      the form — TanStack Form''s `DeepKeys` chases the recursion and hits TS2589 ("type instantiation is excessively deep").
+      Subscribe to `form.state.values.data.length` (not the whole array) to trigger re-renders for row add/remove without infinite
+      loops. Pair with TanStack Pacer for debounced filter inputs on the same screen.'
+    requires:
+      - row-selection
+      - column-definitions
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Form
+    slug: compose-with-tanstack-form
+    type: composition
+    domain: composition
+    path: packages/solid-table/skills/solid/compose-with-tanstack-form/SKILL.md
+    package: packages/solid-table
+    description:
+      'Editable cells with TanStack Form. The table is the layout primitive; the form owns the state. Use `createFormHook`
+      to register reusable field components (`TextField`, `NumberField`, `SelectField`), then in each column''s `cell` renderer
+      return `<form.AppField name={`data[${row.index}].field`}>{(field) => <field.TextField />}</form.AppField>`. Important
+      typing gotcha: if your row type has a recursive `subRows`, `Omit<Row, ''subRows''>` to a flat shape before passing to
+      the form — TanStack Form''s `DeepKeys` chases the recursion and hits TS2589 ("type instantiation is excessively deep").
+      Subscribe to `form.state.values.data.length` (not the whole array) to trigger re-renders for row add/remove without infinite
+      loops. Pair with TanStack Pacer for debounced filter inputs on the same screen.'
+    requires:
+      - row-selection
+      - column-definitions
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Form
+    slug: compose-with-tanstack-form
+    type: composition
+    domain: composition
+    path: packages/svelte-table/skills/svelte/compose-with-tanstack-form/SKILL.md
+    package: packages/svelte-table
+    description:
+      'Editable cells with TanStack Form. The table is the layout primitive; the form owns the state. Use `createFormHook`
+      to register reusable field components (`TextField`, `NumberField`, `SelectField`), then in each column''s `cell` renderer
+      return `<form.AppField name={`data[${row.index}].field`}>{(field) => <field.TextField />}</form.AppField>`. Important
+      typing gotcha: if your row type has a recursive `subRows`, `Omit<Row, ''subRows''>` to a flat shape before passing to
+      the form — TanStack Form''s `DeepKeys` chases the recursion and hits TS2589 ("type instantiation is excessively deep").
+      Subscribe to `form.state.values.data.length` (not the whole array) to trigger re-renders for row add/remove without infinite
+      loops. Pair with TanStack Pacer for debounced filter inputs on the same screen.'
+    requires:
+      - row-selection
+      - column-definitions
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Form
+    slug: compose-with-tanstack-form
+    type: composition
+    domain: composition
+    path: packages/preact-table/skills/preact/compose-with-tanstack-form/SKILL.md
+    package: packages/preact-table
+    description:
+      'Editable cells with TanStack Form. The table is the layout primitive; the form owns the state. Use `createFormHook`
+      to register reusable field components (`TextField`, `NumberField`, `SelectField`), then in each column''s `cell` renderer
+      return `<form.AppField name={`data[${row.index}].field`}>{(field) => <field.TextField />}</form.AppField>`. Important
+      typing gotcha: if your row type has a recursive `subRows`, `Omit<Row, ''subRows''>` to a flat shape before passing to
+      the form — TanStack Form''s `DeepKeys` chases the recursion and hits TS2589 ("type instantiation is excessively deep").
+      Subscribe to `form.state.values.data.length` (not the whole array) to trigger re-renders for row add/remove without infinite
+      loops. Pair with TanStack Pacer for debounced filter inputs on the same screen.'
+    requires:
+      - row-selection
+      - column-definitions
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Pacer
+    slug: compose-with-tanstack-pacer
+    type: composition
+    domain: composition
+    path: packages/react-table/skills/react/compose-with-tanstack-pacer/SKILL.md
+    package: packages/react-table
+    description:
+      "Use `@tanstack/<fw>-pacer` to debounce/throttle the high-frequency writes that drive an interactive table:
+      column filter inputs and column resize state. Pattern: import `useDebouncedCallback` from `@tanstack/react-pacer/debouncer`,
+      wrap your `onChange` writer in it, and keep local state for the input value so typing feels instant. For column resizing,
+      the equivalent is throttling `onColumnResizingChange` so a drag doesn't push 60 state updates a second through the store.
+      Pacer is the v9 replacement for the hand-rolled `DebouncedInput` component that appears in every v8 filtering example
+      — the new pattern keeps the input shape but replaces `setTimeout` plumbing with `useDebouncedCallback`."
+    requires:
+      - filtering
+      - column-layout
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Pacer
+    slug: compose-with-tanstack-pacer
+    type: composition
+    domain: composition
+    path: packages/vue-table/skills/vue/compose-with-tanstack-pacer/SKILL.md
+    package: packages/vue-table
+    description:
+      "Use `@tanstack/<fw>-pacer` to debounce/throttle the high-frequency writes that drive an interactive table:
+      column filter inputs and column resize state. Pattern: import `useDebouncedCallback` from `@tanstack/react-pacer/debouncer`,
+      wrap your `onChange` writer in it, and keep local state for the input value so typing feels instant. For column resizing,
+      the equivalent is throttling `onColumnResizingChange` so a drag doesn't push 60 state updates a second through the store.
+      Pacer is the v9 replacement for the hand-rolled `DebouncedInput` component that appears in every v8 filtering example
+      — the new pattern keeps the input shape but replaces `setTimeout` plumbing with `useDebouncedCallback`."
+    requires:
+      - filtering
+      - column-layout
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Pacer
+    slug: compose-with-tanstack-pacer
+    type: composition
+    domain: composition
+    path: packages/solid-table/skills/solid/compose-with-tanstack-pacer/SKILL.md
+    package: packages/solid-table
+    description:
+      "Use `@tanstack/<fw>-pacer` to debounce/throttle the high-frequency writes that drive an interactive table:
+      column filter inputs and column resize state. Pattern: import `useDebouncedCallback` from `@tanstack/react-pacer/debouncer`,
+      wrap your `onChange` writer in it, and keep local state for the input value so typing feels instant. For column resizing,
+      the equivalent is throttling `onColumnResizingChange` so a drag doesn't push 60 state updates a second through the store.
+      Pacer is the v9 replacement for the hand-rolled `DebouncedInput` component that appears in every v8 filtering example
+      — the new pattern keeps the input shape but replaces `setTimeout` plumbing with `useDebouncedCallback`."
+    requires:
+      - filtering
+      - column-layout
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Pacer
+    slug: compose-with-tanstack-pacer
+    type: composition
+    domain: composition
+    path: packages/svelte-table/skills/svelte/compose-with-tanstack-pacer/SKILL.md
+    package: packages/svelte-table
+    description:
+      "Use `@tanstack/<fw>-pacer` to debounce/throttle the high-frequency writes that drive an interactive table:
+      column filter inputs and column resize state. Pattern: import `useDebouncedCallback` from `@tanstack/react-pacer/debouncer`,
+      wrap your `onChange` writer in it, and keep local state for the input value so typing feels instant. For column resizing,
+      the equivalent is throttling `onColumnResizingChange` so a drag doesn't push 60 state updates a second through the store.
+      Pacer is the v9 replacement for the hand-rolled `DebouncedInput` component that appears in every v8 filtering example
+      — the new pattern keeps the input shape but replaces `setTimeout` plumbing with `useDebouncedCallback`."
+    requires:
+      - filtering
+      - column-layout
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Pacer
+    slug: compose-with-tanstack-pacer
+    type: composition
+    domain: composition
+    path: packages/preact-table/skills/preact/compose-with-tanstack-pacer/SKILL.md
+    package: packages/preact-table
+    description:
+      "Use `@tanstack/<fw>-pacer` to debounce/throttle the high-frequency writes that drive an interactive table:
+      column filter inputs and column resize state. Pattern: import `useDebouncedCallback` from `@tanstack/react-pacer/debouncer`,
+      wrap your `onChange` writer in it, and keep local state for the input value so typing feels instant. For column resizing,
+      the equivalent is throttling `onColumnResizingChange` so a drag doesn't push 60 state updates a second through the store.
+      Pacer is the v9 replacement for the hand-rolled `DebouncedInput` component that appears in every v8 filtering example
+      — the new pattern keeps the input shape but replaces `setTimeout` plumbing with `useDebouncedCallback`."
+    requires:
+      - filtering
+      - column-layout
+    sources:
+      - TanStack/table:examples/react/with-tanstack-form/
+  - name: Compose With Tanstack Devtools
+    slug: compose-with-tanstack-devtools
+    type: composition
+    domain: composition
+    path: packages/react-table-devtools/skills/react/compose-with-tanstack-devtools/SKILL.md
+    package: packages/react-table-devtools
+    description:
+      Install the framework's TanStack Devtools host + the matching table adapter, mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]}
+      />` once at the app root, and call `useTanStackTableDevtools(table, name?)` immediately after each `useTable`. Devtools
+      shows registered tables (with a selector if multiple are named), live state, options, rows, columns, and features. By
+      default devtools are dev-mode only — the framework adapter ships no-op exports when `process.env.NODE_ENV !== 'development'`.
+      If you need live devtools in production, import from the `/production` entrypoint instead (`@tanstack/react-table-devtools/production`,
+      `/vue-table-devtools/production`, `/solid-table-devtools/production`, `/preact-table-devtools/production`). Only React,
+      Vue, Solid, and Preact ship dedicated table devtools adapters — Angular, Svelte, Lit, and vanilla do not.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/devtools.md
+      - TanStack/table:packages/react-table-devtools/src/
+  - name: Compose With Tanstack Devtools
+    slug: compose-with-tanstack-devtools
+    type: composition
+    domain: composition
+    path: packages/vue-table-devtools/skills/vue/compose-with-tanstack-devtools/SKILL.md
+    package: packages/vue-table-devtools
+    description:
+      Install the framework's TanStack Devtools host + the matching table adapter, mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]}
+      />` once at the app root, and call `useTanStackTableDevtools(table, name?)` immediately after each `useTable`. Devtools
+      shows registered tables (with a selector if multiple are named), live state, options, rows, columns, and features. By
+      default devtools are dev-mode only — the framework adapter ships no-op exports when `process.env.NODE_ENV !== 'development'`.
+      If you need live devtools in production, import from the `/production` entrypoint instead (`@tanstack/react-table-devtools/production`,
+      `/vue-table-devtools/production`, `/solid-table-devtools/production`, `/preact-table-devtools/production`). Only React,
+      Vue, Solid, and Preact ship dedicated table devtools adapters — Angular, Svelte, Lit, and vanilla do not.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/devtools.md
+      - TanStack/table:packages/vue-table-devtools/src/
+  - name: Compose With Tanstack Devtools
+    slug: compose-with-tanstack-devtools
+    type: composition
+    domain: composition
+    path: packages/solid-table-devtools/skills/solid/compose-with-tanstack-devtools/SKILL.md
+    package: packages/solid-table-devtools
+    description:
+      Install the framework's TanStack Devtools host + the matching table adapter, mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]}
+      />` once at the app root, and call `useTanStackTableDevtools(table, name?)` immediately after each `useTable`. Devtools
+      shows registered tables (with a selector if multiple are named), live state, options, rows, columns, and features. By
+      default devtools are dev-mode only — the framework adapter ships no-op exports when `process.env.NODE_ENV !== 'development'`.
+      If you need live devtools in production, import from the `/production` entrypoint instead (`@tanstack/react-table-devtools/production`,
+      `/vue-table-devtools/production`, `/solid-table-devtools/production`, `/preact-table-devtools/production`). Only React,
+      Vue, Solid, and Preact ship dedicated table devtools adapters — Angular, Svelte, Lit, and vanilla do not.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/devtools.md
+      - TanStack/table:packages/solid-table-devtools/src/
+  - name: Compose With Tanstack Devtools
+    slug: compose-with-tanstack-devtools
+    type: composition
+    domain: composition
+    path: packages/preact-table-devtools/skills/preact/compose-with-tanstack-devtools/SKILL.md
+    package: packages/preact-table-devtools
+    description:
+      Install the framework's TanStack Devtools host + the matching table adapter, mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]}
+      />` once at the app root, and call `useTanStackTableDevtools(table, name?)` immediately after each `useTable`. Devtools
+      shows registered tables (with a selector if multiple are named), live state, options, rows, columns, and features. By
+      default devtools are dev-mode only — the framework adapter ships no-op exports when `process.env.NODE_ENV !== 'development'`.
+      If you need live devtools in production, import from the `/production` entrypoint instead (`@tanstack/react-table-devtools/production`,
+      `/vue-table-devtools/production`, `/solid-table-devtools/production`, `/preact-table-devtools/production`). Only React,
+      Vue, Solid, and Preact ship dedicated table devtools adapters — Angular, Svelte, Lit, and vanilla do not.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/devtools.md
+      - TanStack/table:packages/preact-table-devtools/src/
+  - name: Compose With Tanstack Devtools
+    slug: compose-with-tanstack-devtools
+    type: composition
+    domain: composition
+    path: packages/table-devtools/skills/compose-with-tanstack-devtools/SKILL.md
+    package: packages/table-devtools
+    description:
+      Install the framework's TanStack Devtools host + the matching table adapter, mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]}
+      />` once at the app root, and call `useTanStackTableDevtools(table, name?)` immediately after each `useTable`. Devtools
+      shows registered tables (with a selector if multiple are named), live state, options, rows, columns, and features. By
+      default devtools are dev-mode only — the framework adapter ships no-op exports when `process.env.NODE_ENV !== 'development'`.
+      If you need live devtools in production, import from the `/production` entrypoint instead (`@tanstack/react-table-devtools/production`,
+      `/vue-table-devtools/production`, `/solid-table-devtools/production`, `/preact-table-devtools/production`). Only React,
+      Vue, Solid, and Preact ship dedicated table devtools adapters — Angular, Svelte, Lit, and vanilla do not.
+    requires:
+      - state-management
+    sources:
+      - TanStack/table:docs/devtools.md
+      - TanStack/table:packages/table-devtools/src/

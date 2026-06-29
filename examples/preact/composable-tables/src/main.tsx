@@ -1,6 +1,12 @@
 import { useCallback, useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/preact-table-devtools'
 import { createAppColumnHelper, useAppTable } from './hooks/table'
+import { IndeterminateCheckbox } from './components/indeterminate-checkbox'
 import { makeData, makeProductData } from './makeData'
 import type { Person, Product } from './makeData'
 import './index.css'
@@ -21,7 +27,7 @@ function UsersTable() {
   }, [])
 
   const stressTest = useCallback(() => {
-    setData(makeData(200_000))
+    setData(makeData(1_000_000))
   }, [])
 
   // Define columns using the column helper
@@ -29,6 +35,18 @@ function UsersTable() {
     () =>
       // NOTE: You must use `createAppColumnHelper` instead of `createColumnHelper` when using pre-bound components like <cell.TextCell />
       personColumnHelper.columns([
+        personColumnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
+          ),
+          // Cell uses the pre-bound SelectCell component via AppCell
+          cell: ({ cell }) => <cell.SelectCell />,
+        }),
         personColumnHelper.accessor('firstName', {
           header: 'First Name',
           footer: (props) => props.column.id,
@@ -68,37 +86,35 @@ function UsersTable() {
     [],
   )
 
-  // Create the table - _features and _rowModels are already configured!
+  // Create the table - features and rowModels are already configured!
   const table = useAppTable(
     {
+      key: 'users-table', // needed for devtools
       columns,
       data,
       debugTable: true,
+      enableRowSelection: true,
       // more table options
     },
     (state) => state, // default selector
   )
 
-  return (
-    // Main selector on AppTable - selects all needed state in one place
-    <table.AppTable
-      selector={(state) => ({
-        // subscribe to specific states for re-rendering if you are optimizing for maximum performance
-        pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-      })}
-    >
-      {({ sorting, columnFilters }) => (
-        <div className="table-container">
-          {/* Table toolbar using pre-bound component */}
-          <table.TableToolbar
-            title="Users Table"
-            onRefresh={refreshData}
-            onStressTest={stressTest}
-          />
+  useTanStackTableDevtools(table)
 
-          {/* Table element */}
+  return (
+    <table.AppTable>
+      <div className="table-container">
+        {/* Table toolbar using pre-bound component */}
+        <table.TableToolbar
+          title="Users Table"
+          onRefresh={refreshData}
+          onStressTest={stressTest}
+        />
+
+        {/* Scroll container with a fixed max-height so larger page sizes
+              scroll. If the App wrappers remount on state updates, the scroll
+              position jumps back to the top on every keystroke/selection. */}
+        <div className="table-scroll">
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -119,12 +135,12 @@ function UsersTable() {
                               <header.SortIndicator />
                               <header.ColumnFilter />
                               {/* Show sort order number when multiple columns sorted */}
-                              {sorting.length > 1 &&
-                                sorting.findIndex(
+                              {table.state.sorting.length > 1 &&
+                                table.state.sorting.findIndex(
                                   (s) => s.id === header.column.id,
                                 ) > -1 && (
                                   <span className="sort-order">
-                                    {sorting.findIndex(
+                                    {table.state.sorting.findIndex(
                                       (s) => s.id === header.column.id,
                                     ) + 1}
                                   </span>
@@ -161,7 +177,7 @@ function UsersTable() {
                     <table.AppFooter header={f} key={f.id}>
                       {(footer) => {
                         const columnId = footer.column.id
-                        const hasFilter = columnFilters.some(
+                        const hasFilter = table.state.columnFilters.some(
                           (cf) => cf.id === columnId,
                         )
 
@@ -204,14 +220,14 @@ function UsersTable() {
               ))}
             </tfoot>
           </table>
-
-          {/* Pagination using pre-bound component */}
-          <table.PaginationControls />
-
-          {/* Row count using pre-bound component */}
-          <table.RowCount />
         </div>
-      )}
+
+        {/* Pagination using pre-bound component */}
+        <table.PaginationControls />
+
+        {/* Row count using pre-bound component */}
+        <table.RowCount />
+      </div>
     </table.AppTable>
   )
 }
@@ -234,6 +250,18 @@ function ProductsTable() {
   const columns = useMemo(
     () =>
       productColumnHelper.columns([
+        productColumnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
+          ),
+          // Cell uses the pre-bound SelectCell component via AppCell
+          cell: ({ cell }) => <cell.SelectCell />,
+        }),
         productColumnHelper.accessor('name', {
           header: 'Product Name',
           footer: (props) => props.column.id,
@@ -266,32 +294,32 @@ function ProductsTable() {
   // Create the table using the same useAppTable hook
   const table = useAppTable(
     {
+      key: 'products-table', // needed for devtools
       debugTable: true,
       columns,
       data,
       getRowId: (row) => row.id,
+      enableRowSelection: true,
     },
     (state) => state, // default selector
   )
 
-  return (
-    <table.AppTable
-      selector={(state) => ({
-        pagination: state.pagination,
-        sorting: state.sorting,
-        columnFilters: state.columnFilters,
-      })}
-    >
-      {({ sorting, columnFilters }) => (
-        <div className="table-container">
-          {/* Table toolbar using the same pre-bound component */}
-          <table.TableToolbar
-            title="Products Table"
-            onRefresh={refreshData}
-            onStressTest={stressTest}
-          />
+  useTanStackTableDevtools(table)
 
-          {/* Table element */}
+  return (
+    <table.AppTable>
+      <div className="table-container">
+        {/* Table toolbar using the same pre-bound component */}
+        <table.TableToolbar
+          title="Products Table"
+          onRefresh={refreshData}
+          onStressTest={stressTest}
+        />
+
+        {/* Scroll container with a fixed max-height so larger page sizes
+              scroll. If the App wrappers remount on state updates, the scroll
+              position jumps back to the top on every keystroke/selection. */}
+        <div className="table-scroll">
           <table>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -311,12 +339,12 @@ function ProductsTable() {
                               <header.FlexRender />
                               <header.SortIndicator />
                               <header.ColumnFilter />
-                              {sorting.length > 1 &&
-                                sorting.findIndex(
+                              {table.state.sorting.length > 1 &&
+                                table.state.sorting.findIndex(
                                   (s) => s.id === header.column.id,
                                 ) > -1 && (
                                   <span className="sort-order">
-                                    {sorting.findIndex(
+                                    {table.state.sorting.findIndex(
                                       (s) => s.id === header.column.id,
                                     ) + 1}
                                   </span>
@@ -353,7 +381,7 @@ function ProductsTable() {
                     <table.AppFooter header={f} key={f.id}>
                       {(footer) => {
                         const columnId = footer.column.id
-                        const hasFilter = columnFilters.some(
+                        const hasFilter = table.state.columnFilters.some(
                           (cf) => cf.id === columnId,
                         )
 
@@ -396,14 +424,14 @@ function ProductsTable() {
               ))}
             </tfoot>
           </table>
-
-          {/* Pagination using the same pre-bound component */}
-          <table.PaginationControls />
-
-          {/* Row count using the same pre-bound component */}
-          <table.RowCount />
         </div>
-      )}
+
+        {/* Pagination using the same pre-bound component */}
+        <table.PaginationControls />
+
+        {/* Row count using the same pre-bound component */}
+        <table.RowCount />
+      </div>
     </table.AppTable>
   )
 }
@@ -432,4 +460,10 @@ function App() {
 const rootElement = document.getElementById('root')
 if (!rootElement) throw new Error('Failed to find the root element')
 
-render(<App />, rootElement)
+render(
+  <>
+    <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+  </>,
+  rootElement,
+)

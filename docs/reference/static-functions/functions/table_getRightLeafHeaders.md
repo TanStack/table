@@ -6,14 +6,14 @@ title: table_getRightLeafHeaders
 # Function: table\_getRightLeafHeaders()
 
 ```ts
-function table_getRightLeafHeaders<TFeatures, TData>(table): any[];
+function table_getRightLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:599](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L599)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:642](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L642)
 
-Returns right leaf headers for the table.
+Collects leaf headers for the right pinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent headers are filtered out from the right flat header list.
 
 ## Type Parameters
 
@@ -29,14 +29,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`Header`](../../index/type-aliases/Header.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getRightLeafHeaders(table)
+const headers = table_getRightLeafHeaders(table)
 ```

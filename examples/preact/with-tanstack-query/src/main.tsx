@@ -1,4 +1,4 @@
-import { useMemo, useReducer } from 'preact/hooks'
+import { useMemo } from 'preact/hooks'
 import { render } from 'preact'
 import {
   QueryClient,
@@ -20,11 +20,11 @@ import type { Person } from './fetchData'
 
 const queryClient = new QueryClient()
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -50,8 +50,6 @@ const columns = columnHelper.columns([
 ])
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   // Create a stable external atom for the pagination slice.
   const paginationAtom = useCreateAtom<PaginationState>({
     pageIndex: 0,
@@ -71,8 +69,7 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       data: dataQuery.data?.rows ?? defaultData,
       rowCount: dataQuery.data?.rowCount,
@@ -185,10 +182,8 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {dataQuery.data?.rowCount.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
-      <pre>{JSON.stringify({ pagination }, null, 2)}</pre>
+      <div></div>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }

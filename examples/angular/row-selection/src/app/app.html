@@ -1,12 +1,16 @@
 <div class="demo-root">
   <button (click)="refreshData()" class="demo-button demo-button-spaced">Regenerate Data</button>
   <button (click)="stressTest()" class="demo-button demo-button-spaced">
-    Stress Test (200k rows)
+    Stress Test (1M rows)
   </button>
-  <div class="spacer-sm"></div>
-  <button class="pin-button" (click)="toggleEnableRowSelection()">
-    {{ enableRowSelection() ? 'Disable' : 'Enable' }} Row selection
-  </button>
+  <div>
+    <input
+      [value]="table.atoms.globalFilter.get() ?? ''"
+      (input)="onGlobalFilter($event)"
+      class="summary-panel"
+      placeholder="Search all columns..."
+    />
+  </div>
 
   <div class="spacer-sm"></div>
 
@@ -69,33 +73,33 @@
       (click)="table.setPageIndex(0)"
       [disabled]="!table.getCanPreviousPage()"
     >
-      <<
+      &lt;&lt;
     </button>
     <button
       class="demo-button demo-button-sm"
       (click)="table.previousPage()"
       [disabled]="!table.getCanPreviousPage()"
     >
-      <
+      &lt;
     </button>
     <button
       class="demo-button demo-button-sm"
       (click)="table.nextPage()"
       [disabled]="!table.getCanNextPage()"
     >
-      >
+      &gt;
     </button>
     <button
       class="demo-button demo-button-sm"
       (click)="table.setPageIndex(table.getPageCount() - 1)"
       [disabled]="!table.getCanNextPage()"
     >
-      >>
+      &gt;&gt;
     </button>
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {{ (paginationState().pageIndex + 1).toLocaleString() }} of
+        {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
         {{ table.getPageCount().toLocaleString() }}
       </strong>
     </span>
@@ -103,13 +107,13 @@
       | Go to page:
       <input
         type="number"
-        [value]="paginationState().pageIndex + 1"
+        [value]="table.atoms.pagination.get().pageIndex + 1"
         (input)="onPageInputChange($event)"
         class="page-size-input"
       />
     </span>
 
-    <select [value]="paginationState().pageSize" (change)="onPageSizeChange($event)">
+    <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
       @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
         <option [value]="pageSize">Show {{ pageSize }}</option>
       }
@@ -118,10 +122,11 @@
   <br />
   <div>
     {{ rowSelectionLength().toLocaleString() }} of
-    {{ table.getPreFilteredRowModel().rows.length.toLocaleString() }} Total Rows
+    {{ table.getPreFilteredRowModel().rows.length.toLocaleString() }} Total Rows Selected
   </div>
   <hr />
   <br />
+  <div></div>
   <div>
     <button class="demo-button demo-button-spaced" (click)="logSelectedFlatRows()">
       Log table.getSelectedRowModel().flatRows
@@ -129,6 +134,6 @@
   </div>
   <div>
     <label>Row Selection State:</label>
-    <pre>{{ stringifiedRowSelection() }}</pre>
+    <pre>{{ stringifiedState() }}</pre>
   </div>
 </div>

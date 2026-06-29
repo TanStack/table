@@ -1,60 +1,16 @@
 <script lang="ts">
   import {
     FlexRender,
-    columnFilteringFeature,
     createColumnHelper,
-    createFilteredRowModel,
-    createPaginatedRowModel,
-    createSortedRowModel,
     createTable,
-    filterFns,
-    globalFilteringFeature,
-    rowPaginationFeature,
-    rowSortingFeature,
-    sortFns,
-    tableFeatures,
   } from '@tanstack/svelte-table'
-  import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
   import DebouncedInput from './DebouncedInput.svelte'
   import './index.css'
+  import { features } from './features'
   import { makeData, type Person } from './makeData'
-  import type { Column, FilterFn, SortFn } from '@tanstack/svelte-table'
+  import type { Column } from '@tanstack/svelte-table'
 
-  const _features = tableFeatures({
-    columnFilteringFeature,
-    globalFilteringFeature,
-    rowSortingFeature,
-    rowPaginationFeature,
-  })
-
-  const columnHelper = createColumnHelper<typeof _features, Person>()
-
-  const fuzzyFilter: FilterFn<typeof _features, Person> = (
-    row,
-    columnId,
-    value,
-    addMeta,
-  ) => {
-    const itemRank = rankItem(row.getValue(columnId), value)
-    addMeta?.({ itemRank })
-    return itemRank.passed
-  }
-
-  const fuzzySort: SortFn<typeof _features, Person> = (
-    rowA,
-    rowB,
-    columnId,
-  ) => {
-    let dir = 0
-    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-    if (rowA.columnFiltersMeta[columnId]) {
-      dir = compareItems(
-        rowA.columnFiltersMeta[columnId].itemRank!,
-        rowB.columnFiltersMeta[columnId].itemRank!,
-      )
-    }
-    return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
-  }
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.accessor('id', {
@@ -75,25 +31,17 @@
       header: 'Full Name',
       cell: (info) => info.getValue(),
       filterFn: 'fuzzy',
-      sortFn: fuzzySort,
+      sortFn: 'fuzzy',
     }),
   ])
 
   let data = $state<Array<Person>>(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(200_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
+      features,
       columns,
       get data() {
         return data
@@ -107,8 +55,8 @@
   )
 
   $effect(() => {
-    if (table.store.state.columnFilters[0]?.id === 'fullName') {
-      if (table.store.state.sorting[0]?.id !== 'fullName') {
+    if (table.state.columnFilters[0]?.id === 'fullName') {
+      if (table.state.sorting[0]?.id !== 'fullName') {
         table.setSorting([{ id: 'fullName', desc: false
         }])
       }
@@ -119,7 +67,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <div>
     <DebouncedInput
@@ -249,9 +197,5 @@
     </select>
   </div>
   <div>{table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows</div>
-  <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
-  </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

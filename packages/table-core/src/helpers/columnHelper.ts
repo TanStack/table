@@ -10,10 +10,10 @@ import type {
   IdentifiedColumnDef,
 } from '../types/ColumnDef'
 
-export type ColumnHelper<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = {
+export interface ColumnHelper<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
   /**
    * Creates a data column definition with an accessor key or function to extract the cell value.
    * @example
@@ -78,16 +78,21 @@ export type ColumnHelper<
 }
 
 /**
- * A helper utility for creating column definitions with slightly better type inference for each individual column.
- * The `TValue` generic is inferred based on the accessor key or function provided.
- * **Note:** From a JavaScript perspective, the functions in these helpers do not do anything. They are only used to help TypeScript infer the correct types for the column definitions.
+ * Creates helper functions for authoring column definitions with stronger value
+ * inference.
+ *
+ * `accessor` infers `TValue` from an accessor key or accessor function,
+ * `display` creates non-data columns, `group` creates parent columns, and
+ * `columns` preserves tuple-level value types for arrays. At runtime these
+ * helpers only return column definition objects.
+ *
  * @example
  * ```tsx
- * const helper = createColumnHelper<typeof _features, Person>() // _features is the result of `tableFeatures({})` helper
+ * const helper = createColumnHelper<typeof features, Person>() // features is the result of `tableFeatures({})` helper
  * const columns = [
  *  helper.display({ id: 'actions', header: 'Actions' }),
  *  helper.accessor('firstName', {}),
- *  helper.accessor((row) => row.lastName, {}
+ *  helper.accessor((row) => row.lastName, { id: 'lastName' }),
  * ]
  * ```
  */

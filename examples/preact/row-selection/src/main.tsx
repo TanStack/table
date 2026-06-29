@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { render } from 'preact'
+import { TanStackDevtools } from '@tanstack/preact-devtools'
 import {
   columnFilteringFeature,
   createColumnHelper,
@@ -16,7 +17,6 @@ import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/preact-table-devtools'
-import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { useCreateAtom } from '@tanstack/preact-store'
 import { makeData } from './makeData'
 import type {
@@ -29,18 +29,19 @@ import type { JSX } from 'preact'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -99,17 +100,14 @@ function App() {
 
   const [data, setData] = useState(() => makeData(1_000))
   const refreshData = () => setData(() => makeData(1_000))
-  const stressTest = () => setData(() => makeData(200_000))
+  const stressTest = () => setData(() => makeData(1_000_000))
 
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      key: 'row-selection', // needed for devtools
+      features,
       atoms: {
         rowSelection: rowSelectionAtom,
       },
@@ -123,14 +121,14 @@ function App() {
     (state) => state, // default selector
   )
 
-  useTanStackTableDevtools(table, 'Row Selection Example')
+  useTanStackTableDevtools(table)
 
   return (
     <>
       <div className="demo-root">
         <div>
           <button onClick={() => refreshData()}>Regenerate Data</button>
-          <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+          <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
         </div>
         <div>
           <input
@@ -273,14 +271,7 @@ function App() {
         </div>
         <hr />
         <br />
-        <div>
-          <button
-            className="demo-button demo-button-spaced"
-            onClick={() => rerender(0)}
-          >
-            Force Rerender
-          </button>
-        </div>
+        <div></div>
         <div>
           <button
             className="demo-button demo-button-spaced"
@@ -307,8 +298,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -394,7 +385,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 render(
   <>
     <App />
-    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </>,
   rootElement,
 )

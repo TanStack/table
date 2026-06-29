@@ -9,11 +9,11 @@ title: column_getCanHide
 function column_getCanHide<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L84)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L100)
 
-Returns whether a column can use hide.
+Checks whether this column is allowed to be hidden.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+Both `columnDef.enableHiding` and table `enableHiding` default to `true`.
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ This combines column options, table options, and any required accessor or featur
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 
@@ -42,5 +42,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanHide(column)
+const canHide = column_getCanHide(column)
 ```

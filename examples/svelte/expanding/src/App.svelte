@@ -21,15 +21,21 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnFilteringFeature,
     rowExpandingFeature,
     rowPaginationFeature,
     rowSortingFeature,
     rowSelectionFeature,
+    expandedRowModel: createExpandedRowModel(),
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortedRowModel: createSortedRowModel(),
+    filterFns,
+    sortFns,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   // Svelte action to set indeterminate property on checkbox inputs
   function setIndeterminate(node: HTMLInputElement, value: boolean) {
@@ -78,13 +84,7 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
+      features,
       columns,
       get data() {
         return data
@@ -251,14 +251,10 @@
     </select>
   </div>
   <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-  <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (10k rows)</button>
-  </div>
   <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>
 
-{#snippet Filter(column: Column<typeof _features, Person>, table: SvelteTable<typeof _features, Person>)}
+{#snippet Filter(column: Column<typeof features, Person>, table: SvelteTable<typeof features, Person>)}
   {@const firstValue = table
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)}

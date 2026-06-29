@@ -5,6 +5,27 @@
  * in AppCell children, e.g., <cell.TextCell />
  */
 import { useCellContext } from '../hooks/table'
+import { IndeterminateCheckbox } from './indeterminate-checkbox'
+
+/**
+ * Row-selection checkbox cell - toggles selection for the current row.
+ *
+ * Solid tracks the `row.getIsSelected()` etc. calls natively, so passing them
+ * as accessors keeps the checkbox reactive without any Subscribe boundary.
+ */
+export function SelectCell() {
+  const cell = useCellContext()
+  const row = cell.row
+
+  return (
+    <IndeterminateCheckbox
+      checked={row.getIsSelected()}
+      disabled={!row.getCanSelect()}
+      indeterminate={row.getIsSomeSelected()}
+      onChange={row.getToggleSelectedHandler()}
+    />
+  )
+}
 
 /**
  * Generic text cell renderer

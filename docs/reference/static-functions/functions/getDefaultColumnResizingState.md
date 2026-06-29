@@ -11,9 +11,10 @@ function getDefaultColumnResizingState(): columnResizingState;
 
 Defined in: [features/column-resizing/columnResizingFeature.utils.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L26)
 
-Returns the default column resizing state.
+Creates the default transient column resizing state.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+The feature default represents no active drag interaction. Reset APIs use
+this value when `defaultState` is `true`.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultColumnResizingState()
+const resizeInfo = getDefaultColumnResizingState()
 ```

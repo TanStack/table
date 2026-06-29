@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   FlexRender,
   columnVisibilityFeature,
@@ -15,11 +10,11 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnVisibilityState } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnVisibilityFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -82,7 +77,7 @@ export class App {
   readonly columnVisibility = signal<ColumnVisibilityState>({})
 
   readonly table = injectTable(() => ({
-    _features,
+    features,
     columns: defaultColumns,
     data: this.data(),
     state: {
@@ -99,9 +94,9 @@ export class App {
     debugColumns: true,
   }))
 
-  readonly stringifiedColumnVisibility = computed(() => {
-    return JSON.stringify(this.table.state().columnVisibility)
-  })
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))

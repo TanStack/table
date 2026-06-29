@@ -1,0 +1,1396 @@
+# Cluster E — Lifecycle & Composition skills for TanStack Table v9.0.0-alpha.48
+# Sources: docs/framework/{react,angular,preact}/guide/*.md, docs/devtools.md,
+#          docs/installation.md, docs/guide/virtualization.md, examples/* (primary)
+# Maintainer: Kevin Vandy
+# Date: 2026-05-16
+
+version: 1
+cluster: lifecycle-composition
+target_version: '9.0.0-alpha.48'
+
+skills:
+  # =========================================================================
+  # LIFECYCLE SKILLS
+  # =========================================================================
+
+  - slug: getting-started
+    type: lifecycle
+    domain: lifecycle
+    status: ready
+    description: >
+      End-to-end first-table journey: install the framework adapter, declare
+      `features` via `tableFeatures()`, declare `rowModels` factories with
+      their *Fns parameters, create a column helper with both `TFeatures` and
+      `TData` generics, instantiate `useTable` / `injectTable` / `createTable`,
+      and render headers + cells with `table.FlexRender` (or `*flexRender*`
+      directives on Angular). New users land here, not on `useLegacyTable`.
+    covers:
+      - Picking the right adapter package (`@tanstack/react-table`,
+        `@tanstack/vue-table`, `@tanstack/angular-table`,
+        `@tanstack/solid-table`, `@tanstack/svelte-table` (Svelte 5+),
+        `@tanstack/preact-table`, `@tanstack/lit-table`).
+      - |-
+        Declaring the minimum-viable v9 table (no features) — must still pass `features: tableFeatures({})` and `rowModels: {}`. Core row model is automatic; you only register filtered/sorted/paginated/etc. when you use them.
+      - |-
+        `createColumnHelper<typeof features, TData>()` and the new `columnHelper.columns([...])` variadic wrapper for preserving each column's `TValue` in nested/group columns.
+      - Rendering with `<table.FlexRender header={header} />` /
+        `<table.FlexRender cell={cell} />` (preferred) or the standalone
+        `<FlexRender />` import. `flexRender(def, ctx)` still works.
+      - |-
+        Angular variant: `injectTable(() => ({ ... }))` returning a signal- backed instance; render via `*flexRenderHeader`, `*flexRenderCell`, `*flexRenderFooter`. Cell/header render fns run inside an Angular injection context — `inject()` is safe.
+      - Default `useTable` selector is `(state) => state` — full re-render on
+        any state change, mirroring v8 ergonomics. Narrow it later only when
+        you measure a problem.
+      - |-
+        Where to go next: `migrate-v8-to-v9` if upgrading, `production-readiness` once it works.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/lit-table'
+    tasks:
+      - 'Render a basic v9 table with 3 columns and an in-memory array.'
+      - 'Add sorting: register `rowSortingFeature` in `features` and `sortedRowModel: createSortedRowModel(sortFns)` in `rowModels`.'
+      - 'Add pagination + filtering on top of sorting without touching the rest of the setup.'
+      - 'Type a `ColumnDef<typeof features, TData>[]` array outside the component for stable references.'
+    correct_pattern: |
+      // React — minimum viable v9 table
+      import {
+        useTable,
+        tableFeatures,
+        rowSortingFeature,
+        createSortedRowModel,
+        sortFns,
+        createColumnHelper,
+      } from '@tanstack/react-table'
+
+      type Person = { firstName: string; lastName: string; age: number }
+
+      // Define OUTSIDE the component for stable identity.
+      const features = tableFeatures({ rowSortingFeature })
+      const columnHelper = createColumnHelper<typeof features, Person>()
+
+      const columns = columnHelper.columns([
+        columnHelper.accessor('firstName', { header: 'First' }),
+        columnHelper.accessor('lastName',  { header: 'Last' }),
+        columnHelper.accessor('age',       { header: 'Age' }),
+      ])
+
+      function PeopleTable({ data }: { data: Person[] }) {
+        const table = useTable({
+          features,
+          rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+          columns,
+          data,
+        })
+
+        return (
+          <table>
+            <thead>{table.getHeaderGroups().map(hg => (
+              <tr key={hg.id}>{hg.headers.map(h => (
+                <th key={h.id} onClick={h.column.getToggleSortingHandler()}>
+                  <table.FlexRender header={h} />
+                </th>
+              ))}</tr>
+            ))}</thead>
+            <tbody>{table.getRowModel().rows.map(row => (
+              <tr key={row.id}>{row.getAllCells().map(cell => (
+                <td key={cell.id}><table.FlexRender cell={cell} /></td>
+              ))}</tr>
+            ))}</tbody>
+          </table>
+        )
+      }
+    wrong_pattern: |
+      // BAD: agents trained on v8 will produce this and it will not compile.
+      // (1) `useReactTable` was removed in favor of `useTable`.
+      // (2) `getCoreRowModel: getCoreRowModel()` is no longer accepted —
+      //     core is implicit; everything else moved to `rowModels`.
+      // (3) `createColumnHelper<Person>()` is missing the TFeatures generic.
+      // (4) No `features` => "Property 'features' is missing in type".
+      import { useReactTable, getCoreRowModel, createColumnHelper, flexRender }
+        from '@tanstack/react-table'
+
+      const columnHelper = createColumnHelper<Person>()  // wrong arity
+      const table = useReactTable({                       // wrong hook
+        columns,
+        data,
+        getCoreRowModel: getCoreRowModel(),               // removed option
+      })
+    failure_modes:
+      - "Forgetting `features: tableFeatures({})` — the option is required even for a 'no features' table. Type error: 'features' is missing."
+      - 'Skipping `rowModels: {}` — same as above. Core is automatic but the option key itself must be present.'
+      - "Calling `createColumnHelper<Person>()` instead of `createColumnHelper<typeof features, Person>()`. The generic order changed in v9 and the old shape doesn't compile."
+      - 'Defining `features` / `columns` / `data` literals inside the render body — every render produces a new reference and busts table-internal memoization. Always declare these outside the component or wrap in `useMemo`.'
+      - 'Importing `useReactTable` (v8) or `createAngularTable` (v8 Angular) — both were renamed. v9 uses `useTable` / `injectTable` / `createTable` consistently across adapters.'
+      - "Reaching for `useLegacyTable` for a new project. It's deprecated and ships every feature in the bundle. New code must use `useTable` with explicit `features`."
+
+  - slug: migrate-v8-to-v9
+    type: lifecycle
+    domain: lifecycle
+    status: ready
+    description: >
+      Mechanical breaking-change migration from TanStack Table v8 to v9 across
+      every adapter. Every old-shaped option, type, or method an agent will
+      try to reproduce from v8 muscle memory has a v9 equivalent enumerated
+      below. For React projects that cannot migrate every table at once,
+      `useLegacyTable` from `@tanstack/react-table/legacy` accepts the v8 API
+      shape on top of the v9 engine — deprecated, ships every feature, no
+      `table.Subscribe`, but lets you upgrade incrementally.
+    covers:
+      - Hook rename per adapter (React, Angular, Solid, Vue, Preact, Svelte 5+, Lit, vanilla).
+      - |-
+        `features` + `rowModels` becoming required options; row-model factories now take their *Fns set as a parameter.
+      - |-
+        `createColumnHelper<TData>()` → `createColumnHelper<typeof features, TData>()` (generic order + arity change).
+      - |-
+        State surface: `table.getState()` → `table.store.state` (full) or `table.state` (selector output) or `table.atoms.<slice>.get()`.
+      - |-
+        `flexRender(def, ctx)` still works; new preferred forms are `<table.FlexRender header|cell|footer={...} />` and the standalone `<FlexRender />`.
+      - |-
+        Sorting renames: `sortingFn` → `sortFn`, `sortingFns` → `sortFns`, `getSortingFn()` → `getSortFn()`, etc.
+      - |-
+        `enablePinning` split into `enableColumnPinning` + `enableRowPinning`.
+      - |-
+        `ColumnSizing` feature split into `columnSizingFeature` + `columnResizingFeature`; `columnSizingInfo` → `columnResizing`; `onColumnSizingInfoChange` → `onColumnResizingChange`.
+      - |-
+        `_`-prefixed internal APIs removed (`row._getAllCellsByColumnId()` → `row.getAllCellsByColumnId()`, `table._getFacetedRowModel()` → public form, etc.).
+      - |-
+        Type generics now carry `TFeatures` first: `Column<TFeatures, TData, TValue>`, `Table<TFeatures, TData>`, `Row<TFeatures, TData>`, `ColumnMeta<TFeatures, TData, TValue>`.
+      - |-
+        `RowData` tightened from `unknown | object | any[]` to `Record<string, any> | Array<any>`.
+      - Angular has no legacy adapter — Angular projects must migrate directly. Svelte v9 supports Svelte 5+ only; stay on v8 for Svelte 3/4.
+      - |-
+        The escape hatch: `useLegacyTable` (React) + `legacyCreateColumnHelper` + `getCoreRowModel`/`getSortedRowModel`/etc. from `@tanstack/react-table/legacy` — same call shape as v8, no fine-grained subscriptions, larger bundle.
+      - |-
+        The other escape hatch: `stockFeatures` to opt into "everything" without listing features explicitly.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/lit-table'
+      - '@tanstack/table-core'
+    tasks:
+      - 'Upgrade a v8 React table to v9 by renaming `useReactTable` → `useTable`, moving `getCoreRowModel`/`getFilteredRowModel`/`getSortedRowModel`/`getPaginationRowModel` options into `rowModels`, and adding `features: tableFeatures({...})`.'
+      - 'Bridge a v8 React table to v9 via `useLegacyTable` from `@tanstack/react-table/legacy` so the rest of the app can upgrade incrementally.'
+      - 'Rename `table.getState()` reads throughout the codebase to `table.store.state` (full read) or `table.state` (typed selector output) or `table.atoms.<slice>.get()` (single-slice atom read).'
+      - 'Update all `createColumnHelper<TData>()` call sites to `createColumnHelper<typeof features, TData>()` and adjust `ColumnDef<TData>` / `Column<TData>` / `Row<TData>` / `Cell<TData, TValue>` type annotations to the new `TFeatures`-first generic order.'
+    correct_pattern: |
+      // === v9 (correct) ===
+      import {
+        useTable,
+        tableFeatures,
+        rowSortingFeature,
+        rowPaginationFeature,
+        columnFilteringFeature,
+        columnSizingFeature,
+        columnResizingFeature,
+        createColumnHelper,
+        createSortedRowModel,
+        createFilteredRowModel,
+        createPaginatedRowModel,
+        sortFns,
+        filterFns,
+      } from '@tanstack/react-table'
+      import type { ColumnDef } from '@tanstack/react-table'
+
+      const features = tableFeatures({
+        rowSortingFeature,
+        rowPaginationFeature,
+        columnFilteringFeature,
+        columnSizingFeature,
+        columnResizingFeature, // explicit — formerly part of ColumnSizing
+      })
+
+      const columnHelper = createColumnHelper<typeof features, Person>()
+
+      const columns: ColumnDef<typeof features, Person>[] = columnHelper.columns([
+        columnHelper.accessor('name', {
+          header: 'Name',
+          sortFn: 'alphanumeric',        // renamed from sortingFn
+        }),
+      ])
+
+      const table = useTable({
+        features,
+        rowModels: {
+          sortedRowModel:    createSortedRowModel(sortFns),
+          filteredRowModel:  createFilteredRowModel(filterFns),
+          paginatedRowModel: createPaginatedRowModel(),
+        },
+        columns,
+        data,
+        enableColumnPinning: true,        // split from enablePinning
+        enableRowPinning:    true,
+      })
+
+      // State reads:
+      const all      = table.store.state                 // full snapshot
+      const sorting  = table.atoms.sorting.get()         // per-slice atom
+      const cells    = row.getAllCellsByColumnId()       // no underscore
+
+      // Rendering:
+      // <table.FlexRender header={header} />
+      // <table.FlexRender cell={cell} />
+    wrong_pattern: |
+      // === v8 muscle memory — an agent will produce all of this, and ALL of it
+      // is broken in v9. Each line is a specific failure mode. ===
+
+      import {
+        useReactTable,               // (1) renamed → useTable
+        getCoreRowModel,             // (2) no longer accepted as an option;
+        getFilteredRowModel,         //     move to `rowModels` as factories
+        getSortedRowModel,           //     created via `createSortedRowModel(sortFns)` etc.
+        getPaginationRowModel,
+        createColumnHelper,          // (3) needs <TFeatures, TData> now
+        sortingFns,                  // (4) renamed → sortFns
+        filterFns,
+        flexRender,                  // still exists, but prefer table.FlexRender
+      } from '@tanstack/react-table'
+      import type { ColumnDef, Row } from '@tanstack/react-table'
+
+      const columnHelper = createColumnHelper<Person>()  // wrong generic arity
+
+      const columns: ColumnDef<Person>[] = [               // (5) ColumnDef<TFeatures, TData, TValue> now
+        {
+          accessorKey: 'name',
+          header: 'Name',
+          sortingFn: 'alphanumeric',                       // (6) renamed → sortFn
+        },
+      ]
+
+      const table = useReactTable({
+        columns,
+        data,
+        getCoreRowModel:        getCoreRowModel(),         // (2) move into `rowModels`
+        getFilteredRowModel:    getFilteredRowModel(),
+        getSortedRowModel:      getSortedRowModel(),
+        getPaginationRowModel:  getPaginationRowModel(),
+        filterFns,                                         // (7) no longer a root option — passed to factories
+        sortingFns,                                        // (4)+(7) renamed AND no longer a root option
+        enablePinning: true,                               // (8) split → enableColumnPinning / enableRowPinning
+        onColumnSizingInfoChange: setInfo,                 // (9) renamed → onColumnResizingChange
+      })
+
+      // (10) BAD reads:
+      const all = table.getState()                         // → table.store.state (or table.state with a selector)
+      const cells = row._getAllCellsByColumnId()           // underscore removed → row.getAllCellsByColumnId()
+
+      // (11) Module augmentation
+      declare module '@tanstack/react-table' {
+        interface ColumnMeta<TData, TValue> {              // (11) v9 adds TFeatures as first generic
+          customProp: string
+        }
+      }
+
+      // === Quick-bridge alternative (DEPRECATED, but compiles): ===
+      // Move just THIS file to `useLegacyTable` and keep the v8 shape; migrate
+      // it to the modern v9 shape later. Imports come from `/legacy`.
+      import { useLegacyTable, getCoreRowModel, legacyCreateColumnHelper }
+        from '@tanstack/react-table/legacy'
+      const legacyHelper = legacyCreateColumnHelper<Person>()
+      const legacyTable  = useLegacyTable({
+        columns, data,
+        getCoreRowModel: getCoreRowModel(),
+      })
+    failure_modes:
+      - 'Importing `useReactTable` / `createAngularTable` / `createSolidTable` (v8 names). All adapters consolidated to `useTable` / `injectTable` / `createTable` in v9. The v8 imports will not exist and will fail at module-resolution time.'
+      - 'Passing `getCoreRowModel: getCoreRowModel()` / `getSortedRowModel: getSortedRowModel()` as root options. These were removed — sortedRowModel/filteredRowModel/etc. now live under `rowModels` and are produced by `createSortedRowModel(sortFns)`-style factories. Core is automatic.'
+      - 'Calling `createSortedRowModel()` without passing `sortFns`. The factories now REQUIRE their *Fns parameter for tree-shaking — `createFilteredRowModel(filterFns)`, `createSortedRowModel(sortFns)`, `createGroupedRowModel(aggregationFns)`.'
+      - "Omitting `features` entirely. The option is required even for a no-features table — pass `features: tableFeatures({})` or `features: stockFeatures` if you want v8-like 'everything on'."
+      - 'Calling `createColumnHelper<Person>()` (v8 arity). v9 requires `createColumnHelper<typeof features, Person>()`. `typeof features` is the standard idiom — declare features once at module scope and reuse the type.'
+      - 'Reading state via `table.getState()`. The method was removed. Use `table.store.state` for a flat snapshot, `table.state` if you passed a `useTable` selector, or `table.atoms.<slice>.get()` for a single slice.'
+      - 'Renaming misses: `sortingFn` (column def) → `sortFn`, `sortingFns` → `sortFns`, `getSortingFn()` → `getSortFn()`, `getAutoSortingFn()` → `getAutoSortFn()`, `SortingFn`/`SortingFns` types → `SortFn`/`SortFns`. TypeScript will surface these but the agent will try the v8 names first.'
+      - 'Using `enablePinning: true`. It was split into `enableColumnPinning` and `enableRowPinning`. Pick one (or both).'
+      - 'Treating column resizing as part of column sizing. v9 splits them: pass `columnSizingFeature` for fixed widths and ALSO `columnResizingFeature` for drag-to-resize. State key `columnSizingInfo` is now `columnResizing`; option `onColumnSizingInfoChange` is `onColumnResizingChange`.'
+      - 'Calling underscore-prefixed APIs: `row._getAllCellsByColumnId()`, `table._getFacetedRowModel()`, `table._getFacetedMinMaxValues()`, `table._getFacetedUniqueValues()`, `table._getPinnedRows()`. All became public — drop the underscore.'
+      - "`declare module '@tanstack/react-table' { interface ColumnMeta<TData, TValue> }` — v9 added `TFeatures` as the first generic, so this becomes `ColumnMeta<TFeatures, TData, TValue>`. Module augmentation silently widens types if the generic arity is wrong."
+      - "Reaching for `useLegacyTable` on NEW code or in Angular. It's React-only, deprecated, bundles every feature, and doesn't support `table.Subscribe`. It exists to unblock incremental migration, not to be a long-term API."
+
+  - slug: client-to-server
+    type: lifecycle
+    domain: lifecycle
+    status: ready
+    description: >
+      Convert a client-side table to server-side (a.k.a. manual modes).
+      Pattern: pass server data, set `manualSorting` / `manualFiltering` /
+      `manualPagination` / `manualGrouping` / `manualExpanding` for whatever
+      the server now owns, supply `rowCount` (and/or `pageCount`) so the
+      table can paginate without seeing all rows, and remove the corresponding
+      `rowModels` entries (you don't need `paginatedRowModel` if pagination
+      is server-side). State for the server-managed slices is best owned
+      EITHER via external TanStack Store atoms (passed via `options.atoms`)
+      OR via classic `state` + `on*Change` controlled state — both work.
+      With Query, the atom pattern lets you key your query on the atom and
+      let the table write directly to it without `on*Change` plumbing.
+    covers:
+      - Setting `manualSorting`, `manualFiltering`, `manualPagination`,
+        `manualGrouping`, `manualExpanding` so the table stops trying to
+        slice rows it doesn't have.
+      - Removing the matching `rowModels` keys so unused factories don't
+        ship (don't register `paginatedRowModel` if the server paginates).
+      - Providing `rowCount` (and optionally `pageCount`) so
+        `table.getPageCount()` / `getCanNextPage()` work without local rows.
+      - |-
+        State ownership: external atoms via `useCreateAtom` + `options.atoms` (cleanest with Query, no `on*Change` needed) OR classic `state` + `on*Change` controlled state. Both are documented patterns.
+      - |-
+        Cache key strategy: include the relevant atom value (or controlled state) in `queryKey`. Use `placeholderData: keepPreviousData` to avoid the "0 rows flash" while paging.
+      - |-
+        Invalidation: call `queryClient.invalidateQueries({ queryKey: [...] })` on writes — TanStack Table doesn't invalidate for you.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+    tasks:
+      - 'Convert a sorting+pagination table that operates on a 50k local array to one that requests `/api/people?pageIndex=&pageSize=&sort=` and renders the response.'
+      - 'Wire pagination via an external TanStack Store atom (`useCreateAtom<PaginationState>(...)`) + the `atoms` option so the query auto-refetches without an explicit `onPaginationChange` handler.'
+      - 'Wire the same conversion via classic `state` + `onPaginationChange` controlled state when you already have signal/useState plumbing.'
+      - "Combine server-side sort + pagination + filter while keeping client-side column visibility / ordering / pinning — those features still work locally because they don't depend on the row model."
+    correct_pattern: |
+      // React + TanStack Query + external pagination atom
+      import { useTable, tableFeatures, rowPaginationFeature, createColumnHelper }
+        from '@tanstack/react-table'
+      import { useQuery, keepPreviousData } from '@tanstack/react-query'
+      import { useCreateAtom, useSelector } from '@tanstack/react-store'
+      import type { PaginationState } from '@tanstack/react-table'
+
+      const features = tableFeatures({ rowPaginationFeature })
+
+      function ServerTable({ columns }) {
+        // 1) Own pagination in an external atom.
+        const paginationAtom = useCreateAtom<PaginationState>({
+          pageIndex: 0,
+          pageSize:  10,
+        })
+        const pagination = useSelector(paginationAtom)
+
+        // 2) Key the query on the atom value. Query refetches automatically
+        //    when the table calls table.setPageIndex(...) / setPageSize(...)
+        //    because those writes flow into the atom.
+        const dataQuery = useQuery({
+          queryKey: ['people', pagination],
+          queryFn:  () => fetchPeople(pagination),
+          placeholderData: keepPreviousData,
+        })
+
+        // 3) Manual pagination + `rowCount` for getPageCount(). Note: no
+        //    `paginatedRowModel` in `rowModels` — server paginates.
+        const table = useTable({
+          features,
+          rowModels: {},                        // core only
+          columns,
+          data: dataQuery.data?.rows ?? [],
+          rowCount: dataQuery.data?.rowCount,
+          atoms: { pagination: paginationAtom }, // own the slice externally
+          manualPagination: true,
+        })
+        // No onPaginationChange needed — writes go to paginationAtom.
+        // ...
+      }
+    wrong_pattern: |
+      // BAD #1: kept `paginatedRowModel` even though the server paginates.
+      // This makes the table try to slice the (already-sliced) `data` array
+      // a second time, producing rows that don't exist.
+      const table = useTable({
+        features,
+        rowModels: { paginatedRowModel: createPaginatedRowModel() },
+        columns,
+        data: serverPage.rows,
+        // missing: manualPagination + rowCount
+      })
+
+      // BAD #2: forgot `rowCount`. `table.getPageCount()` returns
+      // `Math.ceil(rows.length / pageSize)` which is the page size, not the
+      // total — the pager shows "Page 1 of 1" forever.
+      const table = useTable({
+        features,
+        rowModels: {},
+        columns,
+        data: serverPage.rows,
+        manualPagination: true,
+        // missing: rowCount: serverPage.totalRowCount
+      })
+
+      // BAD #3: keyed Query on the wrong thing. `queryKey: ['people']` never
+      // changes, so pagination button clicks update the atom but Query
+      // doesn't refetch — the table stays on page 1's data.
+      useQuery({ queryKey: ['people'], queryFn: () => fetch(pagination) })
+
+      // BAD #4: classic controlled state but the table writes go nowhere
+      // because there's no `on*Change`. Either pass `atoms` OR pass
+      // `state + on*Change`. Don't pass `state` without `on*Change`.
+      const [pagination, setPagination] = useState<PaginationState>({...})
+      useTable({
+        features, rowModels: {}, columns, data,
+        state: { pagination },
+        // missing: onPaginationChange: setPagination
+        manualPagination: true,
+      })
+    failure_modes:
+      - 'Forgetting `manualPagination: true` (or `manualSorting` / `manualFiltering`). The table will re-sort/re-filter/re-paginate the already-server-processed rows, producing visually incorrect or duplicated results.'
+      - 'Leaving `paginatedRowModel: createPaginatedRowModel()` registered when the server paginates. The factory ships in your bundle for no reason AND the table slices server-sliced data. Drop it from `rowModels`.'
+      - "Omitting `rowCount`. Without it, `getPageCount()` is computed from `data.length / pageSize` — which equals 1 if the server returned a single page. Pager UIs lock at 'Page 1 of 1'."
+      - 'Passing `state.pagination` without `onPaginationChange`. The library treats `state` as controlled; without a writeback handler, `table.setPageIndex(2)` is a no-op. Either pass both, or pass `atoms.pagination` (which is its own writeback).'
+      - 'Mixing `state.pagination` AND `atoms.pagination` for the SAME slice. Precedence is `options.atoms[key]` > `options.state[key]` > internal — `state` is silently ignored. Pick one mechanism per slice.'
+      - "Not including pagination/sort/filter in the Query `queryKey`. The query won't refetch when the user pages or sorts because Query has no way to know its inputs changed."
+      - 'Forgetting `placeholderData: keepPreviousData` (or equivalent) when paging. The table renders zero rows during the fetch, which collapses the height and jumps the scroll position.'
+
+  - slug: production-readiness
+    type: lifecycle
+    domain: lifecycle
+    status: ready
+    description: >
+      Ship-ready optimizations for v9: tree-shake the bundle by registering
+      ONLY the `features` you actually use; memoize `features`, `data`,
+      and `columns` for stable identity; replace `(state) => state` with
+      narrow selectors or per-slice `useSelector(table.atoms.<slice>)`
+      subscriptions; and push state-driven re-renders down the tree with
+      `<table.Subscribe>` (or the standalone `<Subscribe>` import) so the
+      expensive table body doesn't re-render every time you toggle a
+      sort indicator. Production builds of the table devtools are also a
+      `/production` import flip — see `compose-with-tanstack-devtools`.
+    covers:
+      - |-
+        Tree-shaking: list features explicitly in `tableFeatures({...})` rather than `stockFeatures`. A sort-only table is ~6–7kb vs ~15–20kb for v8's all-in approach.
+      - |-
+        Reference stability: `features`, `rowModels`, `columns`, and `data` should NOT be redefined on every render. Declare at module scope or memoize with `useMemo` / Angular `signal()` / Solid memo.
+      - |-
+        Default selector trade-off: `(state) => state` matches v8 behavior but forces a re-render on any state change. Narrow it (`(state) => ({ sorting: state.sorting })`) once you've profiled.
+      - |-
+        `<table.Subscribe selector={...}>` (or `<Subscribe source={table.store}>`) for moving the re-render boundary down to a sub-tree.
+      - |-
+        Per-slice atom subscriptions: `useSelector(table.atoms.pagination)` in a leaf component re-renders only when pagination changes — narrower than `table.Subscribe`, which still selects from the full state object.
+      - |-
+        React Compiler interaction: `<Subscribe>` is the React-Compiler-safe way to read table state in nested components — the compiler can't see through the table closure on its own.
+      - |-
+        Angular: prefer `computed(() => table.atoms.<slice>.get(), { equal: shallow })` to debounce object-identity re-runs.
+      - |-
+        Stress patterns: virtualize rows/columns with TanStack Virtual (see `compose-with-tanstack-virtual`), keep the row virtualizer in the deepest possible component, and use `Subscribe` walls around column DnD / pinning UIs that don't need to participate in row updates.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+    tasks:
+      - "Audit a project's `features` declarations and remove any feature whose imports aren't actually wired up in column defs / state."
+      - 'Replace `useTable(opts, (state) => state)` with a narrowed selector when only a subset of state is rendered at the table level.'
+      - 'Wrap a noisy pagination footer (re-renders on every keystroke in a filter) in `<table.Subscribe selector={s => ({ pagination: s.pagination })}>` so it only re-renders on pagination changes.'
+      - 'Move a `RowSelectionCount` component from reading `table.state.rowSelection` to `useSelector(table.atoms.rowSelection)` for the narrowest subscription surface.'
+    correct_pattern: |
+      // === Tree-shake by feature ===
+      import {
+        useTable,
+        tableFeatures,
+        rowSortingFeature,      // ✓ ship sort code
+        rowPaginationFeature,   // ✓ ship pagination code
+        createSortedRowModel,
+        createPaginatedRowModel,
+        sortFns,
+      } from '@tanstack/react-table'
+
+      // Module-scope, stable identity:
+      const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+      const rowModels = {
+        sortedRowModel:    createSortedRowModel(sortFns),
+        paginatedRowModel: createPaginatedRowModel(),
+      }
+
+      function MyTable({ data, columns }) {
+        // ✓ narrow selector — re-renders only when these slices change
+        const table = useTable(
+          { features, rowModels, columns, data },
+          (state) => ({
+            sorting:    state.sorting,
+            pagination: state.pagination,
+          }),
+        )
+
+        return (
+          <>
+            <TableBody table={table} /> {/* heavy — keep stable */}
+            {/* ✓ Re-render wall: footer only re-renders on pagination changes,
+                not on sort changes that affect TableBody */}
+            <table.Subscribe selector={(s) => ({ pagination: s.pagination })}>
+              {({ pagination }) => <PageFooter pagination={pagination} />}
+            </table.Subscribe>
+          </>
+        )
+      }
+
+      // === Narrowest subscription — per-slice atom ===
+      import { useSelector } from '@tanstack/react-store'
+
+      function SelectedCount({ table }) {
+        // re-renders ONLY when rowSelection changes, not sorting/pagination/etc.
+        const selection = useSelector(table.atoms.rowSelection)
+        return <span>{Object.keys(selection).length} selected</span>
+      }
+    wrong_pattern: |
+      // BAD #1: stockFeatures in a sort-only table.
+      // Ships filtering, faceting, grouping, pinning, expanding, sizing,
+      // resizing, visibility, ordering, row-selection, row-pinning code
+      // none of which is used. ~3x the necessary bundle for `features`.
+      import { useTable, stockFeatures } from '@tanstack/react-table'
+      const table = useTable({ features: stockFeatures, /* ... */ })
+
+      // BAD #2: unstable references — every render is a new identity.
+      function MyTable({ data, columns }) {
+        const features = tableFeatures({ rowSortingFeature })  // new every render
+        const opts = {                                           // new every render
+          features,
+          rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+          columns,                                               // hopefully stable
+          data,
+        }
+        const table = useTable(opts)
+        // ...
+      }
+
+      // BAD #3: default selector + deep re-render tree.
+      function MyTable() {
+        // (state) => state means every keystroke in a filter input re-renders
+        // every cell in the body unless you memo manually.
+        const table = useTable(opts) // implicit (state) => state
+        return <DeeplyNestedTable table={table} />
+      }
+
+      // BAD #4: reading state in a way React Compiler can't track.
+      function PageFooter({ table }) {
+        // The compiler can't reason through the table closure — it may either
+        // bail out of optimization OR cache a stale read.
+        const { pagination } = table.state
+        return <div>{pagination.pageIndex + 1}</div>
+        // ✓ Fix: <Subscribe source={table.store} selector={s => s.pagination}>
+        //   or useSelector(table.atoms.pagination).
+      }
+    failure_modes:
+      - 'Using `stockFeatures` in production without auditing which features are actually rendered. Defeats the whole reason tree-shaking exists in v9. Replace with an explicit `tableFeatures({...})` listing only what your UI uses.'
+      - 'Declaring `features`, `rowModels`, or `columns` inside the component body without `useMemo`. Internal memoization keys off identity, so a new object every render forces full recomputation.'
+      - "Putting `data` in `useState` and never memoizing the array literal that produces it. `setData(rows.filter(...))` returns a new array each call — that's fine; the FAQ pitfall is `data={[]}` or `data={rows ?? []}` in JSX, which creates a new identity each render."
+      - 'Leaving `(state) => state` as the selector when only one component cares about one slice. The whole tree re-renders on every state change. Narrow the selector and/or use `<table.Subscribe>` boundaries.'
+      - 'Forgetting that `<table.Subscribe>` still selects from `table.store.state` (the full state). For a single-slice subscription, `useSelector(table.atoms.<slice>)` is narrower and skips even constructing a state snapshot.'
+      - 'Hoisting heavy table state reads above virtualizers. The TanStack Virtual rule of thumb is to keep `useVirtualizer` in the deepest component possible; pulling `table.state` into a parent re-renders the virtualizer and kills scroll perf.'
+      - "Reading `table.state` in deeply-nested React-Compiler-compiled components instead of `<Subscribe>` or `useSelector`. The compiler doesn't see through the table closure, so it can't determine the dependency edges correctly."
+
+  # =========================================================================
+  # COMPOSITION SKILLS
+  # =========================================================================
+
+  - slug: compose-with-tanstack-store
+    type: composition
+    domain: composition
+    status: ready
+    description: >
+      v9 is built on TanStack Store. Each state slice (sorting, pagination,
+      rowSelection, columnFilters, ...) is a separate atom. The table exposes
+      three read surfaces — `table.atoms.<slice>` (per-slice readonly),
+      `table.store` (flat readonly view), and `table.state` (selector output
+      from `useTable`) — and two write paths — internal `table.baseAtoms.<slice>`
+      OR YOUR `options.atoms[slice]` if you opt to own the slice. The
+      `atoms` option lets a slice be shared across components, persisted, or
+      wired to a non-table subscriber. Use `useCreateAtom` to create the
+      atom in React; `useSelector` to read it in any component without
+      going through the table; the table writes to your atom directly when
+      you call `table.setSorting(...)` etc.
+    covers:
+      - |-
+        The three read surfaces and what they're for: `table.atoms.<slice>` (narrowest), `table.store.state` (full snapshot), `table.state` (typed selector output).
+      - |-
+        Precedence: `options.atoms[key]` > `options.state[key]` > internal `baseAtoms[key]`. Mixing `state` + `atoms` for the same slice — `atoms` wins and `state` is ignored.
+      - |-
+        When external atoms beat `state` + `on*Change`: cross-component subscriptions, persistence (writing the atom to localStorage from outside the table), atom-based integrations, sharing one slice across multiple tables.
+      - |-
+        `useCreateAtom<SliceState>(initial)` for stable atom identity inside a React component (replacement for the manual `useRef(createAtom(...))` pattern).
+      - |-
+        `useSelector(table.atoms.<slice>)` / `useSelector(myAtom)` for fine-grained reactivity.
+      - |-
+        `table.reset()` does NOT clear external atoms — you own them, so you reset them yourself with `myAtom.set(default)`.
+      - |-
+        Angular: atoms are signal-backed under the hood. Read them through `computed(() => table.atoms.<slice>.get(), { equal: shallow })`.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/store'
+      - '@tanstack/react-store'
+    tasks:
+      - 'Move a row-selection slice to an external `useCreateAtom<RowSelectionState>({})` and pass it through `options.atoms.rowSelection` so a sibling sidebar can `useSelector` the same atom.'
+      - 'Replace classic `state.sorting` + `onSortingChange` controlled state with an external `sortingAtom` for atom-based ergonomics — the table writes to the atom directly, no `on*Change` plumbing.'
+      - 'Persist a column-visibility slice by subscribing the atom to localStorage outside the table render path.'
+      - "Read `table.atoms.pagination` in a deeply-nested footer with `useSelector` so the rest of the table doesn't re-render on page changes."
+    correct_pattern: |
+      // External atoms for sorting + pagination — owned by you, shared anywhere.
+      import { useCreateAtom, useSelector } from '@tanstack/react-store'
+      import {
+        useTable, tableFeatures, rowSortingFeature, rowPaginationFeature,
+        createSortedRowModel, createPaginatedRowModel, sortFns,
+      } from '@tanstack/react-table'
+      import type { PaginationState, SortingState } from '@tanstack/react-table'
+
+      const features = tableFeatures({ rowSortingFeature, rowPaginationFeature })
+
+      function MyTable({ columns, data }) {
+        const sortingAtom    = useCreateAtom<SortingState>([])
+        const paginationAtom = useCreateAtom<PaginationState>({
+          pageIndex: 0, pageSize: 10,
+        })
+
+        // Fine-grained reads — these components re-render independently.
+        const sorting    = useSelector(sortingAtom)
+        const pagination = useSelector(paginationAtom)
+
+        const table = useTable({
+          features,
+          rowModels: {
+            sortedRowModel:    createSortedRowModel(sortFns),
+            paginatedRowModel: createPaginatedRowModel(),
+          },
+          columns,
+          data,
+          atoms: {
+            sorting:    sortingAtom,
+            pagination: paginationAtom,
+          },
+          // NOTE: no onSortingChange / onPaginationChange needed —
+          // table.setSorting / table.setPageIndex write through to the atoms.
+        })
+
+        // Reset is your job for owned atoms:
+        const resetMyState = () => {
+          sortingAtom.set([])
+          paginationAtom.set({ pageIndex: 0, pageSize: 10 })
+        }
+      }
+    wrong_pattern: |
+      // BAD #1: passing the SAME slice via both `state` and `atoms`. Atoms
+      // win silently and the `state` value is ignored — confusing to debug.
+      useTable({
+        features, rowModels: {},
+        columns, data,
+        state: { sorting: localSorting },           // ignored
+        onSortingChange: setLocalSorting,           // ignored
+        atoms: { sorting: sortingAtom },            // wins
+      })
+
+      // BAD #2: creating the atom inside render without `useCreateAtom`.
+      // A new atom every render → the table re-binds every render → state
+      // resets to initial. (The same trap as `useState(createAtom(...))`.)
+      function MyTable() {
+        const sortingAtom = createAtom<SortingState>([])  // wrong: unstable
+        useTable({ features, rowModels: {}, columns, data,
+                   atoms: { sorting: sortingAtom } })
+      }
+
+      // BAD #3: expecting `table.reset()` to clear an external atom. It
+      // doesn't — you own the atom. Call sortingAtom.set([]) yourself.
+      <button onClick={() => table.reset()}>Reset</button>
+      // ✓ Fix: <button onClick={() => { sortingAtom.set([]); table.reset() }}>
+    failure_modes:
+      - 'Creating atoms with `createAtom(...)` inside a component body. Use `useCreateAtom(initial)` (React) or framework equivalents for stable identity. A fresh atom every render unbinds the table from the slice and resets the state.'
+      - 'Passing the same slice key in both `options.state` and `options.atoms`. `options.atoms` wins; `state` is ignored silently. Pick one mechanism.'
+      - 'Expecting `table.reset()` to clear externally-owned atoms. The library only resets slices it manages internally — your atoms are yours to reset (call `myAtom.set(default)`).'
+      - 'Reading via `table.state.sorting` in a deeply-nested component when only that component cares about sorting. Use `useSelector(table.atoms.sorting)` or `useSelector(mySortingAtom)` for the narrowest re-render surface.'
+      - "Pairing external atoms with `on*Change` handlers. You don't need them — the table writes directly to your atom via the atom's `set()`. Adding an `onSortingChange` does nothing useful and can confuse readers."
+
+  - slug: compose-with-tanstack-query
+    type: composition
+    domain: composition
+    status: ready
+    description: >
+      Server-side / async data flow with TanStack Query. Key the query on
+      the table state that drives the request (pagination + sort + filters),
+      pass `placeholderData: keepPreviousData` to avoid a "0 rows flash"
+      between pages, set `manualPagination` / `manualSorting` /
+      `manualFiltering` so the table doesn't re-process server-processed
+      rows, and pass `rowCount` so `getPageCount()` works without all rows
+      in memory. The cleanest wiring uses an external pagination atom +
+      `options.atoms.pagination` so table writes auto-trigger Query
+      refetches — no `onPaginationChange` handler required. Examples for
+      React, Vue, Solid, Svelte, and Preact all live in
+      `examples/<framework>/with-tanstack-query`. Angular uses `rxResource`
+      instead of Query in `examples/angular/remote-data`.
+    covers:
+      - |-
+        Pattern: external atom OR classic `state` + `on*Change`. With atoms, `queryKey: ['key', useSelector(atom)]` is enough — the table writes to the atom, the atom updates the selector, Query refetches.
+      - |-
+        `manualPagination`, `manualSorting`, `manualFiltering` flags.
+      - |-
+        `rowCount` (preferred) or legacy `pageCount` so the pager UI shows accurate totals.
+      - |-
+        `placeholderData: keepPreviousData` to keep the previous page visible during fetches.
+      - Infinite scroll via `useInfiniteQuery` + flatten pages +
+        `manualSorting` so a new query fires per sort change.
+      - Invalidation on writes — call `queryClient.invalidateQueries(...)`
+        in your mutation `onSuccess`; the table picks up the new data
+        automatically via Query's normal flow.
+      - Angular `rxResource` is the idiomatic equivalent; `linkedSignal`
+        keeps previous response visible while a new one loads.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/react-query'
+      - '@tanstack/query-core'
+    tasks:
+      - 'Wire a paginated server table with `useQuery` + `useCreateAtom<PaginationState>` + `options.atoms.pagination` — no `onPaginationChange` handler.'
+      - 'Build an infinite-scroll table with `useInfiniteQuery` + `manualSorting`, flattening `data.pages` and triggering `fetchNextPage` when the scroll container nears the bottom.'
+      - "On a mutation that adds a row, call `queryClient.invalidateQueries({ queryKey: ['people'] })` so the table re-renders with the new row without manual state updates."
+      - 'Angular: replicate the same shape using `rxResource({ params, stream })` keyed on `signal()`-backed `pagination`/`sorting`/`globalFilter` state, with `linkedSignal` keeping the previous response visible during loading.'
+    correct_pattern: |
+      // React: useQuery + external pagination atom + manualPagination
+      import { QueryClientProvider, useQuery, keepPreviousData } from '@tanstack/react-query'
+      import { useCreateAtom, useSelector } from '@tanstack/react-store'
+      import { useTable, tableFeatures, rowPaginationFeature, createColumnHelper }
+        from '@tanstack/react-table'
+      import type { PaginationState } from '@tanstack/react-table'
+
+      const features = tableFeatures({ rowPaginationFeature })
+
+      function ServerTable({ columns }) {
+        const paginationAtom = useCreateAtom<PaginationState>({
+          pageIndex: 0, pageSize: 10,
+        })
+        const pagination = useSelector(paginationAtom)
+
+        const dataQuery = useQuery({
+          queryKey: ['people', pagination],
+          queryFn:  () => fetchPeople(pagination),
+          placeholderData: keepPreviousData,
+        })
+
+        const table = useTable({
+          features,
+          rowModels: {},                               // server paginates
+          columns,
+          data: dataQuery.data?.rows ?? EMPTY,          // EMPTY is module-scope
+          rowCount: dataQuery.data?.rowCount,
+          atoms: { pagination: paginationAtom },
+          manualPagination: true,
+        })
+        // table.nextPage() → atom updates → query refetches. No on*Change.
+      }
+    wrong_pattern: |
+      // BAD: a v8-shaped server table the agent will reproduce by reflex.
+      // (1) v8 hook name. (2) get*RowModel options. (3) NO manualPagination,
+      // so the table tries to slice the already-sliced server page locally.
+      // (4) Missing `rowCount` so the pager shows "Page 1 of 1".
+      // (5) queryKey doesn't include the pagination state, so the query
+      // never refetches when the user pages.
+      const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 })
+
+      const { data } = useQuery({
+        queryKey: ['people'],                       // (5)
+        queryFn:  () => fetchPeople(pagination),
+      })
+
+      const table = useReactTable({                 // (1)
+        columns,
+        data: data?.rows ?? [],                     // new identity each render
+        getCoreRowModel:       getCoreRowModel(),   // (2)
+        getPaginationRowModel: getPaginationRowModel(), // (2)+(3): also paginates locally
+        state:                 { pagination },
+        onPaginationChange:    setPagination,
+        // missing (4): rowCount
+        // missing (3): manualPagination: true
+      })
+    failure_modes:
+      - "Omitting `manualPagination` / `manualSorting` / `manualFiltering`. The table double-processes server-processed rows. If your server returned a 10-row page, the table will paginate that 10-row 'dataset' again and probably show a single page."
+      - "Missing `rowCount`. `getPageCount()` falls back to `Math.ceil(data.length / pageSize)` which is 1 if the server already paginated. Pager UIs lock at 'Page 1 of 1'."
+      - 'Forgetting to include pagination/sort/filter state in `queryKey`. Query has no other way to know its inputs changed; clicks on the pager update state but the query never refetches.'
+      - 'Skipping `placeholderData: keepPreviousData`. Between pages the table collapses to 0 rows, the row container collapses, and the scroll position jumps.'
+      - 'Keeping `paginatedRowModel: createPaginatedRowModel()` registered in `rowModels` for a server-paginated table. The factory ships in your bundle for nothing AND it competes with `manualPagination`.'
+      - 'Mixing `state.pagination` + `onPaginationChange` AND `atoms.pagination` for the same slice. `atoms` wins; the `state` plumbing is silently dead. Pick one.'
+      - 'Forgetting `queryClient.invalidateQueries(...)` after mutations. The table is a downstream consumer — it has no way to know the server data changed unless Query tells it.'
+      - 'Recreating `data: dataQuery.data?.rows ?? []` in JSX. The `?? []` produces a new array identity on every render — wrap with a module-scope `const EMPTY: Row[] = []` or `useMemo`.'
+
+  - slug: compose-with-tanstack-virtual
+    type: composition
+    domain: composition
+    status: ready
+    description: >
+      TanStack Table does NOT include virtualization — pair with TanStack
+      Virtual (`@tanstack/<fw>-virtual`). The standard pattern: get the row
+      array from `table.getRowModel().rows`, feed `rows.length` to
+      `useVirtualizer({ count, estimateSize, getScrollElement, ... })`,
+      iterate `rowVirtualizer.getVirtualItems()` instead of `rows.map`,
+      absolute-position each row with `transform: translateY(virtualRow.start)px`,
+      and render the `<tbody>` as a CSS grid with a fixed total height. The
+      virtualizer MUST live in the lowest possible component so it doesn't
+      re-run when unrelated state changes. Column virtualization uses the
+      same shape but with `horizontal: true` and padding-left/padding-right
+      placeholder `<th>`/`<td>` cells. Infinite scroll combines this with
+      `useInfiniteQuery` + a `fetchMoreOnBottomReached` callback. The
+      experimental examples (`virtualized-rows-experimental`,
+      `virtualized-columns-experimental`) show next-gen patterns using
+      `rowVirtualizer.measureElement` + manual style application for max
+      perf.
+    covers:
+      - Row virtualization (`useVirtualizer`/`createVirtualizer`/`injectVirtualizer`).
+      - Column virtualization (`horizontal: true`, padding-left/right placeholder cells).
+      - Infinite scroll via `useInfiniteQuery` + scroll-to-bottom callback.
+      - Dynamic row heights via `measureElement` (skip in Firefox — it measures border height incorrectly).
+      - |-
+        Critical perf rule: keep the virtualizer in the DEEPEST component possible (e.g. `TableBody`, not `App`) so unrelated state changes don't re-run it.
+      - |-
+        `display: grid` on `<table>` / `<thead>` / `<tbody>` is required for dynamic row heights — semantic table tags still work, just styled as grid.
+      - |-
+        Experimental pattern: keep a `rowRefsMap`, apply transforms via the virtualizer's `onChange` callback to avoid touching React state at all on scroll.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/lit-table'
+      - '@tanstack/react-virtual'
+      - '@tanstack/virtual-core'
+    tasks:
+      - 'Add row virtualization to a 200k-row table by isolating the virtualizer in a `TableBody` component that consumes the table instance as a prop.'
+      - 'Implement column virtualization with `horizontal: true` plus virtualPaddingLeft/Right placeholder cells in both `<thead>` row and `<tbody>` rows.'
+      - 'Build an infinite-scroll table by combining `useInfiniteQuery({ keepPreviousData })` with a scroll-event handler that calls `fetchNextPage()` when within 500px of the bottom, plus `manualSorting: true` so a new query fires on sort changes.'
+      - "Skip dynamic row measurement in Firefox via `measureElement: navigator.userAgent.indexOf('Firefox') === -1 ? (el) => el.getBoundingClientRect().height : undefined`."
+    correct_pattern: |
+      // React row virtualization — virtualizer in deepest possible component.
+      import { useVirtualizer } from '@tanstack/react-virtual'
+
+      function App() {
+        const tableContainerRef = useRef<HTMLDivElement>(null)
+        const table = useTable({
+          features: { rowSortingFeature, columnSizingFeature },
+          rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+          columns, data,
+        })
+        return (
+          <div ref={tableContainerRef} style={{ overflow: 'auto', height: 800 }}>
+            <table style={{ display: 'grid' }}>
+              <thead>{/* sticky header */}</thead>
+              {/* ✓ virtualizer in TableBody, not in App */}
+              <TableBody table={table} tableContainerRef={tableContainerRef} />
+            </table>
+          </div>
+        )
+      }
+
+      function TableBody({ table, tableContainerRef }) {
+        const { rows } = table.getRowModel()
+
+        const rowVirtualizer = useVirtualizer({
+          count:           rows.length,
+          estimateSize:    () => 33,
+          getScrollElement: () => tableContainerRef.current,
+          measureElement:  typeof window !== 'undefined' &&
+                           navigator.userAgent.indexOf('Firefox') === -1
+            ? (el) => el.getBoundingClientRect().height
+            : undefined,
+          overscan: 5,
+        })
+
+        return (
+          <tbody style={{
+            display: 'grid',
+            height: `${rowVirtualizer.getTotalSize()}px`,
+            position: 'relative',
+          }}>
+            {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+              const row = rows[virtualRow.index]
+              return (
+                <tr
+                  key={row.id}
+                  data-index={virtualRow.index}
+                  ref={(node) => rowVirtualizer.measureElement(node)}
+                  style={{
+                    display: 'flex',
+                    position: 'absolute',
+                    transform: `translateY(${virtualRow.start}px)`,
+                    width: '100%',
+                  }}
+                >
+                  {row.getAllCells().map((cell) => (
+                    <td key={cell.id}
+                        style={{ display: 'flex', width: cell.column.getSize() }}>
+                      <table.FlexRender cell={cell} />
+                    </td>
+                  ))}
+                </tr>
+              )
+            })}
+          </tbody>
+        )
+      }
+    wrong_pattern: |
+      // BAD #1: virtualizer at the App level. Every state change in App
+      // (filter input, sort toggle, anything) re-runs the virtualizer,
+      // which loses scroll position and measurement cache.
+      function App() {
+        const rowVirtualizer = useVirtualizer({...})    // wrong scope
+        const table = useTable(...)
+        return <TableBody table={table} virtualizer={rowVirtualizer} />
+      }
+
+      // BAD #2: rendering rows.map directly when the dataset is large.
+      // No virtualization, 200k DOM rows, browser crashes.
+      <tbody>{rows.map(row => <tr key={row.id}>...</tr>)}</tbody>
+
+      // BAD #3: missing `display: grid` + absolute positioning. Without the
+      // grid layout + translateY, virtual rows stack incorrectly and dynamic
+      // row height measurement fails because the rows are still flowing.
+      <tbody>
+        {rowVirtualizer.getVirtualItems().map(vr => (
+          <tr key={vr.key}>{/* no transform, no absolute */}</tr>
+        ))}
+      </tbody>
+
+      // BAD #4: `measureElement` on Firefox. Firefox measures table-row
+      // border height inconsistently — dynamic-height rows jitter on
+      // every scroll. Detect and disable measureElement on Firefox.
+    failure_modes:
+      - 'Putting `useVirtualizer` in the same component as `useTable`. Any state change in that component re-runs the virtualizer, blowing away scroll position and re-measuring everything. Always isolate the virtualizer in the deepest body/cell component.'
+      - 'Forgetting `display: grid` on `<table>` / `<thead>` / `<tbody>`. The semantic table layout collides with absolute positioning + `transform: translateY`, producing stacked or overlapping rows.'
+      - 'Missing the `translateY(virtualRow.start)` transform. Rows render but all at `top: 0`, so only the last few are visible.'
+      - "Using `measureElement` in Firefox. Firefox returns inconsistent row heights for table rows, causing flicker. Guard with `navigator.userAgent.indexOf('Firefox') === -1`."
+      - "Calling `rowVirtualizer.measureElement(node)` on a stale ref. The pattern is `ref={(node) => rowVirtualizer.measureElement(node)}` — passing a stored ref means the virtualizer can't remeasure when the row content changes height."
+      - "For column virtualization: forgetting the left/right padding placeholder cells (`virtualPaddingLeft`/`virtualPaddingRight`). Without them the visible columns slide left as you scroll, because the unrendered columns aren't taking up scroll space."
+      - 'For infinite scroll: not setting `manualSorting: true`. The table re-sorts the already-fetched pages every time a new page arrives, scrambling the order.'
+
+  - slug: compose-with-tanstack-form
+    type: composition
+    domain: composition
+    status: ready
+    description: >
+      Editable cells with TanStack Form. The table is the layout primitive;
+      the form owns the state. Use `createFormHook` to register reusable
+      field components (`TextField`, `NumberField`, `SelectField`), then in
+      each column's `cell` renderer return `<form.AppField name={`data[${row.index}].field`}>{(field) => <field.TextField />}</form.AppField>`.
+      Important typing gotcha: if your row type has a recursive `subRows`,
+      `Omit<Row, 'subRows'>` to a flat shape before passing to the form —
+      TanStack Form's `DeepKeys` chases the recursion and hits TS2589
+      ("type instantiation is excessively deep"). Subscribe to
+      `form.state.values.data.length` (not the whole array) to trigger
+      re-renders for row add/remove without infinite loops. Pair with
+      TanStack Pacer for debounced filter inputs on the same screen.
+    covers:
+      - |-
+        `createFormHook` + field components attached via `formContext`.
+      - |-
+        Cell renderer pattern: `<form.AppField name={`data[${row.index}].col`}>`.
+      - |-
+        `data: form.state.values.data` to feed the table.
+      - Recursive-row TS2589 pitfall — `Omit<Person, 'subRows'>` for the form row type.
+      - |-
+        `useStore(form.store, (state) => state.values.data.length)` for row add/remove re-renders.
+      - |-
+        `form.pushFieldValue('data', newRow)` for add row; `form.reset({ data })` for replace.
+      - This pattern is officially the answer to "TanStack Table has no
+        built-in editing" — Kevin explicitly scoped editing OUT of v9 core
+        in favor of this composition.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/react-form'
+    tasks:
+      - 'Build an editable people-table where each cell is a `<form.AppField>` bound to `data[${row.index}].firstName` etc., with Zod validators per field.'
+      - "Add an 'Add Row' button using `form.pushFieldValue('data', { firstName: '', ... })` plus subscribe to `form.state.values.data.length` so the table re-renders with the new row."
+      - "Type rows as `Omit<Person, 'subRows'>` to avoid `DeepKeys` recursion (TS2589)."
+      - "Combine with debounced column filters via `useDebouncedCallback` from `@tanstack/react-pacer/debouncer` so editing one cell doesn't refilter the table on every keystroke."
+    correct_pattern: |
+      // 1. Define field components and a form hook (form.tsx)
+      const { useAppForm } = createFormHook({
+        fieldComponents: { TextField, NumberField, SelectField },
+        formComponents:  { SubmitButton, FormStateIndicator },
+        fieldContext, formContext,
+      })
+
+      // 2. Critical: flatten row type for form path-keys (avoids TS2589)
+      type FormRow = Omit<Person, 'subRows'>
+
+      const features = tableFeatures({ rowPaginationFeature, columnFilteringFeature })
+      const columnHelper = createColumnHelper<typeof features, FormRow>()
+
+      function App() {
+        const form = useAppForm({
+          defaultValues: { data: makeData(100) as FormRow[] },
+          onSubmit: ({ value }) => save(value.data),
+        })
+
+        // 3. Bind each cell to a form field
+        const columns = useMemo(() => columnHelper.columns([
+          columnHelper.accessor('firstName', {
+            header: 'First',
+            cell: ({ row }) => (
+              <form.AppField
+                name={`data[${row.index}].firstName`}
+                validators={{ onChange: z.string().min(1) }}
+              >
+                {(field) => <field.TextField />}
+              </form.AppField>
+            ),
+          }),
+          // ...
+        ]), [form])
+
+        // 4. Subscribe to length only — avoids re-render loops on every keystroke
+        const dataLength = useStore(form.store, (s) => s.values.data.length)
+        void dataLength
+
+        const table = useTable({
+          features,
+          rowModels: {
+            filteredRowModel:  createFilteredRowModel(filterFns),
+            paginatedRowModel: createPaginatedRowModel(),
+          },
+          columns,
+          data: form.state.values.data,
+        })
+
+        const addRow = () => form.pushFieldValue('data', {
+          firstName: '', lastName: '', age: 0, visits: 0, progress: 0, status: 'single',
+        })
+        // render table + addRow button
+      }
+    wrong_pattern: |
+      // BAD #1: typing rows as `Person` (with subRows) and feeding to
+      // useAppForm. TanStack Form's DeepKeys walks subRows recursively.
+      // Result: TS2589 "Type instantiation is excessively deep".
+      const form = useAppForm({ defaultValues: { data: makeData(100) as Person[] } })
+      //                                          ^^^^^^ should be Omit<Person, 'subRows'>
+
+      // BAD #2: subscribing to the whole array. Every keystroke in any cell
+      // re-renders App, which recreates the form, which re-binds every cell.
+      const data = useStore(form.store, (s) => s.values.data)  // wrong: full array
+      // ✓ Fix: useStore(form.store, (s) => s.values.data.length) and rely on
+      //   `data: form.state.values.data` to read fresh values on render.
+
+      // BAD #3: passing the table itself as form state. Don't try to mix
+      // the table's internal `data` with form values — the form owns
+      // editing state; the table just renders.
+    failure_modes:
+      - "Typing rows with a recursive `subRows` field and feeding them to TanStack Form. `DeepKeys` walks the recursion and TypeScript reports TS2589. Always `Omit<Row, 'subRows'>` before passing to the form."
+      - "Subscribing to `form.state.values.data` (the full array) via `useStore`. Every keystroke triggers a re-render of every cell. Subscribe to `.data.length` (or a derived count) and rely on table's normal rendering for value reads."
+      - "Putting `form` itself in `useTable`'s `data` option. The table only needs the rows array — pass `data: form.state.values.data`."
+      - 'Forgetting `useMemo` around `columns` (passing `form` as a dep). The field bindings hold a reference to `form`, so without memoization you build new column defs every render.'
+      - "Trying to reuse v8's `useReactTable` editable-cell pattern (manual `useState` per cell, `tableMeta.updateData`). That still works mechanically, but the `compose-with-tanstack-form` pattern is the v9-blessed approach and handles validation/dirty/submit for free."
+
+  - slug: compose-with-tanstack-pacer
+    type: composition
+    domain: composition
+    status: ready
+    description: >
+      Use `@tanstack/<fw>-pacer` to debounce/throttle the high-frequency
+      writes that drive an interactive table: column filter inputs and
+      column resize state. Pattern: import `useDebouncedCallback` from
+      `@tanstack/react-pacer/debouncer`, wrap your `onChange` writer in
+      it, and keep local state for the input value so typing feels
+      instant. For column resizing, the equivalent is throttling
+      `onColumnResizingChange` so a drag doesn't push 60 state updates a
+      second through the store. Pacer is the v9 replacement for the
+      hand-rolled `DebouncedInput` component that appears in every v8
+      filtering example — the new pattern keeps the input shape but
+      replaces `setTimeout` plumbing with `useDebouncedCallback`.
+    covers:
+      - |-
+        `useDebouncedCallback(onChange, { wait: 300 })` for filter inputs.
+      - |-
+        Throttling resize: wrap `onColumnResizingChange` (or write to the atom inside a throttled callback) so column drags batch updates.
+      - |-
+        The kitchen-sink and with-tanstack-form examples both use Pacer for filter debouncing — copy that pattern.
+      - |-
+        When to choose debounce vs throttle: debounce for "stop typing then commit" (filters), throttle for "fire at most every N ms" (resize, scroll-triggered fetches).
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/react-pacer'
+      - '@tanstack/pacer'
+    tasks:
+      - 'Replace a v8-style `setTimeout`-based `DebouncedInput` with `useDebouncedCallback(onChange, { wait: 300 })`.'
+      - 'Add a 16ms throttle around `onColumnResizingChange` so a 1-second drag emits ~60 updates instead of every mousemove.'
+      - 'Build a global filter input that updates `state.globalFilter` debounced at 250ms while showing the typed value instantly in the input.'
+    correct_pattern: |
+      // Debounced filter input — the v9 idiom
+      import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
+
+      function DebouncedInput({
+        value: initialValue,
+        onChange,
+        debounce = 300,
+        ...props
+      }: {
+        value: string | number
+        onChange: (value: string | number) => void
+        debounce?: number
+      } & Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'>) {
+        // Local state so the input feels instant even though the writer is debounced.
+        const [value, setValue] = React.useState(initialValue)
+        React.useEffect(() => { setValue(initialValue) }, [initialValue])
+        const debouncedOnChange = useDebouncedCallback(onChange, { wait: debounce })
+        return (
+          <input
+            {...props}
+            value={value}
+            onChange={(e) => {
+              setValue(e.target.value)         // instant UI update
+              debouncedOnChange(e.target.value) // debounced state write
+            }}
+          />
+        )
+      }
+
+      // Usage in a column filter:
+      <DebouncedInput
+        value={(column.getFilterValue() ?? '') as string}
+        onChange={(v) => column.setFilterValue(v)}
+        placeholder="Search..."
+      />
+    wrong_pattern: |
+      // BAD #1: writing `column.setFilterValue` on every keystroke without
+      // debouncing. The full row model recomputes on each character —
+      // visibly janky for any non-trivial dataset.
+      <input onChange={(e) => column.setFilterValue(e.target.value)} />
+
+      // BAD #2: rolling your own setTimeout-based debounce. v8 examples
+      // shipped this and v9 explicitly moves it to Pacer.
+      function DebouncedInput({ value, onChange, debounce = 300 }) {
+        const [v, setV] = useState(value)
+        useEffect(() => {
+          const t = setTimeout(() => onChange(v), debounce)
+          return () => clearTimeout(t)
+        }, [v])
+        // works, but reinvents what `useDebouncedCallback` already provides
+        // with proper cleanup, ref tracking, and consistent API.
+      }
+
+      // BAD #3: debouncing the cell render itself instead of the writer.
+      // Don't debounce `setFilterValue` AND `setLocalInput` — only the
+      // expensive store write needs debouncing.
+    failure_modes:
+      - 'Writing filter values directly on every keystroke without debouncing. The whole filtered row model recomputes per character — fine for 100 rows, miserable for 10k+.'
+      - "Hand-rolling a `setTimeout`-based debounce instead of `useDebouncedCallback`. Pacer's hook handles ref stability, cleanup, and trailing-edge semantics correctly; the hand-rolled version often leaks timers on unmount."
+      - 'Using `wait: 0` (or omitting `wait`) and expecting debouncing. The default is meaningful — explicit `{ wait: 300 }` is the typical sweet spot for filter inputs.'
+      - 'Debouncing the local input state instead of the store write. The user sees stale characters in the input box. Local state should be instant; only the store write should debounce.'
+      - 'Throttling at 250ms for column resize. Too long — drag feels laggy. Use a 16ms throttle (roughly one frame) for resize.'
+      - 'Wrapping `column.setFilterValue` directly in `useDebouncedCallback` without a local input state. The input becomes uncontrolled-feeling because React renders go through the slow debounced path.'
+
+  - slug: compose-with-tanstack-devtools
+    type: composition
+    domain: composition
+    status: ready
+    description: >
+      Install the framework's TanStack Devtools host + the matching table
+      adapter, mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]} />`
+      once at the app root, and call `useTanStackTableDevtools(table, name?)`
+      immediately after each `useTable`. Devtools shows registered tables
+      (with a selector if multiple are named), live state, options, rows,
+      columns, and features. By default devtools are dev-mode only — the
+      framework adapter ships no-op exports when `process.env.NODE_ENV !==
+      'development'`. If you need live devtools in production, import from
+      the `/production` entrypoint instead (`@tanstack/react-table-devtools/production`,
+      `/vue-table-devtools/production`, `/solid-table-devtools/production`,
+      `/preact-table-devtools/production`). Only React, Vue, Solid, and
+      Preact ship dedicated table devtools adapters — Angular, Svelte,
+      Lit, and vanilla do not.
+    covers:
+      - Installing host + adapter (`@tanstack/<fw>-devtools` +
+        `@tanstack/<fw>-table-devtools`).
+      - Mounting `<TanStackDevtools plugins={[tableDevtoolsPlugin()]} />` once.
+      - |-
+        `useTanStackTableDevtools(table, name?)` per table. Multi-table selector activates when you pass distinct names.
+      - |-
+        Dev/prod gating: `process.env.NODE_ENV !== 'development'` swaps the entire module to no-op exports automatically.
+      - |-
+        `/production` entrypoints for opting devtools into production.
+      - |-
+        Where to expect them: React in `examples/react/row-selection`, Preact in `examples/preact/sorting`, Solid in `examples/solid/row-selection`, Vue in `examples/vue/row-selection`.
+      - |-
+        Frameworks WITHOUT a table devtools adapter: Angular, Svelte, Lit, vanilla. They have to either ship a generic devtools or wait for adapter coverage.
+    packages:
+      - '@tanstack/react-table-devtools'
+      - '@tanstack/vue-table-devtools'
+      - '@tanstack/solid-table-devtools'
+      - '@tanstack/preact-table-devtools'
+      - '@tanstack/table-devtools'
+    tasks:
+      - "Install `@tanstack/react-devtools` + `@tanstack/react-table-devtools`, mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]} />` at the root, and register a single table with `useTanStackTableDevtools(table, 'Users')`."
+      - 'Register multiple tables (`Users`, `Orders`, `Products`) so the devtools shows a selector — pass distinct names to each `useTanStackTableDevtools` call.'
+      - 'Enable devtools in a production build by importing from `@tanstack/react-table-devtools/production` instead of the default entrypoint.'
+      - "Conditionally disable a registration with the `options.enabled` flag: `useTanStackTableDevtools(table, 'Users', { enabled: showDevtools })`."
+    correct_pattern: |
+      // React setup (production-safe by default — no-op outside dev)
+      import { TanStackDevtools } from '@tanstack/react-devtools'
+      import {
+        tableDevtoolsPlugin,
+        useTanStackTableDevtools,
+      } from '@tanstack/react-table-devtools'
+
+      function App() {
+        const usersTable = useTable({...})
+        useTanStackTableDevtools(usersTable, 'Users')
+
+        const ordersTable = useTable({...})
+        useTanStackTableDevtools(ordersTable, 'Orders')
+
+        return <AppContent />
+      }
+
+      ReactDOM.createRoot(rootElement).render(
+        <React.StrictMode>
+          <App />
+          {/* Mounted ONCE at the root */}
+          <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+        </React.StrictMode>,
+      )
+
+      // === Vue setup ===
+      // <script setup>
+      // const table = useTable({...})
+      // useTanStackTableDevtools(table, 'Users')
+      // </script>
+      // Then in main.ts mount <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
+      // at the root Component via h() or a wrapping defineComponent.
+    wrong_pattern: |
+      // BAD #1: forgetting `<TanStackDevtools ... />` at the root.
+      // `useTanStackTableDevtools(table)` registers the table but there's
+      // no plugin host to render the panel — devtools appears to do
+      // nothing. The host MUST be mounted.
+
+      // BAD #2: mounting `<TanStackDevtools ... />` inside a route component
+      // that unmounts when navigating. The plugin host disappears; all
+      // table registrations stop being visible.
+
+      // BAD #3: calling useTanStackTableDevtools(table) BEFORE useTable
+      // returns. The order is `const table = useTable(...)` then
+      // `useTanStackTableDevtools(table, 'Name')`.
+
+      // BAD #4: importing from `@tanstack/react-table-devtools` (default
+      // entrypoint) and expecting it to work in production. The default
+      // entrypoint swaps to no-op when NODE_ENV !== 'development'.
+      // For prod, import from `/production`:
+      import { tableDevtoolsPlugin, useTanStackTableDevtools }
+        from '@tanstack/react-table-devtools/production'
+
+      // BAD #5: trying to import `@tanstack/angular-table-devtools` or
+      // `@tanstack/svelte-table-devtools`. Those don't exist — only React,
+      // Vue, Solid, Preact ship table devtools adapters.
+    failure_modes:
+      - "Forgetting to mount `<TanStackDevtools plugins={[tableDevtoolsPlugin()]} />` at the root. The hook registers tables but there's no panel host to render them."
+      - 'Mounting the devtools host inside a route-scoped component that unmounts on navigation. The panel disappears whenever the user leaves that route.'
+      - 'Importing from the default entrypoint and expecting prod visibility. The default swaps to no-op exports outside `development` — use `@tanstack/<fw>-table-devtools/production` for prod.'
+      - 'Calling `useTanStackTableDevtools` before `useTable` returns. Order matters — declare the table first, then register it.'
+      - 'Trying to use this skill in Angular / Svelte / Lit / vanilla. No table devtools adapter exists for those frameworks yet; only React, Vue, Solid, and Preact are covered.'
+      - 'Skipping the `name` argument with multiple tables. Anonymous tables get auto-assigned labels like `Table 1`, `Table 2`, which are useless when debugging. Always pass a meaningful name.'
+
+  - slug: compose-with-tanstack-hotkeys
+    type: composition
+    domain: composition
+    status: deferred
+    gap: true
+    description: >
+      Accessible keyboard navigation for table interactions (cell focus, row
+      selection, sort/filter triggers, pagination, etc.) via TanStack
+      Hotkeys. *** STATUS: GAP — Phase 4 question for Kevin. *** There is
+      no documented integration pattern for `@tanstack/hotkeys` + TanStack
+      Table v9 in this repo at the time of writing (no docs, no examples,
+      no grep hits for "hotkeys" anywhere under `examples/`, `packages/`,
+      or `docs/`). Kevin needs to supply: (a) the canonical key map
+      expectations (arrow-key cell nav? space/enter to toggle row selection?
+      home/end to jump to first/last row? alt+arrow to change sort?),
+      (b) which surface owns the key handlers (the `<table>` element, the
+      row, the cell?), and (c) how focus management interacts with
+      `table.Subscribe` re-renders and TanStack Virtual's
+      `getVirtualItems()` reordering.
+    covers:
+      - PLACEHOLDER — pending pattern from Kevin.
+    packages:
+      - '@tanstack/react-table'
+      - '@tanstack/vue-table'
+      - '@tanstack/angular-table'
+      - '@tanstack/solid-table'
+      - '@tanstack/svelte-table'
+      - '@tanstack/preact-table'
+      - '@tanstack/hotkeys'
+    tasks:
+      - '[GAP] Wire arrow-key cell navigation across a virtualized table without losing focus when rows are recycled by the virtualizer.'
+      - '[GAP] Bind space/enter to toggle row selection via `row.getToggleSelectedHandler()` while respecting `enableRowSelection` per-row predicates.'
+      - '[GAP] Provide alt+arrow shortcuts to change column sort direction equivalent to clicking the header.'
+    correct_pattern: |
+      // PLACEHOLDER — Kevin needs to supply the canonical pattern.
+      // Open questions:
+      //   1. Where do hotkey handlers attach? `<table>`, `<tr>`, or a wrapping div?
+      //   2. How is "active cell" represented? Add a new state slice? Use existing focus?
+      //   3. How does focus survive a virtualizer recycling the focused row?
+      //   4. Does `<table.Subscribe>` cause focus loss on re-render? (Likely yes
+      //      if the focused element is re-keyed.)
+    wrong_pattern: |
+      // PLACEHOLDER — without canonical guidance, agents will reach for ad-hoc
+      // `useEffect(() => document.addEventListener('keydown', ...))` patterns
+      // which:
+      //   - leak listeners on remount,
+      //   - conflict with row-virtualizer focus management,
+      //   - bypass accessibility expectations (no roving tabindex, etc.).
+      // None of those are the answer; Kevin needs to bless the right shape.
+    failure_modes:
+      - '[GAP] No documented v9 pattern exists at the time of skill authoring — `@tanstack/hotkeys` has no integration guide, examples, or tests with TanStack Table v9. This skill is a placeholder.'
+      - "[GAP] Without canonical guidance, agents will reach for `useEffect(() => document.addEventListener('keydown', ...))` which conflicts with virtualization, leaks listeners, and bypasses accessibility expectations (roving tabindex, ARIA grid semantics)."
+      - '[GAP] Open question: how does keyboard focus survive virtualized row recycling? The focused row may scroll out of view and be unmounted; the hotkey state needs to be decoupled from DOM focus.'
+    open_questions:
+      - "Which key bindings are 'standard'? (arrow nav, space/enter selection, home/end, alt+arrow sort, esc to clear filter, /-key to focus filter?)"
+      - 'Does focus live in the table store (as a new slice) or stay in DOM focus only?'
+      - 'How does the pattern interact with TanStack Virtual — specifically, what happens when the focused row is recycled?'
+      - 'Are there per-framework differences in how hotkeys integrate? (Angular has its own focus-management primitives; Svelte 5 has runes; Lit has its own event system.)'
+      - 'Should there be a `hotkeysFeature` plugin-style feature that other features can hook into, similar to how `rowSelectionFeature` exposes `getToggleSelectedHandler()`?'
+
+# =========================================================================
+# CLUSTER METADATA
+# =========================================================================
+
+notes:
+  - 'Migration skill is the largest by failure-mode count (12). It enumerates every breaking change with both v8 (wrong) and v9 (right) code so agents trained on v8 patterns produce v9 output.'
+  - 'Composition skills target one TanStack library each. They live in every framework adapter package that the integration applies to, not in a separate composition package.'
+  - 'Devtools skill lists 4 packages (react/vue/solid/preact) and explicitly flags Angular/Svelte/Lit/vanilla as unsupported — agents trying to import `@tanstack/angular-table-devtools` will fail at module resolution and the failure_mode entry calls this out.'
+  - 'Hotkeys skill is deferred and flagged as `gap: true` with `status: deferred` and a list of open questions for Phase 4.'
+
+found_examples:
+  with_tanstack_query:
+    react: 'examples/react/with-tanstack-query (uses useCreateAtom + options.atoms for pagination, useQuery with placeholderData: keepPreviousData)'
+    preact: 'examples/preact/with-tanstack-query'
+    vue: 'examples/vue/with-tanstack-query'
+    solid: 'examples/solid/with-tanstack-query'
+    svelte: 'examples/svelte/with-tanstack-query'
+    angular: 'examples/angular/remote-data (uses rxResource not Query — the Angular idiom)'
+  virtualized:
+    react: 'virtualized-rows, virtualized-columns, virtualized-infinite-scrolling, virtualized-rows-experimental, virtualized-columns-experimental'
+    solid: 'virtualized-rows, virtualized-columns, virtualized-infinite-scrolling'
+    svelte: 'virtualized-rows, virtualized-columns, virtualized-infinite-scrolling'
+    vue: 'virtualized-rows, virtualized-columns, virtualized-infinite-scrolling'
+    lit: 'virtualized-rows, virtualized-columns, virtualized-infinite-scrolling'
+  form: "examples/react/with-tanstack-form (uses useAppForm + form.AppField in each cell, Omit<Row, 'subRows'> to avoid TS2589)"
+  legacy: 'examples/react/basic-use-legacy-table (only React has a legacy adapter)'
+  external_atoms: 'examples/react/basic-external-atoms'
+  app_table: 'examples/react/basic-use-app-table, examples/react/composable-tables, examples/angular/composable-tables'
+
+gaps_flagged:
+  - 'compose-with-tanstack-hotkeys: NO documented integration pattern in the repo. No docs, no examples, no grep hits anywhere under examples/, packages/, or docs/. Skill is a placeholder with open_questions listed for Phase 4.'
+  - 'Angular/Svelte/Lit/vanilla table devtools: only 4 frameworks (React/Vue/Solid/Preact) ship table devtools adapters per docs/devtools.md and package.json files. The other 4 framework adapters in this repo have no devtools coverage — this is called out in compose-with-tanstack-devtools failure_modes.'
+  - "Svelte v8 vs v9: `@tanstack/svelte-table` v9 supports Svelte 5+ only. Projects on Svelte 3/4 must stay on v8 — there's a community-adapter workaround but no first-party path. Mentioned in migrate-v8-to-v9 covers."

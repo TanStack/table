@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref, type ComponentPublicInstance } from 'vue'
+import { computed, ref } from 'vue'
 import {
   FlexRender,
   columnSizingFeature,
@@ -11,31 +11,47 @@ import {
   useTable,
 } from '@tanstack/vue-table'
 import { useVirtualizer } from '@tanstack/vue-virtual'
-import { makeColumns, makeData, type Person } from './makeData'
+import { makeColumns, makeData } from './makeData'
+import type { ComponentPublicInstance } from 'vue'
+import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
-const columns = makeColumns(1_000)
-const data = ref<Person[]>(makeData(1_000, columns))
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+const columns = ref(makeColumns(DEFAULT_COLUMN_COUNT))
+const data = ref<Array<Person>>(makeData(DEFAULT_ROW_COUNT, columns.value))
 
 function refreshData() {
-  data.value = makeData(1_000, columns)
+  const nextColumns = makeColumns(DEFAULT_COLUMN_COUNT)
+  columns.value = nextColumns
+  data.value = makeData(DEFAULT_ROW_COUNT, nextColumns)
 }
 
-function stressTest() {
-  data.value = makeData(10_000, columns)
+function stressTestRows() {
+  data.value = makeData(STRESS_ROW_COUNT, columns.value)
+}
+
+function stressTestColumns() {
+  const nextColumns = makeColumns(STRESS_COLUMN_COUNT)
+  columns.value = nextColumns
+  data.value = makeData(data.value.length, nextColumns)
 }
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
+  features,
+  get columns() {
+    return columns.value
   },
-  columns,
   data,
   debugTable: true,
 })
@@ -103,7 +119,8 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
     <div>({{ data.length.toLocaleString() }} rows)</div>
     <div class="button-row">
       <button @click="refreshData">Regenerate Data</button>
-      <button @click="stressTest">Stress Test (10k rows)</button>
+      <button @click="stressTestRows">Stress Test (10k rows)</button>
+      <button @click="stressTestColumns">Stress Test (10k columns)</button>
     </div>
 
     <div

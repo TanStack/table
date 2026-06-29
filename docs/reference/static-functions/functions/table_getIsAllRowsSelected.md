@@ -9,11 +9,12 @@ title: table_getIsAllRowsSelected
 function table_getIsAllRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:247](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L247)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:329](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L329)
 
-Returns is all rows selected for the table.
+Checks whether every selectable filtered row is selected.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The result is false when there are no filtered rows or when selection state is
+empty.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsAllRowsSelected(table)
+const allSelected = table_getIsAllRowsSelected(table)
 ```

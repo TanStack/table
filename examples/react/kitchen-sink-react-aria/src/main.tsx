@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import * as ReactDOM from 'react-dom/client'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
@@ -54,7 +55,6 @@ import {
   columnSizingFeature,
   columnVisibilityFeature,
   createColumnHelper,
-  createCoreRowModel,
   createExpandedRowModel,
   createFacetedRowModel,
   createFacetedUniqueValues,
@@ -64,6 +64,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -72,46 +73,51 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import type { DragEndEvent } from '@dnd-kit/core'
 import type { Key } from 'react-aria-components'
 import type { Person } from '@/lib/make-data'
 import type {
-  CellData,
   Column,
   ColumnPinningState,
   ColumnSizingState,
   ExpandedState,
   GroupingState,
   Header,
-  RowData,
+  ReactTable,
   RowSelectionState,
   SortingState,
-  Table,
-  TableFeatures,
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 
-import {
-  dynamicFilterFn,
-  fuzzyFilter,
-  getFilterOperators,
-} from '@/lib/data-table'
+import { dynamicFilterFn, getFilterOperators } from '@/lib/data-table'
+import { rankItem } from '@tanstack/match-sorter-utils'
 import { departments, makeData, statuses } from '@/lib/make-data'
 import './styles/globals.css'
 
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    label?: string
-    variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
-    options?: Array<{ label: string; value: string; count?: number }>
-  }
+interface MyColumnMeta {
+  label?: string
+  variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
+  options?: Array<{ label: string; value: string; count?: number }>
 }
 
-const _features = tableFeatures({
+// Local fuzzy filter implementation for the filterFns registry slot.
+// Defined here to avoid a circular type dependency with data-table.ts.
+const fuzzyFilterFn = (
+  row: { getValue: (id: string) => unknown },
+  columnId: string,
+  value: unknown,
+  addMeta?: (meta: object) => void,
+) => {
+  const itemRank = rankItem(row.getValue(columnId), value as string)
+  addMeta?.({ itemRank })
+  return itemRank.passed
+}
+
+export const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -125,11 +131,22 @@ const _features = tableFeatures({
   columnPinningFeature,
   columnGroupingFeature,
   globalFilteringFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilterFn },
+  sortFns,
+  aggregationFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
-type AppTable = Table<typeof _features, Person>
-type AppColumn = Column<typeof _features, Person, any>
+const columnHelper = createColumnHelper<typeof features, Person>()
+type AppTable = ReactTable<typeof features, Person>
+type AppColumn = Column<typeof features, Person, any>
 
 function cx(...classes: Array<string | false | null | undefined>) {
   return classes.filter(Boolean).join(' ')
@@ -994,8 +1011,8 @@ function FilterListPopover({
 }
 
 function Pagination({ table }: { table: AppTable }) {
-  const pageIndex = table.store.state.pagination.pageIndex
-  const pageSize = table.store.state.pagination.pageSize
+  const pageIndex = table.state.pagination.pageIndex
+  const pageSize = table.state.pagination.pageSize
   const pageItems = getPageItems(pageIndex, table.getPageCount())
 
   return (
@@ -1126,7 +1143,6 @@ function DebouncedTextInput({
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
   const [rowSelection, setRowSelection] = React.useState<RowSelectionState>({})
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<
@@ -1317,20 +1333,8 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        coreRowModel: createCoreRowModel(),
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        facetedRowModel: createFacetedRowModel(),
-        facetedUniqueValues: createFacetedUniqueValues(),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-        groupedRowModel: createGroupedRowModel(aggregationFns),
-        expandedRowModel: createExpandedRowModel(),
-      },
+      key: 'kitchen-sink-react-aria', // needed for devtools
+      features,
       columns,
       data,
       defaultColumn: {
@@ -1369,6 +1373,8 @@ function App() {
     (state) => state, // default selector
   )
 
+  useTanStackTableDevtools(table)
+
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()
     const colSizes: Record<string, number> = {}
@@ -1377,10 +1383,10 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.store.state.columnSizing])
+  }, [table.state.columnSizing])
 
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   return (
     <SortingContext.Provider value={sorting}>
@@ -1390,8 +1396,7 @@ function App() {
             <div className="control-panel-actions">
               <ModeSwitch />
               <Button onPress={refreshData}>Regenerate Data</Button>
-              <Button onPress={stressTest}>Stress Test (200k rows)</Button>
-              <Button onPress={() => rerender()}>Force Rerender</Button>
+              <Button onPress={stressTest}>Stress Test (1M rows)</Button>
               <Button
                 onPress={() =>
                   console.info(
@@ -1517,10 +1522,10 @@ function ResizableHeaderCell({
   header,
   table,
 }: {
-  header: Header<typeof _features, Person>
+  header: Header<typeof features, Person>
   table: {
     FlexRender: React.ComponentType<{
-      header: Header<typeof _features, Person>
+      header: Header<typeof features, Person>
     }>
   }
 }) {
@@ -1567,5 +1572,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

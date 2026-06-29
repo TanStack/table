@@ -9,7 +9,7 @@ title: RowModelFactory
 type RowModelFactory<TData> = (table) => () => RowModel<StockFeatures, TData>;
 ```
 
-Defined in: [useLegacyTable.ts:162](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L162)
+Defined in: [useLegacyTable.ts:163](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L163)
 
 Row model factory function type from v8 API
 

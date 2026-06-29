@@ -1,7 +1,7 @@
 import { constructTable } from '@tanstack/table-core'
 import { useSelector } from '@tanstack/svelte-store'
 import { untrack } from 'svelte'
-import { mergeObjects } from './merge-objects'
+import { flatMerge, mergeObjects } from './merge-objects'
 import { svelteReactivity } from './reactivity.svelte'
 import type {
   RowData,
@@ -15,9 +15,19 @@ export type SvelteTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
+> = Omit<Table<TFeatures, TData>, 'store'> & {
   /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
+   * @deprecated Prefer `table.state` for render reads,
+   * `table.atoms.<slice>.get()` for slice snapshots, or
+   * `useSelector(table.store, selector)` for explicit subscriptions.
+   * `table.store.state` is a current-value snapshot and is easy to misuse in
+   * render code.
+   */
+  readonly store: Table<TFeatures, TData>['store']
+  /**
+   * The selected state of the table. This state may not match the structure of
+   * the full table state because it is selected by the selector function that
+   * you pass as the 2nd argument to `createTable`.
    *
    * @example
    * const table = createTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
@@ -40,8 +50,7 @@ export type SvelteTable<
  * <script lang="ts">
  *   const table = createTable(
  *     {
- *       _features,
- *       _rowModels: {},
+ *       features,
  *       columns,
  *       data,
  *     },
@@ -62,9 +71,9 @@ export function createTable<
 ): SvelteTable<TFeatures, TData, TSelected> {
   // 1. Merge reactivity into options using mergeObjects (preserves getters)
   const mergedOptions = mergeObjects(tableOptions, {
-    _features: {
-      coreReativityFeature: svelteReactivity(),
-      ...tableOptions._features,
+    features: {
+      coreReactivityFeature: svelteReactivity(),
+      ...tableOptions.features,
     },
   }) as TableOptions<TFeatures, TData>
 
@@ -75,14 +84,14 @@ export function createTable<
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
       ) => {
-        return mergeObjects(defaultOptions, newOptions)
+        return flatMerge(defaultOptions, newOptions)
       },
     },
     mergedOptions,
   ) as TableOptions<TFeatures, TData>
 
   // 3. Construct table
-  const table = constructTable(resolvedOptions) as SvelteTable<
+  const table = constructTable(resolvedOptions) as unknown as SvelteTable<
     TFeatures,
     TData,
     TSelected
@@ -107,7 +116,7 @@ export function createTable<
 
     untrack(() => {
       table.setOptions((prev) => {
-        return mergeObjects(prev, mergedOptions)
+        return flatMerge(prev, mergedOptions)
       })
     })
   })

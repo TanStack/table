@@ -5,6 +5,29 @@
  * in AppCell children, e.g., <cell.TextCell />
  */
 import { useCellContext } from '../hooks/table'
+import { IndeterminateCheckbox } from './indeterminate-checkbox'
+
+/**
+ * Row-selection checkbox cell - toggles selection for the current row.
+ *
+ * Unlike React (which needs a `Subscribe` boundary to work around React
+ * Compiler memoization), Preact re-renders this cell when selection state
+ * changes via the parent table's subscription, so reading `row.getIsSelected()`
+ * directly is enough.
+ */
+export function SelectCell() {
+  const cell = useCellContext()
+  const row = cell.row
+
+  return (
+    <IndeterminateCheckbox
+      checked={row.getIsSelected()}
+      disabled={!row.getCanSelect()}
+      indeterminate={row.getIsSomeSelected()}
+      onChange={row.getToggleSelectedHandler()}
+    />
+  )
+}
 
 /**
  * Generic text cell renderer

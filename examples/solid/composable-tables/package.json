@@ -6,16 +6,19 @@
     "dev": "vite",
     "build": "vite build",
     "serve": "vite preview",
+    "test:types": "tsc --noEmit",
     "lint": "eslint ./src"
   },
   "license": "MIT",
   "devDependencies": {
     "typescript": "6.0.3",
-    "vite": "^8.0.11",
+    "vite": "^8.1.0",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
-    "@tanstack/solid-table": "^9.0.0-alpha.45",
-    "solid-js": "^1.9.12"
+    "@tanstack/solid-devtools": "^0.8.5",
+    "@tanstack/solid-table": "^9.0.0-beta.23",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.23",
+    "solid-js": "^1.9.13"
   }
 }

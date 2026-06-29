@@ -14,11 +14,13 @@ import {
 import { Person, makeData } from './makeData'
 import type { SortFn } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
-const sortStatusFn: SortFn<typeof _features, Person> = (
+const sortStatusFn: SortFn<typeof features, Person> = (
   rowA,
   rowB,
   _columnId,
@@ -29,7 +31,7 @@ const sortStatusFn: SortFn<typeof _features, Person> = (
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -85,7 +87,7 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = new Array<Person>()
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   constructor() {
     super()
@@ -111,10 +113,7 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
+        features,
         columns,
         data: this._data,
       },
@@ -132,10 +131,10 @@ class LitTableExample extends LitElement {
         </button>
         <button
           @click=${() => {
-            this._data = makeData(500_000)
+            this._data = makeData(1_000_000)
           }}
         >
-          Stress Test (500k rows)
+          Stress Test (1M rows)
         </button>
       </div>
       <input
@@ -205,7 +204,7 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
-      <pre>${JSON.stringify(table.state.sorting, null, 2)}</pre>
+      <pre>${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

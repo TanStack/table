@@ -31,6 +31,12 @@ import type {
 
 export type ComponentType<T extends Record<string, any>> = (props: T) => any
 
+export type BoundComponents<
+  TComponents extends Record<string, ComponentType<any>>,
+> = {
+  [TKey in keyof TComponents]: () => ReturnType<TComponents[TKey]>
+}
+
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
 // =============================================================================
@@ -46,7 +52,7 @@ export type AppCellContext<
   TCellComponents extends Record<string, ComponentType<any>>,
 > = {
   cell: Cell<TFeatures, TData, TValue> &
-    TCellComponents & {
+    BoundComponents<TCellComponents> & {
       FlexRender: () => TemplateResult | string | null
     }
   column: Column<TFeatures, TData, TValue>
@@ -68,7 +74,7 @@ export type AppHeaderContext<
 > = {
   column: Column<TFeatures, TData, TValue>
   header: Header<TFeatures, TData, TValue> &
-    THeaderComponents & {
+    BoundComponents<THeaderComponents> & {
       FlexRender: () => TemplateResult | string | null
     }
   table: Table<TFeatures, TData>
@@ -299,7 +305,7 @@ export type AppLitTable<
       cell: Cell<TFeatures, TData, TValue>,
       renderFn: (
         cell: Cell<TFeatures, TData, TValue> &
-          TCellComponents & {
+          BoundComponents<TCellComponents> & {
             FlexRender: () => TemplateResult | string | null
           },
       ) => TemplateResult | string,
@@ -315,7 +321,7 @@ export type AppLitTable<
       header: Header<TFeatures, TData, TValue>,
       renderFn: (
         header: Header<TFeatures, TData, TValue> &
-          THeaderComponents & {
+          BoundComponents<THeaderComponents> & {
             FlexRender: () => TemplateResult | string | null
           },
       ) => TemplateResult | string,
@@ -331,7 +337,7 @@ export type AppLitTable<
       header: Header<TFeatures, TData, TValue>,
       renderFn: (
         header: Header<TFeatures, TData, TValue> &
-          THeaderComponents & {
+          BoundComponents<THeaderComponents> & {
             FlexRender: () => TemplateResult | string | null
           },
       ) => TemplateResult | string,
@@ -348,6 +354,76 @@ export type AppLitTable<
      */
     FlexRender: typeof FlexRender
   }
+
+export interface CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, ComponentType<any>>,
+  TCellComponents extends Record<string, ComponentType<any>>,
+  THeaderComponents extends Record<string, ComponentType<any>>,
+> {
+  /** The features object that was passed to `createTableHook`. */
+  appFeatures: TFeatures
+  /**
+   * A column helper pre-bound to `TFeatures` and the registered components, so
+   * the cell/header/footer render props expose the bound components.
+   */
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Creates a controller-like object whose `table()` method returns a table with
+   * the `App*` wrapper functions, a bound `FlexRender`, and the registered
+   * `tableComponents` attached. `TData` is inferred from the `data` option.
+   */
+  useAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
+    host: ReactiveControllerHost & HTMLElement,
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
+    selector?: (state: TableState<TFeatures>) => TSelected,
+  ) => {
+    table: () => AppLitTable<
+      TFeatures,
+      TData,
+      TSelected,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
+  }
+  /**
+   * Reads the table provided by the nearest ancestor that called `useAppTable`,
+   * via a `@lit/context` `ContextConsumer`. This is the BARE `LitTable` written
+   * to the provider, not the extended `AppLitTable`.
+   */
+  useTableContext: <TData extends RowData = RowData>(
+    host: ReactiveControllerHost & HTMLElement,
+  ) => ContextConsumer<
+    Context<symbol, LitTable<TFeatures, TData, any>>,
+    ReactiveControllerHost & HTMLElement
+  >
+  /**
+   * Reads the cell instance from a `@lit/context` `ContextConsumer`. lit never
+   * provides an extended cell through context, so this is a BARE `Cell`.
+   */
+  useCellContext: <TValue extends CellData = CellData>(
+    host: ReactiveControllerHost & HTMLElement,
+  ) => ContextConsumer<
+    Context<symbol, Cell<TFeatures, any, TValue>>,
+    ReactiveControllerHost & HTMLElement
+  >
+  /**
+   * Reads the header instance from a `@lit/context` `ContextConsumer`. lit never
+   * provides an extended header through context, so this is a BARE `Header`.
+   */
+  useHeaderContext: <TValue extends CellData = CellData>(
+    host: ReactiveControllerHost & HTMLElement,
+  ) => ContextConsumer<
+    Context<symbol, Header<TFeatures, any, TValue>>,
+    ReactiveControllerHost & HTMLElement
+  >
+}
 
 /**
  * Creates a custom table hook with pre-bound components for composition.
@@ -369,16 +445,16 @@ export type AppLitTable<
  *   useCellContext,
  *   useHeaderContext,
  * } = createTableHook({
- *   _features: tableFeatures({
+ *   features: tableFeatures({
  *     rowPaginationFeature,
  *     rowSortingFeature,
  *     columnFilteringFeature,
- *   }),
- *   _rowModels: {
  *     paginatedRowModel: createPaginatedRowModel(),
- *     sortedRowModel: createSortedRowModel(sortFns),
- *     filteredRowModel: createFilteredRowModel(filterFns),
- *   },
+ *     sortedRowModel: createSortedRowModel(),
+ *     filteredRowModel: createFilteredRowModel(),
+ *     sortFns,
+ *     filterFns,
+ *   }),
  *   tableComponents: { PaginationControls, RowCount },
  *   cellComponents: { TextCell, NumberCell },
  *   headerComponents: { SortIndicator, ColumnFilter },
@@ -439,7 +515,12 @@ export function createTableHook<
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
   // Create context keys for @lit/context
   const tableContext = createContext<LitTable<TFeatures, any, any>>(
     Symbol('tanstack-table'),
@@ -617,10 +698,7 @@ export function createTableHook<
     TSelected = TableState<TFeatures>,
   >(
     host: ReactiveControllerHost & HTMLElement,
-    tableOptions: Omit<
-      TableOptions<TFeatures, TData>,
-      '_features' | '_rowModels'
-    >,
+    tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
     selector?: (state: TableState<TFeatures>) => TSelected,
   ): {
     table: () => AppLitTable<
@@ -660,7 +738,7 @@ export function createTableHook<
           cell: Cell<TFeatures, TData, TValue>,
           renderFn: (
             cell: Cell<TFeatures, TData, TValue> &
-              TCellComponents & {
+              BoundComponents<TCellComponents> & {
                 FlexRender: () => TemplateResult | string | null
               },
           ) => TemplateResult | string,
@@ -680,7 +758,7 @@ export function createTableHook<
             FlexRender: cellFlexRender,
             ...boundCellComponents,
           }) as Cell<TFeatures, TData, TValue> &
-            TCellComponents & {
+            BoundComponents<TCellComponents> & {
               FlexRender: () => TemplateResult | string | null
             }
 
@@ -692,7 +770,7 @@ export function createTableHook<
           header: Header<TFeatures, TData, TValue>,
           renderFn: (
             header: Header<TFeatures, TData, TValue> &
-              THeaderComponents & {
+              BoundComponents<THeaderComponents> & {
                 FlexRender: () => TemplateResult | string | null
               },
           ) => TemplateResult | string,
@@ -710,7 +788,7 @@ export function createTableHook<
             FlexRender: headerFlexRender,
             ...boundHeaderComponents,
           }) as Header<TFeatures, TData, TValue> &
-            THeaderComponents & {
+            BoundComponents<THeaderComponents> & {
               FlexRender: () => TemplateResult | string | null
             }
 
@@ -722,7 +800,7 @@ export function createTableHook<
           header: Header<TFeatures, TData, TValue>,
           renderFn: (
             header: Header<TFeatures, TData, TValue> &
-              THeaderComponents & {
+              BoundComponents<THeaderComponents> & {
                 FlexRender: () => TemplateResult | string | null
               },
           ) => TemplateResult | string,
@@ -740,7 +818,7 @@ export function createTableHook<
             FlexRender: footerFlexRender,
             ...boundFooterComponents,
           }) as Header<TFeatures, TData, TValue> &
-            THeaderComponents & {
+            BoundComponents<THeaderComponents> & {
               FlexRender: () => TemplateResult | string | null
             }
 
@@ -767,7 +845,7 @@ export function createTableHook<
   }
 
   return {
-    appFeatures: defaultTableOptions._features as TFeatures,
+    appFeatures: defaultTableOptions.features,
     createAppColumnHelper,
     useAppTable,
     useTableContext,

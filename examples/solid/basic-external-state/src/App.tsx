@@ -9,6 +9,7 @@ import {
   sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { PaginationState, SortingState } from '@tanstack/solid-table'
@@ -16,12 +17,15 @@ import type { Person } from './makeData'
 
 // This example demonstrates managing table state externally via Solid's createSignal instead of letting the table manage its own state internally.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -49,7 +53,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   // Manage sorting state with createSignal
   const [sorting, setSorting] = createSignal<SortingState>([])
@@ -62,12 +66,9 @@ function App() {
 
   // Create the table and pass state + onChange handlers
   const table = createTable({
+    key: 'basic-external-state', // needed for devtools
     debugTable: true,
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns,
     get data() {
       return data()
@@ -84,11 +85,13 @@ function App() {
     onPaginationChange: setPagination, // raise pagination state changes to our own state management
   })
 
+  useTanStackTableDevtools(table)
+
   return (
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <table>
         <thead>
@@ -200,13 +203,7 @@ function App() {
         </select>
       </div>
       <div class="spacer-md" />
-      <pre>
-        {JSON.stringify(
-          { sorting: sorting(), pagination: pagination() },
-          null,
-          2,
-        )}
-      </pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

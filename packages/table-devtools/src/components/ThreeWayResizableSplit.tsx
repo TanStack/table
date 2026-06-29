@@ -20,6 +20,7 @@ export function ThreeWayResizableSplit(props: ThreeWayResizableSplitProps) {
 
   const makeDragHandler =
     (which: 'left' | 'right'): ((e: MouseEvent) => void) =>
+    // eslint-disable-next-line solid/reactivity
     (e) => {
       e.preventDefault()
       const handleEl = e.currentTarget as HTMLElement

@@ -10,6 +10,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { makeData } from './makeData'
 import type {
   Cell,
@@ -22,12 +23,15 @@ import type {
 } from '@tanstack/vue-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -68,7 +72,7 @@ export default defineComponent({
     }
 
     const stressTest = () => {
-      data.value = makeData(200_000)
+      data.value = makeData(1_000_000)
     }
 
     const sorting = ref<SortingState>([])
@@ -77,38 +81,31 @@ export default defineComponent({
       pageSize: 10,
     })
 
-    const table = useTable(
-      {
-        debugTable: true,
-        _features,
-        _rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-          paginatedRowModel: createPaginatedRowModel(),
+    const table = useTable({
+      key: 'basic-external-state', // needed for devtools
+      debugTable: true,
+      features,
+      columns,
+      get data() {
+        return data.value
+      },
+      state: {
+        get sorting() {
+          return sorting.value
         },
-        columns,
-        get data() {
-          return data.value
-        },
-        state: {
-          get sorting() {
-            return sorting.value
-          },
-          get pagination() {
-            return pagination.value
-          },
-        },
-        onSortingChange: (updater: Updater<SortingState>) => {
-          sorting.value = resolveUpdater(updater, sorting.value)
-        },
-        onPaginationChange: (updater: Updater<PaginationState>) => {
-          pagination.value = resolveUpdater(updater, pagination.value)
+        get pagination() {
+          return pagination.value
         },
       },
-      (state) => ({
-        sorting: state.sorting,
-        pagination: state.pagination,
-      }),
-    )
+      onSortingChange: (updater: Updater<SortingState>) => {
+        sorting.value = resolveUpdater(updater, sorting.value)
+      },
+      onPaginationChange: (updater: Updater<PaginationState>) => {
+        pagination.value = resolveUpdater(updater, pagination.value)
+      },
+    })
+
+    useTanStackTableDevtools(table)
 
     return () => (
       <div class="demo-root">
@@ -117,7 +114,7 @@ export default defineComponent({
             Regenerate Data
           </button>
           <button class="demo-button" onClick={stressTest}>
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <div class="spacer-md" />
@@ -125,10 +122,10 @@ export default defineComponent({
           <thead>
             {table
               .getHeaderGroups()
-              .map((headerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <div
@@ -155,11 +152,11 @@ export default defineComponent({
           <tbody>
             {table
               .getRowModel()
-              .rows.map((row: Row<typeof _features, Person>) => (
+              .rows.map((row: Row<typeof features, Person>) => (
                 <tr key={row.id}>
                   {row
                     .getAllCells()
-                    .map((cell: Cell<typeof _features, Person, unknown>) => (
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
                       <td key={cell.id}>
                         <FlexRender cell={cell} />
                       </td>
@@ -201,7 +198,7 @@ export default defineComponent({
           <span class="inline-controls">
             <div>Page</div>
             <strong>
-              {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+              {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>
@@ -211,7 +208,7 @@ export default defineComponent({
               type="number"
               min="1"
               max={table.getPageCount()}
-              value={table.state.pagination.pageIndex + 1}
+              value={table.atoms.pagination.get().pageIndex + 1}
               onInput={(event: Event) => {
                 const target = event.currentTarget as HTMLInputElement
                 const page = target.value ? Number(target.value) - 1 : 0
@@ -221,7 +218,7 @@ export default defineComponent({
             />
           </span>
           <select
-            value={table.state.pagination.pageSize}
+            value={table.atoms.pagination.get().pageSize}
             onChange={(event: Event) => {
               const target = event.currentTarget as HTMLSelectElement
               table.setPageSize(Number(target.value))
@@ -235,16 +232,7 @@ export default defineComponent({
           </select>
         </div>
         <div class="spacer-md" />
-        <pre>
-          {JSON.stringify(
-            {
-              sorting: table.state.sorting,
-              pagination: table.state.pagination,
-            },
-            null,
-            2,
-          )}
-        </pre>
+        <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
       </div>
     )
   },

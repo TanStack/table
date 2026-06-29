@@ -9,11 +9,12 @@ title: table_getCanSomeRowsExpand
 function table_getCanSomeRowsExpand<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L117)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L133)
 
-Returns can some rows expand for the table.
+Checks whether at least one pre-paginated row can expand.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Pagination is intentionally ignored so controls can reflect expandable rows
+that may not be on the current page.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCanSomeRowsExpand(table)
+const canExpand = table_getCanSomeRowsExpand(table)
 ```

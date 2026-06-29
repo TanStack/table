@@ -17,6 +17,7 @@ import {
   rowSelectionFeature,
   tableFeatures,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { FilterComponent } from './filter'
 import { makeData } from './makeData'
 import {
@@ -27,11 +28,14 @@ import type { Person } from './makeData'
 import type { ColumnDef, RowSelectionState } from '@tanstack/angular-table'
 import type { TemplateRef } from '@angular/core'
 
-const _features = tableFeatures({
+export const features = tableFeatures({
   columnFilteringFeature,
   columnVisibilityFeature,
   rowPaginationFeature,
   rowSelectionFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 @Component({
@@ -41,6 +45,12 @@ const _features = tableFeatures({
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
+
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(1_000))
@@ -48,7 +58,7 @@ export class AppComponent {
   readonly ageHeaderCell =
     viewChild.required<TemplateRef<unknown>>('ageHeaderCell')
 
-  readonly columns: Array<ColumnDef<typeof _features, Person>> = [
+  readonly columns: Array<ColumnDef<typeof features, Person>> = [
     {
       id: 'select',
       header: () => TableHeadSelectionComponent<Person>,
@@ -107,12 +117,9 @@ export class AppComponent {
   ]
 
   // TODO make this generic infer without passing in manually
-  table = injectTable<typeof _features, Person>(() => ({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+  table = injectTable<typeof features, Person>(() => ({
+    key: 'row-selection-signal', // needed for devtools
+    features,
     columns: this.columns,
     data: this.data(),
     state: {
@@ -130,9 +137,9 @@ export class AppComponent {
     debugTable: true,
   }))
 
-  readonly stringifiedRowSelection = computed(() =>
-    JSON.stringify(this.rowSelection(), null, 2),
-  )
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   readonly rowSelectionLength = computed(
     () => Object.keys(this.rowSelection()).length,
@@ -156,5 +163,5 @@ export class AppComponent {
   }
 
   refreshData = () => this.data.set(makeData(1_000))
-  stressTest = () => this.data.set(makeData(200_000))
+  stressTest = () => this.data.set(makeData(1_000_000))
 }

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   FlexRender,
   createExpandedRowModel,
@@ -24,13 +19,15 @@ import {
 import type { Person } from './makeData'
 import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   rowExpandingFeature: rowExpandingFeature,
   rowPaginationFeature: rowPaginationFeature,
   rowSelectionFeature: rowSelectionFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: () =>
@@ -81,11 +78,7 @@ export class App {
   readonly expanded = signal<ExpandedState>({})
 
   readonly table = injectTable(() => ({
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
-      expandedRowModel: createExpandedRowModel<typeof _features, Person>(),
-    },
+    features,
     data: this.data(),
     columns: defaultColumns,
     state: {
@@ -101,16 +94,9 @@ export class App {
     debugTable: true,
   }))
 
-  readonly rawExpandedState = computed(() =>
-    JSON.stringify(this.expanded(), undefined, 2),
-  )
-
-  readonly rowSelectionState = this.table.computed({
-    selector: (state) => state.rowSelection,
-  })
-  readonly rawRowSelectionState = computed(() =>
-    JSON.stringify(this.rowSelectionState(), undefined, 2),
-  )
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   onPageInputChange(event: Event): void {
     const inputElement = event.target as HTMLInputElement

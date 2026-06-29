@@ -28,9 +28,19 @@ import {
   table_resetColumnPinning,
   table_setColumnPinning,
 } from '../../../../src/static-functions'
-import { generateTestTableWithData } from '../../../helpers/generateTestTable'
+import {
+  generateTestTableWithData,
+  generateTestTableWithDataAndState,
+} from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
-import type { Header } from '../../../../src'
+import type { Person } from '../../../fixtures/data/types'
+import type {
+  Header,
+  StockFeatures,
+  Table_ColumnOrdering,
+  Table_ColumnPinning,
+  Table_Internal,
+} from '../../../../src'
 
 describe('getDefaultColumnPinningState', () => {
   it('should return default column pinning state', () => {
@@ -125,9 +135,9 @@ describe('column_pin', () => {
 describe('column_getCanPin', () => {
   it('should return true when column pinning is enabled', () => {
     const table = generateTestTableWithData(1)
-    const column = table.getAllColumns()[0]
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getCanPin(column)
+    const result = column_getCanPin(column as any)
 
     expect(result).toBe(true)
   })
@@ -136,23 +146,30 @@ describe('column_getCanPin', () => {
     const table = generateTestTableWithData(1, {
       enableColumnPinning: false,
     })
-    const column = table.getAllColumns()[0]
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getCanPin(column)
+    const result = column_getCanPin(column as any)
 
     expect(result).toBe(false)
   })
 
   it('should return false when column pinning is disabled for specific column', () => {
     const table = generateTestTableWithData(1)
+    const baseColumn = table.getAllColumns()[0]!
     const column = {
-      ...table.getAllColumns()[0],
-      columnDef: { enablePinning: false },
+      ...baseColumn,
+      columnDef: {
+        ...baseColumn.columnDef,
+        enablePinning: false,
+      },
       table: table,
       getLeafColumns: () => [
         {
-          ...table.getAllColumns()[0],
-          columnDef: { enablePinning: false },
+          ...baseColumn,
+          columnDef: {
+            ...baseColumn.columnDef,
+            enablePinning: false,
+          },
         },
       ],
     }
@@ -466,7 +483,7 @@ describe('table_getCenterHeaderGroups', () => {
 
     const headerGroups = table_getCenterHeaderGroups(table)
     const centerColumnIds = headerGroups[0]?.headers.map(
-      (header: Header<any, any>) => header.column.id,
+      (header) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')
@@ -540,7 +557,8 @@ describe('table_getPinnedLeafColumns', () => {
           right: [],
         },
       },
-    })
+    }) as Table_Internal<StockFeatures, Person> &
+      Table_ColumnPinning<StockFeatures, Person>
 
     const leafColumns = table_getPinnedLeafColumns(table, 'left')
 
@@ -624,7 +642,7 @@ describe('table_getPinnedVisibleLeafColumns', () => {
 describe('column pinning table instance APIs', () => {
   it('should expose pinned leaf column APIs on the table instance', () => {
     const table = generateTestTableWithData(1, {
-      _features: stockFeatures,
+      features: stockFeatures,
       initialState: {
         columnPinning: {
           left: ['firstName'],
@@ -634,7 +652,8 @@ describe('column pinning table instance APIs', () => {
           age: false,
         },
       },
-    })
+    }) as Table_Internal<StockFeatures, Person> &
+      Table_ColumnPinning<StockFeatures, Person>
 
     expect(
       table.getPinnedLeafColumns('left').map((col: { id: string }) => col.id),
@@ -648,7 +667,7 @@ describe('column pinning table instance APIs', () => {
 
   it('should pass method arguments into memoized prototype API dependencies', () => {
     const table = generateTestTableWithData(1, {
-      _features: stockFeatures,
+      features: stockFeatures,
       initialState: {
         columnPinning: {
           left: ['firstName'],
@@ -658,6 +677,53 @@ describe('column pinning table instance APIs', () => {
     })
 
     expect(table.getColumn('firstName')!.getStart('left')).toBe(0)
+  })
+
+  it('should update center visible columns when column order changes', () => {
+    const table = generateTestTableWithDataAndState(1, {
+      features: stockFeatures,
+    }) as Table_Internal<StockFeatures, Person> &
+      Table_ColumnPinning<StockFeatures, Person> &
+      Table_ColumnOrdering<StockFeatures, Person>
+
+    expect(
+      table.getCenterVisibleLeafColumns().map((col: { id: string }) => col.id),
+    ).toEqual([
+      'id',
+      'firstName',
+      'lastName',
+      'age',
+      'visits',
+      'progress',
+      'status',
+      'subRows',
+    ])
+    expect(table.getColumn('lastName')!.getStart('center')).toBe(300)
+
+    table.setColumnOrder([
+      'lastName',
+      'firstName',
+      'id',
+      'age',
+      'visits',
+      'progress',
+      'status',
+      'subRows',
+    ])
+
+    expect(
+      table.getCenterVisibleLeafColumns().map((col: { id: string }) => col.id),
+    ).toEqual([
+      'lastName',
+      'firstName',
+      'id',
+      'age',
+      'visits',
+      'progress',
+      'status',
+      'subRows',
+    ])
+    expect(table.getColumn('lastName')!.getStart('center')).toBe(0)
   })
 })
 
@@ -704,7 +770,7 @@ describe('table_getFooterGroups', () => {
 
     const footerGroups = table_getCenterFooterGroups(table)
     const centerColumnIds = footerGroups[0]?.headers.map(
-      (header: Header<any, any>) => header.column.id,
+      (header) => header.column.id,
     )
 
     expect(centerColumnIds).not.toContain('firstName')

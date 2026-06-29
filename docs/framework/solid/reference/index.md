@@ -8,14 +8,12 @@ title: "@tanstack/solid-table"
 ## Interfaces
 
 - [AppCellComponent](interfaces/AppCellComponent.md)
-- [AppCellPropsWithoutSelector](interfaces/AppCellPropsWithoutSelector.md)
-- [AppCellPropsWithSelector](interfaces/AppCellPropsWithSelector.md)
+- [AppCellProps](interfaces/AppCellProps.md)
 - [AppHeaderComponent](interfaces/AppHeaderComponent.md)
-- [AppHeaderPropsWithoutSelector](interfaces/AppHeaderPropsWithoutSelector.md)
-- [AppHeaderPropsWithSelector](interfaces/AppHeaderPropsWithSelector.md)
+- [AppHeaderProps](interfaces/AppHeaderProps.md)
 - [AppTableComponent](interfaces/AppTableComponent.md)
-- [AppTablePropsWithoutSelector](interfaces/AppTablePropsWithoutSelector.md)
-- [AppTablePropsWithSelector](interfaces/AppTablePropsWithSelector.md)
+- [AppTableProps](interfaces/AppTableProps.md)
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
 
 ## Type Aliases
 
@@ -31,7 +29,6 @@ title: "@tanstack/solid-table"
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)
 - [FlexRenderProps](type-aliases/FlexRenderProps.md)
 - [SolidTable](type-aliases/SolidTable.md)
-- [SubscribeSource](type-aliases/SubscribeSource.md)
 
 ## Functions
 

@@ -1,6 +1,6 @@
-import { For, createSignal } from 'solid-js'
+import { For, Show, createEffect, createMemo, createSignal } from 'solid-js'
 import { JsonTree } from '@tanstack/devtools-ui'
-import { batch, useSelector } from '@tanstack/solid-store'
+import { batch } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
@@ -22,41 +22,49 @@ export function StatePanel() {
   const [storeCopied, setStoreCopied] = createSignal(false)
   const [pasteError, setPasteError] = createSignal<string | null>(null)
 
-  const tableInstance = table()
   // Subscribe to both stores so the panel re-renders when either the table
   // state or the options (e.g. options.atoms / options.state) change.
   const tableState = useTableStore(
-    tableInstance ? tableInstance.store : undefined,
+    () => table()?.store,
     (state) => state,
   )
-  const tableOptions = tableInstance
-    ? tableInstance.optionsStore
-      ? useSelector(tableInstance.optionsStore, (opts) => opts)
-      : useTableStore(tableInstance.store, () => tableInstance.options)
-    : undefined
+  const tableOptions = useTableStore(
+    () => {
+      const tableInstance = table()
+      return tableInstance?.optionsStore ?? tableInstance?.store
+    },
+    () => table()?.options as unknown,
+  )
 
-  if (!tableInstance) {
-    return <NoTableConnected title="State" />
-  }
+  const initialState = createMemo((): unknown => {
+    const tableInstance = table()
+    if (!tableInstance) return undefined
 
-  const getInitialState = (): unknown => {
-    tableState?.()
-    tableOptions?.()
-    return tableInstance.initialState as unknown
-  }
+    tableState()
+    tableOptions()
 
-  const getStoreState = (): unknown => {
-    tableState?.()
-    tableOptions?.()
-    return tableInstance.store.state as unknown
-  }
+    return tableInstance.initialState
+  })
 
-  const getAtomSlices = (): Array<AtomSlice> => {
+  const storeState = createMemo((): unknown => {
+    const tableInstance = table()
+    if (!tableInstance) return undefined
+
+    tableState()
+    tableOptions()
+
+    return tableInstance.store.state
+  })
+
+  const atomSlices = createMemo((): Array<AtomSlice> => {
+    const tableInstance = table()
+    if (!tableInstance) return []
+
     // Touch subscriptions so this recomputes on state or option change.
-    tableState?.()
-    tableOptions?.()
+    tableState()
+    tableOptions()
 
-    const options = tableInstance.options as Record<string, unknown>
+    const options = tableInstance.options as unknown as Record<string, unknown>
     const externalAtoms =
       (options.atoms as Record<string, unknown> | undefined) ?? {}
     const externalState =
@@ -82,7 +90,7 @@ export function StatePanel() {
         source,
       }
     })
-  }
+  })
 
   const copyToClipboard = async (
     value: unknown,
@@ -98,8 +106,11 @@ export function StatePanel() {
   }
 
   const handlePaste = async () => {
+    const tableInstance = table()
     if (!tableInstance) return
+
     setPasteError(null)
+
     try {
       const text = await navigator.clipboard.readText()
       const parsed = JSON.parse(text)
@@ -130,77 +141,75 @@ export function StatePanel() {
   }
 
   const handleReset = () => {
-    tableInstance.reset()
+    table()?.reset()
   }
 
   return (
-    <div class={styles().panelScroll}>
-      <ThreeWayResizableSplit
-        left={
-          <>
-            <div class={styles().sectionTitle}>initialState</div>
-            <div class={styles().buttonRow}>
-              <button
-                type="button"
-                class={styles().copyButton}
-                onClick={() =>
-                  copyToClipboard(getInitialState(), setInitialStateCopied)
-                }
-                disabled={!tableInstance}
-              >
-                {initialStateCopied() ? 'Copied!' : 'Copy'}
-              </button>
-            </div>
-            <JsonTree copyable value={getInitialState()} />
-          </>
-        }
-        middle={
-          <>
-            <div class={styles().sectionTitle}>Atoms</div>
-            <div class={styles().buttonRow}>
-              <button
-                type="button"
-                class={styles().resetButton}
-                onClick={handleReset}
-                disabled={!tableInstance}
-              >
-                Reset to initialState
-              </button>
-            </div>
-            <For each={getAtomSlices()}>
-              {(slice) => <AtomRow slice={slice} />}
-            </For>
-          </>
-        }
-        right={
-          <>
-            <div class={styles().sectionTitle}>Store</div>
-            <div class={styles().buttonRow}>
-              <button
-                type="button"
-                class={styles().copyButton}
-                onClick={() => copyToClipboard(getStoreState(), setStoreCopied)}
-                disabled={!tableInstance}
-              >
-                {storeCopied() ? 'Copied!' : 'Copy'}
-              </button>
-              <button
-                type="button"
-                class={styles().pasteButton}
-                onClick={handlePaste}
-                disabled={!tableInstance}
-              >
-                Paste
-              </button>
-            </div>
-            {pasteError() && (
-              <div class={styles().pasteError}>{pasteError()}</div>
-            )}
-            <JsonTree copyable value={getStoreState()} />
-          </>
-        }
-      />
-    </div>
+    <Show fallback={<NoTableConnected title="State" />} when={table()}>
+      <div class={styles().panelScroll}>
+        <ThreeWayResizableSplit
+          left={
+            <>
+              <div class={styles().sectionTitle}>initialState</div>
+              <div class={styles().buttonRow}>
+                <button
+                  type="button"
+                  class={styles().copyButton}
+                  onClick={() =>
+                    copyToClipboard(initialState(), setInitialStateCopied)
+                  }
+                >
+                  {initialStateCopied() ? 'Copied!' : 'Copy'}
+                </button>
+              </div>
+              <JsonTree copyable value={initialState()} />
+            </>
+          }
+          middle={
+            <>
+              <div class={styles().sectionTitle}>Atoms</div>
+              <div class={styles().buttonRow}>
+                <button
+                  type="button"
+                  class={styles().resetButton}
+                  onClick={handleReset}
+                >
+                  Reset to initialState
+                </button>
+              </div>
+              <For each={atomSlices()}>
+                {(slice) => <AtomRow slice={slice} />}
+              </For>
+            </>
+          }
+          right={
+            <>
+              <div class={styles().sectionTitle}>Store</div>
+              <div class={styles().buttonRow}>
+                <button
+                  type="button"
+                  class={styles().copyButton}
+                  onClick={() => copyToClipboard(storeState(), setStoreCopied)}
+                >
+                  {storeCopied() ? 'Copied!' : 'Copy'}
+                </button>
+                <button
+                  type="button"
+                  class={styles().pasteButton}
+                  onClick={handlePaste}
+                >
+                  Paste
+                </button>
+              </div>
+              {pasteError() && (
+                <div class={styles().pasteError}>{pasteError()}</div>
+              )}
+              <JsonTree copyable value={storeState()} />
+            </>
+          }
+        />
+      </div>
+    </Show>
   )
 }
 

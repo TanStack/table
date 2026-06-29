@@ -9,11 +9,12 @@ title: getDefaultExpandedState
 function getDefaultExpandedState(): ExpandedState;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L21)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L22)
 
-Returns the default expanded state.
+Creates the default expanded state.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+The feature default is an empty map, meaning no rows are expanded. Reset APIs
+use this value when `defaultState` is `true`.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultExpandedState()
+const expanded = getDefaultExpandedState()
 ```

@@ -1,29 +1,14 @@
-import { unref, watch } from 'vue'
+import { getCurrentScope, onScopeDispose, unref, watch } from 'vue'
 import { constructTable } from '@tanstack/table-core'
-import { shallow, useSelector } from '@tanstack/vue-store'
-import { mergeProxy } from './merge-proxy'
+import { flatMerge, mergeProxy } from './merge-proxy'
 import { vueReactivity } from './reactivity'
 import type {
-  Atom,
-  ReadonlyAtom,
-  ReadonlyStore,
-  Store,
-} from '@tanstack/vue-store'
-import type {
-  NoInfer,
   RowData,
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 import type { MaybeRef, VNode } from 'vue'
-
-export type SubscribeSource<TValue> =
-  | Atom<TValue>
-  | ReadonlyAtom<TValue>
-  | Store<TValue>
-  | ReadonlyStore<TValue>
 
 export type TableOptionsWithReactiveData<
   TFeatures extends TableFeatures,
@@ -61,47 +46,13 @@ function getReactiveOptionDeps<
 export type VueTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
-  /**
-   * Store mode: `selector` required. Source mode: pass `source` (atom or store); omit
-   * `selector` for the whole value (identity), or pass `selector` to project. Split
-   * overloads so source-only infers `TSourceValue` for `children` (see React `Subscribe`).
+  /** Creates a reactive render boundary. The child function reads the table
+   * atoms it needs, so Vue only tracks those atom reads.
    */
-  Subscribe: {
-    <TSourceValue>(props: {
-      source: SubscribeSource<TSourceValue>
-      selector?: undefined
-      children:
-        | ((state: Readonly<TSourceValue>) => VNode | Array<VNode>)
-        | VNode
-        | Array<VNode>
-    }): VNode | Array<VNode>
-    <TSourceValue, TSubSelected>(props: {
-      source: SubscribeSource<TSourceValue>
-      selector: (state: TSourceValue) => TSubSelected
-      children:
-        | ((state: Readonly<TSubSelected>) => VNode | Array<VNode>)
-        | VNode
-        | Array<VNode>
-    }): VNode | Array<VNode>
-    <TSubSelected>(props: {
-      selector: (state: NoInfer<TableState<TFeatures>>) => TSubSelected
-      children:
-        | ((state: Readonly<TSubSelected>) => VNode | Array<VNode>)
-        | VNode
-        | Array<VNode>
-    }): VNode | Array<VNode>
-  }
-  /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
-   *
-   * @example
-   * const table = useTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
-   *
-   * console.log(table.state.globalFilter)
-   */
-  readonly state: Readonly<TSelected>
+  Subscribe: (props: {
+    children: (atoms: Table<TFeatures, TData>['atoms']) => VNode | Array<VNode>
+  }) => VNode | Array<VNode>
 }
 
 /**
@@ -109,80 +60,70 @@ export type VueTable<
  *
  * Table options may contain Vue refs or computed values. The adapter unwraps
  * those reactive inputs, watches them with synchronous flushing, and keeps the
- * table options in sync. The optional selector projects from `table.store` and
- * exposes the selected value on `table.state`.
+ * table options in sync. Use `table.Subscribe` or native Vue computed values
+ * around `table.atoms.<slice>.get()` for selected reactive reads.
  *
  * @example
  * ```ts
  * const table = useTable(
  *   {
- *     _features,
- *     _rowModels: {},
+ *     features,
  *     columns,
  *     data,
  *   },
- *   (state) => ({ pagination: state.pagination }),
  * )
- *
- * table.state.pagination
  * ```
  */
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
 >(
   tableOptions:
     | TableOptions<TFeatures, TData>
     | TableOptionsWithReactiveData<TFeatures, TData>,
-  selector?: (state: TableState<TFeatures>) => TSelected,
-): VueTable<TFeatures, TData, TSelected> {
+): VueTable<TFeatures, TData> {
   const syncTableOptions = (
     table: Table<TFeatures, TData>,
     options: TableOptionsWithReactiveData<TFeatures, TData>,
   ) => {
-    table.setOptions(
-      () =>
-        getOptionsWithReactiveValues(options) as TableOptions<TFeatures, TData>,
+    table.setOptions((prev) =>
+      flatMerge(prev, getOptionsWithReactiveValues(options)),
     )
   }
 
-  const mergedOptions = {
-    ...tableOptions,
-    _features: {
-      coreReativityFeature: vueReactivity(),
-      ...tableOptions._features,
+  const reactivity = vueReactivity()
+
+  const mergedOptions = mergeProxy(tableOptions, {
+    features: {
+      coreReactivityFeature: reactivity,
+      ...(unref(tableOptions.features) ?? {}),
     },
-  }
+  }) as TableOptionsWithReactiveData<TFeatures, TData>
 
   const resolvedOptions = mergeProxy(
-    getOptionsWithReactiveValues(
-      mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
-    ),
+    getOptionsWithReactiveValues(mergedOptions),
     {
       // Remove state and onStateChange - store handles it internally
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         newOptions: Partial<TableOptions<TFeatures, TData>>,
       ) => {
-        return mergeProxy(defaultOptions, newOptions)
+        return flatMerge(defaultOptions, newOptions)
       },
     },
   ) as TableOptions<TFeatures, TData>
 
-  const table = constructTable(resolvedOptions) as VueTable<
-    TFeatures,
-    TData,
-    TSelected
-  >
+  const coreTable = constructTable(resolvedOptions)
+  const table = coreTable as unknown as VueTable<TFeatures, TData>
+
+  if (getCurrentScope()) {
+    onScopeDispose(() => reactivity.unmount?.())
+  }
 
   watch(
-    () =>
-      getReactiveOptionDeps(
-        mergedOptions as TableOptionsWithReactiveData<TFeatures, TData>,
-      ),
+    () => getReactiveOptionDeps(mergedOptions),
     () => {
-      syncTableOptions(table, mergedOptions)
+      syncTableOptions(coreTable, mergedOptions)
     },
     { immediate: true },
   )
@@ -216,36 +157,17 @@ export function useTable<
     },
     (controlledValues) => {
       if (controlledValues.length > 0) {
-        syncTableOptions(table, mergedOptions)
+        syncTableOptions(coreTable, mergedOptions)
       }
     },
     { immediate: true },
   )
 
-  table.Subscribe = ((props: {
-    source?: SubscribeSource<unknown>
-    selector?: ((state: unknown) => unknown) | undefined
-    children:
-      | ((state: Readonly<unknown>) => VNode | Array<VNode>)
-      | VNode
-      | Array<VNode>
+  table.Subscribe = (props: {
+    children: (atoms: Table<TFeatures, TData>['atoms']) => VNode | Array<VNode>
   }) => {
-    const source = props.source ?? table.store
-    const selected = useSelector(source as never, props.selector as never, {
-      compare: shallow,
-    })
-    if (typeof props.children === 'function') {
-      return props.children(selected.value as Readonly<unknown>)
-    }
-    return props.children
-  }) as VueTable<TFeatures, TData, TSelected>['Subscribe']
-
-  const stateStore = useSelector(table.store, selector)
-
-  return {
-    ...table,
-    get state() {
-      return stateStore.value
-    },
+    return props.children(table.atoms as Table<TFeatures, TData>['atoms'])
   }
+
+  return table
 }

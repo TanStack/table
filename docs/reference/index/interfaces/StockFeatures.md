@@ -12,7 +12,7 @@ Defined in: [features/stockFeatures.ts:16](https://github.com/TanStack/table/blo
 ### columnFacetingFeature
 
 ```ts
-columnFacetingFeature: TableFeature<ColumnFacetingFeatureConstructors<TableFeatures, RowData>>;
+columnFacetingFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L17)
@@ -22,7 +22,7 @@ Defined in: [features/stockFeatures.ts:17](https://github.com/TanStack/table/blo
 ### columnFilteringFeature
 
 ```ts
-columnFilteringFeature: TableFeature<ColumnFilteringFeatureConstructors<TableFeatures, RowData>>;
+columnFilteringFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
@@ -32,7 +32,7 @@ Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blo
 ### columnGroupingFeature
 
 ```ts
-columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructors<TableFeatures, RowData>>;
+columnGroupingFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L19)
@@ -42,7 +42,7 @@ Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blo
 ### columnOrderingFeature
 
 ```ts
-columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructors<TableFeatures, RowData>>;
+columnOrderingFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
@@ -52,7 +52,7 @@ Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blo
 ### columnPinningFeature
 
 ```ts
-columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors<TableFeatures, RowData>>;
+columnPinningFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
@@ -62,7 +62,7 @@ Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blo
 ### columnResizingFeature
 
 ```ts
-columnResizingFeature: TableFeature<ColumnResizingFeatureConstructors<TableFeatures, RowData>>;
+columnResizingFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
@@ -72,7 +72,7 @@ Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blo
 ### columnSizingFeature
 
 ```ts
-columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors<TableFeatures, RowData>>;
+columnSizingFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
@@ -82,7 +82,7 @@ Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blo
 ### columnVisibilityFeature
 
 ```ts
-columnVisibilityFeature: TableFeature<ColumnVisibilityFeatureConstructors<TableFeatures, RowData>>;
+columnVisibilityFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
@@ -92,7 +92,7 @@ Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blo
 ### globalFilteringFeature
 
 ```ts
-globalFilteringFeature: TableFeature<GlobalFilteringFeatureConstructors<TableFeatures, RowData>>;
+globalFilteringFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
@@ -102,7 +102,7 @@ Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blo
 ### rowExpandingFeature
 
 ```ts
-rowExpandingFeature: TableFeature<RowExpandingFeatureConstructors<TableFeatures, RowData>>;
+rowExpandingFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
@@ -112,7 +112,7 @@ Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blo
 ### rowPaginationFeature
 
 ```ts
-rowPaginationFeature: TableFeature<RowPaginationFeatureConstructors<TableFeatures, RowData>>;
+rowPaginationFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
@@ -122,7 +122,7 @@ Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blo
 ### rowPinningFeature
 
 ```ts
-rowPinningFeature: TableFeature<RowPinningFeatureConstructors<TableFeatures, RowData>>;
+rowPinningFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
@@ -132,7 +132,7 @@ Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blo
 ### rowSelectionFeature
 
 ```ts
-rowSelectionFeature: TableFeature<RowSelectionFeatureConstructors<TableFeatures, RowData>>;
+rowSelectionFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
@@ -142,7 +142,7 @@ Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blo
 ### rowSortingFeature
 
 ```ts
-rowSortingFeature: TableFeature<RowSortingFeatureConstructors<TableFeatures, RowData>>;
+rowSortingFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)

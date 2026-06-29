@@ -1,4 +1,4 @@
-import { batch, createAtom } from '@tanstack/store'
+import { batch, createAtom } from '@tanstack/lit-store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
@@ -13,6 +13,18 @@ import type {
 export function litReactivity(): TableReactivityBindings {
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: false,
+    addSubscription: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
+    unmount: () => {
+      throw new Error(
+        'Feature not supported in current reactivity implementation',
+      )
+    },
+    schedule: (fn) => queueMicrotask(() => fn()),
     batch,
     untrack: (fn) => fn(),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {

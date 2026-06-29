@@ -6,12 +6,9 @@ title: columnPinningFeature
 # Variable: columnPinningFeature
 
 ```ts
-const columnPinningFeature: TableFeature<ColumnPinningFeatureConstructors<TableFeatures, RowData>>;
+const columnPinningFeature: TableFeature;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.ts:355](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L355)
+Defined in: [features/column-pinning/columnPinningFeature.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L46)
 
-The stock column pinning feature.
-
-Register this feature to add column pinning state plus table, row, and column
-APIs for splitting columns into left, center, and right regions.
+Feature that adds column pinning state and APIs for left, center, and right regions.

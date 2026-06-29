@@ -50,8 +50,7 @@ Every row object has an `id` property that makes it unique within the table inst
 
 ```js
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
   columns,
   data,
   getRowId: (originalRow) => originalRow.uuid, // override the row.id with the uuid from the original row's data
@@ -83,7 +82,7 @@ const firstName = row.original.firstName // { firstName: 'John', lastName: 'Doe'
 
 ### Sub Rows
 
-If you are using either grouping or expanding features, your rows may contain sub-rows or parent row references. This is discussed in much more detail in the [Expanding Guide](./expanding), but here is a quick overview of useful properties and methods for working with sub-rows.
+If you are using either grouping or expanding features, your rows may contain sub-rows or parent row references. This is discussed in much more detail in the [Expanding Guide](../framework/react/guide/expanding), but here is a quick overview of useful properties and methods for working with sub-rows.
 
 - `row.subRows`: An array of sub-rows for the row.
 - `row.depth`: The depth of the row (if nested or grouped) relative to the root row array. 0 for root level rows, 1 for child rows, 2 for grandchild rows, etc.

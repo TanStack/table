@@ -22,3 +22,5 @@ export * from './helpers/flexRenderCell'
  * @see {@link FlexRenderDirective} and {@link FlexRenderCell} for more details on the directives included in this export.
  */
 export const FlexRender = [FlexRenderDirective, FlexRenderCell] as const
+
+export { shallow } from '@tanstack/angular-store'

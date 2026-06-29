@@ -1,5 +1,6 @@
 import {
   columnFilteringFeature,
+  metaHelper,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
@@ -17,11 +18,18 @@ import type {
 } from '@tanstack/react-table'
 import type { Filters } from '../api/types'
 
-export const _features = tableFeatures({
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterKey?: string
+  filterVariant?: 'text' | 'number'
+}
+
+export const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
 export const DEFAULT_PAGE_INDEX = 0
@@ -29,7 +37,7 @@ export const DEFAULT_PAGE_SIZE = 10
 
 type Props<TData extends Record<string, string | number>> = {
   data: Array<TData>
-  columns: Array<ColumnDef<typeof _features, TData>>
+  columns: Array<ColumnDef<typeof features, TData>>
   pagination: PaginationState
   paginationOptions: Pick<
     TableOptions_RowPagination,
@@ -54,8 +62,7 @@ export default function Table<T extends Record<string, string | number>>({
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {}, // no client-side row models since we're doing server-side sorting, filtering, and pagination
+      features,
       columns,
       data,
       manualFiltering: true,
@@ -172,7 +179,7 @@ export default function Table<T extends Record<string, string | number>>({
         <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -180,7 +187,7 @@ export default function Table<T extends Record<string, string | number>>({
           | Go to page:
           <input
             type="number"
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -189,7 +196,7 @@ export default function Table<T extends Record<string, string | number>>({
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}

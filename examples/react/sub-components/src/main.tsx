@@ -17,11 +17,12 @@ import type {
 } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -91,14 +92,11 @@ function Table({
   data,
   getRowCanExpand,
   renderSubComponent,
-}: TableProps<typeof _features, Person>): React.JSX.Element {
+}: TableProps<typeof features, Person>): React.JSX.Element {
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-      },
+      features,
       columns,
       data,
       getRowCanExpand,
@@ -160,11 +158,7 @@ function Table({
   )
 }
 
-const renderSubComponent = ({
-  row,
-}: {
-  row: Row<typeof _features, Person>
-}) => {
+const renderSubComponent = ({ row }: { row: Row<typeof features, Person> }) => {
   return (
     <pre style={{ fontSize: '10px' }}>
       <code>{JSON.stringify(row.original, null, 2)}</code>

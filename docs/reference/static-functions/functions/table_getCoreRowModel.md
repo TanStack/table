@@ -9,11 +9,12 @@ title: table_getCoreRowModel
 function table_getCoreRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.utils.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L17)
+Defined in: [core/row-models/coreRowModelsFeature.utils.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts#L18)
 
-Returns core row model for the table.
+Resolves the table's unmodified core row model.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The factory is created once per table, either from the `coreRowModel` slot on the `features` option
+or the built-in `createCoreRowModel()`, then reused for later calls.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getCoreRowModel(table)
+const coreRows = table_getCoreRowModel(table)
 ```

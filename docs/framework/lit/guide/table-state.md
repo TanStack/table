@@ -34,24 +34,23 @@ A table instance has a few state surfaces:
 - `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
 - `table.state` is Lit-only selected state. It is the value returned from the selector passed as the second argument to `tableController.table(...)`.
 
-The Lit adapter provides `litReactivity()` to the table's `coreReativityFeature`. Readonly and writable atoms are TanStack Store atoms. `TableController` subscribes to `table.store` and `table.optionsStore`; atom or options changes flowing through those stores call `host.requestUpdate()`.
+The Lit adapter provides `litReactivity()` to the table's `coreReactivityFeature`. Readonly and writable atoms are TanStack Store atoms. `TableController` subscribes to `table.store` and `table.optionsStore`; atom or options changes flowing through those stores call `host.requestUpdate()`.
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = this.tableController.table({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   columns,
   data: this._data,
 })
@@ -62,7 +61,7 @@ table.atoms.sorting.get()
 // table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -71,7 +70,7 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should the Lit host update when that value changes?
 
-Use a direct atom or store read for the current value. Use `table.state` or `table.Subscribe` in render output when the host should reflect selected table state.
+Use a direct atom or store read for the current value. Use `table.state` or `table.subscribe` in render output when the host should reflect selected table state.
 
 #### Reading State Without Subscribing
 
@@ -89,7 +88,7 @@ const tableState = table.store.state
 const pagination = table.store.state.pagination
 ```
 
-These reads are current-value reads. The `TableController` handles host invalidation through its subscriptions to the table store and options store. If the UI needs to stay reactive to table state changes, use `table.state`, `table.Subscribe`, or a TanStack Store subscription.
+These reads are current-value reads. The `TableController` handles host invalidation through its subscriptions to the table store and options store. If the UI needs to stay reactive to table state changes, use `table.state`, `table.subscribe`, or a TanStack Store subscription.
 
 #### Reading Reactive State with TableController
 
@@ -98,10 +97,7 @@ The second argument to `tableController.table(...)` is a TanStack Store selector
 ```ts
 const table = this.tableController.table(
   {
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns,
     data: this._data,
   },
@@ -113,22 +109,28 @@ const table = this.tableController.table(
 table.state.pagination
 ```
 
-#### Selecting State with table.Subscribe
+#### Selecting State with table.subscribe
 
-Use `table.Subscribe` in templates to select a slice of table state while rendering.
+Use `table.subscribe` in templates to select a slice of table state while rendering.
 
 ```ts
-${table.Subscribe({
-  selector: (state) => ({
-    pagination: state.pagination,
-  }),
-  children: ({ pagination }) => html`
+private paginationSelector = (state) => ({
+  pagination: state.pagination,
+})
+
+${table.subscribe(
+  table.store,
+  this.paginationSelector,
+  ({ pagination }) => html`
     <span>Page ${pagination.pageIndex + 1}</span>
   `,
-})}
+)}
 ```
 
-`table.Subscribe` can also accept a `source`, but in the current Lit adapter host invalidation is wired through the full `table.store` subscription. Treat source mode as a render-time selection convenience, not a guarantee of source-only host invalidation.
+The template will only be evaluated when the selected state slice changes. The `table.subscribe` API is useful for fine-grained reactivity in templates.
+It is important to provide a stable reference for the selector function to avoid unnecessary re-renders. You can define the selector as a class property or method to ensure it remains stable across renders.
+
+
 
 ### Setting Table State
 
@@ -164,11 +166,7 @@ If you only need to customize the starting value for some table state, use `init
 
 ```ts
 const table = this.tableController.table({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data: this._data,
   initialState: {
@@ -217,7 +215,7 @@ import {
   type PaginationState,
 } from '@tanstack/lit-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -227,8 +225,7 @@ const paginationAtom = createAtom<PaginationState>({
 })
 
 const table = this.tableController.table({
-  _features,
-  _rowModels: {},
+  features,
   columns,
   data: this._data,
   atoms: {
@@ -252,10 +249,7 @@ private _sorting: SortingState = []
 
 protected render() {
   const table = this.tableController.table({
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
+    features,
     columns,
     data: this._data,
     state: {
@@ -308,8 +302,8 @@ private _sorting: SortingState = [
 ]
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```ts
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

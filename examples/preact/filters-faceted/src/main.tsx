@@ -1,5 +1,5 @@
 import { render } from 'preact'
-import { useEffect, useMemo, useReducer, useState } from 'preact/hooks'
+import { useEffect, useMemo, useState } from 'preact/hooks'
 import './index.css'
 import {
   columnFacetingFeature,
@@ -11,6 +11,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFns,
+  metaHelper,
   rowPaginationFeature,
   tableFeatures,
   useTable,
@@ -18,32 +19,28 @@ import {
 import { useDebouncedCallback } from '@tanstack/preact-pacer/debouncer'
 import { makeData } from './makeData'
 import type { JSX } from 'preact'
-import type {
-  CellData,
-  Column,
-  RowData,
-  TableFeatures,
-} from '@tanstack/preact-table'
+import type { Column } from '@tanstack/preact-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
+}
+
+const features = tableFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filterFns,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
-
-declare module '@tanstack/preact-table' {
-  // allows us to define custom properties for our columns
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
-}
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const columns = useMemo(
@@ -87,19 +84,11 @@ function App() {
 
   const [data, setData] = useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData((_old) => makeData(5_000))
-  const stressTest = () => setData((_old) => makeData(200_000))
-  const rerender = useReducer(() => ({}), {})[1]
+  const stressTest = () => setData((_old) => makeData(1_000_000))
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns), // client-side filtering
-        paginatedRowModel: createPaginatedRowModel(),
-        facetedRowModel: createFacetedRowModel(), // client-side faceting
-        facetedMinMaxValues: createFacetedMinMaxValues(), // generate min/max values for range filter
-        facetedUniqueValues: createFacetedUniqueValues(), // generate unique values for select filter/autocomplete
-      },
+      features,
       columns,
       data,
       debugTable: true,
@@ -113,7 +102,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <table>
         <thead>
@@ -223,15 +212,13 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={rerender}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }
 
-function Filter({ column }: { column: Column<typeof _features, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const { filterVariant } = column.columnDef.meta ?? {}
 
   const columnFilterValue = column.getFilterValue()

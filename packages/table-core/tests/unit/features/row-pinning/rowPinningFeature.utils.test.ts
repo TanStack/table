@@ -18,7 +18,7 @@ import {
   createTableWithMockOnPinningChange,
   createTableWithPinningState,
 } from '../../../helpers/rowPinningHelpers'
-import type { Row } from '../../../../src'
+import type { Row, TableFeatures } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
 const DEFAULT_ROW_COUNT = 10
@@ -508,9 +508,7 @@ describe('row_pin', () => {
       createTableWithMockOnPinningChange()
     const row = table.getRow('0')
     const leafRows = [{ id: LEAF[1] }, { id: LEAF[2] }]
-    vi.spyOn(row, 'getLeafRows').mockReturnValue(
-      leafRows as unknown as Array<Row<any, Person>>,
-    )
+    vi.spyOn(row, 'getLeafRows').mockReturnValue(leafRows as any)
 
     row_pin(row, 'top', true)
 
@@ -528,9 +526,7 @@ describe('row_pin', () => {
       createTableWithMockOnPinningChange()
     const row = table.getRow('0')
     const parentRows = [{ id: PARENT[1] }, { id: PARENT[2] }]
-    vi.spyOn(row, 'getParentRows').mockReturnValue(
-      parentRows as unknown as Array<Row<any, Person>>,
-    )
+    vi.spyOn(row, 'getParentRows').mockReturnValue(parentRows as any)
 
     row_pin(row, 'top', false, true)
 

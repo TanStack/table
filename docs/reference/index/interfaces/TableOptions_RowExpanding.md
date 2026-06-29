@@ -39,7 +39,7 @@ optional enableExpanding: boolean;
 
 Defined in: [features/row-expanding/rowExpandingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L48)
 
-Enable/disable expanding for all rows.
+Allows rows with subRows to be expanded.
 
 ***
 

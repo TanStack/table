@@ -22,43 +22,60 @@ import type {
 import type { Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
-const _features = {
+const features = {
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const DEFAULT_ROW_COUNT = 1_000
+const DEFAULT_COLUMN_COUNT = 1_000
+const STRESS_ROW_COUNT = 10_000
+const STRESS_COLUMN_COUNT = 10_000
+
+const makeTableColumns = (columnCount: number) =>
+  columnHelper.columns(
+    makeColumns(columnCount).map((column) =>
+      columnHelper.accessor(column.accessorKey, {
+        header: column.header,
+        size: column.size,
+      }),
+    ),
+  )
 
 // All important CSS styles are included as inline styles for this example. This is not recommended for your code.
 function App() {
-  const columns = React.useMemo(
-    () =>
-      columnHelper.columns(
-        makeColumns(1_000).map((column) =>
-          columnHelper.accessor(column.accessorKey, {
-            header: column.header,
-            size: column.size,
-          }),
-        ),
-      ),
-    [],
+  const [columns, setColumns] = React.useState(() =>
+    makeTableColumns(DEFAULT_COLUMN_COUNT),
   )
 
-  const [data, setData] = React.useState(() => makeData(1_000, columns))
+  const [data, setData] = React.useState(() =>
+    makeData(DEFAULT_ROW_COUNT, columns),
+  )
 
   const refreshData = React.useCallback(() => {
-    setData(makeData(1_000, columns))
+    const nextColumns = makeTableColumns(DEFAULT_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(DEFAULT_ROW_COUNT, nextColumns))
+  }, [])
+
+  const stressTestRows = React.useCallback(() => {
+    setData(makeData(STRESS_ROW_COUNT, columns))
   }, [columns])
 
-  const stressTest = React.useCallback(() => {
-    setData(makeData(10_000, columns))
-  }, [columns])
+  const stressTestColumns = React.useCallback(() => {
+    const nextColumns = makeTableColumns(STRESS_COLUMN_COUNT)
+    setColumns(nextColumns)
+    setData(makeData(data.length, nextColumns))
+  }, [data.length])
 
   // The table does not live in the same scope as the virtualizers
   const table = useTable(
     {
-      _features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
       columns,
       data,
       debugTable: true,
@@ -79,7 +96,8 @@ function App() {
       <div>({data.length.toLocaleString()} rows)</div>
       <div>
         <button onClick={refreshData}>Regenerate Data</button>
-        <button onClick={stressTest}>Stress Test (10k rows)</button>
+        <button onClick={stressTestRows}>Stress Test (10k rows)</button>
+        <button onClick={stressTestColumns}>Stress Test (10k columns)</button>
       </div>
       <TableContainer table={table} />
     </div>
@@ -87,7 +105,7 @@ function App() {
 }
 
 interface TableContainerProps {
-  table: ReactTable<typeof _features, Person>
+  table: ReactTable<typeof features, Person>
 }
 
 function TableContainer({ table }: TableContainerProps) {
@@ -152,7 +170,7 @@ function TableContainer({ table }: TableContainerProps) {
 
 interface TableHeadProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: ReactTable<typeof _features, Person>
+  table: ReactTable<typeof features, Person>
 }
 
 function TableHead({ table, columnVirtualizer }: TableHeadProps) {
@@ -179,7 +197,7 @@ function TableHead({ table, columnVirtualizer }: TableHeadProps) {
 
 interface TableHeadRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  headerGroup: HeaderGroup<typeof _features, Person>
+  headerGroup: HeaderGroup<typeof features, Person>
 }
 
 function TableHeadRow({ columnVirtualizer, headerGroup }: TableHeadRowProps) {
@@ -210,7 +228,7 @@ function TableHeadRow({ columnVirtualizer, headerGroup }: TableHeadRowProps) {
 
 interface TableHeadCellProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  header: Header<typeof _features, Person, unknown>
+  header: Header<typeof features, Person, unknown>
 }
 
 function TableHeadCell({
@@ -257,7 +275,7 @@ const TableHeadCellMemo = React.memo(
 
 interface TableBodyProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  table: ReactTable<typeof _features, Person>
+  table: ReactTable<typeof features, Person>
   tableContainerRef: React.RefObject<HTMLDivElement | null>
 }
 
@@ -297,7 +315,7 @@ function TableBody({
 
   React.useLayoutEffect(() => {
     rowVirtualizer.measure()
-  }, [table.store.state])
+  }, [table.state])
 
   const virtualRowIndexes = rowVirtualizer.getVirtualIndexes()
 
@@ -329,7 +347,7 @@ function TableBody({
 
 interface TableBodyRowProps {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  row: Row<typeof _features, Person>
+  row: Row<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualRowIndex: number
   rowRefsMap: React.RefObject<Map<number, HTMLTableRowElement>>
@@ -386,7 +404,7 @@ function TableBodyRow({
 // )
 
 interface TableBodyCellProps {
-  cell: Cell<typeof _features, Person, unknown>
+  cell: Cell<typeof features, Person, unknown>
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
 }
 

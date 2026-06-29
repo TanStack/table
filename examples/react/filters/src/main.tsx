@@ -7,41 +7,33 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   filterFns,
+  metaHelper,
   rowPaginationFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { makeData } from './makeData'
-import type {
-  CellData,
-  Column,
-  RowData,
-  TableFeatures,
-} from '@tanstack/react-table'
+import type { Column } from '@tanstack/react-table'
 import type { Person } from './makeData'
 
-declare module '@tanstack/react-table' {
-  // allows us to define custom properties for our columns
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    filterVariant?: 'text' | 'range' | 'select'
-  }
+// allows us to define custom properties for our columns
+interface MyColumnMeta {
+  filterVariant?: 'text' | 'range' | 'select'
 }
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  columnMeta: metaHelper<MyColumnMeta>(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -81,6 +73,13 @@ function App() {
           meta: {
             filterVariant: 'range',
           },
+          // custom filter function
+          filterFn: (row, _columnId, filterValue) => {
+            return (
+              row.original.progress >= filterValue[0] &&
+              row.original.progress <= filterValue[1]
+            )
+          },
         }),
       ]),
     [],
@@ -88,15 +87,11 @@ function App() {
 
   const [data, setData] = React.useState<Array<Person>>(() => makeData(5_000))
   const refreshData = () => setData(makeData(5_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns), // client side filtering
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      features,
       columns,
       data,
       debugTable: true,
@@ -109,7 +104,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <table>
         <thead>
@@ -219,9 +214,7 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
@@ -230,7 +223,7 @@ function App() {
 function Filter({
   column,
 }: {
-  column: Column<typeof _features, Person, unknown>
+  column: Column<typeof features, Person, unknown>
 }) {
   const columnFilterValue = column.getFilterValue()
   const { filterVariant } = column.columnDef.meta ?? {}

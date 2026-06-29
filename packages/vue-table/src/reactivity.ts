@@ -1,9 +1,15 @@
 import { computed, shallowRef, watch } from 'vue'
+import { batch } from '@tanstack/store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
-import type { Atom, Observer, ReadonlyAtom } from '@tanstack/vue-store'
+import type {
+  Atom,
+  Observer,
+  ReadonlyAtom,
+  Subscription,
+} from '@tanstack/store'
 import type { ComputedRef, ShallowRef } from 'vue'
 
 function observerToCallback<T>(
@@ -49,15 +55,27 @@ function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
 /**
  * Creates the table-core reactivity bindings used by the Vue adapter.
  *
- * Readonly table atoms are backed by Vue `computed` refs and writable atoms by
- * `shallowRef`. Subscriptions use synchronous `watch` callbacks so table store
- * updates are visible to Vue render and computed work immediately.
+ * Table state atoms are backed by TanStack Store atoms. The options store stays
+ * framework-native because row-model APIs read `table.options` directly during
+ * render. Readonly table atoms bridge Store dependency tracking into Vue computed
+ * refs.
  */
 export function vueReactivity(): TableReactivityBindings {
+  const subscriptions = new Set<Subscription>()
+
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: true,
+    addSubscription: (subscription) => {
+      subscriptions.add(subscription)
+    },
+    unmount: () => {
+      subscriptions.forEach((s) => s.unsubscribe())
+      subscriptions.clear()
+    },
+    schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-      return refToReadonlyAtom(computed(fn))
+      return refToReadonlyAtom(computed(() => fn()))
     },
     createWritableAtom: <T>(
       value: T,
@@ -66,6 +84,6 @@ export function vueReactivity(): TableReactivityBindings {
       return refToWritableAtom(shallowRef(value) as ShallowRef<T>)
     },
     untrack: (fn) => fn(),
-    batch: (fn) => fn(),
+    batch,
   }
 }

@@ -137,11 +137,11 @@ When using `useLegacyTable`, use these type helpers for proper TypeScript suppor
 | `LegacyRow<TData>` | Row instance type |
 | `LegacyCell<TData>` | Cell instance type |
 | `LegacyTable<TData>` | Table instance type |
-| `legacyCreateColumnHelper<TData>()` | Column helper with StockFeatures pre-bound—only requires TData |
+| `legacyCreateColumnHelper<TData>()` | Column helper with StockFeatures pre-bound; only requires TData |
 
 ### Using `legacyCreateColumnHelper`
 
-Use `legacyCreateColumnHelper` instead of `createColumnHelper`—it has StockFeatures pre-bound, so you only need to specify `TData`:
+Use `legacyCreateColumnHelper` instead of `createColumnHelper`. It has StockFeatures pre-bound, so you only need to specify `TData`:
 
 ```tsx
 import { legacyCreateColumnHelper } from '@tanstack/react-table/legacy'
@@ -194,7 +194,7 @@ The legacy table adapter handles this internally for built-in sorting, but if yo
 `useLegacyTable` includes **all features** by default, similar to v8. This means:
 
 - No tree-shaking benefits
-- Bundle size is **much larger** than v8—each feature has grown since v8, and you pay for all of them
+- Bundle size is **much larger** than v8, since each feature has grown since v8 and you pay for all of them
 - The tree-shakeable v9 API exists so TanStack Table can add features over time without bloating everyone's bundles; only users who opt into a feature pay for it
 - If bundle size is a concern, prioritize migrating to the full v9 API
 
@@ -202,9 +202,9 @@ The legacy table adapter handles this internally for built-in sorting, but if yo
 
 `useLegacyTable` is deprecated and will be removed in a future major version. It exists solely to ease migration. Plan your migration timeline accordingly.
 
-### No `table.Subscribe`
+### Full-State Subscription Only
 
-The fine-grained reactivity feature (`table.Subscribe`) is not available with `useLegacyTable`. The table re-renders on every state change, like v8.
+`useLegacyTable` always subscribes to the entire table state, so the component that creates the table re-renders on every state change, just like v8. The fine-grained rendering optimizations of v9 (narrow `useTable` selectors) are not available through the legacy hook.
 
 ### No `createTableHook` Integration
 
@@ -215,8 +215,8 @@ The fine-grained reactivity feature (`table.Subscribe`) is not available with `u
 Once you're ready to migrate to the full v9 API:
 
 1. Replace `useLegacyTable` with `useTable`
-2. Define your `_features` using `tableFeatures()`
-3. Convert `get*RowModel()` options to `_rowModels`
+2. Define your `features` using `tableFeatures()`
+3. Convert `get*RowModel()` options to `rowModels`
 4. Update types from `Legacy*` to the standard v9 types
 
 See the [main migration guide](./migrating.md) for complete instructions.

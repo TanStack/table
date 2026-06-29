@@ -10,12 +10,11 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
-  _features: {
+  features: {
     columnVisibilityFeature,
     columnPinningFeature,
     columnOrderingFeature,
   },
-  _rowModels: {},
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,
@@ -72,7 +71,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(500_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = createAppTable({
     debugTable: true,
@@ -125,7 +124,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} class="demo-button demo-button-sm">
-          Stress Test (500k rows)
+          Stress Test (1M rows)
         </button>
         <button
           onClick={() => randomizeColumns()}
@@ -205,7 +204,7 @@ function App() {
           </tbody>
         </table>
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

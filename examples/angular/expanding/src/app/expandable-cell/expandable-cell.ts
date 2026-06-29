@@ -4,7 +4,7 @@ import {
   injectTableHeaderContext,
 } from '@tanstack/angular-table'
 import type { RowData } from '@tanstack/angular-table'
-import type { _features } from '../app'
+import type { features } from '../app'
 
 @Component({
   standalone: true,
@@ -26,7 +26,7 @@ import type { _features } from '../app'
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ExpandableHeaderCell<T extends RowData> {
-  readonly context = injectTableHeaderContext<typeof _features, T, unknown>()
+  readonly context = injectTableHeaderContext<typeof features, T, unknown>()
 
   readonly label = input.required<string>()
 
@@ -71,7 +71,7 @@ export class ExpandableHeaderCell<T extends RowData> {
   `,
 })
 export class ExpandableCell<T extends RowData> {
-  readonly context = injectTableCellContext<typeof _features, T, unknown>()
+  readonly context = injectTableCellContext<typeof features, T, unknown>()
 
   get row() {
     return this.context().row

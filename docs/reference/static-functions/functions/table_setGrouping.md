@@ -9,11 +9,12 @@ title: table_setGrouping
 function table_setGrouping<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L203)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:210](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L210)
 
-Updates the table's grouping state slice.
+Routes a grouping updater through the table's grouping change handler.
 
-The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+The updater may be a next `GroupingState` array or a function of the previous
+grouping state, matching the instance `table.setGrouping` behavior.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ The updater follows TanStack Table updater semantics and is routed through the c
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### updater
 
@@ -42,5 +43,5 @@ The updater follows TanStack Table updater semantics and is routed through the c
 ## Example
 
 ```ts
-table_setGrouping(table, (old) => old)
+table_setGrouping(table, (old) => [...old, 'status'])
 ```

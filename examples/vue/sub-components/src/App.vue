@@ -10,8 +10,8 @@ import type { Row } from '@tanstack/vue-table'
 import type { Person } from './makeData'
 
 const { appFeatures, createAppColumnHelper, useAppTable } = createTableHook({
-  _features: { rowExpandingFeature },
-  _rowModels: {
+  features: {
+    rowExpandingFeature,
     expandedRowModel: createExpandedRowModel(),
   },
 })
@@ -75,16 +75,13 @@ const stressTest = () => {
   data.value = makeData(1_000)
 }
 
-const table = useAppTable(
-  {
-    debugTable: true,
-    // features and row models are already defined in the createTableHook call
-    data,
-    columns,
-    getRowCanExpand: () => true,
-  },
-  (state) => ({ expanded: state.expanded }),
-)
+const table = useAppTable({
+  debugTable: true,
+  // features and row models are already defined in the createTableHook call
+  data,
+  columns,
+  getRowCanExpand: () => true,
+})
 </script>
 
 <template>

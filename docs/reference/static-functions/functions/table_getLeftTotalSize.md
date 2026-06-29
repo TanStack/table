@@ -6,14 +6,14 @@ title: table_getLeftTotalSize
 # Function: table\_getLeftTotalSize()
 
 ```ts
-function table_getLeftTotalSize<TFeatures, TData>(table): any;
+function table_getLeftTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L289)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:340](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L340)
 
-Returns left total size for the table.
+Sums the rendered size of the left pinned header region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+An empty left pinning region returns `0`.
 
 ## Type Parameters
 
@@ -29,14 +29,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`
+`number`
 
 ## Example
 
 ```ts
-const value = table_getLeftTotalSize(table)
+const width = table_getLeftTotalSize(table)
 ```

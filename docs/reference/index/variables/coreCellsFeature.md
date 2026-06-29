@@ -6,9 +6,9 @@ title: coreCellsFeature
 # Variable: coreCellsFeature
 
 ```ts
-const coreCellsFeature: TableFeature<CoreCellsFeatureConstructors<TableFeatures, RowData>>;
+const coreCellsFeature: TableFeature;
 ```
 
-Defined in: [core/cells/coreCellsFeature.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.ts#L49)
+Defined in: [core/cells/coreCellsFeature.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/coreCellsFeature.ts#L12)
 
-The Core Cells feature provides the core cell functionality.
+Core feature that adds cell value, render, and context APIs.

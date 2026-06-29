@@ -34,13 +34,15 @@ Every cell stores a reference to its parent [row](./rows) and [column](./columns
 
 The recommended way to access data values from a cell is to use either the `cell.getValue` or `cell.renderValue` APIs. Using either of these APIs will cache the results of the accessor functions and keep rendering efficient. The only difference between the two is that `cell.renderValue` will return either the value or the `renderFallbackValue` if the value is undefined, whereas `cell.getValue` will return the value or `undefined` if the value is undefined.
 
-> Note: The `cell.getValue` and `cell.renderValue` APIs are shortcuts `row.getValue` and `row.renderValue` APIs, respectively.
+> Note: The `cell.getValue` and `cell.renderValue` APIs are shortcuts for the `row.getValue` and `row.renderValue` APIs, respectively.
 
 ```js
-// Access data from any of the columns
-const firstName = cell.getValue('firstName') // read the cell value from the firstName column
-const renderedLastName = cell.renderValue('lastName') // render the value from the lastName column
+// Access the value for this cell's own column
+const value = cell.getValue() // read the cell value
+const renderedValue = cell.renderValue() // read the cell value, falling back to `renderFallbackValue`
 ```
+
+These APIs take no arguments. They are bound to the cell's own column. If you need to read a different column's value from within a cell, use the parent row instead, e.g. `cell.row.getValue('someColumnId')`.
 
 #### Access Other Row Data from Any Cell
 

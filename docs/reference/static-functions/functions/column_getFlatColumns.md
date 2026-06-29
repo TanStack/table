@@ -9,11 +9,12 @@ title: column_getFlatColumns
 function column_getFlatColumns<TFeatures, TData, TValue>(column): Column<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L24)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L25)
 
-Returns flat columns for a column.
+Flattens this column and every descendant column into a single array.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Group columns appear before their child columns, which matches the normalized
+column hierarchy produced during table construction.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getFlatColumns(column)
+const flatColumns = column_getFlatColumns(column)
 ```

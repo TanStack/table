@@ -6,14 +6,14 @@ title: table_getCenterFooterGroups
 # Function: table\_getCenterFooterGroups()
 
 ```ts
-function table_getCenterFooterGroups<TFeatures, TData>(table): any[];
+function table_getCenterFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:474](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L474)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:508](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L508)
 
-Returns center footer groups for the table.
+Builds footer groups for the center, unpinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Footer groups reuse the center header groups in reverse order.
 
 ## Type Parameters
 
@@ -29,14 +29,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`HeaderGroup`](../../index/interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ## Example
 
 ```ts
-const value = table_getCenterFooterGroups(table)
+const footerGroups = table_getCenterFooterGroups(table)
 ```

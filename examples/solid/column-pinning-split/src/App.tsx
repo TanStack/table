@@ -11,13 +11,13 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnVisibilityFeature,
   columnPinningFeature,
   columnOrderingFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -73,11 +73,10 @@ function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const columns = defaultColumns
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(500_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
     columns,
     get data() {
       return data()
@@ -152,7 +151,7 @@ function App() {
           Regenerate Data
         </button>
         <button onClick={() => stressTest()} class="demo-button demo-button-sm">
-          Stress Test (500k rows)
+          Stress Test (1M rows)
         </button>
         <button
           onClick={() => randomizeColumns()}
@@ -285,7 +284,7 @@ function App() {
           </tbody>
         </table>
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core'
 import type { Row, RowData, Table } from '@tanstack/angular-table'
+import type { features } from './app.component'
 
 @Component({
   template: `
@@ -25,7 +26,7 @@ export class TableHeadSelectionComponent<T extends RowData> {
 
   // column = input.required<Column<T, unknown>>()
   // header = input.required<Header<T, unknown>>()
-  table = input.required<Table<any, T>>()
+  table = input.required<Table<typeof features, T>>()
 }
 
 @Component({
@@ -43,5 +44,5 @@ export class TableHeadSelectionComponent<T extends RowData> {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowSelectionComponent<T extends RowData> {
-  row = input.required<Row<any, T>>()
+  row = input.required<Row<typeof features, T>>()
 }

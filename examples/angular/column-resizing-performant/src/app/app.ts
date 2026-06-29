@@ -17,12 +17,12 @@ import { TableResizableCells } from './resizable-cell/resizable-cell'
 import type { Person } from './makeData'
 import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnResizingFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -80,7 +80,7 @@ export class App {
 
   readonly table = injectTable(() => ({
     data: this.data(),
-    _features,
+    features,
     columns: defaultColumns,
     columnResizeMode: 'onChange' as const,
     defaultColumn: {
@@ -92,10 +92,6 @@ export class App {
     debugColumns: true,
   }))
 
-  readonly columnSizing = this.table.computed({
-    selector: (state) => state.columnSizing,
-  })
-
   /**
    * Instead of calling `column.getSize()` on every render for every header
    * and especially every data cell (very expensive),
@@ -103,7 +99,7 @@ export class App {
    * and pass the column sizes down as CSS variables to the <table> element.
    */
   readonly columnSizeVars = computed(() => {
-    void this.columnSizing()
+    void this.table.atoms.columnSizing.get()
     const headers = untracked(() => this.table.getFlatHeaders())
     const colSizes: { [key: string]: number } = {}
     let i = headers.length
@@ -115,14 +111,8 @@ export class App {
     return colSizes
   })
 
-  readonly columnSizingDebugInfo = computed(() =>
-    JSON.stringify(
-      {
-        columnSizing: this.columnSizing(),
-      },
-      null,
-      2,
-    ),
+  readonly stringifiedState = computed(() =>
+    JSON.stringify(this.table.store.get(), null, 2),
   )
 
   refreshData = () => this.data.set(makeData(200))

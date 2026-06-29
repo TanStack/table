@@ -1,0 +1,5 @@
+export { TableDevtoolsPanel } from './TableDevtools'
+export type { TableDevtoolsAngularInit } from './TableDevtools'
+export { tableDevtoolsPlugin } from './plugin'
+export { injectTanStackTableDevtools } from './injectTanStackTableDevtools'
+export type { InjectTanStackTableDevtoolsOptions } from './injectTanStackTableDevtools'

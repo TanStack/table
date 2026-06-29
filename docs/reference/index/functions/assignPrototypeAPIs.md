@@ -13,7 +13,7 @@ function assignPrototypeAPIs<TFeatures, TData, TDeps, TDepArgs>(
    apis): void;
 ```
 
-Defined in: [utils.ts:403](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L403)
+Defined in: [utils.ts:413](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L413)
 
 Assigns API methods to a prototype object for memory-efficient method sharing.
 All instances created with this prototype will share the same method references.
@@ -51,7 +51,7 @@ keyof `TFeatures` & `string`
 
 ### table
 
-[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### apis
 

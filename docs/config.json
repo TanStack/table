@@ -9,11 +9,9 @@
     {
       "label": "Getting Started",
       "children": [
-        { "label": "Introduction", "to": "introduction" },
         { "label": "Overview", "to": "overview" },
         { "label": "Installation", "to": "installation" },
-        { "label": "Devtools", "to": "devtools" },
-        { "label": "FAQ", "to": "faq" }
+        { "label": "Devtools", "to": "devtools" }
       ],
       "frameworks": [
         {
@@ -28,23 +26,22 @@
         {
           "label": "angular",
           "children": [
-            { "label": "Angular Table Adapter", "to": "framework/angular/angular-table" },
+            { "label": "Quick Start", "to": "framework/angular/quick-start" },
             { "label": "Migrating to V9", "to": "framework/angular/guide/migrating" },
-            { "label": "Rendering components", "to": "framework/angular/guide/rendering" },
-            { "label": "Table composition", "to": "framework/angular/guide/table-composition" }
+            { "label": "Rendering components", "to": "framework/angular/guide/rendering" }
           ]
         },
         {
           "label": "lit",
           "children": [
-            { "label": "Lit Table Adapter", "to": "framework/lit/lit-table" }
+            { "label": "Quick Start", "to": "framework/lit/quick-start" },
+            { "label": "Migrating to V9", "to": "framework/lit/guide/migrating" }
           ]
         },
         {
           "label": "react",
           "children": [
-            { "label": "React Table Adapter", "to": "framework/react/react-table" },
-            { "label": "createTableHook Guide", "to": "framework/react/guide/create-table-hook" },
+            { "label": "Quick Start", "to": "framework/react/quick-start" },
             { "label": "Migrating to V9", "to": "framework/react/guide/migrating" },
             { "label": "useLegacyTable Guide", "to": "framework/react/guide/use-legacy-table" }
           ]
@@ -52,26 +49,29 @@
         {
           "label": "preact",
           "children": [
-            { "label": "Preact Table Adapter", "to": "framework/preact/preact-table" },
-            { "label": "createTableHook Guide", "to": "framework/preact/guide/create-table-hook" }
+            { "label": "Quick Start", "to": "framework/preact/quick-start" },
+            { "label": "Migrating to V9", "to": "framework/preact/guide/migrating" }
           ]
         },
         {
           "label": "solid",
           "children": [
-            { "label": "Solid Table Adapter", "to": "framework/solid/solid-table" }
+            { "label": "Quick Start", "to": "framework/solid/quick-start" },
+            { "label": "Migrating to V9", "to": "framework/solid/guide/migrating" }
           ]
         },
         {
           "label": "svelte",
           "children": [
-            { "label": "Svelte Table Adapter", "to": "framework/svelte/svelte-table" }
+            { "label": "Quick Start", "to": "framework/svelte/quick-start" },
+            { "label": "Migrating to V9", "to": "framework/svelte/guide/migrating" }
           ]
         },
         {
           "label": "vue",
           "children": [
-            { "label": "Vue Table Adapter", "to": "framework/vue/vue-table" }
+            { "label": "Quick Start", "to": "framework/vue/quick-start" },
+            { "label": "Migrating to V9", "to": "framework/vue/guide/migrating" }
           ]
         },
         {
@@ -86,14 +86,16 @@
       "label": "Core Guides",
       "children": [
         { "label": "Data", "to": "guide/data" },
-        { "label": "Column Defs", "to": "guide/column-defs" },
+        { "label": "Column Definitions", "to": "guide/column-defs" },
         { "label": "Table Instance", "to": "guide/tables" },
         { "label": "Row Models", "to": "guide/row-models" },
         { "label": "Rows", "to": "guide/rows" },
         { "label": "Cells", "to": "guide/cells" },
         { "label": "Header Groups", "to": "guide/header-groups" },
         { "label": "Headers", "to": "guide/headers" },
-        { "label": "Columns", "to": "guide/columns" }
+        { "label": "Columns", "to": "guide/columns" },
+        { "label": "Table and Column Meta", "to": "guide/table-and-column-meta" },
+        { "label": "Type Helpers", "to": "guide/helpers" }
       ],
       "frameworks": [
         {
@@ -108,43 +110,59 @@
         {
           "label": "angular",
           "children": [
-            { "label": "Table State", "to": "framework/angular/guide/table-state" }
+            { "label": "Table State", "to": "framework/angular/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/angular/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/angular/guide/custom-features" }
           ]
         },
         {
           "label": "lit",
           "children": [
-            { "label": "Table State", "to": "framework/lit/guide/table-state" }
+            { "label": "Table State", "to": "framework/lit/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/lit/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/lit/guide/custom-features" }
           ]
         },
         {
           "label": "react",
           "children": [
-            { "label": "Table State", "to": "framework/react/guide/table-state" }
+            { "label": "Table State", "to": "framework/react/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/react/guide/composable-tables" },
+            { "label": "Table Context", "to": "framework/react/guide/table-context" },
+            { "label": "Custom Plugins", "to": "framework/react/guide/custom-features" }
           ]
         },
         {
           "label": "preact",
           "children": [
-            { "label": "Table State", "to": "framework/preact/guide/table-state" }
+            { "label": "Table State", "to": "framework/preact/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/preact/guide/composable-tables" },
+            { "label": "Table Context", "to": "framework/preact/guide/table-context" },
+            { "label": "Custom Plugins", "to": "framework/preact/guide/custom-features" }
           ]
         },
         {
           "label": "solid",
           "children": [
-            { "label": "Table State", "to": "framework/solid/guide/table-state" }
+            { "label": "Table State", "to": "framework/solid/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/solid/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/solid/guide/custom-features" }
           ]
         },
         {
           "label": "svelte",
           "children": [
-            { "label": "Table State", "to": "framework/svelte/guide/table-state" }
+            { "label": "Table State", "to": "framework/svelte/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/svelte/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/svelte/guide/custom-features" }
           ]
         },
         {
           "label": "vue",
           "children": [
-            { "label": "Table State", "to": "framework/vue/guide/table-state" }
+            { "label": "Table State", "to": "framework/vue/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/vue/guide/composable-tables" },
+            { "label": "Custom Plugins", "to": "framework/vue/guide/custom-features" }
           ]
         },
         {
@@ -157,25 +175,155 @@
     },
     {
       "label": "Feature Guides",
-      "children": [
-        { "label": "Column Ordering", "to": "guide/column-ordering" },
-        { "label": "Column Pinning", "to": "guide/column-pinning" },
-        { "label": "Column Sizing", "to": "guide/column-sizing" },
-        { "label": "Column Resizing", "to": "guide/column-resizing" },
-        { "label": "Column Visibility", "to": "guide/column-visibility" },
-        { "label": "Column Filtering", "to": "guide/column-filtering" },
-        { "label": "Global Filtering", "to": "guide/global-filtering" },
-        { "label": "Fuzzy Filtering", "to": "guide/fuzzy-filtering" },
-        { "label": "Column Faceting", "to": "guide/column-faceting" },
-        { "label": "Global Faceting", "to": "guide/global-faceting" },
-        { "label": "Grouping", "to": "guide/grouping" },
-        { "label": "Expanding", "to": "guide/expanding" },
-        { "label": "Pagination", "to": "guide/pagination" },
-        { "label": "Row Pinning", "to": "guide/row-pinning" },
-        { "label": "Row Selection", "to": "guide/row-selection" },
-        { "label": "Sorting", "to": "guide/sorting" },
-        { "label": "Virtualization", "to": "guide/virtualization" },
-        { "label": "Custom Features", "to": "guide/custom-features" }
+      "children": [],
+      "frameworks": [
+        {
+          "label": "angular",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/angular/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/angular/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/angular/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/angular/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/angular/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/angular/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/angular/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/angular/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/angular/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/angular/guide/grouping" },
+            { "label": "Expanding", "to": "framework/angular/guide/expanding" },
+            { "label": "Pagination", "to": "framework/angular/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/angular/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/angular/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/angular/guide/sorting" },
+            { "label": "Virtualization", "to": "framework/angular/guide/virtualization" }
+          ]
+        },
+        {
+          "label": "lit",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/lit/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/lit/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/lit/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/lit/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/lit/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/lit/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/lit/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/lit/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/lit/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/lit/guide/grouping" },
+            { "label": "Expanding", "to": "framework/lit/guide/expanding" },
+            { "label": "Pagination", "to": "framework/lit/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/lit/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/lit/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/lit/guide/sorting" },
+            { "label": "Virtualization", "to": "framework/lit/guide/virtualization" }
+          ]
+        },
+        {
+          "label": "react",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/react/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/react/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/react/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/react/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/react/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/react/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/react/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/react/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/react/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/react/guide/grouping" },
+            { "label": "Expanding", "to": "framework/react/guide/expanding" },
+            { "label": "Pagination", "to": "framework/react/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/react/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/react/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/react/guide/sorting" },
+            { "label": "Virtualization", "to": "framework/react/guide/virtualization" }
+          ]
+        },
+        {
+          "label": "preact",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/preact/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/preact/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/preact/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/preact/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/preact/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/preact/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/preact/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/preact/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/preact/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/preact/guide/grouping" },
+            { "label": "Expanding", "to": "framework/preact/guide/expanding" },
+            { "label": "Pagination", "to": "framework/preact/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/preact/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/preact/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/preact/guide/sorting" },
+            { "label": "Virtualization", "to": "framework/preact/guide/virtualization" }
+          ]
+        },
+        {
+          "label": "solid",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/solid/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/solid/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/solid/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/solid/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/solid/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/solid/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/solid/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/solid/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/solid/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/solid/guide/grouping" },
+            { "label": "Expanding", "to": "framework/solid/guide/expanding" },
+            { "label": "Pagination", "to": "framework/solid/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/solid/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/solid/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/solid/guide/sorting" },
+            { "label": "Virtualization", "to": "framework/solid/guide/virtualization" }
+          ]
+        },
+        {
+          "label": "svelte",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/svelte/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/svelte/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/svelte/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/svelte/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/svelte/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/svelte/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/svelte/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/svelte/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/svelte/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/svelte/guide/grouping" },
+            { "label": "Expanding", "to": "framework/svelte/guide/expanding" },
+            { "label": "Pagination", "to": "framework/svelte/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/svelte/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/svelte/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/svelte/guide/sorting" },
+            { "label": "Virtualization", "to": "framework/svelte/guide/virtualization" }
+          ]
+        },
+        {
+          "label": "vue",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/vue/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/vue/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/vue/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/vue/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/vue/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/vue/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/vue/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/vue/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/vue/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/vue/guide/grouping" },
+            { "label": "Expanding", "to": "framework/vue/guide/expanding" },
+            { "label": "Pagination", "to": "framework/vue/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/vue/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/vue/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/vue/guide/sorting" },
+            { "label": "Virtualization", "to": "framework/vue/guide/virtualization" }
+          ]
+        }
       ]
     },
     {
@@ -262,11 +410,8 @@
             { "label": "AppReactTable", "to": "framework/react/reference/index/type-aliases/AppReactTable" },
             { "label": "CreateTableHookOptions", "to": "framework/react/reference/index/type-aliases/CreateTableHookOptions" },
             { "label": "Subscribe", "to": "framework/react/reference/index/functions/Subscribe" },
-            { "label": "SubscribeProps", "to": "framework/react/reference/index/type-aliases/SubscribeProps" },
             { "label": "FlexRender", "to": "framework/react/reference/index/functions/FlexRender-1" },
-            { "label": "flexRender", "to": "framework/react/reference/index/functions/flexRender" },
-            { "label": "FlexRenderProps", "to": "framework/react/reference/index/type-aliases/FlexRenderProps" },
-            { "label": "Renderable", "to": "framework/react/reference/index/type-aliases/Renderable" }
+            { "label": "flexRender", "to": "framework/react/reference/index/functions/flexRender" }
           ]
         },
         {
@@ -279,17 +424,9 @@
             { "label": "CreateTableHookResult", "to": "framework/angular/reference/type-aliases/CreateTableHookResult" },
             { "label": "CreateTableContextOptions", "to": "framework/angular/reference/type-aliases/CreateTableContextOptions" },
             { "label": "flexRenderComponent", "to": "framework/angular/reference/functions/flexRenderComponent" },
-            { "label": "FlexRenderComponent", "to": "framework/angular/reference/interfaces/FlexRenderComponent" },
-            { "label": "FlexRenderContent", "to": "framework/angular/reference/type-aliases/FlexRenderContent" },
-            { "label": "FlexRenderInputContent", "to": "framework/angular/reference/type-aliases/FlexRenderInputContent" },
-            { "label": "FlexRenderComponentProps", "to": "framework/angular/reference/type-aliases/FlexRenderComponentProps" },
             { "label": "FlexRender", "to": "framework/angular/reference/variables/FlexRender" },
-            { "label": "FlexRenderDirective", "to": "framework/angular/reference/classes/FlexRenderDirective" },
-            { "label": "FlexRenderCell", "to": "framework/angular/reference/classes/FlexRenderCell" },
             { "label": "TanStackTable", "to": "framework/angular/reference/classes/TanStackTable" },
-            { "label": "TanStackTableToken", "to": "framework/angular/reference/variables/TanStackTableToken" },
-            { "label": "injectTableContext", "to": "framework/angular/reference/functions/injectTableContext" },
-            { "label": "AngularTableComputed", "to": "framework/angular/reference/interfaces/AngularTableComputed" }
+            { "label": "injectTableContext", "to": "framework/angular/reference/functions/injectTableContext" }
           ]
         },
         {
@@ -301,7 +438,6 @@
             { "label": "AppPreactTable", "to": "framework/preact/reference/type-aliases/AppPreactTable" },
             { "label": "CreateTableHookOptions", "to": "framework/preact/reference/type-aliases/CreateTableHookOptions" },
             { "label": "Subscribe", "to": "framework/preact/reference/functions/Subscribe" },
-            { "label": "SubscribeProps", "to": "framework/preact/reference/type-aliases/SubscribeProps" },
             { "label": "FlexRender", "to": "framework/preact/reference/functions/FlexRender-1" },
             { "label": "flexRender", "to": "framework/preact/reference/functions/flexRender" }
           ]
@@ -352,6 +488,9 @@
             { "label": "LitTable", "to": "framework/lit/reference/type-aliases/LitTable" },
             { "label": "AppLitTable", "to": "framework/lit/reference/type-aliases/AppLitTable" },
             { "label": "CreateTableHookOptions", "to": "framework/lit/reference/type-aliases/CreateTableHookOptions" },
+            { "label": "subscribe", "to": "framework/lit/reference/variables/subscribe" },
+            { "label": "SubscribeDirective", "to": "framework/lit/reference/classes/SubscribeDirective" },
+            { "label": "SelectionSource", "to": "framework/lit/reference/type-aliases/SelectionSource" },
             { "label": "FlexRender", "to": "framework/lit/reference/functions/FlexRender-1" },
             { "label": "flexRender", "to": "framework/lit/reference/functions/flexRender" }
           ]
@@ -588,20 +727,6 @@
         { "label": "filterFns", "to": "reference/index/variables/filterFns" },
         { "label": "sortFns", "to": "reference/index/variables/sortFns" },
         { "label": "aggregationFns", "to": "reference/index/variables/aggregationFns" },
-        { "label": "constructColumnFilteringFeature", "to": "reference/index/functions/constructColumnFilteringFeature" },
-        { "label": "constructColumnFacetingFeature", "to": "reference/index/functions/constructColumnFacetingFeature" },
-        { "label": "constructColumnGroupingFeature", "to": "reference/index/functions/constructColumnGroupingFeature" },
-        { "label": "constructColumnOrderingFeature", "to": "reference/index/functions/constructColumnOrderingFeature" },
-        { "label": "constructColumnPinningFeature", "to": "reference/index/functions/constructColumnPinningFeature" },
-        { "label": "constructColumnResizingFeature", "to": "reference/index/functions/constructColumnResizingFeature" },
-        { "label": "constructColumnSizingFeature", "to": "reference/index/functions/constructColumnSizingFeature" },
-        { "label": "constructColumnVisibilityFeature", "to": "reference/index/functions/constructColumnVisibilityFeature" },
-        { "label": "constructGlobalFilteringFeature", "to": "reference/index/functions/constructGlobalFilteringFeature" },
-        { "label": "constructRowExpandingFeature", "to": "reference/index/functions/constructRowExpandingFeature" },
-        { "label": "constructRowPaginationFeature", "to": "reference/index/functions/constructRowPaginationFeature" },
-        { "label": "constructRowPinningFeature", "to": "reference/index/functions/constructRowPinningFeature" },
-        { "label": "constructRowSelectionFeature", "to": "reference/index/functions/constructRowSelectionFeature" },
-        { "label": "constructRowSortingFeature", "to": "reference/index/functions/constructRowSortingFeature" },
         { "label": "ColumnFilter", "to": "reference/index/interfaces/ColumnFilter" },
         { "label": "ColumnPinningState", "to": "reference/index/interfaces/ColumnPinningState" },
         { "label": "ColumnSort", "to": "reference/index/interfaces/ColumnSort" },
@@ -633,37 +758,7 @@
         { "label": "SortFnOption", "to": "reference/index/type-aliases/SortFnOption" },
         { "label": "BuiltInAggregationFn", "to": "reference/index/type-aliases/BuiltInAggregationFn" },
         { "label": "BuiltInFilterFn", "to": "reference/index/type-aliases/BuiltInFilterFn" },
-        { "label": "BuiltInSortFn", "to": "reference/index/type-aliases/BuiltInSortFn" },
-        { "label": "filterFn_arrHas", "to": "reference/index/variables/filterFn_arrHas" },
-        { "label": "filterFn_arrIncludes", "to": "reference/index/variables/filterFn_arrIncludes" },
-        { "label": "filterFn_arrIncludesAll", "to": "reference/index/variables/filterFn_arrIncludesAll" },
-        { "label": "filterFn_arrIncludesSome", "to": "reference/index/variables/filterFn_arrIncludesSome" },
-        { "label": "filterFn_equals", "to": "reference/index/variables/filterFn_equals" },
-        { "label": "filterFn_equalsString", "to": "reference/index/variables/filterFn_equalsString" },
-        { "label": "filterFn_equalsStringSensitive", "to": "reference/index/variables/filterFn_equalsStringSensitive" },
-        { "label": "filterFn_greaterThan", "to": "reference/index/variables/filterFn_greaterThan" },
-        { "label": "filterFn_greaterThanOrEqualTo", "to": "reference/index/variables/filterFn_greaterThanOrEqualTo" },
-        { "label": "filterFn_inNumberRange", "to": "reference/index/variables/filterFn_inNumberRange" },
-        { "label": "filterFn_includesString", "to": "reference/index/variables/filterFn_includesString" },
-        { "label": "filterFn_includesStringSensitive", "to": "reference/index/variables/filterFn_includesStringSensitive" },
-        { "label": "filterFn_lessThan", "to": "reference/index/variables/filterFn_lessThan" },
-        { "label": "filterFn_lessThanOrEqualTo", "to": "reference/index/variables/filterFn_lessThanOrEqualTo" },
-        { "label": "filterFn_weakEquals", "to": "reference/index/variables/filterFn_weakEquals" },
-        { "label": "sortFn_alphanumeric", "to": "reference/index/variables/sortFn_alphanumeric" },
-        { "label": "sortFn_alphanumericCaseSensitive", "to": "reference/index/variables/sortFn_alphanumericCaseSensitive" },
-        { "label": "sortFn_basic", "to": "reference/index/variables/sortFn_basic" },
-        { "label": "sortFn_datetime", "to": "reference/index/variables/sortFn_datetime" },
-        { "label": "sortFn_text", "to": "reference/index/variables/sortFn_text" },
-        { "label": "sortFn_textCaseSensitive", "to": "reference/index/variables/sortFn_textCaseSensitive" },
-        { "label": "aggregationFn_count", "to": "reference/index/variables/aggregationFn_count" },
-        { "label": "aggregationFn_extent", "to": "reference/index/variables/aggregationFn_extent" },
-        { "label": "aggregationFn_max", "to": "reference/index/variables/aggregationFn_max" },
-        { "label": "aggregationFn_mean", "to": "reference/index/variables/aggregationFn_mean" },
-        { "label": "aggregationFn_median", "to": "reference/index/variables/aggregationFn_median" },
-        { "label": "aggregationFn_min", "to": "reference/index/variables/aggregationFn_min" },
-        { "label": "aggregationFn_sum", "to": "reference/index/variables/aggregationFn_sum" },
-        { "label": "aggregationFn_unique", "to": "reference/index/variables/aggregationFn_unique" },
-        { "label": "aggregationFn_uniqueCount", "to": "reference/index/variables/aggregationFn_uniqueCount" }
+        { "label": "BuiltInSortFn", "to": "reference/index/type-aliases/BuiltInSortFn" }
       ]
     },
     {
@@ -671,246 +766,7 @@
       "defaultCollapsed": true,
       "label": "Static Functions API Reference",
       "children": [
-        { "label": "cell_getContext", "to": "reference/static-functions/functions/cell_getContext" },
-        { "label": "cell_getIsAggregated", "to": "reference/static-functions/functions/cell_getIsAggregated" },
-        { "label": "cell_getIsGrouped", "to": "reference/static-functions/functions/cell_getIsGrouped" },
-        { "label": "cell_getIsPlaceholder", "to": "reference/static-functions/functions/cell_getIsPlaceholder" },
-        { "label": "cell_getValue", "to": "reference/static-functions/functions/cell_getValue" },
-        { "label": "cell_renderValue", "to": "reference/static-functions/functions/cell_renderValue" },
-        { "label": "column_clearSorting", "to": "reference/static-functions/functions/column_clearSorting" },
-        { "label": "column_getAfter", "to": "reference/static-functions/functions/column_getAfter" },
-        { "label": "column_getAggregationFn", "to": "reference/static-functions/functions/column_getAggregationFn" },
-        { "label": "column_getAutoAggregationFn", "to": "reference/static-functions/functions/column_getAutoAggregationFn" },
-        { "label": "column_getAutoFilterFn", "to": "reference/static-functions/functions/column_getAutoFilterFn" },
-        { "label": "column_getAutoSortDir", "to": "reference/static-functions/functions/column_getAutoSortDir" },
-        { "label": "column_getAutoSortFn", "to": "reference/static-functions/functions/column_getAutoSortFn" },
-        { "label": "column_getCanFilter", "to": "reference/static-functions/functions/column_getCanFilter" },
-        { "label": "column_getCanGlobalFilter", "to": "reference/static-functions/functions/column_getCanGlobalFilter" },
-        { "label": "column_getCanGroup", "to": "reference/static-functions/functions/column_getCanGroup" },
-        { "label": "column_getCanHide", "to": "reference/static-functions/functions/column_getCanHide" },
-        { "label": "column_getCanMultiSort", "to": "reference/static-functions/functions/column_getCanMultiSort" },
-        { "label": "column_getCanPin", "to": "reference/static-functions/functions/column_getCanPin" },
-        { "label": "column_getCanResize", "to": "reference/static-functions/functions/column_getCanResize" },
-        { "label": "column_getCanSort", "to": "reference/static-functions/functions/column_getCanSort" },
-        { "label": "column_getFacetedMinMaxValues", "to": "reference/static-functions/functions/column_getFacetedMinMaxValues" },
-        { "label": "column_getFacetedRowModel", "to": "reference/static-functions/functions/column_getFacetedRowModel" },
-        { "label": "column_getFacetedUniqueValues", "to": "reference/static-functions/functions/column_getFacetedUniqueValues" },
-        { "label": "column_getFilterFn", "to": "reference/static-functions/functions/column_getFilterFn" },
-        { "label": "column_getFilterIndex", "to": "reference/static-functions/functions/column_getFilterIndex" },
-        { "label": "column_getFilterValue", "to": "reference/static-functions/functions/column_getFilterValue" },
-        { "label": "column_getFirstSortDir", "to": "reference/static-functions/functions/column_getFirstSortDir" },
-        { "label": "column_getFlatColumns", "to": "reference/static-functions/functions/column_getFlatColumns" },
-        { "label": "column_getGroupedIndex", "to": "reference/static-functions/functions/column_getGroupedIndex" },
-        { "label": "column_getIndex", "to": "reference/static-functions/functions/column_getIndex" },
-        { "label": "column_getIsFiltered", "to": "reference/static-functions/functions/column_getIsFiltered" },
-        { "label": "column_getIsFirstColumn", "to": "reference/static-functions/functions/column_getIsFirstColumn" },
-        { "label": "column_getIsGrouped", "to": "reference/static-functions/functions/column_getIsGrouped" },
-        { "label": "column_getIsLastColumn", "to": "reference/static-functions/functions/column_getIsLastColumn" },
-        { "label": "column_getIsPinned", "to": "reference/static-functions/functions/column_getIsPinned" },
-        { "label": "column_getIsResizing", "to": "reference/static-functions/functions/column_getIsResizing" },
-        { "label": "column_getIsSorted", "to": "reference/static-functions/functions/column_getIsSorted" },
-        { "label": "column_getIsVisible", "to": "reference/static-functions/functions/column_getIsVisible" },
-        { "label": "column_getLeafColumns", "to": "reference/static-functions/functions/column_getLeafColumns" },
-        { "label": "column_getNextSortingOrder", "to": "reference/static-functions/functions/column_getNextSortingOrder" },
-        { "label": "column_getPinnedIndex", "to": "reference/static-functions/functions/column_getPinnedIndex" },
-        { "label": "column_getSize", "to": "reference/static-functions/functions/column_getSize" },
-        { "label": "column_getSortFn", "to": "reference/static-functions/functions/column_getSortFn" },
-        { "label": "column_getSortIndex", "to": "reference/static-functions/functions/column_getSortIndex" },
-        { "label": "column_getStart", "to": "reference/static-functions/functions/column_getStart" },
-        { "label": "column_getToggleGroupingHandler", "to": "reference/static-functions/functions/column_getToggleGroupingHandler" },
-        { "label": "column_getToggleSortingHandler", "to": "reference/static-functions/functions/column_getToggleSortingHandler" },
-        { "label": "column_getToggleVisibilityHandler", "to": "reference/static-functions/functions/column_getToggleVisibilityHandler" },
-        { "label": "column_pin", "to": "reference/static-functions/functions/column_pin" },
-        { "label": "column_resetSize", "to": "reference/static-functions/functions/column_resetSize" },
-        { "label": "column_setFilterValue", "to": "reference/static-functions/functions/column_setFilterValue" },
-        { "label": "column_toggleGrouping", "to": "reference/static-functions/functions/column_toggleGrouping" },
-        { "label": "column_toggleSorting", "to": "reference/static-functions/functions/column_toggleSorting" },
-        { "label": "column_toggleVisibility", "to": "reference/static-functions/functions/column_toggleVisibility" },
-        { "label": "getDefaultColumnFiltersState", "to": "reference/static-functions/functions/getDefaultColumnFiltersState" },
-        { "label": "getDefaultColumnOrderState", "to": "reference/static-functions/functions/getDefaultColumnOrderState" },
-        { "label": "getDefaultColumnPinningState", "to": "reference/static-functions/functions/getDefaultColumnPinningState" },
-        { "label": "getDefaultColumnResizingState", "to": "reference/static-functions/functions/getDefaultColumnResizingState" },
-        { "label": "getDefaultColumnSizingColumnDef", "to": "reference/static-functions/functions/getDefaultColumnSizingColumnDef" },
-        { "label": "getDefaultColumnSizingState", "to": "reference/static-functions/functions/getDefaultColumnSizingState" },
-        { "label": "getDefaultColumnVisibilityState", "to": "reference/static-functions/functions/getDefaultColumnVisibilityState" },
-        { "label": "getDefaultExpandedState", "to": "reference/static-functions/functions/getDefaultExpandedState" },
-        { "label": "getDefaultGroupingState", "to": "reference/static-functions/functions/getDefaultGroupingState" },
-        { "label": "getDefaultPaginationState", "to": "reference/static-functions/functions/getDefaultPaginationState" },
-        { "label": "getDefaultRowPinningState", "to": "reference/static-functions/functions/getDefaultRowPinningState" },
-        { "label": "getDefaultRowSelectionState", "to": "reference/static-functions/functions/getDefaultRowSelectionState" },
-        { "label": "getDefaultSortingState", "to": "reference/static-functions/functions/getDefaultSortingState" },
-        { "label": "header_getContext", "to": "reference/static-functions/functions/header_getContext" },
-        { "label": "header_getLeafHeaders", "to": "reference/static-functions/functions/header_getLeafHeaders" },
-        { "label": "header_getResizeHandler", "to": "reference/static-functions/functions/header_getResizeHandler" },
-        { "label": "header_getSize", "to": "reference/static-functions/functions/header_getSize" },
-        { "label": "header_getStart", "to": "reference/static-functions/functions/header_getStart" },
-        { "label": "isRowSelected", "to": "reference/static-functions/functions/isRowSelected" },
-        { "label": "isSubRowSelected", "to": "reference/static-functions/functions/isSubRowSelected" },
-        { "label": "isTouchStartEvent", "to": "reference/static-functions/functions/isTouchStartEvent" },
-        { "label": "orderColumns", "to": "reference/static-functions/functions/orderColumns" },
-        { "label": "passiveEventSupported", "to": "reference/static-functions/functions/passiveEventSupported" },
-        { "label": "row_getAllCells", "to": "reference/static-functions/functions/row_getAllCells" },
-        { "label": "row_getAllCellsByColumnId", "to": "reference/static-functions/functions/row_getAllCellsByColumnId" },
-        { "label": "row_getAllVisibleCells", "to": "reference/static-functions/functions/row_getAllVisibleCells" },
-        { "label": "row_getCanExpand", "to": "reference/static-functions/functions/row_getCanExpand" },
-        { "label": "row_getCanMultiSelect", "to": "reference/static-functions/functions/row_getCanMultiSelect" },
-        { "label": "row_getCanPin", "to": "reference/static-functions/functions/row_getCanPin" },
-        { "label": "row_getCanSelect", "to": "reference/static-functions/functions/row_getCanSelect" },
-        { "label": "row_getCanSelectSubRows", "to": "reference/static-functions/functions/row_getCanSelectSubRows" },
-        { "label": "row_getCenterVisibleCells", "to": "reference/static-functions/functions/row_getCenterVisibleCells" },
-        { "label": "row_getGroupingValue", "to": "reference/static-functions/functions/row_getGroupingValue" },
-        { "label": "row_getIsAllParentsExpanded", "to": "reference/static-functions/functions/row_getIsAllParentsExpanded" },
-        { "label": "row_getIsAllSubRowsSelected", "to": "reference/static-functions/functions/row_getIsAllSubRowsSelected" },
-        { "label": "row_getIsExpanded", "to": "reference/static-functions/functions/row_getIsExpanded" },
-        { "label": "row_getIsGrouped", "to": "reference/static-functions/functions/row_getIsGrouped" },
-        { "label": "row_getIsPinned", "to": "reference/static-functions/functions/row_getIsPinned" },
-        { "label": "row_getIsSelected", "to": "reference/static-functions/functions/row_getIsSelected" },
-        { "label": "row_getIsSomeSelected", "to": "reference/static-functions/functions/row_getIsSomeSelected" },
-        { "label": "row_getLeafRows", "to": "reference/static-functions/functions/row_getLeafRows" },
-        { "label": "row_getLeftVisibleCells", "to": "reference/static-functions/functions/row_getLeftVisibleCells" },
-        { "label": "row_getParentRow", "to": "reference/static-functions/functions/row_getParentRow" },
-        { "label": "row_getParentRows", "to": "reference/static-functions/functions/row_getParentRows" },
-        { "label": "row_getPinnedIndex", "to": "reference/static-functions/functions/row_getPinnedIndex" },
-        { "label": "row_getRightVisibleCells", "to": "reference/static-functions/functions/row_getRightVisibleCells" },
-        { "label": "row_getToggleExpandedHandler", "to": "reference/static-functions/functions/row_getToggleExpandedHandler" },
-        { "label": "row_getToggleSelectedHandler", "to": "reference/static-functions/functions/row_getToggleSelectedHandler" },
-        { "label": "row_getUniqueValues", "to": "reference/static-functions/functions/row_getUniqueValues" },
-        { "label": "row_getValue", "to": "reference/static-functions/functions/row_getValue" },
-        { "label": "row_getVisibleCells", "to": "reference/static-functions/functions/row_getVisibleCells" },
-        { "label": "row_pin", "to": "reference/static-functions/functions/row_pin" },
-        { "label": "row_renderValue", "to": "reference/static-functions/functions/row_renderValue" },
-        { "label": "row_toggleExpanded", "to": "reference/static-functions/functions/row_toggleExpanded" },
-        { "label": "row_toggleSelected", "to": "reference/static-functions/functions/row_toggleSelected" },
-        { "label": "selectRowsFn", "to": "reference/static-functions/functions/selectRowsFn" },
-        { "label": "shouldAutoRemoveFilter", "to": "reference/static-functions/functions/shouldAutoRemoveFilter" },
-        { "label": "table_autoResetExpanded", "to": "reference/static-functions/functions/table_autoResetExpanded" },
-        { "label": "table_autoResetPageIndex", "to": "reference/static-functions/functions/table_autoResetPageIndex" },
-        { "label": "table_firstPage", "to": "reference/static-functions/functions/table_firstPage" },
-        { "label": "table_getAllColumns", "to": "reference/static-functions/functions/table_getAllColumns" },
-        { "label": "table_getAllFlatColumns", "to": "reference/static-functions/functions/table_getAllFlatColumns" },
-        { "label": "table_getAllFlatColumnsById", "to": "reference/static-functions/functions/table_getAllFlatColumnsById" },
-        { "label": "table_getAllLeafColumns", "to": "reference/static-functions/functions/table_getAllLeafColumns" },
-        { "label": "table_getBottomRows", "to": "reference/static-functions/functions/table_getBottomRows" },
-        { "label": "table_getCanNextPage", "to": "reference/static-functions/functions/table_getCanNextPage" },
-        { "label": "table_getCanPreviousPage", "to": "reference/static-functions/functions/table_getCanPreviousPage" },
-        { "label": "table_getCanSomeRowsExpand", "to": "reference/static-functions/functions/table_getCanSomeRowsExpand" },
-        { "label": "table_getCenterFlatHeaders", "to": "reference/static-functions/functions/table_getCenterFlatHeaders" },
-        { "label": "table_getCenterFooterGroups", "to": "reference/static-functions/functions/table_getCenterFooterGroups" },
-        { "label": "table_getCenterHeaderGroups", "to": "reference/static-functions/functions/table_getCenterHeaderGroups" },
-        { "label": "table_getCenterLeafColumns", "to": "reference/static-functions/functions/table_getCenterLeafColumns" },
-        { "label": "table_getCenterLeafHeaders", "to": "reference/static-functions/functions/table_getCenterLeafHeaders" },
-        { "label": "table_getCenterRows", "to": "reference/static-functions/functions/table_getCenterRows" },
-        { "label": "table_getCenterTotalSize", "to": "reference/static-functions/functions/table_getCenterTotalSize" },
-        { "label": "table_getCenterVisibleLeafColumns", "to": "reference/static-functions/functions/table_getCenterVisibleLeafColumns" },
-        { "label": "table_getColumn", "to": "reference/static-functions/functions/table_getColumn" },
-        { "label": "table_getCoreRowModel", "to": "reference/static-functions/functions/table_getCoreRowModel" },
-        { "label": "table_getDefaultColumnDef", "to": "reference/static-functions/functions/table_getDefaultColumnDef" },
-        { "label": "table_getExpandedDepth", "to": "reference/static-functions/functions/table_getExpandedDepth" },
-        { "label": "table_getExpandedRowModel", "to": "reference/static-functions/functions/table_getExpandedRowModel" },
-        { "label": "table_getFilteredRowModel", "to": "reference/static-functions/functions/table_getFilteredRowModel" },
-        { "label": "table_getFilteredSelectedRowModel", "to": "reference/static-functions/functions/table_getFilteredSelectedRowModel" },
-        { "label": "table_getFlatHeaders", "to": "reference/static-functions/functions/table_getFlatHeaders" },
-        { "label": "table_getFooterGroups", "to": "reference/static-functions/functions/table_getFooterGroups" },
-        { "label": "table_getGlobalAutoFilterFn", "to": "reference/static-functions/functions/table_getGlobalAutoFilterFn" },
-        { "label": "table_getGlobalFacetedMinMaxValues", "to": "reference/static-functions/functions/table_getGlobalFacetedMinMaxValues" },
-        { "label": "table_getGlobalFacetedRowModel", "to": "reference/static-functions/functions/table_getGlobalFacetedRowModel" },
-        { "label": "table_getGlobalFacetedUniqueValues", "to": "reference/static-functions/functions/table_getGlobalFacetedUniqueValues" },
-        { "label": "table_getGlobalFilterFn", "to": "reference/static-functions/functions/table_getGlobalFilterFn" },
-        { "label": "table_getGroupedRowModel", "to": "reference/static-functions/functions/table_getGroupedRowModel" },
-        { "label": "table_getGroupedSelectedRowModel", "to": "reference/static-functions/functions/table_getGroupedSelectedRowModel" },
-        { "label": "table_getHeaderGroups", "to": "reference/static-functions/functions/table_getHeaderGroups" },
-        { "label": "table_getIsAllColumnsVisible", "to": "reference/static-functions/functions/table_getIsAllColumnsVisible" },
-        { "label": "table_getIsAllPageRowsSelected", "to": "reference/static-functions/functions/table_getIsAllPageRowsSelected" },
-        { "label": "table_getIsAllRowsExpanded", "to": "reference/static-functions/functions/table_getIsAllRowsExpanded" },
-        { "label": "table_getIsAllRowsSelected", "to": "reference/static-functions/functions/table_getIsAllRowsSelected" },
-        { "label": "table_getIsSomeColumnsPinned", "to": "reference/static-functions/functions/table_getIsSomeColumnsPinned" },
-        { "label": "table_getIsSomeColumnsVisible", "to": "reference/static-functions/functions/table_getIsSomeColumnsVisible" },
-        { "label": "table_getIsSomePageRowsSelected", "to": "reference/static-functions/functions/table_getIsSomePageRowsSelected" },
-        { "label": "table_getIsSomeRowsExpanded", "to": "reference/static-functions/functions/table_getIsSomeRowsExpanded" },
-        { "label": "table_getIsSomeRowsPinned", "to": "reference/static-functions/functions/table_getIsSomeRowsPinned" },
-        { "label": "table_getIsSomeRowsSelected", "to": "reference/static-functions/functions/table_getIsSomeRowsSelected" },
-        { "label": "table_getLeafHeaders", "to": "reference/static-functions/functions/table_getLeafHeaders" },
-        { "label": "table_getLeftFlatHeaders", "to": "reference/static-functions/functions/table_getLeftFlatHeaders" },
-        { "label": "table_getLeftFooterGroups", "to": "reference/static-functions/functions/table_getLeftFooterGroups" },
-        { "label": "table_getLeftHeaderGroups", "to": "reference/static-functions/functions/table_getLeftHeaderGroups" },
-        { "label": "table_getLeftLeafColumns", "to": "reference/static-functions/functions/table_getLeftLeafColumns" },
-        { "label": "table_getLeftLeafHeaders", "to": "reference/static-functions/functions/table_getLeftLeafHeaders" },
-        { "label": "table_getLeftTotalSize", "to": "reference/static-functions/functions/table_getLeftTotalSize" },
-        { "label": "table_getLeftVisibleLeafColumns", "to": "reference/static-functions/functions/table_getLeftVisibleLeafColumns" },
-        { "label": "table_getOrderColumnsFn", "to": "reference/static-functions/functions/table_getOrderColumnsFn" },
-        { "label": "table_getPageCount", "to": "reference/static-functions/functions/table_getPageCount" },
-        { "label": "table_getPageOptions", "to": "reference/static-functions/functions/table_getPageOptions" },
-        { "label": "table_getPaginatedRowModel", "to": "reference/static-functions/functions/table_getPaginatedRowModel" },
-        { "label": "table_getPinnedLeafColumns", "to": "reference/static-functions/functions/table_getPinnedLeafColumns" },
-        { "label": "table_getPinnedVisibleLeafColumns", "to": "reference/static-functions/functions/table_getPinnedVisibleLeafColumns" },
-        { "label": "table_getPreExpandedRowModel", "to": "reference/static-functions/functions/table_getPreExpandedRowModel" },
-        { "label": "table_getPreFilteredRowModel", "to": "reference/static-functions/functions/table_getPreFilteredRowModel" },
-        { "label": "table_getPreGroupedRowModel", "to": "reference/static-functions/functions/table_getPreGroupedRowModel" },
-        { "label": "table_getPrePaginatedRowModel", "to": "reference/static-functions/functions/table_getPrePaginatedRowModel" },
-        { "label": "table_getPreSelectedRowModel", "to": "reference/static-functions/functions/table_getPreSelectedRowModel" },
-        { "label": "table_getPreSortedRowModel", "to": "reference/static-functions/functions/table_getPreSortedRowModel" },
-        { "label": "table_getRightFlatHeaders", "to": "reference/static-functions/functions/table_getRightFlatHeaders" },
-        { "label": "table_getRightFooterGroups", "to": "reference/static-functions/functions/table_getRightFooterGroups" },
-        { "label": "table_getRightHeaderGroups", "to": "reference/static-functions/functions/table_getRightHeaderGroups" },
-        { "label": "table_getRightLeafColumns", "to": "reference/static-functions/functions/table_getRightLeafColumns" },
-        { "label": "table_getRightLeafHeaders", "to": "reference/static-functions/functions/table_getRightLeafHeaders" },
-        { "label": "table_getRightTotalSize", "to": "reference/static-functions/functions/table_getRightTotalSize" },
-        { "label": "table_getRightVisibleLeafColumns", "to": "reference/static-functions/functions/table_getRightVisibleLeafColumns" },
-        { "label": "table_getRow", "to": "reference/static-functions/functions/table_getRow" },
-        { "label": "table_getRowCount", "to": "reference/static-functions/functions/table_getRowCount" },
-        { "label": "table_getRowId", "to": "reference/static-functions/functions/table_getRowId" },
-        { "label": "table_getRowModel", "to": "reference/static-functions/functions/table_getRowModel" },
-        { "label": "table_getSelectedRowModel", "to": "reference/static-functions/functions/table_getSelectedRowModel" },
-        { "label": "table_getSortedRowModel", "to": "reference/static-functions/functions/table_getSortedRowModel" },
-        { "label": "table_getToggleAllColumnsVisibilityHandler", "to": "reference/static-functions/functions/table_getToggleAllColumnsVisibilityHandler" },
-        { "label": "table_getToggleAllPageRowsSelectedHandler", "to": "reference/static-functions/functions/table_getToggleAllPageRowsSelectedHandler" },
-        { "label": "table_getToggleAllRowsExpandedHandler", "to": "reference/static-functions/functions/table_getToggleAllRowsExpandedHandler" },
-        { "label": "table_getToggleAllRowsSelectedHandler", "to": "reference/static-functions/functions/table_getToggleAllRowsSelectedHandler" },
-        { "label": "table_getTopRows", "to": "reference/static-functions/functions/table_getTopRows" },
-        { "label": "table_getTotalSize", "to": "reference/static-functions/functions/table_getTotalSize" },
-        { "label": "table_getVisibleFlatColumns", "to": "reference/static-functions/functions/table_getVisibleFlatColumns" },
-        { "label": "table_getVisibleLeafColumns", "to": "reference/static-functions/functions/table_getVisibleLeafColumns" },
-        { "label": "table_lastPage", "to": "reference/static-functions/functions/table_lastPage" },
-        { "label": "table_mergeOptions", "to": "reference/static-functions/functions/table_mergeOptions" },
-        { "label": "table_nextPage", "to": "reference/static-functions/functions/table_nextPage" },
-        { "label": "table_previousPage", "to": "reference/static-functions/functions/table_previousPage" },
-        { "label": "table_reset", "to": "reference/static-functions/functions/table_reset" },
-        { "label": "table_resetColumnFilters", "to": "reference/static-functions/functions/table_resetColumnFilters" },
-        { "label": "table_resetColumnOrder", "to": "reference/static-functions/functions/table_resetColumnOrder" },
-        { "label": "table_resetColumnPinning", "to": "reference/static-functions/functions/table_resetColumnPinning" },
-        { "label": "table_resetColumnSizing", "to": "reference/static-functions/functions/table_resetColumnSizing" },
-        { "label": "table_resetColumnVisibility", "to": "reference/static-functions/functions/table_resetColumnVisibility" },
-        { "label": "table_resetExpanded", "to": "reference/static-functions/functions/table_resetExpanded" },
-        { "label": "table_resetGlobalFilter", "to": "reference/static-functions/functions/table_resetGlobalFilter" },
-        { "label": "table_resetGrouping", "to": "reference/static-functions/functions/table_resetGrouping" },
-        { "label": "table_resetHeaderSizeInfo", "to": "reference/static-functions/functions/table_resetHeaderSizeInfo" },
-        { "label": "table_resetPageIndex", "to": "reference/static-functions/functions/table_resetPageIndex" },
-        { "label": "table_resetPageSize", "to": "reference/static-functions/functions/table_resetPageSize" },
-        { "label": "table_resetPagination", "to": "reference/static-functions/functions/table_resetPagination" },
-        { "label": "table_resetRowPinning", "to": "reference/static-functions/functions/table_resetRowPinning" },
-        { "label": "table_resetRowSelection", "to": "reference/static-functions/functions/table_resetRowSelection" },
-        { "label": "table_resetSorting", "to": "reference/static-functions/functions/table_resetSorting" },
-        { "label": "table_setColumnFilters", "to": "reference/static-functions/functions/table_setColumnFilters" },
-        { "label": "table_setColumnOrder", "to": "reference/static-functions/functions/table_setColumnOrder" },
-        { "label": "table_setColumnPinning", "to": "reference/static-functions/functions/table_setColumnPinning" },
-        { "label": "table_setColumnResizing", "to": "reference/static-functions/functions/table_setColumnResizing" },
-        { "label": "table_setColumnSizing", "to": "reference/static-functions/functions/table_setColumnSizing" },
-        { "label": "table_setColumnVisibility", "to": "reference/static-functions/functions/table_setColumnVisibility" },
-        { "label": "table_setExpanded", "to": "reference/static-functions/functions/table_setExpanded" },
-        { "label": "table_setGlobalFilter", "to": "reference/static-functions/functions/table_setGlobalFilter" },
-        { "label": "table_setGrouping", "to": "reference/static-functions/functions/table_setGrouping" },
-        { "label": "table_setOptions", "to": "reference/static-functions/functions/table_setOptions" },
-        { "label": "table_setPageIndex", "to": "reference/static-functions/functions/table_setPageIndex" },
-        { "label": "table_setPageSize", "to": "reference/static-functions/functions/table_setPageSize" },
-        { "label": "table_setPagination", "to": "reference/static-functions/functions/table_setPagination" },
-        { "label": "table_setRowPinning", "to": "reference/static-functions/functions/table_setRowPinning" },
-        { "label": "table_setRowSelection", "to": "reference/static-functions/functions/table_setRowSelection" },
-        { "label": "table_setSorting", "to": "reference/static-functions/functions/table_setSorting" },
-        { "label": "table_syncExternalStateToBaseAtoms", "to": "reference/static-functions/functions/table_syncExternalStateToBaseAtoms" },
-        { "label": "table_toggleAllColumnsVisible", "to": "reference/static-functions/functions/table_toggleAllColumnsVisible" },
-        { "label": "table_toggleAllPageRowsSelected", "to": "reference/static-functions/functions/table_toggleAllPageRowsSelected" },
-        { "label": "table_toggleAllRowsExpanded", "to": "reference/static-functions/functions/table_toggleAllRowsExpanded" },
-        { "label": "table_toggleAllRowsSelected", "to": "reference/static-functions/functions/table_toggleAllRowsSelected" }
+        { "label": "Static Functions Overview", "to": "reference/static-functions/index" }
       ]
     },
     {
@@ -938,12 +794,7 @@
             { "label": "LegacyTable", "to": "framework/react/reference/legacy/type-aliases/LegacyTable" },
             { "label": "LegacyTableOptions", "to": "framework/react/reference/legacy/type-aliases/LegacyTableOptions" },
             { "label": "LegacyReactTable", "to": "framework/react/reference/legacy/type-aliases/LegacyReactTable" },
-            { "label": "LegacyColumnDef", "to": "framework/react/reference/legacy/type-aliases/LegacyColumnDef" },
-            { "label": "LegacyColumn", "to": "framework/react/reference/legacy/type-aliases/LegacyColumn" },
-            { "label": "LegacyRow", "to": "framework/react/reference/legacy/type-aliases/LegacyRow" },
-            { "label": "LegacyCell", "to": "framework/react/reference/legacy/type-aliases/LegacyCell" },
-            { "label": "LegacyHeader", "to": "framework/react/reference/legacy/type-aliases/LegacyHeader" },
-            { "label": "LegacyHeaderGroup", "to": "framework/react/reference/legacy/type-aliases/LegacyHeaderGroup" }
+            { "label": "LegacyColumnDef", "to": "framework/react/reference/legacy/type-aliases/LegacyColumnDef" }
           ]
         }
       ]
@@ -963,8 +814,11 @@
         {
           "label": "angular",
           "children": [
-            { "label": "Basic (Inject Table)", "to": "framework/angular/examples/basic-inject-table" },
-            { "label": "Basic (App Table)", "to": "framework/angular/examples/basic-app-table" }
+            { "label": "Basic (injectTable)", "to": "framework/angular/examples/basic-inject-table" },
+            { "label": "Basic (createAppTable)", "to": "framework/angular/examples/basic-app-table" },
+            { "label": "Basic (External State)", "to": "framework/angular/examples/basic-external-state" },
+            { "label": "Basic (External Atoms)", "to": "framework/angular/examples/basic-external-atoms" },
+            { "label": "Header Groups", "to": "framework/angular/examples/column-groups" }
           ]
         },
         {
@@ -974,6 +828,7 @@
             { "label": "Basic (useAppTable)", "to": "framework/lit/examples/basic-app-table" },
             { "label": "Basic (External State)", "to": "framework/lit/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/lit/examples/basic-external-atoms" },
+            { "label": "Basic (Subscribe)", "to": "framework/lit/examples/basic-subscribe" },
             { "label": "Header Groups", "to": "framework/lit/examples/column-groups" }
           ]
         },
@@ -1056,21 +911,31 @@
         {
           "label": "angular",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/angular/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/angular/examples/filters" },
+            { "label": "Column Filters (Faceted)", "to": "framework/angular/examples/filters-faceted" },
+            { "label": "Fuzzy Search Filters", "to": "framework/angular/examples/filters-fuzzy" },
             { "label": "Column Ordering", "to": "framework/angular/examples/column-ordering" },
             { "label": "Column Pinning", "to": "framework/angular/examples/column-pinning" },
-            { "label": "Column Pinning (Sticky)", "to": "framework/angular/examples/column-pinning-sticky" },
-            { "label": "Column Resizing", "to": "framework/angular/examples/column-resizing-performant" },
+            { "label": "Column Pinning (Split)", "to": "framework/angular/examples/column-pinning-split" },
+            { "label": "Sticky Column Pinning", "to": "framework/angular/examples/column-pinning-sticky" },
+            { "label": "Column Sizing", "to": "framework/angular/examples/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/angular/examples/column-resizing" },
+            { "label": "Performant Column Resizing", "to": "framework/angular/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/angular/examples/column-visibility" },
-            { "label": "Row Expanding", "to": "framework/angular/examples/expanding" },
-            { "label": "Column Grouping", "to": "framework/angular/examples/grouping" },
+            { "label": "Expanding", "to": "framework/angular/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/angular/examples/sub-components" },
+            { "label": "Grouping", "to": "framework/angular/examples/grouping" },
+            { "label": "Pagination", "to": "framework/angular/examples/pagination" },
+            { "label": "Row Pinning", "to": "framework/angular/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/angular/examples/row-selection" },
-            { "label": "Row Selection (Signal)", "to": "framework/angular/examples/row-selection-signal" }
+            { "label": "Sorting", "to": "framework/angular/examples/sorting" }
           ]
         },
         {
           "label": "lit",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/lit/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/lit/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/lit/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/lit/examples/filters-fuzzy" },
@@ -1083,6 +948,7 @@
             { "label": "Performant Column Resizing", "to": "framework/lit/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/lit/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/lit/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/lit/examples/sub-components" },
             { "label": "Grouping", "to": "framework/lit/examples/grouping" },
             { "label": "Pagination", "to": "framework/lit/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/lit/examples/row-pinning" },
@@ -1094,6 +960,7 @@
         {
           "label": "react",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/react/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/react/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/react/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/react/examples/filters-fuzzy" },
@@ -1107,6 +974,7 @@
             { "label": "Performant Column Resizing", "to": "framework/react/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/react/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/react/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/react/examples/sub-components" },
             { "label": "Grouping", "to": "framework/react/examples/grouping" },
             { "label": "Pagination", "to": "framework/react/examples/pagination" },
             { "label": "Row DnD", "to": "framework/react/examples/row-dnd" },
@@ -1118,6 +986,7 @@
         {
           "label": "solid",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/solid/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/solid/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/solid/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/solid/examples/filters-fuzzy" },
@@ -1130,6 +999,7 @@
             { "label": "Performant Column Resizing", "to": "framework/solid/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/solid/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/solid/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/solid/examples/sub-components" },
             { "label": "Grouping", "to": "framework/solid/examples/grouping" },
             { "label": "Pagination", "to": "framework/solid/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/solid/examples/row-pinning" },
@@ -1140,6 +1010,7 @@
         {
           "label": "svelte",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/svelte/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/svelte/examples/filtering" },
             { "label": "Column Filters (Faceted)", "to": "framework/svelte/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/svelte/examples/filters-fuzzy" },
@@ -1152,6 +1023,7 @@
             { "label": "Performant Column Resizing", "to": "framework/svelte/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/svelte/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/svelte/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/svelte/examples/sub-components" },
             { "label": "Grouping", "to": "framework/svelte/examples/grouping" },
             { "label": "Pagination", "to": "framework/svelte/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/svelte/examples/row-pinning" },
@@ -1162,6 +1034,7 @@
         {
           "label": "vue",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/vue/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/vue/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/vue/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/vue/examples/filters-fuzzy" },
@@ -1174,6 +1047,7 @@
             { "label": "Performant Column Resizing", "to": "framework/vue/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/vue/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/vue/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/vue/examples/sub-components" },
             { "label": "Grouping", "to": "framework/vue/examples/grouping" },
             { "label": "Pagination", "to": "framework/vue/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/vue/examples/row-pinning" },
@@ -1184,6 +1058,7 @@
         {
           "label": "preact",
           "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/preact/examples/kitchen-sink" },
             { "label": "Column Filters", "to": "framework/preact/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/preact/examples/filters-faceted" },
             { "label": "Fuzzy Search Filters", "to": "framework/preact/examples/filters-fuzzy" },
@@ -1196,6 +1071,7 @@
             { "label": "Performant Column Resizing", "to": "framework/preact/examples/column-resizing-performant" },
             { "label": "Column Visibility", "to": "framework/preact/examples/column-visibility" },
             { "label": "Expanding", "to": "framework/preact/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/preact/examples/sub-components" },
             { "label": "Grouping", "to": "framework/preact/examples/grouping" },
             { "label": "Pagination", "to": "framework/preact/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/preact/examples/row-pinning" },
@@ -1219,11 +1095,16 @@
         {
           "label": "angular",
           "children": [
-            { "label": "Composable Tables", "to": "framework/angular/examples/composable-tables" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/angular/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/angular/examples/custom-plugin" },
-            { "label": "Sub Components", "to": "framework/angular/examples/sub-components" },
+            { "label": "With TanStack Virtual - Columns", "to": "framework/angular/examples/virtualized-columns" },
+            { "label": "With TanStack Virtual - Rows", "to": "framework/angular/examples/virtualized-rows" },
+            { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/angular/examples/virtualized-infinite-scrolling" },
+            { "label": "With TanStack Form", "to": "framework/angular/examples/with-tanstack-form" },
+            { "label": "With TanStack Query", "to": "framework/angular/examples/with-tanstack-query" },
             { "label": "Fetch API data (SPA / SSR)", "to": "framework/angular/examples/remote-data" },
             { "label": "Signal Input", "to": "framework/angular/examples/signal-input" },
+            { "label": "Row Selection (Signal)", "to": "framework/angular/examples/row-selection-signal" },
             { "label": "Editable data", "to": "framework/angular/examples/editable" },
             { "label": "Row Drag & Drop", "to": "framework/angular/examples/row-dnd" }
           ]
@@ -1231,8 +1112,7 @@
         {
           "label": "lit",
           "children": [
-            { "label": "Composable Tables", "to": "framework/lit/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/lit/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/lit/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/lit/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/lit/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/lit/examples/virtualized-infinite-scrolling" }
@@ -1241,9 +1121,8 @@
         {
           "label": "react",
           "children": [
-            { "label": "Composable Tables", "to": "framework/react/examples/composable-tables" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/react/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/react/examples/custom-plugin" },
-            { "label": "Sub Components", "to": "framework/react/examples/sub-components" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/react/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Columns (Exp)", "to": "framework/react/examples/virtualized-columns-experimental" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/react/examples/virtualized-rows" },
@@ -1257,8 +1136,7 @@
         {
           "label": "solid",
           "children": [
-            { "label": "Composable Tables", "to": "framework/solid/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/solid/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/solid/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/solid/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/solid/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/solid/examples/virtualized-infinite-scrolling" },
@@ -1270,8 +1148,7 @@
         {
           "label": "svelte",
           "children": [
-            { "label": "Composable Tables", "to": "framework/svelte/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/svelte/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/svelte/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/svelte/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/svelte/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/svelte/examples/virtualized-infinite-scrolling" },
@@ -1282,8 +1159,7 @@
         {
           "label": "vue",
           "children": [
-            { "label": "Composable Tables", "to": "framework/vue/examples/composable-tables" },
-            { "label": "Sub Components", "to": "framework/vue/examples/sub-components" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/vue/examples/composable-tables" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/vue/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/vue/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/vue/examples/virtualized-infinite-scrolling" },
@@ -1294,9 +1170,8 @@
         {
           "label": "preact",
           "children": [
-            { "label": "Composable Tables", "to": "framework/preact/examples/composable-tables" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/preact/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/preact/examples/custom-plugin" },
-            { "label": "Sub Components", "to": "framework/preact/examples/sub-components" },
             { "label": "With TanStack Query", "to": "framework/preact/examples/with-tanstack-query" }
           ]
         }

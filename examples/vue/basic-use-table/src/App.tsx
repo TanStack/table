@@ -1,5 +1,6 @@
 import { defineComponent, ref } from 'vue'
 import { FlexRender, tableFeatures, useTable } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import type {
   Cell,
   ColumnDef,
@@ -52,9 +53,9 @@ const defaultData: Array<Person> = [
   },
 ]
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: 'First Name',
@@ -92,18 +93,16 @@ export default defineComponent({
     const data = ref([...defaultData])
 
     const table = useTable({
+      key: 'basic-use-table', // needed for devtools
       debugTable: true,
-      _features,
-      _rowModels: {},
+      features,
       columns,
       get data() {
         return data.value
       },
     })
 
-    const rerender = () => {
-      data.value = [...defaultData]
-    }
+    useTanStackTableDevtools(table)
 
     return () => (
       <div class="demo-root">
@@ -111,10 +110,10 @@ export default defineComponent({
           <thead>
             {table
               .getHeaderGroups()
-              .map((headerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id}>
                         {header.isPlaceholder ? null : (
                           <FlexRender header={header} />
@@ -128,11 +127,11 @@ export default defineComponent({
           <tbody>
             {table
               .getRowModel()
-              .rows.map((row: Row<typeof _features, Person>) => (
+              .rows.map((row: Row<typeof features, Person>) => (
                 <tr key={row.id}>
                   {row
                     .getAllCells()
-                    .map((cell: Cell<typeof _features, Person, unknown>) => (
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
                       <td key={cell.id}>
                         <FlexRender cell={cell} />
                       </td>
@@ -143,10 +142,10 @@ export default defineComponent({
           <tfoot>
             {table
               .getFooterGroups()
-              .map((footerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((footerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={footerGroup.id}>
                   {footerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id}>
                         {header.isPlaceholder ? null : (
                           <FlexRender footer={header} />
@@ -158,10 +157,6 @@ export default defineComponent({
               ))}
           </tfoot>
         </table>
-        <div class="spacer-md" />
-        <button onClick={rerender} class="demo-button">
-          Rerender
-        </button>
       </div>
     )
   },

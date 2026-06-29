@@ -9,11 +9,12 @@ title: table_getOrderColumnsFn
 function table_getOrderColumnsFn<TFeatures, TData>(table): (columns) => Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L139)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L144)
 
-Returns order columns fn for the table.
+Creates the ordering function used to arrange leaf columns.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The returned function applies `state.columnOrder`, preserves unspecified
+columns in their original order, then delegates to grouping rules.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -41,14 +42,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 #### columns
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ### Returns
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getOrderColumnsFn(table)
+const orderColumnsForTable = table_getOrderColumnsFn(table)
 ```

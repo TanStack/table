@@ -30,7 +30,7 @@ derived atoms, stores, and table APIs read a consistent snapshot.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -39,5 +39,5 @@ derived atoms, stores, and table APIs read a consistent snapshot.
 ## Example
 
 ```ts
-const value = table_syncExternalStateToBaseAtoms(table)
+table_syncExternalStateToBaseAtoms(table)
 ```

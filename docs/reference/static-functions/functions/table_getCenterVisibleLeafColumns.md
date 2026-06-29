@@ -6,14 +6,15 @@ title: table_getCenterVisibleLeafColumns
 # Function: table\_getCenterVisibleLeafColumns()
 
 ```ts
-function table_getCenterVisibleLeafColumns<TFeatures, TData>(table): any[];
+function table_getCenterVisibleLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:797](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L797)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:846](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L846)
 
-Returns center visible leaf columns for the table.
+Resolves visible leaf columns that are not pinned.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+This is the center partition used by layouts that render pinned columns
+separately from the scrollable middle region.
 
 ## Type Parameters
 
@@ -29,14 +30,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getCenterVisibleLeafColumns(table)
+const columns = table_getCenterVisibleLeafColumns(table)
 ```

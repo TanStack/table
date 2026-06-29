@@ -12,7 +12,7 @@ function shouldAutoRemoveFilter<TFeatures, TData, TValue>(
    column?): boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:304](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L304)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:315](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L315)
 
 Returns whether a filter value should be removed from filter state.
 
@@ -44,7 +44,7 @@ This checks the filter function's `autoRemove` hook and built-in empty-value rul
 
 ### column?
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 

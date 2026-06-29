@@ -7,6 +7,7 @@ import {
   createTable,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
@@ -16,20 +17,18 @@ import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { For, createEffect, createSignal } from 'solid-js'
 import { makeData } from './makeData'
-import type { Column, FilterFn, SortFn } from '@tanstack/solid-table'
+import type { FilterFn, SortFn, TableFeatures } from '@tanstack/solid-table'
+import type { Column } from '@tanstack/solid-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
-  columnFilteringFeature,
-  globalFilteringFeature,
-  rowSortingFeature,
-  rowPaginationFeature,
-})
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-const fuzzyFilter: FilterFn<typeof _features, Person> = (
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
   row,
   columnId,
   value,
@@ -40,7 +39,7 @@ const fuzzyFilter: FilterFn<typeof _features, Person> = (
   return itemRank.passed
 }
 
-const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   let dir = 0
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (rowA.columnFiltersMeta[columnId]) {
@@ -52,14 +51,20 @@ const fuzzySort: SortFn<typeof _features, Person> = (rowA, rowB, columnId) => {
   return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
 }
 
-declare module '@tanstack/solid-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<typeof _features, Person>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
-}
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
+})
+
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('id', {
@@ -80,25 +85,17 @@ const columns = columnHelper.columns([
     header: 'Full Name',
     cell: (info) => info.getValue(),
     filterFn: 'fuzzy',
-    sortFn: fuzzySort,
+    sortFn: 'fuzzy',
   }),
 ])
 
 function App() {
   const [data, setData] = createSignal<Array<Person>>(makeData(5_000))
   const refreshData = () => setData(makeData(5_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
-  const table = createTable<typeof _features, Person>({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel({
-        ...filterFns,
-        fuzzy: fuzzyFilter,
-      }),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
+  const table = createTable<typeof features, Person>({
+    features,
     columns,
     get data() {
       return data()
@@ -110,8 +107,8 @@ function App() {
   })
 
   createEffect(() => {
-    if (table.store.state.columnFilters[0]?.id === 'fullName') {
-      if (table.store.state.sorting[0]?.id !== 'fullName') {
+    if (table.atoms.columnFilters.get()[0]?.id === 'fullName') {
+      if (table.atoms.sorting.get()[0]?.id !== 'fullName') {
         table.setSorting([{ id: 'fullName', desc: false }])
       }
     }
@@ -121,11 +118,11 @@ function App() {
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div>
         <DebouncedInput
-          value={(table.store.state.globalFilter ?? '') as string}
+          value={(table.atoms.globalFilter.get() ?? '') as string}
           onChange={(value) => table.setGlobalFilter(String(value))}
           class="summary-panel"
           placeholder="Search all columns..."
@@ -221,7 +218,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -229,7 +226,7 @@ function App() {
           | Go to page:
           <input
             type="number"
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -240,7 +237,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
         >
           <For each={[10, 20, 30, 40, 50]}>
@@ -251,12 +248,12 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }
 
-function Filter({ column }: { column: Column<typeof _features, Person> }) {
+function Filter({ column }: { column: Column<typeof features, Person> }) {
   const columnFilterValue = () => column.getFilterValue()
 
   return (

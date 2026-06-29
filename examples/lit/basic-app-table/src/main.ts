@@ -15,12 +15,11 @@ import type { Person } from './makeData'
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, we want sorting.
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: tableFeatures({
+  features: tableFeatures({
     rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
   }),
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
   debugTable: true,
 })
 
@@ -88,10 +87,6 @@ class LitTableExample extends LitElement {
       (state) => ({ sorting: state.sorting }),
     )
   })()
-
-  private rerender() {
-    this.data = makeData(20)
-  }
 
   // 8. Render your table markup from the table instance APIs
   protected render(): unknown {
@@ -190,10 +185,6 @@ class LitTableExample extends LitElement {
             )}
           </tfoot>
         </table>
-        <div class="spacer-md"></div>
-        <button @click=${() => this.rerender()} class="demo-button">
-          Rerender (sort by age)
-        </button>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>

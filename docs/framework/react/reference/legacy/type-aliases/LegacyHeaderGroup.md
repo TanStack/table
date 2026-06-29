@@ -9,7 +9,7 @@ title: LegacyHeaderGroup
 type LegacyHeaderGroup<TData> = HeaderGroup<StockFeatures, TData>;
 ```
 
-Defined in: [useLegacyTable.ts:321](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L321)
+Defined in: [useLegacyTable.ts:322](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L322)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: injectFlexRenderContext
 function injectFlexRenderContext<T>(): T;
 ```
 
-Defined in: [flex-render/context.ts:12](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/context.ts#L12)
+Defined in: [packages/angular-table/src/flex-render/context.ts:12](https://github.com/TanStack/table/blob/main/packages/angular-table/src/flex-render/context.ts#L12)
 
 Inject the flex render context props.
 

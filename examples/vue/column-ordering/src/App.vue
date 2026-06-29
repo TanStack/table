@@ -13,12 +13,12 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import type { Column } from '@tanstack/vue-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnVisibilityFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const data = ref(makeData(20))
 
@@ -78,36 +78,30 @@ const stressTest = () => {
   data.value = makeData(1_000)
 }
 
-const table = useTable(
-  {
-    _features,
-    data,
-    get columns() {
-      return columns.value
-    },
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
+const table = useTable({
+  features,
+  data,
+  get columns() {
+    return columns.value
   },
-  (state) => ({
-    columnOrder: state.columnOrder,
-    columnVisibility: state.columnVisibility,
-  }),
-)
+  debugTable: true,
+  debugHeaders: true,
+  debugColumns: true,
+})
 
 const randomizeColumns = () => {
   table.setColumnOrder(
     faker.helpers.shuffle(
       table
         .getAllLeafColumns()
-        .map((column: Column<typeof _features, Person>) => column.id),
+        .map((column: Column<typeof features, Person>) => column.id),
     ),
   )
 }
 
-function toggleColumnVisibility(column: Column<typeof _features, Person>) {
+function toggleColumnVisibility(column: Column<typeof features, Person>) {
   table.setColumnVisibility({
-    ...table.state.columnVisibility,
+    ...table.atoms.columnVisibility.get(),
     [column.id]: !column.getIsVisible(),
   })
 }
@@ -115,7 +109,7 @@ function toggleColumnVisibility(column: Column<typeof _features, Person>) {
 function toggleAllColumnsVisibility() {
   table
     .getAllLeafColumns()
-    .forEach((column: Column<typeof _features, Person>) => {
+    .forEach((column: Column<typeof features, Person>) => {
       toggleColumnVisibility(column)
     })
 }
@@ -201,7 +195,7 @@ function toggleAllColumnsVisibility() {
         </tr>
       </tfoot>
     </table>
-    <pre>{{ JSON.stringify(table.state.columnOrder, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.atoms.columnOrder.get(), null, 2) }}</pre>
   </div>
 </template>
 

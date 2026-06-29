@@ -6,14 +6,14 @@ title: table_getLeftFooterGroups
 # Function: table\_getLeftFooterGroups()
 
 ```ts
-function table_getLeftFooterGroups<TFeatures, TData>(table): any[];
+function table_getLeftFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L430)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:464](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L464)
 
-Returns left footer groups for the table.
+Builds footer groups for the left pinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Footer groups reuse the left header groups in reverse order.
 
 ## Type Parameters
 
@@ -29,14 +29,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`HeaderGroup`](../../index/interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ## Example
 
 ```ts
-const value = table_getLeftFooterGroups(table)
+const footerGroups = table_getLeftFooterGroups(table)
 ```

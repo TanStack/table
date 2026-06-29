@@ -5,7 +5,9 @@ import {
   TanStackTable,
   TanStackTableCell,
   TanStackTableHeader,
+  flexRenderComponent,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { makeProductData } from '../../makeData'
 import { createAppColumnHelper, injectAppTable } from '../../table'
 import type { Product } from '../../makeData'
@@ -25,9 +27,19 @@ export const productColumnHelper = createAppColumnHelper<Product>()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsTable {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
   readonly data = signal(makeProductData(1_000))
 
   readonly columns = productColumnHelper.columns([
+    productColumnHelper.display({
+      id: 'select',
+      header: ({ header }) => flexRenderComponent(header.SelectHeader),
+      cell: ({ cell }) => flexRenderComponent(cell.SelectCell),
+    }),
     productColumnHelper.accessor('name', {
       header: 'Product Name',
       footer: (props) => props.column.id,
@@ -56,9 +68,11 @@ export class ProductsTable {
   ])
 
   table = injectAppTable(() => ({
+    key: 'products-table', // needed for devtools
     columns: this.columns,
     data: this.data(),
     getRowId: (row) => row.id,
+    enableRowSelection: true,
     // more table options
   }))
 

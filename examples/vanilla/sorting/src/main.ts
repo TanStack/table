@@ -15,20 +15,26 @@ import type { Person } from './makeData'
 
 let data = makeData(1_000)
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
-  coreReativityFeature: storeReactivityBindings(),
+  coreReactivityFeature: storeReactivityBindings(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 // Custom sorting logic for one of our enum columns
-const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
+const sortStatusFn: SortFn<typeof features, Person> = (
+  rowA,
+  rowB,
+  _columnId,
+) => {
   const statusA = rowA.original.status
   const statusB = rowB.original.status
   const statusOrder = ['single', 'complicated', 'relationship']
   return statusOrder.indexOf(statusA) - statusOrder.indexOf(statusB)
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -80,9 +86,9 @@ const renderTable = () => {
   })
 
   const stressTestBtn = document.createElement('button')
-  stressTestBtn.textContent = 'Stress Test (500k rows)'
+  stressTestBtn.textContent = 'Stress Test (1M rows)'
   stressTestBtn.addEventListener('click', () => {
-    data = makeData(500_000)
+    data = makeData(1_000_000)
     table.setOptions((prev) => ({ ...prev, data }))
   })
 
@@ -161,10 +167,7 @@ const renderTable = () => {
 }
 
 const table = constructTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   data,
   columns,
   debugTable: true,

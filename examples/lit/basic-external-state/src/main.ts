@@ -18,12 +18,15 @@ import type { Person } from './makeData'
 
 // This example demonstrates managing table state externally via Lit's @state() decorator instead of letting the table manage its own state internally.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -53,7 +56,7 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   // Manage sorting state with Lit's @state() decorator
   @state()
@@ -67,11 +70,7 @@ class LitTableExample extends LitElement {
     // Create the table and pass state + onChange handlers
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
+        features,
         columns,
         data: this._data,
         state: {
@@ -107,10 +106,10 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click=${() => {
-              this._data = makeData(200_000)
+              this._data = makeData(1_000_000)
             }}
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <table>
@@ -228,13 +227,7 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div class="spacer-md"></div>
-        <pre>
-${JSON.stringify(
-            { sorting: this.sorting, pagination: this.pagination },
-            null,
-            2,
-          )}</pre
-        >
+        <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

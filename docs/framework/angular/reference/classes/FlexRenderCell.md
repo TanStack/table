@@ -5,7 +5,7 @@ title: FlexRenderCell
 
 # Class: FlexRenderCell\<TFeatures, TData, TValue\>
 
-Defined in: [helpers/flexRenderCell.ts:62](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L62)
+Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:62](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L62)
 
 Simplified directive wrapper of `*flexRender`.
 
@@ -64,7 +64,7 @@ import {FlexRender} from '@tanstack/angular-table
 new FlexRenderCell<TFeatures, TData, TValue>(): FlexRenderCell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [helpers/flexRenderCell.ts:118](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L118)
+Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:118](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L118)
 
 #### Returns
 
@@ -78,7 +78,7 @@ Defined in: [helpers/flexRenderCell.ts:118](https://github.com/TanStack/table/bl
 readonly cell: InputSignal<Cell<TFeatures, TData, TValue> | undefined>;
 ```
 
-Defined in: [helpers/flexRenderCell.ts:67](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L67)
+Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:67](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L67)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [helpers/flexRenderCell.ts:67](https://github.com/TanStack/table/blo
 readonly footer: InputSignal<Header<TFeatures, TData, TValue> | undefined>;
 ```
 
-Defined in: [helpers/flexRenderCell.ts:75](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L75)
+Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:75](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L75)
 
 ***
 
@@ -98,4 +98,4 @@ Defined in: [helpers/flexRenderCell.ts:75](https://github.com/TanStack/table/blo
 readonly header: InputSignal<Header<TFeatures, TData, TValue> | undefined>;
 ```
 
-Defined in: [helpers/flexRenderCell.ts:71](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L71)
+Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:71](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L71)

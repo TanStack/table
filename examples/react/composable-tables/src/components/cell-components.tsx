@@ -4,7 +4,36 @@
  * These components can be used via the pre-bound cellComponents
  * in AppCell children, e.g., <cell.TextCell />
  */
-import { useCellContext } from '../hooks/table'
+import { Subscribe } from '@tanstack/react-table'
+import { useCellContext, useTableContext } from '../hooks/table'
+import { IndeterminateCheckbox } from './indeterminate-checkbox'
+
+/**
+ * Row-selection checkbox cell - toggles selection for the current row.
+ *
+ * The `Subscribe` boundary is required to work around React Compiler
+ * memoization: the checkbox reads `row.getIsSelected()` (a table API call, not
+ * a prop or hook the compiler can track), so without an explicit subscription
+ * to the row-selection state it would never re-render when selection changes.
+ */
+export function SelectCell() {
+  const cell = useCellContext()
+  const table = useTableContext()
+  const row = cell.row
+
+  return (
+    <Subscribe source={table.atoms.rowSelection}>
+      {() => (
+        <IndeterminateCheckbox
+          checked={row.getIsSelected()}
+          disabled={!row.getCanSelect()}
+          indeterminate={row.getIsSomeSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      )}
+    </Subscribe>
+  )
+}
 
 /**
  * Generic text cell renderer

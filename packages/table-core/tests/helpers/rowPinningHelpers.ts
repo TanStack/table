@@ -1,5 +1,9 @@
+import { table } from 'node:console'
 import { vi } from 'vitest'
-import { getDefaultRowPinningState } from '../../src/features/row-pinning/rowPinningFeature.utils'
+import {
+  getDefaultRowPinningState,
+  table_setRowPinning,
+} from '../../src/features/row-pinning/rowPinningFeature.utils'
 import {
   constructTable,
   coreFeatures,
@@ -9,21 +13,28 @@ import {
 import { generateTestData } from '../fixtures/data/generateTestData'
 import { storeReactivityBindings } from '../../src/store-reactivity-bindings'
 import { generateTestTableWithData } from './generateTestTable'
-import type { ColumnDef, RowPinningState, TableOptions } from '../../src'
+import type {
+  ColumnDef,
+  RowPinningState,
+  StockFeatures,
+  TableOptions,
+  Table_Internal,
+  Table_RowPinning,
+} from '../../src'
 import type { Person } from '../fixtures/data/types'
 
 // Define feature set with proper typing
-const _features = {
+const features = {
   ...coreFeatures,
   rowPinningFeature,
-  coreReativityFeature: storeReactivityBindings(),
+  coreReactivityFeature: storeReactivityBindings(),
 } as any
 
 type personKeys = keyof Person
-type PersonColumn = ColumnDef<typeof _features, Person, any>
+type PersonColumn = ColumnDef<typeof features, Person, any>
 
 function generateColumnDefs(people: Array<Person>): Array<PersonColumn> {
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
   const person = people[0]
 
   if (!person) {
@@ -44,7 +55,7 @@ export function createTableWithPinningState(
     initialState: {
       rowPinning: pinningState ?? getDefaultRowPinningState(),
     },
-    _features: {
+    features: {
       rowPinning: rowPinningFeature,
     },
   } as any)
@@ -52,23 +63,25 @@ export function createTableWithPinningState(
 }
 
 export function createTableWithMockOnPinningChange(rowCount = 10): {
-  table: ReturnType<typeof generateTestTableWithData>
+  table: Table_Internal<StockFeatures, Person> &
+    Table_RowPinning<StockFeatures, Person>
   onRowPinningChangeMock: ReturnType<typeof vi.fn>
 } {
   const onRowPinningChangeMock = vi.fn()
   const table = generateTestTableWithData(rowCount, {
-    _features: {
+    features: {
       rowPinning: rowPinningFeature,
     },
-  } as any)
+  } as any) as Table_Internal<StockFeatures, Person> &
+    Table_RowPinning<StockFeatures, Person>
   table.options.onRowPinningChange = onRowPinningChangeMock
   return { table, onRowPinningChangeMock }
 }
 
 export function createRowPinningTable(
   options?: Omit<
-    TableOptions<typeof _features, Person>,
-    'data' | 'columns' | '_features'
+    TableOptions<typeof features, Person>,
+    'data' | 'columns' | 'features'
   >,
   lengths: Array<number> | number = 10,
 ): any {
@@ -76,9 +89,8 @@ export function createRowPinningTable(
   const data = generateTestData(...lengthsArray)
   const columns = generateColumnDefs(data)
 
-  const table = constructTable<typeof _features, Person>({
-    _features,
-    _rowModels: {},
+  const table = constructTable<typeof features, Person>({
+    features,
     data,
     columns,
     getSubRows: (row: any) => row.subRows,

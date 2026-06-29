@@ -6,8 +6,8 @@ import type { Cell } from '../../types/Cell'
 import type { Column } from '../../types/Column'
 
 export interface CellContext<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   cell: Cell<TFeatures, TData, TValue>
@@ -19,8 +19,8 @@ export interface CellContext<
 }
 
 export interface Cell_CoreProperties<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -42,8 +42,8 @@ export interface Cell_CoreProperties<
 }
 
 export interface Cell_Cell<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > extends Cell_CoreProperties<TFeatures, TData, TValue> {
   /**

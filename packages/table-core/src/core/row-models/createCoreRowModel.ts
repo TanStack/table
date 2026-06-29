@@ -1,7 +1,7 @@
 import { constructRow } from '../rows/constructRow'
-import { tableMemo } from '../../utils'
+import { makeObjectMap, tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
-import type { Table, Table_Internal } from '../../types/Table'
+import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
@@ -15,9 +15,10 @@ import type { RowData } from '../../types/type-utils'
 export function createCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
-  return (_table) => {
-    const table: Table_Internal<TFeatures, TData> = _table
+>(): (
+  table: Table_Internal<TFeatures, TData>,
+) => () => RowModel<TFeatures, TData> {
+  return (table) => {
     return tableMemo({
       feature: 'coreRowModelsFeature',
       table,
@@ -43,7 +44,7 @@ function _createCoreRowModel<
   const rowModel: RowModel<TFeatures, TData> = {
     rows: [],
     flatRows: [],
-    rowsById: {},
+    rowsById: makeObjectMap(),
   }
 
   const accessRows = (

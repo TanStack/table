@@ -6,12 +6,9 @@ title: columnOrderingFeature
 # Variable: columnOrderingFeature
 
 ```ts
-const columnOrderingFeature: TableFeature<ColumnOrderingFeatureConstructors<TableFeatures, RowData>>;
+const columnOrderingFeature: TableFeature;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.ts#L104)
+Defined in: [features/column-ordering/columnOrderingFeature.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.ts#L20)
 
-The stock column ordering feature.
-
-Register this feature to add column order state and APIs for deriving the
-ordered leaf column list alongside grouping and pinning.
+Feature that adds column ordering state and APIs for ordering leaf columns.

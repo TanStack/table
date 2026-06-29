@@ -24,12 +24,16 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnSizingFeature,
     rowPinningFeature,
     rowExpandingFeature,
     columnFilteringFeature,
     rowPaginationFeature,
+    filteredRowModel: createFilteredRowModel(),
+    expandedRowModel: createExpandedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filterFns,
   })
 
   const [rowPinning, setRowPinning] = createTableState<RowPinningState>({
@@ -50,12 +54,7 @@
   const table = createTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        expandedRowModel: createExpandedRowModel(),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      features,
       columns: [
         {
           id: 'pin',
@@ -179,7 +178,7 @@
   </tr>
 {/snippet}
 
-{#snippet Filter(column: Column<typeof _features, Person>, tableRef: SvelteTable<typeof _features, Person, any>)}
+{#snippet Filter(column: Column<typeof features, Person>, tableRef: SvelteTable<typeof features, Person, any>)}
   {@const firstValue = tableRef
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)}
@@ -382,14 +381,5 @@
       </label>
     </div>
   </div>
-  <div>
-    <button class="demo-button demo-button-spaced" onclick={() => refreshData()
-    }>
-      Regenerate Data
-    </button>
-    <button class="demo-button demo-button-spaced" onclick={() => stressTest()}>
-      Stress Test (200k rows)
-    </button>
-  </div>
-  <div>{JSON.stringify(table.state.rowPinning, null, 2)}</div>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

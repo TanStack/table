@@ -1,4 +1,9 @@
-import { cloneState } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  hasOwn,
+  makeObjectMap,
+} from '../../utils'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -9,27 +14,29 @@ import type { RowSelectionState } from './rowSelectionFeature.types'
 // State APIs
 
 /**
- * Returns the default row selection state.
+ * Creates the default row selection state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty map, meaning no rows are selected. Reset APIs
+ * use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultRowSelectionState()
+ * const selection = getDefaultRowSelectionState()
  * ```
  */
 export function getDefaultRowSelectionState(): RowSelectionState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
- * Updates the table's row selection state slice.
+ * Routes a row selection updater through the table's selection change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next selection map or a function of the previous map,
+ * matching the instance `table.setRowSelection` behavior.
  *
  * @example
  * ```ts
- * table_setRowSelection(table, (old) => old)
+ * table_setRowSelection(table, (old) => ({ ...old, [rowId]: true }))
  * ```
  */
 export function table_setRowSelection<
@@ -43,9 +50,10 @@ export function table_setRowSelection<
 }
 
 /**
- * Resets the table's row selection state slice.
+ * Resets `rowSelection` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.rowSelection` when it
+ * exists. Passing `true` ignores initial state and resets to `{}`.
  *
  * @example
  * ```ts
@@ -59,16 +67,22 @@ export function table_resetRowSelection<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setRowSelection(
     table,
-    defaultState ? {} : cloneState(table.initialState.rowSelection ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : Object.assign(
+          makeObjectMap<true>(),
+          cloneState(table.initialState.rowSelection ?? {}),
+        ),
   )
 }
 
 // Table APIs
 
 /**
- * Toggles all rows selected for the table.
+ * Selects or deselects every selectable row before grouping.
  *
- * This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+ * Omitting `value` toggles based on `table_getIsAllRowsSelected(table)`.
+ * Deselecting removes matching ids from the existing selection map.
  *
  * @example
  * ```ts
@@ -78,23 +92,36 @@ export function table_resetRowSelection<
 export function table_toggleAllRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, value?: boolean) {
+>(
+  table: Table_Internal<TFeatures, TData>,
+  value?: boolean,
+  opts?: { deselectAll?: boolean },
+) {
   table_setRowSelection(table, (old) => {
     value =
-      typeof value !== 'undefined' ? value : !table_getIsAllRowsSelected(table)
+      typeof value !== 'undefined'
+        ? value
+        : !callMemoOrStaticFn(
+            table,
+            'getIsAllRowsSelected',
+            table_getIsAllRowsSelected,
+          )
 
-    const rowSelection = { ...old }
+    if (opts?.deselectAll && !value) {
+      // deselectAll opt: clear the whole selection map instead of deleting ids one-by-one
+      return makeObjectMap<true>()
+    }
 
+    const rowSelection = Object.assign(makeObjectMap<true>(), old)
     const preGroupedFlatRows = table.getPreGroupedRowModel().flatRows
 
     // We don't use `mutateRowIsSelected` here for performance reasons.
     // All of the rows are flat already, so it wouldn't be worth it
     if (value) {
       preGroupedFlatRows.forEach((row) => {
-        if (!row_getCanSelect(row)) {
-          return
+        if (row_getCanSelect(row)) {
+          rowSelection[row.id] = true
         }
-        rowSelection[row.id] = true
       })
     } else {
       preGroupedFlatRows.forEach((row) => {
@@ -107,9 +134,10 @@ export function table_toggleAllRowsSelected<
 }
 
 /**
- * Toggles all page rows selected for the table.
+ * Selects or deselects every selectable row on the current page.
  *
- * This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+ * Omitting `value` toggles based on `table_getIsAllPageRowsSelected(table)`.
+ * Child rows are included when sub-row selection allows it.
  *
  * @example
  * ```ts
@@ -119,14 +147,30 @@ export function table_toggleAllRowsSelected<
 export function table_toggleAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>, value?: boolean) {
+>(
+  table: Table_Internal<TFeatures, TData>,
+  value?: boolean,
+  opts?: { deselectAll?: boolean },
+) {
   table_setRowSelection(table, (old) => {
     const resolvedValue =
       typeof value !== 'undefined'
         ? value
-        : !table_getIsAllPageRowsSelected(table)
+        : !callMemoOrStaticFn(
+            table,
+            'getIsAllPageRowsSelected',
+            table_getIsAllPageRowsSelected,
+          )
 
-    const rowSelection: RowSelectionState = { ...old }
+    if (opts?.deselectAll && !resolvedValue) {
+      // deselectAll opt: clear the whole selection map instead of deleting ids one-by-one
+      return makeObjectMap<true>()
+    }
+
+    const rowSelection: RowSelectionState = Object.assign(
+      makeObjectMap<true>(),
+      old,
+    )
 
     table.getRowModel().rows.forEach((row) => {
       mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
@@ -137,13 +181,14 @@ export function table_toggleAllPageRowsSelected<
 }
 
 /**
- * Returns pre selected row model for the table.
+ * Reads the row model before row selection is projected into selected rows.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Selection does not alter the base row pipeline, so this returns the core row
+ * model.
  *
  * @example
  * ```ts
- * const value = table_getPreSelectedRowModel(table)
+ * const rowsBeforeSelection = table_getPreSelectedRowModel(table)
  * ```
  */
 export function table_getPreSelectedRowModel<
@@ -154,13 +199,14 @@ export function table_getPreSelectedRowModel<
 }
 
 /**
- * Returns selected row model for the table.
+ * Builds a row model containing selected rows from the core row model.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * If no row ids are selected, an empty row model is returned without walking
+ * the rows.
  *
  * @example
  * ```ts
- * const value = table_getSelectedRowModel(table)
+ * const selectedRows = table_getSelectedRowModel(table)
  * ```
  */
 export function table_getSelectedRowModel<
@@ -169,25 +215,32 @@ export function table_getSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (
+    !callMemoOrStaticFn(
+      table,
+      'getIsSomeRowsSelected',
+      table_getIsSomeRowsSelected,
+    )
+  ) {
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
-  return selectRowsFn(rowModel)
+  return selectRowsFn(rowModel, table)
 }
 
 /**
- * Returns filtered selected row model for the table.
+ * Builds a row model containing selected rows from the filtered row model.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * If no row ids are selected, an empty row model is returned without walking
+ * the rows.
  *
  * @example
  * ```ts
- * const value = table_getFilteredSelectedRowModel(table)
+ * const selectedRows = table_getFilteredSelectedRowModel(table)
  * ```
  */
 export function table_getFilteredSelectedRowModel<
@@ -196,25 +249,32 @@ export function table_getFilteredSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (
+    !callMemoOrStaticFn(
+      table,
+      'getIsSomeRowsSelected',
+      table_getIsSomeRowsSelected,
+    )
+  ) {
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
-  return selectRowsFn(rowModel)
+  return selectRowsFn(rowModel, table)
 }
 
 /**
- * Returns grouped selected row model for the table.
+ * Builds a row model containing selected rows from the grouped row model.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * If no row ids are selected, an empty row model is returned without walking
+ * the rows.
  *
  * @example
  * ```ts
- * const value = table_getGroupedSelectedRowModel(table)
+ * const selectedRows = table_getGroupedSelectedRowModel(table)
  * ```
  */
 export function table_getGroupedSelectedRowModel<
@@ -223,25 +283,47 @@ export function table_getGroupedSelectedRowModel<
 >(table: Table_Internal<TFeatures, TData>) {
   const rowModel = table.getCoreRowModel()
 
-  if (!Object.keys(table.atoms.rowSelection?.get() ?? {}).length) {
+  if (
+    !callMemoOrStaticFn(
+      table,
+      'getIsSomeRowsSelected',
+      table_getIsSomeRowsSelected,
+    )
+  ) {
     return {
       rows: [],
       flatRows: [],
-      rowsById: {},
+      rowsById: makeObjectMap(),
     }
   }
 
-  return selectRowsFn(rowModel)
+  return selectRowsFn(rowModel, table)
 }
 
 /**
- * Returns is all rows selected for the table.
- *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Returns the ids of all selected rows.
  *
  * @example
  * ```ts
- * const value = table_getIsAllRowsSelected(table)
+ * const selectedRowIds = table_getSelectedRowIds(table)
+ * ```
+ */
+export function table_getSelectedRowIds<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): Array<string> {
+  return Object.keys(table.atoms.rowSelection?.get() ?? {})
+}
+
+/**
+ * Checks whether every selectable filtered row is selected.
+ *
+ * The result is false when there are no filtered rows or when selection state is
+ * empty.
+ *
+ * @example
+ * ```ts
+ * const allSelected = table_getIsAllRowsSelected(table)
  * ```
  */
 export function table_getIsAllRowsSelected<
@@ -249,7 +331,7 @@ export function table_getIsAllRowsSelected<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const preGroupedFlatRows = table.getFilteredRowModel().flatRows
-  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
 
   let isAllRowsSelected = Boolean(
     preGroupedFlatRows.length && Object.keys(rowSelection).length,
@@ -258,7 +340,7 @@ export function table_getIsAllRowsSelected<
   if (isAllRowsSelected) {
     if (
       preGroupedFlatRows.some(
-        (row) => row_getCanSelect(row) && !rowSelection[row.id],
+        (row) => row_getCanSelect(row) && !isRowSelected(row, rowSelection),
       )
     ) {
       isAllRowsSelected = false
@@ -269,13 +351,13 @@ export function table_getIsAllRowsSelected<
 }
 
 /**
- * Returns is all page rows selected for the table.
+ * Checks whether every selectable row on the current page is selected.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Non-selectable rows are ignored for this calculation.
  *
  * @example
  * ```ts
- * const value = table_getIsAllPageRowsSelected(table)
+ * const allPageRowsSelected = table_getIsAllPageRowsSelected(table)
  * ```
  */
 export function table_getIsAllPageRowsSelected<
@@ -285,13 +367,13 @@ export function table_getIsAllPageRowsSelected<
   const paginationFlatRows = table
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
-  const rowSelection: RowSelectionState = table.atoms.rowSelection?.get() ?? {}
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
 
   let isAllPageRowsSelected = !!paginationFlatRows.length
 
   if (
     isAllPageRowsSelected &&
-    paginationFlatRows.some((row) => !rowSelection[row.id])
+    paginationFlatRows.some((row) => !isRowSelected(row, rowSelection))
   ) {
     isAllPageRowsSelected = false
   }
@@ -300,58 +382,52 @@ export function table_getIsAllPageRowsSelected<
 }
 
 /**
- * Returns is some rows selected for the table.
+ * Checks whether selection is partially applied across filtered rows.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * The result is true when at least one row id is selected
  *
  * @example
  * ```ts
- * const value = table_getIsSomeRowsSelected(table)
+ * const someRowsSelected = table_getIsSomeRowsSelected(table)
  * ```
  */
 export function table_getIsSomeRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const totalSelected = Object.keys(
-    table.atoms.rowSelection?.get() ?? {},
-  ).length
   return (
-    totalSelected > 0 &&
-    totalSelected < table.getFilteredRowModel().flatRows.length
+    callMemoOrStaticFn(table, 'getSelectedRowIds', table_getSelectedRowIds)
+      .length > 0
   )
 }
 
 /**
- * Returns is some page rows selected for the table.
- *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Checks whether the current page has a partial selection.
  *
  * @example
  * ```ts
- * const value = table_getIsSomePageRowsSelected(table)
+ * const somePageRowsSelected = table_getIsSomePageRowsSelected(table)
  * ```
  */
 export function table_getIsSomePageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const paginationFlatRows = table.getPaginatedRowModel().flatRows
-  return table_getIsAllPageRowsSelected(table)
-    ? false
-    : paginationFlatRows
-        .filter((row) => row_getCanSelect(row))
-        .some((row) => row_getIsSelected(row) || row_getIsSomeSelected(row))
+  return table
+    .getPaginatedRowModel()
+    .flatRows.filter((row) => row_getCanSelect(row))
+    .some((row) => row_getIsSelected(row) || row_getIsSomeSelected(row))
 }
 
 /**
- * Returns an event handler for all rows selected handler.
+ * Creates a checkbox-style handler that selects or deselects all rows.
  *
- * The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+ * The handler reads `event.target.checked`, so it is intended for controls whose
+ * checked state means "all rows selected".
  *
  * @example
  * ```ts
- * const value = table_getToggleAllRowsSelectedHandler(table)
+ * const onChange = table_getToggleAllRowsSelectedHandler(table)
  * ```
  */
 export function table_getToggleAllRowsSelectedHandler<
@@ -367,13 +443,14 @@ export function table_getToggleAllRowsSelectedHandler<
 }
 
 /**
- * Returns an event handler for all page rows selected handler.
+ * Creates a checkbox-style handler that selects or deselects current page rows.
  *
- * The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+ * The handler reads `event.target.checked`, so it is intended for controls whose
+ * checked state means "all page rows selected".
  *
  * @example
  * ```ts
- * const value = table_getToggleAllPageRowsSelectedHandler(table)
+ * const onChange = table_getToggleAllPageRowsSelectedHandler(table)
  * ```
  */
 export function table_getToggleAllPageRowsSelectedHandler<
@@ -391,13 +468,18 @@ export function table_getToggleAllPageRowsSelectedHandler<
 // Row APIs
 
 /**
- * Toggles selected for a row.
+ * Selects or deselects this row.
  *
- * The update is routed through the table state updater for the owning feature state slice.
+ * Omitting `value` toggles the row. Child rows are selected recursively unless
+ * `opts.selectChildren` is `false` or sub-row selection is disabled.
  *
  * @example
  * ```ts
  * row_toggleSelected(row)
+ * row_toggleSelected(row, true)
+ * row_toggleSelected(row, false)
+ * row_toggleSelected(row, true, { selectChildren: false })
+ * row_toggleSelected(row, false, { selectChildren: false })
  * ```
  */
 export function row_toggleSelected<
@@ -419,45 +501,46 @@ export function row_toggleSelected<
       return old
     }
 
-    const selectedRowIds = { ...old }
+    const rowSelection = Object.assign(makeObjectMap<true>(), old)
 
     mutateRowIsSelected(
-      selectedRowIds,
+      rowSelection,
       row.id,
       value,
       opts?.selectChildren ?? true,
       row.table,
     )
 
-    return selectedRowIds
+    return rowSelection
   })
 }
 
 /**
- * Returns is selected for a row.
+ * Checks whether this row id is selected in `state.rowSelection`.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Missing row ids are treated as not selected.
  *
  * @example
  * ```ts
- * const value = row_getIsSelected(row)
+ * const selected = row_getIsSelected(row)
  * ```
  */
 export function row_getIsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  return isRowSelected(row)
+  const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
+  return isRowSelected(row, rowSelection)
 }
 
 /**
- * Returns is some selected for a row.
+ * Checks whether some, but not all, selectable descendants are selected.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * This supports indeterminate selection UI for parent rows.
  *
  * @example
  * ```ts
- * const value = row_getIsSomeSelected(row)
+ * const partial = row_getIsSomeSelected(row)
  * ```
  */
 export function row_getIsSomeSelected<
@@ -468,13 +551,13 @@ export function row_getIsSomeSelected<
 }
 
 /**
- * Returns is all sub rows selected for a row.
+ * Checks whether all selectable descendants are selected.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * Rows without selectable descendants return false.
  *
  * @example
  * ```ts
- * const value = row_getIsAllSubRowsSelected(row)
+ * const allChildrenSelected = row_getIsAllSubRowsSelected(row)
  * ```
  */
 export function row_getIsAllSubRowsSelected<
@@ -485,13 +568,14 @@ export function row_getIsAllSubRowsSelected<
 }
 
 /**
- * Returns whether a row can use select.
+ * Checks whether this row can be selected.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.enableRowSelection` may be a boolean or a row predicate; it defaults
+ * to `true`.
  *
  * @example
  * ```ts
- * const value = row_getCanSelect(row)
+ * const canSelect = row_getCanSelect(row)
  * ```
  */
 export function row_getCanSelect<
@@ -507,13 +591,14 @@ export function row_getCanSelect<
 }
 
 /**
- * Returns whether a row can use select sub rows.
+ * Checks whether selecting this row should also select its subRows.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.enableSubRowSelection` may be a boolean or a row predicate; it
+ * defaults to `true`.
  *
  * @example
  * ```ts
- * const value = row_getCanSelectSubRows(row)
+ * const canSelectChildren = row_getCanSelectSubRows(row)
  * ```
  */
 export function row_getCanSelectSubRows<
@@ -529,13 +614,14 @@ export function row_getCanSelectSubRows<
 }
 
 /**
- * Returns whether a row can use multi select.
+ * Checks whether this row can be selected alongside other rows.
  *
- * This evaluates row data, table options, and feature-specific enablement rules.
+ * `options.enableMultiRowSelection` may be a boolean or a row predicate; it
+ * defaults to `true`.
  *
  * @example
  * ```ts
- * const value = row_getCanMultiSelect(row)
+ * const canMultiSelect = row_getCanMultiSelect(row)
  * ```
  */
 export function row_getCanMultiSelect<
@@ -551,13 +637,14 @@ export function row_getCanMultiSelect<
 }
 
 /**
- * Returns an event handler for toggling selected handler.
+ * Creates a checkbox-style handler that selects or deselects this row.
  *
- * The handler is intended for direct use in row-level controls such as expansion or selection buttons.
+ * The handler is a no-op when the row cannot be selected and reads
+ * `event.target.checked`.
  *
  * @example
  * ```ts
- * const value = row_getToggleSelectedHandler(row)
+ * const onChange = row_getToggleSelectedHandler(row)
  * ```
  */
 export function row_getToggleSelectedHandler<
@@ -579,28 +666,28 @@ const mutateRowIsSelected = <
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
-  selectedRowIds: Record<string, boolean | undefined>,
+  rowSelection: RowSelectionState,
   rowId: string,
   value: boolean,
   includeChildren: boolean,
   table: Table_Internal<TFeatures, TData>,
-) => {
+): void => {
   const row = table.getRow(rowId, true)
 
   if (value) {
     if (!row_getCanMultiSelect(row)) {
-      Object.keys(selectedRowIds).forEach((key) => delete selectedRowIds[key])
+      Object.keys(rowSelection).forEach((key) => delete rowSelection[key])
     }
     if (row_getCanSelect(row)) {
-      selectedRowIds[rowId] = true
+      rowSelection[rowId] = true
     }
   } else {
-    delete selectedRowIds[rowId]
+    delete rowSelection[rowId]
   }
 
   if (includeChildren && row.subRows.length && row_getCanSelectSubRows(row)) {
     row.subRows.forEach((r) =>
-      mutateRowIsSelected(selectedRowIds, r.id, value, includeChildren, table),
+      mutateRowIsSelected(rowSelection, r.id, value, includeChildren, table),
     )
   }
 }
@@ -608,46 +695,56 @@ const mutateRowIsSelected = <
 /**
  * Builds a row model containing rows selected by the current row selection state.
  *
- * The result is derived from the supplied row model, so selected ids absent from the current data are not materialized as rows.
+ * The result is derived from the supplied row model, so selected ids absent from
+ * that model are not materialized as rows.
  *
  * @example
  * ```ts
- * const selectedRows = selectRowsFn(table, rowModel)
+ * const selectedRows = selectRowsFn(rowModel)
  * ```
  */
 export function selectRowsFn<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(rowModel: RowModel<TFeatures, TData>): RowModel<TFeatures, TData> {
+>(
+  rowModel: RowModel<TFeatures, TData>,
+  table: Table_Internal<TFeatures, TData>,
+): RowModel<TFeatures, TData> {
   const newSelectedFlatRows: Array<Row<TFeatures, TData>> = []
-  const newSelectedRowsById: Record<string, Row<TFeatures, TData>> = {}
-
-  // Filters top level and nested rows
+  const newSelectedRowsById = makeObjectMap<Row<TFeatures, TData>>()
+  const rowSelection = table.atoms.rowSelection?.get() ?? {}
+  // Filters top level and nested rows.
   const recurseRows = (
     rows: Array<Row<TFeatures, TData>>,
     depth = 0,
   ): Array<Row<TFeatures, TData>> => {
-    return rows
-      .map((row) => {
-        const isSelected = isRowSelected(row)
+    const result: Array<Row<TFeatures, TData>> = []
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i]!
+      const isSelected = isRowSelected(row, rowSelection)
+
+      if (isSelected) {
+        newSelectedFlatRows.push(row)
+        newSelectedRowsById[row.id] = row
+      }
+
+      if (row.subRows.length) {
+        // Always recurse — selected descendants of unselected parents must
+        // still be collected into flatRows/rowsById.
+        const newSubRows = recurseRows(row.subRows, depth + 1)
 
         if (isSelected) {
-          newSelectedFlatRows.push(row)
-          newSelectedRowsById[row.id] = row
+          // Preserve prototype chain so methods like getValue() remain accessible
+          const cloned = Object.create(Object.getPrototypeOf(row))
+          Object.assign(cloned, row)
+          cloned.subRows = newSubRows
+          result.push(cloned)
         }
-
-        if (row.subRows.length) {
-          row = {
-            ...row,
-            subRows: recurseRows(row.subRows, depth + 1),
-          }
-        }
-
-        if (isSelected) {
-          return row
-        }
-      })
-      .filter((x) => !!x)
+      } else if (isSelected) {
+        result.push(row)
+      }
+    }
+    return result
   }
 
   return {
@@ -662,14 +759,14 @@ export function selectRowsFn<
  *
  * @example
  * ```ts
- * const selected = isRowSelected(row, selection)
+ * const selected = isRowSelected(row)
  * ```
  */
 export function isRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>): boolean {
-  return (row.table.atoms.rowSelection?.get() ?? {})[row.id] ?? false
+>(row: Row<TFeatures, TData>, rowSelection: RowSelectionState): boolean {
+  return !!(hasOwn(rowSelection, row.id) && rowSelection[row.id])
 }
 
 /**
@@ -679,7 +776,7 @@ export function isRowSelected<
  *
  * @example
  * ```ts
- * const selectedState = isSubRowSelected(row, selection, table)
+ * const selectedState = isSubRowSelected(row)
  * ```
  */
 export function isSubRowSelected<
@@ -687,6 +784,8 @@ export function isSubRowSelected<
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean | 'some' | 'all' {
   if (!row.subRows.length) return false
+
+  const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
 
   let allChildrenSelected = true
   let someSelected = false
@@ -698,7 +797,7 @@ export function isSubRowSelected<
     }
 
     if (row_getCanSelect(subRow)) {
-      if (isRowSelected(subRow)) {
+      if (isRowSelected(subRow, rowSelection)) {
         someSelected = true
       } else {
         allChildrenSelected = false

@@ -10,9 +10,9 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({ columnVisibilityFeature })
+const features = tableFeatures({ columnVisibilityFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -64,12 +64,10 @@ function App() {
   const [data, setData] = React.useState(() => makeData(20))
   const refreshData = () => setData(makeData(20))
   const stressTest = () => setData(makeData(1_000))
-  const rerender = React.useReducer(() => ({}), {})[1]
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       data,
       debugTable: true,
@@ -157,9 +155,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
       <div className="spacer-md" />
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>

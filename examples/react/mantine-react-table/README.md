@@ -11,7 +11,7 @@ The upstream package targets TanStack Table v8 + Mantine v7. This example has be
 ### TanStack Table v8 → v9
 
 - **`useReactTable` → `useTable`** with `state => state` selector.
-- **Row models**: `getCoreRowModel`/`getSortedRowModel`/etc. options replaced with `_features: stockFeatures` and `_rowModels: { sortedRowModel: createSortedRowModel(sortFns), … }`.
+- **Row models**: `getCoreRowModel`/`getSortedRowModel`/etc. options replaced with `features: stockFeatures` and `rowModels: { sortedRowModel: createSortedRowModel(sortFns), … }`.
 - **`createRow` → `constructRow`** (renamed v9 export).
 - **`sortingFn` → `sortFn`** on column defs and the `MRT_SortFn` type.
 - **`columnSizingInfo` state → `columnResizing`** (and `setColumnSizingInfo` → `setColumnResizing`).

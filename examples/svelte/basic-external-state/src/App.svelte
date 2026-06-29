@@ -19,12 +19,15 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
     rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    sortFns,
   })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.accessor('firstName', {
@@ -51,7 +54,7 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(200_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const [sorting, setSorting] = createTableState<SortingState>([])
   const [pagination, setPagination] = createTableState<PaginationState>({
@@ -61,11 +64,7 @@
 
   const table = createTable({
     debugTable: true,
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns,
     get data() {
       return data
@@ -86,7 +85,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <table>
     <thead>
@@ -199,11 +198,5 @@
     </select>
   </div>
   <div class="spacer-md"></div>
-  <pre>
-    {JSON.stringify(
-      { sorting: sorting(), pagination: pagination() },
-      null,
-      2,
-    )}
-  </pre>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

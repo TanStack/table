@@ -9,11 +9,12 @@ title: column_getAfter
 function column_getAfter<TFeatures, TData, TValue>(column, position): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L116)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L141)
 
-Returns after for a column.
+Computes the offset from the end edge of a pinning region after this column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The value is the sum of all following visible leaf column sizes in the
+requested region.
 
 ## Type Parameters
 
@@ -33,7 +34,7 @@ This derives the value from the column definition, table options, and the featur
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ### position
 
@@ -46,5 +47,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getAfter(column)
+const rightOffset = column_getAfter(column, 'right')
 ```

@@ -22,12 +22,15 @@ import type { Person } from './makeData'
 // reactive cell — you can read, write, or subscribe to it from anywhere,
 // which makes it convenient for sharing state across components or modules.
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -66,7 +69,7 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     // The table creates internal base atoms for every slice, and (because we
@@ -76,11 +79,7 @@ class LitTableExample extends LitElement {
     // flowing through the derived store triggers `host.requestUpdate()`.
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          sortedRowModel: createSortedRowModel(sortFns),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
+        features,
         columns,
         data: this._data,
         atoms: {
@@ -110,10 +109,10 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click=${() => {
-              this._data = makeData(200_000)
+              this._data = makeData(1_000_000)
             }}
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <table>
@@ -231,7 +230,7 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div class="spacer-md"></div>
-        <pre>${JSON.stringify({ sorting, pagination }, null, 2)}</pre>
+        <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

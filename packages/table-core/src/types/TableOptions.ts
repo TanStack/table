@@ -17,16 +17,19 @@ import type { TableOptions_RowPinning } from '../features/row-pinning/rowPinning
 import type { TableOptions_RowSelection } from '../features/row-selection/rowSelectionFeature.types'
 import type { TableOptions_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 import type { RowData, UnionToIntersection } from './type-utils'
-import type { ExtractFeatureTypes, TableFeatures } from './TableFeatures'
+import type {
+  ExtractFeatureMapTypes,
+  NonFeatureKeys,
+  TableFeatures,
+} from './TableFeatures'
 
-export interface TableOptions_Plugins<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {}
-
+/**
+ * Core options that are always available on a table, before optional feature
+ * options are mixed in.
+ */
 export interface TableOptions_Core<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 >
   extends
     TableOptions_Table<TFeatures, TData>,
@@ -35,7 +38,10 @@ export interface TableOptions_Core<
     TableOptions_Rows<TFeatures, TData> {}
 
 type DebugKeysFor<TFeatures extends TableFeatures> = {
-  [K in keyof TFeatures & string as `debug${Capitalize<K>}`]?: boolean
+  [K in Exclude<
+    keyof TFeatures & string,
+    NonFeatureKeys // meta, row model, and fn registry slots, not real features
+  > as `debug${Capitalize<K>}`]?: boolean
 }
 
 export type DebugOptions<TFeatures extends TableFeatures> = {
@@ -48,62 +54,80 @@ export type DebugOptions<TFeatures extends TableFeatures> = {
   debugTable?: boolean
 } & DebugKeysFor<CoreFeatures & TFeatures>
 
+export interface TableOptions_FeatureMap<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  columnFilteringFeature: TableOptions_ColumnFiltering<TFeatures, TData>
+  columnGroupingFeature: TableOptions_ColumnGrouping
+  columnOrderingFeature: TableOptions_ColumnOrdering
+  columnPinningFeature: TableOptions_ColumnPinning
+  columnResizingFeature: TableOptions_ColumnResizing
+  columnSizingFeature: TableOptions_ColumnSizing
+  columnVisibilityFeature: TableOptions_ColumnVisibility
+  globalFilteringFeature: TableOptions_GlobalFiltering<TFeatures, TData>
+  rowExpandingFeature: TableOptions_RowExpanding<TFeatures, TData>
+  rowPaginationFeature: TableOptions_RowPagination
+  rowPinningFeature: TableOptions_RowPinning<TFeatures, TData>
+  rowSelectionFeature: TableOptions_RowSelection<TFeatures, TData>
+  rowSortingFeature: TableOptions_RowSorting
+}
+
+type TableOptions_StockFeatureKeys =
+  | 'columnFilteringFeature'
+  | 'columnGroupingFeature'
+  | 'columnOrderingFeature'
+  | 'columnPinningFeature'
+  | 'columnResizingFeature'
+  | 'columnSizingFeature'
+  | 'columnVisibilityFeature'
+  | 'globalFilteringFeature'
+  | 'rowExpandingFeature'
+  | 'rowPaginationFeature'
+  | 'rowPinningFeature'
+  | 'rowSelectionFeature'
+  | 'rowSortingFeature'
+
+/**
+ * Plugin entries declaration-merged into `TableOptions_FeatureMap`, i.e. keys
+ * beyond the stock set. Resolves to `unknown` (an intersection no-op) when no
+ * plugins are merged so the common case skips the union-to-intersection work.
+ */
+type TableOptions_PluginFeatureMapTypes<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = [
+  Exclude<
+    keyof TableOptions_FeatureMap<TFeatures, TData>,
+    TableOptions_StockFeatureKeys
+  >,
+] extends [never]
+  ? unknown
+  : UnionToIntersection<
+      TableOptions_FeatureMap<TFeatures, TData>[Exclude<
+        keyof TableOptions_FeatureMap<TFeatures, TData>,
+        TableOptions_StockFeatureKeys
+      >]
+    >
+
+/**
+ * Complete table options for a specific feature set.
+ *
+ * Feature options are included only when their feature is present in
+ * `TFeatures`, then custom feature/plugin options and debug options are mixed
+ * in.
+ */
 export type TableOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
-  UnionToIntersection<
-    | ('columnFilteringFeature' extends keyof TFeatures
-        ? TableOptions_ColumnFiltering<TFeatures, TData>
-        : never)
-    | ('columnGroupingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnGrouping
-        : never)
-    | ('columnOrderingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnOrdering
-        : never)
-    | ('columnPinningFeature' extends keyof TFeatures
-        ? TableOptions_ColumnPinning
-        : never)
-    | ('columnResizingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnResizing
-        : never)
-    | ('columnSizingFeature' extends keyof TFeatures
-        ? TableOptions_ColumnSizing
-        : never)
-    | ('columnVisibilityFeature' extends keyof TFeatures
-        ? TableOptions_ColumnVisibility
-        : never)
-    | ('globalFilteringFeature' extends keyof TFeatures
-        ? TableOptions_GlobalFiltering<TFeatures, TData>
-        : never)
-    | ('rowExpandingFeature' extends keyof TFeatures
-        ? TableOptions_RowExpanding<TFeatures, TData>
-        : never)
-    | ('rowPaginationFeature' extends keyof TFeatures
-        ? TableOptions_RowPagination
-        : never)
-    | ('rowPinningFeature' extends keyof TFeatures
-        ? TableOptions_RowPinning<TFeatures, TData>
-        : never)
-    | ('rowSelectionFeature' extends keyof TFeatures
-        ? TableOptions_RowSelection<TFeatures, TData>
-        : never)
-    | ('rowSortingFeature' extends keyof TFeatures
-        ? TableOptions_RowSorting
-        : never)
-  > &
-  ExtractFeatureTypes<'TableOptions', TFeatures> &
-  TableOptions_Plugins<TFeatures, TData> &
+  ExtractFeatureMapTypes<TFeatures, TableOptions_FeatureMap<TFeatures, TData>> &
   DebugOptions<TFeatures>
 
-// export type TableOptions<
-//   TFeatures extends TableFeatures,
-//   TData extends RowData,
-// > = TableOptions_Core<TFeatures, TData> &
-//   ExtractFeatureTypes<'TableOptions', TFeatures> &
-//   TableOptions_Plugins<TFeatures, TData>
-
+/**
+ * Internal broad option shape used where feature code may need to read options
+ * from features that are not present in the current generic feature set.
+ */
 export type TableOptions_All<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -121,5 +145,6 @@ export type TableOptions_All<
       TableOptions_RowPagination &
       TableOptions_RowPinning<TFeatures, TData> &
       TableOptions_RowSelection<TFeatures, TData> &
-      TableOptions_RowSorting
+      TableOptions_RowSorting &
+      TableOptions_PluginFeatureMapTypes<TFeatures, TData>
   >

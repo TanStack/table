@@ -6,12 +6,9 @@ title: columnGroupingFeature
 # Variable: columnGroupingFeature
 
 ```ts
-const columnGroupingFeature: TableFeature<ColumnGroupingFeatureConstructors<TableFeatures, RowData>>;
+const columnGroupingFeature: TableFeature;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.ts:159](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts#L159)
+Defined in: [features/column-grouping/columnGroupingFeature.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts#L29)
 
-The stock column grouping feature.
-
-Register this feature to add grouping state, aggregation defaults, grouped
-row-model support, and table/row/column/cell grouping APIs.
+Feature that adds column grouping state, aggregation defaults, and grouped row APIs.

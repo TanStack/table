@@ -1,6 +1,7 @@
 import { Component, input } from '@angular/core'
 import type { OnInit } from '@angular/core'
 import type { Column, RowData, Table } from '@tanstack/angular-table'
+import type { features } from './app.component'
 
 @Component({
   selector: 'app-table-filter',
@@ -37,9 +38,9 @@ import type { Column, RowData, Table } from '@tanstack/angular-table'
   }`,
 })
 export class FilterComponent<T extends RowData> implements OnInit {
-  column = input.required<Column<any, any>>()
+  column = input.required<Column<typeof features, T>>()
 
-  table = input.required<Table<any, T>>()
+  table = input.required<Table<typeof features, T>>()
 
   columnType!: string
 
@@ -50,14 +51,19 @@ export class FilterComponent<T extends RowData> implements OnInit {
   }
 
   getMinValue() {
-    const minValue = this.column().getFilterValue()
+    const minValue = this.column().getFilterValue() as
+      | [string | undefined, string | undefined]
+      | undefined
 
-    return (minValue?.[0] ?? '') as string
+    return minValue?.[0] ?? ''
   }
 
   getMaxValue() {
-    const maxValue = this.column().getFilterValue()
-    return (maxValue?.[1] ?? '') as string
+    const maxValue = this.column().getFilterValue() as
+      | [string | undefined, string | undefined]
+      | undefined
+
+    return maxValue?.[1] ?? ''
   }
 
   updateMinFilterValue(newValue: string): void {

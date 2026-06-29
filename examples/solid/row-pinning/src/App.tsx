@@ -17,15 +17,20 @@ import type {
   ExpandedState,
   Row,
   RowPinningState,
+  SolidTable,
   Table,
 } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 function App() {
@@ -48,7 +53,7 @@ function App() {
     {
       id: 'pin',
       header: () => 'Pin',
-      cell: ({ row }: { row: Row<typeof _features, Person> }) =>
+      cell: ({ row }: { row: Row<typeof features, Person> }) =>
         row.getIsPinned() ? (
           <button
             onClick={() =>
@@ -78,7 +83,7 @@ function App() {
     },
     {
       accessorKey: 'firstName',
-      header: ({ table }: { table: Table<typeof _features, Person> }) => (
+      header: ({ table }: { table: Table<typeof features, Person> }) => (
         <>
           <button onClick={table.getToggleAllRowsExpandedHandler()}>
             {table.getIsAllRowsExpanded() ? '👇' : '👉'}
@@ -90,7 +95,7 @@ function App() {
         row,
         getValue,
       }: {
-        row: Row<typeof _features, Person>
+        row: Row<typeof features, Person>
         getValue: () => unknown
       }) => (
         <div style={{ 'padding-left': `${row.depth * 2}rem` }}>
@@ -121,38 +126,30 @@ function App() {
     { accessorKey: 'progress', header: 'Profile Progress', size: 80 },
   ])
 
-  const table = createTable(
-    {
-      debugTable: true,
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        expandedRowModel: createExpandedRowModel(),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
-      get columns() {
-        return columns()
-      },
-      get data() {
-        return data()
-      },
-      initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
-      get state() {
-        return {
-          expanded: expanded(),
-          rowPinning: rowPinning(),
-        }
-      },
-      onExpandedChange: setExpanded,
-      onRowPinningChange: setRowPinning,
-      getSubRows: (row) => row.subRows,
-      get keepPinnedRows() {
-        return keepPinnedRows()
-      },
-      debugAll: true,
+  const table = createTable({
+    debugTable: true,
+    features,
+    get columns() {
+      return columns()
     },
-    (state) => state,
-  )
+    get data() {
+      return data()
+    },
+    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+    get state() {
+      return {
+        expanded: expanded(),
+        rowPinning: rowPinning(),
+      }
+    },
+    onExpandedChange: setExpanded,
+    onRowPinningChange: setRowPinning,
+    getSubRows: (row) => row.subRows,
+    get keepPinnedRows() {
+      return keepPinnedRows()
+    },
+    debugAll: true,
+  })
 
   return (
     <div class="app">
@@ -250,7 +247,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -260,7 +257,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -271,7 +268,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
         >
           <For each={[10, 20, 30, 40, 50]}>
@@ -324,14 +321,14 @@ function App() {
           </label>
         </div>
       </div>
-      <div>{JSON.stringify(rowPinning(), null, 2)}</div>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }
 
 function PinnedRow(props: {
-  row: Row<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  row: Row<typeof features, Person>
+  table: SolidTable<typeof features, Person>
 }) {
   return (
     <tr
@@ -363,8 +360,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

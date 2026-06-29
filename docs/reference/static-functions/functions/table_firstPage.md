@@ -9,7 +9,7 @@ title: table_firstPage
 function table_firstPage<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:321](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L321)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:335](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L335)
 
 Moves the table to the first page.
 
@@ -29,7 +29,7 @@ This is a convenience wrapper around `table_setPageIndex(table, 0)`.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

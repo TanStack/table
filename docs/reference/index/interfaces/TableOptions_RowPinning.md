@@ -25,9 +25,11 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:16](https://github.
 optional enableRowPinning: boolean | (row) => boolean;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L23)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L25)
 
-Enables/disables row pinning for the table. Defaults to `true`.
+Allows rows to be pinned to top or bottom regions.
+
+Provide a predicate to decide per row. Defaults to `true`.
 
 ***
 
@@ -37,7 +39,7 @@ Enables/disables row pinning for the table. Defaults to `true`.
 optional keepPinnedRows: boolean;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L27)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L29)
 
 When `false`, pinned rows will not be visible if they are filtered or paginated out of the table. When `true`, pinned rows will always be visible regardless of filtering or pagination. Defaults to `true`.
 
@@ -49,7 +51,7 @@ When `false`, pinned rows will not be visible if they are filtered or paginated 
 optional onRowPinningChange: OnChangeFn<RowPinningState>;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L33)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L35)
 
 Called with an updater when row pinning state changes. Pair this with
 `state.rowPinning` when using external state; external atoms can own the

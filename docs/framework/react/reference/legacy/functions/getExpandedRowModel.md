@@ -9,7 +9,7 @@ title: getExpandedRowModel
 function getExpandedRowModel<TData>(): RowModelFactory<TData>;
 ```
 
-Defined in: [useLegacyTable.ts:89](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L89)
+Defined in: [useLegacyTable.ts:90](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L90)
 
 ## Type Parameters
 

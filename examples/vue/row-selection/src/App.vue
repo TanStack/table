@@ -11,11 +11,11 @@ import { ref } from 'vue'
 import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
 import { makeData, Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSelectionFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -104,23 +104,20 @@ const toggleRowSelection = () => {
   enableRowSelection.value = !enableRowSelection.value
 }
 
-const table = useTable(
-  {
-    _features,
-    _rowModels: {},
-    data,
-    columns,
-    debugTable: true,
-    // enable row selection for all rows
-    get enableRowSelection() {
-      return enableRowSelection.value
-    },
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+const table = useTable({
+  key: 'row-selection', // needed for devtools
+  features,
+  data,
+  columns,
+  debugTable: true,
+  // enable row selection for all rows
+  get enableRowSelection() {
+    return enableRowSelection.value
   },
-  (state) => ({ rowSelection: state.rowSelection }),
-)
+  // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+})
 
-useTanStackTableDevtools(table, 'Row Selection Example')
+useTanStackTableDevtools(table)
 </script>
 
 <template>

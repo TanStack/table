@@ -3,17 +3,22 @@
  * a v8-style API for easier migration from TanStack Table v8 to v9.
  *
  * Key differences from the v9 useTable hook:
- * - No need to define _features - all stock features are included
- * - Uses v8-style get*RowModel() options instead of _rowModels
+ * - No need to define features - all stock features are included
+ * - Uses v8-style get*RowModel() options instead of rowModels
  * - Subscribes to all state automatically (like v8 behavior)
  *
  * NOTE: useLegacyTable is deprecated and intended only as a migration aid.
- * New code should use useTable with explicit _features and _rowModels.
+ * New code should use useTable with explicit features and rowModels.
  */
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import { flexRender } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   getCoreRowModel,
@@ -35,6 +40,7 @@ import type {
 import type { LegacyColumn } from '@tanstack/react-table/legacy' // legacy types
 import type { Person } from './makeData'
 
+// old way of declaring column meta with declaration merging
 declare module '@tanstack/react-table' {
   // allows us to define custom properties for our columns
   interface ColumnMeta<
@@ -49,8 +55,6 @@ declare module '@tanstack/react-table' {
 const columnHelper = legacyCreateColumnHelper<Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -108,12 +112,13 @@ function App() {
   })
 
   // Using useLegacyTable with the v8-style API!
-  // Notice how we use get*RowModel() options instead of _rowModels
-  // and we don't need to define _features
+  // Notice how we use get*RowModel() options instead of rowModels
+  // and we don't need to define features
   const table = useLegacyTable({
+    key: 'basic-use-legacy-table', // needed for devtools
     columns,
     data,
-    // V8-style row model options (these are mapped to v9 _rowModels under the hood)
+    // V8-style row model options (these are mapped to v9 rowModels under the hood)
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(), // client side filtering
     getSortedRowModel: getSortedRowModel(), // client side sorting
@@ -130,6 +135,8 @@ function App() {
     debugTable: true,
     debugColumns: true,
   })
+
+  useTanStackTableDevtools(table)
 
   return (
     <div className="demo-root">
@@ -266,9 +273,7 @@ function App() {
       <div>
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
+      <div></div>
       <div>
         <button onClick={() => refreshData()}>Refresh Data</button>
       </div>
@@ -377,5 +382,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

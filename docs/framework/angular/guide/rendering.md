@@ -6,11 +6,11 @@ The `@tanstack/angular-table` adapter provides structural directives and depende
 
 ## FlexRender
 
-[`FlexRender`](../reference/variables/FlexRender) is the rendering primitive.
+`FlexRender` is the rendering primitive.
 It is exported as a tuple of two directives:
 
-- [`FlexRenderDirective`](../reference/classes/FlexRenderDirective) — the base structural directive (`*flexRender`)
-- [`FlexRenderCell`](../reference/classes/FlexRenderCell.md) — shorthand directives (`*flexRenderCell`, `*flexRenderHeader`, `*flexRenderFooter`)
+- `FlexRenderDirective`: the base structural directive (`*flexRender`)
+- `FlexRenderCell`: shorthand directives (`*flexRenderCell`, `*flexRenderHeader`, `*flexRenderFooter`)
 
 Import `FlexRender` to get both:
 
@@ -88,8 +88,8 @@ When you need full control over the `props` passed to the render function, use `
 
 `FlexRenderDirective` accepts two inputs:
 
-- `flexRender` — the render definition (a column def function, a string, a `TemplateRef`, a component type, or a `flexRenderComponent(...)` wrapper)
-- `flexRenderProps` — the props object passed to the render function and used as the implicit template context
+- `flexRender`: the render definition (a column def function, a string, a `TemplateRef`, a component type, or a `flexRenderComponent(...)` wrapper)
+- `flexRenderProps`: the props object passed to the render function and used as the implicit template context
 
 Standard usage:
 
@@ -130,7 +130,7 @@ You can render Angular components from column definitions in two ways:
 
 ### Using `flexRenderComponent`
 
-[`flexRenderComponent(component, options?)`](../reference/functions/flexRenderComponent) wraps a component type with explicit options for `inputs`, `outputs`, `injector`, `bindings`, and `directives`.
+`flexRenderComponent(component, options?)` wraps a component type with explicit options for `inputs`, `outputs`, `injector`, `bindings`, and `directives`.
 
 Use this when you need to:
 
@@ -163,7 +163,7 @@ const columns: ColumnDef<Person>[] = [
 
 #### How inputs and outputs work
 
-**Inputs** are applied through [`ComponentRef.setInput(key, value)`](https://angular.dev/api/core/ComponentRef#setInput). This works with both `input()` signals and `@Input()` decorators. Inputs are diffed on every change detection cycle using `KeyValueDiffers` — only changed values trigger `setInput`.
+**Inputs** are applied through [`ComponentRef.setInput(key, value)`](https://angular.dev/api/core/ComponentRef#setInput). This works with both `input()` signals and `@Input()` decorators. Inputs are diffed on every change detection cycle using `KeyValueDiffers`; only changed values trigger `setInput`.
 
 For object-like inputs, updates are reference-based: if the object reference is stable, Angular's default input equality semantics prevent unnecessary updates.
 
@@ -175,7 +175,7 @@ For object-like inputs, updates are reference-based: if the object reference is 
 
 This supports Angular programmatic rendering APIs for passing host directives and binding values at runtime.
 
-Unlike `inputs`/`outputs` (which are applied imperatively after creation), `bindings` are applied **at creation time** — they participate in the component's initial change detection cycle.
+Unlike `inputs`/`outputs` (which are applied imperatively after creation), `bindings` are applied **at creation time**, so they participate in the component's initial change detection cycle.
 
 ```ts
 import {
@@ -200,11 +200,11 @@ cell: () =>
   })
 ```
 
-> Avoid mixing `bindings` with `inputs`/`outputs` on the same property. `bindings` are applied at creation, while `inputs`/`outputs` are applied post-creation — mixing them can lead to double initialization or conflicting values.
+> Avoid mixing `bindings` with `inputs`/`outputs` on the same property. `bindings` are applied at creation, while `inputs`/`outputs` are applied post-creation, so mixing them can lead to double initialization or conflicting values.
 
 See the Angular docs for details:
 
-- [Programmatic rendering — Binding inputs/outputs/directives](https://angular.dev/guide/components/programmatic-rendering#binding-inputs-outputs-and-setting-host-directives-at-creation)
+- [Programmatic rendering: Binding inputs/outputs/directives](https://angular.dev/guide/components/programmatic-rendering#binding-inputs-outputs-and-setting-host-directives-at-creation)
 - [`inputBinding`](https://angular.dev/api/core/inputBinding), [`outputBinding`](https://angular.dev/api/core/outputBinding), [`twoWayBinding`](https://angular.dev/api/core/twoWayBinding)
 
 ### Returning a component class
@@ -239,12 +239,12 @@ const columns: ColumnDef<Person>[] = [
 })
 export class TableHeadSelectionComponent<T> {
   readonly table = input.required<Table<T>>();
-  // column = input.required<Column<typeof _features, T, unknown>>()
-  // header = input.required<Header<typeof _features, T, unknown>>()
+  // column = input.required<Column<typeof features, T, unknown>>()
+  // header = input.required<Header<typeof features, T, unknown>>()
 }
 ```
 
-Only properties declared with `input()` / `input.required()` are set — other context properties are silently ignored. You can also access the full context via [`injectFlexRenderContext()`](#injectflexrendercontext).
+Only properties declared with `input()` / `input.required()` are set; other context properties are silently ignored. You can also access the full context via [`injectFlexRenderContext()`](#injectflexrendercontext).
 
 ## TemplateRef rendering
 
@@ -299,7 +299,7 @@ export class AppComponent {
 
 ### `injectFlexRenderContext`
 
-[`injectFlexRenderContext<T>()`](../reference/functions/injectFlexRenderContext) returns the full props object passed to `*flexRender`. The return type depends on the column definition slot:
+`injectFlexRenderContext<T>()` returns the full props object passed to `*flexRender`. The return type depends on the column definition slot:
 
 - In a `cell` definition: `CellContext<TFeatures, TData, TValue>`
 - In a `header`/`footer` definition: `HeaderContext<TFeatures, TData, TValue>`
@@ -326,15 +326,15 @@ Internally, the renderer wraps the context in a `Proxy` so that property access 
 
 ### Context directives
 
-Three optional directives let you expose table, header, and cell context to **any descendant** in the template — not just components rendered by `*flexRender`.
+Three optional directives let you expose table, header, and cell context to **any descendant** in the template, not just components rendered by `*flexRender`.
 
 This eliminates prop drilling: instead of passing data through multiple `input()` layers, any nested component or directive can inject the context directly.
 
 | Directive | Selector | Token | Inject helper |
 |---|---|---|---|
-| [`TanStackTable`](../reference/functions/injectTableContext) | `[tanStackTable]` | `TanStackTableToken` | `injectTableContext()` |
-| [`TanStackTableHeader`](../reference/functions/injectTableHeaderContext) | `[tanStackTableHeader]` | `TanStackTableHeaderToken` | `injectTableHeaderContext()` |
-| [`TanStackTableCell`](../reference/functions/injectTableCellContext) | `[tanStackTableCell]` | `TanStackTableCellToken` | `injectTableCellContext()` |
+| `TanStackTable` | `[tanStackTable]` | `TanStackTableToken` | `injectTableContext()` |
+| `TanStackTableHeader` | `[tanStackTableHeader]` | `TanStackTableHeaderToken` | `injectTableHeaderContext()` |
+| `TanStackTableCell` | `[tanStackTableCell]` | `TanStackTableCellToken` | `injectTableCellContext()` |
 
 Import them alongside `FlexRender`:
 
@@ -404,7 +404,7 @@ export class CellActionsComponent {
 ```
 
 ```html
-<!-- No need to pass cell as an input — it's injected -->
+<!-- No need to pass cell as an input, it is injected -->
 <td [tanStackTableCell]="cell">
   <app-cell-actions />
 </td>

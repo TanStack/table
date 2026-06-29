@@ -32,26 +32,24 @@ A table instance has a few state surfaces:
 - `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
 - `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
-- `table.state` is Vue-only selected state. It is the value returned from the selector passed as the second argument to `useTable`.
 
-The Vue adapter provides `vueReactivity()` to the table's `coreReativityFeature`. Core readonly atoms are Vue `computed` values, writable atoms are `shallowRef` values, and subscriptions are backed by `watch(..., { flush: 'sync' })`. `useTable` also watches reactive option dependencies and controlled state values so it can call `table.setOptions` when Vue state changes.
+The Vue adapter provides `vueReactivity()` to the table's `coreReactivityFeature`. Core readonly atoms are Vue `computed` values, writable atoms are `shallowRef` values, and subscriptions are backed by `watch(..., { flush: 'sync' })`. `useTable` also watches reactive option dependencies and controlled state values so it can call `table.setOptions` when Vue state changes.
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   columns,
   data,
 })
@@ -62,7 +60,7 @@ table.atoms.sorting.get()
 // table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.get()`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -71,9 +69,9 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should Vue render or computed work update when that value changes?
 
-Use a direct atom or store read for the current value. Use selected state, `useSelector`, or `table.Subscribe` when you want Vue to track the selected value.
+Use direct atom reads for slice values. Use `table.store.get()` for the current flat state snapshot. Because Vue table atoms are backed by Vue refs and computed values, atom reads participate in Vue dependency tracking when they happen inside templates, `computed(...)`, `watch(...)`, or `table.Subscribe`.
 
-#### Reading State Without Subscribing
+#### Reading State
 
 The simplest and most performant way to read a current state value is to read the matching atom:
 
@@ -85,32 +83,29 @@ const sorting = table.atoms.sorting.get()
 You can also read the current flat store snapshot:
 
 ```ts
-const tableState = table.store.state
-const pagination = table.store.state.pagination
+const tableState = table.store.get()
+const pagination = table.store.get().pagination
 ```
 
-These reads are current-value reads. They only participate in Vue dependency tracking when they are called in a Vue reactive context that tracks those reads. If the UI needs to stay reactive to table state changes, use `table.state`, `table.Subscribe`, or even a `useSelector` hook from TanStack Store.
+These reads are current-value reads. They only participate in Vue dependency tracking when they are called inside a Vue reactive context that tracks those reads. Prefer `table.atoms.<slice>.get()` for narrow reactive reads. Use `table.store.get()` for full-state debug output or when a computation intentionally depends on the whole table state.
 
-#### Reading Reactive State with useTable
+#### Reading Reactive State with Vue
 
-The second argument to `useTable` is a TanStack Store selector. The selected value is exposed as `table.state`. The default selector selects all registered table state.
+Use Vue's native primitives to derive reactive values from table atoms or the flat store snapshot.
 
 ```ts
-const table = useTable(
-  {
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-    columns,
-    data,
-  },
-  (state) => ({
-    pagination: state.pagination,
-  }),
-)
+const table = useTable({
+  features,
+  columns,
+  data,
+})
 
-table.state.pagination
+const pagination = computed(() => table.atoms.pagination.get())
+const pageIndex = computed(() => pagination.value.pageIndex)
+
+const tableStateJson = computed(() =>
+  JSON.stringify(table.store.get(), null, 2),
+)
 ```
 
 Vue's `data` option can also be a `ref` or `computed`. The adapter unwraps reactive option values and syncs the table when those values change.
@@ -119,8 +114,7 @@ Vue's `data` option can also be a `ref` or `computed`. The adapter unwraps react
 const data = ref(makeData(100))
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
   columns,
   data,
 })
@@ -130,26 +124,46 @@ data.value = makeData(200)
 
 #### Fine-grained Updates with table.Subscribe
 
-Use `table.Subscribe` in render functions or JSX when you want a specific part of the Vue tree to subscribe to a selected table state value.
-
-Without a `source` prop, `table.Subscribe` subscribes to `table.store` and requires a selector. With a `source` prop, it can subscribe directly to one atom or store.
+Use `table.Subscribe` in render functions or JSX when you want a specific part of the Vue tree to create a reactive render boundary. It receives `table.atoms` through a `children` function, and Vue tracks only the atom reads used inside that function. Note that `table.Subscribe` reads `children` as a prop, so pass it explicitly (Vue JSX delivers element children as slots, not props).
 
 ```tsx
 <table.Subscribe
-  selector={(state) => ({
-    columnFilters: state.columnFilters,
-    globalFilter: state.globalFilter,
-    pagination: state.pagination,
-  })}
->
-  {() => (
+  children={(atoms) => {
+    void atoms.columnFilters.get()
+    void atoms.globalFilter.get()
+    void atoms.pagination.get()
+
+    return (
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>...</tr>
+        ))}
+      </tbody>
+    )
+  }}
+/>
+```
+
+You can also call it as a plain function inside a render function:
+
+```tsx
+{table.Subscribe({
+  children: (atoms) => (
     <tbody>
       {table.getRowModel().rows.map((row) => (
-        <tr key={row.id}>...</tr>
+        <tr key={row.id}>
+          <td>
+            <input
+              type="checkbox"
+              checked={!!atoms.rowSelection.get()[row.id]}
+              onChange={row.getToggleSelectedHandler()}
+            />
+          </td>
+        </tr>
       ))}
     </tbody>
-  )}
-</table.Subscribe>
+  ),
+})}
 ```
 
 ### Setting Table State
@@ -186,11 +200,7 @@ If you only need to customize the starting value for some table state, use `init
 
 ```ts
 const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
   initialState: {
@@ -224,11 +234,11 @@ Slice reset APIs like `resetPagination()` update through that feature's state up
 
 ### Controlled State
 
-If you need easy access to table state in other parts of your application, you can control individual state slices. In v9, external atoms are the recommended way to do this when you want atomic ownership and fine-grained Vue updates.
+If you need easy access to table state in other parts of your application, you can control individual state slices. In Vue, use refs or computed values with `state` plus `on[State]Change` when you want Vue to own the slice. Use external TanStack Store atoms when you already want app-level atom sharing or direct atom subscriptions outside the table.
 
 #### External Atoms
 
-Use external atoms when the app should own one or more table state slices. Create stable writable atoms with `createAtom`, pass them to `atoms`, and subscribe to them with `useSelector`.
+Use external atoms when the app should own one or more table state slices as TanStack Store atoms. Create stable writable atoms with `createAtom`, pass them to `atoms`, and subscribe to them with `useSelector`. `@tanstack/vue-store` is only needed by your app if you choose this pattern; the Vue table adapter itself uses Vue-native reactivity.
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/vue-store'
@@ -239,7 +249,7 @@ import {
   type PaginationState,
 } from '@tanstack/vue-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -251,8 +261,7 @@ const paginationAtom = createAtom<PaginationState>({
 const pagination = useSelector(paginationAtom)
 
 const table = useTable({
-  _features,
-  _rowModels: {},
+  features,
   columns,
   data: tableData,
   rowCount,
@@ -269,7 +278,7 @@ When using the `atoms` option for a slice, you do not need to add the matching `
 
 #### External State
 
-The classic `state` plus `on[State]Change` pattern is still supported. This can be convenient for simple integrations or when migrating v8 code, but it is less atomic than external atoms.
+Use `state` plus `on[State]Change` when Vue refs or computed values should own a table state slice.
 
 ```ts
 const sorting = ref<SortingState>([])
@@ -279,11 +288,7 @@ const pagination = ref<PaginationState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
   state: {
@@ -304,7 +309,7 @@ const table = useTable({
 })
 ```
 
-The v8-style `onStateChange` option is no longer part of the v9 `useTable` state model. v9 encourages keeping table state slices atomic and separated for performance.
+Use the per-slice `on[State]Change` callbacks to keep controlled table state slices atomic and separated.
 
 ##### On State Change Callbacks
 
@@ -340,8 +345,8 @@ const sorting = ref<SortingState>([
 ])
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```ts
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

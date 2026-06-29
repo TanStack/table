@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  signal,
-} from '@angular/core'
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   FlexRenderDirective,
   columnOrderingFeature,
@@ -23,13 +18,13 @@ import type {
   ColumnVisibilityState,
 } from '@tanstack/angular-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnPinningFeature,
   columnOrderingFeature,
   columnVisibilityFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -98,7 +93,7 @@ export class App {
   readonly split = signal(false)
 
   table = injectTable(() => ({
-    _features,
+    features,
     columns: defaultColumns,
     data: this.data(),
     state: {
@@ -126,9 +121,9 @@ export class App {
     debugColumns: true,
   }))
 
-  stringifiedColumnPinning = computed(() => {
-    return JSON.stringify(this.table.state().columnPinning)
-  })
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   randomizeColumns() {
     this.table.setColumnOrder(

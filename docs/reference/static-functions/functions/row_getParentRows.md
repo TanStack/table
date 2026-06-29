@@ -9,11 +9,11 @@ title: row_getParentRows
 function row_getParentRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L137)
+Defined in: [core/rows/coreRowsFeature.utils.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L140)
 
-Returns parent rows for a row.
+Collects this row's ancestor chain from root to direct parent.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+The current row is not included. Rows without a parent return an empty array.
 
 ## Type Parameters
 
@@ -38,5 +38,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getParentRows(row)
+const ancestors = row_getParentRows(row)
 ```

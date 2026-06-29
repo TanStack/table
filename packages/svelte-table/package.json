@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/svelte-table",
-  "version": "9.0.0-alpha.45",
+  "version": "9.0.0-beta.23",
   "description": "Headless UI for building powerful tables & datagrids for Svelte.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,7 +18,8 @@
     "svelte",
     "table",
     "svelte-table",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "types": "dist/index.d.ts",
@@ -47,7 +48,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "skills"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -61,11 +63,11 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
-    "@sveltejs/package": "^2.5.7",
+    "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
-    "eslint-plugin-svelte": "^3.17.1",
-    "svelte": "^5.55.5",
-    "svelte-check": "^4.4.8"
+    "eslint-plugin-svelte": "^3.19.0",
+    "svelte": "^5.56.2",
+    "svelte-check": "^4.6.0"
   },
   "peerDependencies": {
     "svelte": "^5.0.0"

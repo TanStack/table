@@ -5,7 +5,12 @@ title: Table_Columns
 
 # Interface: Table\_Columns\<TFeatures, TData\>
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L75)
+Defined in: [core/columns/coreColumnsFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L76)
+
+## Extended by
+
+- [`Table_Core`](Table_Core.md)
+- [`Table_Internal`](Table_Internal.md)
 
 ## Type Parameters
 
@@ -25,9 +30,9 @@ Defined in: [core/columns/coreColumnsFeature.types.ts:75](https://github.com/Tan
 getAllColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L90)
+Defined in: [core/columns/coreColumnsFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L91)
 
-Returns all columns in the table in their normalized and nested hierarchy.
+Normalizes `options.columns` into the table's nested column hierarchy.
 
 #### Returns
 
@@ -41,9 +46,9 @@ Returns all columns in the table in their normalized and nested hierarchy.
 getAllFlatColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L94)
+Defined in: [core/columns/coreColumnsFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L95)
 
-Returns all columns in the table flattened to a single level.
+Flattens the nested column hierarchy, including parent/group columns.
 
 #### Returns
 
@@ -57,7 +62,7 @@ Returns all columns in the table flattened to a single level.
 getAllFlatColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L82)
+Defined in: [core/columns/coreColumnsFeature.types.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L83)
 
 Returns a map of all flat columns by their ID.
 
@@ -73,13 +78,29 @@ Returns a map of all flat columns by their ID.
 getAllLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L98)
+Defined in: [core/columns/coreColumnsFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L99)
 
-Returns all leaf-node columns in the table flattened to a single level. This does not include parent columns.
+Collects all terminal leaf columns, excluding parent/group columns.
 
 #### Returns
 
 [`Column`](../type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+
+***
+
+### getAllLeafColumnsById()
+
+```ts
+getAllLeafColumnsById: () => Record<string, Column<TFeatures, TData, unknown>>;
+```
+
+Defined in: [core/columns/coreColumnsFeature.types.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L103)
+
+Returns a map of all leaf-node columns by their ID. This does not include parent columns.
+
+#### Returns
+
+`Record`\<`string`, [`Column`](../type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>\>
 
 ***
 
@@ -91,7 +112,7 @@ getColumn: (columnId) =>
   | undefined;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L102)
+Defined in: [core/columns/coreColumnsFeature.types.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L107)
 
 Returns a single column by its ID.
 
@@ -114,9 +135,9 @@ Returns a single column by its ID.
 getDefaultColumnDef: () => Partial<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L86)
+Defined in: [core/columns/coreColumnsFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L87)
 
-Returns the default column options to use for all column defs supplied to the table.
+Resolves built-in, feature-level, and user-defined default column options.
 
 #### Returns
 

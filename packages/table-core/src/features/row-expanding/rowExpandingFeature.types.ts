@@ -13,19 +13,19 @@ export interface TableState_RowExpanding {
 
 export interface Row_RowExpanding {
   /**
-   * Returns whether the row can be expanded.
+   * Checks whether this row can be expanded.
    */
   getCanExpand: () => boolean
   /**
-   * Returns whether all parent rows of the row are expanded.
+   * Checks whether every ancestor of this row is expanded.
    */
   getIsAllParentsExpanded: () => boolean
   /**
-   * Returns whether the row is expanded.
+   * Checks whether this row is currently expanded.
    */
   getIsExpanded: () => boolean
   /**
-   * Returns a function that can be used to toggle the expanded state of the row. This function can be used to bind to an event handler to a button.
+   * Creates a handler that toggles this row's expanded state.
    */
   getToggleExpandedHandler: () => () => void
   /**
@@ -35,15 +35,15 @@ export interface Row_RowExpanding {
 }
 
 export interface TableOptions_RowExpanding<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Enables automatic expanded-state resets when page-altering table state changes.
    */
   autoResetExpanded?: boolean
   /**
-   * Enable/disable expanding for all rows.
+   * Allows rows with subRows to be expanded.
    */
   enableExpanding?: boolean
   /**
@@ -71,37 +71,38 @@ export interface TableOptions_RowExpanding<
 }
 
 export interface Table_RowExpanding<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   autoResetExpanded: () => void
   /**
-   * Returns whether there are any rows that can be expanded.
+   * Checks whether at least one row can be expanded.
    */
   getCanSomeRowsExpand: () => boolean
   /**
-   * Returns the maximum depth of the expanded rows.
+   * Computes the deepest expanded row id depth.
    */
   getExpandedDepth: () => number
   /**
-   * Returns whether all rows are currently expanded.
+   * Checks whether all rows in the current row model are expanded.
    */
   getIsAllRowsExpanded: () => boolean
   /**
-   * Returns whether there are any rows that are currently expanded.
+   * Checks whether any row is currently expanded.
    */
   getIsSomeRowsExpanded: () => boolean
   /**
-   * Returns a handler that can be used to toggle the expanded state of all rows. This handler is meant to be used with an `input[type=checkbox]` element.
+   * Creates a handler that toggles all rows expanded.
    */
   getToggleAllRowsExpandedHandler: () => (event: unknown) => void
   /**
-   * Resets expanded state to `initialState.expanded`. Pass `true` to reset to
-   * the feature default of `{}`.
+   * Resets `expanded` to `initialState.expanded`.
+   *
+   * Pass `true` to ignore initial state and reset to `{}`.
    */
   resetExpanded: (defaultState?: boolean) => void
   /**
-   * Sets expanded state using a value or updater.
+   * Updates expanded state with `true`, a row-id map, or an updater function.
    */
   setExpanded: (updater: Updater<ExpandedState>) => void
   /**
@@ -111,36 +112,22 @@ export interface Table_RowExpanding<
 }
 
 export interface Table_RowModels_Expanded<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
-   * Returns the row model after expansion has been applied.
+   * Resolves the row model after expanded rows have been flattened into view.
    */
   getExpandedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns the row model before expansion has been applied.
+   * Reads the row model immediately before expansion.
    */
   getPreExpandedRowModel: () => RowModel<TFeatures, TData>
 }
 
-export interface CreateRowModel_Expanded<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * Factory used to retrieve the expanded row model. If this function is not
-   * provided, the table will not expand rows. To use client-side expansion,
-   * pass `createExpandedRowModel()` or implement your own factory.
-   */
-  expandedRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
-}
-
 export interface CachedRowModel_Expanded<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   expandedRowModel: () => RowModel<TFeatures, TData>
 }

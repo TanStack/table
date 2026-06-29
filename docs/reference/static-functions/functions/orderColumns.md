@@ -9,11 +9,13 @@ title: orderColumns
 function orderColumns<TFeatures, TData>(table, leafColumns): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:188](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L188)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L203)
 
-Orders leaf columns with manual ordering, grouping, and pinning rules.
+Applies grouped-column placement rules to an already ordered leaf-column list.
 
-This helper is used by the column ordering feature to produce the final visible column order.
+`groupedColumnMode: 'remove'` drops grouped columns from the list.
+`groupedColumnMode: 'reorder'` moves grouped columns to the front in grouping
+state order.
 
 ## Type Parameters
 
@@ -29,18 +31,18 @@ This helper is used by the column ordering feature to produce the final visible 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### leafColumns
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Returns
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const orderedColumns = orderColumns(leafColumns, columnOrder, grouping, groupedColumnMode)
+const orderedColumns = orderColumns(table, leafColumns)
 ```

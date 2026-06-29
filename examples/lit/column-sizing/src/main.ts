@@ -11,12 +11,12 @@ import {
 } from '@tanstack/lit-table'
 import { Person, makeData } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnSizingFeature,
   columnResizingFeature,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
@@ -58,13 +58,12 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {},
+        features,
         data: this._data,
         columns,
         columnResizeMode: 'onChange',
@@ -90,10 +89,10 @@ class LitTableExample extends LitElement {
         </button>
         <button
           @click=${() => {
-            this._data = makeData(500_000)
+            this._data = makeData(1_000_000)
           }}
         >
-          Stress Test (500k rows)
+          Stress Test (1M rows)
         </button>
       </div>
       <table style="width: ${table.getCenterTotalSize()}px">

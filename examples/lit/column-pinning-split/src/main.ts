@@ -19,13 +19,13 @@ import type {
 } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnOrderingFeature,
   columnPinningFeature,
   columnVisibilityFeature,
 })
 
-const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
+const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -79,7 +79,7 @@ const defaultColumns: Array<ColumnDef<typeof _features, Person>> = [
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   @state()
   private _data: Array<Person> = makeData(1_000)
@@ -96,8 +96,7 @@ class LitTableExample extends LitElement {
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {},
+        features,
         columns: defaultColumns,
         data: this._data,
         state: {
@@ -211,11 +210,11 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click="${() => {
-              this._data = makeData(500_000)
+              this._data = makeData(1_000_000)
             }}"
             class="demo-button demo-button-sm"
           >
-            Stress Test (500k rows)
+            Stress Test (1M rows)
           </button>
           <button
             @click="${randomizeColumns}"

@@ -1,92 +1,131 @@
+import { createEffect, createRoot, createSignal, untrack } from 'solid-js'
+import type { Readable } from '@tanstack/solid-store'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
-type AnyTable = Table<TableFeatures, RowData>
 type Listener = (targets: Array<TableDevtoolsRegistration>) => void
 
-const LEGACY_TARGET_ID = '__legacy__'
+const MISSING_KEY_ERROR =
+  '[TanStack Table Devtools] Missing table key. Add a `key` option to your table to use devtools.'
+
+export interface TableDevtoolsStore<TState = unknown> extends Readable<TState> {
+  state: TState
+}
+
+export interface TableDevtoolsTable {
+  _features: Record<string, unknown>
+  _rowModelFns: unknown
+  baseAtoms: Record<string, unknown>
+  initialState: unknown
+  options: {
+    atoms?: Record<string, unknown>
+    data?: unknown
+    features?: Record<string, unknown>
+    key?: string
+    state?: Record<string, unknown>
+    [key: string]: unknown
+  }
+  optionsStore?: TableDevtoolsStore
+  reset: () => void
+  store: TableDevtoolsStore
+}
 
 export interface TableDevtoolsRegistration {
   id: string
-  table: AnyTable
-  name?: string
-  fallbackName: string
+  table: TableDevtoolsTable
 }
 
-export interface UpsertTableDevtoolsTargetOptions {
-  id: string
-  table: AnyTable
-  name?: string
+export interface UpsertTableDevtoolsTargetOptions<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> {
+  table: Table<TFeatures, TData>
 }
 
-const registrations = new Map<string, TableDevtoolsRegistration>()
-const listeners = new Set<Listener>()
-let fallbackNameCounter = 1
+const [registrationsMap, setRegistrationsMap] = createSignal<
+  Map<string, TableDevtoolsRegistration>
+>(new Map())
 
-function emitTargets() {
-  const targets = getTableDevtoolsTargets()
+function getTableKey(table: TableDevtoolsTable) {
+  const key = untrack(() => table.options.key?.trim())
+  return key || undefined
+}
 
-  for (const listener of listeners) {
-    listener(targets)
+export function upsertTableDevtoolsTarget<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(options: UpsertTableDevtoolsTargetOptions<TFeatures, TData>) {
+  const table = options.table as unknown as TableDevtoolsTable
+  const key = getTableKey(table)
+
+  if (!key) {
+    console.error(MISSING_KEY_ERROR)
+    return undefined
   }
-}
 
-function normalizeName(name?: string) {
-  const trimmedName = name?.trim()
-  return trimmedName ? trimmedName : undefined
-}
-
-export function upsertTableDevtoolsTarget(
-  options: UpsertTableDevtoolsTargetOptions,
-) {
-  const existingRegistration = registrations.get(options.id)
-  const name = normalizeName(options.name)
+  const registrations = untrack(registrationsMap)
+  const existingRegistration = registrations.get(key)
 
   if (existingRegistration) {
-    registrations.set(options.id, {
-      ...existingRegistration,
-      table: options.table,
-      name,
+    if (existingRegistration.table === table) {
+      return () => {
+        removeTableDevtoolsTarget(key)
+      }
+    }
+
+    const nextRegistrations = new Map(registrations)
+    nextRegistrations.set(key, {
+      id: key,
+      table,
     })
+    setRegistrationsMap(nextRegistrations)
   } else {
-    registrations.set(options.id, {
-      id: options.id,
-      table: options.table,
-      name,
-      fallbackName: `Table ${fallbackNameCounter++}`,
+    const nextRegistrations = new Map(registrations)
+    nextRegistrations.set(key, {
+      id: key,
+      table,
     })
+    setRegistrationsMap(nextRegistrations)
   }
 
-  emitTargets()
+  return () => {
+    removeTableDevtoolsTarget(key)
+  }
 }
 
 export function removeTableDevtoolsTarget(id: string) {
-  if (!registrations.delete(id)) {
+  const registrations = untrack(registrationsMap)
+  if (!registrations.has(id)) {
     return
   }
 
-  emitTargets()
+  const nextRegistrations = new Map(registrations)
+  nextRegistrations.delete(id)
+
+  setRegistrationsMap(nextRegistrations)
 }
 
 export function getTableDevtoolsTargets(): Array<TableDevtoolsRegistration> {
-  return Array.from(registrations.values())
+  return Array.from(registrationsMap().values())
 }
 
 export function subscribeTableDevtoolsTargets(listener: Listener) {
-  listeners.add(listener)
-
-  return () => {
-    listeners.delete(listener)
-  }
+  let disposeRoot = () => {}
+  createRoot((dispose) => {
+    disposeRoot = dispose
+    createEffect(() => {
+      listener(getTableDevtoolsTargets())
+    })
+  })
+  return disposeRoot
 }
 
-export function setTableDevtoolsTarget(table: Table<any, any> | undefined) {
+export function setTableDevtoolsTarget<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table<TFeatures, TData> | undefined) {
   if (!table) {
-    removeTableDevtoolsTarget(LEGACY_TARGET_ID)
     return
   }
 
-  upsertTableDevtoolsTarget({
-    id: LEGACY_TARGET_ID,
-    table,
-  })
+  upsertTableDevtoolsTarget({ table })
 }

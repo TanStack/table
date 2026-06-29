@@ -9,11 +9,12 @@ title: column_getLeafColumns
 function column_getLeafColumns<TFeatures, TData, TValue>(column): Column<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L44)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L46)
 
-Returns leaf columns for a column.
+Collects the terminal leaf columns below this column.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+Group columns return their ordered descendants. Non-group columns return an
+array containing only the column itself.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getLeafColumns(column)
+const leafColumns = column_getLeafColumns(column)
 ```

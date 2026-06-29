@@ -1,4 +1,10 @@
-import { callMemoOrStaticFn, cloneState } from '../../utils'
+import {
+  callMemoOrStaticFn,
+  cloneState,
+  hasOwn,
+  makeObjectMap,
+} from '../../utils'
+import { getDefaultColumnPinningState } from '../column-pinning/columnPinningFeature.utils'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -8,23 +14,25 @@ import type { ColumnVisibilityState } from './columnVisibilityFeature.types'
 import type { Row } from '../../types/Row'
 
 /**
- * Returns the default column visibility state.
+ * Creates the default column visibility state.
  *
- * Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+ * The feature default is an empty object, where missing column ids are treated
+ * as visible. Reset APIs use this value when `defaultState` is `true`.
  *
  * @example
  * ```ts
- * const initialValue = getDefaultColumnVisibilityState()
+ * const visibility = getDefaultColumnVisibilityState()
  * ```
  */
 export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
-  return {}
+  return makeObjectMap()
 }
 
 /**
- * Toggles visibility for a column.
+ * Updates this column's visibility when hiding is allowed.
  *
- * The update is applied through the owning table state slice and respects the feature options for that column.
+ * Passing `visible` stores that value. Omitting it flips the column's current
+ * visibility state. Columns that cannot hide are left unchanged.
  *
  * @example
  * ```ts
@@ -37,23 +45,26 @@ export function column_toggleVisibility<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>, visible?: boolean): void {
   if (column_getCanHide(column)) {
-    table_setColumnVisibility(column.table, (old) => ({
-      ...old,
-      [column.id]:
+    table_setColumnVisibility(column.table, (old) => {
+      const next = Object.assign(makeObjectMap<boolean>(), old)
+      next[column.id] =
         visible ??
-        !callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
-    }))
+        !callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+      return next
+    })
   }
 }
 
 /**
- * Returns is visible for a column.
+ * Checks whether this column is visible.
  *
- * This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+ * Leaf columns read `state.columnVisibility[column.id]`, where missing entries
+ * default to visible. Parent columns are visible when at least one child column
+ * is visible.
  *
  * @example
  * ```ts
- * const value = column_getIsVisible(column)
+ * const visible = column_getIsVisible(column)
  * ```
  */
 export function column_getIsVisible<
@@ -62,23 +73,28 @@ export function column_getIsVisible<
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): boolean {
   const childColumns = column.columns
+  if (childColumns.length) {
+    return childColumns.some((childColumn) =>
+      callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
+    )
+  }
+
+  const columnVisibility = column.table.atoms.columnVisibility?.get()
   return (
-    (childColumns.length
-      ? childColumns.some((childColumn) =>
-          callMemoOrStaticFn(childColumn, 'getIsVisible', column_getIsVisible),
-        )
-      : column.table.atoms.columnVisibility?.get()?.[column.id]) ?? true
+    (columnVisibility && hasOwn(columnVisibility, column.id)
+      ? columnVisibility[column.id]
+      : undefined) ?? true
   )
 }
 
 /**
- * Returns whether a column can use hide.
+ * Checks whether this column is allowed to be hidden.
  *
- * This combines column options, table options, and any required accessor or feature state for the capability.
+ * Both `columnDef.enableHiding` and table `enableHiding` default to `true`.
  *
  * @example
  * ```ts
- * const value = column_getCanHide(column)
+ * const canHide = column_getCanHide(column)
  * ```
  */
 export function column_getCanHide<
@@ -93,13 +109,14 @@ export function column_getCanHide<
 }
 
 /**
- * Returns an event handler for toggling visibility handler.
+ * Creates a checkbox-style handler that writes this column's visibility.
  *
- * The handler is intended for direct use in column header controls such as buttons or checkboxes.
+ * The handler reads `event.target.checked`, so it is intended for visibility
+ * controls whose checked state means "visible".
  *
  * @example
  * ```ts
- * const value = column_getToggleVisibilityHandler(column)
+ * const onChange = column_getToggleVisibilityHandler(column)
  * ```
  */
 export function column_getToggleVisibilityHandler<
@@ -116,55 +133,96 @@ export function column_getToggleVisibilityHandler<
 }
 
 /**
- * Returns all visible cells for a row.
+ * Collects the cells from this row whose columns are visible.
  *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
- *
- * @example
- * ```ts
- * const value = row_getAllVisibleCells(row)
- * ```
- */
-export function row_getAllVisibleCells<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(row: Row<TFeatures, TData>) {
-  return row
-    .getAllCells()
-    .filter((cell) =>
-      callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible),
-    )
-}
-
-/**
- * Returns visible cells for a row.
- *
- * This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+ * When column pinning is active, the result is ordered as left-pinned cells,
+ * center cells, then right-pinned cells.
  *
  * @example
  * ```ts
- * const value = row_getVisibleCells(row)
+ * const visibleCells = row_getVisibleCells(row)
  * ```
  */
 export function row_getVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  left: Array<Cell<TFeatures, TData, unknown>>,
-  center: Array<Cell<TFeatures, TData, unknown>>,
-  right: Array<Cell<TFeatures, TData, unknown>>,
-) {
-  return [...left, ...center, ...right]
+>(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
+  const allCells = row.getAllCells()
+  const visibleCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < allCells.length; i++) {
+    const cell = allCells[i]!
+    if (callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible)) {
+      visibleCells.push(cell)
+    }
+  }
+
+  const { left, right } =
+    row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+  if (!left.length && !right.length) return visibleCells // no pinning, return early
+
+  const visibleCellsByColumnId = callMemoOrStaticFn(
+    row,
+    'getVisibleCellsByColumnId',
+    row_getVisibleCellsByColumnId,
+  )
+
+  const leftCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < left.length; i++) {
+    const cell = visibleCellsByColumnId[left[i]!]
+    if (cell) leftCells.push(cell)
+  }
+
+  const rightCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < right.length; i++) {
+    const cell = visibleCellsByColumnId[right[i]!]
+    if (cell) rightCells.push(cell)
+  }
+
+  // Center cells: visible cells in natural column order, minus pinned ones.
+  const centerCells: Array<Cell<TFeatures, TData, unknown>> = []
+  for (let i = 0; i < visibleCells.length; i++) {
+    const cell = visibleCells[i]!
+    const id = cell.column.id
+    if (!left.includes(id) && !right.includes(id)) centerCells.push(cell)
+  }
+
+  return [...leftCells, ...centerCells, ...rightCells]
 }
 
 /**
- * Returns visible flat columns for the table.
+ * Builds a lookup map of this row's visible cells keyed by column id.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Hidden columns are omitted from the map.
  *
  * @example
  * ```ts
- * const value = table_getVisibleFlatColumns(table)
+ * const visibleCellsById = row_getVisibleCellsByColumnId(row)
+ * ```
+ */
+export function row_getVisibleCellsByColumnId<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>): Record<string, Cell<TFeatures, TData, unknown>> {
+  const result = makeObjectMap<Cell<TFeatures, TData, unknown>>()
+  const allCells = row.getAllCells()
+  for (let i = 0; i < allCells.length; i++) {
+    const cell = allCells[i]!
+    if (callMemoOrStaticFn(cell.column, 'getIsVisible', column_getIsVisible)) {
+      result[cell.column.id] = cell
+    }
+  }
+  return result
+}
+
+/**
+ * Filters the flat column list down to visible columns.
+ *
+ * Parent/group columns are included when `column_getIsVisible` considers them
+ * visible.
+ *
+ * @example
+ * ```ts
+ * const columns = table_getVisibleFlatColumns(table)
  * ```
  */
 export function table_getVisibleFlatColumns<
@@ -179,13 +237,14 @@ export function table_getVisibleFlatColumns<
 }
 
 /**
- * Returns visible leaf columns for the table.
+ * Filters leaf columns down to those currently visible.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * This is the column list most row rendering code uses before pinning-specific
+ * partitioning.
  *
  * @example
  * ```ts
- * const value = table_getVisibleLeafColumns(table)
+ * const columns = table_getVisibleLeafColumns(table)
  * ```
  */
 export function table_getVisibleLeafColumns<
@@ -200,13 +259,14 @@ export function table_getVisibleLeafColumns<
 }
 
 /**
- * Updates the table's column visibility state slice.
+ * Routes a column visibility updater through the table's visibility change handler.
  *
- * The updater follows TanStack Table updater semantics and is routed through the corresponding `on*Change` option or backing atom.
+ * The updater may be a next visibility map or a function of the previous map,
+ * matching the instance `table.setColumnVisibility` behavior.
  *
  * @example
  * ```ts
- * table_setColumnVisibility(table, (old) => old)
+ * table_setColumnVisibility(table, (old) => ({ ...old, age: false }))
  * ```
  */
 export function table_setColumnVisibility<
@@ -220,9 +280,10 @@ export function table_setColumnVisibility<
 }
 
 /**
- * Resets the table's column visibility state slice.
+ * Resets `columnVisibility` to the configured initial state or feature default.
  *
- * By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+ * With no argument, the reset clones `table.initialState.columnVisibility` when
+ * it exists. Passing `true` ignores initial state and resets to `{}`.
  *
  * @example
  * ```ts
@@ -236,14 +297,19 @@ export function table_resetColumnVisibility<
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
   table_setColumnVisibility(
     table,
-    defaultState ? {} : cloneState(table.initialState.columnVisibility ?? {}),
+    defaultState
+      ? makeObjectMap()
+      : Object.assign(
+          makeObjectMap<boolean>(),
+          cloneState(table.initialState.columnVisibility ?? {}),
+        ),
   )
 }
 
 /**
- * Toggles all columns visible for the table.
+ * Shows or hides every hideable leaf column.
  *
- * This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+ * Columns that cannot hide stay visible when toggling all columns off.
  *
  * @example
  * ```ts
@@ -256,26 +322,25 @@ export function table_toggleAllColumnsVisible<
 >(table: Table_Internal<TFeatures, TData>, value?: boolean) {
   value = value ?? !table_getIsAllColumnsVisible(table)
 
-  table_setColumnVisibility(
-    table,
-    table.getAllLeafColumns().reduce(
-      (obj, column) => ({
-        ...obj,
-        [column.id]: !value ? !column_getCanHide(column) : value,
-      }),
-      {},
-    ),
-  )
+  const visibility = makeObjectMap<boolean>()
+  const leafColumns = table.getAllLeafColumns()
+  for (let i = 0; i < leafColumns.length; i++) {
+    const column = leafColumns[i]!
+    visibility[column.id] = !value ? !column_getCanHide(column) : value
+  }
+
+  table_setColumnVisibility(table, visibility)
 }
 
 /**
- * Returns is all columns visible for the table.
+ * Checks whether every leaf column is currently visible.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * Non-hideable columns are naturally visible because missing visibility entries
+ * default to `true`.
  *
  * @example
  * ```ts
- * const value = table_getIsAllColumnsVisible(table)
+ * const allVisible = table_getIsAllColumnsVisible(table)
  * ```
  */
 export function table_getIsAllColumnsVisible<
@@ -291,13 +356,13 @@ export function table_getIsAllColumnsVisible<
 }
 
 /**
- * Returns is some columns visible for the table.
+ * Checks whether at least one leaf column is currently visible.
  *
- * This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+ * This is useful for tri-state "show all columns" controls.
  *
  * @example
  * ```ts
- * const value = table_getIsSomeColumnsVisible(table)
+ * const someVisible = table_getIsSomeColumnsVisible(table)
  * ```
  */
 export function table_getIsSomeColumnsVisible<
@@ -312,13 +377,14 @@ export function table_getIsSomeColumnsVisible<
 }
 
 /**
- * Returns an event handler for all columns visibility handler.
+ * Creates a checkbox-style handler that shows or hides all columns.
  *
- * The handler calls the matching table toggle API and can be attached directly to checkbox or button UI.
+ * The handler reads `event.target.checked`, so it is intended for controls whose
+ * checked state means "all columns visible".
  *
  * @example
  * ```ts
- * const value = table_getToggleAllColumnsVisibilityHandler(table)
+ * const onChange = table_getToggleAllColumnsVisibilityHandler(table)
  * ```
  */
 export function table_getToggleAllColumnsVisibilityHandler<

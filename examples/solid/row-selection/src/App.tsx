@@ -1,5 +1,4 @@
 import { For, Show, createEffect, createSignal } from 'solid-js'
-import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import {
   FlexRender,
   columnFilteringFeature,
@@ -12,6 +11,7 @@ import {
   rowSelectionFeature,
   tableFeatures,
 } from '@tanstack/solid-table'
+import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { makeData } from './makeData'
 import type {
   Column,
@@ -22,22 +22,25 @@ import type {
 import type { Person } from './makeData'
 import './index.css'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
   const [enableRowSelection, setEnableRowSelection] = createSignal(true)
 
-  const tableRef: { current?: SolidTable<typeof _features, Person> } = {}
+  const tableRef: { current?: SolidTable<typeof features, Person> } = {}
 
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       id: 'select',
       header: () => (
@@ -112,11 +115,8 @@ function App() {
   ]
 
   const table = createTable({
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    key: 'row-selection', // needed for devtools
+    features,
     get data() {
       return data()
     },
@@ -127,18 +127,19 @@ function App() {
     },
     debugTable: true,
   })
+
+  useTanStackTableDevtools(table)
   tableRef.current = table
-  useTanStackTableDevtools(table, 'Row Selection Example')
 
   return (
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div>
         <input
-          value={table.store.state.globalFilter ?? ''}
+          value={table.atoms.globalFilter.get() ?? ''}
           onInput={(e) => table.setGlobalFilter(e.target.value)}
           class="summary-panel"
           placeholder="Search all columns..."
@@ -233,7 +234,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -243,7 +244,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -252,7 +253,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -264,7 +265,7 @@ function App() {
       </div>
       <br />
       <div>
-        {Object.keys(table.store.state.rowSelection).length.toLocaleString()} of{' '}
+        {Object.keys(table.atoms.rowSelection.get()).length.toLocaleString()} of{' '}
         {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total Rows
         Selected
       </div>
@@ -291,15 +292,15 @@ function App() {
       </div>
       <div>
         <label>Row Selection State:</label>
-        <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+        <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
       </div>
     </div>
   )
 }
 
 function Filter(props: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = props.table
     .getPreFilteredRowModel()

@@ -27,15 +27,21 @@ import type {
 } from '@tanstack/vue-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const IndeterminateCheckbox = defineComponent({
   name: 'IndeterminateCheckbox',
@@ -67,8 +73,8 @@ const IndeterminateCheckbox = defineComponent({
 })
 
 function renderFilter(
-  column: Column<typeof _features, Person>,
-  table: Table<typeof _features, Person>,
+  column: Column<typeof features, Person>,
+  table: Table<typeof features, Person>,
 ) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -196,13 +202,7 @@ export default defineComponent({
     ])
 
     const table = useTable({
-      _features,
-      _rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
+      features,
       columns,
       get data() {
         return data.value
@@ -226,10 +226,10 @@ export default defineComponent({
           <thead>
             {table
               .getHeaderGroups()
-              .map((headerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <div>
@@ -248,11 +248,11 @@ export default defineComponent({
           <tbody>
             {table
               .getRowModel()
-              .rows.map((row: Row<typeof _features, Person>) => (
+              .rows.map((row: Row<typeof features, Person>) => (
                 <tr key={row.id}>
                   {row
                     .getAllCells()
-                    .map((cell: Cell<typeof _features, Person, unknown>) => (
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
                       <td key={cell.id}>
                         <FlexRender cell={cell} />
                       </td>
@@ -294,7 +294,7 @@ export default defineComponent({
           <span class="inline-controls">
             <div>Page</div>
             <strong>
-              {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+              {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
               {table.getPageCount().toLocaleString()}
             </strong>
           </span>
@@ -304,7 +304,7 @@ export default defineComponent({
               type="number"
               min="1"
               max={table.getPageCount()}
-              value={table.store.state.pagination.pageIndex + 1}
+              value={table.atoms.pagination.get().pageIndex + 1}
               onInput={(event: Event) => {
                 const target = event.currentTarget as HTMLInputElement
                 const page = target.value ? Number(target.value) - 1 : 0
@@ -314,7 +314,7 @@ export default defineComponent({
             />
           </span>
           <select
-            value={table.store.state.pagination.pageSize}
+            value={table.atoms.pagination.get().pageSize}
             onChange={(event: Event) => {
               const target = event.currentTarget as HTMLSelectElement
               table.setPageSize(Number(target.value))
@@ -328,7 +328,7 @@ export default defineComponent({
           </select>
         </div>
         <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-        <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+        <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
       </div>
     )
   },

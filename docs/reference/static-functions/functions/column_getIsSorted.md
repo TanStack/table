@@ -9,11 +9,12 @@ title: column_getIsSorted
 function column_getIsSorted<TFeatures, TData, TValue>(column): false | SortDirection;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:388](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L388)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:405](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L405)
 
-Returns is sorted for a column.
+Reads this column's current sort direction.
 
-This derives the value from the column definition, table options, and the feature state atoms registered on the table.
+The result is `false` when the column is not sorted, otherwise `'asc'` or
+`'desc'` based on the column's entry in `state.sorting`.
 
 ## Type Parameters
 
@@ -33,7 +34,7 @@ This derives the value from the column definition, table options, and the featur
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 
@@ -42,5 +43,5 @@ This derives the value from the column definition, table options, and the featur
 ## Example
 
 ```ts
-const value = column_getIsSorted(column)
+const direction = column_getIsSorted(column)
 ```

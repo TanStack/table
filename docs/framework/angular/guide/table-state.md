@@ -7,6 +7,10 @@ title: Table State (Angular) Guide
 Want to skip to the implementation? Check out these examples:
 
 - [Basic injectTable](../examples/basic-inject-table)
+- [Basic External Atoms](../examples/basic-external-atoms)
+- [Basic External State](../examples/basic-external-state)
+- [Row Selection (Signals)](../examples/row-selection-signal)
+- [With TanStack Query](../examples/with-tanstack-query)
 
 ## Table State (Angular) Guide
 
@@ -22,35 +26,33 @@ There will be situations where you need to customize how you interact with the i
 
 ### State in v9
 
-TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For Angular, the table adapter supplies custom reactivity so table state atoms are backed by Angular signals.
+TanStack Table v9 overhauled state management around TanStack Store. TanStack Store uses the `alien-signals` implementation and supports performant derived state. For Angular, the table adapter supplies reactivity bindings so table state atoms are backed by Angular signals.
 
 A table instance has a few state surfaces:
 
 - `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
-- `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
-- `table.state()` is Angular-only selected state. It is the signal created from the selector passed as the second argument to `injectTable`.
+- `table.store` is the readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
 
-The Angular adapter provides `angularReactivity(injector)` to the table's `coreReativityFeature`. Core readonly atoms are Angular `computed` values, writable atoms are Angular `signal` values, and subscriptions bridge through `toObservable(computed(...), { injector })`. `injectTable` reruns the options initializer when Angular signals read inside it change, then calls `table.setOptions`.
+The Angular adapter provides `angularReactivity(injector)` as the table's reactivity binding. Core readonly atoms are Angular `computed` values, writable atoms are Angular `signal` values, and subscriptions bridge through `toObservable(computed(...), { injector })`. `injectTable` reruns the options initializer when Angular signals read inside it change, then calls `table.setOptions`.
 
 The returned table is also signal-reactive: table state and table APIs are wired for Angular signals, so you can consume table methods inside `computed(...)` and `effect(...)` and have those computations update when the underlying atom reads change.
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   columns,
   data: this.data(),
 }))
@@ -61,7 +63,7 @@ this.table.atoms.sorting.get()
 // this.table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state()`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.get()`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -70,61 +72,59 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should an Angular signal, computed value, effect, or template update when that value changes?
 
-Use a direct atom or store read for the current value. Use `table.state()` or `table.computed(...)` when you want signal updates.
+Use a direct atom read for the current value. Because Angular table atoms are backed by Angular signals, the same read also participates in Angular dependency tracking when it happens inside a template, `computed(...)`, or `effect(...)`.
 
-#### Reading State Without Subscribing
+#### Reading State
 
-The simplest and most performant way to read a current state value is to read the matching atom:
+The simplest and most performant way to read a state value is to read the matching atom:
 
 ```ts
 const pagination = this.table.atoms.pagination.get()
 const sorting = this.table.atoms.sorting.get()
 ```
 
-You can also read the current flat store snapshot:
+Use `table.store.get()` when you need the current flat state shape, such as debug JSON:
 
 ```ts
-const tableState = this.table.store.state
-const pagination = this.table.store.state.pagination
+const tableState = this.table.store.get()
+const stateJson = JSON.stringify(this.table.store.get(), null, 2)
 ```
 
-These reads are current-value reads. They only participate in Angular dependency tracking when they are called inside an Angular reactive context that tracks those reads. If the UI needs to stay reactive to table state changes, use `table.state()`, `table.computed(...)`, or even `injectSelector` from TanStack Store.
+Atom reads are signal reads in Angular. If `this.table.atoms.pagination.get()` is used in a template expression, `computed(...)`, or `effect(...)`, Angular tracks it and updates when that atom changes.
 
-#### Reading Reactive State with injectTable
+#### Selecting State with Angular computed
 
-The second argument to `injectTable` is a TanStack Store selector. The selected value is exposed as the `table.state()` signal. The default selector selects all registered table state.
+Use Angular's native `computed(...)` when you want to derive a value from table state or apply a custom equality function. For object or array slices, pass `shallow` to avoid unnecessary downstream work when the selected value is structurally unchanged.
 
 ```ts
-readonly table = injectTable(
-  () => ({
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
-    columns,
-    data: this.data(),
-  }),
-  (state) => ({
-    pagination: state.pagination,
-  }),
+import { computed } from '@angular/core'
+import { shallow } from '@tanstack/angular-table'
+
+readonly table = injectTable(() => ({
+  features,
+  columns,
+  data: this.data(),
+}))
+
+readonly pagination = computed(
+  () => this.table.atoms.pagination.get(),
+  // if you want to pass a custom equality function
+  // { equal: shallow },
 )
-
-readonly pageIndex = computed(() => this.table.state().pagination.pageIndex)
-```
-
-#### Fine-grained Updates with table.computed
-
-Use `table.computed({ selector })` when you want an Angular signal for a selected slice of table state. The default equality behavior is shallow comparison.
-
-```ts
-readonly pagination = this.table.computed({
-  selector: (state) => state.pagination,
-})
 
 readonly pageIndex = computed(() => this.pagination().pageIndex)
 ```
 
-This is the recommended way to keep expensive computed values scoped to the state they actually depend on.
+You can also select from the flat store snapshot if that is more convenient, but prefer direct atoms for narrow render reads.
+
+```ts
+readonly pagination = computed(
+  () => this.table.store.get().pagination,
+  { equal: shallow },
+)
+```
+
+Use `computed(...)` for selection, derivation, and equality control. You do not need it just to make an atom reactive; the atom already is backed by an Angular signal.
 
 ### Setting Table State
 
@@ -160,11 +160,7 @@ If you only need to customize the starting value for some table state, use `init
 
 ```ts
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data: this.data(),
   initialState: {
@@ -198,17 +194,70 @@ Slice reset APIs like `resetPagination()` update through that feature's state up
 
 ### Controlled State
 
-If you need easy access to table state in other parts of your application, you can control individual state slices. In Angular, the common pattern is to own those values with Angular signals and pass them through `state` plus the matching `on[State]Change` callback.
+If you need easy access to table state in other parts of your application, you can control individual state slices. In v9, external atoms are the recommended way to do this because they preserve the atomic state model and keep fine-grained subscriptions intact.
 
 #### External Atoms
 
-The core `atoms` table option is still available in Angular because the adapter re-exports TanStack Table core types. Use it when you already have compatible writable TanStack Store atoms and want a table slice to read from that atom.
+Use external atoms when the app should own one or more table state slices. Create stable writable atoms with `createAtom` from `@tanstack/angular-store` (class fields work well, since they are created once per component instance) and pass them to the table's `atoms` option. The table's derived `table.atoms.<slice>` reads then come from your atom, and they stay signal-reactive in templates, `computed(...)`, and `effect(...)` just like internally owned slices.
 
-Most Angular apps should start with Angular signals and the `state` option instead. That keeps ownership in Angular's signal model while `injectTable` keeps table options synchronized with signal changes.
+To consume the external atom itself inside Angular's reactive contexts, wrap it with `injectAtom` (or `injectSelector`) from `@tanstack/angular-store`, which returns an Angular signal. A plain `.get()` read returns the current snapshot and is fine in event handlers and other imperative code.
+
+This is especially useful for server-side data fetching. Pagination, sorting, or filters often belong in a query key, and external atoms let the app and the table share those values without funneling them through the `injectTable` options initializer (which re-runs whenever a signal read inside it changes).
+
+```ts
+import { Component } from '@angular/core'
+import { createAtom, injectAtom } from '@tanstack/angular-store'
+import { injectQuery } from '@tanstack/angular-query-experimental'
+import {
+  injectTable,
+  rowPaginationFeature,
+  tableFeatures,
+} from '@tanstack/angular-table'
+import type { PaginationState } from '@tanstack/angular-table'
+
+const features = tableFeatures({
+  rowPaginationFeature,
+})
+
+@Component({
+  /* ... */
+})
+export class App {
+  readonly paginationAtom = createAtom<PaginationState>({
+    pageIndex: 0,
+    pageSize: 10,
+  })
+
+  // an Angular signal view of the atom for reactive reads
+  readonly pagination = injectAtom(this.paginationAtom)
+
+  readonly dataQuery = injectQuery(() => ({
+    queryKey: ['data', this.pagination()],
+    queryFn: () => fetchData(this.pagination()),
+  }))
+
+  readonly table = injectTable(() => ({
+    features,
+    columns,
+    data: this.dataQuery.data()?.rows ?? [],
+    rowCount: this.dataQuery.data()?.rowCount,
+    atoms: {
+      pagination: this.paginationAtom,
+    },
+    manualPagination: true,
+  }))
+
+  // table pagination APIs update paginationAtom
+}
+```
+
+When using the `atoms` option for a slice, you do not need to add the matching `on[State]Change` option. For example, if you pass `atoms.pagination`, table pagination APIs update that atom directly.
+
+See the [Basic External Atoms example](../examples/basic-external-atoms) for a complete working version of this pattern (sorting and pagination owned by atoms), and the [With TanStack Query example](../examples/with-tanstack-query) for the server-side data fetching workflow (that example owns the slice with an Angular signal, but the query-key idea is the same).
 
 #### External State
 
-Use `state` plus `on[State]Change` when Angular should own a table state slice.
+The classic `state` plus `on[State]Change` pattern is still supported. In Angular this means owning the slice with an Angular signal, passing its current value through `state`, and writing it back in the matching callback. This can be convenient for simple integrations or when migrating v8 code, but it is less fine-grained than external atoms: every signal write re-runs the `injectTable` options initializer and calls `table.setOptions`. The [Basic External State example](../examples/basic-external-state) shows this pattern in full.
 
 ```ts
 readonly sorting = signal<SortingState>([])
@@ -218,11 +267,7 @@ readonly pagination = signal<PaginationState>({
 })
 
 readonly table = injectTable(() => ({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data: this.data(),
   state: {
@@ -242,7 +287,9 @@ readonly table = injectTable(() => ({
 }))
 ```
 
-The v8-style `onStateChange` option is no longer part of the v9 `injectTable` state model. v9 encourages keeping table state slices atomic and separated for performance.
+Use the per-slice `on[State]Change` callbacks to keep controlled table state slices atomic and separated.
+
+The v8-style `onStateChange` option (a single global state callback) is gone in v9. Use per-slice `on[State]Change` callbacks paired with `state.<slice>`, or external atoms via the `atoms` option. If you truly need to observe every state change, subscribe to `table.store` directly.
 
 ##### On State Change Callbacks
 
@@ -279,8 +326,8 @@ readonly sorting = signal<SortingState>([
 ])
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```ts
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

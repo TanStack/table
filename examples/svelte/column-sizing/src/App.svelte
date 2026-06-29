@@ -9,9 +9,9 @@
   import { makeData, type Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({ columnSizingFeature })
+  const features = tableFeatures({ columnSizingFeature })
 
-  const columnHelper = createColumnHelper<typeof _features, Person>()
+  const columnHelper = createColumnHelper<typeof features, Person>()
 
   const columns = columnHelper.columns([
     columnHelper.accessor('firstName', {
@@ -54,8 +54,7 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       get data() {
         return data
@@ -85,7 +84,7 @@
             value={column.getSize()}
             oninput={(e) => {
               table.setColumnSizing({
-                ...table.store.state.columnSizing,
+                ...table.state.columnSizing,
                 [column.id]: Number((e.target as HTMLInputElement).value),
               })
             }}
@@ -201,5 +200,5 @@
     </div>
   </div>
   <div class="spacer-md"></div>
-  <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+  <pre>{JSON.stringify(table.state, null, 2)}</pre>
 </div>

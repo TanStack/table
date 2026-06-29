@@ -1,18 +1,38 @@
-import {
-  createFormHook,
-  createFormHookContexts,
-  useStore,
-} from '@tanstack/solid-form'
+import { createFormHook, createFormHookContexts } from '@tanstack/solid-form'
 import { For, Show } from 'solid-js'
 
-// Create form and field contexts
 export const { fieldContext, useFieldContext, formContext, useFormContext } =
   createFormHookContexts()
 
-// TextField component for string inputs
+function getErrorMessage(error: unknown) {
+  if (typeof error === 'string') return error
+
+  if (error && typeof error === 'object' && 'message' in error) {
+    const message = error.message
+    if (typeof message === 'string') return message
+  }
+
+  return String(error)
+}
+
+function FieldErrors({
+  errors,
+  isBlurred,
+  isTouched,
+}: {
+  errors: ReadonlyArray<unknown>
+  isBlurred: boolean
+  isTouched: boolean
+}) {
+  return (
+    <Show when={(isTouched || isBlurred) && errors.length > 0}>
+      <div class="error-text">{errors.map(getErrorMessage).join(', ')}</div>
+    </Show>
+  )
+}
+
 function TextField() {
   const field = useFieldContext<string>()
-  const errors = useStore(field().store, (state) => state.meta.errors)
 
   return (
     <div>
@@ -22,17 +42,17 @@ function TextField() {
         onInput={(e) => field().handleChange(e.currentTarget.value)}
         onBlur={() => field().handleBlur()}
       />
-      <Show when={errors().length > 0}>
-        <div class="error-text">{errors().join(', ')}</div>
-      </Show>
+      <FieldErrors
+        errors={field().state.meta.errors}
+        isBlurred={field().state.meta.isBlurred}
+        isTouched={field().state.meta.isTouched}
+      />
     </div>
   )
 }
 
-// NumberField component for numeric inputs
 function NumberField() {
   const field = useFieldContext<number>()
-  const errors = useStore(field().store, (state) => state.meta.errors)
 
   return (
     <div>
@@ -43,19 +63,19 @@ function NumberField() {
         onInput={(e) => field().handleChange(Number(e.currentTarget.value))}
         onBlur={() => field().handleBlur()}
       />
-      <Show when={errors().length > 0}>
-        <div class="error-text">{errors().join(', ')}</div>
-      </Show>
+      <FieldErrors
+        errors={field().state.meta.errors}
+        isBlurred={field().state.meta.isBlurred}
+        isTouched={field().state.meta.isTouched}
+      />
     </div>
   )
 }
 
-// SelectField component for status dropdown
 const statusOptions = ['relationship', 'complicated', 'single'] as const
 
 function SelectField() {
   const field = useFieldContext<string>()
-  const errors = useStore(field().store, (state) => state.meta.errors)
 
   return (
     <div>
@@ -69,16 +89,18 @@ function SelectField() {
           {(status) => <option value={status}>{status}</option>}
         </For>
       </select>
-      <Show when={errors().length > 0}>
-        <div class="error-text">{errors().join(', ')}</div>
-      </Show>
+      <FieldErrors
+        errors={field().state.meta.errors}
+        isBlurred={field().state.meta.isBlurred}
+        isTouched={field().state.meta.isTouched}
+      />
     </div>
   )
 }
 
-// SubmitButton component that shows form state
 function SubmitButton(props: { label: string }) {
   const form = useFormContext()
+
   return (
     <button
       type="submit"
@@ -90,9 +112,9 @@ function SubmitButton(props: { label: string }) {
   )
 }
 
-// FormStateIndicator component to show dirty/valid state
 function FormStateIndicator() {
   const form = useFormContext()
+
   return (
     <div class="form-status">
       <span class={form.state.isDirty ? 'warning-text' : 'muted-text'}>
@@ -101,16 +123,10 @@ function FormStateIndicator() {
       <span class={form.state.isValid ? 'success-text' : 'error-text'}>
         {form.state.isValid ? '✓ Valid' : '✗ Invalid'}
       </span>
-      <Show when={Object.keys(form.state.errorMap).length > 0}>
-        <span class="error-text">
-          Errors: {JSON.stringify(form.state.errorMap)}
-        </span>
-      </Show>
     </div>
   )
 }
 
-// Create the form hook with all components
 export const { useAppForm } = createFormHook({
   fieldComponents: {
     TextField,

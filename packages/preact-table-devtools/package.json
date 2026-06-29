@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/preact-table-devtools",
-  "version": "9.0.0-alpha.43",
+  "version": "9.0.0-beta.23",
   "description": "Preact devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -18,7 +18,8 @@
     "preact",
     "tanstack",
     "table",
-    "devtools"
+    "devtools",
+    "tanstack-intent"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
@@ -44,19 +45,20 @@
   },
   "files": [
     "dist/",
-    "src"
+    "src",
+    "skills"
   ],
   "dependencies": {
-    "@tanstack/devtools-utils": "^0.4.0",
+    "@tanstack/devtools-utils": "^0.6.0",
     "@tanstack/table-devtools": "workspace:*"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.5",
     "@tanstack/table-core": "workspace:*",
-    "preact": "^10.29.1"
+    "preact": "^10.29.2"
   },
   "peerDependencies": {
-    "@tanstack/table-core": "workspace:*",
+    "@tanstack/table-core": "^9.0.0-beta.5",
     "preact": ">=10.0.0"
   }
 }

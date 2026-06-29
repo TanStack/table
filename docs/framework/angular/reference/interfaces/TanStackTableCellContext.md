@@ -5,7 +5,7 @@ title: TanStackTableCellContext
 
 # Interface: TanStackTableCellContext\<TFeatures, TData, TValue\>
 
-Defined in: [helpers/cell.ts:11](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L11)
+Defined in: [packages/angular-table/src/helpers/cell.ts:11](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L11)
 
 DI context shape for a TanStack Table cell.
 
@@ -34,6 +34,6 @@ without having to pass it through inputs/props manually.
 cell: Signal<Cell<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [helpers/cell.ts:17](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L17)
+Defined in: [packages/angular-table/src/helpers/cell.ts:17](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L17)
 
 Signal that returns the current cell instance.

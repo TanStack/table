@@ -6,10 +6,10 @@ title: Cell
 # Type Alias: Cell\<TFeatures, TData, TValue\>
 
 ```ts
-type Cell<TFeatures, TData, TValue> = Cell_Cell<TFeatures, TData, TValue> & UnionToIntersection<"columnGroupingFeature" extends keyof TFeatures ? Cell_ColumnGrouping : never> & ExtractFeatureTypes<"Cell", TFeatures> & Cell_Plugins<TFeatures, TData, TValue>;
+type Cell<TFeatures, TData, TValue> = Cell_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap>;
 ```
 
-Defined in: [types/Cell.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L22)
+Defined in: [types/Cell.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L16)
 
 ## Type Parameters
 

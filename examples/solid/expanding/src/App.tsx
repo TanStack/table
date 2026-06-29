@@ -19,15 +19,21 @@ import { makeData } from './makeData'
 import type { Column, Table } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
   const [data, setData] = createSignal(makeData(100, 5, 3))
@@ -99,13 +105,7 @@ function App() {
   ])
 
   const table = createTable({
-    _features,
-    _rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
+    features,
     columns,
     get data() {
       return data()
@@ -195,7 +195,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -205,7 +205,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -216,7 +216,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.currentTarget.value))
           }}
@@ -227,7 +227,7 @@ function App() {
         </select>
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }
@@ -236,8 +236,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

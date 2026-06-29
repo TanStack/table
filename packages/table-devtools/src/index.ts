@@ -18,5 +18,7 @@ export {
 } from './tableTarget'
 export type {
   TableDevtoolsRegistration,
+  TableDevtoolsStore,
+  TableDevtoolsTable,
   UpsertTableDevtoolsTargetOptions,
 } from './tableTarget'

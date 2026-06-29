@@ -12,11 +12,13 @@ function column_toggleSorting<TFeatures, TData, TValue>(
    multi?): void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L177)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L189)
 
-Toggles sorting for a column.
+Applies the next sorting state for this column.
 
-The update is applied through the owning table state slice and respects the feature options for that column.
+The toggle can add, replace, flip, or remove this column's sort entry. Multi
+sorting respects `enableMultiSort`, `maxMultiSortColCount`, and the `multi`
+argument.
 
 ## Type Parameters
 
@@ -36,7 +38,7 @@ The update is applied through the owning table state slice and respects the feat
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ### desc?
 
@@ -53,5 +55,5 @@ The update is applied through the owning table state slice and respects the feat
 ## Example
 
 ```ts
-column_toggleSorting(column)
+column_toggleSorting(column, undefined, true)
 ```

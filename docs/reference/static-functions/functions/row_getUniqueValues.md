@@ -9,11 +9,12 @@ title: row_getUniqueValues
 function row_getUniqueValues<TFeatures, TData>(row, columnId): unknown;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L48)
+Defined in: [core/rows/coreRowsFeature.utils.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L50)
 
-Returns unique values for a row.
+Reads and caches the values used by faceting/grouping for a column.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+If the column defines `getUniqueValues`, that result is used. Otherwise the
+row's accessor value is wrapped in a single-item array.
 
 ## Type Parameters
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getUniqueValues(row)
+const values = row_getUniqueValues(row, 'tags')
 ```

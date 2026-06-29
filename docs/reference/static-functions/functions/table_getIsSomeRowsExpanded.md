@@ -9,11 +9,11 @@ title: table_getIsSomeRowsExpanded
 function table_getIsSomeRowsExpanded<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L156)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L173)
 
-Returns is some rows expanded for the table.
+Checks whether any row is expanded.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The special expanded-all value `true` counts as some rows expanded.
 
 ## Type Parameters
 
@@ -29,7 +29,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -38,5 +38,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsSomeRowsExpanded(table)
+const someExpanded = table_getIsSomeRowsExpanded(table)
 ```

@@ -8,9 +8,9 @@ import { For, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature })
+const features = tableFeatures({ columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -52,20 +52,16 @@ function App() {
   const refreshData = () => setData(makeData(20))
   const stressTest = () => setData(makeData(1_000))
 
-  const table = createTable(
-    {
-      _features,
-      _rowModels: {},
-      columns,
-      get data() {
-        return data()
-      },
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   return (
     <div class="demo-root">
@@ -87,7 +83,7 @@ function App() {
                   value={column.getSize()}
                   onInput={(e) => {
                     table.setColumnSizing({
-                      ...table.store.state.columnSizing,
+                      ...table.atoms.columnSizing.get(),
                       [column.id]: Number(e.currentTarget.value),
                     })
                   }}
@@ -244,7 +240,7 @@ function App() {
         </div>
       </div>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

@@ -9,7 +9,7 @@
 // )
 // }
 
-import { Component, computed } from '@angular/core'
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core'
 import { flexRenderComponent } from '@tanstack/angular-table'
 import { FormsModule } from '@angular/forms'
 import { injectTableHeaderContext } from '../table'
@@ -22,6 +22,26 @@ export function SortIndicator(): string | null {
     return null
   }
   return `<span class="sort-indicator">${sorted === 'asc' ? '🔼' : '🔽'}</span>`
+}
+
+@Component({
+  selector: 'table-select-header',
+  host: {
+    class: 'selection-cell',
+  },
+  template: `
+    <input
+      type="checkbox"
+      [checked]="table().getIsAllRowsSelected()"
+      [indeterminate]="table().getIsSomeRowsSelected()"
+      (change)="table().getToggleAllRowsSelectedHandler()($event)"
+    />
+  `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class SelectHeader {
+  readonly header = injectTableHeaderContext()
+  readonly table = computed(() => this.header().getContext().table)
 }
 
 export function ColumnFilter(): FlexRenderComponent | null {

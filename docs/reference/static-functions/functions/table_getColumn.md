@@ -11,11 +11,12 @@ function table_getColumn<TFeatures, TData>(table, columnId):
   | undefined;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:226](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L226)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L261)
 
-Returns column for the table.
+Looks up a column by id from the flat column map.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The lookup can return group columns or leaf columns. In development, a
+missing id logs a warning to help catch stale column references.
 
 ## Type Parameters
 
@@ -31,7 +32,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### columnId
 
@@ -45,5 +46,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getColumn(table)
+const column = table_getColumn(table, 'firstName')
 ```

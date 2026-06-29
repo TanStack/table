@@ -18,112 +18,78 @@ import {
   table_setPageSize,
   table_setPagination,
 } from './rowPaginationFeature.utils'
-import type { RowData } from '../../types/type-utils'
-import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
-// import type {
-//   CachedRowModel_Paginated,
-//   CreateRowModel_Paginated,
-//   TableOptions_RowPagination,
-//   TableState_RowPagination,
-//   Table_RowPagination,
-// } from './rowPaginationFeature.types'
-
-export interface RowPaginationFeatureConstructors<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  // CachedRowModel: CachedRowModel_Paginated<TFeatures, TData>
-  // CreateRowModels: CreateRowModel_Paginated<TFeatures, TData>
-  // Table: Table_RowPagination<TFeatures, TData>
-  // TableOptions: TableOptions_RowPagination<TFeatures, TData>
-  // TableState: TableState_RowPagination
-}
+import type { TableFeature } from '../../types/TableFeatures'
 
 /**
- * Creates the stock row pagination feature.
- *
- * The returned feature registers its state defaults, option defaults, and instance APIs so it can be included in a `tableFeatures({ ... })` call.
+ * Feature that adds pagination state and table APIs for page navigation.
  */
-export function constructRowPaginationFeature<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(): TableFeature<RowPaginationFeatureConstructors<TFeatures, TData>> {
-  return {
-    getInitialState: (initialState) => {
-      return {
-        ...initialState,
-        pagination: {
-          ...getDefaultPaginationState(),
-          ...initialState.pagination,
-        },
-      }
-    },
+export const rowPaginationFeature: TableFeature = {
+  getInitialState: (initialState) => {
+    return {
+      ...initialState,
+      pagination: {
+        ...getDefaultPaginationState(),
+        ...initialState.pagination,
+      },
+    }
+  },
 
-    getDefaultTableOptions: (table) => {
-      return {
-        onPaginationChange: makeStateUpdater('pagination', table),
-      }
-    },
+  getDefaultTableOptions: (table) => {
+    return {
+      onPaginationChange: makeStateUpdater('pagination', table),
+    }
+  },
 
-    constructTableAPIs: (table) => {
-      assignTableAPIs('rowPaginationFeature', table, {
-        table_autoResetPageIndex: {
-          fn: () => table_autoResetPageIndex(table),
-        },
-        table_setPagination: {
-          fn: (updater) => table_setPagination(table, updater),
-        },
-        table_resetPagination: {
-          fn: (defaultState) => table_resetPagination(table, defaultState),
-        },
-        table_setPageIndex: {
-          fn: (updater) => table_setPageIndex(table, updater),
-        },
-        table_resetPageIndex: {
-          fn: (defaultState) => table_resetPageIndex(table, defaultState),
-        },
-        table_setPageSize: {
-          fn: (updater) => table_setPageSize(table, updater),
-        },
-        table_getPageCount: {
-          fn: () => table_getPageCount(table),
-        },
-        table_resetPageSize: {
-          fn: (defaultState) => table_resetPageSize(table, defaultState),
-        },
-        table_getPageOptions: {
-          fn: () => table_getPageOptions(table),
-        },
-        table_getCanPreviousPage: {
-          fn: () => table_getCanPreviousPage(table),
-        },
-        table_getCanNextPage: {
-          fn: () => table_getCanNextPage(table),
-        },
-        table_previousPage: {
-          fn: () => table_previousPage(table),
-        },
-        table_nextPage: {
-          fn: () => table_nextPage(table),
-        },
-        table_firstPage: {
-          fn: () => table_firstPage(table),
-        },
-        table_lastPage: {
-          fn: () => table_lastPage(table),
-        },
-        table_getRowCount: {
-          fn: () => table_getRowCount(table),
-        },
-      })
-    },
-  }
+  constructTableAPIs: (table) => {
+    assignTableAPIs('rowPaginationFeature', table, {
+      table_autoResetPageIndex: {
+        fn: () => table_autoResetPageIndex(table),
+      },
+      table_setPagination: {
+        fn: (updater) => table_setPagination(table, updater),
+      },
+      table_resetPagination: {
+        fn: (defaultState) => table_resetPagination(table, defaultState),
+      },
+      table_setPageIndex: {
+        fn: (updater) => table_setPageIndex(table, updater),
+      },
+      table_resetPageIndex: {
+        fn: (defaultState) => table_resetPageIndex(table, defaultState),
+      },
+      table_setPageSize: {
+        fn: (updater) => table_setPageSize(table, updater),
+      },
+      table_getPageCount: {
+        fn: () => table_getPageCount(table),
+      },
+      table_resetPageSize: {
+        fn: (defaultState) => table_resetPageSize(table, defaultState),
+      },
+      table_getPageOptions: {
+        fn: () => table_getPageOptions(table),
+      },
+      table_getCanPreviousPage: {
+        fn: () => table_getCanPreviousPage(table),
+      },
+      table_getCanNextPage: {
+        fn: () => table_getCanNextPage(table),
+      },
+      table_previousPage: {
+        fn: () => table_previousPage(table),
+      },
+      table_nextPage: {
+        fn: () => table_nextPage(table),
+      },
+      table_firstPage: {
+        fn: () => table_firstPage(table),
+      },
+      table_lastPage: {
+        fn: () => table_lastPage(table),
+      },
+      table_getRowCount: {
+        fn: () => table_getRowCount(table),
+      },
+    })
+  },
 }
-
-/**
- * The stock row pagination feature.
- *
- * Register this feature to add pagination state, page navigation APIs, and
- * pagination-aware row model helpers to a table.
- */
-export const rowPaginationFeature = constructRowPaginationFeature()

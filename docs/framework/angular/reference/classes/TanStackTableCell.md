@@ -5,7 +5,7 @@ title: TanStackTableCell
 
 # Class: TanStackTableCell\<TFeatures, TData, TValue\>
 
-Defined in: [helpers/cell.ts:76](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L76)
+Defined in: [packages/angular-table/src/helpers/cell.ts:76](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L76)
 
 Provides a TanStack Table `Cell` instance in Angular DI.
 
@@ -81,7 +81,7 @@ new TanStackTableCell<TFeatures, TData, TValue>(): TanStackTableCell<TFeatures, 
 readonly cell: InputSignal<Cell<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [helpers/cell.ts:86](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L86)
+Defined in: [packages/angular-table/src/helpers/cell.ts:86](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/cell.ts#L86)
 
 The current TanStack Table cell.
 

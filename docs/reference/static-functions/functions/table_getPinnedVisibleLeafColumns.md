@@ -6,14 +6,17 @@ title: table_getPinnedVisibleLeafColumns
 # Function: table\_getPinnedVisibleLeafColumns()
 
 ```ts
-function table_getPinnedVisibleLeafColumns<TFeatures, TData>(table, position?): any[];
+function table_getPinnedVisibleLeafColumns<TFeatures, TData>(table, position?): 
+  | Column<TFeatures, TData, unknown>[]
+  | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:820](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L820)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:870](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L870)
 
-Returns pinned visible leaf columns for the table.
+Resolves visible leaf columns for a requested pinning region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Omit `position` to get all visible leaf columns, or pass `'left'`, `'center'`,
+or `'right'` to get one partition.
 
 ## Type Parameters
 
@@ -29,7 +32,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### position?
 
@@ -37,10 +40,11 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ## Returns
 
-`any`[]
+  \| [`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+  \| [`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getPinnedVisibleLeafColumns(table)
+const columns = table_getPinnedVisibleLeafColumns(table, 'left')
 ```

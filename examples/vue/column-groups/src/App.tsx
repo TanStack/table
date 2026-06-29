@@ -10,9 +10,9 @@ import type {
 } from '@tanstack/vue-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -79,7 +79,7 @@ export default defineComponent({
 
     const table = useTable({
       debugTable: true,
-      _features,
+      features,
       columns,
       get data() {
         return data.value
@@ -101,10 +101,10 @@ export default defineComponent({
           <thead>
             {table
               .getHeaderGroups()
-              .map((headerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <FlexRender header={header} />
@@ -118,11 +118,11 @@ export default defineComponent({
           <tbody>
             {table
               .getRowModel()
-              .rows.map((row: Row<typeof _features, Person>) => (
+              .rows.map((row: Row<typeof features, Person>) => (
                 <tr key={row.id}>
                   {row
                     .getAllCells()
-                    .map((cell: Cell<typeof _features, Person, unknown>) => (
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
                       <td key={cell.id}>
                         <FlexRender cell={cell} />
                       </td>
@@ -133,10 +133,10 @@ export default defineComponent({
           <tfoot>
             {table
               .getFooterGroups()
-              .map((footerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((footerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={footerGroup.id}>
                   {footerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <FlexRender footer={header} />

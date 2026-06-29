@@ -1,0 +1,63 @@
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (1M rows)
+  </button>
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+                <div
+                  [class.sortable-header]="header.column.getCanSort()"
+                  (click)="header.column.getToggleSortingHandler()?.($event)"
+                  [title]="
+                    getSortTitle(header.column.getCanSort(), header.column.getNextSortingOrder())
+                  "
+                >
+                  <ng-container *flexRenderHeader="header; let headerCell">{{
+                    headerCell
+                  }}</ng-container>
+                  {{ sortIndicator(header.column.getIsSorted()) }}
+                </div>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows.slice(0, 10); track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td>
+              <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (footer of footerGroup.headers; track footer.id) {
+            <th [attr.colSpan]="footer.colSpan">
+              @if (!footer.isPlaceholder) {
+                <ng-container *flexRenderFooter="footer; let footerCell">{{
+                  footerCell
+                }}</ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+  <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
+  <div></div>
+  <!-- Store mode: dump full table state for debugging -->
+  <pre>{{ stringifiedState() }}</pre>
+</div>

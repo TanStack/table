@@ -2,32 +2,15 @@
   import type { ColumnDef } from '@tanstack/svelte-table'
   import {
     FlexRender,
-    columnFacetingFeature,
-    columnFilteringFeature,
-    createFacetedMinMaxValues,
-    createFacetedRowModel,
-    createFacetedUniqueValues,
-    createFilteredRowModel,
-    createPaginatedRowModel,
     createTable,
-    filterFns,
-    globalFilteringFeature,
-    rowPaginationFeature,
-    tableFeatures,
   } from '@tanstack/svelte-table'
   import DebouncedInput from './DebouncedInput.svelte'
   import ColumnFilter from './ColumnFilter.svelte'
   import './index.css'
+  import { features } from './features'
   import { makeData, type Person } from './makeData'
 
-  const _features = tableFeatures({
-    columnFilteringFeature,
-    globalFilteringFeature,
-    columnFacetingFeature,
-    rowPaginationFeature,
-  })
-
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       header: 'Name',
       footer: (props) => props.column.id,
@@ -84,18 +67,11 @@
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(200_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {
-        facetedRowModel: createFacetedRowModel(),
-        facetedMinMaxValues: createFacetedMinMaxValues(),
-        facetedUniqueValues: createFacetedUniqueValues(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      features,
       get data() {
         return data
       },
@@ -112,7 +88,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <DebouncedInput
     value={table.state.globalFilter ?? ''}

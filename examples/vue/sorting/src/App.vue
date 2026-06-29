@@ -12,11 +12,13 @@ import { h, ref } from 'vue'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -57,18 +59,12 @@ const stressTest = () => {
   data.value = makeData(500_000)
 }
 
-const table = useTable(
-  {
-    _features,
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
-    data,
-    columns,
-    debugTable: true,
-  },
-  (state) => ({ sorting: state.sorting }),
-)
+const table = useTable({
+  features,
+  data,
+  columns,
+  debugTable: true,
+})
 </script>
 
 <template>
@@ -134,7 +130,7 @@ const table = useTable(
 
     <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
 
-    <pre>{{ JSON.stringify(table.state.sorting, null, 2) }}</pre>
+    <pre>{{ JSON.stringify(table.atoms.sorting.get(), null, 2) }}</pre>
   </div>
 </template>
 

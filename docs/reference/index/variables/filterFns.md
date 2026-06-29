@@ -9,7 +9,7 @@ title: filterFns
 const filterFns: object;
 ```
 
-Defined in: [fns/filterFns.ts:363](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L363)
+Defined in: [fns/filterFns.ts:367](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L367)
 
 The built-in filter function registry.
 
@@ -20,71 +20,303 @@ Pass this object to filtered row model creation or extend it with custom filter 
 ### arrHas
 
 ```ts
-arrHas: FilterFn<any, any> = filterFn_arrHas;
+arrHas: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrHas;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### arrIncludes
 
 ```ts
-arrIncludes: FilterFn<any, any> = filterFn_arrIncludes;
+arrIncludes: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrIncludes;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### arrIncludesAll
 
 ```ts
-arrIncludesAll: FilterFn<any, any> = filterFn_arrIncludesAll;
+arrIncludesAll: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrIncludesAll;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### arrIncludesSome
 
 ```ts
-arrIncludesSome: FilterFn<any, any> = filterFn_arrIncludesSome;
+arrIncludesSome: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrIncludesSome;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### between
 
 ```ts
-between: FilterFn<any, any> = filterFn_between;
+between: <TFeatures, TData>(row, columnId, filterValues) => boolean & object = filterFn_between;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### betweenInclusive
 
 ```ts
-betweenInclusive: FilterFn<any, any> = filterFn_betweenInclusive;
+betweenInclusive: <TFeatures, TData>(row, columnId, filterValues) => boolean & object = filterFn_betweenInclusive;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### equals
 
 ```ts
-equals: FilterFn<any, any> = filterFn_equals;
+equals: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_equals;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### equalsString
 
 ```ts
-equalsString: FilterFn<any, any> = filterFn_equalsString;
+equalsString: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_equalsString;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### includesString
 
 ```ts
-includesString: FilterFn<any, any> = filterFn_includesString;
+includesString: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_includesString;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### includesStringSensitive
 
 ```ts
-includesStringSensitive: FilterFn<any, any> = filterFn_includesStringSensitive;
+includesStringSensitive: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_includesStringSensitive;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
 
 ### inNumberRange
 
 ```ts
-inNumberRange: FilterFn<any, any> = filterFn_inNumberRange;
+inNumberRange: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_inNumberRange;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`
+
+##### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => readonly [number, number];
+```
+
+###### Parameters
+
+###### val
+
+\[`any`, `any`\]
+
+###### Returns
+
+readonly \[`number`, `number`\]
 
 ### weakEquals
 
 ```ts
-weakEquals: FilterFn<any, any> = filterFn_weakEquals;
+weakEquals: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_weakEquals;
 ```
+
+#### Type Declaration
+
+##### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`boolean`

@@ -72,33 +72,33 @@
     (click)="table.setPageIndex(0)"
     [disabled]="!table.getCanPreviousPage()"
   >
-    <<
+    &lt;&lt;
   </button>
   <button
     class="demo-button demo-button-sm"
     (click)="table.previousPage()"
     [disabled]="!table.getCanPreviousPage()"
   >
-    <
+    &lt;
   </button>
   <button
     class="demo-button demo-button-sm"
     (click)="table.nextPage()"
     [disabled]="!table.getCanNextPage()"
   >
-    >
+    &gt;
   </button>
   <button
     class="demo-button demo-button-sm"
     (click)="table.setPageIndex(table.getPageCount() - 1)"
     [disabled]="!table.getCanNextPage()"
   >
-    >>
+    &gt;&gt;
   </button>
   <span class="inline-controls">
     <div>Page</div>
     <strong>
-      {{ (table.store.state.pagination.pageIndex + 1).toLocaleString() }} of
+      {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
       {{ table.getPageCount().toLocaleString() }}
     </strong>
   </span>
@@ -106,13 +106,13 @@
     | Go to page:
     <input
       type="number"
-      [value]="table.store.state.pagination.pageIndex + 1"
+      [value]="table.atoms.pagination.get().pageIndex + 1"
       (input)="onPageInputChange($event)"
       class="page-size-input"
     />
   </span>
 
-  <select [value]="table.store.state.pagination.pageSize" (change)="onPageSizeChange($event)">
+  <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
     @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
       <option [value]="pageSize">Show {{ pageSize }}</option>
     }

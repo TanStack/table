@@ -12,7 +12,7 @@ Defined in: [core/coreFeatures.ts:9](https://github.com/TanStack/table/blob/main
 ### coreCellsFeature
 
 ```ts
-coreCellsFeature: TableFeature<CoreCellsFeatureConstructors<TableFeatures, RowData>>;
+coreCellsFeature: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L11)
@@ -22,7 +22,7 @@ Defined in: [core/coreFeatures.ts:11](https://github.com/TanStack/table/blob/mai
 ### coreColumnsFeature
 
 ```ts
-coreColumnsFeature: TableFeature<CoreColumnsFeatureConstructors<TableFeatures, RowData>>;
+coreColumnsFeature: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L12)
@@ -32,17 +32,17 @@ Defined in: [core/coreFeatures.ts:12](https://github.com/TanStack/table/blob/mai
 ### coreHeadersFeature
 
 ```ts
-coreHeadersFeature: TableFeature<CoreHeadersFeatureConstructors<TableFeatures, RowData>>;
+coreHeadersFeature: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L13)
 
 ***
 
-### coreReativityFeature?
+### coreReactivityFeature?
 
 ```ts
-optional coreReativityFeature: TableReactivityBindings;
+optional coreReactivityFeature: TableReactivityBindings;
 ```
 
 Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L10)
@@ -52,7 +52,7 @@ Defined in: [core/coreFeatures.ts:10](https://github.com/TanStack/table/blob/mai
 ### coreRowModelsFeature
 
 ```ts
-coreRowModelsFeature: TableFeature<CoreRowModelsFeatureConstructors<TableFeatures, RowData>>;
+coreRowModelsFeature: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L14)
@@ -62,7 +62,7 @@ Defined in: [core/coreFeatures.ts:14](https://github.com/TanStack/table/blob/mai
 ### coreRowsFeature
 
 ```ts
-coreRowsFeature: TableFeature<CoreRowsFeatureConstructors<TableFeatures, RowData>>;
+coreRowsFeature: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L15)
@@ -72,7 +72,7 @@ Defined in: [core/coreFeatures.ts:15](https://github.com/TanStack/table/blob/mai
 ### coreTablesFeature
 
 ```ts
-coreTablesFeature: TableFeature<CoreTablesFeatureConstructors<TableFeatures, RowData>>;
+coreTablesFeature: TableFeature;
 ```
 
 Defined in: [core/coreFeatures.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/coreFeatures.ts#L16)

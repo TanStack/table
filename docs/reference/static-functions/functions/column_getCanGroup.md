@@ -9,11 +9,12 @@ title: column_getCanGroup
 function column_getCanGroup<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L64)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L66)
 
-Returns whether a column can use group.
+Checks whether this column can be used for grouping.
 
-This combines column options, table options, and any required accessor or feature state for the capability.
+Grouping must be enabled at the column and table level, and the column must
+either have an accessor or provide `getGroupingValue`.
 
 ## Type Parameters
 
@@ -33,7 +34,7 @@ This combines column options, table options, and any required accessor or featur
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 
@@ -42,5 +43,5 @@ This combines column options, table options, and any required accessor or featur
 ## Example
 
 ```ts
-const value = column_getCanGroup(column)
+const canGroup = column_getCanGroup(column)
 ```

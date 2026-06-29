@@ -1,0 +1,74 @@
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">Stress Test</button>
+  <input
+    class="summary-panel"
+    debouncedInput
+    [debounce]="500"
+    [value]="table.atoms.globalFilter.get() ?? ''"
+    (changeEvent)="onGlobalFilter($event)"
+    placeholder="Search all columns..."
+  />
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+                <div
+                  [class.sortable-header]="header.column.getCanSort()"
+                  (click)="header.column.getToggleSortingHandler()?.($event)"
+                >
+                  <ng-container *flexRenderHeader="header; let headerCell">{{
+                    headerCell
+                  }}</ng-container>
+                  @if (header.column.getIsSorted() === 'asc') {
+                    <span> asc</span>
+                  }
+                  @if (header.column.getIsSorted() === 'desc') {
+                    <span> desc</span>
+                  }
+                </div>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td>
+              <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.previousPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.nextPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;
+    </button>
+    <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
+      @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+        <option [value]="pageSize">Show {{ pageSize }}</option>
+      }
+    </select>
+  </div>
+  <pre>{{ stringifiedState() }}</pre>
+</div>

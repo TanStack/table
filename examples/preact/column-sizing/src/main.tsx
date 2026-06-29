@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnSizingFeature,
@@ -10,9 +10,9 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = tableFeatures({ columnSizingFeature })
+const features = tableFeatures({ columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // This is not the Column Resizing Example, this is a simplified version that just sets static column sizes
 function App() {
@@ -59,12 +59,9 @@ function App() {
     [],
   )
 
-  const rerender = useReducer(() => ({}), {})[1]
-
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       data,
       debugTable: true,
@@ -94,7 +91,7 @@ function App() {
                   // Don't actually do this to resize columns. This is just for demonstration purposes.
                   // See the Column Resizing Example for how to do this with dedicated resizing APIs efficiently.
                   table.setColumnSizing({
-                    ...table.store.state.columnSizing,
+                    ...table.state.columnSizing,
                     [column.id]: Number((e.target as HTMLInputElement).value),
                   })
                 }}
@@ -264,9 +261,6 @@ function App() {
         </div>
       </div>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

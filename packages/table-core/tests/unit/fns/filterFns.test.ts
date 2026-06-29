@@ -12,12 +12,13 @@ import {
   filterFn_lessThan,
   filterFn_lessThanOrEqualTo,
   filterFn_weakEquals,
+  filterFns,
 } from '../../../src'
 import { getStaticTestData } from '../../fixtures/data/generateTestData'
 
-// TODO - fix _features not being inferred correctly
+// TODO - fix features not being inferred correctly
 const mockRows = generateTestRowsWithStateFromData(getStaticTestData(), {
-  _features: {
+  features: {
     columnFilteringFeature,
   },
 })
@@ -509,6 +510,78 @@ describe('Filter Functions', () => {
           filterValue,
         )
         expect(result).toBe(true)
+      })
+    })
+  })
+
+  describe('Range Filters', () => {
+    describe('filterFns.between.autoRemove', () => {
+      const autoRemove = filterFns.between.autoRemove!
+
+      it('should auto-remove when both endpoints are undefined', () => {
+        expect(autoRemove([undefined, undefined])).toBe(true)
+      })
+      it('should auto-remove when both endpoints are null', () => {
+        expect(autoRemove([null, null])).toBe(true)
+      })
+      it('should auto-remove when both endpoints are empty strings', () => {
+        expect(autoRemove(['', ''])).toBe(true)
+      })
+      it('should NOT auto-remove when both endpoints are valid numbers', () => {
+        expect(autoRemove([5, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when lower bound is 0 (falsy number)', () => {
+        expect(autoRemove([0, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when only one endpoint is provided', () => {
+        expect(autoRemove([undefined, 10])).toBe(false)
+        expect(autoRemove([5, undefined])).toBe(false)
+      })
+    })
+
+    describe('filterFns.betweenInclusive.autoRemove', () => {
+      const autoRemove = filterFns.betweenInclusive.autoRemove!
+
+      it('should auto-remove when both endpoints are undefined', () => {
+        expect(autoRemove([undefined, undefined])).toBe(true)
+      })
+      it('should auto-remove when both endpoints are null', () => {
+        expect(autoRemove([null, null])).toBe(true)
+      })
+      it('should auto-remove when both endpoints are empty strings', () => {
+        expect(autoRemove(['', ''])).toBe(true)
+      })
+      it('should NOT auto-remove when both endpoints are valid numbers', () => {
+        expect(autoRemove([5, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when lower bound is 0 (falsy number)', () => {
+        expect(autoRemove([0, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when only one endpoint is provided', () => {
+        expect(autoRemove([undefined, 10])).toBe(false)
+        expect(autoRemove([5, undefined])).toBe(false)
+      })
+    })
+  })
+
+  describe('Array Filters', () => {
+    describe('filterFns.arrHas.autoRemove', () => {
+      const autoRemove = filterFns.arrHas.autoRemove!
+
+      it('should auto-remove when the filter value is undefined', () => {
+        expect(autoRemove(undefined)).toBe(true)
+      })
+      it('should auto-remove when the filter value is null', () => {
+        expect(autoRemove(null)).toBe(true)
+      })
+      it('should auto-remove when the filter value is an empty string', () => {
+        expect(autoRemove('')).toBe(true)
+      })
+      it('should auto-remove when the filter value is an empty array', () => {
+        expect(autoRemove([])).toBe(true)
+      })
+      it('should NOT auto-remove when the filter value is a non-empty array', () => {
+        expect(autoRemove(['a'])).toBe(false)
       })
     })
   })

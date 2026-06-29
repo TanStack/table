@@ -15,9 +15,12 @@ import type {
 } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ rowExpandingFeature })
+const features = tableFeatures({
+  rowExpandingFeature,
+  expandedRowModel: createExpandedRowModel(),
+})
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -74,13 +77,10 @@ type TableProps<TFeatures extends TableFeatures, TData extends RowData> = {
   getRowCanExpand: (row: Row<TFeatures, TData>) => boolean
 }
 
-function TableComponent(props: TableProps<typeof _features, Person>) {
+function TableComponent(props: TableProps<typeof features, Person>) {
   const table = createTable({
     debugTable: true,
-    _features,
-    _rowModels: {
-      expandedRowModel: createExpandedRowModel(),
-    },
+    features,
     columns: props.columns,
     get data() {
       return props.data
@@ -142,11 +142,7 @@ function TableComponent(props: TableProps<typeof _features, Person>) {
   )
 }
 
-const renderSubComponent = ({
-  row,
-}: {
-  row: Row<typeof _features, Person>
-}) => (
+const renderSubComponent = ({ row }: { row: Row<typeof features, Person> }) => (
   <pre style={{ 'font-size': '10px' }}>
     <code>{JSON.stringify(row.original, null, 2)}</code>
   </pre>

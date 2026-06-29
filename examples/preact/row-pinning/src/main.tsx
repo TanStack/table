@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnFilteringFeature,
@@ -25,18 +25,20 @@ import type {
 } from '@tanstack/preact-table'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
   columnSizingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   // table states
   const [rowPinning, setRowPinning] = useState<RowPinningState>({
     top: [],
@@ -151,12 +153,7 @@ function App() {
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        expandedRowModel: createExpandedRowModel(),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      features,
       columns,
       data,
       initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
@@ -264,7 +261,7 @@ function App() {
         <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -274,7 +271,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.store.state.pagination.pageIndex + 1}
+            defaultValue={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = (e.target as HTMLInputElement).value
                 ? Number((e.target as HTMLInputElement).value) - 1
@@ -285,7 +282,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number((e.target as HTMLSelectElement).value))
           }}
@@ -342,15 +339,8 @@ function App() {
           </label>
         </div>
       </div>
-      <div>
-        <button
-          className="demo-button demo-button-spaced"
-          onClick={() => rerender(0)}
-        >
-          Force Rerender
-        </button>
-      </div>
-      <div>{JSON.stringify(rowPinning, null, 2)}</div>
+      <div></div>
+      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
 }
@@ -359,8 +349,8 @@ function PinnedRow({
   row,
   table,
 }: {
-  row: Row<typeof _features, Person>
-  table: PreactTable<typeof _features, Person>
+  row: Row<typeof features, Person>
+  table: PreactTable<typeof features, Person>
 }) {
   return (
     <tr
@@ -394,8 +384,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: PreactTable<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: PreactTable<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

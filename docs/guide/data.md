@@ -58,7 +58,7 @@ type User = {
 We can then define our `data` array with this type, and then TanStack Table will be able to intelligently infer lots of types for us later on in our columns, rows, cells, etc. This is because the `data` type is literally defined as the `TData` generic type. Whatever you pass to the `data` table option will become the `TData` type for the rest of the table instance. Just make sure your column definitions use the same `TData` type as the `data` type when you define them later.
 
 ```ts
-//note: data needs a "stable" reference in order to prevent infinite re-renders
+//note: data needs a "stable" reference in order to prevent wasteful re-computation (more on this below)
 const data: User[] = []
 //or
 const [data, setData] = React.useState<User[]>([])
@@ -82,7 +82,7 @@ If your `data` looks something like this:
     },
     "info": {
       "age": 33,
-      "visits": 100,
+      "visits": 100
     }
   },
   {
@@ -92,7 +92,7 @@ If your `data` looks something like this:
     },
     "info": {
       "age": 27,
-      "visits": 200,
+      "visits": 200
     }
   }
 ]
@@ -127,7 +127,7 @@ const columns = [
   },
   {
     header: 'Age',
-    accessorFn: info => info.age, 
+    accessorFn: row => row.info.age, //accessorFn receives the whole row object
   },
   //...
 ]
@@ -151,20 +151,18 @@ So if your data looks like this:
     "subRows": [
       {
         "firstName": "Kevin",
-        "lastName": "Vandy",
+        "lastName": "Vandy"
       },
       {
         "firstName": "John",
         "lastName": "Doe",
-        "subRows": [
-          //...
-        ]
+        "subRows": []
       }
     ]
   },
   {
     "firstName": "Jane",
-    "lastName": "Doe",
+    "lastName": "Doe"
   }
 ]
 ```
@@ -179,35 +177,41 @@ type User = {
 }
 ```
 
-Where `subRows` is an optional array of `User` objects. This is discussed in more detail in the [Expanding Guide](./expanding).
+Where `subRows` is an optional array of `User` objects. This is discussed in more detail in the [Expanding Guide](../framework/react/guide/expanding).
 
 ### Give Data a "Stable" Reference
 
-The `data` array that you pass to the table instance ***MUST*** have a "stable" reference in order to prevent bugs that cause infinite re-renders (especially in React).
+The `data` and `columns` arrays that you pass to the table instance should have "stable" references in order to prevent wasteful re-computation and rendering bugs.
 
-This will depend on which framework adapter you are using, but in React, you should often use `React.useState`, `React.useMemo`, or similar to ensure that both the `data` and `columns` table options have stable references.
+In v9, table state lives in TanStack Store atoms, and the table instance is only created once. Passing a new `data` or `columns` reference on every render will not, by itself, throw the table into the classic v8-style infinite re-render loop. However, the row models and column structures are memoized against the `data` and `columns` references, so an unstable reference still has real consequences:
+
+- **Wasted re-computation.** A new `data` reference invalidates the core row model, so every row and cell object is rebuilt from scratch on every render (and any sorted, filtered, grouped, or paginated row models recompute right along with it). A new `columns` reference does the same for the column and header structures. For large datasets, this is a serious performance problem.
+- **Auto-reset render loops.** Features that automatically reset state when the rows are recalculated can still cause infinite re-render loops. For example, with client-side pagination enabled, `autoResetPageIndex` resets the page index whenever the row model recomputes. With an unstable `data` reference, that means a state update after every render, and each state update triggers another render with yet another new `data` reference.
+
+Either way, treat stable `data` and `columns` references as a requirement.
+
+How you do this depends on which framework adapter you are using, but in React, you should often use `React.useState`, `React.useMemo`, or similar to ensure that both the `data` and `columns` table options have stable references.
 
 ```tsx
 const fallbackData = []
-const _features = tableFeatures({}) // Define outside component for stable reference
+const features = tableFeatures({}) // Define outside component for stable reference
 
 export default function MyComponent() {
-  //✅ GOOD: This will not cause an infinite loop of re-renders because `columns` is a stable reference
+  //✅ GOOD: `columns` is a stable reference
   const columns = useMemo(() => [
     // ...
   ], []);
 
-  //✅ GOOD: This will not cause an infinite loop of re-renders because `data` is a stable reference
+  //✅ GOOD: `data` is a stable reference
   const [data, setData] = useState(() => [
     // ...
   ]);
 
-  // Columns and data are defined in a stable reference, will not cause infinite loop!
+  // Columns and data have stable references, so the table only recomputes when they actually change
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
     columns,
-    data ?? fallbackData, //also good to use a fallback array that is defined outside of the component (stable reference)
+    data: data ?? fallbackData, //also good to use a fallback array that is defined outside of the component (stable reference)
   });
 
   return <table>...</table>;
@@ -216,26 +220,71 @@ export default function MyComponent() {
 
 `React.useState` and `React.useMemo` are not the only ways to give your data a stable reference. You can also define your data outside of the component or use a 3rd party state management library like Redux, Zustand, or TanStack Query.
 
-The main thing to avoid is defining the `data` array inside the same scope as the `useTable` call. That will cause the `data` array to be redefined on every render, which will cause an infinite loop of re-renders.
+The main thing to avoid is defining the `data` array inside the same scope as the `useTable` call. That will cause the `data` array to be redefined on every render, which forces the table to rebuild every row on every render (and can loop forever when auto-reset features are involved).
 
 ```tsx
+const features = tableFeatures({}) //❌ Also re-created on every render
+
 export default function MyComponent() {
-  //😵 BAD: This will cause an infinite loop of re-renders because `columns` is redefined as a new array on every render!
+  //😵 BAD: `columns` is redefined as a new array on every render, so the column and header structures are rebuilt on every render!
   const columns = [
     // ...
   ];
 
-  //😵 BAD: This will cause an infinite loop of re-renders because `data` is redefined as a new array on every render!
+  //😵 BAD: `data` is redefined as a new array on every render, so every row is rebuilt on every render!
   const data = [
     // ...
   ];
 
-  //❌ Columns and data are defined in the same scope as `useTable` without a stable reference, will cause infinite loop!
+  //❌ Columns and data are defined in the same scope as `useTable` without stable references
   const table = useTable({
-    _features: tableFeatures({}), //❌ Also re-created on every render
-    _rowModels: {},
+    features,
     columns,
-    data ?? [], //❌ Also bad because the fallback array is re-created on every render
+    data: data ?? [], //❌ Also bad because the fallback array is re-created on every render
+  });
+
+  return <table>...</table>;
+}
+```
+
+#### Memoize Data Transformations
+
+Even if your source data already has a stable reference, transforming it inline destroys that stability. Something as simple as an inline `data.filter()` creates a brand new array on every render.
+
+```tsx
+export default function MyComponent() {
+  //✅ GOOD (TanStack Query provides stable references to data automatically)
+  const { data, isLoading } = useQuery({
+    //...
+  });
+
+  const table = useTable({
+    features,
+    columns,
+    //❌ BAD: This creates a new array on every render (destroys the stable reference)
+    data: data?.filter(d => d.isActive) ?? fallbackData,
+  });
+
+  return <table>...</table>;
+}
+```
+
+Instead, always memoize your data transformations. In React, this can be done with `useMemo` or similar.
+
+```tsx
+export default function MyComponent() {
+  //✅ GOOD
+  const { data, isLoading } = useQuery({
+    //...
+  });
+
+  //✅ GOOD: `filteredData` only gets a new reference when `data` changes
+  const filteredData = useMemo(() => data?.filter(d => d.isActive) ?? [], [data]);
+
+  const table = useTable({
+    features,
+    columns,
+    data: filteredData, // stable reference!
   });
 
   return <table>...</table>;
@@ -252,4 +301,4 @@ Believe it or not, TanStack Table was actually built to scale up to handle poten
 
 The default mindset of a developer building a data grid is to implement server-side pagination, sorting, and filtering for large datasets. This is still usually a good idea, but a lot of developers underestimate how much data can actually be handled in the client with modern browsers and the right optimizations. If your table will never have more than a few thousand rows, you can probably take advantage of the client-side features in TanStack Table instead of implementing them yourself on the server. Before committing to letting TanStack Table's client-side features handle your large dataset, you should test it with your actual data to see if it performs well enough for your needs, of course.
 
-This is discussed in more detail in the [Pagination Guide](./pagination#should-you-use-client-side-pagination).
+This is discussed in more detail in the [Pagination Guide](../framework/react/guide/pagination#should-you-use-client-side-pagination).

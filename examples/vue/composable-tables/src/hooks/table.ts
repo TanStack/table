@@ -7,6 +7,7 @@ import {
   filterFns,
   globalFilteringFeature,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
@@ -17,6 +18,7 @@ import {
   PriceCell,
   ProgressCell,
   RowActionsCell,
+  SelectCell,
   StatusCell,
   TextCell,
 } from '../components/cell-components'
@@ -24,6 +26,7 @@ import {
   ColumnFilter,
   FooterColumnId,
   FooterSum,
+  SelectAllHeader,
   SortIndicator,
 } from '../components/header-components'
 import {
@@ -43,20 +46,21 @@ import type {
 // This is needed to break the circular inference chain caused by the component
 // files (table-components, cell-components, header-components) importing context
 // functions from this file, while this file imports from those component files.
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const _hook = createTableHook({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   getRowId: (row) => row.id,
   tableComponents: {
     PaginationControls,
@@ -71,12 +75,14 @@ const _hook = createTableHook({
     RowActionsCell,
     PriceCell,
     CategoryCell,
+    SelectCell,
   },
   headerComponents: {
     SortIndicator,
     ColumnFilter,
     FooterColumnId,
     FooterSum,
+    SelectAllHeader,
   },
 })
 
@@ -87,18 +93,18 @@ export const useAppTable = _hook.useAppTable
 // TypeScript cannot infer the types of these when the component files that
 // import them are also imported by this module (circular dependency).
 export const useTableContext: <TData extends RowData = RowData>() => VueTable<
-  typeof _features,
+  typeof features,
   TData
 > = _hook.useTableContext
 
 export const useCellContext: <TValue extends CellData = CellData>() => Cell<
-  typeof _features,
+  typeof features,
   any,
   TValue
 > = _hook.useCellContext
 
 export const useHeaderContext: <TValue extends CellData = CellData>() => Header<
-  typeof _features,
+  typeof features,
   any,
   TValue
 > = _hook.useHeaderContext

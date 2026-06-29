@@ -1,0 +1,26 @@
+{
+  "name": "tanstack-solid-table-example-kitchen-sink",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "typescript": "6.0.3",
+    "vite": "^8.1.0",
+    "vite-plugin-solid": "^2.11.12"
+  },
+  "dependencies": {
+    "@tanstack/match-sorter-utils": "^9.0.0-alpha.4",
+    "@tanstack/solid-devtools": "^0.8.5",
+    "@tanstack/solid-table": "^9.0.0-beta.23",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.23",
+    "solid-js": "^1.9.13"
+  }
+}

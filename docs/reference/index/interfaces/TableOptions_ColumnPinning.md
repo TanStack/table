@@ -15,9 +15,12 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:19](https://g
 optional enableColumnPinning: boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L23)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L26)
 
-Enables/disables column pinning for the table. Defaults to `true`.
+Allows columns to be pinned into left and right regions.
+
+Defaults to `true`; column-level `enablePinning` can still opt individual
+columns out.
 
 ***
 
@@ -27,7 +30,7 @@ Enables/disables column pinning for the table. Defaults to `true`.
 optional onColumnPinningChange: OnChangeFn<ColumnPinningState>;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L29)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L32)
 
 Called with an updater when column pinning state changes. Pair this with
 `state.columnPinning` when using external state; external atoms can own the

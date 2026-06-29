@@ -11,9 +11,9 @@ export function generateTestRowsWithData<TFeatures extends TableFeatures>(
   lengths: Array<number> | number = 10,
   options?: Omit<
     TableOptions<TFeatures, Person>,
-    'data' | 'columns' | '_features'
+    'data' | 'columns' | 'features'
   > & {
-    _features?: TFeatures
+    features?: TFeatures
   },
 ): Array<Row<TFeatures, Person>> {
   const testTable = generateTestTableWithData(lengths, options)
@@ -23,7 +23,7 @@ export function generateTestRowsWithData<TFeatures extends TableFeatures>(
 export function generateTestRowsFromData<TFeatures extends TableFeatures>(
   data: Array<Person>,
   options?: Omit<TableOptions<TFeatures, Person>, 'data' | 'columns'> & {
-    _features?: TFeatures
+    features?: TFeatures
   },
 ): Array<Row<TFeatures, Person>> {
   const testTable = generateTestTableFromData(data, options)
@@ -36,7 +36,7 @@ export function generateTestRowsWithState<TFeatures extends TableFeatures>(
     TableOptions<TFeatures, Person>,
     'data' | 'columns' | 'onStateChange'
   > & {
-    _features?: TFeatures
+    features?: TFeatures
   },
 ): Array<Row<TFeatures, Person>> {
   const testTable = generateTestTableWithDataAndState(lengths, options)
@@ -51,7 +51,7 @@ export function generateTestRowsWithStateFromData<
     TableOptions<TFeatures, Person>,
     'data' | 'columns' | 'onStateChange'
   > & {
-    _features?: TFeatures
+    features?: TFeatures
   },
 ): Array<Row<TFeatures, Person>> {
   const testTable = generateTestTableWithStateFromData(data, options)

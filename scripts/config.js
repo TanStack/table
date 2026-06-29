@@ -25,6 +25,10 @@ export const packages = [
     packageDir: 'packages/angular-table',
   },
   {
+    name: '@tanstack/angular-table-devtools',
+    packageDir: 'packages/angular-table-devtools',
+  },
+  {
     name: '@tanstack/lit-table',
     packageDir: 'packages/lit-table',
   },

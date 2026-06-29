@@ -3,9 +3,9 @@ id: AppHeaderProps
 title: AppHeaderProps
 ---
 
-# Interface: AppHeaderProps\<TFeatures, TData, TValue, TSelected\>
+# Interface: AppHeaderProps\<TFeatures, TData, TValue\>
 
-Defined in: [packages/vue-table/src/createTableHook.ts:212](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L212)
+Defined in: [packages/vue-table/src/createTableHook.ts:205](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L205)
 
 ## Type Parameters
 
@@ -21,10 +21,6 @@ Defined in: [packages/vue-table/src/createTableHook.ts:212](https://github.com/T
 
 `TValue` *extends* `CellData` = `CellData`
 
-### TSelected
-
-`TSelected` = `unknown`
-
 ## Properties
 
 ### header
@@ -33,24 +29,4 @@ Defined in: [packages/vue-table/src/createTableHook.ts:212](https://github.com/T
 header: Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:218](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L218)
-
-***
-
-### selector()?
-
-```ts
-optional selector: (state) => TSelected;
-```
-
-Defined in: [packages/vue-table/src/createTableHook.ts:219](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L219)
-
-#### Parameters
-
-##### state
-
-`TableState`\<`TFeatures`\>
-
-#### Returns
-
-`TSelected`
+Defined in: [packages/vue-table/src/createTableHook.ts:210](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L210)

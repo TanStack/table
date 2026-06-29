@@ -9,11 +9,12 @@ title: getDefaultColumnFiltersState
 function getDefaultColumnFiltersState(): ColumnFiltersState;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L21)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L22)
 
-Returns the default column filters state.
+Creates the default column filter state.
 
-Feature constructors use this value to initialize the table state or option defaults when no user value is provided.
+The feature default is an empty array, meaning no column filters are active.
+Reset APIs use this value when `defaultState` is `true`.
 
 ## Returns
 
@@ -22,5 +23,5 @@ Feature constructors use this value to initialize the table state or option defa
 ## Example
 
 ```ts
-const initialValue = getDefaultColumnFiltersState()
+const filters = getDefaultColumnFiltersState()
 ```

@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
@@ -9,9 +9,9 @@ import {
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({})
+const features = tableFeatures({})
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // use new columnHelper.columns method to create columns with the same TValue generic so TypeScript doesn't complain when passing columns to useTable
 const columns = columnHelper.columns([
@@ -64,13 +64,11 @@ function App() {
   const [data, setData] = useState(() => makeData(20))
   const refreshData = () => setData(makeData(20))
   const stressTest = () => setData(makeData(1_000))
-  const rerender = useReducer(() => ({}), {})[1]
 
   const table = useTable(
     {
       debugTable: true,
-      _features,
-      _rowModels: {},
+      features,
       columns,
       data,
     },
@@ -123,9 +121,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
     </div>
   )
 }

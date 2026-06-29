@@ -6,14 +6,14 @@ title: table_getCenterLeafHeaders
 # Function: table\_getCenterLeafHeaders()
 
 ```ts
-function table_getCenterLeafHeaders<TFeatures, TData>(table): any[];
+function table_getCenterLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:620](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L620)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:663](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L663)
 
-Returns center leaf headers for the table.
+Collects leaf headers for the center, unpinned region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent headers are filtered out from the center flat header list.
 
 ## Type Parameters
 
@@ -29,14 +29,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`Header`](../../index/type-aliases/Header.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getCenterLeafHeaders(table)
+const headers = table_getCenterLeafHeaders(table)
 ```

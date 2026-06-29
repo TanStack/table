@@ -9,11 +9,12 @@ title: table_getRightHeaderGroups
 function table_getRightHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:366](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L366)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L396)
 
-Returns right header groups for the table.
+Builds header groups for visible columns pinned to the right region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The leaf columns are read in `state.columnPinning.right` order and then
+passed through the same header-group builder as the unpinned table.
 
 ## Type Parameters
 
@@ -29,14 +30,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`HeaderGroup`](../../index/type-aliases/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
+[`HeaderGroup`](../../index/interfaces/HeaderGroup.md)\<`TFeatures`, `TData`\>[]
 
 ## Example
 
 ```ts
-const value = table_getRightHeaderGroups(table)
+const headerGroups = table_getRightHeaderGroups(table)
 ```

@@ -11,11 +11,12 @@ function row_getParentRow<TFeatures, TData>(row):
   | undefined;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L120)
+Defined in: [core/rows/coreRowsFeature.utils.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L123)
 
-Returns parent row for a row.
+Looks up this row's direct parent, if it has one.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+Parent lookup searches the pre-pagination row model so parent relationships
+are available even when the parent is not on the current page.
 
 ## Type Parameters
 
@@ -41,5 +42,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getParentRow(row)
+const parent = row_getParentRow(row)
 ```

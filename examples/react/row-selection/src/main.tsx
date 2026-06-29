@@ -1,4 +1,5 @@
 import React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import {
   columnFilteringFeature,
@@ -12,12 +13,11 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
-import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/react-table-devtools'
-import { TanStackDevtools } from '@tanstack/react-devtools'
+import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { useCreateAtom } from '@tanstack/react-store'
 import { makeData } from './makeData'
 import type { HTMLProps } from 'react'
@@ -25,18 +25,19 @@ import type { Person } from './makeData'
 import type { Column, RowSelectionState, Table } from '@tanstack/react-table'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   columnFilteringFeature,
   globalFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -95,18 +96,15 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   // optionally, raise the selection state to your own atom
   const rowSelectionAtom = useCreateAtom<RowSelectionState>({})
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      key: 'row-selection', // needed for devtools
+      features,
       atoms: {
         rowSelection: rowSelectionAtom,
       },
@@ -120,7 +118,7 @@ function App() {
     (state) => state, // default selector
   )
 
-  useTanStackTableDevtools(table, 'Row Selection Example')
+  useTanStackTableDevtools(table)
 
   return (
     <>
@@ -136,7 +134,7 @@ function App() {
             className="demo-button demo-button-spaced"
             onClick={() => stressTest()}
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <div>
@@ -276,14 +274,7 @@ function App() {
         </div>
         <hr />
         <br />
-        <div>
-          <button
-            className="demo-button demo-button-spaced"
-            onClick={() => rerender()}
-          >
-            Force Rerender
-          </button>
-        </div>
+        <div></div>
         <div>
           <button
             className="demo-button demo-button-spaced"
@@ -298,8 +289,10 @@ function App() {
           </button>
         </div>
         <div>
-          <label>Row Selection State:</label>
-          <pre>{JSON.stringify(table.state, null, 2)}</pre>
+          <label>State:</label>
+          <pre>
+            {data.length < 1_001 && JSON.stringify(table.state, null, 2)}
+          </pre>
         </div>
       </div>
     </>
@@ -310,8 +303,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

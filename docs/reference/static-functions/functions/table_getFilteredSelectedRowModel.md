@@ -6,14 +6,21 @@ title: table_getFilteredSelectedRowModel
 # Function: table\_getFilteredSelectedRowModel()
 
 ```ts
-function table_getFilteredSelectedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
+function table_getFilteredSelectedRowModel<TFeatures, TData>(table): 
+  | RowModel<TFeatures, TData>
+  | {
+  flatRows: never[];
+  rows: never[];
+  rowsById: Record<string, unknown>;
+};
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L193)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:246](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L246)
 
-Returns filtered selected row model for the table.
+Builds a row model containing selected rows from the filtered row model.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+If no row ids are selected, an empty row model is returned without walking
+the rows.
 
 ## Type Parameters
 
@@ -29,14 +36,19 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`RowModel`](../../index/interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+  \| [`RowModel`](../../index/interfaces/RowModel.md)\<`TFeatures`, `TData`\>
+  \| \{
+  `flatRows`: `never`[];
+  `rows`: `never`[];
+  `rowsById`: `Record`\<`string`, `unknown`\>;
+\}
 
 ## Example
 
 ```ts
-const value = table_getFilteredSelectedRowModel(table)
+const selectedRows = table_getFilteredSelectedRowModel(table)
 ```

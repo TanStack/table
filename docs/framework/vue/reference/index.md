@@ -10,6 +10,9 @@ title: "@tanstack/vue-table"
 - [AppCellProps](interfaces/AppCellProps.md)
 - [AppHeaderProps](interfaces/AppHeaderProps.md)
 - [AppTableProps](interfaces/AppTableProps.md)
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
+- [FlexRenderCell](interfaces/FlexRenderCell.md)
+- [FlexRenderHeader](interfaces/FlexRenderHeader.md)
 
 ## Type Aliases
 
@@ -23,7 +26,6 @@ title: "@tanstack/vue-table"
 - [AppVueTable](type-aliases/AppVueTable.md)
 - [ComponentType](type-aliases/ComponentType.md)
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)
-- [SubscribeSource](type-aliases/SubscribeSource.md)
 - [TableOptionsWithReactiveData](type-aliases/TableOptionsWithReactiveData.md)
 - [VueTable](type-aliases/VueTable.md)
 

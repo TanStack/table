@@ -3,25 +3,27 @@ import ReactDOM from 'react-dom/client'
 import {
   FlexRender,
   columnSizingFeature,
+  createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
   sortFns,
   useTable,
-  createColumnHelper,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeData } from './makeData'
-import type { Row, Table } from '@tanstack/react-table'
+import type { ReactTable, Row } from '@tanstack/react-table'
 import type { Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 import './index.css'
 
-const _features = {
+const features = {
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
 // See https://tanstack.com/virtual/v3/docs/examples/react/table for a simpler fixed row height example.
 function App() {
@@ -66,12 +68,11 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(50_000))
   const refreshData = () => setData(makeData(50_000))
-  const stressTest = () => setData(makeData(500_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
-      _features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
       columns,
       data,
       debugTable: true,
@@ -94,7 +95,7 @@ function App() {
       ) : null}
       <div>
         <button onClick={refreshData}>Regenerate Data</button>
-        <button onClick={stressTest}>Stress Test (500k rows)</button>
+        <button onClick={stressTest}>Stress Test (1M rows)</button>
       </div>
       ({data.length.toLocaleString()} rows)
       <div
@@ -171,7 +172,7 @@ function App() {
 }
 
 interface TableBodyWrapperProps {
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof features, Person>
   tableContainerRef: React.RefObject<HTMLDivElement | null>
 }
 
@@ -204,7 +205,7 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
 
   React.useLayoutEffect(() => {
     rowVirtualizer.measure()
-  }, [table.store.state])
+  }, [table.state])
 
   return (
     <TableBody
@@ -216,7 +217,7 @@ function TableBodyWrapper({ table, tableContainerRef }: TableBodyWrapperProps) {
 }
 
 interface TableBodyProps {
-  table: Table<typeof _features, Person>
+  table: ReactTable<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
 }
@@ -250,7 +251,7 @@ function TableBody({ rowVirtualizer, table, rowRefsMap }: TableBodyProps) {
 }
 
 interface TableBodyRowProps {
-  row: Row<typeof _features, Person>
+  row: Row<typeof features, Person>
   rowRefsMap: React.MutableRefObject<Map<number, HTMLTableRowElement>>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualRowIndex: number

@@ -9,7 +9,7 @@ title: table_lastPage
 function table_lastPage<TFeatures, TData>(table): void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:338](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L338)
+Defined in: [features/row-pagination/rowPaginationFeature.utils.ts:352](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts#L352)
 
 Moves the table to the last known page.
 
@@ -29,7 +29,7 @@ The target page is derived from `table_getPageCount(table) - 1`.
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

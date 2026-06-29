@@ -5,7 +5,7 @@ title: Cell_Core
 
 # Interface: Cell\_Core\<TFeatures, TData, TValue\>
 
-Defined in: [types/Cell.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L16)
+Defined in: [types/Cell.ts:6](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L6)
 
 ## Extends
 

@@ -10,9 +10,9 @@ import { makeData } from './makeData'
 import type { Table as SolidTableType } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({ columnSizingFeature, columnResizingFeature })
+const features = tableFeatures({ columnSizingFeature, columnResizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -60,25 +60,18 @@ function App() {
   const refreshData = () => setData(makeData(200))
   const stressTest = () => setData(makeData(2_000))
 
-  const table = createTable(
-    {
-      _features,
-      _rowModels: {},
-      columns,
-      get data() {
-        return data()
-      },
-      defaultColumn: { minSize: 60, maxSize: 800 },
-      columnResizeMode: 'onChange',
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data()
     },
-    (state) => ({
-      columnSizing: state.columnSizing,
-      columnResizing: state.columnResizing,
-    }),
-  )
+    defaultColumn: { minSize: 60, maxSize: 800 },
+    columnResizeMode: 'onChange',
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   const columnSizeVars = createMemo(() => {
     const headers = table.getFlatHeaders()
@@ -102,7 +95,7 @@ function App() {
       </i>
       <div class="spacer-md" />
       <pre style={{ 'min-height': '10rem' }}>
-        {JSON.stringify(table.store.state, null, 2)}
+        {JSON.stringify(table.store.get(), null, 2)}
       </pre>
       <div class="spacer-md" />({data().length.toLocaleString()} rows)
       <div class="scroll-container">
@@ -151,7 +144,7 @@ function App() {
 function TableBody({
   table,
 }: {
-  table: SolidTableType<typeof _features, Person>
+  table: SolidTableType<typeof features, Person>
 }) {
   return (
     <div class="tbody">

@@ -1,4 +1,6 @@
-import { createSignal, onCleanup } from 'solid-js'
+import { createEffect, createSignal, onCleanup } from 'solid-js'
+import type { Accessor } from 'solid-js'
+import type { Readable } from '@tanstack/solid-store'
 
 /**
  * Subscribes to a table store and returns a reactive signal.
@@ -6,28 +8,25 @@ import { createSignal, onCleanup } from 'solid-js'
  * { unsubscribe } object return (store 0.9.x).
  */
 export function useTableStore<T, U>(
-  store:
-    | { state: T; subscribe: (listener: () => void) => unknown }
-    | null
-    | undefined,
+  storeAccessor: Accessor<Readable<T> | null | undefined>,
   selector: (state: T) => U = (s) => s as unknown as U,
-): (() => U) | undefined {
-  if (!store) return undefined
+): Accessor<U | undefined> {
+  const initialValue = storeAccessor()?.get()
+  const [signal, setSignal] = createSignal(
+    initialValue ? selector(initialValue) : undefined,
+  )
 
-  const [signal, setSignal] = createSignal(selector(store.state))
-  const result = store.subscribe(() => {
-    setSignal(() => selector(store.state))
-  })
+  createEffect(() => {
+    const store = storeAccessor()
+    if (!store) return
 
-  onCleanup(() => {
-    if (typeof result === 'function') {
-      ;(result as () => void)()
-    } else if (
-      result &&
-      typeof (result as { unsubscribe?: () => void }).unsubscribe === 'function'
-    ) {
-      ;(result as { unsubscribe: () => void }).unsubscribe()
-    }
+    const subscription = store.subscribe(() => {
+      setSignal(() => selector(store.get()))
+    })
+
+    onCleanup(() => {
+      subscription.unsubscribe()
+    })
   })
 
   return signal

@@ -5,7 +5,7 @@ title: AppCellPropsWithoutSelector
 
 # Interface: AppCellPropsWithoutSelector\<TFeatures, TData, TValue, TCellComponents\>
 
-Defined in: [createTableHook.tsx:296](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L296)
+Defined in: [createTableHook.tsx:396](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L396)
 
 Props for AppCell component - without selector
 
@@ -35,7 +35,7 @@ Props for AppCell component - without selector
 cell: Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:302](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L302)
+Defined in: [createTableHook.tsx:402](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L402)
 
 ***
 
@@ -45,13 +45,13 @@ Defined in: [createTableHook.tsx:302](https://github.com/TanStack/table/blob/mai
 children: (cell) => ComponentChildren;
 ```
 
-Defined in: [createTableHook.tsx:303](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L303)
+Defined in: [createTableHook.tsx:403](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L403)
 
 #### Parameters
 
 ##### cell
 
-`Cell_Cell`\<`TFeatures`, `TData`, `TValue`\> & `UnionToIntersection`\<`"columnGroupingFeature"` *extends* keyof `TFeatures` ? `Cell_ColumnGrouping` : `never`\> & `UnionToIntersection`\<\{ \[K in string \| number \| symbol\]: K extends "coreReativityFeature" ? never : TFeatures\[K\] extends TableFeature\<FeatureConstructorOptions\> ? "Cell" extends keyof FeatureConstructorOptions ? FeatureConstructorOptions\[keyof (...) & "Cell"\] : never : any \}\[keyof `TFeatures`\]\> & `Cell_Plugins`\<`TFeatures`, `TData`, `TValue`\> & `TCellComponents` & `object`
+`Cell_Core`\<`TFeatures`, `TData`, `TValue`\> & `ExtractFeatureMapTypes`\<`TFeatures`, `Cell_FeatureMap`\> & `TCellComponents` & `object`
 
 #### Returns
 
@@ -65,4 +65,4 @@ Defined in: [createTableHook.tsx:303](https://github.com/TanStack/table/blob/mai
 optional selector: undefined;
 ```
 
-Defined in: [createTableHook.tsx:307](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L307)
+Defined in: [createTableHook.tsx:407](https://github.com/TanStack/table/blob/main/packages/preact-table/src/createTableHook.tsx#L407)

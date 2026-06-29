@@ -9,7 +9,7 @@ title: TableOptionsWithReactiveData
 type TableOptionsWithReactiveData<TFeatures, TData> = { [K in keyof TableOptions<TFeatures, TData>]: K extends "data" ? MaybeRef<ReadonlyArray<TData>> : MaybeRef<TableOptions<TFeatures, TData>[K]> };
 ```
 
-Defined in: [packages/vue-table/src/useTable.ts:28](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L28)
+Defined in: [packages/vue-table/src/useTable.ts:13](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L13)
 
 ## Type Parameters
 

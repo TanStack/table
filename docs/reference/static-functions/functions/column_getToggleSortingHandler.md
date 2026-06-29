@@ -9,11 +9,13 @@ title: column_getToggleSortingHandler
 function column_getToggleSortingHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:451](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L451)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:470](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L470)
 
-Returns an event handler for toggling sorting handler.
+Creates a header event handler that toggles this column's sorting.
 
-The handler is intended for direct use in column header controls such as buttons or checkboxes.
+The handler ignores events when the column cannot sort, persists React-style
+synthetic events when present, and asks `options.isMultiSortEvent` whether
+the event should add to a multi-sort.
 
 ## Type Parameters
 
@@ -33,7 +35,7 @@ The handler is intended for direct use in column header controls such as buttons
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 
@@ -54,5 +56,5 @@ The handler is intended for direct use in column header controls such as buttons
 ## Example
 
 ```ts
-const value = column_getToggleSortingHandler(column)
+const onClick = column_getToggleSortingHandler(column)
 ```

@@ -11,6 +11,7 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
 import { makeData } from './makeData'
 import type {
   Cell,
@@ -22,12 +23,15 @@ import type {
 } from '@tanstack/vue-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -62,7 +66,7 @@ export default defineComponent({
     }
 
     const stressTest = () => {
-      data.value = makeData(200_000)
+      data.value = makeData(1_000_000)
     }
 
     const sortingAtom = createAtom<SortingState>([])
@@ -71,15 +75,11 @@ export default defineComponent({
       pageSize: 10,
     })
 
-    const sorting = useSelector(sortingAtom)
     const pagination = useSelector(paginationAtom)
 
     const table = useTable({
-      _features,
-      _rowModels: {
-        sortedRowModel: createSortedRowModel(sortFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      key: 'basic-external-atoms', // needed for devtools
+      features,
       columns,
       get data() {
         return data.value
@@ -91,6 +91,8 @@ export default defineComponent({
       debugTable: true,
     })
 
+    useTanStackTableDevtools(table)
+
     return () => (
       <div class="demo-root">
         <div class="button-row">
@@ -98,7 +100,7 @@ export default defineComponent({
             Regenerate Data
           </button>
           <button class="demo-button" onClick={stressTest}>
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <div class="spacer-md" />
@@ -106,10 +108,10 @@ export default defineComponent({
           <thead>
             {table
               .getHeaderGroups()
-              .map((headerGroup: HeaderGroup<typeof _features, Person>) => (
+              .map((headerGroup: HeaderGroup<typeof features, Person>) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map(
-                    (header: Header<typeof _features, Person, unknown>) => (
+                    (header: Header<typeof features, Person, unknown>) => (
                       <th key={header.id} colspan={header.colSpan}>
                         {header.isPlaceholder ? null : (
                           <div
@@ -136,11 +138,11 @@ export default defineComponent({
           <tbody>
             {table
               .getRowModel()
-              .rows.map((row: Row<typeof _features, Person>) => (
+              .rows.map((row: Row<typeof features, Person>) => (
                 <tr key={row.id}>
                   {row
                     .getAllCells()
-                    .map((cell: Cell<typeof _features, Person, unknown>) => (
+                    .map((cell: Cell<typeof features, Person, unknown>) => (
                       <td key={cell.id}>
                         <FlexRender cell={cell} />
                       </td>
@@ -216,13 +218,7 @@ export default defineComponent({
           </select>
         </div>
         <div class="spacer-md" />
-        <pre>
-          {JSON.stringify(
-            { sorting: sorting.value, pagination: pagination.value },
-            null,
-            2,
-          )}
-        </pre>
+        <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
       </div>
     )
   },

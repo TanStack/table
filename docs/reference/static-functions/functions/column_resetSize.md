@@ -9,11 +9,12 @@ title: column_resetSize
 function column_resetSize<TFeatures, TData, TValue>(column): void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:148](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L148)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L181)
 
-Reset Size. for a column.
+Removes this column's committed size override.
 
-This is the static implementation behind the matching column instance API.
+After reset, the column resolves size from `columnDef.size` or built-in
+defaults again.
 
 ## Type Parameters
 
@@ -33,7 +34,7 @@ This is the static implementation behind the matching column instance API.
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 
@@ -42,5 +43,5 @@ This is the static implementation behind the matching column instance API.
 ## Example
 
 ```ts
-const value = column_resetSize(column)
+column_resetSize(column)
 ```

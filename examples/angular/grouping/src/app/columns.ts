@@ -10,23 +10,26 @@ import {
   filterFns,
   rowExpandingFeature,
   rowPaginationFeature,
+  tableFeatures,
 } from '@tanstack/angular-table'
 import type { Person } from './makeData'
 
+const features = tableFeatures({
+  columnGroupingFeature,
+  rowPaginationFeature,
+  columnFilteringFeature,
+  rowExpandingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  aggregationFns,
+  filterFns,
+})
+
 export const { createAppColumnHelper, injectAppTable: injectTable } =
   createTableHook({
-    _features: {
-      columnGroupingFeature,
-      rowPaginationFeature,
-      columnFilteringFeature,
-      rowExpandingFeature,
-    },
-    _rowModels: {
-      groupedRowModel: createGroupedRowModel(aggregationFns),
-      expandedRowModel: createExpandedRowModel(),
-      paginatedRowModel: createPaginatedRowModel(),
-      filteredRowModel: createFilteredRowModel(filterFns),
-    },
+    features,
   })
 const columnHelper = createAppColumnHelper<Person>()
 

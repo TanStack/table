@@ -34,24 +34,23 @@ A table instance has a few state surfaces:
 - `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
 - `table.state` is Svelte-only selected state. It is the value returned from the selector passed as the second argument to `createTable`.
 
-The Svelte adapter provides `svelteReactivity()` to the table's `coreReativityFeature`. Core readonly atoms are backed by `$derived.by`, writable atoms are backed by `$state`, and `createTable` uses `$effect.pre` to sync options and controlled state before DOM updates. Table APIs that read atoms participate in Svelte dependency tracking through those rune-backed atom reads.
+The Svelte adapter provides `svelteReactivity()` to the table's `coreReactivityFeature`. Core readonly atoms are backed by `$derived.by`, writable atoms are backed by `$state`, and `createTable` uses `$effect.pre` to sync options and controlled state before DOM updates. Table APIs that read atoms participate in Svelte dependency tracking through those rune-backed atom reads.
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = createTable({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   columns,
   get data() {
     return data
@@ -64,7 +63,7 @@ table.atoms.sorting.get()
 // table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -100,10 +99,7 @@ The second argument to `createTable` is a TanStack Store selector. The selected 
 ```ts
 const table = createTable(
   {
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns,
     get data() {
       return data
@@ -171,11 +167,7 @@ If you only need to customize the starting value for some table state, use `init
 
 ```ts
 const table = createTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   get data() {
     return data
@@ -226,7 +218,7 @@ import {
   type PaginationState,
 } from '@tanstack/svelte-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -238,8 +230,7 @@ const paginationAtom = createAtom<PaginationState>({
 const pagination = useSelector(paginationAtom)
 
 const table = createTable({
-  _features,
-  _rowModels: {},
+  features,
   columns,
   get data() {
     return dataQuery.data?.rows ?? []
@@ -270,11 +261,7 @@ let pagination: PaginationState = $state({
 })
 
 const table = createTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   get data() {
     return data
@@ -296,7 +283,7 @@ const table = createTable({
 })
 ```
 
-The v8-style `onStateChange` option is no longer part of the v9 `createTable` state model. v9 encourages keeping table state slices atomic and separated for performance.
+The v8-style `onStateChange` option (a single global state callback) is gone in v9. Use per-slice `on[State]Change` callbacks paired with `state.<slice>`, or external atoms via the `atoms` option. If you truly need to observe every state change, subscribe to `table.store` directly.
 
 ##### On State Change Callbacks
 
@@ -331,8 +318,8 @@ let sorting: SortingState = $state([
 ])
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```ts
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

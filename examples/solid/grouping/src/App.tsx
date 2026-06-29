@@ -19,19 +19,20 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
-  _features: {
+  features: {
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,
     rowPaginationFeature,
     rowSortingFeature,
-  },
-  _rowModels: {
     expandedRowModel: createExpandedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
+    filteredRowModel: createFilteredRowModel(),
+    groupedRowModel: createGroupedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
+    sortedRowModel: createSortedRowModel(),
+    filterFns,
+    sortFns,
+    aggregationFns,
   },
 })
 
@@ -80,16 +81,13 @@ function App() {
   const refreshData = () => setData(makeData(10_000))
   const stressTest = () => setData(makeData(200_000))
 
-  const table = createAppTable(
-    {
-      columns,
-      get data() {
-        return data()
-      },
-      debugTable: true,
+  const table = createAppTable({
+    columns,
+    get data() {
+      return data()
     },
-    (state) => state,
-  )
+    debugTable: true,
+  })
 
   return (
     <div class="demo-root">
@@ -204,7 +202,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -214,7 +212,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -225,7 +223,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => table.setPageSize(Number(e.currentTarget.value))}
         >
           <For each={[10, 20, 30, 40, 50]}>
@@ -234,7 +232,7 @@ function App() {
         </select>
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

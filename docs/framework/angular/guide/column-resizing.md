@@ -1,0 +1,254 @@
+---
+title: Column Resizing (Angular) Guide
+---
+
+## Examples
+
+Want to skip to the implementation? Check out these Angular examples:
+
+- [Column Resizing](../examples/column-resizing)
+- [Performant Column Resizing](../examples/column-resizing-performant)
+
+### Column Resizing Setup
+
+Here's how you set up your table to use column resizing features. Column resizing depends on column sizing, so add `columnSizingFeature` before `columnResizingFeature`. Adding the column resizing feature enables the related APIs.
+
+```ts
+import { signal } from '@angular/core'
+import { injectTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/angular-table'
+
+const features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+})
+
+export class App {
+  readonly data = signal(defaultData)
+
+  readonly table = injectTable(() => ({
+    features,
+    columns,
+    data: this.data(),
+  }))
+}
+```
+
+## Column Resizing (Angular) Guide
+
+TanStack Table provides built-in column resizing state and APIs that allow you to easily implement column resizing in your table UI with a variety of options for UX and performance.
+
+Column resizing builds on column sizing. If you only need to define starting, minimum, or maximum widths, see the [Column Sizing Guide](./column-sizing).
+
+### Enable Column Resizing
+
+To use column resizing, add `columnSizingFeature` and then `columnResizingFeature` to your features. The `column.getCanResize()` API will return `true` by default for all columns, but you can either disable column resizing for all columns with the `enableColumnResizing` table option, or disable column resizing on a per-column basis with the `enableResizing` column option.
+
+```ts
+import {
+  columnResizingFeature,
+  columnSizingFeature,
+  tableFeatures,
+  injectTable,
+} from '@tanstack/angular-table'
+
+const features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+})
+
+const columns = [
+  {
+    accessorKey: 'id',
+    enableResizing: false, // disable resizing for just this column
+    size: 200, // starting column size
+  },
+  //...
+]
+
+readonly table = injectTable(() => ({
+  features,
+  columns,
+  data,
+}))
+```
+
+### Column Resize Mode
+
+By default, the column resize mode is set to `"onEnd"`. This means that the `column.getSize()` API will not return the new column size until the user has finished resizing (dragging) the column. Usually a small UI indicator will be displayed while the user is resizing the column.
+
+Even though the Angular adapter wires table state to signals, every drag frame in `"onChange"` mode updates the `columnSizing` state, and any template that calls `column.getSize()` in every header and data cell recomputes on each frame. For large or complex tables, the `"onEnd"` column resize mode can be a good default option to avoid stuttering or lagging while the user resizes columns. That is not to say that you cannot achieve 60 fps column resizing in Angular, but for big tables you may need to compute column widths once per frame in a `computed(...)` and apply them as CSS variables instead of reading sizes cell by cell.
+
+> Advanced column resizing performance tips will be discussed [down below](#advanced-column-resizing-performance).
+
+If you want to change the column resize mode to `"onChange"` for immediate column resizing renders, you can do so with the `columnResizeMode` table option.
+
+```ts
+readonly table = injectTable(() => ({
+  //...
+  columnResizeMode: 'onChange', // change column resize mode to "onChange"
+}))
+```
+
+### Column Resize Direction
+
+By default, TanStack Table assumes that the table markup is laid out in a left-to-right direction. For right-to-left layouts, you may need to change the column resize direction to `"rtl"`.
+
+```ts
+readonly table = injectTable(() => ({
+  //...
+  columnResizeDirection: 'rtl', // change column resize direction to "rtl" for certain locales
+}))
+```
+
+### Connect Column Resizing APIs to UI
+
+There are a few really handy APIs that you can use to hook up your column resizing drag interactions to your UI.
+
+#### Column Size APIs
+
+To apply the size of a column to the column head cells, data cells, or footer cells, you can use the following APIs:
+
+```ts
+header.getSize()
+column.getSize()
+cell.column.getSize()
+```
+
+How you apply these size styles to your markup is up to you, but it is pretty common to use either CSS variables or inline styles to apply the column sizes.
+
+```html
+<th [attr.colSpan]="header.colSpan" [style.width.px]="header.getSize()">
+  <!-- header content -->
+</th>
+```
+
+Though, as discussed in the [advanced column resizing performance section](#advanced-column-resizing-performance), you may want to consider using CSS variables to apply column sizes to your markup.
+
+#### Column Resize APIs
+
+TanStack Table provides a pre-built event handler to make your drag interactions easy to implement. These event handlers are just convenience functions that call other internal APIs to update the column sizing state and re-render the table. Use `header.getResizeHandler()` to connect to your column resize drag interactions, for both mouse and touch events.
+
+```html
+<div
+  class="resizer"
+  (mousedown)="header.getResizeHandler()($event)"
+  (touchstart)="header.getResizeHandler()($event)"
+></div>
+```
+
+#### Column Resize Indicator with Column Resizing State
+
+TanStack Table keeps track of a `columnResizing` state object that you can use to render a column resize indicator UI.
+
+```html
+<div
+  class="resize-indicator"
+  [style.transform]="
+    header.column.getIsResizing()
+      ? 'translateX(' + (table.atoms.columnResizing.get().deltaOffset ?? 0) + 'px)'
+      : ''
+  "
+></div>
+```
+
+The `columnResizing` state stores transient drag information:
+
+```ts
+type columnResizingState = {
+  columnSizingStart: Array<[string, number]>
+  deltaOffset: null | number
+  deltaPercentage: null | number
+  isResizingColumn: false | string
+  startOffset: null | number
+  startSize: null | number
+}
+```
+
+You rarely need to manage this transient drag state yourself, but if you do, the recommended v9 approach is an external atom (created with `createAtom` from `@tanstack/angular-store`) passed to the table's `atoms` option. External atoms give you fine-grained subscriptions anywhere in your app, and other code can observe the resize state without re-running the `injectTable` options initializer on every change.
+
+```ts
+import { createAtom } from '@tanstack/angular-store'
+import type { columnResizingState } from '@tanstack/angular-table'
+
+export class App {
+  readonly columnResizingAtom = createAtom<columnResizingState>({
+    columnSizingStart: [],
+    deltaOffset: null,
+    deltaPercentage: null,
+    isResizingColumn: false,
+    startOffset: null,
+    startSize: null,
+  })
+
+  readonly table = injectTable(() => ({
+    features,
+    columns,
+    data: this.data(),
+    atoms: {
+      columnResizing: this.columnResizingAtom,
+    },
+  }))
+
+  // read this.columnResizingAtom.get() wherever you need the value
+}
+```
+
+Alternatively, the v8-style `state.columnResizing` plus `onColumnResizingChange` pattern is still supported. In Angular this means owning the slice with an Angular signal. It can be convenient for simple integrations or when migrating v8 code, but it is less fine-grained than external atoms. See the [Table State Guide](./table-state) for a deeper comparison.
+
+```ts
+readonly columnResizing = signal<columnResizingState>({
+  columnSizingStart: [],
+  deltaOffset: null,
+  deltaPercentage: null,
+  isResizingColumn: false,
+  startOffset: null,
+  startSize: null,
+})
+
+readonly table = injectTable(() => ({
+  features,
+  columns,
+  data,
+  state: {
+    columnResizing: this.columnResizing(),
+  },
+  onColumnResizingChange: (updater) =>
+    typeof updater === 'function'
+      ? this.columnResizing.update(updater)
+      : this.columnResizing.set(updater),
+}))
+```
+
+### Column Resizing APIs
+
+Use `header.getResizeHandler()` to connect mouse or touch events to the resizing logic. Use `column.getCanResize()` to decide whether to render a resize handle, and `column.getIsResizing()` to render active resizing UI.
+
+```ts
+header.getResizeHandler()
+column.getCanResize()
+column.getIsResizing()
+```
+
+The table instance exposes APIs for the transient resize state. The current generated v9 API spelling is `table.setcolumnResizing` with a lowercase `c` in `column`; use that exact name.
+
+```ts
+table.setcolumnResizing(old => ({
+  ...old,
+  deltaOffset: 12,
+}))
+
+table.resetHeaderSizeInfo()
+table.resetHeaderSizeInfo(true)
+```
+
+### Advanced Column Resizing Performance
+
+If you are creating large or complex tables with Angular, reading `column.getSize()` in every header and data cell of your template means every cell binding recomputes on every drag frame, which can degrade performance while resizing columns.
+
+We have created a [performant column resizing example](../examples/column-resizing-performant) that demonstrates how to achieve 60 fps column resizing renders with a complex table that may otherwise have slow renders. It is recommended that you just look at that example to see how it is done, but these are the basic things to keep in mind:
+
+1. Don't use `column.getSize()` on every header and every data cell. Instead, calculate all column widths once per sizing change in a single `computed(...)` at the table level (the example reads `table.atoms.columnSizing.get()` to track changes, then builds a map of widths with `untracked`).
+2. Use CSS variables to communicate column widths to your table cells, so a resize only updates the variable values on the `<table>` element instead of re-evaluating per-cell bindings.
+3. Keep your components on `ChangeDetectionStrategy.OnPush` so Angular only re-checks templates whose tracked signals actually changed.
+
+If you follow these steps, you should see significant performance improvements while resizing columns.

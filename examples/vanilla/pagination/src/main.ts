@@ -15,12 +15,13 @@ import type { Table } from '@tanstack/table-core'
 
 let data = makeData(200_000)
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
-  coreReativityFeature: storeReactivityBindings(),
+  coreReactivityFeature: storeReactivityBindings(),
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -52,7 +53,7 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const renderTable = (table: Table<typeof _features, Person>) => {
+const renderTable = (table: Table<typeof features, Person>) => {
   // Create buttons container
   const buttonsDiv = document.createElement('div')
 
@@ -64,9 +65,9 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   })
 
   const stressTestBtn = document.createElement('button')
-  stressTestBtn.textContent = 'Stress Test (200k rows)'
+  stressTestBtn.textContent = 'Stress Test (1M rows)'
   stressTestBtn.addEventListener('click', () => {
-    data = makeData(200_000)
+    data = makeData(1_000_000)
     table.setOptions((prev) => ({ ...prev, data }))
   })
 
@@ -188,7 +189,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
   paginationPageElement.appendChild(paginationPageInput)
   paginationElement.appendChild(paginationPageElement)
 
-  // Render pagiantion page size
+  // Render pagination page size
   const paginationPageSizeSelect = document.createElement('select')
   paginationPageSizeSelect.value = String(table.store.state.pagination.pageSize)
   paginationPageSizeSelect.onchange = (e) => {
@@ -224,10 +225,7 @@ const renderTable = (table: Table<typeof _features, Person>) => {
 }
 
 const table = constructTable({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   data,
   columns,
   initialState: {

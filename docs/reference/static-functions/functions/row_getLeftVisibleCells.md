@@ -9,11 +9,12 @@ title: row_getLeftVisibleCells
 function row_getLeftVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L203)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L215)
 
-Returns left visible cells for a row.
+Collects visible cells for columns pinned to the left region.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+Cells are returned in `state.columnPinning.left` order and are marked with
+`cell.position = 'left'`.
 
 ## Type Parameters
 
@@ -38,5 +39,5 @@ This is the static implementation behind the matching row instance API and may r
 ## Example
 
 ```ts
-const value = row_getLeftVisibleCells(row)
+const leftCells = row_getLeftVisibleCells(row)
 ```

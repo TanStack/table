@@ -22,7 +22,15 @@ export type ReactTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TSelected = TableState<TFeatures>,
-> = Table<TFeatures, TData> & {
+> = Omit<Table<TFeatures, TData>, 'store'> & {
+  /**
+   * @deprecated Prefer `table.state` for render reads,
+   * `table.atoms.<slice>.get()` for slice snapshots, or
+   * `table.Subscribe` / `useSelector(table.store, selector)` for explicit
+   * subscriptions. `table.store.state` is a current-value snapshot and is easy
+   * to misuse in render code.
+   */
+  readonly store: Table<TFeatures, TData>['store']
   /**
    * A React HOC (Higher Order Component) that allows you to subscribe to the table state.
    *
@@ -95,7 +103,9 @@ export type ReactTable<
     props: FlexRenderProps<TFeatures, TData, TValue>,
   ) => ReactNode
   /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
+   * The selected state of the table. This state may not match the structure of
+   * the full table state because it is selected by the selector function that
+   * you pass as the 2nd argument to `useTable`.
    *
    * @example
    * const table = useTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
@@ -118,8 +128,7 @@ export type ReactTable<
  * ```tsx
  * const table = useTable(
  *   {
- *     _features,
- *     _rowModels: {},
+ *     features,
  *     columns,
  *     data,
  *   },
@@ -138,13 +147,16 @@ export function useTable<
   selector?: (state: TableState<TFeatures>) => TSelected,
 ): ReactTable<TFeatures, TData, TSelected> {
   const [table] = useState(() => {
-    const tableInstance = constructTable({
+    // Explicit type arguments skip generic inference from the spread object (a
+    // type-check hot spot); the spread only adds the react reactivity binding
+    // to `features`.
+    const tableInstance = constructTable<TFeatures, TData>({
       ...tableOptions,
-      _features: {
-        coreReativityFeature: reactReactivity(),
-        ...tableOptions._features,
+      features: {
+        coreReactivityFeature: reactReactivity(),
+        ...tableOptions.features,
       },
-    }) as ReactTable<TFeatures, TData, TSelected>
+    }) as unknown as ReactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
       const source = props.source ?? tableInstance.store

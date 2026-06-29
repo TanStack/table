@@ -39,22 +39,21 @@ The important change from previous versions is that table state is now atomic. R
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
-For example, if `_features` includes `rowPaginationFeature`, TypeScript exposes pagination state APIs and `table.atoms.pagination`. If `_features` does not include `rowPaginationFeature`, `pagination` should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
+For example, if `features` includes `rowPaginationFeature`, TypeScript exposes pagination state APIs and `table.atoms.pagination`. If `features` does not include `rowPaginationFeature`, `pagination` should not be available in `table.atoms`, `table.store.state`, `table.state`, `initialState`, `state`, or `atoms`.
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   columns,
   data,
 })
@@ -103,10 +102,7 @@ You can pass your own selector to make `table.state` contain only the reactive s
 ```tsx
 const table = useTable(
   {
-    _features,
-    _rowModels: {
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns,
     data,
   },
@@ -123,8 +119,7 @@ For large tables, you can also opt the parent table component out of table-state
 ```tsx
 const table = useTable(
   {
-    _features,
-    _rowModels: {},
+    features,
     columns,
     data,
   },
@@ -143,11 +138,7 @@ Without a `source` prop, `table.Subscribe` subscribes to `table.store` and requi
 ```tsx
 const table = useTable(
   {
-    _features,
-    _rowModels: {
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     columns,
     data,
   },
@@ -192,6 +183,68 @@ You can also subscribe directly to a single atom and select one value from it:
 
 Advanced subscription patterns require understanding which table APIs depend on which state slices. For example, a row model may depend on filtering, sorting, and pagination, while one row selection checkbox may only need one row's selection value. Start with the default selector, then optimize with selectors and `table.Subscribe` where render cost matters.
 
+#### Subscribe for React Compiler Compatibility
+
+`useTable` itself was significantly reworked in the v9 upgrade for React Compiler compatibility. It returns a fresh `table` reference on every state change so that the compiler invalidates JSX dependent on it. For most tables that's enough. But state isn't only read through `table`. It's also read through `column.getIsPinned()`, `row.getIsSelected()`, `cell.getIsAggregated()`, `header.column.getCanSort()`, and similar builder-pattern APIs. Those method calls hide their state dependencies from the compiler. When you split header / cell / row rendering into nested React components, the compiler can memoize the inner JSX against the stable `column` / `row` / `cell` / `header` references it sees, and those state-dependent reads never get re-evaluated.
+
+The symptoms are subtle and look like rendering bugs: row-selection checkboxes that don't reflect clicks, pin buttons that don't update, sort indicators that go stale. This is most visible in tables that wrap header or cell rendering inside custom components (for example, a DnD-enabled table where each header is rendered through a `DraggableTableHeader` component, or where you've broken a column's `cell` template out into a named React component for re-use).
+
+`table.Subscribe` (or the standalone `Subscribe` from `@tanstack/react-table`) is the supported way to work around this. It exposes the underlying TanStack Store subscription as a render-prop using `useSelector` under the hood, a hook the compiler recognizes as a real reactive dependency. The JSX inside re-runs on every selected state change, so the builder-pattern reads return current values.
+
+```tsx
+import { Subscribe } from '@tanstack/react-table'
+
+const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'select',
+    header: ({ table }) => (
+      // work around react compiler memoization for nested components using table APIs
+      <Subscribe source={table.store} selector={(s) => s.rowSelection}>
+        {() => (
+          <input
+            type="checkbox"
+            checked={table.getIsAllPageRowsSelected()}
+            onChange={table.getToggleAllPageRowsSelectedHandler()}
+          />
+        )}
+      </Subscribe>
+    ),
+    cell: ({ row, table }) => (
+      // work around react compiler memoization for nested components using row APIs
+      <Subscribe
+        source={table.atoms.rowSelection}
+        selector={(s) => s[row.id]}
+      >
+        {(isSelected) => (
+          <input
+            type="checkbox"
+            checked={!!isSelected}
+            onChange={row.getToggleSelectedHandler()}
+          />
+        )}
+      </Subscribe>
+    ),
+  }),
+])
+```
+
+You only need `Subscribe` for UI that reads through TanStack Table's method APIs from inside a component that React Compiler is allowed to memoize. Simpler tables (where headers and cells are rendered inline in the parent component) usually don't need this, because the compiler always re-evaluates inline JSX when the parent re-renders. Reach for `Subscribe` once you start factoring header / cell templates into custom child components.
+
+**Tips:**
+
+- For UI that depends on multiple state slices, return an object from the selector:
+  ```tsx
+  <Subscribe
+    source={table.store}
+    selector={(s) => ({ rowSelection: s.rowSelection, rowPinning: s.rowPinning })}
+  >
+    {() => /* checkbox + pin button */}
+  </Subscribe>
+  ```
+- For per-row or per-column UI, prefer subscribing to a specific atom (`table.atoms.rowSelection`, `table.atoms.columnPinning`, etc.) so only that row's or column's component re-renders on changes.
+- Inside cell / header render contexts, the `table` field is typed as the core `Table<TFeatures, TData>`, so `table.Subscribe` isn't available there. Import the standalone `Subscribe` component and pass `source={table.store}` instead. From a top-level component that holds the `ReactTable` returned by `useTable`, `table.Subscribe` works.
+- See the [Kitchen Sink](../examples/kitchen-sink) example for a table that combines every stock feature and uses `Subscribe` to stay correct under React Compiler.
+
 ### Setting Table State
 
 You should almost never need to set table state directly. TanStack Table features expose dedicated APIs for interacting with their state, and those APIs are the safest way to make changes because they preserve the feature's own rules and related updates.
@@ -228,11 +281,7 @@ If you only need to customize the starting value for some table state, use `init
 
 ```tsx
 const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
   initialState: {
@@ -283,7 +332,7 @@ import {
   type PaginationState,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -301,8 +350,7 @@ function App() {
   })
 
   const table = useTable({
-    _features,
-    _rowModels: {},
+    features,
     columns,
     data: dataQuery.data?.rows ?? [],
     rowCount: dataQuery.data?.rowCount,
@@ -332,11 +380,7 @@ const [pagination, setPagination] = React.useState<PaginationState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
   state: {
@@ -348,7 +392,7 @@ const table = useTable({
 })
 ```
 
-The v8-style `onStateChange` option is no longer part of the v9 `useTable` state model. It remains available through `useLegacyTable` for migration, but v9 encourages keeping table state slices atomic and separated for performance.
+The v8-style `onStateChange` option (a single global state callback) is gone in v9. It is not supported by `useTable` or `useLegacyTable`. Use per-slice `on[State]Change` callbacks paired with `state.<slice>`, or external atoms via the `atoms` option. If you truly need to observe every state change, subscribe to `table.store` directly.
 
 ##### On State Change Callbacks
 
@@ -360,10 +404,7 @@ If you provide an `on[State]Change` callback, also provide the corresponding val
 const [sorting, setSorting] = React.useState<SortingState>([])
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-  },
+  features,
   columns,
   data,
   state: {
@@ -382,10 +423,7 @@ const [pagination, setPagination] = React.useState<PaginationState>({
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
   state: {
@@ -424,15 +462,15 @@ const [sorting, setSorting] = React.useState<SortingState>([
 ])
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```tsx
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
 })
 
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```
 
 Prefer feature-specific state types like `SortingState`, `PaginationState`, or `RowSelectionState` when you are creating local state or external atoms for one slice.

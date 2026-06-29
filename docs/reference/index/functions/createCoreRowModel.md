@@ -35,7 +35,7 @@ The factory reads the relevant table state atoms and options, then returns a row
 
 #### table
 
-[`Table`](../type-aliases/Table.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### Returns
 

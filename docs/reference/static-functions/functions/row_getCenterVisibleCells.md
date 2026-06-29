@@ -6,14 +6,14 @@ title: row_getCenterVisibleCells
 # Function: row\_getCenterVisibleCells()
 
 ```ts
-function row_getCenterVisibleCells<TFeatures, TData>(row): any[];
+function row_getCenterVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:178](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L178)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L189)
 
-Returns center visible cells for a row.
+Collects visible cells whose columns are not pinned left or right.
 
-This is the static implementation behind the matching row instance API and may read row caches or table state atoms.
+The result preserves the row's visible-cell order for center columns.
 
 ## Type Parameters
 
@@ -33,10 +33,10 @@ This is the static implementation behind the matching row instance API and may r
 
 ## Returns
 
-`any`[]
+[`Cell`](../../index/type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = row_getCenterVisibleCells(row)
+const centerCells = row_getCenterVisibleCells(row)
 ```

@@ -18,16 +18,20 @@ import { makeData } from './makeData'
 import type { Column, ColumnDef, Row, Table } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
 function renderFilter(
-  column: Column<typeof _features, Person>,
-  table: Table<typeof _features, Person>,
+  column: Column<typeof features, Person>,
+  table: Table<typeof features, Person>,
 ) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -81,8 +85,8 @@ function renderFilter(
 }
 
 function renderPinnedRow(
-  row: Row<typeof _features, Person>,
-  table: Table<typeof _features, Person>,
+  row: Row<typeof features, Person>,
+  table: Table<typeof features, Person>,
 ) {
   const isPinnedTop = row.getIsPinned() === 'top'
   const topOffset = isPinnedTop
@@ -105,7 +109,7 @@ function renderPinnedRow(
   `
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     id: 'pin',
     header: () => 'Pin',
@@ -171,17 +175,12 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(1_000, 2, 2)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          filteredRowModel: createFilteredRowModel(filterFns),
-          expandedRowModel: createExpandedRowModel(),
-          paginatedRowModel: createPaginatedRowModel(),
-        },
+        features,
         columns,
         data: this._data,
         initialState: {
@@ -326,16 +325,7 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div class="spacer-sm"></div>
-        <pre>
-${JSON.stringify(
-            {
-              rowPinning: table.state.rowPinning,
-              pagination: table.state.pagination,
-            },
-            null,
-            2,
-          )}</pre
-        >
+        <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

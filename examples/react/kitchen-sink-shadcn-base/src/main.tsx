@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import * as ReactDOM from 'react-dom/client'
 import './index.css'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
@@ -30,7 +31,6 @@ import {
   columnSizingFeature,
   columnVisibilityFeature,
   createColumnHelper,
-  createCoreRowModel,
   createExpandedRowModel,
   createFacetedRowModel,
   createFacetedUniqueValues,
@@ -40,6 +40,7 @@ import {
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
+  metaHelper,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -48,17 +49,18 @@ import {
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import type { Person } from '@/lib/make-data'
 import type {
-  CellData,
   Column,
   ColumnPinningState,
   ColumnSizingState,
   ExpandedState,
   GroupingState,
-  RowData,
   SortingState,
-  TableFeatures,
 } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -89,24 +91,32 @@ import {
 import { cn, formatDate, toSentenceCase } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
-import { dynamicFilterFn, fuzzyFilter } from '@/lib/data-table'
+import { dynamicFilterFn } from '@/lib/data-table'
+import { rankItem } from '@tanstack/match-sorter-utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Input } from '@/components/ui/input'
 
-declare module '@tanstack/react-table' {
-  interface ColumnMeta<
-    TFeatures extends TableFeatures,
-    TData extends RowData,
-    TValue extends CellData = CellData,
-  > {
-    label?: string
-    variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
-    options?: Array<{ label: string; value: string; count?: number }>
-  }
+interface MyColumnMeta {
+  label?: string
+  variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
+  options?: Array<{ label: string; value: string; count?: number }>
 }
 
-const _features = tableFeatures({
+// Local fuzzy filter implementation for the filterFns registry slot.
+// Defined here to avoid a circular type dependency with data-table.ts.
+const fuzzyFilterFn = (
+  row: { getValue: (id: string) => unknown },
+  columnId: string,
+  value: unknown,
+  addMeta?: (meta: object) => void,
+) => {
+  const itemRank = rankItem(row.getValue(columnId), value as string)
+  addMeta?.({ itemRank })
+  return itemRank.passed
+}
+
+export const features = tableFeatures({
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -120,16 +130,27 @@ const _features = tableFeatures({
   columnPinningFeature,
   columnGroupingFeature,
   globalFilteringFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilterFn },
+  sortFns,
+  aggregationFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 /**
  * CSS for left/right pinned columns. Verbatim port of the helper from
  * `examples/react/column-pinning-sticky/src/main.tsx` so a pinned column gets
  * `position: sticky` plus the appropriate offset and edge shadow.
  */
 function getCommonPinningStyles(
-  column: Column<typeof _features, Person>,
+  column: Column<typeof features, Person>,
   isSelected = false,
 ): React.CSSProperties {
   const isPinned = column.getIsPinned()
@@ -157,8 +178,6 @@ function getCommonPinningStyles(
 }
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const [rowSelection, setRowSelection] = React.useState({})
   const [sorting, setSorting] = React.useState<SortingState>([])
   const [columnFilters, setColumnFilters] = React.useState<
@@ -388,24 +407,12 @@ function App() {
   )
 
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        coreRowModel: createCoreRowModel(),
-        filteredRowModel: createFilteredRowModel({
-          ...filterFns,
-          fuzzy: fuzzyFilter,
-        }),
-        facetedRowModel: createFacetedRowModel(),
-        facetedUniqueValues: createFacetedUniqueValues(),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-        groupedRowModel: createGroupedRowModel(aggregationFns),
-        expandedRowModel: createExpandedRowModel(),
-      },
+      key: 'kitchen-sink-shadcn-base', // needed for devtools
+      features,
       columns,
       data,
       defaultColumn: {
@@ -444,6 +451,8 @@ function App() {
     (state) => state, // default selector
   )
 
+  useTanStackTableDevtools(table)
+
   const columnSizeVars = React.useMemo(() => {
     const headers = table.getFlatHeaders()
     const colSizes: { [key: string]: number } = {}
@@ -452,7 +461,7 @@ function App() {
       colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
     }
     return colSizes
-  }, [table.store.state.columnSizing])
+  }, [table.state.columnSizing])
 
   return (
     <div className="container mx-auto p-4 flex flex-col gap-4">
@@ -462,10 +471,7 @@ function App() {
           Regenerate Data
         </Button>
         <Button variant="outline" size="sm" onClick={() => stressTest()}>
-          Stress Test (200k rows)
-        </Button>
-        <Button variant="outline" size="sm" onClick={() => rerender()}>
-          Force Rerender
+          Stress Test (1M rows)
         </Button>
         <Button
           variant="outline"
@@ -659,6 +665,7 @@ ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
       <App />
+      <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
     </ThemeProvider>
   </React.StrictMode>,
 )

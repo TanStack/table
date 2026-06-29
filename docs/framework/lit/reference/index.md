@@ -7,7 +7,12 @@ title: "@tanstack/lit-table"
 
 ## Classes
 
+- [SubscribeDirective](classes/SubscribeDirective.md)
 - [TableController](classes/TableController.md)
+
+## Interfaces
+
+- [CreateTableHookResult](interfaces/CreateTableHookResult.md)
 
 ## Type Aliases
 
@@ -19,11 +24,16 @@ title: "@tanstack/lit-table"
 - [AppGroupColumnDef](type-aliases/AppGroupColumnDef.md)
 - [AppHeaderContext](type-aliases/AppHeaderContext.md)
 - [AppLitTable](type-aliases/AppLitTable.md)
+- [BoundComponents](type-aliases/BoundComponents.md)
 - [ComponentType](type-aliases/ComponentType.md)
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)
 - [FlexRenderProps](type-aliases/FlexRenderProps.md)
 - [LitTable](type-aliases/LitTable.md)
-- [SubscribeSource](type-aliases/SubscribeSource.md)
+- [SelectionSource](type-aliases/SelectionSource.md)
+
+## Variables
+
+- [subscribe](variables/subscribe.md)
 
 ## Functions
 

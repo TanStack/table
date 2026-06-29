@@ -5,7 +5,7 @@ title: Table_GlobalFiltering
 
 # Interface: Table\_GlobalFiltering\<TFeatures, TData\>
 
-Defined in: [features/global-filtering/globalFilteringFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L66)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L69)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/global-filtering/globalFilteringFeature.types.ts:66](https
 getGlobalAutoFilterFn: () => FilterFn<TFeatures, TData> | undefined;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L73)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L76)
 
 Currently, this function returns the built-in `includesString` filter function. In future releases, it may return more dynamic filter functions based on the nature of the data provided.
 
@@ -41,7 +41,7 @@ Currently, this function returns the built-in `includesString` filter function. 
 getGlobalFilterFn: () => FilterFn<TFeatures, TData> | undefined;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L77)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L80)
 
 Returns the filter function (either user-defined or automatic, depending on configuration) for the global filter.
 
@@ -57,9 +57,11 @@ Returns the filter function (either user-defined or automatic, depending on conf
 resetGlobalFilter: (defaultState?) => void;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L81)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L86)
 
-Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can be passed to force a default blank state reset to `undefined`.
+Resets `globalFilter` to `initialState.globalFilter`.
+
+Pass `true` to ignore initial state and reset to `undefined`.
 
 #### Parameters
 
@@ -79,9 +81,9 @@ Resets the **globalFilter** state to `initialState.globalFilter`, or `true` can 
 setGlobalFilter: (updater) => void;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L85)
+Defined in: [features/global-filtering/globalFilteringFeature.types.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.types.ts#L90)
 
-Sets global filter state using a value or updater.
+Updates global filter state with a next value or updater function.
 
 #### Parameters
 

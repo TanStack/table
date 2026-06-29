@@ -65,7 +65,7 @@ Every header stores a reference to its parent [column](./columns) object and its
 
 ### More Header APIs
 
-Headers have a few more useful APIs attached to them that are useful for interacting with the table state. Most of them relate to the column sizing and resizing features. See the [Column Sizing Guide](./column-sizing) and [Column Resizing Guide](./column-resizing) for more information.
+Headers have a few more useful APIs attached to them that are useful for interacting with the table state. Most of them relate to the column sizing and resizing features. See the [Column Sizing Guide](../framework/react/guide/column-sizing) and [Column Resizing Guide](../framework/react/guide/column-resizing) for more information.
 
 ### Header Rendering
 

@@ -27,7 +27,7 @@ getIsAllColumnsVisible: () => boolean;
 
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L37)
 
-Returns whether all columns are visible
+Checks whether every leaf column is currently visible.
 
 #### Returns
 
@@ -43,7 +43,7 @@ getIsSomeColumnsVisible: () => boolean;
 
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L41)
 
-Returns whether any columns are visible
+Checks whether at least one leaf column is currently visible.
 
 #### Returns
 
@@ -59,7 +59,7 @@ getToggleAllColumnsVisibilityHandler: () => (event) => void;
 
 Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L45)
 
-Returns a handler for toggling the visibility of all columns, meant to be bound to a `input[type=checkbox]` element.
+Creates a checkbox-style handler that shows or hides all columns.
 
 #### Returns
 
@@ -85,9 +85,10 @@ Returns a handler for toggling the visibility of all columns, meant to be bound 
 getVisibleFlatColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L49)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L50)
 
-Returns a flat array of columns that are visible, including parent columns.
+Lists visible columns in flat table order, including parent columns that
+have visible descendants.
 
 #### Returns
 
@@ -101,9 +102,9 @@ Returns a flat array of columns that are visible, including parent columns.
 getVisibleLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L53)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L54)
 
-Returns a flat array of leaf-node columns that are visible.
+Lists visible leaf columns in the order used for row cells and headers.
 
 #### Returns
 
@@ -117,9 +118,11 @@ Returns a flat array of leaf-node columns that are visible.
 resetColumnVisibility: (defaultState?) => void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L57)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L60)
 
-Resets the column visibility state to the initial state. If `defaultState` is provided, the state will be reset to `{}`
+Resets `columnVisibility` to `initialState.columnVisibility`.
+
+Pass `true` to ignore initial state and reset to `{}`.
 
 #### Parameters
 
@@ -139,9 +142,9 @@ Resets the column visibility state to the initial state. If `defaultState` is pr
 setColumnVisibility: (updater) => void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L61)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L64)
 
-Sets column visibility state using a value or updater.
+Updates column visibility state with a next map or updater function.
 
 #### Parameters
 
@@ -161,7 +164,7 @@ Sets column visibility state using a value or updater.
 toggleAllColumnsVisible: (value?) => void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L65)
+Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.types.ts#L68)
 
 Toggles the visibility of all columns.
 

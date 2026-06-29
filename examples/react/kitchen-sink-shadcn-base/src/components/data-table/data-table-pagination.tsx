@@ -6,7 +6,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react'
-import type { RowData, Table, TableFeatures } from '@tanstack/react-table'
+import type { ReactTable, RowData } from '@tanstack/react-table'
+import type { features } from '@/main'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -17,15 +18,15 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-interface DataTablePaginationProps {
-  table: Table<Pick<TableFeatures, 'rowPaginationFeature'>, RowData>
+interface DataTablePaginationProps<TData extends RowData> {
+  table: ReactTable<typeof features, TData>
   pageSizeOptions?: Array<number>
 }
 
-export function DataTablePagination({
+export function DataTablePagination<TData extends RowData>({
   table,
   pageSizeOptions = [10, 20, 30, 40, 50],
-}: DataTablePaginationProps) {
+}: DataTablePaginationProps<TData>) {
   return (
     <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
       <div className="flex-1 whitespace-nowrap text-muted-foreground text-sm">
@@ -37,15 +38,13 @@ export function DataTablePagination({
         <div className="flex items-center space-x-2">
           <p className="whitespace-nowrap font-medium text-sm">Rows per page</p>
           <Select
-            value={`${table.store.state.pagination.pageSize}`}
+            value={`${table.state.pagination.pageSize}`}
             onValueChange={(value) => {
               table.setPageSize(Number(value))
             }}
           >
             <SelectTrigger className="h-8 w-[4.5rem]">
-              <SelectValue
-                placeholder={table.store.state.pagination.pageSize}
-              />
+              <SelectValue placeholder={table.state.pagination.pageSize} />
             </SelectTrigger>
             <SelectContent side="top">
               {pageSizeOptions.map((pageSize) => (
@@ -57,8 +56,8 @@ export function DataTablePagination({
           </Select>
         </div>
         <div className="flex items-center justify-center font-medium text-sm">
-          Page {(table.store.state.pagination.pageIndex + 1).toLocaleString()}{' '}
-          of {table.getPageCount().toLocaleString()}
+          Page {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+          {table.getPageCount().toLocaleString()}
         </div>
         <div className="flex items-center space-x-2">
           <Button

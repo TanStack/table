@@ -6,9 +6,30 @@ title: filterFn_equalsString
 # Variable: filterFn\_equalsString
 
 ```ts
-const filterFn_equalsString: FilterFn<any, any>;
+const filterFn_equalsString: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L85)
+Defined in: [fns/filterFns.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L89)
 
-Filter function for checking if a string is exactly equal to a given string. (Non-case-sensitive)
+Keeps rows whose stringified column value equals the filter text.
+
+Both values are lowercased before comparison, and empty filter values are
+auto-removed.
+
+## Type Declaration
+
+### autoRemove()
+
+```ts
+autoRemove: (val) => boolean;
+```
+
+#### Parameters
+
+##### val
+
+`any`
+
+#### Returns
+
+`boolean`

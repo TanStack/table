@@ -12,11 +12,11 @@ import { fetchData } from './fetchData'
 import type { PaginationState } from '@tanstack/solid-table'
 import type { Person } from './fetchData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -57,8 +57,7 @@ function App() {
   const defaultData: Array<Person> = []
 
   const table = createTable({
-    _features,
-    _rowModels: {},
+    features,
     columns,
     get data() {
       return dataQuery.data?.rows ?? defaultData
@@ -179,7 +178,7 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {dataQuery.data?.rowCount.toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(pagination(), null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

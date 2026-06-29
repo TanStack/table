@@ -24,18 +24,26 @@ import { makeData } from './makeData'
 import type { ColumnDef } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   columnGroupingFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
+  aggregationFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
-const columns: Array<ColumnDef<typeof _features, Person>> =
-  columnHelper.columns([
+const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
+  [
     columnHelper.accessor('firstName', {
       header: 'First Name',
       cell: (info) => info.getValue(),
@@ -67,26 +75,20 @@ const columns: Array<ColumnDef<typeof _features, Person>> =
       aggregatedCell: ({ getValue }) =>
         Math.round(getValue<number>() * 100) / 100 + '%',
     }),
-  ])
+  ],
+)
 
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(10_000)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          expandedRowModel: createExpandedRowModel(),
-          filteredRowModel: createFilteredRowModel(filterFns),
-          groupedRowModel: createGroupedRowModel(aggregationFns),
-          paginatedRowModel: createPaginatedRowModel(),
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
+        features,
         columns,
         data: this._data,
         debugTable: true,

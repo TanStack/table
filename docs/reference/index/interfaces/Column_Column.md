@@ -103,7 +103,7 @@ getFlatColumns: () => Column<TFeatures, TData, TValue>[];
 
 Defined in: [core/columns/coreColumnsFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L53)
 
-Returns the flattened array of this column and all child/grand-child columns for this column.
+Flattens this column and every descendant column into a single array.
 
 #### Returns
 
@@ -117,9 +117,10 @@ Returns the flattened array of this column and all child/grand-child columns for
 getLeafColumns: () => Column<TFeatures, TData, TValue>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L57)
+Defined in: [core/columns/coreColumnsFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L58)
 
-Returns an array of all leaf-node columns for this column. If a column has no children, it is considered the only leaf-node column.
+Collects the terminal leaf columns below this column, or the column itself
+when it has no children.
 
 #### Returns
 

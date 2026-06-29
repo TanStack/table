@@ -1,19 +1,20 @@
 import { html } from 'lit'
-import type { Cell } from '@tanstack/lit-table'
+import type { Cell, RowData } from '@tanstack/lit-table'
+import type { features } from '../hooks/table'
 
 // Cell components are plain functions that receive the cell instance as their
 // first argument (bound automatically by AppCell in createTableHook).
 // In column definitions, call them as: cell: ({ cell }) => cell.TextCell()
 
-export function TextCell(cell: Cell<any, any, string>) {
+export function TextCell(cell: Cell<typeof features, RowData, string>) {
   return html`<span>${String(cell.getValue() ?? '')}</span>`
 }
 
-export function NumberCell(cell: Cell<any, any, number>) {
+export function NumberCell(cell: Cell<typeof features, RowData, number>) {
   return html`<span>${Number(cell.getValue() ?? 0).toLocaleString()}</span>`
 }
 
-export function StatusCell(cell: Cell<any, any, string>) {
+export function StatusCell(cell: Cell<typeof features, RowData, string>) {
   const status = String(cell.getValue() ?? '')
   const statusClass =
     status === 'single'
@@ -24,7 +25,7 @@ export function StatusCell(cell: Cell<any, any, string>) {
   return html`<span class="status-badge ${statusClass}">${status}</span>`
 }
 
-export function ProgressCell(cell: Cell<any, any, number>) {
+export function ProgressCell(cell: Cell<typeof features, RowData, number>) {
   const value = Number(cell.getValue() ?? 0)
   return html`
     <div class="progress-bar">
@@ -33,7 +34,7 @@ export function ProgressCell(cell: Cell<any, any, number>) {
   `
 }
 
-export function RowActionsCell(cell: Cell<any, any, any>) {
+export function RowActionsCell(cell: Cell<typeof features, RowData, unknown>) {
   const row = cell.row.original as {
     firstName?: string
     name?: string
@@ -48,7 +49,7 @@ export function RowActionsCell(cell: Cell<any, any, any>) {
   `
 }
 
-export function PriceCell(cell: Cell<any, any, number>) {
+export function PriceCell(cell: Cell<typeof features, RowData, number>) {
   const value = Number(cell.getValue() ?? 0)
   return html`<span class="price"
     >$${value.toLocaleString(undefined, {
@@ -58,7 +59,7 @@ export function PriceCell(cell: Cell<any, any, number>) {
   >`
 }
 
-export function CategoryCell(cell: Cell<any, any, string>) {
+export function CategoryCell(cell: Cell<typeof features, RowData, string>) {
   const category = String(cell.getValue() ?? '')
   return html`<span class="category-badge ${category}">${category}</span>`
 }

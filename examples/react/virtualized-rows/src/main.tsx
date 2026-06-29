@@ -20,6 +20,8 @@ import type { Person } from './makeData'
 const features = {
   columnSizingFeature,
   rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 }
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -80,8 +82,7 @@ function App() {
 
   const table = useTable(
     {
-      _features: features,
-      _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+      features,
       columns,
       data,
       debugTable: true,

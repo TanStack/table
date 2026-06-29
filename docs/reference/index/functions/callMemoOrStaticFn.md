@@ -6,14 +6,14 @@ title: callMemoOrStaticFn
 # Function: callMemoOrStaticFn()
 
 ```ts
-function callMemoOrStaticFn<TObject, TStaticFn>(
+function callMemoOrStaticFn<TObject, TArgs, TReturn>(
    obj, 
    fnKey, 
    staticFn, ...
-args): ReturnType<TStaticFn>;
+   args): TReturn;
 ```
 
-Defined in: [utils.ts:451](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L451)
+Defined in: [utils.ts:459](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L459)
 
 Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fallback to the static method passed in.
 
@@ -23,9 +23,13 @@ Looks to run the memoized function with the builder pattern on the object if it 
 
 `TObject` *extends* `Record`\<`string`, `any`\>
 
-### TStaticFn
+### TArgs
 
-`TStaticFn` *extends* `AnyFunction`
+`TArgs` *extends* `any`[]
+
+### TReturn
+
+`TReturn`
 
 ## Parameters
 
@@ -39,12 +43,12 @@ Looks to run the memoized function with the builder pattern on the object if it 
 
 ### staticFn
 
-`TStaticFn`
+(`obj`, ...`args`) => `TReturn`
 
 ### args
 
-...`Parameters`\<`TStaticFn`\> *extends* \[`any`, `...Rest[]`\] ? `Rest` : `never`
+...`TArgs`
 
 ## Returns
 
-`ReturnType`\<`TStaticFn`\>
+`TReturn`

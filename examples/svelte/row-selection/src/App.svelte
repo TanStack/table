@@ -20,16 +20,19 @@
   } from '@tanstack/svelte-table'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     rowPaginationFeature,
     rowSelectionFeature,
     columnFilteringFeature,
     globalFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    paginatedRowModel: createPaginatedRowModel(),
+    filterFns,
   })
 
   let data = $state(makeData(1_000))
   const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(200_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   // Svelte action to set indeterminate property on checkbox inputs
   function setIndeterminate(node: HTMLInputElement, value: boolean) {
@@ -44,11 +47,7 @@
   // Create table with selector to track specific state
   const table = createTable(
     {
-      _features,
-      _rowModels: {
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-      },
+      features,
       get data() {
         return data
       },
@@ -123,7 +122,7 @@
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <div>
     <input
@@ -271,14 +270,6 @@
   <hr />
   <br />
   <div>
-    <button class="demo-button demo-button-spaced" onclick={() => refreshData()}>
-      Regenerate Data
-    </button>
-    <button class="demo-button demo-button-spaced" onclick={() => stressTest()}>
-      Stress Test (200k rows)
-    </button>
-  </div>
-  <div>
     <button
       class="demo-button demo-button-spaced"
       onclick={() =>
@@ -299,8 +290,8 @@
 </div>
 
 {#snippet Filter(
-  column: Column<typeof _features, Person>,
-  table: SvelteTable<typeof _features, Person, any>,
+  column: Column<typeof features, Person>,
+  table: SvelteTable<typeof features, Person, any>,
 )}
   {@const firstValue = table
     .getPreFilteredRowModel()

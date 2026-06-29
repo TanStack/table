@@ -5,7 +5,10 @@ title: TableOptions_Core
 
 # Interface: TableOptions\_Core\<TFeatures, TData\>
 
-Defined in: [types/TableOptions.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L27)
+Defined in: [types/TableOptions.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L30)
+
+Core options that are always available on a table, before optional feature
+options are mixed in.
 
 ## Extends
 
@@ -23,45 +26,13 @@ Defined in: [types/TableOptions.ts:27](https://github.com/TanStack/table/blob/ma
 
 ## Properties
 
-### \_features
-
-```ts
-readonly _features: TFeatures;
-```
-
-Defined in: [core/table/coreTablesFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L71)
-
-The features that you want to enable for the table.
-
-#### Inherited from
-
-[`TableOptions_Table`](TableOptions_Table.md).[`_features`](TableOptions_Table.md#_features)
-
-***
-
-### \_rowModels?
-
-```ts
-readonly optional _rowModels: CreateRowModels_All<TFeatures, TData>;
-```
-
-Defined in: [core/table/coreTablesFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L75)
-
-The row model options that you want to enable for the table.
-
-#### Inherited from
-
-[`TableOptions_Table`](TableOptions_Table.md).[`_rowModels`](TableOptions_Table.md#_rowmodels)
-
-***
-
 ### atoms?
 
 ```ts
-readonly optional atoms: Partial<{ [K in string | number | symbol]: Atom<TableState<TFeatures>[K]> }>;
+readonly optional atoms: Partial<{ [K in string | number | symbol]: Atom<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>[K]> }>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L83)
+Defined in: [core/table/coreTablesFeature.types.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L107)
 
 Optionally, provide your own external writable atoms for individual state slices.
 When an atom is provided for a given slice, it takes precedence over `options.state[key]`
@@ -81,7 +52,7 @@ model for app-managed table state slices.
 readonly optional autoResetAll: boolean;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L87)
+Defined in: [core/table/coreTablesFeature.types.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L111)
 
 Set this option to override any of the `autoReset...` feature options.
 
@@ -97,7 +68,7 @@ Set this option to override any of the `autoReset...` feature options.
 columns: readonly ColumnDef<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L68)
+Defined in: [core/columns/coreColumnsFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L69)
 
 The array of column defs to use for the table.
 
@@ -113,7 +84,7 @@ The array of column defs to use for the table.
 readonly data: readonly TData[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L91)
+Defined in: [core/table/coreTablesFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L115)
 
 The data for the table to display. When the `data` option changes reference, the table will reprocess the data.
 
@@ -129,7 +100,7 @@ The data for the table to display. When the `data` option changes reference, the
 optional defaultColumn: Partial<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L72)
+Defined in: [core/columns/coreColumnsFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.types.ts#L73)
 
 Default column options to use for all column defs supplied to the table.
 
@@ -139,13 +110,35 @@ Default column options to use for all column defs supplied to the table.
 
 ***
 
+### features
+
+```ts
+readonly features: TFeatures & ValidateFeatureSlots<TFeatures>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L99)
+
+The feature modules registered on this table instance.
+
+Feature registration controls which state slices, options, and prototype
+APIs are available. This object also carries the table's row model
+factories (`sortedRowModel`, `filteredRowModel`, etc.), row model function
+registries (`sortFns`, `filterFns`, `aggregationFns`), and type-only meta
+slots (`tableMeta`, `columnMeta`).
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`features`](TableOptions_Table.md#features)
+
+***
+
 ### getRowId()?
 
 ```ts
 optional getRowId: (originalRow, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L90)
+Defined in: [core/rows/coreRowsFeature.types.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L93)
 
 This optional function is used to derive a unique ID for any given row. If not provided the rows index is used (nested rows join together with `.` using their grandparents' index eg. `index.index.index`). If you need to identify individual rows that are originating from any server-side operations, it's suggested you use this function to return an ID that makes sense regardless of network IO/ambiguity eg. a userId, taskId, database ID field, etc.
 
@@ -185,7 +178,7 @@ getRowId: row => row.userId
 optional getSubRows: (originalRow, index) => readonly TData[] | undefined;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L99)
+Defined in: [core/rows/coreRowsFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L102)
 
 This optional function is used to access the sub rows for any given row. If you are using nested rows, you will need to use this function to return the sub rows object (or undefined) from the row.
 
@@ -218,10 +211,10 @@ getSubRows: row => row.subRows
 ### initialState?
 
 ```ts
-readonly optional initialState: Partial<TableState<TFeatures>>;
+readonly optional initialState: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L98)
+Defined in: [core/table/coreTablesFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L129)
 
 Optionally provide starting values for registered table state slices.
 Feature reset APIs use this value by default, and many reset APIs accept
@@ -234,13 +227,32 @@ object later does not reset table state, so it does not need to be stable.
 
 ***
 
+### key?
+
+```ts
+readonly optional key: string;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L122)
+
+Optional key used to identify this table instance.
+
+This is used by TanStack Table Devtools to register and select tables. It is
+not required unless the table is passed to devtools.
+
+#### Inherited from
+
+[`TableOptions_Table`](TableOptions_Table.md).[`key`](TableOptions_Table.md#key)
+
+***
+
 ### mergeOptions()?
 
 ```ts
 readonly optional mergeOptions: (defaultOptions, options) => TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L102)
+Defined in: [core/table/coreTablesFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L133)
 
 This option is used to optionally implement the merging of table options.
 
@@ -267,12 +279,15 @@ This option is used to optionally implement the merging of table options.
 ### meta?
 
 ```ts
-readonly optional meta: TableMeta<TFeatures, TData>;
+readonly optional meta: ExtractTableMeta<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L109)
+Defined in: [core/table/coreTablesFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L143)
 
 You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
+
+Declare its type per-table via the `tableMeta` type-only slot on the
+`features` option, or globally via declaration merging on `TableMeta`.
 
 #### Inherited from
 
@@ -299,10 +314,10 @@ Value used when the desired value is not found in the data.
 ### state?
 
 ```ts
-readonly optional state: Partial<TableState<TFeatures>>;
+readonly optional state: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L117)
+Defined in: [core/table/coreTablesFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L151)
 
 Optionally provide externally managed values for individual state slices.
 

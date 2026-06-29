@@ -1,0 +1,990 @@
+# fragment: cluster-d-framework-adapters
+skills:
+  - name: 'React Table State, Subscribe & createTableHook'
+    slug: 'table-state'
+    domain: 'framework-adapters'
+    description: 'Reactivity, atom subscription, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook composition for @tanstack/react-table.'
+    type: 'framework'
+    packages: ['@tanstack/react-table']
+    covers:
+      - 'useTable'
+      - 'useTable selector second argument'
+      - 'table.state (selected state)'
+      - 'table.atoms (per-slice readonly derived atoms)'
+      - 'table.baseAtoms (writable internal atoms)'
+      - 'table.store (flat readonly store)'
+      - 'table.Subscribe with selector'
+      - 'table.Subscribe with source (atom or store)'
+      - 'Subscribe (standalone)'
+      - 'table.FlexRender'
+      - 'useCreateAtom from @tanstack/react-store'
+      - 'atoms option for external ownership'
+      - 'state plus on[State]Change option'
+      - 'initialState'
+      - 'createTableHook'
+      - 'createAppColumnHelper / useAppTable / useTableContext / useCellContext / useHeaderContext'
+      - 'table.AppTable / table.AppHeader / table.AppCell / table.AppFooter'
+    tasks:
+      - 'Wire up a React table with default reactivity and decide between initialState, atoms, and external state.'
+      - 'Optimize re-renders with a useTable selector or table.Subscribe at a specific subtree.'
+      - 'Hoist a pagination or filter slice into an external atom that other parts of the app subscribe to.'
+      - 'Build a reusable createTableHook with shared features, row models, and cellComponents / headerComponents / tableComponents.'
+    failure_modes:
+      - mistake: 'Reading state via table.atoms.pagination.get() inside a component and expecting it to re-render'
+        mechanism: 'Atom .get() and table.store.state are current-value reads, not React subscriptions. They do not cause the component to re-render when the atom changes.'
+        wrong_pattern: |
+          function Pager({ table }) {
+            const pagination = table.atoms.pagination.get()
+            return <span>Page {pagination.pageIndex + 1}</span>
+          }
+        correct_pattern: |
+          function Pager({ table }) {
+            return (
+              <table.Subscribe
+                source={table.atoms.pagination}
+                selector={(p) => p.pageIndex}
+              >
+                {(pageIndex) => <span>Page {pageIndex + 1}</span>}
+              </table.Subscribe>
+            )
+          }
+        source: 'docs/framework/react/guide/table-state.md (Reading State Without Subscribing); examples/react/basic-subscribe/src/main.tsx'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Passing both atoms.pagination and state.pagination for the same slice'
+        mechanism: 'When a slice is owned both ways, external atoms take precedence over external state. The on[State]Change callback may stop firing or write into a base atom whose value is shadowed by the external atom, producing surprising divergence.'
+        wrong_pattern: |
+          const table = useTable({
+            features,
+            rowModels: {},
+            columns,
+            data,
+            atoms: { pagination: paginationAtom },
+            state: { pagination },
+            onPaginationChange: setPagination,
+          })
+        correct_pattern: |
+          // Pick exactly one source of truth per slice.
+          const table = useTable({
+            features,
+            rowModels: {},
+            columns,
+            data,
+            atoms: { pagination: paginationAtom },
+          })
+        source: 'docs/framework/react/guide/table-state.md (Custom Initial State Note); examples/react/basic-external-atoms'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Using table.Subscribe inside a column cell / header definition'
+        mechanism: 'In cell and header render contexts, the table field is typed as the core Table<TFeatures, TData>, not the React-extended ReactTable, so table.Subscribe is not on the object. Calling it crashes or fails to compile.'
+        wrong_pattern: |
+          columnHelper.display({
+            id: 'select',
+            cell: ({ row, table }) => (
+              <table.Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+                {(isSelected) => <input type="checkbox" checked={!!isSelected} />}
+              </table.Subscribe>
+            ),
+          })
+        correct_pattern: |
+          import { Subscribe } from '@tanstack/react-table'
+
+          columnHelper.display({
+            id: 'select',
+            cell: ({ row, table }) => (
+              <Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+                {(isSelected) => (
+                  <input
+                    type="checkbox"
+                    checked={!!isSelected}
+                    onChange={row.getToggleSelectedHandler()}
+                  />
+                )}
+              </Subscribe>
+            ),
+          })
+        source: 'docs/framework/react/guide/table-state.md (Tips section); examples/react/basic-subscribe/src/main.tsx'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+        skills: ['react-subscribe-compiler-compat']
+
+  - name: 'Vue Table State, Subscribe & createTableHook'
+    slug: 'table-state'
+    domain: 'framework-adapters'
+    description: 'Vue reactivity binding, useTable selector, table.Subscribe, FlexRender, and createTableHook composition for @tanstack/vue-table.'
+    type: 'framework'
+    packages: ['@tanstack/vue-table']
+    covers:
+      - 'useTable'
+      - 'useTable selector second argument'
+      - 'table.state (selected reactive state)'
+      - 'table.atoms / table.baseAtoms / table.store'
+      - 'table.Subscribe with selector'
+      - 'table.Subscribe with source'
+      - 'FlexRender component'
+      - 'vueReactivity (shallowRef + computed + watch flush sync)'
+      - 'createAtom from @tanstack/vue-store'
+      - 'useSelector from @tanstack/vue-store'
+      - 'reactive data / columns (ref or computed)'
+      - 'atoms / state / on[State]Change options'
+      - 'createTableHook'
+    tasks:
+      - 'Pass a Vue ref or computed as data and let useTable re-sync via setOptions.'
+      - 'Choose between atoms ownership and state-plus-on[State]Change with getter wrappers for Vue refs.'
+      - 'Subscribe a small piece of the template to a single atom with table.Subscribe.'
+    failure_modes:
+      - mistake: 'Passing a Vue ref directly to state.pagination without a getter'
+        mechanism: 'useTable reads state.pagination once when options resolve. Without a getter, the raw ref object is captured and the table never sees subsequent ref.value changes.'
+        wrong_pattern: |
+          const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
+          const table = useTable({
+            features,
+            rowModels: {},
+            columns,
+            data,
+            state: { pagination },
+            onPaginationChange: (u) => {
+              pagination.value = u instanceof Function ? u(pagination.value) : u
+            },
+          })
+        correct_pattern: |
+          const pagination = ref<PaginationState>({ pageIndex: 0, pageSize: 10 })
+          const table = useTable({
+            features,
+            rowModels: {},
+            columns,
+            data,
+            state: {
+              get pagination() { return pagination.value },
+            },
+            onPaginationChange: (u) => {
+              pagination.value = u instanceof Function ? u(pagination.value) : u
+            },
+          })
+        source: 'docs/framework/vue/guide/table-state.md (External State); examples/vue/basic-external-state'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Reading table.atoms.pagination.get() outside a reactive context and expecting Vue updates'
+        mechanism: 'Atom .get() is a current-value read. It only participates in Vue tracking when called inside a reactive scope such as a template, computed, or watch. From plain script setup top-level code it is a one-shot read.'
+        wrong_pattern: |
+          const pagination = table.atoms.pagination.get() // read once, never updates
+        correct_pattern: |
+          const pagination = computed(() => table.atoms.pagination.get())
+          // or
+          // table.state.pagination via useTable selector
+        source: 'docs/framework/vue/guide/table-state.md (Reading State Without Subscribing)'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Using the v8 useVueTable name'
+        mechanism: 'v9 renamed the adapter creator to useTable for every framework. useVueTable is no longer exported.'
+        wrong_pattern: |
+          import { useVueTable } from '@tanstack/vue-table'
+        correct_pattern: |
+          import { useTable } from '@tanstack/vue-table'
+        source: 'docs/framework/vue/vue-table.md; packages/vue-table/src/useTable.ts'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+
+  - name: 'Solid Table State, Subscribe & createTableHook'
+    slug: 'table-state'
+    domain: 'framework-adapters'
+    description: 'Solid reactivity binding, createTable selector, table.state() accessor, table.Subscribe, FlexRender, and createTableHook composition for @tanstack/solid-table.'
+    type: 'framework'
+    packages: ['@tanstack/solid-table']
+    covers:
+      - 'createTable'
+      - 'createTable selector second argument'
+      - 'table.state() (Solid accessor)'
+      - 'table.atoms / table.baseAtoms / table.store'
+      - 'table.Subscribe with selector'
+      - 'table.Subscribe with source (accessor children)'
+      - 'FlexRender component'
+      - 'solidReactivity (createSignal + createMemo)'
+      - 'createAtom from @tanstack/solid-store'
+      - 'useSelector from @tanstack/solid-store'
+      - 'reactive get data() getter pattern'
+      - 'atoms / state / on[State]Change options'
+      - 'createTableHook'
+    tasks:
+      - 'Wire reactive Solid data via a get data() getter on the options object.'
+      - 'Read table.state() as an accessor inside JSX and computations.'
+      - 'Subscribe per-row UI to a single atom with table.Subscribe and an accessor child.'
+    failure_modes:
+      - mistake: 'Reading table.state as a value instead of calling table.state() as an accessor'
+        mechanism: 'The Solid adapter returns table.state as a function accessor so reads can participate in Solid tracking. table.state.pagination accesses a property on the function and is undefined.'
+        wrong_pattern: |
+          const page = table.state.pagination.pageIndex // undefined
+        correct_pattern: |
+          const page = table.state().pagination.pageIndex
+        source: 'docs/framework/solid/guide/table-state.md (Reading Reactive State with createTable)'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Passing data as a plain reactive accessor value instead of a getter'
+        mechanism: 'Solid loses fine-grained reactivity once a signal value is destructured into a plain object. Without a get data() getter, createTable never re-syncs setOptions when the underlying signal changes.'
+        wrong_pattern: |
+          const [data] = createSignal(makeData(100))
+          const table = createTable({
+            features,
+            rowModels: {},
+            columns,
+            data: data(),
+          })
+        correct_pattern: |
+          const [data] = createSignal(makeData(100))
+          const table = createTable({
+            features,
+            rowModels: {},
+            columns,
+            get data() { return data() },
+          })
+        source: 'docs/framework/solid/guide/table-state.md (Reading Reactive State with createTable); examples/solid/basic-use-table/src/App.tsx'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Using table.Subscribe child callback as a raw value'
+        mechanism: 'In Solid, table.Subscribe child receives an accessor function. Treating it as a value renders the function reference, not the selected state.'
+        wrong_pattern: |
+          <table.Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+            {(isSelected) => <input type="checkbox" checked={!!isSelected} />}
+          </table.Subscribe>
+        correct_pattern: |
+          <table.Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+            {(isSelected) => (
+              <input
+                type="checkbox"
+                checked={!!isSelected()}
+                onChange={row.getToggleSelectedHandler()}
+              />
+            )}
+          </table.Subscribe>
+        source: 'docs/framework/solid/guide/table-state.md (Fine-grained Updates with table.Subscribe)'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+
+  - name: 'Svelte Table State, subscribeTable & createTableHook'
+    slug: 'table-state'
+    domain: 'framework-adapters'
+    description: 'Svelte 5 rune reactivity, createTable selector, table.state, subscribeTable .current pattern, FlexRender, and createTableHook composition for @tanstack/svelte-table.'
+    type: 'framework'
+    packages: ['@tanstack/svelte-table']
+    covers:
+      - 'createTable'
+      - 'createTable selector second argument'
+      - 'table.state (selected rune-tracked state)'
+      - 'table.atoms / table.baseAtoms / table.store'
+      - 'subscribeTable (atom or store source)'
+      - 'subscribeTable .current accessor'
+      - 'FlexRender Svelte component'
+      - 'svelteReactivity ($state + $derived.by + $effect.pre)'
+      - 'createAtom / useSelector from @tanstack/svelte-store'
+      - 'reactive get data() getter pattern'
+      - 'atoms / state / on[State]Change options with $state getters'
+      - 'createTableHook'
+    tasks:
+      - 'Bind table data to a Svelte 5 $state variable through a get data() getter.'
+      - 'Use subscribeTable to expose a per-slice rune-friendly reactive value with .current.'
+      - 'Control sorting or pagination via $state + getter + on[State]Change updater pattern.'
+    failure_modes:
+      - mistake: 'Using subscribeTable result as a value instead of reading .current'
+        mechanism: 'subscribeTable returns a rune-friendly wrapper whose selected value lives behind .current. Treating the wrapper itself as the value renders an object, not the page index.'
+        wrong_pattern: |
+          const pageIndex = subscribeTable(
+            table.atoms.pagination,
+            (p) => p.pageIndex,
+          )
+          // template
+          // <span>Page {pageIndex + 1}</span>
+        correct_pattern: |
+          const pageIndex = subscribeTable(
+            table.atoms.pagination,
+            (p) => p.pageIndex,
+          )
+          // template
+          // <span>Page {pageIndex.current + 1}</span>
+        source: 'docs/framework/svelte/guide/table-state.md (Fine-grained Updates with subscribeTable)'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Svelte 5+ only'
+      - mistake: 'Passing $state values directly to options.state without getters'
+        mechanism: 'createTable resolves options once and reads state.pagination as a snapshot. Without a getter, runes do not surface the latest value to the table, and the controlled slice falls out of sync.'
+        wrong_pattern: |
+          let pagination = $state({ pageIndex: 0, pageSize: 10 })
+          const table = createTable({
+            features,
+            rowModels: {},
+            columns,
+            data,
+            state: { pagination },
+            onPaginationChange: (u) => {
+              pagination = u instanceof Function ? u(pagination) : u
+            },
+          })
+        correct_pattern: |
+          let pagination = $state({ pageIndex: 0, pageSize: 10 })
+          const table = createTable({
+            features,
+            rowModels: {},
+            columns,
+            get data() { return data },
+            state: {
+              get pagination() { return pagination },
+            },
+            onPaginationChange: (u) => {
+              pagination = u instanceof Function ? u(pagination) : u
+            },
+          })
+        source: 'docs/framework/svelte/guide/table-state.md (External State); examples/svelte/basic-external-state'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Svelte 5+ only'
+      - mistake: 'Using the legacy createSvelteTable name from Svelte 4 era'
+        mechanism: 'v9 is Svelte 5+ only and exports createTable. Older codebases referencing createSvelteTable will fail to import.'
+        wrong_pattern: |
+          import { createSvelteTable } from '@tanstack/svelte-table'
+        correct_pattern: |
+          import { createTable } from '@tanstack/svelte-table'
+        source: 'packages/svelte-table/src/createTable.svelte.ts; docs/framework/svelte/svelte-table.md'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Svelte 5+ only'
+
+  - name: 'Angular Table State & injectTable'
+    slug: 'table-state'
+    domain: 'framework-adapters'
+    description: 'Angular signal reactivity binding, injectTable lazy initializer, atom-as-signal reads, computed selection with shallow equality, and createTableHook composition for @tanstack/angular-table.'
+    type: 'framework'
+    packages: ['@tanstack/angular-table']
+    covers:
+      - 'injectTable'
+      - 'injectTable initializer function form'
+      - 'table.atoms / table.baseAtoms / table.store'
+      - 'angularReactivity(injector) (signal + computed + toObservable)'
+      - 'shallow equality helper'
+      - 'computed selectors with equal option'
+      - 'signal-based state ownership via state plus on[State]Change'
+      - 'atoms option (core re-export, advanced)'
+      - 'initialState'
+      - 'createTableHook'
+    tasks:
+      - 'Convert v8 createAngularTable usage to injectTable lazy initializer with signal reads.'
+      - 'Select a state slice with computed(...) and the shallow equality helper to avoid extra change detection.'
+      - 'Control sorting and pagination via signal + state + on[State]Change update/set pattern.'
+    failure_modes:
+      - mistake: 'Calling injectTable with a plain options object instead of an initializer function'
+        mechanism: 'injectTable expects a () => options factory and reruns it when read signals change. Passing a plain object skips signal tracking and the table never resyncs when source signals update.'
+        wrong_pattern: |
+          readonly table = injectTable({
+            features,
+            rowModels: {},
+            columns,
+            data: this.data(),
+          })
+        correct_pattern: |
+          readonly table = injectTable(() => ({
+            features,
+            rowModels: {},
+            columns,
+            data: this.data(),
+          }))
+        source: 'docs/framework/angular/guide/table-state.md (Feature-based State); packages/angular-table/src/injectTable.ts; examples/angular/basic-inject-table'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Angular >=19 with signals'
+      - mistake: 'Using the v8 createAngularTable name'
+        mechanism: 'v9 renamed the adapter creator to injectTable to match Angular DI conventions. createAngularTable is no longer exported.'
+        wrong_pattern: |
+          import { createAngularTable } from '@tanstack/angular-table'
+        correct_pattern: |
+          import { injectTable } from '@tanstack/angular-table'
+        source: 'docs/framework/angular/angular-table.md; packages/angular-table/src/injectTable.ts'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Selecting object slices with computed without shallow equality'
+        mechanism: 'Object/array slice references change on every store update even when their contents are unchanged. Without { equal: shallow }, downstream computeds and templates re-run unnecessarily, defeating fine-grained signal performance.'
+        wrong_pattern: |
+          readonly pagination = computed(() => this.table.store.state.pagination)
+        correct_pattern: |
+          import { shallow } from '@tanstack/angular-table'
+
+          readonly pagination = computed(
+            () => this.table.store.state.pagination,
+            { equal: shallow },
+          )
+        source: 'docs/framework/angular/guide/table-state.md (Selecting State with Angular computed)'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+
+  - name: 'Lit Table State & createTableHook'
+    slug: 'table-state'
+    domain: 'framework-adapters'
+    description: 'Lit TableController reactive controller, atom subscription, table.state selector, table.Subscribe render, FlexRender, and createTableHook composition for @tanstack/lit-table.'
+    type: 'framework'
+    packages: ['@tanstack/lit-table']
+    covers:
+      - 'TableController'
+      - 'tableController.table(options, selector?)'
+      - 'table.state (selected state)'
+      - 'table.atoms / table.baseAtoms / table.store'
+      - 'table.Subscribe with selector or source'
+      - 'table.FlexRender'
+      - 'litReactivity'
+      - 'createAtom from @tanstack/store'
+      - 'atoms / state / on[State]Change options'
+      - 'ReactiveControllerHost integration with requestUpdate'
+      - 'createTableHook'
+    tasks:
+      - 'Instantiate one TableController per LitElement host and call .table(...) inside render.'
+      - 'Use table.state with a selector to keep render output focused on needed slices.'
+      - 'Control sorting via Lit @state and pass state + onSortingChange updater.'
+    failure_modes:
+      - mistake: 'Creating a new TableController inside render() on every update'
+        mechanism: 'TableController owns the underlying table instance and subscriptions. Constructing it in render creates fresh subscriptions and discards prior state every cycle, causing data loss and double-subscribed host updates.'
+        wrong_pattern: |
+          protected render() {
+            const tableController = new TableController<typeof features, Person>(this)
+            const table = tableController.table({
+              features,
+              rowModels: {},
+              columns,
+              data: this._data,
+            })
+            return html`...`
+          }
+        correct_pattern: |
+          private tableController = new TableController<typeof features, Person>(this)
+
+          protected render() {
+            const table = this.tableController.table({
+              features,
+              rowModels: {},
+              columns,
+              data: this._data,
+            })
+            return html`...`
+          }
+        source: 'packages/lit-table/src/TableController.ts; docs/framework/lit/guide/table-state.md; examples/lit/basic-table-controller/src/main.ts'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Expecting source-only host invalidation from table.Subscribe with a source prop'
+        mechanism: 'TableController currently wires host requestUpdate through the full table.store and optionsStore subscriptions. table.Subscribe with a source is render-time selection sugar, not a per-source invalidation guarantee.'
+        wrong_pattern: |
+          // assuming this avoids host invalidation when other slices change
+          ${table.Subscribe({
+            source: table.atoms.rowSelection,
+            selector: (s) => s[row.id],
+            children: (isSelected) => html`<input type="checkbox" .checked=${!!isSelected} />`,
+          })}
+        correct_pattern: |
+          // accept that the host updates on any store change; use Subscribe for cleaner render code
+          ${table.Subscribe({
+            selector: (state) => state.pagination,
+            children: (pagination) => html`<span>Page ${pagination.pageIndex + 1}</span>`,
+          })}
+        source: 'packages/lit-table/src/TableController.ts (LitTable Subscribe note); docs/framework/lit/guide/table-state.md'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Reading atom.get() in render and never seeing UI update'
+        mechanism: 'Atom .get() reads a value but does not register with the controller. Host invalidation is wired through the full table.store subscription, so updates that change the read slice still trigger render, but state from a non-controller-bound atom that is not part of table.store will not invalidate the host.'
+        wrong_pattern: |
+          // separate atom not passed via atoms option
+          const externalAtom = createAtom({ count: 0 })
+
+          protected render() {
+            return html`<span>${externalAtom.get().count}</span>`
+          }
+        correct_pattern: |
+          // wire external atoms through table.atoms or maintain a separate subscription
+          private tableController = new TableController<typeof features, Person>(this)
+          private _externalAtom = createAtom({ count: 0 })
+          private _unsub?: () => void
+
+          connectedCallback() {
+            super.connectedCallback()
+            this._unsub = this._externalAtom.subscribe(() => this.requestUpdate())
+          }
+
+          disconnectedCallback() {
+            super.disconnectedCallback()
+            this._unsub?.()
+          }
+        source: 'docs/framework/lit/guide/table-state.md (Reading State Without Subscribing); packages/lit-table/src/TableController.ts'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+
+  - name: 'Preact Table State, Subscribe & createTableHook'
+    slug: 'table-state'
+    domain: 'framework-adapters'
+    description: 'Preact reactivity binding mirroring React, useTable selector, table.Subscribe rendering, FlexRender, and createTableHook composition for @tanstack/preact-table.'
+    type: 'framework'
+    packages: ['@tanstack/preact-table']
+    covers:
+      - 'useTable'
+      - 'useTable selector second argument'
+      - 'table.state (selected state)'
+      - 'table.atoms / table.baseAtoms / table.store'
+      - 'table.Subscribe with selector or source'
+      - 'Subscribe (standalone)'
+      - 'table.FlexRender'
+      - 'useCreateAtom from @tanstack/preact-store'
+      - 'useSelector from @tanstack/preact-store'
+      - 'atoms / state / on[State]Change options'
+      - 'initialState'
+      - 'createTableHook (createAppColumnHelper, useAppTable, useTableContext, useCellContext, useHeaderContext)'
+    tasks:
+      - 'Set up useTable in Preact with stable references for data, columns, and features.'
+      - 'Optimize a large Preact table by passing () => null as the selector and subscribing lower in the tree.'
+      - 'Build reusable component registries with createTableHook in Preact.'
+    failure_modes:
+      - mistake: 'Recreating columns or features on every render'
+        mechanism: 'Preact relies on stable references for table options. New columns or features arrays each render force useTable to call setOptions and rebuild derived state, undoing the work selectors and Subscribe are meant to save.'
+        wrong_pattern: |
+          function App({ data }) {
+            const columns = [
+              { accessorKey: 'firstName', header: 'First name' },
+            ]
+            const features = tableFeatures({})
+            const table = useTable({
+              features,
+              rowModels: {},
+              columns,
+              data,
+            })
+            return null
+          }
+        correct_pattern: |
+          const features = tableFeatures({})
+          const columns = [
+            { accessorKey: 'firstName', header: 'First name' },
+          ]
+
+          function App({ data }) {
+            const table = useTable({
+              features,
+              rowModels: {},
+              columns,
+              data,
+            })
+            return null
+          }
+        source: 'docs/framework/preact/preact-table.md; examples/preact/basic-use-table/src/main.tsx'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Using table.Subscribe inside a cell or header render context'
+        mechanism: 'The cell and header table field is typed as the core Table<TFeatures, TData> and does not expose Subscribe. Import the standalone Subscribe and pass source={table.store}.'
+        wrong_pattern: |
+          cell: ({ row, table }) => (
+            <table.Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+              {(isSelected) => <input type="checkbox" checked={!!isSelected} />}
+            </table.Subscribe>
+          )
+        correct_pattern: |
+          import { Subscribe } from '@tanstack/preact-table'
+
+          cell: ({ row, table }) => (
+            <Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+              {(isSelected) => (
+                <input
+                  type="checkbox"
+                  checked={!!isSelected}
+                  onChange={row.getToggleSelectedHandler()}
+                />
+              )}
+            </Subscribe>
+          )
+        source: 'docs/framework/preact/guide/table-state.md (Optimizing Re-renders with Selectors and table.Subscribe); packages/preact-table/src/Subscribe.ts'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Passing useTable both atoms.pagination and state.pagination for the same slice'
+        mechanism: 'External atoms take precedence over external state. Mixing them silently hides on[State]Change-driven setState writes and leaves React-style state stale.'
+        wrong_pattern: |
+          const table = useTable({
+            features,
+            rowModels: {},
+            columns,
+            data,
+            atoms: { pagination: paginationAtom },
+            state: { pagination },
+            onPaginationChange: setPagination,
+          })
+        correct_pattern: |
+          // Pick exactly one source of truth per slice.
+          const table = useTable({
+            features,
+            rowModels: {},
+            columns,
+            data,
+            atoms: { pagination: paginationAtom },
+          })
+        source: 'docs/framework/preact/guide/table-state.md (Custom Initial State Note); examples/preact/basic-external-atoms'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+
+  - name: 'React Subscribe for React Compiler Compatibility'
+    slug: 'react-subscribe-compiler-compat'
+    domain: 'framework-adapters'
+    description: 'Use Subscribe / table.Subscribe to keep nested header and cell components correct under React Compiler memoization.'
+    type: 'framework'
+    packages: ['@tanstack/react-table']
+    covers:
+      - 'Subscribe (standalone import)'
+      - 'table.Subscribe (from useTable result)'
+      - 'source prop (atom or store)'
+      - 'selector prop'
+      - 'render-prop children'
+      - 'useSelector under the hood'
+      - 'table.store'
+      - 'table.atoms.rowSelection / columnPinning / etc.'
+    tasks:
+      - 'Wrap row-selection or pin-button JSX inside nested header/cell components in Subscribe to prevent React Compiler from memoizing stale state reads.'
+      - 'Choose between subscribing to table.store with a selector vs subscribing to a single atom for per-row UI.'
+      - 'Audit a table for builder-pattern reads inside custom component boundaries that are likely memoization risks.'
+    failure_modes:
+      - mistake: 'Reading column.getIsPinned() / row.getIsSelected() / cell.getIsAggregated() inside a custom child component and not wrapping in Subscribe'
+        mechanism: "React Compiler memoizes the child's JSX against the stable column / row / cell reference it receives. The state-dependent builder method hides its atom dependency from the compiler, so the memoized JSX never re-runs when the underlying atom changes."
+        wrong_pattern: |
+          function DraggableHeader({ header }) {
+            const isPinned = header.column.getIsPinned()
+            return <th data-pinned={isPinned}>{header.column.id}</th>
+          }
+        correct_pattern: |
+          import { Subscribe } from '@tanstack/react-table'
+
+          function DraggableHeader({ header, table }) {
+            return (
+              <Subscribe
+                source={table.store}
+                selector={(s) => s.columnPinning}
+              >
+                {() => {
+                  const isPinned = header.column.getIsPinned()
+                  return <th data-pinned={isPinned}>{header.column.id}</th>
+                }}
+              </Subscribe>
+            )
+          }
+        source: 'docs/framework/react/guide/table-state.md (Subscribe for React Compiler Compatibility); examples/react/basic-subscribe/src/main.tsx; packages/react-table/src/Subscribe.ts'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; React Compiler enabled'
+      - mistake: 'Using table.Subscribe from inside a cell or header definition where table is the core Table type'
+        mechanism: 'Cell and header render contexts type table as Table<TFeatures, TData>, not ReactTable. table.Subscribe is undefined. The fix is to import the standalone Subscribe and pass source={table.store} or source={table.atoms.X}.'
+        wrong_pattern: |
+          cell: ({ row, table }) => (
+            <table.Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+              {(isSelected) => <input type="checkbox" checked={!!isSelected} />}
+            </table.Subscribe>
+          )
+        correct_pattern: |
+          import { Subscribe } from '@tanstack/react-table'
+
+          cell: ({ row, table }) => (
+            <Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+              {(isSelected) => (
+                <input
+                  type="checkbox"
+                  checked={!!isSelected}
+                  onChange={row.getToggleSelectedHandler()}
+                />
+              )}
+            </Subscribe>
+          )
+        source: 'docs/framework/react/guide/table-state.md (Tips); packages/react-table/src/Subscribe.ts'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Wrapping every cell in Subscribe by default'
+        mechanism: 'Subscribe is overhead. For inline JSX in the parent component, the compiler always re-evaluates when the parent re-renders, so wrapping is unnecessary. Over-wrapping adds subscription churn without correctness benefit.'
+        wrong_pattern: |
+          // Inline cell that already re-runs each parent render
+          {row.getVisibleCells().map((cell) => (
+            <Subscribe source={table.store} selector={(s) => s.rowSelection}>
+              {() => <td>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>}
+            </Subscribe>
+          ))}
+        correct_pattern: |
+          {row.getVisibleCells().map((cell) => (
+            <td key={cell.id}>
+              <table.FlexRender cell={cell} />
+            </td>
+          ))}
+        source: 'docs/framework/react/guide/table-state.md (Subscribe for React Compiler Compatibility)'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: "Subscribing to the whole table.store for one row's selection checkbox"
+        mechanism: 'Every store change re-renders the Subscribe child. Subscribing to table.atoms.rowSelection (or a per-row selector returning s[row.id]) limits re-renders to actual selection changes for that row.'
+        wrong_pattern: |
+          <Subscribe source={table.store} selector={(s) => s.rowSelection[row.id]}>
+            {(isSelected) => <input type="checkbox" checked={!!isSelected} />}
+          </Subscribe>
+        correct_pattern: |
+          <Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
+            {(isSelected) => (
+              <input
+                type="checkbox"
+                checked={!!isSelected}
+                onChange={row.getToggleSelectedHandler()}
+              />
+            )}
+          </Subscribe>
+        source: 'docs/framework/react/guide/table-state.md (Tips bullets); examples/react/basic-subscribe/src/main.tsx'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+
+  - name: 'Angular Rendering Directives & DI Context'
+    slug: 'angular-rendering-directives'
+    domain: 'framework-adapters'
+    description: 'Structural directives flexRender / flexRenderCell / flexRenderHeader / flexRenderFooter plus context tokens for prop-drill-free Angular rendering.'
+    type: 'framework'
+    packages: ['@tanstack/angular-table']
+    covers:
+      - 'FlexRender (tuple export of FlexRenderDirective and FlexRenderCell)'
+      - '*flexRender structural directive'
+      - '*flexRenderCell shorthand'
+      - '*flexRenderHeader shorthand'
+      - '*flexRenderFooter shorthand'
+      - 'flexRenderProps input'
+      - 'flexRenderComponent(component, options)'
+      - 'inputs / outputs / bindings / directives / injector options'
+      - 'inputBinding / outputBinding / twoWayBinding (Angular v20+)'
+      - 'injectFlexRenderContext'
+      - 'TanStackTable directive + injectTableContext / TanStackTableToken'
+      - 'TanStackTableHeader directive + injectTableHeaderContext / TanStackTableHeaderToken'
+      - 'TanStackTableCell directive + injectTableCellContext / TanStackTableCellToken'
+      - 'TemplateRef rendering with implicit context'
+    tasks:
+      - 'Render cells and headers with the shorthand structural directives, falling back to *flexRender for custom props.'
+      - 'Pass dynamic inputs and outputs to a cell component with flexRenderComponent.'
+      - 'Eliminate input drilling by applying tanStackTableCell / tanStackTableHeader / tanStackTable directives and injecting context tokens in descendants.'
+    failure_modes:
+      - mistake: 'Forgetting to import FlexRender in a standalone component'
+        mechanism: 'FlexRender is exported as a tuple of directives. Angular standalone components only see directives that are listed in imports, so without the import, *flexRender and *flexRenderCell silently do nothing or fail template compilation.'
+        wrong_pattern: |
+          @Component({
+            imports: [],
+            templateUrl: './app.html',
+          })
+          export class AppComponent {}
+        correct_pattern: |
+          import { FlexRender } from '@tanstack/angular-table'
+
+          @Component({
+            imports: [FlexRender],
+            templateUrl: './app.html',
+          })
+          export class AppComponent {}
+        source: 'docs/framework/angular/guide/rendering.md (FlexRender import)'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
+      - mistake: 'Returning a component class but expecting all CellContext properties to be visible without input signals'
+        mechanism: 'FlexRender wires render context onto the component via ComponentRef.setInput, but only declared input() / input.required() properties receive values. Undeclared properties are silently ignored.'
+        wrong_pattern: |
+          @Component({ template: `{{ cell.getValue() }}` })
+          export class MyCellComponent {
+            cell: any // not declared as input
+          }
+        correct_pattern: |
+          import { Component, input } from '@angular/core'
+          import type { CellContext } from '@tanstack/angular-table'
+
+          @Component({ template: `{{ cell().getValue() }}` })
+          export class MyCellComponent {
+            readonly cell = input.required<CellContext<any, any, any>>()
+          }
+        source: 'docs/framework/angular/guide/rendering.md (Returning a component class)'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
+      - mistake: 'Mixing bindings with inputs / outputs on the same property in flexRenderComponent'
+        mechanism: 'bindings are applied at component creation, inputs / outputs are applied post-creation. Combining them on the same property causes double initialization or conflicting values.'
+        wrong_pattern: |
+          flexRenderComponent(EditableCell, {
+            inputs: { value: 'a' },
+            bindings: [inputBinding('value', this.name)],
+          })
+        correct_pattern: |
+          flexRenderComponent(EditableCell, {
+            bindings: [
+              inputBinding('value', this.name),
+              outputBinding('valueChange', (v) => console.log(v)),
+            ],
+          })
+        source: 'docs/framework/angular/guide/rendering.md (bindings API note)'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Angular v20+ for bindings'
+      - mistake: 'Drilling cell or header through input() in nested presentational components'
+        mechanism: 'Using FlexRender + context directives makes injectTableCellContext / injectTableHeaderContext / injectTableContext available to any descendant of the [tanStackTableCell] / [tanStackTableHeader] / [tanStackTable] host. Drilling defeats the DI pattern and complicates refactors.'
+        wrong_pattern: |
+          <td [tanStackTableCell]="cell">
+            <app-cell-actions [cell]="cell" />
+          </td>
+        correct_pattern: |
+          <td [tanStackTableCell]="cell">
+            <app-cell-actions />
+          </td>
+
+          // app-cell-actions.ts
+          import { injectTableCellContext } from '@tanstack/angular-table'
+
+          @Component({ template: `<button (click)=\"onAction()\">Act</button>` })
+          export class CellActionsComponent {
+            readonly cell = injectTableCellContext()
+            onAction() { console.log(this.cell()) }
+          }
+        source: 'docs/framework/angular/guide/rendering.md (Context directives)'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
+      - mistake: 'Calling injectFlexRenderContext outside a *flexRender rendered subtree without applying the corresponding context directive'
+        mechanism: 'Tokens are only provided in the child injector that FlexRender creates, or where the [tanStackTable] / [tanStackTableHeader] / [tanStackTableCell] directives are applied. Components outside both scopes throw a NullInjectorError.'
+        wrong_pattern: |
+          // Sibling component in the same <td> as a *flexRenderCell-rendered cell
+          <td>
+            <ng-container *flexRenderCell=\"cell\" />
+            <app-cell-actions />
+          </td>
+        correct_pattern: |
+          <td [tanStackTableCell]=\"cell\">
+            <ng-container *flexRenderCell=\"cell\" />
+            <app-cell-actions />
+          </td>
+        source: 'docs/framework/angular/guide/rendering.md (Automatic token injection in FlexRender)'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48; Angular >=19'
+
+  - name: 'Lit TableController Pattern'
+    slug: 'lit-table-controller'
+    domain: 'framework-adapters'
+    description: 'TableController ReactiveController pattern for hosting a TanStack Table instance inside a LitElement.'
+    type: 'framework'
+    packages: ['@tanstack/lit-table']
+    covers:
+      - 'TableController class'
+      - 'TableController constructor(host) addController side effect'
+      - 'tableController.table(options, selector?)'
+      - 'table.state (selected state)'
+      - 'table.Subscribe ({ source, selector, children })'
+      - 'table.FlexRender (cell / header / footer rendering)'
+      - 'litReactivity'
+      - 'hostConnected / hostDisconnected lifecycle'
+      - 'table.store and table.optionsStore subscriptions driving requestUpdate'
+    tasks:
+      - 'Create a single TableController per LitElement and call .table(...) each render.'
+      - 'Pass a selector to .table(...) to reduce work in the render method.'
+      - 'Render headers and cells via table.FlexRender or table.Subscribe in lit-html templates.'
+    failure_modes:
+      - mistake: 'Instantiating TableController inside render() instead of as a class field'
+        mechanism: 'TableController.addController and store subscriptions run in the constructor. Recreating it per render leaks subscriptions, drops the prior table instance (losing state), and double-triggers host updates.'
+        wrong_pattern: |
+          protected render() {
+            const controller = new TableController<typeof features, Person>(this)
+            const table = controller.table({ features, rowModels: {}, columns, data: this._data })
+            return html`...`
+          }
+        correct_pattern: |
+          private tableController = new TableController<typeof features, Person>(this)
+
+          protected render() {
+            const table = this.tableController.table({
+              features,
+              rowModels: {},
+              columns,
+              data: this._data,
+            })
+            return html`...`
+          }
+        source: 'packages/lit-table/src/TableController.ts; examples/lit/basic-table-controller/src/main.ts'
+        priority: 'CRITICAL'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Using table.FlexRender as a Lit directive instead of a function call'
+        mechanism: 'table.FlexRender is a function that returns a TemplateResult. It is invoked inside ${...} interpolation with a header / cell / footer argument, not used as a custom element.'
+        wrong_pattern: |
+          html`<td><table.FlexRender cell=${cell}></table.FlexRender></td>`
+        correct_pattern: |
+          html`<td>${table.FlexRender({ cell })}</td>`
+        source: 'packages/lit-table/src/TableController.ts (FlexRender attached); docs/framework/lit/lit-table.md'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Calling table.Subscribe children outside a template interpolation'
+        mechanism: 'table.Subscribe returns a TemplateResult or string. It must be embedded with ${...} inside an html`` template. Calling it as a statement produces a value that the renderer never sees.'
+        wrong_pattern: |
+          protected render() {
+            table.Subscribe({
+              selector: (s) => s.pagination,
+              children: (p) => html`<span>${p.pageIndex + 1}</span>`,
+            })
+            return html`<div></div>`
+          }
+        correct_pattern: |
+          protected render() {
+            return html`
+              <div>
+                ${table.Subscribe({
+                  selector: (s) => s.pagination,
+                  children: (p) => html`<span>Page ${p.pageIndex + 1}</span>`,
+                })}
+              </div>
+            `
+          }
+        source: 'packages/lit-table/src/TableController.ts (Subscribe shape); docs/framework/lit/guide/table-state.md'
+        priority: 'HIGH'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+      - mistake: 'Forgetting that host update is wired through table.store, so source-only Subscribe does not skip host updates'
+        mechanism: 'TableController subscribes the host to the full table.store and optionsStore. table.Subscribe with a source prop reads source.get() at render time but does not currently install an independent host subscription, so the host still updates on any store change.'
+        wrong_pattern: |
+          // expecting only rowSelection changes to invalidate the host
+          ${table.Subscribe({
+            source: table.atoms.rowSelection,
+            selector: (s) => s[row.id],
+            children: (isSelected) => html`<input type=\"checkbox\" .checked=${!!isSelected} />`,
+          })}
+        correct_pattern: |
+          // accept host updates on any store change; reach for an explicit manual subscription only if you measure a real bottleneck
+          ${table.Subscribe({
+            source: table.atoms.rowSelection,
+            selector: (s) => s[row.id],
+            children: (isSelected) => html`
+              <input
+                type="checkbox"
+                .checked=${!!isSelected}
+                @change=${row.getToggleSelectedHandler()}
+              />
+            `,
+          })}
+        source: 'packages/lit-table/src/TableController.ts (LitTable Subscribe note); docs/framework/lit/guide/table-state.md (Selecting State with table.Subscribe)'
+        priority: 'MEDIUM'
+        status: 'active'
+        version_context: 'v9.0.0-alpha.48'
+
+gaps:
+  - skill: 'table-state (Angular)'
+    question: 'Is there a recommended pattern for using TanStack Store external atoms with Angular signals end-to-end, or do users always go through state + on[State]Change with signals?'
+    context: 'The Angular guide explicitly downplays atoms in favor of signals, but does not show an atoms+useSelector-equivalent flow. Maintainers may want a clearer recommendation.'
+    status: 'open'
+  - skill: 'lit-table-controller'
+    question: 'Should TableController.Subscribe with a source eventually wire independent host invalidation, or is the docs note the long-term contract?'
+    context: "TableController.ts comments call this out as 'can be added later'. Without a decision, Lit users cannot rely on source-only invalidation for perf optimization."
+    status: 'open'

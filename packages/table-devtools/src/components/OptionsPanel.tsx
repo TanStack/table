@@ -1,5 +1,5 @@
 import { JsonTree } from '@tanstack/devtools-ui'
-import { useSelector } from '@tanstack/solid-store'
+import { Show, createMemo } from 'solid-js'
 import { useTableDevtoolsContext } from '../TableContextProvider'
 import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
@@ -10,8 +10,7 @@ function projectOptionsForTree(full: unknown) {
   const {
     state: _s,
     data: _d,
-    _features: _f,
-    _rowModels: _r,
+    features: _f,
     ...options
   } = full as Record<string, unknown>
   return options
@@ -21,37 +20,42 @@ export function OptionsPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
 
-  const tableInstance = table()
-  const tableState = tableInstance
-    ? tableInstance.optionsStore
-      ? useSelector(tableInstance.optionsStore, (state: unknown) =>
-          projectOptionsForTree(state),
-        )
-      : useTableStore(tableInstance.store, () =>
-          projectOptionsForTree(tableInstance.options as unknown),
-        )
-    : undefined
+  const tableOptions = useTableStore(
+    () => {
+      const tableInstance = table()
+      return tableInstance?.optionsStore ?? tableInstance?.store
+    },
+    () => {
+      const tableInstance = table()
+      return tableInstance
+        ? projectOptionsForTree(tableInstance.options)
+        : undefined
+    },
+  )
 
-  if (!tableInstance) {
-    return <NoTableConnected title="Options" />
-  }
+  const options = createMemo(() => {
+    const tableInstance = table()
+    if (!tableInstance) {
+      return undefined
+    }
 
-  const getState = (): unknown => {
-    tableState?.()
-    return tableState?.()
-  }
+    tableOptions()
+    return projectOptionsForTree(tableInstance.options)
+  })
 
   return (
-    <div class={styles().panelScroll}>
-      <ResizableSplit
-        left={
-          <>
-            <div class={styles().sectionTitle}>Options</div>
-            <JsonTree copyable value={getState()} />
-          </>
-        }
-        right={<></>}
-      />
-    </div>
+    <Show fallback={<NoTableConnected title="Options" />} when={table()}>
+      <div class={styles().panelScroll}>
+        <ResizableSplit
+          left={
+            <>
+              <div class={styles().sectionTitle}>Options</div>
+              <JsonTree copyable value={options()} />
+            </>
+          }
+          right={<></>}
+        />
+      </div>
+    </Show>
   )
 }

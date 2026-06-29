@@ -1,5 +1,4 @@
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { Table } from '../../types/Table'
 import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
 import type {
   CellData,
@@ -7,7 +6,7 @@ import type {
   RowData,
   Updater,
 } from '../../types/type-utils'
-import type { TableFeatures } from '../../types/TableFeatures'
+import type { IsAny, TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { ColumnDefTemplate } from '../../types/ColumnDef'
@@ -19,10 +18,10 @@ export interface TableState_ColumnGrouping {
 }
 
 export interface RowModelFns_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
-  aggregationFns: Record<keyof AggregationFns, AggregationFn<TFeatures, TData>>
+  aggregationFns: Record<string, AggregationFn<TFeatures, TData>>
 }
 
 export interface AggregationFns {}
@@ -41,18 +40,34 @@ export type CustomAggregationFns<
   TData extends RowData,
 > = Record<string, AggregationFn<TFeatures, TData>>
 
+/**
+ * Resolves the valid string names for `columnDef.aggregationFn` for a feature
+ * set.
+ *
+ * When the features object declares an `aggregationFns` registry
+ * (`tableFeatures({ ..., aggregationFns })`), its keys are the only valid
+ * names; a name is only assignable if an aggregation function is actually
+ * registered for it. Otherwise this falls back to the global
+ * declaration-merged `AggregationFns` interface.
+ */
+export type ExtractAggregationFnKeys<TFeatures extends TableFeatures> =
+  IsAny<TFeatures> extends true
+    ? keyof AggregationFns | BuiltInAggregationFn
+    : TFeatures extends { aggregationFns: infer TAggregationFns extends object }
+      ? Extract<keyof TAggregationFns, string>
+      : keyof AggregationFns
+
 export type AggregationFnOption<
   TFeatures extends TableFeatures,
   TData extends RowData,
 > =
   | 'auto'
-  | keyof AggregationFns
-  | BuiltInAggregationFn
+  | ExtractAggregationFnKeys<TFeatures>
   | AggregationFn<TFeatures, TData>
 
 export interface ColumnDef_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -66,18 +81,27 @@ export interface ColumnDef_ColumnGrouping<
    */
   aggregationFn?: AggregationFnOption<TFeatures, TData>
   /**
-   * Enables/disables grouping for this column.
+   * Allows this column to be added to grouping state.
+   *
+   * Defaults to `true`; table-level `enableGrouping` must also allow grouping.
    */
   enableGrouping?: boolean
   /**
-   * Specify a value to be used for grouping rows on this column. If this option is not specified, the value derived from `accessorKey` / `accessorFn` will be used instead.
+   * Returns the value used to group rows for this column.
+   *
+   * When omitted, grouping uses the value derived from this column's
+   * `accessorKey` or `accessorFn`.
    */
-  getGroupingValue?: (row: TData) => any
+  getGroupingValue?: (
+    originalRow: TData,
+    index: number,
+    row: Row<TFeatures, TData>,
+  ) => any
 }
 
 export interface Column_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
    * Returns the aggregation function for the column.
@@ -88,15 +112,15 @@ export interface Column_ColumnGrouping<
    */
   getAutoAggregationFn: () => AggregationFn<TFeatures, TData> | undefined
   /**
-   * Returns whether or not the column can be grouped.
+   * Checks whether this column can currently be grouped.
    */
   getCanGroup: () => boolean
   /**
-   * Returns the index of the column in the grouping state.
+   * Finds this column's position in the ordered grouping state.
    */
   getGroupedIndex: () => number
   /**
-   * Returns whether or not the column is currently grouped.
+   * Checks whether this column id is present in grouping state.
    */
   getIsGrouped: () => boolean
   /**
@@ -112,11 +136,11 @@ export interface Column_ColumnGrouping<
 export interface Row_ColumnGrouping {
   _groupingValuesCache: Record<string, any>
   /**
-   * Returns the grouping value for any row and column (including leaf rows).
+   * Reads the value used to group this row for a column id.
    */
   getGroupingValue: (columnId: string) => unknown
   /**
-   * Returns whether or not the row is currently grouped.
+   * Checks whether this row represents a grouped row.
    */
   getIsGrouped: () => boolean
   /**
@@ -131,15 +155,15 @@ export interface Row_ColumnGrouping {
 
 export interface Cell_ColumnGrouping {
   /**
-   * Returns whether or not the cell is currently aggregated.
+   * Checks whether this cell should render an aggregated value.
    */
   getIsAggregated: () => boolean
   /**
-   * Returns whether or not the cell is currently grouped.
+   * Checks whether this cell represents the active grouping column.
    */
   getIsGrouped: () => boolean
   /**
-   * Returns whether or not the cell is currently a placeholder cell.
+   * Checks whether this cell is hidden as a grouping placeholder.
    */
   getIsPlaceholder: () => boolean
 }
@@ -151,7 +175,7 @@ export interface ColumnDefaultOptions {
 
 export interface TableOptions_ColumnGrouping {
   /**
-   * Enables/disables grouping for the table.
+   * Allows columns to be grouped for this table.
    */
   enableGrouping?: boolean
   /**
@@ -173,50 +197,38 @@ export interface TableOptions_ColumnGrouping {
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export interface Table_ColumnGrouping<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
-   * Resets the **grouping** state to `initialState.grouping`, or `true` can be passed to force a default blank state reset to `[]`.
+   * Resets `grouping` to `initialState.grouping`.
+   *
+   * Pass `true` to ignore initial state and reset to `[]`.
    */
   resetGrouping: (defaultState?: boolean) => void
   /**
-   * Sets grouping state using a value or updater.
+   * Updates grouping state with a next ordered id array or updater function.
    */
   setGrouping: (updater: Updater<GroupingState>) => void
 }
 
 export interface Table_RowModels_Grouped<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
-   * Returns the row model for the table after grouping has been applied.
+   * Resolves the row model after grouping and aggregation have been applied.
    */
   getGroupedRowModel: () => RowModel<TFeatures, TData>
   /**
-   * Returns the row model for the table before any grouping has been applied.
+   * Reads the row model immediately before grouping.
    */
   getPreGroupedRowModel: () => RowModel<TFeatures, TData>
 }
 
-export interface CreateRowModel_Grouped<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  /**
-   * Factory used to retrieve the grouped row model. If using server-side
-   * grouping, this is not required. To use client-side grouping, pass
-   * `createGroupedRowModel()` or implement your own factory.
-   */
-  groupedRowModel?: (
-    table: Table<TFeatures, TData>,
-  ) => () => RowModel<TFeatures, TData>
-}
-
 export interface CachedRowModel_Grouped<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   groupedRowModel: () => RowModel<TFeatures, TData>
 }

@@ -6,14 +6,15 @@ title: table_getLeafHeaders
 # Function: table\_getLeafHeaders()
 
 ```ts
-function table_getLeafHeaders<TFeatures, TData>(table): any[];
+function table_getLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L162)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L187)
 
-Returns leaf headers for the table.
+Collects only the leaf headers from the current header tree.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Parent/group headers are skipped, making the result suitable for rendering
+one header per visible leaf column.
 
 ## Type Parameters
 
@@ -29,14 +30,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-`any`[]
+[`Header`](../../index/type-aliases/Header.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getLeafHeaders(table)
+const leafHeaders = table_getLeafHeaders(table)
 ```

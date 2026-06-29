@@ -5,7 +5,7 @@ title: Row_Core
 
 # Interface: Row\_Core\<TFeatures, TData\>
 
-Defined in: [types/Row.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L21)
+Defined in: [types/Row.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L12)
 
 ## Extends
 
@@ -73,9 +73,9 @@ The depth of the row (if nested or grouped) relative to the root row array.
 getAllCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L55)
+Defined in: [core/rows/coreRowsFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L58)
 
-Returns all of the cells for the row.
+Builds one cell for each leaf column, including cells for hidden columns.
 
 #### Returns
 
@@ -93,7 +93,9 @@ Returns all of the cells for the row.
 getAllCellsByColumnId: () => Record<string, Cell<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L51)
+Defined in: [core/rows/coreRowsFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L54)
+
+Builds a lookup of this row's cells keyed by leaf column id.
 
 #### Returns
 
@@ -111,7 +113,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:51](https://github.com/TanStack/
 getLeafRows: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L59)
+Defined in: [core/rows/coreRowsFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L62)
 
 Returns the leaf rows for the row, not including any parent rows.
 
@@ -131,7 +133,7 @@ Returns the leaf rows for the row, not including any parent rows.
 getParentRow: () => Row<TFeatures, TData> | undefined;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L63)
+Defined in: [core/rows/coreRowsFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L66)
 
 Returns the parent row for the row, if it exists.
 
@@ -151,7 +153,7 @@ Returns the parent row for the row, if it exists.
 getParentRows: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L67)
+Defined in: [core/rows/coreRowsFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L70)
 
 Returns the parent rows for the row, all the way up to a root row.
 
@@ -171,9 +173,9 @@ Returns the parent rows for the row, all the way up to a root row.
 getUniqueValues: <TValue>(columnId) => TValue[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L71)
+Defined in: [core/rows/coreRowsFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L74)
 
-Returns a unique array of values from the row for a given columnId.
+Reads the values this row contributes to faceting/grouping for a column.
 
 #### Type Parameters
 
@@ -203,9 +205,9 @@ Returns a unique array of values from the row for a given columnId.
 getValue: <TValue>(columnId) => TValue;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L75)
+Defined in: [core/rows/coreRowsFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L78)
 
-Returns the value from the row for a given columnId.
+Reads this row's accessor value for a column id and caches the result.
 
 #### Type Parameters
 
@@ -315,7 +317,7 @@ If nested, this row's parent row id.
 renderValue: <TValue>(columnId) => TValue;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L79)
+Defined in: [core/rows/coreRowsFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L82)
 
 Renders the value for the row in a given columnId the same as `getValue`, but will return the `renderFallbackValue` if no value is found.
 

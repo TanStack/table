@@ -6,12 +6,10 @@ title: Header
 # Type Alias: Header\<TFeatures, TData, TValue\>
 
 ```ts
-type Header<TFeatures, TData, TValue> = Header_Core<TFeatures, TData, TValue> & UnionToIntersection<
-  | "columnSizingFeature" extends keyof TFeatures ? Header_ColumnSizing : never
-| "columnResizingFeature" extends keyof TFeatures ? Header_ColumnResizing : never> & ExtractFeatureTypes<"Header", TFeatures> & Header_Plugins<TFeatures, TData, TValue>;
+type Header<TFeatures, TData, TValue> = Header_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap>;
 ```
 
-Defined in: [types/Header.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Header.ts#L23)
+Defined in: [types/Header.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Header.ts#L18)
 
 ## Type Parameters
 

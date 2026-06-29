@@ -9,11 +9,12 @@ title: table_getExpandedDepth
 function table_getExpandedDepth<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L208)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:227](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L227)
 
-Returns expanded depth for the table.
+Computes the deepest expanded row id depth.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Row ids are split on `.`; expanded-all state scans the current row model,
+while explicit expanded state scans its expanded id keys.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -38,5 +39,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getExpandedDepth(table)
+const depth = table_getExpandedDepth(table)
 ```

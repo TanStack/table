@@ -8,7 +8,7 @@ This example demonstrates the `createTableHook` composition pattern for TanStack
 
 The `hooks/table.ts` file sets up everything in one place:
 
-- **Features** - `_features` defines which table features are enabled
+- **Features** - `features` defines which table features are enabled
 - **Row Models** - Pre-configured sorted, filtered, and paginated row models
 - **Default Options** - Any table options can be set as defaults (except columns/data/store/state/initialState)
 - **Contexts** - Created internally, with `TFeatures` already baked in
@@ -44,7 +44,7 @@ const columns = columnHelper.columns([
 
 ### Simplified useAppTable
 
-Since `_features`, `_rowModels`, and default options are configured once in `createTableHook`, `useAppTable` only needs `columns` and `data`:
+Since `features`, `rowModels`, and default options are configured once in `createTableHook`, `useAppTable` only needs `columns` and `data`:
 
 ```tsx
 const table = useAppTable({

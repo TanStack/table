@@ -1,4 +1,4 @@
-import { tableMemo } from '../../utils'
+import { makeObjectMap, tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -6,23 +6,23 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { SortFn, SortFns } from './rowSortingFeature.types'
+import type { SortFn } from './rowSortingFeature.types'
 import type { RowData } from '../../types/type-utils'
 
 /**
  * Creates a memoized sorted row model factory.
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ *
+ * Register sorting functions with the `sortFns` slot on the `features` option:
+ * `tableFeatures({ rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns })`.
  */
 export function createSortedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>,
-): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table: Table_Internal<TFeatures, TData> = _table
-    if (!table._rowModelFns.sortFns) table._rowModelFns.sortFns = sortFns
+    const table = _table as unknown as Table_Internal<TFeatures, TData>
     return tableMemo({
       feature: 'rowSortingFeature',
       table,
@@ -57,14 +57,11 @@ function _createSortedRowModel<
     ),
   )
 
-  const columnInfoById: Record<
-    string,
-    {
-      sortUndefined?: false | -1 | 1 | 'first' | 'last'
-      invertSorting?: boolean
-      sortFn: SortFn<TFeatures, TData>
-    }
-  > = {}
+  const columnInfoById = makeObjectMap<{
+    sortUndefined?: false | -1 | 1 | 'first' | 'last'
+    invertSorting?: boolean
+    sortFn: SortFn<TFeatures, TData>
+  }>()
 
   availableSorting.forEach((sortEntry) => {
     const column: Column_Internal<TFeatures, TData> | undefined =
@@ -79,16 +76,11 @@ function _createSortedRowModel<
   })
 
   const sortData = (rows: Array<Row<TFeatures, TData>>) => {
-    // This will also perform a stable sorting using the row index
-    // if needed.
-    // Preserve prototype chain so methods like getValue() remain accessible
-    const sortedData = rows.map((row) => {
-      const cloned = Object.create(Object.getPrototypeOf(row))
-      return Object.assign(cloned, row)
-    })
+    const sortedData = rows.slice()
 
     sortedData.sort((rowA, rowB) => {
-      for (const sortEntry of availableSorting) {
+      for (let i = 0; i < availableSorting.length; i++) {
+        const sortEntry = availableSorting[i]!
         const columnInfo = columnInfoById[sortEntry.id]!
         const sortUndefined = columnInfo.sortUndefined
         const isDesc = sortEntry.desc
@@ -135,13 +127,21 @@ function _createSortedRowModel<
       return rowA.index - rowB.index
     })
 
-    // If there are sub-rows, sort them
-    sortedData.forEach((row) => {
-      sortedFlatRows.push(row)
+    // If there are sub-rows, sort them. Clone only rows that need mutation
+    // (i.e. have subRows) so we don't corrupt the source row model.
+    for (let i = 0; i < sortedData.length; i++) {
+      const row = sortedData[i]!
       if (row.subRows.length) {
-        row.subRows = sortData(row.subRows)
+        // Preserve prototype chain so methods like getValue() remain accessible
+        const cloned = Object.create(Object.getPrototypeOf(row))
+        Object.assign(cloned, row)
+        cloned.subRows = sortData(row.subRows)
+        sortedData[i] = cloned
+        sortedFlatRows.push(cloned)
+      } else {
+        sortedFlatRows.push(row)
       }
-    })
+    }
 
     return sortedData
   }

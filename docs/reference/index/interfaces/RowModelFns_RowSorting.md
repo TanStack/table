@@ -5,7 +5,7 @@ title: RowModelFns_RowSorting
 
 # Interface: RowModelFns\_RowSorting\<TFeatures, TData\>
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L21)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L20)
 
 ## Type Parameters
 
@@ -22,7 +22,7 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:21](https://github.
 ### sortFns
 
 ```ts
-sortFns: Record<keyof SortFns, SortFn<TFeatures, TData>>;
+sortFns: Record<string, SortFn<TFeatures, TData>>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L25)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L24)

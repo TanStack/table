@@ -6,14 +6,15 @@ title: table_getLeftLeafColumns
 # Function: table\_getLeftLeafColumns()
 
 ```ts
-function table_getLeftLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
+function table_getLeftLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:643](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L643)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:687](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L687)
 
-Returns left leaf columns for the table.
+Resolves leaf columns pinned to the left region.
 
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+The result follows `state.columnPinning.left` order and skips stale ids that
+no longer correspond to a leaf column.
 
 ## Type Parameters
 
@@ -29,14 +30,14 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
-[`Column`](../../index/type-aliases/Column.md)\<`TFeatures`, `TData`, `unknown`\>[]
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `unknown`\>[]
 
 ## Example
 
 ```ts
-const value = table_getLeftLeafColumns(table)
+const columns = table_getLeftLeafColumns(table)
 ```

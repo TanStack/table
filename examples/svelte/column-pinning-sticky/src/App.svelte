@@ -15,7 +15,7 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({
+  const features = tableFeatures({
     columnOrderingFeature,
     columnPinningFeature,
     columnResizingFeature,
@@ -34,7 +34,7 @@
   }
 
   const getCommonPinningStyles = (
-    column: Column<typeof _features, Person>,
+    column: Column<typeof features, Person>,
   ): PinningStyles => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
@@ -110,8 +110,7 @@
 
   const table = createTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns: defaultColumns,
       get data() {
         return data
@@ -162,12 +161,6 @@
   </div>
   <div class="spacer-md"></div>
   <div class="button-row">
-    <button onclick={() => refreshData()} class="demo-button demo-button-sm">
-      Regenerate Data
-    </button>
-    <button onclick={() => stressTest()} class="demo-button demo-button-sm">
-      Stress Test (1k rows)
-    </button>
     <button onclick={() => randomizeColumns()} class="demo-button demo-button-sm">
       Shuffle Columns
     </button>

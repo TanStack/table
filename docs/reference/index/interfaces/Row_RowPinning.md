@@ -5,7 +5,7 @@ title: Row_RowPinning
 
 # Interface: Row\_RowPinning
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L40)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L42)
 
 ## Properties
 
@@ -15,9 +15,9 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:40](https://github.
 getCanPin: () => boolean;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L44)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L46)
 
-Returns whether or not the row can be pinned.
+Checks whether this row can be pinned.
 
 #### Returns
 
@@ -31,7 +31,7 @@ Returns whether or not the row can be pinned.
 getIsPinned: () => RowPinningPosition;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L48)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L50)
 
 Returns the pinned position of the row. (`'top'`, `'bottom'` or `false`)
 
@@ -47,7 +47,7 @@ Returns the pinned position of the row. (`'top'`, `'bottom'` or `false`)
 getPinnedIndex: () => number;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L52)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L54)
 
 Returns the numeric pinned index of the row within a pinned row group.
 
@@ -63,7 +63,7 @@ Returns the numeric pinned index of the row within a pinned row group.
 pin: (position, includeLeafRows?, includeParentRows?) => void;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L56)
+Defined in: [features/row-pinning/rowPinningFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts#L58)
 
 Pins a row to the `'top'` or `'bottom'`, or unpins the row to the center if `false` is passed.
 

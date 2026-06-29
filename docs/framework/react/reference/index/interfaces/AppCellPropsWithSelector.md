@@ -5,7 +5,7 @@ title: AppCellPropsWithSelector
 
 # Interface: AppCellPropsWithSelector\<TFeatures, TData, TValue, TCellComponents, TSelected\>
 
-Defined in: [createTableHook.tsx:313](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L313)
+Defined in: [createTableHook.tsx:416](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L416)
 
 Props for AppCell component - with selector
 
@@ -39,7 +39,7 @@ Props for AppCell component - with selector
 cell: Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:320](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L320)
+Defined in: [createTableHook.tsx:423](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L423)
 
 ***
 
@@ -49,13 +49,13 @@ Defined in: [createTableHook.tsx:320](https://github.com/TanStack/table/blob/mai
 children: (cell, state) => ReactNode;
 ```
 
-Defined in: [createTableHook.tsx:321](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L321)
+Defined in: [createTableHook.tsx:424](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L424)
 
 #### Parameters
 
 ##### cell
 
-`Cell_Cell`\<`TFeatures`, `TData`, `TValue`\> & `UnionToIntersection`\<`"columnGroupingFeature"` *extends* keyof `TFeatures` ? `Cell_ColumnGrouping` : `never`\> & `UnionToIntersection`\<\{ \[K in string \| number \| symbol\]: K extends "coreReativityFeature" ? never : TFeatures\[K\] extends TableFeature\<FeatureConstructorOptions\> ? "Cell" extends keyof FeatureConstructorOptions ? FeatureConstructorOptions\[keyof (...) & "Cell"\] : never : any \}\[keyof `TFeatures`\]\> & `Cell_Plugins`\<`TFeatures`, `TData`, `TValue`\> & `TCellComponents` & `object`
+`Cell_Core`\<`TFeatures`, `TData`, `TValue`\> & `ExtractFeatureMapTypes`\<`TFeatures`, `Cell_FeatureMap`\> & `TCellComponents` & `object`
 
 ##### state
 
@@ -73,7 +73,7 @@ Defined in: [createTableHook.tsx:321](https://github.com/TanStack/table/blob/mai
 selector: (state) => TSelected;
 ```
 
-Defined in: [createTableHook.tsx:326](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L326)
+Defined in: [createTableHook.tsx:429](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L429)
 
 #### Parameters
 

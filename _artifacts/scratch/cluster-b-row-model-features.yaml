@@ -1,0 +1,1188 @@
+# Cluster B — Row-Model Features (TanStack Table v9.0.0-alpha.48)
+# Maintainer: Kevin Vandy
+# Source repo:
+# Generated for TanStack Intent skill set
+#
+# Scope: 5 skills, all `type: core`, `packages: [@tanstack/table-core]`, `domain: row-model-features`.
+# Pipeline order anchor: Core -> Filtered -> Grouped -> Sorted -> Expanded -> Paginated -> getRowModel
+# (see packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts)
+
+version: v9.0.0-alpha.48
+cluster: B
+domain: row-model-features
+
+skills:
+  # ---------------------------------------------------------------
+  # 1. FILTERING (unified: column + global + faceted + fuzzy)
+  # ---------------------------------------------------------------
+  - slug: filtering
+    type: core
+    packages: ['@tanstack/table-core']
+    domain: row-model-features
+    description: Filter rows in TanStack Table v9 — column filters, a global filter, faceted facet values for filter UIs, and fuzzy ranking — using the `filteredRowModel` row-model pipeline stage.
+    subsystems:
+      - column-filtering
+      - global-filtering
+      - column-faceting
+      - global-faceting
+      - fuzzy-filtering
+    covers:
+      # Features
+      - columnFilteringFeature
+      - globalFilteringFeature
+      - columnFacetingFeature
+      # Row models
+      - createFilteredRowModel(filterFns)
+      - createFacetedRowModel()
+      - createFacetedUniqueValues()
+      - createFacetedMinMaxValues()
+      # State
+      - 'state.columnFilters (ColumnFiltersState = Array<{ id, value }>)'
+      - 'state.globalFilter (any)'
+      - onColumnFiltersChange
+      - onGlobalFilterChange
+      # Column-def options
+      - 'columnDef.filterFn (string name | function | "auto")'
+      - columnDef.enableColumnFilter
+      - columnDef.enableGlobalFilter
+      # Table options
+      - manualFiltering
+      - enableFilters
+      - enableColumnFilters
+      - enableGlobalFilter
+      - globalFilterFn
+      - filterFromLeafRows
+      - maxLeafRowFilterDepth
+      - getColumnCanGlobalFilter
+      - getFacetedUniqueValues (server-side override)
+      - getFacetedMinMaxValues (server-side override)
+      - getGlobalFacetedUniqueValues (server-side override)
+      - getGlobalFacetedMinMaxValues (server-side override)
+      # APIs
+      - table.setColumnFilters
+      - table.resetColumnFilters
+      - table.setGlobalFilter
+      - table.resetGlobalFilter
+      - table.getGlobalAutoFilterFn
+      - table.getGlobalFilterFn
+      - column.getFilterValue / setFilterValue / getCanFilter / getIsFiltered / getFilterIndex / getAutoFilterFn / getFilterFn
+      - column.getCanGlobalFilter
+      - column.getFacetedRowModel / getFacetedUniqueValues / getFacetedMinMaxValues
+      - table.getGlobalFacetedRowModel / getGlobalFacetedUniqueValues / getGlobalFacetedMinMaxValues
+      # Built-in filterFns (10) - see reference_candidates
+      - filterFns built-in registry
+      # Custom filterFn hooks
+      - filterFn.autoRemove
+      - filterFn.resolveFilterValue
+      # Fuzzy
+      - '@tanstack/match-sorter-utils (rankItem, compareItems, RankingInfo)'
+      - 'row.columnFiltersMeta (FilterMeta extended via declare module)'
+      - 'addMeta callback (4th argument to FilterFn)'
+    tasks:
+      - 'Wire up text/range/select per-column filters with debounced inputs (see examples/react/filters/src/main.tsx).'
+      - 'Add a faceted filter UI: autocomplete from `column.getFacetedUniqueValues()` and a range slider from `column.getFacetedMinMaxValues()` (requires `createFacetedRowModel()` PLUS the unique/minMax row models).'
+      - 'Implement fuzzy global search with `@tanstack/match-sorter-utils` and a custom `fuzzySort` that reads `row.columnFiltersMeta[columnId].itemRank`.'
+      - 'Switch a table to manual server-side filtering: set `manualFiltering: true`, omit the `filteredRowModel` from `rowModels`, and pass pre-filtered `data` from the server.'
+      - 'Make a tree table filter sub-rows by enabling `filterFromLeafRows: true` so a parent stays visible whenever any child matches.'
+    failure_modes:
+      - mistake: 'Forgetting `createFacetedRowModel()` while still registering `createFacetedUniqueValues()` / `createFacetedMinMaxValues()`.'
+        mechanism: |
+          `createFacetedUniqueValues` and `createFacetedMinMaxValues` both compute their results from `column.getFacetedRowModel().flatRows`. Without the base `facetedRowModel` factory in `rowModels.facetedRowModel`, `column_getFacetedRowModel` falls back to `table.getPreFilteredRowModel()` (see column-faceting/columnFacetingFeature.utils.ts lines 44-56), so facet values are still computed but **don't exclude the column's own active filter** — meaning a select dropdown showing options for a column will collapse to only the currently selected value once the user picks one.
+        wrong_pattern: |
+          ```tsx
+          const table = useTable({
+            features: tableFeatures({ columnFacetingFeature, columnFilteringFeature }),
+            rowModels: {
+              filteredRowModel: createFilteredRowModel(filterFns),
+              // BUG: missing facetedRowModel - the unique/minMax helpers will use
+              // the pre-filtered model so they include every filter EXCEPT none
+              facetedUniqueValues: createFacetedUniqueValues(),
+              facetedMinMaxValues: createFacetedMinMaxValues(),
+            },
+            columns, data,
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // From examples/react/filters-faceted/src/main.tsx
+          const table = useTable({
+            features: tableFeatures({
+              columnFacetingFeature,
+              columnFilteringFeature,
+              rowPaginationFeature,
+            }),
+            rowModels: {
+              filteredRowModel: createFilteredRowModel(filterFns),
+              paginatedRowModel: createPaginatedRowModel(),
+              facetedRowModel: createFacetedRowModel(),       // REQUIRED base
+              facetedMinMaxValues: createFacetedMinMaxValues(),
+              facetedUniqueValues: createFacetedUniqueValues(),
+            },
+            columns, data,
+          })
+          ```
+        source: packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [filtering]
+
+      - mistake: 'Using `manualFiltering: true` without removing the `filteredRowModel` factory (works), or expecting `manualFiltering` to filter the row model anyway.'
+        mechanism: |
+          When `manualFiltering: true`, `table_getFilteredRowModel` short-circuits and returns `getPreFilteredRowModel()` (the core row model). The filter state still exists and `onColumnFiltersChange` still fires — but rows are NOT filtered client-side. Agents commonly add the filter UI, hook up `setFilterValue`, and forget to refetch server data, leaving filter UI changes invisible.
+        wrong_pattern: |
+          ```tsx
+          // BUG: manualFiltering: true means the filteredRowModel is BYPASSED.
+          // Filter state changes do nothing visible unless `data` is refetched.
+          const table = useTable({
+            features: tableFeatures({ columnFilteringFeature }),
+            rowModels: {
+              filteredRowModel: createFilteredRowModel(filterFns),
+            },
+            data,
+            columns,
+            manualFiltering: true,
+            // ...but no useEffect to refetch when columnFilters changes
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // From docs/guide/column-filtering.md
+          const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+          const { data } = useQuery(['rows', columnFilters], () =>
+            fetch('/api/rows?' + serialize(columnFilters)).then(r => r.json())
+          )
+          const table = useTable({
+            features: tableFeatures({ columnFilteringFeature }),
+            rowModels: {}, // no filteredRowModel needed for manual filtering
+            data,
+            columns,
+            manualFiltering: true,
+            state: { columnFilters },
+            onColumnFiltersChange: setColumnFilters,
+          })
+          ```
+        source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [filtering]
+
+      - mistake: 'Custom fuzzy filter without merging into `filterFns`: passing only `{ fuzzy: fuzzyFilter }` to `createFilteredRowModel`, dropping the 10 built-in filters.'
+        mechanism: |
+          `createFilteredRowModel(filterFns)` accepts a `Record<keyof FilterFns, FilterFn>`. The argument is stored AS-IS at `table._rowModelFns.filterFns`, replacing the registry. If a developer writes `createFilteredRowModel({ fuzzy: fuzzyFilter })`, then any column with `filterFn: 'includesString'` will trigger `Could not find a valid 'column.filterFn' for column with the ID: ...` (warning at columnFilteringFeature.utils.ts:102) and the column won't filter.
+        wrong_pattern: |
+          ```tsx
+          // BUG: drops the built-in registry
+          filteredRowModel: createFilteredRowModel({
+            fuzzy: fuzzyFilter,
+          }),
+          // Column with filterFn: 'includesString' now warns and never filters
+          ```
+        correct_pattern: |
+          ```tsx
+          // From examples/react/filters-fuzzy/src/main.tsx
+          import { filterFns, sortFns } from '@tanstack/react-table'
+          import { rankItem, compareItems } from '@tanstack/match-sorter-utils'
+
+          declare module '@tanstack/react-table' {
+            interface FilterFns { fuzzy: FilterFn<typeof features, Person> }
+            interface FilterMeta { itemRank?: RankingInfo }
+          }
+
+          const fuzzyFilter: FilterFn<typeof features, Person> = (row, columnId, value, addMeta) => {
+            const itemRank = rankItem(row.getValue(columnId), value)
+            addMeta?.({ itemRank })
+            return itemRank.passed
+          }
+
+          const table = useTable({
+            features,
+            rowModels: {
+              filteredRowModel: createFilteredRowModel({
+                ...filterFns,           // KEEP built-ins
+                fuzzy: fuzzyFilter,     // ADD custom
+              }),
+              sortedRowModel: createSortedRowModel(sortFns),
+            },
+            globalFilterFn: 'fuzzy',
+            columns, data,
+          })
+          ```
+        source: examples/react/filters-fuzzy/src/main.tsx
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [filtering, sorting]
+
+      - mistake: 'Using `state.columnFilters` AND `initialState.columnFilters` at the same time (or same for globalFilter).'
+        mechanism: |
+          When both are set, the controlled `state.columnFilters` value overrides the `initialState.columnFilters` on every render. The initial state is effectively ignored. This pattern usually signals confusion between controlled and uncontrolled state ownership — and developers often expect `initialState` to seed `state` on first render, which TanStack Table does NOT do.
+        wrong_pattern: |
+          ```tsx
+          const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([])
+          //                                                                       ^^ empty
+          const table = useTable({
+            features, rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+            columns, data,
+            initialState: {
+              columnFilters: [{ id: 'name', value: 'John' }], // IGNORED
+            },
+            state: { columnFilters }, // wins, starts empty
+            onColumnFiltersChange: setColumnFilters,
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // Seed the controlled state at useState time, NOT in initialState.
+          // From docs/guide/column-filtering.md
+          const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([
+            { id: 'name', value: 'John' }, // seeded here
+          ])
+          const table = useTable({
+            features, rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+            columns, data,
+            state: { columnFilters },
+            onColumnFiltersChange: setColumnFilters,
+          })
+          ```
+        source: docs/guide/column-filtering.md
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [filtering]
+
+      - mistake: "Globally filtering on columns whose values aren't strings or numbers and getting silently-ignored search."
+        mechanism: |
+          `globalFilteringFeature` defaults `getColumnCanGlobalFilter` to a function that returns `typeof value === 'string' || typeof value === 'number'` from sampling the first row's cell value. Objects, arrays, booleans, dates, and undefined values fail this default check and the column is excluded from the global filter scan. There is no warning — the column just doesn't participate.
+        wrong_pattern: |
+          ```tsx
+          // BUG: createdAt is a Date object — global filter silently skips it.
+          const columns = [
+            columnHelper.accessor('createdAt', { header: 'Created' }),
+            columnHelper.accessor('name', { header: 'Name' }),
+          ]
+          // table.setGlobalFilter('2024') will never find Date rows
+          ```
+        correct_pattern: |
+          ```tsx
+          // Override getColumnCanGlobalFilter or set per-column.
+          const table = useTable({
+            features: tableFeatures({ globalFilteringFeature }),
+            rowModels: { filteredRowModel: createFilteredRowModel(filterFns) },
+            columns, data,
+            globalFilterFn: 'includesString',
+            getColumnCanGlobalFilter: (column) => true, // include every column
+          })
+          // Or per-column:
+          columnHelper.accessor('createdAt', {
+            header: 'Created',
+            enableGlobalFilter: true,
+          })
+          ```
+        source: packages/table-core/src/features/global-filtering/globalFilteringFeature.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [filtering]
+
+      - mistake: 'Expecting `filterFromLeafRows` to keep child rows visible when only the parent matches.'
+        mechanism: |
+          `filterFromLeafRows: true` walks the tree bottom-up and keeps a parent if ANY descendant matches. The inverse — keeping all descendants when the parent matches — is the **default** root-down behavior (see filterRowsUtils.ts:103). The two modes are mutually exclusive. To preserve all sub-rows under a matching parent without checking children, use `maxLeafRowFilterDepth: 0` so only root-level rows are filtered.
+        wrong_pattern: |
+          ```tsx
+          // BUG: filterFromLeafRows hides ALL children that don't match,
+          // even though the parent does match.
+          const table = useTable({
+            features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+            rowModels: { filteredRowModel: createFilteredRowModel(filterFns), expandedRowModel: createExpandedRowModel() },
+            columns, data,
+            getSubRows: r => r.subRows,
+            filterFromLeafRows: true,
+            // expectation: parent matches "John" -> all children visible
+            // reality: only children that also match "John" stay visible
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // Keep parent's whole sub-tree when parent matches: filter root-only.
+          const table = useTable({
+            features: tableFeatures({ columnFilteringFeature, rowExpandingFeature }),
+            rowModels: {
+              filteredRowModel: createFilteredRowModel(filterFns),
+              expandedRowModel: createExpandedRowModel(),
+            },
+            columns, data,
+            getSubRows: r => r.subRows,
+            maxLeafRowFilterDepth: 0, // only filter root-level rows
+          })
+          ```
+        source: packages/table-core/src/features/column-filtering/filterRowsUtils.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [filtering, row-expanding]
+
+    reference_candidates:
+      - name: built-in filterFns
+        kind: function-registry
+        count: 12 # 10 documented + arrHas, between, betweenInclusive (12 total in source)
+        source: packages/table-core/src/fns/filterFns.ts
+        documented_in_guide:
+          - includesString
+          - includesStringSensitive
+          - equalsString
+          - equalsStringSensitive
+          - arrIncludes
+          - arrIncludesAll
+          - arrIncludesSome
+          - equals
+          - weakEquals
+          - inNumberRange
+        also_exported:
+          - arrHas
+          - between
+          - betweenInclusive
+          - greaterThan
+          - greaterThanOrEqualTo
+          - lessThan
+          - lessThanOrEqualTo
+        note: "Docs list 10 filterFns but the registry actually exports 12 (adds `arrHas`, `between`, `betweenInclusive`). `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo` are NOT included in the registry export but are used by the range filters. Expanding example uses `filterFn: 'between'` — which IS in the registry."
+    gaps:
+      - 'Docs say 10 built-in filterFns but the actual `filterFns` registry exports 12. Need authoritative reference for the full set.'
+      - '`column.getCanGlobalFilter` returns `false` for columns with first-row non-string/non-number values; this is the SILENT failure case. Worth a dedicated reference table for which value types pass auto-detection.'
+      - "`addMeta` is optional in the FilterFn signature — fuzzy example uses `addMeta?.()`. Need clear rule for when meta is/isn't passed (it IS passed by `createFilteredRowModel`)."
+      - 'No documented invariant on what happens when `filterFn` resolves to undefined; the warning is dev-mode only and the column silently uses no filter.'
+
+  # ---------------------------------------------------------------
+  # 2. SORTING
+  # ---------------------------------------------------------------
+  - slug: sorting
+    type: core
+    packages: ['@tanstack/table-core']
+    domain: row-model-features
+    description: Sort rows in TanStack Table v9 with the `sortedRowModel` stage — built-in sortFns, custom sortFns, multi-sort, sortUndefined placement, invertSorting for "lower-is-better" scales, and manual server-side sorting.
+    covers:
+      - rowSortingFeature
+      - createSortedRowModel(sortFns)
+      - 'state.sorting (SortingState = Array<{ id, desc }>)'
+      - onSortingChange
+      - 'columnDef.sortFn (string | function | "auto")  # v9 renamed from sortingFn'
+      - columnDef.sortDescFirst
+      - 'columnDef.sortUndefined (false | -1 | 1 | "first" | "last")'
+      - columnDef.invertSorting
+      - columnDef.enableSorting
+      - columnDef.enableMultiSort
+      - manualSorting
+      - enableSorting
+      - enableSortingRemoval
+      - enableMultiSort
+      - enableMultiRemove
+      - maxMultiSortColCount
+      - isMultiSortEvent
+      - sortDescFirst
+      - table.setSorting
+      - table.resetSorting
+      - column.getCanSort / getIsSorted / getSortIndex / getCanMultiSort / clearSorting
+      - column.getToggleSortingHandler / toggleSorting
+      - column.getFirstSortDir / getNextSortingOrder / getAutoSortDir / getAutoSortFn / getSortFn
+      - 'sortFns built-in registry  # v9 renamed from sortingFns'
+    tasks:
+      - 'Add clickable column-header sorting with multi-sort on Shift+click (see examples/react/sorting/src/main.tsx).'
+      - 'Wire a column-specific custom `sortFn` for an enum (e.g. status: single < complicated < relationship).'
+      - "Sort nullable values with explicit placement using `sortUndefined: 'last'` so undefined never confuses the auto sortFn picker."
+      - "Use `invertSorting: true` on a `rank` column so 1st ranks above 2nd even when the user clicks 'descending'."
+      - 'Switch to server-side sorting: `manualSorting: true`, omit `sortedRowModel`, mirror `state.sorting` to the fetch URL.'
+    failure_modes:
+      - mistake: "Using v8's `sortingFn` / `sortingFns` after upgrading to v9."
+        mechanism: |
+          v9 renamed `columnDef.sortingFn` -> `columnDef.sortFn`, `tableOptions.sortingFns` -> `tableOptions.sortFns`, and the exported registry from `sortingFns` -> `sortFns`. The new column option `sortFn` defaults to `'auto'` and looks up `column.table._rowModelFns.sortFns` (see rowSortingFeature.utils.ts:160-173). A column with the v8 `sortingFn: 'alphanumeric'` will silently fall through to `sortFn_basic` (via the `?? sortFn_basic` fallback at line 172).
+        wrong_pattern: |
+          ```tsx
+          // v8-style column def — works without type error if `as any`, sorts wrong
+          {
+            accessorKey: 'fullName',
+            sortingFn: 'alphanumeric', // v8 name
+          }
+          // useTable({ sortingFns: { ...sortingFns, myFn } }) // v8 option name
+          ```
+        correct_pattern: |
+          ```tsx
+          // v9 names. From examples/react/sorting/src/main.tsx
+          import { sortFns, createSortedRowModel } from '@tanstack/react-table'
+
+          columnHelper.accessor('firstName', {
+            sortFn: 'alphanumeric',   // v9 name
+          })
+
+          const table = useTable({
+            features: tableFeatures({ rowSortingFeature }),
+            rowModels: {
+              sortedRowModel: createSortedRowModel({   // pass registry here
+                ...sortFns,
+                myCustom: (a, b, id) => a.original[id] - b.original[id],
+              }),
+            },
+            columns, data,
+          })
+          ```
+        source: packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [sorting]
+
+      - mistake: "Expecting `sortUndefined: 'first' | 'last'` to work in v8 (they only exist in v9)."
+        mechanism: |
+          v8 only had `sortUndefined: false | -1 | 1`. v9 added the `'first'` and `'last'` literal aliases. The createSortedRowModel switch at lines 100-110 has explicit branches: `if (sortUndefined === 'first') return aUndefined ? -1 : 1`. With `1` (the v9 default), undefined sorts ascending toward the END (lower priority); with `-1`, it sorts toward the START. The semantic difference: numeric `1`/`-1` flip when `desc: true`; `'first'`/`'last'` are absolute.
+        wrong_pattern: |
+          ```tsx
+          // BUG: agent assumes 'first' = ascending-start. But with desc: true,
+          // numeric 1 flips to "first" anyway. The literal forms are ABSOLUTE.
+          { accessorKey: 'lastName', sortUndefined: -1 } // ascending-first, descending-LAST
+          ```
+        correct_pattern: |
+          ```tsx
+          // From examples/react/sorting/src/main.tsx
+          columnHelper.accessor((row) => row.lastName, {
+            id: 'lastName',
+            sortUndefined: 'last',     // ABSOLUTE: always at end regardless of asc/desc
+            sortDescFirst: false,      // nullable values can mess up auto detection
+          }),
+          ```
+        source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [sorting]
+
+      - mistake: 'Custom `sortFn` returns `desc`-aware values (i.e. negating inside the function).'
+        mechanism: |
+          From sorting.md: "The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take of that logic." `createSortedRowModel` multiplies the return by `-1` when `isDesc`, then again by `-1` if `invertSorting` is true (lines 119-126). A custom sortFn that returns -1 for "A before B" when descending will get doubly-flipped.
+        wrong_pattern: |
+          ```tsx
+          // BUG: takes sort direction into account, breaks toggle
+          const customSort: SortFn<any, any> = (a, b, id, desc) => {
+            // desc isn't even a parameter — but agents try to detect via state
+            const cmp = a.original[id] - b.original[id]
+            return desc ? -cmp : cmp
+          }
+          ```
+        correct_pattern: |
+          ```tsx
+          // From examples/react/sorting/src/main.tsx
+          // Always return ascending-order comparison; the row model handles desc.
+          const sortStatusFn: SortFn<any, any> = (rowA, rowB, _columnId) => {
+            const statusOrder = ['single', 'complicated', 'relationship']
+            return statusOrder.indexOf(rowA.original.status) -
+                   statusOrder.indexOf(rowB.original.status)
+          }
+          ```
+        source: packages/table-core/src/features/row-sorting/createSortedRowModel.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [sorting]
+
+      - mistake: 'Using fuzzy filter on a column but not pairing it with a fuzzy-aware sortFn that reads `itemRank` from `columnFiltersMeta`.'
+        mechanism: |
+          The fuzzy filter writes `{ itemRank }` into `row.columnFiltersMeta[columnId]` via the `addMeta` callback (see createFilteredRowModel.ts lines 132-136). To rank results by match quality, a custom sortFn must read this meta and call `compareItems` from `@tanstack/match-sorter-utils`. If the column uses `sortFn: 'alphanumeric'` (the default), rows are sorted alphabetically, NOT by closest match — defeating the whole point of fuzzy search.
+        wrong_pattern: |
+          ```tsx
+          columnHelper.accessor(...{
+            filterFn: 'fuzzy',
+            // BUG: missing sortFn — rows sort alphabetically, not by rank
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // From examples/react/filters-fuzzy/src/main.tsx
+          import { compareItems } from '@tanstack/match-sorter-utils'
+          import { sortFns } from '@tanstack/react-table'
+
+          const fuzzySort: SortFn<typeof features, Person> = (rowA, rowB, columnId) => {
+            let dir = 0
+            if (rowA.columnFiltersMeta[columnId]) {
+              dir = compareItems(
+                rowA.columnFiltersMeta[columnId].itemRank!,
+                rowB.columnFiltersMeta[columnId].itemRank!,
+              )
+            }
+            return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+          }
+
+          columnHelper.accessor(..., {
+            filterFn: 'fuzzy',
+            sortFn: fuzzySort,
+          })
+          ```
+        source: examples/react/filters-fuzzy/src/main.tsx
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [sorting, filtering]
+
+    reference_candidates:
+      - name: built-in sortFns
+        kind: function-registry
+        count: 6
+        source: packages/table-core/src/fns/sortFns.ts
+        entries:
+          - alphanumeric
+          - alphanumericCaseSensitive
+          - text
+          - textCaseSensitive
+          - datetime
+          - basic
+        note: 'Default fallback when no sortFn matches is `sortFn_basic` (see rowSortingFeature.utils.ts:172). `auto` infers from sampled values: date -> datetime, mixed alphanumeric -> alphanumeric, string -> text, else basic.'
+    gaps:
+      - '`column_getAutoSortFn` samples `firstRows = getFilteredRowModel().flatRows.slice(10)` — this is `.slice(10)`, NOT `.slice(0, 10)`! It skips the first 10 rows and uses everything after. Likely a bug; verify with maintainer.'
+      - "`getSelectedRowModel`, `getFilteredSelectedRowModel`, and `getGroupedSelectedRowModel` in rowSelectionFeature.utils.ts ALL currently call `selectRowsFn(rowModel)` against `table.getCoreRowModel()` — they appear identical. Either they're stubs awaiting wiring or the dispatch is missing. Worth flagging."
+
+  # ---------------------------------------------------------------
+  # 3. PAGINATION
+  # ---------------------------------------------------------------
+  - slug: pagination
+    type: core
+    packages: ['@tanstack/table-core']
+    domain: row-model-features
+    description: Paginate rows in TanStack Table v9 with the `paginatedRowModel` stage — page navigation APIs, total row/page count, automatic page reset on data changes, and manual server-side pagination.
+    covers:
+      - rowPaginationFeature
+      - createPaginatedRowModel()
+      - 'state.pagination ({ pageIndex, pageSize })  # defaults: { pageIndex: 0, pageSize: 10 }'
+      - onPaginationChange
+      - manualPagination
+      - pageCount
+      - rowCount
+      - autoResetPageIndex
+      - paginateExpandedRows # cross-skill with row-expanding
+      - table.setPagination / resetPagination
+      - table.setPageIndex / resetPageIndex
+      - table.setPageSize / resetPageSize
+      - table.nextPage / previousPage / firstPage / lastPage
+      - table.getCanNextPage / getCanPreviousPage
+      - table.getPageCount / getRowCount / getPageOptions
+      - table.getPaginatedRowModel / getPrePaginatedRowModel
+    tasks:
+      - "Add a pagination toolbar with `<<`, `<`, `>`, `>>` buttons, current page indicator, page size selector, and 'go to page' input (see examples/react/pagination/src/main.tsx)."
+      - 'Switch to server-side pagination: `manualPagination: true`, supply `rowCount` (or `pageCount`) from the server, omit `paginatedRowModel`, refetch when `state.pagination` changes.'
+      - 'Stop the automatic page-index reset when filters change: `autoResetPageIndex: false` (e.g., to keep page 3 visible while a user types into a search box).'
+      - 'Display total filtered rows even when paginated: `table.getPrePaginatedRowModel().rows.length` (see filters example).'
+    failure_modes:
+      - mistake: 'Setting `manualPagination: true` without supplying `rowCount` (or `pageCount`).'
+        mechanism: |
+          With `manualPagination` set, `table_getPageCount` returns `options.pageCount ?? Math.ceil(getRowCount() / pageSize)`. `table_getRowCount` returns `options.rowCount ?? getPrePaginatedRowModel().rows.length`. In manual mode, the pre-paginated row model contains only the CURRENT page's rows — so `getRowCount()` becomes the page size (e.g., 10), `getPageCount()` becomes 1, and `getCanNextPage()` returns `false`. Pagination is effectively broken.
+        wrong_pattern: |
+          ```tsx
+          // BUG: getPageCount returns 1, next/prev buttons are disabled
+          const table = useTable({
+            features: tableFeatures({ rowPaginationFeature }),
+            rowModels: {},
+            data, // only 10 rows for the current page
+            columns,
+            manualPagination: true,
+            state: { pagination },
+            onPaginationChange: setPagination,
+            // missing: rowCount or pageCount
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // From docs/guide/pagination.md
+          const { data: dataQuery } = useQuery(['rows', pagination], () =>
+            fetchPage(pagination.pageIndex, pagination.pageSize),
+          )
+          const table = useTable({
+            features: tableFeatures({ rowPaginationFeature }),
+            rowModels: {},
+            data: dataQuery.rows,
+            columns,
+            manualPagination: true,
+            rowCount: dataQuery.rowCount, // server tells the table the total
+            // OR: pageCount: dataQuery.pageCount
+            // OR: pageCount: -1 if unknown (next button always enabled)
+            state: { pagination },
+            onPaginationChange: setPagination,
+          })
+          ```
+        source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [pagination]
+
+      - mistake: 'Putting `pagination` in BOTH `state.pagination` and `initialState.pagination`.'
+        mechanism: |
+          When both are set, the controlled `state.pagination` wins on every render. `initialState.pagination` is ignored. Agents often see "my pageSize default isn't working" because they wrote `useState({ pageIndex: 0, pageSize: 10 })` AND `initialState: { pagination: { pageSize: 25 } }`. The pageSize stays at 10.
+        wrong_pattern: |
+          ```tsx
+          // BUG: initialState ignored.
+          const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 10 })
+          const table = useTable({
+            initialState: { pagination: { pageSize: 25 } }, // IGNORED
+            state: { pagination },                          // wins (pageSize 10)
+            onPaginationChange: setPagination,
+            // ...
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // Seed in useState OR use initialState only — never both.
+          const [pagination, setPagination] = useState({ pageIndex: 0, pageSize: 25 })
+          const table = useTable({
+            features: tableFeatures({ rowPaginationFeature }),
+            rowModels: { paginatedRowModel: createPaginatedRowModel() },
+            columns, data,
+            state: { pagination },
+            onPaginationChange: setPagination,
+          })
+          ```
+        source: docs/guide/pagination.md
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [pagination]
+
+      - mistake: 'Disabling `autoResetPageIndex: false` and forgetting to clamp `pageIndex` when the data shrinks below the current page.'
+        mechanism: |
+          `autoResetPageIndex` defaults to `!manualPagination` (so true client-side, false manual). When false and data changes, `pageIndex` stays put. `table_setPageIndex` only clamps against `options.pageCount` (max safe int when pageCount is unset/-1, see rowPaginationFeature.utils.ts:123-129) — it does NOT clamp against the current row model. Result: user sees an empty page after a destructive filter.
+        wrong_pattern: |
+          ```tsx
+          const table = useTable({
+            features, rowModels: { paginatedRowModel: createPaginatedRowModel(), filteredRowModel: createFilteredRowModel(filterFns) },
+            columns, data,
+            autoResetPageIndex: false, // user on page 5, then filters down to 2 pages
+            // -> page 5 is empty. No automatic clamp.
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // Either leave autoResetPageIndex at default (true)...
+          const table = useTable({ /* ... */ }) // autoResetPageIndex undefined = on
+
+          // ...or clamp manually after any data-altering effect:
+          useEffect(() => {
+            const lastPage = Math.max(0, table.getPageCount() - 1)
+            if (table.atoms.pagination.get().pageIndex > lastPage) {
+              table.setPageIndex(lastPage)
+            }
+          }, [data, columnFilters])
+          ```
+        source: packages/table-core/src/features/row-pagination/rowPaginationFeature.utils.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [pagination]
+
+      - mistake: 'Computing `getRowCount()` and expecting it to match `data.length` when grouping/filtering/expansion is active.'
+        mechanism: |
+          `table_getRowCount` returns `options.rowCount ?? getPrePaginatedRowModel().rows.length`. The pre-paginated row model is the END of the pipeline before the page slice — so it reflects filtering, grouping, sorting, AND expansion. With `paginateExpandedRows: false`, expanded children are NOT in `getPrePaginatedRowModel().rows` (they're appended to the parent's page in `createPaginatedRowModel`'s expandRows call). With `paginateExpandedRows: true` (default), they ARE counted as their own paginated rows.
+        wrong_pattern: |
+          ```tsx
+          // BUG: agent expects getRowCount() === data.length
+          console.log(table.getRowCount())       // count after all transforms
+          console.log(data.length)               // count of raw input
+          // These will diverge under filtering, grouping, OR a flat input != tree input.
+          ```
+        correct_pattern: |
+          ```tsx
+          // Use the right model for the question being asked.
+          table.getCoreRowModel().rows.length        // raw row count (flat)
+          table.getPreFilteredRowModel().rows.length // before filtering
+          table.getFilteredRowModel().rows.length    // after filtering
+          table.getRowCount()                        // pre-paginated count (server count if rowCount option set)
+          table.getRowModel().rows.length            // current page only
+          ```
+        source: docs/guide/row-models.md
+        priority: low
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [pagination, filtering, grouping]
+
+    reference_candidates: []
+    gaps:
+      - '`autoResetPageIndex` is silently `false` when `manualPagination` is true (see rowPaginationFeature.utils.ts:43-50). This is documented but easy to miss. Worth a dedicated note.'
+
+  # ---------------------------------------------------------------
+  # 4. GROUPING
+  # ---------------------------------------------------------------
+  - slug: grouping
+    type: core
+    packages: ['@tanstack/table-core']
+    domain: row-model-features
+    description: Group rows by column values in TanStack Table v9 with the `groupedRowModel` stage — 8 built-in aggregationFns, custom aggregations, grouped-column placement modes, manual server-side grouping, and expand-grouped-rows interaction with the expanding feature.
+    covers:
+      - columnGroupingFeature
+      - createGroupedRowModel(aggregationFns)
+      - 'state.grouping (GroupingState = Array<string>)'
+      - onGroupingChange
+      - 'columnDef.aggregationFn ("auto" | name | function)'
+      - columnDef.aggregatedCell
+      - columnDef.getGroupingValue
+      - columnDef.enableGrouping
+      - manualGrouping
+      - enableGrouping
+      - 'groupedColumnMode (false | "reorder" | "remove")  # default "reorder"'
+      - table.setGrouping / resetGrouping
+      - column.toggleGrouping / getCanGroup / getIsGrouped / getGroupedIndex
+      - column.getToggleGroupingHandler
+      - column.getAggregationFn / getAutoAggregationFn
+      - cell.getIsGrouped / getIsAggregated / getIsPlaceholder
+      - row.getIsGrouped / getGroupingValue / groupingColumnId / groupingValue / leafRows
+      - 'aggregationFns built-in registry (8 fns)'
+    tasks:
+      - "Add per-column 'group' toggles in headers and render grouped cells with subRow counts + expand icons (see examples/react/grouping/src/main.tsx)."
+      - 'Mix aggregation strategies across columns: `sum` for visits, `median` for age, `mean` for progress, `count` for the implicit grouping column.'
+      - "Override a column's grouping key with `getGroupingValue: row => ${row.firstName} ${row.lastName}` so rows group on a derived value, not the column accessor value."
+      - 'Pair grouping with expanding so users can drill into each group: register `rowExpandingFeature` + `expandedRowModel` and call `row.getToggleExpandedHandler()` on grouped cells.'
+      - "Hide grouped columns from the visible column flow with `groupedColumnMode: 'remove'`, or leave them in place with `groupedColumnMode: false`."
+    failure_modes:
+      - mistake: 'Adding `columnGroupingFeature` without also registering `rowExpandingFeature` and expecting grouped rows to expand.'
+        mechanism: |
+          `createGroupedRowModel` produces grouped rows with `subRows`, but those rows aren't VISIBLE until the expanded row model flattens them in. Without `rowExpandingFeature` + `createExpandedRowModel()`, `row.getToggleExpandedHandler` doesn't exist (TypeScript error). Even if you skip the handler, the grouped row is collapsed by default and there's no way to drill down. Aggregated cells appear but child rows are unreachable.
+        wrong_pattern: |
+          ```tsx
+          // BUG: grouped rows show aggregates but can't be expanded.
+          const features = tableFeatures({ columnGroupingFeature })
+          const table = useTable({
+            features,
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            columns, data,
+          })
+          // row.getToggleExpandedHandler() -> TS error or undefined
+          ```
+        correct_pattern: |
+          ```tsx
+          // From examples/react/grouping/src/main.tsx
+          import {
+            aggregationFns,
+            columnGroupingFeature,
+            createExpandedRowModel,
+            createGroupedRowModel,
+            rowExpandingFeature,
+          } from '@tanstack/react-table'
+
+          const features = tableFeatures({
+            columnGroupingFeature,
+            rowExpandingFeature,
+            rowPaginationFeature,
+            rowSortingFeature,
+            columnFilteringFeature,
+          })
+
+          const table = useTable({
+            features,
+            rowModels: {
+              groupedRowModel: createGroupedRowModel(aggregationFns),
+              expandedRowModel: createExpandedRowModel(),
+              // + sorted, filtered, paginated as needed
+            },
+            columns, data,
+          })
+
+          // In cell renderer:
+          {cell.getIsGrouped() && (
+            <button onClick={row.getToggleExpandedHandler()}>
+              {row.getIsExpanded() ? '👇' : '👉'} ({row.subRows.length})
+            </button>
+          )}
+          ```
+        source: examples/react/grouping/src/main.tsx
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [grouping, row-expanding]
+
+      - mistake: 'Customizing `aggregationFns` like the v8 `aggregationFns` option (passing the registry through `tableOptions.aggregationFns` instead of `createGroupedRowModel`).'
+        mechanism: |
+          In v9, the aggregation function registry is passed as the first argument to `createGroupedRowModel(aggregationFns)`, which stores it at `table._rowModelFns.aggregationFns`. There is NO top-level `tableOptions.aggregationFns` like sorting/filtering have via row model factory. Agents migrating from v8 commonly try `useTable({ aggregationFns: { ... } })` and it has no effect; columns with custom `aggregationFn: 'myCustom'` resolve to `undefined`.
+        wrong_pattern: |
+          ```tsx
+          // BUG: v8-style option that doesn't exist in v9
+          const table = useTable({
+            features: tableFeatures({ columnGroupingFeature }),
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            columns, data,
+            // @ts-ignore - this property doesn't exist on TableOptions in v9
+            aggregationFns: {
+              myCustom: (id, leaf, child) => /* ... */,
+            },
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // From docs/guide/grouping.md - register via createGroupedRowModel
+          import { aggregationFns, createGroupedRowModel } from '@tanstack/react-table'
+
+          const table = useTable({
+            features: tableFeatures({ columnGroupingFeature, rowExpandingFeature }),
+            rowModels: {
+              groupedRowModel: createGroupedRowModel({
+                ...aggregationFns,
+                myCustomAggregation: (columnId, leafRows, childRows) => {
+                  return /* aggregated value */
+                },
+              }),
+              expandedRowModel: createExpandedRowModel(),
+            },
+            columns, data,
+          })
+
+          // Then on a column:
+          { accessorKey: 'sales', aggregationFn: 'myCustomAggregation' }
+          ```
+        source: packages/table-core/src/features/column-grouping/createGroupedRowModel.ts
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [grouping]
+
+      - mistake: 'Confusing `aggregationFn` signature: `(columnId, leafRows, childRows)` vs filter/sort signatures.'
+        mechanism: |
+          Aggregation functions have a DIFFERENT signature than filterFns and sortFns. They receive `(columnId: string, leafRows: Array<Row>, childRows: Array<Row>)`. `leafRows` = ALL descendant non-grouped rows (recursive flatten). `childRows` = immediate children of the current grouped row (which may themselves be grouped sub-aggregates at deeper levels). Built-ins use `childRows` (sum, min, max, extent) for nested aggregation reuse, but `leafRows` (mean, median, unique, uniqueCount, count) when the math requires raw values.
+        wrong_pattern: |
+          ```tsx
+          // BUG: wrong arg names - first arg is columnId, not row
+          aggregationFn: (rowA, rowB, columnId) => /* ... */
+          // BUG: averaging via childRows includes already-aggregated sub-group sums
+          aggregationFn: (id, leaf, child) => child.reduce((a, r) => a + r.getValue(id), 0) / child.length
+          ```
+        correct_pattern: |
+          ```tsx
+          // From packages/table-core/src/fns/aggregationFns.ts
+          // For pure leaf averages, use leafRows:
+          const aggregationFn_mean: AggregationFn<any, any> = (columnId, leafRows) => {
+            let count = 0, sum = 0
+            leafRows.forEach((row) => {
+              const value = row.getValue(columnId)
+              if (typeof value === 'number') { count++; sum += value }
+            })
+            return count ? sum / count : undefined
+          }
+
+          // For nestable sums (reuse sub-aggregates), use childRows:
+          const aggregationFn_sum: AggregationFn<any, any> = (columnId, _leafRows, childRows) => {
+            return childRows.reduce((acc, next) => {
+              const v = next.getValue(columnId)
+              return acc + (typeof v === 'number' ? v : 0)
+            }, 0)
+          }
+          ```
+        source: packages/table-core/src/fns/aggregationFns.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [grouping]
+
+      - mistake: "Expecting grouped columns to appear in their original position — and missing the default `groupedColumnMode: 'reorder'`."
+        mechanism: |
+          `columnGroupingFeature.getDefaultTableOptions` sets `groupedColumnMode: 'reorder'`. When grouping is active, the column ordering function in `columnOrderingFeature.utils.ts::orderColumns` moves grouped columns to the START of the leaf-column list. Agents who manually set `columnOrder` and group by 'status' will see 'status' jump to position 0 with no warning. Set `groupedColumnMode: false` to disable this, or `'remove'` to drop grouped columns from the visible flow entirely.
+        wrong_pattern: |
+          ```tsx
+          // BUG: column order is overridden by reorder mode
+          const table = useTable({
+            features,
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            columns, data,
+            initialState: {
+              columnOrder: ['firstName', 'lastName', 'age', 'status'], // explicit
+              grouping: ['status'],
+            },
+            // status jumps to position 0, columnOrder is "overridden"
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          const table = useTable({
+            features,
+            rowModels: { groupedRowModel: createGroupedRowModel(aggregationFns) },
+            columns, data,
+            initialState: {
+              columnOrder: ['firstName', 'lastName', 'age', 'status'],
+              grouping: ['status'],
+            },
+            groupedColumnMode: false, // keep columnOrder intact
+          })
+
+          // Or accept the reorder and let grouped columns lead:
+          groupedColumnMode: 'reorder', // (default)
+
+          // Or hide grouped columns entirely:
+          groupedColumnMode: 'remove',
+          ```
+        source: packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [grouping, column-ordering]
+
+      - mistake: 'Calling `getSelectedRowModel()` on a grouped table and expecting it to include grouped rows.'
+        mechanism: |
+          Three selected-row APIs exist: `table.getSelectedRowModel()` (built off core), `table.getFilteredSelectedRowModel()` (built off filtered), `table.getGroupedSelectedRowModel()` (built off grouped). They are distinct in the type system. Agents commonly want "selected rows that are currently visible after grouping" and call the wrong one — `getSelectedRowModel()` walks the core (flat) row model and won't reflect grouping changes.
+        wrong_pattern: |
+          ```tsx
+          // BUG: returns selection from core model, not the grouped projection
+          const selectedRows = table.getSelectedRowModel().rows
+          // Doesn't reflect grouping — leaf rows only
+          ```
+        correct_pattern: |
+          ```tsx
+          // Pick the right model for the question:
+          table.getSelectedRowModel()           // selection from raw data
+          table.getFilteredSelectedRowModel()   // selection within current filters
+          table.getGroupedSelectedRowModel()    // selection within current groups
+          ```
+        source: packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts
+        priority: low
+        status: warning # current source files appear to call selectRowsFn against getCoreRowModel for all 3 — may be a stub
+        version_context: v9.0.0-alpha.48
+        skills: [grouping, row-selection]
+
+    reference_candidates:
+      - name: built-in aggregationFns
+        kind: function-registry
+        count: 8 # docs say 9 (count, sum, min, max, extent, mean, median, unique, uniqueCount) but registry exports 9 too
+        actual_count: 9
+        source: packages/table-core/src/fns/aggregationFns.ts
+        entries:
+          - sum
+          - min
+          - max
+          - extent
+          - mean
+          - median
+          - unique
+          - uniqueCount
+          - count
+        note: "Docs say 'There are several built-in aggregation functions' and list 9. Phase 1+2 note said 8 — actual count is 9 (count, extent both included)."
+    gaps:
+      - "Phase 1+2 anchor says '8 built-in aggregationFns' but the registry has 9 (count + 8 numeric). Verify with maintainer."
+      - "`createGroupedRowModel` constructs new Row objects via `constructRow` for grouped rows; these rows have a special `getValue` override that intercepts to either return cached grouping values or call the column's aggregationFn (lines 139-175). The interaction with column accessors (which normally return per-row data) is subtle. Worth a reference note."
+      - "`manualGrouping: true` exists but docs say 'There are not currently many known easy ways to do server-side grouping with TanStack Table.' Real-world server-side grouping support is a gap."
+
+  # ---------------------------------------------------------------
+  # 5. ROW-EXPANDING
+  # ---------------------------------------------------------------
+  - slug: row-expanding
+    type: core
+    packages: ['@tanstack/table-core']
+    domain: row-model-features
+    description: Expand and collapse rows in TanStack Table v9 with the `expandedRowModel` stage — tree sub-rows via `getSubRows`, detail panels via `getRowCanExpand`, filter-from-leaf-rows interaction, expanded rows in pagination, and manual server-side expansion.
+    covers:
+      - rowExpandingFeature
+      - createExpandedRowModel()
+      - 'state.expanded (ExpandedState = true | Record<string, boolean>)'
+      - onExpandedChange
+      - 'getSubRows  # (row) => row.children | row.subRows | undefined'
+      - 'getRowCanExpand  # override for detail-panel pattern'
+      - getIsRowExpanded
+      - 'enableExpanding  # column/row gate'
+      - manualExpanding
+      - 'autoResetExpanded  # auto reset when row structure changes'
+      - 'paginateExpandedRows  # default true; false = expand on parent page'
+      - 'filterFromLeafRows  # tree filtering interaction'
+      - 'maxLeafRowFilterDepth  # default 100, set 0 to filter root-only'
+      - table.setExpanded / resetExpanded / toggleAllRowsExpanded
+      - table.getIsAllRowsExpanded / getIsSomeRowsExpanded / getCanSomeRowsExpand / getExpandedDepth
+      - table.getToggleAllRowsExpandedHandler
+      - row.toggleExpanded / getIsExpanded / getCanExpand / getIsAllParentsExpanded
+      - row.getToggleExpandedHandler
+      - 'row.depth  # for paddingLeft indentation in tree UIs'
+      - 'row.subRows  # populated via getSubRows'
+    tasks:
+      - 'Render a tree table: provide nested `subRows` data, set `getSubRows: row => row.subRows`, render `paddingLeft: ${row.depth * 2}rem` on the first cell (see examples/react/expanding/src/main.tsx).'
+      - 'Render detail panels (sub-components) for flat data: set `getRowCanExpand: () => true`, render a second `<tr>` with a `colSpan` cell when `row.getIsExpanded()` (see examples/react/sub-components/src/main.tsx).'
+      - 'Toggle ALL rows at once with a header button: `table.getToggleAllRowsExpandedHandler()`.'
+      - "Keep expanded children on their parent's page (so the page count doesn't expand): `paginateExpandedRows: false`."
+      - 'Filter tree data and keep matching descendants visible under non-matching parents: `filterFromLeafRows: true`.'
+    failure_modes:
+      - mistake: 'Using `getRowCanExpand: () => true` with tree data and a custom expand button — but `row.getCanExpand()` already auto-detects `subRows.length`, so the override may collide.'
+        mechanism: |
+          `row_getCanExpand` (rowExpandingFeature.utils.ts:319-327) returns `options.getRowCanExpand?.(row) ?? (enableExpanding ?? true) && !!row.subRows.length`. When `getRowCanExpand` is set, it WINS over the auto subRows check. If a developer wants both tree behavior AND detail panels (e.g., leaf rows expand to show extra info), they need `getRowCanExpand: row => true` AND `getSubRows: row => row.subRows`. But then EVERY row (including leaves with no subRows) will show an expand icon — the developer must check `row.subRows.length` themselves in the cell render.
+        wrong_pattern: |
+          ```tsx
+          // BUG: every row gets an expander icon, including leaves
+          const table = useTable({
+            getRowCanExpand: () => true,
+            getSubRows: r => r.subRows,
+            // ...
+          })
+          // In cell: row.getCanExpand() always true → leaf rows show 👉 with nothing to expand
+          ```
+        correct_pattern: |
+          ```tsx
+          // For pure tree data, omit getRowCanExpand and let it auto-detect:
+          // From examples/react/expanding/src/main.tsx
+          const table = useTable({
+            features,
+            rowModels: { expandedRowModel: createExpandedRowModel(), /* ... */ },
+            columns, data,
+            getSubRows: row => row.subRows,
+            // no getRowCanExpand — row.getCanExpand() is true only when subRows.length > 0
+          })
+
+          // For pure detail panels, override and skip getSubRows:
+          // From examples/react/sub-components/src/main.tsx
+          const table = useTable({
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: { expandedRowModel: createExpandedRowModel() },
+            columns, data,
+            getRowCanExpand: (row) => true, // every row expands to show <subComponent>
+          })
+          ```
+        source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
+        priority: high
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [row-expanding]
+
+      - mistake: "Setting `paginateExpandedRows: false` and expecting the page size to stay 10 (it doesn't — more rows render)."
+        mechanism: |
+          `paginateExpandedRows: true` (default) lets expanded children flow naturally into pagination — each child counts toward `pageSize`. `paginateExpandedRows: false` keeps expanded children stuck under their parent on whichever page the parent appears — meaning a page of 10 parents with 5 children each renders 60 rows. From the docs guide: "This also means more rows will be rendered than the set page size." `createPaginatedRowModel` calls `expandRows({ ... })` to inflate the page slice when `paginateExpandedRows: false` (see createPaginatedRowModel.ts:57-69).
+        wrong_pattern: |
+          ```tsx
+          // BUG: page renders 50 rows even though pageSize is 10
+          const table = useTable({
+            paginateExpandedRows: false,
+            initialState: { pagination: { pageSize: 10 } },
+            // user expands all parents → 10 parents * 5 children = 60 visible rows
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // From docs/guide/expanding.md
+          // Default behavior (children flow through pagination):
+          const table = useTable({
+            features,
+            rowModels: { expandedRowModel: createExpandedRowModel(), paginatedRowModel: createPaginatedRowModel() },
+            columns, data,
+            getSubRows: r => r.subRows,
+            // paginateExpandedRows defaults to true
+          })
+
+          // OR explicitly keep children with parent:
+          paginateExpandedRows: false, // accept that pageSize is a soft cap
+          ```
+        source: packages/table-core/src/features/row-pagination/createPaginatedRowModel.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [row-expanding, pagination]
+
+      - mistake: 'Storing `expanded` as `true` then writing into it as if it were a Record.'
+        mechanism: |
+          `ExpandedState = true | Record<string, boolean>`. The `true` literal means "all rows expanded" — there's no need to enumerate row IDs. `row_toggleExpanded` (rowExpandingFeature.utils.ts:250-283) handles the transition: if `old === true`, it first MATERIALIZES the `true` into a real Record of all row IDs in the current row model, then applies the per-row toggle. Agents writing `setExpanded((old) => ({ ...old, [id]: true }))` against `old === true` get `{ 0: true, 1: true, ..., [id]: true }` which is a different state than they expected.
+        wrong_pattern: |
+          ```tsx
+          // BUG: spreading `true` (a boolean) into an object gives {} - all rows collapse except [id]
+          setExpanded((old) => ({ ...old, [row.id]: true }))
+          // When old === true, this becomes { [row.id]: true } -- everything else collapses!
+          ```
+        correct_pattern: |
+          ```tsx
+          // Use row.toggleExpanded() / row.getToggleExpandedHandler() — they materialize properly:
+          // From examples/react/expanding/src/main.tsx
+          <button onClick={row.getToggleExpandedHandler()}>
+            {row.getIsExpanded() ? '👇' : '👉'}
+          </button>
+
+          // Or handle the materialization yourself if you must:
+          table.setExpanded((old) => {
+            if (old === true) {
+              const map: Record<string, boolean> = {}
+              Object.keys(table.getRowModel().rowsById).forEach(id => { map[id] = true })
+              return { ...map, [row.id]: !map[row.id] }
+            }
+            return { ...old, [row.id]: !old[row.id] }
+          })
+          ```
+        source: packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [row-expanding]
+
+      - mistake: 'Setting `manualExpanding: true` and still passing `expandedRowModel: createExpandedRowModel()` AND expecting client-side flattening.'
+        mechanism: |
+          With `manualExpanding: true`, `table_getExpandedRowModel` skips the registered `expandedRowModel` factory and returns `getPreExpandedRowModel()` (sorted rows). The expanded state still tracks which rows are "expanded" in terms of UI affordance, but the row model is NOT inflated. To render manually-expanded children, you must include them in the source `data` and `getSubRows` — at which point you can just NOT use manualExpanding.
+        wrong_pattern: |
+          ```tsx
+          // BUG: manualExpanding bypasses the expanded row model;
+          // sub-rows are never flattened into view.
+          const table = useTable({
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: { expandedRowModel: createExpandedRowModel() }, // ignored
+            columns, data,
+            getSubRows: r => r.subRows,
+            manualExpanding: true,
+          })
+          ```
+        correct_pattern: |
+          ```tsx
+          // Manual expanding is for server-side patterns where the server
+          // returns a pre-flattened view based on which rows are expanded.
+          // From docs/guide/expanding.md
+          const table = useTable({
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: {}, // no expandedRowModel for manual mode
+            columns,
+            data: dataQuery.data, // server returns flattened rows when expanded
+            manualExpanding: true,
+            state: { expanded },
+            onExpandedChange: setExpanded,
+          })
+
+          // For client-side tree, omit manualExpanding:
+          const table = useTable({
+            features: tableFeatures({ rowExpandingFeature }),
+            rowModels: { expandedRowModel: createExpandedRowModel() },
+            columns, data,
+            getSubRows: r => r.subRows,
+          })
+          ```
+        source: packages/table-core/src/core/row-models/coreRowModelsFeature.utils.ts
+        priority: medium
+        status: active
+        version_context: v9.0.0-alpha.48
+        skills: [row-expanding]
+
+    reference_candidates: []
+    gaps:
+      - "`row.subRows` is initially populated by `getSubRows`; for grouped rows it's overwritten by `createGroupedRowModel`. The interaction between user-provided `getSubRows` and grouping-generated subRows is subtle — what happens if a user has tree data AND groups it?"
+      - "`autoResetExpanded` exists but isn't documented in the expanding guide. The implementation schedules a reset (`table._reactivity.schedule`) when grouping changes (it's called from `createGroupedRowModel.onAfterUpdate`). Worth a note on reset interactions."
+      - "`row.getIsAllParentsExpanded()` exists but isn't used in any example file I read. Its main use case is in conditional rendering of deeply nested rows."
+
+# ---------------------------------------------------------------
+# CROSS-CUTTING GAPS (apply across all 5 skills)
+# ---------------------------------------------------------------
+gaps:
+  - issue: 'Phase 1+2 anchor inaccuracies'
+    detail: "Phase 1+2 notes say '10 built-in filterFns', '6 built-in sortFns', '8 built-in aggregationFns'. Actual counts from source registry: 12 filterFns (registry includes arrHas, between, betweenInclusive beyond the 10 documented), 6 sortFns ✓, 9 aggregationFns. Need maintainer review."
+
+  - issue: 'v9 sortFn auto-detection samples flatRows.slice(10)'
+    detail: 'packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:94 reads `getFilteredRowModel().flatRows.slice(10)` — note this is `.slice(10)` not `.slice(0, 10)`. It skips the first 10 rows. Likely a bug or oversight. Worth flagging.'
+
+  - issue: 'Three selected-row-model APIs appear functionally identical in source'
+    detail: '`table_getSelectedRowModel`, `table_getFilteredSelectedRowModel`, and `table_getGroupedSelectedRowModel` all call `selectRowsFn(table.getCoreRowModel())` (rowSelectionFeature.utils.ts:173-244). The function bodies are the same except for comments. Per docs row-models.md they should dispatch on filtered/grouped models. Either documentation is aspirational or implementation is stubbed.'
+
+  - issue: 'v9 createColumnHelper signature change'
+    detail: 'v9 requires `createColumnHelper<typeof features, TData>()` — TFeatures FIRST. v8 was `createColumnHelper<TData>()`. Every cluster-B example confirms this pattern (filters, filters-faceted, filters-fuzzy, sorting, pagination, grouping, expanding, sub-components all use `<typeof features, Person>`).'
+
+  - issue: 'Framework variation: Vue/Svelte/Solid/Angular use signal/reactive data getter'
+    detail: |
+      React: `useTable({ data, columns, ... })` — data is a value.
+      Vue: `useTable({ get columns() { return columns.value }, data, ... })` — getter for reactivity.
+      Solid: `createTable({ get data() { return data() }, columns, ... })` — getter against signal.
+      Svelte: `createTable({ get data() { return data }, ... })` — getter against $state rune.
+      Angular: `injectTable(() => ({ data: this.data(), columns, ... }))` — whole config is a factory.
+      All use the same `tableFeatures({ ... })` and `rowModels` shapes. The reactive plumbing differs.
+
+  - issue: 'Faceting requires THREE row models in lockstep'
+    detail: "createFacetedRowModel() is the base; createFacetedUniqueValues() and createFacetedMinMaxValues() both depend on it (column_getFacetedUniqueValues / column_getFacetedMinMaxValues both call column_getFacetedRowModel internally for the memoDep). Phase 1+2 note flagged this as 'agents commonly forget the base faceted row model'. Confirmed by reading source."
+
+  - issue: 'fuzzy filter and addMeta parameter is optional'
+    detail: "FilterFn signature: `(row, columnId, filterValue, addMeta?: (meta: FilterMeta) => void) => boolean`. The 4th arg is OPTIONAL (`addMeta?:`). The fuzzy filter example uses `addMeta?.({ itemRank })` with optional chaining. But createFilteredRowModel ALWAYS passes a real addMeta function (createFilteredRowModel.ts:131-135 and 150-154). So in practice the `?.` is unnecessary defensiveness — but it's idiomatic in examples."
+
+  - issue: 'manual* flags are mutually independent — agents try to combine them'
+    detail: "manualFiltering, manualSorting, manualGrouping, manualExpanding, manualPagination can each be set independently. They each cause the corresponding row model to be SKIPPED (the pre-* model is returned instead). Order still applies: manualFiltering doesn't skip grouping. Agents sometimes think 'manual everything' means 'use raw data as-is' — but if you set manualFiltering + manualSorting but NOT manualPagination, the table still paginates the raw data."

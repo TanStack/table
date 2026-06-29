@@ -9,19 +9,18 @@ If you take a look at the most basic example of TanStack Table, you'll see a cod
 ```ts
 import { tableFeatures, useTable } from '@tanstack/react-table'
 
-const _features = tableFeatures({}) // Core features only
+const features = tableFeatures({}) // Core features only
 
 function Component() {
   const table = useTable({
-    _features,
-    _rowModels: {}, // Core row model is automatic; add others as needed
+    features,
     columns,
     data,
   })
 }
 ```
 
-In v9, row models are configured via the `_rowModels` option. The core row model is always included automatically. You only add the row models you need for filtering, sorting, pagination, etc. This keeps your bundle small—you only import and use the code for the features you enable.
+In v9, row model factories live on the features object created by `tableFeatures()`. The core row model is always included automatically. You only add the row models you need for filtering, sorting, pagination, etc. This keeps your bundle small, since you only import and use the code for the features you enable.
 
 ### What are Row Models?
 
@@ -29,21 +28,23 @@ Row models run under the hood of TanStack Table to transform your original data 
 
 ### Configuring Row Models
 
-You should only add the row models that you need. Here are all of the row models that are available via `_rowModels`:
+You should only add the row models that you need. Pass the row model factories as slots directly inside your `tableFeatures()` call alongside your feature objects:
 
-| `_rowModels` Key | Factory Function | Purpose |
+| Slot Key | Factory Function | Purpose |
 |------------------|------------------|---------|
-| (automatic) | — | Core row model (always included) |
-| `filteredRowModel` | `createFilteredRowModel(filterFns)` | Filtering (column + global) |
-| `sortedRowModel` | `createSortedRowModel(sortFns)` | Sorting |
+| (automatic) | (none) | Core row model (always included) |
+| `filteredRowModel` | `createFilteredRowModel()` | Filtering (column + global) |
+| `sortedRowModel` | `createSortedRowModel()` | Sorting |
 | `paginatedRowModel` | `createPaginatedRowModel()` | Pagination |
 | `expandedRowModel` | `createExpandedRowModel()` | Row expanding |
-| `groupedRowModel` | `createGroupedRowModel(aggregationFns)` | Grouping and aggregation |
+| `groupedRowModel` | `createGroupedRowModel()` | Grouping and aggregation |
 | `facetedRowModel` | `createFacetedRowModel()` | Faceted filtering |
 | `facetedMinMaxValues` | `createFacetedMinMaxValues()` | Min/max for faceted filters |
 | `facetedUniqueValues` | `createFacetedUniqueValues()` | Unique values for faceted filters |
 
-You must also add the corresponding features to `_features` for each row model you use. For example:
+The factory functions no longer accept `filterFns`, `sortFns`, or `aggregationFns` as arguments. Those function maps are registered as their own named slots on the features object (see [Function Registries](#function-registries) below).
+
+You must also add the corresponding feature objects to `tableFeatures()` for each row model you use. For example:
 
 ```ts
 import {
@@ -59,29 +60,63 @@ import {
   sortFns,
 } from '@tanstack/react-table'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const table = useTable({
-  _features,
-  _rowModels: {
-    filteredRowModel: createFilteredRowModel(filterFns),
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
-  },
+  features,
   columns,
   data,
 })
 ```
 
-Note that `createFilteredRowModel`, `createSortedRowModel`, and `createGroupedRowModel` accept their processing functions (`filterFns`, `sortFns`, `aggregationFns`) as parameters. This enables tree-shaking—if you use a custom filter, you don't pay for built-in filters you never use.
+### Function Registries
+
+`tableFeatures()` accepts three named registry slots: `filterFns`, `sortFns`, and `aggregationFns`. Each slot is an object whose keys become valid, fully type-safe string values for `filterFn`, `sortFn`, `globalFilterFn`, and `aggregationFn` in your column definitions and table options. You only pay for the functions you register.
+
+```ts
+import {
+  tableFeatures,
+  columnFilteringFeature,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/react-table'
+
+const myFuzzyFilter: FilterFn<typeof features, Person> = (row, columnId, value, addMeta) => {
+  // ...
+  return true
+}
+
+const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns: { ...filterFns, fuzzy: myFuzzyFilter },
+})
+
+// 'fuzzy' is now a valid type-safe value for filterFn in column defs:
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+columnHelper.accessor('name', { filterFn: 'fuzzy' })
+```
+
+The same pattern applies for sorting and grouping:
+
+- `sortFns: { ...sortFns, myCustomSort }` makes `'myCustomSort'` valid for `sortFn` in column defs.
+- `aggregationFns: { ...aggregationFns, myAgg }` makes `'myAgg'` valid for `aggregationFn` in column defs.
+
+You can spread in the built-in maps (`filterFns`, `sortFns`, `aggregationFns`) to retain the defaults, add your own, or pass only your own to keep the bundle lean.
 
 ### Customize/Fork Row Models
 
-You don't have to use the exact row models that are provided by TanStack Table. If you need some advanced customization for certain row models, feel free to copy the [source code](https://github.com/TanStack/table/tree/main/packages/table-core/src/utils) for the row model you want to customize and modify it to your needs.
+You don't have to use the exact row models that are provided by TanStack Table. If you need some advanced customization for certain row models, feel free to copy the [source code](https://github.com/TanStack/table/tree/beta/packages/table-core/src/features) for the row model you want to customize and modify it to your needs. Each row model factory lives alongside its feature (e.g. `row-sorting/createSortedRowModel.ts`), and the core row model lives in [`core/row-models`](https://github.com/TanStack/table/tree/beta/packages/table-core/src/core/row-models).
 
 ### Using Row Models
 

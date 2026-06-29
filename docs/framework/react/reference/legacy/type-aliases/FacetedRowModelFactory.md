@@ -9,7 +9,7 @@ title: FacetedRowModelFactory
 type FacetedRowModelFactory<TData> = (table, columnId) => () => RowModel<StockFeatures, TData>;
 ```
 
-Defined in: [useLegacyTable.ts:169](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L169)
+Defined in: [useLegacyTable.ts:170](https://github.com/TanStack/table/blob/main/packages/react-table/src/useLegacyTable.ts#L170)
 
 Faceted row model factory function type from v8 API
 

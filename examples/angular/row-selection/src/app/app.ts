@@ -9,6 +9,7 @@ import {
   TanStackTable,
   flexRenderComponent,
 } from '@tanstack/angular-table'
+import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import { TableFilter } from './table-filter/table-filter'
 import { makeData } from './makeData'
 import {
@@ -17,7 +18,7 @@ import {
 } from './selection-column/selection-column'
 import { createAppColumnHelper, injectTable } from './table'
 import type { Person } from './makeData'
-import type { RowSelectionState } from '@tanstack/angular-table'
+import type { RowSelectionState, Updater } from '@tanstack/angular-table'
 
 const columnHelper = createAppColumnHelper<Person>()
 
@@ -29,6 +30,11 @@ const columnHelper = createAppColumnHelper<Person>()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  constructor() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+    }))
+  }
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(1_000))
@@ -89,10 +95,12 @@ export class App {
   ])
 
   readonly table = injectTable(() => ({
+    key: 'row-selection', // needed for devtools
     debugTable: true,
     data: this.data(),
     columns: this.columns,
     state: {
+      globalFilter: this.globalFilter(),
       rowSelection: this.rowSelection(),
     },
 
@@ -105,15 +113,18 @@ export class App {
           : updaterOrValue,
       )
     },
+    onGlobalFilterChange: (updaterOrValue: Updater<string>) => {
+      this.globalFilter.set(
+        typeof updaterOrValue === 'function'
+          ? updaterOrValue(this.globalFilter())
+          : updaterOrValue,
+      )
+    },
   }))
 
-  readonly paginationState = this.table.computed({
-    selector: (state) => state.pagination,
-  })
-
-  readonly stringifiedRowSelection = computed(() =>
-    JSON.stringify(this.rowSelection(), null, 2),
-  )
+  stringifiedState() {
+    return JSON.stringify(this.table.store.get(), null, 2)
+  }
 
   readonly rowSelectionLength = computed(
     () => Object.keys(this.rowSelection()).length,
@@ -137,7 +148,11 @@ export class App {
   }
 
   refreshData = () => this.data.set(makeData(1_000))
-  stressTest = () => this.data.set(makeData(200_000))
+  stressTest = () => this.data.set(makeData(1_000_000))
+
+  onGlobalFilter(event: Event): void {
+    this.table.setGlobalFilter((event.target as HTMLInputElement).value)
+  }
 
   toggleEnableRowSelection() {
     this.enableRowSelection.update((value) => !value)

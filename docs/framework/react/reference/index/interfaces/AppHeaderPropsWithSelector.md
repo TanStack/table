@@ -5,7 +5,7 @@ title: AppHeaderPropsWithSelector
 
 # Interface: AppHeaderPropsWithSelector\<TFeatures, TData, TValue, THeaderComponents, TSelected\>
 
-Defined in: [createTableHook.tsx:349](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L349)
+Defined in: [createTableHook.tsx:452](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L452)
 
 Props for AppHeader/AppFooter component - with selector
 
@@ -39,15 +39,13 @@ Props for AppHeader/AppFooter component - with selector
 children: (header, state) => ReactNode;
 ```
 
-Defined in: [createTableHook.tsx:357](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L357)
+Defined in: [createTableHook.tsx:460](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L460)
 
 #### Parameters
 
 ##### header
 
-`Header_Core`\<`TFeatures`, `TData`, `TValue`\> & `UnionToIntersection`\<
-  \| `"columnSizingFeature"` *extends* keyof `TFeatures` ? `Header_ColumnSizing` : `never`
-  \| `"columnResizingFeature"` *extends* keyof `TFeatures` ? `Header_ColumnResizing` : `never`\> & `UnionToIntersection`\<\{ \[K in string \| number \| symbol\]: K extends "coreReativityFeature" ? never : TFeatures\[K\] extends TableFeature\<FeatureConstructorOptions\> ? "Header" extends keyof FeatureConstructorOptions ? FeatureConstructorOptions\[keyof (...) & "Header"\] : never : any \}\[keyof `TFeatures`\]\> & `Header_Plugins`\<`TFeatures`, `TData`, `TValue`\> & `THeaderComponents` & `object`
+`Header_Core`\<`TFeatures`, `TData`, `TValue`\> & `ExtractFeatureMapTypes`\<`TFeatures`, `Header_FeatureMap`\> & `THeaderComponents` & `object`
 
 ##### state
 
@@ -65,7 +63,7 @@ Defined in: [createTableHook.tsx:357](https://github.com/TanStack/table/blob/mai
 header: Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:356](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L356)
+Defined in: [createTableHook.tsx:459](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L459)
 
 ***
 
@@ -75,7 +73,7 @@ Defined in: [createTableHook.tsx:356](https://github.com/TanStack/table/blob/mai
 selector: (state) => TSelected;
 ```
 
-Defined in: [createTableHook.tsx:362](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L362)
+Defined in: [createTableHook.tsx:465](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L465)
 
 #### Parameters
 

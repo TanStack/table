@@ -20,14 +20,20 @@ import ColumnFilter from './ColumnFilter'
 import type { Person } from './makeData'
 import type { ColumnDef } from '@tanstack/solid-table'
 
-export const _features = tableFeatures({
+export const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   columnFacetingFeature,
   rowPaginationFeature,
+  facetedRowModel: createFacetedRowModel(),
+  facetedMinMaxValues: createFacetedMinMaxValues(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  filterFns,
 })
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
     footer: (props) => props.column.id,
@@ -82,17 +88,10 @@ const columns: Array<ColumnDef<typeof _features, Person>> = [
 function App() {
   const [data, setData] = createSignal(makeData(1_000))
   const refreshData = () => setData(makeData(1_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = createTable({
-    _features,
-    _rowModels: {
-      facetedRowModel: createFacetedRowModel(),
-      facetedMinMaxValues: createFacetedMinMaxValues(),
-      facetedUniqueValues: createFacetedUniqueValues(),
-      filteredRowModel: createFilteredRowModel(filterFns),
-      paginatedRowModel: createPaginatedRowModel(),
-    },
+    features,
     get data() {
       return data()
     },
@@ -112,11 +111,11 @@ function App() {
     <div class="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <input
         class="summary-panel"
-        value={table.store.state.globalFilter ?? ''}
+        value={table.atoms.globalFilter.get() ?? ''}
         onInput={(e) =>
           globalFilterDebouncer.maybeExecute(e.currentTarget.value)
         }
@@ -200,7 +199,7 @@ function App() {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.store.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -210,7 +209,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            value={table.store.state.pagination.pageIndex + 1}
+            value={table.atoms.pagination.get().pageIndex + 1}
             onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
@@ -221,7 +220,7 @@ function App() {
           />
         </span>
         <select
-          value={table.store.state.pagination.pageSize}
+          value={table.atoms.pagination.get().pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.currentTarget.value))
           }}
@@ -235,7 +234,7 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.store.state, null, 2)}</pre>
+      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </div>
   )
 }

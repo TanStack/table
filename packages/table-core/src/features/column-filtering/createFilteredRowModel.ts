@@ -1,4 +1,4 @@
-import { tableMemo } from '../../utils'
+import { makeObjectMap, tableMemo } from '../../utils'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import {
   column_getCanGlobalFilter,
@@ -13,8 +13,6 @@ import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
 import type {
-  FilterFn,
-  FilterFns,
   ResolvedColumnFilter,
   Row_ColumnFiltering,
 } from './columnFilteringFeature.types'
@@ -23,16 +21,16 @@ import type {
  * Creates a memoized filtered row model factory.
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
+ *
+ * Register filter functions with the `filterFns` slot on the `features` option:
+ * `tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`.
  */
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(
-  filterFns: Record<keyof FilterFns, FilterFn<TFeatures, TData>>,
-): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
+>(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
-    const table: Table_Internal<TFeatures, TData> = _table
-    if (!table._rowModelFns.filterFns) table._rowModelFns.filterFns = filterFns
+    const table = _table as unknown as Table_Internal<TFeatures, TData>
     return tableMemo({
       feature: 'columnFilteringFeature',
       table,
@@ -57,11 +55,13 @@ function _createFilteredRowModel<
   const globalFilter = table.atoms.globalFilter?.get()
 
   if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
-    for (const row of rowModel.flatRows as Array<
+    const flatRows = rowModel.flatRows as Array<
       Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
-    >) {
-      row.columnFilters = {}
-      row.columnFiltersMeta = {}
+    >
+    for (let i = 0; i < flatRows.length; i++) {
+      const row = flatRows[i]!
+      row.columnFilters = makeObjectMap()
+      row.columnFiltersMeta = makeObjectMap()
     }
     return rowModel
   }
@@ -110,13 +110,17 @@ function _createFilteredRowModel<
   }
 
   // Flag the pre-filtered row model with each filter state
-  for (const row of rowModel.flatRows as Array<
+  const flatRows = rowModel.flatRows as Array<
     Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
-  >) {
-    row.columnFilters = {}
+  >
+  for (let i = 0; i < flatRows.length; i++) {
+    const row = flatRows[i]!
+    row.columnFilters = makeObjectMap()
+    row.columnFiltersMeta = makeObjectMap()
 
     if (resolvedColumnFilters.length) {
-      for (const currentColumnFilter of resolvedColumnFilters) {
+      for (let j = 0; j < resolvedColumnFilters.length; j++) {
+        const currentColumnFilter = resolvedColumnFilters[j]!
         const id = currentColumnFilter.id
 
         // Tag the row with the column filter state
@@ -125,16 +129,18 @@ function _createFilteredRowModel<
           id,
           currentColumnFilter.resolvedValue,
           (filterMeta) => {
-            !row.columnFiltersMeta
-              ? (row.columnFiltersMeta = {})
-              : (row.columnFiltersMeta[id] = filterMeta)
+            if (!row.columnFiltersMeta) {
+              row.columnFiltersMeta = makeObjectMap()
+            }
+            row.columnFiltersMeta[id] = filterMeta
           },
         )
       }
     }
 
     if (resolvedGlobalFilters.length) {
-      for (const currentGlobalFilter of resolvedGlobalFilters) {
+      for (let j = 0; j < resolvedGlobalFilters.length; j++) {
+        const currentGlobalFilter = resolvedGlobalFilters[j]!
         const id = currentGlobalFilter.id
         // Tag the row with the first truthy global filter state
         if (
@@ -143,9 +149,10 @@ function _createFilteredRowModel<
             id,
             currentGlobalFilter.resolvedValue,
             (filterMeta) => {
-              !row.columnFiltersMeta
-                ? (row.columnFiltersMeta = {})
-                : (row.columnFiltersMeta[id] = filterMeta)
+              if (!row.columnFiltersMeta) {
+                row.columnFiltersMeta = makeObjectMap()
+              }
+              row.columnFiltersMeta[id] = filterMeta
             },
           )
         ) {
@@ -164,8 +171,8 @@ function _createFilteredRowModel<
     row: Row<TFeatures, TData> & Row_ColumnFiltering<TFeatures, TData>,
   ) => {
     // Horizontally filter rows through each column
-    for (const columnId of filterableIds) {
-      if (row.columnFilters[columnId] === false) {
+    for (let i = 0; i < filterableIds.length; i++) {
+      if (row.columnFilters[filterableIds[i]!] === false) {
         return false
       }
     }

@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useReducer, useRef, useState } from 'preact/hooks'
+import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnFilteringFeature,
@@ -22,19 +22,23 @@ import type { Person } from './makeData'
 import type { Column, Table } from '@tanstack/preact-table'
 import './index.css'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function App() {
-  const rerender = useReducer(() => ({}), {})[1]
-
   const columns = useMemo(
     () =>
       columnHelper.columns([
@@ -117,13 +121,7 @@ function App() {
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {
-        expandedRowModel: createExpandedRowModel(),
-        filteredRowModel: createFilteredRowModel(filterFns),
-        paginatedRowModel: createPaginatedRowModel(),
-        sortedRowModel: createSortedRowModel(sortFns),
-      },
+      features,
       columns,
       data,
       getSubRows: (row) => row.subRows,
@@ -247,9 +245,7 @@ function App() {
         </select>
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <div>
-        <button onClick={() => rerender(0)}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )
@@ -259,8 +255,8 @@ function Filter({
   column,
   table,
 }: {
-  column: Column<typeof _features, Person>
-  table: Table<typeof _features, Person>
+  column: Column<typeof features, Person>
+  table: Table<typeof features, Person>
 }) {
   const firstValue = table
     .getPreFilteredRowModel()

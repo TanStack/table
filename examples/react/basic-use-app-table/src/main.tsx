@@ -1,6 +1,11 @@
 import * as React from 'react'
+import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import { createTableHook } from '@tanstack/react-table'
+import {
+  tableDevtoolsPlugin,
+  useTanStackTableDevtools,
+} from '@tanstack/react-table-devtools'
 import './index.css'
 
 // This example uses the new `createTableHook` method to create a re-usable table hook factory instead of independently using the standalone `useTable` hook and `createColumnHelper` method. You can choose to use either way.
@@ -53,8 +58,7 @@ const defaultData: Array<Person> = [
 
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {},
-  _rowModels: {}, // client-side row models. `Core` row model is now included by default, but you can still override it here
+  features: {},
   debugTable: true,
 })
 
@@ -99,12 +103,12 @@ const columns = columnHelper.columns([
 function App() {
   // 6. Store data with a stable reference
   const [data, _setData] = React.useState(() => [...defaultData])
-  const rerender = React.useReducer(() => ({}), {})[1]
 
   // 7. Create the table instance with the required columns and data.
   // Features and row models are already defined in the createTableHook call above
   const table = useAppTable(
     {
+      key: 'basic-use-app-table', // needed for devtools
       debugTable: true,
       columns,
       data,
@@ -112,6 +116,8 @@ function App() {
     },
     (state) => state, // default selector
   )
+
+  useTanStackTableDevtools(table)
 
   // 8. Render your table markup from the table instance APIs
   return (
@@ -156,9 +162,6 @@ function App() {
         </tfoot>
       </table>
       <div className="spacer-md" />
-      <button onClick={() => rerender()} className="demo-button">
-        Rerender
-      </button>
     </div>
   )
 }
@@ -169,5 +172,6 @@ if (!rootElement) throw new Error('Failed to find the root element')
 ReactDOM.createRoot(rootElement).render(
   <React.StrictMode>
     <App />
+    <TanStackDevtools plugins={[tableDevtoolsPlugin()]} />
   </React.StrictMode>,
 )

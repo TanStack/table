@@ -1,17 +1,22 @@
 import {
-  batch,
   createMemo,
   createSignal,
   observable,
   runWithOwner,
   untrack,
 } from 'solid-js'
+import { batch } from '@tanstack/store'
+import type {
+  Atom,
+  Observer,
+  ReadonlyAtom,
+  Subscription,
+} from '@tanstack/store'
 import type { Accessor, Owner, Setter } from 'solid-js'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
-import type { Atom, Observer, ReadonlyAtom } from '@tanstack/solid-store'
 
 function signalToReadonlyAtom<T>(
   signal: Accessor<T>,
@@ -46,13 +51,24 @@ function signalToWritableAtom<T>(
 /**
  * Creates the table-core reactivity bindings used by the Solid adapter.
  *
- * Readonly table atoms are backed by Solid memos and writable table atoms are
- * backed by Solid signals. Subscriptions run with the captured owner so table
- * APIs can safely participate in Solid computations.
+ * Table state atoms are backed by TanStack Store atoms. The options store stays
+ * framework-native because row-model APIs read `table.options` directly during
+ * render. Readonly table atoms bridge Store dependency tracking into Solid memos.
  */
 export function solidReactivity(owner: Owner): TableReactivityBindings {
+  const subscriptions = new Set<Subscription>()
+
   return {
     createOptionsStore: true,
+    wrapExternalAtoms: true,
+    addSubscription: (subscription) => {
+      subscriptions.add(subscription)
+    },
+    unmount: () => {
+      subscriptions.forEach((s) => s.unsubscribe())
+      subscriptions.clear()
+    },
+    schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
       const signal = createMemo(() => fn(), {
         equals: options?.compare,

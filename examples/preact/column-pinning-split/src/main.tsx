@@ -13,13 +13,13 @@ import {
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnVisibilityFeature,
   columnPinningFeature,
   columnOrderingFeature,
 })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 const defaultColumns = columnHelper.columns([
   columnHelper.group({
     header: 'Name',
@@ -71,12 +71,11 @@ function App() {
   const [columns] = useState(() => [...defaultColumns])
 
   const refreshData = () => setData(() => makeData(1_000))
-  const stressTest = () => setData(() => makeData(500_000))
+  const stressTest = () => setData(() => makeData(1_000_000))
 
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       data,
       debugTable: true,
@@ -132,7 +131,7 @@ function App() {
           onClick={() => stressTest()}
           className="demo-button demo-button-sm"
         >
-          Stress Test (500k rows)
+          Stress Test (1M rows)
         </button>
         <button
           onClick={() => randomizeColumns()}

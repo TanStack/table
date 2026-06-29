@@ -6,9 +6,9 @@ title: coreTablesFeature
 # Variable: coreTablesFeature
 
 ```ts
-const coreTablesFeature: TableFeature<CoreTablesFeatureConstructors<TableFeatures, RowData>>;
+const coreTablesFeature: TableFeature;
 ```
 
-Defined in: [core/table/coreTablesFeature.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.ts#L41)
+Defined in: [core/table/coreTablesFeature.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.ts#L8)
 
-The Core Tables feature provides the core table functionality for handling state and options.
+Core feature that adds base table instance APIs such as reset and setOptions.

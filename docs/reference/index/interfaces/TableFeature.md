@@ -3,120 +3,390 @@ id: TableFeature
 title: TableFeature
 ---
 
-# Interface: TableFeature\<TConstructors\>
+# Interface: TableFeature
 
-Defined in: [types/TableFeatures.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L116)
+Defined in: [types/TableFeatures.ts:308](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L308)
 
-## Type Parameters
+Lifecycle hooks and defaults contributed by a table feature.
 
-### TConstructors
-
-`TConstructors` *extends* [`FeatureConstructors`](FeatureConstructors.md)
+Feature objects are registered in the table's `features` option. They can
+contribute default state/options, default column definitions, table APIs,
+shared prototype APIs for rows/columns/headers/cells, and per-instance row
+or column data.
 
 ## Properties
 
-### assignCellPrototype?
+### assignCellPrototype()?
 
 ```ts
-optional assignCellPrototype: AssignCellPrototype<TConstructors>;
+optional assignCellPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L121)
+Defined in: [types/TableFeatures.ts:317](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L317)
 
-Assigns Cell APIs to the cell prototype for memory-efficient method sharing.
-This is called once per table to build a shared prototype for all cells.
+Adds feature methods to the shared cell prototype for a table.
+
+This runs lazily the first time a cell is constructed for a table. Methods
+assigned here are shared by every cell instance created by that table, so
+this hook should be used for APIs and memoized methods rather than
+per-cell mutable data.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### prototype
+
+`Record`\<`string`, `any`\>
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`
 
 ***
 
-### assignColumnPrototype?
+### assignColumnPrototype()?
 
 ```ts
-optional assignColumnPrototype: AssignColumnPrototype<TConstructors>;
+optional assignColumnPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L126)
+Defined in: [types/TableFeatures.ts:332](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L332)
 
-Assigns Column APIs to the column prototype for memory-efficient method sharing.
-This is called once per table to build a shared prototype for all columns.
+Adds feature methods to the shared column prototype for a table.
+
+This runs lazily the first time a column is constructed for a table.
+Methods assigned here are shared by every column instance created by that
+table, so this hook should be used for APIs and memoized methods rather
+than per-column mutable data.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### prototype
+
+`Record`\<`string`, `any`\>
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`
 
 ***
 
-### assignHeaderPrototype?
+### assignHeaderPrototype()?
 
 ```ts
-optional assignHeaderPrototype: AssignHeaderPrototype<TConstructors>;
+optional assignHeaderPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L131)
+Defined in: [types/TableFeatures.ts:347](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L347)
 
-Assigns Header APIs to the header prototype for memory-efficient method sharing.
-This is called once per table to build a shared prototype for all headers.
+Adds feature methods to the shared header prototype for a table.
+
+This runs lazily the first time a header is constructed for a table.
+Methods assigned here are shared by every header instance created by that
+table, so this hook should be used for APIs and memoized methods rather
+than per-header mutable data.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### prototype
+
+`Record`\<`string`, `any`\>
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`
 
 ***
 
-### assignRowPrototype?
+### assignRowPrototype()?
 
 ```ts
-optional assignRowPrototype: AssignRowPrototype<TConstructors>;
+optional assignRowPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L136)
+Defined in: [types/TableFeatures.ts:362](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L362)
 
-Assigns Row APIs to the row prototype for memory-efficient method sharing.
-This is called once per table to build a shared prototype for all rows.
+Adds feature methods to the shared row prototype for a table.
+
+This runs lazily the first time a row is constructed for a table. Methods
+assigned here are shared by every row instance created by that table, so
+this hook should be used for APIs and memoized methods rather than per-row
+mutable data.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### prototype
+
+`Record`\<`string`, `any`\>
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`
 
 ***
 
-### constructTableAPIs?
+### constructTableAPIs()?
 
 ```ts
-optional constructTableAPIs: ConstructTableAPIs<TConstructors>;
+optional constructTableAPIs: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L141)
+Defined in: [types/TableFeatures.ts:374](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L374)
 
-Assigns Table APIs to the table instance.
-Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
+Adds feature APIs directly to the table instance.
+
+The table is a singleton, unlike rows, columns, headers, and cells, so
+table APIs are assigned directly instead of through a shared prototype.
+This runs while the table is being constructed, after options and initial
+state have been resolved.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`
 
 ***
 
-### getDefaultColumnDef?
+### getDefaultColumnDef()?
 
 ```ts
-optional getDefaultColumnDef: GetDefaultColumnDef<TConstructors>;
+optional getDefaultColumnDef: <TFeatures, TData, TValue>() => ColumnDefBase_All<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/TableFeatures.ts:142](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L142)
+Defined in: [types/TableFeatures.ts:384](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L384)
+
+Returns default column definition options contributed by this feature.
+
+These defaults are merged into the table's default column definition before
+`options.defaultColumn` and before each user-supplied column definition is
+resolved, so users can override values supplied here.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+##### TValue
+
+`TValue` *extends* `unknown` = `unknown`
+
+#### Returns
+
+[`ColumnDefBase_All`](../type-aliases/ColumnDefBase_All.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ***
 
-### getDefaultTableOptions?
+### getDefaultTableOptions()?
 
 ```ts
-optional getDefaultTableOptions: GetDefaultTableOptions<TConstructors>;
+optional getDefaultTableOptions: <TFeatures, TData>(table) => Partial<TableOptions_All<TFeatures, TData>>;
 ```
 
-Defined in: [types/TableFeatures.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L143)
+Defined in: [types/TableFeatures.ts:397](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L397)
+
+Returns default table options contributed by this feature.
+
+This runs while table options are being resolved. Use it for option
+defaults such as feature enablement flags and default state-updater
+callbacks. User-supplied table options take precedence over values returned
+here.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`Partial`\<[`TableOptions_All`](../type-aliases/TableOptions_All.md)\<`TFeatures`, `TData`\>\>
 
 ***
 
-### getInitialState?
+### getInitialState()?
 
 ```ts
-optional getInitialState: GetInitialState<TConstructors>;
+optional getInitialState: (initialState) => TableState_All;
 ```
 
-Defined in: [types/TableFeatures.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L144)
+Defined in: [types/TableFeatures.ts:411](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L411)
+
+Returns this feature's initial table state.
+
+The incoming `initialState` contains state accumulated from earlier
+features and user-provided initial state. Return a complete state object
+for this feature, preserving `initialState` so user-provided values can
+override feature defaults.
+
+#### Parameters
+
+##### initialState
+
+`Partial`\<[`TableState_All`](TableState_All.md)\>
+
+#### Returns
+
+[`TableState_All`](TableState_All.md)
 
 ***
 
-### initRowInstanceData?
+### initColumnInstanceData()?
 
 ```ts
-optional initRowInstanceData: InitRowInstanceData<TConstructors>;
+optional initColumnInstanceData: <TFeatures, TData, TValue>(column) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L149)
+Defined in: [types/TableFeatures.ts:420](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L420)
 
-Initializes instance-specific data on each row (e.g., caches).
-Methods should be assigned via assignRowPrototype instead.
+Initializes instance-specific data on each column.
+
+This runs for every constructed column after core column fields such as
+`id`, `depth`, `parent`, `columnDef`, and `columns` have been assigned.
+Use this for per-column mutable data, caches, or annotations. Shared
+methods should be assigned via `assignColumnPrototype` instead.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+##### TValue
+
+`TValue` *extends* `unknown` = `unknown`
+
+#### Parameters
+
+##### column
+
+[`Column`](../type-aliases/Column.md)\<`TFeatures`, `TData`, `TValue`\>
+
+#### Returns
+
+`void`
+
+***
+
+### initRowInstanceData()?
+
+```ts
+optional initRowInstanceData: <TFeatures, TData>(row) => void;
+```
+
+Defined in: [types/TableFeatures.ts:435](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L435)
+
+Initializes instance-specific data on each row.
+
+This runs for every constructed row after core row fields such as `id`,
+`index`, `depth`, `original`, `parentId`, and `subRows` have been assigned.
+Use this for per-row mutable data, caches, or annotations. Shared methods
+should be assigned via `assignRowPrototype` instead.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### row
+
+[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`

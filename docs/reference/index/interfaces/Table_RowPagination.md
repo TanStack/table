@@ -39,7 +39,7 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:48](https://g
 firstPage: () => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L80)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L83)
 
 Sets the page index to `0`.
 
@@ -57,7 +57,7 @@ getCanNextPage: () => boolean;
 
 Defined in: [features/row-pagination/rowPaginationFeature.types.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L52)
 
-Returns whether the table can go to the next page.
+Checks whether the current page index can move forward.
 
 #### Returns
 
@@ -73,7 +73,7 @@ getCanPreviousPage: () => boolean;
 
 Defined in: [features/row-pagination/rowPaginationFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L56)
 
-Returns whether the table can go to the previous page.
+Checks whether the current page index can move backward.
 
 #### Returns
 
@@ -87,9 +87,10 @@ Returns whether the table can go to the previous page.
 getPageCount: () => number;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L60)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L61)
 
-Returns the page count. If manually paginating or controlling the pagination state, this will come directly from the `options.pageCount` table option, otherwise it will be calculated from the table data using the total row count and current page size.
+Resolves the current page count from `options.pageCount` or row count and
+page size.
 
 #### Returns
 
@@ -103,9 +104,9 @@ Returns the page count. If manually paginating or controlling the pagination sta
 getPageOptions: () => number[];
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L68)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:71](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L71)
 
-Returns an array of page options (zero-index-based) for the current page size.
+Builds zero-based page indexes for the current page count.
 
 #### Returns
 
@@ -119,9 +120,11 @@ Returns an array of page options (zero-index-based) for the current page size.
 getRowCount: () => number;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L64)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L67)
 
-Returns the row count. If manually paginating or controlling the pagination state, this will come directly from the `options.rowCount` table option, otherwise it will be calculated from the table data.
+Resolves the row count used for pagination math.
+
+`options.rowCount` wins; otherwise the pre-paginated row model is counted.
 
 #### Returns
 
@@ -135,7 +138,7 @@ Returns the row count. If manually paginating or controlling the pagination stat
 lastPage: () => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L84)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L87)
 
 Sets the page index to the last page.
 
@@ -151,7 +154,7 @@ Sets the page index to the last page.
 nextPage: () => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:72](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L72)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L75)
 
 Increments the page index by one, if possible.
 
@@ -167,7 +170,7 @@ Increments the page index by one, if possible.
 previousPage: () => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L76)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L79)
 
 Decrements the page index by one, if possible.
 
@@ -183,9 +186,10 @@ Decrements the page index by one, if possible.
 resetPageIndex: (defaultState?) => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L88)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L92)
 
-Resets the page index to its initial state. If `defaultState` is `true`, the page index will be reset to `0` regardless of initial state.
+Resets `pagination.pageIndex` to initial state, or to `0` when
+`defaultState` is `true`.
 
 #### Parameters
 
@@ -205,9 +209,10 @@ Resets the page index to its initial state. If `defaultState` is `true`, the pag
 resetPageSize: (defaultState?) => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L92)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L97)
 
-Resets the page size to its initial state. If `defaultState` is `true`, the page size will be reset to `10` regardless of initial state.
+Resets `pagination.pageSize` to initial state, or to `10` when
+`defaultState` is `true`.
 
 #### Parameters
 
@@ -227,10 +232,12 @@ Resets the page size to its initial state. If `defaultState` is `true`, the page
 resetPagination: (defaultState?) => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L97)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L104)
 
-Resets pagination state to `initialState.pagination`. Pass `true` to reset
-to the feature default of `{ pageIndex: 0, pageSize: 10 }`.
+Resets `pagination` to `initialState.pagination`.
+
+Pass `true` to ignore initial state and reset to
+`{ pageIndex: 0, pageSize: 10 }`.
 
 #### Parameters
 
@@ -250,7 +257,7 @@ to the feature default of `{ pageIndex: 0, pageSize: 10 }`.
 setPageIndex: (updater) => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L101)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L108)
 
 Updates `pagination.pageIndex` using a value or updater.
 
@@ -272,7 +279,7 @@ Updates `pagination.pageIndex` using a value or updater.
 setPageSize: (updater) => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L105)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L112)
 
 Updates `pagination.pageSize` using a value or updater.
 
@@ -294,9 +301,9 @@ Updates `pagination.pageSize` using a value or updater.
 setPagination: (updater) => void;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L109)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L116)
 
-Sets pagination state using a value or updater.
+Updates pagination state with a next state or updater function.
 
 #### Parameters
 

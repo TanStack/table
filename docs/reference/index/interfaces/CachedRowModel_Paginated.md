@@ -5,7 +5,7 @@ title: CachedRowModel_Paginated
 
 # Interface: CachedRowModel\_Paginated\<TFeatures, TData\>
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L140)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L133)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:140](https://
 paginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L144)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L137)
 
 #### Returns
 

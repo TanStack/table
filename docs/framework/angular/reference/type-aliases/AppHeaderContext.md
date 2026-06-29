@@ -9,7 +9,7 @@ title: AppHeaderContext
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```
 
-Defined in: [helpers/createTableHook.ts:66](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L66)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:66](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L66)
 
 Enhanced HeaderContext with pre-bound header components.
 The `header` property includes the registered headerComponents.
@@ -40,7 +40,7 @@ The `header` property includes the registered headerComponents.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [helpers/createTableHook.ts:72](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L72)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:72](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L72)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [helpers/createTableHook.ts:72](https://github.com/TanStack/table/bl
 header: Header<TFeatures, TData, TValue> & THeaderComponents & object;
 ```
 
-Defined in: [helpers/createTableHook.ts:73](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L73)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:73](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L73)
 
 #### Type Declaration
 
@@ -72,4 +72,4 @@ FlexRender: () => unknown;
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [helpers/createTableHook.ts:75](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L75)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:75](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L75)

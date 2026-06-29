@@ -21,12 +21,18 @@ import { makeData } from './makeData'
 import type { Column, ColumnDef, Table } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   columnFilteringFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
   rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
+  filteredRowModel: createFilteredRowModel(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 function indeterminateCheckbox(options: {
@@ -46,8 +52,8 @@ function indeterminateCheckbox(options: {
 }
 
 function renderFilter(
-  column: Column<typeof _features, Person>,
-  table: Table<typeof _features, Person>,
+  column: Column<typeof features, Person>,
+  table: Table<typeof features, Person>,
 ) {
   const firstValue = table
     .getPreFilteredRowModel()
@@ -100,7 +106,7 @@ function renderFilter(
   `
 }
 
-const columns: Array<ColumnDef<typeof _features, Person>> = [
+const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'firstName',
     header: ({ table }) => html`
@@ -168,18 +174,12 @@ class LitTableExample extends LitElement {
   @state()
   private _data: Array<Person> = makeData(100, 5, 3)
 
-  private tableController = new TableController<typeof _features, Person>(this)
+  private tableController = new TableController<typeof features, Person>(this)
 
   protected render() {
     const table = this.tableController.table(
       {
-        _features,
-        _rowModels: {
-          expandedRowModel: createExpandedRowModel(),
-          filteredRowModel: createFilteredRowModel(filterFns),
-          paginatedRowModel: createPaginatedRowModel(),
-          sortedRowModel: createSortedRowModel(sortFns),
-        },
+        features,
         columns,
         data: this._data,
         getSubRows: (row) => row.subRows,
@@ -316,15 +316,6 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
-        <div>
-          <button
-            @click="${() => {
-              this._data = makeData(100, 5, 3)
-            }}"
-          >
-            Regenerate Data
-          </button>
-        </div>
         <pre>${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>

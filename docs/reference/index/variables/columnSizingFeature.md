@@ -6,13 +6,9 @@ title: columnSizingFeature
 # Variable: columnSizingFeature
 
 ```ts
-const columnSizingFeature: TableFeature<ColumnSizingFeatureConstructors<TableFeatures, RowData>>;
+const columnSizingFeature: TableFeature;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L154)
+Defined in: [features/column-sizing/columnSizingFeature.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L27)
 
-The stock column sizing feature.
-
-Register this feature to add column width state and table, header, and column
-APIs for reading and resetting sizes. Column drag resizing lives in
-`columnResizingFeature`.
+Feature that adds column sizing state, defaults, and size measurement APIs.

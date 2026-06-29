@@ -1,4 +1,4 @@
-import { useMemo, useReducer, useState } from 'preact/hooks'
+import { useMemo, useState } from 'preact/hooks'
 import { memo } from 'preact/compat'
 import { render } from 'preact'
 import {
@@ -12,7 +12,7 @@ import { makeData } from './makeData'
 import type { Table } from '@tanstack/preact-table'
 import './index.css'
 
-const _features = tableFeatures({ columnSizingFeature, columnResizingFeature })
+const features = tableFeatures({ columnSizingFeature, columnResizingFeature })
 
 type Person = {
   firstName: string
@@ -23,7 +23,7 @@ type Person = {
   progress: number
 }
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -71,12 +71,9 @@ function App() {
   const refreshData = () => setData(makeData(200))
   const stressTest = () => setData(makeData(2_000))
 
-  const rerender = useReducer(() => ({}), {})[1]
-
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       data,
       defaultColumn: {
@@ -134,9 +131,6 @@ function App() {
         />
       </label>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
       <pre style={{ minHeight: '10rem' }}>
         {JSON.stringify(table.state, null, 2)}
       </pre>
@@ -178,7 +172,7 @@ function App() {
             ))}
           </div>
           {/* When resizing any column we will render this special memoized version of our table body */}
-          {table.store.state.columnResizing.isResizingColumn && enableMemo ? (
+          {table.state.columnResizing.isResizingColumn && enableMemo ? (
             <MemoizedTableBody table={table} />
           ) : (
             <TableBody table={table} />
@@ -190,7 +184,7 @@ function App() {
 }
 
 // un-memoized normal table body component - see memoized version below
-function TableBody({ table }: { table: Table<typeof _features, Person> }) {
+function TableBody({ table }: { table: Table<typeof features, Person> }) {
   return (
     <div className="tbody">
       {table.getRowModel().rows.map((row) => (

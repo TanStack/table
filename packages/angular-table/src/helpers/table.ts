@@ -1,5 +1,5 @@
 import { Directive, InjectionToken, inject, input } from '@angular/core'
-import { RowData, TableFeatures, TableState } from '@tanstack/table-core'
+import { RowData, TableFeatures } from '@tanstack/table-core'
 import { AngularTable } from '../injectTable'
 import type { Signal } from '@angular/core'
 
@@ -9,7 +9,7 @@ import type { Signal } from '@angular/core'
  * This token is provided by the {@link TanStackTable} directive.
  */
 export const TanStackTableToken = new InjectionToken<
-  Signal<AngularTable<any, any>>
+  Signal<AngularTable<TableFeatures, RowData>>
 >('[TanStack Table] Table Context')
 
 /**
@@ -59,14 +59,13 @@ export const TanStackTableToken = new InjectionToken<
 export class TanStackTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected extends {} = TableState<TFeatures>,
 > {
   /**
    * The current TanStack Table instance.
    *
    * Provided as a required signal input so DI consumers always read the latest value.
    */
-  readonly table = input.required<AngularTable<TFeatures, TData, TSelected>>({
+  readonly table = input.required<AngularTable<TFeatures, TData>>({
     alias: 'tanStackTable',
   })
 }
@@ -81,7 +80,8 @@ export class TanStackTable<
 export function injectTableContext<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected extends {} = TableState<TFeatures>,
->(): Signal<AngularTable<TFeatures, TData, TSelected>> {
-  return inject(TanStackTableToken)
+>(): Signal<AngularTable<TFeatures, TData>> {
+  return inject(TanStackTableToken) as unknown as Signal<
+    AngularTable<TFeatures, TData>
+  >
 }

@@ -1,10 +1,10 @@
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
-import { useSelector } from '@tanstack/vue-store'
 import { defineComponent, h, inject, provide } from 'vue'
 import { FlexRender } from './FlexRender'
 import { mergeProxy } from './merge-proxy'
 import { useTable } from './useTable'
 import type { TableOptionsWithReactiveData, VueTable } from './useTable'
+import type { FlexRenderCell, FlexRenderHeader } from './FlexRender'
 import type { Component, InjectionKey, PropType, VNodeChild } from 'vue'
 import type {
   AccessorFn,
@@ -192,31 +192,22 @@ export type CreateTableHookOptions<
   headerComponents?: THeaderComponents
 }
 
-export interface AppTableProps<
-  TFeatures extends TableFeatures,
-  TSelected = unknown,
-> {
-  selector?: (state: TableState<TFeatures>) => TSelected
-}
+export interface AppTableProps {}
 
 export interface AppCellProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-  TSelected = unknown,
 > {
   cell: Cell<TFeatures, TData, TValue>
-  selector?: (state: TableState<TFeatures>) => TSelected
 }
 
 export interface AppHeaderProps<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
-  TSelected = unknown,
 > {
   header: Header<TFeatures, TData, TValue>
-  selector?: (state: TableState<TFeatures>) => TSelected
 }
 
 export type AppVueTable<
@@ -226,28 +217,99 @@ export type AppVueTable<
   TTableComponents extends Record<string, ComponentType<any>>,
   TCellComponents extends Record<string, ComponentType<any>>,
   THeaderComponents extends Record<string, ComponentType<any>>,
-> = VueTable<TFeatures, TData, TSelected> &
+> = VueTable<TFeatures, TData> &
   NoInfer<TTableComponents> & {
-    AppTable: Component<AppTableProps<TFeatures>>
+    AppTable: Component<AppTableProps>
     AppCell: Component<AppCellProps<TFeatures, TData>>
     AppHeader: Component<AppHeaderProps<TFeatures, TData>>
     AppFooter: Component<AppHeaderProps<TFeatures, TData>>
     FlexRender: typeof AppFlexRender
   }
 
+export interface CreateTableHookResult<
+  TFeatures extends TableFeatures,
+  TTableComponents extends Record<string, ComponentType<any>>,
+  TCellComponents extends Record<string, ComponentType<any>>,
+  THeaderComponents extends Record<string, ComponentType<any>>,
+> {
+  /** The features object that was passed to `createTableHook`. */
+  appFeatures: TFeatures
+  /**
+   * A column helper pre-bound to `TFeatures` and the registered components, so
+   * the cell/header/footer render props expose the bound components.
+   */
+  createAppColumnHelper: <TData extends RowData>() => AppColumnHelper<
+    TFeatures,
+    TData,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Creates a table with the `App*` wrapper components and registered
+   * `tableComponents` attached. `TData` is inferred from the `data` option.
+   */
+  useAppTable: <TData extends RowData>(
+    tableOptions: Omit<
+      TableOptionsWithReactiveData<TFeatures, TData>,
+      'features'
+    >,
+  ) => AppVueTable<
+    TFeatures,
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the table provided by the nearest `<table.AppTable>`. This is the same
+   * extended instance `useAppTable` returns, so the `App*` components and your
+   * `tableComponents` are available on it.
+   */
+  useTableContext: <TData extends RowData = RowData>() => AppVueTable<
+    TFeatures,
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
+  >
+  /**
+   * Reads the cell provided by the nearest `<table.AppCell>`, extended with your
+   * `cellComponents` and a context-bound `FlexRender`.
+   */
+  useCellContext: <TValue extends CellData = CellData>() => Cell<
+    TFeatures,
+    any,
+    TValue
+  > &
+    TCellComponents & { FlexRender: Component }
+  /**
+   * Reads the header provided by the nearest `<table.AppHeader>` /
+   * `<table.AppFooter>`, extended with your `headerComponents` and a
+   * context-bound `FlexRender`.
+   */
+  useHeaderContext: <TValue extends CellData = CellData>() => Header<
+    TFeatures,
+    any,
+    TValue
+  > &
+    THeaderComponents & { FlexRender: Component }
+}
+
 export const AppFlexRender = defineComponent({
   name: 'TableFlexRender',
   props: {
     cell: {
-      type: Object as PropType<Cell<any, any, any>>,
+      type: Object as PropType<FlexRenderCell>,
       default: undefined,
     },
     header: {
-      type: Object as PropType<Header<any, any, any>>,
+      type: Object as PropType<FlexRenderHeader>,
       default: undefined,
     },
     footer: {
-      type: Object as PropType<Header<any, any, any>>,
+      type: Object as PropType<FlexRenderHeader>,
       default: undefined,
     },
   },
@@ -289,8 +351,7 @@ export const AppFlexRender = defineComponent({
  * @example
  * ```ts
  * const { useAppTable, createAppColumnHelper } = createTableHook({
- *   _features,
- *   _rowModels: {},
+ *   features,
  *   tableComponents: {},
  *   cellComponents: {},
  *   headerComponents: {},
@@ -312,9 +373,14 @@ export function createTableHook<
   TTableComponents,
   TCellComponents,
   THeaderComponents
->) {
+>): CreateTableHookResult<
+  TFeatures,
+  TTableComponents,
+  TCellComponents,
+  THeaderComponents
+> {
   const TableContext = Symbol('TableContext') as InjectionKey<
-    VueTable<TFeatures, any, any>
+    VueTable<TFeatures, any>
   >
   const CellContext = Symbol('CellContext') as InjectionKey<
     Cell<TFeatures, any, any>
@@ -337,9 +403,13 @@ export function createTableHook<
     >
   }
 
-  function useTableContext<TData extends RowData = RowData>(): VueTable<
+  function useTableContext<TData extends RowData = RowData>(): AppVueTable<
     TFeatures,
-    TData
+    TData,
+    TableState<TFeatures>,
+    TTableComponents,
+    TCellComponents,
+    THeaderComponents
   > {
     const table = inject(TableContext)
 
@@ -350,14 +420,25 @@ export function createTableHook<
       )
     }
 
-    return table as VueTable<TFeatures, TData>
+    // The value provided by `<table.AppTable>` is the extended table (the App*
+    // wrapper components and `tableComponents` are Object.assign-ed onto the same
+    // instance `useAppTable` returns), so this asserts the runtime shape.
+    return table as unknown as AppVueTable<
+      TFeatures,
+      TData,
+      TableState<TFeatures>,
+      TTableComponents,
+      TCellComponents,
+      THeaderComponents
+    >
   }
 
   function useCellContext<TValue extends CellData = CellData>(): Cell<
     TFeatures,
     any,
     TValue
-  > {
+  > &
+    TCellComponents & { FlexRender: Component } {
     const cell = inject(CellContext)
 
     if (!cell) {
@@ -367,14 +448,18 @@ export function createTableHook<
       )
     }
 
-    return cell as Cell<TFeatures, any, TValue>
+    // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
+    // the same cell instance it provides, so this asserts the runtime shape.
+    return cell as unknown as Cell<TFeatures, any, TValue> &
+      TCellComponents & { FlexRender: Component }
   }
 
   function useHeaderContext<TValue extends CellData = CellData>(): Header<
     TFeatures,
     any,
     TValue
-  > {
+  > &
+    THeaderComponents & { FlexRender: Component } {
     const header = inject(HeaderContext)
 
     if (!header) {
@@ -383,7 +468,10 @@ export function createTableHook<
       )
     }
 
-    return header as Header<TFeatures, any, TValue>
+    // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
+    // and `FlexRender` onto the same header instance they provide.
+    return header as unknown as Header<TFeatures, any, TValue> &
+      THeaderComponents & { FlexRender: Component }
   }
 
   const CellFlexRender = defineComponent({
@@ -410,19 +498,15 @@ export function createTableHook<
     },
   })
 
-  function useAppTable<
-    TData extends RowData,
-    TSelected = TableState<TFeatures>,
-  >(
+  function useAppTable<TData extends RowData>(
     tableOptions: Omit<
       TableOptionsWithReactiveData<TFeatures, TData>,
-      '_features' | '_rowModels'
+      'features'
     >,
-    selector?: (state: TableState<TFeatures>) => TSelected,
   ): AppVueTable<
     TFeatures,
     TData,
-    TSelected,
+    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -432,28 +516,14 @@ export function createTableHook<
       tableOptions,
     ) as TableOptionsWithReactiveData<TFeatures, TData>
 
-    const table = useTable<TFeatures, TData, TSelected>(mergedOptions, selector)
+    const table = useTable<TFeatures, TData>(mergedOptions)
 
     const AppTable = defineComponent({
       name: 'AppTable',
-      props: {
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
-      },
-      setup(props, { slots }) {
+      setup(_, { slots }) {
         provide(TableContext, table)
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
-
         return () => {
-          if (!props.selector) {
-            return slots.default?.()
-          }
-
-          return slots.default?.({ state: selected?.value })
+          return slots.default?.()
         }
       },
     })
@@ -465,19 +535,11 @@ export function createTableHook<
           type: Object as PropType<object>,
           required: true,
         },
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
       },
       setup(props, { slots }) {
         const cell = props.cell as Cell<TFeatures, TData, any>
 
         provide(CellContext, cell)
-
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
 
         const extendedCell = Object.assign(cell, {
           FlexRender: CellFlexRender,
@@ -486,11 +548,7 @@ export function createTableHook<
           TCellComponents & { FlexRender: Component }
 
         return () => {
-          return slots.default?.(
-            props.selector
-              ? { cell: extendedCell, state: selected?.value }
-              : { cell: extendedCell },
-          )
+          return slots.default?.({ cell: extendedCell })
         }
       },
     })
@@ -502,19 +560,11 @@ export function createTableHook<
           type: Object as PropType<object>,
           required: true,
         },
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
       },
       setup(props, { slots }) {
         const header = props.header as Header<TFeatures, TData, any>
 
         provide(HeaderContext, header)
-
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
 
         const extendedHeader = Object.assign(header, {
           FlexRender: HeaderFlexRender,
@@ -523,11 +573,7 @@ export function createTableHook<
           THeaderComponents & { FlexRender: Component }
 
         return () => {
-          return slots.default?.(
-            props.selector
-              ? { header: extendedHeader, state: selected?.value }
-              : { header: extendedHeader },
-          )
+          return slots.default?.({ header: extendedHeader })
         }
       },
     })
@@ -539,19 +585,11 @@ export function createTableHook<
           type: Object as PropType<object>,
           required: true,
         },
-        selector: {
-          type: Function as PropType<(state: TableState<TFeatures>) => unknown>,
-          default: undefined,
-        },
       },
       setup(props, { slots }) {
         const header = props.header as Header<TFeatures, TData, any>
 
         provide(HeaderContext, header)
-
-        const selected = props.selector
-          ? useSelector(table.store, props.selector)
-          : undefined
 
         const extendedHeader = Object.assign(header, {
           FlexRender: FooterFlexRender,
@@ -560,11 +598,7 @@ export function createTableHook<
           THeaderComponents & { FlexRender: Component }
 
         return () => {
-          return slots.default?.(
-            props.selector
-              ? { header: extendedHeader, state: selected?.value }
-              : { header: extendedHeader },
-          )
+          return slots.default?.({ header: extendedHeader })
         }
       },
     })
@@ -579,7 +613,7 @@ export function createTableHook<
     }) as AppVueTable<
       TFeatures,
       TData,
-      TSelected,
+      TableState<TFeatures>,
       TTableComponents,
       TCellComponents,
       THeaderComponents
@@ -587,7 +621,9 @@ export function createTableHook<
   }
 
   return {
-    appFeatures: defaultTableOptions._features as TFeatures,
+    // `TableOptionsWithReactiveData` widens `features` to allow a reactive ref,
+    // so this narrows it back to the resolved `TFeatures` for `appFeatures`.
+    appFeatures: defaultTableOptions.features as TFeatures,
     createAppColumnHelper,
     useAppTable,
     useTableContext,

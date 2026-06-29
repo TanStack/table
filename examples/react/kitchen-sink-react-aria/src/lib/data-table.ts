@@ -13,52 +13,21 @@ import type {
   ExtendedColumnFilter,
   FilterOperator,
   JoinOperator,
-  TableFilterFeatures,
 } from '@/types'
-import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type {
-  FilterFn,
-  Row,
-  RowData,
-  TableFeatures,
-} from '@tanstack/react-table'
+import type { FilterFn } from '@tanstack/react-table'
+import type { features } from '../main'
 
-/**
- * Fuzzy filter using @tanstack/match-sorter-utils. Used as the global filter
- * (`globalFilterFn: 'fuzzy'`) in the kitchen-sink example so the toolbar
- * search ranks rows by best match across all columns.
- *
- * Mirrors the canonical pattern from `examples/react/filters-fuzzy`. Written
- * as a plain function (not a typed const) so it stays generic over TFeatures
- * and TData and can be slotted into any `createFilteredRowModel({...})`
- * registration without narrowing inference.
- */
-export function fuzzyFilter<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  value: string,
-  addMeta?: (meta: { itemRank: RankingInfo }) => void,
-): boolean {
-  // Rank the item
+export const fuzzyFilter: FilterFn<typeof features, any> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
   const itemRank = rankItem(row.getValue(columnId), value)
 
-  // Store the itemRank info so a fuzzy sort function (if any) could reuse it
   addMeta?.({ itemRank })
 
-  // Return whether the item should be filtered in/out
   return itemRank.passed
-}
-
-declare module '@tanstack/react-table' {
-  interface FilterFns {
-    fuzzy: FilterFn<TableFeatures, RowData>
-  }
-  interface FilterMeta {
-    itemRank?: RankingInfo
-  }
 }
 
 function isFalsy(val: unknown) {
@@ -91,11 +60,8 @@ function isSameDay(date1: Date, date2: Date): boolean {
   return date1Str === date2Str
 }
 
-const filterFn_enhancedEquals: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_enhancedEquals: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -119,11 +85,8 @@ const filterFn_enhancedEquals: FilterFn<any, any> = <
 
 filterFn_enhancedEquals.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedGreaterThan: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_enhancedGreaterThan: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -143,14 +106,7 @@ const filterFn_enhancedGreaterThan: FilterFn<any, any> = <
 
 filterFn_enhancedGreaterThan.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: unknown,
-) => {
+const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<typeof features, any> = (row, columnId: string, filterValue: unknown) => {
   const rowValue = row.getValue(columnId)
 
   if (isValidDate(rowValue) && isValidDate(filterValue)) {
@@ -168,11 +124,8 @@ const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<any, any> = <
 filterFn_enhancedGreaterThanOrEqualTo.resolveFilterValue = (val: any) =>
   isFalsy(val)
 
-const filterFn_enhancedLessThan: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_enhancedLessThan: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -192,11 +145,8 @@ const filterFn_enhancedLessThan: FilterFn<any, any> = <
 
 filterFn_enhancedLessThan.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedLessThanOrEqualTo: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_enhancedLessThanOrEqualTo: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -217,11 +167,8 @@ const filterFn_enhancedLessThanOrEqualTo: FilterFn<any, any> = <
 filterFn_enhancedLessThanOrEqualTo.resolveFilterValue = (val: any) =>
   isFalsy(val)
 
-const filterFn_startsWith: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_startsWith: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: string,
 ) => {
@@ -231,11 +178,8 @@ const filterFn_startsWith: FilterFn<any, any> = <
 
 filterFn_startsWith.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_endsWith: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_endsWith: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: string,
 ) => {
@@ -245,11 +189,8 @@ const filterFn_endsWith: FilterFn<any, any> = <
 
 filterFn_endsWith.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_isEmpty: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_isEmpty: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
 ) => {
   const value = row.getValue(columnId)
@@ -263,11 +204,8 @@ const filterFn_isEmpty: FilterFn<any, any> = <
 
 filterFn_isEmpty.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_inBetween: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_inBetween: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -308,11 +246,8 @@ const filterFn_inBetween: FilterFn<any, any> = <
 
 filterFn_inBetween.autoRemove = (val: any) => isFalsy(val)
 
-const filterFn_isRelativeToToday: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
+const filterFn_isRelativeToToday: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -354,11 +289,8 @@ const filterFn_isRelativeToToday: FilterFn<any, any> = <
 
 filterFn_isRelativeToToday.autoRemove = (val: any) => isFalsy(val)
 
-export const dynamicFilterFn: FilterFn<any, any> = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TableFilterFeatures<TFeatures>, TData>,
+export const dynamicFilterFn: FilterFn<typeof features, any> = (
+  row,
   columnId: string,
   filterValue: unknown,
 ) => {
@@ -367,7 +299,9 @@ export const dynamicFilterFn: FilterFn<any, any> = <
   let joinOperator: JoinOperator = 'and'
 
   const filters: Array<ExtendedColumnFilter> =
-    row.table.store.state.columnFilters.filter((f) => f.id === columnId)
+    row.table.store.state.columnFilters.filter(
+      (f: ExtendedColumnFilter) => f.id === columnId,
+    )
 
   if (!filters.length) return true
 

@@ -32,26 +32,25 @@ A table instance has a few state surfaces:
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
 - `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
 
-For vanilla or non-framework use, pass `storeReactivityBindings()` through the table's `coreReativityFeature`. Table APIs that call atom `.get()` read current values synchronously. UI updates are your responsibility; subscribe to atoms or `table.store` and redraw as needed.
+For vanilla or non-framework use, pass `storeReactivityBindings()` through the table's `coreReactivityFeature`. Table APIs that call atom `.get()` read current values synchronously. UI updates are your responsibility; subscribe to atoms or `table.store` and redraw as needed.
 
 ### Feature-based State
 
-State slices are only created for the features that are registered in `_features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
+State slices are only created for the features that are registered in `features`. This keeps TanStack Table tree-shakeable and gives TypeScript more accurate state inference.
 
 ```ts
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
 })
 
 const table = constructTable({
-  _features: {
-    coreReativityFeature: storeReactivityBindings(),
-    ..._features,
-  },
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
+  features: {
+    coreReactivityFeature: storeReactivityBindings(),
+    ...features,
   },
   columns,
   data,
@@ -63,7 +62,7 @@ table.atoms.sorting.get()
 // table.atoms.rowSelection // TypeScript error unless rowSelectionFeature is registered
 ```
 
-If `_features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `initialState`, `state`, or `atoms`.
+If `features` does not include a feature, its state should not be available in `table.atoms`, `table.store.state`, `initialState`, `state`, or `atoms`.
 
 ### Accessing Table State
 
@@ -147,13 +146,9 @@ If you only need to customize the starting value for some table state, use `init
 
 ```ts
 const table = constructTable({
-  _features: {
-    coreReativityFeature: storeReactivityBindings(),
-    ..._features,
-  },
-  _rowModels: {
-    sortedRowModel: createSortedRowModel(sortFns),
-    paginatedRowModel: createPaginatedRowModel(),
+  features: {
+    coreReactivityFeature: storeReactivityBindings(),
+    ...features,
   },
   columns,
   data,
@@ -204,7 +199,7 @@ import {
 } from '@tanstack/table-core'
 import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
 })
 
@@ -214,11 +209,10 @@ const paginationAtom = createAtom<PaginationState>({
 })
 
 const table = constructTable({
-  _features: {
-    coreReativityFeature: storeReactivityBindings(),
-    ..._features,
+  features: {
+    coreReactivityFeature: storeReactivityBindings(),
+    ...features,
   },
-  _rowModels: {},
   columns,
   data,
   atoms: {
@@ -239,18 +233,20 @@ When using the `atoms` option for a slice, you do not need to add the matching `
 The classic `state` plus `on[State]Change` pattern is still supported. This can be convenient when you already have a plain external state object, but it is less atomic than external atoms.
 
 ```ts
+const features = tableFeatures({
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
+
 let pagination: PaginationState = {
   pageIndex: 0,
   pageSize: 10,
 }
 
 const table = constructTable({
-  _features: {
-    coreReativityFeature: storeReactivityBindings(),
-    ..._features,
-  },
-  _rowModels: {
-    paginatedRowModel: createPaginatedRowModel(),
+  features: {
+    coreReactivityFeature: storeReactivityBindings(),
+    ...features,
   },
   columns,
   data,
@@ -306,8 +302,8 @@ let sorting: SortingState = [
 ]
 ```
 
-`TableState<typeof _features>` is inferred from the features registered on that table:
+`TableState<typeof features>` is inferred from the features registered on that table:
 
 ```ts
-type MyTableState = TableState<typeof _features>
+type MyTableState = TableState<typeof features>
 ```

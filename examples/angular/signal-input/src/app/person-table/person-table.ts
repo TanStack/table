@@ -10,9 +10,10 @@ import {
 import type { ColumnDef, PaginationState } from '@tanstack/angular-table'
 import type { Person } from '../makeData'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   rowPaginationFeature,
   columnVisibilityFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
 @Component({
@@ -26,7 +27,7 @@ export class PersonTable {
 
   readonly pagination = model.required<PaginationState>()
 
-  readonly columns: Array<ColumnDef<typeof _features, Person>> = [
+  readonly columns: Array<ColumnDef<typeof features, Person>> = [
     {
       accessorKey: 'firstName',
       header: 'First Name',
@@ -42,10 +43,7 @@ export class PersonTable {
 
   readonly table = injectTable(() => {
     return {
-      _features,
-      _rowModels: {
-        paginatedRowModel: createPaginatedRowModel<typeof _features, Person>(),
-      },
+      features,
       data: this.data(),
       columns: this.columns,
       state: {

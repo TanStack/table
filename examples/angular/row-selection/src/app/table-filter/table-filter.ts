@@ -1,6 +1,8 @@
 import { Component, computed, input } from '@angular/core'
 import { injectTableContext } from '../table'
 import type { Column } from '@tanstack/angular-table'
+import type { features } from '../table'
+import type { Person } from '../makeData'
 
 @Component({
   selector: 'app-table-filter',
@@ -40,7 +42,7 @@ import type { Column } from '@tanstack/angular-table'
   standalone: true,
 })
 export class TableFilter {
-  readonly column = input.required<Column<any, any, any>>()
+  readonly column = input.required<Column<typeof features, Person, unknown>>()
   readonly table = injectTableContext()
 
   readonly columnType = computed(() => {
@@ -50,14 +52,19 @@ export class TableFilter {
   })
 
   getMinValue() {
-    const minValue = this.column().getFilterValue()
+    const minValue = this.column().getFilterValue() as
+      | [string | undefined, string | undefined]
+      | undefined
 
-    return (minValue?.[0] ?? '') as string
+    return minValue?.[0] ?? ''
   }
 
   getMaxValue() {
-    const maxValue = this.column().getFilterValue()
-    return (maxValue?.[1] ?? '') as string
+    const maxValue = this.column().getFilterValue() as
+      | [string | undefined, string | undefined]
+      | undefined
+
+    return maxValue?.[1] ?? ''
   }
 
   updateMinFilterValue(newValue: string): void {

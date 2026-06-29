@@ -5,9 +5,9 @@ import { storeReactivityBindings } from '../../../../src/store-reactivity-bindin
 describe('constructTable with stockFeatures', () => {
   it('should include all feature states in initial state', () => {
     const table = constructTable({
-      _features: {
+      features: {
         ...stockFeatures,
-        coreReativityFeature: storeReactivityBindings(),
+        coreReactivityFeature: storeReactivityBindings(),
       },
       columns: [],
       data: [],
@@ -35,8 +35,8 @@ describe('constructTable with stockFeatures', () => {
     expect(table.atoms.columnPinning).toBeDefined()
 
     // Defaults
-    expect(table.atoms.columnFilters.get()).toEqual([])
-    expect(table.atoms.columnOrder.get()).toEqual([])
-    expect(table.atoms.grouping.get()).toEqual([])
+    expect(table.atoms.columnFilters!.get()).toEqual([])
+    expect(table.atoms.columnOrder!.get()).toEqual([])
+    expect(table.atoms.grouping!.get()).toEqual([])
   })
 })

@@ -15,11 +15,16 @@
   import type { Person } from './makeData'
   import './index.css'
 
-  const _features = tableFeatures({ columnSizingFeature, rowSortingFeature })
+  const features = tableFeatures({
+    columnSizingFeature,
+    rowSortingFeature,
+    sortedRowModel: createSortedRowModel(),
+    sortFns,
+  })
 
   // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
   // See https://tanstack.com/virtual/v3/docs/examples/svelte/table for a simpler fixed row height example.
-  const columns: Array<ColumnDef<typeof _features, Person>> = [
+  const columns: Array<ColumnDef<typeof features, Person>> = [
     {
       accessorKey: 'id',
       header: 'ID',
@@ -67,8 +72,7 @@
   const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createTable({
-    _features,
-    _rowModels: { sortedRowModel: createSortedRowModel(sortFns) },
+    features,
     columns,
     get data() {
       return data

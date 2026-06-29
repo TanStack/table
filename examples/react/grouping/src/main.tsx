@@ -22,27 +22,26 @@ import type { Person } from './makeData'
 
 // this example happens to use the createTableHook pattern, but it is not required
 const { useAppTable, createAppColumnHelper } = createTableHook({
-  _features: {
+  features: {
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,
     rowPaginationFeature,
     rowSortingFeature,
-  },
-  _rowModels: {
     expandedRowModel: createExpandedRowModel(),
-    filteredRowModel: createFilteredRowModel(filterFns),
-    groupedRowModel: createGroupedRowModel(aggregationFns),
+    filteredRowModel: createFilteredRowModel(),
+    groupedRowModel: createGroupedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    sortedRowModel: createSortedRowModel(sortFns),
+    sortedRowModel: createSortedRowModel(),
+    filterFns,
+    sortFns,
+    aggregationFns,
   },
 })
 
 const columnHelper = createAppColumnHelper<Person>()
 
 function App() {
-  const rerender = React.useReducer(() => ({}), {})[1]
-
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
@@ -248,9 +247,7 @@ function App() {
         </select>
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-      <div>
-        <button onClick={() => rerender()}>Force Rerender</button>
-      </div>
+      <div></div>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

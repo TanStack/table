@@ -1,0 +1,114 @@
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (1M rows)
+  </button>
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              <div>
+                @if (!header.isPlaceholder) {
+                  <ng-container *flexRenderHeader="header; let headerCell">{{
+                    headerCell
+                  }}</ng-container>
+                }
+              </div>
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td>
+              <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (footer of footerGroup.headers; track footer.id) {
+            <th [attr.colSpan]="footer.colSpan">
+              @if (!footer.isPlaceholder) {
+                <ng-container *flexRenderFooter="footer; let footerCell">{{
+                  footerCell
+                }}</ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+  <div class="spacer-sm"></div>
+
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.firstPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;&lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.previousPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.nextPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.lastPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;&gt;
+    </button>
+    <span class="inline-controls"
+      ><div>Page</div>
+      <strong
+        >{{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}</strong
+      ></span
+    >
+    <span class="inline-controls"
+      >| Go to page:
+      <input
+        type="number"
+        min="1"
+        [max]="table.getPageCount()"
+        [value]="table.atoms.pagination.get().pageIndex + 1"
+        (input)="onPageInputChange($event)"
+        class="page-size-input"
+    /></span>
+    <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
+      @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+        <option [value]="pageSize">Show {{ pageSize }}</option>
+      }
+    </select>
+  </div>
+
+  <div>
+    Showing {{ table.getRowModel().rows.length.toLocaleString() }} of
+    {{ table.getRowCount().toLocaleString() }} Rows
+  </div>
+  <pre>{{ stringifiedState() }}</pre>
+</div>
+<hr />
+<div></div>

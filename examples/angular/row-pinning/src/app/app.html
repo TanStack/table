@@ -1,0 +1,123 @@
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (200k rows)
+  </button>
+  <label
+    ><input
+      type="checkbox"
+      [checked]="keepPinnedRows()"
+      (change)="keepPinnedRows.set($any($event.target).checked)"
+    />
+    Keep pinned rows</label
+  >
+  <label
+    ><input
+      type="checkbox"
+      [checked]="includeLeafRows()"
+      (change)="includeLeafRows.set($any($event.target).checked)"
+    />
+    Include leaf rows</label
+  >
+  <label
+    ><input
+      type="checkbox"
+      [checked]="includeParentRows()"
+      (change)="includeParentRows.set($any($event.target).checked)"
+    />
+    Include parent rows</label
+  >
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (!header.isPlaceholder) {
+                <ng-container *flexRenderHeader="header; let headerCell">{{
+                  headerCell
+                }}</ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td>
+              @if (cell.column.id === 'pin') {
+                @if (row.getIsPinned()) {
+                  <button (click)="row.pin(false, includeLeafRows(), includeParentRows())">
+                    x
+                  </button>
+                } @else {
+                  <button (click)="row.pin('top', includeLeafRows(), includeParentRows())">
+                    Top</button
+                  ><button (click)="row.pin('bottom', includeLeafRows(), includeParentRows())">
+                    Bottom
+                  </button>
+                }
+              } @else if (cell.column.id === 'firstName') {
+                <div [style.padding-left.rem]="row.depth * 2">
+                  <!-- Since rows are flattened by default, use row.depth and padding-left to visually indicate row depth. -->
+                  @if (row.getCanExpand()) {
+                    <button (click)="row.getToggleExpandedHandler()()">
+                      {{ row.getIsExpanded() ? 'v' : '>' }}
+                    </button>
+                  } @else {
+                    .
+                  }
+                  <ng-container *flexRenderCell="cell; let renderCell">{{
+                    renderCell
+                  }}</ng-container>
+                </div>
+              } @else {
+                <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.firstPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;&lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.previousPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.nextPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.lastPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;&gt;
+    </button>
+    <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
+      @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+        <option [value]="pageSize">Show {{ pageSize }}</option>
+      }
+    </select>
+  </div>
+  <pre>{{ stringifiedState() }}</pre>
+</div>

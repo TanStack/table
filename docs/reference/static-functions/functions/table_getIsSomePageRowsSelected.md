@@ -9,11 +9,9 @@ title: table_getIsSomePageRowsSelected
 function table_getIsSomePageRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:335](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L335)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:412](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L412)
 
-Returns is some page rows selected for the table.
-
-This reads the relevant table atoms, options, and row-model cache to derive the current table-level value.
+Checks whether the current page has a partial selection.
 
 ## Type Parameters
 
@@ -29,7 +27,7 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 
@@ -38,5 +36,5 @@ This reads the relevant table atoms, options, and row-model cache to derive the 
 ## Example
 
 ```ts
-const value = table_getIsSomePageRowsSelected(table)
+const somePageRowsSelected = table_getIsSomePageRowsSelected(table)
 ```

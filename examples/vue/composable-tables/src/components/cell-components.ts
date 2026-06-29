@@ -1,5 +1,27 @@
 import { defineComponent, h } from 'vue'
 import { useCellContext } from '../hooks/table'
+import IndeterminateCheckbox from './IndeterminateCheckbox.vue'
+
+// Row-selection checkbox cell - toggles selection for the current row.
+// Vue tracks the reactive table state natively, so no Subscribe boundary is
+// needed for the checkbox to update when the row-selection state changes.
+export const SelectCell = defineComponent({
+  name: 'SelectCell',
+  setup() {
+    const cell = useCellContext()
+    return () => {
+      const row = cell.row
+      return h('div', { class: 'column-toggle-row' }, [
+        h(IndeterminateCheckbox, {
+          checked: row.getIsSelected(),
+          disabled: !row.getCanSelect(),
+          indeterminate: row.getIsSomeSelected(),
+          onChange: row.getToggleSelectedHandler(),
+        }),
+      ])
+    }
+  },
+})
 
 export const TextCell = defineComponent({
   name: 'TextCell',

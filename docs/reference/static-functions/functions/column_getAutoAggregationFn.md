@@ -11,11 +11,12 @@ function column_getAutoAggregationFn<TFeatures, TData, TValue>(column):
   | undefined;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L145)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L149)
 
-Infers aggregation fn for a column.
+Chooses a built-in aggregation function from the first core row value.
 
-The inference uses the column definition, table options, and sampled row values when needed.
+Numeric columns default to `sum`, date-like values default to `extent`, and
+other value types leave aggregation unspecified.
 
 ## Type Parameters
 
@@ -35,7 +36,7 @@ The inference uses the column definition, table options, and sampled row values 
 
 ### column
 
-[`Column_Internal`](../../index/type-aliases/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
+[`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
 ## Returns
 
@@ -45,5 +46,5 @@ The inference uses the column definition, table options, and sampled row values 
 ## Example
 
 ```ts
-const value = column_getAutoAggregationFn(column)
+const aggregationFn = column_getAutoAggregationFn(column)
 ```

@@ -10,7 +10,6 @@ import {
   column_getToggleVisibilityHandler,
   column_toggleVisibility,
   getDefaultColumnVisibilityState,
-  row_getAllVisibleCells,
   row_getVisibleCells,
   table_getIsAllColumnsVisible,
   table_getIsSomeColumnsVisible,
@@ -23,9 +22,8 @@ import {
 } from '../../../../src/static-functions'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 import { getUpdaterResult } from '../../../helpers/testUtils'
-import type { Column } from '../../../../src'
 
-const _features = tableFeatures({
+const features = tableFeatures({
   ...coreFeatures,
   columnVisibilityFeature,
 })
@@ -40,7 +38,7 @@ describe('columnVisibilityFeature.utils', () => {
 
   describe('column_getIsVisible', () => {
     it('should return true by default', () => {
-      const table = generateTestTableWithData(1, { _features })
+      const table = generateTestTableWithData(1, { features })
       const column = table.getAllColumns()[0]!
 
       const result = column_getIsVisible(column)
@@ -50,7 +48,7 @@ describe('columnVisibilityFeature.utils', () => {
 
     it('should return false when column is hidden', () => {
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         initialState: {
           columnVisibility: {
             firstName: false,
@@ -69,7 +67,7 @@ describe('columnVisibilityFeature.utils', () => {
     })
 
     it('should return true if any child column is visible', () => {
-      const table = generateTestTableWithData(1, { _features })
+      const table = generateTestTableWithData(1, { features })
       const baseColumn = table.getAllColumns()[0]!
       const parentColumn = {
         ...baseColumn,
@@ -87,10 +85,10 @@ describe('columnVisibilityFeature.utils', () => {
 
   describe('column_getCanHide', () => {
     it('should return true by default', () => {
-      const table = generateTestTableWithData(1, { _features })
+      const table = generateTestTableWithData(1, { features })
       const column = table.getAllColumns()[0]!
 
-      const result = column_getCanHide(column)
+      const result = column_getCanHide(column as any)
 
       expect(result).toBe(true)
     })
@@ -98,20 +96,23 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return false when hiding is disabled globally', () => {
       const table = generateTestTableWithData(1, {
         enableHiding: false,
-        _features,
+        features,
       })
       const column = table.getAllColumns()[0]!
 
-      const result = column_getCanHide(column)
+      const result = column_getCanHide(column as any)
 
       expect(result).toBe(false)
     })
 
     it('should return false when hiding is disabled for column', () => {
-      const table = generateTestTableWithData(1, { _features })
+      const table = generateTestTableWithData(1, { features })
       const column = {
         ...table.getAllColumns()[0]!,
-        columnDef: { enableHiding: false },
+        columnDef: {
+          ...table.getAllColumns()[0]!.columnDef,
+          enableHiding: false,
+        },
       }
 
       const result = column_getCanHide(column)
@@ -124,7 +125,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should toggle column visibility', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
       const column = {
@@ -142,7 +143,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should set specific visibility when provided', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
       const column = {
@@ -161,7 +162,7 @@ describe('columnVisibilityFeature.utils', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
         enableHiding: false,
-        _features,
+        features,
         onColumnVisibilityChange,
       })
       const column = {
@@ -180,7 +181,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return handler that toggles visibility based on checkbox state', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
       const column = {
@@ -190,17 +191,17 @@ describe('columnVisibilityFeature.utils', () => {
       }
       const handler = column_getToggleVisibilityHandler(column)
 
-      handler({ target: { checked: true } } as any)
+      handler({ target: { checked: true } })
 
       const result = getUpdaterResult(onColumnVisibilityChange, {})
       expect(result).toEqual({ firstName: true })
     })
   })
 
-  describe('row_getAllVisibleCells', () => {
+  describe('row_getVisibleCells', () => {
     it('should return only visible cells', () => {
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         initialState: {
           columnVisibility: {
             firstName: false,
@@ -209,7 +210,7 @@ describe('columnVisibilityFeature.utils', () => {
       })
       const row = table.getRowModel().rows[0]!
 
-      const visibleCells = row_getAllVisibleCells(row)
+      const visibleCells = row_getVisibleCells(row)
       const visibleColumnIds = visibleCells.map((cell) => cell.column.id)
 
       expect(visibleColumnIds).not.toContain('firstName')
@@ -217,26 +218,10 @@ describe('columnVisibilityFeature.utils', () => {
     })
   })
 
-  describe('row_getVisibleCells', () => {
-    it('should combine left, center and right cells', () => {
-      const leftCells = [{ id: 'left' }]
-      const centerCells = [{ id: 'center' }]
-      const rightCells = [{ id: 'right' }]
-
-      const result = row_getVisibleCells(
-        leftCells as any,
-        centerCells as any,
-        rightCells as any,
-      )
-
-      expect(result).toEqual([...leftCells, ...centerCells, ...rightCells])
-    })
-  })
-
   describe('table_getVisibleFlatColumns', () => {
     it('should return only visible flat columns', () => {
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         initialState: {
           columnVisibility: {
             firstName: false,
@@ -255,7 +240,7 @@ describe('columnVisibilityFeature.utils', () => {
   describe('table_getVisibleLeafColumns', () => {
     it('should return only visible leaf columns', () => {
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         initialState: {
           columnVisibility: {
             firstName: false,
@@ -275,7 +260,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should call onColumnVisibilityChange with updater', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
 
@@ -291,7 +276,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should reset to empty state when defaultState is true', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
 
@@ -304,7 +289,7 @@ describe('columnVisibilityFeature.utils', () => {
       const initialState = { columnVisibility: { firstName: false } }
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         initialState,
         onColumnVisibilityChange,
       })
@@ -321,7 +306,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should show all columns when value is true', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
 
@@ -329,9 +314,7 @@ describe('columnVisibilityFeature.utils', () => {
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
       const result = onColumnVisibilityChange.mock.calls[0]?.[0]
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id: string) => [id, true]),
       )
@@ -340,7 +323,7 @@ describe('columnVisibilityFeature.utils', () => {
     it('should hide all columns that can be hidden when value is false', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
 
@@ -348,9 +331,7 @@ describe('columnVisibilityFeature.utils', () => {
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
       const result = onColumnVisibilityChange.mock.calls[0]?.[0]
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id: string) => [id, false]),
       )
@@ -359,7 +340,7 @@ describe('columnVisibilityFeature.utils', () => {
 
   describe('table_getIsAllColumnsVisible', () => {
     it('should return true when all columns are visible', () => {
-      const table = generateTestTableWithData(1, { _features })
+      const table = generateTestTableWithData(1, { features })
 
       const result = table_getIsAllColumnsVisible(table)
 
@@ -384,7 +365,7 @@ describe('columnVisibilityFeature.utils', () => {
   describe('table_getIsSomeColumnsVisible', () => {
     it('should return true when some columns are visible', () => {
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         initialState: {
           columnVisibility: {
             firstName: false,
@@ -398,16 +379,14 @@ describe('columnVisibilityFeature.utils', () => {
     })
 
     it('should return false when no columns are visible', () => {
-      const table = generateTestTableWithData(1, { _features })
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const table = generateTestTableWithData(1, { features })
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       const hideAllColumns = Object.fromEntries(
         allColumnIds.map((id: string) => [id, false]),
       )
 
       const tableWithHiddenColumns = generateTestTableWithData(1, {
-        _features,
+        features,
         initialState: {
           columnVisibility: hideAllColumns,
         },
@@ -423,18 +402,16 @@ describe('columnVisibilityFeature.utils', () => {
     it('should return handler that toggles all columns visibility based on checkbox state', () => {
       const onColumnVisibilityChange = vi.fn()
       const table = generateTestTableWithData(1, {
-        _features,
+        features,
         onColumnVisibilityChange,
       })
       const handler = table_getToggleAllColumnsVisibilityHandler(table)
 
-      handler({ target: { checked: true } } as any)
+      handler({ target: { checked: true } })
 
       expect(onColumnVisibilityChange).toHaveBeenCalled()
       const result = onColumnVisibilityChange.mock.calls[0]?.[0]
-      const allColumnIds = table
-        .getAllLeafColumns()
-        .map((col: Column<any, any>) => col.id)
+      const allColumnIds = table.getAllLeafColumns().map((col) => col.id)
       expect(Object.entries(result)).toEqual(
         allColumnIds.map((id: string) => [id, true]),
       )

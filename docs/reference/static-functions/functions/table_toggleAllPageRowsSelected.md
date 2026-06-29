@@ -6,14 +6,18 @@ title: table_toggleAllPageRowsSelected
 # Function: table\_toggleAllPageRowsSelected()
 
 ```ts
-function table_toggleAllPageRowsSelected<TFeatures, TData>(table, value?): void;
+function table_toggleAllPageRowsSelected<TFeatures, TData>(
+   table, 
+   value?, 
+   opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L119)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L147)
 
-Toggles all page rows selected for the table.
+Selects or deselects every selectable row on the current page.
 
-This is the table-level convenience API used by UI controls that affect many columns or rows at once.
+Omitting `value` toggles based on `table_getIsAllPageRowsSelected(table)`.
+Child rows are included when sub-row selection allows it.
 
 ## Type Parameters
 
@@ -29,9 +33,15 @@ This is the table-level convenience API used by UI controls that affect many col
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### value?
+
+`boolean`
+
+### opts?
+
+#### deselectAll?
 
 `boolean`
 

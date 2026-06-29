@@ -7,9 +7,9 @@ title: FlexRender
 
 ```ts
 const FlexRender: DefineComponent<{
-  cell?: any;
-  footer?: any;
-  header?: any;
+  cell?: FlexRenderCell;
+  footer?: FlexRenderHeader;
+  header?: FlexRenderHeader;
   props?: any;
   render?: any;
 }, () => any, {
@@ -17,16 +17,16 @@ const FlexRender: DefineComponent<{
 }, {
 }, ComponentOptionsMixin, ComponentOptionsMixin, {
 }, string, PublicProps, ToResolvedProps<{
-  cell?: any;
-  footer?: any;
-  header?: any;
+  cell?: FlexRenderCell;
+  footer?: FlexRenderHeader;
+  header?: FlexRenderHeader;
   props?: any;
   render?: any;
 }, {
 }>, {
-  cell: any;
-  footer: any;
-  header: any;
+  cell: FlexRenderCell;
+  footer: FlexRenderHeader;
+  header: FlexRenderHeader;
   props: any;
   render: any;
 }, {
@@ -36,7 +36,7 @@ const FlexRender: DefineComponent<{
 }, any>;
 ```
 
-Defined in: [packages/vue-table/src/FlexRender.ts:52](https://github.com/TanStack/table/blob/main/packages/vue-table/src/FlexRender.ts#L52)
+Defined in: [packages/vue-table/src/FlexRender.ts:67](https://github.com/TanStack/table/blob/main/packages/vue-table/src/FlexRender.ts#L67)
 
 Simplified component for rendering headers, cells, or footers.
 

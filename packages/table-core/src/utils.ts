@@ -1,4 +1,4 @@
-import type { Table, Table_Internal } from './types/Table'
+import type { Table_Internal } from './types/Table'
 import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
@@ -31,10 +31,17 @@ export function cloneState<T>(value: T): T {
       return value
     }
 
-    const copy: Record<string, unknown> = {}
+    const copy: Record<string, unknown> = proto === null ? makeObjectMap() : {}
+    const keys = Object.keys(value)
 
-    for (const key of Object.keys(value)) {
-      copy[key] = cloneState((value as Record<string, unknown>)[key])
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i]!
+      Object.defineProperty(copy, key, {
+        configurable: true,
+        enumerable: true,
+        value: cloneState((value as Record<string, unknown>)[key]),
+        writable: true,
+      })
     }
 
     return copy as T
@@ -44,9 +51,21 @@ export function cloneState<T>(value: T): T {
 }
 
 /**
- * A no-operation function used as a safe default callback.
+ * Creates an object intended only for string-keyed dictionary lookups.
+ *
+ * The null prototype keeps user-controlled ids such as `__proto__` and
+ * `hasOwnProperty` as plain data keys.
  */
-export function noop() {}
+export function makeObjectMap<TValue = unknown>(): Record<string, TValue> {
+  return Object.create(null) as Record<string, TValue>
+}
+
+/**
+ * Checks whether an object owns a key, including null-prototype dictionaries.
+ */
+export function hasOwn(obj: object, key: PropertyKey): boolean {
+  return Object.prototype.hasOwnProperty.call(obj, key)
+}
 
 /**
  * Creates a table state updater for a single state slice.
@@ -56,7 +75,16 @@ export function noop() {}
 export function makeStateUpdater<
   TFeatures extends TableFeatures,
   K extends (string & {}) | keyof TableState_All | keyof TableState<TFeatures>,
->(key: K, instance: Table<TFeatures, any>) {
+>(
+  key: K,
+  // Minimal structural shape so any table view (public `Table`,
+  // `Table_Internal`, or a custom plugin table) can be passed without forcing
+  // the compiler to relate the full table types.
+  instance: {
+    readonly options: { readonly atoms?: object | undefined }
+    readonly baseAtoms: object
+  },
+) {
   return (updater: Updater<TableState<any>[K & keyof TableState<any>]>) => {
     const externalAtom = (instance.options as any).atoms?.[key]
     const targetAtom = externalAtom ?? (instance.baseAtoms as any)[key]
@@ -71,13 +99,6 @@ type AnyFunction = (...args: any) => any
  */
 export function isFunction<T extends AnyFunction>(d: any): d is T {
   return d instanceof Function
-}
-
-/**
- * Returns whether a value is an array containing only numbers.
- */
-export function isNumberArray(d: any): d is Array<number> {
-  return Array.isArray(d) && d.every((val) => typeof val === 'number')
 }
 
 /**
@@ -104,29 +125,6 @@ export function flattenBy<TNode>(
   recurse(arr)
 
   return flat
-}
-
-/**
- * Symbol used to attach internal memo metadata to wrapped functions.
- *
- * This is exported so diagnostics can recognize memoized functions without
- * depending on a string property name.
- */
-export const $internalMemoFnMeta = Symbol('memoFnMeta')
-export type MemoFnMeta = { originalArgsLength?: number }
-
-/**
- * @internal
- */
-function setMemoFnMeta(fn: Function, meta: MemoFnMeta) {
-  Object.defineProperty(fn, $internalMemoFnMeta, { value: meta })
-}
-
-/**
- * @internal
- */
-export function getMemoFnMeta(fn: any): MemoFnMeta | null {
-  return (typeof fn === 'function' && fn[$internalMemoFnMeta]) ?? null
 }
 
 interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
@@ -159,10 +157,15 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
   const memoizedFn = (depArgs?: TDepArgs): TResult => {
     onBeforeCompare?.()
     const newDeps = memoDeps?.(depArgs)
-    const depsChanged =
-      !newDeps ||
-      newDeps.length !== deps?.length ||
-      newDeps.some((dep: any, index: number) => deps?.[index] !== dep)
+    let depsChanged = !newDeps || newDeps.length !== deps?.length
+    if (!depsChanged && newDeps) {
+      for (let i = 0; i < newDeps.length; i++) {
+        if (newDeps[i] !== deps![i]) {
+          depsChanged = true
+          break
+        }
+      }
+    }
     onAfterCompare?.(depsChanged)
 
     if (!depsChanged) {
@@ -177,8 +180,6 @@ export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
 
     return result
   }
-
-  setMemoFnMeta(memoizedFn, { originalArgsLength: fn.length })
 
   return memoizedFn
 }
@@ -283,6 +284,15 @@ export function tableMemo<
     console.groupEnd()
   }
 
+  const onAfterUpdateHandler = () => {
+    if (!onAfterUpdate) {
+      return
+    }
+
+    const { schedule, untrack } = table._reactivity
+    schedule(() => untrack(() => onAfterUpdate()))
+  }
+
   const debugOptions =
     process.env.NODE_ENV === 'development'
       ? {
@@ -313,12 +323,12 @@ export function tableMemo<
                 Math.round((endCalcTime - startCalcTime) * 100) / 100
               logTime(executionTime, true)
             }
-            queueMicrotask(() => onAfterUpdate?.())
+            onAfterUpdateHandler()
           },
         }
       : {
           onAfterUpdate: () => {
-            queueMicrotask(() => onAfterUpdate?.())
+            onAfterUpdateHandler()
           },
         }
 
@@ -440,8 +450,6 @@ export function assignPrototypeAPIs<
         return fn(this, ...args)
       }
     }
-
-    setMemoFnMeta(prototype[fnKey], { originalArgsLength: fn.length })
   }
 }
 
@@ -450,13 +458,14 @@ export function assignPrototypeAPIs<
  */
 export function callMemoOrStaticFn<
   TObject extends Record<string, any>,
-  TStaticFn extends AnyFunction,
+  TArgs extends Array<any>,
+  TReturn,
 >(
   obj: TObject,
   fnKey: string,
-  staticFn: TStaticFn,
-  ...args: Parameters<TStaticFn> extends [any, ...infer Rest] ? Rest : never
-): ReturnType<TStaticFn> {
+  staticFn: (obj: TObject, ...args: TArgs) => TReturn,
+  ...args: TArgs
+): TReturn {
   return (
     (obj[fnKey] as Function | undefined)?.(...args) ?? staticFn(obj, ...args)
   )

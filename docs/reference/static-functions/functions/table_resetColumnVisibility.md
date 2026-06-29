@@ -9,11 +9,12 @@ title: table_resetColumnVisibility
 function table_resetColumnVisibility<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L233)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:294](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L294)
 
-Resets the table's column visibility state slice.
+Resets `columnVisibility` to the configured initial state or feature default.
 
-By default the reset uses `table.initialState`; when supported, a blank/default reset bypasses the saved initial value.
+With no argument, the reset clones `table.initialState.columnVisibility` when
+it exists. Passing `true` ignores initial state and resets to `{}`.
 
 ## Type Parameters
 
@@ -29,7 +30,7 @@ By default the reset uses `table.initialState`; when supported, a blank/default 
 
 ### table
 
-[`Table_Internal`](../../index/type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../../index/interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ### defaultState?
 

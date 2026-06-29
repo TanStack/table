@@ -6,7 +6,7 @@ title: PreactTable
 # Type Alias: PreactTable\<TFeatures, TData, TSelected\>
 
 ```ts
-type PreactTable<TFeatures, TData, TSelected> = Table<TFeatures, TData> & object;
+type PreactTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
 Defined in: [useTable.ts:19](https://github.com/TanStack/table/blob/main/packages/preact-table/src/useTable.ts#L19)
@@ -44,7 +44,23 @@ Use this utility component instead of manually calling flexRender.
 readonly state: Readonly<TSelected>;
 ```
 
-The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `useTable`.
+The selected state of the table. This state may not match the structure of
+the full table state because it is selected by the selector function that
+you pass as the 2nd argument to `useTable`.
+
+### ~~store~~
+
+```ts
+readonly store: Table<TFeatures, TData>["store"];
+```
+
+#### Deprecated
+
+Prefer `table.state` for render reads,
+`table.atoms.<slice>.get()` for slice snapshots, or
+`table.Subscribe` / `useSelector(table.store, selector)` for explicit
+subscriptions. `table.store.state` is a current-value snapshot and is easy
+to misuse in render code.
 
 ### Subscribe()
 

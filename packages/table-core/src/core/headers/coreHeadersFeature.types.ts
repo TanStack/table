@@ -1,35 +1,37 @@
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
-import type { Table } from '../../types/Table'
+import type { Table, Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
 
 export interface Table_Headers<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
 > {
   /**
-   * Returns all header groups for the table.
+   * Builds the visible header groups for the current column tree, visibility,
+   * and pinning state.
    */
   getHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Returns the footer groups for the table.
+   * Builds footer groups by reversing the current header group order.
    */
   getFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Returns headers for all columns in the table, including parent headers.
+   * Flattens every header from every header group, including parent and
+   * placeholder headers.
    */
   getFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * Returns headers for all leaf columns in the table, (not including parent headers).
+   * Collects only leaf headers, excluding parent/group headers.
    */
   getLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
 }
 
 export interface HeaderContext<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -47,8 +49,8 @@ export interface HeaderContext<
 }
 
 export interface Header_CoreProperties<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   /**
@@ -94,12 +96,12 @@ export interface Header_CoreProperties<
   /**
    * Reference to the parent table instance.
    */
-  table: Table<TFeatures, TData>
+  table: Table_Internal<TFeatures, TData>
 }
 
 export interface Header_Header<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > extends Header_CoreProperties<TFeatures, TData, TValue> {
   /**
@@ -113,8 +115,8 @@ export interface Header_Header<
 }
 
 export interface HeaderGroup_Header<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
   TValue extends CellData = CellData,
 > {
   depth: number

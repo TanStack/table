@@ -16,10 +16,7 @@
   // 1. New in V9! Tell the table which features and row models we want to use.
   const { createAppTable, createAppColumnHelper
   } = createTableHook({
-    _features: { rowSortingFeature },
-    _rowModels: {
-      sortedRowModel: createSortedRowModel(sortFns),
-    },
+    features: { rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns },
     debugTable: true,
   })
 
@@ -141,6 +138,6 @@
     </tfoot>
   </table>
   <div class="spacer-md"></div>
-  <pre>{JSON.stringify(table.store.state, null, 2)
+  <pre>{JSON.stringify(table.state, null, 2)
   }</pre>
 </div>

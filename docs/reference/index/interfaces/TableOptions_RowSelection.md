@@ -25,10 +25,11 @@ Defined in: [features/row-selection/rowSelectionFeature.types.ts:12](https://git
 optional enableMultiRowSelection: boolean | (row) => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L20)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L21)
 
-- Enables/disables multiple row selection for all rows in the table OR
-- A function that given a row, returns whether to enable/disable multiple row selection for that row's children/grandchildren
+Allows rows to be selected alongside other rows.
+
+Provide a predicate to decide per row. Defaults to `true`.
 
 ***
 
@@ -38,10 +39,11 @@ Defined in: [features/row-selection/rowSelectionFeature.types.ts:20](https://git
 optional enableRowSelection: boolean | (row) => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L25)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L27)
 
-- Enables/disables row selection for all rows in the table OR
-- A function that given a row, returns whether to enable/disable row selection for that row
+Allows rows to be selected.
+
+Provide a predicate to decide per row. Defaults to `true`.
 
 ***
 
@@ -51,10 +53,12 @@ Defined in: [features/row-selection/rowSelectionFeature.types.ts:25](https://git
 optional enableSubRowSelection: boolean | (row) => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L30)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L34)
 
-Enables/disables automatic sub-row selection when a parent row is selected, or a function that enables/disables automatic sub-row selection for each row.
-(Use in combination with expanding or grouping features)
+Controls whether selecting a parent row also selects its subRows.
+
+Provide a predicate to decide per row. This is most useful with expanding or
+grouping features and defaults to `true`.
 
 ***
 
@@ -64,7 +68,7 @@ Enables/disables automatic sub-row selection when a parent row is selected, or a
 optional onRowSelectionChange: OnChangeFn<RowSelectionState>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L36)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L40)
 
 Called with an updater when row selection state changes. Pair this with
 `state.rowSelection` when using external state; external atoms can own the

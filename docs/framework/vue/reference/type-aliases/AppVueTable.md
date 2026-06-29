@@ -6,10 +6,10 @@ title: AppVueTable
 # Type Alias: AppVueTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
 
 ```ts
-type AppVueTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = VueTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
+type AppVueTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = VueTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:222](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L222)
+Defined in: [packages/vue-table/src/createTableHook.ts:213](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L213)
 
 ## Type Declaration
 
@@ -34,7 +34,7 @@ AppHeader: Component<AppHeaderProps<TFeatures, TData>>;
 ### AppTable
 
 ```ts
-AppTable: Component<AppTableProps<TFeatures>>;
+AppTable: Component<AppTableProps>;
 ```
 
 ### FlexRender

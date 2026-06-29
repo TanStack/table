@@ -12,7 +12,7 @@ function constructCell<TFeatures, TData, TValue>(
 table): Cell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [core/cells/constructCell.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/constructCell.ts#L31)
+Defined in: [core/cells/constructCell.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/cells/constructCell.ts#L32)
 
 Constructs a cell instance from normalized table internals.
 
@@ -44,7 +44,7 @@ This wires core properties, feature prototype APIs, and instance data used by ta
 
 ### table
 
-[`Table_Internal`](../type-aliases/Table_Internal.md)\<`TFeatures`, `TData`\>
+[`Table_Internal`](../interfaces/Table_Internal.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

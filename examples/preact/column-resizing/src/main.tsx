@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'preact/hooks'
+import { useState } from 'preact/hooks'
 import { render } from 'preact'
 import {
   columnResizingFeature,
@@ -15,9 +15,9 @@ import type {
 } from '@tanstack/preact-table'
 import './index.css'
 
-const _features = tableFeatures({ columnResizingFeature, columnSizingFeature })
+const features = tableFeatures({ columnResizingFeature, columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof _features, Person>()
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -76,12 +76,9 @@ function App() {
   const [columnResizeDirection, setColumnResizeDirection] =
     useState<ColumnResizeDirection>('ltr')
 
-  const rerender = useReducer(() => ({}), {})[1]
-
   const table = useTable(
     {
-      _features,
-      _rowModels: {},
+      features,
       columns,
       data,
       columnResizeMode,
@@ -157,8 +154,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.store.state.columnResizing
-                                    .deltaOffset ?? 0)
+                                  (table.state.columnResizing.deltaOffset ?? 0)
                                 }px)`
                               : '',
                         }}
@@ -219,8 +215,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.store.state.columnResizing
-                                    .deltaOffset ?? 0)
+                                  (table.state.columnResizing.deltaOffset ?? 0)
                                 }px)`
                               : '',
                         }}
@@ -295,8 +290,7 @@ function App() {
                                   (table.options.columnResizeDirection === 'rtl'
                                     ? -1
                                     : 1) *
-                                  (table.store.state.columnResizing
-                                    .deltaOffset ?? 0)
+                                  (table.state.columnResizing.deltaOffset ?? 0)
                                 }px)`
                               : '',
                         }}
@@ -335,9 +329,6 @@ function App() {
         </div>
       </div>
       <div className="spacer-md" />
-      <button onClick={() => rerender(0)} className="demo-button">
-        Rerender
-      </button>
       <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </div>
   )

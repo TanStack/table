@@ -6,9 +6,29 @@ title: filterFn_lessThan
 # Variable: filterFn\_lessThan
 
 ```ts
-const filterFn_lessThan: FilterFn<any, any>;
+const filterFn_lessThan: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L168)
+Defined in: [fns/filterFns.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L173)
 
-Filter function for checking if a number is less than a given number.
+Keeps rows whose value is less than the filter value.
+
+This is implemented as the inverse of greater-than-or-equal comparison.
+
+## Type Declaration
+
+### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => boolean;
+```
+
+#### Parameters
+
+##### val
+
+`any`
+
+#### Returns
+
+`boolean`

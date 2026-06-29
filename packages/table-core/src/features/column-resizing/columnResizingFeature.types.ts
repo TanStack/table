@@ -47,17 +47,15 @@ export type ColumnResizingDefaultOptions = Pick<
 
 export interface Table_ColumnResizing {
   /**
-   * Resets transient resize interaction state to `initialState.columnResizing`.
-   * Pass `true` to reset to the feature's default blank resize state instead.
+   * Resets `columnResizing` to `initialState.columnResizing`.
+   *
+   * Pass `true` to ignore initial state and reset to the no-drag default state.
    */
   resetHeaderSizeInfo: (defaultState?: boolean) => void
   /**
-   * Sets the transient resize interaction state using a value or updater.
-   *
-   * The lowercase `c` in this API name matches the current generated v9 table
-   * API for the `columnResizing` state slice.
+   * Updates transient resize interaction state with a next state or updater function.
    */
-  setcolumnResizing: (updater: Updater<columnResizingState>) => void
+  setColumnResizing: (updater: Updater<columnResizingState>) => void
 }
 
 export interface ColumnDef_ColumnResizing {
@@ -69,21 +67,20 @@ export interface ColumnDef_ColumnResizing {
 
 export interface Column_ColumnResizing {
   /**
-   * Returns `true` if the column can be resized.
+   * Checks whether this column can start a resize interaction.
    */
   getCanResize: () => boolean
   /**
-   * Returns `true` if the column is currently being resized.
+   * Checks whether this column is the active resize target.
    */
   getIsResizing: () => boolean
 }
 
 export interface Header_ColumnResizing {
   /**
-   * Returns an event handler function that can be used to resize the header. It can be used as an:
-   * - `onMouseDown` handler
-   * - `onTouchStart` handler
-   * The dragging and release events are automatically handled for you.
+   * Creates the `onMouseDown`/`onTouchStart` handler for a resize handle.
+   *
+   * Dragging and release listeners are installed and cleaned up automatically.
    */
   getResizeHandler: (context?: Document) => (event: unknown) => void
 }

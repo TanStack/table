@@ -9,7 +9,7 @@ title: getInitialTableState
 function getInitialTableState<TFeatures>(features, initialState): TableState<TFeatures>;
 ```
 
-Defined in: [core/table/constructTable.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L16)
+Defined in: [core/table/constructTable.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/constructTable.ts#L17)
 
 Builds the initial table state from registered features and user initial state.
 
