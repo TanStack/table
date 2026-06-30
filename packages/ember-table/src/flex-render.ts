@@ -6,6 +6,7 @@ import type {
   RowData,
   TableFeatures,
 } from '@tanstack/table-core'
+export { flexRender } from '@tanstack/table-core/flex-render'
 
 export type FlexRenderContext<
   TFeatures extends TableFeatures = TableFeatures,
@@ -19,29 +20,46 @@ export interface FlexRenderableSignature<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
   TValue extends CellData = CellData,
-  TArgs extends Record<string, unknown> = Record<string, unknown>,
+  TArgs = undefined,
 > {
   Args: {
     ctx: FlexRenderContext<TFeatures, TData, TValue>
-    args: TArgs
+    args?: TArgs
   }
 }
+
+export interface CellRenderableSignature<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
+  TValue extends CellData = CellData,
+  TArgs = undefined,
+> {
+  Args: {
+    ctx: CellContext<TFeatures, TData, TValue>
+    args?: TArgs
+  }
+}
+
+type FlexRenderableComponent<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData,
+  TArgs,
+> =
+  | ComponentLike<FlexRenderableSignature<TFeatures, TData, TValue, TArgs>>
+  | ComponentLike<CellRenderableSignature<TFeatures, TData, TValue, TArgs>>
 
 export class FlexRenderComponentConfig<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
   TValue extends CellData = CellData,
-  TArgs extends Record<string, unknown> = Record<string, unknown>,
+  TArgs = undefined,
 > {
-  readonly component: ComponentLike<
-    FlexRenderableSignature<TFeatures, TData, TValue, TArgs>
-  >
+  readonly component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>
   readonly args?: TArgs
 
   constructor(
-    component: ComponentLike<
-      FlexRenderableSignature<TFeatures, TData, TValue, TArgs>
-    >,
+    component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>,
     args?: TArgs,
   ) {
     this.component = component
@@ -50,14 +68,30 @@ export class FlexRenderComponentConfig<
 }
 
 export function flexRenderComponent<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData,
+>(
+  component: FlexRenderableComponent<TFeatures, TData, TValue, undefined>,
+): FlexRenderComponentConfig<TFeatures, TData, TValue, undefined>
+
+export function flexRenderComponent<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData,
+  TArgs,
+>(
+  component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>,
+  args: TArgs,
+): FlexRenderComponentConfig<TFeatures, TData, TValue, TArgs>
+
+export function flexRenderComponent<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
   TValue extends CellData = CellData,
-  TArgs extends Record<string, unknown> = Record<string, unknown>,
+  TArgs = undefined,
 >(
-  component: ComponentLike<
-    FlexRenderableSignature<TFeatures, TData, TValue, TArgs>
-  >,
+  component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>,
   args?: TArgs,
 ): FlexRenderComponentConfig<TFeatures, TData, TValue, TArgs> {
   return new FlexRenderComponentConfig(component, args)
