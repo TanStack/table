@@ -4,9 +4,10 @@ import { on } from '@ember/modifier';
 import { pageTitle } from 'ember-page-title';
 import {
   useTable,
-  flexRenderCell,
-  flexRenderHeader,
-  flexRenderFooter,
+  FlexRenderCell,
+  FlexRenderHeader,
+  FlexRenderFooter,
+  flexRenderComponent,
   tableFeatures,
   rowSortingFeature,
   createSortedRowModel,
@@ -55,6 +56,31 @@ function makeData(count: number): Array<Person> {
   }));
 }
 
+// --- Custom cell component example ---
+
+class StatusBadge extends Component<{
+  Args: {
+    ctx: unknown;
+    args: unknown;
+  };
+}> {
+  get value(): string {
+    const ctx = this.args.ctx as { getValue: () => string };
+    return ctx.getValue();
+  }
+
+  get className(): string {
+    const value = this.value;
+    if (value === 'relationship') return 'status-relationship';
+    if (value === 'complicated') return 'status-complicated';
+    return 'status-single';
+  }
+
+  <template>
+    <span class={{this.className}}>{{this.value}}</span>
+  </template>
+}
+
 // --- Table setup ---
 
 const features = tableFeatures({
@@ -87,6 +113,7 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('status', {
     header: 'Status',
+    cell: () => flexRenderComponent(StatusBadge),
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
@@ -102,7 +129,7 @@ const columns = columnHelper.columns([
 
 const getCanSort = (column: Column<typeof features, Person> ): boolean => column.getCanSort();
 const getAllCells = (row: Row<typeof features, Person>): Array<Cell<typeof features, Person>> => row.getAllCells();
-const lookup = (obj: Record<string, unknown>, key: string): unknown => obj[key];
+const lookup = (obj: Record<string, string>, key: string): string => obj[key] ?? '';
 
 const toggleSort = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
@@ -177,7 +204,7 @@ class BasicAppTable extends Component {
                       {{on "click" (toggleSort header.column)}}
                       style="cursor: {{if (getCanSort header.column) "pointer" "not-allowed"}}; user-select: none"
                     >
-                      {{flexRenderHeader header}}{{lookup this.sortIndicators header.column.id}}
+                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
                     </div>
                   {{/unless}}
                 </th>
@@ -189,7 +216,7 @@ class BasicAppTable extends Component {
           {{#each this.rows as |row|}}
             <tr>
               {{#each (getAllCells row) as |cell|}}
-                <td>{{flexRenderCell cell}}</td>
+                <td><FlexRenderCell @cell={{cell}} /></td>
               {{/each}}
             </tr>
           {{/each}}
@@ -200,7 +227,7 @@ class BasicAppTable extends Component {
               {{#each footerGroup.headers as |header|}}
                 <th>
                   {{#unless header.isPlaceholder}}
-                    {{flexRenderFooter header}}
+                    <FlexRenderFooter @footer={{header}} />
                   {{/unless}}
                 </th>
               {{/each}}

@@ -1,60 +1,64 @@
+import type { ComponentLike } from '@glint/template'
 import type {
-  Cell,
+  CellContext,
   CellData,
-  Header,
+  HeaderContext,
   RowData,
   TableFeatures,
 } from '@tanstack/table-core'
 
-export function flexRender<TProps>(
-  Comp: ((props: TProps) => unknown) | string | undefined | null,
-  props: TProps,
-): unknown {
-  if (Comp == null) return ''
-  if (typeof Comp === 'function') return Comp(props)
-  return Comp
+export type FlexRenderContext<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
+  TValue extends CellData = CellData,
+> =
+  | CellContext<TFeatures, TData, TValue>
+  | HeaderContext<TFeatures, TData, TValue>
+
+export interface FlexRenderableSignature<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
+  TValue extends CellData = CellData,
+  TArgs extends Record<string, unknown> = Record<string, unknown>,
+> {
+  Args: {
+    ctx: FlexRenderContext<TFeatures, TData, TValue>
+    args: TArgs
+  }
 }
 
-export function flexRenderCell<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+export class FlexRenderComponentConfig<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
   TValue extends CellData = CellData,
->(cell: Cell<TFeatures, TData, TValue>): unknown {
-  return flexRender(
-    cell.column.columnDef.cell as
-      | ((props: unknown) => unknown)
-      | string
-      | undefined,
-    cell.getContext(),
-  )
+  TArgs extends Record<string, unknown> = Record<string, unknown>,
+> {
+  readonly component: ComponentLike<
+    FlexRenderableSignature<TFeatures, TData, TValue, TArgs>
+  >
+  readonly args?: TArgs
+
+  constructor(
+    component: ComponentLike<
+      FlexRenderableSignature<TFeatures, TData, TValue, TArgs>
+    >,
+    args?: TArgs,
+  ) {
+    this.component = component
+    this.args = args
+  }
 }
 
-export function flexRenderHeader<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
+export function flexRenderComponent<
+  TFeatures extends TableFeatures = TableFeatures,
+  TData extends RowData = RowData,
   TValue extends CellData = CellData,
->(header: Header<TFeatures, TData, TValue>): unknown {
-  if (header.isPlaceholder) return ''
-  return flexRender(
-    header.column.columnDef.header as
-      | ((props: unknown) => unknown)
-      | string
-      | undefined,
-    header.getContext(),
-  )
-}
-
-export function flexRenderFooter<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-  TValue extends CellData = CellData,
->(header: Header<TFeatures, TData, TValue>): unknown {
-  if (header.isPlaceholder) return ''
-  return flexRender(
-    header.column.columnDef.footer as
-      | ((props: unknown) => unknown)
-      | string
-      | undefined,
-    header.getContext(),
-  )
+  TArgs extends Record<string, unknown> = Record<string, unknown>,
+>(
+  component: ComponentLike<
+    FlexRenderableSignature<TFeatures, TData, TValue, TArgs>
+  >,
+  args?: TArgs,
+): FlexRenderComponentConfig<TFeatures, TData, TValue, TArgs> {
+  return new FlexRenderComponentConfig(component, args)
 }
