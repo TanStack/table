@@ -101,6 +101,23 @@ function filterRowModelFromLeafs<
   }
 }
 
+function addSubRowsToFlatArrays<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  subRows: Array<Row<TFeatures, TData>>,
+  flatRows: Array<Row<TFeatures, TData>>,
+  rowsById: Record<string, Row<TFeatures, TData>>,
+): void {
+  for (const subRow of subRows) {
+    flatRows.push(subRow)
+    rowsById[subRow.id] = subRow
+    if (subRow.subRows.length) {
+      addSubRowsToFlatArrays(subRow.subRows, flatRows, rowsById)
+    }
+  }
+}
+
 function filterRowModelFromRoot<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -144,6 +161,13 @@ function filterRowModelFromRoot<
         filteredRows.push(row)
         newFilteredFlatRows.push(row)
         newFilteredRowsById[row.id] = row
+        // When sub-rows exist but weren't recursed into (depth >= maxDepth),
+        // they are still visible in the row tree. Add them to flatRows so that
+        // flatRows is a complete flat representation of all visible rows,
+        // consistent with the no-filter case.
+        if (row.subRows.length && depth >= maxDepth) {
+          addSubRowsToFlatArrays(row.subRows, newFilteredFlatRows, newFilteredRowsById)
+        }
       }
     }
 
