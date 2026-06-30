@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
-    "@tanstack/alpine-table": "^9.0.0-beta.23",
+    "@tanstack/alpine-table": "^9.0.0-beta.25",
     "alpinejs": "^3.15.12"
   },
   "devDependencies": {
