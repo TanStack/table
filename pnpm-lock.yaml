@@ -6,6 +6,7 @@ settings:
 
 overrides:
   '@types/react': 19.2.16
+  '@tanstack/alpine-table': workspace:*
   '@tanstack/angular-table-devtools': workspace:*
   '@tanstack/angular-table': workspace:*
   '@tanstack/lit-table': workspace:*
@@ -104,7 +105,7 @@ importers:
   examples/alpine/basic-app-table:
     dependencies:
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -129,7 +130,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -154,7 +155,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       '@tanstack/store':
         specifier: ^0.11.0
@@ -182,7 +183,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -207,7 +208,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -232,7 +233,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -257,7 +258,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -282,7 +283,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -307,7 +308,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -332,7 +333,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -357,7 +358,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -382,7 +383,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -407,7 +408,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -432,7 +433,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -457,7 +458,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -482,7 +483,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -507,7 +508,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -532,7 +533,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -557,7 +558,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -582,7 +583,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -607,7 +608,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -632,7 +633,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -657,7 +658,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12
@@ -682,7 +683,7 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/alpine-table':
-        specifier: ^9.0.0-beta.23
+        specifier: workspace:*
         version: link:../../../packages/alpine-table
       alpinejs:
         specifier: ^3.15.12

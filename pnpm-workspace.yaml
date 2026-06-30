@@ -4,6 +4,7 @@ packages:
 
 overrides:
   '@types/react': 19.2.16
+  '@tanstack/alpine-table': 'workspace:*'
   '@tanstack/angular-table-devtools': 'workspace:*'
   '@tanstack/angular-table': 'workspace:*'
   '@tanstack/lit-table': 'workspace:*'
