@@ -3,8 +3,8 @@ import { tracked } from '@glimmer/tracking';
 import { on } from '@ember/modifier';
 import {
   useTable,
-  flexRenderCell,
-  flexRenderHeader,
+  FlexRenderCell,
+  FlexRenderHeader,
   tableFeatures,
   rowSortingFeature,
   rowPaginationFeature,
@@ -206,7 +206,7 @@ export default class BasicTable extends Component {
                       class="{{if (getCanSort header.column) 'sortable-header'}}"
                       {{on "click" (toggleSort header.column)}}
                     >
-                      {{flexRenderHeader header}}{{lookup this.sortIndicators header.column.id}}
+                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
                     </div>
                   {{/unless}}
                 </th>
@@ -218,7 +218,7 @@ export default class BasicTable extends Component {
           {{#each this.rows as |row|}}
             <tr>
               {{#each (getAllCells row) as |cell|}}
-                <td>{{flexRenderCell cell}}</td>
+                <td><FlexRenderCell @cell={{cell}} /></td>
               {{/each}}
             </tr>
           {{/each}}
