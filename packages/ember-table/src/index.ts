@@ -6,5 +6,13 @@ export {
   flexRenderCell,
   flexRenderHeader,
   flexRenderFooter,
+  flexRenderComponent,
+  FlexRenderComponentConfig,
 } from './flex-render.ts'
+export type { FlexRenderableSignature } from './flex-render.ts'
+export {
+  FlexRenderCell,
+  FlexRenderHeader,
+  FlexRenderFooter,
+} from './FlexRender.gts'
 export { emberReactivity } from './reactivity.ts'
