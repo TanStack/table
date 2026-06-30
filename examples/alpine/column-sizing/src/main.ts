@@ -56,21 +56,18 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(1_000) })
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      columnResizeMode: 'onChange',
-      columnResizeDirection: 'ltr',
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    columnResizeMode: 'onChange',
+    columnResizeDirection: 'ltr',
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   return {
     table,

@@ -177,28 +177,25 @@ Alpine.data('table', () => {
     density: 'md',
   }) as { data: Array<Person>; density: DensityState }
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      debugTable: true,
-      state: {
-        // passing the density state to the table, TS is still happy :)
-        get density() {
-          return local.density
-        },
-      },
-      onDensityChange: (updater) => {
-        // raise density state changes to our own state management
-        local.density =
-          typeof updater === 'function' ? updater(local.density) : updater
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
+    },
+    debugTable: true,
+    state: {
+      // passing the density state to the table, TS is still happy :)
+      get density() {
+        return local.density
       },
     },
-    (state) => state, // default selector
-  )
+    onDensityChange: (updater) => {
+      // raise density state changes to our own state management
+      local.density =
+        typeof updater === 'function' ? updater(local.density) : updater
+    },
+  })
 
   return {
     table,

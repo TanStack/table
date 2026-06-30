@@ -83,25 +83,22 @@ Alpine.data('table', () => {
     columnResizeDirection: ColumnResizeDirection
   }
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      get columnResizeMode() {
-        return local.columnResizeMode
-      },
-      get columnResizeDirection() {
-        return local.columnResizeDirection
-      },
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    get columnResizeMode() {
+      return local.columnResizeMode
+    },
+    get columnResizeDirection() {
+      return local.columnResizeDirection
+    },
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   return {
     table,
@@ -110,7 +107,7 @@ Alpine.data('table', () => {
     // Translate the resizer while dragging when using the "onEnd" resize mode.
     resizerTransform(header: any) {
       if (local.columnResizeMode === 'onEnd' && header.column.getIsResizing()) {
-        const delta = table.state.columnResizing.deltaOffset ?? 0
+        const delta = table.atoms.columnResizing.get().deltaOffset ?? 0
         const dir = local.columnResizeDirection === 'rtl' ? -1 : 1
         return `transform: translateX(${dir * delta}px)`
       }

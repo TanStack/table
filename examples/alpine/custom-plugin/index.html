@@ -127,7 +127,7 @@
           <div>Page</div>
           <strong>
             <span
-              x-text="(table.state.pagination.pageIndex + 1).toLocaleString()"
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
             ></span>
             of
             <span x-text="table.getPageCount().toLocaleString()"></span>
@@ -139,13 +139,13 @@
             type="number"
             min="1"
             :max="table.getPageCount()"
-            :value="table.state.pagination.pageIndex + 1"
+            :value="table.atoms.pagination.get().pageIndex + 1"
             @input="goToPage($event.target.value)"
             class="page-size-input"
           />
         </span>
         <select
-          :value="String(table.state.pagination.pageSize)"
+          :value="String(table.atoms.pagination.get().pageSize)"
           @change="setPageSize($event.target.value)"
         >
           <option value="10">Show 10</option>
@@ -162,7 +162,7 @@
         <span x-text="table.getRowCount().toLocaleString()"></span> Rows
       </div>
       <div class="spacer-md"></div>
-      <pre x-text="JSON.stringify(table.state, null, 2)"></pre>
+      <pre x-text="JSON.stringify(table.store.get(), null, 2)"></pre>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

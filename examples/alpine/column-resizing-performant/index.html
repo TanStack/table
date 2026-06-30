@@ -14,7 +14,7 @@
       <div class="spacer-md"></div>
       <pre
         style="min-height: 10rem"
-        x-text="JSON.stringify(table.state, null, 2)"
+        x-text="JSON.stringify(table.store.get(), null, 2)"
       ></pre>
       <div class="spacer-md"></div>
       <span x-text="'(' + local.data.length.toLocaleString() + ' rows)'"></span>

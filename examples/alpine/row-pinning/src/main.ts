@@ -87,23 +87,20 @@ function pinnedRowStyle(
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(1_000, 2, 2) })
 
-  const table = createTable(
-    {
-      debugTable: true,
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      initialState: {
-        pagination: { pageSize: 20, pageIndex: 0 },
-      },
-      getSubRows: (row) => row.subRows,
-      keepPinnedRows: true,
-      debugAll: true,
+  const table = createTable({
+    debugTable: true,
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+    },
+    getSubRows: (row) => row.subRows,
+    keepPinnedRows: true,
+    debugAll: true,
+  })
 
   return {
     table,

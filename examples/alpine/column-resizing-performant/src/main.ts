@@ -66,21 +66,18 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(200) })
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      defaultColumn: { minSize: 60, maxSize: 800 },
-      columnResizeMode: 'onChange',
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    defaultColumn: { minSize: 60, maxSize: 800 },
+    columnResizeMode: 'onChange',
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   return {
     table,
@@ -90,7 +87,7 @@ Alpine.data('table', () => {
     // this reactive so the variables recompute while a column is being resized.
     columnSizeVars(): string {
       // touch the resizing state so Alpine tracks it as a dependency
-      void table.state.columnResizing.columnSizingStart
+      void table.atoms.columnResizing.get().columnSizingStart
       const headers = table.getFlatHeaders()
       const styles: Array<string> = []
       for (const header of headers) {

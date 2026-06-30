@@ -106,7 +106,7 @@
           Page
           <strong>
             <span
-              x-text="(table.state.pagination.pageIndex + 1).toLocaleString()"
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
             ></span>
             of
             <span x-text="table.getPageCount().toLocaleString()"></span>
@@ -118,13 +118,13 @@
             type="number"
             min="1"
             :max="table.getPageCount()"
-            :value="table.state.pagination.pageIndex + 1"
+            :value="table.atoms.pagination.get().pageIndex + 1"
             @input="goToPage($event.target.value)"
             class="page-size-input"
           />
         </span>
         <select
-          :value="table.state.pagination.pageSize"
+          :value="table.atoms.pagination.get().pageSize"
           @change="table.setPageSize(Number($event.target.value))"
         >
           <template x-for="pageSize in [10, 20, 30, 40, 50]" :key="pageSize">

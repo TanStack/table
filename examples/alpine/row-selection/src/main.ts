@@ -71,18 +71,15 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(50_000) })
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      enableRowSelection: true,
-      debugTable: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    enableRowSelection: true,
+    debugTable: true,
+  })
 
   return {
     table,

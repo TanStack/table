@@ -73,18 +73,15 @@ function renderSubComponent(row: Row<typeof features, Person>) {
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(10, 5) })
 
-  const table = createTable(
-    {
-      debugTable: true,
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      getRowCanExpand: () => true,
+  const table = createTable({
+    debugTable: true,
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    getRowCanExpand: () => true,
+  })
 
   return {
     table,

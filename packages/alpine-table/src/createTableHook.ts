@@ -1,12 +1,7 @@
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core'
 import { createTable } from './createTable'
 import type { AlpineTable } from './createTable'
-import type {
-  RowData,
-  TableFeatures,
-  TableOptions,
-  TableState,
-} from '@tanstack/table-core'
+import type { RowData, TableFeatures, TableOptions } from '@tanstack/table-core'
 
 export type CreateTableHookOptions<TFeatures extends TableFeatures> = Omit<
   TableOptions<TFeatures, any>,
@@ -16,8 +11,7 @@ export type CreateTableHookOptions<TFeatures extends TableFeatures> = Omit<
 export type AppAlpineTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected,
-> = AlpineTable<TFeatures, TData, TSelected>
+> = AlpineTable<TFeatures, TData>
 
 export type AppColumnHelper<
   TFeatures extends TableFeatures,
@@ -34,17 +28,16 @@ export function createTableHook<TFeatures extends TableFeatures>({
     return coreCreateColumnHelper<TFeatures, TData>()
   }
 
-  function createAppTable<TData extends RowData, TSelected = {}>(
+  function createAppTable<TData extends RowData>(
     tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
-    selector?: (state: TableState<TFeatures>) => TSelected,
-  ): AppAlpineTable<TFeatures, TData, TSelected> {
+  ): AppAlpineTable<TFeatures, TData> {
     // Merge default options with provided options (provided takes precedence)
     const mergedOptions = {
       ...defaultTableOptions,
       ...tableOptions,
     } as TableOptions<TFeatures, TData>
 
-    return createTable<TFeatures, TData, TSelected>(mergedOptions, selector)
+    return createTable<TFeatures, TData>(mergedOptions)
   }
 
   return {

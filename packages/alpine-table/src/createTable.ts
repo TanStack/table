@@ -7,13 +7,11 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 
 export type AlpineTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
 > = Table<TFeatures, TData> & {
   /**
    * A lower-level helper to render the content of a cell, header, or footer from a render function and its context.
@@ -24,26 +22,12 @@ export type AlpineTable<
    * A convenience helper to render a cell, header, or footer object. Call from `x-html`, e.g. `FlexRender({ header })`.
    */
   FlexRender: typeof FlexRender
-
-  /**
-   * The selected state of the table. This state may not match the structure of `table.store.state` because it is selected by the `selector` function that you pass as the 2nd argument to `createTable`.
-   *
-   * @example
-   * const table = createTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
-   *
-   * console.log(table.state.globalFilter)
-   */
-  readonly state: Readonly<TSelected>
 }
 
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
->(
-  tableOptions: TableOptions<TFeatures, TData>,
-  selector?: (state: TableState<TFeatures>) => TSelected,
-): AlpineTable<TFeatures, TData, TSelected> {
+>(tableOptions: TableOptions<TFeatures, TData>): AlpineTable<TFeatures, TData> {
   const mergedOptions: TableOptions<TFeatures, TData> = {
     ...tableOptions,
     features: {
@@ -61,10 +45,9 @@ export function createTable<
     },
   }
 
-  const table = constructTable(mergedOptions) as AlpineTable<
+  const table = constructTable(mergedOptions) as unknown as AlpineTable<
     TFeatures,
-    TData,
-    TSelected
+    TData
   >
 
   table.flexRender = flexRender
@@ -160,16 +143,6 @@ export function createTable<
     proxyCache.set(value, proxy)
     return proxy
   }
-
-  Object.defineProperty(table, 'state', {
-    get() {
-      void reactivity._ver
-      const state = selector ? selector(table.store.state) : table.store.state
-      return toReactiveProxy(state) as Readonly<TSelected>
-    },
-    enumerable: true,
-    configurable: true,
-  })
 
   return toReactiveProxy(table)
 }

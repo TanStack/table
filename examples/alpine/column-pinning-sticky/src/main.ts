@@ -99,20 +99,17 @@ const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(20) })
 
-  const table = createTable(
-    {
-      features,
-      columns: defaultColumns,
-      get data() {
-        return local.data
-      },
-      columnResizeMode: 'onChange',
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns: defaultColumns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    columnResizeMode: 'onChange',
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
   return {
     table,

@@ -63,36 +63,33 @@ Alpine.data('table', () => {
     pagination: { pageIndex: 0, pageSize: 10 },
   })
 
-  const table = createTable(
-    {
-      debugTable: true,
-      features,
-      columns,
-      get data() {
-        return local.data
+  const table = createTable({
+    debugTable: true,
+    features,
+    columns,
+    get data() {
+      return local.data
+    },
+    // connect our external state back down to the table via getters
+    state: {
+      get sorting() {
+        return local.sorting
       },
-      // connect our external state back down to the table via getters
-      state: {
-        get sorting() {
-          return local.sorting
-        },
-        get pagination() {
-          return local.pagination
-        },
-      },
-      onSortingChange: (updater) => {
-        // raise sorting state changes to our own state management
-        local.sorting =
-          typeof updater === 'function' ? updater(local.sorting) : updater
-      },
-      onPaginationChange: (updater) => {
-        // raise pagination state changes to our own state management
-        local.pagination =
-          typeof updater === 'function' ? updater(local.pagination) : updater
+      get pagination() {
+        return local.pagination
       },
     },
-    (state) => state, // default selector
-  )
+    onSortingChange: (updater) => {
+      // raise sorting state changes to our own state management
+      local.sorting =
+        typeof updater === 'function' ? updater(local.sorting) : updater
+    },
+    onPaginationChange: (updater) => {
+      // raise pagination state changes to our own state management
+      local.pagination =
+        typeof updater === 'function' ? updater(local.pagination) : updater
+    },
+  })
 
   return {
     table,

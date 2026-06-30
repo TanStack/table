@@ -100,7 +100,7 @@
           <span>Page</span>
           <strong>
             <span
-              x-text="(table.state.pagination.pageIndex + 1).toLocaleString()"
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
             ></span>
             of
             <span x-text="table.getPageCount().toLocaleString()"></span>

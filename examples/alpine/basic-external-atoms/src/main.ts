@@ -71,21 +71,18 @@ Alpine.data('table', () => {
   // through the external atoms we created instead. Atom changes flow through
   // the derived `table.store`, which the Alpine adapter subscribes to so the
   // template re-renders.
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      atoms: {
-        sorting: sortingAtom,
-        pagination: paginationAtom,
-      },
-      debugTable: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    atoms: {
+      sorting: sortingAtom,
+      pagination: paginationAtom,
+    },
+    debugTable: true,
+  })
 
   return {
     table,

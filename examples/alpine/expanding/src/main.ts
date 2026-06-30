@@ -79,18 +79,15 @@ type PersonColumn = Column<typeof features, Person>
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(100, 5, 3) })
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return local.data
-      },
-      getSubRows: (row) => row.subRows,
-      debugTable: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return local.data
     },
-    (state) => state, // default selector
-  )
+    getSubRows: (row) => row.subRows,
+    debugTable: true,
+  })
 
   return {
     table,
