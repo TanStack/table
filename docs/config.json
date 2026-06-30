@@ -358,6 +358,12 @@
       ],
       "frameworks": [
         {
+          "label": "alpine",
+          "children": [
+            { "label": "Alpine API Reference", "to": "framework/alpine/reference/index" }
+          ]
+        },
+        {
           "label": "angular",
           "children": [
             { "label": "Angular API Reference", "to": "framework/angular/reference/index" }
@@ -426,6 +432,18 @@
         { "label": "DebugOptions", "to": "reference/index/type-aliases/DebugOptions" }
       ],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "createTable", "to": "framework/alpine/reference/functions/createTable" },
+            { "label": "createTableHook", "to": "framework/alpine/reference/functions/createTableHook" },
+            { "label": "AlpineTable", "to": "framework/alpine/reference/type-aliases/AlpineTable" },
+            { "label": "AppAlpineTable", "to": "framework/alpine/reference/type-aliases/AppAlpineTable" },
+            { "label": "CreateTableHookOptions", "to": "framework/alpine/reference/type-aliases/CreateTableHookOptions" },
+            { "label": "FlexRender", "to": "framework/alpine/reference/functions/FlexRender-1" },
+            { "label": "flexRender", "to": "framework/alpine/reference/functions/flexRender" }
+          ]
+        },
         {
           "label": "react",
           "children": [
@@ -543,6 +561,12 @@
         { "label": "DeepValue", "to": "reference/index/type-aliases/DeepValue" }
       ],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "AppColumnHelper", "to": "framework/alpine/reference/type-aliases/AppColumnHelper" }
+          ]
+        },
         {
           "label": "react",
           "children": [

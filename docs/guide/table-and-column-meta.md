@@ -145,6 +145,26 @@ const table = this.tableController.table({
 table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```
 
+# Alpine
+
+```ts
+const table = createTable({
+  features,
+  columns,
+  get data() {
+    return local.data
+  },
+  meta: {
+    updateData: (rowIndex, columnId, value) => {
+      // ...
+    },
+  },
+})
+
+// ...later, anywhere the table is available (e.g. inside an Alpine.data method)
+table.options.meta?.updateData(rowIndex, columnId, newValue)
+```
+
 # Vanilla
 
 ```ts
@@ -277,6 +297,18 @@ const features = tableFeatures({
 
 ```ts
 import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/lit-table'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  tableMeta: metaHelper<MyTableMeta>(),
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+```
+
+# Alpine
+
+```ts
+import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/alpine-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -535,6 +567,26 @@ declare module '@tanstack/angular-table' {
 import type { CellData, RowData, TableFeatures } from '@tanstack/lit-table'
 
 declare module '@tanstack/lit-table' {
+  interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void
+  }
+
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
+    filterVariant?: 'text' | 'range' | 'select'
+  }
+}
+```
+
+# Alpine
+
+```ts
+import type { CellData, RowData, TableFeatures } from '@tanstack/alpine-table'
+
+declare module '@tanstack/alpine-table' {
   interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
   }
