@@ -50,15 +50,18 @@ Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(20) })
 
   // 6. Create the table instance with required features, columns, and data
-  const table = createTable({
-    debugTable: true, // optionally, enable console logging debug messages
-    features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
-    columns,
-    get data() {
-      return local.data
+  const table = createTable(
+    {
+      debugTable: true, // optionally, enable console logging debug messages
+      features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
+      columns,
+      get data() {
+        return local.data
+      },
+      // add additional table options here
     },
-    // add additional table options here
-  })
+    (state) => state, // default selector
+  )
 
   return {
     table,

@@ -808,7 +808,8 @@
           "children": [
             { "to": "framework/alpine/examples/basic-create-table", "label": "Basic (createTable)" },
             { "to": "framework/alpine/examples/basic-external-state", "label": "Basic (External State)" },
-            { "to": "framework/alpine/examples/basic-external-atoms", "label": "Basic (External Atoms)" }
+            { "to": "framework/alpine/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
+            { "to": "framework/alpine/examples/column-groups", "label": "Header Groups" }
           ]
         },
         {
@@ -903,9 +904,22 @@
           "children": [
             { "to": "framework/alpine/examples/filters", "label": "Column Filters" },
             { "to": "framework/alpine/examples/filters-faceted", "label": "Column Filters (Faceted)" },
-            { "to": "framework/alpine/examples/filters-fuzzy", "label": "Fuzzy Search Filters" },
+            { "to": "framework/alpine/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/alpine/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/alpine/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/alpine/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
+            { "to": "framework/alpine/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/alpine/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/alpine/examples/column-resizing-performant", "label": "Performant Column Resizing" },
+            { "to": "framework/alpine/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/alpine/examples/expanding", "label": "Expanding" },
+            { "to": "framework/alpine/examples/sub-components", "label": "Expanding Sub Components" },
+            { "to": "framework/alpine/examples/grouping", "label": "Grouping" },
             { "to": "framework/alpine/examples/pagination", "label": "Pagination" },
-            { "to": "framework/alpine/examples/sorting", "label": "Sorting" }
+            { "to": "framework/alpine/examples/row-pinning", "label": "Row Pinning" },
+            { "to": "framework/alpine/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/alpine/examples/sorting", "label": "Sorting" },
+            { "to": "framework/alpine/examples/sorting-dynamic-data", "label": "Sorting (Dynamic Data)" }
           ]
         },
         {
@@ -1092,6 +1106,12 @@
       "label": "Specialized Examples",
       "children": [],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "Custom Plugin", "to": "framework/alpine/examples/custom-plugin" }
+          ]
+        },
         {
           "label": "angular",
           "children": [

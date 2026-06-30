@@ -1,0 +1,22 @@
+{
+  "name": "tanstack-alpine-table-example-column-ordering",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/alpine-table": "^9.0.0-beta.23",
+    "alpinejs": "^3.15.12"
+  },
+  "devDependencies": {
+    "@rollup/plugin-replace": "^6.0.3",
+    "@types/alpinejs": "^3.13.11",
+    "typescript": "6.0.3",
+    "vite": "^8.1.0"
+  }
+}

@@ -114,6 +114,22 @@ export function createTable<
       return value
     }
 
+    // Built-in exotic objects (Map, Set, Date, etc.) rely on internal slots and
+    // throw "incompatible receiver" when their getters/methods run with a Proxy
+    // as the receiver (e.g. `getFacetedUniqueValues().size`). Return them as-is;
+    // the read that produced them already tracked `_ver` at the call site.
+    if (
+      value instanceof Map ||
+      value instanceof Set ||
+      value instanceof WeakMap ||
+      value instanceof WeakSet ||
+      value instanceof Date ||
+      value instanceof RegExp ||
+      value instanceof Promise
+    ) {
+      return value
+    }
+
     const cachedProxy = proxyCache.get(value)
     if (cachedProxy) {
       return cachedProxy as TValue

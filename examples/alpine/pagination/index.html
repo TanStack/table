@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Pagination</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (100k rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div x-html="FlexRender({ header })"></div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.firstPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.nextPage()"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.lastPage()"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            <span
+              x-text="(table.state.pagination.pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.state.pagination.pageIndex + 1"
+            @input="goToPage($event.target.value)"
+            class="page-size-input"
+          />
+        </span>
+        <select
+          :value="table.state.pagination.pageSize"
+          @change="table.setPageSize(Number($event.target.value))"
+        >
+          <template x-for="pageSize in pageSizes" :key="pageSize">
+            <option
+              :value="pageSize"
+              x-text="'Show ' + pageSize"
+              :selected="pageSize === table.state.pagination.pageSize"
+            ></option>
+          </template>
+        </select>
+      </div>
+      <div>
+        Showing
+        <span x-text="table.getRowModel().rows.length.toLocaleString()"></span>
+        of
+        <span x-text="table.getRowCount().toLocaleString()"></span> Rows
+      </div>
+      <pre x-text="JSON.stringify(table.state, null, 2)"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

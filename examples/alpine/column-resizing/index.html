@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Column Resizing</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (100 rows)</button>
+      </div>
+      <select
+        x-model="local.columnResizeMode"
+        class="demo-button outlined-control"
+      >
+        <option value="onEnd">Resize: "onEnd"</option>
+        <option value="onChange">Resize: "onChange"</option>
+      </select>
+      <select
+        x-model="local.columnResizeDirection"
+        class="demo-button outlined-control"
+      >
+        <option value="ltr">Resize Direction: "ltr"</option>
+        <option value="rtl">Resize Direction: "rtl"</option>
+      </select>
+      <div :style="'direction:' + local.columnResizeDirection">
+        <div class="spacer-md"></div>
+        <div class="section-title">&lt;table/&gt;</div>
+        <div class="scroll-container">
+          <table :style="'width:' + table.getCenterTotalSize() + 'px'">
+            <thead>
+              <template
+                x-for="headerGroup in table.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th
+                      :colspan="header.colSpan"
+                      :style="'width:' + header.getSize() + 'px'"
+                    >
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                      <div
+                        class="resizer"
+                        :class="local.columnResizeDirection + (header.column.getIsResizing() ? ' is-resizing' : '')"
+                        :style="resizerTransform(header)"
+                        @dblclick="header.column.resetSize()"
+                        @mousedown="header.getResizeHandler()($event)"
+                        @touchstart="header.getResizeHandler()($event)"
+                      ></div>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template x-for="row in table.getRowModel().rows" :key="row.id">
+                <tr>
+                  <template x-for="cell in row.getAllCells()" :key="cell.id">
+                    <td :style="'width:' + cell.column.getSize() + 'px'">
+                      <span x-html="FlexRender({ cell })"></span>
+                    </td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </div>
+        <div class="spacer-md"></div>
+        <div class="section-title">&lt;div/&gt; (relative)</div>
+        <div class="scroll-container">
+          <div class="divTable" :style="'width:' + table.getTotalSize() + 'px'">
+            <div class="thead">
+              <template
+                x-for="headerGroup in table.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <div class="tr">
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <div class="th" :style="'width:' + header.getSize() + 'px'">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                      <div
+                        class="resizer"
+                        :class="local.columnResizeDirection + (header.column.getIsResizing() ? ' is-resizing' : '')"
+                        :style="resizerTransform(header)"
+                        @dblclick="header.column.resetSize()"
+                        @mousedown="header.getResizeHandler()($event)"
+                        @touchstart="header.getResizeHandler()($event)"
+                      ></div>
+                    </div>
+                  </template>
+                </div>
+              </template>
+            </div>
+            <div class="tbody">
+              <template x-for="row in table.getRowModel().rows" :key="row.id">
+                <div class="tr">
+                  <template x-for="cell in row.getAllCells()" :key="cell.id">
+                    <div
+                      class="td"
+                      :style="'width:' + cell.column.getSize() + 'px'"
+                    >
+                      <span x-html="FlexRender({ cell })"></span>
+                    </div>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+        <div class="spacer-md"></div>
+        <div class="section-title">&lt;div/&gt; (absolute positioning)</div>
+        <div class="scroll-container">
+          <div class="divTable" :style="'width:' + table.getTotalSize() + 'px'">
+            <div class="thead">
+              <template
+                x-for="headerGroup in table.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <div class="tr" style="position: relative">
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <div
+                      class="th"
+                      :style="'position:absolute;left:' + header.getStart() + 'px;width:' + header.getSize() + 'px'"
+                    >
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                      <div
+                        class="resizer"
+                        :class="local.columnResizeDirection + (header.column.getIsResizing() ? ' is-resizing' : '')"
+                        :style="resizerTransform(header)"
+                        @dblclick="header.column.resetSize()"
+                        @mousedown="header.getResizeHandler()($event)"
+                        @touchstart="header.getResizeHandler()($event)"
+                      ></div>
+                    </div>
+                  </template>
+                </div>
+              </template>
+            </div>
+            <div class="tbody">
+              <template x-for="row in table.getRowModel().rows" :key="row.id">
+                <div class="tr" style="position: relative">
+                  <template x-for="cell in row.getAllCells()" :key="cell.id">
+                    <div
+                      class="td"
+                      :style="'position:absolute;left:' + cell.column.getStart() + 'px;width:' + cell.column.getSize() + 'px'"
+                    >
+                      <span x-html="FlexRender({ cell })"></span>
+                    </div>
+                  </template>
+                </div>
+              </template>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="spacer-md"></div>
+      <pre x-text="JSON.stringify(table.state, null, 2)"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

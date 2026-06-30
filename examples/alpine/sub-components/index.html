@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Sub Components</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (100 rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div>
+                      <span x-html="FlexRender({ header })"></span>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <template x-for="row in table.getRowModel().rows" :key="row.id">
+          <tbody>
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td>
+                  <!-- expander cell: interactive expand button -->
+                  <template x-if="cell.column.id === 'expander'">
+                    <span>
+                      <button
+                        x-show="cell.row.getCanExpand()"
+                        style="cursor: pointer"
+                        @click="cell.row.getToggleExpandedHandler()($event)"
+                        x-text="cell.row.getIsExpanded() ? '👇' : '👉'"
+                      ></button>
+                      <span x-show="!cell.row.getCanExpand()">🔵</span>
+                    </span>
+                  </template>
+                  <!-- firstName cell: depth-indented value -->
+                  <template x-if="cell.column.id === 'firstName'">
+                    <div
+                      :style="'padding-left:' + cell.row.depth * 2 + 'rem'"
+                      x-text="cell.getValue()"
+                    ></div>
+                  </template>
+                  <!-- other cells -->
+                  <template
+                    x-if="cell.column.id !== 'expander' && cell.column.id !== 'firstName'"
+                  >
+                    <span x-html="FlexRender({ cell })"></span>
+                  </template>
+                </td>
+              </template>
+            </tr>
+            <!-- expanded detail sub-row -->
+            <template x-if="row.getIsExpanded()">
+              <tr>
+                <td :colspan="row.getAllCells().length">
+                  <span x-html="renderSubComponent(row)"></span>
+                </td>
+              </tr>
+            </template>
+          </tbody>
+        </template>
+      </table>
+      <div class="spacer-sm"></div>
+      <div>
+        <span x-text="table.getRowModel().rows.length.toLocaleString()"></span>
+        Rows
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
