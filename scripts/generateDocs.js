@@ -75,6 +75,15 @@ await generateReferenceDocs({
       outputDir: resolve(__dirname, '../docs/framework/lit/reference'),
       exclude: ['packages/table-core/**/*'],
     },
+    {
+      name: 'alpine-table',
+      entryPoints: [
+        resolve(__dirname, '../packages/alpine-table/src/index.ts'),
+      ],
+      tsconfig: resolve(__dirname, '../packages/alpine-table/tsconfig.json'),
+      outputDir: resolve(__dirname, '../docs/framework/alpine/reference'),
+      exclude: ['packages/table-core/**/*'],
+    },
   ],
 })
 

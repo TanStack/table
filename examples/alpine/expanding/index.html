@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Expanding</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1k root rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div>
+                      <!-- firstName header: select-all + expand-all controls -->
+                      <template x-if="header.column.id === 'firstName'">
+                        <div class="inline-controls">
+                          <input
+                            type="checkbox"
+                            style="cursor: pointer"
+                            :checked="table.getIsAllRowsSelected()"
+                            x-effect="$el.indeterminate = !table.getIsAllRowsSelected() && table.getIsSomeRowsSelected()"
+                            @change="table.getToggleAllRowsSelectedHandler()($event)"
+                          />
+                          <button
+                            @click="table.getToggleAllRowsExpandedHandler()($event)"
+                            x-text="table.getIsAllRowsExpanded() ? '👇' : '👉'"
+                          ></button>
+                          <span>First Name</span>
+                        </div>
+                      </template>
+                      <!-- other headers: rendered content -->
+                      <template x-if="header.column.id !== 'firstName'">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                      <!-- per-column filter -->
+                      <template x-if="header.column.getCanFilter()">
+                        <div class="filter-row">
+                          <template x-if="isNumberColumn(header.column)">
+                            <div class="filter-row">
+                              <input
+                                type="number"
+                                class="filter-input"
+                                placeholder="Min"
+                                :value="rangeValue(header.column, 0)"
+                                @input="setRangeMin(header.column, $event.target.value)"
+                              />
+                              <input
+                                type="number"
+                                class="filter-input"
+                                placeholder="Max"
+                                :value="rangeValue(header.column, 1)"
+                                @input="setRangeMax(header.column, $event.target.value)"
+                              />
+                            </div>
+                          </template>
+                          <template x-if="!isNumberColumn(header.column)">
+                            <input
+                              type="text"
+                              class="filter-input"
+                              placeholder="Search..."
+                              :value="header.column.getFilterValue() ?? ''"
+                              @input="setTextFilter(header.column, $event.target.value)"
+                            />
+                          </template>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td>
+                  <!-- firstName cell: selection + expander + value with depth indent -->
+                  <template x-if="cell.column.id === 'firstName'">
+                    <div
+                      class="inline-controls"
+                      :style="'padding-left:' + cell.row.depth * 2 + 'rem'"
+                    >
+                      <input
+                        type="checkbox"
+                        style="cursor: pointer"
+                        :checked="cell.row.getIsSelected()"
+                        x-effect="$el.indeterminate = !cell.row.getIsSelected() && cell.row.getIsSomeSelected()"
+                        @change="cell.row.getToggleSelectedHandler()($event)"
+                      />
+                      <button
+                        x-show="cell.row.getCanExpand()"
+                        style="cursor: pointer"
+                        @click="cell.row.getToggleExpandedHandler()($event)"
+                        x-text="cell.row.getIsExpanded() ? '👇' : '👉'"
+                      ></button>
+                      <span x-show="!cell.row.getCanExpand()">🔵</span>
+                      <span x-text="cell.getValue()"></span>
+                    </div>
+                  </template>
+                  <!-- other cells -->
+                  <template x-if="cell.column.id !== 'firstName'">
+                    <span x-html="FlexRender({ cell })"></span>
+                  </template>
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="page-controls">
+        <button
+          @click="table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button @click="table.nextPage()" :disabled="!table.getCanNextPage()">
+          &gt;
+        </button>
+        <button
+          @click="table.setPageIndex(table.getPageCount() - 1)"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <span>Page</span>
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.atoms.pagination.get().pageIndex + 1"
+            @input="goToPage($event.target.value)"
+            class="page-size-input"
+          />
+        </span>
+      </div>
+      <div class="spacer-sm"></div>
+      <div>
+        <span x-text="table.getRowModel().rows.length.toLocaleString()"></span>
+        of
+        <span
+          x-text="table.getPreFilteredRowModel().rows.length.toLocaleString()"
+        ></span>
+        rows
+      </div>
+      <pre x-text="JSON.stringify(table.atoms.expanded.get(), null, 2)"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

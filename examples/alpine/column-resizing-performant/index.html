@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Column Resizing (Performant)</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (2k rows)</button>
+      </div>
+      <div class="spacer-md"></div>
+      <pre
+        style="min-height: 10rem"
+        x-text="JSON.stringify(table.store.get(), null, 2)"
+      ></pre>
+      <div class="spacer-md"></div>
+      <span x-text="'(' + local.data.length.toLocaleString() + ' rows)'"></span>
+      <div class="scroll-container">
+        <div class="divTable" :style="columnSizeVars()">
+          <div class="thead">
+            <template
+              x-for="headerGroup in table.getHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <div class="tr">
+                <template
+                  x-for="header in headerGroup.headers"
+                  :key="header.id"
+                >
+                  <div
+                    class="th"
+                    :style="'width:calc(var(--header-' + header.id + '-size) * 1px)'"
+                  >
+                    <template x-if="!header.isPlaceholder">
+                      <span x-html="FlexRender({ header })"></span>
+                    </template>
+                    <div
+                      class="resizer"
+                      :class="header.column.getIsResizing() ? 'is-resizing' : ''"
+                      @dblclick="header.column.resetSize()"
+                      @mousedown="header.getResizeHandler()($event)"
+                      @touchstart="header.getResizeHandler()($event)"
+                    ></div>
+                  </div>
+                </template>
+              </div>
+            </template>
+          </div>
+          <div class="tbody">
+            <template x-for="row in table.getRowModel().rows" :key="row.id">
+              <div class="tr">
+                <template x-for="cell in row.getAllCells()" :key="cell.id">
+                  <div
+                    class="td"
+                    :style="'width:calc(var(--col-' + cell.column.id + '-size) * 1px)'"
+                    x-text="cell.renderValue()"
+                  ></div>
+                </template>
+              </div>
+            </template>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

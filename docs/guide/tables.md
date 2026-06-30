@@ -138,6 +138,23 @@ const table = this.tableController.table({
 })
 ```
 
+# Alpine
+
+```ts
+import { createTable, tableFeatures } from '@tanstack/alpine-table'
+
+const features = tableFeatures({}) // Core features only; add columnFilteringFeature, rowSortingFeature, etc. as needed
+
+// inside Alpine.data('table', () => { ... }):
+const table = createTable({
+  features,
+  columns,
+  get data() {
+    return local.data
+  },
+})
+```
+
 # Vanilla
 
 ```ts
@@ -227,6 +244,18 @@ const table = this.tableController.table({
 })
 ```
 
+# Alpine
+
+```ts
+const table = createTable({
+  features,
+  columns,
+  get data() {
+    return local.data
+  },
+})
+```
+
 # Vanilla
 
 ```ts
@@ -283,6 +312,10 @@ Direct reads like `table.atoms.rowSelection.get()` and `table.store.state.rowSel
 # Lit
 
 [Table State Guide](../framework/lit/guide/table-state)
+
+# Alpine
+
+[Table State Guide](../framework/alpine/guide/table-state)
 
 # Vanilla
 

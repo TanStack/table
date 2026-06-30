@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Column Ordering</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
+          <label>
+            <input
+              type="checkbox"
+              :checked="table.getIsAllColumnsVisible()"
+              @change="table.getToggleAllColumnsVisibilityHandler()($event)"
+            />
+            Toggle All
+          </label>
+        </div>
+        <template x-for="column in table.getAllLeafColumns()" :key="column.id">
+          <div class="column-toggle-row">
+            <label>
+              <input
+                type="checkbox"
+                :checked="column.getIsVisible()"
+                @change="column.getToggleVisibilityHandler()($event)"
+              />
+              <span x-text="column.id"></span>
+            </label>
+          </div>
+        </template>
+      </div>
+      <div class="spacer-md"></div>
+      <div class="button-row">
+        <button class="demo-button demo-button-sm" @click="reset()">
+          Reset
+        </button>
+        <button class="demo-button demo-button-sm" @click="randomizeColumns()">
+          Shuffle Columns
+        </button>
+      </div>
+      <div class="spacer-md"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <span x-html="FlexRender({ header })"></span>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getVisibleCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+        <tfoot>
+          <template
+            x-for="footerGroup in table.getFooterGroups()"
+            :key="footerGroup.id"
+          >
+            <tr>
+              <template x-for="header in footerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <span x-html="FlexRender({ footer: header })"></span>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </tfoot>
+      </table>
+      <div class="spacer-md"></div>
+      <pre x-text="JSON.stringify(table.store.get(), null, 2)"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -15,6 +15,7 @@ solid: @tanstack/solid-table@beta
 svelte: @tanstack/svelte-table@beta
 angular: @tanstack/angular-table@beta
 lit: @tanstack/lit-table@beta
+alpine: @tanstack/alpine-table@beta
 
 <!-- ::end:tabs -->
 
@@ -50,6 +51,10 @@ The `@tanstack/angular-table` package works with Angular 19 or newer. The Angula
 # Lit
 
 The `@tanstack/lit-table` package works with Lit 3 (3.1.3 or newer) and also requires `@lit/context` as a peer dependency.
+
+# Alpine
+
+The `@tanstack/alpine-table` package works with Alpine 3.
 
 <!-- ::end:framework -->
 

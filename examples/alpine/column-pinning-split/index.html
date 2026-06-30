@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Column Pinning (Split)</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
+          <label>
+            <input
+              type="checkbox"
+              :checked="table.getIsAllColumnsVisible()"
+              @change="table.getToggleAllColumnsVisibilityHandler()($event)"
+            />
+            Toggle All
+          </label>
+        </div>
+        <template x-for="column in table.getAllLeafColumns()" :key="column.id">
+          <div class="column-toggle-row">
+            <label>
+              <input
+                type="checkbox"
+                :checked="column.getIsVisible()"
+                @change="column.getToggleVisibilityHandler()($event)"
+              />
+              <span x-text="column.id"></span>
+            </label>
+          </div>
+        </template>
+      </div>
+      <div class="spacer-md"></div>
+      <div class="button-row">
+        <button class="demo-button demo-button-sm" @click="refreshData()">
+          Regenerate Data
+        </button>
+        <button class="demo-button demo-button-sm" @click="stressTest()">
+          Stress Test (1M rows)
+        </button>
+        <button class="demo-button demo-button-sm" @click="randomizeColumns()">
+          Shuffle Columns
+        </button>
+      </div>
+      <div class="spacer-md"></div>
+      <p class="demo-note">
+        This example takes advantage of the "splitting" APIs. (APIs that have
+        "left", "center", and "right" modifiers)
+      </p>
+      <div class="split-tables">
+        <!-- Left pinned table -->
+        <table class="outlined-table">
+          <thead>
+            <template
+              x-for="headerGroup in table.getLeftHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <tr>
+                <template
+                  x-for="header in headerGroup.headers"
+                  :key="header.id"
+                >
+                  <th :colspan="header.colSpan">
+                    <div class="nowrap">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                    </div>
+                    <template
+                      x-if="!header.isPlaceholder && header.column.getCanPin()"
+                    >
+                      <div class="pin-actions">
+                        <button
+                          x-show="header.column.getIsPinned() !== 'left'"
+                          class="pin-button"
+                          @click="header.column.pin('left')"
+                        >
+                          &lt;=
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned()"
+                          class="pin-button"
+                          @click="header.column.pin(false)"
+                        >
+                          X
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned() !== 'right'"
+                          class="pin-button"
+                          @click="header.column.pin('right')"
+                        >
+                          =&gt;
+                        </button>
+                      </div>
+                    </template>
+                  </th>
+                </template>
+              </tr>
+            </template>
+          </thead>
+          <tbody>
+            <template
+              x-for="row in table.getRowModel().rows.slice(0, 20)"
+              :key="row.id"
+            >
+              <tr>
+                <template
+                  x-for="cell in row.getLeftVisibleCells()"
+                  :key="cell.id"
+                >
+                  <td x-html="FlexRender({ cell })"></td>
+                </template>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <!-- Center (unpinned) table -->
+        <table class="outlined-table">
+          <thead>
+            <template
+              x-for="headerGroup in table.getCenterHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <tr>
+                <template
+                  x-for="header in headerGroup.headers"
+                  :key="header.id"
+                >
+                  <th :colspan="header.colSpan">
+                    <div class="nowrap">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                    </div>
+                    <template
+                      x-if="!header.isPlaceholder && header.column.getCanPin()"
+                    >
+                      <div class="pin-actions">
+                        <button
+                          x-show="header.column.getIsPinned() !== 'left'"
+                          class="pin-button"
+                          @click="header.column.pin('left')"
+                        >
+                          &lt;=
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned()"
+                          class="pin-button"
+                          @click="header.column.pin(false)"
+                        >
+                          X
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned() !== 'right'"
+                          class="pin-button"
+                          @click="header.column.pin('right')"
+                        >
+                          =&gt;
+                        </button>
+                      </div>
+                    </template>
+                  </th>
+                </template>
+              </tr>
+            </template>
+          </thead>
+          <tbody>
+            <template
+              x-for="row in table.getRowModel().rows.slice(0, 20)"
+              :key="row.id"
+            >
+              <tr>
+                <template
+                  x-for="cell in row.getCenterVisibleCells()"
+                  :key="cell.id"
+                >
+                  <td x-html="FlexRender({ cell })"></td>
+                </template>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+        <!-- Right pinned table -->
+        <table class="outlined-table">
+          <thead>
+            <template
+              x-for="headerGroup in table.getRightHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <tr>
+                <template
+                  x-for="header in headerGroup.headers"
+                  :key="header.id"
+                >
+                  <th :colspan="header.colSpan">
+                    <div class="nowrap">
+                      <template x-if="!header.isPlaceholder">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                    </div>
+                    <template
+                      x-if="!header.isPlaceholder && header.column.getCanPin()"
+                    >
+                      <div class="pin-actions">
+                        <button
+                          x-show="header.column.getIsPinned() !== 'left'"
+                          class="pin-button"
+                          @click="header.column.pin('left')"
+                        >
+                          &lt;=
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned()"
+                          class="pin-button"
+                          @click="header.column.pin(false)"
+                        >
+                          X
+                        </button>
+                        <button
+                          x-show="header.column.getIsPinned() !== 'right'"
+                          class="pin-button"
+                          @click="header.column.pin('right')"
+                        >
+                          =&gt;
+                        </button>
+                      </div>
+                    </template>
+                  </th>
+                </template>
+              </tr>
+            </template>
+          </thead>
+          <tbody>
+            <template
+              x-for="row in table.getRowModel().rows.slice(0, 20)"
+              :key="row.id"
+            >
+              <tr>
+                <template
+                  x-for="cell in row.getRightVisibleCells()"
+                  :key="cell.id"
+                >
+                  <td x-html="FlexRender({ cell })"></td>
+                </template>
+              </tr>
+            </template>
+          </tbody>
+        </table>
+      </div>
+      <div class="spacer-md"></div>
+      <pre x-text="JSON.stringify(table.store.get(), null, 2)"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

@@ -1,4 +1,5 @@
 export default [
+  './packages/alpine-table/vite.config.ts',
   './packages/angular-table/vite.config.ts',
   './packages/lit-table/vite.config.ts',
   './packages/match-sorter-utils/vite.config.ts',

@@ -15,6 +15,12 @@
       ],
       "frameworks": [
         {
+          "label": "alpine",
+          "children": [
+            { "label": "Quick Start", "to": "framework/alpine/quick-start" }
+          ]
+        },
+        {
           "label": "angular",
           "children": [
             { "label": "Quick Start", "to": "framework/angular/quick-start" },
@@ -90,6 +96,23 @@
       ],
       "frameworks": [
         {
+          "label": "alpine",
+          "children": [
+            {
+              "label": "Table State",
+              "to": "framework/alpine/guide/table-state"
+            },
+            {
+              "label": "Composable Tables (createTableHook)",
+              "to": "framework/alpine/guide/composable-tables"
+            },
+            {
+              "label": "Custom Plugins",
+              "to": "framework/alpine/guide/custom-features"
+            }
+          ]
+        },
+        {
           "label": "angular",
           "children": [
             { "label": "Table State", "to": "framework/angular/guide/table-state" },
@@ -159,6 +182,26 @@
       "label": "Feature Guides",
       "children": [],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/alpine/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/alpine/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/alpine/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/alpine/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/alpine/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/alpine/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/alpine/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/alpine/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/alpine/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/alpine/guide/grouping" },
+            { "label": "Expanding", "to": "framework/alpine/guide/expanding" },
+            { "label": "Pagination", "to": "framework/alpine/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/alpine/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/alpine/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/alpine/guide/sorting" }
+          ]
+        },
         {
           "label": "angular",
           "children": [
@@ -315,6 +358,12 @@
       ],
       "frameworks": [
         {
+          "label": "alpine",
+          "children": [
+            { "label": "Alpine API Reference", "to": "framework/alpine/reference/index" }
+          ]
+        },
+        {
           "label": "angular",
           "children": [
             { "label": "Angular API Reference", "to": "framework/angular/reference/index" }
@@ -383,6 +432,18 @@
         { "label": "DebugOptions", "to": "reference/index/type-aliases/DebugOptions" }
       ],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "createTable", "to": "framework/alpine/reference/functions/createTable" },
+            { "label": "createTableHook", "to": "framework/alpine/reference/functions/createTableHook" },
+            { "label": "AlpineTable", "to": "framework/alpine/reference/type-aliases/AlpineTable" },
+            { "label": "AppAlpineTable", "to": "framework/alpine/reference/type-aliases/AppAlpineTable" },
+            { "label": "CreateTableHookOptions", "to": "framework/alpine/reference/type-aliases/CreateTableHookOptions" },
+            { "label": "FlexRender", "to": "framework/alpine/reference/functions/FlexRender-1" },
+            { "label": "flexRender", "to": "framework/alpine/reference/functions/flexRender" }
+          ]
+        },
         {
           "label": "react",
           "children": [
@@ -500,6 +561,12 @@
         { "label": "DeepValue", "to": "reference/index/type-aliases/DeepValue" }
       ],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "AppColumnHelper", "to": "framework/alpine/reference/type-aliases/AppColumnHelper" }
+          ]
+        },
         {
           "label": "react",
           "children": [
@@ -786,6 +853,16 @@
       "children": [],
       "frameworks": [
         {
+          "label": "alpine",
+          "children": [
+            { "to": "framework/alpine/examples/basic-create-table", "label": "Basic (createTable)" },
+            { "to": "framework/alpine/examples/basic-app-table", "label": "Basic (createAppTable)" },
+            { "to": "framework/alpine/examples/basic-external-state", "label": "Basic (External State)" },
+            { "to": "framework/alpine/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
+            { "to": "framework/alpine/examples/column-groups", "label": "Header Groups" }
+          ]
+        },
+        {
           "label": "angular",
           "children": [
             { "label": "Basic (injectTable)", "to": "framework/angular/examples/basic-inject-table" },
@@ -872,6 +949,29 @@
       "label": "Feature Examples",
       "children": [],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "to": "framework/alpine/examples/filters", "label": "Column Filters" },
+            { "to": "framework/alpine/examples/filters-faceted", "label": "Column Filters (Faceted)" },
+            { "to": "framework/alpine/examples/column-ordering", "label": "Column Ordering" },
+            { "to": "framework/alpine/examples/column-pinning", "label": "Column Pinning" },
+            { "to": "framework/alpine/examples/column-pinning-split", "label": "Column Pinning (Split)" },
+            { "to": "framework/alpine/examples/column-pinning-sticky", "label": "Sticky Column Pinning" },
+            { "to": "framework/alpine/examples/column-sizing", "label": "Column Sizing" },
+            { "to": "framework/alpine/examples/column-resizing", "label": "Column Resizing" },
+            { "to": "framework/alpine/examples/column-resizing-performant", "label": "Performant Column Resizing" },
+            { "to": "framework/alpine/examples/column-visibility", "label": "Column Visibility" },
+            { "to": "framework/alpine/examples/expanding", "label": "Expanding" },
+            { "to": "framework/alpine/examples/sub-components", "label": "Expanding Sub Components" },
+            { "to": "framework/alpine/examples/grouping", "label": "Grouping" },
+            { "to": "framework/alpine/examples/pagination", "label": "Pagination" },
+            { "to": "framework/alpine/examples/row-pinning", "label": "Row Pinning" },
+            { "to": "framework/alpine/examples/row-selection", "label": "Row Selection" },
+            { "to": "framework/alpine/examples/sorting", "label": "Sorting" },
+            { "to": "framework/alpine/examples/sorting-dynamic-data", "label": "Sorting (Dynamic Data)" }
+          ]
+        },
         {
           "label": "angular",
           "children": [
@@ -1056,6 +1156,12 @@
       "label": "Specialized Examples",
       "children": [],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "Custom Plugin", "to": "framework/alpine/examples/custom-plugin" }
+          ]
+        },
         {
           "label": "angular",
           "children": [

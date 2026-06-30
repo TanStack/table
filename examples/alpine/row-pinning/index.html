@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Row Pinning</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (200k rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div>
+                      <span x-html="FlexRender({ header })"></span>
+                      <!-- per-column filter -->
+                      <template x-if="header.column.getCanFilter()">
+                        <div class="filter-row">
+                          <template x-if="isNumberColumn(header.column)">
+                            <div class="filter-row">
+                              <input
+                                type="number"
+                                class="filter-input"
+                                placeholder="Min"
+                                :value="rangeValue(header.column, 0)"
+                                @input="setRangeMin(header.column, $event.target.value)"
+                              />
+                              <input
+                                type="number"
+                                class="filter-input"
+                                placeholder="Max"
+                                :value="rangeValue(header.column, 1)"
+                                @input="setRangeMax(header.column, $event.target.value)"
+                              />
+                            </div>
+                          </template>
+                          <template x-if="!isNumberColumn(header.column)">
+                            <input
+                              type="text"
+                              class="filter-input"
+                              placeholder="Search..."
+                              :value="header.column.getFilterValue() ?? ''"
+                              @input="setTextFilter(header.column, $event.target.value)"
+                            />
+                          </template>
+                        </div>
+                      </template>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <!-- top-pinned rows -->
+          <template x-for="row in table.getTopRows()" :key="row.id">
+            <tr :style="pinnedRowStyle(row, table.getBottomRows().length)">
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td>
+                  <!-- pin cell: unpin button -->
+                  <template x-if="cell.column.id === 'pin'">
+                    <button @click="cell.row.pin(false, true, false)">
+                      ❌
+                    </button>
+                  </template>
+                  <!-- firstName cell: expander + depth-indented value -->
+                  <template x-if="cell.column.id === 'firstName'">
+                    <div
+                      class="inline-controls"
+                      :style="'padding-left:' + cell.row.depth * 2 + 'rem'"
+                    >
+                      <button
+                        x-show="cell.row.getCanExpand()"
+                        style="cursor: pointer"
+                        @click="cell.row.getToggleExpandedHandler()($event)"
+                        x-text="cell.row.getIsExpanded() ? '👇' : '👉'"
+                      ></button>
+                      <span x-show="!cell.row.getCanExpand()">🔵</span>
+                      <span x-text="cell.getValue()"></span>
+                    </div>
+                  </template>
+                  <!-- other cells -->
+                  <template
+                    x-if="cell.column.id !== 'pin' && cell.column.id !== 'firstName'"
+                  >
+                    <span x-html="FlexRender({ cell })"></span>
+                  </template>
+                </td>
+              </template>
+            </tr>
+          </template>
+          <!-- center (unpinned) rows -->
+          <template x-for="row in table.getCenterRows()" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td>
+                  <!-- pin cell: pin/unpin buttons -->
+                  <template x-if="cell.column.id === 'pin'">
+                    <span class="pin-actions">
+                      <template x-if="cell.row.getIsPinned()">
+                        <button @click="cell.row.pin(false, true, false)">
+                          ❌
+                        </button>
+                      </template>
+                      <template x-if="!cell.row.getIsPinned()">
+                        <span class="pin-actions">
+                          <button @click="cell.row.pin('top', true, false)">
+                            ⬆️
+                          </button>
+                          <button @click="cell.row.pin('bottom', true, false)">
+                            ⬇️
+                          </button>
+                        </span>
+                      </template>
+                    </span>
+                  </template>
+                  <!-- firstName cell: expander + depth-indented value -->
+                  <template x-if="cell.column.id === 'firstName'">
+                    <div
+                      class="inline-controls"
+                      :style="'padding-left:' + cell.row.depth * 2 + 'rem'"
+                    >
+                      <button
+                        x-show="cell.row.getCanExpand()"
+                        style="cursor: pointer"
+                        @click="cell.row.getToggleExpandedHandler()($event)"
+                        x-text="cell.row.getIsExpanded() ? '👇' : '👉'"
+                      ></button>
+                      <span x-show="!cell.row.getCanExpand()">🔵</span>
+                      <span x-text="cell.getValue()"></span>
+                    </div>
+                  </template>
+                  <!-- other cells -->
+                  <template
+                    x-if="cell.column.id !== 'pin' && cell.column.id !== 'firstName'"
+                  >
+                    <span x-html="FlexRender({ cell })"></span>
+                  </template>
+                </td>
+              </template>
+            </tr>
+          </template>
+          <!-- bottom-pinned rows -->
+          <template x-for="row in table.getBottomRows()" :key="row.id">
+            <tr :style="pinnedRowStyle(row, table.getBottomRows().length)">
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td>
+                  <!-- pin cell: unpin button -->
+                  <template x-if="cell.column.id === 'pin'">
+                    <button @click="cell.row.pin(false, true, false)">
+                      ❌
+                    </button>
+                  </template>
+                  <!-- firstName cell: expander + depth-indented value -->
+                  <template x-if="cell.column.id === 'firstName'">
+                    <div
+                      class="inline-controls"
+                      :style="'padding-left:' + cell.row.depth * 2 + 'rem'"
+                    >
+                      <button
+                        x-show="cell.row.getCanExpand()"
+                        style="cursor: pointer"
+                        @click="cell.row.getToggleExpandedHandler()($event)"
+                        x-text="cell.row.getIsExpanded() ? '👇' : '👉'"
+                      ></button>
+                      <span x-show="!cell.row.getCanExpand()">🔵</span>
+                      <span x-text="cell.getValue()"></span>
+                    </div>
+                  </template>
+                  <!-- other cells -->
+                  <template
+                    x-if="cell.column.id !== 'pin' && cell.column.id !== 'firstName'"
+                  >
+                    <span x-html="FlexRender({ cell })"></span>
+                  </template>
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="page-controls">
+        <button
+          @click="table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button @click="table.nextPage()" :disabled="!table.getCanNextPage()">
+          &gt;
+        </button>
+        <button
+          @click="table.setPageIndex(table.getPageCount() - 1)"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <span>Page</span>
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.atoms.pagination.get().pageIndex + 1"
+            @input="goToPage($event.target.value)"
+            class="page-size-input"
+          />
+        </span>
+        <select
+          :value="table.atoms.pagination.get().pageSize"
+          @change="table.setPageSize(Number($event.target.value))"
+        >
+          <template x-for="pageSize in [10, 20, 30, 40, 50]" :key="pageSize">
+            <option :value="pageSize" x-text="'Show ' + pageSize"></option>
+          </template>
+        </select>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

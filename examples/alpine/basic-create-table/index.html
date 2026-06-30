@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Basic Create Table</title>
+  </head>
+  <body>
+    <!-- 7. Render your table markup from the table instance APIs -->
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1k rows)</button>
+      </div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th
+                  x-html="header.isPlaceholder ? '' : FlexRender({ header })"
+                ></th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+        <tfoot>
+          <template
+            x-for="footerGroup in table.getFooterGroups()"
+            :key="footerGroup.id"
+          >
+            <tr>
+              <template x-for="header in footerGroup.headers" :key="header.id">
+                <th
+                  x-html="header.isPlaceholder ? '' : FlexRender({ footer: header })"
+                ></th>
+              </template>
+            </tr>
+          </template>
+        </tfoot>
+      </table>
+      <div class="spacer-md"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

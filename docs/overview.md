@@ -2,7 +2,7 @@
 title: Overview
 ---
 
-TanStack Table is a **headless UI** library for building powerful tables and datagrids. Its core is **framework agnostic**, which means its API is the same regardless of the framework you are using. Official adapters are provided for React, Preact, Vue, Solid, Svelte, Angular, and Lit, and you can use the core directly in vanilla TypeScript or JavaScript via `@tanstack/table-core`.
+TanStack Table is a **headless UI** library for building powerful tables and datagrids. Its core is **framework agnostic**, which means its API is the same regardless of the framework you are using. Official adapters are provided for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine, and you can use the core directly in vanilla TypeScript or JavaScript via `@tanstack/table-core`.
 
 > **These docs are for TanStack Table v9, which is currently in beta.** The docs for v8, the latest stable release, live at [tanstack.com/table/v8](https://tanstack.com/table/v8). When installing v9 packages, use the `beta` npm tag (see the [Installation](./installation) page).
 
@@ -38,6 +38,10 @@ If you are upgrading from v8, start with the migration guide for your framework:
 
 - [Migrating to V9](./framework/lit/guide/migrating)
 
+# Alpine
+
+- Alpine support is new in v9, so there is nothing to migrate. Start with the [Quick Start](./framework/alpine/quick-start).
+
 # Vanilla
 
 - The vanilla `@tanstack/table-core` entry point changed in v9. See the [Vanilla JS](./vanilla) page for the new setup.
@@ -68,7 +72,7 @@ If you use TypeScript, you will get top-notch type safety and editor autocomplet
 
 Since TanStack Table is headless and runs on a vanilla TypeScript core, it is agnostic in a couple of ways:
 
-1. TanStack Table is **framework agnostic**, which means you can use it with any JavaScript framework (or library) that you want. TanStack Table provides ready-to-use adapters for React, Preact, Vue, Solid, Svelte, Angular, and Lit out of the box, and the framework-agnostic core works in vanilla TypeScript or JavaScript and even in JS-to-native platforms like React Native. You can also create your own adapter if you need to.
+1. TanStack Table is **framework agnostic**, which means you can use it with any JavaScript framework (or library) that you want. TanStack Table provides ready-to-use adapters for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine out of the box, and the framework-agnostic core works in vanilla TypeScript or JavaScript and even in JS-to-native platforms like React Native. You can also create your own adapter if you need to.
 2. TanStack Table is **CSS / component library agnostic**, which means that you can use TanStack Table with whatever CSS strategy or component library you want. TanStack Table itself does not render any table markup or styles. You bring your own! Want to use Tailwind or ShadCN? No problem! Want to use Material UI or Bootstrap? No problem! Have your own custom design system? TanStack Table was made for you!
 
 ## Core Objects and Types
@@ -215,6 +219,23 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Row Pinning](./framework/lit/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
 - [Row Selection](./framework/lit/guide/row-selection) - Select/deselect rows (checkboxes)
 - [Row Sorting](./framework/lit/guide/sorting) - Sort rows by column values
+
+# Alpine
+
+- [Faceting](./framework/alpine/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
+- [Column Filtering](./framework/alpine/guide/column-filtering) - Filter rows based on search values for a column
+- [Column Grouping](./framework/alpine/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Ordering](./framework/alpine/guide/column-ordering) - Dynamically change the order of columns
+- [Column Pinning](./framework/alpine/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
+- [Column Resizing](./framework/alpine/guide/column-resizing) - Let users resize columns with drag handles
+- [Column Sizing](./framework/alpine/guide/column-sizing) - Dynamically change the size of columns
+- [Column Visibility](./framework/alpine/guide/column-visibility) - Hide/show columns
+- [Global Filtering](./framework/alpine/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Expanding](./framework/alpine/guide/expanding) - Expand/collapse rows (sub-rows)
+- [Row Pagination](./framework/alpine/guide/pagination) - Paginate rows
+- [Row Pinning](./framework/alpine/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
+- [Row Selection](./framework/alpine/guide/row-selection) - Select/deselect rows (checkboxes)
+- [Row Sorting](./framework/alpine/guide/sorting) - Sort rows by column values
 
 <!-- ::end:framework -->
 

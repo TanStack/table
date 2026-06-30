@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Sorting Dynamic Data</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <div class="inline-controls">
+        <label for="multiplier">Visits multiplier:</label>
+        <input
+          type="number"
+          min="1"
+          max="100"
+          id="multiplier"
+          class="number-input"
+          @change="applyMultiplier($event.target.value)"
+        />
+      </div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div
+                      :class="header.column.getCanSort() ? 'sortable-header' : ''"
+                      :style="header.column.getCanSort() ? 'cursor: pointer' : 'cursor: default'"
+                      @click="header.column.getToggleSortingHandler()?.($event)"
+                    >
+                      <span x-html="FlexRender({ header })"></span
+                      ><span
+                        x-text="sortIndicator(header.column.getIsSorted())"
+                      ></span>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template
+            x-for="row in table.getRowModel().rows.slice(0, 10)"
+            :key="row.id"
+          >
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-md"></div>
+      <pre x-text="JSON.stringify(table.store.get(), null, 2)"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

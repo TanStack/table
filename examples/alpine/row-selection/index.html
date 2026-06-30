@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Row Selection</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <div class="spacer-sm"></div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div>
+                      <!-- select header: select-all checkbox -->
+                      <template x-if="header.column.id === 'select'">
+                        <input
+                          type="checkbox"
+                          style="cursor: pointer"
+                          :checked="table.getIsAllRowsSelected()"
+                          x-effect="$el.indeterminate = table.getIsSomeRowsSelected()"
+                          @change="table.getToggleAllRowsSelectedHandler()($event)"
+                        />
+                      </template>
+                      <!-- other headers -->
+                      <template x-if="header.column.id !== 'select'">
+                        <span x-html="FlexRender({ header })"></span>
+                      </template>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template
+            x-for="row in table.getRowModel().rows.slice(0, 10)"
+            :key="row.id"
+          >
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td>
+                  <!-- select cell: per-row checkbox -->
+                  <template x-if="cell.column.id === 'select'">
+                    <input
+                      type="checkbox"
+                      style="cursor: pointer"
+                      :checked="cell.row.getIsSelected()"
+                      :disabled="!cell.row.getCanSelect()"
+                      x-effect="$el.indeterminate = cell.row.getIsSomeSelected()"
+                      @change="cell.row.getToggleSelectedHandler()($event)"
+                    />
+                  </template>
+                  <!-- other cells -->
+                  <template x-if="cell.column.id !== 'select'">
+                    <span x-html="FlexRender({ cell })"></span>
+                  </template>
+                </td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="page-controls">
+        <button
+          @click="table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button @click="table.nextPage()" :disabled="!table.getCanNextPage()">
+          &gt;
+        </button>
+        <button
+          @click="table.setPageIndex(table.getPageCount() - 1)"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <span>Page</span>
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

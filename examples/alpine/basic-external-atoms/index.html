@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Basic External Atoms</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="button-row">
+        <button @click="refreshData()">Regenerate Data</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
+      </div>
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th :colspan="header.colSpan">
+                  <template x-if="!header.isPlaceholder">
+                    <div
+                      :class="header.column.getCanSort() ? 'sortable-header' : ''"
+                      @click="header.column.getToggleSortingHandler()?.($event)"
+                    >
+                      <span x-html="FlexRender({ header })"></span
+                      ><span
+                        x-text="sortIndicator(header.column.getIsSorted())"
+                      ></span>
+                    </div>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+      </table>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.setPageIndex(0)"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;&lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.nextPage()"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;
+        </button>
+        <button
+          class="demo-button demo-button-sm"
+          @click="table.setPageIndex(table.getPageCount() - 1)"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;&gt;
+        </button>
+        <span class="inline-controls">
+          <div>Page</div>
+          <strong>
+            <span
+              x-text="(table.atoms.pagination.get().pageIndex + 1).toLocaleString()"
+            ></span>
+            of
+            <span x-text="table.getPageCount().toLocaleString()"></span>
+          </strong>
+        </span>
+        <span class="inline-controls">
+          | Go to page:
+          <input
+            type="number"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.atoms.pagination.get().pageIndex + 1"
+            @input="goToPage($event.target.value)"
+            class="page-size-input"
+          />
+        </span>
+        <select
+          :value="String(table.atoms.pagination.get().pageSize)"
+          @change="setPageSize($event.target.value)"
+        >
+          <option value="10">Show 10</option>
+          <option value="20">Show 20</option>
+          <option value="30">Show 30</option>
+          <option value="40">Show 40</option>
+          <option value="50">Show 50</option>
+        </select>
+      </div>
+      <div class="spacer-md"></div>
+      <pre x-text="JSON.stringify(table.store.get(), null, 2)"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
