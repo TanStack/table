@@ -3,9 +3,6 @@ export * from '@tanstack/table-core/static-functions'
 export { useTable } from './use-table.ts'
 export {
   flexRender,
-  flexRenderCell,
-  flexRenderHeader,
-  flexRenderFooter,
   flexRenderComponent,
   FlexRenderComponentConfig,
 } from './flex-render.ts'

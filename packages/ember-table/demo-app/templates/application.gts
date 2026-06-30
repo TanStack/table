@@ -16,7 +16,11 @@ import {
   type Column,
   type Row,
   type Cell,
+  type FlexRenderableSignature,
+  type CellContext,
 } from '@tanstack/ember-table';
+import type { TOC } from '@ember/component/template-only';
+import type { CellRenderableSignature } from '#src/flex-render.ts';
 
 // --- Data types and generation ---
 
@@ -58,12 +62,7 @@ function makeData(count: number): Array<Person> {
 
 // --- Custom cell component example ---
 
-class StatusBadge extends Component<{
-  Args: {
-    ctx: unknown;
-    args: unknown;
-  };
-}> {
+class StatusBadge extends Component<FlexRenderableSignature<typeof features, Person, string, { color: 'red' | 'green' | 'blue' }>> {
   get value(): string {
     const ctx = this.args.ctx as { getValue: () => string };
     return ctx.getValue();
@@ -91,6 +90,16 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, Person>();
 
+function getValue<T>(ctx: CellContext<typeof features, Person, T>): T {
+  return ctx.getValue();
+}
+
+const ProgressBar: TOC<CellRenderableSignature<typeof features, Person, string, undefined | { color: 'red' | 'blue'}>> = <template>
+  <div class="status-bar">
+    <span>Status: {{getValue @ctx}}</span>
+  </div>
+</template>
+
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
@@ -113,13 +122,18 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    cell: () => flexRenderComponent(StatusBadge),
+    cell: () => flexRenderComponent(StatusBadge, {
+      color: 'blue',
+    }),
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
     footer: (info) => info.column.id,
-  }),
+    cell: () => flexRenderComponent(ProgressBar, {
+      'color': 'red'
+    }),
+  })
 ]);
 
 // --- Template helpers ---
