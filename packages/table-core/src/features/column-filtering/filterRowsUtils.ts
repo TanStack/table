@@ -166,7 +166,11 @@ function filterRowModelFromRoot<
         // flatRows is a complete flat representation of all visible rows,
         // consistent with the no-filter case.
         if (row.subRows.length && depth >= maxDepth) {
-          addSubRowsToFlatArrays(row.subRows, newFilteredFlatRows, newFilteredRowsById)
+          addSubRowsToFlatArrays(
+            row.subRows,
+            newFilteredFlatRows,
+            newFilteredRowsById,
+          )
         }
       }
     }

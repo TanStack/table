@@ -36,9 +36,7 @@ function makeNestedTable(opts?: {
     },
     {
       name: 'Bob',
-      subRows: [
-        { name: 'Eve', subRows: [] },
-      ],
+      subRows: [{ name: 'Eve', subRows: [] }],
     },
   ]
 
@@ -113,15 +111,15 @@ describe('filterRowModelFromRoot: flatRows includes sub-rows of passing parents'
     // substring that is in BOTH parents: we need a different approach.
     // Let's use the full dataset without filtering at depth 0 to see
     // that ALL sub-rows appear in flatRows even when parents pass.
-    
+
     // Filter that passes ALL rows at depth 0 (case-insensitive "a" is in Alice but not Bob)
     // Let's instead set a filter that matches both parents:
-    // Combine Alice+Bob — both contain neither 'x' nor others... 
+    // Combine Alice+Bob — both contain neither 'x' nor others...
     // Actually, the issue is simpler: just add a filter value that matches both.
-    // "l" appears in "Alice" but not "Bob". 
+    // "l" appears in "Alice" but not "Bob".
     // "o" appears in "Bob" but not "Alice".
     // Let's just set a filter that's definitely in both: "" (empty), but that auto-removes.
-    // 
+    //
     // Better approach: verify the sub-rows count matches across filter depths.
     const tableNoFilter = makeNestedTable({ maxLeafRowFilterDepth: 0 })
     const tableWithFilter = makeNestedTable({
