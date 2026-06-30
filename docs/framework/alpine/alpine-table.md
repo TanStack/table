@@ -1,5 +1,0 @@
----
-title: Alpine Table
----
-
-TODO

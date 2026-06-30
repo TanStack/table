@@ -51,7 +51,7 @@ npm install @tanstack/angular-devtools @tanstack/angular-table-devtools@beta
 
 <!-- ::end:framework -->
 
-Lit, Svelte, and vanilla do not currently ship dedicated table devtools adapters.
+Lit, Svelte, Alpine, and vanilla do not currently ship dedicated table devtools adapters.
 
 ## The Required `key` Table Option
 

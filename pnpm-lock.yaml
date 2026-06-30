@@ -101,6 +101,28 @@ importers:
         specifier: ^4.1.9
         version: 4.1.9(@types/node@26.0.0)(jsdom@29.1.1)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0))
 
+  examples/alpine/basic-app-table:
+    dependencies:
+      '@tanstack/alpine-table':
+        specifier: ^9.0.0-beta.23
+        version: link:../../../packages/alpine-table
+      alpinejs:
+        specifier: ^3.15.12
+        version: 3.15.12
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      '@types/alpinejs':
+        specifier: ^3.13.11
+        version: 3.13.11
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
+
   examples/alpine/basic-create-table:
     dependencies:
       '@faker-js/faker':

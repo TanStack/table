@@ -17,10 +17,7 @@
         {
           "label": "alpine",
           "children": [
-            {
-              "label": "Alpine Table Adapter",
-              "to": "framework/alpine/alpine-table"
-            }
+            { "label": "Quick Start", "to": "framework/alpine/quick-start" }
           ]
         },
         {
@@ -104,6 +101,14 @@
             {
               "label": "Table State",
               "to": "framework/alpine/guide/table-state"
+            },
+            {
+              "label": "Composable Tables (createTableHook)",
+              "to": "framework/alpine/guide/composable-tables"
+            },
+            {
+              "label": "Custom Plugins",
+              "to": "framework/alpine/guide/custom-features"
             }
           ]
         },
@@ -177,6 +182,26 @@
       "label": "Feature Guides",
       "children": [],
       "frameworks": [
+        {
+          "label": "alpine",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/alpine/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/alpine/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/alpine/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/alpine/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/alpine/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/alpine/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/alpine/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/alpine/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/alpine/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/alpine/guide/grouping" },
+            { "label": "Expanding", "to": "framework/alpine/guide/expanding" },
+            { "label": "Pagination", "to": "framework/alpine/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/alpine/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/alpine/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/alpine/guide/sorting" }
+          ]
+        },
         {
           "label": "angular",
           "children": [
@@ -807,6 +832,7 @@
           "label": "alpine",
           "children": [
             { "to": "framework/alpine/examples/basic-create-table", "label": "Basic (createTable)" },
+            { "to": "framework/alpine/examples/basic-app-table", "label": "Basic (createAppTable)" },
             { "to": "framework/alpine/examples/basic-external-state", "label": "Basic (External State)" },
             { "to": "framework/alpine/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
             { "to": "framework/alpine/examples/column-groups", "label": "Header Groups" }

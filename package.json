@@ -80,6 +80,7 @@
   "overrides": {
     "@tanstack/alpine-table": "workspace:*",
     "@tanstack/angular-table": "workspace:*",
+    "@tanstack/angular-table-devtools": "workspace:*",
     "@tanstack/lit-table": "workspace:*",
     "@tanstack/match-sorter-utils": "workspace:*",
     "@tanstack/preact-table": "workspace:*",

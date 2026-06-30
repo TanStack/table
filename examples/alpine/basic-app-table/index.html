@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Basic (createAppTable)</title>
+  </head>
+  <body>
+    <!-- 8. Render your table markup from the table instance APIs -->
+    <div id="root" class="demo-root" x-data="table">
+      <table>
+        <thead>
+          <template
+            x-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <tr>
+              <template x-for="header in headerGroup.headers" :key="header.id">
+                <th>
+                  <template x-if="!header.isPlaceholder">
+                    <span x-html="table.FlexRender({ header })"></span>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </thead>
+        <tbody>
+          <template x-for="row in table.getRowModel().rows" :key="row.id">
+            <tr>
+              <template x-for="cell in row.getAllCells()" :key="cell.id">
+                <td x-html="table.FlexRender({ cell })"></td>
+              </template>
+            </tr>
+          </template>
+        </tbody>
+        <tfoot>
+          <template
+            x-for="footerGroup in table.getFooterGroups()"
+            :key="footerGroup.id"
+          >
+            <tr>
+              <template x-for="header in footerGroup.headers" :key="header.id">
+                <th>
+                  <template x-if="!header.isPlaceholder">
+                    <span x-html="table.FlexRender({ footer: header })"></span>
+                  </template>
+                </th>
+              </template>
+            </tr>
+          </template>
+        </tfoot>
+      </table>
+      <div class="spacer-md"></div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
