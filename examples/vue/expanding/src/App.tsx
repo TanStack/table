@@ -156,7 +156,10 @@ export default defineComponent({
           <div style={{ paddingLeft: `${row.depth * 2}rem` }}>
             <div>
               <IndeterminateCheckbox
-                checked={row.getIsSelected()}
+                checked={
+                  row.getIsSelected() ||
+                  (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+                }
                 indeterminate={row.getIsSomeSelected()}
                 onChange={row.getToggleSelectedHandler()}
               />{' '}

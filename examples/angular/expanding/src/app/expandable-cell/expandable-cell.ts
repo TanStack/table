@@ -43,7 +43,10 @@ export class ExpandableHeaderCell<T extends RowData> {
         <input
           type="checkbox"
           [indeterminate]="row.getIsSomeSelected()"
-          [checked]="row.getIsSelected()"
+          [checked]="
+            row.getIsSelected() ||
+            (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+          "
           (change)="row.getToggleSelectedHandler()($event)"
         />
         {{ ' ' }}

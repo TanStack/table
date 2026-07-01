@@ -59,7 +59,10 @@ function App() {
         <div style={{ 'padding-left': `${row.depth * 2}rem` }}>
           <div>
             <IndeterminateCheckbox
-              checked={row.getIsSelected()}
+              checked={
+                row.getIsSelected() ||
+                (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+              }
               indeterminate={row.getIsSomeSelected()}
               onChange={row.getToggleSelectedHandler()}
             />{' '}

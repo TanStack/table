@@ -525,9 +525,7 @@ const results: Array<{ colSpan: number; rowSpan: number }> = []
 
 for (let i = 0; i < headers.length; i++) {
   const header = headers[i]!
-  if (
-    !callMemoOrStaticFn(header.column, 'getIsVisible', column_getIsVisible)
-  ) {
+  if (!callMemoOrStaticFn(header.column, 'getIsVisible', column_getIsVisible)) {
     continue
   }
 
