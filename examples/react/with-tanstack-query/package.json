@@ -13,7 +13,7 @@
     "@faker-js/faker": "^10.5.0",
     "@tanstack/react-query": "^5.101.1",
     "@tanstack/react-store": "^0.11.0",
-    "@tanstack/react-table": "^9.0.0-beta.23",
+    "@tanstack/react-table": "^9.0.0-beta.26",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
