@@ -53,7 +53,6 @@
   },
   "devDependencies": {
     "@angular/compiler": "^22.0.2",
-    "@angular/core": "^22.0.2",
-    "@angular/platform-browser": "^22.0.2"
+    "@angular/core": "^22.0.2"
   }
 }
