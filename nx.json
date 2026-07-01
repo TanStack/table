@@ -44,6 +44,11 @@
       "inputs": ["default", "^public"],
       "cache": true
     },
+    "test:e2e": {
+      "dependsOn": ["^build"],
+      "inputs": ["default", "^public"],
+      "cache": true
+    },
     "test:build": {
       "dependsOn": ["build"],
       "inputs": ["default", "^public"],

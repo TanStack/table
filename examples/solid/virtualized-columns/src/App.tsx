@@ -214,10 +214,14 @@ function TableHeadRow(props: {
         />
       ) : null}
       <For each={virtualColumns()}>
-        {(virtualColumn) => {
-          const header = props.headerGroup.headers[virtualColumn.index]
-          return <TableHeadCell header={header} table={props.table} />
-        }}
+        {(virtualColumn) => (
+          // pass an accessor instead of a plain value - For's callback is
+          // non-tracking, so a captured header would go stale when columns change
+          <TableHeadCell
+            header={() => props.headerGroup.headers[virtualColumn.index]}
+            table={props.table}
+          />
+        )}
       </For>
       {props.virtualPaddingRight ? (
         // fake empty column to the right for virtualization scroll padding
@@ -230,27 +234,27 @@ function TableHeadRow(props: {
 }
 
 function TableHeadCell(props: {
-  header: Header<typeof features, Person, unknown>
+  header: () => Header<typeof features, Person, unknown>
   table: SolidTable<typeof features, Person>
 }) {
   return (
     <th
       style={{
         display: 'flex',
-        width: `${props.header.getSize()}px`,
+        width: `${props.header().getSize()}px`,
       }}
     >
       <div
-        class={props.header.column.getCanSort() ? 'sortable-header' : ''}
-        onClick={props.header.column.getToggleSortingHandler()}
+        class={props.header().column.getCanSort() ? 'sortable-header' : ''}
+        onClick={props.header().column.getToggleSortingHandler()}
       >
-        <FlexRender header={props.header} />
+        <FlexRender header={props.header()} />
         {(
           {
             asc: ' 🔼',
             desc: ' 🔽',
           } as Record<string, string>
-        )[props.header.column.getIsSorted() as string] ?? null}
+        )[props.header().column.getIsSorted() as string] ?? null}
       </div>
     </th>
   )
@@ -275,20 +279,19 @@ function TableBody(props: {
       }}
     >
       <For each={virtualRows()}>
-        {(virtualRow) => {
-          const row = props.rows()[virtualRow.index]
-          return (
-            <TableBodyRow
-              columnVirtualizer={props.columnVirtualizer}
-              row={row}
-              rowVirtualizer={props.rowVirtualizer}
-              virtualPaddingLeft={props.virtualPaddingLeft}
-              virtualPaddingRight={props.virtualPaddingRight}
-              virtualRow={virtualRow}
-              table={props.table}
-            />
-          )
-        }}
+        {(virtualRow) => (
+          // pass an accessor instead of a plain value - For's callback is
+          // non-tracking, so a captured row would go stale when data changes
+          <TableBodyRow
+            columnVirtualizer={props.columnVirtualizer}
+            row={() => props.rows()[virtualRow.index]}
+            rowVirtualizer={props.rowVirtualizer}
+            virtualPaddingLeft={props.virtualPaddingLeft}
+            virtualPaddingRight={props.virtualPaddingRight}
+            virtualRow={virtualRow}
+            table={props.table}
+          />
+        )}
       </For>
     </tbody>
   )
@@ -296,14 +299,14 @@ function TableBody(props: {
 
 function TableBodyRow(props: {
   columnVirtualizer: Virtualizer<HTMLDivElement, HTMLTableCellElement>
-  row: Row<typeof features, Person>
+  row: () => Row<typeof features, Person>
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   virtualPaddingLeft: number | undefined
   virtualPaddingRight: number | undefined
   virtualRow: VirtualItem
   table: SolidTable<typeof features, Person>
 }) {
-  const visibleCells = () => props.row.getVisibleCells()
+  const visibleCells = () => props.row().getVisibleCells()
   const virtualColumns = () => props.columnVirtualizer.getVirtualItems()
   return (
     <tr
@@ -323,10 +326,14 @@ function TableBodyRow(props: {
         />
       ) : null}
       <For each={virtualColumns()}>
-        {(vc) => {
-          const cell = visibleCells()[vc.index]
-          return <TableBodyCell cell={cell} table={props.table} />
-        }}
+        {(vc) => (
+          // pass an accessor instead of a plain value - For's callback is
+          // non-tracking, so a captured cell would go stale when data changes
+          <TableBodyCell
+            cell={() => visibleCells()[vc.index]}
+            table={props.table}
+          />
+        )}
       </For>
       {props.virtualPaddingRight ? (
         // fake empty column to the right for virtualization scroll padding
@@ -339,17 +346,17 @@ function TableBodyRow(props: {
 }
 
 function TableBodyCell(props: {
-  cell: Cell<typeof features, Person, unknown>
+  cell: () => Cell<typeof features, Person, unknown>
   table: SolidTable<typeof features, Person>
 }) {
   return (
     <td
       style={{
         display: 'flex',
-        width: `${props.cell.column.getSize()}px`,
+        width: `${props.cell().column.getSize()}px`,
       }}
     >
-      <FlexRender cell={props.cell} />
+      <FlexRender cell={props.cell()} />
     </td>
   )
 }

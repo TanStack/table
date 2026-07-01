@@ -105,6 +105,7 @@ import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/react-table-devtools'
+import { rankItem } from '@tanstack/match-sorter-utils'
 import type { Person } from '@/lib/make-data'
 import type { DragEndEvent } from '@dnd-kit/core'
 import type {
@@ -120,7 +121,6 @@ import type {
 import type { ExtendedColumnFilter } from '@/types'
 
 import { dynamicFilterFn, getFilterOperators } from '@/lib/data-table'
-import { rankItem } from '@tanstack/match-sorter-utils'
 import { departments, makeData, statuses } from '@/lib/make-data'
 import './styles/globals.css'
 

@@ -214,7 +214,10 @@ function App() {
           >
             <For each={rowVirtualizer.getVirtualItems()}>
               {(virtualRow) => {
-                const row = rows()[virtualRow.index]
+                // keep the row lookup an accessor - For's callback is
+                // non-tracking, so a captured row would go stale when
+                // data or sorting changes
+                const row = () => rows()[virtualRow.index]
                 return (
                   <tr
                     data-index={virtualRow.index}
@@ -226,7 +229,7 @@ function App() {
                       width: '100%',
                     }}
                   >
-                    <For each={row.getAllCells()}>
+                    <For each={row().getAllCells()}>
                       {(cell) => (
                         <td
                           style={{

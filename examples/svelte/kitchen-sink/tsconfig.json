@@ -11,6 +11,7 @@
     "noEmit": true
   },
   "include": [
+    "tests/e2e",
     "src/**/*.ts",
     "src/**/*.js",
     "src/**/*.d.ts",

@@ -20,5 +20,11 @@
     },
     "allowJs": true
   },
-  "include": ["src", "tailwind.config.ts", "vite.config.js", "vite.config.ts"]
+  "include": [
+    "src",
+    "tests/e2e",
+    "tailwind.config.ts",
+    "vite.config.js",
+    "vite.config.ts"
+  ]
 }

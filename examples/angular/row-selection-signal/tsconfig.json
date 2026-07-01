@@ -26,5 +26,5 @@
     "strictInputAccessModifiers": true,
     "strictTemplates": true
   },
-  "include": ["**/*.ts", "vite.config.js", "vite.config.ts"]
+  "include": ["**/*.ts", "tests/e2e", "vite.config.js", "vite.config.ts"]
 }

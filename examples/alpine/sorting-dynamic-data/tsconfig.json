@@ -15,5 +15,5 @@
     "noFallthroughCasesInSwitch": true,
     "allowJs": true
   },
-  "include": ["src", "vite.config.js", "vite.config.ts"]
+  "include": ["src", "tests/e2e", "vite.config.js", "vite.config.ts"]
 }

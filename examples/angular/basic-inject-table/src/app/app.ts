@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  inject,
+  signal,
+} from '@angular/core'
 import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
 import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
 import type { ColumnDef } from '@tanstack/angular-table'
@@ -96,11 +102,8 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-    }))
-  }
+  private readonly injector = inject(Injector)
+
   // 5. Store data with a stable reference
   readonly data = signal<Array<Person>>([...defaultData])
 
@@ -112,4 +115,15 @@ export class App {
     columns,
     data: this.data(),
   }))
+
+  ngOnInit() {
+    this.registerTableDevtools()
+  }
+
+  private registerTableDevtools() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      injector: this.injector,
+    }))
+  }
 }

@@ -6,6 +6,7 @@
     "dev": "ng serve --port 5173",
     "build": "ng build",
     "test:types": "ng build",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
     "lint": "eslint ./src",
     "watch": "ng build --watch --configuration development"
   },

@@ -18,6 +18,7 @@
   "include": [
     "node_modules/vite/client.d.ts",
     "src/**/*",
+    "tests/e2e",
     "vite.config.js",
     "vite.config.ts"
   ],

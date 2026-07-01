@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  Injector,
+  inject,
   signal,
 } from '@angular/core'
 import { createAtom } from '@tanstack/angular-store'
@@ -53,11 +55,7 @@ const columns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-    }))
-  }
+  private readonly injector = inject(Injector)
 
   readonly data = signal(makeData(1_000))
   readonly sortingAtom = createAtom<SortingState>([])
@@ -77,6 +75,17 @@ export class App {
       pagination: this.paginationAtom,
     },
   }))
+
+  ngOnInit() {
+    this.registerTableDevtools()
+  }
+
+  private registerTableDevtools() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      injector: this.injector,
+    }))
+  }
 
   refreshData() {
     this.data.set(makeData(1_000))

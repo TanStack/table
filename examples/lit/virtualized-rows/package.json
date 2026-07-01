@@ -7,7 +7,8 @@
     "serve": "vite preview",
     "start": "vite",
     "lint": "eslint ./src",
-    "test:types": "tsc --noEmit"
+    "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",

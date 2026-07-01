@@ -53,6 +53,7 @@ import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/react-table-devtools'
+import { rankItem } from '@tanstack/match-sorter-utils'
 import type { Person } from '@/lib/make-data'
 import type {
   Column,
@@ -92,7 +93,6 @@ import { cn, formatDate, toSentenceCase } from '@/lib/utils'
 import { DataTableSortList } from '@/components/data-table/data-table-sort-list'
 import { DataTableFilterList } from '@/components/data-table/data-table-filter-list'
 import { dynamicFilterFn } from '@/lib/data-table'
-import { rankItem } from '@tanstack/match-sorter-utils'
 import { ThemeProvider } from '@/components/theme-provider'
 import { ModeToggle } from '@/components/mode-toggle'
 import { Input } from '@/components/ui/input'
