@@ -416,7 +416,11 @@ export function table_getIsSomePageRowsSelected<
   return table
     .getPaginatedRowModel()
     .flatRows.filter((row) => row_getCanSelect(row))
-    .some((row) => row_getIsSelected(row) || row_getIsSomeSelected(row))
+    .some(
+      (row) =>
+        row_getIsSelected(row) ||
+        callMemoOrStaticFn(row, 'getIsSomeSelected', row_getIsSomeSelected),
+    )
 }
 
 /**
