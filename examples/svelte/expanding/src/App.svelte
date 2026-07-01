@@ -156,7 +156,9 @@
                   <div>
                     <input
                       type="checkbox"
-                      checked={row.getIsSelected()}
+                      checked={row.getIsSelected() ||
+                        (row.getCanSelectSubRows() &&
+                          row.getIsAllSubRowsSelected())}
                       use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
                       onchange={row.getToggleSelectedHandler()}
                       class="sortable-header"

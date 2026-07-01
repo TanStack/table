@@ -68,7 +68,10 @@ function App() {
             >
               <div>
                 <IndeterminateCheckbox
-                  checked={row.getIsSelected()}
+                  checked={
+                    row.getIsSelected() ||
+                    (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+                  }
                   indeterminate={row.getIsSomeSelected()}
                   onChange={row.getToggleSelectedHandler()}
                 />{' '}

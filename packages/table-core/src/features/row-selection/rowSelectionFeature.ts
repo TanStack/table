@@ -61,9 +61,19 @@ export const rowSelectionFeature: TableFeature = {
       },
       row_getIsSomeSelected: {
         fn: (row) => row_getIsSomeSelected(row),
+        memoDeps: (row) => [
+          row.subRows,
+          row.table.atoms.rowSelection?.get(),
+          row.table.options.enableRowSelection,
+        ],
       },
       row_getIsAllSubRowsSelected: {
         fn: (row) => row_getIsAllSubRowsSelected(row),
+        memoDeps: (row) => [
+          row.subRows,
+          row.table.atoms.rowSelection?.get(),
+          row.table.options.enableRowSelection,
+        ],
       },
       row_getCanSelect: {
         fn: (row) => row_getCanSelect(row),

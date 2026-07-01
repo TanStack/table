@@ -123,7 +123,9 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     cell: ({ row, getValue }) => html`
       <div style="padding-left:${row.depth * 2}rem">
         ${indeterminateCheckbox({
-          checked: row.getIsSelected(),
+          checked:
+            row.getIsSelected() ||
+            (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()),
           indeterminate: row.getIsSomeSelected(),
           onChange: row.getToggleSelectedHandler(),
         })}

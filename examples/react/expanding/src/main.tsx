@@ -69,7 +69,10 @@ function App() {
             >
               <div>
                 <IndeterminateCheckbox
-                  checked={row.getIsSelected()}
+                  checked={
+                    row.getIsSelected() ||
+                    (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
+                  }
                   indeterminate={row.getIsSomeSelected()}
                   onChange={row.getToggleSelectedHandler()}
                 />{' '}
@@ -129,6 +132,7 @@ function App() {
       // filterFromLeafRows: true,
       // maxLeafRowFilterDepth: 0,
       debugTable: true,
+      debugRows: true,
     },
     (state) => state, // default selector
   )
@@ -343,7 +347,7 @@ function IndeterminateCheckbox({
     if (typeof indeterminate === 'boolean') {
       ref.current.indeterminate = !rest.checked && indeterminate
     }
-  }, [ref, indeterminate])
+  }, [ref, indeterminate, rest.checked])
 
   return (
     <input

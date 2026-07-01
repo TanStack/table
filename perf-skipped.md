@@ -36,8 +36,7 @@ if (existingGrouping.includes(colId)) {
   }
 
   if (groupedRows[0]) {
-    row._valuesCache[colId] =
-      groupedRows[0].getValue(colId) ?? undefined
+    row._valuesCache[colId] = groupedRows[0].getValue(colId) ?? undefined
   }
 
   return row._valuesCache[colId]
@@ -134,9 +133,8 @@ Each call walks the `columnFilters` array. When a filter UI re-renders columns, 
 **Before**
 
 ```ts
-return column.table.atoms.columnFilters
-  ?.get()
-  ?.find((d) => d.id === column.id)?.value
+return column.table.atoms.columnFilters?.get()?.find((d) => d.id === column.id)
+  ?.value
 ```
 
 **After (new memoized table API)**
