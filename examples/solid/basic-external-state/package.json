@@ -19,8 +19,8 @@
   },
   "dependencies": {
     "@tanstack/solid-devtools": "^0.8.5",
-    "@tanstack/solid-table": "^9.0.0-beta.26",
-    "@tanstack/solid-table-devtools": "^9.0.0-beta.26",
+    "@tanstack/solid-table": "^9.0.0-beta.27",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.27",
     "solid-js": "^1.9.13"
   }
 }
