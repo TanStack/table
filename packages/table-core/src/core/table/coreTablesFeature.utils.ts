@@ -32,7 +32,7 @@ export function table_syncExternalStateToBaseAtoms<
       }
 
       const externalState = state[key as keyof typeof state]
-      if (externalState !== baseAtom.get()) {
+      if (externalState !== table._reactivity.untrack(() => baseAtom.get())) {
         baseAtom.set(() => externalState)
       }
     }

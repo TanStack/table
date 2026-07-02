@@ -18,7 +18,7 @@ import {
   type Cell,
   type FlexRenderableSignature,
   type CellContext,
-} from '@tanstack/ember-table';
+} from '#src/index.ts';
 import type { TOC } from '@ember/component/template-only';
 import type { CellRenderableSignature } from '#src/flex-render.ts';
 
@@ -156,15 +156,11 @@ const toggleSort = (column: Column<typeof features, Person>) => {
 class BasicAppTable extends Component {
   @tracked data: Array<Person> = makeData(20);
 
-  tableManager = useTable(this, () => ({
+  table = useTable(() => ({
     features,
     columns,
     data: this.data,
   }));
-
-  get table() {
-    return this.tableManager.table;
-  }
 
   get headerGroups() {
     return this.table.getHeaderGroups();

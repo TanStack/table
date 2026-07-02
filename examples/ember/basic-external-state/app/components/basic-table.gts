@@ -76,7 +76,7 @@ export default class BasicTable extends Component {
   @tracked sorting: SortingState = [];
   @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 };
 
-  tableManager = useTable(this, () => ({
+  table = useTable(() => ({
     features,
     columns,
     data: this.data,
@@ -93,10 +93,6 @@ export default class BasicTable extends Component {
         typeof updater === 'function' ? updater(this.pagination) : updater;
     },
   }));
-
-  get table() {
-    return this.tableManager.table;
-  }
 
   get headerGroups() {
     return this.table.getHeaderGroups();
