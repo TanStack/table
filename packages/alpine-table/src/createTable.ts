@@ -1,4 +1,5 @@
 import Alpine from 'alpinejs'
+import { shallow } from '@tanstack/store'
 import { constructTable } from '@tanstack/table-core'
 import { FlexRender, flexRender } from './flexRender'
 import { alpineReactivity } from './reactivity'
@@ -7,6 +8,7 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
+  TableState,
 } from '@tanstack/table-core'
 
 export type AlpineTable<
@@ -24,10 +26,30 @@ export type AlpineTable<
   FlexRender: typeof FlexRender
 }
 
+/**
+ * Creates an Alpine-reactive table instance.
+ *
+ * Reactivity is bridged through a single version counter that every proxied
+ * table read registers as a dependency, so by default ANY state change
+ * re-evaluates every Alpine binding that touches the table. Pass a `selector`
+ * to gate that: the counter then only bumps when the selected slice of state
+ * changes (shallow compare). Use `() => ({})` to opt out of state-driven
+ * re-evaluation entirely and handle high-frequency state (e.g. column
+ * resizing) with explicit `table.atoms.<slice>.subscribe()` side effects.
+ * Options changes (e.g. new `data`) always re-evaluate.
+ *
+ * @example
+ * ```ts
+ * const table = createTable(options, (state) => ({ sorting: state.sorting }))
+ * ```
+ */
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(tableOptions: TableOptions<TFeatures, TData>): AlpineTable<TFeatures, TData> {
+>(
+  tableOptions: TableOptions<TFeatures, TData>,
+  selector?: (state: TableState<TFeatures>) => unknown,
+): AlpineTable<TFeatures, TData> {
   const mergedOptions: TableOptions<TFeatures, TData> = {
     ...tableOptions,
     features: {
@@ -55,7 +77,20 @@ export function createTable<
 
   const reactivity = Alpine.reactive({ _ver: 0 })
 
+  // With a selector, only bump the version counter (and thereby re-evaluate
+  // table-reading Alpine bindings) when the selected state actually changes.
+  // No selector keeps the previous behavior of re-evaluating on every state
+  // change.
+  let lastSelected = selector ? selector(table.store.state) : undefined
+
   table.store.subscribe(() => {
+    if (selector) {
+      const nextSelected = selector(table.store.state)
+      if (shallow(lastSelected as any, nextSelected as any)) {
+        return
+      }
+      lastSelected = nextSelected
+    }
     reactivity._ver++
   })
 
@@ -92,6 +127,14 @@ export function createTable<
 
   const proxyCache = new WeakMap<object, object>()
 
+  // Cache method wrappers per (target, prop) so repeated reads of the same
+  // function property (e.g. `cell.renderValue` across thousands of cells)
+  // reuse one closure instead of allocating a new one per access.
+  const wrapperCache = new WeakMap<
+    object,
+    Map<PropertyKey, { original: Function; wrapper: Function }>
+  >()
+
   const toReactiveProxy = <TValue>(value: TValue): TValue => {
     if (typeof value !== 'object' || value === null) {
       return value
@@ -127,12 +170,23 @@ export function createTable<
         const resolvedValue = Reflect.get(target, prop, receiver)
 
         if (typeof resolvedValue === 'function') {
-          return (...args: Array<unknown>) => {
+          let targetWrappers = wrapperCache.get(target)
+          if (!targetWrappers) {
+            targetWrappers = new Map()
+            wrapperCache.set(target, targetWrappers)
+          }
+          const cached = targetWrappers.get(prop)
+          if (cached && cached.original === resolvedValue) {
+            return cached.wrapper
+          }
+          const wrapper = (...args: Array<unknown>) => {
             void reactivity._ver
             return toReactiveProxy(
               (resolvedValue as Function).apply(target, args),
             )
           }
+          targetWrappers.set(prop, { original: resolvedValue, wrapper })
+          return wrapper
         }
 
         void reactivity._ver

@@ -16,19 +16,18 @@
         </button>
       </div>
       <div class="spacer-md"></div>
-      <!-- Only this text binding updates per resize tick -->
-      <pre
-        style="height: 10rem; overflow: auto"
-        x-text="JSON.stringify(table.store.get(), null, 2)"
-      ></pre>
+      <!-- Written imperatively per resize tick by the store subscription in
+           init(); an x-text binding here would freeze under the () => ({})
+           selector -->
+      <pre x-ref="stateDump" style="height: 10rem; overflow: auto"></pre>
       <div class="spacer-md"></div>
       <span x-text="'(' + local.data.length.toLocaleString() + ' rows)'"></span>
       <div class="scroll-container">
         <!-- This example is using semantic table tags, but also CSS Grid/Flexbox
              layout for more absolute column widths. All column widths flow
-             through CSS variables computed in the one :style binding below, so
-             a resize tick only rewrites this style attribute -->
-        <table :style="columnSizeVars()">
+             through CSS variables written imperatively onto this element (see
+             init() in main.ts), so a resize tick does zero Alpine work -->
+        <table x-ref="tableEl" style="display: grid">
           <thead style="display: grid">
             <template
               x-for="headerGroup in table.getHeaderGroups()"
@@ -47,9 +46,12 @@
                     <template x-if="!header.isPlaceholder">
                       <span x-html="FlexRender({ header })"></span>
                     </template>
+                    <!-- The isResizing highlight is toggled imperatively by
+                         the columnResizing subscription in init(), keyed off
+                         this data attribute -->
                     <div
                       class="resizer"
-                      :class="header.column.getIsResizing() ? 'isResizing' : ''"
+                      :data-col-id="header.column.id"
                       @dblclick="header.column.resetSize()"
                       @mousedown="header.getResizeHandler()($event)"
                       @touchstart="header.getResizeHandler()($event)"
