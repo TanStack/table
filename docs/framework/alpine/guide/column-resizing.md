@@ -298,90 +298,108 @@ table.resetHeaderSizeInfo(true)
 
 ### Advanced Column Resizing Performance
 
-Alpine's per-binding reactivity means you usually do not have to fight whole-component re-renders the way React users do. But in a large or complex table where every header and every data cell reads `column.getSize()` directly, an `"onChange"` resize drag still triggers a lot of recomputation per frame.
+Alpine bridges table reactivity through a single version counter, so by default any table state change re-evaluates every binding that reads the table. During an `"onChange"` drag on a large table that is a lot of work per frame. The [performant column resizing example](../examples/column-resizing-performant) shows how to keep a drag off Alpine's reactivity entirely.
 
-We have created a [performant column resizing example](../examples/column-resizing-performant) that demonstrates how to keep column resizing smooth with a complex table that has artificially slow cell renders. It is recommended that you just look at that example to see how it is done, but these are the basic things to keep in mind:
+1. **Opt the table out of state-driven re-evaluation.** Pass a selector to `createTable` that returns a constant (`() => ({})`). Alpine then re-evaluates table bindings only when your data or options change, not on every resize tick. (Data changes such as Regenerate still re-render normally.)
+2. **Write column widths as CSS variables imperatively.** In the component's `init()`, subscribe to `table.atoms.columnSizing` and set `--header-<id>-size` and `--col-<id>-size` variables directly on the `<table>` element. Cells reference them with `width: calc(var(--col-firstName-size) * 1px)`, so the browser applies new widths with no Alpine work per frame. Unsubscribe in `destroy()`.
+3. **Drive the resizer highlight and any live state readout from subscriptions too**, toggling classes or text imperatively rather than through `x-` bindings.
 
-1. Don't read `column.getSize()` in every header and every data cell. Instead, calculate all column widths once in a single method that maps header and column ids to CSS variable values. Touch `table.atoms.columnResizing.get()` inside that method so Alpine tracks it as a dependency and recomputes the variables while a column is being resized.
-2. Use CSS variables (e.g. `width: calc(var(--col-firstName-size) * 1px)`) to communicate column widths to your table cells. During a drag, only the binding that produces the variables re-runs and the browser applies the new widths; the cell bindings themselves do not recompute their width.
-
-The example computes the variables in a method on the `Alpine.data` object and binds them once on the table container:
+The example sets up the subscriptions in `init()` and references the table element with `x-ref`:
 
 ```ts
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(200) })
 
-  const table = createTable({
-    features,
-    columns,
-    get data() {
-      return local.data
+  const table = createTable(
+    {
+      features,
+      columns,
+      get data() {
+        return local.data
+      },
+      defaultColumn: { minSize: 60, maxSize: 800 },
+      columnResizeMode: 'onChange',
     },
-    defaultColumn: { minSize: 60, maxSize: 800 },
-    columnResizeMode: 'onChange',
-  })
+    () => ({}), // opt out of state-driven re-evaluation; the drag is handled by the subscriptions below
+  )
+
+  let subscriptions: Array<{ unsubscribe: () => void }> = []
 
   return {
     table,
     FlexRender,
-    columnSizeVars(): string {
-      // touch the resizing state so Alpine tracks it as a dependency
-      void table.atoms.columnResizing.get().columnSizingStart
-      const headers = table.getFlatHeaders()
-      const styles: Array<string> = []
-      for (const header of headers) {
-        styles.push(`--header-${header.id}-size:${header.getSize()}`)
-        styles.push(`--col-${header.column.id}-size:${header.column.getSize()}`)
+    local,
+    init(this: { $refs: Record<string, HTMLElement> }) {
+      const tableEl = this.$refs.tableEl
+
+      const writeColumnSizeVars = () => {
+        for (const header of table.getFlatHeaders()) {
+          tableEl.style.setProperty(
+            `--header-${header.id}-size`,
+            String(header.getSize()),
+          )
+          tableEl.style.setProperty(
+            `--col-${header.column.id}-size`,
+            String(header.column.getSize()),
+          )
+        }
+        tableEl.style.width = `${table.getTotalSize()}px`
       }
-      styles.push(`width:${table.getTotalSize()}px`)
-      return styles.join(';')
+
+      writeColumnSizeVars() // initial paint
+      subscriptions = [table.atoms.columnSizing.subscribe(writeColumnSizeVars)]
+    },
+    destroy() {
+      subscriptions.forEach((subscription) => subscription.unsubscribe())
+      subscriptions = []
     },
   }
 })
 ```
 
 ```html
-<div class="divTable" :style="columnSizeVars()">
-  <div class="thead">
+<table x-ref="tableEl" style="display: grid">
+  <thead style="display: grid">
     <template
       x-for="headerGroup in table.getHeaderGroups()"
       :key="headerGroup.id"
     >
-      <div class="tr">
+      <tr style="display: flex; width: 100%; height: 30px">
         <template x-for="header in headerGroup.headers" :key="header.id">
-          <div
-            class="th"
-            :style="'width:calc(var(--header-' + header.id + '-size) * 1px)'"
+          <th
+            :colspan="header.colSpan"
+            :style="'display:flex;flex-shrink:0;width:calc(var(--header-' + header.id + '-size) * 1px)'"
           >
             <template x-if="!header.isPlaceholder">
               <span x-html="FlexRender({ header })"></span>
             </template>
             <div
               class="resizer"
-              :class="header.column.getIsResizing() ? 'is-resizing' : ''"
+              :class="header.column.getIsResizing() ? 'isResizing' : ''"
               @dblclick="header.column.resetSize()"
               @mousedown="header.getResizeHandler()($event)"
               @touchstart="header.getResizeHandler()($event)"
             ></div>
-          </div>
+          </th>
         </template>
-      </div>
+      </tr>
     </template>
-  </div>
-  <div class="tbody">
+  </thead>
+  <tbody style="display: grid">
     <template x-for="row in table.getRowModel().rows" :key="row.id">
-      <div class="tr">
+      <tr style="display: flex; width: 100%; height: 30px">
         <template x-for="cell in row.getAllCells()" :key="cell.id">
-          <div
-            class="td"
-            :style="'width:calc(var(--col-' + cell.column.id + '-size) * 1px)'"
+          <td
+            :style="'display:flex;flex-shrink:0;width:calc(var(--col-' + cell.column.id + '-size) * 1px)'"
             x-text="cell.renderValue()"
-          ></div>
+          ></td>
         </template>
-      </div>
+      </tr>
     </template>
-  </div>
-</div>
+  </tbody>
+</table>
 ```
+
+> Note: with the `() => ({})` selector, the `:class` binding on the resizer above will not update during a drag (the table is opted out of state-driven re-evaluation). The example instead toggles the `isResizing` class imperatively from a `table.atoms.columnResizing` subscription. Keeping the `:class` binding is fine if you accept the highlight only reflecting resize state on the next data-driven re-render.
 
 If you follow these steps, you should see significant performance improvements while resizing columns.

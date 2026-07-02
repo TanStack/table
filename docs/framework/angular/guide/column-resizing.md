@@ -243,12 +243,10 @@ table.resetHeaderSizeInfo(true)
 
 ### Advanced Column Resizing Performance
 
-If you are creating large or complex tables with Angular, reading `column.getSize()` in every header and data cell of your template means every cell binding recomputes on every drag frame, which can degrade performance while resizing columns.
+If every header and data cell in your template reads `column.getSize()`, every cell binding recomputes on each `"onChange"` drag frame. The [performant column resizing example](../examples/column-resizing-performant) shows how to reduce a drag to a single style update using signals.
 
-We have created a [performant column resizing example](../examples/column-resizing-performant) that demonstrates how to achieve 60 fps column resizing renders with a complex table that may otherwise have slow renders. It is recommended that you just look at that example to see how it is done, but these are the basic things to keep in mind:
+1. **Compute all column widths in one `computed`.** Read `table.atoms.columnSizing.get()` to track sizing changes, then build the CSS variable map inside `untracked(...)` so no other reads register as dependencies. Bind the result once on the `<table>` element (`[style]="tableStyle()"`).
+2. **Reference the variables in cell styles** with `[style.width]="'calc(var(--col-' + cell.column.id + '-size) * 1px)'"`, so a resize only updates the variables on the `<table>` element instead of re-evaluating per-cell width bindings.
+3. **Keep components on `ChangeDetectionStrategy.OnPush`** so Angular only re-checks templates whose tracked signals actually changed.
 
-1. Don't use `column.getSize()` on every header and every data cell. Instead, calculate all column widths once per sizing change in a single `computed(...)` at the table level (the example reads `table.atoms.columnSizing.get()` to track changes, then builds a map of widths with `untracked`).
-2. Use CSS variables to communicate column widths to your table cells, so a resize only updates the variable values on the `<table>` element instead of re-evaluating per-cell bindings.
-3. Keep your components on `ChangeDetectionStrategy.OnPush` so Angular only re-checks templates whose tracked signals actually changed.
-
-If you follow these steps, you should see significant performance improvements while resizing columns.
+Because nothing in the table body reads resize state for its width, no per-cell recomputation happens during a drag.

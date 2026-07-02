@@ -253,12 +253,10 @@ table.resetHeaderSizeInfo(true)
 
 ### Advanced Column Resizing Performance
 
-If you are creating large or complex tables with Lit, every host update during a resize drag re-evaluates your templates, and your users may experience degraded performance while resizing columns if each cell does its own size work.
+By default the Lit adapter re-renders the host on every table state change, so an `"onChange"` drag re-runs your whole template each frame. The [performant column resizing example](../examples/column-resizing-performant) shows how to keep a drag off the host's render path.
 
-We have created a [performant column resizing example](../examples/column-resizing-performant) that demonstrates how to achieve smooth column resizing renders with a complex table that may otherwise have slow renders. It is recommended that you just look at that example to see how it is done, but these are the basic things to keep in mind:
+1. **Gate host re-renders with a selector.** `tableController.table(options, selector)` re-renders the host only when the selector's output changes (shallow compared). Pass `() => ({})` to opt out of state-driven re-renders entirely, then drive the per-frame work yourself.
+2. **Write column widths as CSS variables imperatively.** Query the `<table>` element with `@query` and subscribe to `table.atoms.columnSizing`, setting `--header-<id>-size` and `--col-<id>-size` variables directly on it. Cells reference them with `width: calc(var(--col-firstName-size) * 1px)`, so the browser applies new widths with no Lit work per frame. Set the subscription up when the element connects and unsubscribe when it disconnects.
+3. **Isolate the few things that must react with the `table.subscribe` directive.** The active resizer's highlight and any live state readout each subscribe to just the slice they render, so only those template regions update during a drag.
 
-1. Don't use `column.getSize()` on every header and every data cell. Instead, calculate all column widths once per render from `table.getFlatHeaders()` and expose them as CSS variables on the table wrapper.
-2. Reference those CSS variables (e.g. `width: calc(var(--col-firstName-size) * 1px)`) in your cell styles so resizing only changes the variable values, not the cell templates.
-3. Use Lit's `repeat` directive with stable keys for header groups, rows, and cells so Lit reuses DOM instead of re-creating it on every drag frame, and keep the selector you pass to `tableController.table` limited to the state you actually render.
-
-If you follow these steps, you should see significant performance improvements while resizing columns.
+Keep using Lit's `repeat` directive with stable keys for header groups, rows, and cells so Lit reuses DOM instead of re-creating it.

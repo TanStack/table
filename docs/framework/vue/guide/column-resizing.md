@@ -239,12 +239,12 @@ table.resetHeaderSizeInfo(true)
 
 ### Advanced Column Resizing Performance
 
-If you are creating large or complex tables with Vue, you may find that resizing columns with `columnResizeMode: 'onChange'` triggers a full template re-render on every drag frame, which can degrade performance.
+Vue tracks reactivity per component render effect, so reading `columnResizing` or `columnSizing` anywhere in a component re-renders that whole component on every `"onChange"` drag frame. The [performant column resizing example](../examples/column-resizing-performant) shows how to keep a drag off the root component's render path.
 
-There is a [performant column resizing example](../examples/column-resizing-performant) you can reference, and these are the basic principles to keep in mind:
+The idea is to keep resize state out of the component that renders your rows:
 
-1. Don't read `column.getSize()` in every header and every data cell on every frame. Instead, calculate all column widths once in a `computed(...)` so Vue caches the result until the sizing state actually changes.
-2. Keep the table body out of the resize-reactive path while a drag is in progress, for example by rendering rows inside a child component that does not read the `columnResizing` state (Vue only re-renders components whose tracked dependencies changed).
-3. Use CSS variables to communicate column widths to your table cells, so a drag frame updates a few style declarations instead of re-rendering every cell.
+1. **Do not read `column.getSize()` per cell in the root template.** Reading it there ties every frame's re-render to the whole table.
+2. **Write column widths as CSS variables imperatively.** In `onMounted`, subscribe to `table.atoms.columnSizing` and set `--header-<id>-size` and `--col-<id>-size` variables directly on the `<table>` element via a template ref. Cells reference them with `width: calc(var(--col-firstName-size) * 1px)`, so the browser applies new widths with no Vue work per frame.
+3. **Isolate the few things that must react into small child components.** The example renders the active resizer's highlight and the live state readout as functional components, each with its own render effect, so a drag re-renders only those, never the table body.
 
-If you follow these steps, you should see significant performance improvements while resizing columns.
+Because the root template no longer reads resize state, the body only re-renders when your data changes.

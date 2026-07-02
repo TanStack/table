@@ -233,12 +233,12 @@ table.resetHeaderSizeInfo(true)
 
 ### Advanced Column Resizing Performance
 
-If you are creating large or complex tables with Preact, you may find that if you do not add proper memoization to your render logic, your users may experience degraded performance while resizing columns.
+If you are creating large or complex tables with Preact, an `"onChange"` resize can re-render the whole table on every drag frame, which degrades performance. The [performant column resizing example](../examples/column-resizing-performant) shows how to keep a drag off Preact's render path entirely, so even a table with expensive cells stays smooth.
 
-We have created a [performant column resizing example](../examples/column-resizing-performant) that demonstrates how to achieve 60 fps column resizing renders with a complex table that may otherwise have slow renders. It is recommended that you just look at that example to see how it is done, but these are the basic things to keep in mind:
+The idea is to stop treating column widths as component state during a drag:
 
-1. Don't use `column.getSize()` on every header and every data cell. Instead, calculate all column widths once upfront, **memoized** (the example uses `useMemo` from `preact/hooks`)!
-2. Memoize your Table Body while resizing is in progress (the example wraps the body component with `memo` from `preact/compat`).
-3. Use CSS variables to communicate column widths to your table cells.
+1. **Subscribe the table component to no resize state.** Pass a selector that returns a constant (the example uses `() => ({})`) so state changes never re-render the component that owns the table.
+2. **Write column widths as CSS variables imperatively.** In a `useLayoutEffect` (from `preact/hooks`), subscribe to `table.atoms.columnSizing` and set `--header-<id>-size` and `--col-<id>-size` variables directly on the `<table>` element. Cells reference them with `width: calc(var(--col-firstName-size) * 1px)`, so the browser applies new widths with zero Preact work per frame.
+3. **Isolate the few things that must react into `table.Subscribe` islands.** The active resizer's highlight and any live state readout each subscribe to just the slice they need, so a drag re-renders only those small islands, not the table body.
 
-If you follow these steps, you should see significant performance improvements while resizing columns.
+This replaces the older "memoize the table body while resizing" approach (the example no longer needs `memo` from `preact/compat`). Because the body no longer subscribes to resize state, it only re-renders when your data changes.
