@@ -1,7 +1,6 @@
-import { customElement, state } from 'lit/decorators.js'
+import { customElement, query, state } from 'lit/decorators.js'
 import { LitElement, html } from 'lit'
 import { repeat } from 'lit/directives/repeat.js'
-import { styleMap } from 'lit/directives/style-map.js'
 import {
   FlexRender,
   TableController,
@@ -10,8 +9,14 @@ import {
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
-import type { ColumnDef } from '@tanstack/lit-table'
+import type { ColumnDef, LitTable } from '@tanstack/lit-table'
 import type { Person } from './makeData'
+
+/**
+ * This example implements column resizing with NO Lit re-renders!
+ * The controller selector subscribes to nothing, and we subscribe to the
+ * table store OUTSIDE of Lit's render cycle to write CSS variables
+ */
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -72,7 +77,65 @@ class LitTableExample extends LitElement {
 
   private tableController = new TableController<typeof features, Person>(this)
 
-  protected render() {
+  @query('table')
+  private _tableEl?: HTMLTableElement
+
+  private _table!: LitTable<typeof features, Person, Record<string, never>>
+  private _sizingSub?: { unsubscribe: () => void }
+
+  /**
+   * Instead of re-rendering Lit on every resize tick, we subscribe to the
+   * table store OUTSIDE of Lit and write the column size CSS variables
+   * directly onto the <table> element. Header and data cells reference the
+   * variables, so the browser updates widths with zero Lit work per tick.
+   * (The core resize handler already coalesces pointer events to one state
+   * update per animation frame.)
+   */
+  private _writeColumnSizeVars() {
+    const tableEl = this._tableEl
+    if (!tableEl) return
+    for (const header of this._table.getFlatHeaders()) {
+      tableEl.style.setProperty(
+        `--header-${header.id}-size`,
+        String(header.getSize()),
+      )
+      tableEl.style.setProperty(
+        `--col-${header.column.id}-size`,
+        String(header.column.getSize()),
+      )
+    }
+    tableEl.style.width = `${this._table.getTotalSize()}px`
+  }
+
+  private _subscribeToColumnSizing() {
+    if (this._sizingSub) return
+    this._writeColumnSizeVars() // initial paint (and repaint after reconnect)
+    this._sizingSub = this._table.atoms.columnSizing.subscribe(() =>
+      this._writeColumnSizeVars(),
+    )
+  }
+
+  protected override firstUpdated() {
+    this._subscribeToColumnSizing()
+  }
+
+  override connectedCallback() {
+    super.connectedCallback()
+    // re-establish the subscription if this element is re-inserted into the
+    // DOM after disconnectedCallback tore it down; skip the very first
+    // connect, where the table and element ref don't exist yet
+    if (this.hasUpdated) {
+      this._subscribeToColumnSizing()
+    }
+  }
+
+  override disconnectedCallback() {
+    super.disconnectedCallback()
+    this._sizingSub?.unsubscribe()
+    this._sizingSub = undefined
+  }
+
+  protected override render() {
     const table = this.tableController.table(
       {
         features,
@@ -84,28 +147,16 @@ class LitTableExample extends LitElement {
         debugHeaders: true,
         debugColumns: true,
       },
-      (state) => ({
-        columnSizing: state.columnSizing,
-        columnResizing: state.columnResizing,
-      }),
+      // subscribe to nothing instead of re-rendering on every internal state change
+      (): Record<string, never> => ({}),
     )
-
-    // Compute CSS variables for column sizes
-    const columnSizeVars = (): Record<string, string> => {
-      const headers = table.getFlatHeaders()
-      const colSizes: Record<string, string> = {}
-      for (const header of headers) {
-        colSizes[`--header-${header.id}-size`] = `${header.getSize()}`
-        colSizes[`--col-${header.column.id}-size`] =
-          `${header.column.getSize()}`
-      }
-      return colSizes
-    }
+    this._table = table
 
     return html`
       <div class="demo-root">
         <div>
           <button
+            class="demo-button"
             @click=${() => {
               this._data = makeData(200)
             }}
@@ -113,90 +164,98 @@ class LitTableExample extends LitElement {
             Regenerate Data
           </button>
           <button
+            class="demo-button"
             @click=${() => {
-              this._data = makeData(2_000)
+              this._data = makeData(5_000)
             }}
           >
-            Stress Test (2k rows)
+            Stress Test (5k rows)
           </button>
         </div>
-        <i>
-          This example has artificially slow cell renders to simulate complex
-          usage
-        </i>
         <div class="spacer-md"></div>
-        <pre style="${styleMap({ 'min-height': '10rem' })}">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+        ${table.subscribe(
+          table.store,
+          (state) =>
+            // Only this little island re-renders per resize tick
+            html`<pre style="height: 10rem; overflow: auto">
+${JSON.stringify(state, null, 2)}</pre
+            >`,
+        )}
         <div class="spacer-md"></div>
         (${this._data.length.toLocaleString()} rows)
         <div class="scroll-container">
-          <div
-            class="divTable"
-            style="${styleMap({
-              ...columnSizeVars(),
-              width: `${table.getTotalSize()}px`,
-            })}"
-          >
-            <div class="thead">
+          <!-- This example is using semantic table tags, but also CSS Grid/Flexbox layout for more absolute column widths -->
+          <table style="display: grid">
+            <thead style="display: grid">
               ${repeat(
                 table.getHeaderGroups(),
                 (headerGroup) => headerGroup.id,
                 (headerGroup) => html`
-                  <div class="tr">
+                  <tr style="display: flex; width: 100%; height: 30px">
                     ${repeat(
                       headerGroup.headers,
                       (header) => header.id,
                       (header) => html`
-                        <div
-                          class="th"
-                          style="${styleMap({
-                            width: `calc(var(--header-${header.id}-size) * 1px)`,
-                          })}"
+                        <th
+                          colspan=${header.colSpan}
+                          style="display: flex; flex-shrink: 0; width: calc(var(--header-${header.id}-size) * 1px)"
                         >
                           ${header.isPlaceholder
                             ? null
                             : FlexRender({ header })}
-                          <div
-                            @dblclick="${() => header.column.resetSize()}"
-                            @mousedown="${header.getResizeHandler()}"
-                            @touchstart="${header.getResizeHandler()}"
-                            class="resizer ${header.column.getIsResizing()
-                              ? 'isResizing'
-                              : ''}"
-                          ></div>
-                        </div>
+                          ${table.subscribe(
+                            table.atoms.columnResizing,
+                            // Each resizer subscribes to just its own "am I
+                            // being resized?" boolean, so a drag re-renders
+                            // exactly one of these islands at drag start/end
+                            (columnResizing) =>
+                              columnResizing.isResizingColumn ===
+                              header.column.id,
+                            (isResizing) => html`
+                              <div
+                                @dblclick="${() => header.column.resetSize()}"
+                                @mousedown="${header.getResizeHandler()}"
+                                @touchstart="${header.getResizeHandler()}"
+                                class="resizer ${isResizing
+                                  ? 'isResizing'
+                                  : ''}"
+                              ></div>
+                            `,
+                          )}
+                        </th>
                       `,
                     )}
-                  </div>
+                  </tr>
                 `,
               )}
-            </div>
-            <div class="tbody">
+            </thead>
+            <!-- No memoization needed: the host subscribes to no table state,
+                 so the body only re-renders when the data itself changes -->
+            <tbody style="display: grid">
               ${repeat(
                 table.getRowModel().rows,
                 (row) => row.id,
                 (row) => html`
-                  <div class="tr">
+                  <tr
+                    style="display: flex; width: 100%; height: 30px; content-visibility: auto; contain-intrinsic-height: auto 30px"
+                  >
                     ${repeat(
                       row.getAllCells(),
                       (cell) => cell.id,
                       (cell) => html`
-                        <div
-                          class="td"
-                          style="${styleMap({
-                            width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                          })}"
+                        <td
+                          style="display: flex; flex-shrink: 0; width: calc(var(--col-${cell
+                            .column.id}-size) * 1px)"
                         >
                           ${cell.renderValue()}
-                        </div>
+                        </td>
                       `,
                     )}
-                  </div>
+                  </tr>
                 `,
               )}
-            </div>
-          </div>
+            </tbody>
+          </table>
         </div>
       </div>
       <style>
@@ -206,32 +265,23 @@ ${JSON.stringify(table.state, null, 2)}</pre
           box-sizing: border-box;
         }
 
-        table,
-        .divTable {
+        table {
           border: 1px solid lightgray;
-          width: fit-content;
+          border-collapse: collapse;
+          border-spacing: 0;
         }
 
-        .tr {
-          display: flex;
-        }
-
-        tr,
-        .tr {
-          width: fit-content;
+        tr {
           height: 30px;
         }
 
         th,
-        .th,
-        td,
-        .td {
+        td {
           box-shadow: inset 0 0 0 1px lightgray;
           padding: 0.25rem;
         }
 
-        th,
-        .th {
+        th {
           padding: 2px 4px;
           position: relative;
           font-weight: bold;
@@ -239,8 +289,7 @@ ${JSON.stringify(table.state, null, 2)}</pre
           height: 30px;
         }
 
-        td,
-        .td {
+        td {
           height: 30px;
         }
 
@@ -275,204 +324,16 @@ ${JSON.stringify(table.state, null, 2)}</pre
         .demo-root {
           padding: 0.5rem;
         }
-        .spacer-xs {
-          height: 0.25rem;
-        }
-        .spacer-sm {
-          height: 0.5rem;
-        }
         .spacer-md {
           height: 1rem;
         }
-        .controls,
-        .button-row,
-        .inline-controls,
-        .pin-actions,
-        .filter-row,
-        .form-actions {
-          display: flex;
-          align-items: center;
-        }
-        .button-row {
-          flex-wrap: wrap;
-          gap: 0.5rem;
-        }
-        .controls {
-          gap: 0.5rem;
-        }
-        .inline-controls,
-        .pin-actions {
-          gap: 0.25rem;
-        }
-        .pin-actions {
-          justify-content: center;
-        }
-        .filter-row {
-          gap: 0.5rem;
-        }
-        .form-actions {
-          gap: 1rem;
-          margin-bottom: 1rem;
-        }
-        .split-tables {
-          display: flex;
-          gap: 1rem;
-        }
-        .table-row-group {
-          display: flex;
-        }
-        .split-gap {
-          gap: 1rem;
-        }
-        .vertical-options {
-          display: flex;
-          flex-direction: column;
-          gap: 0.5rem;
-          align-items: center;
-        }
-        .column-toggle-panel {
-          display: inline-block;
-          border: 1px solid #000;
-          border-radius: 0.25rem;
-          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
-        }
-        .column-toggle-panel-header {
-          border-bottom: 1px solid #000;
-          padding: 0 0.25rem;
-        }
-        .column-toggle-row,
-        .selection-cell {
-          padding: 0 0.25rem;
-        }
-        .selection-cell {
-          display: block;
-        }
-        .demo-button,
-        .pin-button,
-        .compact-input,
-        .filter-input,
-        .filter-select,
-        .page-size-input,
-        .text-input,
-        .number-input,
-        .wide-action-button,
-        .primary-action,
-        .secondary-action,
-        .success-action {
+        .demo-button {
           border: 1px solid currentColor;
           border-radius: 0.25rem;
-        }
-        .demo-button {
           padding: 0.5rem;
-        }
-        .demo-button-sm {
-          padding: 0.25rem;
-        }
-        .demo-button-spaced {
-          margin-bottom: 0.5rem;
-        }
-        .pin-button {
-          padding: 0 0.5rem;
-        }
-        .outlined-table {
-          border: 2px solid #000;
-        }
-        .outlined-control {
-          border-color: #000;
-        }
-        .nowrap {
-          white-space: nowrap;
-        }
-        .demo-note {
-          margin-bottom: 0.5rem;
-          font-size: 0.875rem;
-        }
-        .section-title {
-          font-size: 1.25rem;
         }
         .scroll-container {
           overflow-x: auto;
-        }
-        .page-size-input {
-          width: 4rem;
-          padding: 0.25rem;
-        }
-        .number-input {
-          width: 5rem;
-          padding: 0 0.25rem;
-        }
-        .filter-input,
-        .filter-select {
-          width: 6rem;
-          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
-        }
-        .filter-select {
-          width: 9rem;
-        }
-        .text-input {
-          width: 100%;
-          padding: 0 0.25rem;
-        }
-        .compact-input {
-          padding: 0 0.25rem;
-        }
-        .wide-action-button {
-          width: 16rem;
-        }
-        .summary-panel {
-          border: 1px solid currentColor;
-          box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
-          padding: 0.5rem;
-        }
-        .sortable-header,
-        .sortable {
-          cursor: pointer;
-          user-select: none;
-        }
-        .primary-action,
-        .success-action,
-        .secondary-action {
-          color: #fff;
-        }
-        .primary-action {
-          background: #3b82f6;
-        }
-        .success-action {
-          background: #22c55e;
-        }
-        .secondary-action {
-          background: #6b7280;
-        }
-        .submit-button:disabled {
-          opacity: 0.5;
-        }
-        .error-text {
-          color: #ef4444;
-          font-size: 0.75rem;
-        }
-        .success-text {
-          color: #16a34a;
-        }
-        .warning-text {
-          color: #ca8a04;
-        }
-        .muted-text {
-          color: #9ca3af;
-        }
-        .label-offset {
-          margin-left: 0.5rem;
-        }
-        .cell-padding {
-          padding: 0.25rem;
-        }
-        .table-spacer {
-          margin-bottom: 0.5rem;
-        }
-        .centered-button-row {
-          display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
-          gap: 0.5rem;
         }
       </style>
     `

@@ -1,4 +1,5 @@
 import { constructTable } from '@tanstack/table-core'
+import { shallow } from '@tanstack/lit-store'
 import { litReactivity } from './reactivity'
 import { FlexRender } from './flexRender'
 
@@ -124,6 +125,9 @@ export class TableController<
   private _storeSubscription?: { unsubscribe: () => void }
   private _optionsSubscription?: { unsubscribe: () => void }
   private _notifier = 0
+  private _hasSelector = false
+  private _latestSelector?: (state: TableState<TFeatures>) => unknown
+  private _lastSelected: unknown
 
   constructor(host: ReactiveControllerHost) {
     ;(this.host = host).addController(this)
@@ -179,6 +183,19 @@ export class TableController<
       ...tableOptions,
     }))
 
+    // Record the latest selector each render pass and re-baseline what the
+    // store-subscription gate compares against, so renders triggered by
+    // anything else (e.g. a @state change) reset the gate too. The gate lets
+    // a selector like `() => ({})` opt the host out of state-driven updates
+    // entirely, pushing granular reactivity into `table.subscribe` islands.
+    this._hasSelector = selector !== undefined
+    this._latestSelector = selector as
+      | ((state: TableState<TFeatures>) => unknown)
+      | undefined
+    this._lastSelected = selector
+      ? selector(this._table.store.state)
+      : undefined
+
     // Capture for closure
     const tableInstance = this._table
 
@@ -196,10 +213,21 @@ export class TableController<
   private _setupSubscriptions() {
     if (this._table && !this._storeSubscription) {
       this._storeSubscription = this._table.store.subscribe(() => {
+        // With a selector, only update the host when the selected state
+        // actually changes (shallow compare). No selector keeps the previous
+        // behavior of updating on every state change.
+        if (this._hasSelector) {
+          const nextSelected = this._latestSelector!(this._table!.store.state)
+          if (shallow(this._lastSelected as any, nextSelected as any)) {
+            return
+          }
+          this._lastSelected = nextSelected
+        }
         this._notifier++
         this.host.requestUpdate()
       })
 
+      // Options changes (e.g. new data) must always re-render.
       this._optionsSubscription = this._table.optionsStore!.subscribe(() => {
         this._notifier++
         this.host.requestUpdate()

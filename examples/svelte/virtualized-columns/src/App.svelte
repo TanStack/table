@@ -1,6 +1,7 @@
 <script lang="ts">
   import {
     FlexRender,
+    columnResizingFeature,
     columnSizingFeature,
     columnVisibilityFeature,
     createSortedRowModel,
@@ -16,6 +17,7 @@
   import './index.css'
 
   const features = tableFeatures({
+    columnResizingFeature,
     columnSizingFeature,
     columnVisibilityFeature,
     rowSortingFeature,
@@ -54,6 +56,7 @@
     get data() {
       return data
     },
+    columnResizeMode: 'onChange',
     debugTable: true,
   })
 
@@ -79,23 +82,22 @@
   })
 
   // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without `measureElement`
-  const rowVirtualizer = createVirtualizer<
-    HTMLDivElement,
-    HTMLTableRowElement
-  >({
-    get count() {
-      return rows.length
+  const rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLTableRowElement>(
+    {
+      get count() {
+        return rows.length
+      },
+      estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
+      getScrollElement: () => tableContainerRef ?? null,
+      // measure dynamic row height, except in firefox because it measures table border height incorrectly
+      measureElement:
+        typeof window !== 'undefined' &&
+        navigator.userAgent.indexOf('Firefox') === -1
+          ? (element) => element.getBoundingClientRect().height
+          : undefined,
+      overscan: 5,
     },
-    estimateSize: () => 33, // estimate row height for accurate scrollbar dragging
-    getScrollElement: () => tableContainerRef ?? null,
-    // measure dynamic row height, except in firefox because it measures table border height incorrectly
-    measureElement:
-      typeof window !== 'undefined' &&
-      navigator.userAgent.indexOf('Firefox') === -1
-        ? (element) => element.getBoundingClientRect().height
-        : undefined,
-    overscan: 5,
-  })
+  )
 
   // When the container ref becomes available, update both virtualizers
   // so they pick up the scroll element and set up scroll observers.
@@ -114,6 +116,13 @@
   })
   $effect(() => {
     get(columnVirtualizer).setOptions({ count: visibleColumns.length })
+  })
+
+  // re-measure virtual column widths when a column is resized so the
+  // virtualizer's scroll math stays in sync with the rendered widths
+  $effect(() => {
+    void table.atoms.columnSizing?.get()
+    get(columnVirtualizer).measure()
   })
 
   // Different virtualization strategy for columns - instead of absolute and translateY,
@@ -153,8 +162,7 @@
     <!-- Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights -->
     <table style="display: grid;">
       <thead style="display: grid; position: sticky; top: 0px; z-index: 1;">
-        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)
-        }
+        {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
           <tr style="display: flex; width: 100%;">
             {#if virtualPaddingLeft}
               <!-- fake empty column to the left for virtualization scroll padding -->
@@ -162,11 +170,11 @@
             {/if}
             {#each $columnVirtualizer.getVirtualItems() as virtualColumn (virtualColumn.index)}
               {@const header = headerGroup.headers[virtualColumn.index]}
-              <th style="display: flex; width: {header.getSize()}px;">
+              <th
+                style="display: flex; position: relative; width: {header.getSize()}px;"
+              >
                 <div
-                  class={header.column.getCanSort()
-                    ? 'sortable-header'
-                    : ''}
+                  class={header.column.getCanSort() ? 'sortable-header' : ''}
                   role="button"
                   tabindex="0"
                   onclick={header.column.getToggleSortingHandler()}
@@ -176,13 +184,22 @@
                     }
                   }}
                 >
-                  <FlexRender header={header} />
+                  <FlexRender {header} />
                   {#if header.column.getIsSorted() === 'asc'}
                     {' '}🔼
                   {:else if header.column.getIsSorted() === 'desc'}
                     {' '}🔽
                   {/if}
                 </div>
+                <div
+                  ondblclick={() => header.column.resetSize()}
+                  onmousedown={header.getResizeHandler()}
+                  ontouchstart={header.getResizeHandler()}
+                  aria-hidden="true"
+                  class="resizer {header.column.getIsResizing()
+                    ? 'isResizing'
+                    : ''}"
+                ></div>
               </th>
             {/each}
             {#if virtualPaddingRight}
@@ -210,7 +227,7 @@
             {#each $columnVirtualizer.getVirtualItems() as virtualColumn (virtualColumn.index)}
               {@const cell = visibleCells[virtualColumn.index]}
               <td style="display: flex; width: {cell.column.getSize()}px;">
-                <FlexRender cell={cell} />
+                <FlexRender {cell} />
               </td>
             {/each}
             {#if virtualPaddingRight}

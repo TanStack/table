@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
   FlexRender,
+  columnResizingFeature,
   columnSizingFeature,
   createColumnHelper,
   createSortedRowModel,
@@ -23,6 +24,7 @@ import type { Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
 const features = {
+  columnResizingFeature,
   columnSizingFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
@@ -78,6 +80,7 @@ function App() {
       features,
       columns,
       data,
+      columnResizeMode: 'onChange',
       debugTable: true,
     },
     (state) => state, // default selector
@@ -144,6 +147,13 @@ function TableContainer({ table }: TableContainerProps) {
       // })
     },
   })
+
+  // re-measure virtual column widths when a column is resized so the
+  // virtualizer's scroll math stays in sync with the rendered widths
+  const columnSizing = table.state.columnSizing
+  React.useEffect(() => {
+    columnVirtualizer.measure()
+  }, [columnVirtualizer, columnSizing])
 
   return (
     <div
@@ -242,6 +252,7 @@ function TableHeadCell({
         alignItems: 'center',
         display: 'flex',
         height: '34px',
+        position: 'relative', // needed for absolute positioning of the resizer
         width: header.getSize(),
       }}
     >
@@ -264,6 +275,14 @@ function TableHeadCell({
           desc: ' 🔽',
         }[header.column.getIsSorted() as string] ?? null}
       </div>
+      <div
+        onDoubleClick={() => header.column.resetSize()}
+        onMouseDown={header.getResizeHandler()}
+        onTouchStart={header.getResizeHandler()}
+        className={`resizer ${
+          header.column.getIsResizing() ? 'isResizing' : ''
+        }`}
+      />
     </th>
   )
 }

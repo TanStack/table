@@ -7,34 +7,23 @@ html {
   font-size: 14px;
 }
 
-table,
-.divTable {
+table {
   border: 1px solid lightgray;
-  width: fit-content;
   border-collapse: collapse;
   border-spacing: 0;
 }
 
-.tr {
-  display: flex;
-}
-
-tr,
-.tr {
-  width: fit-content;
+tr {
   height: 30px;
 }
 
 th,
-.th,
-td,
-.td {
+td {
   box-shadow: inset 0 0 0 1px lightgray;
   padding: 0.25rem;
 }
 
-th,
-.th {
+th {
   padding: 2px 4px;
   position: relative;
   font-weight: bold;
@@ -42,8 +31,7 @@ th,
   height: 30px;
 }
 
-td,
-.td {
+td {
   height: 30px;
 }
 
@@ -51,6 +39,7 @@ td,
   position: absolute;
   top: 0;
   height: 100%;
+  right: 0;
   width: 5px;
   background: rgba(0, 0, 0, 0.5);
   cursor: col-resize;

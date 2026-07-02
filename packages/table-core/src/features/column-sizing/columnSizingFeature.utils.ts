@@ -4,7 +4,6 @@ import {
   table_getPinnedVisibleLeafColumns,
   table_getRightHeaderGroups,
 } from '../column-pinning/columnPinningFeature.utils'
-import { column_getIndex } from '../column-ordering/columnOrderingFeature.utils'
 import {
   callMemoOrStaticFn,
   cloneState,
@@ -17,7 +16,11 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { Header } from '../../types/Header'
 import type { Column_Internal } from '../../types/Column'
-import type { ColumnSizingState } from './columnSizingFeature.types'
+import type {
+  ColumnOffsets,
+  ColumnOffsetsByPosition,
+  ColumnSizingState,
+} from './columnSizingFeature.types'
 
 /**
  * Creates the default committed column sizing state.
@@ -86,6 +89,85 @@ export function column_getSize<
   )
 }
 
+function buildColumnOffsets<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(columns: Array<Column_Internal<TFeatures, TData, unknown>>): ColumnOffsets {
+  const starts = makeObjectMap<number>()
+  const afters = makeObjectMap<number>()
+  const sizes = new Array<number>(columns.length)
+
+  let start = 0
+  for (let i = 0; i < columns.length; i++) {
+    const column = columns[i]!
+    const size = callMemoOrStaticFn(column, 'getSize', column_getSize)
+    sizes[i] = size
+    starts[column.id] = start
+    start += size
+  }
+
+  let after = 0
+  for (let i = columns.length - 1; i >= 0; i--) {
+    afters[columns[i]!.id] = after
+    after += sizes[i]!
+  }
+
+  return { starts, afters }
+}
+
+/**
+ * Builds start and after offset maps for every visible leaf column, computed
+ * once per pinning region plus the full visible list.
+ *
+ * A single table-level memo of this result backs all `column.getStart()` and
+ * `column.getAfter()` calls with O(1) lookups.
+ *
+ * @example
+ * ```ts
+ * const offsets = table_getColumnOffsets(table)
+ * const leftOffset = offsets.left.starts[column.id]
+ * ```
+ */
+export function table_getColumnOffsets<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): ColumnOffsetsByPosition {
+  return {
+    all: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table) as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+    center: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'center') as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+    left: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'left') as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+    right: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'right') as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+  }
+}
+
+function toOffsetsKey(
+  position: ColumnPinningPosition | 'center' | undefined,
+): keyof ColumnOffsetsByPosition {
+  return position === 'left'
+    ? 'left'
+    : position === 'right'
+      ? 'right'
+      : position === 'center'
+        ? 'center'
+        : 'all' // undefined | false use the full visible list
+}
+
 /**
  * Computes the offset from the start edge of a pinning region to this column.
  *
@@ -103,28 +185,14 @@ export function column_getStart<
   TValue extends CellData = CellData,
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
-  position: ColumnPinningPosition | 'center',
+  position?: ColumnPinningPosition | 'center',
 ): number {
-  const index = callMemoOrStaticFn(
-    column,
-    'getIndex',
-    column_getIndex,
-    position,
-  )
-  if (index <= 0) return 0
-
-  const visibleLeafColumns = callMemoOrStaticFn(
+  const offsets = callMemoOrStaticFn(
     column.table,
-    'getPinnedVisibleLeafColumns',
-    table_getPinnedVisibleLeafColumns,
-    position,
+    'getColumnOffsets',
+    table_getColumnOffsets,
   )
-
-  const prevColumn = visibleLeafColumns[index - 1]!
-  return (
-    callMemoOrStaticFn(prevColumn, 'getStart', column_getStart, position) +
-    callMemoOrStaticFn(prevColumn, 'getSize', column_getSize)
-  )
+  return offsets[toOffsetsKey(position)].starts[column.id] ?? 0
 }
 
 /**
@@ -144,27 +212,14 @@ export function column_getAfter<
   TValue extends CellData = CellData,
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
-  position: ColumnPinningPosition | 'center',
+  position?: ColumnPinningPosition | 'center',
 ): number {
-  const visibleLeafColumns = callMemoOrStaticFn(
+  const offsets = callMemoOrStaticFn(
     column.table,
-    'getPinnedVisibleLeafColumns',
-    table_getPinnedVisibleLeafColumns,
-    position,
+    'getColumnOffsets',
+    table_getColumnOffsets,
   )
-  const index = callMemoOrStaticFn(
-    column,
-    'getIndex',
-    column_getIndex,
-    position,
-  )
-  if (index < 0 || index >= visibleLeafColumns.length - 1) return 0
-
-  const nextColumn = visibleLeafColumns[index + 1]!
-  return (
-    callMemoOrStaticFn(nextColumn, 'getSize', column_getSize) +
-    callMemoOrStaticFn(nextColumn, 'getAfter', column_getAfter, position)
-  )
+  return offsets[toOffsetsKey(position)].afters[column.id] ?? 0
 }
 
 /**

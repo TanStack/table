@@ -2,6 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   createColumnHelper,
@@ -23,6 +24,7 @@ import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
 const features = {
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
@@ -77,6 +79,7 @@ function App() {
       features,
       columns,
       data,
+      columnResizeMode: 'onChange',
       debugTable: true,
     },
     (state) => state, // default selector
@@ -125,6 +128,13 @@ function TableContainer({ table }: TableContainerProps) {
     horizontal: true,
     overscan: 3, // how many columns to render on each side off screen each way (adjust this for performance)
   })
+
+  // re-measure virtual column widths when a column is resized so the
+  // virtualizer's scroll math stays in sync with the rendered widths
+  const columnSizing = table.state.columnSizing
+  React.useEffect(() => {
+    columnVirtualizer.measure()
+  }, [columnVirtualizer, columnSizing])
 
   const virtualColumns = columnVirtualizer.getVirtualItems()
 
@@ -246,26 +256,37 @@ interface TableHeadCellProps {
 
 function TableHeadCell({ header, table }: TableHeadCellProps) {
   return (
-    <th
-      key={header.id}
-      style={{
-        display: 'flex',
-        width: header.getSize(),
-      }}
-    >
-      <div
-        {...{
-          className: header.column.getCanSort() ? 'sortable-header' : '',
-          onClick: header.column.getToggleSortingHandler(),
+    <table.Subscribe source={table.atoms.columnSizing}>
+      <th
+        key={header.id}
+        style={{
+          display: 'flex',
+          position: 'relative', // needed for absolute positioning of the resizer
+          width: header.getSize(),
         }}
       >
-        <table.FlexRender header={header} />
-        {{
-          asc: ' 🔼',
-          desc: ' 🔽',
-        }[header.column.getIsSorted() as string] ?? null}
-      </div>
-    </th>
+        <div
+          {...{
+            className: header.column.getCanSort() ? 'sortable-header' : '',
+            onClick: header.column.getToggleSortingHandler(),
+          }}
+        >
+          <table.FlexRender header={header} />
+          {{
+            asc: ' 🔼',
+            desc: ' 🔽',
+          }[header.column.getIsSorted() as string] ?? null}
+        </div>
+        <div
+          onDoubleClick={() => header.column.resetSize()}
+          onMouseDown={header.getResizeHandler()}
+          onTouchStart={header.getResizeHandler()}
+          className={`resizer ${
+            header.column.getIsResizing() ? 'isResizing' : ''
+          }`}
+        />
+      </th>
+    </table.Subscribe>
   )
 }
 
@@ -386,15 +407,17 @@ interface TableBodyCellProps {
 
 function TableBodyCell({ cell, table }: TableBodyCellProps) {
   return (
-    <td
-      key={cell.id}
-      style={{
-        display: 'flex',
-        width: cell.column.getSize(),
-      }}
-    >
-      <table.FlexRender cell={cell} />
-    </td>
+    <table.Subscribe source={table.atoms.columnSizing}>
+      <td
+        key={cell.id}
+        style={{
+          display: 'flex',
+          width: cell.column.getSize(),
+        }}
+      >
+        <table.FlexRender cell={cell} />
+      </td>
+    </table.Subscribe>
   )
 }
 

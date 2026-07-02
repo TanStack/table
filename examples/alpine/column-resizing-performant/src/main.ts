@@ -66,42 +66,90 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 Alpine.data('table', () => {
   const local = Alpine.reactive({ data: makeData(200) })
 
-  const table = createTable({
-    features,
-    columns,
-    get data() {
-      return local.data
+  const table = createTable(
+    {
+      features,
+      columns,
+      get data() {
+        return local.data
+      },
+      defaultColumn: { minSize: 60, maxSize: 800 },
+      columnResizeMode: 'onChange',
+      debugTable: true,
+      debugHeaders: true,
+      debugColumns: true,
     },
-    defaultColumn: { minSize: 60, maxSize: 800 },
-    columnResizeMode: 'onChange',
-    debugTable: true,
-    debugHeaders: true,
-    debugColumns: true,
-  })
+    () => ({}), // subscribe to nothing instead of re-evaluating every binding on every state change
+  )
+
+  let subscriptions: Array<{ unsubscribe: () => void }> = []
 
   return {
     table,
     FlexRender,
     local,
-    // Compute CSS variables for column sizes. Reading columnSizingInfo keeps
-    // this reactive so the variables recompute while a column is being resized.
-    columnSizeVars(): string {
-      // touch the resizing state so Alpine tracks it as a dependency
-      void table.atoms.columnResizing.get().columnSizingStart
-      const headers = table.getFlatHeaders()
-      const styles: Array<string> = []
-      for (const header of headers) {
-        styles.push(`--header-${header.id}-size:${header.getSize()}`)
-        styles.push(`--col-${header.column.id}-size:${header.column.getSize()}`)
+    init(this: { $refs: Record<string, HTMLElement> }) {
+      const tableEl = this.$refs.tableEl
+      const stateDump = this.$refs.stateDump
+
+      /**
+       * Instead of re-evaluating Alpine bindings on every resize tick, we
+       * subscribe to the table store OUTSIDE of Alpine and write the column
+       * size CSS variables directly onto the <table> element. Header and
+       * data cells reference the variables, so the browser updates widths
+       * with zero Alpine work per tick. (The core resize handler already
+       * coalesces pointer events to one state update per animation frame.)
+       */
+      const writeColumnSizeVars = () => {
+        for (const header of table.getFlatHeaders()) {
+          tableEl.style.setProperty(
+            `--header-${header.id}-size`,
+            String(header.getSize()),
+          )
+          tableEl.style.setProperty(
+            `--col-${header.column.id}-size`,
+            String(header.column.getSize()),
+          )
+        }
+        tableEl.style.width = `${table.getTotalSize()}px`
       }
-      styles.push(`width:${table.getTotalSize()}px`)
-      return styles.join(';')
+
+      // Toggle the active resizer's highlight imperatively; a drag touches
+      // exactly one element at drag start and end
+      const writeResizingClass = () => {
+        const resizingId = table.atoms.columnResizing.get().isResizingColumn
+        tableEl
+          .querySelectorAll('.resizer.isResizing')
+          .forEach((el) => el.classList.remove('isResizing'))
+        if (resizingId) {
+          tableEl
+            .querySelector(`.resizer[data-col-id="${CSS.escape(resizingId)}"]`)
+            ?.classList.add('isResizing')
+        }
+      }
+
+      // Only this text node updates per resize tick
+      const writeStateDump = () => {
+        stateDump.textContent = JSON.stringify(table.store.get(), null, 2)
+      }
+
+      writeColumnSizeVars() // initial paint
+      writeStateDump()
+      subscriptions = [
+        table.atoms.columnSizing.subscribe(writeColumnSizeVars),
+        table.atoms.columnResizing.subscribe(writeResizingClass),
+        table.store.subscribe(writeStateDump),
+      ]
+    },
+    destroy() {
+      subscriptions.forEach((subscription) => subscription.unsubscribe())
+      subscriptions = []
     },
     refreshData() {
       local.data = makeData(200)
     },
     stressTest() {
-      local.data = makeData(2_000)
+      local.data = makeData(5_000)
     },
   }
 })

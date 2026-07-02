@@ -7,6 +7,38 @@ export interface TableState_ColumnSizing {
 
 export type ColumnSizingState = Record<string, number>
 
+export interface ColumnOffsets {
+  /**
+   * Offset from the start edge of the region to each column's start edge,
+   * keyed by column id.
+   */
+  starts: Record<string, number>
+  /**
+   * Offset from the end edge of the region to each column's end edge, keyed by
+   * column id.
+   */
+  afters: Record<string, number>
+}
+
+export interface ColumnOffsetsByPosition {
+  /**
+   * Offsets across all visible leaf columns, ignoring pinning regions.
+   */
+  all: ColumnOffsets
+  /**
+   * Offsets within the center (unpinned) region.
+   */
+  center: ColumnOffsets
+  /**
+   * Offsets within the left pinned region.
+   */
+  left: ColumnOffsets
+  /**
+   * Offsets within the right pinned region.
+   */
+  right: ColumnOffsets
+}
+
 export interface TableOptions_ColumnSizing {
   /**
    * Called with an updater when committed column sizing state changes. Pair
@@ -26,6 +58,13 @@ export interface Table_ColumnSizing {
    * Sums the current sizes of visible center-region leaf columns.
    */
   getCenterTotalSize: () => number
+  /**
+   * Returns memoized column offset maps (start and after offsets keyed by
+   * column id) for each pinning region plus the full visible leaf column list.
+   *
+   * Backs `column.getStart()` and `column.getAfter()` with O(1) lookups.
+   */
+  getColumnOffsets: () => ColumnOffsetsByPosition
   /**
    * Sums the current sizes of visible left-pinned leaf columns.
    */

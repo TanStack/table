@@ -4,6 +4,7 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   FlexRender,
   TableController,
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   createSortedRowModel,
@@ -18,6 +19,7 @@ import { Person, makeColumns, makeData } from './makeData.ts'
 import type { ColumnDef } from '@tanstack/lit-table'
 
 const features = tableFeatures({
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
@@ -48,8 +50,16 @@ class LitTableExample extends LitElement {
   private columnVirtualizerController?: VirtualizerController<Element, Element>
   private rowVirtualizerController?: VirtualizerController<Element, Element>
 
+  private _sizingSub?: { unsubscribe: () => void }
+
   connectedCallback() {
     super.connectedCallback()
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback()
+    this._sizingSub?.unsubscribe()
+    this._sizingSub = undefined
   }
 
   private _ensureVirtualizers(
@@ -101,8 +111,11 @@ class LitTableExample extends LitElement {
         features,
         columns: this._columns,
         data: this._data,
+        columnResizeMode: 'onChange',
       },
-      () => ({}),
+      // header/cell widths render via header.getSize(), so the host must
+      // re-render when column sizing changes
+      (state) => ({ columnSizing: state.columnSizing }),
     )
 
     const visibleColumns = table.getVisibleLeafColumns()
@@ -115,6 +128,14 @@ class LitTableExample extends LitElement {
 
     if (!columnVirtualizer || !rowVirtualizer) {
       return html`<div>Loading...</div>`
+    }
+
+    // re-measure virtual column widths when a column is resized so the
+    // virtualizer's scroll math stays in sync with the rendered widths
+    if (!this._sizingSub) {
+      this._sizingSub = table.atoms.columnSizing.subscribe(() => {
+        this.columnVirtualizerController?.getVirtualizer().measure()
+      })
     }
 
     // Update virtualizer counts
@@ -192,15 +213,30 @@ class LitTableExample extends LitElement {
                           <th
                             style="${styleMap({
                               display: 'flex',
+                              position: 'relative',
                               width: `${header.getSize()}px`,
                             })}"
-                            @click="${header.column.getToggleSortingHandler()}"
                           >
-                            ${FlexRender({ header })}
-                            ${{
-                              asc: ' 🔼',
-                              desc: ' 🔽',
-                            }[header.column.getIsSorted() as string] ?? null}
+                            <div
+                              class="${header.column.getCanSort()
+                                ? 'sortable-header'
+                                : ''}"
+                              @click="${header.column.getToggleSortingHandler()}"
+                            >
+                              ${FlexRender({ header })}
+                              ${{
+                                asc: ' 🔼',
+                                desc: ' 🔽',
+                              }[header.column.getIsSorted() as string] ?? null}
+                            </div>
+                            <div
+                              @dblclick="${() => header.column.resetSize()}"
+                              @mousedown="${header.getResizeHandler()}"
+                              @touchstart="${header.getResizeHandler()}"
+                              class="resizer ${header.column.getIsResizing()
+                                ? 'isResizing'
+                                : ''}"
+                            ></div>
                           </th>
                         `
                       },
@@ -318,6 +354,33 @@ class LitTableExample extends LitElement {
         .container {
           border: 1px solid lightgray;
           margin: 1rem auto;
+        }
+
+        .resizer {
+          position: absolute;
+          top: 0;
+          height: 100%;
+          right: 0;
+          width: 5px;
+          background: rgba(0, 0, 0, 0.5);
+          cursor: col-resize;
+          user-select: none;
+          touch-action: none;
+        }
+
+        .resizer.isResizing {
+          background: blue;
+          opacity: 1;
+        }
+
+        @media (hover: hover) {
+          .resizer {
+            opacity: 0;
+          }
+
+          *:hover > .resizer {
+            opacity: 1;
+          }
         }
 
         .app {

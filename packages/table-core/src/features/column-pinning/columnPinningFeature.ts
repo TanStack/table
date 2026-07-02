@@ -257,6 +257,8 @@ export const columnPinningFeature: TableFeature = {
           table.options.columns,
           table.atoms.columnPinning?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
         ],
       },
       table_getRightLeafColumns: {
@@ -265,6 +267,8 @@ export const columnPinningFeature: TableFeature = {
           table.options.columns,
           table.atoms.columnPinning?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
         ],
       },
       table_getCenterLeafColumns: {
@@ -273,6 +277,8 @@ export const columnPinningFeature: TableFeature = {
           table.options.columns,
           table.atoms.columnPinning?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
         ],
       },
       table_getPinnedLeafColumns: {
@@ -287,6 +293,8 @@ export const columnPinningFeature: TableFeature = {
           table.atoms.columnPinning?.get(),
           table.atoms.columnVisibility?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
         ],
       },
       table_getCenterVisibleLeafColumns: {
@@ -296,6 +304,8 @@ export const columnPinningFeature: TableFeature = {
           table.atoms.columnPinning?.get(),
           table.atoms.columnVisibility?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
         ],
       },
       table_getRightVisibleLeafColumns: {
@@ -305,6 +315,8 @@ export const columnPinningFeature: TableFeature = {
           table.atoms.columnPinning?.get(),
           table.atoms.columnVisibility?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
         ],
       },
       table_getPinnedVisibleLeafColumns: {

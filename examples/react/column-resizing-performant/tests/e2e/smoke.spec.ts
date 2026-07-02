@@ -40,7 +40,7 @@ async function openExample(page: Page) {
 }
 
 async function getFirstBodyRowText(table: Locator) {
-  const text = await table.locator('.tbody .tr').first().textContent()
+  const text = await table.locator('tbody tr').first().textContent()
   return text?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
@@ -48,11 +48,11 @@ test('renders the table without crashing', async ({ page }) => {
   const { errors, server } = await openExample(page)
 
   try {
-    const table = page.locator('.divTable').first()
+    const table = page.getByRole('table')
 
     await expect(table).toBeVisible()
-    await expect(table.locator('.thead .th').first()).toBeVisible()
-    await expect(table.locator('.tbody .tr').first()).toBeVisible()
+    await expect(table.locator('thead th').first()).toBeVisible()
+    await expect(table.locator('tbody tr').first()).toBeVisible()
     expect(errors).toEqual([])
   } finally {
     await server.close()
@@ -63,8 +63,8 @@ test('regenerates table data', async ({ page }) => {
   const { errors, server } = await openExample(page)
 
   try {
-    const table = page.locator('.divTable').first()
-    const bodyRows = table.locator('.tbody .tr')
+    const table = page.getByRole('table')
+    const bodyRows = table.locator('tbody tr')
     const regenerateButton = page.getByRole('button', {
       name: /^Regenerate Data$/i,
     })

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 import {
   FlexRender,
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   createSortedRowModel,
@@ -16,6 +17,7 @@ import type { ComponentPublicInstance } from 'vue'
 import type { Person } from './makeData'
 
 const features = tableFeatures({
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
@@ -53,6 +55,7 @@ const table = useTable({
     return columns.value
   },
   data,
+  columnResizeMode: 'onChange',
   debugTable: true,
 })
 
@@ -83,6 +86,13 @@ const rowVirtualizer = useVirtualizer(
         : undefined,
     overscan: 5,
   })),
+)
+
+// re-measure virtual column widths when a column is resized so the
+// virtualizer's scroll math stays in sync with the rendered widths
+watch(
+  () => table.atoms.columnSizing.get(),
+  () => columnVirtualizer.value.measure(),
 )
 
 const virtualColumns = computed(() => columnVirtualizer.value.getVirtualItems())
@@ -155,6 +165,7 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
               :key="`${headerGroup.id}-${virtualColumn.index}`"
               :style="{
                 display: 'flex',
+                position: 'relative',
                 width: `${headerGroup.headers[virtualColumn.index]?.getSize() ?? 0}px`,
               }"
             >
@@ -195,6 +206,28 @@ function measureRowElement(element: Element | ComponentPublicInstance | null) {
                     {' '}🔽
                   </span>
                 </div>
+                <div
+                  class="resizer"
+                  :class="{
+                    isResizing:
+                      headerGroup.headers[
+                        virtualColumn.index
+                      ].column.getIsResizing(),
+                  }"
+                  @dblclick="
+                    headerGroup.headers[virtualColumn.index].column.resetSize()
+                  "
+                  @mousedown="
+                    headerGroup.headers[virtualColumn.index].getResizeHandler()(
+                      $event,
+                    )
+                  "
+                  @touchstart="
+                    headerGroup.headers[virtualColumn.index].getResizeHandler()(
+                      $event,
+                    )
+                  "
+                ></div>
               </template>
             </th>
             <th

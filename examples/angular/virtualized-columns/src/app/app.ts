@@ -2,11 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   signal,
+  untracked,
   viewChild,
 } from '@angular/core'
 import {
   FlexRender,
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   createColumnHelper,
@@ -22,6 +25,7 @@ import type { ElementRef } from '@angular/core'
 import type { Person } from './makeData'
 
 const features = tableFeatures({
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
@@ -67,6 +71,7 @@ export class App {
     features,
     columns: this.columns(),
     data: this.data(),
+    columnResizeMode: 'onChange' as const,
     debugTable: true,
   }))
 
@@ -85,6 +90,13 @@ export class App {
     horizontal: true,
     overscan: 3, // how many columns to render on each side off screen each way (adjust this for performance)
   }))
+
+  // re-measure virtual column widths when a column is resized so the
+  // virtualizer's scroll math stays in sync with the rendered widths
+  private readonly measureOnColumnResize = effect(() => {
+    void this.table.atoms.columnSizing.get()
+    untracked(() => this.columnVirtualizer.measure())
+  })
 
   readonly rowVirtualizer = injectVirtualizer<
     HTMLDivElement,

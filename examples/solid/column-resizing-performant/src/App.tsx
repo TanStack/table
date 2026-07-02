@@ -10,6 +10,12 @@ import { makeData } from './makeData'
 import type { Table as SolidTableType } from '@tanstack/solid-table'
 import type { Person } from './makeData'
 
+/**
+ * This example implements column resizing with fine-grained reactivity!
+ * Solid only re-runs the single style binding that reads the CSS variable
+ * memo, so a resize tick never re-renders any component
+ */
+
 const features = tableFeatures({ columnSizingFeature, columnResizingFeature })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -58,7 +64,7 @@ const columns = columnHelper.columns([
 function App() {
   const [data, setData] = createSignal(makeData(200))
   const refreshData = () => setData(makeData(200))
-  const stressTest = () => setData(makeData(2_000))
+  const stressTest = () => setData(makeData(5_000))
 
   const table = createTable({
     features,
@@ -73,69 +79,84 @@ function App() {
     debugColumns: true,
   })
 
-  const columnSizeVars = createMemo(() => {
-    const headers = table.getFlatHeaders()
-    const colSizes: Record<string, number> = {}
-    for (const header of headers) {
-      colSizes[`--header-${header.id}-size`] = header.getSize()
-      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
+  /**
+   * All column widths flow through CSS variables computed in ONE memo and
+   * bound to the <table> element's style. `header.getSize()` reads the
+   * signal-backed columnSizing atom, so a resize tick re-runs only this memo
+   * and its single style binding; header and data cells reference the
+   * variables and never re-render.
+   */
+  const tableStyle = createMemo(() => {
+    const styles: Record<string, string> = { display: 'grid' }
+    for (const header of table.getFlatHeaders()) {
+      styles[`--header-${header.id}-size`] = `${header.getSize()}`
+      styles[`--col-${header.column.id}-size`] = `${header.column.getSize()}`
     }
-    return colSizes
+    styles.width = `${table.getTotalSize()}px`
+    return styles
   })
 
   return (
     <div class="demo-root">
       <div>
-        <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (2k rows)</button>
+        <button onClick={() => refreshData()} class="demo-button">
+          Regenerate Data
+        </button>
+        <button onClick={() => stressTest()} class="demo-button">
+          Stress Test (5k rows)
+        </button>
       </div>
-      <i>
-        This example has artificially slow cell renders to simulate complex
-        usage
-      </i>
       <div class="spacer-md" />
-      <pre style={{ 'min-height': '10rem' }}>
+      {/* Only this text node updates per resize tick */}
+      <pre style={{ height: '10rem', overflow: 'auto' }}>
         {JSON.stringify(table.store.get(), null, 2)}
       </pre>
       <div class="spacer-md" />({data().length.toLocaleString()} rows)
       <div class="scroll-container">
-        <div
-          class="divTable"
-          style={{
-            ...columnSizeVars(),
-            width: `${table.getTotalSize()}px`,
-          }}
-        >
-          <div class="thead">
+        {/* This example is using semantic table tags, but also CSS Grid/Flexbox layout for more absolute column widths */}
+        <table style={tableStyle()}>
+          <thead style={{ display: 'grid' }}>
             <For each={table.getHeaderGroups()}>
               {(headerGroup) => (
-                <div class="tr">
+                <tr
+                  style={{
+                    display: 'flex',
+                    width: '100%',
+                    height: '30px',
+                  }}
+                >
                   <For each={headerGroup.headers}>
                     {(header) => (
-                      <div
-                        class="th"
+                      <th
+                        colspan={header.colSpan}
                         style={{
-                          width: `calc(var(--header-${header.id}-size) * 1px)`,
+                          display: 'flex',
+                          'flex-shrink': '0',
+                          width: `calc(var(--header-${header.id}-size) * 1px)`, // use CSS variable so only the table style binding updates
                         }}
                       >
                         {header.isPlaceholder ? null : (
                           <table.FlexRender header={header} />
                         )}
+                        {/* This class binding is its own fine-grained effect,
+                            so a drag updates exactly one resizer's class */}
                         <div
                           onDblClick={() => header.column.resetSize()}
                           onMouseDown={header.getResizeHandler()}
                           onTouchStart={header.getResizeHandler()}
                           class={`resizer ${header.column.getIsResizing() ? 'isResizing' : ''}`}
                         />
-                      </div>
+                      </th>
                     )}
                   </For>
-                </div>
+                </tr>
               )}
             </For>
-          </div>
+          </thead>
+          {/* No memoization needed: Solid components run once, and nothing in
+              the body reads resize state */}
           <TableBody table={table} />
-        </div>
+        </table>
       </div>
     </div>
   )
@@ -147,32 +168,37 @@ function TableBody({
   table: SolidTableType<typeof features, Person>
 }) {
   return (
-    <div class="tbody">
+    <tbody style={{ display: 'grid' }}>
       <For each={table.getRowModel().rows}>
         {(row) => (
-          <div class="tr">
+          <tr
+            style={{
+              display: 'flex',
+              width: '100%',
+              height: '30px',
+              // Offscreen rows skip style recalc and layout entirely, so a
+              // live column resize only lays out the rows actually on screen.
+              'content-visibility': 'auto',
+              'contain-intrinsic-height': 'auto 30px',
+            }}
+          >
             <For each={row.getAllCells()}>
-              {(cell) => {
-                // simulate expensive render
-                for (const _ of Array.from({ length: 10000 })) {
-                  Math.random()
-                }
-                return (
-                  <div
-                    class="td"
-                    style={{
-                      width: `calc(var(--col-${cell.column.id}-size) * 1px)`,
-                    }}
-                  >
-                    {cell.renderValue<any>()}
-                  </div>
-                )
-              }}
+              {(cell) => (
+                <td
+                  style={{
+                    display: 'flex',
+                    'flex-shrink': '0',
+                    width: `calc(var(--col-${cell.column.id}-size) * 1px)`, // use CSS variable so only the table style binding updates
+                  }}
+                >
+                  {cell.renderValue<any>()}
+                </td>
+              )}
             </For>
-          </div>
+          </tr>
         )}
       </For>
-    </div>
+    </tbody>
   )
 }
 

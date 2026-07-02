@@ -13,9 +13,14 @@ import {
   tableFeatures,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
-import { TableResizableCells } from './resizable-cell/resizable-cell'
 import type { Person } from './makeData'
-import type { ColumnDef, ColumnResizeMode } from '@tanstack/angular-table'
+import type { ColumnDef } from '@tanstack/angular-table'
+
+/**
+ * This example implements column resizing with fine-grained signals!
+ * All column widths flow through CSS variables computed in ONE signal bound
+ * to the <table> element's style, so a resize tick is a single style write
+ */
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -71,7 +76,7 @@ const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
 
 @Component({
   selector: 'app-root',
-  imports: [FlexRender, TableResizableCells],
+  imports: [FlexRender],
   templateUrl: './app.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -93,22 +98,23 @@ export class App {
   }))
 
   /**
-   * Instead of calling `column.getSize()` on every render for every header
-   * and especially every data cell (very expensive),
-   * we will calculate all column sizes at once at the root table level in a useMemo
-   * and pass the column sizes down as CSS variables to the <table> element.
+   * All column widths flow through CSS variables computed in ONE signal and
+   * bound to the <table> element's style. The explicit `columnSizing` read
+   * establishes the signal dependency; the header walk runs `untracked` so
+   * no other reads register. Header and data cells reference the variables,
+   * so a resize tick updates only this one style binding.
    */
-  readonly columnSizeVars = computed(() => {
+  readonly tableStyle = computed(() => {
     void this.table.atoms.columnSizing.get()
-    const headers = untracked(() => this.table.getFlatHeaders())
-    const colSizes: { [key: string]: number } = {}
-    let i = headers.length
-    while (--i >= 0) {
-      const header = headers[i]
-      colSizes[`--header-${header.id}-size`] = header.getSize()
-      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
-    }
-    return colSizes
+    return untracked(() => {
+      const styles: Record<string, string> = { display: 'grid' }
+      for (const header of this.table.getFlatHeaders()) {
+        styles[`--header-${header.id}-size`] = `${header.getSize()}`
+        styles[`--col-${header.column.id}-size`] = `${header.column.getSize()}`
+      }
+      styles['width'] = `${this.table.getTotalSize()}px`
+      return styles
+    })
   })
 
   readonly stringifiedState = computed(() =>
@@ -116,5 +122,5 @@ export class App {
   )
 
   refreshData = () => this.data.set(makeData(200))
-  stressTest = () => this.data.set(makeData(2_000))
+  stressTest = () => this.data.set(makeData(5_000))
 }

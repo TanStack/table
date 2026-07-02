@@ -15,9 +15,9 @@ export default defineConfig({
     }),
     react(),
     // React Compiler - comment out the next line to disable
-    babel({
-      presets: [reactCompilerPreset()],
-      include: [/\/src\/.*\.[jt]sx?$/],
-    }),
+    // babel({
+    //   presets: [reactCompilerPreset()],
+    //   include: [/\/src\/.*\.[jt]sx?$/],
+    // }),
   ],
 })
