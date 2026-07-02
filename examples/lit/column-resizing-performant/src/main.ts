@@ -91,25 +91,42 @@ class LitTableExample extends LitElement {
    * (The core resize handler already coalesces pointer events to one state
    * update per animation frame.)
    */
-  protected override firstUpdated() {
-    const writeColumnSizeVars = () => {
-      const tableEl = this._tableEl
-      if (!tableEl) return
-      for (const header of this._table.getFlatHeaders()) {
-        tableEl.style.setProperty(
-          `--header-${header.id}-size`,
-          String(header.getSize()),
-        )
-        tableEl.style.setProperty(
-          `--col-${header.column.id}-size`,
-          String(header.column.getSize()),
-        )
-      }
-      tableEl.style.width = `${this._table.getTotalSize()}px`
+  private _writeColumnSizeVars() {
+    const tableEl = this._tableEl
+    if (!tableEl) return
+    for (const header of this._table.getFlatHeaders()) {
+      tableEl.style.setProperty(
+        `--header-${header.id}-size`,
+        String(header.getSize()),
+      )
+      tableEl.style.setProperty(
+        `--col-${header.column.id}-size`,
+        String(header.column.getSize()),
+      )
     }
-    writeColumnSizeVars() // initial paint
-    this._sizingSub =
-      this._table.atoms.columnSizing.subscribe(writeColumnSizeVars)
+    tableEl.style.width = `${this._table.getTotalSize()}px`
+  }
+
+  private _subscribeToColumnSizing() {
+    if (this._sizingSub) return
+    this._writeColumnSizeVars() // initial paint (and repaint after reconnect)
+    this._sizingSub = this._table.atoms.columnSizing.subscribe(() =>
+      this._writeColumnSizeVars(),
+    )
+  }
+
+  protected override firstUpdated() {
+    this._subscribeToColumnSizing()
+  }
+
+  override connectedCallback() {
+    super.connectedCallback()
+    // re-establish the subscription if this element is re-inserted into the
+    // DOM after disconnectedCallback tore it down; skip the very first
+    // connect, where the table and element ref don't exist yet
+    if (this.hasUpdated) {
+      this._subscribeToColumnSizing()
+    }
   }
 
   override disconnectedCallback() {
