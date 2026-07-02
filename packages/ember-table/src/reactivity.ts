@@ -81,8 +81,8 @@ export class Signal<T> {
   }
 
   update(fn: (value: T) => T) {
-    // const original = untrack(() => this._value);
-    const original = null as unknown as T; // TODO: figure out how to untrack in ember 7.2
+    const original = untrack(() => this._value);
+
     this._value = fn(original);
   }
 }
