@@ -1,5 +1,6 @@
 import {
   FlexRender,
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   createSortedRowModel,
@@ -9,7 +10,7 @@ import {
   tableFeatures,
 } from '@tanstack/solid-table'
 import { createVirtualizer } from '@tanstack/solid-virtual'
-import { For, createSignal } from 'solid-js'
+import { For, createEffect, createSignal } from 'solid-js'
 import { makeColumns, makeData } from './makeData'
 import type {
   Cell,
@@ -22,6 +23,7 @@ import type { VirtualItem, Virtualizer } from '@tanstack/solid-virtual'
 import type { Person } from './makeData'
 
 const features = tableFeatures({
+  columnResizingFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   rowSortingFeature,
@@ -62,6 +64,7 @@ function App() {
     get data() {
       return data()
     },
+    columnResizeMode: 'onChange',
     debugTable: true,
   })
 
@@ -103,6 +106,13 @@ function TableContainer(props: { table: SolidTable<typeof features, Person> }) {
     getScrollElement: () => tableContainerRef ?? null,
     horizontal: true,
     overscan: 3, // how many columns to render on each side off screen (adjust this for performance)
+  })
+
+  // re-measure virtual column widths when a column is resized so the
+  // virtualizer's scroll math stays in sync with the rendered widths
+  createEffect(() => {
+    void props.table.atoms.columnSizing?.get()
+    columnVirtualizer.measure()
   })
 
   // dynamic row height virtualization - alternatively you could use a simpler fixed row height strategy without `measureElement`
@@ -241,6 +251,7 @@ function TableHeadCell(props: {
     <th
       style={{
         display: 'flex',
+        position: 'relative', // needed for absolute positioning of the resizer
         width: `${props.header().getSize()}px`,
       }}
     >
@@ -256,6 +267,12 @@ function TableHeadCell(props: {
           } as Record<string, string>
         )[props.header().column.getIsSorted() as string] ?? null}
       </div>
+      <div
+        onDblClick={() => props.header().column.resetSize()}
+        onMouseDown={props.header().getResizeHandler()}
+        onTouchStart={props.header().getResizeHandler()}
+        class={`resizer ${props.header().column.getIsResizing() ? 'isResizing' : ''}`}
+      />
     </th>
   )
 }

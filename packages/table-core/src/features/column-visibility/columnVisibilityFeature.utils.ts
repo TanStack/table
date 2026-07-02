@@ -72,6 +72,9 @@ export function column_getIsVisible<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>): boolean {
+  const columnVisibility = column.table.atoms.columnVisibility?.get()
+  if (!columnVisibility) return true
+
   const childColumns = column.columns
   if (childColumns.length) {
     return childColumns.some((childColumn) =>
@@ -79,9 +82,8 @@ export function column_getIsVisible<
     )
   }
 
-  const columnVisibility = column.table.atoms.columnVisibility?.get()
   return (
-    (columnVisibility && hasOwn(columnVisibility, column.id)
+    (hasOwn(columnVisibility, column.id)
       ? columnVisibility[column.id]
       : undefined) ?? true
   )

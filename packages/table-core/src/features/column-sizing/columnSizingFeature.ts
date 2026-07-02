@@ -13,6 +13,7 @@ import {
   header_getSize,
   header_getStart,
   table_getCenterTotalSize,
+  table_getColumnOffsets,
   table_getLeftTotalSize,
   table_getRightTotalSize,
   table_getTotalSize,
@@ -51,27 +52,13 @@ export const columnSizingFeature: TableFeature = {
           table.atoms.columnSizing?.get()?.[column.id], // just this column's size state
         ],
       },
+      // O(1) lookups into the memoized table-level offsets, so no per-column
+      // memos here
       column_getStart: {
         fn: (column, position) => column_getStart(column, position),
-        memoDeps: (column, position) => [
-          position,
-          table.options.columns,
-          table.atoms.columnSizing?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-        ],
       },
       column_getAfter: {
         fn: (column, position) => column_getAfter(column, position),
-        memoDeps: (column, position) => [
-          position,
-          table.options.columns,
-          table.atoms.columnSizing?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-        ],
       },
       column_resetSize: {
         fn: (column) => column_resetSize(column),
@@ -92,13 +79,14 @@ export const columnSizingFeature: TableFeature = {
       },
       header_getStart: {
         fn: (header) => header_getStart(header),
-        memoDeps: (header, position) => [
-          position,
+        memoDeps: () => [
           table.options.columns,
           table.atoms.columnSizing?.get(),
           table.atoms.columnOrder?.get(),
           table.atoms.columnPinning?.get(),
           table.atoms.columnVisibility?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
         ],
       },
     })
@@ -106,6 +94,18 @@ export const columnSizingFeature: TableFeature = {
 
   constructTableAPIs: (table) => {
     assignTableAPIs('columnSizingFeature', table, {
+      table_getColumnOffsets: {
+        fn: () => table_getColumnOffsets(table),
+        memoDeps: () => [
+          table.options.columns,
+          table.atoms.columnSizing?.get(),
+          table.atoms.columnOrder?.get(),
+          table.atoms.columnPinning?.get(),
+          table.atoms.columnVisibility?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
+        ],
+      },
       table_setColumnSizing: {
         fn: (updater) => table_setColumnSizing(table, updater),
       },

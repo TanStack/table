@@ -11,6 +11,12 @@
   import type { Person } from './makeData'
   import './index.css'
 
+  /**
+   * This example implements column resizing with fine-grained reactivity!
+   * Svelte only re-runs the single style-attribute effect that reads the
+   * derived CSS variable string, so a resize tick never re-renders anything
+   */
+
   const features = tableFeatures({
     columnSizingFeature,
     columnResizingFeature,
@@ -60,76 +66,77 @@
   ])
 
   let data = $state(makeData(200))
-  const refreshData = () => { data = makeData(200) }
-  const stressTest = () => { data = makeData(2_000) }
+  const refreshData = () => {
+    data = makeData(200)
+  }
+  const stressTest = () => {
+    data = makeData(5_000)
+  }
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return data
-      },
-      defaultColumn: { minSize: 60, maxSize: 800 },
-      columnResizeMode: 'onChange',
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data
     },
-    (state) => ({
-      columnSizing: state.columnSizing,
-      columnResizing: state.columnResizing,
-    }),
-  )
+    defaultColumn: { minSize: 60, maxSize: 800 },
+    columnResizeMode: 'onChange',
+    debugTable: true,
+    debugHeaders: true,
+    debugColumns: true,
+  })
 
-  function getColumnSizeVars() {
-    const headers = table.getFlatHeaders()
-    const colSizes: Record<string, number> = {
+  /**
+   * All column widths flow through CSS variables derived in ONE string and
+   * bound to the <table> element's style attribute. `header.getSize()` reads
+   * the rune-backed columnSizing atom, so a resize tick re-runs only this
+   * derived and its single attribute effect; header and data cells reference
+   * the variables and never update.
+   */
+  const tableStyle = $derived.by(() => {
+    const parts = ['display: grid']
+    for (const header of table.getFlatHeaders()) {
+      parts.push(`--header-${header.id}-size: ${header.getSize()}`)
+      parts.push(`--col-${header.column.id}-size: ${header.column.getSize()}`)
     }
-    for (const header of headers) {
-      colSizes[`--header-${header.id}-size`] = header.getSize()
-      colSizes[`--col-${header.column.id}-size`] = header.column.getSize()
-    }
-    return colSizes
-  }
-
-  function colSizeVarsToStyle(vars: Record<string, number>) {
-    return Object.entries(vars)
-      .map(([key, value]) => `${key}: ${value}`)
-      .join('; ')
-  }
+    parts.push(`width: ${table.getTotalSize()}px`)
+    return parts.join('; ')
+  })
 </script>
 
 <div class="demo-root">
   <div>
-    <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (2k rows)</button>
+    <button onclick={() => refreshData()} class="demo-button">
+      Regenerate Data
+    </button>
+    <button onclick={() => stressTest()} class="demo-button">
+      Stress Test (5k rows)
+    </button>
   </div>
-  <i>
-    This example has artificially slow cell renders to simulate complex usage
-  </i>
   <div class="spacer-md"></div>
-  <pre style="min-height: 10rem">
-    {JSON.stringify(table.state, null, 2)}
+  <!-- Only this text node updates per resize tick -->
+  <pre style="height: 10rem; overflow: auto">
+    {JSON.stringify(table.store.get(), null, 2)}
   </pre>
   <div class="spacer-md"></div>
   ({data.length.toLocaleString()} rows)
   <div class="scroll-container">
-    <div
-      class="divTable"
-      style="{colSizeVarsToStyle(getColumnSizeVars())}; width: {table.getTotalSize()}px"
-    >
-      <div class="thead">
+    <!-- This example is using semantic table tags, but also CSS Grid/Flexbox layout for more absolute column widths -->
+    <table style={tableStyle}>
+      <thead style="display: grid">
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
-          <div class="tr">
+          <tr style="display: flex; width: 100%; height: 30px">
             {#each headerGroup.headers as header (header.id)}
-              <div
-                class="th"
-                style="width: calc(var(--header-{header.id}-size) * 1px)"
+              <!-- use CSS variables for widths so cells never update -->
+              <th
+                colspan={header.colSpan}
+                style="display: flex; flex-shrink: 0; width: calc(var(--header-{header.id}-size) * 1px)"
               >
                 {#if !header.isPlaceholder}
-                  <FlexRender header={header} />
+                  <FlexRender {header} />
                 {/if}
+                <!-- This class binding is its own fine-grained effect, so a
+                     drag updates exactly one resizer's class -->
                 <div
                   ondblclick={() => header.column.resetSize()}
                   onmousedown={header.getResizeHandler()}
@@ -139,31 +146,30 @@
                     ? 'isResizing'
                     : ''}"
                 ></div>
-              </div>
+              </th>
             {/each}
-          </div>
+          </tr>
         {/each}
-      </div>
-      <div class="tbody">
+      </thead>
+      <!-- No memoization needed: nothing in the body reads resize state -->
+      <tbody style="display: grid">
         {#each table.getRowModel().rows as row (row.id)}
-          <div class="tr">
+          <!-- content-visibility lets offscreen rows skip style recalc and
+               layout, so a live resize only lays out the rows on screen -->
+          <tr
+            style="display: flex; width: 100%; height: 30px; content-visibility: auto; contain-intrinsic-height: auto 30px"
+          >
             {#each row.getAllCells() as cell (cell.id)}
-              {@const _ = (() => {
-                // simulate expensive render
-                for (const _i of Array.from({ length: 10000 })) {
-                  Math.random()
-                }
-              })()}
-              <div
-                class="td"
-                style="width: calc(var(--col-{cell.column.id}-size) * 1px)"
+              <td
+                style="display: flex; flex-shrink: 0; width: calc(var(--col-{cell
+                  .column.id}-size) * 1px)"
               >
                 {cell.renderValue()}
-              </div>
+              </td>
             {/each}
-          </div>
+          </tr>
         {/each}
-      </div>
-    </div>
+      </tbody>
+    </table>
   </div>
 </div>

@@ -106,10 +106,10 @@ function App() {
       features,
       columns,
       data,
-      debugTable: true,
-      debugHeaders: true,
-      debugColumns: true,
       columnResizeMode: 'onChange',
+      debugColumnVisibilityFeature: true,
+      debugColumnPinningFeature: true,
+      debugColumnSizingFeature: true,
     },
     (state) => state, // default selector
   )

@@ -88,7 +88,9 @@ export const columnVisibilityFeature: TableFeature = {
         memoDeps: () => [
           table.atoms.columnVisibility?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
           table.options.columns,
+          table.options.groupedColumnMode,
         ],
       },
       table_getVisibleLeafColumns: {
@@ -96,7 +98,9 @@ export const columnVisibilityFeature: TableFeature = {
         memoDeps: () => [
           table.atoms.columnVisibility?.get(),
           table.atoms.columnOrder?.get(),
+          table.atoms.grouping?.get(),
           table.options.columns,
+          table.options.groupedColumnMode,
         ],
       },
       table_setColumnVisibility: {

@@ -9,6 +9,7 @@ import {
   table_resetHeaderSizeInfo,
   table_setColumnResizing,
 } from '../../../../src/static-functions'
+import { columnResizingFeature, columnSizingFeature } from '../../../../src'
 import { generateTestTableWithData } from '../../../helpers/generateTestTable'
 
 // Add type for the features we need
@@ -305,7 +306,7 @@ describe('header_getResizeHandler', () => {
       ;(table.store.state as any).columnResizing = resizingState
     }
 
-    const sizingUpdates: Record<string, number>[] = []
+    const sizingUpdates: Array<Record<string, number>> = []
     table.options.onColumnSizingChange = (updater: any) => {
       if (typeof updater === 'function') {
         const result = updater(table.atoms.columnSizing?.get() ?? {})
@@ -354,7 +355,7 @@ describe('header_getResizeHandler', () => {
     })
 
     let resizingState = getDefaultColumnResizingState()
-    const resizingUpdates: any[] = []
+    const resizingUpdates: Array<any> = []
     table.options.onColumnResizingChange = (updater: any) => {
       resizingState =
         typeof updater === 'function' ? updater(resizingState) : updater
@@ -392,6 +393,153 @@ describe('header_getResizeHandler', () => {
 
     const upEvent = new MouseEvent('mouseup', { clientX: 150 })
     document.dispatchEvent(upEvent)
+  })
+
+  it('should coalesce move events into one update per animation frame', () => {
+    const rafCallbacks: Array<FrameRequestCallback> = []
+    const rafSpy = vi
+      .spyOn(globalThis, 'requestAnimationFrame')
+      .mockImplementation((cb) => {
+        rafCallbacks.push(cb)
+        return rafCallbacks.length
+      })
+    const cafSpy = vi
+      .spyOn(globalThis, 'cancelAnimationFrame')
+      .mockImplementation(() => {})
+
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onChange',
+    })
+    const onColumnSizingChange = vi.fn()
+    table.options.onColumnSizingChange = onColumnSizingChange
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 110 }))
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 120 }))
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 130 }))
+
+    // leading edge applies immediately; later moves wait for the frame
+    expect(onColumnSizingChange).toHaveBeenCalledTimes(1)
+
+    // frame boundary flushes the latest coalesced move
+    rafCallbacks.shift()!(0)
+    expect(onColumnSizingChange).toHaveBeenCalledTimes(2)
+
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 130 }))
+
+    rafSpy.mockRestore()
+    cafSpy.mockRestore()
+  })
+
+  it('should cancel a pending coalesced move on mouse up and commit the end position', () => {
+    const rafCallbacks: Array<FrameRequestCallback> = []
+    const rafSpy = vi
+      .spyOn(globalThis, 'requestAnimationFrame')
+      .mockImplementation((cb) => {
+        rafCallbacks.push(cb)
+        return rafCallbacks.length
+      })
+    const canceledIds: Array<number> = []
+    const cafSpy = vi
+      .spyOn(globalThis, 'cancelAnimationFrame')
+      .mockImplementation((id) => {
+        canceledIds.push(id)
+      })
+
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onChange',
+      features: { columnResizingFeature, columnSizingFeature },
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater: any) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing?.get() ?? {})
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 110 }))
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 120 }))
+    expect(sizingUpdates).toHaveLength(1)
+
+    // mouseup before the frame fires: pending frame is canceled and the end
+    // position is committed synchronously
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150 }))
+    expect(canceledIds).toHaveLength(1)
+    expect(sizingUpdates).toHaveLength(2)
+    // default size 150 at startOffset 100, so mouseup at 150 grows the
+    // column by a third: 150 * (1 + 50/150) = 200
+    expect(sizingUpdates[1]!['firstName']).toBe(200)
+
+    rafSpy.mockRestore()
+    cafSpy.mockRestore()
+  })
+
+  it('should flush one store notification per move tick and per drag end (batched writes)', () => {
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onChange',
+      features: { columnResizingFeature, columnSizingFeature } as any,
+    })
+    const notifications: Array<string> = []
+    table.store.subscribe(() => notifications.push('flush'))
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+    const afterDown = notifications.length
+
+    // a move writes columnResizing AND columnSizing, batched into one flush
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 150 }))
+    const afterMove = notifications.length
+
+    // drag end: 'end' commit (two writes) + resizing reset, one flush total
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 160 }))
+    const afterUp = notifications.length
+
+    expect(afterDown).toBe(1)
+    expect(afterMove - afterDown).toBe(1)
+    expect(afterUp - afterMove).toBe(1)
+  })
+
+  it('should not commit sizing on move ticks in onEnd mode, only at drag end', () => {
+    const table = generateTestTableWithData<TestFeatures>(1, {
+      columnResizeMode: 'onEnd',
+      features: { columnResizingFeature, columnSizingFeature } as any,
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater: any) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing?.get() ?? {})
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'mousedown', clientX: 100 })
+
+    // single move: the rAF throttle applies the first move of a frame
+    // immediately, later moves wait for the next frame
+    document.dispatchEvent(new MouseEvent('mousemove', { clientX: 140 }))
+    expect(sizingUpdates).toHaveLength(0)
+
+    // transient resize info still tracks the drag during moves
+    expect(table.atoms.columnResizing?.get()?.deltaOffset).toBe(40)
+
+    document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150 }))
+    expect(sizingUpdates).toHaveLength(1)
+    // default size 150 at startOffset 100: 150 * (1 + 50/150) = 200
+    expect(sizingUpdates[0]!['firstName']).toBe(200)
+    expect(table.atoms.columnResizing?.get()?.isResizingColumn).toBe(false)
   })
 
   it('should cleanup event listeners on mouse up', () => {

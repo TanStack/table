@@ -41,6 +41,7 @@ export const columnOrderingFeature: TableFeature = {
           column.table.atoms.columnPinning?.get(),
           column.table.atoms.grouping?.get(),
           column.table.atoms.columnVisibility?.get(),
+          column.table.options.groupedColumnMode,
         ],
       },
       column_getIsFirstColumn: {

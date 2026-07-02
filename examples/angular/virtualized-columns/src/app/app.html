@@ -22,7 +22,8 @@
             }
             @for (virtualColumn of virtualColumns(); track virtualColumn.key) {
               @let header = headerGroup.headers[virtualColumn.index];
-              <th style="display: flex" [style.width.px]="header.getSize()">
+              <!-- position: relative is needed for absolute positioning of the resizer -->
+              <th style="display: flex; position: relative" [style.width.px]="header.getSize()">
                 @if (!header.isPlaceholder) {
                   <div
                     [class.sortable-header]="header.column.getCanSort()"
@@ -34,6 +35,13 @@
                     {{ sortIndicator(header.column.getIsSorted()) }}
                   </div>
                 }
+                <div
+                  class="resizer"
+                  [class.isResizing]="header.column.getIsResizing()"
+                  (dblclick)="header.column.resetSize()"
+                  (mousedown)="header.getResizeHandler()($event)"
+                  (touchstart)="header.getResizeHandler()($event)"
+                ></div>
               </th>
             }
             @if (virtualPaddingRight()) {

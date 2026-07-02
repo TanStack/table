@@ -83,14 +83,17 @@ Alpine.data('table', () => {
     table,
     FlexRender,
     local,
-    // Compute CSS variables for column sizes. Reading columnSizingInfo keeps
-    // this reactive so the variables recompute while a column is being resized.
+    /**
+     * All column widths flow through CSS variables computed in ONE binding on
+     * the <table> element. Header and data cells reference the variables, so
+     * a resize tick updates only this style attribute. Alpine string :style
+     * bindings replace the whole attribute, so the layout styles ride along.
+     */
     columnSizeVars(): string {
-      // touch the resizing state so Alpine tracks it as a dependency
-      void table.atoms.columnResizing.get().columnSizingStart
-      const headers = table.getFlatHeaders()
-      const styles: Array<string> = []
-      for (const header of headers) {
+      // touch the sizing state so Alpine tracks it as a dependency
+      void table.atoms.columnSizing.get()
+      const styles: Array<string> = ['display:grid']
+      for (const header of table.getFlatHeaders()) {
         styles.push(`--header-${header.id}-size:${header.getSize()}`)
         styles.push(`--col-${header.column.id}-size:${header.column.getSize()}`)
       }
@@ -101,7 +104,7 @@ Alpine.data('table', () => {
       local.data = makeData(200)
     },
     stressTest() {
-      local.data = makeData(2_000)
+      local.data = makeData(5_000)
     },
   }
 })

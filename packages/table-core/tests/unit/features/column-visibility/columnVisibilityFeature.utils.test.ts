@@ -71,6 +71,8 @@ describe('columnVisibilityFeature.utils', () => {
       const baseColumn = table.getAllColumns()[0]!
       const parentColumn = {
         ...baseColumn,
+        // `table` lives on the column prototype, so the spread drops it
+        table,
         columns: [
           { ...baseColumn, id: 'child1', columns: [], table },
           { ...table.getAllColumns()[1]!, id: 'child2', columns: [], table },

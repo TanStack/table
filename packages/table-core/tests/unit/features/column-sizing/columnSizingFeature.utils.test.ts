@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 import {
+  columnGroupingFeature,
   columnSizingFeature,
+  columnVisibilityFeature,
   constructTable,
   coreFeatures,
   createCoreRowModel,
@@ -319,5 +321,71 @@ describe('column_getAfter', () => {
     table.setColumnSizing({ b: 500 })
     cols = table.getAllLeafColumns()
     expect(cols[0].getAfter()).toBe(500)
+  })
+})
+
+describe('column offsets with grouping (memo invalidation)', () => {
+  function makeGroupedTable(): any {
+    return constructTable({
+      features: {
+        ...features,
+        columnGroupingFeature,
+        columnVisibilityFeature,
+        coreRowModel: createCoreRowModel(),
+      },
+      columns: [
+        { id: 'a', accessorKey: 'a', size: 100 },
+        { id: 'b', accessorKey: 'b', size: 200 },
+        { id: 'c', accessorKey: 'c', size: 50 },
+      ],
+      data,
+    } as any)
+  }
+
+  it('reorders visible leaf columns, headers, and cells in lockstep after setGrouping', () => {
+    const table = makeGroupedTable()
+
+    // prime the memos before grouping changes
+    expect(table.getVisibleLeafColumns().map((c: any) => c.id)).toEqual([
+      'a',
+      'b',
+      'c',
+    ])
+    expect(
+      table.getHeaderGroups()[0].headers.map((h: any) => h.column.id),
+    ).toEqual(['a', 'b', 'c'])
+
+    // default groupedColumnMode 'reorder' moves the grouped column first
+    table.setGrouping(['b'])
+
+    const visibleIds = table.getVisibleLeafColumns().map((c: any) => c.id)
+    const headerIds = table
+      .getHeaderGroups()[0]
+      .headers.map((h: any) => h.column.id)
+    const cellIds = table
+      .getRowModel()
+      .rows[0].getAllCells()
+      .map((cell: any) => cell.column.id)
+    expect(visibleIds).toEqual(['b', 'a', 'c'])
+    expect(headerIds).toEqual(visibleIds)
+    expect(cellIds).toEqual(visibleIds)
+  })
+
+  it('updates getStart and getAfter after setGrouping', () => {
+    const table = makeGroupedTable()
+
+    // prime the memos before grouping changes
+    expect(table.getColumn('c')!.getStart()).toBe(300)
+    expect(table.getColumn('b')!.getAfter()).toBe(50)
+
+    table.setGrouping(['b'])
+
+    // new order: b (200), a (100), c (50)
+    expect(table.getColumn('b')!.getStart()).toBe(0)
+    expect(table.getColumn('a')!.getStart()).toBe(200)
+    expect(table.getColumn('c')!.getStart()).toBe(300)
+    expect(table.getColumn('b')!.getAfter()).toBe(150)
+    expect(table.getColumn('a')!.getAfter()).toBe(50)
+    expect(table.getColumn('c')!.getAfter()).toBe(0)
   })
 })
