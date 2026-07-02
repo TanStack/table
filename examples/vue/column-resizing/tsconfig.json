@@ -18,6 +18,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
+    "tests/e2e",
     "src/**/*.ts",
     "src/**/*.tsx",
     "src/**/*.vue",

@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
+  Injector,
+  inject,
   signal,
   untracked,
 } from '@angular/core'
@@ -74,6 +76,8 @@ const rowColumns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
+  private readonly injector = inject(Injector)
+
   readonly data = signal<Array<FormRow>>(makeData(100))
   readonly rowData = signal<Array<FormRow>>(makeData(100))
 
@@ -112,14 +116,22 @@ export class App {
     debugTable: true,
   }))
 
-  constructor() {
+  ngOnInit() {
+    this.registerTableDevtools()
+  }
+
+  private registerTableDevtools() {
     injectTanStackTableDevtools(() => ({
       table: this.table,
+      injector: this.injector,
     }))
     injectTanStackTableDevtools(() => ({
       table: this.rowTable,
+      injector: this.injector,
     }))
+  }
 
+  constructor() {
     effect(() => {
       const data = this.data()
       untracked(() => this.fullTableForm.reset({ data }))

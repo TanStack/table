@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  inject,
+  signal,
+} from '@angular/core'
 import {
   FlexRender,
   createColumnHelper,
@@ -59,11 +65,8 @@ const columns = columnHelper.columns([
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class App {
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-    }))
-  }
+  private readonly injector = inject(Injector)
+
   readonly data = signal(makeData(1_000))
   readonly sorting = signal<SortingState>([])
   readonly pagination = signal<PaginationState>({ pageIndex: 0, pageSize: 10 })
@@ -89,6 +92,17 @@ export class App {
         : this.pagination.set(updater)
     },
   }))
+
+  ngOnInit() {
+    this.registerTableDevtools()
+  }
+
+  private registerTableDevtools() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      injector: this.injector,
+    }))
+  }
 
   stringifiedState() {
     return JSON.stringify(this.table.store.get(), null, 2)

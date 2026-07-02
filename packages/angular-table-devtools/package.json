@@ -50,5 +50,9 @@
   },
   "peerDependencies": {
     "@angular/core": ">=21.0.0"
+  },
+  "devDependencies": {
+    "@angular/compiler": "^22.0.2",
+    "@angular/core": "^22.0.2"
   }
 }

@@ -78,6 +78,8 @@ function App() {
     get data() {
       return data()
     },
+    getRowId: (row) =>
+      `${row.id}-${row.firstName}-${row.lastName}-${row.createdAt.getTime()}`,
     debugTable: true,
   })
 
@@ -185,10 +187,9 @@ function VirtualizedTable(props: {
         >
           <For each={rowVirtualizer.getVirtualItems()}>
             {(virtualRow) => {
-              const row = rows()[virtualRow.index]
               return (
                 <TableBodyRow
-                  row={row}
+                  row={() => rows()[virtualRow.index]}
                   virtualRow={virtualRow}
                   rowVirtualizer={rowVirtualizer}
                   table={props.table}
@@ -203,7 +204,7 @@ function VirtualizedTable(props: {
 }
 
 function TableBodyRow(props: {
-  row: Row<typeof features, Person>
+  row: () => Row<typeof features, Person>
   virtualRow: VirtualItem
   rowVirtualizer: Virtualizer<HTMLDivElement, HTMLTableRowElement>
   table: SolidTable<typeof features, Person>
@@ -219,7 +220,7 @@ function TableBodyRow(props: {
         width: '100%',
       }}
     >
-      <For each={props.row.getAllCells()}>
+      <For each={props.row().getAllCells()}>
         {(cell) => (
           <td
             style={{

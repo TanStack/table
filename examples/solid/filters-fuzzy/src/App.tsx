@@ -17,8 +17,12 @@ import { createDebouncer } from '@tanstack/solid-pacer/debouncer'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { For, createEffect, createSignal } from 'solid-js'
 import { makeData } from './makeData'
-import type { FilterFn, SortFn, TableFeatures } from '@tanstack/solid-table'
-import type { Column } from '@tanstack/solid-table'
+import type {
+  Column,
+  FilterFn,
+  SortFn,
+  TableFeatures,
+} from '@tanstack/solid-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
 

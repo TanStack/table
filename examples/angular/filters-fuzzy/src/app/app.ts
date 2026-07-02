@@ -10,10 +10,10 @@ import {
   filterFns,
   globalFilteringFeature,
   injectTable,
+  metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
   sortFns,
-  metaHelper,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { DebouncedInput } from './debounced-input/debounced-input'

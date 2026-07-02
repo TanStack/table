@@ -81,9 +81,11 @@ export function FlexRender<
 >(props: FlexRenderProps<TFeatures, TData, TValue>) {
   return (
     <Switch>
-      <Match when={'cell' in props && props.cell}>
-        {(cell) => {
-          const c = cell()
+      {/* `keyed` is required so content re-renders when the prop changes to a
+          new cell/header instance (e.g. new data under a persistent virtual
+          item). Non-keyed Match only re-runs children on truthiness changes. */}
+      <Match keyed when={'cell' in props && props.cell}>
+        {(c) => {
           const def = c.column.columnDef
           // When the column-grouping feature is registered, a cell can be in
           // one of three special modes that should not render `columnDef.cell`
@@ -115,14 +117,14 @@ export function FlexRender<
           return flexRender(def.cell, c.getContext())
         }}
       </Match>
-      <Match when={'header' in props && props.header}>
+      <Match keyed when={'header' in props && props.header}>
         {(header) =>
-          flexRender(header().column.columnDef.header, header().getContext())
+          flexRender(header.column.columnDef.header, header.getContext())
         }
       </Match>
-      <Match when={'footer' in props && props.footer}>
+      <Match keyed when={'footer' in props && props.footer}>
         {(footer) =>
-          flexRender(footer().column.columnDef.footer, footer().getContext())
+          flexRender(footer.column.columnDef.footer, footer.getContext())
         }
       </Match>
     </Switch>

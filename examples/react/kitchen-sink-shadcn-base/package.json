@@ -8,6 +8,7 @@
     "serve": "vite preview",
     "start": "vite",
     "lint": "eslint ./src",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
     "test:types": "tsc",
     "shadcn": "pnpm dlx shadcn@latest"
   },

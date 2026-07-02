@@ -14,7 +14,7 @@ export interface InjectTanStackTableDevtoolsOptions<
 > {
   table: Table<TFeatures, TData> | undefined
   enabled?: () => boolean
-  injector?: Injector
+  injector?: unknown
 }
 
 export function injectTanStackTableDevtools<
@@ -22,8 +22,13 @@ export function injectTanStackTableDevtools<
   TData extends RowData = RowData,
 >(options: () => InjectTanStackTableDevtoolsOptions<TFeatures, TData>): void {
   const enabled = () => options().enabled?.() ?? true
-  assertInInjectionContext(injectTanStackTableDevtools)
-  const injector = options().injector ?? inject(Injector)
+  const initialOptions = options()
+  let injector = initialOptions.injector as Injector | undefined
+
+  if (!injector) {
+    assertInInjectionContext(injectTanStackTableDevtools)
+    injector = inject(Injector)
+  }
 
   effect(
     (onCleanup) => {

@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Injector,
+  inject,
+  signal,
+} from '@angular/core'
 import { NgComponentOutlet } from '@angular/common'
 import {
   FlexRender,
@@ -27,11 +33,8 @@ export const productColumnHelper = createAppColumnHelper<Product>()
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProductsTable {
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-    }))
-  }
+  private readonly injector = inject(Injector)
+
   readonly data = signal(makeProductData(1_000))
 
   readonly columns = productColumnHelper.columns([
@@ -75,6 +78,17 @@ export class ProductsTable {
     enableRowSelection: true,
     // more table options
   }))
+
+  ngOnInit() {
+    this.registerTableDevtools()
+  }
+
+  private registerTableDevtools() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      injector: this.injector,
+    }))
+  }
 
   onRefresh = () => {
     this.data.set([...makeProductData(1_000)])

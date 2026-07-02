@@ -8,7 +8,8 @@
     "serve": "vite preview",
     "start": "vite",
     "lint": "eslint ./src",
-    "test:types": "tsc"
+    "test:types": "tsc",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
     "@tanstack/preact-devtools": "^0.10.5",

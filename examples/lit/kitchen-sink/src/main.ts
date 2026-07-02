@@ -5,7 +5,6 @@ import { styleMap } from 'lit/directives/style-map.js'
 import { faker } from '@faker-js/faker'
 import {
   FlexRender,
-  metaHelper,
   TableController,
   aggregationFns,
   createColumnHelper,
@@ -18,6 +17,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
+  metaHelper,
   sortFns,
   stockFeatures,
   tableFeatures,

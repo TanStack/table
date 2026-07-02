@@ -7,6 +7,7 @@
     "serve": "vite preview",
     "start": "vite",
     "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
     "lint": "eslint ./src"
   },
   "dependencies": {

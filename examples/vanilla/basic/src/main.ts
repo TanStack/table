@@ -56,6 +56,7 @@ const renderTable = () => {
   regenerateBtn.addEventListener('click', () => {
     data = makeData(20)
     table.setOptions((prev) => ({ ...prev, data }))
+    renderTable()
   })
 
   const stressTestBtn = document.createElement('button')
@@ -63,6 +64,7 @@ const renderTable = () => {
   stressTestBtn.addEventListener('click', () => {
     data = makeData(1_000)
     table.setOptions((prev) => ({ ...prev, data }))
+    renderTable()
   })
 
   buttonsDiv.appendChild(regenerateBtn)

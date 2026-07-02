@@ -275,7 +275,7 @@ function App() {
       </div>
       <div></div>
       <div>
-        <button onClick={() => refreshData()}>Refresh Data</button>
+        <button onClick={() => refreshData()}>Regenerate Data</button>
       </div>
       <div className="state-section">
         <h4 className="state-heading">Current State:</h4>

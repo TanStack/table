@@ -28,6 +28,9 @@
     "test:build": "nx affected --target=test:build",
     "test:ci": "nx run-many --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",
     "test:docs": "node scripts/verify-links.ts",
+    "test:e2e": "nx run-many --target=test:e2e",
+    "test:e2e:affected": "nx affected --target=test:e2e",
+    "test:e2e:install": "playwright install chromium",
     "test:eslint": "nx affected --target=test:eslint",
     "test:intent": "intent validate && intent stale",
     "test:knip": "NODE_OPTIONS='--max-old-space-size=4096' knip",
@@ -53,6 +56,7 @@
   ],
   "devDependencies": {
     "@faker-js/faker": "^10.5.0",
+    "@playwright/test": "^1.61.1",
     "@size-limit/preset-small-lib": "^12.1.0",
     "@tanstack/eslint-config": "0.4.0",
     "@tanstack/intent": "^0.3.2",

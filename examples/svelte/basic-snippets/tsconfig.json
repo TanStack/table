@@ -10,6 +10,7 @@
     "isolatedModules": true
   },
   "include": [
+    "tests/e2e",
     "../basic-snippets/src/**/*.ts",
     "../basic-snippets/src/**/*.js",
     "../basic-snippets/src/**/*.d.ts",

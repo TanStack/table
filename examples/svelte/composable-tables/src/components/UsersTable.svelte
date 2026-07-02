@@ -87,6 +87,7 @@
   // We must read a $state value that changes on every table update.
   // JSON.stringify forces a deep read, ensuring Svelte sees the dependency.
   const rows = $derived.by(() => {
+    data
     JSON.stringify(table.state)
     return table.getRowModel().rows
   })
@@ -139,7 +140,7 @@
         {/each}
       </thead>
       <tbody>
-        {#each rows as row (row.id)}
+        {#each rows as row (row.id + JSON.stringify(row.original))}
           <tr>
             {#each row.getAllCells() as c (c.id)}
               <table.AppCell cell={c

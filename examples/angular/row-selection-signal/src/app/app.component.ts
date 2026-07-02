@@ -2,6 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  Injector,
+  inject,
   signal,
   viewChild,
 } from '@angular/core'
@@ -45,12 +47,7 @@ export const features = tableFeatures({
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AppComponent {
-  constructor() {
-    injectTanStackTableDevtools(() => ({
-      table: this.table,
-    }))
-  }
-
+  private readonly injector = inject(Injector)
   private readonly rowSelection = signal<RowSelectionState>({})
   readonly globalFilter = signal<string>('')
   readonly data = signal(makeData(1_000))
@@ -136,6 +133,17 @@ export class AppComponent {
     },
     debugTable: true,
   }))
+
+  ngOnInit() {
+    this.registerTableDevtools()
+  }
+
+  private registerTableDevtools() {
+    injectTanStackTableDevtools(() => ({
+      table: this.table,
+      injector: this.injector,
+    }))
+  }
 
   stringifiedState() {
     return JSON.stringify(this.table.store.get(), null, 2)
