@@ -4,3 +4,30 @@
 *
 * This CSS is meant for the demo-app only, and will not be included in the published assets for this library.
 */
+
+.example-tabs {
+  display: flex;
+  gap: 0.25rem;
+  border-bottom: 2px solid #ddd;
+  margin-bottom: 1rem;
+}
+
+.example-tab {
+  border: none;
+  background: none;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  font-size: 0.95rem;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+}
+
+.example-tab:hover {
+  background: #f2f2f2;
+}
+
+.example-tab.is-active {
+  border-bottom-color: #0969da;
+  color: #0969da;
+  font-weight: 600;
+}
