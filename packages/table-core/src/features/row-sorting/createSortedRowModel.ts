@@ -51,11 +51,10 @@ function _createSortedRowModel<
   const sortedFlatRows: Array<Row<TFeatures, TData>> = []
 
   // Filter out sortings that correspond to non existing columns
-  const availableSorting = sorting.filter((sort) =>
-    column_getCanSort(
-      table.getColumn(sort.id) as Column_Internal<TFeatures, TData>,
-    ),
-  )
+  const availableSorting = sorting.filter((sort) => {
+    const column = table.getColumn(sort.id)
+    return column ? column_getCanSort(column) : false
+  })
 
   const resolvedSorting: Array<{
     id: string
