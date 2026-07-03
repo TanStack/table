@@ -7,9 +7,57 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 33
-- **Source findings:** 31
+- **Entries:** 37
+- **Source findings:** 35
 - **Cross-cutting sweeps:** 2
+
+## Score 9
+
+## 62. B1: Faceted row model does a full O(R) rebuild when its filter set is empty — Score: 9
+
+**Status:** `[x]` done
+**Implementation note:** Added the post-exclusion empty-filter guard in `createFacetedRowModel`, returning `preRowModel` directly when the only active filter is the faceted column's own filter. Added regression coverage for identity reuse and for preserving filtering by other columns.
+
+**Location:** `packages/table-core/src/features/column-faceting/createFacetedRowModel.ts:59–84`
+**Category:** `big-o` (short-circuit)
+
+Hot path: Per state-change: every columnFilters/globalFilter keystroke, per faceted column. The extremely common case "the only active filter is on the faceted column itself" (one filter input with a facet dropdown/range on the same column) yields `filterableIds.length === 0`. `filterRowsImpl` then returns `true` for every row, yet `filterRows` still walks all R rows, pushes into a new `flatRows` array, inserts R entries into a new `rowsById` map, and calls `constructRow` clones for rows with subRows. The result is content-identical to `preRowModel`. At R=100k this is a full O(R) pass with R keyed-map insertions per keystroke, per faceted column.
+
+**Before**
+
+```ts
+if (!preRowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
+  return preRowModel
+}
+
+const filterableIds: Array<string> = []
+if (columnFilters) {
+  for (let i = 0; i < columnFilters.length; i++) {
+    const id = columnFilters[i]!.id
+    if (id !== columnId) filterableIds.push(id)
+  }
+}
+if (globalFilter) filterableIds.push('__global__')
+// ...
+return filterRows(preRowModel.rows, filterRowsImpl, table)
+```
+
+**After**
+
+```ts
+if (globalFilter) filterableIds.push('__global__')
+
+if (!filterableIds.length) {
+  return preRowModel
+}
+```
+
+**Big-O:** O(R) → O(1) for the excluded-own-filter-only case: ~100k iterations + ~100k object-map insertions + 2 array allocations avoided per keystroke per faceted column (~10-30ms at 100k rows). Verified bonus: `getFacetedUniqueValues`/`getFacetedMinMaxValues` memoDeps key on `.flatRows` identity, so the stable `preRowModel` reference also converts the downstream O(R) facet-map rebuild into a memo hit per keystroke.
+
+**Risk:** Returns `preRowModel` by reference instead of a fresh model with identical contents; same referential behavior as the existing empty-filter branch. For hierarchical data there is a flatRows-order note: the current all-pass `filterRows` emits child-before-parent flatRows while `preRowModel` is parent-first, so facet `Map` insertion order can shift (content identical; the existing no-filter branch already returns parent-first, so precedent exists). The early return never reads tags, so B17's ordering constraint does not apply.
+**Verification:** CONFIRMED, raised 8 → 9; verifier added the downstream facet-map memo-hit win and the hierarchical flatRows-order note.
+
+---
 
 ## Score 8
 
@@ -523,6 +571,7 @@ Deps coverage (everything `table_getColumnOffsets` reads transitively): `table_g
 **Implementation note:** Fixed in PR #6367 (47fc97d2f). `grouping` + `groupedColumnMode` added to the memoDeps tuples in columnPinningFeature.ts (6 registrations), columnVisibilityFeature.ts (`table_getVisibleLeafColumns` / `table_getVisibleFlatColumns`), and columnOrderingFeature.ts (`column_getIndex`, closing the `groupedColumnMode` gap). `header_getStart`'s vestigial `position` dep slot was also dropped (the half of A8 that belonged to this fix; A8's remaining closure-to-stack scope lives in todo #114). Two regression tests added in columnSizingFeature.utils.test.ts, verified to fail against the pre-fix deps.
 
 **Location:**
+
 - `packages/table-core/src/features/column-sizing/columnSizingFeature.ts:56–63, 67–74, 95–102` (`column_getStart`, `column_getAfter`, `header_getStart` deps)
 - `packages/table-core/src/features/column-pinning/columnPinningFeature.ts:254–277` (`table_get{Left,Right,Center}LeafColumns` deps) and `:283–309` (`table_get{Left,Center,Right}VisibleLeafColumns` deps)
 - `packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts:94–101` (`table_getVisibleLeafColumns` deps) and `:86–101` (`table_getVisibleFlatColumns`, same gap; added during verification)
@@ -1585,6 +1634,57 @@ return [facetedMinValue, facetedMaxValue]
 
 ---
 
+## 89. B16+E13: Faceted factories re-invoked per call, constructing throwaway tableMemo instances — Score: 5
+
+**Status:** `[x]` done
+**Implementation note:** Added table-level `_rowModels` caches for per-column faceted row models, unique values, and min/max values, plus single global slots for the three global faceted variants. This preserves each factory's inner memo as the invalidation authority and avoids rebuilding `tableMemo` closures on repeated reads. Added regression coverage that direct static utility calls construct each per-column/global factory only once.
+
+**Location:** `packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts:44–56` (also 18–30, 69–81, 94–145), vs. the cached pattern at `src/core/row-models/coreRowModelsFeature.utils.ts:65–75`
+**Category:** `memoization`, `allocation`
+
+Hot path: per state-change: every faceted deps-change per faceted column; per call in the no-prototype fallback. `table.options.features.facetedRowModel` is the factory from `createFacetedRowModel()`; each invocation builds a brand-new `tableMemo` (memo closure, debug-name parsing in dev, scheduling wiring) whose single-slot cache is used exactly once and discarded, so its memoization is structurally dead. The filtered/sorted/grouped models avoid this by caching the constructed memo in `table._rowModels`. On the registered-feature path the column prototype memo caches results, hiding the cost as "factory + tableMemo construction per deps-change per faceted column". In the fallback path (facet factories registered without `columnFacetingFeature`), every single call performs a full O(R) recompute. Same pattern for `column_getFacetedMinMaxValues`, `column_getFacetedUniqueValues`, and the three `table_getGlobalFaceted*` fns.
+
+**Before**
+
+```ts
+export function column_getFacetedRowModel<...>(
+  column: ...,
+  table: Table_Internal<TFeatures, TData>,
+): RowModel<TFeatures, TData> {
+  const facetedRowModelFn =
+    table.options.features.facetedRowModel?.(table, column?.id ?? '') ??
+    (() => table.getPreFilteredRowModel())
+  return facetedRowModelFn()
+}
+```
+
+**After**
+
+(B16's table-level `_rowModels`-style cache, preferred over E13's on-column cache because it covers the three global variants and matches existing typing)
+
+```ts
+export function column_getFacetedRowModel<...>(column, table): RowModel<TFeatures, TData> {
+  const columnId = column?.id ?? ''
+  const cache = (table._rowModels.facetedRowModels ??= makeObjectMap())
+  let facetedRowModelFn = cache[columnId]
+  if (!facetedRowModelFn) {
+    facetedRowModelFn = cache[columnId] =
+      table.options.features.facetedRowModel?.(table, columnId) ??
+      (() => table.getPreFilteredRowModel())
+  }
+  return facetedRowModelFn()
+}
+```
+
+(plus `facetedUniqueValues`/`facetedMinMaxValues` maps and the three global variants cached as single slots; extend the `CachedRowModels` types accordingly.)
+
+**Big-O:** Registered path: one factory + tableMemo construction (several closures + dev string work) saved per deps-change per faceted column. Fallback path: repeated full O(R) recomputes per call → memoized (at R=100k with a facet dropdown read per render, ~10ms/render → ~0).
+
+**Risk:** The cache is keyed by columnId, scaling with N (doctrine-compliant). Cache lifetime matches `_rowModels` (never reset; must not outlive `table.options.features` swaps, same invariant as filtered/sorted). The inner memo becoming long-lived makes its own memoDeps the invalidation authority; the dep set is identical to the prototype memo, so results stay coherent.
+**Verification:** MERGED (B16 ≡ E13; B16 formulation kept), demoted 6 → 5: on the registered path the outer prototype memo already caches results, so the win there is construction allocations only; the O(R)-per-call fallback is real but requires a specific misconfiguration.
+
+---
+
 ## Score 4
 
 ## 17. `row_getAllCells` / `row_getAllCellsByColumnId` use `.map`/`for...of` — Score: 4
@@ -1735,6 +1835,32 @@ if (core) return core
 ```
 
 **Risk:** None.
+
+---
+
+## 22. `createFacetedUniqueValues` redundant `Map.has` before `Map.set` — Score: 3
+
+**Status:** `[x]` done
+**Implementation note:** Replaced `has` + `get` + `set` with one `get` and one `set`, using `previousValue === undefined` as the miss sentinel because stored counts are always numbers. Added faceted unique-values coverage with an `undefined` facet key to lock in the sentinel behavior.
+
+**Location:** `src/features/column-faceting/createFacetedUniqueValues.ts:46–62`
+**Category:** `micro`
+
+`set(k, (get(k) ?? 0) + 1)` works in either branch.
+
+**Scale impact** (Map ops saved per facet rebuild — dimension: distinct value encounters):
+
+| Value occurrences | Before (`has` + `get` + `set`) | After (`get` + `set`) | Saved Map ops |
+| ----------------- | ------------------------------ | --------------------- | ------------- |
+| 10                | 30                             | 20                    | 10            |
+| 100               | 300                            | 200                   | 100           |
+| 1,000             | 3,000                          | 2,000                 | 1,000         |
+| 10,000            | 30,000                         | 20,000                | 10,000        |
+
+**Risk:** None.
+
+**2026-07-01 audit (B18, score 3):** Re-verified and sharpened: `has` + `get` + `set` is 3 hashed Map ops per value on the hit path (the Map itself is correct here — R-scaling key space, not a tiny state array). Proposed form: `const prev = map.get(v); map.set(v, prev === undefined ? 1 : prev + 1)` — safe because stored counts are always numbers, so `prev === undefined` ⟺ miss.
+**Verification:** Verified (2026-07-01 audit).
 
 ---
 

@@ -29,23 +29,23 @@
   },
   "targetDefaults": {
     "test:lib": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build"],
       "inputs": ["default", "^public"],
       "outputs": ["{projectRoot}/coverage"],
       "cache": true
     },
     "test:eslint": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build"],
       "inputs": ["default", "^public"],
       "cache": true
     },
     "test:types": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build"],
       "inputs": ["default", "^public"],
       "cache": true
     },
     "test:e2e": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", "build"],
       "inputs": ["default", "^public"],
       "cache": true
     },
@@ -55,7 +55,7 @@
       "cache": true
     },
     "build": {
-      "dependsOn": ["^build"],
+      "dependsOn": ["^build", { "target": "format", "projects": "table" }],
       "inputs": ["default", "^public"],
       "outputs": ["{projectRoot}/build", "{projectRoot}/dist"],
       "cache": true

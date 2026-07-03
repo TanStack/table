@@ -7,57 +7,9 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 107
-- **Source findings:** 107
+- **Entries:** 103
+- **Source findings:** 103
 - **Cross-cutting sweeps:** 0
-
-## Score 9
-
-## 62. B1: Faceted row model does a full O(R) rebuild when its filter set is empty — Score: 9
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/column-faceting/createFacetedRowModel.ts:59–84`
-**Category:** `big-o` (short-circuit)
-
-Hot path: Per state-change: every columnFilters/globalFilter keystroke, per faceted column. The extremely common case "the only active filter is on the faceted column itself" (one filter input with a facet dropdown/range on the same column) yields `filterableIds.length === 0`. `filterRowsImpl` then returns `true` for every row, yet `filterRows` still walks all R rows, pushes into a new `flatRows` array, inserts R entries into a new `rowsById` map, and calls `constructRow` clones for rows with subRows. The result is content-identical to `preRowModel`. At R=100k this is a full O(R) pass with R keyed-map insertions per keystroke, per faceted column.
-
-**Before**
-
-```ts
-if (!preRowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
-  return preRowModel
-}
-
-const filterableIds: Array<string> = []
-if (columnFilters) {
-  for (let i = 0; i < columnFilters.length; i++) {
-    const id = columnFilters[i]!.id
-    if (id !== columnId) filterableIds.push(id)
-  }
-}
-if (globalFilter) filterableIds.push('__global__')
-// ...
-return filterRows(preRowModel.rows, filterRowsImpl, table)
-```
-
-**After**
-
-```ts
-if (globalFilter) filterableIds.push('__global__')
-
-if (!filterableIds.length) {
-  return preRowModel
-}
-```
-
-**Big-O:** O(R) → O(1) for the excluded-own-filter-only case: ~100k iterations + ~100k object-map insertions + 2 array allocations avoided per keystroke per faceted column (~10-30ms at 100k rows). Verified bonus: `getFacetedUniqueValues`/`getFacetedMinMaxValues` memoDeps key on `.flatRows` identity, so the stable `preRowModel` reference also converts the downstream O(R) facet-map rebuild into a memo hit per keystroke.
-
-**Risk:** Returns `preRowModel` by reference instead of a fresh model with identical contents; same referential behavior as the existing empty-filter branch. For hierarchical data there is a flatRows-order note: the current all-pass `filterRows` emits child-before-parent flatRows while `preRowModel` is parent-first, so facet `Map` insertion order can shift (content identical; the existing no-filter branch already returns parent-first, so precedent exists). The early return never reads tags, so B17's ordering constraint does not apply.
-**Verification:** CONFIRMED, raised 8 → 9; verifier added the downstream facet-map memo-hit win and the hierarchical flatRows-order note.
-
----
 
 ## Score 8
 
@@ -476,7 +428,7 @@ if (resolvedGlobalFilters.length && !(failed && !needsAllFilterTags)) {
 
 ---
 
-## 70. B19: constructRow allocates Object.values(table._features) and probes all features per row — Score: 7
+## 70. B19: constructRow allocates Object.values(table.\_features) and probes all features per row — Score: 7
 
 **Status:** `[ ]` not started
 **Implementation note:** _(none)_
@@ -1934,57 +1886,6 @@ Also hoist the comparator itself out of `sortData` (it captures only outer-scope
 
 ---
 
-## 89. B16+E13: Faceted factories re-invoked per call, constructing throwaway tableMemo instances — Score: 5
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts:44–56` (also 18–30, 69–81, 94–145), vs. the cached pattern at `src/core/row-models/coreRowModelsFeature.utils.ts:65–75`
-**Category:** `memoization`, `allocation`
-
-Hot path: per state-change: every faceted deps-change per faceted column; per call in the no-prototype fallback. `table.options.features.facetedRowModel` is the factory from `createFacetedRowModel()`; each invocation builds a brand-new `tableMemo` (memo closure, debug-name parsing in dev, scheduling wiring) whose single-slot cache is used exactly once and discarded, so its memoization is structurally dead. The filtered/sorted/grouped models avoid this by caching the constructed memo in `table._rowModels`. On the registered-feature path the column prototype memo caches results, hiding the cost as "factory + tableMemo construction per deps-change per faceted column". In the fallback path (facet factories registered without `columnFacetingFeature`), every single call performs a full O(R) recompute. Same pattern for `column_getFacetedMinMaxValues`, `column_getFacetedUniqueValues`, and the three `table_getGlobalFaceted*` fns.
-
-**Before**
-
-```ts
-export function column_getFacetedRowModel<...>(
-  column: ...,
-  table: Table_Internal<TFeatures, TData>,
-): RowModel<TFeatures, TData> {
-  const facetedRowModelFn =
-    table.options.features.facetedRowModel?.(table, column?.id ?? '') ??
-    (() => table.getPreFilteredRowModel())
-  return facetedRowModelFn()
-}
-```
-
-**After**
-
-(B16's table-level `_rowModels`-style cache, preferred over E13's on-column cache because it covers the three global variants and matches existing typing)
-
-```ts
-export function column_getFacetedRowModel<...>(column, table): RowModel<TFeatures, TData> {
-  const columnId = column?.id ?? ''
-  const cache = (table._rowModels.facetedRowModels ??= makeObjectMap())
-  let facetedRowModelFn = cache[columnId]
-  if (!facetedRowModelFn) {
-    facetedRowModelFn = cache[columnId] =
-      table.options.features.facetedRowModel?.(table, columnId) ??
-      (() => table.getPreFilteredRowModel())
-  }
-  return facetedRowModelFn()
-}
-```
-
-(plus `facetedUniqueValues`/`facetedMinMaxValues` maps and the three global variants cached as single slots; extend the `CachedRowModels` types accordingly.)
-
-**Big-O:** Registered path: one factory + tableMemo construction (several closures + dev string work) saved per deps-change per faceted column. Fallback path: repeated full O(R) recomputes per call → memoized (at R=100k with a facet dropdown read per render, ~10ms/render → ~0).
-
-**Risk:** The cache is keyed by columnId, scaling with N (doctrine-compliant). Cache lifetime matches `_rowModels` (never reset; must not outlive `table.options.features` swaps, same invariant as filtered/sorted). The inner memo becoming long-lived makes its own memoDeps the invalidation authority; the dep set is identical to the prototype memo, so results stay coherent.
-**Verification:** MERGED (B16 ≡ E13; B16 formulation kept), demoted 6 → 5: on the registered path the outer prototype memo already caches results, so the win there is construction allocations only; the O(R)-per-call fallback is real but requires a specific misconfiguration.
-
----
-
 ## 90. C3: row_getVisibleCells: O(N) per-cell memoized getIsVisible calls per row instead of the table-level visible-column list — Score: 5
 
 **Status:** `[ ]` not started
@@ -2327,14 +2228,15 @@ export function cell_getIsAggregated<...>(cell: Cell<TFeatures, TData, TValue>) 
 **Implementation note:** _(none)_
 
 **Location:**
-  - `packages/react-table/src/useTable.ts:176–179` (per render)
-  - `packages/preact-table/src/useTable.ts:147–150` (per render)
-  - `packages/angular-table/src/injectTable.ts:128–133` (per options-effect run)
-  - `packages/lit-table/src/TableController.ts:177–180` (per host render)
-  - `packages/alpine-table/src/createTable.ts:82–85` (per effect run)
-  - `packages/svelte-table/src/createTable.svelte.ts:117–121` (`flatMerge(prev, mergedOptions)`, per `$effect.pre` run)
-  - `packages/vue-table/src/useTable.ts:89–92` (`flatMerge(prev, ...)`, per watch fire)
-  - `packages/solid-table/src/createTable.ts:100–104` (`mergeProps(prev, mergedOptions)`, per computed run)
+
+- `packages/react-table/src/useTable.ts:176–179` (per render)
+- `packages/preact-table/src/useTable.ts:147–150` (per render)
+- `packages/angular-table/src/injectTable.ts:128–133` (per options-effect run)
+- `packages/lit-table/src/TableController.ts:177–180` (per host render)
+- `packages/alpine-table/src/createTable.ts:82–85` (per effect run)
+- `packages/svelte-table/src/createTable.svelte.ts:117–121` (`flatMerge(prev, mergedOptions)`, per `$effect.pre` run)
+- `packages/vue-table/src/useTable.ts:89–92` (`flatMerge(prev, ...)`, per watch fire)
+- `packages/solid-table/src/createTable.ts:100–104` (`mergeProps(prev, mergedOptions)`, per computed run)
 
 **Category:** `allocation`
 
@@ -3086,32 +2988,6 @@ export function createColumnHelper<...>(): ColumnHelper<TFeatures, TData> {
 
 ---
 
-## 22. `createFacetedUniqueValues` redundant `Map.has` before `Map.set` — Score: 3
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `src/features/column-faceting/createFacetedUniqueValues.ts:46–62`
-**Category:** `micro`
-
-`set(k, (get(k) ?? 0) + 1)` works in either branch.
-
-**Scale impact** (Map ops saved per facet rebuild — dimension: distinct value encounters):
-
-| Value occurrences | Before (`has` + `get` + `set`) | After (`get` + `set`) | Saved Map ops |
-| ----------------- | ------------------------------ | --------------------- | ------------- |
-| 10                | 30                             | 20                    | 10            |
-| 100               | 300                            | 200                   | 100           |
-| 1,000             | 3,000                          | 2,000                 | 1,000         |
-| 10,000            | 30,000                         | 20,000                | 10,000        |
-
-**Risk:** None.
-
-**2026-07-01 audit (B18, score 3):** Re-verified and sharpened: `has` + `get` + `set` is 3 hashed Map ops per value on the hit path (the Map itself is correct here — R-scaling key space, not a tiny state array). Proposed form: `const prev = map.get(v); map.set(v, prev === undefined ? 1 : prev + 1)` — safe because stored counts are always numbers, so `prev === undefined` ⟺ miss.
-**Verification:** Verified (2026-07-01 audit).
-
----
-
 ## 25. `column_setFilterValue` re-searches array — Score: 3
 
 **Status:** `[ ]` not started
@@ -3331,7 +3207,7 @@ Hit path does `hasOwn` + second keyed lookup; miss path writes then re-reads; `r
 
 ---
 
-## 127. D9: header/group ids built via [..].filter(Boolean).join('_'): 2 array allocations per header — Score: 3
+## 127. D9: header/group ids built via [..].filter(Boolean).join('\_'): 2 array allocations per header — Score: 3
 
 **Status:** `[ ]` not started
 **Implementation note:** _(none)_
@@ -3631,23 +3507,6 @@ Currently `>=` runs `>` then `=`. Could inline the comparison directly, at the c
 Each file has a `getXyzPrototype(table)` function with identical shape — `if (!table._xyzPrototype) { table._xyzPrototype = { table }; for (...) feature.assignXyzPrototype?.(...) }`. Could collapse to a shared utility keyed by `prototypeKey`/`assignMethodName`. Saves ~300–500 bytes gzipped at the cost of indirection at construction time only.
 
 **Risk:** Slight loss of readability. Worth doing only if running close to a size-limit budget.
-
----
-
-## 109. B17: Faceted model's 4th memoDep is load-bearing: DO NOT REMOVE (observation) — Score: 2
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/column-faceting/createFacetedRowModel.ts:31–45`
-**Category:** `observation`
-
-The 4th dep `table.getFilteredRowModel()` looks redundant (fn never receives it) but forces the filtered model to run FIRST, guaranteeing fresh `row.columnFilters` tags that `_createFacetedRowModel` reads as a side effect of the filtered model's tagging loop. Removing it introduces a stale-tag bug.
-
-**Fix:** Add a source comment (`// keep: forces filter tagging side effects before facet reads`) at the 4th memoDep slot. This dependency must NOT be removed, even though it looks redundant to a naive dep-drift audit.
-
-**Risk:** None noted.
-**Verification:** CONFIRMED (guard-rail); verified non-interacting with B1.
 
 ---
 

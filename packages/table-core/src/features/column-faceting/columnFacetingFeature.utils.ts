@@ -1,3 +1,4 @@
+import { makeObjectMap } from '../../utils'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -23,9 +24,16 @@ export function column_getFacetedMinMaxValues<
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): [number, number] | undefined {
-  const facetedMinMaxValuesFn =
-    table.options.features.facetedMinMaxValues?.(table, column.id) ??
-    (() => undefined)
+  const facetedMinMaxValues = (table._rowModels.facetedMinMaxValues ??=
+    makeObjectMap())
+  let facetedMinMaxValuesFn = facetedMinMaxValues[column.id]
+
+  if (!facetedMinMaxValuesFn) {
+    facetedMinMaxValuesFn = facetedMinMaxValues[column.id] =
+      table.options.features.facetedMinMaxValues?.(table, column.id) ??
+      (() => undefined)
+  }
+
   return facetedMinMaxValuesFn()
 }
 
@@ -49,9 +57,17 @@ export function column_getFacetedRowModel<
   column: Column_Internal<TFeatures, TData, TValue> | undefined,
   table: Table_Internal<TFeatures, TData>,
 ): RowModel<TFeatures, TData> {
-  const facetedRowModelFn =
-    table.options.features.facetedRowModel?.(table, column?.id ?? '') ??
-    (() => table.getPreFilteredRowModel())
+  const columnId = column?.id ?? ''
+  const facetedRowModels = (table._rowModels.facetedRowModels ??=
+    makeObjectMap())
+  let facetedRowModelFn = facetedRowModels[columnId]
+
+  if (!facetedRowModelFn) {
+    facetedRowModelFn = facetedRowModels[columnId] =
+      table.options.features.facetedRowModel?.(table, columnId) ??
+      (() => table.getPreFilteredRowModel())
+  }
+
   return facetedRowModelFn()
 }
 
@@ -74,9 +90,16 @@ export function column_getFacetedUniqueValues<
   column: Column_Internal<TFeatures, TData, TValue>,
   table: Table_Internal<TFeatures, TData>,
 ): Map<any, number> {
-  const facetedUniqueValuesFn =
-    table.options.features.facetedUniqueValues?.(table, column.id) ??
-    (() => new Map<any, number>())
+  const facetedUniqueValues = (table._rowModels.facetedUniqueValues ??=
+    makeObjectMap())
+  let facetedUniqueValuesFn = facetedUniqueValues[column.id]
+
+  if (!facetedUniqueValuesFn) {
+    facetedUniqueValuesFn = facetedUniqueValues[column.id] =
+      table.options.features.facetedUniqueValues?.(table, column.id) ??
+      (() => new Map<any, number>())
+  }
+
   return facetedUniqueValuesFn()
 }
 
@@ -95,9 +118,13 @@ export function table_getGlobalFacetedMinMaxValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): undefined | [number, number] {
-  const facetedMinMaxValuesFn =
-    table.options.features.facetedMinMaxValues?.(table, '__global__') ??
-    (() => undefined)
+  if (!table._rowModels.globalFacetedMinMaxValues) {
+    table._rowModels.globalFacetedMinMaxValues =
+      table.options.features.facetedMinMaxValues?.(table, '__global__') ??
+      (() => undefined)
+  }
+
+  const facetedMinMaxValuesFn = table._rowModels.globalFacetedMinMaxValues
   return facetedMinMaxValuesFn()
 }
 
@@ -117,9 +144,13 @@ export function table_getGlobalFacetedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): RowModel<TFeatures, TData> {
-  const facetedRowModelFn =
-    table.options.features.facetedRowModel?.(table, '__global__') ??
-    (() => table.getPreFilteredRowModel())
+  if (!table._rowModels.globalFacetedRowModel) {
+    table._rowModels.globalFacetedRowModel =
+      table.options.features.facetedRowModel?.(table, '__global__') ??
+      (() => table.getPreFilteredRowModel())
+  }
+
+  const facetedRowModelFn = table._rowModels.globalFacetedRowModel
   return facetedRowModelFn()
 }
 
@@ -138,8 +169,12 @@ export function table_getGlobalFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): Map<any, number> {
-  const facetedUniqueValuesFn =
-    table.options.features.facetedUniqueValues?.(table, '__global__') ??
-    (() => new Map())
+  if (!table._rowModels.globalFacetedUniqueValues) {
+    table._rowModels.globalFacetedUniqueValues =
+      table.options.features.facetedUniqueValues?.(table, '__global__') ??
+      (() => new Map())
+  }
+
+  const facetedUniqueValuesFn = table._rowModels.globalFacetedUniqueValues
   return facetedUniqueValuesFn()
 }
