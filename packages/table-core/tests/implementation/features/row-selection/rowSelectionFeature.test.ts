@@ -1,12 +1,24 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
+  aggregationFns,
+  columnFilteringFeature,
+  columnGroupingFeature,
   constructTable,
   coreFeatures,
   createColumnHelper,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  createSortedRowModel,
+  filterFns,
   rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
 } from '../../../../src'
 import * as RowSelectionUtils from '../../../../src/features/row-selection/rowSelectionFeature.utils'
-import { generateTestData } from '../../../fixtures/data/generateTestData'
+import {
+  generateTestData,
+  getStaticTestData,
+} from '../../../fixtures/data/generateTestData'
 import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef, Row, Table_Internal } from '../../../../src'
@@ -542,6 +554,112 @@ describe('rowSelectionFeature', () => {
       expect(enableRowSelection.mock.calls.length).toBeGreaterThan(
         callsAfterFirst,
       )
+    })
+  })
+
+  describe('selected row models source the correct pipeline models', () => {
+    // Full pipeline: filtered -> grouped -> sorted, matching v8's sourcing of
+    // getFilteredSelectedRowModel (filtered) and getGroupedSelectedRowModel (sorted).
+    const pipelineFeatures = {
+      ...coreFeatures,
+      aggregationFns,
+      columnFilteringFeature,
+      columnGroupingFeature,
+      coreReactivityFeature: storeReactivityBindings(),
+      filterFns,
+      filteredRowModel: createFilteredRowModel(),
+      groupedRowModel: createGroupedRowModel(),
+      rowSelectionFeature,
+      rowSortingFeature,
+      sortFns,
+      sortedRowModel: createSortedRowModel(),
+    }
+
+    // Static data: row ids default to index — '0' relationship, '1' complicated, '2' single
+    const pipelineColumns: Array<
+      ColumnDef<typeof pipelineFeatures, Person, any>
+    > = [
+      { accessorKey: 'firstName', id: 'firstName' },
+      { accessorKey: 'status', filterFn: 'equalsString', id: 'status' },
+    ]
+
+    function makePipelineTable(
+      initialState: Record<string, unknown>,
+      features = pipelineFeatures,
+    ) {
+      return constructTable<typeof pipelineFeatures, Person>({
+        features,
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data: getStaticTestData(),
+        columns: pipelineColumns,
+        initialState,
+      })
+    }
+
+    it('getFilteredSelectedRowModel excludes selected rows that are filtered out', () => {
+      const table = makePipelineTable({
+        columnFilters: [{ id: 'status', value: 'single' }],
+        rowSelection: { '0': true, '2': true },
+      })
+
+      // Row '0' (relationship) fails the filter; row '2' (single) passes
+      const filteredSelected = table.getFilteredSelectedRowModel()
+      expect(filteredSelected.rows.map((row) => row.id)).toEqual(['2'])
+      expect(filteredSelected.flatRows.length).toBe(1)
+      expect(filteredSelected.rowsById).toHaveProperty('2')
+      expect(filteredSelected.rowsById).not.toHaveProperty('0')
+
+      // Sanity: the plain selected model stays core-sourced and keeps both rows
+      expect(table.getSelectedRowModel().flatRows.length).toBe(2)
+    })
+
+    it('getGroupedSelectedRowModel returns a selected group row', () => {
+      const table = makePipelineTable({
+        grouping: ['status'],
+        rowSelection: { 'status:single': true },
+      })
+
+      const groupedSelected = table.getGroupedSelectedRowModel()
+      expect(groupedSelected.rows.length).toBe(1)
+      expect(groupedSelected.rows[0]!.id).toBe('status:single')
+      // The group's only leaf ('2') is unselected, so it is not collected
+      expect(groupedSelected.flatRows.map((row) => row.id)).toEqual([
+        'status:single',
+      ])
+    })
+
+    it('getGroupedSelectedRowModel collects a selected leaf under an unselected group', () => {
+      const table = makePipelineTable({
+        grouping: ['status'],
+        rowSelection: { '2': true },
+      })
+
+      const groupedSelected = table.getGroupedSelectedRowModel()
+      // No top-level group row is selected...
+      expect(groupedSelected.rows).toEqual([])
+      // ...but the selected leaf is still collected from the grouped tree
+      expect(groupedSelected.flatRows.map((row) => row.id)).toEqual(['2'])
+    })
+
+    it('getGroupedSelectedRowModel falls back through the row-model chain when sorting is not registered', () => {
+      const {
+        rowSortingFeature: _sorting,
+        sortFns: _sortFns,
+        sortedRowModel: _sorted,
+        ...rest
+      } = pipelineFeatures
+      const table = makePipelineTable(
+        {
+          grouping: ['status'],
+          rowSelection: { 'status:single': true },
+        },
+        rest as typeof pipelineFeatures,
+      )
+
+      const groupedSelected = table.getGroupedSelectedRowModel()
+      expect(groupedSelected.rows.length).toBe(1)
+      expect(groupedSelected.rows[0]!.id).toBe('status:single')
     })
   })
 })

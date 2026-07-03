@@ -83,11 +83,17 @@ function _createGroupedRowModel<
       return rows.map((row) => {
         row.depth = depth
 
-        groupedFlatRows.push(row)
-        groupedRowsById[row.id] = row
-
+        // Every row is pushed into flatRows/rowsById exactly once, by its
+        // parent frame: rows returned here are pushed by the caller (the
+        // parent group's loop or the root loop), so only descendants below
+        // the terminal depth are pushed here.
         if (row.subRows.length) {
           row.subRows = groupUpRecursively(row.subRows, depth + 1, row.id)
+          for (let i = 0; i < row.subRows.length; i++) {
+            const subRow = row.subRows[i]!
+            groupedFlatRows.push(subRow)
+            groupedRowsById[subRow.id] = subRow
+          }
         }
 
         return row
