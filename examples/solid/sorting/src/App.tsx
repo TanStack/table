@@ -39,6 +39,12 @@ function App() {
           header: () => <span>Last Name</span>,
           footer: (props) => props.column.id,
         },
+        {
+          accessorKey: 'email',
+          header: 'Email',
+          sortFn: 'alphanumeric',
+          footer: (props) => props.column.id,
+        },
       ],
     },
     {

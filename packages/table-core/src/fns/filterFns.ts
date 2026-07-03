@@ -54,7 +54,10 @@ export const filterFn_includesStringSensitive = Object.assign(
       row.getValue(columnId)?.toString().includes(String(filterValue)),
     )
   },
-  { autoRemove: (val: any) => testFalsy(val) },
+  {
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => String(val),
+  },
 )
 
 /**
@@ -77,7 +80,10 @@ export const filterFn_includesString = Object.assign(
         .includes(String(filterValue).toLowerCase()),
     )
   },
-  { autoRemove: (val: any) => testFalsy(val) },
+  {
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => String(val).toLowerCase(),
+  },
 )
 
 /**
@@ -97,7 +103,10 @@ export const filterFn_equalsString = Object.assign(
       String(filterValue).toLowerCase()
     )
   },
-  { autoRemove: (val: any) => testFalsy(val) },
+  {
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => String(val).toLowerCase(),
+  },
 )
 
 /**
@@ -113,7 +122,10 @@ export const filterFn_equalsStringSensitive = Object.assign(
   ) => {
     return row.getValue(columnId)?.toString() === String(filterValue)
   },
-  { autoRemove: (val: any) => testFalsy(val) },
+  {
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => String(val),
+  },
 )
 
 // Number filters
@@ -143,7 +155,7 @@ export const filterFn_greaterThan = Object.assign(
     const stringFilterValue = String(filterValue).toLowerCase().trim()
     return stringValue > stringFilterValue
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: (val: any) => testFalsy(val) },
 )
 
 /**
@@ -162,7 +174,7 @@ export const filterFn_greaterThanOrEqualTo = Object.assign(
       filterFn_equals(row, columnId, filterValue)
     )
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: (val: any) => testFalsy(val) },
 )
 
 /**
@@ -178,7 +190,7 @@ export const filterFn_lessThan = Object.assign(
   ) => {
     return !filterFn_greaterThanOrEqualTo(row, columnId, filterValue)
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: (val: any) => testFalsy(val) },
 )
 
 /**
@@ -194,7 +206,7 @@ export const filterFn_lessThanOrEqualTo = Object.assign(
   ) => {
     return !filterFn_greaterThan(row, columnId, filterValue)
   },
-  { resolveFilterValue: (val: any) => testFalsy(val) },
+  { autoRemove: (val: any) => testFalsy(val) },
 )
 
 // Range filters
@@ -209,14 +221,25 @@ const filterFn_between = Object.assign(
     row: Row<TFeatures, TData>,
     columnId: string,
     filterValues: [unknown, unknown],
-  ): boolean =>
-    ((['', undefined] as Array<any>).includes(filterValues[0]) ||
-      filterFn_greaterThan(row, columnId, filterValues[0])) &&
-    ((!isNaN(Number(filterValues[0])) &&
-      !isNaN(Number(filterValues[1])) &&
-      Number(filterValues[0]) > Number(filterValues[1])) ||
-      (['', undefined] as Array<any>).includes(filterValues[1]) ||
-      filterFn_lessThan(row, columnId, filterValues[1])),
+  ): boolean => {
+    const min = filterValues[0]
+    if (min !== '' && min !== undefined) {
+      if (!filterFn_greaterThan(row, columnId, min)) {
+        return false
+      }
+    }
+
+    const max = filterValues[1]
+    const numericMin = Number(min)
+    const numericMax = Number(max)
+
+    return (
+      (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) ||
+      max === '' ||
+      max === undefined ||
+      filterFn_lessThan(row, columnId, max)
+    )
+  },
   {
     autoRemove: (val: any) =>
       testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
@@ -233,14 +256,25 @@ const filterFn_betweenInclusive = Object.assign(
     row: Row<TFeatures, TData>,
     columnId: string,
     filterValues: [unknown, unknown],
-  ): boolean =>
-    ((['', undefined] as Array<any>).includes(filterValues[0]) ||
-      filterFn_greaterThanOrEqualTo(row, columnId, filterValues[0])) &&
-    ((!isNaN(Number(filterValues[0])) &&
-      !isNaN(Number(filterValues[1])) &&
-      Number(filterValues[0]) > Number(filterValues[1])) ||
-      (['', undefined] as Array<any>).includes(filterValues[1]) ||
-      filterFn_lessThanOrEqualTo(row, columnId, filterValues[1])),
+  ): boolean => {
+    const min = filterValues[0]
+    if (min !== '' && min !== undefined) {
+      if (!filterFn_greaterThanOrEqualTo(row, columnId, min)) {
+        return false
+      }
+    }
+
+    const max = filterValues[1]
+    const numericMin = Number(min)
+    const numericMax = Number(max)
+
+    return (
+      (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) ||
+      max === '' ||
+      max === undefined ||
+      filterFn_lessThanOrEqualTo(row, columnId, max)
+    )
+  },
   {
     autoRemove: (val: any) =>
       testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
@@ -302,7 +336,13 @@ export const filterFn_arrHas = Object.assign(
     columnId: string,
     filterValue: Array<unknown>,
   ) => {
-    return filterValue.some((val) => row.getValue<unknown>(columnId) === val)
+    const value = row.getValue<unknown>(columnId)
+    for (let i = 0; i < filterValue.length; i++) {
+      if (value === filterValue[i]) {
+        return true
+      }
+    }
+    return false
   },
   { autoRemove: (val: any) => testFalsy(val) || !val?.length },
 )
@@ -316,11 +356,13 @@ export const filterFn_arrIncludes = Object.assign(
     columnId: string,
     filterValue: Array<unknown>,
   ) => {
-    return filterValue.some((val) =>
-      (row.getValue<unknown>(columnId) as Array<unknown> | string).includes(
-        val as any,
-      ),
-    )
+    const value = row.getValue<unknown>(columnId) as Array<unknown> | string
+    for (let i = 0; i < filterValue.length; i++) {
+      if (value.includes(filterValue[i] as any)) {
+        return true
+      }
+    }
+    return false
   },
   { autoRemove: (val: any) => testFalsy(val) || !val?.length },
 )
@@ -336,7 +378,12 @@ export const filterFn_arrIncludesAll = Object.assign(
   ) => {
     const value = row.getValue<Array<unknown>>(columnId)
     if (!Array.isArray(value)) return false
-    return !filterValue.some((val) => !value.includes(val))
+    for (let i = 0; i < filterValue.length; i++) {
+      if (!value.includes(filterValue[i])) {
+        return false
+      }
+    }
+    return true
   },
   { autoRemove: (val: any) => testFalsy(val) || !val?.length },
 )
@@ -352,7 +399,12 @@ export const filterFn_arrIncludesSome = Object.assign(
   ) => {
     const value = row.getValue<Array<unknown>>(columnId)
     if (!Array.isArray(value)) return false
-    return filterValue.some((val) => value.includes(val))
+    for (let i = 0; i < filterValue.length; i++) {
+      if (value.includes(filterValue[i])) {
+        return true
+      }
+    }
+    return false
   },
   { autoRemove: (val: any) => testFalsy(val) || !val?.length },
 )

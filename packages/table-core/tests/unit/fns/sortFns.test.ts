@@ -260,4 +260,19 @@ describe('sortFn_datetime', () => {
   it('compares numeric timestamps', () => {
     expect(cmp(sortFn_datetime, 1000, 2000)).toBe(-1)
   })
+
+  it('compares dates and numeric timestamps by time', () => {
+    const date = new Date(2000)
+
+    expect(cmp(sortFn_datetime, date, 1000)).toBe(1)
+    expect(cmp(sortFn_datetime, 1000, date)).toBe(-1)
+  })
+
+  it('preserves string fallback comparisons', () => {
+    expect(cmp(sortFn_datetime, '2026-01-01', '2026-02-01')).toBe(-1)
+  })
+
+  it('keeps invalid dates equal-like under relational comparison', () => {
+    expect(cmp(sortFn_datetime, new Date(Number.NaN), 1000)).toBe(0)
+  })
 })

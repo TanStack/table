@@ -35,6 +35,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     sortUndefined: 'last',
     sortDescFirst: false,
   },
+  { accessorKey: 'email', header: 'Email', sortFn: 'alphanumeric' },
   { accessorKey: 'age', header: () => 'Age' },
   { accessorKey: 'visits', header: () => 'Visits', sortUndefined: 'last' },
   { accessorKey: 'status', header: 'Status', sortFn: sortStatusFn },

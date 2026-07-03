@@ -48,6 +48,10 @@ const columns = columnHelper.columns([
     sortUndefined: 'last', // Force undefined values to the end
     sortDescFirst: false, // First sort order will be ascending (nullable values can mess up auto detection of sort order)
   }),
+  columnHelper.accessor('email', {
+    header: 'Email',
+    sortFn: 'alphanumeric',
+  }),
   columnHelper.accessor('age', {
     header: () => 'Age',
     cell: (info) => info.renderValue(),

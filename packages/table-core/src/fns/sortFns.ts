@@ -103,8 +103,8 @@ export const sortFn_datetime = <
   rowB: Row<TFeatures, TData>,
   columnId: string,
 ) => {
-  const a: number | string = rowA.getValue(columnId)
-  const b: number | string = rowB.getValue(columnId)
+  const a = toDateSortValue(rowA.getValue(columnId))
+  const b = toDateSortValue(rowB.getValue(columnId))
 
   // Can handle nullish values
   // Use > and < because == (and ===) doesn't work with
@@ -134,6 +134,10 @@ function compareBasic(a: any, b: any) {
   return a === b ? 0 : a > b ? 1 : -1
 }
 
+function toDateSortValue(value: any) {
+  return value instanceof Date ? value.getTime() : value
+}
+
 function toString(a: any) {
   if (typeof a === 'number') {
     if (isNaN(a) || a === Infinity || a === -Infinity) {
@@ -151,74 +155,182 @@ function toString(a: any) {
 // It handles numbers, mixed alphanumeric combinations, and even
 // null, undefined, and Infinity
 function compareAlphanumeric(aStr: string, bStr: string) {
-  const a = aStr.split(reSplitAlphaNumeric)
-  const b = bStr.split(reSplitAlphaNumeric)
-
   let ai = 0
   let bi = 0
-  const aLen = a.length
-  const bLen = b.length
+  const aLen = aStr.length
+  const bLen = bStr.length
 
   while (ai < aLen && bi < bLen) {
-    // Skip the empty boundary chunks that .filter(Boolean) used to remove
-    if (!a[ai]) {
-      ai++
-      continue
-    }
-    if (!b[bi]) {
-      bi++
-      continue
-    }
+    const aIsNumeric = isDigit(aStr.charCodeAt(ai))
+    const bIsNumeric = isDigit(bStr.charCodeAt(bi))
 
-    const aa = a[ai++]!
-    const bb = b[bi++]!
+    const aEnd = findChunkEnd(aStr, ai, aIsNumeric)
+    const bEnd = findChunkEnd(bStr, bi, bIsNumeric)
 
-    // Chunks are either all-digit (parseInt always succeeds) or digit-free
-    // (parseInt is always NaN), so NaN-ness fully classifies each chunk
-    const an = parseInt(aa, 10)
-    const bn = parseInt(bb, 10)
-
-    const aIsNaN = isNaN(an)
-    const bIsNaN = isNaN(bn)
-
-    // Both are string
-    if (aIsNaN && bIsNaN) {
-      if (aa > bb) {
-        return 1
+    // Both are string chunks
+    if (!aIsNumeric && !bIsNumeric) {
+      const stringComparison = compareStringChunks(
+        aStr,
+        ai,
+        aEnd,
+        bStr,
+        bi,
+        bEnd,
+      )
+      if (stringComparison) {
+        return stringComparison
       }
-      if (bb > aa) {
-        return -1
-      }
+      ai = aEnd
+      bi = bEnd
       continue
     }
 
-    // One is a string, one is a number — the string chunk sorts first
-    if (aIsNaN || bIsNaN) {
-      return aIsNaN ? -1 : 1
+    // One is a string chunk, one is a number chunk — the string sorts first
+    if (aIsNumeric !== bIsNumeric) {
+      return aIsNumeric ? 1 : -1
     }
 
-    // Both are numbers
+    // Both are numeric chunks
+    const numericComparison = compareNumericChunks(
+      aStr,
+      ai,
+      aEnd,
+      bStr,
+      bi,
+      bEnd,
+    )
+    if (numericComparison) {
+      return numericComparison
+    }
+
+    ai = aEnd
+    bi = bEnd
+  }
+
+  // One side is exhausted — compare the counts of remaining non-empty chunks
+  return countRemainingChunks(aStr, ai) - countRemainingChunks(bStr, bi)
+}
+
+function isDigit(charCode: number) {
+  return charCode >= 48 && charCode <= 57
+}
+
+function findChunkEnd(str: string, start: number, isNumeric: boolean) {
+  let end = start + 1
+  while (end < str.length && isDigit(str.charCodeAt(end)) === isNumeric) {
+    end++
+  }
+  return end
+}
+
+function compareStringChunks(
+  aStr: string,
+  aStart: number,
+  aEnd: number,
+  bStr: string,
+  bStart: number,
+  bEnd: number,
+) {
+  const aLength = aEnd - aStart
+  const bLength = bEnd - bStart
+  const minLength = aLength < bLength ? aLength : bLength
+
+  for (let i = 0; i < minLength; i++) {
+    const aCode = aStr.charCodeAt(aStart + i)
+    const bCode = bStr.charCodeAt(bStart + i)
+
+    if (aCode > bCode) {
+      return 1
+    }
+    if (bCode > aCode) {
+      return -1
+    }
+  }
+
+  if (aLength > bLength) {
+    return 1
+  }
+  if (bLength > aLength) {
+    return -1
+  }
+  return 0
+}
+
+function compareNumericChunks(
+  aStr: string,
+  aStart: number,
+  aEnd: number,
+  bStr: string,
+  bStart: number,
+  bEnd: number,
+) {
+  let aSignificantStart = aStart
+  while (
+    aSignificantStart < aEnd &&
+    aStr.charCodeAt(aSignificantStart) === 48
+  ) {
+    aSignificantStart++
+  }
+
+  let bSignificantStart = bStart
+  while (
+    bSignificantStart < bEnd &&
+    bStr.charCodeAt(bSignificantStart) === 48
+  ) {
+    bSignificantStart++
+  }
+
+  const aSignificantLength = aEnd - aSignificantStart
+  const bSignificantLength = bEnd - bSignificantStart
+
+  if (aSignificantLength === 0 && bSignificantLength === 0) {
+    return 0
+  }
+
+  if (aSignificantLength <= 15 && bSignificantLength <= 15) {
+    const an = parseSmallInt(aStr, aSignificantStart, aEnd)
+    const bn = parseSmallInt(bStr, bSignificantStart, bEnd)
+
     if (an > bn) {
       return 1
     }
     if (bn > an) {
       return -1
     }
+    return 0
   }
 
-  // One side is exhausted — compare the counts of remaining non-empty chunks
-  let remaining = 0
-  for (; ai < aLen; ai++) {
-    if (a[ai]) {
-      remaining++
-    }
+  // Preserve parseInt precision-collapse behavior for unusually large chunks.
+  const an = parseInt(aStr.slice(aStart, aEnd), 10)
+  const bn = parseInt(bStr.slice(bStart, bEnd), 10)
+
+  if (an > bn) {
+    return 1
   }
-  for (; bi < bLen; bi++) {
-    if (b[bi]) {
-      remaining--
-    }
+  if (bn > an) {
+    return -1
   }
-  return remaining
+  return 0
+}
+
+function parseSmallInt(str: string, start: number, end: number) {
+  let result = 0
+  for (let i = start; i < end; i++) {
+    result = result * 10 + str.charCodeAt(i) - 48
+  }
+  return result
+}
+
+function countRemainingChunks(str: string, start: number) {
+  let count = 0
+  let index = start
+
+  while (index < str.length) {
+    count++
+    index = findChunkEnd(str, index, isDigit(str.charCodeAt(index)))
+  }
+
+  return count
 }
 
 // Exports

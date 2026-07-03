@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 9
-- **Source findings:** 9
+- **Entries:** 10
+- **Source findings:** 10
 - **Cross-cutting sweeps:** 0
 
 ## Score 1
@@ -221,6 +221,67 @@ return allCells.filter((d) => !leftAndRight.has(d.column.id))
 | 10,000   | 100           | 10         | 10,000,000         | 1,100,000           | 8,900,000 |
 
 **Risk:** None.
+
+---
+
+## 94. E4: filterFn_greaterThan re-parses the filter value per row; pre-parse via resolveFilterValue (gated on E3) — Score: 5
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 1  
+**Original score:** 5  
+**Score note:** Real micro-allocation opportunity, but the compatibility shape is too cumbersome for the benefit.
+**Implementation note:** Rejected after implementation review. The optimization is legitimate in isolation, but preserving direct-call behavior plus the in-repo `between`/`betweenInclusive` raw-endpoint delegation requires a tagged resolved-value shape and fallback parsing path. That adds subtle internal protocol code to hot filter functions for a narrow opt-in filter family, making the maintenance cost higher than the likely win. #101/E3 remains the important fix; #54 already removed the obvious range-filter array allocations without adding a resolved-value protocol.
+
+**Location:** `packages/table-core/src/fns/filterFns.ts:127–147` (amplified by delegation in :154–198)
+**Category:** `big-o` (short-circuit)
+
+Hot path: per row per filtered rebuild; doubled for `greaterThanOrEqualTo` (calls `greaterThan` + `equals`), and `lessThan` = `!greaterThanOrEqualTo`, so a `between` filter can run this parse chain up to 3-4× per row. `Number(filterValue)` (an O(len) numeric parse) and, on the string fallback branch, `String(filterValue).toLowerCase().trim()` (2 allocations) are loop-invariant on the filter value but run per row: R to 4R times per rebuild. Once E3 is fixed, `resolveFilterValue` is free for its real purpose: pre-parse once so the body only reads pre-computed values.
+
+**Cross-refs / gating:** Strictly gated on the #101 (E3) resolveFilterValue bug fix landing first, with tests through the row model.
+
+**Before**
+
+```ts
+const numericFilterValue = Number(filterValue)
+
+if (!isNaN(numericFilterValue) && !isNaN(numericRowValue)) {
+  return numericRowValue > numericFilterValue
+}
+
+const stringValue = (rowValue ?? '').toString().toLowerCase().trim()
+const stringFilterValue = String(filterValue).toLowerCase().trim()
+return stringValue > stringFilterValue
+```
+
+**After (sketch, gated on E3)**
+
+```ts
+export const filterFn_greaterThan = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    /* body reads filterValue's pre-resolved numeric/string forms,
+           with a raw-value fallback (see risk) */
+  },
+  {
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => {
+      const numericFilterValue = Number(val)
+      return Number.isNaN(numericFilterValue)
+        ? { num: NaN, str: String(val).toLowerCase().trim(), raw: val }
+        : { num: numericFilterValue, str: '', raw: val }
+    },
+  },
+)
+```
+
+**Big-O:** O(R) → O(1) filter-value parses per rebuild; on string-comparison columns removes 2R string allocations per rebuild.
+
+**Risk (verifier-amended):** The delegation web is IN-REPO, not just external: `between`/`betweenInclusive` in the same file call `filterFn_greaterThan`/`lessThan` with RAW endpoints, so a body that only reads the resolved shape breaks in-repo callers. The body must detect the tagged shape and fall back to raw parsing, or `between` must resolve endpoints itself; all six fns must agree on the resolved shape. Direct-call semantics change (same caveat class as E1). Design-level, strictly gated on E3 landing first with tests through the row model.
+**Verification:** AMENDED, 6 → 5: in-repo raw-endpoint delegation from between/betweenInclusive requires a tagged-shape fallback in the body.
 
 ---
 

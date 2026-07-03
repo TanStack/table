@@ -44,6 +44,11 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
   },
   {
+    accessorKey: 'email',
+    header: 'Email',
+    sortFn: 'alphanumeric',
+  },
+  {
     accessorKey: 'age',
     header: () => 'Age',
     // this column will sort in descending order by default since it is a number column

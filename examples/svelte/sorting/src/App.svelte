@@ -29,6 +29,13 @@
             renderComponent(Header, { label: 'Last Name', header }),
           footer: (props) => props.column.id,
         },
+        {
+          accessorKey: 'email',
+          header: ({ header }) =>
+            renderComponent(Header, { label: 'Email', header }),
+          sortFn: 'alphanumeric',
+          footer: (props) => props.column.id,
+        },
       ],
     },
     {

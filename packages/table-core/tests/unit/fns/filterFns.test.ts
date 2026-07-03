@@ -123,6 +123,14 @@ describe('Filter Functions', () => {
         )
         expect(result).toBe(true)
       })
+      it('should stringify resolved filter values for row-model filtering', () => {
+        expect(filterFn_includesStringSensitive.resolveFilterValue?.(123)).toBe(
+          '123',
+        )
+        expect(
+          filterFn_includesStringSensitive.resolveFilterValue?.('John'),
+        ).toBe('John')
+      })
     })
 
     describe('filterFn_includesString', () => {
@@ -159,6 +167,10 @@ describe('Filter Functions', () => {
         )
         expect(result).toBe(true)
       })
+      it('should normalize resolved filter values for row-model filtering', () => {
+        expect(filterFn_includesString.resolveFilterValue?.('JoH')).toBe('joh')
+        expect(filterFn_includesString.resolveFilterValue?.(123)).toBe('123')
+      })
     })
 
     describe('filterFn_equalsString', () => {
@@ -182,6 +194,10 @@ describe('Filter Functions', () => {
         const filterValue = 'ohn'
         const result = filterFn_equalsString(row as any, columnId, filterValue)
         expect(result).toBe(false)
+      })
+      it('should normalize resolved filter values for row-model filtering', () => {
+        expect(filterFn_equalsString.resolveFilterValue?.('JoHn')).toBe('john')
+        expect(filterFn_equalsString.resolveFilterValue?.(123)).toBe('123')
       })
     })
 
@@ -219,10 +235,46 @@ describe('Filter Functions', () => {
         )
         expect(result).toBe(false)
       })
+      it('should stringify resolved filter values for row-model filtering', () => {
+        expect(filterFn_equalsStringSensitive.resolveFilterValue?.(123)).toBe(
+          '123',
+        )
+        expect(
+          filterFn_equalsStringSensitive.resolveFilterValue?.('John'),
+        ).toBe('John')
+      })
     })
   })
 
   describe('Number Filters', () => {
+    describe('numeric comparison filter metadata', () => {
+      const comparisonFns = [
+        filterFn_greaterThan,
+        filterFn_greaterThanOrEqualTo,
+        filterFn_lessThan,
+        filterFn_lessThanOrEqualTo,
+      ]
+
+      it('does not transform filter values during row-model filtering', () => {
+        for (const filterFn of comparisonFns) {
+          expect(
+            (filterFn as { resolveFilterValue?: unknown }).resolveFilterValue,
+          ).toBeUndefined()
+        }
+      })
+
+      it('auto-removes only empty comparison filter values', () => {
+        for (const filterFn of comparisonFns) {
+          expect(filterFn.autoRemove?.(30)).toBe(false)
+          expect(filterFn.autoRemove?.('30')).toBe(false)
+          expect(filterFn.autoRemove?.(0)).toBe(false)
+          expect(filterFn.autoRemove?.(null)).toBe(true)
+          expect(filterFn.autoRemove?.(undefined)).toBe(true)
+          expect(filterFn.autoRemove?.('')).toBe(true)
+        }
+      })
+    })
+
     describe('filterFn_greaterThan', () => {
       it('should match greater than values', () => {
         const row = mockRows[0]!
@@ -515,6 +567,63 @@ describe('Filter Functions', () => {
   })
 
   describe('Range Filters', () => {
+    describe('filterFns.between', () => {
+      const between = filterFns.between
+
+      it('matches values strictly between both endpoints', () => {
+        const row = mockRows[0]!
+
+        expect(between(row as any, 'age', [29, 31])).toBe(true)
+        expect(between(row as any, 'age', [30, 31])).toBe(false)
+        expect(between(row as any, 'age', [29, 30])).toBe(false)
+      })
+
+      it('treats blank endpoints as open-ended', () => {
+        const row = mockRows[0]!
+
+        expect(between(row as any, 'age', [undefined, 31])).toBe(true)
+        expect(between(row as any, 'age', ['', 31])).toBe(true)
+        expect(between(row as any, 'age', [29, undefined])).toBe(true)
+        expect(between(row as any, 'age', [29, ''])).toBe(true)
+      })
+
+      it('preserves reversed-range behavior after the lower bound passes', () => {
+        const row = mockRows[0]!
+
+        expect(between(row as any, 'age', [29, 20])).toBe(true)
+        expect(between(row as any, 'age', [31, 20])).toBe(false)
+      })
+    })
+
+    describe('filterFns.betweenInclusive', () => {
+      const betweenInclusive = filterFns.betweenInclusive
+
+      it('matches values inclusively between both endpoints', () => {
+        const row = mockRows[0]!
+
+        expect(betweenInclusive(row as any, 'age', [29, 31])).toBe(true)
+        expect(betweenInclusive(row as any, 'age', [30, 31])).toBe(true)
+        expect(betweenInclusive(row as any, 'age', [29, 30])).toBe(true)
+        expect(betweenInclusive(row as any, 'age', [31, 40])).toBe(false)
+      })
+
+      it('treats blank endpoints as open-ended', () => {
+        const row = mockRows[0]!
+
+        expect(betweenInclusive(row as any, 'age', [undefined, 30])).toBe(true)
+        expect(betweenInclusive(row as any, 'age', ['', 30])).toBe(true)
+        expect(betweenInclusive(row as any, 'age', [30, undefined])).toBe(true)
+        expect(betweenInclusive(row as any, 'age', [30, ''])).toBe(true)
+      })
+
+      it('preserves reversed-range behavior after the lower bound passes', () => {
+        const row = mockRows[0]!
+
+        expect(betweenInclusive(row as any, 'age', [30, 20])).toBe(true)
+        expect(betweenInclusive(row as any, 'age', [31, 20])).toBe(false)
+      })
+    })
+
     describe('filterFns.between.autoRemove', () => {
       const autoRemove = filterFns.between.autoRemove!
 
@@ -565,6 +674,103 @@ describe('Filter Functions', () => {
   })
 
   describe('Array Filters', () => {
+    function makeRow(value: unknown) {
+      let getValueCalls = 0
+      return {
+        row: {
+          getValue: () => {
+            getValueCalls++
+            return value
+          },
+        },
+        getValueCalls: () => getValueCalls,
+      }
+    }
+
+    describe('filterFns.arrHas', () => {
+      const arrHas = filterFns.arrHas
+
+      it('matches scalar values against any filter value', () => {
+        const { row, getValueCalls } = makeRow('b')
+
+        expect(arrHas(row as any, 'value', ['a', 'b'])).toBe(true)
+        expect(getValueCalls()).toBe(1)
+      })
+
+      it('does not match when no filter value equals the scalar value', () => {
+        const { row } = makeRow('c')
+
+        expect(arrHas(row as any, 'value', ['a', 'b'])).toBe(false)
+      })
+    })
+
+    describe('filterFns.arrIncludes', () => {
+      const arrIncludes = filterFns.arrIncludes
+
+      it('matches array values that include any filter value', () => {
+        const { row, getValueCalls } = makeRow(['a', 'b'])
+
+        expect(arrIncludes(row as any, 'value', ['z', 'b'])).toBe(true)
+        expect(getValueCalls()).toBe(1)
+      })
+
+      it('matches string values that include any filter value', () => {
+        const { row } = makeRow('hello')
+
+        expect(arrIncludes(row as any, 'value', ['zz', 'ell'])).toBe(true)
+      })
+
+      it('does not match when no filter value is included', () => {
+        const { row } = makeRow(['a', 'b'])
+
+        expect(arrIncludes(row as any, 'value', ['x', 'y'])).toBe(false)
+      })
+    })
+
+    describe('filterFns.arrIncludesAll', () => {
+      const arrIncludesAll = filterFns.arrIncludesAll
+
+      it('matches array values that include every filter value', () => {
+        const { row } = makeRow(['a', 'b', 'c'])
+
+        expect(arrIncludesAll(row as any, 'value', ['a', 'c'])).toBe(true)
+      })
+
+      it('does not match when any filter value is missing', () => {
+        const { row } = makeRow(['a', 'b'])
+
+        expect(arrIncludesAll(row as any, 'value', ['a', 'c'])).toBe(false)
+      })
+
+      it('does not match non-array row values', () => {
+        const { row } = makeRow('abc')
+
+        expect(arrIncludesAll(row as any, 'value', ['a'])).toBe(false)
+      })
+    })
+
+    describe('filterFns.arrIncludesSome', () => {
+      const arrIncludesSome = filterFns.arrIncludesSome
+
+      it('matches array values that include at least one filter value', () => {
+        const { row } = makeRow(['a', 'b'])
+
+        expect(arrIncludesSome(row as any, 'value', ['z', 'b'])).toBe(true)
+      })
+
+      it('does not match when no filter value is included', () => {
+        const { row } = makeRow(['a', 'b'])
+
+        expect(arrIncludesSome(row as any, 'value', ['x', 'y'])).toBe(false)
+      })
+
+      it('does not match non-array row values', () => {
+        const { row } = makeRow('abc')
+
+        expect(arrIncludesSome(row as any, 'value', ['a'])).toBe(false)
+      })
+    })
+
     describe('filterFns.arrHas.autoRemove', () => {
       const autoRemove = filterFns.arrHas.autoRemove!
 
