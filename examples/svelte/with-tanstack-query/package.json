@@ -22,6 +22,6 @@
   },
   "dependencies": {
     "@tanstack/svelte-query": "^6.1.35",
-    "@tanstack/svelte-table": "^9.0.0-beta.27"
+    "@tanstack/svelte-table": "^9.0.0-beta.28"
   }
 }
