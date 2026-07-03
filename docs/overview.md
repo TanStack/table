@@ -73,7 +73,7 @@ If you use TypeScript, you will get top-notch type safety and editor autocomplet
 Since TanStack Table is headless and runs on a vanilla TypeScript core, it is agnostic in a couple of ways:
 
 1. TanStack Table is **framework agnostic**, which means you can use it with any JavaScript framework (or library) that you want. TanStack Table provides ready-to-use adapters for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine out of the box, and the framework-agnostic core works in vanilla TypeScript or JavaScript and even in JS-to-native platforms like React Native. You can also create your own adapter if you need to.
-2. TanStack Table is **CSS / component library agnostic**, which means that you can use TanStack Table with whatever CSS strategy or component library you want. TanStack Table itself does not render any table markup or styles. You bring your own! Want to use Tailwind or ShadCN? No problem! Want to use Material UI or Bootstrap? No problem! Have your own custom design system? TanStack Table was made for you!
+2. TanStack Table is **CSS / component library agnostic**, which means that you can use TanStack Table with whatever CSS strategy or component library you want. TanStack Table itself does not render any table markup or styles. You bring your own! Want to use Tailwind, ShadCN, Chakra UI, Material UI, or Bootstrap? No problem! Have your own custom design system? TanStack Table was made for you!
 
 ## Core Objects and Types
 
