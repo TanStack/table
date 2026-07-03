@@ -3,6 +3,7 @@ import { faker } from '@faker-js/faker'
 export type Person = {
   firstName: string
   lastName: string
+  email: string
   age: number
   visits: number
   progress: number
@@ -21,9 +22,16 @@ const range = (len: number) => {
 }
 
 const newPerson = (): Person => {
+  const firstName = faker.person.firstName()
+  const lastName = faker.person.lastName()
+
   return {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
+    firstName,
+    lastName,
+    email: faker.internet
+      .email({ firstName, lastName })
+      .replace('@', `${faker.number.int(9999)}@`)
+      .toLowerCase(),
     age: faker.number.int(40),
     visits: faker.number.int(1000),
     progress: faker.number.int(100),

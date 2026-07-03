@@ -47,6 +47,12 @@ interface Person {
   age: number
 }
 
+interface SortRecord {
+  name: string
+  priority?: number
+  score: number
+}
+
 // Custom fns annotated against the broad `TableFeatures` interface so they can
 // be defined before (and registered inside) the features object.
 const reverseAge: SortFn<TableFeatures, Person> = (rowA, rowB, columnId) =>
@@ -118,6 +124,46 @@ describe('row model and fn registry feature slots', () => {
     expect(
       table.getSortedRowModel().rows.map((row) => row.original.age),
     ).toEqual([40, 30, 20])
+  })
+
+  it('preserves multi-sort metadata resolution order', () => {
+    const table = constructTable({
+      features: {
+        ...coreFeatures,
+        coreReactivityFeature: storeReactivityBindings(),
+        ...features,
+      },
+      columns: [
+        { accessorKey: 'name', id: 'name' },
+        {
+          accessorKey: 'priority',
+          id: 'priority',
+          sortUndefined: 'last',
+        },
+        {
+          accessorKey: 'score',
+          id: 'score',
+          invertSorting: true,
+        },
+      ],
+      data: [
+        { name: 'a', priority: 1, score: 10 },
+        { name: 'b', score: 5 },
+        { name: 'c', priority: 1, score: 20 },
+        { name: 'd', score: 10 },
+        { name: 'e', priority: 2, score: 30 },
+      ] satisfies Array<SortRecord>,
+      initialState: {
+        sorting: [
+          { id: 'priority', desc: false },
+          { id: 'score', desc: false },
+        ],
+      },
+    })
+
+    expect(
+      table.getSortedRowModel().rows.map((row) => row.original.name),
+    ).toEqual(['c', 'a', 'e', 'd', 'b'])
   })
 
   it('filters with a custom filter fn registered in the slot', () => {

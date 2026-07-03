@@ -31,6 +31,11 @@ const columns = columnHelper.columns([
     header: () => h('span', 'Last Name'),
     footer: (props) => props.column.id,
   }),
+  columnHelper.accessor('email', {
+    header: 'Email',
+    sortFn: 'alphanumeric',
+    footer: (props) => props.column.id,
+  }),
   columnHelper.accessor('age', {
     header: () => 'Age',
     footer: (props) => props.column.id,

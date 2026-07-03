@@ -45,6 +45,10 @@ function App() {
           sortUndefined: 'last',
           sortDescFirst: false,
         }),
+        columnHelper.accessor('email', {
+          header: 'Email',
+          sortFn: 'alphanumeric',
+        }),
         columnHelper.accessor('age', {
           header: () => 'Age',
         }),

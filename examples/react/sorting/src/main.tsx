@@ -48,6 +48,10 @@ function App() {
           sortUndefined: 'last', // force undefined values to the end
           sortDescFirst: false, // first sort order will be ascending (nullable values can mess up auto detection of sort order)
         }),
+        columnHelper.accessor('email', {
+          header: 'Email',
+          sortFn: 'alphanumeric',
+        }),
         columnHelper.accessor('age', {
           header: () => 'Age',
           // this column will sort in descending order by default since it is a number column

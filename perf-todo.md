@@ -7,123 +7,11 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 103
-- **Source findings:** 103
+- **Entries:** 91
+- **Source findings:** 91
 - **Cross-cutting sweeps:** 0
 
 ## Score 8
-
-## 64. E2: Allocation-free compareAlphanumeric — Score: 8
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/fns/sortFns.ts:153–222` (called from `sortFn_alphanumeric` :18–30 and `sortFn_alphanumericCaseSensitive` :37–49)
-**Category:** `allocation`
-
-Hot path: Per comparison during sort: ~R log R calls per sorted rebuild. `createSortedRowModel` resolves the sortFn once per column, but every comparison re-splits both strings. Each comparison allocates 2 arrays plus one string per chunk via regex `.split`, then `parseInt` per numeric chunk. At R=100k that is ~1.7M comparisons × (2 arrays + ~2-6 chunk strings) ≈ 5-10M short-lived allocations per sort, the dominant GC pressure of the alphanumeric sort. The chunk walk can be done with index arithmetic on the original strings with zero allocations, preserving the exact comparison lattice (empty boundary chunks are skipped today, equivalent to scanning digit/non-digit runs; string chunks compare by code units exactly like `aa > bb`; numeric chunks compare like `parseInt` when leading zeros are skipped). Verifier re-derivation confirmed: chunks after empty-skipping are exactly maximal digit/non-digit runs; digit-free chunks always `parseInt` to NaN at radix 10; string-chunk `aa > bb` equals code-unit walk + length tiebreak; exhaustion sign equals the remaining-character test; mixed-chunk direction matches. There is no Infinity handling in the current code (`toString` maps Infinity to `''` upstream).
-
-**Before**
-
-```ts
-function compareAlphanumeric(aStr: string, bStr: string) {
-  const a = aStr.split(reSplitAlphaNumeric)
-  const b = bStr.split(reSplitAlphaNumeric)
-  // ...
-  const an = parseInt(aa, 10)
-  const bn = parseInt(bb, 10)
-  // ...
-}
-```
-
-**After**
-
-```ts
-function compareAlphanumeric(aStr: string, bStr: string) {
-  const aLen = aStr.length
-  const bLen = bStr.length
-  let ai = 0
-  let bi = 0
-
-  while (ai < aLen && bi < bLen) {
-    const aCode = aStr.charCodeAt(ai)
-    const bCode = bStr.charCodeAt(bi)
-    const aIsNum = aCode >= 48 && aCode <= 57
-    const bIsNum = bCode >= 48 && bCode <= 57
-
-    // One is a string chunk, one is a number chunk: the string chunk sorts first
-    if (aIsNum !== bIsNum) {
-      return aIsNum ? 1 : -1
-    }
-
-    // Find the end of each same-class run (digit run or digit-free run)
-    let aEnd = ai + 1
-    while (aEnd < aLen) {
-      const c = aStr.charCodeAt(aEnd)
-      if ((c >= 48 && c <= 57) !== aIsNum) break
-      aEnd++
-    }
-    let bEnd = bi + 1
-    while (bEnd < bLen) {
-      const c = bStr.charCodeAt(bEnd)
-      if ((c >= 48 && c <= 57) !== bIsNum) break
-      bEnd++
-    }
-
-    if (aIsNum) {
-      // Both are numbers: skip leading zeros, then longer digit run wins,
-      // then digit-wise compare (equivalent to comparing parseInt results)
-      let as = ai
-      while (as < aEnd && aStr.charCodeAt(as) === 48) as++
-      let bs = bi
-      while (bs < bEnd && bStr.charCodeAt(bs) === 48) bs++
-
-      const aDigits = aEnd - as
-      const bDigits = bEnd - bs
-      if (aDigits !== bDigits) {
-        return aDigits > bDigits ? 1 : -1
-      }
-      for (let i = 0; i < aDigits; i++) {
-        const ac = aStr.charCodeAt(as + i)
-        const bc = bStr.charCodeAt(bs + i)
-        if (ac !== bc) {
-          return ac > bc ? 1 : -1
-        }
-      }
-    } else {
-      // Both are strings: code-unit lexicographic compare, same as `aa > bb`
-      const aChunkLen = aEnd - ai
-      const bChunkLen = bEnd - bi
-      const minLen = aChunkLen < bChunkLen ? aChunkLen : bChunkLen
-      for (let i = 0; i < minLen; i++) {
-        const ac = aStr.charCodeAt(ai + i)
-        const bc = bStr.charCodeAt(bi + i)
-        if (ac !== bc) {
-          return ac > bc ? 1 : -1
-        }
-      }
-      if (aChunkLen !== bChunkLen) {
-        return aChunkLen > bChunkLen ? 1 : -1
-      }
-    }
-
-    ai = aEnd
-    bi = bEnd
-  }
-
-  // One side is exhausted: the side with remaining chunks sorts last
-  if (ai < aLen) return 1
-  if (bi < bLen) return -1
-  return 0
-}
-```
-
-**Big-O:** Allocations per comparison: ~4-12 → 0. Per 100k-row sort: ~5-10M allocations eliminated; the work becomes a pure charCode walk. Same O(len) time, dramatically lower constant + GC.
-
-**Risk:** Two observable deltas, both flagged. (a) Digit runs of 16+ digits: `parseInt` saturates double precision so today two huge, nearly equal digit runs can compare "equal" and fall through to the next chunk (and 309+-digit runs both become Infinity); the digit-wise compare orders them exactly instead. Decimal-to-double conversion is monotone, so parseInt only ever COLLAPSES distinctions; the proposal resolves those collapsed cases. Strictly more correct but observable; if bit-identical behavior is required, fall back to `parseInt(slice)` only for runs longer than 15 digits. (b) Return magnitude changes from ±chunk-count to ±1: sign-equivalent for sorting, but verify no test asserts exact comparator magnitudes. **Gate on `tests/unit/fns/sortFns.test.ts`.**
-**Verification:** AMENDED: full re-derivation checks out; huge-digit-run behavior note expanded (parseInt-collapse direction proven), ±1 magnitude delta added, test-suite gate made explicit.
-
----
 
 ## 65. F1: Svelte useSelector subscribes with `===` compare: every subscriber re-renders on every atom write — Score: 8
 
@@ -154,41 +42,6 @@ const stateStore = useSelector(table.store, selector, { compare: shallow })
 
 **Risk:** Matches react/preact/subscribe.ts behavior exactly; only risk is a consumer relying on re-render-per-write with an identity selector (they should use `subscribe`/atoms for that).
 **Verification:** CONFIRMED (drop-in, adapter-wide, per-write).
-
----
-
-## 101. E3: greaterThan/lessThan family declares testFalsy as resolveFilterValue — filter value replaced by a boolean (bug) — Score: 8 (bug)
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/fns/filterFns.ts:146, 165, 181, 197` (`greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`)
-**Category:** `bug`
-
-`resolveFilterValue` is typed as `TransformFilterValueFn`: it TRANSFORMS the filter value. `createFilteredRowModel.ts:87` does `filterFn.resolveFilterValue?.(columnFilter.value) ?? columnFilter.value`; `testFalsy(30)` returns `false`, which is not nullish, so `resolvedValue` becomes `false`. `filterFn_greaterThan` then computes `Number(false) === 0` and compares every row against `0` (or `1` for a `null` filter value) regardless of the user's actual filter value. Verified end-to-end by the verifier; no other `resolveFilterValue` consumer exists to mask it. The unit tests call the fns directly with raw values, bypassing resolution, so the bug is test-invisible. Plainly a copy-paste of the `autoRemove` predicate onto the wrong key.
-
-**Blast radius (verifier note):** These four fns are NOT in the `filterFns` string registry, so the bug triggers only via imported function values or custom registries; real, but narrower than "any greaterThan filter". `between`/`betweenInclusive` are unaffected (they delegate raw values internally and have correct `autoRemove`).
-
-**Cross-refs / gating:** #94 (E4: greaterThan family pre-parse via resolveFilterValue) is strictly gated on this fix landing first.
-
-**Before**
-
-```ts
-  { resolveFilterValue: (val: any) => testFalsy(val) },
-```
-
-(on all four fns; every other filterFn uses `autoRemove: (val: any) => testFalsy(val)` for this expression)
-
-**After**
-
-```ts
-  { autoRemove: (val: any) => testFalsy(val) },
-```
-
-(on all four fns)
-
-**Risk:** Changing to `autoRemove` additionally causes `null` filter values to be auto-removed from state; that matches every sibling filterFn's behavior and is evidently the intent. E4 is strictly gated on this fix.
-**Verification:** CONFIRMED, severity HIGH for the affected fns.
 
 ---
 
@@ -582,72 +435,6 @@ Transitive inputs: `externalAtom` (construct-stable, restored by `table_mergeOpt
 
 ---
 
-## 73. E1: includesString (auto string filter AND default global filter): add resolveFilterValue, SAFE variant only — Score: 7
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/fns/filterFns.ts:66–81` (consumed at `createFilteredRowModel.ts:87,107`; default global fn via `globalFilteringFeature.utils.ts:45–47`)
-**Category:** `big-o` (short-circuit), `allocation`
-
-Hot path: Per row per filtered rebuild for column filters (R calls per keystroke); per row PER globally-filterable column for global filtering (R × N calls per keystroke; the per-row loop breaks only on first truthy). `String(filterValue).toLowerCase()` is loop-invariant on the filter value but recomputed on every invocation: one case-conversion scan + one string allocation per row (column filter) or per row×column (global filter). At R=100k, N=20 filterable columns, one global-filter keystroke does 2M redundant lowercase allocations. The engine already has the sanctioned hoisting hook: `createFilteredRowModel` applies `filterFn.resolveFilterValue?.(value)` exactly once per filter per rebuild (`filterFn_inNumberRange` already uses this pattern).
-
-**Before**
-
-```ts
-export const filterFn_includesString = Object.assign(
-  <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData>,
-    columnId: string,
-    filterValue: unknown,
-  ) => {
-    return Boolean(
-      row
-        .getValue(columnId)
-        ?.toString()
-        .toLowerCase()
-        .includes(String(filterValue).toLowerCase()),
-    )
-  },
-  { autoRemove: (val: any) => testFalsy(val) },
-)
-```
-
-**After**
-
-(SAFE variant only, per verifier: keep the body's `String(filterValue).toLowerCase()` AND add `resolveFilterValue`.)
-
-```ts
-export const filterFn_includesString = Object.assign(
-  <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData>,
-    columnId: string,
-    filterValue: unknown,
-  ) => {
-    return Boolean(
-      row
-        .getValue(columnId)
-        ?.toString()
-        .toLowerCase()
-        .includes(String(filterValue).toLowerCase()),
-    )
-  },
-  {
-    autoRemove: (val: any) => testFalsy(val),
-    resolveFilterValue: (val: any) => String(val).toLowerCase(),
-  },
-)
-```
-
-Lowercasing an already-lowercased string hits the V8 no-change fast path (no allocation), so the row-model path keeps most of the win while direct callers (including the unit tests in `tests/unit/fns/filterFns.test.ts`, which invoke fns directly with raw values) keep strictly identical semantics.
-
-**Big-O:** Filter-value string ALLOCATIONS per rebuild: R (or R×N for global) → 1. The safe variant still pays an O(L) no-change lowercase scan per row (allocation eliminated, scan not), and the row-value `.toString().toLowerCase()` per row remains (unavoidable, depends on the row).
-
-**Risk:** None with the safe variant (idempotent for direct calls). Composes with B3: hoist the per-column resolution at line 107, or `resolveFilterValue` runs N times for the global filter.
-**Verification:** AMENDED: safe variant only (body-replacing variant would change direct-call semantics and break existing unit tests); demoted 8 → 7 because the no-change lowercase scan remains.
-
----
-
 ## 74. F2: Svelte options store is a deep $state proxy: all options.data row reads pay proxy traps — Score: 7
 
 **Status:** `[ ]` not started
@@ -814,68 +601,6 @@ Deps verified complete against transitive reads (`row_getIsExpanded` → expande
 
 **Risk (amended):** Low. Inline (identity-unstable) option fns degrade the memo to a small compare + recompute, negligibly worse than today, never worse in aggregate.
 **Verification:** AMENDED: narrative corrected (`getIsAllRowsExpanded` is already O(1) for `expanded === true`; `getCanSomeRowsExpand` is the strongest case); deps completeness verified.
-
----
-
-## 54. `filterFn_between` / `filterFn_betweenInclusive` allocate `['', undefined]` per row (broadened by E5: hoist array literals + Number parses) — Score: 6
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `src/fns/filterFns.ts:210–216, 231–237`
-**Category:** `micro`
-
-Hoist to a module constant.
-
-**Scale impact** (array allocations saved per filter evaluation — dimension: rows evaluated per filter pass):
-
-| Rows evaluated | Before (2 arrays/row) | After (0) | Saved arrays |
-| -------------- | --------------------- | --------- | ------------ |
-| 10             | 20                    | 0         | 20           |
-| 100            | 200                   | 0         | 200          |
-| 1,000          | 2,000                 | 0         | 2,000        |
-| 10,000         | 20,000                | 0         | 20,000       |
-
-**Risk:** None.
-
-**2026-07-01 audit (E5, score 6 — full rewrite):** Two fresh 2-element arrays are allocated per row per call (2R allocations per rebuild per between filter) just to test two constants, and `Number(filterValues[0])`/`Number(filterValues[1])` are each parsed up to twice per row, all loop-invariant. Tiny-array `.includes` on state arrays is fine by doctrine, but here the array literal is constructed inside the hot loop.
-
-**After (E5, semantics-identical, no resolveFilterValue needed)**
-
-```ts
-const filterFn_between = Object.assign(
-  <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData>,
-    columnId: string,
-    filterValues: [unknown, unknown],
-  ): boolean => {
-    const min = filterValues[0]
-    const max = filterValues[1]
-    const numericMin = Number(min)
-    const numericMax = Number(max)
-    return (
-      (min === '' ||
-        min === undefined ||
-        filterFn_greaterThan(row, columnId, min)) &&
-      ((!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) ||
-        max === '' ||
-        max === undefined ||
-        filterFn_lessThan(row, columnId, max))
-    )
-  },
-  {
-    autoRemove: (val: any) =>
-      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
-  },
-)
-```
-
-(same transform for `filterFn_betweenInclusive`)
-
-**Big-O (amended):** 2R array allocations per rebuild → 0; endpoint `Number()` parses inside the fn body 4/row → 2/row (full hoisting to once-per-rebuild folds into #94 / E4).
-
-**Risk (amended):** Very low; pure strength reduction. `['', undefined].includes(x)` ≡ `x === '' || x === undefined` under SameValueZero (no NaN/±0 in the constant set); NaN-propagation and reversed-range semantics preserved verbatim. Evaluation-order caveat: `Number()` now evaluates even when the first conjunct short-circuits (observable only via valueOf side effects); move the computations after the first conjunct if exact evaluation order matters.
-**Verification:** CONFIRMED, demoted 7 → 6 (between fns are opt-in; numbers auto-resolve to `inNumberRange`).
 
 ---
 
@@ -1812,80 +1537,6 @@ for (let row of rowsToFilter) {
 
 ---
 
-## 88. B8: Sort comparator does a hashed columnInfoById lookup per comparison per sort column — Score: 5
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:60–128`
-**Category:** `micro`
-
-Hot path: warm O(R log R) path; per state-change: every sort toggle / upstream model change; comparator runs ~R log R times. `sorting` is a tiny array (1-3 entries) so the outer loop is fine, but the string-keyed `columnInfoById[sortEntry.id]` lookup executes once per sort column per comparison: at R=100k that is ~1.7M comparisons × G lookups. The id→info map is built once and only ever read alongside the same `availableSorting[i]` entry; fuse the two structures at construction so the comparator reads array slots only.
-
-**Before**
-
-```ts
-  const columnInfoById = makeObjectMap<{...}>()
-
-  availableSorting.forEach((sortEntry) => {
-    // ...
-    columnInfoById[sortEntry.id] = { ... }
-  })
-
-  const sortData = (rows: Array<Row<TFeatures, TData>>) => {
-    const sortedData = rows.slice()
-
-    sortedData.sort((rowA, rowB) => {
-      for (let i = 0; i < availableSorting.length; i++) {
-        const sortEntry = availableSorting[i]!
-        const columnInfo = columnInfoById[sortEntry.id]!
-        const sortUndefined = columnInfo.sortUndefined
-        const isDesc = sortEntry.desc
-```
-
-**After**
-
-```ts
-  const resolvedSorting: Array<{
-    id: string
-    desc?: boolean
-    sortUndefined?: false | -1 | 1 | 'first' | 'last'
-    invertSorting?: boolean
-    sortFn: SortFn<TFeatures, TData>
-  }> = []
-
-  for (let i = 0; i < availableSorting.length; i++) {
-    const sortEntry = availableSorting[i]!
-    const column: Column_Internal<TFeatures, TData> | undefined =
-      table.getColumn(sortEntry.id)
-    if (!column) continue
-    resolvedSorting.push({
-      id: sortEntry.id,
-      desc: sortEntry.desc,
-      sortUndefined: column.columnDef.sortUndefined,
-      invertSorting: column.columnDef.invertSorting,
-      sortFn: column_getSortFn(column),
-    })
-  }
-
-  // comparator:
-      for (let i = 0; i < resolvedSorting.length; i++) {
-        const entry = resolvedSorting[i]!
-        const sortUndefined = entry.sortUndefined
-        const isDesc = entry.desc
-        // ...
-        sortInt = entry.sortFn(rowA, rowB, entry.id)
-```
-
-Also hoist the comparator itself out of `sortData` (it captures only outer-scope values) so recursion over grouped subRows does not allocate a new comparator closure per group.
-
-**Big-O:** ~R log R × G hashed lookups → 0 (~1.7-5M lookups per sort at R=100k, G=1-3; low-ms range). One closure alloc per group removed.
-
-**Risk:** None: same resolution order, same data; `columnInfoById` and `availableSorting` are 1:1 in practice (a missing column would already crash the canSort filter today; see the pre-existing crash note in the correctness section). Fusing also removes that double fetch.
-**Verification:** CONFIRMED (1:1 alignment proven; the unknown-column-id crash logged separately as a pre-existing bug).
-
----
-
 ## 90. C3: row_getVisibleCells: O(N) per-cell memoized getIsVisible calls per row instead of the table-level visible-column list — Score: 5
 
 **Status:** `[ ]` not started
@@ -2084,93 +1735,6 @@ const header = constructHeader(table, column, {
 
 **Risk:** Count-loop version is semantically identical (same count, same ordering); the Map variant must key on the column object reference exactly as the `===` filter does. Ship inside the coordinated buildHeaderGroups work item (with A11, D9, D10, D11).
 **Verification:** CONFIRMED (O(N²)-per-level case re-derived).
-
----
-
-## 94. E4: filterFn_greaterThan re-parses the filter value per row; pre-parse via resolveFilterValue (gated on E3) — Score: 5
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/fns/filterFns.ts:127–147` (amplified by delegation in :154–198)
-**Category:** `big-o` (short-circuit)
-
-Hot path: per row per filtered rebuild; doubled for `greaterThanOrEqualTo` (calls `greaterThan` + `equals`), and `lessThan` = `!greaterThanOrEqualTo`, so a `between` filter can run this parse chain up to 3-4× per row. `Number(filterValue)` (an O(len) numeric parse) and, on the string fallback branch, `String(filterValue).toLowerCase().trim()` (2 allocations) are loop-invariant on the filter value but run per row: R to 4R times per rebuild. Once E3 is fixed, `resolveFilterValue` is free for its real purpose: pre-parse once so the body only reads pre-computed values.
-
-**Cross-refs / gating:** Strictly gated on the #101 (E3) resolveFilterValue bug fix landing first, with tests through the row model.
-
-**Before**
-
-```ts
-const numericFilterValue = Number(filterValue)
-
-if (!isNaN(numericFilterValue) && !isNaN(numericRowValue)) {
-  return numericRowValue > numericFilterValue
-}
-
-const stringValue = (rowValue ?? '').toString().toLowerCase().trim()
-const stringFilterValue = String(filterValue).toLowerCase().trim()
-return stringValue > stringFilterValue
-```
-
-**After (sketch, gated on E3)**
-
-```ts
-export const filterFn_greaterThan = Object.assign(
-  <TFeatures extends TableFeatures, TData extends RowData>(
-    row: Row<TFeatures, TData>,
-    columnId: string,
-    filterValue: unknown,
-  ) => {
-    /* body reads filterValue's pre-resolved numeric/string forms,
-           with a raw-value fallback (see risk) */
-  },
-  {
-    autoRemove: (val: any) => testFalsy(val),
-    resolveFilterValue: (val: any) => {
-      const numericFilterValue = Number(val)
-      return Number.isNaN(numericFilterValue)
-        ? { num: NaN, str: String(val).toLowerCase().trim(), raw: val }
-        : { num: numericFilterValue, str: '', raw: val }
-    },
-  },
-)
-```
-
-**Big-O:** O(R) → O(1) filter-value parses per rebuild; on string-comparison columns removes 2R string allocations per rebuild.
-
-**Risk (verifier-amended):** The delegation web is IN-REPO, not just external: `between`/`betweenInclusive` in the same file call `filterFn_greaterThan`/`lessThan` with RAW endpoints, so a body that only reads the resolved shape breaks in-repo callers. The body must detect the tagged shape and fall back to raw parsing, or `between` must resolve endpoints itself; all six fns must agree on the resolved shape. Direct-call semantics change (same caveat class as E1). Design-level, strictly gated on E3 landing first with tests through the row model.
-**Verification:** AMENDED, 6 → 5: in-repo raw-endpoint delegation from between/betweenInclusive requires a tagged-shape fallback in the body.
-
----
-
-## 95. E6: filterFn_equalsString lowercases the filter value per row — Score: 5
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/fns/filterFns.ts:89–101`
-**Category:** `big-o` (short-circuit), `allocation`
-
-Hot path: per row per filtered rebuild (R calls). Identical shape to E1: `String(filterValue).toLowerCase()` is loop-invariant, costing one allocation + case scan per row.
-
-**Before**
-
-```ts
-return (
-  row.getValue(columnId)?.toString().toLowerCase() ===
-  String(filterValue).toLowerCase()
-)
-```
-
-**After**
-
-Add `resolveFilterValue: (val: any) => String(val).toLowerCase()` and keep the body idempotent (E1's safe variant), so direct callers are unaffected.
-
-**Big-O:** R filter-value string allocations per rebuild → 1.
-
-**Risk:** Same direct-call analysis as E1; the safe variant is fully behavior-preserving. Cooler path than E1 (`equalsString` is registry-selected, not the auto default).
-**Verification:** CONFIRMED (same safety analysis as E1's safe variant).
 
 ---
 
@@ -2524,32 +2088,6 @@ Trivial `for` loop replacement of `.reduce`.
 
 ---
 
-## 55. `filterFn_arrHas` and `filterFn_arrIncludesAll` use `.some()` (broadened by E7: hoist getValue + classic loops) — Score: 4
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `src/fns/filterFns.ts:287–296, 321–332`
-**Category:** `micro`
-
-Replace with indexed `for` loops with early `return`. Removes closure-per-row.
-
-**Scale impact** (closure allocations saved per filter evaluation — dimension: rows evaluated):
-
-| Rows evaluated | Before (`.some` closures) | After | Saved closures |
-| -------------- | ------------------------- | ----- | -------------- |
-| 10             | 10                        | 0     | 10             |
-| 100            | 100                       | 0     | 100            |
-| 1,000          | 1,000                     | 0     | 1,000          |
-| 10,000         | 10,000                    | 0     | 10,000         |
-
-**Risk:** None.
-
-**2026-07-01 audit (E7, score 4 — broadened):** Beyond the closure-per-row (R per rebuild), `row.getValue(columnId)` is re-invoked once per filter-value element (V times) instead of once, across `arrHas`, `arrIncludes`, and the loops in `arrIncludesAll`/`arrIncludesSome` (`src/fns/filterFns.ts:299–358`). Fix: hoist `getValue` once per call, classic loop over the filter values with early return. `getValue` is cache-stable within a rebuild, so this is observationally identical.
-**Verification:** Verified (2026-07-01 audit).
-
----
-
 ## 59. `table.getAllLeafColumns()` is called many places per row-model build — Score: 4
 
 **Status:** `[ ]` not started
@@ -2603,35 +2141,6 @@ Apply to BOTH clone sites (rowSelectionFeature.utils.ts and createSortedRowModel
 
 **Risk:** Clones lose warm caches (first call re-memoizes against the clone), which is the correct behavior; `_valuesCache` stays shared by reference (values identical, fine). Behavior delta to flag: post-fix, clone getters answer for the clone's own (e.g. filtered) subRows; that is the sane semantics but observable (e.g. `getIsAllSubRowsSelected` may flip from `'some'`-derived to `'all'`-derived on selected-model rows).
 **Verification:** CONFIRMED-BUG, severity MODERATE; scope extended to createSortedRowModel; D14 blocked until this lands.
-
----
-
-## 104. E10: column_getAutoFilterFn's Array.isArray branch is unreachable (bug) — Score: 4 (bug)
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts:62–68`
-**Category:** `bug`
-
-Arrays satisfy `typeof value === 'object'`, so the `equals` branch always wins and the documented behavior ("arrays use `arrIncludes`", per the fn's own docstring at lines 29-31) never happens: array-valued auto-filter columns silently get `===` filtering, which essentially never matches.
-
-**Before**
-
-```ts
-if (value !== null && typeof value === 'object') {
-  return filterFns?.equals
-}
-
-if (Array.isArray(value)) {
-  return filterFns?.arrIncludes
-}
-```
-
-**Fix:** Swap the two branches (`Array.isArray` first).
-
-**Risk:** Behavior change is from-broken-to-documented; flag in the changeset.
-**Verification:** CONFIRMED-BUG, severity MODERATE.
 
 ---
 
@@ -2834,23 +2343,6 @@ Collapse path copies the whole expanded map via `Object.assign` then copies E-1 
 
 ---
 
-## 133. E9: aggregationFns reduce/forEach closures; dead null checks in min/max/extent — Score: 4
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/fns/aggregationFns.ts:11–150` (sum, min, max, extent, mean)
-**Category:** `micro`
-
-`.reduce`/`.forEach` closures run per group per rebuild; `value != null` is dead before `typeof value === 'number'` in `min`/`max`/`extent` (mean's null check is load-bearing, keep it).
-
-**Fix:** Classic loops, with NaN-seeding stickiness preserved exactly.
-
-**Risk:** Do not remove `mean`'s null check when cleaning up `min`/`max`/`extent`'s dead checks — it is load-bearing there, unlike the others. NaN-seeding stickiness must be preserved exactly across all five functions.
-**Verification:** Verified (2026-07-01 audit).
-
----
-
 ## 137. F11: React useTable useMemo spread recomputes every render (React Compiler validation required) — Score: 4
 
 **Status:** `[ ]` not started
@@ -2999,20 +2491,6 @@ export function createColumnHelper<...>(): ColumnHelper<TFeatures, TData> {
 Calls `.find()` then `.map()` over the same array. Use `findIndex` and slice in/around it.
 
 **Risk:** None.
-
----
-
-## 53. `sortFn_datetime` compares mixed Date / string / number — Score: 3
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `src/fns/sortFns.ts:99–114`
-**Category:** `micro`
-
-Normalize `Date` → `getTime()` once at the top, then compare numbers (or fall through to `>/<` for strings). Marginal but the comparator runs O(n log n) times.
-
-**Risk:** None when only used for true datetime columns. Verify mixed-type columns don't rely on coercion.
 
 ---
 
@@ -3327,23 +2805,6 @@ Computed `getGroupingValue` result is re-read via a guarded lookup right after b
 
 **Risk:** Low: the verifier-corrected claim shows the cache-less path this targets is unreachable in practice, so the realized win is narrower than originally filed.
 **Verification:** Verifier-corrected (2026-07-01 audit): cache-less call path confirmed unreachable in practice; fix itself still confirmed safe.
-
----
-
-## 136. E15: includesStringSensitive / equalsStringSensitive: String(filterValue) per row — Score: 3
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/fns/filterFns.ts:47–58, 108–117` (`includesStringSensitive`, `equalsStringSensitive`)
-**Category:** `micro`
-
-`String(filterValue)` runs per row, allocating for non-string filter values.
-
-**Fix:** `resolveFilterValue: (val) => String(val)`; `String(String(v))` is identity, so this is fully safe even for direct callers.
-
-**Risk:** None noted; the fix is provably safe since `String(String(v))` is identity.
-**Verification:** Verified (2026-07-01 audit).
 
 ---
 

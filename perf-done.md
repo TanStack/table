@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 37
-- **Source findings:** 35
+- **Entries:** 48
+- **Source findings:** 46
 - **Cross-cutting sweeps:** 2
 
 ## Score 9
@@ -565,6 +565,118 @@ Deps coverage (everything `table_getColumnOffsets` reads transitively): `table_g
 
 ---
 
+## 64. E2: Allocation-free compareAlphanumeric — Score: 8
+
+**Status:** `[x]` done
+**Implementation note:** Implemented scanner-based `compareAlphanumeric` without per-comparison `split` arrays. Preserves existing comparator semantics, including remaining chunk-count return values and `parseInt` precision-collapse behavior for unusually large numeric chunks. User stress-test screenshots showed sorted-row-model reruns dropping from ~5.9-6.0s with the change stashed to ~3.5s with the change applied, about 41% lower elapsed time and in line with the reported "~45% faster" observation.
+
+**Location:** `packages/table-core/src/fns/sortFns.ts:153–222` (called from `sortFn_alphanumeric` :18–30 and `sortFn_alphanumericCaseSensitive` :37–49)
+**Category:** `allocation`
+
+Hot path: Per comparison during sort: ~R log R calls per sorted rebuild. `createSortedRowModel` resolves the sortFn once per column, but every comparison re-splits both strings. Each comparison allocates 2 arrays plus one string per chunk via regex `.split`, then `parseInt` per numeric chunk. At R=100k that is ~1.7M comparisons × (2 arrays + ~2-6 chunk strings) ≈ 5-10M short-lived allocations per sort, the dominant GC pressure of the alphanumeric sort. The chunk walk can be done with index arithmetic on the original strings with zero allocations, preserving the exact comparison lattice (empty boundary chunks are skipped today, equivalent to scanning digit/non-digit runs; string chunks compare by code units exactly like `aa > bb`; numeric chunks compare like `parseInt` when leading zeros are skipped). Verifier re-derivation confirmed: chunks after empty-skipping are exactly maximal digit/non-digit runs; digit-free chunks always `parseInt` to NaN at radix 10; string-chunk `aa > bb` equals code-unit walk + length tiebreak; exhaustion sign equals the remaining-character test; mixed-chunk direction matches. There is no Infinity handling in the current code (`toString` maps Infinity to `''` upstream).
+
+**Before**
+
+```ts
+function compareAlphanumeric(aStr: string, bStr: string) {
+  const a = aStr.split(reSplitAlphaNumeric)
+  const b = bStr.split(reSplitAlphaNumeric)
+  // ...
+  const an = parseInt(aa, 10)
+  const bn = parseInt(bb, 10)
+  // ...
+}
+```
+
+**After**
+
+```ts
+function compareAlphanumeric(aStr: string, bStr: string) {
+  const aLen = aStr.length
+  const bLen = bStr.length
+  let ai = 0
+  let bi = 0
+
+  while (ai < aLen && bi < bLen) {
+    const aCode = aStr.charCodeAt(ai)
+    const bCode = bStr.charCodeAt(bi)
+    const aIsNum = aCode >= 48 && aCode <= 57
+    const bIsNum = bCode >= 48 && bCode <= 57
+
+    // One is a string chunk, one is a number chunk: the string chunk sorts first
+    if (aIsNum !== bIsNum) {
+      return aIsNum ? 1 : -1
+    }
+
+    // Find the end of each same-class run (digit run or digit-free run)
+    let aEnd = ai + 1
+    while (aEnd < aLen) {
+      const c = aStr.charCodeAt(aEnd)
+      if ((c >= 48 && c <= 57) !== aIsNum) break
+      aEnd++
+    }
+    let bEnd = bi + 1
+    while (bEnd < bLen) {
+      const c = bStr.charCodeAt(bEnd)
+      if ((c >= 48 && c <= 57) !== bIsNum) break
+      bEnd++
+    }
+
+    if (aIsNum) {
+      // Both are numbers: skip leading zeros, then longer digit run wins,
+      // then digit-wise compare (equivalent to comparing parseInt results)
+      let as = ai
+      while (as < aEnd && aStr.charCodeAt(as) === 48) as++
+      let bs = bi
+      while (bs < bEnd && bStr.charCodeAt(bs) === 48) bs++
+
+      const aDigits = aEnd - as
+      const bDigits = bEnd - bs
+      if (aDigits !== bDigits) {
+        return aDigits > bDigits ? 1 : -1
+      }
+      for (let i = 0; i < aDigits; i++) {
+        const ac = aStr.charCodeAt(as + i)
+        const bc = bStr.charCodeAt(bs + i)
+        if (ac !== bc) {
+          return ac > bc ? 1 : -1
+        }
+      }
+    } else {
+      // Both are strings: code-unit lexicographic compare, same as `aa > bb`
+      const aChunkLen = aEnd - ai
+      const bChunkLen = bEnd - bi
+      const minLen = aChunkLen < bChunkLen ? aChunkLen : bChunkLen
+      for (let i = 0; i < minLen; i++) {
+        const ac = aStr.charCodeAt(ai + i)
+        const bc = bStr.charCodeAt(bi + i)
+        if (ac !== bc) {
+          return ac > bc ? 1 : -1
+        }
+      }
+      if (aChunkLen !== bChunkLen) {
+        return aChunkLen > bChunkLen ? 1 : -1
+      }
+    }
+
+    ai = aEnd
+    bi = bEnd
+  }
+
+  // One side is exhausted: the side with remaining chunks sorts last
+  if (ai < aLen) return 1
+  if (bi < bLen) return -1
+  return 0
+}
+```
+
+**Big-O:** Allocations per comparison: ~4-12 → 0. Per 100k-row sort: ~5-10M allocations eliminated; the work becomes a pure charCode walk. Same O(len) time, dramatically lower constant + GC.
+
+**Risk:** Two observable deltas, both flagged. (a) Digit runs of 16+ digits: `parseInt` saturates double precision so today two huge, nearly equal digit runs can compare "equal" and fall through to the next chunk (and 309+-digit runs both become Infinity); the digit-wise compare orders them exactly instead. Decimal-to-double conversion is monotone, so parseInt only ever COLLAPSES distinctions; the proposal resolves those collapsed cases. Strictly more correct but observable; if bit-identical behavior is required, fall back to `parseInt(slice)` only for runs longer than 15 digits. (b) Return magnitude changes from ±chunk-count to ±1: sign-equivalent for sorting, but verify no test asserts exact comparator magnitudes. **Gate on `tests/unit/fns/sortFns.test.ts`.**
+**Verification:** AMENDED: full re-derivation checks out; huge-digit-run behavior note expanded (parseInt-collapse direction proven), ±1 magnitude delta added, test-suite gate made explicit.
+
+---
+
 ## 67. A2: grouping/groupedColumnMode omitted from sizing/pinning/visibility memoDeps: header/cell column misalignment after setGrouping (bug) — Score: 8 (bug)
 
 **Status:** `[x]` done
@@ -615,11 +727,46 @@ Per grouping state-change on any table with `columnGroupingFeature` enabled (def
 
 ---
 
+## 101. E3: greaterThan/lessThan family declares testFalsy as resolveFilterValue — filter value replaced by a boolean (bug) — Score: 8 (bug)
+
+**Status:** `[x]` done
+**Implementation note:** Replaced the accidental `resolveFilterValue` metadata with `autoRemove` on `greaterThan`, `greaterThanOrEqualTo`, `lessThan`, and `lessThanOrEqualTo`; added focused unit coverage for the metadata behavior.
+
+**Location:** `packages/table-core/src/fns/filterFns.ts:146, 165, 181, 197` (`greaterThan`, `greaterThanOrEqualTo`, `lessThan`, `lessThanOrEqualTo`)
+**Category:** `bug`
+
+`resolveFilterValue` is typed as `TransformFilterValueFn`: it TRANSFORMS the filter value. `createFilteredRowModel.ts:87` does `filterFn.resolveFilterValue?.(columnFilter.value) ?? columnFilter.value`; `testFalsy(30)` returns `false`, which is not nullish, so `resolvedValue` becomes `false`. `filterFn_greaterThan` then computes `Number(false) === 0` and compares every row against `0` (or `1` for a `null` filter value) regardless of the user's actual filter value. Verified end-to-end by the verifier; no other `resolveFilterValue` consumer exists to mask it. The unit tests call the fns directly with raw values, bypassing resolution, so the bug is test-invisible. Plainly a copy-paste of the `autoRemove` predicate onto the wrong key.
+
+**Blast radius (verifier note):** These four fns are NOT in the `filterFns` string registry, so the bug triggers only via imported function values or custom registries; real, but narrower than "any greaterThan filter". `between`/`betweenInclusive` are unaffected (they delegate raw values internally and have correct `autoRemove`).
+
+**Cross-refs / gating:** #94 (E4: greaterThan family pre-parse via resolveFilterValue) is strictly gated on this fix landing first.
+
+**Before**
+
+```ts
+  { resolveFilterValue: (val: any) => testFalsy(val) },
+```
+
+(on all four fns; every other filterFn uses `autoRemove: (val: any) => testFalsy(val)` for this expression)
+
+**After**
+
+```ts
+  { autoRemove: (val: any) => testFalsy(val) },
+```
+
+(on all four fns)
+
+**Risk:** Changing to `autoRemove` additionally causes `null` filter values to be auto-removed from state; that matches every sibling filterFn's behavior and is evidently the intent. E4 is strictly gated on this fix.
+**Verification:** CONFIRMED, severity HIGH for the affected fns.
+
+---
+
 ## Cross-cutting sweep: loop fusion (`.map().flat()`, `.map().filter()`, `.map().map().filter()`)
 
 **Status:** `[x]` done
 
-**Adjusted score:** 8  
+**Adjusted score:** 8
 **Original score:** n/a  
 **Score note:** Completed cross-cutting allocation and loop-fusion sweep.
 
@@ -1215,6 +1362,72 @@ const onEnd = (clientXPos?: number) => {
 
 ---
 
+## 73. E1: includesString (auto string filter AND default global filter): add resolveFilterValue, SAFE variant only — Score: 7
+
+**Status:** `[x]` done
+**Implementation note:** Added the safe `resolveFilterValue` metadata to `filterFn_includesString` while keeping the function body's `String(filterValue).toLowerCase()` call intact, so direct callers keep identical behavior and row-model callers receive an already-lowercased value. Added focused unit coverage for the resolver metadata. The separate B3/#27 global-filter hoist is still the catalog item that reduces global active-filter resolution from N calls to 1; this entry alone reduces the per-row allocation path and leaves the current per-column global resolution shape unchanged.
+
+**Location:** `packages/table-core/src/fns/filterFns.ts:66–81` (consumed at `createFilteredRowModel.ts:87,107`; default global fn via `globalFilteringFeature.utils.ts:45–47`)
+**Category:** `big-o` (short-circuit), `allocation`
+
+Hot path: Per row per filtered rebuild for column filters (R calls per keystroke); per row PER globally-filterable column for global filtering (R × N calls per keystroke; the per-row loop breaks only on first truthy). `String(filterValue).toLowerCase()` is loop-invariant on the filter value but recomputed on every invocation: one case-conversion scan + one string allocation per row (column filter) or per row×column (global filter). At R=100k, N=20 filterable columns, one global-filter keystroke does 2M redundant lowercase allocations. The engine already has the sanctioned hoisting hook: `createFilteredRowModel` applies `filterFn.resolveFilterValue?.(value)` exactly once per filter per rebuild (`filterFn_inNumberRange` already uses this pattern).
+
+**Before**
+
+```ts
+export const filterFn_includesString = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return Boolean(
+      row
+        .getValue(columnId)
+        ?.toString()
+        .toLowerCase()
+        .includes(String(filterValue).toLowerCase()),
+    )
+  },
+  { autoRemove: (val: any) => testFalsy(val) },
+)
+```
+
+**After**
+
+(SAFE variant only, per verifier: keep the body's `String(filterValue).toLowerCase()` AND add `resolveFilterValue`.)
+
+```ts
+export const filterFn_includesString = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValue: unknown,
+  ) => {
+    return Boolean(
+      row
+        .getValue(columnId)
+        ?.toString()
+        .toLowerCase()
+        .includes(String(filterValue).toLowerCase()),
+    )
+  },
+  {
+    autoRemove: (val: any) => testFalsy(val),
+    resolveFilterValue: (val: any) => String(val).toLowerCase(),
+  },
+)
+```
+
+Lowercasing an already-lowercased string hits the V8 no-change fast path (no allocation), so the row-model path keeps most of the win while direct callers (including the unit tests in `tests/unit/fns/filterFns.test.ts`, which invoke fns directly with raw values) keep strictly identical semantics.
+
+**Big-O:** Filter-value string ALLOCATIONS per rebuild: R (or R×N for global) → 1. The safe variant still pays an O(L) no-change lowercase scan per row (allocation eliminated, scan not), and the row-value `.toString().toLowerCase()` per row remains (unavoidable, depends on the row).
+
+**Risk:** None with the safe variant (idempotent for direct calls). Composes with B3: hoist the per-column resolution at line 107, or `resolveFilterValue` runs N times for the global filter.
+**Verification:** AMENDED: safe variant only (body-replacing variant would change direct-call semantics and break existing unit tests); demoted 8 → 7 because the no-change lowercase scan remains.
+
+---
+
 ## Score 6
 
 ## 9. `cell_getContext()` re-allocates the context object on every call — Score: 6
@@ -1283,7 +1496,7 @@ export function cell_getContext(cell) {
 ## 52. `compareAlphanumeric` allocates 2 arrays per comparison — Score: 6
 
 **Status:** `[x]` done
-**Implementation note:** Went further than proposed — the audit undercounted the allocations. Besides the two `.filter(Boolean)` arrays per comparison, every chunk-pair iteration allocated and **default-sorted** a fresh `[an, bn]` array (`const combo = [an, bn].sort()`), paying array allocation + sort dispatch + number→string coercion just to classify NaN-ness. Since chunks from `reSplitAlphaNumeric` are either all-digit (`parseInt` always succeeds) or digit-free (`parseInt` always `NaN`), two plain `isNaN` checks replace the combo entirely (`aIsNaN && bIsNaN` → both-string branch, `aIsNaN || bIsNaN` → mixed branch). The `.filter(Boolean)` drop required two semantic guards: (1) empty chunks (which only occur at split-array boundaries) are skipped inline at the top of the loop; (2) the prefix tail return counts only **non-empty** remaining chunks instead of raw `aLen - ai - (bLen - bi)`. Net per comparison: 3+k array allocations → 1 per side (the unavoidable `.split()`), where k = chunk pairs visited. Measured on a 10k-row sort of mixed `itemNNNN-revNN` strings (Node, median of 7 runs): **36.5ms → 20.7ms (~43% faster)**. Equivalence verified two ways: a vocab×vocab differential test against the verbatim old implementation (625 pairs covering boundary digits, leading zeros, pure digits, empties, 30-digit overflow) plus targeted boundary-chunk unit tests, all in `tests/unit/fns/sortFns.test.ts`. Unblocked by #61 — the auto path can now actually select `alphanumeric` again.
+**Implementation note:** Went further than proposed — the audit undercounted the allocations. Besides the two `.filter(Boolean)` arrays per comparison, every chunk-pair iteration allocated and **default-sorted** a fresh `[an, bn]` array (`const combo = [an, bn].sort()`), paying array allocation + sort dispatch + number→string coercion just to classify NaN-ness. Since chunks from `reSplitAlphaNumeric` are either all-digit (`parseInt` always succeeds) or digit-free (`parseInt` always `NaN`), two plain `isNaN` checks replace the combo entirely (`aIsNaN && bIsNaN` → both-string branch, `aIsNaN || bIsNaN` → mixed branch). The `.filter(Boolean)` drop required two semantic guards: (1) empty chunks (which only occur at split-array boundaries) are skipped inline at the top of the loop; (2) the prefix tail return counts only **non-empty** remaining chunks instead of raw `aLen - ai - (bLen - bi)`. Net per comparison: 3+k array allocations → 1 per side (the unavoidable `.split()`), where k = chunk pairs visited. Measured on a 10k-row sort of mixed `itemNNNN-revNN` strings (Node, median of 7 runs): **36.5ms → 20.7ms (~43% faster)**. Equivalence verified two ways: a vocab×vocab differential test against the verbatim old implementation (625 pairs covering boundary digits, leading zeros, pure digits, empties, 30-digit overflow) plus targeted boundary-chunk unit tests, all in `tests/unit/fns/sortFns.test.ts`. Unblocked by #61 — the auto path can now actually select `alphanumeric` again. Follow-up browser stress test on the sorting example with the newer scanner-based alphanumeric changes showed the same order of win: stashed/baseline `table.getSortedRowModel` reruns were **5867.9ms** and **6030.4ms**; applied-change reruns were **3534.6ms** and **3466.6ms**. That is **5949.2ms → 3500.6ms average (~41% faster)** for the two measured hot reruns.
 
 **Location:** `src/fns/sortFns.ts:154–200`
 **Category:** `big-o`, `micro`
@@ -1382,6 +1595,76 @@ return remaining
 | 10,000          | ~132,877                 | ~265,754                  | 0                | ~265,754     |
 
 **Risk:** Careful logic — empty-string skipping must mirror the `.filter(Boolean)` semantics exactly.
+
+---
+
+## 54. `filterFn_between` / `filterFn_betweenInclusive` allocate `['', undefined]` per row (broadened by E5: hoist array literals + Number parses) — Score: 6
+
+**Status:** `[x]` done
+**Implementation note:** Rewrote both range predicates into explicit blocks. Removed the hot `['', undefined]` literals and `.includes` calls, replaced them with direct endpoint checks, and parsed each endpoint at most once after the lower-bound conjunct passes. This is stricter than the audit sketch because it avoids moving `Number(min/max)` ahead of the first conjunct, preserving the old short-circuit behavior for rows that fail the lower bound. PR review then found a latent edge case in the old semantics: blank lower endpoints were coerced by `Number('')` to `0` during the reversed-range check, so `['', -1]` bypassed the max bound. The follow-up fix excludes blank endpoints from the reversed-range check and adds regression coverage for exclusive/inclusive blank-min + negative-max cases.
+
+**Location:** `src/fns/filterFns.ts:210–216, 231–237`
+**Category:** `micro`
+
+Hoist to a module constant.
+
+**Scale impact** (array allocations saved per filter evaluation — dimension: rows evaluated per filter pass):
+
+| Rows evaluated | Before (2 arrays/row) | After (0) | Saved arrays |
+| -------------- | --------------------- | --------- | ------------ |
+| 10             | 20                    | 0         | 20           |
+| 100            | 200                   | 0         | 200          |
+| 1,000          | 2,000                 | 0         | 2,000        |
+| 10,000         | 20,000                | 0         | 20,000       |
+
+**Risk:** Low. The allocation rewrite itself is behavior-preserving except for the intentional follow-up bug fix: blank lower endpoints now remain open-ended instead of being treated as numeric zero when deciding whether a range is reversed.
+
+**2026-07-01 audit (E5, score 6 — full rewrite):** Two fresh 2-element arrays are allocated per row per call (2R allocations per rebuild per between filter) just to test two constants, and `Number(filterValues[0])`/`Number(filterValues[1])` are each parsed up to twice per row, all loop-invariant. Tiny-array `.includes` on state arrays is fine by doctrine, but here the array literal is constructed inside the hot loop.
+
+**After (E5, with blank-endpoint reversed-range guard, no resolveFilterValue needed)**
+
+```ts
+const filterFn_between = Object.assign(
+  <TFeatures extends TableFeatures, TData extends RowData>(
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    filterValues: [unknown, unknown],
+  ): boolean => {
+    const min = filterValues[0]
+    if (min !== '' && min !== undefined) {
+      if (!filterFn_greaterThan(row, columnId, min)) {
+        return false
+      }
+    }
+
+    const max = filterValues[1]
+    if (max === '' || max === undefined) {
+      return true
+    }
+
+    if (min !== '' && min !== undefined) {
+      const numericMin = Number(min)
+      const numericMax = Number(max)
+      if (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) {
+        return true
+      }
+    }
+
+    return filterFn_lessThan(row, columnId, max)
+  },
+  {
+    autoRemove: (val: any) =>
+      testFalsy(val) || (testFalsy(val[0]) && testFalsy(val[1])),
+  },
+)
+```
+
+(same transform for `filterFn_betweenInclusive`)
+
+**Big-O (amended):** 2R array allocations per rebuild → 0; endpoint `Number()` parses inside the fn body 4/row → 2/row (full hoisting to once-per-rebuild folds into #94 / E4).
+
+**Risk (amended):** Low; mostly pure strength reduction. `['', undefined].includes(x)` ≡ `x === '' || x === undefined` under SameValueZero (no NaN/±0 in the constant set), and the implementation preserves the old short-circuit behavior by keeping endpoint parsing after the lower-bound conjunct passes. The one intentional behavior fix is that blank lower endpoints no longer participate in reversed-range detection, so `['', negativeMax]` now enforces the max bound instead of treating `''` as `0` and bypassing the upper bound.
+**Verification:** CONFIRMED, demoted 7 → 6 (between fns are opt-in; numbers auto-resolve to `inNumberRange`). Follow-up PR review fix verified with blank-min + negative-max tests for both `between` and `betweenInclusive`.
 
 ---
 
@@ -1634,6 +1917,80 @@ return [facetedMinValue, facetedMaxValue]
 
 ---
 
+## 88. B8: Sort comparator does a hashed columnInfoById lookup per comparison per sort column — Score: 5
+
+**Status:** `[x]` done
+**Implementation note:** Replaced the per-row-model `columnInfoById` object with a `resolvedSorting` array that carries each sort entry's `id`, `desc`, `sortUndefined`, `invertSorting`, and resolved `sortFn` together. The comparator now reads the resolved entry directly by array index instead of doing `columnInfoById[sortEntry.id]` inside the O(R log R × G) comparison loop. Also hoisted the comparator closure out of `sortData`, so recursive sub-row sorts reuse one comparator for the row-model rebuild instead of allocating one per group. The implementation intentionally keeps the existing `availableSorting` filter and missing-column behavior, leaving the separate unknown-column correctness issue untouched. Added a multi-sort regression covering ordered metadata resolution with `sortUndefined` and `invertSorting`; it also documents the existing behavior that `sortUndefined: 'last'` returns before later sort keys when both compared values are undefined.
+
+**Location:** `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:60–128`
+**Category:** `micro`
+
+Hot path: warm O(R log R) path; per state-change: every sort toggle / upstream model change; comparator runs ~R log R times. `sorting` is a tiny array (1-3 entries) so the outer loop is fine, but the string-keyed `columnInfoById[sortEntry.id]` lookup executes once per sort column per comparison: at R=100k that is ~1.7M comparisons × G lookups. The id→info map is built once and only ever read alongside the same `availableSorting[i]` entry; fuse the two structures at construction so the comparator reads array slots only.
+
+**Before**
+
+```ts
+  const columnInfoById = makeObjectMap<{...}>()
+
+  availableSorting.forEach((sortEntry) => {
+    // ...
+    columnInfoById[sortEntry.id] = { ... }
+  })
+
+  const sortData = (rows: Array<Row<TFeatures, TData>>) => {
+    const sortedData = rows.slice()
+
+    sortedData.sort((rowA, rowB) => {
+      for (let i = 0; i < availableSorting.length; i++) {
+        const sortEntry = availableSorting[i]!
+        const columnInfo = columnInfoById[sortEntry.id]!
+        const sortUndefined = columnInfo.sortUndefined
+        const isDesc = sortEntry.desc
+```
+
+**After**
+
+```ts
+  const resolvedSorting: Array<{
+    id: string
+    desc?: boolean
+    sortUndefined?: false | -1 | 1 | 'first' | 'last'
+    invertSorting?: boolean
+    sortFn: SortFn<TFeatures, TData>
+  }> = []
+
+  for (let i = 0; i < availableSorting.length; i++) {
+    const sortEntry = availableSorting[i]!
+    const column: Column_Internal<TFeatures, TData> | undefined =
+      table.getColumn(sortEntry.id)
+    if (!column) continue
+    resolvedSorting.push({
+      id: sortEntry.id,
+      desc: sortEntry.desc,
+      sortUndefined: column.columnDef.sortUndefined,
+      invertSorting: column.columnDef.invertSorting,
+      sortFn: column_getSortFn(column),
+    })
+  }
+
+  // comparator:
+      for (let i = 0; i < resolvedSorting.length; i++) {
+        const entry = resolvedSorting[i]!
+        const sortUndefined = entry.sortUndefined
+        const isDesc = entry.desc
+        // ...
+        sortInt = entry.sortFn(rowA, rowB, entry.id)
+```
+
+Also hoist the comparator itself out of `sortData` (it captures only outer-scope values) so recursion over grouped subRows does not allocate a new comparator closure per group.
+
+**Big-O:** ~R log R × G hashed lookups → 0 (~1.7-5M lookups per sort at R=100k, G=1-3; low-ms range). One closure alloc per group removed.
+
+**Risk:** None: same resolution order, same data; `columnInfoById` and `availableSorting` are 1:1 in practice (a missing column would already crash the canSort filter today; see the pre-existing crash note in the correctness section). Fusing also removes that double fetch.
+**Verification:** CONFIRMED (1:1 alignment proven; the unknown-column-id crash logged separately as a pre-existing bug).
+
+---
+
 ## 89. B16+E13: Faceted factories re-invoked per call, constructing throwaway tableMemo instances — Score: 5
 
 **Status:** `[x]` done
@@ -1682,6 +2039,36 @@ export function column_getFacetedRowModel<...>(column, table): RowModel<TFeature
 
 **Risk:** The cache is keyed by columnId, scaling with N (doctrine-compliant). Cache lifetime matches `_rowModels` (never reset; must not outlive `table.options.features` swaps, same invariant as filtered/sorted). The inner memo becoming long-lived makes its own memoDeps the invalidation authority; the dep set is identical to the prototype memo, so results stay coherent.
 **Verification:** MERGED (B16 ≡ E13; B16 formulation kept), demoted 6 → 5: on the registered path the outer prototype memo already caches results, so the win there is construction allocations only; the O(R)-per-call fallback is real but requires a specific misconfiguration.
+
+---
+
+## 95. E6: filterFn_equalsString lowercases the filter value per row — Score: 5
+
+**Status:** `[x]` done
+**Implementation note:** Added the safe `resolveFilterValue` metadata to `filterFn_equalsString` while keeping the function body's `String(filterValue).toLowerCase()` call intact. Row-model filtering now receives a lowercased value once per rebuild, and direct callers keep identical behavior because the body remains idempotent. Added focused resolver metadata coverage alongside the existing `equalsString` behavior tests.
+
+**Location:** `packages/table-core/src/fns/filterFns.ts:89–101`
+**Category:** `big-o` (short-circuit), `allocation`
+
+Hot path: per row per filtered rebuild (R calls). Identical shape to E1: `String(filterValue).toLowerCase()` is loop-invariant, costing one allocation + case scan per row.
+
+**Before**
+
+```ts
+return (
+  row.getValue(columnId)?.toString().toLowerCase() ===
+  String(filterValue).toLowerCase()
+)
+```
+
+**After**
+
+Add `resolveFilterValue: (val: any) => String(val).toLowerCase()` and keep the body idempotent (E1's safe variant), so direct callers are unaffected.
+
+**Big-O:** R filter-value string allocations per rebuild → 1.
+
+**Risk:** Same direct-call analysis as E1; the safe variant is fully behavior-preserving. Cooler path than E1 (`equalsString` is registry-selected, not the auto default).
+**Verification:** CONFIRMED (same safety analysis as E1's safe variant).
 
 ---
 
@@ -1793,7 +2180,93 @@ if (newSubRows !== row.subRows) row = { ...row, subRows: newSubRows }
 
 ---
 
+## 55. `filterFn_arrHas` and `filterFn_arrIncludesAll` use `.some()` (broadened by E7: hoist getValue + classic loops) — Score: 4
+
+**Status:** `[x]` done
+**Implementation note:** Replaced `.some()` callbacks in `arrHas`, `arrIncludes`, `arrIncludesAll`, and `arrIncludesSome` with indexed loops and early returns. Also hoisted `row.getValue(columnId)` once per filter function call for `arrHas` and `arrIncludes`, matching the broadened E7 audit. Added direct behavior tests for all four array filters, including `getValue` call-count checks for the hoisted paths and non-array fallback coverage for the all/some variants.
+
+**Location:** `src/fns/filterFns.ts:287–296, 321–332`
+**Category:** `micro`
+
+Replace with indexed `for` loops with early `return`. Removes closure-per-row.
+
+**Scale impact** (closure allocations saved per filter evaluation — dimension: rows evaluated):
+
+| Rows evaluated | Before (`.some` closures) | After | Saved closures |
+| -------------- | ------------------------- | ----- | -------------- |
+| 10             | 10                        | 0     | 10             |
+| 100            | 100                       | 0     | 100            |
+| 1,000          | 1,000                     | 0     | 1,000          |
+| 10,000         | 10,000                    | 0     | 10,000         |
+
+**Risk:** None.
+
+**2026-07-01 audit (E7, score 4 — broadened):** Beyond the closure-per-row (R per rebuild), `row.getValue(columnId)` is re-invoked once per filter-value element (V times) instead of once, across `arrHas`, `arrIncludes`, and the loops in `arrIncludesAll`/`arrIncludesSome` (`src/fns/filterFns.ts:299–358`). Fix: hoist `getValue` once per call, classic loop over the filter values with early return. `getValue` is cache-stable within a rebuild, so this is observationally identical.
+**Verification:** Verified (2026-07-01 audit).
+
+---
+
+## 104. E10: column_getAutoFilterFn's Array.isArray branch is unreachable (bug) — Score: 4 (bug)
+
+**Status:** `[x]` done
+**Implementation note:** Moved the `Array.isArray(value)` branch before the generic non-null object branch in `column_getAutoFilterFn`, matching the function's documented behavior that array-valued columns use `arrIncludes`. Added focused auto-filter selection tests covering array values (`arrIncludes`) and plain object values (`equals`) so the branch order stays locked.
+
+**Location:** `packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts:62–68`
+**Category:** `bug`
+
+Arrays satisfy `typeof value === 'object'`, so the `equals` branch always wins and the documented behavior ("arrays use `arrIncludes`", per the fn's own docstring at lines 29-31) never happens: array-valued auto-filter columns silently get `===` filtering, which essentially never matches.
+
+**Before**
+
+```ts
+if (value !== null && typeof value === 'object') {
+  return filterFns?.equals
+}
+
+if (Array.isArray(value)) {
+  return filterFns?.arrIncludes
+}
+```
+
+**Fix:** Swap the two branches (`Array.isArray` first).
+
+**Risk:** Behavior change is from-broken-to-documented; flag in the changeset.
+**Verification:** CONFIRMED-BUG, severity MODERATE.
+
+---
+
+## 133. E9: aggregationFns reduce/forEach closures; dead null checks in min/max/extent — Score: 4
+
+**Status:** `[x]` done
+**Implementation note:** Replaced `reduce`/`forEach` in `sum`, `min`, `max`, `extent`, and `mean` with indexed loops. Removed the redundant `value != null` checks from `min`/`max`/`extent` while keeping mean's load-bearing nullish check before numeric coercion. Added focused aggregation function tests for sum behavior, min/max/extent NaN seeding stickiness, ignored non-number values, and mean's nullish handling.
+
+**Location:** `packages/table-core/src/fns/aggregationFns.ts:11–150` (sum, min, max, extent, mean)
+**Category:** `micro`
+
+`.reduce`/`.forEach` closures run per group per rebuild; `value != null` is dead before `typeof value === 'number'` in `min`/`max`/`extent` (mean's null check is load-bearing, keep it).
+
+**Fix:** Classic loops, with NaN-seeding stickiness preserved exactly.
+
+**Risk:** Do not remove `mean`'s null check when cleaning up `min`/`max`/`extent`'s dead checks — it is load-bearing there, unlike the others. NaN-seeding stickiness must be preserved exactly across all five functions.
+**Verification:** Verified (2026-07-01 audit).
+
+---
+
 ## Score 3
+
+## 53. `sortFn_datetime` compares mixed Date / string / number — Score: 3
+
+**Status:** `[x]` done
+**Implementation note:** Added a small `toDateSortValue` helper so `sortFn_datetime` normalizes `Date` instances to `getTime()` before the existing relational comparison. Non-Date values still flow through unchanged, preserving string fallback comparisons and numeric timestamp behavior. Added datetime sort tests for Date/timestamp mixed comparisons, string fallback ordering, and invalid Date equality-like behavior.
+
+**Location:** `src/fns/sortFns.ts:99–114`
+**Category:** `micro`
+
+Normalize `Date` → `getTime()` once at the top, then compare numbers (or fall through to `>/<` for strings). Marginal but the comparator runs O(n log n) times.
+
+**Risk:** None when only used for true datetime columns. Verify mixed-type columns don't rely on coercion.
+
+---
 
 ## 18. `table_getRow` always calls `getCoreRowModel()` — Score: 3
 
@@ -1906,6 +2379,23 @@ When deselecting all, the function spreads `old`, then `delete`s every row id. J
 Median requires only the middle element; quickselect is O(n) average vs `.sort()` O(n log n). Worth it only for large groups; skip otherwise to keep bundle slim.
 
 **Risk:** Quickselect adds bytes and complexity. Recommend leaving as-is unless real-world data shows hot.
+
+---
+
+## 136. E15: includesStringSensitive / equalsStringSensitive: String(filterValue) per row — Score: 3
+
+**Status:** `[x]` done
+**Implementation note:** Added safe `resolveFilterValue` metadata to both case-sensitive string filters: `filterFn_includesStringSensitive` and `filterFn_equalsStringSensitive`. The function bodies still call `String(filterValue)`, so direct-call behavior stays identical; row-model filtering receives a stringified value once per rebuild. Added focused resolver metadata coverage for both filters.
+
+**Location:** `packages/table-core/src/fns/filterFns.ts:47–58, 108–117` (`includesStringSensitive`, `equalsStringSensitive`)
+**Category:** `micro`
+
+`String(filterValue)` runs per row, allocating for non-string filter values.
+
+**Fix:** `resolveFilterValue: (val) => String(val)`; `String(String(v))` is identity, so this is fully safe even for direct callers.
+
+**Risk:** None noted; the fix is provably safe since `String(String(v))` is identity.
+**Verification:** Verified (2026-07-01 audit).
 
 ---
 

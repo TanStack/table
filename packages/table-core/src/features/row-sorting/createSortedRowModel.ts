@@ -1,4 +1,4 @@
-import { makeObjectMap, tableMemo } from '../../utils'
+import { tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -57,75 +57,86 @@ function _createSortedRowModel<
     ),
   )
 
-  const columnInfoById = makeObjectMap<{
+  const resolvedSorting: Array<{
+    id: string
+    desc?: boolean
     sortUndefined?: false | -1 | 1 | 'first' | 'last'
     invertSorting?: boolean
     sortFn: SortFn<TFeatures, TData>
-  }>()
+  }> = []
 
-  availableSorting.forEach((sortEntry) => {
+  for (let i = 0; i < availableSorting.length; i++) {
+    const sortEntry = availableSorting[i]!
     const column: Column_Internal<TFeatures, TData> | undefined =
       table.getColumn(sortEntry.id)
-    if (!column) return
+    if (!column) {
+      continue
+    }
 
-    columnInfoById[sortEntry.id] = {
+    resolvedSorting.push({
+      id: sortEntry.id,
+      desc: sortEntry.desc,
       sortUndefined: column.columnDef.sortUndefined,
       invertSorting: column.columnDef.invertSorting,
       sortFn: column_getSortFn(column),
+    })
+  }
+
+  const compareRows = (
+    rowA: Row<TFeatures, TData>,
+    rowB: Row<TFeatures, TData>,
+  ) => {
+    for (let i = 0; i < resolvedSorting.length; i++) {
+      const sortEntry = resolvedSorting[i]!
+      const sortUndefined = sortEntry.sortUndefined
+      const isDesc = sortEntry.desc
+
+      let sortInt = 0
+
+      // All sorting ints should always return in ascending order
+      if (sortUndefined) {
+        const aValue = rowA.getValue(sortEntry.id)
+        const bValue = rowB.getValue(sortEntry.id)
+
+        const aUndefined = aValue === undefined
+        const bUndefined = bValue === undefined
+
+        if (aUndefined && bUndefined) {
+          continue
+        }
+
+        if (aUndefined || bUndefined) {
+          if (sortUndefined === 'first') return aUndefined ? -1 : 1
+          if (sortUndefined === 'last') return aUndefined ? 1 : -1
+          sortInt = aUndefined ? sortUndefined : -sortUndefined
+        }
+      }
+
+      if (sortInt === 0) {
+        sortInt = sortEntry.sortFn(rowA, rowB, sortEntry.id)
+      }
+
+      // If sorting is non-zero, take care of desc and inversion
+      if (sortInt !== 0) {
+        if (isDesc) {
+          sortInt *= -1
+        }
+
+        if (sortEntry.invertSorting) {
+          sortInt *= -1
+        }
+
+        return sortInt
+      }
     }
-  })
+
+    return rowA.index - rowB.index
+  }
 
   const sortData = (rows: Array<Row<TFeatures, TData>>) => {
     const sortedData = rows.slice()
 
-    sortedData.sort((rowA, rowB) => {
-      for (let i = 0; i < availableSorting.length; i++) {
-        const sortEntry = availableSorting[i]!
-        const columnInfo = columnInfoById[sortEntry.id]!
-        const sortUndefined = columnInfo.sortUndefined
-        const isDesc = sortEntry.desc
-
-        let sortInt = 0
-
-        // All sorting ints should always return in ascending order
-        if (sortUndefined) {
-          const aValue = rowA.getValue(sortEntry.id)
-          const bValue = rowB.getValue(sortEntry.id)
-
-          const aUndefined = aValue === undefined
-          const bUndefined = bValue === undefined
-
-          if (aUndefined || bUndefined) {
-            if (sortUndefined === 'first') return aUndefined ? -1 : 1
-            if (sortUndefined === 'last') return aUndefined ? 1 : -1
-            sortInt =
-              aUndefined && bUndefined
-                ? 0
-                : aUndefined
-                  ? sortUndefined
-                  : -sortUndefined
-          }
-        }
-
-        if (sortInt === 0) {
-          sortInt = columnInfo.sortFn(rowA, rowB, sortEntry.id)
-        }
-
-        // If sorting is non-zero, take care of desc and inversion
-        if (sortInt !== 0) {
-          if (isDesc) {
-            sortInt *= -1
-          }
-
-          if (columnInfo.invertSorting) {
-            sortInt *= -1
-          }
-
-          return sortInt
-        }
-      }
-      return rowA.index - rowB.index
-    })
+    sortedData.sort(compareRows)
 
     // If there are sub-rows, sort them. Clone only rows that need mutation
     // (i.e. have subRows) so we don't corrupt the source row model.
