@@ -230,15 +230,19 @@ const filterFn_between = Object.assign(
     }
 
     const max = filterValues[1]
-    const numericMin = Number(min)
-    const numericMax = Number(max)
+    if (max === '' || max === undefined) {
+      return true
+    }
 
-    return (
-      (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) ||
-      max === '' ||
-      max === undefined ||
-      filterFn_lessThan(row, columnId, max)
-    )
+    if (min !== '' && min !== undefined) {
+      const numericMin = Number(min)
+      const numericMax = Number(max)
+      if (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) {
+        return true
+      }
+    }
+
+    return filterFn_lessThan(row, columnId, max)
   },
   {
     autoRemove: (val: any) =>
@@ -265,15 +269,19 @@ const filterFn_betweenInclusive = Object.assign(
     }
 
     const max = filterValues[1]
-    const numericMin = Number(min)
-    const numericMax = Number(max)
+    if (max === '' || max === undefined) {
+      return true
+    }
 
-    return (
-      (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) ||
-      max === '' ||
-      max === undefined ||
-      filterFn_lessThanOrEqualTo(row, columnId, max)
-    )
+    if (min !== '' && min !== undefined) {
+      const numericMin = Number(min)
+      const numericMax = Number(max)
+      if (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) {
+        return true
+      }
+    }
+
+    return filterFn_lessThanOrEqualTo(row, columnId, max)
   },
   {
     autoRemove: (val: any) =>
@@ -356,7 +364,11 @@ export const filterFn_arrIncludes = Object.assign(
     columnId: string,
     filterValue: Array<unknown>,
   ) => {
-    const value = row.getValue<unknown>(columnId) as Array<unknown> | string
+    const value = row.getValue<unknown>(columnId)
+    if (typeof value !== 'string' && !Array.isArray(value)) {
+      return false
+    }
+
     for (let i = 0; i < filterValue.length; i++) {
       if (value.includes(filterValue[i] as any)) {
         return true

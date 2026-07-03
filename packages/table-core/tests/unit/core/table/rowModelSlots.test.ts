@@ -163,7 +163,7 @@ describe('row model and fn registry feature slots', () => {
 
     expect(
       table.getSortedRowModel().rows.map((row) => row.original.name),
-    ).toEqual(['c', 'a', 'e', 'b', 'd'])
+    ).toEqual(['c', 'a', 'e', 'd', 'b'])
   })
 
   it('filters with a custom filter fn registered in the slot', () => {

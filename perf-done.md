@@ -1601,7 +1601,7 @@ return remaining
 ## 54. `filterFn_between` / `filterFn_betweenInclusive` allocate `['', undefined]` per row (broadened by E5: hoist array literals + Number parses) — Score: 6
 
 **Status:** `[x]` done
-**Implementation note:** Rewrote both range predicates into explicit blocks. Removed the hot `['', undefined]` literals and `.includes` calls, replaced them with direct endpoint checks, and parsed each endpoint at most once after the lower-bound conjunct passes. This is stricter than the audit sketch because it avoids moving `Number(min/max)` ahead of the first conjunct, preserving the old short-circuit behavior for rows that fail the lower bound. Added direct behavior coverage for exclusive and inclusive boundaries, open endpoints, and reversed-range semantics.
+**Implementation note:** Rewrote both range predicates into explicit blocks. Removed the hot `['', undefined]` literals and `.includes` calls, replaced them with direct endpoint checks, and parsed each endpoint at most once after the lower-bound conjunct passes. This is stricter than the audit sketch because it avoids moving `Number(min/max)` ahead of the first conjunct, preserving the old short-circuit behavior for rows that fail the lower bound. PR review then found a latent edge case in the old semantics: blank lower endpoints were coerced by `Number('')` to `0` during the reversed-range check, so `['', -1]` bypassed the max bound. The follow-up fix excludes blank endpoints from the reversed-range check and adds regression coverage for exclusive/inclusive blank-min + negative-max cases.
 
 **Location:** `src/fns/filterFns.ts:210–216, 231–237`
 **Category:** `micro`
@@ -1617,11 +1617,11 @@ Hoist to a module constant.
 | 1,000          | 2,000                 | 0         | 2,000        |
 | 10,000         | 20,000                | 0         | 20,000       |
 
-**Risk:** None.
+**Risk:** Low. The allocation rewrite itself is behavior-preserving except for the intentional follow-up bug fix: blank lower endpoints now remain open-ended instead of being treated as numeric zero when deciding whether a range is reversed.
 
 **2026-07-01 audit (E5, score 6 — full rewrite):** Two fresh 2-element arrays are allocated per row per call (2R allocations per rebuild per between filter) just to test two constants, and `Number(filterValues[0])`/`Number(filterValues[1])` are each parsed up to twice per row, all loop-invariant. Tiny-array `.includes` on state arrays is fine by doctrine, but here the array literal is constructed inside the hot loop.
 
-**After (E5, semantics-identical, no resolveFilterValue needed)**
+**After (E5, with blank-endpoint reversed-range guard, no resolveFilterValue needed)**
 
 ```ts
 const filterFn_between = Object.assign(
@@ -1638,15 +1638,19 @@ const filterFn_between = Object.assign(
     }
 
     const max = filterValues[1]
-    const numericMin = Number(min)
-    const numericMax = Number(max)
+    if (max === '' || max === undefined) {
+      return true
+    }
 
-    return (
-      (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) ||
-      max === '' ||
-      max === undefined ||
-      filterFn_lessThan(row, columnId, max)
-    )
+    if (min !== '' && min !== undefined) {
+      const numericMin = Number(min)
+      const numericMax = Number(max)
+      if (!isNaN(numericMin) && !isNaN(numericMax) && numericMin > numericMax) {
+        return true
+      }
+    }
+
+    return filterFn_lessThan(row, columnId, max)
   },
   {
     autoRemove: (val: any) =>
@@ -1659,8 +1663,8 @@ const filterFn_between = Object.assign(
 
 **Big-O (amended):** 2R array allocations per rebuild → 0; endpoint `Number()` parses inside the fn body 4/row → 2/row (full hoisting to once-per-rebuild folds into #94 / E4).
 
-**Risk (amended):** Very low; pure strength reduction. `['', undefined].includes(x)` ≡ `x === '' || x === undefined` under SameValueZero (no NaN/±0 in the constant set); NaN-propagation and reversed-range semantics preserved verbatim. The implementation preserves the old short-circuit behavior by keeping endpoint parsing after the lower-bound conjunct passes.
-**Verification:** CONFIRMED, demoted 7 → 6 (between fns are opt-in; numbers auto-resolve to `inNumberRange`).
+**Risk (amended):** Low; mostly pure strength reduction. `['', undefined].includes(x)` ≡ `x === '' || x === undefined` under SameValueZero (no NaN/±0 in the constant set), and the implementation preserves the old short-circuit behavior by keeping endpoint parsing after the lower-bound conjunct passes. The one intentional behavior fix is that blank lower endpoints no longer participate in reversed-range detection, so `['', negativeMax]` now enforces the max bound instead of treating `''` as `0` and bypassing the upper bound.
+**Verification:** CONFIRMED, demoted 7 → 6 (between fns are opt-in; numbers auto-resolve to `inNumberRange`). Follow-up PR review fix verified with blank-min + negative-max tests for both `between` and `betweenInclusive`.
 
 ---
 

@@ -101,15 +101,14 @@ function _createSortedRowModel<
         const aUndefined = aValue === undefined
         const bUndefined = bValue === undefined
 
+        if (aUndefined && bUndefined) {
+          continue
+        }
+
         if (aUndefined || bUndefined) {
           if (sortUndefined === 'first') return aUndefined ? -1 : 1
           if (sortUndefined === 'last') return aUndefined ? 1 : -1
-          sortInt =
-            aUndefined && bUndefined
-              ? 0
-              : aUndefined
-                ? sortUndefined
-                : -sortUndefined
+          sortInt = aUndefined ? sortUndefined : -sortUndefined
         }
       }
 

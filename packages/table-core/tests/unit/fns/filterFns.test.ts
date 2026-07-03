@@ -587,6 +587,13 @@ describe('Filter Functions', () => {
         expect(between(row as any, 'age', [29, ''])).toBe(true)
       })
 
+      it('enforces a negative max when the min endpoint is blank', () => {
+        const row = mockRows[0]!
+
+        expect(between(row as any, 'age', [undefined, -1])).toBe(false)
+        expect(between(row as any, 'age', ['', -1])).toBe(false)
+      })
+
       it('preserves reversed-range behavior after the lower bound passes', () => {
         const row = mockRows[0]!
 
@@ -614,6 +621,13 @@ describe('Filter Functions', () => {
         expect(betweenInclusive(row as any, 'age', ['', 30])).toBe(true)
         expect(betweenInclusive(row as any, 'age', [30, undefined])).toBe(true)
         expect(betweenInclusive(row as any, 'age', [30, ''])).toBe(true)
+      })
+
+      it('enforces a negative max when the min endpoint is blank', () => {
+        const row = mockRows[0]!
+
+        expect(betweenInclusive(row as any, 'age', [undefined, -1])).toBe(false)
+        expect(betweenInclusive(row as any, 'age', ['', -1])).toBe(false)
       })
 
       it('preserves reversed-range behavior after the lower bound passes', () => {
@@ -724,6 +738,15 @@ describe('Filter Functions', () => {
         const { row } = makeRow(['a', 'b'])
 
         expect(arrIncludes(row as any, 'value', ['x', 'y'])).toBe(false)
+      })
+
+      it('does not throw or match for nullish row values', () => {
+        expect(arrIncludes(makeRow(null).row as any, 'value', ['a'])).toBe(
+          false,
+        )
+        expect(arrIncludes(makeRow(undefined).row as any, 'value', ['a'])).toBe(
+          false,
+        )
       })
     })
 
