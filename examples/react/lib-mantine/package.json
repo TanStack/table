@@ -16,7 +16,7 @@
     "@mantine/core": "^9.4.0",
     "@mantine/hooks": "^9.4.0",
     "@tabler/icons-react": "^3.44.0",
-    "@tanstack/react-table": "^9.0.0-beta.30",
+    "@tanstack/react-table": "^9.0.0-beta.31",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
