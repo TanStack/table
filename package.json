@@ -43,6 +43,7 @@
   },
   "nx": {
     "includedScripts": [
+      "format",
       "test:docs",
       "test:knip",
       "test:sherif"

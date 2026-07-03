@@ -69,6 +69,10 @@ function _createFacetedRowModel<
   }
   if (globalFilter) filterableIds.push('__global__')
 
+  if (!filterableIds.length) {
+    return preRowModel
+  }
+
   const filterRowsImpl = (
     row: Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>,
   ) => {

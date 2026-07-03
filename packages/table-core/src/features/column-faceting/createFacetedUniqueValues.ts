@@ -51,14 +51,11 @@ function _createFacetedUniqueValues<
 
     for (let j = 0; j < values.length; j++) {
       const value = values[j]
-      if (facetedUniqueValues.has(value)) {
-        facetedUniqueValues.set(
-          value,
-          (facetedUniqueValues.get(value) ?? 0) + 1,
-        )
-      } else {
-        facetedUniqueValues.set(value, 1)
-      }
+      const previousValue = facetedUniqueValues.get(value)
+      facetedUniqueValues.set(
+        value,
+        previousValue === undefined ? 1 : previousValue + 1,
+      )
     }
   }
 
