@@ -7,9 +7,10 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 91
-- **Source findings:** 91
+- **Entries:** 90
+- **Source findings:** 90
 - **Cross-cutting sweeps:** 0
+- 2026-07-03: #102 (C9) completed and moved to perf-done.md.
 
 ## Score 8
 
@@ -1076,53 +1077,6 @@ const extendedCell = Object.assign(cell, boundCellComponents)
 
 **Risk:** None observable: same keys, same values, same assignment onto the instance. `FooterFlexRender` needs its own bound object. Scope note: only affects `createTableHook` App-component consumers.
 **Verification:** CONFIRMED (factory-scope stability of all three FlexRenders and component maps verified).
-
----
-
-## 102. C9: getFilteredSelectedRowModel / getGroupedSelectedRowModel read the CORE row model while memoDeps declare filtered/sorted models (bug) — Score: 6 (bug)
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:246–267, 280–301` + registrations `packages/table-core/src/features/row-selection/rowSelectionFeature.ts:118–131`
-**Category:** `bug`
-
-All three selected-row-model getters (`getSelectedRowModel`, `getFilteredSelectedRowModel`, `getGroupedSelectedRowModel`) call `selectRowsFn(table.getCoreRowModel(), ...)`, so they return IDENTICAL results: "filtered selected" includes selected rows that are filtered OUT, and "grouped selected" ignores grouping/sorting structure. Meanwhile the memos invalidate on models the fn never reads (spurious O(R) recomputes on filter change) while producing un-filtered output.
-
-**Proposed direction (owner decision required; behavior-changing):** `getFilteredSelectedRowModel` should read `table.getFilteredRowModel()`; the grouped variant's intended input is almost certainly `table.getSortedRowModel()` (matching its declared dep and v8 semantics), not `getGroupedRowModel()`. If the duplication is intentional, dedupe all three to the core-model memo instead. Report-only.
-
-**Before**
-
-```ts
-export function table_getFilteredSelectedRowModel<...>(table: ...) {
-  const rowModel = table.getCoreRowModel()
-  // ...
-  return selectRowsFn(rowModel, table)
-}
-```
-
-with registration:
-
-```ts
-table_getFilteredSelectedRowModel: {
-  fn: () => table_getFilteredSelectedRowModel(table),
-  memoDeps: () => [
-    table.atoms.rowSelection?.get(),
-    table.getFilteredRowModel(),
-  ],
-},
-table_getGroupedSelectedRowModel: {
-  fn: () => table_getGroupedSelectedRowModel(table),
-  memoDeps: () => [
-    table.atoms.rowSelection?.get(),
-    table.getSortedRowModel(),
-  ],
-},
-```
-
-**Big-O:** Perf side effect: three separate O(R) `selectRowsFn` walks per selection change where one shared result would do if the duplication were intentional.
-
-**Verification:** CONFIRMED-BUG, severity HIGH; the verifier pinned the grouped variant's likely intended input to `getSortedRowModel` and confirmed all three getters currently return identical output. Same failure-mode class as C16 (memoDeps not matching fn reads); a lint-style audit for deps/fn drift is worth considering.
 
 ---
 

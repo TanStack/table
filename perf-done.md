@@ -7,9 +7,10 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 48
-- **Source findings:** 46
+- **Entries:** 49
+- **Source findings:** 47
 - **Cross-cutting sweeps:** 2
+- 2026-07-03: #102 (C9) moved here from perf-todo.md after the row-model benchmark confirmed and the fix landed.
 
 ## Score 9
 
@@ -1429,6 +1430,52 @@ Lowercasing an already-lowercased string hits the V8 no-change fast path (no all
 ---
 
 ## Score 6
+
+## 102. C9: getFilteredSelectedRowModel / getGroupedSelectedRowModel read the CORE row model while memoDeps declare filtered/sorted models (bug) — Score: 6 (bug)
+
+**Status:** `[x]` done
+**Implementation note:** Fixed 2026-07-03 after the v8↔v9 row-model benchmark empirically confirmed the bug (`benchmark-examples/results/row-model-2026-07-03T15-30-46.270Z.json`): `selection:groupedSelected10Percent` returned an EMPTY row model at every row count (group-row ids like `group:group-0` do not exist in the core model — checksum DIFF vs v8), and `filteredSelected` was measurably slower at 20k (walking R core rows instead of R_filtered). Two-line fix in `rowSelectionFeature.utils.ts`: `table_getFilteredSelectedRowModel` now reads `table.getFilteredRowModel()` (:250) and `table_getGroupedSelectedRowModel` reads `table.getSortedRowModel()` (:284, v8 parity — the sorted model falls back grouped→filtered→core when those features are not registered, so the change is safe for all feature combinations). The registrations' memoDeps already declared the correct models, so no registration change was needed — this was a pure fn-body/deps drift. Regression coverage added in `tests/implementation/features/row-selection/rowSelectionFeature.test.ts` (filtered-selected excludes filtered-out rows; grouped-selected returns selected group rows; selected-leaf-under-unselected-group discriminates grouped vs core sourcing; fallback-chain variant without the sorting feature). The benchmark harness's `filteredSelected10Percent` scenario was also fixed to straddle the filter (`makeStraddledSelectionState`) — its previous selection was a subset of the filter and structurally could not detect this class of bug (verified: against published beta.29 the straddled scenario now flags checksum DIFF, 34 vs 68 output rows).
+
+**Location:** `packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:246–267, 280–301` + registrations `packages/table-core/src/features/row-selection/rowSelectionFeature.ts:118–131`
+**Category:** `bug`
+
+All three selected-row-model getters (`getSelectedRowModel`, `getFilteredSelectedRowModel`, `getGroupedSelectedRowModel`) call `selectRowsFn(table.getCoreRowModel(), ...)`, so they return IDENTICAL results: "filtered selected" includes selected rows that are filtered OUT, and "grouped selected" ignores grouping/sorting structure. Meanwhile the memos invalidate on models the fn never reads (spurious O(R) recomputes on filter change) while producing un-filtered output.
+
+**Before**
+
+```ts
+export function table_getFilteredSelectedRowModel<...>(table: ...) {
+  const rowModel = table.getCoreRowModel()
+  // ...
+  return selectRowsFn(rowModel, table)
+}
+```
+
+**After**
+
+```ts
+export function table_getFilteredSelectedRowModel<...>(table: ...) {
+  const rowModel = table.getFilteredRowModel()
+  // ...
+  return selectRowsFn(rowModel, table)
+}
+
+export function table_getGroupedSelectedRowModel<...>(table: ...) {
+  // The sorted model falls back grouped -> filtered -> core when those
+  // features are not registered, so selected group rows are always visible.
+  const rowModel = table.getSortedRowModel()
+  // ...
+  return selectRowsFn(rowModel, table)
+}
+```
+
+**Big-O:** Correctness fix; also removes the perf side effect of walking R core rows where R_filtered would do (measured −50% at 20k rows for the filtered variant pre-fix).
+
+**Risk:** Behavior change for anyone relying on the broken identical-output behavior; restores documented v8 semantics.
+
+**Verification:** CONFIRMED-BUG, severity HIGH; the verifier pinned the grouped variant's intended input to `getSortedRowModel` and confirmed all three getters returned identical output. Empirically confirmed by the 2026-07-03 benchmark before fixing. Same failure-mode class as C16 (memoDeps not matching fn reads); a lint-style audit for deps/fn drift is worth considering.
+
+---
 
 ## 9. `cell_getContext()` re-allocates the context object on every call — Score: 6
 

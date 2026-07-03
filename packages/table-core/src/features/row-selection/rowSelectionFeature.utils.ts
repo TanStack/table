@@ -247,7 +247,7 @@ export function table_getFilteredSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const rowModel = table.getCoreRowModel()
+  const rowModel = table.getFilteredRowModel()
 
   if (
     !callMemoOrStaticFn(
@@ -281,7 +281,9 @@ export function table_getGroupedSelectedRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const rowModel = table.getCoreRowModel()
+  // The sorted model falls back grouped -> filtered -> core when those
+  // features are not registered, so selected group rows are always visible.
+  const rowModel = table.getSortedRowModel()
 
   if (
     !callMemoOrStaticFn(
