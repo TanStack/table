@@ -6,26 +6,75 @@ import {
   FlexRenderCell,
   FlexRenderHeader,
   tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
   rowSortingFeature,
   rowPaginationFeature,
+  createFilteredRowModel,
   createSortedRowModel,
   createPaginatedRowModel,
+  filterFns,
   sortFns,
+  metaHelper,
   createColumnHelper,
   type Column,
   type Row,
   type Cell,
-  type SortingState,
-  type PaginationState,
+  type FilterFn,
+  type SortFn,
+  type TableFeatures,
 } from '#src/index.ts';
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils';
 import { makeData, type Person } from '../utils/make-data';
+import type { RankingInfo } from '@tanstack/match-sorter-utils';
+
+// --- Fuzzy filter/sort meta ---
+// The `filterMeta` slot on the feature set stores the `RankingInfo` produced by
+// `rankItem` so the fuzzy sort can compare rows by relevance.
+
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo;
+}
+
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta };
+
+// The fuzzy filter ranks the cell value against the search term and stores the
+// ranking on the row's filter meta (so the sort can reuse it). It tolerates
+// typos because `rankItem` does approximate matching.
+const fuzzyFilter: FilterFn<FuzzyFeatures, Person> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
+  const itemRank = rankItem(row.getValue(columnId), value as string);
+  addMeta?.({ itemRank });
+  return itemRank.passed;
+};
+
+// When a global filter is active, sort by the stored rank so the best matches
+// float to the top. Falls back to alphanumeric when ranks tie.
+const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
+  let dir = 0;
+  const rankA = rowA.columnFiltersMeta[columnId]?.itemRank;
+  const rankB = rowB.columnFiltersMeta[columnId]?.itemRank;
+  if (rankA && rankB) {
+    dir = compareItems(rankA, rankB);
+  }
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir;
+};
 
 const features = tableFeatures({
-  rowPaginationFeature,
+  columnFilteringFeature,
+  globalFilteringFeature,
   rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
+  rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  sortFns,
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
 });
 
 const columnHelper = createColumnHelper<typeof features, Person>();
@@ -34,26 +83,25 @@ const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
+    filterFn: 'fuzzy',
+    sortFn: 'fuzzy',
   }),
-  columnHelper.accessor('lastName', {
-    header: 'Last Name',
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    header: () => 'Last Name',
     cell: (info) => info.getValue(),
+    filterFn: 'fuzzy',
+    sortFn: 'fuzzy',
   }),
-  columnHelper.accessor('age', {
-    header: 'Age',
-  }),
-  columnHelper.accessor('visits', {
-    header: 'Visits',
-  }),
-  columnHelper.accessor('status', {
-    header: 'Status',
-  }),
-  columnHelper.accessor('progress', {
-    header: 'Profile Progress',
-  }),
+  columnHelper.accessor('age', { header: () => 'Age' }),
+  columnHelper.accessor('visits', { header: () => 'Visits' }),
+  columnHelper.accessor('status', { header: 'Status' }),
+  columnHelper.accessor('progress', { header: 'Profile Progress' }),
 ]);
 
 const PAGE_SIZES = [10, 20, 30, 40, 50];
+
+// --- Template helpers (v9 methods need explicit `this` binding) ---
 
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
   column.getCanSort();
@@ -71,27 +119,14 @@ const toggleSort = (column: Column<typeof features, Person>) => {
   };
 };
 
-export default class BasicExternalStateTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked sorting: SortingState = [];
-  @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 };
+export default class FiltersFuzzyTable extends Component {
+  @tracked data: Array<Person> = makeData(2_000);
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
-    state: {
-      sorting: this.sorting,
-      pagination: this.pagination,
-    },
-    onSortingChange: (updater) => {
-      this.sorting =
-        typeof updater === 'function' ? updater(this.sorting) : updater;
-    },
-    onPaginationChange: (updater) => {
-      this.pagination =
-        typeof updater === 'function' ? updater(this.pagination) : updater;
-    },
+    globalFilterFn: 'fuzzy',
   }));
 
   get headerGroups() {
@@ -104,6 +139,10 @@ export default class BasicExternalStateTable extends Component {
 
   get tableState() {
     return JSON.stringify(this.table.store.state, null, 2);
+  }
+
+  get globalFilterValue(): string {
+    return (this.table.store.state.globalFilter as string | undefined) ?? '';
   }
 
   get sortIndicators(): Record<string, string> {
@@ -131,15 +170,15 @@ export default class BasicExternalStateTable extends Component {
   }
 
   get currentPage() {
-    return (this.pagination.pageIndex + 1).toLocaleString();
+    return (this.table.store.state.pagination.pageIndex + 1).toLocaleString();
   }
 
   get pageCountDisplay() {
     return this.table.getPageCount().toLocaleString();
   }
 
-  get currentPageInputValue() {
-    return String(this.pagination.pageIndex + 1);
+  get pageSize() {
+    return this.table.store.state.pagination.pageSize;
   }
 
   get pageSizes() {
@@ -147,15 +186,16 @@ export default class BasicExternalStateTable extends Component {
   }
 
   regenerateData = () => {
-    this.data = makeData(1_000);
+    this.data = makeData(2_000);
   };
 
   stressTest = () => {
-    this.data = makeData(1_000_000);
+    this.data = makeData(50_000);
   };
 
-  goToFirstPage = () => {
-    this.table.setPageIndex(0);
+  handleGlobalFilter = (event: Event) => {
+    const target = event.currentTarget as HTMLInputElement;
+    this.table.setGlobalFilter(target.value);
   };
 
   goToPreviousPage = () => {
@@ -166,16 +206,6 @@ export default class BasicExternalStateTable extends Component {
     this.table.nextPage();
   };
 
-  goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
-
-  handleGoToPage = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const page = target.value ? Number(target.value) - 1 : 0;
-    this.table.setPageIndex(page);
-  };
-
   handlePageSizeChange = (event: Event) => {
     const target = event.currentTarget as HTMLSelectElement;
     this.table.setPageSize(Number(target.value));
@@ -184,13 +214,17 @@ export default class BasicExternalStateTable extends Component {
   <template>
     <div class="demo-root">
       <div>
-        <button {{on "click" this.regenerateData}}>
-          Regenerate Data
-        </button>
-        <button {{on "click" this.stressTest}}>
-          Stress Test (1M rows)
-        </button>
+        <button {{on "click" this.regenerateData}}>Regenerate Data</button>
+        <button {{on "click" this.stressTest}}>Stress Test (50k rows)</button>
       </div>
+      <div class="spacer-sm"></div>
+      <input
+        type="text"
+        value={{this.globalFilterValue}}
+        placeholder="Fuzzy search all columns (typos ok)..."
+        {{on "input" this.handleGlobalFilter}}
+      />
+      <div class="spacer-sm"></div>
       <table>
         <thead>
           {{#each this.headerGroups as |headerGroup|}}
@@ -202,7 +236,9 @@ export default class BasicExternalStateTable extends Component {
                       class="{{if (getCanSort header.column) 'sortable-header'}}"
                       {{on "click" (toggleSort header.column)}}
                     >
-                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
+                      <FlexRenderHeader
+                        @header={{header}}
+                      />{{lookup this.sortIndicators header.column.id}}
                     </div>
                   {{/unless}}
                 </th>
@@ -225,13 +261,6 @@ export default class BasicExternalStateTable extends Component {
         <button
           class="demo-button demo-button-sm"
           disabled={{not this.canPreviousPage}}
-          {{on "click" this.goToFirstPage}}
-        >
-          &lt;&lt;
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          disabled={{not this.canPreviousPage}}
           {{on "click" this.goToPreviousPage}}
         >
           &lt;
@@ -243,36 +272,15 @@ export default class BasicExternalStateTable extends Component {
         >
           &gt;
         </button>
-        <button
-          class="demo-button demo-button-sm"
-          disabled={{not this.canNextPage}}
-          {{on "click" this.goToLastPage}}
-        >
-          &gt;&gt;
-        </button>
         <span class="inline-controls">
           <div>Page</div>
-          <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
-          </strong>
+          <strong>{{this.currentPage}} of {{this.pageCountDisplay}}</strong>
         </span>
-        <span class="inline-controls">
-          | Go to page:
-          <input
-            type="number"
-            min="1"
-            max={{this.pageCount}}
-            value={{this.currentPageInputValue}}
-            class="page-size-input"
-            {{on "input" this.handleGoToPage}}
-          />
-        </span>
-        <select
-          {{on "change" this.handlePageSizeChange}}
-        >
-          {{#each this.pageSizes as |pageSize|}}
-            <option value={{pageSize}} selected={{eq pageSize this.pagination.pageSize}}>
-              Show {{pageSize}}
+        <select {{on "change" this.handlePageSizeChange}}>
+          {{#each this.pageSizes as |size|}}
+            <option value={{size}} selected={{eq size this.pageSize}}>
+              Show
+              {{size}}
             </option>
           {{/each}}
         </select>

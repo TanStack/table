@@ -6,26 +6,23 @@ import {
   FlexRenderCell,
   FlexRenderHeader,
   tableFeatures,
-  rowSortingFeature,
+  rowExpandingFeature,
   rowPaginationFeature,
-  createSortedRowModel,
+  rowSelectionFeature,
+  createExpandedRowModel,
   createPaginatedRowModel,
-  sortFns,
   createColumnHelper,
-  type Column,
   type Row,
   type Cell,
-  type SortingState,
-  type PaginationState,
 } from '#src/index.ts';
 import { makeData, type Person } from '../utils/make-data';
 
 const features = tableFeatures({
+  rowExpandingFeature,
   rowPaginationFeature,
-  rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
+  rowSelectionFeature,
+  expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  sortFns,
 });
 
 const columnHelper = createColumnHelper<typeof features, Person>();
@@ -35,15 +32,16 @@ const columns = columnHelper.columns([
     header: 'First Name',
     cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('lastName', {
-    header: 'Last Name',
+  columnHelper.accessor((row) => row.lastName, {
+    id: 'lastName',
+    header: () => 'Last Name',
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('age', {
-    header: 'Age',
+    header: () => 'Age',
   }),
   columnHelper.accessor('visits', {
-    header: 'Visits',
+    header: () => 'Visits',
   }),
   columnHelper.accessor('status', {
     header: 'Status',
@@ -55,43 +53,41 @@ const columns = columnHelper.columns([
 
 const PAGE_SIZES = [10, 20, 30, 40, 50];
 
-const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort();
-const getAllCells = (
+// --- Template helpers (v9 methods need explicit `this` binding) ---
+
+const getVisibleCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getAllCells();
-const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
+const getCanExpand = (row: Row<typeof features, Person>): boolean =>
+  row.getCanExpand();
+const getIsExpanded = (row: Row<typeof features, Person>): boolean =>
+  row.getIsExpanded();
+const getDepth = (row: Row<typeof features, Person>): number => row.depth;
+const getIsSelected = (row: Row<typeof features, Person>): boolean =>
+  row.getIsSelected();
+const getIsSomeSelected = (row: Row<typeof features, Person>): boolean =>
+  row.getIsSomeSelected();
+
+const toggleExpanded = (row: Row<typeof features, Person>) => () =>
+  row.toggleExpanded();
+const toggleSelected = (row: Row<typeof features, Person>) => (event: Event) =>
+  row.getToggleSelectedHandler()(event);
+
+const depthPadding = (row: Row<typeof features, Person>): string =>
+  `padding-left: ${getDepth(row) * 2}rem`;
+
 const not = (value: unknown): boolean => !value;
 const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
 
-const toggleSort = (column: Column<typeof features, Person>) => {
-  return (event: Event) => {
-    column.getToggleSortingHandler()?.(event);
-  };
-};
-
-export default class BasicExternalStateTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked sorting: SortingState = [];
-  @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 };
+export default class ExpandingTable extends Component {
+  @tracked data: Array<Person> = makeData(10, 5, 3);
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
-    state: {
-      sorting: this.sorting,
-      pagination: this.pagination,
-    },
-    onSortingChange: (updater) => {
-      this.sorting =
-        typeof updater === 'function' ? updater(this.sorting) : updater;
-    },
-    onPaginationChange: (updater) => {
-      this.pagination =
-        typeof updater === 'function' ? updater(this.pagination) : updater;
-    },
+    getSubRows: (row: Person) => row.subRows,
+    getRowCanExpand: () => true,
   }));
 
   get headerGroups() {
@@ -102,20 +98,8 @@ export default class BasicExternalStateTable extends Component {
     return this.table.getRowModel().rows;
   }
 
-  get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
-  }
-
-  get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
-    for (const hg of this.table.getHeaderGroups()) {
-      for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
-        indicators[h.column.id] =
-          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : '';
-      }
-    }
-    return indicators;
+  get isAllRowsExpanded() {
+    return this.table.getIsAllRowsExpanded();
   }
 
   get canPreviousPage() {
@@ -126,8 +110,8 @@ export default class BasicExternalStateTable extends Component {
     return this.table.getCanNextPage();
   }
 
-  get pageCount() {
-    return this.table.getPageCount();
+  get pagination() {
+    return this.table.store.state.pagination;
   }
 
   get currentPage() {
@@ -138,20 +122,20 @@ export default class BasicExternalStateTable extends Component {
     return this.table.getPageCount().toLocaleString();
   }
 
-  get currentPageInputValue() {
-    return String(this.pagination.pageIndex + 1);
-  }
-
   get pageSizes() {
     return PAGE_SIZES;
   }
 
+  get tableState() {
+    return JSON.stringify(this.table.store.state, null, 2);
+  }
+
   regenerateData = () => {
-    this.data = makeData(1_000);
+    this.data = makeData(10, 5, 3);
   };
 
-  stressTest = () => {
-    this.data = makeData(1_000_000);
+  toggleAllExpanded = (event: Event) => {
+    this.table.getToggleAllRowsExpandedHandler()(event);
   };
 
   goToFirstPage = () => {
@@ -170,12 +154,6 @@ export default class BasicExternalStateTable extends Component {
     this.table.setPageIndex(this.table.getPageCount() - 1);
   };
 
-  handleGoToPage = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const page = target.value ? Number(target.value) - 1 : 0;
-    this.table.setPageIndex(page);
-  };
-
   handlePageSizeChange = (event: Event) => {
     const target = event.currentTarget as HTMLSelectElement;
     this.table.setPageSize(Number(target.value));
@@ -184,13 +162,12 @@ export default class BasicExternalStateTable extends Component {
   <template>
     <div class="demo-root">
       <div>
-        <button {{on "click" this.regenerateData}}>
-          Regenerate Data
-        </button>
-        <button {{on "click" this.stressTest}}>
-          Stress Test (1M rows)
+        <button {{on "click" this.regenerateData}}>Regenerate Data</button>
+        <button {{on "click" this.toggleAllExpanded}}>
+          {{if this.isAllRowsExpanded "Collapse All" "Expand All"}}
         </button>
       </div>
+      <div class="spacer-sm"></div>
       <table>
         <thead>
           {{#each this.headerGroups as |headerGroup|}}
@@ -198,12 +175,7 @@ export default class BasicExternalStateTable extends Component {
               {{#each headerGroup.headers as |header|}}
                 <th colspan={{header.colSpan}}>
                   {{#unless header.isPlaceholder}}
-                    <div
-                      class="{{if (getCanSort header.column) 'sortable-header'}}"
-                      {{on "click" (toggleSort header.column)}}
-                    >
-                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
-                    </div>
+                    <FlexRenderHeader @header={{header}} />
                   {{/unless}}
                 </th>
               {{/each}}
@@ -213,8 +185,29 @@ export default class BasicExternalStateTable extends Component {
         <tbody>
           {{#each this.rows as |row|}}
             <tr>
-              {{#each (getAllCells row) as |cell|}}
-                <td><FlexRenderCell @cell={{cell}} /></td>
+              {{#each (getVisibleCells row) as |cell index|}}
+                <td>
+                  {{#if (eq index 0)}}
+                    <div style={{depthPadding row}}>
+                      <input
+                        type="checkbox"
+                        checked={{getIsSelected row}}
+                        indeterminate={{getIsSomeSelected row}}
+                        {{on "change" (toggleSelected row)}}
+                      />
+                      {{#if (getCanExpand row)}}
+                        <button {{on "click" (toggleExpanded row)}}>
+                          {{if (getIsExpanded row) "👇" "👉"}}
+                        </button>
+                      {{else}}
+                        <span>🔵</span>
+                      {{/if}}
+                      <FlexRenderCell @cell={{cell}} />
+                    </div>
+                  {{else}}
+                    <FlexRenderCell @cell={{cell}} />
+                  {{/if}}
+                </td>
               {{/each}}
             </tr>
           {{/each}}
@@ -252,26 +245,14 @@ export default class BasicExternalStateTable extends Component {
         </button>
         <span class="inline-controls">
           <div>Page</div>
-          <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
-          </strong>
+          <strong>{{this.currentPage}} of {{this.pageCountDisplay}}</strong>
         </span>
-        <span class="inline-controls">
-          | Go to page:
-          <input
-            type="number"
-            min="1"
-            max={{this.pageCount}}
-            value={{this.currentPageInputValue}}
-            class="page-size-input"
-            {{on "input" this.handleGoToPage}}
-          />
-        </span>
-        <select
-          {{on "change" this.handlePageSizeChange}}
-        >
+        <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |pageSize|}}
-            <option value={{pageSize}} selected={{eq pageSize this.pagination.pageSize}}>
+            <option
+              value={{pageSize}}
+              selected={{eq pageSize this.pagination.pageSize}}
+            >
               Show {{pageSize}}
             </option>
           {{/each}}

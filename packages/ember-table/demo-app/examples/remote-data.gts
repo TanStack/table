@@ -6,26 +6,81 @@ import {
   FlexRenderCell,
   FlexRenderHeader,
   tableFeatures,
-  rowSortingFeature,
   rowPaginationFeature,
-  createSortedRowModel,
-  createPaginatedRowModel,
-  sortFns,
+  rowSortingFeature,
   createColumnHelper,
   type Column,
   type Row,
   type Cell,
-  type SortingState,
   type PaginationState,
+  type SortingState,
 } from '#src/index.ts';
 import { makeData, type Person } from '../utils/make-data';
+import type Owner from '@ember/owner';
+
+// --- Dep-free simulated async "server" -------------------------------------
+// A fixed in-memory dataset stands in for a remote backend. `fetchData`
+// resolves after a small delay with a manually sorted + sliced page, mirroring
+// what a paginated/sorted API endpoint would return.
+
+const fakeServer: Array<Person> = makeData(1_000);
+
+interface FetchParams {
+  pageIndex: number;
+  pageSize: number;
+  sorting: SortingState;
+}
+
+interface FetchResult {
+  rows: Array<Person>;
+  pageCount: number;
+  total: number;
+}
+
+function compareValues(a: unknown, b: unknown): number {
+  if (typeof a === 'number' && typeof b === 'number') {
+    return a - b;
+  }
+  return String(a).localeCompare(String(b));
+}
+
+function fetchData({
+  pageIndex,
+  pageSize,
+  sorting,
+}: FetchParams): Promise<FetchResult> {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      const rows = [...fakeServer];
+
+      if (sorting.length) {
+        const [sort] = sorting;
+        if (sort) {
+          const key = sort.id as keyof Person;
+          rows.sort((a, b) => {
+            const result = compareValues(a[key], b[key]);
+            return sort.desc ? -result : result;
+          });
+        }
+      }
+
+      const start = pageIndex * pageSize;
+      const paged = rows.slice(start, start + pageSize);
+
+      resolve({
+        rows: paged,
+        pageCount: Math.ceil(fakeServer.length / pageSize),
+        total: fakeServer.length,
+      });
+    }, 500);
+  });
+}
+
+// --- Table setup -----------------------------------------------------------
 
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
-  paginatedRowModel: createPaginatedRowModel(),
-  sortFns,
 });
 
 const columnHelper = createColumnHelper<typeof features, Person>();
@@ -40,10 +95,10 @@ const columns = columnHelper.columns([
     cell: (info) => info.getValue(),
   }),
   columnHelper.accessor('age', {
-    header: 'Age',
+    header: () => 'Age',
   }),
   columnHelper.accessor('visits', {
-    header: 'Visits',
+    header: () => 'Visits',
   }),
   columnHelper.accessor('status', {
     header: 'Status',
@@ -54,6 +109,8 @@ const columns = columnHelper.columns([
 ]);
 
 const PAGE_SIZES = [10, 20, 30, 40, 50];
+
+// --- Template helpers (v9 methods need explicit `this`) ---
 
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
   column.getCanSort();
@@ -71,15 +128,27 @@ const toggleSort = (column: Column<typeof features, Person>) => {
   };
 };
 
-export default class BasicExternalStateTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked sorting: SortingState = [];
+export default class RemoteDataTable extends Component {
+  @tracked data: Array<Person> = [];
+  @tracked isLoading = false;
+  @tracked rowCount = 0;
+  @tracked pageCountValue = 0;
+  @tracked sorting: SortingState = [{ id: 'age', desc: false }];
   @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 };
+
+  constructor(owner: Owner, args: object) {
+    super(owner, args);
+    void this.load();
+  }
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
+    manualPagination: true,
+    manualSorting: true,
+    rowCount: this.rowCount,
+    pageCount: this.pageCountValue,
     state: {
       sorting: this.sorting,
       pagination: this.pagination,
@@ -87,12 +156,29 @@ export default class BasicExternalStateTable extends Component {
     onSortingChange: (updater) => {
       this.sorting =
         typeof updater === 'function' ? updater(this.sorting) : updater;
+      // reset to the first page on a sort change, then refetch
+      this.pagination = { ...this.pagination, pageIndex: 0 };
+      void this.load();
     },
     onPaginationChange: (updater) => {
       this.pagination =
         typeof updater === 'function' ? updater(this.pagination) : updater;
+      void this.load();
     },
   }));
+
+  load = async () => {
+    this.isLoading = true;
+    const result = await fetchData({
+      pageIndex: this.pagination.pageIndex,
+      pageSize: this.pagination.pageSize,
+      sorting: this.sorting,
+    });
+    this.data = result.rows;
+    this.rowCount = result.total;
+    this.pageCountValue = result.pageCount;
+    this.isLoading = false;
+  };
 
   get headerGroups() {
     return this.table.getHeaderGroups();
@@ -100,10 +186,6 @@ export default class BasicExternalStateTable extends Component {
 
   get rows() {
     return this.table.getRowModel().rows;
-  }
-
-  get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
   }
 
   get sortIndicators(): Record<string, string> {
@@ -146,14 +228,6 @@ export default class BasicExternalStateTable extends Component {
     return PAGE_SIZES;
   }
 
-  regenerateData = () => {
-    this.data = makeData(1_000);
-  };
-
-  stressTest = () => {
-    this.data = makeData(1_000_000);
-  };
-
   goToFirstPage = () => {
     this.table.setPageIndex(0);
   };
@@ -183,43 +257,40 @@ export default class BasicExternalStateTable extends Component {
 
   <template>
     <div class="demo-root">
-      <div>
-        <button {{on "click" this.regenerateData}}>
-          Regenerate Data
-        </button>
-        <button {{on "click" this.stressTest}}>
-          Stress Test (1M rows)
-        </button>
+      <div class="scroll-container">
+        <table>
+          <thead>
+            {{#each this.headerGroups as |headerGroup|}}
+              <tr>
+                {{#each headerGroup.headers as |header|}}
+                  <th colspan={{header.colSpan}}>
+                    {{#unless header.isPlaceholder}}
+                      <div
+                        class="{{if (getCanSort header.column) 'sortable-header'}}"
+                        {{on "click" (toggleSort header.column)}}
+                      >
+                        <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
+                      </div>
+                    {{/unless}}
+                  </th>
+                {{/each}}
+              </tr>
+            {{/each}}
+          </thead>
+          <tbody>
+            {{#each this.rows as |row|}}
+              <tr>
+                {{#each (getAllCells row) as |cell|}}
+                  <td><FlexRenderCell @cell={{cell}} /></td>
+                {{/each}}
+              </tr>
+            {{/each}}
+          </tbody>
+        </table>
       </div>
-      <table>
-        <thead>
-          {{#each this.headerGroups as |headerGroup|}}
-            <tr>
-              {{#each headerGroup.headers as |header|}}
-                <th colspan={{header.colSpan}}>
-                  {{#unless header.isPlaceholder}}
-                    <div
-                      class="{{if (getCanSort header.column) 'sortable-header'}}"
-                      {{on "click" (toggleSort header.column)}}
-                    >
-                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
-                    </div>
-                  {{/unless}}
-                </th>
-              {{/each}}
-            </tr>
-          {{/each}}
-        </thead>
-        <tbody>
-          {{#each this.rows as |row|}}
-            <tr>
-              {{#each (getAllCells row) as |cell|}}
-                <td><FlexRenderCell @cell={{cell}} /></td>
-              {{/each}}
-            </tr>
-          {{/each}}
-        </tbody>
-      </table>
+      {{#if this.isLoading}}
+        <div>Loading...</div>
+      {{/if}}
       <div class="spacer-sm"></div>
       <div class="controls">
         <button
@@ -267,18 +338,14 @@ export default class BasicExternalStateTable extends Component {
             {{on "input" this.handleGoToPage}}
           />
         </span>
-        <select
-          {{on "change" this.handlePageSizeChange}}
-        >
-          {{#each this.pageSizes as |pageSize|}}
-            <option value={{pageSize}} selected={{eq pageSize this.pagination.pageSize}}>
-              Show {{pageSize}}
+        <select {{on "change" this.handlePageSizeChange}}>
+          {{#each this.pageSizes as |size|}}
+            <option value={{size}} selected={{eq size this.pagination.pageSize}}>
+              Show {{size}}
             </option>
           {{/each}}
         </select>
       </div>
-      <div class="spacer-md"></div>
-      <pre>{{this.tableState}}</pre>
     </div>
   </template>
 }

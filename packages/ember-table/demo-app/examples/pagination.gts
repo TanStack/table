@@ -5,93 +5,90 @@ import {
   useTable,
   FlexRenderCell,
   FlexRenderHeader,
+  FlexRenderFooter,
   tableFeatures,
-  rowSortingFeature,
   rowPaginationFeature,
-  createSortedRowModel,
   createPaginatedRowModel,
-  sortFns,
   createColumnHelper,
-  type Column,
   type Row,
   type Cell,
-  type SortingState,
-  type PaginationState,
 } from '#src/index.ts';
 import { makeData, type Person } from '../utils/make-data';
 
 const features = tableFeatures({
   rowPaginationFeature,
-  rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  sortFns,
 });
 
 const columnHelper = createColumnHelper<typeof features, Person>();
 
 const columns = columnHelper.columns([
-  columnHelper.accessor('firstName', {
-    header: 'First Name',
-    cell: (info) => info.getValue(),
+  columnHelper.group({
+    id: 'name',
+    header: 'Name',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        cell: (info) => info.getValue(),
+        header: () => 'Last Name',
+        footer: (props) => props.column.id,
+      }),
+    ]),
   }),
-  columnHelper.accessor('lastName', {
-    header: 'Last Name',
-    cell: (info) => info.getValue(),
-  }),
-  columnHelper.accessor('age', {
-    header: 'Age',
-  }),
-  columnHelper.accessor('visits', {
-    header: 'Visits',
-  }),
-  columnHelper.accessor('status', {
-    header: 'Status',
-  }),
-  columnHelper.accessor('progress', {
-    header: 'Profile Progress',
+  columnHelper.group({
+    id: 'info',
+    header: 'Info',
+    footer: (props) => props.column.id,
+    columns: columnHelper.columns([
+      columnHelper.accessor('age', {
+        header: () => 'Age',
+        footer: (props) => props.column.id,
+      }),
+      columnHelper.group({
+        id: 'moreInfo',
+        header: 'More Info',
+        columns: columnHelper.columns([
+          columnHelper.accessor('visits', {
+            header: () => 'Visits',
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('status', {
+            header: 'Status',
+            footer: (props) => props.column.id,
+          }),
+          columnHelper.accessor('progress', {
+            header: 'Profile Progress',
+            footer: (props) => props.column.id,
+          }),
+        ]),
+      }),
+    ]),
   }),
 ]);
 
 const PAGE_SIZES = [10, 20, 30, 40, 50];
 
-const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort();
+// TanStack Table v9 uses prototype-based methods that require `this` binding.
+// Ember templates extract function references without binding, so we provide
+// helpers that call methods on the correct object.
 const getAllCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getAllCells();
-const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
 const not = (value: unknown): boolean => !value;
 const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
 
-const toggleSort = (column: Column<typeof features, Person>) => {
-  return (event: Event) => {
-    column.getToggleSortingHandler()?.(event);
-  };
-};
-
-export default class BasicExternalStateTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked sorting: SortingState = [];
-  @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 };
+export default class PaginationTable extends Component {
+  @tracked data: Array<Person> = makeData(100_000);
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
-    state: {
-      sorting: this.sorting,
-      pagination: this.pagination,
-    },
-    onSortingChange: (updater) => {
-      this.sorting =
-        typeof updater === 'function' ? updater(this.sorting) : updater;
-    },
-    onPaginationChange: (updater) => {
-      this.pagination =
-        typeof updater === 'function' ? updater(this.pagination) : updater;
-    },
   }));
 
   get headerGroups() {
@@ -102,20 +99,16 @@ export default class BasicExternalStateTable extends Component {
     return this.table.getRowModel().rows;
   }
 
-  get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+  get footerGroups() {
+    return this.table.getFooterGroups();
   }
 
-  get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
-    for (const hg of this.table.getHeaderGroups()) {
-      for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
-        indicators[h.column.id] =
-          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : '';
-      }
-    }
-    return indicators;
+  get pagination() {
+    return this.table.store.state.pagination;
+  }
+
+  get tableState() {
+    return JSON.stringify(this.pagination, null, 2);
   }
 
   get canPreviousPage() {
@@ -142,12 +135,16 @@ export default class BasicExternalStateTable extends Component {
     return String(this.pagination.pageIndex + 1);
   }
 
+  get pageSize() {
+    return this.pagination.pageSize;
+  }
+
   get pageSizes() {
     return PAGE_SIZES;
   }
 
-  regenerateData = () => {
-    this.data = makeData(1_000);
+  refreshData = () => {
+    this.data = makeData(100_000);
   };
 
   stressTest = () => {
@@ -184,13 +181,14 @@ export default class BasicExternalStateTable extends Component {
   <template>
     <div class="demo-root">
       <div>
-        <button {{on "click" this.regenerateData}}>
+        <button class="demo-button" {{on "click" this.refreshData}}>
           Regenerate Data
         </button>
-        <button {{on "click" this.stressTest}}>
+        <button class="demo-button" {{on "click" this.stressTest}}>
           Stress Test (1M rows)
         </button>
       </div>
+      <div class="spacer-md"></div>
       <table>
         <thead>
           {{#each this.headerGroups as |headerGroup|}}
@@ -198,12 +196,7 @@ export default class BasicExternalStateTable extends Component {
               {{#each headerGroup.headers as |header|}}
                 <th colspan={{header.colSpan}}>
                   {{#unless header.isPlaceholder}}
-                    <div
-                      class="{{if (getCanSort header.column) 'sortable-header'}}"
-                      {{on "click" (toggleSort header.column)}}
-                    >
-                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
-                    </div>
+                    <FlexRenderHeader @header={{header}} />
                   {{/unless}}
                 </th>
               {{/each}}
@@ -219,6 +212,19 @@ export default class BasicExternalStateTable extends Component {
             </tr>
           {{/each}}
         </tbody>
+        <tfoot>
+          {{#each this.footerGroups as |footerGroup|}}
+            <tr>
+              {{#each footerGroup.headers as |header|}}
+                <th colspan={{header.colSpan}}>
+                  {{#unless header.isPlaceholder}}
+                    <FlexRenderFooter @footer={{header}} />
+                  {{/unless}}
+                </th>
+              {{/each}}
+            </tr>
+          {{/each}}
+        </tfoot>
       </table>
       <div class="spacer-sm"></div>
       <div class="controls">
@@ -267,11 +273,9 @@ export default class BasicExternalStateTable extends Component {
             {{on "input" this.handleGoToPage}}
           />
         </span>
-        <select
-          {{on "change" this.handlePageSizeChange}}
-        >
+        <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |pageSize|}}
-            <option value={{pageSize}} selected={{eq pageSize this.pagination.pageSize}}>
+            <option value={{pageSize}} selected={{eq pageSize this.pageSize}}>
               Show {{pageSize}}
             </option>
           {{/each}}

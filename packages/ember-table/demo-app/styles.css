@@ -1,3 +1,6 @@
+body {
+  margin: 0
+}
 /**
 * See: https://vite.dev/guide/features.html#css
 *      for features beyond normal CSS that are available to you.
@@ -5,11 +8,17 @@
 * This CSS is meant for the demo-app only, and will not be included in the published assets for this library.
 */
 
+.examples {
+  padding: 0 1rem 1rem;
+}
+
 .example-tabs {
+  width: 100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
   display: flex;
   gap: 0.25rem;
   border-bottom: 2px solid #ddd;
-  margin-bottom: 1rem;
 }
 
 .example-tab {

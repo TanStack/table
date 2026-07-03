@@ -2731,7 +2731,7 @@ importers:
         version: 38.0.0(stylelint@16.26.1(typescript@5.9.3))
       testem:
         specifier: ^3.20.0
-        version: 3.20.1(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
+        version: 3.20.1(@babel/core@7.29.7)(debug@4.4.3)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
       typescript:
         specifier: ^5.9.3
         version: 5.9.3
@@ -10236,6 +10236,9 @@ importers:
       '@eslint/js':
         specifier: ^9.17.0
         version: 9.39.4
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
       '@glimmer/component':
         specifier: ^2.0.0
         version: 2.1.1
@@ -10251,6 +10254,9 @@ importers:
       '@rollup/plugin-babel':
         specifier: ^6.0.4
         version: 6.1.0(@babel/core@7.29.7)(@types/babel__core@7.20.5)(rollup@4.61.1)
+      '@tanstack/match-sorter-utils':
+        specifier: workspace:*
+        version: link:../match-sorter-utils
       '@types/qunit':
         specifier: ^2.19.12
         version: 2.19.14
@@ -10313,7 +10319,7 @@ importers:
         version: 4.61.1
       testem:
         specifier: ^3.15.1
-        version: 3.20.1(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
+        version: 3.20.1(@babel/core@7.29.7)(debug@4.4.3)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -33883,7 +33889,7 @@ snapshots:
       silent-error: 1.1.1
       sort-package-json: 3.7.1
       symlink-or-copy: 1.3.1
-      testem: 3.20.1(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
+      testem: 3.20.1(@babel/core@7.29.7)(debug@4.4.3)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
       tiny-lr: 2.0.0
       tree-sync: 2.1.0
       walk-sync: 4.0.2
@@ -39394,7 +39400,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  testem@3.20.1(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8):
+  testem@3.20.1(@babel/core@7.29.7)(debug@4.4.3)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8):
     dependencies:
       '@xmldom/xmldom': 0.9.10
       backbone: 1.6.1

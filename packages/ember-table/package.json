@@ -62,6 +62,8 @@
   "devDependencies": {
     "@babel/core": "^7.25.2",
     "@babel/eslint-parser": "^7.25.1",
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/match-sorter-utils": "workspace:*",
     "@babel/plugin-transform-typescript": "^7.25.2",
     "@babel/runtime": "^7.25.6",
     "@ember/app-tsconfig": "^1.0.0",
