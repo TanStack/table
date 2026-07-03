@@ -1,16 +1,33 @@
 # `@tanstack/table-core` — Performance Refactor Catalog: Skipped
 
 Generated from `perf.md`. The original `perf.md` is intentionally preserved.
+2026-07-01: merged with the fresh audit in `perf.md` (findings A1–F18 and verification new-risks mapped to entries 62–147; legacy entries 1–61 retained).
 
 Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 5
-- **Source findings:** 5
+- **Entries:** 9
+- **Source findings:** 9
 - **Cross-cutting sweeps:** 0
 
 ## Score 1
+
+## 145. F7: Lit self-perpetuating update loop — Score: 8
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 1  
+**Original score:** 8 (as filed)  
+**Score note:** REFUTED during adversarial verification; the residual per-render wasted notify scores 1-2 and is covered by open findings #97/#98/#99 (F5/F6/F8).
+**Implementation note:** REFUTED during adversarial verification. The claim (`table()` in `render()` → `setOptions` → optionsStore notifies → `host.requestUpdate()` → another render, forever) is impossible because `@tanstack/store` atoms notify SYNCHRONOUSLY inside `set()`, so the subscription's `requestUpdate` fires during `table()`, i.e. inside the host's `render()`; `LitElement.update()` calls `render()` before `super.update()` clears `isUpdatePending`, and `ReactiveElement.requestUpdate()` early-outs while `isUpdatePending` is true, so the notification is swallowed and nothing is rescheduled. No loop; idle tables do not spin. Residual truth (score 2): every host render pays one wasted notify (effect run + `_notifier++` + no-op requestUpdate) plus the F6 descriptor merge; largely fixed by F5/F6/F8 (#97/#98/#99), and a cheap `_syncing` guard remains reasonable hygiene.
+
+**Location:** `packages/lit-table/src/TableController.ts`
+**Category:** `render-path`
+
+F7 claimed Lit's `TableController` enters a self-perpetuating render loop: `table()` called inside `render()` triggers `setOptions`, which notifies the options store, which calls `host.requestUpdate()`, triggering another render, forever. This is refuted: store notifications fire synchronously inside `render()`, and `ReactiveElement.requestUpdate()` early-outs while `isUpdatePending` is still true, so the notification is swallowed and no loop is scheduled — idle tables do not spin. The residual cost, one wasted notify per host render plus the F6 descriptor merge, is tracked as a much smaller finding and is largely addressed by the open F5/F6/F8 items (#97/#98/#99); a cheap `_syncing` guard remains reasonable hygiene on top of those fixes.
+
+---
 
 ## 30. `existingGrouping.includes(colId)` per cell value access — Score: 7
 
@@ -114,8 +131,6 @@ const nonGroupingColumns = leafColumns.filter((col) => !groupingSet.has(col.id))
 
 ---
 
-# Feature — column-pinning
-
 ## 24. `column_getFilterValue` / `column_getFilterIndex` linear `.find` — Score: 6
 
 **Status:** `[-]` skipped
@@ -209,7 +224,32 @@ return allCells.filter((d) => !leftAndRight.has(d.column.id))
 
 ---
 
-# Feature — column-resizing
+## 51. `column_getIsSorted` / `column_getSortIndex` `.find` per call — Score: 4
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 1  
+**Original score:** 4  
+**Score note:** Tiny sorting state array makes the memo/map refactor unjustified in real usage.
+**Implementation note:** Per project guidance, `sorting` state typically holds 1–3 entries; `.find`/`.findIndex` over an array that size is a couple of reference comparisons and beats memo or hash overhead. The 2026-07-01 fresh audit independently re-reviewed these getters in its doctrine screen-outs and confirmed them clean ("all tiny-array `.find`/`.includes` getters ... were reviewed and deliberately left alone"). See [[skip-policy-small-state-arrays]] and the precedent entries #24/#30/#34/#36.
+
+**Location:** `src/features/row-sorting/rowSortingFeature.utils.ts:388–418`
+**Category:** `memoization`
+
+Both walk the `sorting` array; called for every visible sortable column on every render. Memoize per column with deps `[sorting, column.id]`, or add `table.getSortingById()`.
+
+**Scale impact** (`.find`/`.findIndex` compares per render — dimension: visible sortable cols × active sorts × renders):
+
+| Cols (C) | Active sorts (S) | Renders (R) | Before (≈ C × S/2 × R, × 2 fns) | After (memoized: ~0) | Saved      |
+| -------- | ---------------- | ----------- | ------------------------------- | -------------------- | ---------- |
+| 10       | 1                | 10          | 100                             | 0                    | 100        |
+| 50       | 3                | 100         | 15,000                          | 0                    | 15,000     |
+| 100      | 5                | 1,000       | 500,000                         | 0                    | 500,000    |
+| 500      | 10               | 10,000      | 50,000,000                      | 0                    | 50,000,000 |
+
+**Risk:** None.
+
+---
 
 ## Score 0
 
@@ -276,5 +316,37 @@ prototype[fnKey] = function (this: any, ...args: Array<any>) {
 | 1,000,000   | 1,000,000 | 0     | 1,000,000 |
 
 **Risk:** Low. `this` inside a regular function is identical to `self`.
+
+---
+
+## 146. F17: Svelte readonly-atom double read is load-bearing — Score: 0
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** n/a (rejected during verification, before scoring)  
+**Score note:** The double read is deliberate and load-bearing for pre-flush synchronous reads; recommend a source comment instead of a change.
+**Implementation note:** From the Rejected section near-verbatim: the `get()` that reads `storeAtom.get()` directly AND touches the `$derived` is deliberate: the version-bump subscription is established inside `$effect`, which does not run until the effect tree first flushes, and `$derived.by` cannot track the TanStack-store graph (only the `version` rune). Reading only the derived would serve a stale cached snapshot for any synchronous read after a write pre-flush, exactly the construct-time/sync-API window core relies on. Keep as-is; add a code comment explaining why the double read exists.
+
+**Location:** `packages/svelte-table/src/reactivity.svelte.ts`
+**Category:** `render-path`
+
+F17 flagged the double read in `get()`, reading `storeAtom.get()` directly as well as touching the `$derived` value, as redundant. Verification found it load-bearing: the version-bump subscription that keeps `$derived` fresh is only established once `$effect` first flushes, so before that point (or synchronously after a write, pre-flush) the derived value would return a stale cached snapshot. The direct `storeAtom.get()` read is what guarantees correct synchronous reads in that window. No code change; a comment explaining the rationale was recommended instead.
+
+---
+
+## 147. D2: table.store snapshot atom suspected of per-write rebuilds — verified properly cached — Score: 0
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** n/a (non-finding)  
+**Score note:** Investigated and verified properly cached by @tanstack/store; recorded so nobody re-flags it.
+**Implementation note:** Investigated during the 2026-07-01 audit and verified clean against `@tanstack/store@0.11` internals: the `table.store` snapshot atom recomputes only when a state slice actually changes (dirty-dep gating), not on every write. Non-finding; documented here so future audits do not re-flag it.
+
+**Location:** `packages/table-core/src/core/table/constructTable.ts` (store snapshot atom)
+**Category:** `memoization`
+
+D2 hypothesized that `table.store`'s snapshot atom rebuilds on every state write regardless of which slice changed. The 2026-07-01 audit's verified-clean pass checked this against `@tanstack/store@0.11` internals and found the atom uses dirty-dependency gating: it only recomputes when a state slice it actually reads has changed, matching the rest of the memo machinery's doctrine. No fix needed; recorded as a non-finding so it is not re-flagged in a future audit pass.
 
 ---

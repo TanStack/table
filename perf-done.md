@@ -1,13 +1,14 @@
 # `@tanstack/table-core` — Performance Refactor Catalog: Done
 
 Generated from `perf.md`. The original `perf.md` is intentionally preserved.
+2026-07-01: merged with the fresh audit in `perf.md` (findings A1–F18 and verification new-risks mapped to entries 62–147; legacy entries 1–61 retained).
 
 Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 26
-- **Source findings:** 24
+- **Entries:** 33
+- **Source findings:** 31
 - **Cross-cutting sweeps:** 2
 
 ## Score 8
@@ -129,8 +130,6 @@ export function passiveEventSupported() {
 
 ---
 
-# Feature — column-sizing
-
 ## 38. `table_getTotalSize` and the L/C/R variants are not memoized — Score: 8
 
 **Status:** `[x]` done
@@ -199,8 +198,6 @@ Virtualizers calling `getTotalSize()` per scroll tick amplify this dramatically.
 **Risk:** None. Deps fully capture inputs.
 
 ---
-
-# Feature — column-visibility
 
 ## 42. `row_getIsAllParentsExpanded` checks the wrong row (bug) — Score: 8 (bug)
 
@@ -296,6 +293,276 @@ return sortFn_basic
 ```
 
 **Risk:** Behavior changes for tables relying on the broken default — string columns containing digits now natural-sort (the documented v8 behavior) instead of lexicographic `text` sort.
+
+---
+
+## 63. A1: Table-level column offsets record replaces per-column getStart/getAfter memos — Score: 8
+
+**Status:** `[x]` done
+**Implementation note:** Shipped in PR #6367 (47fc97d2f), landed together with the A2 deps fix (#67) exactly as the audit required. `table_getColumnOffsets` is registered as a table-level memo in columnSizingFeature.ts (registration at :97+), with the `ColumnOffsetsByPosition` type added in columnSizingFeature.types.ts; the per-column `getStart`/`getAfter` memos were removed and re-registered as plain prototype fns doing O(1) record lookups. Maintainer note: no felt difference at example scales once the rAF coalescing in the resize handler landed (see #66); kept for the single-slot thrash-cliff removal, the 2N-resident-closure memory reduction, and the `getColumnOffsets` primitive itself.
+
+**Location:** `packages/table-core/src/features/column-sizing/columnSizingFeature.ts:54–75` and `packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts:100–168`
+**Category:** `memoization`, `big-o`
+
+Per tick (onChange resize mode, 60-120Hz) and per render pass. Absolute/sticky layouts call `cell.column.getStart(...)` per visible cell (R_vis × N per render; e.g. `examples/react/column-resizing/src/main.tsx:319` per cell, `examples/react/column-pinning-sticky/src/main.tsx:47-48` calls `getStart('left')`/`getAfter('right')` per cell). The deps tuple contains the ENTIRE `columnSizing` object, whose identity changes on every onChange tick (`Object.assign(makeObjectMap(), old, newColumnSizing)` in `updateOffset`). So resizing ONE column invalidates ALL N columns' `getStart` AND `getAfter` memos every tick. Each recompute walks the recursive chain (`prev.getStart + prev.getSize`) via `callMemoOrStaticFn`; recursion depth is up to N for the far column, and every recursion frame re-evaluates a 6-element memoDeps array plus 5 atom reads. Per tick at N=500 that is ~1000 memo recomputes and ~3000+ transient dep-array allocations, plus 2N permanently resident `tableMemo` closures (`_memo_getStart`, `_memo_getAfter`) per table. There is also a single-slot thrash hazard: a column whose `getStart` is called with two different positions in one render (e.g. `getStart('left')` for sticky style and `getStart()` for a virtualizer) recomputes on every call because `position` lives in the one deps slot.
+
+**Before**
+
+(registration, columnSizingFeature.ts:54-75):
+
+```ts
+      column_getStart: {
+        fn: (column, position) => column_getStart(column, position),
+        memoDeps: (column, position) => [
+          position,
+          table.options.columns,
+          table.atoms.columnSizing?.get(),
+          table.atoms.columnOrder?.get(),
+          table.atoms.columnPinning?.get(),
+          table.atoms.columnVisibility?.get(),
+        ],
+      },
+      column_getAfter: {
+        fn: (column, position) => column_getAfter(column, position),
+        memoDeps: (column, position) => [
+          position,
+          table.options.columns,
+          table.atoms.columnSizing?.get(),
+          table.atoms.columnOrder?.get(),
+          table.atoms.columnPinning?.get(),
+          table.atoms.columnVisibility?.get(),
+        ],
+      },
+```
+
+and the recursive static fns (columnSizingFeature.utils.ts:100-128; getAfter analogous at 141-168):
+
+```ts
+const index = callMemoOrStaticFn(column, 'getIndex', column_getIndex, position)
+if (index <= 0) return 0
+
+const visibleLeafColumns = callMemoOrStaticFn(
+  column.table,
+  'getPinnedVisibleLeafColumns',
+  table_getPinnedVisibleLeafColumns,
+  position,
+)
+
+const prevColumn = visibleLeafColumns[index - 1]!
+return (
+  callMemoOrStaticFn(prevColumn, 'getStart', column_getStart, position) +
+  callMemoOrStaticFn(prevColumn, 'getSize', column_getSize)
+)
+```
+
+**After**
+
+(one table-level memoized offsets API, O(1) per-column lookups, per-column memos removed). In `columnSizingFeature.utils.ts`:
+
+```ts
+export interface ColumnOffsets {
+  starts: Record<string, number>
+  afters: Record<string, number>
+}
+
+export interface ColumnOffsetsByPosition {
+  all: ColumnOffsets
+  center: ColumnOffsets
+  left: ColumnOffsets
+  right: ColumnOffsets
+}
+
+function buildColumnOffsets<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(columns: Array<Column_Internal<TFeatures, TData, unknown>>): ColumnOffsets {
+  const starts = makeObjectMap<number>()
+  const afters = makeObjectMap<number>()
+  const sizes = new Array<number>(columns.length)
+
+  let start = 0
+  for (let i = 0; i < columns.length; i++) {
+    const column = columns[i]!
+    const size = callMemoOrStaticFn(column, 'getSize', column_getSize)
+    sizes[i] = size
+    starts[column.id] = start
+    start += size
+  }
+
+  let after = 0
+  for (let i = columns.length - 1; i >= 0; i--) {
+    afters[columns[i]!.id] = after
+    after += sizes[i]!
+  }
+
+  return { starts, afters }
+}
+
+export function table_getColumnOffsets<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): ColumnOffsetsByPosition {
+  return {
+    all: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table) as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+    center: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'center') as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+    left: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'left') as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+    right: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'right') as Array<
+        Column_Internal<TFeatures, TData, unknown>
+      >,
+    ),
+  }
+}
+
+function toOffsetsKey(
+  position: ColumnPinningPosition | 'center' | undefined,
+): keyof ColumnOffsetsByPosition {
+  return position === 'left'
+    ? 'left'
+    : position === 'right'
+      ? 'right'
+      : position === 'center'
+        ? 'center'
+        : 'all' // undefined | false -> full visible list
+}
+
+export function column_getStart<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+  position: ColumnPinningPosition | 'center',
+): number {
+  const offsets = callMemoOrStaticFn(
+    column.table,
+    'getColumnOffsets',
+    table_getColumnOffsets,
+  )
+  return offsets[toOffsetsKey(position)].starts[column.id] ?? 0
+}
+
+export function column_getAfter<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+  position: ColumnPinningPosition | 'center',
+): number {
+  const offsets = callMemoOrStaticFn(
+    column.table,
+    'getColumnOffsets',
+    table_getColumnOffsets,
+  )
+  return offsets[toOffsetsKey(position)].afters[column.id] ?? 0
+}
+```
+
+Registration changes in `columnSizingFeature.ts`:
+
+```ts
+  constructTableAPIs: (table) => {
+    assignTableAPIs('columnSizingFeature', table, {
+      // ...existing APIs...
+      table_getColumnOffsets: {
+        fn: () => table_getColumnOffsets(table),
+        memoDeps: () => [
+          table.options.columns,
+          table.atoms.columnSizing?.get(),
+          table.atoms.columnOrder?.get(),
+          table.atoms.columnPinning?.get(),
+          table.atoms.columnVisibility?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
+        ],
+      },
+    })
+  },
+
+  assignColumnPrototype: (prototype, table) => {
+    assignPrototypeAPIs('columnSizingFeature', prototype, table, {
+      column_getSize: { /* unchanged */ },
+      // O(1) lookups now: register as plain non-memoized prototype fns,
+      // removing 2N per-instance _memo_ closures (dead weight)
+      column_getStart: {
+        fn: (column, position) => column_getStart(column, position),
+      },
+      column_getAfter: {
+        fn: (column, position) => column_getAfter(column, position),
+      },
+      column_resetSize: { /* unchanged */ },
+    })
+  },
+```
+
+Deps coverage (everything `table_getColumnOffsets` reads transitively): `table_getPinnedVisibleLeafColumns` → the L/C/R/all visible-leaf chains → `getAllColumns()` (reads `options.columns`), `orderColumns` (reads `columnOrder`, `grouping`, `groupedColumnMode`), pinning left/right arrays (`columnPinning`), `column_getIsVisible` (`columnVisibility`); `column_getSize` reads `columnDef` (covered by `options.columns`) and `columnSizing[column.id]` (covered by `columnSizing`). Tuple is statically non-empty and the fn always returns an object (never nullish, as `callMemoOrStaticFn`'s `??` fallback requires). No positional arg in the memo (all four position keys computed in one recompute), so render passes interleaving left/center/right cannot thrash it. Missing-column semantics preserved: `?? 0` reproduces the current `index <= 0` / `index < 0` / last-column returns exactly (verified for all five possible `position` values).
+
+**Big-O:** The recompute path collapses from 2N chained memo recomputes (each with a 6-slot dep-array alloc + 5 atom reads + nested `getIndex`/dispatcher memo evals; ~1000 recomputes and ~3000+ array allocations per tick at N=500) to ONE recompute doing 4 classic-loop passes with 8 record allocations total. The single-slot position thrash disappears, and 2N resident `tableMemo` closures per table are removed (N=500: 1000 closures). Note the cache-hit cost is roughly unchanged: each plain `getStart` call still consults the table memo, which evaluates a 7-slot deps array + atom reads per call, comparable to today's per-column cache-hit cost. The wins are the recompute-path collapse, thrash elimination, and closure-memory reduction. Recompute is now O(N) on ANY sizing/order/pinning/visibility/grouping change even if only one region's offsets are consumed (acceptable: that is exactly when offsets change).
+
+**Risk:** Medium-low. Public return shapes unchanged. **A1 MUST land together with A2's dependency fix**: `table_getColumnOffsets` reads through `callMemoOrStaticFn(table, 'getVisibleLeafColumns', ...)` whose memo currently omits `grouping`/`groupedColumnMode` (A2), so A1 alone would rebuild offsets from a stale column list and must not be advertised as a grouping-staleness fix on its own. Keep this offsets memo separate from A4's index memo (`columnSizing` must not invalidate indexes).
+**Verification:** AMENDED: design confirmed sound; cache-hit metric corrected (roughly unchanged per call); the grouping-staleness fix is delivered only in combination with A2, on which this finding now explicitly depends.
+
+---
+
+## 67. A2: grouping/groupedColumnMode omitted from sizing/pinning/visibility memoDeps: header/cell column misalignment after setGrouping (bug) — Score: 8 (bug)
+
+**Status:** `[x]` done
+**Implementation note:** Fixed in PR #6367 (47fc97d2f). `grouping` + `groupedColumnMode` added to the memoDeps tuples in columnPinningFeature.ts (6 registrations), columnVisibilityFeature.ts (`table_getVisibleLeafColumns` / `table_getVisibleFlatColumns`), and columnOrderingFeature.ts (`column_getIndex`, closing the `groupedColumnMode` gap). `header_getStart`'s vestigial `position` dep slot was also dropped (the half of A8 that belonged to this fix; A8's remaining closure-to-stack scope lives in todo #114). Two regression tests added in columnSizingFeature.utils.test.ts, verified to fail against the pre-fix deps.
+
+**Location:**
+- `packages/table-core/src/features/column-sizing/columnSizingFeature.ts:56–63, 67–74, 95–102` (`column_getStart`, `column_getAfter`, `header_getStart` deps)
+- `packages/table-core/src/features/column-pinning/columnPinningFeature.ts:254–277` (`table_get{Left,Right,Center}LeafColumns` deps) and `:283–309` (`table_get{Left,Center,Right}VisibleLeafColumns` deps)
+- `packages/table-core/src/features/column-visibility/columnVisibilityFeature.ts:94–101` (`table_getVisibleLeafColumns` deps) and `:86–101` (`table_getVisibleFlatColumns`, same gap; added during verification)
+
+**Category:** `bug`, `memoization`
+
+Per grouping state-change on any table with `columnGroupingFeature` enabled (default `groupedColumnMode: 'reorder'`, verified at columnGroupingFeature.ts:47). This is a default-configuration hazard. Leaf-column ORDER depends on grouping: `table_getAllLeafColumns` → `table_getOrderColumnsFn` → `orderColumns` reorders/removes grouped columns, and core registers `table_getAllLeafColumns` with `grouping` + `groupedColumnMode` in deps, as does core `table_getHeaderGroups`. But the derived memos above omit both: when `grouping` changes, `getAllLeafColumns` recomputes (new array), yet `table_getVisibleLeafColumns`, `table_getVisibleFlatColumns`, the pinning-region leaf-column memos, and the `column_getStart`/`getAfter`/`header_getStart` memos compare only unchanged inputs and return STALE cached arrays.
+
+**Verified repro (verifier upgrade; worse than originally filed):** `setGrouping(['b'])` under the default `groupedColumnMode: 'reorder'` → `getAllLeafColumns` reorders → `getVisibleLeafColumns` returns the stale array → core `table.getHeaderGroups()` RECOMPUTES (its own deps do include grouping) but its static fn reads the stale `getVisibleLeafColumns` memo, so headers do NOT reorder, while `row.getAllCells()` (deps `[table.getAllLeafColumns()]`) evaluates fresh and cells DO reorder. Result: headers and cells disagree on column order after `setGrouping` on a default-config path. Meanwhile `column_getIndex` (whose deps do include grouping) can disagree with `getStart` in the same render.
+
+**Before**
+
+(columnPinningFeature.ts:292-300, representative):
+
+```ts
+      table_getCenterVisibleLeafColumns: {
+        fn: () => table_getCenterVisibleLeafColumns(table),
+        memoDeps: () => [
+          table.options.columns,
+          table.atoms.columnPinning?.get(),
+          table.atoms.columnVisibility?.get(),
+          table.atoms.columnOrder?.get(),
+        ],
+      },
+```
+
+**Fix:** (add `table.atoms.grouping?.get()` and `table.options.groupedColumnMode` to each tuple):
+
+- `table_getVisibleLeafColumns` and `table_getVisibleFlatColumns` (columnVisibilityFeature.ts:86-101)
+- `table_get{Left,Right,Center}LeafColumns` and `table_get{Left,Center,Right}VisibleLeafColumns` (columnPinningFeature.ts:254-309)
+- `column_getStart`, `column_getAfter`, `header_getStart` (columnSizingFeature.ts:56-102); the `header_getStart` grouping slot absorbs A8's part (c)
+- While there: `column_getIndex` deps include grouping but omit `groupedColumnMode`; add it (also covered if A4 lands)
+
+**Big-O:** Correctness fix, not a performance metric. `getVisibleLeafColumns`, `getVisibleFlatColumns`, the pinning-region leaf-column memos, `getStart`/`getAfter`/`header_getStart`, and `column_getIndex`'s `groupedColumnMode` slot all return stale cached values after `setGrouping` under the default `groupedColumnMode: 'reorder'`, producing header/cell column-order divergence on every affected render until an unrelated dependency happens to invalidate the memo.
+
+**Risk:** Low. Tables without the grouping feature get stably `undefined` for both new slots (never triggers recompute); the fix strictly aligns recompute triggers with actual data dependencies.
+
+**Dependencies:** **A1 and C3 depend on this fix landing first.** A1's offsets memo and C3's render-path routing both read through `getVisibleLeafColumns`-family memos and would inherit the staleness if shipped alone.
+
+**Verification:** CONFIRMED, severity upgraded to HIGH: the verifier derived the concrete header/cell misalignment repro and extended the affected set to core `table_getHeaderGroups` (transitively) and `table_getVisibleFlatColumns`.
 
 ---
 
@@ -632,8 +899,6 @@ memoDeps: () => [table.getHeaderGroups()]
 
 ---
 
-# Core — rows
-
 ## 47. Table-level selection getters not memoized + per-row atom re-reads — Score: 7
 
 **Status:** `[x]` done
@@ -760,7 +1025,211 @@ const firstRows = column.table.getFilteredRowModel().flatRows.slice(0, 10)
 
 ---
 
+## 66. A3: updateOffset: batch the per-tick double atom write; skip the commit-sizing loop in onEnd mode — Score: 7
+
+**Status:** `[x]` done
+**Implementation note:** Shipped in PR #6367 (47fc97d2f). updateOffset's two writes are wrapped in `table._reactivity.batch` (1 notification flush per tick instead of 2); the `newColumnSizing` commit loop is skipped on onEnd-mode move ticks and the `forEach` became an indexed loop; the drag-end commit+reset sequence is batched (3 flushes → 1). Tests assert the flush counts. Related non-audit work in the same PR, worth recording here: requestAnimationFrame coalescing was added to `header_getResizeHandler` (leading-edge call plus trailing flush per frame) — this was the biggest felt win of the whole resize effort — and lit-table's TableController plus the alpine adapter got selector-based shallow gating of host updates.
+
+**Location:** `packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts:128–171` (plus `onEnd` at 175–187)
+**Category:** `render-path`, `big-o` (short-circuit), `allocation`
+
+Per tick: every pointermove during a drag at 60-120Hz. Three distinct per-tick problems. (a) Missing short-circuit: in the default `columnResizeMode: 'onEnd'`, the `columnSizingStart.forEach` loop computes `newColumnSizing` on EVERY move tick, but the values are only read at commit ('end' or onChange) and are overwritten next tick; for a group-header drag `columnSizingStart` holds an entry per subtree header (up to N), so up to N wasted multiply/round ops per tick. (b) Unbatched writes: in onChange mode, `table_setColumnResizing` and `table_setColumnSizing` fire two separate atom writes per tick → two subscriber notification flushes → potentially two render passes per tick. `table._reactivity.batch` is available and precedented in core (`coreTablesFeature.utils.ts:27, 58`), and grep confirms no `batch` usage exists anywhere under `table-core/src/features/`. The `onEnd` handler is worse: `updateOffset('end', ...)` (2 writes) plus a third `table_setColumnResizing` reset, three unbatched flushes at drag end. (c) Allocations: per tick, one `forEach` callback closure + one destructuring array per entry + one `{...old}` spread. Cross-adapter evidence (from F12's quantification): each of the 2 unbatched writes per tick notifies every `table.store` subscriber; with S row-level `Subscribe` components the per-tick cost is 2 × S × (selector + shallow compare) even though nothing they select changed. Batching this double write is the single highest-leverage fix on the whole tick path.
+
+**Before**
+
+```ts
+const updateOffset = (eventType: 'move' | 'end', clientXPos?: number) => {
+  if (typeof clientXPos !== 'number') {
+    return
+  }
+
+  table_setColumnResizing(column.table, (old) => {
+    const deltaDirection =
+      column.table.options.columnResizeDirection === 'rtl' ? -1 : 1
+    const deltaOffset = (clientXPos - (old.startOffset ?? 0)) * deltaDirection
+    const startSize = old.startSize ?? 0
+    const deltaPercentage = Math.max(
+      startSize > 0 ? deltaOffset / startSize : 0,
+      -0.999999,
+    )
+
+    old.columnSizingStart.forEach(([columnId, headerSize]) => {
+      newColumnSizing[columnId] =
+        Math.round(
+          Math.max(
+            headerSize > 0
+              ? headerSize + headerSize * deltaPercentage
+              : deltaOffset / old.columnSizingStart.length,
+            0,
+          ) * 100,
+        ) / 100
+    })
+
+    return {
+      ...old,
+      deltaOffset,
+      deltaPercentage,
+    }
+  })
+
+  if (
+    column.table.options.columnResizeMode === 'onChange' ||
+    eventType === 'end'
+  ) {
+    table_setColumnSizing(column.table, (old) =>
+      Object.assign(makeObjectMap<number>(), old, newColumnSizing),
+    )
+  }
+}
+```
+
+**After**
+
+```ts
+const updateOffset = (eventType: 'move' | 'end', clientXPos?: number) => {
+  if (typeof clientXPos !== 'number') {
+    return
+  }
+
+  const table = column.table
+  const isCommit =
+    table.options.columnResizeMode === 'onChange' || eventType === 'end'
+
+  table._reactivity.batch(() => {
+    table_setColumnResizing(table, (old) => {
+      const deltaDirection =
+        table.options.columnResizeDirection === 'rtl' ? -1 : 1
+      const deltaOffset = (clientXPos - (old.startOffset ?? 0)) * deltaDirection
+      const startSize = old.startSize ?? 0
+      const deltaPercentage = Math.max(
+        startSize > 0 ? deltaOffset / startSize : 0,
+        -0.999999,
+      )
+
+      if (isCommit) {
+        const columnSizingStart = old.columnSizingStart
+        for (let i = 0; i < columnSizingStart.length; i++) {
+          const entry = columnSizingStart[i]!
+          const headerSize = entry[1]
+          newColumnSizing[entry[0]] =
+            Math.round(
+              Math.max(
+                headerSize > 0
+                  ? headerSize + headerSize * deltaPercentage
+                  : deltaOffset / columnSizingStart.length,
+                0,
+              ) * 100,
+            ) / 100
+        }
+      }
+
+      return {
+        ...old,
+        deltaOffset,
+        deltaPercentage,
+      }
+    })
+
+    if (isCommit) {
+      table_setColumnSizing(table, (old) =>
+        Object.assign(makeObjectMap<number>(), old, newColumnSizing),
+      )
+    }
+  })
+}
+```
+
+And wrap the drag-end sequence (lines 175-187) in one batch so the 'end' commit + reset flush once:
+
+```ts
+const onEnd = (clientXPos?: number) => {
+  column.table._reactivity.batch(() => {
+    updateOffset('end', clientXPos)
+
+    table_setColumnResizing(column.table, (old) => ({
+      ...old,
+      isResizingColumn: false,
+      startOffset: null,
+      startSize: null,
+      deltaOffset: null,
+      deltaPercentage: null,
+      columnSizingStart: [],
+    }))
+  })
+}
+```
+
+**Big-O:** onChange mode: 2 notification flushes/tick → 1. Scope note (verifier): React 18 already coalesces the two synchronous flushes into one render, so in React/Preact the saving is two subscriber-notification walks → one; the flush-halving of full render passes applies to the store-driven adapters (solid, svelte, vue, lit, angular, alpine, vanilla). onEnd mode (default): eliminates up to |columnSizingStart| float ops + one closure + per-entry destructuring array per tick; drag end 3 flushes → 1. The `Object.assign` O(|sizing|) copy per commit tick remains (required for immutable state identity).
+
+**Risk:** Low-medium. `@tanstack/store@0.11` batch verified nest-safe (batchDepth counter); values apply synchronously inside the batch (functional updaters read fresh state), only notifications coalesce. Behavior change only if a subscriber depended on observing the intermediate `columnResizing` flush before `columnSizing` within one tick. The onEnd-mode skip is unobservable ('end' recomputes all values from absolute positions, not accumulation).
+**Verification:** CONFIRMED, with the React-18-coalescing scope amendment and F12's core double-write quantification merged in as cross-adapter evidence.
+
+---
+
 ## Score 6
+
+## 9. `cell_getContext()` re-allocates the context object on every call — Score: 6
+
+**Status:** `[x]` done
+**Implementation note:** Verified resolved in current source by the 2026-07-01 fresh audit: `cell_getContext` is now registered with `memoDeps: (cell) => [cell]` in coreCellsFeature.ts, so the context object is built exactly once per cell instance and the per-render cost is a single-element deps compare.
+
+**Location:** `src/core/cells/coreCellsFeature.utils.ts:51–65`
+**Category:** `micro`, `memoization`
+
+Every render that reads `cell.getContext()` (which every framework adapter does for every visible cell) builds a fresh 6-property object. Cells are long-lived; the context is functionally immutable. Cache it on the cell instance.
+
+**Before**
+
+```ts
+export function cell_getContext<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(cell: Cell<TFeatures, TData, TValue>) {
+  return {
+    table: cell.table,
+    column: cell.column,
+    row: cell.row,
+    cell: cell,
+    // Wrap in arrow functions to preserve `this` binding (methods are on prototype)
+    getValue: () => cell.getValue(),
+    renderValue: () => cell.renderValue(),
+  }
+}
+```
+
+**After**
+
+```ts
+export function cell_getContext(cell) {
+  if (!cell._contextCache) {
+    cell._contextCache = {
+      table: cell.table,
+      column: cell.column,
+      row: cell.row,
+      cell,
+      getValue: () => cell.getValue(),
+      renderValue: () => cell.renderValue(),
+    }
+  }
+  return cell._contextCache
+}
+```
+
+**Big-O:** Eliminates one object + two arrow-function allocations per visible cell per access. For a 1000-row × 20-col table that's 20k saved allocations per render.
+
+**Scale impact** (allocations saved per render — 1 object + 2 closures per visible cell read):
+
+| Rows × cols (visible cells) | Allocations before / render | After (post-warmup) | Saved / render |
+| --------------------------- | --------------------------- | ------------------- | -------------- |
+| 10 × 10 = 100               | 300                         | 0                   | 300            |
+| 100 × 20 = 2,000            | 6,000                       | 0                   | 6,000          |
+| 1,000 × 50 = 50,000         | 150,000                     | 0                   | 150,000        |
+| 10,000 × 100 = 1,000,000    | 3,000,000                   | 0                   | 3,000,000      |
+
+**Risk:** Add `_contextCache?` to the internal Cell type. Safe because cell properties are not mutated post-construction.
+
+---
 
 ## 52. `compareAlphanumeric` allocates 2 arrays per comparison — Score: 6
 
@@ -867,6 +1336,81 @@ return remaining
 
 ---
 
+## 83. F9: Alpine reactive proxy allocates a fresh closure for every method access (per-target fn cache) — Score: 6
+
+**Status:** `[x]` done
+**Implementation note:** Shipped in PR #6367 (47fc97d2f). Implementation differs slightly from the proposal: wrapper closures are cached per (target, prop) via a `wrapperCache` WeakMap in packages/alpine-table/src/createTable.ts (the audit proposed a per-target `Map` keyed by the resolved function; the per-target-keyed-by-prop WeakMap variant has the same stable-identity effect and the same no-cross-instance-binding guarantee). Additionally, `createTable(options, selector?)` gained a selector argument that shallow-gates the `_ver` bump so non-selected state writes no longer invalidate templates. Unit tests in alpine-table/tests/unit/selectorGate.test.ts.
+
+**Location:** `packages/alpine-table/src/createTable.ts:93–147` (specifically 127–136)
+**Category:** `allocation`
+
+Every property read of the returned table (and, recursively, of every object it returns) in Alpine templates: `table.getRowModel` → `rows` → `row.getAllCells` → `cell.getContext`... per row × column × re-render (`_ver` bump per state write, ×2 per resize tick). `proxyCache` (WeakMap) dedupes OBJECT proxies, but the function wrapper is rebuilt on every single `get` of a method: `row.getValue` accessed once per cell per render allocates a new rest-args closure each time. At R_vis×N = 50k cells with ~3 method reads per cell, ~150k closure allocations per template re-evaluation, per `_ver` bump (2 per resize tick). Rest-args + `Function.apply` is also deopt-prone versus a cached wrapper.
+
+**Before**
+
+```ts
+const proxy = new Proxy(value, {
+  get(target, prop, receiver) {
+    if (prop === '__v_skip') {
+      return true
+    }
+
+    const resolvedValue = Reflect.get(target, prop, receiver)
+
+    if (typeof resolvedValue === 'function') {
+      return (...args: Array<unknown>) => {
+        void reactivity._ver
+        return toReactiveProxy((resolvedValue as Function).apply(target, args))
+      }
+    }
+
+    void reactivity._ver
+    return toReactiveProxy(resolvedValue)
+  },
+})
+```
+
+**After**
+
+(verifier-corrected design: the cache MUST be per-target, not a global WeakMap. In v9, `assignPrototypeAPIs` puts SHARED functions on row/cell/column prototypes, so a global `WeakMap<Function, Function>` keyed on function identity would bind ALL rows to the first row's `target` (the wrapper closes over `target` for `.apply(target, args)`). Create one fn cache per target alongside each proxy in `toReactiveProxy` (targets are already WeakMap-keyed)):
+
+```ts
+// created once per target, next to the proxyCache entry:
+const fnCache = new Map<Function, Function>()
+
+const proxy = new Proxy(value, {
+  get(target, prop, receiver) {
+    if (prop === '__v_skip') return true
+
+    const resolvedValue = Reflect.get(target, prop, receiver)
+
+    if (typeof resolvedValue === 'function') {
+      let wrapped = fnCache.get(resolvedValue)
+      if (!wrapped) {
+        wrapped = function (this: unknown, ...args: Array<unknown>) {
+          void reactivity._ver
+          return toReactiveProxy(
+            (resolvedValue as Function).apply(target, args),
+          )
+        }
+        fnCache.set(resolvedValue, wrapped)
+      }
+      return wrapped
+    }
+
+    void reactivity._ver
+    return toReactiveProxy(resolvedValue)
+  },
+})
+```
+
+**Big-O:** Method-access allocations per render: O(cells × methods) → O(distinct methods per target) amortized ~0 after warm-up (worst case ~150k closures/render → ~0).
+
+**Risk:** Function identity across reads changes from "always new" to "stable per target", strictly better for Alpine equality checks. The per-target cache's lifetime is tied to the proxy entry, so no cross-instance binding is possible.
+**Verification:** AMENDED: the finder's "methods are per-instance closures" assumption is wrong for v9 prototype-shared APIs; the global-WeakMap design was replaced with a per-target fn cache.
+
+---
+
 ## Cross-cutting sweep: `for...of` → indexed `for`
 
 **Status:** `[x]` done
@@ -963,6 +1507,28 @@ for (let i = 0; i < columns.length; i++) {
 (The win here is constant in tree height, not size — the per-recursion filtered array is the entry that gets eliminated.)
 
 **Risk:** None.
+
+---
+
+## 15. `header_getContext()` re-allocates per call — Score: 5
+
+**Status:** `[x]` done
+**Implementation note:** Verified resolved in current source by the 2026-07-01 fresh audit: the header context registration now carries `memoDeps: [options.columns]` (coreHeadersFeature.ts:22–25), so the context is cached per header until the column defs change.
+
+**Location:** `src/core/headers/coreHeadersFeature.utils.ts:59–69`
+**Category:** `micro`, `memoization`
+
+Mirror of finding #9 for headers.
+
+**Scale impact** (object allocations saved per render — dimension: visible headers × renders that read `header.getContext()`):
+
+| Headers × renders | Before (objs) | After (post-warmup) | Saved   |
+| ----------------- | ------------- | ------------------- | ------- |
+| 10 × 100          | 1,000         | 10                  | 990     |
+| 50 × 1,000        | 50,000        | 50                  | 49,950  |
+| 100 × 10,000      | 1,000,000     | 100                 | 999,900 |
+
+**Risk:** Add `_contextCache?` to internal Header type.
 
 ---
 
@@ -1127,9 +1693,50 @@ if (newSubRows !== row.subRows) row = { ...row, subRows: newSubRows }
 
 ---
 
-# Feature — row-sorting
+## Score 3
 
-## Score 2
+## 18. `table_getRow` always calls `getCoreRowModel()` — Score: 3
+
+**Status:** `[x]` done
+**Implementation note:** Verified resolved in current source by the 2026-07-01 fresh audit: `table_getRow` now does an O(1) `rowsById[rowId]` lookup on getRowModel/getPrePaginatedRowModel and falls back to the core row model only on a miss (coreRowsFeature.utils.ts:241–264).
+
+**Location:** `src/core/rows/coreRowsFeature.utils.ts:228–251`
+**Category:** `micro`
+
+When the row exists in the primary row model (common case), skip the fallback fetch.
+
+**Before**
+
+```ts
+let row = (searchAll ? table.getPrePaginatedRowModel() : table.getRowModel())
+  .rowsById[rowId]
+
+if (!row) {
+  row = table.getCoreRowModel().rowsById[rowId]
+  if (!row) {
+    if (process.env.NODE_ENV === 'development') {
+      throw new Error(`getRow could not find row with ID: ${rowId}`)
+    }
+    throw new Error()
+  }
+}
+
+return row
+```
+
+**After**
+
+```ts
+const primary = (searchAll ? table.getPrePaginatedRowModel() : table.getRowModel()).rowsById[rowId]
+if (primary) return primary
+const core = table.getCoreRowModel().rowsById[rowId]
+if (core) return core
+...
+```
+
+**Risk:** None.
+
+---
 
 ## 46. `table_toggleAllRowsSelected` clones entire selection on deselect — Score: 3
 
@@ -1176,6 +1783,8 @@ Median requires only the middle element; quickselect is O(n) average vs `.sort()
 
 ---
 
+## Score 2
+
 ## 11. `table_getAllFlatColumnsById` / `getAllLeafColumnsById` use `for...of` — Score: 2
 
 **Status:** `[x]` done
@@ -1199,10 +1808,6 @@ Swap `for...of` for indexed loops to drop iterator protocol overhead. Cheap, but
 
 ---
 
-# Core — headers
-
-## Score 1
-
 ## 58. `aggregationFn_unique` + `aggregationFn_uniqueCount` rebuild Set twice — Score: 2
 
 **Status:** `[~]` partial
@@ -1221,7 +1826,7 @@ Only useful if both are called on the same column in the same aggregation pass. 
 
 ---
 
-# Cross-feature observations
+## Score 1
 
 ## 5. `isNumberArray()` uses `.every()` — Score: 1
 
@@ -1250,5 +1855,3 @@ Replace with an indexed loop and early exit. Low frequency; only used during sor
 **Risk:** None.
 
 ---
-
-# Feature — column-filtering
