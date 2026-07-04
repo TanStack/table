@@ -155,7 +155,7 @@ The column virtualizer is configured for horizontal virtualization:
 ```tsx
 const columnVirtualizer = useVirtualizer({
   count: visibleColumns.length,
-  estimateSize: index => visibleColumns[index].getSize(),
+  estimateSize: (index) => visibleColumns[index].getSize(),
   getScrollElement: () => tableContainerRef.current,
   horizontal: true,
   overscan: 3,
@@ -282,8 +282,8 @@ The experimental row example:
 - Memoizes rows with a custom `React.memo` comparator while scrolling.
 
 ```tsx
-onChange: instance => {
-  instance.getVirtualItems().forEach(virtualRow => {
+onChange: (instance) => {
+  instance.getVirtualItems().forEach((virtualRow) => {
     const rowRef = rowRefsMap.current.get(virtualRow.index)
     if (!rowRef) return
     rowRef.style.transform = `translateY(${virtualRow.start}px)`
@@ -313,13 +313,13 @@ Because these examples update the DOM outside React's normal render flow, keep t
 
 ### Choosing An Example
 
-| Need | Start with |
-| --- | --- |
-| Many rows, normal columns | [Virtualized Rows](../examples/virtualized-rows) |
-| Many columns | [Virtualized Columns](../examples/virtualized-columns) |
-| Many rows and columns | [Virtualized Columns](../examples/virtualized-columns) |
-| Remote data loaded as the user scrolls | [Virtualized Infinite Scrolling](../examples/virtualized-infinite-scrolling) |
-| React scroll performance after profiling | [Experimental React examples](../examples/virtualized-rows-experimental) |
+| Need                                     | Start with                                                                   |
+| ---------------------------------------- | ---------------------------------------------------------------------------- |
+| Many rows, normal columns                | [Virtualized Rows](../examples/virtualized-rows)                             |
+| Many columns                             | [Virtualized Columns](../examples/virtualized-columns)                       |
+| Many rows and columns                    | [Virtualized Columns](../examples/virtualized-columns)                       |
+| Remote data loaded as the user scrolls   | [Virtualized Infinite Scrolling](../examples/virtualized-infinite-scrolling) |
+| React scroll performance after profiling | [Experimental React examples](../examples/virtualized-rows-experimental)     |
 
 ### Common Pitfalls
 

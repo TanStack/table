@@ -14,7 +14,12 @@ Want to skip to the implementation? Check out these React examples:
 Here's how you set up your table to use column resizing features. Column resizing depends on column sizing, so add `columnSizingFeature` before `columnResizingFeature`. Adding the column resizing feature enables the related APIs.
 
 ```tsx
-import { useTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/react-table'
+import {
+  useTable,
+  tableFeatures,
+  columnSizingFeature,
+  columnResizingFeature,
+} from '@tanstack/react-table'
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -222,7 +227,7 @@ column.getIsResizing()
 The table instance exposes APIs for the transient resize state. Note that the current v9 API spelling is `table.setcolumnResizing` with a lowercase `c` in `column`; use that exact name.
 
 ```tsx
-table.setcolumnResizing(old => ({
+table.setcolumnResizing((old) => ({
   ...old,
   deltaOffset: 12,
 }))

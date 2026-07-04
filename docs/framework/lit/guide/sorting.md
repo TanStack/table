@@ -16,7 +16,13 @@ Here's how you set up your table to use sorting features. Adding the sorting fea
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  rowSortingFeature,
+  createSortedRowModel,
+  sortFns,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -239,7 +245,11 @@ Whether you register a custom sorting function in the `sortFns` slot on `tableFe
 
 ```ts
 //optionally use the SortFn to infer the parameter types
-const myCustomSortFn: SortFn<TFeatures, TData> = (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string) => {
+const myCustomSortFn: SortFn<TFeatures, TData> = (
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   return //-1, 0, or 1 - access any row data using rowA.original and rowB.original
 }
 ```
@@ -278,7 +288,7 @@ const columns = [
     sortFn: (rowA, rowB, columnId) => {
       return rowA.original.someProperty - rowB.original.someProperty
     },
-  }
+  },
 ]
 //...
 const features = tableFeatures({

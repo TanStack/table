@@ -4,9 +4,10 @@
 **/build
 **/coverage
 **/dist
-**/docs
+**/reference
 **/old-examples
 **/examples/**/*.svelte
 pnpm-lock.yaml
+docs/config.json
 
 .angular

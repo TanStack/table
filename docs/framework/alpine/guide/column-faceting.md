@@ -165,10 +165,7 @@ Alpine.data('table', () => {
 <template x-if="!isNumberColumn(header.column)">
   <div>
     <datalist :id="header.column.id + 'list'">
-      <template
-        x-for="value in uniqueValues(header.column)"
-        :key="value"
-      >
+      <template x-for="value in uniqueValues(header.column)" :key="value">
         <option :value="value"></option>
       </template>
     </datalist>

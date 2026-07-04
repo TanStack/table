@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 Here's how you set up your table to use row selection features. Adding the row selection feature enables the related APIs.
 
 ```tsx
-import { createTable, tableFeatures, rowSelectionFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -58,7 +62,12 @@ If you need easy access to the selected row ids in other parts of your applicati
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/solid-store'
-import { createTable, tableFeatures, rowSelectionFeature, type RowSelectionState } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  rowSelectionFeature,
+  type RowSelectionState,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -132,7 +141,7 @@ Row selection is enabled by default for all rows. To either enable row selection
 ```ts
 const table = createTable({
   //...
-  enableRowSelection: row => row.original.age > 18, //only enable row selection for adults
+  enableRowSelection: (row) => row.original.age > 18, //only enable row selection for adults
 })
 ```
 
@@ -208,12 +217,12 @@ If you want a simpler row selection UI, you can just hook up click events to the
 ```tsx
 <tbody>
   <For each={table.getRowModel().rows}>
-    {row => (
+    {(row) => (
       <tr
         classList={{ selected: row.getIsSelected() }}
         onClick={row.getToggleSelectedHandler()}
       >
-        <For each={row.getVisibleCells()}>{cell => <td>{/* */}</td>}</For>
+        <For each={row.getVisibleCells()}>{(cell) => <td>{/* */}</td>}</For>
       </tr>
     )}
   </For>

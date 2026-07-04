@@ -14,7 +14,11 @@ Here's how you set up your table to use column sizing features. Adding the colum
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnSizingFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnSizingFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({ columnSizingFeature })
 

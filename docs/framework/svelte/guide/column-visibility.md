@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnVisibilityFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
 
@@ -40,7 +44,11 @@ If you need to own the `columnVisibility` state yourself (for example, to persis
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/svelte-store'
-import { createTable, tableFeatures, columnVisibilityFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/svelte-table'
 import type { ColumnVisibilityState } from '@tanstack/svelte-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
@@ -72,10 +80,10 @@ const features = tableFeatures({ columnVisibilityFeature })
 
 const [columnVisibility, setColumnVisibility] =
   createTableState<ColumnVisibilityState>({
-  columnId1: true,
-  columnId2: false, // hide this column by default
-  columnId3: true,
-})
+    columnId1: true,
+    columnId2: false, // hide this column by default
+    columnId3: true,
+  })
 
 const table = createTable({
   features,
@@ -125,7 +133,7 @@ const columns = [
     header: 'Name',
     accessorKey: 'name', // can be hidden
   },
-];
+]
 ```
 
 ### Column Visibility Toggle APIs
@@ -168,7 +176,7 @@ When you render your header, body, and footer cells, there are a lot of API opti
     {#each table.getRowModel().rows as row (row.id)}
       <tr>
         {#each row.getVisibleCells() as cell (cell.id)}
-          <td><FlexRender cell={cell} /></td>
+          <td><FlexRender {cell} /></td>
         {/each}
       </tr>
     {/each}

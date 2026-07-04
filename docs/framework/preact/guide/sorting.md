@@ -13,7 +13,13 @@ Want to skip to the implementation? Check out these Preact examples:
 Here's how you set up your table to use sorting features. Adding the sorting feature enables the related APIs. Additionally, if using client-side sorting, you also need to set up `sortedRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
-import { useTable, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  rowSortingFeature,
+  createSortedRowModel,
+  sortFns,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -209,7 +215,11 @@ Whether you register a custom sorting function in the registry passed to `create
 
 ```tsx
 //optionally use the SortFn to infer the parameter types
-const myCustomSortFn: SortFn<TFeatures, TData> = (rowA: Row<TFeatures, TData>, rowB: Row<TFeatures, TData>, columnId: string) => {
+const myCustomSortFn: SortFn<TFeatures, TData> = (
+  rowA: Row<TFeatures, TData>,
+  rowB: Row<TFeatures, TData>,
+  columnId: string,
+) => {
   return //-1, 0, or 1 - access any row data using rowA.original and rowB.original
 }
 ```
@@ -248,10 +258,14 @@ const columns = [
     sortFn: (rowA, rowB, columnId) => {
       return rowA.original.someProperty - rowB.original.someProperty
     },
-  }
+  },
 ]
 //...
-const myCustomSortFn: SortFn<typeof features, MyData> = (rowA, rowB, columnId) =>
+const myCustomSortFn: SortFn<typeof features, MyData> = (
+  rowA,
+  rowB,
+  columnId,
+) =>
   rowA.original[columnId] > rowB.original[columnId]
     ? 1
     : rowA.original[columnId] < rowB.original[columnId]

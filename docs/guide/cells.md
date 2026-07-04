@@ -8,7 +8,7 @@ This quick guide will discuss the different ways you can retrieve and interact w
 
 ### Where to Get Cells From
 
-Cells come from [Rows](./rows). Enough said, right? 
+Cells come from [Rows](./rows). Enough said, right?
 
 There are multiple `row` instance APIs you can use to retrieve the appropriate cells from a row depending on which features you are using. Most commonly, you will use the `row.getAllCells` or `row.getVisibleCells` APIs (if you are using column visibility features), but there are a handful of other similar APIs that you can use.
 
@@ -21,7 +21,9 @@ Every cell object can be associated with a `<td>` or similar cell element in you
 Every cell object has an `id` property that makes it unique within the table instance. Each `cell.id` is constructed simply as a union of its parent row and column IDs separated by an underscore.
 
 ```js
-{ id: `${row.id}_${column.id}` }
+{
+  id: `${row.id}_${column.id}`
+}
 ```
 
 During grouping or aggregation features, the `cell.id` will have additional string appended to it.
@@ -81,3 +83,4 @@ const columns = [
     return <td key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</td>
   })}
 </tr>
+```

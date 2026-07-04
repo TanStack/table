@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```tsx
-import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({ columnOrderingFeature })
 
@@ -73,7 +77,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```tsx
 import { createAtom, useSelector } from '@tanstack/solid-store'
-import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/solid-table'
 import type { ColumnOrderState } from '@tanstack/solid-table'
 
 const features = tableFeatures({ columnOrderingFeature })
@@ -101,7 +109,11 @@ Alternatively, the v8-style `state.columnOrder` plus `onColumnOrderChange` patte
 ```tsx
 const features = tableFeatures({ columnOrderingFeature })
 
-const [columnOrder, setColumnOrder] = createSignal<ColumnOrderState>(['columnId1', 'columnId2', 'columnId3'])
+const [columnOrder, setColumnOrder] = createSignal<ColumnOrderState>([
+  'columnId1',
+  'columnId2',
+  'columnId3',
+])
 //...
 const table = createTable({
   features,

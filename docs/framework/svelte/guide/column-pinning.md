@@ -17,7 +17,11 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 Here's how you set up your table to use column pinning features. Adding the column pinning feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnPinningFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({ columnPinningFeature })
 
@@ -52,7 +56,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/svelte-store'
-import { createTable, tableFeatures, columnPinningFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/svelte-table'
 import type { ColumnPinningState } from '@tanstack/svelte-table'
 
 const features = tableFeatures({ columnPinningFeature })
@@ -80,8 +88,7 @@ Alternatively, the v8-style `state.columnPinning` plus `onColumnPinningChange` p
 import { createTableState } from '@tanstack/svelte-table'
 import type { ColumnPinningState } from '@tanstack/svelte-table'
 
-const [columnPinning, setColumnPinning] =
-  createTableState<ColumnPinningState>({
+const [columnPinning, setColumnPinning] = createTableState<ColumnPinningState>({
   left: [],
   right: [],
 })

@@ -130,8 +130,6 @@ ${table.subscribe(
 The template will only be evaluated when the selected state slice changes. The `table.subscribe` API is useful for fine-grained reactivity in templates.
 It is important to provide a stable reference for the selector function to avoid unnecessary re-renders. You can define the selector as a class property or method to ensure it remains stable across renders.
 
-
-
 ### Setting Table State
 
 You should almost never need to set table state directly. TanStack Table features expose dedicated APIs for interacting with their state, and those APIs are the safest way to make changes.

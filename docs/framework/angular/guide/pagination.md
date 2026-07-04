@@ -14,7 +14,12 @@ Here's how you set up your table to use pagination features. Adding the paginati
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  rowPaginationFeature,
+  createPaginatedRowModel,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
@@ -38,7 +43,7 @@ TanStack Table has great support for both client-side and server-side pagination
 
 ### Client-Side Pagination
 
-Using client-side pagination means that the `data` that you fetch will contain ***ALL*** of the rows for the table, and the table instance will handle pagination logic in the front-end.
+Using client-side pagination means that the `data` that you fetch will contain **_ALL_** of the rows for the table, and the table instance will handle pagination logic in the front-end.
 
 #### Should You Use Client-Side Pagination?
 
@@ -241,21 +246,40 @@ There are several pagination table instance APIs that are useful for hooking up 
 > **Note**: These pagination APIs are available when using `rowPaginationFeature`.
 
 ```html
-<button type="button" (click)="table.firstPage()" [disabled]="!table.getCanPreviousPage()">
+<button
+  type="button"
+  (click)="table.firstPage()"
+  [disabled]="!table.getCanPreviousPage()"
+>
   &lt;&lt;
 </button>
-<button type="button" (click)="table.previousPage()" [disabled]="!table.getCanPreviousPage()">
+<button
+  type="button"
+  (click)="table.previousPage()"
+  [disabled]="!table.getCanPreviousPage()"
+>
   &lt;
 </button>
-<button type="button" (click)="table.nextPage()" [disabled]="!table.getCanNextPage()">
+<button
+  type="button"
+  (click)="table.nextPage()"
+  [disabled]="!table.getCanNextPage()"
+>
   &gt;
 </button>
-<button type="button" (click)="table.lastPage()" [disabled]="!table.getCanNextPage()">
+<button
+  type="button"
+  (click)="table.lastPage()"
+  [disabled]="!table.getCanNextPage()"
+>
   &gt;&gt;
 </button>
-<select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
+<select
+  [value]="table.atoms.pagination.get().pageSize"
+  (change)="onPageSizeChange($event)"
+>
   @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
-    <option [value]="pageSize">Show {{ pageSize }}</option>
+  <option [value]="pageSize">Show {{ pageSize }}</option>
   }
 </select>
 ```

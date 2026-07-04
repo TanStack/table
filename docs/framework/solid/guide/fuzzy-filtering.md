@@ -15,7 +15,17 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. Additionally, if using client-side fuzzy filtering and sorting, you also need to set up `filteredRowModel` and `sortedRowModel` after their associated features because row model slots are type-checked.
 
 ```tsx
-import { createTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFns,
+  sortFns,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -58,7 +68,9 @@ import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { FilterFn, RowData, TableFeatures } from '@tanstack/solid-table'
 
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
@@ -86,10 +98,17 @@ To reference this filter function by the string name `'fuzzy'` (and to type the 
 import { metaHelper } from '@tanstack/solid-table'
 import type { FilterFn, RowData, TableFeatures } from '@tanstack/solid-table'
 
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (row, columnId, value, addMeta) => {
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
   const itemRank = rankItem(row.getValue(columnId), value)
   addMeta?.({ itemRank })
   return itemRank.passed
@@ -151,14 +170,14 @@ To use fuzzy filtering with column filtering, pass your fuzzy filter function to
 ```typescript
 const column = [
   {
-    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     id: 'fullName',
     header: 'Full Name',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     filterFn: 'fuzzy', //using our custom fuzzy filter function
   },
   // other columns...
-];
+]
 ```
 
 In this example, we're applying the fuzzy filter to a column that combines the firstName and lastName fields of the data.

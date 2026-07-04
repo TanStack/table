@@ -15,7 +15,12 @@ Here's how you set up your table to use pagination features. Adding the paginati
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  rowPaginationFeature,
+  createPaginatedRowModel,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
@@ -47,7 +52,7 @@ TanStack Table has great support for both client-side and server-side pagination
 
 ### Client-Side Pagination
 
-Using client-side pagination means that the `data` that you fetch will contain ***ALL*** of the rows for the table, and the table instance will handle pagination logic in the front-end.
+Using client-side pagination means that the `data` that you fetch will contain **_ALL_** of the rows for the table, and the table instance will handle pagination logic in the front-end.
 
 #### Should You Use Client-Side Pagination?
 
@@ -250,15 +255,32 @@ There are several pagination table instance APIs that are useful for hooking up 
 
 ```ts
 html`
-  <button @click=${() => table.firstPage()} ?disabled=${!table.getCanPreviousPage()}>&lt;&lt;</button>
-  <button @click=${() => table.previousPage()} ?disabled=${!table.getCanPreviousPage()}>&lt;</button>
-  <button @click=${() => table.nextPage()} ?disabled=${!table.getCanNextPage()}>&gt;</button>
-  <button @click=${() => table.lastPage()} ?disabled=${!table.getCanNextPage()}>&gt;&gt;</button>
+  <button
+    @click=${() => table.firstPage()}
+    ?disabled=${!table.getCanPreviousPage()}
+  >
+    &lt;&lt;
+  </button>
+  <button
+    @click=${() => table.previousPage()}
+    ?disabled=${!table.getCanPreviousPage()}
+  >
+    &lt;
+  </button>
+  <button @click=${() => table.nextPage()} ?disabled=${!table.getCanNextPage()}>
+    &gt;
+  </button>
+  <button @click=${() => table.lastPage()} ?disabled=${!table.getCanNextPage()}>
+    &gt;&gt;
+  </button>
   <select
     .value=${String(table.state.pagination.pageSize)}
-    @change=${(e: Event) => table.setPageSize(Number((e.target as HTMLSelectElement).value))}
+    @change=${(e: Event) =>
+      table.setPageSize(Number((e.target as HTMLSelectElement).value))}
   >
-    ${[10, 20, 30, 40, 50].map((pageSize) => html`<option value=${pageSize}>Show ${pageSize}</option>`)}
+    ${[10, 20, 30, 40, 50].map(
+      (pageSize) => html`<option value=${pageSize}>Show ${pageSize}</option>`,
+    )}
   </select>
 `
 ```

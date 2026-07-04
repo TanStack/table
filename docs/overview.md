@@ -2,6 +2,10 @@
 title: Overview
 ---
 
+TanStack Table is a bit of a different table library than you might be used to. It's _not_ a pre-built table component, like you might find from a library like AG Grid. Instead, it's a headless UI library that gives you the power to build your own powerful table and datagrid components the right way with whatever UI technology you want.
+
+There are some of you who might be disappointed to discover that this isn't a pre-built batteries included data grid component.
+
 TanStack Table is a **headless UI** library for building powerful tables and datagrids. Its core is **framework agnostic**, which means its API is the same regardless of the framework you are using. Official adapters are provided for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine, and you can use the core directly in vanilla TypeScript or JavaScript via `@tanstack/table-core`.
 
 > **These docs are for TanStack Table v9, which is currently in beta.** The docs for v8, the latest stable release, live at [tanstack.com/table/v8](https://tanstack.com/table/v8). When installing v9 packages, use the `beta` npm tag (see the [Installation](./installation) page).
@@ -91,7 +95,7 @@ The table core then uses the following abstractions, commonly exposed by adapter
 - [Row Models](./guide/row-models): How the `data` array is transformed into useful rows depending on the features you are using
 - [Rows](./guide/rows): Each row mirrors its respective row data and provides row-specific APIs
 - [Cells](./guide/cells): Each cell mirrors its respective row-column intersection and provides cell-specific APIs
-- [Header Groups](./guide/header-groups):  Header groups are computed slices of nested header levels, each containing a group of headers
+- [Header Groups](./guide/header-groups): Header groups are computed slices of nested header levels, each containing a group of headers
 - [Headers](./guide/headers): Each header is either directly associated with or derived from its column def and provides header-specific APIs
 - [Columns](./guide/columns): Each column mirrors its respective column def and also provides column-specific APIs
 

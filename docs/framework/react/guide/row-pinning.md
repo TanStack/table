@@ -13,7 +13,11 @@ Want to skip to the implementation? Check out these React examples:
 Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```tsx
-import { useTable, tableFeatures, rowPinningFeature } from '@tanstack/react-table'
+import {
+  useTable,
+  tableFeatures,
+  rowPinningFeature,
+} from '@tanstack/react-table'
 
 const features = tableFeatures({ rowPinningFeature })
 
@@ -158,13 +162,19 @@ const columns = [
     cell: ({ row }) =>
       row.getCanPin() ? (
         <div>
-          <button onClick={() => row.pin('top')} disabled={row.getIsPinned() === 'top'}>
+          <button
+            onClick={() => row.pin('top')}
+            disabled={row.getIsPinned() === 'top'}
+          >
             Top
           </button>
           <button onClick={() => row.pin(false)} disabled={!row.getIsPinned()}>
             Center
           </button>
-          <button onClick={() => row.pin('bottom')} disabled={row.getIsPinned() === 'bottom'}>
+          <button
+            onClick={() => row.pin('bottom')}
+            disabled={row.getIsPinned() === 'bottom'}
+          >
             Bottom
           </button>
         </div>
@@ -190,13 +200,13 @@ If you render pinned rows in separate table sections, use those APIs directly:
 
 ```tsx
 <tbody>
-  {table.getTopRows().map(row => (
+  {table.getTopRows().map((row) => (
     <PinnedRow key={row.id} row={row} />
   ))}
-  {table.getCenterRows().map(row => (
+  {table.getCenterRows().map((row) => (
     <TableRow key={row.id} row={row} />
   ))}
-  {table.getBottomRows().map(row => (
+  {table.getBottomRows().map((row) => (
     <PinnedRow key={row.id} row={row} />
   ))}
 </tbody>
@@ -219,7 +229,7 @@ const table = useTable({
   features,
   columns,
   data,
-  enableRowPinning: row => row.original.status !== 'archived',
+  enableRowPinning: (row) => row.original.status !== 'archived',
 })
 ```
 

@@ -13,7 +13,13 @@ Want to skip to the implementation? Check out these Preact examples:
 Here's how you set up your table to use grouping features. Adding the grouping feature enables the related APIs. Additionally, if using client-side grouping, you also need to set up `groupedRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
-import { useTable, tableFeatures, columnGroupingFeature, createGroupedRowModel, aggregationFns } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  columnGroupingFeature,
+  createGroupedRowModel,
+  aggregationFns,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({
   columnGroupingFeature,
@@ -84,13 +90,13 @@ const table = useTable({
 The grouping state is an array of strings, where each string is the ID of a column to group by. The order of the strings in the array determines the order of the grouping. For example, if the grouping state is ['column1', 'column2'], then the table will first group by column1, and then within each group, it will group by column2. You can control the grouping state using the setGrouping function:
 
 ```tsx
-table.setGrouping(['column1', 'column2']);
+table.setGrouping(['column1', 'column2'])
 ```
 
 You can also reset the grouping state to its initial state using the resetGrouping function:
 
 ```tsx
-table.resetGrouping();
+table.resetGrouping()
 ```
 
 By default, when a column is grouped, it is moved to the start of the table. You can control this behavior using the groupedColumnMode option. If you set it to 'reorder', then the grouped columns will be moved to the start of the table. If you set it to 'remove', then the grouped columns will be removed from the table. If you set it to false, then the grouped columns will not be moved or removed.
@@ -133,7 +139,11 @@ There are several built-in aggregation functions that you can use:
 You can define custom aggregation functions in the registry that you pass to `createGroupedRowModel`. The registry is a record where the keys are the names of the aggregation functions, and the values are the aggregation functions themselves. You can then reference these aggregation functions by name in a column's `aggregationFn` option.
 
 ```tsx
-const myCustomAggregation: AggregationFn<typeof features, MyData> = (columnId, leafRows, childRows) => {
+const myCustomAggregation: AggregationFn<typeof features, MyData> = (
+  columnId,
+  leafRows,
+  childRows,
+) => {
   // return the aggregated value
 }
 

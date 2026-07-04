@@ -15,7 +15,17 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 Here's how you set up your table to use faceting features. Adding the faceting feature enables the related APIs. Additionally, if using client-side faceting, you also need to set up `filteredRowModel` and `facetedRowModel` after their associated features because row model slots are type-checked.
 
 ```ts
-import { createTable, tableFeatures, columnFacetingFeature, columnFilteringFeature, createFacetedRowModel, createFacetedUniqueValues, createFacetedMinMaxValues, createFilteredRowModel, filterFns } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnFacetingFeature,
+  columnFilteringFeature,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFacetedMinMaxValues,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({
   columnFacetingFeature,
@@ -82,15 +92,16 @@ Once you have included the appropriate row models in your table options, you wil
 
 ```ts
 // list of unique values for autocomplete filter
-const autoCompleteSuggestions = 
- Array.from(column.getFacetedUniqueValues().keys())
+const autoCompleteSuggestions = Array.from(
+  column.getFacetedUniqueValues().keys(),
+)
   .sort()
-  .slice(0, 5000);
+  .slice(0, 5000)
 ```
 
 ```ts
 // tuple of min and max values for range filter
-const [min, max] = column.getFacetedMinMaxValues() ?? [0, 1];
+const [min, max] = column.getFacetedMinMaxValues() ?? [0, 1]
 ```
 
 ### Global Faceting
@@ -105,15 +116,16 @@ const globalFacetedRows = table.getGlobalFacetedRowModel().flatRows
 
 ```ts
 // list of unique values for autocomplete filter
-const autoCompleteSuggestions =
- Array.from(table.getGlobalFacetedUniqueValues().keys())
+const autoCompleteSuggestions = Array.from(
+  table.getGlobalFacetedUniqueValues().keys(),
+)
   .sort()
-  .slice(0, 5000);
+  .slice(0, 5000)
 ```
 
 ```ts
 // tuple of min and max values for range filter
-const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1];
+const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1]
 ```
 
 ### Custom (Server-Side) Faceting
@@ -121,9 +133,8 @@ const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1];
 Instead of using the built-in client-side faceting features, you can implement your own faceting logic on the server-side and pass the faceted values to the client-side. Supply custom `facetedUniqueValues` and `facetedMinMaxValues` factory slots in `tableFeatures`. Each factory receives the table and a column ID and returns a thunk that resolves the faceted values. The column instance APIs (`column.getFacetedUniqueValues()` and `column.getFacetedMinMaxValues()`) will then return your server-provided values.
 
 ```ts
-const facetingQuery = createQuery(
-  //...
-)
+const facetingQuery = createQuery()
+//...
 
 const features = tableFeatures({
   columnFacetingFeature,

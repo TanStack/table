@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```tsx
-import { createTable, tableFeatures, rowPinningFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  rowPinningFeature,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({ rowPinningFeature })
 
@@ -164,13 +168,19 @@ const columns = [
     cell: ({ row }) =>
       row.getCanPin() ? (
         <div>
-          <button onClick={() => row.pin('top')} disabled={row.getIsPinned() === 'top'}>
+          <button
+            onClick={() => row.pin('top')}
+            disabled={row.getIsPinned() === 'top'}
+          >
             Top
           </button>
           <button onClick={() => row.pin(false)} disabled={!row.getIsPinned()}>
             Center
           </button>
-          <button onClick={() => row.pin('bottom')} disabled={row.getIsPinned() === 'bottom'}>
+          <button
+            onClick={() => row.pin('bottom')}
+            disabled={row.getIsPinned() === 'bottom'}
+          >
             Bottom
           </button>
         </div>
@@ -196,15 +206,9 @@ If you render pinned rows in separate table sections, use those APIs directly:
 
 ```tsx
 <tbody>
-  <For each={table.getTopRows()}>
-    {row => <PinnedRow row={row} />}
-  </For>
-  <For each={table.getCenterRows()}>
-    {row => <TableRow row={row} />}
-  </For>
-  <For each={table.getBottomRows()}>
-    {row => <PinnedRow row={row} />}
-  </For>
+  <For each={table.getTopRows()}>{(row) => <PinnedRow row={row} />}</For>
+  <For each={table.getCenterRows()}>{(row) => <TableRow row={row} />}</For>
+  <For each={table.getBottomRows()}>{(row) => <PinnedRow row={row} />}</For>
 </tbody>
 ```
 
@@ -225,7 +229,7 @@ const table = createTable({
   features,
   columns,
   data,
-  enableRowPinning: row => row.original.status !== 'archived',
+  enableRowPinning: (row) => row.original.status !== 'archived',
 })
 ```
 

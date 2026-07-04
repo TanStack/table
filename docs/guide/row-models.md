@@ -30,16 +30,16 @@ Row models run under the hood of TanStack Table to transform your original data 
 
 You should only add the row models that you need. Pass the row model factories as slots directly inside your `tableFeatures()` call alongside your feature objects:
 
-| Slot Key | Factory Function | Purpose |
-|------------------|------------------|---------|
-| (automatic) | (none) | Core row model (always included) |
-| `filteredRowModel` | `createFilteredRowModel()` | Filtering (column + global) |
-| `sortedRowModel` | `createSortedRowModel()` | Sorting |
-| `paginatedRowModel` | `createPaginatedRowModel()` | Pagination |
-| `expandedRowModel` | `createExpandedRowModel()` | Row expanding |
-| `groupedRowModel` | `createGroupedRowModel()` | Grouping and aggregation |
-| `facetedRowModel` | `createFacetedRowModel()` | Faceted filtering |
-| `facetedMinMaxValues` | `createFacetedMinMaxValues()` | Min/max for faceted filters |
+| Slot Key              | Factory Function              | Purpose                           |
+| --------------------- | ----------------------------- | --------------------------------- |
+| (automatic)           | (none)                        | Core row model (always included)  |
+| `filteredRowModel`    | `createFilteredRowModel()`    | Filtering (column + global)       |
+| `sortedRowModel`      | `createSortedRowModel()`      | Sorting                           |
+| `paginatedRowModel`   | `createPaginatedRowModel()`   | Pagination                        |
+| `expandedRowModel`    | `createExpandedRowModel()`    | Row expanding                     |
+| `groupedRowModel`     | `createGroupedRowModel()`     | Grouping and aggregation          |
+| `facetedRowModel`     | `createFacetedRowModel()`     | Faceted filtering                 |
+| `facetedMinMaxValues` | `createFacetedMinMaxValues()` | Min/max for faceted filters       |
 | `facetedUniqueValues` | `createFacetedUniqueValues()` | Unique values for faceted filters |
 
 The factory functions no longer accept `filterFns`, `sortFns`, or `aggregationFns` as arguments. Those function maps are registered as their own named slots on the features object (see [Function Registries](#function-registries) below).
@@ -90,7 +90,12 @@ import {
   filterFns,
 } from '@tanstack/react-table'
 
-const myFuzzyFilter: FilterFn<typeof features, Person> = (row, columnId, value, addMeta) => {
+const myFuzzyFilter: FilterFn<typeof features, Person> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
   // ...
   return true
 }

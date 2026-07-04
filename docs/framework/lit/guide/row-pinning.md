@@ -15,7 +15,11 @@ Here's how you set up your table to use row pinning features. Adding the row pin
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, rowPinningFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  rowPinningFeature,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({ rowPinningFeature })
 
@@ -172,9 +176,21 @@ You can use these APIs to build pinning controls:
 row.getCanPin()
   ? html`
       <div>
-        <button @click=${() => row.pin('top')} ?disabled=${row.getIsPinned() === 'top'}>Top</button>
-        <button @click=${() => row.pin(false)} ?disabled=${!row.getIsPinned()}>Center</button>
-        <button @click=${() => row.pin('bottom')} ?disabled=${row.getIsPinned() === 'bottom'}>Bottom</button>
+        <button
+          @click=${() => row.pin('top')}
+          ?disabled=${row.getIsPinned() === 'top'}
+        >
+          Top
+        </button>
+        <button @click=${() => row.pin(false)} ?disabled=${!row.getIsPinned()}>
+          Center
+        </button>
+        <button
+          @click=${() => row.pin('bottom')}
+          ?disabled=${row.getIsPinned() === 'bottom'}
+        >
+          Bottom
+        </button>
       </div>
     `
   : null
@@ -197,9 +213,15 @@ If you render pinned rows in separate table sections, use those APIs directly:
 ```ts
 html`
   <tbody>
-    ${table.getTopRows().map((row) => html`<pinned-row .row=${row}></pinned-row>`)}
-    ${table.getCenterRows().map((row) => html`<table-row .row=${row}></table-row>`)}
-    ${table.getBottomRows().map((row) => html`<pinned-row .row=${row}></pinned-row>`)}
+    ${table
+      .getTopRows()
+      .map((row) => html`<pinned-row .row=${row}></pinned-row>`)}
+    ${table
+      .getCenterRows()
+      .map((row) => html`<table-row .row=${row}></table-row>`)}
+    ${table
+      .getBottomRows()
+      .map((row) => html`<pinned-row .row=${row}></pinned-row>`)}
   </tbody>
 `
 ```
@@ -221,7 +243,7 @@ const table = this.tableController.table({
   features,
   columns,
   data: this.data,
-  enableRowPinning: row => row.original.status !== 'archived',
+  enableRowPinning: (row) => row.original.status !== 'archived',
 })
 ```
 

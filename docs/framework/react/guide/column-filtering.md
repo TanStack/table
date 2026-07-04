@@ -15,7 +15,13 @@ Want to skip to the implementation? Check out these React examples:
 Here's how you set up your table to use column filtering features. Adding the column filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
-import { useTable, tableFeatures, columnFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/react-table'
+import {
+  useTable,
+  tableFeatures,
+  columnFilteringFeature,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/react-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -40,7 +46,7 @@ TanStack table supports both client-side and manual server-side filtering. This 
 
 ### Client-Side vs Server-Side Filtering
 
-If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc. 
+If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc.
 
 However, as also discussed in the [Pagination Guide](./pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
 
@@ -241,7 +247,11 @@ Every filter function receives:
 and should return `true` if the row should be included in the filtered rows, and `false` if it should be removed.
 
 ```tsx
-const myCustomFilterFn: FilterFn<typeof features, MyData> = (row, columnId, filterValue) => {
+const myCustomFilterFn: FilterFn<typeof features, MyData> = (
+  row,
+  columnId,
+  filterValue,
+) => {
   return // true or false based on your custom logic
 }
 
@@ -278,7 +288,7 @@ const columns = [
     filterFn: (row, columnId, filterValue) => {
       return // true or false based on your custom logic
     },
-  }
+  },
 ]
 //...
 const table = useTable({
@@ -299,7 +309,10 @@ You can attach a few other properties to filter functions to customize their beh
 - `filterFn.autoRemove` - This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
 
 ```tsx
-const startsWithFilterFn = <TFeatures extends TableFeatures, TData extends RowData>(
+const startsWithFilterFn = <
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
   row: Row<TFeatures, TData>,
   columnId: string,
   filterValue: string, // resolveFilterValue below transforms the raw value to a string
@@ -309,13 +322,14 @@ const startsWithFilterFn = <TFeatures extends TableFeatures, TData extends RowDa
     .toString()
     .toLowerCase()
     .trim()
-    .startsWith(filterValue); // toString, toLowerCase, and trim the filter value in `resolveFilterValue`
+    .startsWith(filterValue) // toString, toLowerCase, and trim the filter value in `resolveFilterValue`
 
 // remove the filter value from filter state if it is falsy (empty string in this case)
-startsWithFilterFn.autoRemove = (val: any) => !val; 
+startsWithFilterFn.autoRemove = (val: any) => !val
 
 // transform/sanitize/format the filter value before it is passed to the filter function
-startsWithFilterFn.resolveFilterValue = (val: any) => val.toString().toLowerCase().trim(); 
+startsWithFilterFn.resolveFilterValue = (val: any) =>
+  val.toString().toLowerCase().trim()
 ```
 
 ### Customize Column Filtering

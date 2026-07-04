@@ -18,14 +18,18 @@ If you are in a header group, the headers are stored as an array in the `headerG
 
 ```jsx
 <thead>
-  {table.getHeaderGroups().map(headerGroup => {
+  {table.getHeaderGroups().map((headerGroup) => {
     return (
       <tr key={headerGroup.id}>
-        {headerGroup.headers.map(header => ( // map over the headerGroup headers array
-          <th key={header.id} colSpan={header.colSpan}>
-            {/* */}
-          </th>
-        ))}
+        {headerGroup.headers.map(
+          (
+            header, // map over the headerGroup headers array
+          ) => (
+            <th key={header.id} colSpan={header.colSpan}>
+              {/* */}
+            </th>
+          ),
+        )}
       </tr>
     )
   })}
@@ -72,9 +76,12 @@ Headers have a few more useful APIs attached to them that are useful for interac
 Since the `header` column option you defined can be either a string, jsx, or a function returning either of those, the best way to render the headers is to use the `flexRender` utility from your adapter, which will handle all of those cases for you.
 
 ```jsx
-{headerGroup.headers.map(header => (
-  <th key={header.id} colSpan={header.colSpan}>
-    {/* Handles all possible header column def scenarios for `header` */}
-    {flexRender(header.column.columnDef.header, header.getContext())}
-  </th>
-))}
+{
+  headerGroup.headers.map((header) => (
+    <th key={header.id} colSpan={header.colSpan}>
+      {/* Handles all possible header column def scenarios for `header` */}
+      {flexRender(header.column.columnDef.header, header.getContext())}
+    </th>
+  ))
+}
+```

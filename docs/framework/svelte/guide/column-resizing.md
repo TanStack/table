@@ -16,7 +16,12 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 Here's how you set up your table to use column resizing features. Column resizing depends on column sizing, so add `columnSizingFeature` before `columnResizingFeature`. Adding the column resizing feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnSizingFeature,
+  columnResizingFeature,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -198,13 +203,13 @@ import type { columnResizingState } from '@tanstack/svelte-table'
 
 const [columnResizing, setColumnResizing] =
   createTableState<columnResizingState>({
-  columnSizingStart: [],
-  deltaOffset: null,
-  deltaPercentage: null,
-  isResizingColumn: false,
-  startOffset: null,
-  startSize: null,
-})
+    columnSizingStart: [],
+    deltaOffset: null,
+    deltaPercentage: null,
+    isResizingColumn: false,
+    startOffset: null,
+    startSize: null,
+  })
 
 const table = createTable({
   features,
@@ -232,7 +237,7 @@ column.getIsResizing()
 The table instance exposes APIs for the transient resize state. Note that the current v9 API spelling is `table.setcolumnResizing` with a lowercase `c` in `column`; use that exact name.
 
 ```ts
-table.setcolumnResizing(old => ({
+table.setcolumnResizing((old) => ({
   ...old,
   deltaOffset: 12,
 }))

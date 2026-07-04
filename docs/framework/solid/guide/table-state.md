@@ -137,9 +137,7 @@ Use `table.Subscribe` when you want a specific part of the Solid tree to create 
 
     return (
       <tbody>
-        <For each={rows()}>
-          {(row) => <tr>{/* ... */}</tr>}
-        </For>
+        <For each={rows()}>{(row) => <tr>{/* ... */}</tr>}</For>
       </tbody>
     )
   }}

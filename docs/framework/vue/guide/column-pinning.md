@@ -17,7 +17,11 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use column pinning features. Adding the column pinning feature enables the related APIs.
 
 ```ts
-import { useTable, tableFeatures, columnPinningFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({ columnPinningFeature })
 
@@ -50,7 +54,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/vue-store'
-import { useTable, tableFeatures, columnPinningFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/vue-table'
 import type { ColumnPinningState } from '@tanstack/vue-table'
 
 const features = tableFeatures({ columnPinningFeature })
@@ -90,7 +98,8 @@ const table = useTable({
     //...
   },
   onColumnPinningChange: (updater) => {
-    columnPinning.value = updater instanceof Function ? updater(columnPinning.value) : updater
+    columnPinning.value =
+      updater instanceof Function ? updater(columnPinning.value) : updater
   },
   //...
 })

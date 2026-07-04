@@ -1,38 +1,42 @@
 ---
-title: Migrating to TanStack Table v9 (Vue)
+title: Migrating to TanStack Table V9 (Vue)
 ---
 
 > [!NOTE]
 > `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Model Factories](#row-model-factories) section below for the new shape.
 
-## What's New in TanStack Table v9
+## What's New in TanStack Table V9
 
-TanStack Table v9 is a major release with explicit feature registration, row model registration, and a new atom-backed state model. The Vue adapter keeps table rendering headless while adding Vue-aware reactivity for table atoms and reactive options.
+TanStack Table V9 is a major release with significant internal architectural improvements while maintaining the core table logic you're familiar with. Here are the key changes:
 
-### 1. Tree Shaking and Extensibility
+### 1. Better Performance
 
-- **Features are tree-shakeable**: register only the table features you use.
-- **Row model factories are explicit**: register row model factories (`createFilteredRowModel`, `createSortedRowModel`, etc.) as slots on the `features` object via `tableFeatures`. The factories take no arguments.
-- **Function registries moved to features**: `sortFns`, `filterFns`, and `aggregationFns` are registered as their own feature slots. This enables tree-shaking of the functions themselves: if you only register a custom filter, you don't pay for built-in filters you never use.
-- **Custom feature plugins with full type safety**: The same plugin architecture that powers the built-in features is open to your own code. Write a custom feature with its own state, options, and APIs, register it in `tableFeatures()` alongside the built-ins, and the table's types pick it all up automatically. See the [Custom Features Guide](./custom-features.md).
+- **Lower memory usage**: The core architecture now shares more behavior across table objects, with some large-table scenarios seeing up to 90% memory savings.
+- **Faster client-side row models**: Sorting, filtering, and aggregation paths have improved algorithms and memoization, with many scenarios seeing up to 40-70% speed improvements.
+- **Better column resizing performance**: Column resizing also gets significant performance improvements from the same architectural and memoization work.
 
-### 2. State Management
+### 2. State Management Overhaul
 
-- **Uses TanStack Store**: table state is backed by TanStack Store atoms.
-- **Uses Vue reactivity**: table atoms are backed by Vue refs and computed values.
-- **Per-slice state**: registered features expose their state through `table.atoms`.
-- **Vue option syncing**: `useTable` unwraps refs and computed values in options like `data` and syncs the table when they change.
+- **TanStack Store foundation**: Table state is backed by TanStack Store atoms.
+- **Vue reactivity integration**: Table atoms are backed by Vue refs and computed values, and `useTable` unwraps reactive option values like `data`.
+- **Fine-grained subscriptions**: Registered features expose per-slice state through `table.atoms`, so reads can stay scoped to the state they need.
 
-### 3. Composability
+### 3. Type-Safety Improvements
 
-- **`tableOptions()`**: compose reusable option fragments.
-- **`createTableHook()`**: define shared Vue table factories with pre-bound features, row models, defaults, and components.
+- **New and revamped type helpers**: New type helpers help define columns, custom filters, sorts, aggregations, column and table meta, shared table options and components, and more.
+- **Per-table meta types**: `tableMeta`, `columnMeta`, and `filterMeta` slots let you type meta for a specific table instead of globally augmenting shared interfaces. **No more global declaration merging required!**
+- **Feature-gated APIs**: APIs only exist when their feature is registered, and `tableFeatures()` validates feature prerequisites at the type level.
 
-### 4. Improved Type Safety (No More Declaration Merging)
+### 4. Tree Shaking and Extensibility
 
-- **Function registries replace `declare module` augmentation**: Custom filter, sort, and aggregation functions are registered by name in the `filterFns` / `sortFns` / `aggregationFns` slots on `tableFeatures()`. The registered keys become the valid, type-safe string values for `filterFn`, `sortFn`, `globalFilterFn`, and `aggregationFn` in your column definitions, with full inference. No more augmenting the `FilterFns` / `SortFns` / `AggregationFns` interfaces globally.
-- **Per-table meta slots**: The type-only `tableMeta`, `columnMeta`, and `filterMeta` slots declare meta types for a single table instead of merging into a global interface. The `filterMeta` slot types both the `addMeta` callback in filter functions and the values read back from `row.columnFiltersMeta`.
-- **Feature-gated APIs and validated prerequisites**: APIs like `table.setSorting` only exist on the table type when their feature is registered, and `tableFeatures()` validates slot prerequisites at the type level. Registering `sortFns` without `rowSortingFeature`, or `globalFilteringFeature` without `columnFilteringFeature`, is a typed error instead of a silent runtime no-op.
+- **Import only the features you use**: Tables that only need sorting do not ship filtering, pagination, or other unused feature code.
+- **Tree-shakeable row models and functions**: Row model factories and `filterFns` / `sortFns` / `aggregationFns` now live on `tableFeatures()`, so unused processing code can be dropped.
+- **Custom features use the same system**: Your own feature plugins can register state, options, and APIs alongside the built-in features. See the [Custom Features Guide](./custom-features.md).
+
+### 5. Composability
+
+- **`tableOptions()`**: Compose reusable table configuration, including features, row models, and default options.
+- **`createTableHook()`**: Define shared Vue table factories with pre-bound features, row models, defaults, and components.
 
 ### The Good News: Most Table Logic Is Still Familiar
 
@@ -60,12 +64,33 @@ import { useTable } from '@tanstack/vue-table'
 const table = useTable(options)
 ```
 
-### New Required Option: `features`
+### Instance Methods Must Be Called on Their Instance
+
+In v9, methods on rows, cells, columns, headers, and similar table objects are shared on the object's prototype instead of being created as arrow functions on each object. This improves memory usage, but it means destructuring those methods loses the `this` context they need to operate on the instance.
 
 ```ts
-// v8
+// v8 - worked because getValue closed over the row object
+const { getValue } = row
+const value = getValue('name')
+
+// v9 - call the method on the instance
+const value = row.getValue('name')
+```
+
+This applies to row, cell, column, header, and related instance APIs, but not to the table instance itself. Audit code that destructures methods from table objects or passes them around as bare callbacks. Prefer calling them through the original object, for example `row.getValue('name')`, `cell.getContext()`, `column.getCanSort()`, or `header.getContext()`.
+
+Because these methods now live on the prototype, they also do not appear as own properties in `Object.keys(instance)`, object spread, or `JSON.stringify`. A shallow clone like `{ ...row }` copies row data but does not copy row methods. The methods are still callable normally because JavaScript looks them up through the prototype chain.
+
+### New Required `features` Table Option
+
+In Table V9, you must explicitly declare which features your table uses. Features, Row Models, and Row Model processing "Fns" are defined on the new `features` table option.
+
+```ts
+// Table V8
 import {
   getCoreRowModel,
+  getSortedRowModel,
+  sortingFns,
   useVueTable,
 } from '@tanstack/vue-table'
 
@@ -73,15 +98,29 @@ const table = useVueTable({
   columns,
   data,
   getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  sortingFns,
 })
 
-// v9
-import { tableFeatures, useTable } from '@tanstack/vue-table'
+// Table V9
+import {
+  createSortedRowModel,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+  useTable,
+} from '@tanstack/vue-table'
 
-const features = tableFeatures({})
+// All table options that concern including code modules (features, row models, Fns, etc.)
+const features = tableFeatures({
+  rowSortingFeature, // new - import and pass the feature you want to use
+  sortedRowModel: createSortedRowModel(), // now row models are defined on the features object
+  sortFns, // now Fns are defined on the features object
+  // ...more features, row models, etc.
+})
 
 const table = useTable({
-  features,
+  features, // new required option
   columns,
   data,
 })
@@ -91,34 +130,7 @@ const table = useTable({
 
 ---
 
-## The `features` Option
-
-Features control which APIs, options, and state slices exist on the table.
-
-### Importing Individual Features
-
-```ts
-import {
-  columnFilteringFeature,
-  columnVisibilityFeature,
-  rowPaginationFeature,
-  rowSelectionFeature,
-  rowSortingFeature,
-  tableFeatures,
-} from '@tanstack/vue-table'
-
-const features = tableFeatures({
-  columnFilteringFeature,
-  columnVisibilityFeature,
-  rowPaginationFeature,
-  rowSelectionFeature,
-  rowSortingFeature,
-})
-```
-
-If a feature is not registered, its APIs and state slice are not available.
-
-### Using `stockFeatures` for v8-like Behavior
+#### Shortcut: Use `stockFeatures` for Table V8-like Behavior
 
 `stockFeatures` is useful for early migration before you audit feature usage.
 
@@ -136,22 +148,22 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 
 ### Available Features
 
-| Feature | Import Name |
-|---|---|
-| Column Filtering | `columnFilteringFeature` |
-| Global Filtering | `globalFilteringFeature` |
-| Row Sorting | `rowSortingFeature` |
-| Row Pagination | `rowPaginationFeature` |
-| Row Selection | `rowSelectionFeature` |
-| Row Expanding | `rowExpandingFeature` |
-| Row Pinning | `rowPinningFeature` |
-| Column Pinning | `columnPinningFeature` |
+| Feature           | Import Name               |
+| ----------------- | ------------------------- |
+| Column Filtering  | `columnFilteringFeature`  |
+| Global Filtering  | `globalFilteringFeature`  |
+| Row Sorting       | `rowSortingFeature`       |
+| Row Pagination    | `rowPaginationFeature`    |
+| Row Selection     | `rowSelectionFeature`     |
+| Row Expanding     | `rowExpandingFeature`     |
+| Row Pinning       | `rowPinningFeature`       |
+| Column Pinning    | `columnPinningFeature`    |
 | Column Visibility | `columnVisibilityFeature` |
-| Column Ordering | `columnOrderingFeature` |
-| Column Sizing | `columnSizingFeature` |
-| Column Resizing | `columnResizingFeature` |
-| Column Grouping | `columnGroupingFeature` |
-| Column Faceting | `columnFacetingFeature` |
+| Column Ordering   | `columnOrderingFeature`   |
+| Column Sizing     | `columnSizingFeature`     |
+| Column Resizing   | `columnResizingFeature`   |
+| Column Grouping   | `columnGroupingFeature`   |
+| Column Faceting   | `columnFacetingFeature`   |
 
 ---
 
@@ -161,17 +173,17 @@ Row model factories now live on the `features` object (passed to `tableFeatures`
 
 ### Migration Mapping
 
-| v8 Option | v9 `tableFeatures` Slot | v9 Factory Function |
-|---|---|---|
-| `getCoreRowModel()` | (automatic) | Not needed |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel()` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel()` |
-| `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
-| `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel()` |
-| `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
-| `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
-| `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
+| Table V8 Option            | Table V9 `tableFeatures` Slot | Table V9 Factory Function     |
+| -------------------------- | ----------------------------- | ----------------------------- |
+| `getCoreRowModel()`        | (automatic)                   | Not needed, always included   |
+| `getFilteredRowModel()`    | `filteredRowModel`            | `createFilteredRowModel()`    |
+| `getSortedRowModel()`      | `sortedRowModel`              | `createSortedRowModel()`      |
+| `getPaginationRowModel()`  | `paginatedRowModel`           | `createPaginatedRowModel()`   |
+| `getExpandedRowModel()`    | `expandedRowModel`            | `createExpandedRowModel()`    |
+| `getGroupedRowModel()`     | `groupedRowModel`             | `createGroupedRowModel()`     |
+| `getFacetedRowModel()`     | `facetedRowModel`             | `createFacetedRowModel()`     |
+| `getFacetedMinMaxValues()` | `facetedMinMaxValues`         | `createFacetedMinMaxValues()` |
+| `getFacetedUniqueValues()` | `facetedUniqueValues`         | `createFacetedUniqueValues()` |
 
 ### Full Migration Example
 
@@ -236,12 +248,12 @@ const table = useTable({
 
 Vue v9 table state is atom-backed and Vue-aware. Prefer Vue `computed` values around narrow atom reads over broad whole-state reads.
 
-| Surface | Use |
-|---|---|
-| `table.atoms.<slice>.get()` | Narrow reactive reads inside Vue tracking scopes. |
-| `table.store.get()` | Current full state snapshot. Use mostly for debug output or intentionally broad dependencies. |
-| `table.Subscribe` | A render-function or JSX boundary whose child reads the atoms it needs. |
-| `table.baseAtoms.<slice>` | Internal writable atoms. Prefer feature APIs or external atoms. |
+| Surface                     | Use                                                                                           |
+| --------------------------- | --------------------------------------------------------------------------------------------- |
+| `table.atoms.<slice>.get()` | Narrow reactive reads inside Vue tracking scopes.                                             |
+| `table.store.get()`         | Current full state snapshot. Use mostly for debug output or intentionally broad dependencies. |
+| `table.Subscribe`           | A render-function or JSX boundary whose child reads the atoms it needs.                       |
+| `table.baseAtoms.<slice>`   | Internal writable atoms. Prefer feature APIs or external atoms.                               |
 
 ### Accessing State
 
@@ -307,9 +319,7 @@ Use `table.Subscribe` in render functions or JSX when a specific subtree should 
   children={(atoms) => {
     const pagination = atoms.pagination.get()
 
-    return (
-      <span>Page {pagination.pageIndex + 1}</span>
-    )
+    return <span>Page {pagination.pageIndex + 1}</span>
   }}
 />
 ```
@@ -365,6 +375,14 @@ const table = useTable({
 
 The v8-style top-level `onStateChange` callback is gone. Use per-slice callbacks or external atoms.
 
+If you want to lift or listen to any state change, set up a subscription to the `table.store`:
+
+```ts
+const unsubscribe = table.store.subscribe((state) => {
+  console.log(state)
+})
+```
+
 ### External Atoms
 
 Use external atoms when the app should own and share state slices outside the table.
@@ -416,12 +434,14 @@ const columns: ColumnDef<Person>[] = [
 
 // v9
 const columnHelper = createColumnHelper<typeof features, Person>()
-const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns([
-  columnHelper.accessor('age', {
-    header: 'Age',
-    sortFn: 'alphanumeric',
-  }),
-])
+const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
+  [
+    columnHelper.accessor('age', {
+      header: 'Age',
+      sortFn: 'alphanumeric',
+    }),
+  ],
+)
 ```
 
 Use `columnHelper.columns([...])` for better inference across nested columns.
@@ -434,15 +454,12 @@ The v9 `FlexRender` component supports shorthand props for cells, headers, and f
 
 ```vue
 <!-- v8 -->
-<FlexRender
-  :render="cell.column.columnDef.cell"
-  :props="cell.getContext()"
-/>
+<FlexRender :render="cell.column.columnDef.cell" :props="cell.getContext()" />
 
 <!-- v9 preferred -->
 <FlexRender :cell="cell" />
 <FlexRender :header="header" />
-<FlexRender :footer="header" />
+<FlexRender :footer="footer" />
 ```
 
 The older `:render` and `:props` shape still compiles, but the shorthand props are the preferred migration target.
@@ -521,25 +538,40 @@ const features = tableFeatures({
 
 ### Sorting API Renames
 
-| v8 | v9 |
-|---|---|
-| `sortingFn` | `sortFn` |
-| `sortingFns` | `sortFns` |
-| `getSortingFn()` | `getSortFn()` |
+| v8                   | v9                |
+| -------------------- | ----------------- |
+| `sortingFn`          | `sortFn`          |
+| `sortingFns`         | `sortFns`         |
+| `getSortingFn()`     | `getSortFn()`     |
 | `getAutoSortingFn()` | `getAutoSortFn()` |
-| `SortingFn` | `SortFn` |
+| `SortingFn`          | `SortFn`          |
 
-### Removed Internal API Prefixes
+### Removed Internal APIs
 
-Underscore-prefixed APIs that are now public should be called without `_`, such as `row.getAllCellsByColumnId()`.
+All internal APIs prefixed with `_` have been removed. If you were using any of these, use their public equivalents:
+
+- Removed: `table._getPinnedRows()`
+- Removed: `table._getFacetedRowModel()`
+- Removed: `table._getFacetedMinMaxValues()`
+- Removed: `table._getFacetedUniqueValues()`
+
+### Row API Changes
+
+Some row APIs have changed from private to public:
+
+| Table V8                                 | Table V9                               |
+| ---------------------------------------- | -------------------------------------- |
+| `row._getAllCellsByColumnId()` (private) | `row.getAllCellsByColumnId()` (public) |
+
+If you were accessing this internal API, you can now use it without the underscore prefix.
 
 ### Row Selection API Changes
 
 The "some rows selected" checks were simplified to mean "at least one row is selected":
 
-| API | v8 | v9 |
-|-----|-----|-----|
-| `table.getIsSomeRowsSelected()` | `true` when some but not all rows are selected | `true` when at least one row is selected |
+| API                                 | v8                                                  | v9                                            |
+| ----------------------------------- | --------------------------------------------------- | --------------------------------------------- |
+| `table.getIsSomeRowsSelected()`     | `true` when some but not all rows are selected      | `true` when at least one row is selected      |
 | `table.getIsSomePageRowsSelected()` | `true` when some but not all page rows are selected | `true` when at least one page row is selected |
 
 In v8 these returned `false` once every row was selected; in v9 they stay `true`. If you use them to drive an indeterminate "select all" checkbox, gate the indeterminate state on the matching all-selected check so it clears at full selection:
@@ -667,6 +699,7 @@ type Person = {
 - [ ] Replace `table.getState()` reads with `table.atoms.<slice>.get()` or `table.store.get()`.
 - [ ] Use Vue getters for controlled `state` slices.
 - [ ] Replace top-level `onStateChange` with per-slice callbacks or external atoms.
+- [ ] Replace destructured row/cell/column/header methods with calls on the instance (for example, `row.getValue('name')`).
 - [ ] Prefer `<FlexRender :cell="cell" />`, `:header`, and `:footer` shorthand rendering.
 - [ ] Audit `stockFeatures` before production.
 

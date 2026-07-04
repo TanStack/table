@@ -83,30 +83,30 @@ export class App {
 <table>
   <thead>
     @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-      <tr>
-        @for (header of headerGroup.headers; track header.id) {
-          <th>
-            @if (!header.isPlaceholder) {
-              <ng-container *flexRenderHeader="header; let headerCell">
-                {{ headerCell }}
-              </ng-container>
-            }
-          </th>
+    <tr>
+      @for (header of headerGroup.headers; track header.id) {
+      <th>
+        @if (!header.isPlaceholder) {
+        <ng-container *flexRenderHeader="header; let headerCell">
+          {{ headerCell }}
+        </ng-container>
         }
-      </tr>
+      </th>
+      }
+    </tr>
     }
   </thead>
   <tbody>
     @for (row of table.getRowModel().rows; track row.id) {
-      <tr>
-        @for (cell of row.getAllCells(); track cell.id) {
-          <td>
-            <ng-container *flexRenderCell="cell; let renderCell">
-              {{ renderCell }}
-            </ng-container>
-          </td>
-        }
-      </tr>
+    <tr>
+      @for (cell of row.getAllCells(); track cell.id) {
+      <td>
+        <ng-container *flexRenderCell="cell; let renderCell">
+          {{ renderCell }}
+        </ng-container>
+      </td>
+      }
+    </tr>
     }
   </tbody>
 </table>
@@ -162,23 +162,23 @@ export class App {
 <!-- app.html: thead changes, tbody unchanged from above -->
 <thead>
   @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-    <tr>
-      @for (header of headerGroup.headers; track header.id) {
-        <th>
-          @if (!header.isPlaceholder) {
-            <div
-              [style.cursor]="header.column.getCanSort() ? 'pointer' : null"
-              (click)="header.column.getToggleSortingHandler()?.($event)"
-            >
-              <ng-container *flexRenderHeader="header; let headerCell">
-                {{ headerCell }}
-              </ng-container>
-              {{ sortIndicator(header.column.getIsSorted()) }}
-            </div>
-          }
-        </th>
+  <tr>
+    @for (header of headerGroup.headers; track header.id) {
+    <th>
+      @if (!header.isPlaceholder) {
+      <div
+        [style.cursor]="header.column.getCanSort() ? 'pointer' : null"
+        (click)="header.column.getToggleSortingHandler()?.($event)"
+      >
+        <ng-container *flexRenderHeader="header; let headerCell">
+          {{ headerCell }}
+        </ng-container>
+        {{ sortIndicator(header.column.getIsSorted()) }}
+      </div>
       }
-    </tr>
+    </th>
+    }
+  </tr>
   }
 </thead>
 ```

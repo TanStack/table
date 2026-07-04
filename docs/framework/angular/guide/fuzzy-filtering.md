@@ -14,10 +14,23 @@ Here's how you set up your table to use fuzzy filtering features. Adding the fuz
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns, metaHelper } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFns,
+  sortFns,
+  metaHelper,
+} from '@tanstack/angular-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -63,7 +76,9 @@ import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { FilterFn, TableFeatures, RowData } from '@tanstack/angular-table'
 
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 ```
 
@@ -149,14 +164,14 @@ To use fuzzy filtering with column filtering, register your fuzzy filter functio
 ```typescript
 const column = [
   {
-    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     id: 'fullName',
     header: 'Full Name',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     filterFn: 'fuzzy', //using our custom fuzzy filter function
   },
   // other columns...
-];
+]
 ```
 
 In this example, we're applying the fuzzy filter to a column that combines the firstName and lastName fields of the data.

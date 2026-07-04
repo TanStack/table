@@ -8,7 +8,7 @@ Tables start with your data. Your column definitions and rows will depend on the
 
 ### TypeScript
 
-TypeScript is NOT required to use the TanStack Table packages... ***BUT*** TanStack Table is written and organized in such a way that makes the awesome TypeScript experience that you get feel like it is one of the main selling points of the library. If you are not using TypeScript, you will be missing out on a lot of great autocompletion and type-checking features that will both speed up your development time and reduce the number of bugs in your code.
+TypeScript is NOT required to use the TanStack Table packages... **_BUT_** TanStack Table is written and organized in such a way that makes the awesome TypeScript experience that you get feel like it is one of the main selling points of the library. If you are not using TypeScript, you will be missing out on a lot of great autocompletion and type-checking features that will both speed up your development time and reduce the number of bugs in your code.
 
 #### TypeScript Generics
 
@@ -127,7 +127,7 @@ const columns = [
   },
   {
     header: 'Age',
-    accessorFn: row => row.info.age, //accessorFn receives the whole row object
+    accessorFn: (row) => row.info.age, //accessorFn receives the whole row object
   },
   //...
 ]
@@ -198,23 +198,26 @@ const features = tableFeatures({}) // Define outside component for stable refere
 
 export default function MyComponent() {
   //✅ GOOD: `columns` is a stable reference
-  const columns = useMemo(() => [
-    // ...
-  ], []);
+  const columns = useMemo(
+    () => [
+      // ...
+    ],
+    [],
+  )
 
   //✅ GOOD: `data` is a stable reference
   const [data, setData] = useState(() => [
     // ...
-  ]);
+  ])
 
   // Columns and data have stable references, so the table only recomputes when they actually change
   const table = useTable({
     features,
     columns,
     data: data ?? fallbackData, //also good to use a fallback array that is defined outside of the component (stable reference)
-  });
+  })
 
-  return <table>...</table>;
+  return <table>...</table>
 }
 ```
 
@@ -229,21 +232,21 @@ export default function MyComponent() {
   //😵 BAD: `columns` is redefined as a new array on every render, so the column and header structures are rebuilt on every render!
   const columns = [
     // ...
-  ];
+  ]
 
   //😵 BAD: `data` is redefined as a new array on every render, so every row is rebuilt on every render!
   const data = [
     // ...
-  ];
+  ]
 
   //❌ Columns and data are defined in the same scope as `useTable` without stable references
   const table = useTable({
     features,
     columns,
     data: data ?? [], //❌ Also bad because the fallback array is re-created on every render
-  });
+  })
 
-  return <table>...</table>;
+  return <table>...</table>
 }
 ```
 
@@ -256,16 +259,16 @@ export default function MyComponent() {
   //✅ GOOD (TanStack Query provides stable references to data automatically)
   const { data, isLoading } = useQuery({
     //...
-  });
+  })
 
   const table = useTable({
     features,
     columns,
     //❌ BAD: This creates a new array on every render (destroys the stable reference)
-    data: data?.filter(d => d.isActive) ?? fallbackData,
-  });
+    data: data?.filter((d) => d.isActive) ?? fallbackData,
+  })
 
-  return <table>...</table>;
+  return <table>...</table>
 }
 ```
 
@@ -276,18 +279,21 @@ export default function MyComponent() {
   //✅ GOOD
   const { data, isLoading } = useQuery({
     //...
-  });
+  })
 
   //✅ GOOD: `filteredData` only gets a new reference when `data` changes
-  const filteredData = useMemo(() => data?.filter(d => d.isActive) ?? [], [data]);
+  const filteredData = useMemo(
+    () => data?.filter((d) => d.isActive) ?? [],
+    [data],
+  )
 
   const table = useTable({
     features,
     columns,
     data: filteredData, // stable reference!
-  });
+  })
 
-  return <table>...</table>;
+  return <table>...</table>
 }
 ```
 

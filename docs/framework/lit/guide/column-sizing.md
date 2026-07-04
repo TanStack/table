@@ -15,7 +15,11 @@ Here's how you set up your table to use column sizing features. Adding the colum
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, columnSizingFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnSizingFeature,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({ columnSizingFeature })
 

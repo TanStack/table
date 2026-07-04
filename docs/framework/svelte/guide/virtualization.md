@@ -113,16 +113,14 @@ $effect(() => {
 ```
 
 ```svelte
-<tbody
-  style="height: {$rowVirtualizer.getTotalSize()}px; position: relative;"
->
+<tbody style="height: {$rowVirtualizer.getTotalSize()}px; position: relative;">
   {#each $rowVirtualizer.getVirtualItems() as virtualRow (virtualRow.key)}
     {@const row = rows[virtualRow.index]}
     <tr
       style="position: absolute; transform: translateY({virtualRow.start}px); width: 100%;"
     >
       {#each row.getVisibleCells() as cell (cell.id)}
-        <td><FlexRender cell={cell} /></td>
+        <td><FlexRender {cell} /></td>
       {/each}
     </tr>
   {/each}

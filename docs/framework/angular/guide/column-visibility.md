@@ -14,7 +14,11 @@ Here's how you set up your table to use column visibility features. Adding the c
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnVisibilityFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
 
@@ -41,7 +45,11 @@ If you need to own the `columnVisibility` state yourself (for example, to persis
 
 ```ts
 import { createAtom } from '@tanstack/angular-store'
-import { injectTable, tableFeatures, columnVisibilityFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/angular-table'
 import type { ColumnVisibilityState } from '@tanstack/angular-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
@@ -126,7 +134,7 @@ const columns = [
     header: 'Name',
     accessorKey: 'name', // can be hidden
   },
-];
+]
 ```
 
 ### Column Visibility Toggle APIs
@@ -140,15 +148,15 @@ There are several column API methods that are useful for rendering column visibi
 
 ```html
 @for (column of table.getAllLeafColumns(); track column.id) {
-  <label>
-    <input
-      type="checkbox"
-      [checked]="column.getIsVisible()"
-      [disabled]="!column.getCanHide()"
-      (change)="column.getToggleVisibilityHandler()?.($event)"
-    />
-    {{ column.id }}
-  </label>
+<label>
+  <input
+    type="checkbox"
+    [checked]="column.getIsVisible()"
+    [disabled]="!column.getCanHide()"
+    (change)="column.getToggleVisibilityHandler()?.($event)"
+  />
+  {{ column.id }}
+</label>
 }
 ```
 
@@ -161,19 +169,21 @@ When you render your header, body, and footer cells, there are a lot of API opti
   <thead>
     <tr>
       @for (column of table.getVisibleLeafColumns(); track column.id) {
-        <th>{{ column.id }}</th>
+      <th>{{ column.id }}</th>
       }
     </tr>
   </thead>
   <tbody>
     @for (row of table.getRowModel().rows; track row.id) {
-      <tr>
-        @for (cell of row.getVisibleCells(); track cell.id) {
-          <td>
-            <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
-          </td>
-        }
-      </tr>
+    <tr>
+      @for (cell of row.getVisibleCells(); track cell.id) {
+      <td>
+        <ng-container *flexRenderCell="cell; let renderCell"
+          >{{ renderCell }}</ng-container
+        >
+      </td>
+      }
+    </tr>
     }
   </tbody>
 </table>

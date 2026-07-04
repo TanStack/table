@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```tsx
-import { createTable, tableFeatures, columnVisibilityFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
 
@@ -40,7 +44,11 @@ If you need to own the `columnVisibility` state yourself (for example, to persis
 
 ```tsx
 import { createAtom, useSelector } from '@tanstack/solid-store'
-import { createTable, tableFeatures, columnVisibilityFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/solid-table'
 import type { ColumnVisibilityState } from '@tanstack/solid-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
@@ -67,11 +75,12 @@ Alternatively, the v8-style `state.columnVisibility` plus `onColumnVisibilityCha
 ```tsx
 const features = tableFeatures({ columnVisibilityFeature })
 
-const [columnVisibility, setColumnVisibility] = createSignal<ColumnVisibilityState>({
-  columnId1: true,
-  columnId2: false, // hide this column by default
-  columnId3: true,
-})
+const [columnVisibility, setColumnVisibility] =
+  createSignal<ColumnVisibilityState>({
+    columnId1: true,
+    columnId2: false, // hide this column by default
+    columnId3: true,
+  })
 
 const table = createTable({
   features,
@@ -122,7 +131,7 @@ const columns = [
     header: 'Name',
     accessorKey: 'name', // can be hidden
   },
-];
+]
 ```
 
 ### Column Visibility Toggle APIs
@@ -136,7 +145,7 @@ There are several column API methods that are useful for rendering column visibi
 
 ```tsx
 <For each={table.getAllColumns()}>
-  {column => (
+  {(column) => (
     <label>
       <input
         checked={column.getIsVisible()}
@@ -159,7 +168,7 @@ When you render your header, body, and footer cells, there are a lot of API opti
   <thead>
     <tr>
       <For each={table.getVisibleLeafColumns()}>
-        {column => {
+        {(column) => {
           // takes column visibility into account
         }}
       </For>
@@ -167,14 +176,14 @@ When you render your header, body, and footer cells, there are a lot of API opti
   </thead>
   <tbody>
     <For each={table.getRowModel().rows}>
-      {row => (
-      <tr>
-        <For each={row.getVisibleCells()}>
-          {cell => {
-            // takes column visibility into account
-          }}
-        </For>
-      </tr>
+      {(row) => (
+        <tr>
+          <For each={row.getVisibleCells()}>
+            {(cell) => {
+              // takes column visibility into account
+            }}
+          </For>
+        </tr>
       )}
     </For>
   </tbody>

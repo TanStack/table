@@ -40,9 +40,9 @@ Column definition functions (`header`, `cell`, `footer`) are called inside [`run
 
 Prefer the shorthand directives for standard rendering:
 
-| Directive | Input | Column definition |
-|---|---|---|
-| `*flexRenderCell` | `Cell` | `columnDef.cell` |
+| Directive           | Input    | Column definition  |
+| ------------------- | -------- | ------------------ |
+| `*flexRenderCell`   | `Cell`   | `columnDef.cell`   |
 | `*flexRenderHeader` | `Header` | `columnDef.header` |
 | `*flexRenderFooter` | `Header` | `columnDef.footer` |
 
@@ -53,31 +53,31 @@ Each shorthand resolves the correct column definition function and render contex
 ```html
 <thead>
   @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-    <tr>
-      @for (header of headerGroup.headers; track header.id) {
-        <th>
-          @if (!header.isPlaceholder) {
-            <ng-container *flexRenderHeader="header; let value">
-              {{ value }}
-            </ng-container>
-          }
-        </th>
+  <tr>
+    @for (header of headerGroup.headers; track header.id) {
+    <th>
+      @if (!header.isPlaceholder) {
+      <ng-container *flexRenderHeader="header; let value">
+        {{ value }}
+      </ng-container>
       }
-    </tr>
+    </th>
+    }
+  </tr>
   }
 </thead>
 
 <tbody>
   @for (row of table.getRowModel().rows; track row.id) {
-    <tr>
-      @for (cell of row.getVisibleCells(); track cell.id) {
-        <td>
-          <ng-container *flexRenderCell="cell; let value">
-            {{ value }}
-          </ng-container>
-        </td>
-      }
-    </tr>
+  <tr>
+    @for (cell of row.getVisibleCells(); track cell.id) {
+    <td>
+      <ng-container *flexRenderCell="cell; let value">
+        {{ value }}
+      </ng-container>
+    </td>
+    }
+  </tr>
   }
 </tbody>
 ```
@@ -146,13 +146,13 @@ import { flexRenderComponent, type ColumnDef } from '@tanstack/angular-table'
 const columns: ColumnDef<Person>[] = [
   {
     id: 'custom-cell',
-    cell: ctx =>
+    cell: (ctx) =>
       flexRenderComponent(CustomCellComponent, {
         inputs: {
           content: ctx.row.original.firstName,
         },
         outputs: {
-          clicked: value => {
+          clicked: (value) => {
             console.log(value)
           },
         },
@@ -209,7 +209,7 @@ See the Angular docs for details:
 
 ### Returning a component class
 
-Return a component class from `header`, `cell`, or `footer`. 
+Return a component class from `header`, `cell`, or `footer`.
 
 The render context properties (`table`, `column`, `header`, `cell`, `row`, `getValue`, etc.) are automatically set as component inputs via `ComponentRef.setInput(...)`.
 
@@ -238,7 +238,7 @@ const columns: ColumnDef<Person>[] = [
   `,
 })
 export class TableHeadSelectionComponent<T> {
-  readonly table = input.required<Table<T>>();
+  readonly table = input.required<Table<T>>()
   // column = input.required<Column<typeof features, T, unknown>>()
   // header = input.required<Header<typeof features, T, unknown>>()
 }
@@ -273,9 +273,9 @@ import type {
 })
 export class AppComponent {
   readonly customHeader =
-    viewChild.required<TemplateRef<{ $implicit: HeaderContext<any, any, any> }>>(
-      'customHeader',
-    )
+    viewChild.required<
+      TemplateRef<{ $implicit: HeaderContext<any, any, any> }>
+    >('customHeader')
   readonly customCell =
     viewChild.required<TemplateRef<{ $implicit: CellContext<any, any, any> }>>(
       'customCell',
@@ -330,11 +330,11 @@ Three optional directives let you expose table, header, and cell context to **an
 
 This eliminates prop drilling: instead of passing data through multiple `input()` layers, any nested component or directive can inject the context directly.
 
-| Directive | Selector | Token | Inject helper |
-|---|---|---|---|
-| `TanStackTable` | `[tanStackTable]` | `TanStackTableToken` | `injectTableContext()` |
+| Directive             | Selector                | Token                      | Inject helper                |
+| --------------------- | ----------------------- | -------------------------- | ---------------------------- |
+| `TanStackTable`       | `[tanStackTable]`       | `TanStackTableToken`       | `injectTableContext()`       |
 | `TanStackTableHeader` | `[tanStackTableHeader]` | `TanStackTableHeaderToken` | `injectTableHeaderContext()` |
-| `TanStackTableCell` | `[tanStackTableCell]` | `TanStackTableCellToken` | `injectTableCellContext()` |
+| `TanStackTableCell`   | `[tanStackTableCell]`   | `TanStackTableCellToken`   | `injectTableCellContext()`   |
 
 Import them alongside `FlexRender`:
 
@@ -357,26 +357,24 @@ Apply them in the template to establish injection scopes:
 
 ```html
 <table [tanStackTable]="table">
-   <!-- components can access to table context -->
+  <!-- components can access to table context -->
 
   @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-    <tr>
-      @for (header of headerGroup.headers; track header.id) {
-        <th [tanStackTableHeader]="header">
-            <!-- components can access to table header context -->
-        </th>
-      }
-    </tr>
-  }
-
-  @for (row of table.getRowModel().rows; track row.id) {
-    <tr>
-      @for (cell of row.getVisibleCells(); track cell.id) {
-        <td [tanStackTableCell]="cell">
-            <!-- components can access to table cell context -->
-        </td>
-      }
-    </tr>
+  <tr>
+    @for (header of headerGroup.headers; track header.id) {
+    <th [tanStackTableHeader]="header">
+      <!-- components can access to table header context -->
+    </th>
+    }
+  </tr>
+  } @for (row of table.getRowModel().rows; track row.id) {
+  <tr>
+    @for (cell of row.getVisibleCells(); track cell.id) {
+    <td [tanStackTableCell]="cell">
+      <!-- components can access to table cell context -->
+    </td>
+    }
+  </tr>
   }
 </table>
 ```
@@ -389,9 +387,7 @@ import { injectTableCellContext } from '@tanstack/angular-table'
 
 @Component({
   template: `
-    <button (click)="onAction()">
-      Action for {{ cell().id }}
-    </button>
+    <button (click)="onAction()">Action for {{ cell().id }}</button>
   `,
 })
 export class CellActionsComponent {

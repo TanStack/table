@@ -231,13 +231,13 @@ export const {
 
 ### Returned Helpers
 
-| Helper | Purpose |
-|---|---|
-| `createAppTable` | Creates a Solid table with shared features, row models, defaults, and registered components. |
-| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound. |
-| `useTableContext` | Reads the current table inside registered table components. |
-| `useCellContext` | Reads the current cell inside registered cell components. |
-| `useHeaderContext` | Reads the current header/footer inside registered header components. |
+| Helper                  | Purpose                                                                                      |
+| ----------------------- | -------------------------------------------------------------------------------------------- |
+| `createAppTable`        | Creates a Solid table with shared features, row models, defaults, and registered components. |
+| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound.        |
+| `useTableContext`       | Reads the current table inside registered table components.                                  |
+| `useCellContext`        | Reads the current cell inside registered cell components.                                    |
+| `useHeaderContext`      | Reads the current header/footer inside registered header components.                         |
 
 ### Component Columns
 

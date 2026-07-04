@@ -232,13 +232,13 @@ export const {
 
 ### Returned Helpers
 
-| Helper | Purpose |
-|---|---|
-| `useAppTable` | Creates a table with shared features, row models, defaults, and registered components. |
-| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound. |
-| `useTableContext` | Reads the current table inside registered table components. |
-| `useCellContext` | Reads the current cell inside registered cell components. |
-| `useHeaderContext` | Reads the current header/footer inside registered header components. |
+| Helper                  | Purpose                                                                                |
+| ----------------------- | -------------------------------------------------------------------------------------- |
+| `useAppTable`           | Creates a table with shared features, row models, defaults, and registered components. |
+| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound.  |
+| `useTableContext`       | Reads the current table inside registered table components.                            |
+| `useCellContext`        | Reads the current cell inside registered cell components.                              |
+| `useHeaderContext`      | Reads the current header/footer inside registered header components.                   |
 
 > [!IMPORTANT]
 > Import `useTableContext`, `useCellContext`, and `useHeaderContext` from the same module where you called `createTableHook` (as shown above). Those hooks are typed with your `TFeatures` and your registered component maps, so values like `table.PaginationControls`, `cell.TextCell`, and `header.SortIndicator` are typed. See the [Table Context guide](./table-context) for details and for the scoped-context escape hatch.

@@ -16,7 +16,14 @@ Here's how you set up your table to use global filtering features. Global filter
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -80,7 +87,10 @@ import {
   globalFilteringFeature,
 } from '@tanstack/lit-table'
 
-const features = tableFeatures({ columnFilteringFeature, globalFilteringFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+})
 
 const table = this.tableController.table({
   features,
@@ -200,7 +210,8 @@ html`
   <input
     type="text"
     .value=${String(table.state.globalFilter ?? '')}
-    @input=${(e: InputEvent) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
+    @input=${(e: InputEvent) =>
+      table.setGlobalFilter((e.target as HTMLInputElement).value)}
     placeholder="Search all columns..."
   />
 `

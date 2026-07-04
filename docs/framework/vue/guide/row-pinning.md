@@ -40,11 +40,7 @@ There are 2 table features that can reorder rows, which happen in the following 
 To use row pinning, add `rowPinningFeature` to your features. Row pinning does not require a row model factory.
 
 ```ts
-import {
-  rowPinningFeature,
-  tableFeatures,
-  useTable,
-} from '@tanstack/vue-table'
+import { rowPinningFeature, tableFeatures, useTable } from '@tanstack/vue-table'
 
 const features = tableFeatures({ rowPinningFeature })
 
@@ -123,7 +119,8 @@ const table = useTable({
     },
   },
   onRowPinningChange: (updater) => {
-    rowPinning.value = updater instanceof Function ? updater(rowPinning.value) : updater
+    rowPinning.value =
+      updater instanceof Function ? updater(rowPinning.value) : updater
   },
 })
 ```
@@ -209,7 +206,7 @@ const table = useTable({
   features,
   columns,
   data,
-  enableRowPinning: row => row.original.status !== 'archived',
+  enableRowPinning: (row) => row.original.status !== 'archived',
 })
 ```
 

@@ -276,4 +276,3 @@ Rows are absolutely positioned inside a relatively positioned `tbody`, and cells
 - Test production builds. Framework development builds can be slower than production builds; profile production bundles before optimizing.
 - Prefer fixed row sizes when the UI allows it.
 - For column virtualization, use `column.getSize()`, `header.getSize()`, and `cell.column.getSize()` consistently.
-

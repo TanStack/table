@@ -145,9 +145,7 @@ const table = useTable({
           <template v-if="!header.isPlaceholder">
             <FlexRender :header="header" />
             {{
-              { asc: ' 🔼', desc: ' 🔽' }[
-                header.column.getIsSorted() as string
-              ]
+              { asc: ' 🔼', desc: ' 🔽' }[header.column.getIsSorted() as string]
             }}
           </template>
         </th>

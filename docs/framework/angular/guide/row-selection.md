@@ -15,7 +15,11 @@ Here's how you set up your table to use row selection features. Adding the row s
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, rowSelectionFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -60,7 +64,11 @@ If you need easy access to the selected row ids in other parts of your applicati
 
 ```ts
 import { createAtom } from '@tanstack/angular-store'
-import { injectTable, tableFeatures, rowSelectionFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/angular-table'
 import type { RowSelectionState } from '@tanstack/angular-table'
 
 const features = tableFeatures({ rowSelectionFeature })
@@ -207,16 +215,18 @@ If you want a simpler row selection UI, you can just hook up click events to the
 ```html
 <tbody>
   @for (row of table.getRowModel().rows; track row.id) {
-    <tr
-      [class.selected]="row.getIsSelected()"
-      (click)="row.getToggleSelectedHandler()?.($event)"
-    >
-      @for (cell of row.getVisibleCells(); track cell.id) {
-        <td>
-          <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
-        </td>
-      }
-    </tr>
+  <tr
+    [class.selected]="row.getIsSelected()"
+    (click)="row.getToggleSelectedHandler()?.($event)"
+  >
+    @for (cell of row.getVisibleCells(); track cell.id) {
+    <td>
+      <ng-container *flexRenderCell="cell; let renderCell"
+        >{{ renderCell }}</ng-container
+      >
+    </td>
+    }
+  </tr>
   }
 </tbody>
 ```

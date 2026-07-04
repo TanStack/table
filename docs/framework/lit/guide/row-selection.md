@@ -15,7 +15,11 @@ Here's how you set up your table to use row selection features. Adding the row s
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, rowSelectionFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -68,7 +72,11 @@ If you need easy access to the selected row ids in other parts of your applicati
 
 ```ts
 import { createAtom } from '@tanstack/store'
-import { TableController, tableFeatures, rowSelectionFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/lit-table'
 import type { RowSelectionState } from '@tanstack/lit-table'
 
 const features = tableFeatures({ rowSelectionFeature })
@@ -144,7 +152,7 @@ Row selection is enabled by default for all rows. To either enable row selection
 ```ts
 const table = this.tableController.table({
   //...
-  enableRowSelection: row => row.original.age > 18, //only enable row selection for adults
+  enableRowSelection: (row) => row.original.age > 18, //only enable row selection for adults
 })
 ```
 
@@ -222,7 +230,9 @@ html`
           class=${row.getIsSelected() ? 'selected' : ''}
           @click=${row.getToggleSelectedHandler()}
         >
-          ${row.getVisibleCells().map((cell) => html`<td>${FlexRender({ cell })}</td>`)}
+          ${row
+            .getVisibleCells()
+            .map((cell) => html`<td>${FlexRender({ cell })}</td>`)}
         </tr>
       `,
     )}

@@ -30,14 +30,18 @@ To render the header cells in a header group, you just map over the `headers` ar
 
 ```jsx
 <thead>
-  {table.getHeaderGroups().map(headerGroup => {
+  {table.getHeaderGroups().map((headerGroup) => {
     return (
       <tr key={headerGroup.id}>
-        {headerGroup.headers.map(header => ( // map over the headerGroup headers array
-          <th key={header.id} colSpan={header.colSpan}>
-            {/* */}
-          </th>
-        ))}
+        {headerGroup.headers.map(
+          (
+            header, // map over the headerGroup headers array
+          ) => (
+            <th key={header.id} colSpan={header.colSpan}>
+              {/* */}
+            </th>
+          ),
+        )}
       </tr>
     )
   })}

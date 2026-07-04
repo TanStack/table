@@ -117,12 +117,18 @@ class MyTable extends LitElement {
     })
 
     return html`
-      <tbody style="height: ${rowVirtualizer.getTotalSize()}px; position: relative">
+      <tbody
+        style="height: ${rowVirtualizer.getTotalSize()}px; position: relative"
+      >
         ${rowVirtualizer.getVirtualItems().map((virtualRow) => {
           const row = rows[virtualRow.index]
           return html`
-            <tr style="position: absolute; transform: translateY(${virtualRow.start}px); width: 100%">
-              ${row.getVisibleCells().map((cell) => html`<td>${FlexRender({ cell })}</td>`)}
+            <tr
+              style="position: absolute; transform: translateY(${virtualRow.start}px); width: 100%"
+            >
+              ${row
+                .getVisibleCells()
+                .map((cell) => html`<td>${FlexRender({ cell })}</td>`)}
             </tr>
           `
         })}
@@ -240,8 +246,7 @@ html`
         .getVirtualizer()
         .measureElement(node ?? null),
     )}
-  >
-  </tr>
+  ></tr>
 `
 ```
 

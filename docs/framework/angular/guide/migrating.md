@@ -1,35 +1,42 @@
 ---
-title: Migrating to TanStack Table v9 (Angular)
+title: Migrating to TanStack Table V9 (Angular)
 ---
 
 > [!NOTE]
 > `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Model Factories](#row-model-factories) section below for the new shape.
 
-## What's New in TanStack Table v9
+## What's New in TanStack Table V9
 
-TanStack Table v9 is a major release that introduces significant architectural improvements while maintaining the core table logic you're familiar with. Here are the key changes:
+TanStack Table V9 is a major release with significant internal architectural improvements while maintaining the core table logic you're familiar with. Here are the key changes:
 
-### 1. Tree Shaking and Extensibility
+### 1. Better Performance
 
-- **Features are tree-shakeable**: Features are now treated as plugins: import only what you use. If your table only needs sorting, you won't ship filtering, pagination, or other feature code. Bundlers can eliminate unused code, so for smaller tables you can expect a meaningfully smaller bundle compared to v8. This also lets TanStack Table add features over time without bloating everyone's bundles.
-- **Row models and their functions are refactored**: Row model factories (`createFilteredRowModel`, `createSortedRowModel`, etc.) are now slots on the `features` object, and their processing functions (`filterFns`, `sortFns`, `aggregationFns`) are registered as their own feature slots. This enables tree-shaking of the functions themselves: if you only register a custom filter, you don't pay for built-in filters you never use.
-- **Custom feature plugins with full type safety**: The same plugin architecture that powers the built-in features is open to your own code. Write a custom feature with its own state, options, and APIs, register it in `tableFeatures()` alongside the built-ins, and the table's types pick it all up automatically. See the [Custom Features Guide](./custom-features.md).
+- **Lower memory usage**: The core architecture now shares more behavior across table objects, with some large-table scenarios seeing up to 90% memory savings.
+- **Faster client-side row models**: Sorting, filtering, and aggregation paths have improved algorithms and memoization, with many scenarios seeing up to 40-70% speed improvements.
+- **Better column resizing performance**: Column resizing also gets significant performance improvements from the same architectural and memoization work.
 
-### 2. State Management
+### 2. State Management Overhaul
 
-- **Uses TanStack Store**: The internal state system has been rebuilt on [TanStack Store](https://tanstack.com/store), providing a reactive, framework-agnostic foundation.
-- **Opt-in subscriptions instead of memo hacks**: In Angular, table atoms are backed by signals. Use `computed(...)` when you want selector-style derivation or custom equality, and keep reads scoped to the state you actually need.
+- **TanStack Store foundation**: The internal state system has been rebuilt on [TanStack Store](https://tanstack.com/store), providing a reactive, framework-agnostic foundation.
+- **Angular signal integration**: Table atoms are backed by signals. Use `computed(...)` when you want selector-style derivation or custom equality, and keep reads scoped to the state you actually need.
+- **External state remains supported**: You can still use `state` plus `on[State]Change` by owning slices with Angular signals.
 
-### 3. Composability
+### 3. Type-Safety Improvements
 
-- **`tableOptions`**: New utilities let you compose and share table configurations. Define `features` (including row model factories) and default options once, then reuse them across tables or pass them through `createTableHook`.
-- **`createTableHook`** (optional, advanced): Create reusable, strongly typed Angular table factories with pre-bound features, row models, default options, and component registries.
+- **New and revamped type helpers**: New type helpers help define columns, custom filters, sorts, aggregations, column and table meta, shared table options and components, and more.
+- **Per-table meta types**: `tableMeta`, `columnMeta`, and `filterMeta` slots let you type meta for a specific table instead of globally augmenting shared interfaces. **No more global declaration merging required!**
+- **Feature-gated APIs**: APIs only exist when their feature is registered, and `tableFeatures()` validates feature prerequisites at the type level.
 
-### 4. Improved Type Safety (No More Declaration Merging)
+### 4. Tree Shaking and Extensibility
 
-- **Function registries replace `declare module` augmentation**: Custom filter, sort, and aggregation functions are registered by name in the `filterFns` / `sortFns` / `aggregationFns` slots on `tableFeatures()`. The registered keys become the valid, type-safe string values for `filterFn`, `sortFn`, `globalFilterFn`, and `aggregationFn` in your column definitions, with full inference. No more augmenting the `FilterFns` / `SortFns` / `AggregationFns` interfaces globally.
-- **Per-table meta slots**: The type-only `tableMeta`, `columnMeta`, and `filterMeta` slots declare meta types for a single table instead of merging into a global interface. The `filterMeta` slot types both the `addMeta` callback in filter functions and the values read back from `row.columnFiltersMeta`.
-- **Feature-gated APIs and validated prerequisites**: APIs like `table.setSorting` only exist on the table type when their feature is registered, and `tableFeatures()` validates slot prerequisites at the type level. Registering `sortFns` without `rowSortingFeature`, or `globalFilteringFeature` without `columnFilteringFeature`, is a typed error instead of a silent runtime no-op.
+- **Import only the features you use**: Tables that only need sorting do not ship filtering, pagination, or other unused feature code.
+- **Tree-shakeable row models and functions**: Row model factories and `filterFns` / `sortFns` / `aggregationFns` now live on `tableFeatures()`, so unused processing code can be dropped.
+- **Custom features use the same system**: Your own feature plugins can register state, options, and APIs alongside the built-in features. See the [Custom Features Guide](./custom-features.md).
+
+### 5. Composability
+
+- **`tableOptions`**: Compose reusable table configuration, including features, row models, and default options.
+- **`createTableHook`**: Create reusable, strongly typed Angular table factories with pre-bound features, row models, default options, and component registries.
 
 ### The Good News: Most Upgrades Are Opt-in
 
@@ -65,31 +72,66 @@ const v9Table = injectTable(() => ({
 > Note: `injectTable` evaluates your initializer whenever any Angular signal read inside of it changes.
 > Keep expensive/static values (like `columns` and `features`) as stable references outside the initializer.
 
-### New Required Option: `features`
+### Instance Methods Must Be Called on Their Instance
 
-In v9, you must explicitly declare which features and row model factories your table uses via `tableFeatures`:
+In v9, methods on rows, cells, columns, headers, and similar table objects are shared on the object's prototype instead of being created as arrow functions on each object. This improves memory usage, but it means destructuring those methods loses the `this` context they need to operate on the instance.
 
 ```ts
-// v8
-import { createAngularTable, getCoreRowModel } from '@tanstack/angular-table'
+// v8 - worked because getValue closed over the row object
+const { getValue } = row
+const value = getValue('name')
+
+// v9 - call the method on the instance
+const value = row.getValue('name')
+```
+
+This applies to row, cell, column, header, and related instance APIs, but not to the table instance itself. Audit code that destructures methods from table objects or passes them around as bare callbacks. Prefer calling them through the original object, for example `row.getValue('name')`, `cell.getContext()`, `column.getCanSort()`, or `header.getContext()`.
+
+Because these methods now live on the prototype, they also do not appear as own properties in `Object.keys(instance)`, object spread, or `JSON.stringify`. A shallow clone like `{ ...row }` copies row data but does not copy row methods. The methods are still callable normally because JavaScript looks them up through the prototype chain.
+
+### New Required `features` Table Option
+
+In Table V9, you must explicitly declare which features your table uses. Features, Row Models, and Row Model processing "Fns" are defined on the new `features` table option.
+
+In Table V8, all features were bundled and included in the table setup. In Table V9, you import only what you need.
+
+```ts
+// Table V8
+import {
+  createAngularTable,
+  getCoreRowModel,
+  getSortedRowModel,
+  sortingFns,
+} from '@tanstack/angular-table'
 
 const v8Table = createAngularTable(() => ({
   columns,
   data: data(),
   getCoreRowModel: getCoreRowModel(),
+  getSortedRowModel: getSortedRowModel(),
+  sortingFns,
 }))
 
-// v9
+// Table V9
 import {
+  createSortedRowModel,
   injectTable,
+  rowSortingFeature,
+  sortFns,
   tableFeatures,
 } from '@tanstack/angular-table'
 
-const features = tableFeatures({}) // Empty = core features only
+// All table options that concern including code modules (features, row models, Fns, etc.)
+const features = tableFeatures({
+  rowSortingFeature, // new - import and pass the feature you want to use
+  sortedRowModel: createSortedRowModel(), // now row models are defined on the features object
+  sortFns, // now Fns are defined on the features object
+  // ...more features, row models, etc.
+})
 
 // Define stable references outside the initializer
 const v9Table = injectTable(() => ({
-  features,
+  features, // new required option
   columns: this.columns,
   data: this.data(),
 }))
@@ -97,43 +139,16 @@ const v9Table = injectTable(() => ({
 
 ---
 
-## The `features` Option
+#### Shortcut: Use `stockFeatures` for Table V8-like Behavior
 
-Features control what table functionality is available. In v8, all features were bundled. In v9, you import only what you need.
-
-### Importing Individual Features
-
-```ts
-import {
-  tableFeatures,
-  // Import only the features you need
-  columnFilteringFeature,
-  rowSortingFeature,
-  rowPaginationFeature,
-  columnVisibilityFeature,
-  rowSelectionFeature,
-} from '@tanstack/angular-table'
-
-// Create a features object (define this outside your injectTable initializer for stable reference)
-const features = tableFeatures({
-  columnFilteringFeature,
-  rowSortingFeature,
-  rowPaginationFeature,
-  columnVisibilityFeature,
-  rowSelectionFeature,
-})
-```
-
-### Using `stockFeatures` for v8-like Behavior
-
-If you want all features without thinking about it (like v8), import `stockFeatures`:
+If you want all features without thinking about it (like Table V8), import `stockFeatures`:
 
 ```ts
 import { injectTable, stockFeatures } from '@tanstack/angular-table'
 
 class TableCmp {
   readonly table = injectTable(() => ({
-    features: stockFeatures, // All features included
+    features: stockFeatures, // All features included - just like Table V8
     columns: this.columns,
     data: this.data(),
   }))
@@ -142,42 +157,42 @@ class TableCmp {
 
 ### Available Features
 
-| Feature | Import Name |
-|---------|-------------|
-| Column Filtering | `columnFilteringFeature` |
-| Global Filtering | `globalFilteringFeature` |
-| Row Sorting | `rowSortingFeature` |
-| Row Pagination | `rowPaginationFeature` |
-| Row Selection | `rowSelectionFeature` |
-| Row Expanding | `rowExpandingFeature` |
-| Row Pinning | `rowPinningFeature` |
-| Column Pinning | `columnPinningFeature` |
+| Feature           | Import Name               |
+| ----------------- | ------------------------- |
+| Column Filtering  | `columnFilteringFeature`  |
+| Global Filtering  | `globalFilteringFeature`  |
+| Row Sorting       | `rowSortingFeature`       |
+| Row Pagination    | `rowPaginationFeature`    |
+| Row Selection     | `rowSelectionFeature`     |
+| Row Expanding     | `rowExpandingFeature`     |
+| Row Pinning       | `rowPinningFeature`       |
+| Column Pinning    | `columnPinningFeature`    |
 | Column Visibility | `columnVisibilityFeature` |
-| Column Ordering | `columnOrderingFeature` |
-| Column Sizing | `columnSizingFeature` |
-| Column Resizing | `columnResizingFeature` |
-| Column Grouping | `columnGroupingFeature` |
-| Column Faceting | `columnFacetingFeature` |
+| Column Ordering   | `columnOrderingFeature`   |
+| Column Sizing     | `columnSizingFeature`     |
+| Column Resizing   | `columnResizingFeature`   |
+| Column Grouping   | `columnGroupingFeature`   |
+| Column Faceting   | `columnFacetingFeature`   |
 
 ---
 
 ## Row Model Factories
 
-Row models are the functions that process your data (filtering, sorting, pagination, etc.). In v9, row model factories and their `*Fns` registries move from a separate `rowModels` option into `tableFeatures`. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
+Row models are the functions that process your data (filtering, sorting, pagination, etc.). In Table V9, row model factories and their `*Fns` registries move from a separate `rowModels` option into `tableFeatures`. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
 ### Migration Mapping
 
-| v8 Option | v9 `tableFeatures` slot | v9 Factory Function |
-|-----------|--------------------------|---------------------|
-| `getCoreRowModel()` | (automatic) | Not needed, always included |
-| `getFilteredRowModel()` | `filteredRowModel` | `createFilteredRowModel()` |
-| `getSortedRowModel()` | `sortedRowModel` | `createSortedRowModel()` |
-| `getPaginationRowModel()` | `paginatedRowModel` | `createPaginatedRowModel()` |
-| `getExpandedRowModel()` | `expandedRowModel` | `createExpandedRowModel()` |
-| `getGroupedRowModel()` | `groupedRowModel` | `createGroupedRowModel()` |
-| `getFacetedRowModel()` | `facetedRowModel` | `createFacetedRowModel()` |
-| `getFacetedMinMaxValues()` | `facetedMinMaxValues` | `createFacetedMinMaxValues()` |
-| `getFacetedUniqueValues()` | `facetedUniqueValues` | `createFacetedUniqueValues()` |
+| Table V8 Option            | Table V9 `tableFeatures` Slot | Table V9 Factory Function     |
+| -------------------------- | ----------------------------- | ----------------------------- |
+| `getCoreRowModel()`        | (automatic)                   | Not needed, always included   |
+| `getFilteredRowModel()`    | `filteredRowModel`            | `createFilteredRowModel()`    |
+| `getSortedRowModel()`      | `sortedRowModel`              | `createSortedRowModel()`      |
+| `getPaginationRowModel()`  | `paginatedRowModel`           | `createPaginatedRowModel()`   |
+| `getExpandedRowModel()`    | `expandedRowModel`            | `createExpandedRowModel()`    |
+| `getGroupedRowModel()`     | `groupedRowModel`             | `createGroupedRowModel()`     |
+| `getFacetedRowModel()`     | `facetedRowModel`             | `createFacetedRowModel()`     |
+| `getFacetedMinMaxValues()` | `facetedMinMaxValues`         | `createFacetedMinMaxValues()` |
+| `getFacetedUniqueValues()` | `facetedUniqueValues`         | `createFacetedUniqueValues()` |
 
 The `filterFns`, `sortFns`, and `aggregationFns` objects are now registered as named slots on `tableFeatures` rather than passed as arguments to the factory functions.
 
@@ -351,10 +366,9 @@ class TableCmp {
   }))
 
   // Provide an equality function for object slices
-  readonly pagination = computed(
-    () => this.table.atoms.pagination.get(),
-    { equal: shallow },
-  )
+  readonly pagination = computed(() => this.table.atoms.pagination.get(), {
+    equal: shallow,
+  })
 
   constructor() {
     effect(() => {
@@ -400,6 +414,14 @@ class TableCmp {
 }
 ```
 
+The v8-style `onStateChange` callback is no longer part of the v9 table state model. Use per-slice `on[State]Change` callbacks or subscribe to the table store when you need to listen to all state changes.
+
+```ts
+const unsubscribe = this.table.store.subscribe((state) => {
+  console.log(state)
+})
+```
+
 ---
 
 ## Column Helper Changes
@@ -413,7 +435,11 @@ import { createColumnHelper } from '@tanstack/angular-table'
 const columnHelperV8 = createColumnHelper<Person>()
 
 // v9
-import { createColumnHelper, tableFeatures, rowSortingFeature } from '@tanstack/angular-table'
+import {
+  createColumnHelper,
+  tableFeatures,
+  rowSortingFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({ rowSortingFeature })
 const columnHelperV9 = createColumnHelper<typeof features, Person>()
@@ -450,7 +476,13 @@ const columns = columnHelper.columns([
 When using `createTableHook`, you get a pre-bound `createAppColumnHelper` that only requires `TData`:
 
 ```ts
-import { createTableHook, tableFeatures, rowSortingFeature, createSortedRowModel, sortFns } from '@tanstack/angular-table'
+import {
+  createTableHook,
+  tableFeatures,
+  rowSortingFeature,
+  createSortedRowModel,
+  sortFns,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -512,15 +544,20 @@ The `tableOptions()` helper provides type-safe composition of table options. It'
 ### Basic Usage
 
 ```ts
-import { injectTable, tableOptions, tableFeatures, rowSortingFeature } from '@tanstack/angular-table'
-import { isDevMode } from '@angular/core';
+import {
+  injectTable,
+  tableOptions,
+  tableFeatures,
+  rowSortingFeature,
+} from '@tanstack/angular-table'
+import { isDevMode } from '@angular/core'
 
 const features = tableFeatures({ rowSortingFeature })
 
 // Create a reusable options object with features pre-configured
 const baseOptions = tableOptions({
   features,
-  debugTable: isDevMode()
+  debugTable: isDevMode(),
 })
 
 class TableCmp {
@@ -641,16 +678,21 @@ enableRowPinning: true
 
 All internal APIs prefixed with `_` have been removed. If you were using any of these, use their public equivalents.
 
+- Removed: `table._getPinnedRows()`
+- Removed: `table._getFacetedRowModel()`
+- Removed: `table._getFacetedMinMaxValues()`
+- Removed: `table._getFacetedUniqueValues()`
+
 ### Column Sizing vs. Column Resizing Split
 
 In v8, column sizing and resizing were combined in a single feature. In v9, they've been split into separate features for better tree-shaking.
 
-| v8 | v9 |
-|----|-----|
-| `ColumnSizing` (combined feature) | `columnSizingFeature` + `columnResizingFeature` |
-| `columnSizingInfo` state | `columnResizing` state |
-| `setColumnSizingInfo()` | `setcolumnResizing()` (note the lowercase `c`, the current v9 spelling) |
-| `onColumnSizingInfoChange` option | `onColumnResizingChange` option |
+| v8                                | v9                                                                      |
+| --------------------------------- | ----------------------------------------------------------------------- |
+| `ColumnSizing` (combined feature) | `columnSizingFeature` + `columnResizingFeature`                         |
+| `columnSizingInfo` state          | `columnResizing` state                                                  |
+| `setColumnSizingInfo()`           | `setcolumnResizing()` (note the lowercase `c`, the current v9 spelling) |
+| `onColumnSizingInfoChange` option | `onColumnResizingChange` option                                         |
 
 If you only need column sizing (fixed widths) without interactive resizing, you can import just `columnSizingFeature`. If you need drag-to-resize functionality, import both.
 
@@ -658,14 +700,14 @@ If you only need column sizing (fixed widths) without interactive resizing, you 
 
 Sorting-related APIs have been renamed for consistency:
 
-| v8 | v9 |
-|----|-----|
-| `sortingFn` (column def option) | `sortFn` |
-| `column.getSortingFn()` | `column.getSortFn()` |
-| `column.getAutoSortingFn()` | `column.getAutoSortFn()` |
-| `SortingFn` type | `SortFn` type |
-| `SortingFns` interface | `SortFns` interface |
-| `sortingFns` (built-in functions) | `sortFns` |
+| v8                                | v9                       |
+| --------------------------------- | ------------------------ |
+| `sortingFn` (column def option)   | `sortFn`                 |
+| `column.getSortingFn()`           | `column.getSortFn()`     |
+| `column.getAutoSortingFn()`       | `column.getAutoSortFn()` |
+| `SortingFn` type                  | `SortFn` type            |
+| `SortingFns` interface            | `SortFns` interface      |
+| `sortingFns` (built-in functions) | `sortFns`                |
 
 Update your column definitions.
 
@@ -673,17 +715,17 @@ Update your column definitions.
 
 Some row APIs have changed from private to public:
 
-| v8 | v9 |
-|----|-----|
+| v8                                       | v9                                     |
+| ---------------------------------------- | -------------------------------------- |
 | `row._getAllCellsByColumnId()` (private) | `row.getAllCellsByColumnId()` (public) |
 
 ### Row Selection API Changes
 
 The "some rows selected" checks were simplified to mean "at least one row is selected":
 
-| API | v8 | v9 |
-|-----|-----|-----|
-| `table.getIsSomeRowsSelected()` | `true` when some but not all rows are selected | `true` when at least one row is selected |
+| API                                 | v8                                                  | v9                                            |
+| ----------------------------------- | --------------------------------------------------- | --------------------------------------------- |
+| `table.getIsSomeRowsSelected()`     | `true` when some but not all rows are selected      | `true` when at least one row is selected      |
 | `table.getIsSomePageRowsSelected()` | `true` when some but not all page rows are selected | `true` when at least one page row is selected |
 
 In v8 these returned `false` once every row was selected; in v9 they stay `true`. If you use them to drive an indeterminate "select all" checkbox, gate the indeterminate state on the matching all-selected check so it clears at full selection:
@@ -819,6 +861,7 @@ This change improves type safety. If you were passing unusual data types, ensure
 - [ ] Split column sizing/resizing: use both `columnSizingFeature` and `columnResizingFeature` if needed
 - [ ] Rename `columnSizingInfo` state → `columnResizing` (and related options)
 - [ ] If you use `TableMeta`/`ColumnMeta` declaration merging, add the `TFeatures` generic to your augmentations (optionally, switch to the per-table `tableMeta`/`columnMeta` feature slots)
+- [ ] Replace destructured row/cell/column/header methods with calls on the instance (for example, `row.getValue('name')`)
 - [ ] (Optional) Use `tableOptions()` for composable configurations
 - [ ] (Optional) Use `createTableHook` for reusable table patterns
 
@@ -827,6 +870,7 @@ This change improves type safety. If you were passing unusual data types, ensure
 ## Examples
 
 Check out these examples to see v9 patterns in action:
+
 - [Basic (Inject Table)](../examples/basic-inject-table)
 - [Basic (App Table)](../examples/basic-app-table)
 - [Filters](../examples/filters)

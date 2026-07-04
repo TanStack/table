@@ -95,30 +95,30 @@ You can render the table with the same table instance APIs used by a standalone 
 <table>
   <thead>
     @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
-      <tr>
-        @for (header of headerGroup.headers; track header.id) {
-          <th (click)="header.column.getToggleSortingHandler()?.($event)">
-            @if (!header.isPlaceholder) {
-              <ng-container *flexRenderHeader="header; let headerCell">
-                {{ headerCell }}
-              </ng-container>
-            }
-          </th>
+    <tr>
+      @for (header of headerGroup.headers; track header.id) {
+      <th (click)="header.column.getToggleSortingHandler()?.($event)">
+        @if (!header.isPlaceholder) {
+        <ng-container *flexRenderHeader="header; let headerCell">
+          {{ headerCell }}
+        </ng-container>
         }
-      </tr>
+      </th>
+      }
+    </tr>
     }
   </thead>
   <tbody>
     @for (row of table.getRowModel().rows; track row.id) {
-      <tr>
-        @for (cell of row.getAllCells(); track cell.id) {
-          <td>
-            <ng-container *flexRenderCell="cell; let renderCell">
-              {{ renderCell }}
-            </ng-container>
-          </td>
-        }
-      </tr>
+    <tr>
+      @for (cell of row.getAllCells(); track cell.id) {
+      <td>
+        <ng-container *flexRenderCell="cell; let renderCell">
+          {{ renderCell }}
+        </ng-container>
+      </td>
+      }
+    </tr>
     }
   </tbody>
 </table>
@@ -227,13 +227,13 @@ This file is the source of truth for the feature set, row model pipeline, row ID
 
 ### Returned Helpers
 
-| Helper | Purpose |
-|---|---|
-| `injectAppTable` | Creates a table with the app's shared `features` (including row model factories), defaults, and registered components already attached. |
-| `createAppColumnHelper` | Creates column helpers where `cell`, `header`, and `footer` contexts know about the registered components. |
-| `injectTableContext` | Reads the current table inside registered table components like `PaginationControls`. |
-| `injectTableCellContext` | Reads the current cell inside registered cell components like `TextCell`. |
-| `injectTableHeaderContext` | Reads the current header/footer inside registered header components like `SortIndicator`. |
+| Helper                     | Purpose                                                                                                                                 |
+| -------------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `injectAppTable`           | Creates a table with the app's shared `features` (including row model factories), defaults, and registered components already attached. |
+| `createAppColumnHelper`    | Creates column helpers where `cell`, `header`, and `footer` contexts know about the registered components.                              |
+| `injectTableContext`       | Reads the current table inside registered table components like `PaginationControls`.                                                   |
+| `injectTableCellContext`   | Reads the current cell inside registered cell components like `TextCell`.                                                               |
+| `injectTableHeaderContext` | Reads the current header/footer inside registered header components like `SortIndicator`.                                               |
 
 ### Component Columns
 
@@ -293,19 +293,19 @@ export class PaginationControls {
 In templates, use the Angular rendering helpers with the app wrappers:
 
 ```html
-@for (_header of headerGroup.headers; track _header.id) {
-  @let header = table.appHeader(_header);
+@for (_header of headerGroup.headers; track _header.id) { @let header =
+table.appHeader(_header);
 
-  <th (click)="header.column.getToggleSortingHandler()?.($event)">
-    <ng-container *flexRenderHeader="header; let value">
-      {{ value }}
-    </ng-container>
-    <ng-container
-      *flexRender="header.SortIndicator; props: header.getContext(); let value"
-    >
-      {{ value }}
-    </ng-container>
-  </th>
+<th (click)="header.column.getToggleSortingHandler()?.($event)">
+  <ng-container *flexRenderHeader="header; let value">
+    {{ value }}
+  </ng-container>
+  <ng-container
+    *flexRender="header.SortIndicator; props: header.getContext(); let value"
+  >
+    {{ value }}
+  </ng-container>
+</th>
 }
 ```
 

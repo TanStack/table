@@ -15,7 +15,11 @@ Read your reactive inputs such as `data` through a getter (for example backing t
 Here's how you set up your table to use row selection features. Adding the row selection feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, rowSelectionFeature } from '@tanstack/alpine-table'
+import {
+  createTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/alpine-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -58,7 +62,12 @@ If you need easy access to the selected row ids in other parts of your applicati
 
 ```ts
 import { createAtom } from '@tanstack/store'
-import { createTable, tableFeatures, rowSelectionFeature, type RowSelectionState } from '@tanstack/alpine-table'
+import {
+  createTable,
+  tableFeatures,
+  rowSelectionFeature,
+  type RowSelectionState,
+} from '@tanstack/alpine-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 

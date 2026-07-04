@@ -15,7 +15,12 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. Additionally, if using client-side pagination, you also need to set up `paginatedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
-import { useTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  rowPaginationFeature,
+  createPaginatedRowModel,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
@@ -35,7 +40,7 @@ TanStack Table has great support for both client-side and server-side pagination
 
 ### Client-Side Pagination
 
-Using client-side pagination means that the `data` that you fetch will contain ***ALL*** of the rows for the table, and the table instance will handle pagination logic in the front-end.
+Using client-side pagination means that the `data` that you fetch will contain **_ALL_** of the rows for the table, and the table instance will handle pagination logic in the front-end.
 
 #### Should You Use Client-Side Pagination?
 
@@ -168,7 +173,8 @@ const table = useTable({
   columns,
   data,
   onPaginationChange: (updater) => {
-    pagination.value = updater instanceof Function ? updater(pagination.value) : updater
+    pagination.value =
+      updater instanceof Function ? updater(pagination.value) : updater
   },
   state: {
     get pagination() {
@@ -242,19 +248,38 @@ There are several pagination table instance APIs that are useful for hooking up 
 > **Note**: These pagination APIs are available when using `rowPaginationFeature`.
 
 ```vue
-<button type="button" @click="table.firstPage()" :disabled="!table.getCanPreviousPage()">
+<button
+  type="button"
+  @click="table.firstPage()"
+  :disabled="!table.getCanPreviousPage()"
+>
   &lt;&lt;
 </button>
-<button type="button" @click="table.previousPage()" :disabled="!table.getCanPreviousPage()">
+<button
+  type="button"
+  @click="table.previousPage()"
+  :disabled="!table.getCanPreviousPage()"
+>
   &lt;
 </button>
-<button type="button" @click="table.nextPage()" :disabled="!table.getCanNextPage()">
+<button
+  type="button"
+  @click="table.nextPage()"
+  :disabled="!table.getCanNextPage()"
+>
   &gt;
 </button>
-<button type="button" @click="table.lastPage()" :disabled="!table.getCanNextPage()">
+<button
+  type="button"
+  @click="table.lastPage()"
+  :disabled="!table.getCanNextPage()"
+>
   &gt;&gt;
 </button>
-<select :value="table.atoms.pagination.get().pageSize" @change="handlePageSizeChange">
+<select
+  :value="table.atoms.pagination.get().pageSize"
+  @change="handlePageSizeChange"
+>
   <option v-for="pageSize in [10, 20, 30, 40, 50]" :key="pageSize" :value="pageSize">
     Show {{ pageSize }}
   </option>
