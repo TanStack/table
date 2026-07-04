@@ -74,7 +74,7 @@
         {
           "label": "vanilla",
           "children": [
-            { "label": "Vanilla JS (No Framework)", "to": "vanilla" }
+            { "label": "Quick Start", "to": "framework/vanilla/quick-start" }
           ]
         }
       ]

@@ -2,45 +2,37 @@
 title: Overview
 ---
 
-TanStack Table is a bit of a different table library than you might be used to. It's _not_ a pre-built table component, like you might find from a library like AG Grid. Instead, it's a headless UI library that gives you the power to build your own powerful table and datagrid components the right way with whatever UI technology you want.
-
-There are some of you who might be disappointed to discover that this isn't a pre-built batteries included data grid component.
-
-TanStack Table is a **headless UI** library for building powerful tables and datagrids. Its core is **framework agnostic**, which means its API is the same regardless of the framework you are using. Official adapters are provided for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine, and you can use the core directly in vanilla TypeScript or JavaScript via `@tanstack/table-core`.
-
-> **These docs are for TanStack Table v9, which is currently in beta.** The docs for v8, the latest stable release, live at [tanstack.com/table/v8](https://tanstack.com/table/v8). When installing v9 packages, use the `beta` npm tag (see the [Installation](./installation) page).
-
-If you are upgrading from v8, start with the migration guide for your framework:
+> NOTE: If you are upgrading from TanStack Table v8, start with the migration guide for your framework:
 
 <!-- ::start:framework -->
 
 # React
 
-- [Migrating to V9](./framework/react/guide/migrating)
+- [Migrating to v9](./framework/react/guide/migrating)
 
 # Preact
 
-- [Migrating to V9](./framework/preact/guide/migrating)
+- [Migrating to v9](./framework/preact/guide/migrating)
 
 # Solid
 
-- [Migrating to V9](./framework/solid/guide/migrating)
+- [Migrating to v9](./framework/solid/guide/migrating)
 
 # Svelte
 
-- [Migrating to V9](./framework/svelte/guide/migrating)
+- [Migrating to v9](./framework/svelte/guide/migrating)
 
 # Vue
 
-- [Migrating to V9](./framework/vue/guide/migrating)
+- [Migrating to v9](./framework/vue/guide/migrating)
 
 # Angular
 
-- [Migrating to V9](./framework/angular/guide/migrating)
+- [Migrating to v9](./framework/angular/guide/migrating)
 
 # Lit
 
-- [Migrating to V9](./framework/lit/guide/migrating)
+- [Migrating to v9](./framework/lit/guide/migrating)
 
 # Alpine
 
@@ -48,9 +40,19 @@ If you are upgrading from v8, start with the migration guide for your framework:
 
 # Vanilla
 
-- The vanilla `@tanstack/table-core` entry point changed in v9. See the [Vanilla JS](./vanilla) page for the new setup.
+- The vanilla `@tanstack/table-core` entry point changed in v9. See the [Vanilla Quick Start](./framework/vanilla/quick-start) page for the new setup.
 
 <!-- ::end:framework -->
+
+TanStack Table is the best way to build your own powerful table and datagrid components with _blazingly fast_ performance, but most importantly, with **100% control over your own design and markup.**
+
+In this new age of AI, where markup can be generated in seconds, the old value proposition of pre-built components (saving you the typing) matters less than ever. What matters now is owning and controlling the result, and that is exactly what TanStack Table gives you.
+
+TanStack Table might be a bit of a different table library than you are used to. It is **_NOT_** a pre-built table component, like you might find from a library like [AG Grid](https://ag-grid.com?utm_source=reacttable&utm_campaign=githubreacttable). Instead, TanStack Table is a headless UI library that gives you the power to build your own fully customizable table and datagrid components the right way with whatever JavaScript libraries, component libraries, or design systems you want. TanStack Table is the _engine_ that you can hook up to your own favorite front-end tech, no matter what you're already using or want to use.
+
+At its core, TanStack Table is **agnostic**. ~95% of the source code of TanStack Table is written in vanilla, framework-agnostic TypeScript, and thin framework adapters are available for your favorite frameworks. Official adapters are provided for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine, or you can use the core directly in vanilla JavaScript via `@tanstack/table-core`.
+
+It also **does not care which CSS or component library** you use, and is compatible with anything from Tailwind, Bootstrap, Material UI, ShadCN UI, or even your own custom design system.
 
 ## What is "Headless" UI?
 
@@ -58,56 +60,270 @@ If you are upgrading from v8, start with the migration guide for your framework:
 
 > Want to dive deeper? [Read more about Headless UI](https://www.merrickchristensen.com/articles/headless-user-interface-components/).
 
-## Component-Based vs Headless Libraries
-
-In the ecosystem of table and datagrid libraries, there are two main categories, and each comes with tradeoffs:
-
-**Component-based table libraries** ship a feature-rich, drop-in solution with ready-to-use components, markup, styles, and theming. [AG Grid](https://ag-grid.com/react-data-grid/?utm_source=reacttable&utm_campaign=githubreacttable) is a great example of this kind of library, and is by far our favorite grid-sibling (don't tell the others). You get a turn-key experience with little setup, at the cost of less control over markup, theme-based styling, larger bundle sizes, and tighter coupling to specific frameworks and platforms. **If you want a ready-to-use table and design or bundle size are not hard requirements**, a component-based library like AG Grid is a great choice.
-
-**Headless table libraries** supply functions, state, and utilities that you wire into your own table markup (or attach to existing markup). You get full control over markup and styles, support for every styling pattern (CSS, CSS-in-JS, UI component libraries), smaller bundle sizes, and portability anywhere JavaScript runs, at the cost of a bit more setup and no provided markup or themes. **If you want a lighter-weight table or full control over the design**, TanStack Table was made for you.
-
-## TypeScript
-
-While TanStack Table is written in [TypeScript](https://www.typescriptlang.org/), using TypeScript in your application is optional (but recommended, as it comes with outstanding benefits to both you and your codebase).
-
-If you use TypeScript, you will get top-notch type safety and editor autocomplete for all table APIs and state.
-
-## Agnostic
-
-Since TanStack Table is headless and runs on a vanilla TypeScript core, it is agnostic in a couple of ways:
-
-1. TanStack Table is **framework agnostic**, which means you can use it with any JavaScript framework (or library) that you want. TanStack Table provides ready-to-use adapters for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine out of the box, and the framework-agnostic core works in vanilla TypeScript or JavaScript and even in JS-to-native platforms like React Native. You can also create your own adapter if you need to.
-2. TanStack Table is **CSS / component library agnostic**, which means that you can use TanStack Table with whatever CSS strategy or component library you want. TanStack Table itself does not render any table markup or styles. You bring your own! Want to use Tailwind, ShadCN, Chakra UI, Material UI, or Bootstrap? No problem! Have your own custom design system? TanStack Table was made for you!
-
-## Core Objects and Types
-
-Before diving into the object model, it helps to understand three concepts that are new in v9 and shape how everything else works:
-
-- **Opt-in features**: Every table feature (sorting, filtering, row selection, and so on) is now opt-in. You declare exactly which features your table uses via the `features` table option, built with the `tableFeatures()` helper. This enables tree-shaking, so you only bundle the code for the features you actually use. If you want every feature enabled, v8-style, you can pass the provided `stockFeatures` object instead.
-- **State atoms backed by TanStack Store**: Each slice of table state (sorting, pagination, column visibility, and so on) lives in its own reactive atom powered by [TanStack Store](https://tanstack.com/store/latest). Adapters subscribe to only the atoms you actually read, enabling fine-grained re-rendering, and you can supply your own external atoms to take full control of any state slice.
-- **Row models as explicit opt-ins**: Data transformations such as filtering, sorting, grouping, expanding, and pagination are performed by row models that you register explicitly as factory slots on the `tableFeatures()` call, using factories like `createSortedRowModel()` and `createFilteredRowModel()`. If you do not register a row model, its processing code never ships in your bundle.
-
-The table core then uses the following abstractions, commonly exposed by adapters:
-
-- [Data](./guide/data) - The core data array you provide the table
-- [Column Defs](./guide/column-defs): Objects used to configure a column and its data model, display templates, and more
-- [Table Instance](./guide/tables): The core table object containing both state and API
-- [Row Models](./guide/row-models): How the `data` array is transformed into useful rows depending on the features you are using
-- [Rows](./guide/rows): Each row mirrors its respective row data and provides row-specific APIs
-- [Cells](./guide/cells): Each cell mirrors its respective row-column intersection and provides cell-specific APIs
-- [Header Groups](./guide/header-groups): Header groups are computed slices of nested header levels, each containing a group of headers
-- [Headers](./guide/headers): Each header is either directly associated with or derived from its column def and provides header-specific APIs
-- [Columns](./guide/columns): Each column mirrors its respective column def and also provides column-specific APIs
-
-## Features
-
-TanStack Table will help you build just about any type of table you can imagine. It has built-in state and APIs for the following features, each of which you can opt in to individually:
+Here's the difference in practice. With a pre-built table component, you pass props in and style the result from the outside, limited to whatever the component's props and theme APIs allow. With TanStack Table, you create a table instance and use its state and APIs to render your own markup:
 
 <!-- ::start:framework -->
 
 # React
 
-- [Faceting](./framework/react/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
+```diff
+- {/* Pass props into a pre-built component and hope you can style it */}
+- <PrebuiltDataGrid
+-   data={data}
+-   columns={columns}
+-   theme={messyThemeOverrides}
+-   sx={cssOverridesThatHopefullyWork}
+-   positionPagination={"however-my-stakeholders-are-feeling-today"}
+- />
++ // Build your own markup from the table instance's state and APIs
++ const table = useTable({ features, columns, data })
++
++ return (
++   <table className="anything-you-want">
++     <thead>
++       {/* need to really customize the functionality in your headers? no problem! */}
++       {table.getHeaderGroups().map((headerGroup) => ( ... ))}
++     </thead>
++     <tbody>
++       {/* want to add virtualization here? no problem! */}
++       {table.getRowModel().rows.map((row) => ( ... ))}
++     </tbody>
++   </table>
++ )
+```
+
+# Preact
+
+```diff
+- {/* Pass props into a pre-built component and hope you can style it */}
+- <PrebuiltDataGrid
+-   data={data}
+-   columns={columns}
+-   theme={messyThemeOverrides}
+-   sx={cssOverridesThatHopefullyWork}
+-   positionPagination={"however-my-stakeholders-are-feeling-today"}
+- />
++ // Build your own markup from the table instance's state and APIs
++ const table = useTable({ features, columns, data })
++
++ return (
++   <table className="anything-you-want">
++     <thead>
++       {/* need to really customize the functionality in your headers? no problem! */}
++       {table.getHeaderGroups().map((headerGroup) => ( ... ))}
++     </thead>
++     <tbody>
++       {/* want to add virtualization here? no problem! */}
++       {table.getRowModel().rows.map((row) => ( ... ))}
++     </tbody>
++   </table>
++ )
+```
+
+# Solid
+
+```diff
+- {/* Pass props into a pre-built component and hope you can style it */}
+- <PrebuiltDataGrid
+-   data={data()}
+-   columns={columns}
+-   theme={messyThemeOverrides}
+-   sx={cssOverridesThatHopefullyWork}
+-   positionPagination={"however-my-stakeholders-are-feeling-today"}
+- />
++ // Build your own markup from the table instance's state and APIs
++ const table = createTable({ features, columns, get data() { return data() } })
++
++ return (
++   <table class="anything-you-want">
++     <thead>
++       {/* need to really customize the functionality in your headers? no problem! */}
++       <For each={table.getHeaderGroups()}>{(headerGroup) => ( ... )}</For>
++     </thead>
++     <tbody>
++       {/* want to add virtualization here? no problem! */}
++       <For each={table.getRowModel().rows}>{(row) => ( ... )}</For>
++     </tbody>
++   </table>
++ )
+```
+
+# Svelte
+
+```diff
+- <!-- Pass props into a pre-built component and hope you can style it -->
+- <PrebuiltDataGrid
+-   {data}
+-   {columns}
+-   theme={messyThemeOverrides}
+-   sx={cssOverridesThatHopefullyWork}
+-   positionPagination="however-my-stakeholders-are-feeling-today"
+- />
++ <!-- Build your own markup from the table instance's state and APIs -->
++ <script>
++   const table = createTable({ features, columns, get data() { return data } })
++ </script>
++
++ <table class="anything-you-want">
++   <thead>
++     <!-- need to really customize the functionality in your headers? no problem! -->
++     {#each table.getHeaderGroups() as headerGroup} ... {/each}
++   </thead>
++   <tbody>
++     <!-- want to add virtualization here? no problem! -->
++     {#each table.getRowModel().rows as row} ... {/each}
++   </tbody>
++ </table>
+```
+
+# Vue
+
+```diff
+- <!-- Pass props into a pre-built component and hope you can style it -->
+- <PrebuiltDataGrid
+-   :data="data"
+-   :columns="columns"
+-   :theme="messyThemeOverrides"
+-   :sx="cssOverridesThatHopefullyWork"
+-   position-pagination="however-my-stakeholders-are-feeling-today"
+- />
++ <!-- Build your own markup from the table instance's state and APIs -->
++ <script setup>
++ const table = useTable({ features, columns, data })
++ </script>
++
++ <template>
++   <table class="anything-you-want">
++     <thead>
++       <!-- need to really customize the functionality in your headers? no problem! -->
++       <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">...</tr>
++     </thead>
++     <tbody>
++       <!-- want to add virtualization here? no problem! -->
++       <tr v-for="row in table.getRowModel().rows" :key="row.id">...</tr>
++     </tbody>
++   </table>
++ </template>
+```
+
+# Angular
+
+```diff
+- <!-- Pass props into a pre-built component and hope you can style it -->
+- <prebuilt-data-grid
+-   [data]="data"
+-   [columns]="columns"
+-   [theme]="messyThemeOverrides"
+-   [styleOverrides]="cssOverridesThatHopefullyWork"
+-   positionPagination="however-my-stakeholders-are-feeling-today"
+- />
++ // Build your own markup from the table instance's state and APIs
++ readonly table = injectTable(() => ({ features, columns, data: this.data() }))
++
++ <!-- in your component template -->
++ <table class="anything-you-want">
++   <thead>
++     <!-- need to really customize the functionality in your headers? no problem! -->
++     @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) { ... }
++   </thead>
++   <tbody>
++     <!-- want to add virtualization here? no problem! -->
++     @for (row of table.getRowModel().rows; track row.id) { ... }
++   </tbody>
++ </table>
+```
+
+# Lit
+
+```diff
+- <!-- Pass props into a pre-built component and hope you can style it -->
+- <prebuilt-data-grid
+-   .data=${data}
+-   .columns=${columns}
+-   .theme=${messyThemeOverrides}
+-   .sx=${cssOverridesThatHopefullyWork}
+-   positionPagination="however-my-stakeholders-are-feeling-today"
+- ></prebuilt-data-grid>
++ // Build your own markup from the table instance's state and APIs
++ private tableController = new TableController(this)
++
++ render() {
++   const table = this.tableController.table({ features, columns, data: this.data })
++
++   return html`
++     <table class="anything-you-want">
++       <thead>
++         <!-- need to really customize the functionality in your headers? no problem! -->
++         ${table.getHeaderGroups().map((headerGroup) => html`...`)}
++       </thead>
++       <tbody>
++         <!-- want to add virtualization here? no problem! -->
++         ${table.getRowModel().rows.map((row) => html`...`)}
++       </tbody>
++     </table>
++   `
++ }
+```
+
+# Alpine
+
+```diff
+- <!-- Pass props into a pre-built component and hope you can style it -->
+- <prebuilt-data-grid
+-   data="data"
+-   columns="columns"
+-   theme="messy-theme-overrides"
+-   position-pagination="however-my-stakeholders-are-feeling-today"
+- ></prebuilt-data-grid>
++ // Build your own markup from the table instance's state and APIs
++ Alpine.data('myTable', () => {
++   const table = createTable({ features, columns, get data() { return data } })
++   return { table }
++ })
++
++ <!-- in your markup -->
++ <table class="anything-you-want" x-data="myTable">
++   <thead>
++     <!-- need to really customize the functionality in your headers? no problem! -->
++     <template x-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">...</template>
++   </thead>
++   <tbody>
++     <!-- want to add virtualization here? no problem! -->
++     <template x-for="row in table.getRowModel().rows" :key="row.id">...</template>
++   </tbody>
++ </table>
+```
+
+# Vanilla
+
+```diff
+- // Configure a pre-built widget and hope you can style it
+- new PrebuiltDataGrid('#my-table', {
+-   data,
+-   columns,
+-   theme: messyThemeOverrides,
+-   positionPagination: 'however-my-stakeholders-are-feeling-today',
+- })
++ // Build your own markup from the table instance's state and APIs
++ const table = constructTable({ features, columns, data })
++
++ // render however you like: DOM APIs, innerHTML, or your own template system
++ table.getHeaderGroups().forEach((headerGroup) => { ... })
++ table.getRowModel().rows.forEach((row) => { ... })
+```
+
+<!-- ::end:framework -->
+
+## Features
+
+TanStack Table is packed with features, but you only ever bundle the ones you use. Many libraries claim to be "lightweight"; TanStack Table happens to be lightweight too (under 20 KB even with every feature enabled), but more importantly, it is **modular**! You register only the features and row models that your table actually uses, and your bundler tree-shakes away the rest. A basic table bundles just the small core. The code for sorting, filtering, grouping, and every other feature below is only included in your bundle once you register it. So if you only use half of the features from TanStack Table, you only bundle about half of the library.
+
+We like to think of TanStack Table as more of a "system" for building tables than just a library, as it is one of the most customizable table libraries ever built. TanStack Table has the following built-in features, plus a custom features (plugin) system for adding your own state and APIs.
+
+<!-- ::start:framework -->
+
+# React
+
 - [Column Filtering](./framework/react/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/react/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/react/guide/column-ordering) - Dynamically change the order of columns
@@ -115,6 +331,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/react/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/react/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/react/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/react/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/react/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/react/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/react/guide/pagination) - Paginate rows
@@ -124,7 +341,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 # Preact
 
-- [Faceting](./framework/preact/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Column Filtering](./framework/preact/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/preact/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/preact/guide/column-ordering) - Dynamically change the order of columns
@@ -132,6 +348,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/preact/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/preact/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/preact/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/preact/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/preact/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/preact/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/preact/guide/pagination) - Paginate rows
@@ -141,7 +358,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 # Solid
 
-- [Faceting](./framework/solid/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Column Filtering](./framework/solid/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/solid/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/solid/guide/column-ordering) - Dynamically change the order of columns
@@ -149,6 +365,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/solid/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/solid/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/solid/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/solid/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/solid/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/solid/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/solid/guide/pagination) - Paginate rows
@@ -158,7 +375,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 # Svelte
 
-- [Faceting](./framework/svelte/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Column Filtering](./framework/svelte/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/svelte/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/svelte/guide/column-ordering) - Dynamically change the order of columns
@@ -166,6 +382,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/svelte/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/svelte/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/svelte/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/svelte/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/svelte/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/svelte/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/svelte/guide/pagination) - Paginate rows
@@ -175,7 +392,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 # Vue
 
-- [Faceting](./framework/vue/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Column Filtering](./framework/vue/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/vue/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/vue/guide/column-ordering) - Dynamically change the order of columns
@@ -183,6 +399,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/vue/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/vue/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/vue/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/vue/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/vue/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/vue/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/vue/guide/pagination) - Paginate rows
@@ -192,7 +409,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 # Angular
 
-- [Faceting](./framework/angular/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Column Filtering](./framework/angular/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/angular/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/angular/guide/column-ordering) - Dynamically change the order of columns
@@ -200,6 +416,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/angular/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/angular/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/angular/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/angular/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/angular/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/angular/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/angular/guide/pagination) - Paginate rows
@@ -209,7 +426,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 # Lit
 
-- [Faceting](./framework/lit/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Column Filtering](./framework/lit/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/lit/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/lit/guide/column-ordering) - Dynamically change the order of columns
@@ -217,6 +433,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/lit/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/lit/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/lit/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/lit/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/lit/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/lit/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/lit/guide/pagination) - Paginate rows
@@ -226,7 +443,6 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 # Alpine
 
-- [Faceting](./framework/alpine/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Column Filtering](./framework/alpine/guide/column-filtering) - Filter rows based on search values for a column
 - [Column Grouping](./framework/alpine/guide/grouping) - Group columns together, run aggregations, and more
 - [Column Ordering](./framework/alpine/guide/column-ordering) - Dynamically change the order of columns
@@ -234,6 +450,7 @@ TanStack Table will help you build just about any type of table you can imagine.
 - [Column Resizing](./framework/alpine/guide/column-resizing) - Let users resize columns with drag handles
 - [Column Sizing](./framework/alpine/guide/column-sizing) - Dynamically change the size of columns
 - [Column Visibility](./framework/alpine/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/alpine/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
 - [Global Filtering](./framework/alpine/guide/global-filtering) - Filter rows based on search values for the entire table
 - [Row Expanding](./framework/alpine/guide/expanding) - Expand/collapse rows (sub-rows)
 - [Row Pagination](./framework/alpine/guide/pagination) - Paginate rows
@@ -243,10 +460,82 @@ TanStack Table will help you build just about any type of table you can imagine.
 
 <!-- ::end:framework -->
 
-These are just some of the capabilities that you can build with TanStack Table. There are many more features that are possible with TanStack Table that you can add along-side the built-in features.
+## Composition
 
-Virtualization is an example of a feature that is not built in to TanStack Table, but can be achieved by using another library (like [TanStack Virtual](https://tanstack.com/virtual/latest)) alongside your other table rendering logic. Each framework has its own Virtualization guide in the Feature Guides section of the navigation.
+Headless doesn't just mean "bring your own styles". Because you own the markup, the event handlers, and (optionally) the state, TanStack Table composes cleanly with whatever else your table needs:
 
-TanStack Table also supports custom features (plugins) that you can use to modify the table instance and add your own custom logic to the table in a more integrated way. See the Custom Features guide for your framework to learn more.
+- **Your own state**: Any slice of table state (sorting, filters, pagination, etc.) can be lifted out of the table and managed however you like: in your framework's state, in a global store, or even in the URL.
+- **Your own features**: Custom features let you add your own state and APIs directly to the table instance, right alongside the built-in ones. See the Custom Features guide for your framework.
+- **Your own logic**: Anything else (fancy interactions, analytics, drag and drop, etc.) is just code you write around the table. There is no black box to fight against.
 
-And of course, you can just write your own state and hooks to add whatever other features you want for your table. The features from the TanStack Table core are just a solid foundation to build on, with a large focus on performance and DX.
+This also makes it easy to pair TanStack Table with other TanStack libraries:
+
+- [TanStack Virtual](https://tanstack.com/virtual/latest) - Virtualize thousands of rows or columns without changing any table logic (see the Virtualization guide for your framework)
+- [TanStack Query](https://tanstack.com/query/latest) - Fetch and cache server-side data for manual pagination, sorting, and filtering
+- [TanStack Form](https://tanstack.com/form/latest) - Build editable cells and inline row editing with validation
+- [TanStack Pacer](https://tanstack.com/pacer/latest) - Debounce or throttle filter inputs and other rapid-fire interactions
+- [TanStack Hotkeys](https://tanstack.com/hotkeys/latest) - Add type-safe keyboard shortcuts for table navigation and actions
+- [TanStack Store](https://tanstack.com/store/latest) - Already powers table state under the hood; provide your own atoms to take full control of any state slice
+
+## Get Started
+
+Ready to build something? Head to the Quick Start for your framework, then explore the runnable examples:
+
+<!-- ::start:framework -->
+
+# React
+
+- [React Quick Start](./framework/react/quick-start)
+- [Kitchen Sink example](./framework/react/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+Using a component library? These examples pair TanStack Table with popular React component libraries, with both a basic version and an advanced (kitchen sink) version for each:
+
+- ShadCN (Base UI): [Basic Example](./framework/react/examples/lib-shadcn-base) | [Advanced Example](./framework/react/examples/kitchen-sink-shadcn-base)
+- ShadCN (Radix UI): [Basic Example](./framework/react/examples/lib-shadcn-radix) | [Advanced Example](./framework/react/examples/kitchen-sink-shadcn-radix)
+- HeroUI: [Basic Example](./framework/react/examples/lib-hero-ui) | [Advanced Example](./framework/react/examples/kitchen-sink-hero-ui)
+- React Aria: [Basic Example](./framework/react/examples/lib-react-aria) | [Advanced Example](./framework/react/examples/kitchen-sink-react-aria)
+- Material UI: [Basic Example](./framework/react/examples/lib-material-ui) | [Advanced Example](./framework/react/examples/kitchen-sink-material-ui)
+- Mantine: [Basic Example](./framework/react/examples/lib-mantine) | [Advanced Example](./framework/react/examples/kitchen-sink-mantine)
+- Chakra UI: [Basic Example](./framework/react/examples/lib-chakra-ui) | [Advanced Example](./framework/react/examples/kitchen-sink-chakra-ui)
+
+# Preact
+
+- [Preact Quick Start](./framework/preact/quick-start)
+- [Kitchen Sink example](./framework/preact/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Solid
+
+- [Solid Quick Start](./framework/solid/quick-start)
+- [Kitchen Sink example](./framework/solid/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Svelte
+
+- [Svelte Quick Start](./framework/svelte/quick-start)
+- [Kitchen Sink example](./framework/svelte/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Vue
+
+- [Vue Quick Start](./framework/vue/quick-start)
+- [Kitchen Sink example](./framework/vue/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Angular
+
+- [Angular Quick Start](./framework/angular/quick-start)
+- [Kitchen Sink example](./framework/angular/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Lit
+
+- [Lit Quick Start](./framework/lit/quick-start)
+- [Kitchen Sink example](./framework/lit/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Alpine
+
+- [Alpine Quick Start](./framework/alpine/quick-start)
+- [Basic example](./framework/alpine/examples/basic-create-table) - A simple table to get you started
+
+# Vanilla
+
+- [Vanilla Quick Start](./framework/vanilla/quick-start)
+- [Basic example](./framework/vanilla/examples/basic) - A simple table built directly on `@tanstack/table-core`
+
+<!-- ::end:framework -->
