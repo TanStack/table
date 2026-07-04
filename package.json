@@ -98,6 +98,7 @@
     "@tanstack/table-core": "workspace:*",
     "@tanstack/table-devtools": "workspace:*",
     "@tanstack/vue-table": "workspace:*",
-    "@tanstack/vue-table-devtools": "workspace:*"
+    "@tanstack/vue-table-devtools": "workspace:*",
+    "@tanstack/vanilla-table": "workspace:*"
   }
 }

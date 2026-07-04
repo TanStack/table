@@ -1,0 +1,62 @@
+{
+  "name": "@tanstack/vanilla-table",
+  "version": "9.0.0-beta.30",
+  "description": "Vanilla JS adapter for TanStack Table",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/vanilla-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "table",
+    "vanilla",
+    "vanilla-table",
+    "datagrid"
+  ],
+  "type": "module",
+  "types": "./dist/index.d.cts",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./utils/virtualizer": {
+      "import": "./dist/utils/virtualizer.js",
+      "require": "./dist/utils/virtualizer.cjs"
+    },
+    "./vanillaTable": {
+      "import": "./dist/vanillaTable.js",
+      "require": "./dist/vanillaTable.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=16"
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src",
+    "test:types": "tsc",
+    "test:build": "publint --strict",
+    "build": "tsdown"
+  },
+  "dependencies": {
+    "@tanstack/store": "^0.11.0",
+    "@tanstack/table-core": "workspace:*",
+    "@tanstack/match-sorter-utils": "workspace:*"
+  }
+}

@@ -8,4 +8,5 @@ export default [
   './packages/svelte-table/vite.config.ts',
   './packages/table-core/vite.config.ts',
   './packages/vue-table/vite.config.ts',
+  './packages/vanilla-table/vite.config.ts',
 ]

@@ -22,6 +22,7 @@ overrides:
   '@tanstack/table-devtools': workspace:*
   '@tanstack/vue-table-devtools': workspace:*
   '@tanstack/vue-table': workspace:*
+  '@tanstack/vanilla-table': workspace:*
 
 packageExtensionsChecksum: sha256-kdMrH6YFBP5cMTJikpCMbz6Nj8NoVILHjAEjHhVi+hI=
 
@@ -8469,6 +8470,38 @@ importers:
         specifier: ^8.1.0
         version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/vanilla/basic-subscribe:
+    dependencies:
+      '@tanstack/vanilla-table':
+        specifier: workspace:*
+        version: link:../../../packages/vanilla-table
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
+
+  examples/vanilla/filters:
+    dependencies:
+      '@tanstack/vanilla-table':
+        specifier: workspace:*
+        version: link:../../../packages/vanilla-table
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0)
+
   examples/vanilla/pagination:
     dependencies:
       '@tanstack/table-core':
@@ -9814,6 +9847,18 @@ importers:
       vite-plugin-solid:
         specifier: ^2.11.12
         version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.13)(vite@8.1.0(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0))
+
+  packages/vanilla-table:
+    dependencies:
+      '@tanstack/match-sorter-utils':
+        specifier: workspace:*
+        version: link:../match-sorter-utils
+      '@tanstack/store':
+        specifier: ^0.11.0
+        version: 0.11.0
+      '@tanstack/table-core':
+        specifier: workspace:*
+        version: link:../table-core
 
   packages/vue-table:
     dependencies:

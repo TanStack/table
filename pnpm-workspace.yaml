@@ -20,6 +20,7 @@ overrides:
   '@tanstack/table-devtools': 'workspace:*'
   '@tanstack/vue-table-devtools': 'workspace:*'
   '@tanstack/vue-table': 'workspace:*'
+  '@tanstack/vanilla-table': 'workspace:*'
 
 packageExtensions:
   '@analogjs/vite-plugin-angular':
