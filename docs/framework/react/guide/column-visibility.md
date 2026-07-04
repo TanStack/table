@@ -13,7 +13,11 @@ Want to skip to the implementation? Check out these React examples:
 Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```tsx
-import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/react-table'
+import {
+  useTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/react-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
 
@@ -36,7 +40,11 @@ If you need to own the `columnVisibility` state yourself (for example, to persis
 
 ```tsx
 import { useCreateAtom, useSelector } from '@tanstack/react-store'
-import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/react-table'
+import {
+  useTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/react-table'
 import type { ColumnVisibilityState } from '@tanstack/react-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
@@ -63,11 +71,13 @@ Alternatively, the v8-style `state.columnVisibility` plus `onColumnVisibilityCha
 ```tsx
 const features = tableFeatures({ columnVisibilityFeature })
 
-const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>({
-  columnId1: true,
-  columnId2: false, // hide this column by default
-  columnId3: true,
-})
+const [columnVisibility, setColumnVisibility] = useState<ColumnVisibilityState>(
+  {
+    columnId1: true,
+    columnId2: false, // hide this column by default
+    columnId3: true,
+  },
+)
 
 const table = useTable({
   features,
@@ -116,7 +126,7 @@ const columns = [
     header: 'Name',
     accessorKey: 'name', // can be hidden
   },
-];
+]
 ```
 
 ### Column Visibility Toggle APIs
@@ -129,17 +139,19 @@ There are several column API methods that are useful for rendering column visibi
 - `column.getToggleVisibilityHandler` - Shortcut for hooking up the `column.toggleVisibility` method to a UI event handler.
 
 ```tsx
-{table.getAllColumns().map((column) => (
-  <label key={column.id}>
-    <input
-      checked={column.getIsVisible()}
-      disabled={!column.getCanHide()}
-      onChange={column.getToggleVisibilityHandler()}
-      type="checkbox"
-    />
-    {column.columnDef.header}
-  </label>
-))}
+{
+  table.getAllColumns().map((column) => (
+    <label key={column.id}>
+      <input
+        checked={column.getIsVisible()}
+        disabled={!column.getCanHide()}
+        onChange={column.getToggleVisibilityHandler()}
+        type="checkbox"
+      />
+      {column.columnDef.header}
+    </label>
+  ))
+}
 ```
 
 ### Column Visibility Aware Table APIs

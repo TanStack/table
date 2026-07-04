@@ -292,7 +292,9 @@ Alpine.data('table', () => {
     >
       <span x-text="cell.row.getIsExpanded() ? '👇' : '👉'"></span>
       <span x-html="FlexRender({ cell })"></span>
-      <span x-text="'(' + cell.row.subRows.length.toLocaleString() + ')'"></span>
+      <span
+        x-text="'(' + cell.row.subRows.length.toLocaleString() + ')'"
+      ></span>
     </button>
   </template>
   <!-- aggregated cell -->

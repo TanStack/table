@@ -143,7 +143,9 @@ export function PersonTable() {
                 {header.isPlaceholder ? null : (
                   <div
                     style={{
-                      cursor: header.column.getCanSort() ? 'pointer' : undefined,
+                      cursor: header.column.getCanSort()
+                        ? 'pointer'
+                        : undefined,
                     }}
                     onClick={header.column.getToggleSortingHandler()}
                   >

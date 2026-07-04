@@ -277,7 +277,7 @@ The table instance contains the state slices registered by its `features`. Each 
 ```ts
 table.atoms.rowSelection.get() // read the current row selection state
 table.store.state.rowSelection // read the current table state snapshot
-table.setRowSelection((old) => ({...old})) //set the row selection state
+table.setRowSelection((old) => ({ ...old })) //set the row selection state
 table.resetRowSelection() //reset the row selection state
 ```
 

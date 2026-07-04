@@ -221,11 +221,11 @@ The Lit example does not register `tableComponents` in `createTableHook`. Its ta
 
 ### Returned Helpers
 
-| Helper | Purpose |
-|---|---|
-| `useAppTable` | Creates a `TableController`-backed app table for a Lit host and attaches app render helpers. |
+| Helper                  | Purpose                                                                                           |
+| ----------------------- | ------------------------------------------------------------------------------------------------- |
+| `useAppTable`           | Creates a `TableController`-backed app table for a Lit host and attaches app render helpers.      |
 | `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered cell/header component types already bound. |
-| `useTableContext` | Lets custom elements like `pagination-controls` read the nearest app table context. |
+| `useTableContext`       | Lets custom elements like `pagination-controls` read the nearest app table context.               |
 
 ### Component Columns
 
@@ -313,7 +313,10 @@ return html`
             ${row
               .getAllCells()
               .map((cell) =>
-                table.AppCell(cell, (appCell) => html`<td>${appCell.FlexRender()}</td>`),
+                table.AppCell(
+                  cell,
+                  (appCell) => html`<td>${appCell.FlexRender()}</td>`,
+                ),
               )}
           </tr>
         `,

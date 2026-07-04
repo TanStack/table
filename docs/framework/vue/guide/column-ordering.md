@@ -15,7 +15,11 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```ts
-import { useTable, tableFeatures, columnOrderingFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({ columnOrderingFeature })
 
@@ -71,7 +75,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/vue-store'
-import { useTable, tableFeatures, columnOrderingFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/vue-table'
 import type { ColumnOrderState } from '@tanstack/vue-table'
 
 const features = tableFeatures({ columnOrderingFeature })
@@ -99,7 +107,11 @@ Alternatively, the v8-style `state.columnOrder` plus `onColumnOrderChange` patte
 ```ts
 const features = tableFeatures({ columnOrderingFeature })
 
-const columnOrder = ref<ColumnOrderState>(['columnId1', 'columnId2', 'columnId3'])
+const columnOrder = ref<ColumnOrderState>([
+  'columnId1',
+  'columnId2',
+  'columnId3',
+])
 //...
 const table = useTable({
   features,
@@ -111,7 +123,8 @@ const table = useTable({
     //...
   },
   onColumnOrderChange: (updater) => {
-    columnOrder.value = updater instanceof Function ? updater(columnOrder.value) : updater
+    columnOrder.value =
+      updater instanceof Function ? updater(columnOrder.value) : updater
   },
   //...
 })

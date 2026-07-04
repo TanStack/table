@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnSizingFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnSizingFeature,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({ columnSizingFeature })
 

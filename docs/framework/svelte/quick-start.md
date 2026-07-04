@@ -20,7 +20,11 @@ The component below is complete. Paste it into a Svelte 5 app and you will see a
 
 ```svelte
 <script lang="ts">
-  import { createTable, FlexRender, tableFeatures } from '@tanstack/svelte-table'
+  import {
+    createTable,
+    FlexRender,
+    tableFeatures,
+  } from '@tanstack/svelte-table'
   import type { ColumnDef } from '@tanstack/svelte-table'
 
   // 1. Define the shape of your data
@@ -77,7 +81,7 @@ The component below is complete. Paste it into a Svelte 5 app and you will see a
         {#each headerGroup.headers as header (header.id)}
           <th>
             {#if !header.isPlaceholder}
-              <FlexRender header={header} />
+              <FlexRender {header} />
             {/if}
           </th>
         {/each}
@@ -89,7 +93,7 @@ The component below is complete. Paste it into a Svelte 5 app and you will see a
       <tr>
         {#each row.getAllCells() as cell (cell.id)}
           <td>
-            <FlexRender cell={cell} />
+            <FlexRender {cell} />
           </td>
         {/each}
       </tr>
@@ -152,7 +156,7 @@ Features are opt-in in v9. To make columns sortable, register `rowSortingFeature
                 disabled={!header.column.getCanSort()}
                 onclick={header.column.getToggleSortingHandler()}
               >
-                <FlexRender header={header} />
+                <FlexRender {header} />
                 {#if header.column.getIsSorted() === 'asc'}
                   🔼
                 {:else if header.column.getIsSorted() === 'desc'}

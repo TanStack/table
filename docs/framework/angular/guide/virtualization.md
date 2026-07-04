@@ -99,22 +99,25 @@ readonly rowVirtualizer = injectVirtualizer(() => ({
 ```
 
 ```html
-<tbody [style.height.px]="rowVirtualizer.getTotalSize()" style="position: relative">
+<tbody
+  [style.height.px]="rowVirtualizer.getTotalSize()"
+  style="position: relative"
+>
   @for (virtualRow of rowVirtualizer.getVirtualItems(); track virtualRow.key) {
-    @let row = rows()[virtualRow.index];
-    <tr
-      [style.position]="'absolute'"
-      [style.transform]="'translateY(' + virtualRow.start + 'px)'"
-      [style.width]="'100%'"
-    >
-      @for (cell of row.getVisibleCells(); track cell.id) {
-        <td>
-          <ng-container *flexRenderCell="cell; let renderCell">
-            {{ renderCell }}
-          </ng-container>
-        </td>
-      }
-    </tr>
+  @let row = rows()[virtualRow.index];
+  <tr
+    [style.position]="'absolute'"
+    [style.transform]="'translateY(' + virtualRow.start + 'px)'"
+    [style.width]="'100%'"
+  >
+    @for (cell of row.getVisibleCells(); track cell.id) {
+    <td>
+      <ng-container *flexRenderCell="cell; let renderCell">
+        {{ renderCell }}
+      </ng-container>
+    </td>
+    }
+  </tr>
   }
 </tbody>
 ```
@@ -237,7 +240,7 @@ readonly rowVirtualizer = injectVirtualizer(() => ({
 <tr
   [attr.data-index]="virtualRow.index"
   [style.transform]="'translateY(' + virtualRow.start + 'px)'"
->
+></tr>
 ```
 
 Overscan helps avoid blank regions while measurements settle. If every row has a known fixed height, skip dynamic measurement and use the fixed height estimate instead.

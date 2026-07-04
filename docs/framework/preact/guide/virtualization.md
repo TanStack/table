@@ -151,7 +151,7 @@ The column virtualizer is configured for horizontal virtualization:
 ```tsx
 const columnVirtualizer = useVirtualizer({
   count: visibleColumns.length,
-  estimateSize: index => visibleColumns[index].getSize(),
+  estimateSize: (index) => visibleColumns[index].getSize(),
   getScrollElement: () => tableContainerRef.current,
   horizontal: true,
   overscan: 3,
@@ -272,4 +272,3 @@ Rows are absolutely positioned inside a relatively positioned `tbody`, and cells
 - Using `measureElement` when every row has a fixed height.
 - Expecting TanStack Table to provide virtualization APIs as a feature.
 - Mixing client-side virtualization with server-side sorting or filtering inconsistently.
-

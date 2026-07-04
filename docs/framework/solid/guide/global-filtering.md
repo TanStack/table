@@ -16,7 +16,14 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 Here's how you set up your table to use global filtering features. Global filtering depends on column filtering, so add `columnFilteringFeature` before `globalFilteringFeature`. Adding the global filtering feature enables the related APIs. Additionally, if using client-side filtering, you also need to set up `filteredRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
-import { createTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -70,7 +77,10 @@ import {
   globalFilteringFeature,
 } from '@tanstack/solid-table'
 
-const features = tableFeatures({ columnFilteringFeature, globalFilteringFeature })
+const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+})
 
 const table = createTable({
   features,

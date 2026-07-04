@@ -16,7 +16,12 @@ Here's how you set up your table to use column resizing features. Column resizin
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnSizingFeature,
+  columnResizingFeature,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -242,7 +247,7 @@ column.getIsResizing()
 The table instance exposes APIs for the transient resize state. Note that the current v9 API spelling is `table.setcolumnResizing` with a lowercase `c` in `column`; use that exact name.
 
 ```ts
-table.setcolumnResizing(old => ({
+table.setcolumnResizing((old) => ({
   ...old,
   deltaOffset: 12,
 }))

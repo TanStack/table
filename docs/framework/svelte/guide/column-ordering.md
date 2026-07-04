@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({ columnOrderingFeature })
 
@@ -73,7 +77,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/svelte-store'
-import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/svelte-table'
 import type { ColumnOrderState } from '@tanstack/svelte-table'
 
 const features = tableFeatures({ columnOrderingFeature })

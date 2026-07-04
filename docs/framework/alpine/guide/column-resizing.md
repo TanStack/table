@@ -16,7 +16,12 @@ Read your reactive inputs such as `data` through a getter (for example backing t
 Here's how you set up your table to use column resizing features. Column resizing depends on column sizing, so add `columnSizingFeature` before `columnResizingFeature`. Adding the column resizing feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/alpine-table'
+import {
+  createTable,
+  tableFeatures,
+  columnSizingFeature,
+  columnResizingFeature,
+} from '@tanstack/alpine-table'
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -118,10 +123,7 @@ cell.column.getSize()
 How you apply these size styles to your markup is up to you, but it is pretty common to use either CSS variables or inline styles to apply the column sizes. Because table reads are reactive inside Alpine bindings, a `:style` that reads `header.getSize()` updates automatically as the size changes:
 
 ```html
-<th
-  :colspan="header.colSpan"
-  :style="'width:' + header.getSize() + 'px'"
-></th>
+<th :colspan="header.colSpan" :style="'width:' + header.getSize() + 'px'"></th>
 ```
 
 Though, as discussed in the [advanced column resizing performance section](#advanced-column-resizing-performance), you may want to consider using CSS variables to apply column sizes to your markup.

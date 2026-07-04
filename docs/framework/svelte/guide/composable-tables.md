@@ -105,7 +105,7 @@ You can render the table with the same table instance APIs used by a standalone 
         {#each headerGroup.headers as header (header.id)}
           <th onclick={header.column.getToggleSortingHandler()}>
             {#if !header.isPlaceholder}
-              <FlexRender header={header} />
+              <FlexRender {header} />
             {/if}
           </th>
         {/each}
@@ -117,7 +117,7 @@ You can render the table with the same table instance APIs used by a standalone 
       <tr>
         {#each row.getAllCells() as cell (cell.id)}
           <td>
-            <FlexRender cell={cell} />
+            <FlexRender {cell} />
           </td>
         {/each}
       </tr>
@@ -225,13 +225,13 @@ export const {
 
 ### Returned Helpers
 
-| Helper | Purpose |
-|---|---|
-| `createAppTable` | Creates a Svelte table with shared features, row models, defaults, and registered components. |
-| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound. |
-| `useTableContext` | Reads the current table inside registered table components. |
-| `useCellContext` | Reads the current cell inside registered cell components. |
-| `useHeaderContext` | Reads the current header/footer inside registered header components. |
+| Helper                  | Purpose                                                                                       |
+| ----------------------- | --------------------------------------------------------------------------------------------- |
+| `createAppTable`        | Creates a Svelte table with shared features, row models, defaults, and registered components. |
+| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound.         |
+| `useTableContext`       | Reads the current table inside registered table components.                                   |
+| `useCellContext`        | Reads the current cell inside registered cell components.                                     |
+| `useHeaderContext`      | Reads the current header/footer inside registered header components.                          |
 
 ### Component Columns
 
@@ -301,7 +301,7 @@ The returned table includes Svelte components for `AppTable`, `AppHeader`, `AppC
               <table.AppHeader header={h}>
                 {#snippet children(header)}
                   <th onclick={header.column.getToggleSortingHandler()}>
-                    <header.FlexRender header={header} />
+                    <header.FlexRender {header} />
                     <header.SortIndicator />
                     <header.ColumnFilter />
                   </th>
@@ -315,7 +315,7 @@ The returned table includes Svelte components for `AppTable`, `AppHeader`, `AppC
         {#each rows as row (row.id)}
           <tr>
             {#each row.getAllCells() as cell (cell.id)}
-              <table.AppCell cell={cell}>
+              <table.AppCell {cell}>
                 {#snippet children(appCell)}
                   <td>
                     <appCell.FlexRender cell={appCell} />

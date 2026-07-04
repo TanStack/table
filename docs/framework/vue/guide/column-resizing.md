@@ -16,7 +16,12 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use column resizing features. Column resizing depends on column sizing, so add `columnSizingFeature` before `columnResizingFeature`. Adding the column resizing feature enables the related APIs.
 
 ```ts
-import { useTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnSizingFeature,
+  columnResizingFeature,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -210,7 +215,8 @@ const table = useTable({
     },
   },
   onColumnResizingChange: (updater) => {
-    columnResizing.value = updater instanceof Function ? updater(columnResizing.value) : updater
+    columnResizing.value =
+      updater instanceof Function ? updater(columnResizing.value) : updater
   },
 })
 ```
@@ -228,7 +234,7 @@ column.getIsResizing()
 The table instance exposes APIs for the transient resize state. Note that the current v9 API spelling is `table.setcolumnResizing` with a lowercase `c` in `column`; use that exact name.
 
 ```ts
-table.setcolumnResizing(old => ({
+table.setcolumnResizing((old) => ({
   ...old,
   deltaOffset: 12,
 }))

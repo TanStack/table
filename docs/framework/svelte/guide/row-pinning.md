@@ -15,7 +15,11 @@ Use getters for reactive inputs such as `data` when passing Svelte state to `cre
 Here's how you set up your table to use row pinning features. Adding the row pinning feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, rowPinningFeature } from '@tanstack/svelte-table'
+import {
+  createTable,
+  tableFeatures,
+  rowPinningFeature,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({ rowPinningFeature })
 
@@ -163,9 +167,17 @@ You can use these APIs to build pinning controls:
 ```svelte
 {#if row.getCanPin()}
   <div>
-    <button onclick={() => row.pin('top')} disabled={row.getIsPinned() === 'top'}>Top</button>
-    <button onclick={() => row.pin(false)} disabled={!row.getIsPinned()}>Center</button>
-    <button onclick={() => row.pin('bottom')} disabled={row.getIsPinned() === 'bottom'}>Bottom</button>
+    <button
+      onclick={() => row.pin('top')}
+      disabled={row.getIsPinned() === 'top'}>Top</button
+    >
+    <button onclick={() => row.pin(false)} disabled={!row.getIsPinned()}
+      >Center</button
+    >
+    <button
+      onclick={() => row.pin('bottom')}
+      disabled={row.getIsPinned() === 'bottom'}>Bottom</button
+    >
   </div>
 {/if}
 ```
@@ -215,7 +227,7 @@ const table = createTable({
   features,
   columns,
   data,
-  enableRowPinning: row => row.original.status !== 'archived',
+  enableRowPinning: (row) => row.original.status !== 'archived',
 })
 ```
 

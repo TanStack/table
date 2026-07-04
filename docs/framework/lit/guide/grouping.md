@@ -15,7 +15,13 @@ Here's how you set up your table to use grouping features. Adding the grouping f
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, columnGroupingFeature, createGroupedRowModel, aggregationFns } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnGroupingFeature,
+  createGroupedRowModel,
+  aggregationFns,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({
   columnGroupingFeature,
@@ -98,13 +104,13 @@ const table = this.tableController.table({
 The grouping state is an array of strings, where each string is the ID of a column to group by. The order of the strings in the array determines the order of the grouping. For example, if the grouping state is ['column1', 'column2'], then the table will first group by column1, and then within each group, it will group by column2. You can control the grouping state using the setGrouping function:
 
 ```ts
-table.setGrouping(['column1', 'column2']);
+table.setGrouping(['column1', 'column2'])
 ```
 
 You can also reset the grouping state to its initial state using the resetGrouping function:
 
 ```ts
-table.resetGrouping();
+table.resetGrouping()
 ```
 
 By default, when a column is grouped, it is moved to the start of the table. You can control this behavior using the groupedColumnMode option. If you set it to 'reorder', then the grouped columns will be moved to the start of the table. If you set it to 'remove', then the grouped columns will be removed from the table. If you set it to false, then the grouped columns will not be moved or removed.

@@ -42,7 +42,7 @@ TanStack Table has great support for both client-side and server-side pagination
 
 ### Client-Side Pagination
 
-Using client-side pagination means that the `data` that you fetch will contain ***ALL*** of the rows for the table, and the table instance will handle pagination logic in the front-end.
+Using client-side pagination means that the `data` that you fetch will contain **_ALL_** of the rows for the table, and the table instance will handle pagination logic in the front-end.
 
 #### Should You Use Client-Side Pagination?
 

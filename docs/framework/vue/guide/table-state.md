@@ -147,23 +147,25 @@ Use `table.Subscribe` in render functions or JSX when you want a specific part o
 You can also call it as a plain function inside a render function:
 
 ```tsx
-{table.Subscribe({
-  children: (atoms) => (
-    <tbody>
-      {table.getRowModel().rows.map((row) => (
-        <tr key={row.id}>
-          <td>
-            <input
-              type="checkbox"
-              checked={!!atoms.rowSelection.get()[row.id]}
-              onChange={row.getToggleSelectedHandler()}
-            />
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  ),
-})}
+{
+  table.Subscribe({
+    children: (atoms) => (
+      <tbody>
+        {table.getRowModel().rows.map((row) => (
+          <tr key={row.id}>
+            <td>
+              <input
+                type="checkbox"
+                checked={!!atoms.rowSelection.get()[row.id]}
+                onChange={row.getToggleSelectedHandler()}
+              />
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    ),
+  })
+}
 ```
 
 ### Setting Table State
@@ -300,7 +302,8 @@ const table = useTable({
     },
   },
   onSortingChange: (updater) => {
-    sorting.value = updater instanceof Function ? updater(sorting.value) : updater
+    sorting.value =
+      updater instanceof Function ? updater(sorting.value) : updater
   },
   onPaginationChange: (updater) => {
     pagination.value =

@@ -49,7 +49,12 @@ export const {
   useTableContext, // <- typed with TFeatures + your tableComponents
   useCellContext, //  <- typed with TFeatures + your cellComponents
   useHeaderContext, // <- typed with TFeatures + your headerComponents
-} = createTableHook({ features, tableComponents, cellComponents, headerComponents })
+} = createTableHook({
+  features,
+  tableComponents,
+  cellComponents,
+  headerComponents,
+})
 ```
 
 ## Passing Instances Through Your Own Context
@@ -98,7 +103,9 @@ The shared context only becomes a problem if you **nest** one table's provider i
 // scoped-table-context.ts (no component imports)
 import { createTableHookContexts, tableFeatures } from '@tanstack/preact-table'
 
-export const features = tableFeatures({ /* ... */ })
+export const features = tableFeatures({
+  /* ... */
+})
 
 export const {
   tableContext,
@@ -113,7 +120,12 @@ export const {
 ```tsx
 // table.ts
 import { createTableHook } from '@tanstack/preact-table'
-import { cellContext, features, headerContext, tableContext } from './scoped-table-context'
+import {
+  cellContext,
+  features,
+  headerContext,
+  tableContext,
+} from './scoped-table-context'
 
 export const { useAppTable } = createTableHook({
   features,

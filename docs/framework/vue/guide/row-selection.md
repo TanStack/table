@@ -15,7 +15,11 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use row selection features. Adding the row selection feature enables the related APIs.
 
 ```ts
-import { useTable, tableFeatures, rowSelectionFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -54,7 +58,11 @@ If you need easy access to the selected row ids in other parts of your applicati
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/vue-store'
-import { useTable, tableFeatures, rowSelectionFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/vue-table'
 import type { RowSelectionState } from '@tanstack/vue-table'
 
 const features = tableFeatures({ rowSelectionFeature })
@@ -82,7 +90,8 @@ const table = useTable({
   features,
   //...
   onRowSelectionChange: (updater) => {
-    rowSelection.value = updater instanceof Function ? updater(rowSelection.value) : updater
+    rowSelection.value =
+      updater instanceof Function ? updater(rowSelection.value) : updater
   },
   state: {
     get rowSelection() {
@@ -131,7 +140,7 @@ Row selection is enabled by default for all rows. To either enable row selection
 ```ts
 const table = useTable({
   //...
-  enableRowSelection: row => row.original.age > 18, //only enable row selection for adults
+  enableRowSelection: (row) => row.original.age > 18, //only enable row selection for adults
 })
 ```
 

@@ -14,7 +14,11 @@ Here's how you set up your table to use column ordering features. Adding the col
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnOrderingFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({ columnOrderingFeature })
 
@@ -74,7 +78,11 @@ In v9, the recommended way to own a state slice is with an external atom (create
 
 ```ts
 import { createAtom } from '@tanstack/angular-store'
-import { injectTable, tableFeatures, columnOrderingFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/angular-table'
 import type { ColumnOrderState } from '@tanstack/angular-table'
 
 const features = tableFeatures({ columnOrderingFeature })

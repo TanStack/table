@@ -15,7 +15,11 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use column visibility features. Adding the column visibility feature enables the related APIs.
 
 ```ts
-import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
 
@@ -38,7 +42,11 @@ If you need to own the `columnVisibility` state yourself (for example, to persis
 
 ```ts
 import { createAtom, useSelector } from '@tanstack/vue-store'
-import { useTable, tableFeatures, columnVisibilityFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/vue-table'
 import type { ColumnVisibilityState } from '@tanstack/vue-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
@@ -81,7 +89,8 @@ const table = useTable({
     //...
   },
   onColumnVisibilityChange: (updater) => {
-    columnVisibility.value = updater instanceof Function ? updater(columnVisibility.value) : updater
+    columnVisibility.value =
+      updater instanceof Function ? updater(columnVisibility.value) : updater
   },
 })
 ```
@@ -122,7 +131,7 @@ const columns = [
     header: 'Name',
     accessorKey: 'name', // can be hidden
   },
-];
+]
 ```
 
 ### Column Visibility Toggle APIs

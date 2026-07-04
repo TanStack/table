@@ -224,7 +224,11 @@ Then declare them on your `features` object:
 # React
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/react-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/react-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -236,7 +240,11 @@ const features = tableFeatures({
 # Preact
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/preact-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -248,7 +256,11 @@ const features = tableFeatures({
 # Vue
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/vue-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -260,7 +272,11 @@ const features = tableFeatures({
 # Solid
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/solid-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -272,7 +288,11 @@ const features = tableFeatures({
 # Svelte
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/svelte-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/svelte-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -284,7 +304,11 @@ const features = tableFeatures({
 # Angular
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/angular-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -296,7 +320,11 @@ const features = tableFeatures({
 # Lit
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/lit-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -308,7 +336,11 @@ const features = tableFeatures({
 # Alpine
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/alpine-table'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/alpine-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -320,7 +352,11 @@ const features = tableFeatures({
 # Vanilla
 
 ```ts
-import { metaHelper, rowSortingFeature, tableFeatures } from '@tanstack/table-core'
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/table-core'
 import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 
 const features = tableFeatures({
@@ -353,7 +389,7 @@ Unlike the v8-style declaration merging described below, this scoping is **per-t
 
 #### How the Type-Only Slots Work
 
-The `tableMeta` and `columnMeta` keys are *phantom* entries: only their TypeScript types matter. At runtime, the value is an empty object that gets stripped from the table's registered features, so it is never treated as a real feature. The actual meta *values* are still passed where they always were: the `meta` table option and the `meta` property on column definitions.
+The `tableMeta` and `columnMeta` keys are _phantom_ entries: only their TypeScript types matter. At runtime, the value is an empty object that gets stripped from the table's registered features, so it is never treated as a real feature. The actual meta _values_ are still passed where they always were: the `meta` table option and the `meta` property on column definitions.
 
 `metaHelper<MyMeta>()` simply returns `{}` cast to your meta type. You can write the cast yourself instead:
 
@@ -387,7 +423,12 @@ import {
   filterFns,
   sortFns,
 } from '@tanstack/react-table'
-import type { FilterFn, SortFn, RowData, TableFeatures } from '@tanstack/react-table'
+import type {
+  FilterFn,
+  SortFn,
+  RowData,
+  TableFeatures,
+} from '@tanstack/react-table'
 import { rankItem, type RankingInfo } from '@tanstack/match-sorter-utils'
 
 // 1. Define the metadata shape your filter function will attach
@@ -399,7 +440,12 @@ interface FuzzyFilterMeta {
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 // 3. Annotate your filter and sort functions against the extended features type
-const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (row, columnId, value, addMeta) => {
+const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
   const itemRank = rankItem(row.getValue(columnId), value)
   addMeta({ itemRank })
   return itemRank.passed
@@ -625,8 +671,8 @@ declare module '@tanstack/table-core' {
 
 The trade-off with declaration merging is that it is **global**. Every table in your entire project gets the same meta types, whether or not a given table actually provides that meta. If you have many tables with different needs, the per-table slots above are a better fit.
 
-The two approaches resolve with a simple precedence: if a `features` object declares a `tableMeta` or `columnMeta` slot, that slot's type is used for tables created with those features, *replacing* (not merging with) the globally declared interface. Tables whose features declare no slot fall back to the declaration-merged interfaces.
+The two approaches resolve with a simple precedence: if a `features` object declares a `tableMeta` or `columnMeta` slot, that slot's type is used for tables created with those features, _replacing_ (not merging with) the globally declared interface. Tables whose features declare no slot fall back to the declaration-merged interfaces.
 
 ### When to Use Custom Features Instead
 
-Meta is intentionally simple: a typed bag of values you carry through the table. If you find yourself wanting real table *options* with defaults, new *state*, or new *APIs* on the table instance (e.g. `table.toggleDensity()`), consider writing a [custom feature](../framework/react/guide/custom-features) instead. Custom features plug into the same `features` option, get the same `typeof features` type inference, and can declare their own options, state, and instance methods. Meta was never designed to do any of that.
+Meta is intentionally simple: a typed bag of values you carry through the table. If you find yourself wanting real table _options_ with defaults, new _state_, or new _APIs_ on the table instance (e.g. `table.toggleDensity()`), consider writing a [custom feature](../framework/react/guide/custom-features) instead. Custom features plug into the same `features` option, get the same `typeof features` type inference, and can declare their own options, state, and instance methods. Meta was never designed to do any of that.

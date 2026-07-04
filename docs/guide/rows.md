@@ -26,10 +26,8 @@ The `table` instance generates `row` objects and stores them in useful arrays ca
 
 ```jsx
 <tbody>
-  {table.getRowModel().rows.map(row => (
-    <tr key={row.id}>
-     {/* ... */}
-    </tr>
+  {table.getRowModel().rows.map((row) => (
+    <tr key={row.id}>{/* ... */}</tr>
   ))}
 </tbody>
 ```

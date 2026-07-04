@@ -82,7 +82,7 @@ function MyTable({ data }: { data: Person[] }) {
               <th key={header.id}>
                 {flexRender(
                   header.column.columnDef.header,
-                  header.getContext()
+                  header.getContext(),
                 )}
                 {header.column.getCanFilter() ? (
                   <Filter column={header.column} />
@@ -130,13 +130,13 @@ function RowActions({ row }: { row: LegacyRow<Person> }) {
 
 When using `useLegacyTable`, use these type helpers for proper TypeScript support:
 
-| Type | Description |
-|------|-------------|
-| `LegacyColumnDef<TData>` | Column definition type (equivalent to v8's `ColumnDef<TData>`) |
-| `LegacyColumn<TData>` | Column instance type |
-| `LegacyRow<TData>` | Row instance type |
-| `LegacyCell<TData>` | Cell instance type |
-| `LegacyTable<TData>` | Table instance type |
+| Type                                | Description                                                     |
+| ----------------------------------- | --------------------------------------------------------------- |
+| `LegacyColumnDef<TData>`            | Column definition type (equivalent to v8's `ColumnDef<TData>`)  |
+| `LegacyColumn<TData>`               | Column instance type                                            |
+| `LegacyRow<TData>`                  | Row instance type                                               |
+| `LegacyCell<TData>`                 | Cell instance type                                              |
+| `LegacyTable<TData>`                | Table instance type                                             |
 | `legacyCreateColumnHelper<TData>()` | Column helper with StockFeatures pre-bound; only requires TData |
 
 ### Using `legacyCreateColumnHelper`
@@ -181,8 +181,8 @@ import {
 
 Note that in v9, sorting-related APIs have been renamed. If you're using custom sorting functions in column definitions:
 
-| v8 | v9 |
-|----|-----|
+| v8          | v9       |
+| ----------- | -------- |
 | `sortingFn` | `sortFn` |
 
 The legacy table adapter handles this internally for built-in sorting, but if you're defining custom sorting functions, be aware of the rename.

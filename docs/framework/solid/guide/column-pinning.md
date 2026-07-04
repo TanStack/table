@@ -17,7 +17,11 @@ Use getters for reactive inputs such as `data` when passing Solid signals to `cr
 Here's how you set up your table to use column pinning features. Adding the column pinning feature enables the related APIs.
 
 ```tsx
-import { createTable, tableFeatures, columnPinningFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/solid-table'
 
 const features = tableFeatures({ columnPinningFeature })
 
@@ -52,7 +56,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```tsx
 import { createAtom, useSelector } from '@tanstack/solid-store'
-import { createTable, tableFeatures, columnPinningFeature } from '@tanstack/solid-table'
+import {
+  createTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/solid-table'
 import type { ColumnPinningState } from '@tanstack/solid-table'
 
 const features = tableFeatures({ columnPinningFeature })

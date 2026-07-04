@@ -13,7 +13,11 @@ Want to skip to the implementation? Check out these Preact examples:
 Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```tsx
-import { useTable, tableFeatures, columnSizingFeature } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  columnSizingFeature,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({ columnSizingFeature })
 

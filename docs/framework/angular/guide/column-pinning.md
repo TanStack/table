@@ -16,7 +16,11 @@ Here's how you set up your table to use column pinning features. Adding the colu
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnPinningFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({ columnPinningFeature })
 
@@ -53,7 +57,11 @@ In v9, the recommended way to own a state slice is with an external atom (create
 
 ```ts
 import { createAtom } from '@tanstack/angular-store'
-import { injectTable, tableFeatures, columnPinningFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/angular-table'
 import type { ColumnPinningState } from '@tanstack/angular-table'
 
 const features = tableFeatures({ columnPinningFeature })

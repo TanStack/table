@@ -15,7 +15,17 @@ Here's how you set up your table to use fuzzy filtering features. Adding the fuz
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFns,
+  sortFns,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -66,7 +76,12 @@ Here's an example of a custom fuzzy filter function:
 ```typescript
 import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type { FilterFn, RowData, TableFeatures, metaHelper } from '@tanstack/lit-table'
+import type {
+  FilterFn,
+  RowData,
+  TableFeatures,
+  metaHelper,
+} from '@tanstack/lit-table'
 
 // Define the shape of filter meta stored by the fuzzy filter
 interface FuzzyFilterMeta {
@@ -156,14 +171,14 @@ To use fuzzy filtering with column filtering, register the fuzzy filter in the `
 ```typescript
 const column = [
   {
-    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     id: 'fullName',
     header: 'Full Name',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     filterFn: 'fuzzy', //using our custom fuzzy filter function
   },
   // other columns...
-];
+]
 ```
 
 In this example, we're applying the fuzzy filter to a column that combines the firstName and lastName fields of the data.

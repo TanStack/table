@@ -13,7 +13,11 @@ Want to skip to the implementation? Check out these Preact examples:
 Here's how you set up your table to use row selection features. Adding the row selection feature enables the related APIs.
 
 ```tsx
-import { useTable, tableFeatures, rowSelectionFeature } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  rowSelectionFeature,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -54,7 +58,12 @@ If you need easy access to the selected row ids in other parts of your applicati
 
 ```ts
 import { useCreateAtom, useSelector } from '@tanstack/preact-store'
-import { useTable, tableFeatures, rowSelectionFeature, type RowSelectionState } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  rowSelectionFeature,
+  type RowSelectionState,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({ rowSelectionFeature })
 
@@ -126,7 +135,7 @@ Row selection is enabled by default for all rows. To either enable row selection
 ```ts
 const table = useTable({
   //...
-  enableRowSelection: row => row.original.age > 18, //only enable row selection for adults
+  enableRowSelection: (row) => row.original.age > 18, //only enable row selection for adults
 })
 ```
 
@@ -201,14 +210,14 @@ If you want a simpler row selection UI, you can just hook up click events to the
 
 ```tsx
 <tbody>
-  {table.getRowModel().rows.map(row => {
+  {table.getRowModel().rows.map((row) => {
     return (
       <tr
         key={row.id}
         className={row.getIsSelected() ? 'selected' : null}
         onClick={row.getToggleSelectedHandler()}
       >
-        {row.getVisibleCells().map(cell => {
+        {row.getVisibleCells().map((cell) => {
           return <td key={cell.id}>{/* */}</td>
         })}
       </tr>

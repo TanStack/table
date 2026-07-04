@@ -15,7 +15,13 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use grouping features. Adding the grouping feature enables the related APIs. Additionally, if using client-side grouping, you also need to set up `groupedRowModel` after its associated feature because row model slots are type-checked.
 
 ```ts
-import { useTable, tableFeatures, columnGroupingFeature, createGroupedRowModel, aggregationFns } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnGroupingFeature,
+  createGroupedRowModel,
+  aggregationFns,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({
   columnGroupingFeature,
@@ -86,13 +92,13 @@ const table = useTable({
 The grouping state is an array of strings, where each string is the ID of a column to group by. The order of the strings in the array determines the order of the grouping. For example, if the grouping state is ['column1', 'column2'], then the table will first group by column1, and then within each group, it will group by column2. You can control the grouping state using the setGrouping function:
 
 ```ts
-table.setGrouping(['column1', 'column2']);
+table.setGrouping(['column1', 'column2'])
 ```
 
 You can also reset the grouping state to its initial state using the resetGrouping function:
 
 ```ts
-table.resetGrouping();
+table.resetGrouping()
 ```
 
 By default, when a column is grouped, it is moved to the start of the table. You can control this behavior using the groupedColumnMode option. If you set it to 'reorder', then the grouped columns will be moved to the start of the table. If you set it to 'remove', then the grouped columns will be removed from the table. If you set it to false, then the grouped columns will not be moved or removed.
@@ -216,7 +222,8 @@ const table = useTable({
     },
   },
   onGroupingChange: (updater) => {
-    grouping.value = updater instanceof Function ? updater(grouping.value) : updater
+    grouping.value =
+      updater instanceof Function ? updater(grouping.value) : updater
   },
 })
 ```

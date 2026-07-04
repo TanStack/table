@@ -17,7 +17,11 @@ Here's how you set up your table to use column pinning features. Adding the colu
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, columnPinningFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({ columnPinningFeature })
 
@@ -62,7 +66,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```ts
 import { createAtom } from '@tanstack/store'
-import { TableController, tableFeatures, columnPinningFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/lit-table'
 import type { ColumnPinningState } from '@tanstack/lit-table'
 
 const features = tableFeatures({ columnPinningFeature })

@@ -8,7 +8,7 @@ In this guide, we'll cover how to extend TanStack Table with custom features, an
 
 ### TanStack Table Strives to be Lean
 
-TanStack Table has a core set of features that are built into the library such as sorting, filtering, pagination, etc. We've received a lot of requests and sometimes even some well thought out PRs to add even more features to the library. While we are always open to improving the library, we also want to make sure that TanStack Table remains a lean library that does not include too much bloat and code that is unlikely to be used in most use cases. Not every PR can, or should, be accepted into the core library, even if it does solve a real problem. This can be frustrating to developers where TanStack Table solves 90% of their use case, but they need a little bit more control. 
+TanStack Table has a core set of features that are built into the library such as sorting, filtering, pagination, etc. We've received a lot of requests and sometimes even some well thought out PRs to add even more features to the library. While we are always open to improving the library, we also want to make sure that TanStack Table remains a lean library that does not include too much bloat and code that is unlikely to be used in most use cases. Not every PR can, or should, be accepted into the core library, even if it does solve a real problem. This can be frustrating to developers where TanStack Table solves 90% of their use case, but they need a little bit more control.
 
 TanStack Table has always been built in a way that allows it to be highly extensible (at least since v7). The `table` instance that is returned from whichever framework adapter that you are using (the Lit `TableController`'s `table()` method, React's `useTable`, etc.) is a plain JavaScript object that can have extra properties or APIs added to it. It has always been possible to use composition to add custom logic, state, and APIs to the table instance. Libraries like [Material React Table](https://github.com/KevinVandy/material-react-table/blob/v2/packages/material-react-table/src/hooks/useMRT_TableInstance.ts) have simply created custom wrappers around their adapter's table constructor to extend the table instance with custom functionality, and you can do the same around `TableController` in Lit.
 
@@ -129,7 +129,7 @@ The `assignCellPrototype` method in a table feature is responsible for adding me
 
 ### Adding a Custom Feature
 
-Let's walk through making a custom table feature for a hypothetical use case. Let's say we want to add a feature to the table instance that allows the user to change the "density" (padding of cells) of the table. 
+Let's walk through making a custom table feature for a hypothetical use case. Let's say we want to add a feature to the table instance that allows the user to change the "density" (padding of cells) of the table.
 
 Here's an in-depth look at the steps to create a custom feature.
 
@@ -277,7 +277,11 @@ const density = table.state.density
 
 return html`
   <td
-    style="padding: ${density === 'sm' ? '4px' : density === 'md' ? '8px' : '16px'}; transition: padding 0.2s"
+    style="padding: ${density === 'sm'
+      ? '4px'
+      : density === 'md'
+        ? '8px'
+        : '16px'}; transition: padding 0.2s"
   >
     ${FlexRender({ cell })}
   </td>

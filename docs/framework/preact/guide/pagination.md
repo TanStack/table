@@ -13,7 +13,12 @@ Want to skip to the implementation? Check out these Preact examples:
 Here's how you set up your table to use pagination features. Adding the pagination feature enables the related APIs. Additionally, if using client-side pagination, you also need to set up `paginatedRowModel` after its associated feature because row model slots are type-checked.
 
 ```tsx
-import { useTable, tableFeatures, rowPaginationFeature, createPaginatedRowModel } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  rowPaginationFeature,
+  createPaginatedRowModel,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({
   rowPaginationFeature,
@@ -33,7 +38,7 @@ TanStack Table has great support for both client-side and server-side pagination
 
 ### Client-Side Pagination
 
-Using client-side pagination means that the `data` that you fetch will contain ***ALL*** of the rows for the table, and the table instance will handle pagination logic in the front-end.
+Using client-side pagination means that the `data` that you fetch will contain **_ALL_** of the rows for the table, and the table instance will handle pagination logic in the front-end.
 
 #### Should You Use Client-Side Pagination?
 

@@ -15,7 +15,11 @@ Read your reactive inputs such as `data` through a getter (for example backing t
 Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnSizingFeature } from '@tanstack/alpine-table'
+import {
+  createTable,
+  tableFeatures,
+  columnSizingFeature,
+} from '@tanstack/alpine-table'
 
 const features = tableFeatures({ columnSizingFeature })
 

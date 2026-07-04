@@ -173,7 +173,8 @@ const features = tableFeatures({
               :style="header.column.getCanSort() ? 'cursor: pointer' : ''"
               @click="header.column.getToggleSortingHandler()?.($event)"
             >
-              <span x-html="FlexRender({ header })"></span><span
+              <span x-html="FlexRender({ header })"></span
+              ><span
                 x-text="({ asc: ' 🔼', desc: ' 🔽' })[header.column.getIsSorted()] ?? ''"
               ></span>
             </div>

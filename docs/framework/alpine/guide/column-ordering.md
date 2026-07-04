@@ -15,7 +15,11 @@ Read your reactive inputs such as `data` through a getter (for example backing t
 Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```ts
-import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/alpine-table'
+import {
+  createTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/alpine-table'
 
 const features = tableFeatures({ columnOrderingFeature })
 
@@ -73,7 +77,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```ts
 import { createAtom } from '@tanstack/store'
-import { createTable, tableFeatures, columnOrderingFeature } from '@tanstack/alpine-table'
+import {
+  createTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/alpine-table'
 import type { ColumnOrderState } from '@tanstack/alpine-table'
 
 const features = tableFeatures({ columnOrderingFeature })

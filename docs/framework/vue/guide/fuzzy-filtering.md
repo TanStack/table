@@ -15,10 +15,23 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. Additionally, if using client-side fuzzy filtering and sorting, you also need to set up `filteredRowModel` and `sortedRowModel` after their associated features because row model slots are type-checked.
 
 ```ts
-import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns, metaHelper } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFns,
+  sortFns,
+  metaHelper,
+} from '@tanstack/vue-table'
 import type { FilterFn, SortFn, RowData } from '@tanstack/vue-table'
 
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -60,7 +73,9 @@ import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { FilterFn, RowData, TableFeatures } from '@tanstack/vue-table'
 
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 const fuzzyFilter: FilterFn<FuzzyFeatures, RowData> = (
@@ -143,14 +158,14 @@ To use fuzzy filtering with column filtering, register your fuzzy filter functio
 ```typescript
 const column = [
   {
-    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     id: 'fullName',
     header: 'Full Name',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     filterFn: 'fuzzy', //using our custom fuzzy filter function
   },
   // other columns...
-];
+]
 ```
 
 In this example, we're applying the fuzzy filter to a column that combines the firstName and lastName fields of the data.

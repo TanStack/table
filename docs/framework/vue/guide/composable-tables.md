@@ -242,13 +242,13 @@ export const useHeaderContext: <TValue extends CellData = CellData>() => Header<
 
 ### Returned Helpers
 
-| Helper | Purpose |
-|---|---|
-| `useAppTable` | Creates a Vue table with shared features, row models, defaults, and registered components. |
-| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound. |
-| `useTableContext` | Reads the current table inside registered table components. |
-| `useCellContext` | Reads the current cell inside registered cell components. |
-| `useHeaderContext` | Reads the current header/footer inside registered header components. |
+| Helper                  | Purpose                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------ |
+| `useAppTable`           | Creates a Vue table with shared features, row models, defaults, and registered components. |
+| `createAppColumnHelper` | Creates column helpers with `TFeatures` and registered component types already bound.      |
+| `useTableContext`       | Reads the current table inside registered table components.                                |
+| `useCellContext`        | Reads the current cell inside registered cell components.                                  |
+| `useHeaderContext`      | Reads the current header/footer inside registered header components.                       |
 
 ### Component Columns
 
@@ -308,7 +308,10 @@ The returned table includes Vue components for `AppTable`, `AppHeader`, `AppCell
 
       <table>
         <thead>
-          <tr v-for="headerGroup in table.getHeaderGroups()" :key="headerGroup.id">
+          <tr
+            v-for="headerGroup in table.getHeaderGroups()"
+            :key="headerGroup.id"
+          >
             <component
               :is="table.AppHeader"
               v-for="header in headerGroup.headers"

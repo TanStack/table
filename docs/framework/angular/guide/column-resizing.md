@@ -15,7 +15,12 @@ Here's how you set up your table to use column resizing features. Column resizin
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnSizingFeature, columnResizingFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnSizingFeature,
+  columnResizingFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({
   columnSizingFeature,
@@ -232,7 +237,7 @@ column.getIsResizing()
 The table instance exposes APIs for the transient resize state. The current generated v9 API spelling is `table.setcolumnResizing` with a lowercase `c` in `column`; use that exact name.
 
 ```ts
-table.setcolumnResizing(old => ({
+table.setcolumnResizing((old) => ({
   ...old,
   deltaOffset: 12,
 }))

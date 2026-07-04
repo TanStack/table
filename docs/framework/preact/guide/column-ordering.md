@@ -13,7 +13,11 @@ Want to skip to the implementation? Check out these Preact examples:
 Here's how you set up your table to use column ordering features. Adding the column ordering feature enables the related APIs.
 
 ```tsx
-import { useTable, tableFeatures, columnOrderingFeature } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/preact-table'
 
 const features = tableFeatures({ columnOrderingFeature })
 
@@ -69,7 +73,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```tsx
 import { useCreateAtom, useSelector } from '@tanstack/preact-store'
-import { useTable, tableFeatures, columnOrderingFeature } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  columnOrderingFeature,
+} from '@tanstack/preact-table'
 import type { ColumnOrderState } from '@tanstack/preact-table'
 
 const features = tableFeatures({ columnOrderingFeature })
@@ -97,7 +105,11 @@ Alternatively, the v8-style `state.columnOrder` plus `onColumnOrderChange` patte
 ```tsx
 const features = tableFeatures({ columnOrderingFeature })
 
-const [columnOrder, setColumnOrder] = useState<ColumnOrderState>(['columnId1', 'columnId2', 'columnId3'])
+const [columnOrder, setColumnOrder] = useState<ColumnOrderState>([
+  'columnId1',
+  'columnId2',
+  'columnId3',
+])
 //...
 const table = useTable({
   features,
@@ -129,7 +141,11 @@ const handleDrop = (targetColumnId: string) => {
       newColumnOrder.indexOf(draggedColumnId),
       1,
     )
-    newColumnOrder.splice(newColumnOrder.indexOf(targetColumnId), 0, movedColumnId)
+    newColumnOrder.splice(
+      newColumnOrder.indexOf(targetColumnId),
+      0,
+      movedColumnId,
+    )
     return newColumnOrder
   })
   setDraggedColumnId(null)

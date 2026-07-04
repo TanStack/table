@@ -14,7 +14,7 @@ Want to skip to the implementation? Check out these examples:
 
 ## Table State (React) Guide
 
-> **If you boil TanStack Table down to one sentence: TanStack Table is a large state-management coordinator for table states.** 
+> **If you boil TanStack Table down to one sentence: TanStack Table is a large state-management coordinator for table states.**
 
 Understanding this guide is fundamental to understanding how TanStack Table works and how to interact with it for the best results.
 
@@ -211,10 +211,7 @@ const columns = columnHelper.columns([
     ),
     cell: ({ row, table }) => (
       // work around react compiler memoization for nested components using row APIs
-      <Subscribe
-        source={table.atoms.rowSelection}
-        selector={(s) => s[row.id]}
-      >
+      <Subscribe source={table.atoms.rowSelection} selector={(s) => s[row.id]}>
         {(isSelected) => (
           <input
             type="checkbox"

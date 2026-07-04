@@ -15,7 +15,11 @@ Want to skip to the implementation? Check out these React examples:
 Here's how you set up your table to use column pinning features. Adding the column pinning feature enables the related APIs.
 
 ```tsx
-import { useTable, tableFeatures, columnPinningFeature } from '@tanstack/react-table'
+import {
+  useTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/react-table'
 
 const features = tableFeatures({ columnPinningFeature })
 
@@ -48,7 +52,11 @@ In v9, the recommended way to own a state slice is with an external atom passed 
 
 ```tsx
 import { useCreateAtom, useSelector } from '@tanstack/react-store'
-import { useTable, tableFeatures, columnPinningFeature } from '@tanstack/react-table'
+import {
+  useTable,
+  tableFeatures,
+  columnPinningFeature,
+} from '@tanstack/react-table'
 import type { ColumnPinningState } from '@tanstack/react-table'
 
 const features = tableFeatures({ columnPinningFeature })

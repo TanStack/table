@@ -95,9 +95,7 @@ const table = createTable({
   },
   onColumnVisibilityChange: (updater) => {
     local.columnVisibility =
-      typeof updater === 'function'
-        ? updater(local.columnVisibility)
-        : updater
+      typeof updater === 'function' ? updater(local.columnVisibility) : updater
   },
 })
 ```

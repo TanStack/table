@@ -14,7 +14,12 @@ Here's how you set up your table to use expanding features. Adding the expanding
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, rowExpandingFeature, createExpandedRowModel } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  rowExpandingFeature,
+  createExpandedRowModel,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({
   rowExpandingFeature,
@@ -82,21 +87,21 @@ type Person = {
   children?: Person[] | undefined
 }
 
-const data: Person[] =  [
-  { id: 1, 
-  name: 'John', 
-  age: 30, 
-  children: [
-      { id: 2, name: 'Jane', age: 5 },
-      { id: 5, name: 'Jim', age: 10 }
-    ] 
-  },
-  { id: 3,
-   name: 'Doe', 
-   age: 40, 
+const data: Person[] = [
+  {
+    id: 1,
+    name: 'John',
+    age: 30,
     children: [
-      { id: 4, name: 'Alice', age: 10 }
-    ] 
+      { id: 2, name: 'Jane', age: 5 },
+      { id: 5, name: 'Jim', age: 10 },
+    ],
+  },
+  {
+    id: 3,
+    name: 'Doe',
+    age: 40,
+    children: [{ id: 4, name: 'Alice', age: 10 }],
   },
 ]
 ```
@@ -122,21 +127,22 @@ By default, the `row.getCanExpand()` row instance API will return false unless i
 ```html
 <tbody>
   @for (row of table.getRowModel().rows; track row.id) {
-    <tr>
-      @for (cell of row.getVisibleCells(); track cell.id) {
-        <td>
-          <ng-container *flexRenderCell="cell; let renderCell">{{ renderCell }}</ng-container>
-        </td>
-      }
-    </tr>
-    @if (row.getIsExpanded()) {
-      <tr>
-        <td [attr.colSpan]="row.getAllCells().length">
-          <!-- Your custom UI goes here -->
-        </td>
-      </tr>
+  <tr>
+    @for (cell of row.getVisibleCells(); track cell.id) {
+    <td>
+      <ng-container *flexRenderCell="cell; let renderCell"
+        >{{ renderCell }}</ng-container
+      >
+    </td>
     }
-  }
+  </tr>
+  @if (row.getIsExpanded()) {
+  <tr>
+    <td [attr.colSpan]="row.getAllCells().length">
+      <!-- Your custom UI goes here -->
+    </td>
+  </tr>
+  } }
 </tbody>
 ```
 
@@ -186,7 +192,7 @@ The ExpandedState type is defined as follows:
 type ExpandedState = true | Record<string, boolean>
 ```
 
-If the ExpandedState is true, it means all rows are expanded. If it's a record, only the rows with IDs present as keys in the record and have their value set to true are expanded.  For example, if the expanded state is { row1: true, row2: false }, it means the row with ID row1 is expanded and the row with ID row2 is not expanded. This state is used by the table to determine which rows are expanded and should display their subRows, if any.
+If the ExpandedState is true, it means all rows are expanded. If it's a record, only the rows with IDs present as keys in the record and have their value set to true are expanded. For example, if the expanded state is { row1: true, row2: false }, it means the row with ID row1 is expanded and the row with ID row2 is not expanded. This state is used by the table to determine which rows are expanded and should display their subRows, if any.
 
 ### UI toggling handler for expanded rows
 
@@ -211,13 +217,13 @@ const columns = [
 
 ```html
 @if (row.getCanExpand()) {
-  <button
-    type="button"
-    (click)="row.getToggleExpandedHandler()?.($event)"
-    style="cursor: pointer"
-  >
-    {{ row.getIsExpanded() ? 'Expanded' : 'Collapsed' }}
-  </button>
+<button
+  type="button"
+  (click)="row.getToggleExpandedHandler()?.($event)"
+  style="cursor: pointer"
+>
+  {{ row.getIsExpanded() ? 'Expanded' : 'Collapsed' }}
+</button>
 }
 ```
 

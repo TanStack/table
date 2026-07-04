@@ -15,7 +15,14 @@ Here's how you set up your table to use global filtering features. Global filter
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, createFilteredRowModel, filterFns } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({
   columnFilteringFeature,

@@ -14,7 +14,17 @@ Here's how you set up your table to use faceting features. Adding the faceting f
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, columnFacetingFeature, columnFilteringFeature, createFacetedRowModel, createFacetedUniqueValues, createFacetedMinMaxValues, createFilteredRowModel, filterFns } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  columnFacetingFeature,
+  columnFilteringFeature,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFacetedMinMaxValues,
+  createFilteredRowModel,
+  filterFns,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({
   columnFacetingFeature,
@@ -83,15 +93,16 @@ Once you have included the appropriate row models in your table options, you wil
 
 ```ts
 // list of unique values for autocomplete filter
-const autoCompleteSuggestions = 
- Array.from(column.getFacetedUniqueValues().keys())
+const autoCompleteSuggestions = Array.from(
+  column.getFacetedUniqueValues().keys(),
+)
   .sort()
-  .slice(0, 5000);
+  .slice(0, 5000)
 ```
 
 ```ts
 // tuple of min and max values for range filter
-const [min, max] = column.getFacetedMinMaxValues() ?? [0, 1];
+const [min, max] = column.getFacetedMinMaxValues() ?? [0, 1]
 ```
 
 ### Global Faceting
@@ -106,15 +117,16 @@ const globalFacetedRows = table.getGlobalFacetedRowModel().flatRows
 
 ```ts
 // list of unique values for autocomplete filter
-const autoCompleteSuggestions =
- Array.from(table.getGlobalFacetedUniqueValues().keys())
+const autoCompleteSuggestions = Array.from(
+  table.getGlobalFacetedUniqueValues().keys(),
+)
   .sort()
-  .slice(0, 5000);
+  .slice(0, 5000)
 ```
 
 ```ts
 // tuple of min and max values for range filter
-const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1];
+const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1]
 ```
 
 ### Custom (Server-Side) Faceting

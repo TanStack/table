@@ -14,7 +14,11 @@ Here's how you set up your table to use row pinning features. Adding the row pin
 
 ```ts
 import { signal } from '@angular/core'
-import { injectTable, tableFeatures, rowPinningFeature } from '@tanstack/angular-table'
+import {
+  injectTable,
+  tableFeatures,
+  rowPinningFeature,
+} from '@tanstack/angular-table'
 
 const features = tableFeatures({ rowPinningFeature })
 
@@ -162,17 +166,29 @@ You can use these APIs to build pinning controls:
 
 ```html
 @if (row.getCanPin()) {
-  <div>
-    <button type="button" (click)="row.pin('top')" [disabled]="row.getIsPinned() === 'top'">
-      Top
-    </button>
-    <button type="button" (click)="row.pin(false)" [disabled]="!row.getIsPinned()">
-      Center
-    </button>
-    <button type="button" (click)="row.pin('bottom')" [disabled]="row.getIsPinned() === 'bottom'">
-      Bottom
-    </button>
-  </div>
+<div>
+  <button
+    type="button"
+    (click)="row.pin('top')"
+    [disabled]="row.getIsPinned() === 'top'"
+  >
+    Top
+  </button>
+  <button
+    type="button"
+    (click)="row.pin(false)"
+    [disabled]="!row.getIsPinned()"
+  >
+    Center
+  </button>
+  <button
+    type="button"
+    (click)="row.pin('bottom')"
+    [disabled]="row.getIsPinned() === 'bottom'"
+  >
+    Bottom
+  </button>
+</div>
 }
 ```
 
@@ -193,13 +209,17 @@ If you render pinned rows in separate table sections, use those APIs directly:
 ```html
 <tbody>
   @for (row of table.getTopRows(); track row.id) {
-    <tr class="pinned"><!-- render pinned row --></tr>
-  }
-  @for (row of table.getCenterRows(); track row.id) {
-    <tr><!-- render center row --></tr>
-  }
-  @for (row of table.getBottomRows(); track row.id) {
-    <tr class="pinned"><!-- render pinned row --></tr>
+  <tr class="pinned">
+    <!-- render pinned row -->
+  </tr>
+  } @for (row of table.getCenterRows(); track row.id) {
+  <tr>
+    <!-- render center row -->
+  </tr>
+  } @for (row of table.getBottomRows(); track row.id) {
+  <tr class="pinned">
+    <!-- render pinned row -->
+  </tr>
   }
 </tbody>
 ```

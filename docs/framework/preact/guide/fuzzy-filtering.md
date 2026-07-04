@@ -13,10 +13,23 @@ Want to skip to the implementation? Check out these Preact examples:
 Here's how you set up your table to use fuzzy filtering features. Adding the fuzzy filtering feature enables the related APIs. Additionally, if using client-side fuzzy filtering and sorting, you also need to set up `filteredRowModel` and `sortedRowModel` after their associated features because row model slots are type-checked.
 
 ```tsx
-import { useTable, tableFeatures, columnFilteringFeature, globalFilteringFeature, rowSortingFeature, createFilteredRowModel, createSortedRowModel, filterFns, sortFns, metaHelper } from '@tanstack/preact-table'
+import {
+  useTable,
+  tableFeatures,
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  filterFns,
+  sortFns,
+  metaHelper,
+} from '@tanstack/preact-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -56,10 +69,17 @@ Here's an example of a custom fuzzy filter function:
 ```typescript
 import { rankItem } from '@tanstack/match-sorter-utils'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
-import type { FilterFn, TableFeatures, RowData, metaHelper } from '@tanstack/preact-table'
+import type {
+  FilterFn,
+  TableFeatures,
+  RowData,
+  metaHelper,
+} from '@tanstack/preact-table'
 
 // Define the shape of the filter meta stored by the fuzzy filter
-interface FuzzyFilterMeta { itemRank?: RankingInfo }
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
 
 // Extend TableFeatures so the FilterFn type has access to the filterMeta shape
 type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
@@ -146,14 +166,14 @@ To use fuzzy filtering with column filtering, pass your fuzzy filter function to
 ```typescript
 const column = [
   {
-    accessorFn: row => `${row.firstName} ${row.lastName}`,
+    accessorFn: (row) => `${row.firstName} ${row.lastName}`,
     id: 'fullName',
     header: 'Full Name',
-    cell: info => info.getValue(),
+    cell: (info) => info.getValue(),
     filterFn: 'fuzzy', //using our custom fuzzy filter function
   },
   // other columns...
-];
+]
 ```
 
 In this example, we're applying the fuzzy filter to a column that combines the firstName and lastName fields of the data.

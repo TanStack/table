@@ -15,7 +15,11 @@ Here's how you set up your table to use column visibility features. Adding the c
 ```ts
 import { LitElement, html } from 'lit'
 import { customElement, state } from 'lit/decorators.js'
-import { TableController, tableFeatures, columnVisibilityFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/lit-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
 
@@ -50,7 +54,11 @@ If you need to own the `columnVisibility` state yourself (for example, to persis
 
 ```ts
 import { createAtom } from '@tanstack/store'
-import { TableController, tableFeatures, columnVisibilityFeature } from '@tanstack/lit-table'
+import {
+  TableController,
+  tableFeatures,
+  columnVisibilityFeature,
+} from '@tanstack/lit-table'
 import type { ColumnVisibilityState } from '@tanstack/lit-table'
 
 const features = tableFeatures({ columnVisibilityFeature })
@@ -134,7 +142,7 @@ const columns = [
     header: 'Name',
     accessorKey: 'name', // can be hidden
   },
-];
+]
 ```
 
 ### Column Visibility Toggle APIs
@@ -173,14 +181,18 @@ html`
   <table>
     <thead>
       <tr>
-        ${table.getVisibleLeafColumns().map((column) => html`<th>${column.id}</th>`)}
+        ${table
+          .getVisibleLeafColumns()
+          .map((column) => html`<th>${column.id}</th>`)}
       </tr>
     </thead>
     <tbody>
       ${table.getRowModel().rows.map(
         (row) => html`
           <tr>
-            ${row.getVisibleCells().map((cell) => html`<td>${FlexRender({ cell })}</td>`)}
+            ${row
+              .getVisibleCells()
+              .map((cell) => html`<td>${FlexRender({ cell })}</td>`)}
           </tr>
         `,
       )}

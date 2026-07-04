@@ -15,7 +15,11 @@ Vue refs can be passed directly where the adapter expects reactive table options
 Here's how you set up your table to use column sizing features. Adding the column sizing feature enables the related APIs.
 
 ```ts
-import { useTable, tableFeatures, columnSizingFeature } from '@tanstack/vue-table'
+import {
+  useTable,
+  tableFeatures,
+  columnSizingFeature,
+} from '@tanstack/vue-table'
 
 const features = tableFeatures({ columnSizingFeature })
 
@@ -165,7 +169,8 @@ const table = useTable({
     },
   },
   onColumnSizingChange: (updater) => {
-    columnSizing.value = updater instanceof Function ? updater(columnSizing.value) : updater
+    columnSizing.value =
+      updater instanceof Function ? updater(columnSizing.value) : updater
   },
 })
 ```
