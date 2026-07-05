@@ -9468,6 +9468,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/match-sorter-utils':
+        specifier: workspace:*
+        version: link:../../../packages/match-sorter-utils
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table

@@ -1,92 +1,79 @@
 <script setup lang="ts">
-import {
-  FlexRender,
-  createColumnHelper,
-  createPaginatedRowModel,
-  rowPaginationFeature,
-  tableFeatures,
-  useTable,
-} from '@tanstack/vue-table'
+import { FlexRender, createColumnHelper, useTable } from '@tanstack/vue-table'
 import { ref } from 'vue'
+import Filter from './Filter.vue'
+import { appFeatures } from './tableHelper'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
 
-const features = tableFeatures({
-  rowPaginationFeature,
-  paginatedRowModel: createPaginatedRowModel(),
-})
-
-const columnHelper = createColumnHelper<typeof features, Person>()
+const columnHelper = createColumnHelper<typeof appFeatures, Person>()
 
 const INITIAL_PAGE_INDEX = 0
 
 const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 const pageSizes = [10, 20, 30, 40, 50]
-const data = ref(makeData(1_000))
+const data = ref(makeData(5_000))
 
 const columns = ref(
   columnHelper.columns([
-    columnHelper.group({
-      header: 'Name',
-      footer: (props) => props.column.id,
-      columns: columnHelper.columns([
-        columnHelper.accessor('firstName', {
-          cell: (info) => info.getValue(),
-          footer: (props) => props.column.id,
-        }),
-        columnHelper.accessor((row) => row.lastName, {
-          id: 'lastName',
-          cell: (info) => info.getValue(),
-          header: () => 'Last Name',
-          footer: (props) => props.column.id,
-        }),
-      ]),
+    columnHelper.accessor('firstName', {
+      cell: (info) => info.getValue(),
+      meta: {
+        filterVariant: 'text',
+      },
     }),
-    columnHelper.group({
-      header: 'Info',
-      footer: (props) => props.column.id,
-      columns: columnHelper.columns([
-        columnHelper.accessor('age', {
-          header: () => 'Age',
-          footer: (props) => props.column.id,
-        }),
-        columnHelper.group({
-          header: 'More Info',
-          columns: columnHelper.columns([
-            columnHelper.accessor('visits', {
-              header: () => 'Visits',
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.accessor('status', {
-              header: 'Status',
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.accessor('progress', {
-              header: 'Profile Progress',
-              footer: (props) => props.column.id,
-            }),
-          ]),
-        }),
-      ]),
+    columnHelper.accessor((row) => row.lastName, {
+      id: 'lastName',
+      cell: (info) => info.getValue(),
+      header: () => 'Last Name',
+      meta: {
+        filterVariant: 'text',
+      },
+    }),
+    columnHelper.accessor('age', {
+      header: () => 'Age',
+      meta: {
+        filterVariant: 'range',
+      },
+    }),
+    columnHelper.accessor('visits', {
+      header: () => 'Visits',
+      meta: {
+        filterVariant: 'range',
+      },
+    }),
+    columnHelper.accessor('status', {
+      header: 'Status',
+      meta: {
+        filterVariant: 'select',
+      },
+    }),
+    columnHelper.accessor('progress', {
+      header: 'Profile Progress',
+      meta: {
+        filterVariant: 'range',
+      },
     }),
   ]),
 )
 
 const table = useTable({
-  features,
+  features: appFeatures,
   data,
   get columns() {
     return columns.value
   },
   debugTable: true,
+  debugHeaders: true,
+  debugColumns: false,
 })
 
 const refreshData = () => {
-  data.value = makeData(1_000)
+  data.value = makeData(5_000)
 }
 
 const stressTest = () => {
-  data.value = makeData(200_000)
+  data.value = makeData(1_000_000)
 }
 
 function handleGoToPage(e: any) {
@@ -105,7 +92,7 @@ function handlePageSizeChange(e: any) {
     <div class="button-row">
       <button @click="refreshData" class="demo-button">Regenerate Data</button>
       <button @click="stressTest" class="demo-button">
-        Stress Test (200k rows)
+        Stress Test (1M rows)
       </button>
     </div>
     <div class="spacer-md" />
@@ -120,7 +107,12 @@ function handlePageSizeChange(e: any) {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender v-if="!header.isPlaceholder" :header="header" />
+            <template v-if="!header.isPlaceholder">
+              <FlexRender :header="header" />
+              <div v-if="header.column.getCanFilter()">
+                <Filter :column="header.column" />
+              </div>
+            </template>
           </th>
         </tr>
       </thead>
@@ -131,85 +123,67 @@ function handlePageSizeChange(e: any) {
           </td>
         </tr>
       </tbody>
-      <tfoot>
-        <tr
-          v-for="footerGroup in table.getFooterGroups()"
-          :key="footerGroup.id"
-        >
-          <th
-            v-for="header in footerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
-          >
-            <FlexRender v-if="!header.isPlaceholder" :footer="header" />
-          </th>
-        </tr>
-      </tfoot>
     </table>
-    <div>
-      <div class="controls">
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(0)"
-          :disabled="!table.getCanPreviousPage()"
-        >
-          «
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.previousPage()"
-          :disabled="!table.getCanPreviousPage()"
-        >
-          ‹
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.nextPage()"
-          :disabled="!table.getCanNextPage()"
-        >
-          ›
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
-          :disabled="!table.getCanNextPage()"
-        >
-          »
-        </button>
-        <span class="inline-controls">
-          <div>Page</div>
-          <strong>
-            {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }}
-            of
-            {{ table.getPageCount().toLocaleString() }}
-          </strong>
-        </span>
-        <span class="inline-controls">
-          | Go to page:
-          <input
-            type="number"
-            :value="goToPageNumber"
-            @change="handleGoToPage"
-            class="page-size-input"
-          />
-        </span>
-        <select
-          :value="table.atoms.pagination.get().pageSize"
-          @change="handlePageSizeChange"
-        >
-          <option
-            :key="pageSize"
-            :value="pageSize"
-            v-for="pageSize in pageSizes"
-          >
-            Show {{ pageSize }}
-          </option>
-        </select>
-      </div>
-      <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
+    <div class="spacer-md" />
+    <div class="controls">
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.setPageIndex(0)"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        «
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.previousPage()"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        ‹
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.nextPage()"
+        :disabled="!table.getCanNextPage()"
+      >
+        ›
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.setPageIndex(table.getPageCount() - 1)"
+        :disabled="!table.getCanNextPage()"
+      >
+        »
+      </button>
+      <span class="inline-controls">
+        <div>Page</div>
+        <strong>
+          {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
+          {{ table.getPageCount().toLocaleString() }}
+        </strong>
+      </span>
+      <span class="inline-controls">
+        | Go to page:
+        <input
+          type="number"
+          :value="goToPageNumber"
+          @change="handleGoToPage"
+          class="page-size-input"
+        />
+      </span>
+      <select
+        :value="table.atoms.pagination.get().pageSize"
+        @change="handlePageSizeChange"
+      >
+        <option :key="pageSize" :value="pageSize" v-for="pageSize in pageSizes">
+          Show {{ pageSize }}
+        </option>
+      </select>
     </div>
-    <div class="spacer-sm" />
+    <div>
+      {{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows
+    </div>
+    <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
+    <div class="spacer-md" />
   </div>
 </template>
 

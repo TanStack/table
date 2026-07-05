@@ -9,6 +9,13 @@ table {
   border-spacing: 0;
 }
 
+thead {
+  background: lightgray;
+  margin: 0;
+  position: sticky;
+  top: 0;
+}
+
 tbody {
   border-bottom: 1px solid lightgray;
 }
@@ -19,12 +26,28 @@ th {
   padding: 2px 4px;
 }
 
+td {
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+td:last-child {
+  border-right: 0;
+}
+
 tfoot {
   color: gray;
 }
 
 tfoot th {
   font-weight: normal;
+}
+
+.container {
+  border: 1px solid lightgray;
+  height: 500px;
+  max-width: 900px !important;
+  overflow: auto;
 }
 
 /* Demo layout utilities for plain example styling. */

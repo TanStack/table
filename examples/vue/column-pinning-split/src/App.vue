@@ -1,27 +1,27 @@
 <script setup lang="ts">
 import {
   FlexRender,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnVisibilityFeature,
   createColumnHelper,
-  createPaginatedRowModel,
-  rowPaginationFeature,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
 import { ref } from 'vue'
+import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
+import type { Column } from '@tanstack/vue-table'
 
 const features = tableFeatures({
-  rowPaginationFeature,
-  paginatedRowModel: createPaginatedRowModel(),
+  columnVisibilityFeature,
+  columnPinningFeature,
+  columnOrderingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
-const INITIAL_PAGE_INDEX = 0
-
-const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
-const pageSizes = [10, 20, 30, 40, 50]
 const data = ref(makeData(1_000))
 
 const columns = ref(
@@ -79,6 +79,8 @@ const table = useTable({
     return columns.value
   },
   debugTable: true,
+  debugHeaders: true,
+  debugColumns: true,
 })
 
 const refreshData = () => {
@@ -86,160 +88,247 @@ const refreshData = () => {
 }
 
 const stressTest = () => {
-  data.value = makeData(200_000)
+  data.value = makeData(1_000_000)
 }
 
-function handleGoToPage(e: any) {
-  const page = e.target.value ? Number(e.target.value) - 1 : 0
-  goToPageNumber.value = page + 1
-  table.setPageIndex(page)
+const randomizeColumns = () => {
+  table.setColumnOrder(
+    faker.helpers.shuffle(
+      table
+        .getAllLeafColumns()
+        .map((column: Column<typeof features, Person>) => column.id),
+    ),
+  )
 }
 
-function handlePageSizeChange(e: any) {
-  table.setPageSize(Number(e.target.value))
+function toggleColumnVisibility(column: Column<typeof features, Person>) {
+  table.setColumnVisibility({
+    ...table.atoms.columnVisibility.get(),
+    [column.id]: !column.getIsVisible(),
+  })
+}
+
+function toggleAllColumnsVisibility() {
+  table
+    .getAllLeafColumns()
+    .forEach((column: Column<typeof features, Person>) => {
+      toggleColumnVisibility(column)
+    })
 }
 </script>
 
 <template>
   <div class="demo-root">
+    <div class="column-toggle-panel">
+      <div class="column-toggle-panel-header">
+        <label>
+          <input
+            type="checkbox"
+            :checked="table.getIsAllColumnsVisible()"
+            @input="toggleAllColumnsVisibility"
+          />
+          Toggle All
+        </label>
+      </div>
+      <div
+        v-for="column in table.getAllLeafColumns()"
+        :key="column.id"
+        class="column-toggle-row"
+      >
+        <label>
+          <input
+            type="checkbox"
+            :checked="column.getIsVisible()"
+            @input="toggleColumnVisibility(column)"
+          />
+          {{ column.id }}
+        </label>
+      </div>
+    </div>
+    <div class="spacer-md" />
     <div class="button-row">
-      <button @click="refreshData" class="demo-button">Regenerate Data</button>
-      <button @click="stressTest" class="demo-button">
-        Stress Test (200k rows)
+      <button @click="refreshData" class="demo-button demo-button-sm">
+        Regenerate Data
+      </button>
+      <button @click="stressTest" class="demo-button demo-button-sm">
+        Stress Test (1M rows)
+      </button>
+      <button @click="randomizeColumns" class="demo-button demo-button-sm">
+        Shuffle Columns
       </button>
     </div>
     <div class="spacer-md" />
-    <table>
-      <thead>
-        <tr
-          v-for="headerGroup in table.getHeaderGroups()"
-          :key="headerGroup.id"
-        >
-          <th
-            v-for="header in headerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
+    <p class="demo-note">
+      This example takes advantage of the "splitting" APIs. (APIs that have
+      "left", "center", and "right" modifiers)
+    </p>
+    <div class="split-tables">
+      <!-- left -->
+      <table class="outlined-table">
+        <thead>
+          <tr
+            v-for="headerGroup in table.getLeftHeaderGroups()"
+            :key="headerGroup.id"
           >
-            <FlexRender v-if="!header.isPlaceholder" :header="header" />
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="row in table.getRowModel().rows" :key="row.id">
-          <td v-for="cell in row.getAllCells()" :key="cell.id">
-            <FlexRender :cell="cell" />
-          </td>
-        </tr>
-      </tbody>
-      <tfoot>
-        <tr
-          v-for="footerGroup in table.getFooterGroups()"
-          :key="footerGroup.id"
-        >
-          <th
-            v-for="header in footerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
+            <th
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              :colSpan="header.colSpan"
+            >
+              <div class="nowrap">
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
+              </div>
+              <div
+                v-if="!header.isPlaceholder && header.column.getCanPin()"
+                class="pin-actions"
+              >
+                <button
+                  v-if="header.column.getIsPinned() !== 'left'"
+                  @click="header.column.pin('left')"
+                  class="pin-button"
+                >
+                  {{ '<=' }}
+                </button>
+                <button
+                  v-if="header.column.getIsPinned()"
+                  @click="header.column.pin(false)"
+                  class="pin-button"
+                >
+                  X
+                </button>
+                <button
+                  v-if="header.column.getIsPinned() !== 'right'"
+                  @click="header.column.pin('right')"
+                  class="pin-button"
+                >
+                  {{ '=>' }}
+                </button>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="row in table.getRowModel().rows.slice(0, 20)"
+            :key="row.id"
           >
-            <FlexRender v-if="!header.isPlaceholder" :footer="header" />
-          </th>
-        </tr>
-      </tfoot>
-    </table>
-    <div>
-      <div class="controls">
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(0)"
-          :disabled="!table.getCanPreviousPage()"
-        >
-          «
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.previousPage()"
-          :disabled="!table.getCanPreviousPage()"
-        >
-          ‹
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.nextPage()"
-          :disabled="!table.getCanNextPage()"
-        >
-          ›
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
-          :disabled="!table.getCanNextPage()"
-        >
-          »
-        </button>
-        <span class="inline-controls">
-          <div>Page</div>
-          <strong>
-            {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }}
-            of
-            {{ table.getPageCount().toLocaleString() }}
-          </strong>
-        </span>
-        <span class="inline-controls">
-          | Go to page:
-          <input
-            type="number"
-            :value="goToPageNumber"
-            @change="handleGoToPage"
-            class="page-size-input"
-          />
-        </span>
-        <select
-          :value="table.atoms.pagination.get().pageSize"
-          @change="handlePageSizeChange"
-        >
-          <option
-            :key="pageSize"
-            :value="pageSize"
-            v-for="pageSize in pageSizes"
+            <td v-for="cell in row.getLeftVisibleCells()" :key="cell.id">
+              <FlexRender :cell="cell" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- center -->
+      <table class="outlined-table">
+        <thead>
+          <tr
+            v-for="headerGroup in table.getCenterHeaderGroups()"
+            :key="headerGroup.id"
           >
-            Show {{ pageSize }}
-          </option>
-        </select>
-      </div>
-      <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
+            <th
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              :colSpan="header.colSpan"
+            >
+              <div class="nowrap">
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
+              </div>
+              <div
+                v-if="!header.isPlaceholder && header.column.getCanPin()"
+                class="pin-actions"
+              >
+                <button
+                  v-if="header.column.getIsPinned() !== 'left'"
+                  @click="header.column.pin('left')"
+                  class="pin-button"
+                >
+                  {{ '<=' }}
+                </button>
+                <button
+                  v-if="header.column.getIsPinned()"
+                  @click="header.column.pin(false)"
+                  class="pin-button"
+                >
+                  X
+                </button>
+                <button
+                  v-if="header.column.getIsPinned() !== 'right'"
+                  @click="header.column.pin('right')"
+                  class="pin-button"
+                >
+                  {{ '=>' }}
+                </button>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="row in table.getRowModel().rows.slice(0, 20)"
+            :key="row.id"
+          >
+            <td v-for="cell in row.getCenterVisibleCells()" :key="cell.id">
+              <FlexRender :cell="cell" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- right -->
+      <table class="outlined-table">
+        <thead>
+          <tr
+            v-for="headerGroup in table.getRightHeaderGroups()"
+            :key="headerGroup.id"
+          >
+            <th
+              v-for="header in headerGroup.headers"
+              :key="header.id"
+              :colSpan="header.colSpan"
+            >
+              <div class="nowrap">
+                <FlexRender v-if="!header.isPlaceholder" :header="header" />
+              </div>
+              <div
+                v-if="!header.isPlaceholder && header.column.getCanPin()"
+                class="pin-actions"
+              >
+                <button
+                  v-if="header.column.getIsPinned() !== 'left'"
+                  @click="header.column.pin('left')"
+                  class="pin-button"
+                >
+                  {{ '<=' }}
+                </button>
+                <button
+                  v-if="header.column.getIsPinned()"
+                  @click="header.column.pin(false)"
+                  class="pin-button"
+                >
+                  X
+                </button>
+                <button
+                  v-if="header.column.getIsPinned() !== 'right'"
+                  @click="header.column.pin('right')"
+                  class="pin-button"
+                >
+                  {{ '=>' }}
+                </button>
+              </div>
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            v-for="row in table.getRowModel().rows.slice(0, 20)"
+            :key="row.id"
+          >
+            <td v-for="cell in row.getRightVisibleCells()" :key="cell.id">
+              <FlexRender :cell="cell" />
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="spacer-sm" />
+    <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
   </div>
 </template>
-
-<style>
-html {
-  font-family: sans-serif;
-  font-size: 14px;
-}
-
-table {
-  border-spacing: 0;
-  border-collapse: collapse;
-  border: 1px solid lightgray;
-}
-
-tbody {
-  border-bottom: 1px solid lightgray;
-}
-
-th {
-  border-bottom: 1px solid lightgray;
-  border-right: 1px solid lightgray;
-  padding: 2px 4px;
-}
-
-tfoot {
-  color: gray;
-}
-
-tfoot th {
-  font-weight: normal;
-}
-</style>

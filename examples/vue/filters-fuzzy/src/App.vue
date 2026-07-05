@@ -1,73 +1,118 @@
 <script setup lang="ts">
 import {
   FlexRender,
+  columnFilteringFeature,
   createColumnHelper,
+  createFilteredRowModel,
   createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
+  globalFilteringFeature,
+  metaHelper,
   rowPaginationFeature,
+  rowSortingFeature,
+  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+import DebouncedInput from './DebouncedInput.vue'
 import { makeData } from './makeData'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from './makeData'
+import type {
+  Column,
+  ColumnFiltersState,
+  FilterFn,
+  SortFn,
+  TableFeatures,
+} from '@tanstack/vue-table'
+
+// The filter meta that the fuzzy filter attaches to rows, declared per-table
+// via the `filterMeta` slot below. No declaration merging needed!
+interface FuzzyFilterMeta {
+  itemRank?: RankingInfo
+}
+
+// Broad features type for writing the custom fns below before the `features`
+// object exists, with the filter meta type plugged in
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
+
+// Define a custom fuzzy filter function that will apply ranking info to rows (using match-sorter utils)
+const fuzzyFilter: FilterFn<FuzzyFeatures, any> = (
+  row,
+  columnId,
+  value,
+  addMeta,
+) => {
+  // Rank the item
+  const itemRank = rankItem(row.getValue(columnId), value)
+
+  // Store the itemRank info
+  addMeta?.({ itemRank })
+
+  // Return if the item should be filtered in/out
+  return itemRank.passed
+}
+
+// Define a custom fuzzy sort function that will sort by rank if the row has ranking information
+const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
+  let dir = 0
+
+  // Only sort by rank if the column has ranking information
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (rowA.columnFiltersMeta[columnId]) {
+    dir = compareItems(
+      rowA.columnFiltersMeta[columnId].itemRank as RankingInfo,
+      rowB.columnFiltersMeta[columnId].itemRank as RankingInfo,
+    )
+  }
+
+  // Provide an alphanumeric fallback for when the item ranks are equal
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+}
 
 const features = tableFeatures({
+  columnFilteringFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
   rowPaginationFeature,
+  filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
-const INITIAL_PAGE_INDEX = 0
-
-const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
-const pageSizes = [10, 20, 30, 40, 50]
-const data = ref(makeData(1_000))
+const data = ref(makeData(5_000))
 
 const columns = ref(
   columnHelper.columns([
-    columnHelper.group({
-      header: 'Name',
-      footer: (props) => props.column.id,
-      columns: columnHelper.columns([
-        columnHelper.accessor('firstName', {
-          cell: (info) => info.getValue(),
-          footer: (props) => props.column.id,
-        }),
-        columnHelper.accessor((row) => row.lastName, {
-          id: 'lastName',
-          cell: (info) => info.getValue(),
-          header: () => 'Last Name',
-          footer: (props) => props.column.id,
-        }),
-      ]),
+    columnHelper.accessor('id', {
+      header: 'ID',
+      filterFn: 'equalsString', // note: normal non-fuzzy filter column - exact match required
     }),
-    columnHelper.group({
-      header: 'Info',
-      footer: (props) => props.column.id,
-      columns: columnHelper.columns([
-        columnHelper.accessor('age', {
-          header: () => 'Age',
-          footer: (props) => props.column.id,
-        }),
-        columnHelper.group({
-          header: 'More Info',
-          columns: columnHelper.columns([
-            columnHelper.accessor('visits', {
-              header: () => 'Visits',
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.accessor('status', {
-              header: 'Status',
-              footer: (props) => props.column.id,
-            }),
-            columnHelper.accessor('progress', {
-              header: 'Profile Progress',
-              footer: (props) => props.column.id,
-            }),
-          ]),
-        }),
-      ]),
+    columnHelper.accessor('firstName', {
+      header: 'First Name',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesStringSensitive', // note: normal non-fuzzy filter column - case sensitive
+    }),
+    columnHelper.accessor((row) => row.lastName, {
+      id: 'lastName',
+      header: () => 'Last Name',
+      cell: (info) => info.getValue(),
+      filterFn: 'includesString', // note: normal non-fuzzy filter column - case insensitive
+    }),
+    columnHelper.accessor((row) => `${row.firstName} ${row.lastName}`, {
+      id: 'fullName',
+      header: 'Full Name',
+      cell: (info) => info.getValue(),
+      filterFn: 'fuzzy', // using our custom fuzzy filter function registered in `features`
+      sortFn: 'fuzzy', // sort by fuzzy rank (falls back to alphanumeric)
     }),
   ]),
 )
@@ -78,25 +123,35 @@ const table = useTable({
   get columns() {
     return columns.value
   },
+  globalFilterFn: 'fuzzy', // apply fuzzy filter to the global filter (most common use case for fuzzy filter)
   debugTable: true,
+  debugHeaders: true,
+  debugColumns: false,
 })
 
+// apply the fuzzy sort if the fullName column is being filtered
+watch(
+  () => table.atoms.columnFilters.get(),
+  (filters: ColumnFiltersState) => {
+    if (
+      filters[0]?.id === 'fullName' &&
+      table.atoms.sorting.get()[0]?.id !== 'fullName'
+    ) {
+      table.setSorting([{ id: 'fullName', desc: false }])
+    }
+  },
+)
+
 const refreshData = () => {
-  data.value = makeData(1_000)
+  data.value = makeData(5_000)
 }
 
 const stressTest = () => {
-  data.value = makeData(200_000)
+  data.value = makeData(1_000_000)
 }
 
-function handleGoToPage(e: any) {
-  const page = e.target.value ? Number(e.target.value) - 1 : 0
-  goToPageNumber.value = page + 1
-  table.setPageIndex(page)
-}
-
-function handlePageSizeChange(e: any) {
-  table.setPageSize(Number(e.target.value))
+function getColumnFilterValue(column: Column<typeof features, Person>) {
+  return (column.getFilterValue() ?? '') as string
 }
 </script>
 
@@ -105,10 +160,19 @@ function handlePageSizeChange(e: any) {
     <div class="button-row">
       <button @click="refreshData" class="demo-button">Regenerate Data</button>
       <button @click="stressTest" class="demo-button">
-        Stress Test (200k rows)
+        Stress Test (1M rows)
       </button>
     </div>
     <div class="spacer-md" />
+    <div>
+      <DebouncedInput
+        :modelValue="table.atoms.globalFilter.get() ?? ''"
+        @update:modelValue="(value) => table.setGlobalFilter(String(value))"
+        class="summary-panel"
+        placeholder="Search all columns..."
+      />
+    </div>
+    <div class="spacer-sm" />
     <table>
       <thead>
         <tr
@@ -120,7 +184,30 @@ function handlePageSizeChange(e: any) {
             :key="header.id"
             :colSpan="header.colSpan"
           >
-            <FlexRender v-if="!header.isPlaceholder" :header="header" />
+            <template v-if="!header.isPlaceholder">
+              <div
+                :class="header.column.getCanSort() ? 'sortable-header' : ''"
+                @click="header.column.getToggleSortingHandler()?.($event)"
+              >
+                <FlexRender :header="header" />
+                {{
+                  { asc: ' 🔼', desc: ' 🔽' }[
+                    header.column.getIsSorted() as string
+                  ] ?? ''
+                }}
+              </div>
+              <div v-if="header.column.getCanFilter()">
+                <DebouncedInput
+                  type="text"
+                  :modelValue="getColumnFilterValue(header.column)"
+                  @update:modelValue="
+                    (value) => header.column.setFilterValue(value)
+                  "
+                  placeholder="Search..."
+                  class="filter-select"
+                />
+              </div>
+            </template>
           </th>
         </tr>
       </thead>
@@ -131,85 +218,81 @@ function handlePageSizeChange(e: any) {
           </td>
         </tr>
       </tbody>
-      <tfoot>
-        <tr
-          v-for="footerGroup in table.getFooterGroups()"
-          :key="footerGroup.id"
-        >
-          <th
-            v-for="header in footerGroup.headers"
-            :key="header.id"
-            :colSpan="header.colSpan"
-          >
-            <FlexRender v-if="!header.isPlaceholder" :footer="header" />
-          </th>
-        </tr>
-      </tfoot>
     </table>
-    <div>
-      <div class="controls">
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(0)"
-          :disabled="!table.getCanPreviousPage()"
-        >
-          «
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.previousPage()"
-          :disabled="!table.getCanPreviousPage()"
-        >
-          ‹
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.nextPage()"
-          :disabled="!table.getCanNextPage()"
-        >
-          ›
-        </button>
-        <button
-          class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
-          :disabled="!table.getCanNextPage()"
-        >
-          »
-        </button>
-        <span class="inline-controls">
-          <div>Page</div>
-          <strong>
-            {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }}
-            of
-            {{ table.getPageCount().toLocaleString() }}
-          </strong>
-        </span>
-        <span class="inline-controls">
-          | Go to page:
-          <input
-            type="number"
-            :value="goToPageNumber"
-            @change="handleGoToPage"
-            class="page-size-input"
-          />
-        </span>
-        <select
-          :value="table.atoms.pagination.get().pageSize"
-          @change="handlePageSizeChange"
-        >
-          <option
-            :key="pageSize"
-            :value="pageSize"
-            v-for="pageSize in pageSizes"
-          >
-            Show {{ pageSize }}
-          </option>
-        </select>
-      </div>
-      <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
-    </div>
     <div class="spacer-sm" />
+    <div class="controls">
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.setPageIndex(0)"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        «
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.previousPage()"
+        :disabled="!table.getCanPreviousPage()"
+      >
+        ‹
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.nextPage()"
+        :disabled="!table.getCanNextPage()"
+      >
+        ›
+      </button>
+      <button
+        class="demo-button demo-button-sm"
+        @click="() => table.setPageIndex(table.getPageCount() - 1)"
+        :disabled="!table.getCanNextPage()"
+      >
+        »
+      </button>
+      <span class="inline-controls">
+        <div>Page</div>
+        <strong>
+          {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
+          {{ table.getPageCount().toLocaleString() }}
+        </strong>
+      </span>
+      <span class="inline-controls">
+        | Go to page:
+        <input
+          type="number"
+          min="1"
+          :max="table.getPageCount()"
+          :value="table.atoms.pagination.get().pageIndex + 1"
+          @input="
+            table.setPageIndex(
+              ($event.target as HTMLInputElement).value
+                ? Number(($event.target as HTMLInputElement).value) - 1
+                : 0,
+            )
+          "
+          class="page-size-input"
+        />
+      </span>
+      <select
+        :value="table.atoms.pagination.get().pageSize"
+        @change="
+          table.setPageSize(Number(($event.target as HTMLSelectElement).value))
+        "
+      >
+        <option
+          v-for="pageSize in [10, 20, 30, 40, 50]"
+          :key="pageSize"
+          :value="pageSize"
+        >
+          Show {{ pageSize }}
+        </option>
+      </select>
+    </div>
+    <div>
+      {{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows
+    </div>
+    <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
+    <div class="spacer-md" />
   </div>
 </template>
 
