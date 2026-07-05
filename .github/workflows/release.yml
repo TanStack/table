@@ -72,3 +72,24 @@ jobs:
             --body "Automated version bump created after publishing packages."
         env:
           RELEASE_BRANCH: ${{ steps.release-branch.outputs.branch }}
+
+  audit:
+    name: Audit
+    needs: release
+    if: github.repository_owner == 'TanStack' && contains(fromJSON('["main","alpha","beta"]'), github.ref_name)
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - name: Checkout
+        uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Setup Tools
+        uses: tanstack/config/.github/setup@e4b48f16568324f76f467aa4c2aac2f05db632c3 # main
+      - name: Build Packages
+        run: pnpm run build:all
+      - name: Install Playwright Browsers
+        run: pnpm run test:e2e:install
+      - name: Run E2E Tests
+        run: pnpm run test:e2e
