@@ -8,6 +8,9 @@ on:
         required: false
   push:
     branches: [main, alpha, beta, rc]
+    paths:
+      - 'packages/**'
+      - 'pnpm-lock.yaml'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event.number || github.ref }}
