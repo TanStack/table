@@ -94,6 +94,20 @@ export class FlexRenderCell<
       const header = this.header()
       const footer = this.footer()
       if (cell) {
+        const def = cell.column.columnDef
+        const groupingCell = cell as typeof cell & {
+          getIsAggregated?: () => boolean
+          getIsPlaceholder?: () => boolean
+        }
+        const groupingDef = def as typeof def & {
+          aggregatedCell?: typeof def.cell
+        }
+        if (groupingCell.getIsAggregated?.()) {
+          return [groupingDef.aggregatedCell ?? def.cell, cell.getContext()]
+        }
+        if (groupingCell.getIsPlaceholder?.()) {
+          return [null, null]
+        }
         return [cell.column.columnDef.cell, cell.getContext()]
       }
       if (header) {
