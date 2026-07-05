@@ -7,6 +7,7 @@ export default defineConfig({
     './src/flex-render.ts',
     './src/reactivity.ts',
     './src/store-reactivity-bindings.ts',
+    './src/experimental-worker-plugin.ts',
   ],
   format: ['esm', 'cjs'],
   unbundle: true,

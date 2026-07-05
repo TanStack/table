@@ -2,8 +2,8 @@
   "name": "tanstack-angular-table-example-column-visibility",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5173",
-    "dev": "ng serve --port 5173",
+    "start": "ng serve --port 6565",
+    "dev": "ng serve --port 6565",
     "build": "ng build",
     "lint": "eslint ./src",
     "test:types": "ng build",

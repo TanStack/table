@@ -35,6 +35,10 @@
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
     },
+    "./experimental-worker-plugin": {
+      "import": "./dist/experimental-worker-plugin.js",
+      "require": "./dist/experimental-worker-plugin.cjs"
+    },
     "./flex-render": {
       "import": "./dist/flex-render.js",
       "require": "./dist/flex-render.cjs"
@@ -55,7 +59,7 @@
   },
   "sideEffects": false,
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "files": [
     "dist/",

@@ -6,6 +6,7 @@ export default defineConfig({
     './src/legacy.ts',
     './src/static-functions.ts',
     './src/flex-render.ts',
+    './src/experimental-worker-plugin.ts',
   ],
   format: ['esm', 'cjs'],
   unbundle: true,
