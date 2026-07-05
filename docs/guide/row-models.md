@@ -2,8 +2,6 @@
 title: Row Models Guide
 ---
 
-## Row Models Guide
-
 If you take a look at the most basic example of TanStack Table, you'll see a code snippet like this:
 
 ```ts
@@ -22,11 +20,11 @@ function Component() {
 
 In v9, row model factories live on the features object created by `tableFeatures()`. The core row model is always included automatically. You only add the row models you need for filtering, sorting, pagination, etc. This keeps your bundle small, since you only import and use the code for the features you enable.
 
-### What are Row Models?
+## What are Row Models?
 
 Row models run under the hood of TanStack Table to transform your original data in useful ways that are needed for data grid features like filtering, sorting, grouping, expanding, and pagination. The rows that get generated and render on screen won't necessarily be a 1:1 mapping of the original data that you passed to the table. They may be sorted, filtered, paginated, etc.
 
-### Configuring Row Models
+## Configuring Row Models
 
 You should only add the row models that you need. Pass the row model factories as slots directly inside your `tableFeatures()` call alongside your feature objects:
 
@@ -78,7 +76,7 @@ const table = useTable({
 })
 ```
 
-### Function Registries
+## Function Registries
 
 `tableFeatures()` accepts three named registry slots: `filterFns`, `sortFns`, and `aggregationFns`. Each slot is an object whose keys become valid, fully type-safe string values for `filterFn`, `sortFn`, `globalFilterFn`, and `aggregationFn` in your column definitions and table options. You only pay for the functions you register.
 
@@ -119,17 +117,17 @@ The same pattern applies for sorting and grouping:
 
 You can spread in the built-in maps (`filterFns`, `sortFns`, `aggregationFns`) to retain the defaults, add your own, or pass only your own to keep the bundle lean.
 
-### Customize/Fork Row Models
+## Customize/Fork Row Models
 
 You don't have to use the exact row models that are provided by TanStack Table. If you need some advanced customization for certain row models, feel free to copy the [source code](https://github.com/TanStack/table/tree/beta/packages/table-core/src/features) for the row model you want to customize and modify it to your needs. Each row model factory lives alongside its feature (e.g. `row-sorting/createSortedRowModel.ts`), and the core row model lives in [`core/row-models`](https://github.com/TanStack/table/tree/beta/packages/table-core/src/core/row-models).
 
-### Using Row Models
+## Using Row Models
 
 Once your table instance has been created, you can access all of the row models that you may need directly from the table instance. There are even more derived row models available apart from the ones that you may have imported.
 
 For normal rendering use cases, you will probably only need to use the `table.getRowModel()` method, as this row model will use all/any of the other row models depending on which features you have enabled or disabled. All of the other row models are available for you to "dig into" some of the underlying data transformations that are happening in the table.
 
-### Available Row Models on Table Instance
+## Available Row Models on Table Instance
 
 - **`getRowModel`** - This is the main row model that you should use for rendering your table rows markup. It will use all of the other row models to generate the final row model that you will use to render your table rows.
 
@@ -155,7 +153,7 @@ For normal rendering use cases, you will probably only need to use the `table.ge
 - `getGroupedSelectedRowModel` - returns a row model of selected rows after grouping. Runs after getSortedRowModel, which runs after getGroupedRowModel, which runs after getFilteredRowModel.
 - `getFilteredSelectedRowModel` - returns a row model of selected rows after column filtering and global filtering. Runs after getFilteredRowModel.
 
-### The Order of Row Model Execution
+## The Order of Row Model Execution
 
 Knowing how TanStack Table processes rows internally can help you gain a better understanding of what is happening under the hood, and help you debug any issues you may encounter.
 
@@ -167,7 +165,7 @@ If in any case the respective feature is disabled or turned off with a `"manual*
 
 As you can see above, first the data is filtered, then grouped, then sorted, then expanded, and then finally paginated as the final step.
 
-### Row Model Data Structure
+## Row Model Data Structure
 
 Each row model will provide you the rows in 3 different useful formats:
 

@@ -2,8 +2,6 @@
 title: Helpers Guide
 ---
 
-## Helpers Guide
-
 TanStack Table exposes a few small helper functions for authoring table configuration with better TypeScript inference. They do not add behavior by themselves. Instead, they help TypeScript preserve the relationship between your feature set, row type, column definitions, table options, and named function registries.
 
 The most common helpers are:

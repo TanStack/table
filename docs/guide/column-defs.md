@@ -2,8 +2,6 @@
 title: Column Definitions Guide
 ---
 
-## Column Definitions Guide
-
 > Note: This guide is about setting up column definitions for your table and NOT about the actual [`column`](./columns) objects that are generated within the table instance.
 
 Column defs are the single most important part of building a table. They are responsible for:

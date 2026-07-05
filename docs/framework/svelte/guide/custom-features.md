@@ -4,11 +4,9 @@ title: Custom Features (Svelte) Guide
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
-## Custom Features (Svelte) Guide
-
 In this guide, we'll cover how to extend TanStack Table with custom features, and along the way, we'll learn more about how the TanStack Table v9 codebase is structured and how it works.
 
-### TanStack Table Strives to be Lean
+## TanStack Table Strives to be Lean
 
 TanStack Table has a core set of features that are built into the library such as sorting, filtering, pagination, etc. We've received a lot of requests and sometimes even some well thought out PRs to add even more features to the library. While we are always open to improving the library, we also want to make sure that TanStack Table remains a lean library that does not include too much bloat and code that is unlikely to be used in most use cases. Not every PR can, or should, be accepted into the core library, even if it does solve a real problem. This can be frustrating to developers where TanStack Table solves 90% of their use case, but they need a little bit more control.
 
@@ -18,7 +16,7 @@ In v9, TanStack Table uses the `features` option (via `tableFeatures()`) to decl
 
 > In v9, features are opt-in. Use `tableFeatures({ ... })` to declare which features your table uses, including custom features.
 
-### How TanStack Table Features Work
+## How TanStack Table Features Work
 
 TanStack Table's source code is arguably somewhat simple (at least we think so). All code for each feature is split up into its own object/file with instantiation methods to create initial state, default table and column options, and API methods that can be added to the `table`, `header`, `column`, `row`, and `cell` instances.
 
@@ -77,65 +75,65 @@ export interface TableFeature {
 
 This might be a bit confusing, so let's break down what each of these methods do:
 
-#### Default Options and Initial State
+### Default Options and Initial State
 
 <br />
 
-##### getDefaultTableOptions
+#### getDefaultTableOptions
 
 The `getDefaultTableOptions` method in a table feature is responsible for setting the default table options for that feature. For example, in the [Column Resizing](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-resizing/columnResizingFeature.ts) feature, the `getDefaultTableOptions` method sets the default `columnResizeMode` option with a default value of `"onEnd"`.
 
 <br />
 
-##### getDefaultColumnDef
+#### getDefaultColumnDef
 
 The `getDefaultColumnDef` method in a table feature is responsible for setting the default column options for that feature. For example, in the [Sorting](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature, the `getDefaultColumnDef` method sets the default `sortUndefined` column option with a default value of `1`.
 
 <br />
 
-##### getInitialState
+#### getInitialState
 
 The `getInitialState` method in a table feature is responsible for setting the default state for that feature. For example, in the [Pagination](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-pagination/rowPaginationFeature.ts) feature, the `getInitialState` method sets the default `pageSize` state with a value of `10` and the default `pageIndex` state with a value of `0`.
 
-#### API Creators
+### API Creators
 
 <br />
 
-##### constructTableAPIs
+#### constructTableAPIs
 
 The `constructTableAPIs` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature, the `constructTableAPIs` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
 
 <br />
 
-##### assignHeaderPrototype
+#### assignHeaderPrototype
 
 The `assignHeaderPrototype` method in a table feature is responsible for adding methods to the shared `header` prototype. For example, the [Column Sizing](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-sizing/columnSizingFeature.ts) feature adds header instance API methods such as `getStart`. So then, when you call `header.getStart()`, you are calling a method that was added by the column sizing feature.
 
 <br />
 
-##### assignColumnPrototype
+#### assignColumnPrototype
 
 The `assignColumnPrototype` method in a table feature is responsible for adding methods to the shared `column` prototype. For example, the [Sorting](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature adds column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added by the row sorting feature.
 
 <br />
 
-##### assignRowPrototype and initRowInstanceData
+#### assignRowPrototype and initRowInstanceData
 
 The `assignRowPrototype` method in a table feature is responsible for adding methods to the shared `row` prototype. The `initRowInstanceData` method is available for per-row instance data or caches that cannot live on the shared prototype. For example, the [Row Selection](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature adds row instance API methods such as `toggleSelected` and `getIsSelected`.
 
 <br />
 
-##### assignCellPrototype
+#### assignCellPrototype
 
 The `assignCellPrototype` method in a table feature is responsible for adding methods to the shared `cell` prototype. For example, the [Column Grouping](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts) feature adds cell instance API methods such as `getIsGrouped` and `getIsAggregated`.
 
-### Adding a Custom Feature
+## Adding a Custom Feature
 
 Let's walk through making a custom table feature for a hypothetical use case. Let's say we want to add a feature to the table instance that allows the user to change the "density" (padding of cells) of the table.
 
 This repository does not currently include a Svelte custom-plugin example, but here's an in-depth look at the steps to create a custom feature.
 
-#### Step 1: Set up TypeScript Types
+### Step 1: Set up TypeScript Types
 
 Assuming you want the same full type-safety that the built-in features in TanStack Table have, let's set up all of the TypeScript types for our new feature. We'll create types for new table options, state, and table instance API methods.
 
@@ -161,7 +159,7 @@ export interface Table_Density {
 }
 ```
 
-#### Step 2: Add the Feature to TanStack Table's Feature Maps
+### Step 2: Add the Feature to TanStack Table's Feature Maps
 
 TanStack Table uses the keys passed to `tableFeatures({ ... })` to infer which feature state, options, and APIs exist on a table. To make a custom feature key type-safe, add it to the exported `Plugins`, `TableState_FeatureMap`, `TableOptions_FeatureMap`, and `Table_FeatureMap` interfaces with declaration merging.
 
@@ -193,7 +191,7 @@ declare module '@tanstack/svelte-table' {
 
 Once the feature is registered this way, TypeScript can infer the feature's state, options, and APIs only on tables whose `features` include `densityPlugin`.
 
-#### Step 3: Create the Feature Object
+### Step 3: Create the Feature Object
 
 With all of that TypeScript setup out of the way, we can now create the feature object for our new feature. This is where we define all of the methods that will be added to the table instance.
 
@@ -255,7 +253,7 @@ export const densityPlugin: TableFeature = {
 }
 ```
 
-#### Step 4: Add the Feature to the Table
+### Step 4: Add the Feature to the Table
 
 Now that we have our feature object, we can add it to the table instance by including it in the `tableFeatures()` call and passing the result to the `features` option when we create the table instance.
 
@@ -270,7 +268,7 @@ const table = createTable({
 })
 ```
 
-#### Step 5: Use the Feature in Your Application
+### Step 5: Use the Feature in Your Application
 
 Now that the feature is added to the table instance, you can use the new instance APIs, options, and state in your application. `table.state.density` reads the new state slice reactively in your markup, and `table.setDensity` / `table.toggleDensity` update it.
 
@@ -284,6 +282,6 @@ Now that the feature is added to the table instance, you can use the new instanc
 </td>
 ```
 
-#### Do We Have to Do It This Way?
+### Do We Have to Do It This Way?
 
 This is just a new way to integrate custom code along-side the built-in features in TanStack Table. In our example up above, we could have just as easily stored the `density` state in a `$state`, defined our own `toggleDensity` handler wherever, and just used it in our code separately from the table instance. Building table features along-side TanStack Table instead of deeply integrating them into the table instance is still a perfectly valid way to build custom features. Depending on your use case, this may or may not be the cleanest way to extend TanStack Table with custom features.

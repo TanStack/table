@@ -2,8 +2,6 @@
 title: Table and Column Meta Guide
 ---
 
-## Table and Column Meta Guide
-
 Sometimes you need to attach your own arbitrary data or functions to a table or its columns so that they are available anywhere the `table` or `column` instances are available. That is what the `meta` options are for. TanStack Table never reads or writes `meta` itself; it is purely a place for you to pass your own context through the table.
 
 There are two kinds of meta:
@@ -11,7 +9,7 @@ There are two kinds of meta:
 - **Table meta** - The `meta` table option. Pass any object and read it back anywhere via `table.options.meta`. A classic use case is passing an `updateData` function down to editable cells.
 - **Column meta** - The `meta` property on a column definition. Read it back anywhere a column is available via `column.columnDef.meta`. A classic use case is declaring which filter UI variant a column's header should render.
 
-### Table Meta
+## Table Meta
 
 <!-- ::start:framework -->
 
@@ -201,7 +199,7 @@ const columns = columnHelper.columns([
 const variant = column.columnDef.meta?.filterVariant
 ```
 
-### Typing Meta Per-Table (Recommended)
+## Typing Meta Per-Table (Recommended)
 
 By default, both meta types are empty objects, so to get type safety you declare their shapes yourself. New in v9, you can declare meta types **per features set** with the type-only `tableMeta` and `columnMeta` slots in your `tableFeatures()` call, using the `metaHelper` utility.
 
@@ -387,7 +385,7 @@ column.columnDef.meta?.filterVariant // ✅ 'text' | 'range' | 'select' | undefi
 
 Unlike the v8-style declaration merging described below, this scoping is **per-table, not global**: only tables created with this `features` object get these meta types. Different tables in your app can declare entirely different meta shapes by using different `features` objects.
 
-#### How the Type-Only Slots Work
+### How the Type-Only Slots Work
 
 The `tableMeta` and `columnMeta` keys are _phantom_ entries: only their TypeScript types matter. At runtime, the value is an empty object that gets stripped from the table's registered features, so it is never treated as a real feature. The actual meta _values_ are still passed where they always were: the `meta` table option and the `meta` property on column definitions.
 
@@ -403,7 +401,7 @@ const features = tableFeatures({
 
 Both forms are equivalent. Prefer `metaHelper`: it reads as type-only at a glance, and it avoids false positives from the `@typescript-eslint/no-unnecessary-type-assertion` lint rule, which flags the `{} as` form when your meta type has only optional properties (and whose auto-fix would silently erase your meta type).
 
-### Filter Meta (`filterMeta` Slot)
+## Filter Meta (`filterMeta` Slot)
 
 The `filterMeta` slot lets you declare the shape of arbitrary metadata that a custom filter function attaches to a row during filtering. This is most useful for filter functions that produce a by-product (such as a ranking score) that you want to read in a column's sort function or cell renderer.
 
@@ -481,7 +479,7 @@ Now `columnFiltersMeta` on every row is typed as `FuzzyFilterMeta` for tables bu
 
 See the [React filters-fuzzy example](../framework/react/examples/filters-fuzzy) for a complete, runnable implementation.
 
-### Typing Meta Globally with Declaration Merging (v8 Style)
+## Typing Meta Globally with Declaration Merging (v8 Style)
 
 The v8 approach of extending the `TableMeta` and `ColumnMeta` interfaces with module augmentation still works in v9. The only change from v8 is the generics shape: `TFeatures` is now the first type parameter on both interfaces.
 
@@ -673,6 +671,6 @@ The trade-off with declaration merging is that it is **global**. Every table in 
 
 The two approaches resolve with a simple precedence: if a `features` object declares a `tableMeta` or `columnMeta` slot, that slot's type is used for tables created with those features, _replacing_ (not merging with) the globally declared interface. Tables whose features declare no slot fall back to the declaration-merged interfaces.
 
-### When to Use Custom Features Instead
+## When to Use Custom Features Instead
 
 Meta is intentionally simple: a typed bag of values you carry through the table. If you find yourself wanting real table _options_ with defaults, new _state_, or new _APIs_ on the table instance (e.g. `table.toggleDensity()`), consider writing a [custom feature](../framework/react/guide/custom-features) instead. Custom features plug into the same `features` option, get the same `typeof features` type inference, and can declare their own options, state, and instance methods. Meta was never designed to do any of that.

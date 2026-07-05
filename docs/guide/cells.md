@@ -2,21 +2,19 @@
 title: Cells Guide
 ---
 
-## Cells Guide
-
 This quick guide will discuss the different ways you can retrieve and interact with `cell` objects in TanStack Table.
 
-### Where to Get Cells From
+## Where to Get Cells From
 
 Cells come from [Rows](./rows). Enough said, right?
 
 There are multiple `row` instance APIs you can use to retrieve the appropriate cells from a row depending on which features you are using. Most commonly, you will use the `row.getAllCells` or `row.getVisibleCells` APIs (if you are using column visibility features), but there are a handful of other similar APIs that you can use.
 
-### Cell Objects
+## Cell Objects
 
 Every cell object can be associated with a `<td>` or similar cell element in your UI. There are a few properties and methods on `cell` objects that you can use to interact with the table state and extract cell values from the table based on the state of the table.
 
-#### Cell IDs
+### Cell IDs
 
 Every cell object has an `id` property that makes it unique within the table instance. Each `cell.id` is constructed simply as a union of its parent row and column IDs separated by an underscore.
 
@@ -28,11 +26,11 @@ Every cell object has an `id` property that makes it unique within the table ins
 
 During grouping or aggregation features, the `cell.id` will have additional string appended to it.
 
-#### Cell Parent Objects
+### Cell Parent Objects
 
 Every cell stores a reference to its parent [row](./rows) and [column](./columns) objects.
 
-#### Access Cell Values
+### Access Cell Values
 
 The recommended way to access data values from a cell is to use either the `cell.getValue` or `cell.renderValue` APIs. Using either of these APIs will cache the results of the accessor functions and keep rendering efficient. The only difference between the two is that `cell.renderValue` will return either the value or the `renderFallbackValue` if the value is undefined, whereas `cell.getValue` will return the value or `undefined` if the value is undefined.
 
@@ -46,7 +44,7 @@ const renderedValue = cell.renderValue() // read the cell value, falling back to
 
 These APIs take no arguments. They are bound to the cell's own column. If you need to read a different column's value from within a cell, use the parent row instead, e.g. `cell.row.getValue('someColumnId')`.
 
-#### Access Other Row Data from Any Cell
+### Access Other Row Data from Any Cell
 
 Since every cell object is associated with its parent row, you can access any data from the original row that you are using in your table using `cell.row.original`.
 
@@ -55,11 +53,11 @@ Since every cell object is associated with its parent row, you can access any da
 const firstName = cell.row.original.firstName // { firstName: 'John', lastName: 'Doe' }
 ```
 
-### More Cell APIs
+## More Cell APIs
 
 Depending on the features that you are using for your table, there are dozens more useful APIs for interacting with cells. See each features' respective API docs or guide for more information.
 
-### Cell Rendering
+## Cell Rendering
 
 You can just use the `cell.renderValue` or `cell.getValue` APIs to render the cells of your table. However, these APIs will only spit out the raw cell values (from accessor functions). If you are using the `cell: () => JSX` column definition options, you will want to use the `flexRender` API utility from your adapter.
 
