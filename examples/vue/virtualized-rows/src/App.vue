@@ -32,7 +32,7 @@ function refreshData() {
 }
 
 function stressTest() {
-  data.value = makeData(500_000)
+  data.value = makeData(1_000_000)
 }
 
 const filteredData = computed<Array<Person>>(() => {
@@ -149,7 +149,7 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
     <div class="centered-button-row" style="margin-bottom: 8px">
       <button @click="refreshData" class="demo-button">Regenerate Data</button>
       <button @click="stressTest" class="demo-button">
-        Stress Test (500k rows)
+        Stress Test (1M rows)
       </button>
     </div>
     <div style="margin: 0 auto; width: min-content">

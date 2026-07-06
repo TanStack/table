@@ -251,7 +251,7 @@ function ProductsTable() {
     setData(makeProductData(500))
   }
   const stressTest = () => {
-    setData(makeProductData(200_000))
+    setData(makeProductData(1_000_000))
   }
 
   // Define columns using the column helper - different structure than Users table

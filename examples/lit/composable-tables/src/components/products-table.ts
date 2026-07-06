@@ -96,7 +96,7 @@ export class ProductsTable extends LitElement {
           .title=${'Products Table'}
           .onRefresh=${this.refreshData}
           .onStressTest=${() => {
-            this.data = makeProductData(200_000)
+            this.data = makeProductData(1_000_000)
           }}
         ></table-toolbar>
 

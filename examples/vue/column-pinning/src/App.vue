@@ -79,7 +79,7 @@ const refreshData = () => {
 }
 
 const stressTest = () => {
-  data.value = makeData(500_000)
+  data.value = makeData(1_000_000)
 }
 
 const table = useTable({
@@ -153,7 +153,7 @@ function toggleAllColumnsVisibility() {
         Regenerate Data
       </button>
       <button @click="stressTest" class="demo-button demo-button-sm">
-        Stress Test (500k rows)
+        Stress Test (1M rows)
       </button>
       <button @click="randomizeColumns" class="demo-button demo-button-sm">
         Shuffle Columns

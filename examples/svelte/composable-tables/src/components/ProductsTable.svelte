@@ -19,7 +19,7 @@
     data = makeProductData(1_000)
   }
   function stressTest() {
-    data = makeProductData(200_000)
+    data = makeProductData(1_000_000)
   }
 
   // Define columns using the column helper - different structure than Users table

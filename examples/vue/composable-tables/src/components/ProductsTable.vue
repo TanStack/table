@@ -47,7 +47,7 @@ function refreshData() {
 }
 
 function stressTest() {
-  data.value = makeProductData(200_000)
+  data.value = makeProductData(1_000_000)
 }
 
 const table = useAppTable({

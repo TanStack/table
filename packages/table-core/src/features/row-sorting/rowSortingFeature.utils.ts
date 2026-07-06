@@ -195,15 +195,6 @@ export function column_toggleSorting<
   desc?: boolean,
   multi?: boolean,
 ) {
-  // if (column.columns.length) {
-  //   column.columns.forEach((c, i) => {
-  //     if (c.id) {
-  //       table.toggleColumnSorting(c.id, undefined, multi || !!i)
-  //     }
-  //   })
-  //   return
-  // }
-
   // this needs to be outside of table.setSorting to be in sync with rerender
   const nextSortingOrder = column_getNextSortingOrder(column)
   const hasManualValue = typeof desc !== 'undefined'

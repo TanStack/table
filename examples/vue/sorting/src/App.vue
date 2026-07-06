@@ -61,7 +61,7 @@ const refreshData = () => {
 }
 
 const stressTest = () => {
-  data.value = makeData(500_000)
+  data.value = makeData(1_000_000)
 }
 
 const table = useTable({
@@ -77,7 +77,7 @@ const table = useTable({
     <div class="button-row">
       <button @click="refreshData" class="demo-button">Regenerate Data</button>
       <button @click="stressTest" class="demo-button">
-        Stress Test (500k rows)
+        Stress Test (1M rows)
       </button>
     </div>
     <div class="spacer-md" />
