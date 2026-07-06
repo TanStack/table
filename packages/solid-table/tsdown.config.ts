@@ -6,6 +6,7 @@ export default defineConfig({
   entry: [
     './src/index.tsx',
     './src/static-functions.ts',
+    './src/experimental-worker-plugin.ts',
     './src/flex-render.tsx',
   ],
   format: ['esm', 'cjs'],

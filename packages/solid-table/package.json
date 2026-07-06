@@ -35,6 +35,11 @@
       "import": "./dist/static-functions.js",
       "require": "./dist/static-functions.cjs"
     },
+    "./experimental-worker-plugin": {
+      "solid": "./dist/experimental-worker-plugin.js",
+      "import": "./dist/experimental-worker-plugin.js",
+      "require": "./dist/experimental-worker-plugin.cjs"
+    },
     "./flex-render": {
       "solid": "./dist/flex-render.js",
       "import": "./dist/flex-render.js",
