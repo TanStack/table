@@ -2,8 +2,8 @@
   "name": "tanstack-angular-table-example-composable-tables",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 5173",
-    "dev": "ng serve --port 5173",
+    "start": "ng serve --port 6565",
+    "dev": "ng serve --port 6565",
     "build": "ng build",
     "test:types": "ng build",
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",

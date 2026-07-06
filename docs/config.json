@@ -86,6 +86,7 @@
         { "label": "Column Definitions", "to": "guide/column-defs" },
         { "label": "Table Instance", "to": "guide/tables" },
         { "label": "Row Models", "to": "guide/row-models" },
+        { "label": "Worker Row Models (Experimental)", "to": "guide/worker-row-models" },
         { "label": "Rows", "to": "guide/rows" },
         { "label": "Cells", "to": "guide/cells" },
         { "label": "Header Groups", "to": "guide/header-groups" },
@@ -1201,6 +1202,7 @@
           "children": [
             { "label": "Composable Tables (createTableHook)", "to": "framework/react/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/react/examples/custom-plugin" },
+            { "label": "Experimental Web Workers Plugin", "to": "framework/react/examples/web-worker-row-models" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/react/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Columns (Exp)", "to": "framework/react/examples/virtualized-columns-experimental" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/react/examples/virtualized-rows" },

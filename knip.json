@@ -10,7 +10,11 @@
       "ignoreDependencies": ["remove-accents"]
     },
     "packages/angular-table": {
-      "entry": ["src/index.ts!", "static-functions/index.ts!"]
+      "entry": [
+        "src/index.ts!",
+        "static-functions/index.ts!",
+        "experimental-worker-plugin/index.ts!"
+      ]
     },
     "packages/svelte-table": {
       "entry": [

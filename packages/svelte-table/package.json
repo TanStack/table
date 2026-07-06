@@ -36,6 +36,11 @@
       "svelte": "./dist/static-functions.js",
       "import": "./dist/static-functions.js"
     },
+    "./experimental-worker-plugin": {
+      "types": "./dist/experimental-worker-plugin.d.ts",
+      "svelte": "./dist/experimental-worker-plugin.js",
+      "import": "./dist/experimental-worker-plugin.js"
+    },
     "./flex-render": {
       "types": "./dist/flex-render.d.ts",
       "svelte": "./dist/flex-render.js",
@@ -44,7 +49,7 @@
     "./package.json": "./package.json"
   },
   "engines": {
-    "node": ">=16"
+    "node": ">=20"
   },
   "files": [
     "dist",
