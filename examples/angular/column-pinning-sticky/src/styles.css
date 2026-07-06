@@ -17,13 +17,16 @@ table {
   /* box-shadow and borders will not work with position: sticky otherwise */
   border-collapse: collapse;
   border-spacing: 0;
+  table-layout: fixed;
 }
 
 th {
   background-color: lightgray;
   border-bottom: 1px solid lightgray;
+  box-sizing: border-box;
   font-weight: bold;
   height: 30px;
+  overflow: hidden;
   padding: 2px 4px;
   position: relative;
   text-align: center;
@@ -31,6 +34,8 @@ th {
 
 td {
   background-color: white;
+  box-sizing: border-box;
+  overflow: hidden;
   padding: 2px 4px;
 }
 
@@ -187,6 +192,8 @@ td {
 }
 
 .nowrap {
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 }
 

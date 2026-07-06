@@ -349,13 +349,16 @@ class LitTableExample extends LitElement {
         }
 
         table {
+          table-layout: fixed;
         }
 
         th {
           background-color: lightgray;
           border-bottom: 1px solid lightgray;
+          box-sizing: border-box;
           font-weight: bold;
           height: 30px;
+          overflow: hidden;
           padding: 2px 4px;
           position: relative;
           text-align: center;
@@ -363,6 +366,8 @@ class LitTableExample extends LitElement {
 
         td {
           background-color: white;
+          box-sizing: border-box;
+          overflow: hidden;
           padding: 2px 4px;
         }
 
@@ -493,6 +498,8 @@ class LitTableExample extends LitElement {
           border-color: #000;
         }
         .nowrap {
+          overflow: hidden;
+          text-overflow: ellipsis;
           white-space: nowrap;
         }
         .demo-note {
