@@ -251,7 +251,14 @@ export function table_getCanPreviousPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (table.atoms.pagination?.get()?.pageIndex ?? 0) > 0
+  const pagination = table.atoms.pagination?.get()
+  const { canPreviousPage, pageIndex } = pagination ?? {}
+
+  if (canPreviousPage !== undefined) {
+    return canPreviousPage
+  }
+
+  return (pageIndex ?? defaultPageIndex) > 0
 }
 
 /**
@@ -269,9 +276,15 @@ export function table_getCanNextPage<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const pageIndex = table.atoms.pagination?.get()?.pageIndex ?? defaultPageIndex
-
+  const pagination = table.atoms.pagination?.get()
+  const pageIndex = pagination?.pageIndex ?? defaultPageIndex
+  // Read `pageCount` before any early return so the reactivity system always
+  // subscribes to its dependencies (pageSize atom + pre-paginated row model).
   const pageCount = table_getPageCount(table)
+
+  if (pagination?.canNextPage !== undefined) {
+    return pagination.canNextPage
+  }
 
   if (pageCount === -1) {
     return true

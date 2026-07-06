@@ -5,6 +5,14 @@ import type { TableFeatures } from '../../types/TableFeatures'
 export interface PaginationState {
   pageIndex: number
   pageSize: number
+  /**
+   * When manually controlling pagination, supply `canNextPage` explicitly to override the derived value. This is useful when working with news feeds or other server paginated data where `pageCount` or `rowCount` is unknown.
+   */
+  canNextPage?: boolean
+  /**
+   * When manually controlling pagination, supply `canPreviousPage` explicitly to override the derived value. This is useful when working with news feeds or other server paginated data where `pageCount` or `rowCount` is unknown.
+   */
+  canPreviousPage?: boolean
 }
 
 export interface TableState_RowPagination {

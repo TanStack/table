@@ -313,6 +313,26 @@ describe('table_getCanPreviousPage', () => {
 
     expect(table_getCanPreviousPage(table)).toBe(true)
   })
+
+  it('should honor an explicit canPreviousPage override on the first page', () => {
+    const table = makeTable(25, {
+      initialState: {
+        pagination: { pageIndex: 0, pageSize: 10, canPreviousPage: true },
+      },
+    })
+
+    expect(table_getCanPreviousPage(table)).toBe(true)
+  })
+
+  it('should honor an explicit canPreviousPage=false override past the first page', () => {
+    const table = makeTable(25, {
+      initialState: {
+        pagination: { pageIndex: 1, pageSize: 10, canPreviousPage: false },
+      },
+    })
+
+    expect(table_getCanPreviousPage(table)).toBe(false)
+  })
 })
 
 describe('table_getCanNextPage', () => {
@@ -344,6 +364,39 @@ describe('table_getCanNextPage', () => {
     const table = makeTable(0)
 
     expect(table_getCanNextPage(table)).toBe(false)
+  })
+
+  it('should return false for a manual page count of 0', () => {
+    const table = makeTable(25, {
+      manualPagination: true,
+      pageCount: 0,
+    })
+
+    expect(table_getCanNextPage(table)).toBe(false)
+  })
+
+  it('should honor a canNextPage=false override even when the page count is unknown (-1)', () => {
+    const table = makeTable(25, {
+      manualPagination: true,
+      pageCount: -1,
+      initialState: {
+        pagination: { pageIndex: 0, pageSize: 10, canNextPage: false },
+      },
+    })
+
+    expect(table_getCanNextPage(table)).toBe(false)
+  })
+
+  it('should honor a canNextPage=true override even when the page count is 0', () => {
+    const table = makeTable(25, {
+      manualPagination: true,
+      pageCount: 0,
+      initialState: {
+        pagination: { pageIndex: 0, pageSize: 10, canNextPage: true },
+      },
+    })
+
+    expect(table_getCanNextPage(table)).toBe(true)
   })
 })
 
