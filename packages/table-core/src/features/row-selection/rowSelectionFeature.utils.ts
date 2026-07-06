@@ -1,6 +1,7 @@
 import {
   callMemoOrStaticFn,
   cloneState,
+  copyInstancePropertiesWithoutMemos,
   hasOwn,
   makeObjectMap,
 } from '../../utils'
@@ -738,7 +739,7 @@ export function selectRowsFn<
         if (isSelected) {
           // Preserve prototype chain so methods like getValue() remain accessible
           const cloned = Object.create(Object.getPrototypeOf(row))
-          Object.assign(cloned, row)
+          copyInstancePropertiesWithoutMemos(cloned, row)
           cloned.subRows = newSubRows
           result.push(cloned)
         }

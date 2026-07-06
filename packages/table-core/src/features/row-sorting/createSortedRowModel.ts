@@ -1,4 +1,4 @@
-import { tableMemo } from '../../utils'
+import { copyInstancePropertiesWithoutMemos, tableMemo } from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -55,6 +55,10 @@ function _createSortedRowModel<
     const column = table.getColumn(sort.id)
     return column ? column_getCanSort(column) : false
   })
+
+  if (!availableSorting.length) {
+    return preSortedRowModel
+  }
 
   const resolvedSorting: Array<{
     id: string
@@ -132,32 +136,49 @@ function _createSortedRowModel<
     return rowA.index - rowB.index
   }
 
-  const sortData = (rows: Array<Row<TFeatures, TData>>) => {
+  const sortData = (
+    rows: Array<Row<TFeatures, TData>>,
+  ): {
+    rows: Array<Row<TFeatures, TData>>
+    changed: boolean
+  } => {
     const sortedData = rows.slice()
 
     sortedData.sort(compareRows)
+    let changed = false
 
     // If there are sub-rows, sort them. Clone only rows that need mutation
     // (i.e. have subRows) so we don't corrupt the source row model.
     for (let i = 0; i < sortedData.length; i++) {
       const row = sortedData[i]!
+      if (row !== rows[i]) {
+        changed = true
+      }
+
       if (row.subRows.length) {
-        // Preserve prototype chain so methods like getValue() remain accessible
-        const cloned = Object.create(Object.getPrototypeOf(row))
-        Object.assign(cloned, row)
-        cloned.subRows = sortData(row.subRows)
-        sortedData[i] = cloned
-        sortedFlatRows.push(cloned)
+        const sortedSubRows = sortData(row.subRows)
+
+        if (sortedSubRows.changed) {
+          // Preserve prototype chain so methods like getValue() remain accessible
+          const cloned = Object.create(Object.getPrototypeOf(row))
+          copyInstancePropertiesWithoutMemos(cloned, row)
+          cloned.subRows = sortedSubRows.rows
+          sortedData[i] = cloned
+          sortedFlatRows.push(cloned)
+          changed = true
+        } else {
+          sortedFlatRows.push(row)
+        }
       } else {
         sortedFlatRows.push(row)
       }
     }
 
-    return sortedData
+    return { rows: sortedData, changed }
   }
 
   return {
-    rows: sortData(preSortedRowModel.rows),
+    rows: sortData(preSortedRowModel.rows).rows,
     flatRows: sortedFlatRows,
     rowsById: preSortedRowModel.rowsById,
   }

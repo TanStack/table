@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 49
-- **Source findings:** 47
+- **Entries:** 54
+- **Source findings:** 52
 - **Cross-cutting sweeps:** 2
 - 2026-07-03: #102 (C9) moved here from perf-todo.md after the row-model benchmark confirmed and the fix landed.
 
@@ -2253,6 +2253,48 @@ Replace with indexed `for` loops with early `return`. Removes closure-per-row.
 
 ---
 
+## 103. C10: Object.assign row clones copy `_memo_*` closures bound to the original row (bug) — Score: 4 (bug)
+
+**Status:** `[x]` done
+**Implementation note:** Added `copyInstancePropertiesWithoutMemos` and routed both row clone sites through it: `selectRowsFn` selected parent clones and `createSortedRowModel` branch-row clones. The helper copies enumerable own properties except `_memo_*`, so cloned rows keep ordinary caches like `_valuesCache` but rebuild memoized prototype APIs against the clone on first use. Added regressions that warm `getAllCells()` on the source row before cloning, then assert cloned rows return cells whose `cell.row` is the clone, not the source. This unblocks #131 (D14 row_getLeafRows memoization).
+
+**Location:** `packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:736–741`; same pattern at `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:135–138`; interacts with `packages/table-core/src/utils.ts:430–445` (assignPrototypeAPIs)
+**Category:** `bug`
+
+`assignPrototypeAPIs` stores lazily created memos as own enumerable `_memo_<fnKey>` props whose closures captured `self = <original row>`. `Object.assign(cloned, row)` copies them, so any memoized API called on a clone executes against the ORIGINAL row: `cloned.subRows = newSubRows` is invisible to every copied memoized method (e.g. `cloned.getVisibleCells()`, `cloned.getIsSomeSelected()`), and returned cells have `cell.row === original`. Verified end-to-end. This was a pre-existing hazard for ALL per-instance memoized row APIs on any cloned row, and it blocked D14 (memoizing `row_getLeafRows`) as filed: a clone's copied `getLeafRows` memo would keep returning the flatten of the original (e.g. unsorted) subRows.
+
+**Cross-refs / gating:** Unblocks #131 (D14: memoizing row_getLeafRows).
+
+**Before**
+
+```ts
+// Preserve prototype chain so methods like getValue() remain accessible
+const cloned = Object.create(Object.getPrototypeOf(row))
+Object.assign(cloned, row)
+cloned.subRows = newSubRows
+```
+
+**After**
+
+```ts
+const cloned = Object.create(Object.getPrototypeOf(row))
+const keys = Object.keys(row)
+for (let i = 0; i < keys.length; i++) {
+  const key = keys[i]!
+  if (!key.startsWith('_memo_')) {
+    cloned[key] = (row as Record<string, any>)[key]
+  }
+}
+cloned.subRows = newSubRows
+```
+
+Apply to BOTH clone sites (rowSelectionFeature.utils.ts and createSortedRowModel.ts).
+
+**Risk:** Clones lose warm caches (first call re-memoizes against the clone), which is the correct behavior; `_valuesCache` stays shared by reference (values identical, fine). Behavior delta to flag: post-fix, clone getters answer for the clone's own (e.g. filtered) subRows; that is the sane semantics but observable (e.g. `getIsAllSubRowsSelected` may flip from `'some'`-derived to `'all'`-derived on selected-model rows).
+**Verification:** CONFIRMED-BUG, severity MODERATE; scope extended to createSortedRowModel; D14 unblocked by this fix.
+
+---
+
 ## 104. E10: column_getAutoFilterFn's Array.isArray branch is unreachable (bug) — Score: 4 (bug)
 
 **Status:** `[x]` done
@@ -2282,6 +2324,25 @@ if (Array.isArray(value)) {
 
 ---
 
+## 116. B10: createSortedRowModel: no availableSorting.length guard; branch rows cloned even when subRows unchanged — Score: 4
+
+**Status:** `[x]` done
+**Implementation note:** Added the `availableSorting.length` guard after missing/unsortable sorting entries are filtered, so a sorting state containing only unavailable ids returns `preSortedRowModel` directly. Also changed recursive sorting to return a `changed` flag computed during the existing post-sort `flatRows` walk; branch rows are cloned only when their sorted `subRows` changed order or contain a cloned descendant. Added focused row-sorting tests for unknown-only sorting returning the pre-sorted model, unchanged branch-row identity preservation, and clone-on-changed-subRows behavior.
+
+**Location:** `createSortedRowModel.ts:47–58, 130–147`
+**Category:** `micro`
+
+(a) No `availableSorting.length` guard: when all sorting ids miss, the code still pays O(R log R) no-op comparator calls + slice + flatRows rebuild + branch-row clones; (b) every branch row is cloned even when the sorted subRows are element-wise identical.
+
+**Fix:** `if (!availableSorting.length) return preSortedRowModel` (comparator provably order-preserving; edge flatRows order becomes parent-first, consistent with the existing empty-sorting branch) + identity-scan-before-clone (cloned descendants replace elements, so element-wise compare catches subtree changes).
+
+**Big-O:** O(R log R) no-op comparator calls (plus slice + flatRows rebuild + branch-row clones) avoided entirely when no sorting ids match.
+
+**Risk:** None noted; comparator is provably order-preserving, and the identity-scan-before-clone catches subtree changes via element-wise compare since cloned descendants replace elements.
+**Verification:** Verified (2026-07-01 audit).
+
+---
+
 ## 133. E9: aggregationFns reduce/forEach closures; dead null checks in min/max/extent — Score: 4
 
 **Status:** `[x]` done
@@ -2299,6 +2360,23 @@ if (Array.isArray(value)) {
 
 ---
 
+## 142. NR1: Pre-existing crash on unknown sorting column id in createSortedRowModel (bug) — Score: 4 (bug)
+
+**Status:** `[x]` done
+**Implementation note:** Verified this was already fixed in current source by a recent row-sorting change: `availableSorting` now fetches the column and calls `column_getCanSort(column)` only when the column exists. Existing row-sorting unit coverage already asserts that an unknown sorting id does not throw, preserves pre-sorted order when all ids are unknown, and still sorts by remaining known columns. The #116 implementation added the stronger unknown-only fast path assertion that `getSortedRowModel()` returns `getPreSortedRowModel()` by reference.
+
+**Location:** `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:54–57` (dereference at `packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:363–368`)
+**Category:** `bug`
+
+A `sorting` entry whose id matches no column makes `createSortedRowModel.ts:54-57` pass `undefined` into `column_getCanSort`, which dereferences `column.columnDef` (`rowSortingFeature.utils.ts:363-368`) → TypeError.
+
+**Fix:** Guard the `column_getCanSort` call by first checking whether `table.getColumn(sort.id)` returned a column. Unknown sorting ids are filtered out before resolving sort metadata or invoking the comparator.
+
+**Risk:** Crash (TypeError) reachable whenever a `sorting` state entry's id matches no column, e.g. after a column is removed while its sort state persists. Correctness bug, not a perf regression; independent of #88 (B8).
+**Verification:** CONFIRMED-BUG (2026-07-01 audit).
+
+---
+
 ## Score 3
 
 ## 53. `sortFn_datetime` compares mixed Date / string / number — Score: 3
@@ -2312,6 +2390,23 @@ if (Array.isArray(value)) {
 Normalize `Date` → `getTime()` once at the top, then compare numbers (or fall through to `>/<` for strings). Marginal but the comparator runs O(n log n) times.
 
 **Risk:** None when only used for true datetime columns. Verify mixed-type columns don't rely on coercion.
+
+---
+
+## 131. D14: row_getLeafRows unmemoized — Score: 3
+
+**Status:** `[x]` done
+**Implementation note:** Added a per-row memo for `row_getLeafRows` with deps `[row.subRows]`. The memo now reuses the flattened descendant array across repeated calls until the row's `subRows` array reference changes. Added core-row coverage for stable memo identity plus invalidation after `subRows` reassignment, and sorted-row coverage that warms the source row's `getLeafRows()` before cloning and verifies the sorted clone computes leaf rows from its own sorted `subRows`. This relies on #103 so `_memo_getLeafRows` is not copied from source rows to clones.
+
+**Location:** `packages/table-core/src/core/rows/coreRowsFeature.ts:30–32` (`row_getLeafRows` unmemoized)
+**Category:** `micro`, `memoization`
+
+Re-flattens the whole subtree on every call; the ideal fix is a per-instance memo with deps `[row.subRows]` (all `subRows` writes are whole-array reassignments, verified).
+
+**Fix:** Add a per-instance memo with deps `[row.subRows]`. The former C10/#103 blocker has landed; verify the new memo is not copied across cloned rows before shipping.
+
+**Risk:** Must preserve whole-array `subRows` reassignment semantics and verify cloned rows build their own `_memo_getLeafRows` after #103.
+**Verification:** Verified (2026-07-01 audit); unblocked by #103 (C10 clone fix).
 
 ---
 
@@ -2516,5 +2611,22 @@ Replace with an indexed loop and early exit. Low frequency; only used during sor
 `if (...) ... else if (...)` instead of two unconditional ifs. Tiny.
 
 **Risk:** None.
+
+---
+
+## 135. E12: column_toggleSorting scans the tiny sorting array twice — Score: 1
+
+**Status:** `[x]` done
+**Implementation note:** Replaced `old.find(...)` + `old.findIndex(...)` with a single `findIndex` and derived `existingSorting` from `old[existingIndex]`. This keeps the tiny sorting array as an array and does not introduce a memo/map structure; it only removes the second scan in the click handler.
+
+**Location:** `packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:211–214` (`column_toggleSorting`)
+**Category:** `micro`
+
+`old.find` + `old.findIndex` scan the tiny sorting array twice.
+
+**Fix:** `findIndex` once, index into `old`. Per header click; negligible.
+
+**Risk:** None noted; per-interaction-click cost on an already-tiny (2-3 entry) array, consistent with the doctrine that these arrays don't warrant hashing.
+**Verification:** Verified (2026-07-01 audit).
 
 ---

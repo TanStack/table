@@ -29,6 +29,7 @@ export const coreRowsFeature: TableFeature = {
       },
       row_getLeafRows: {
         fn: (row) => row_getLeafRows(row),
+        memoDeps: (row) => [row.subRows],
       },
       row_getParentRow: {
         fn: (row) => row_getParentRow(row),

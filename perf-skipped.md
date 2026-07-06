@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 10
-- **Source findings:** 10
+- **Entries:** 12
+- **Source findings:** 12
 - **Cross-cutting sweeps:** 0
 
 ## Score 1
@@ -313,6 +313,79 @@ Both walk the `sorting` array; called for every visible sortable column on every
 ---
 
 ## Score 0
+
+## 108. B22: Row-model memoDeps systematically omit options they read (observation) — Score: 4
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** 4  
+**Score note:** Observation is too broad to implement safely as filed. The sorting-specific portion would require adding function-valued sort/column-definition inputs to memo deps, which the entry itself correctly rejects because adapter option objects/functions often change identity. Remaining primitive-flag cases should be handled as concrete scoped entries rather than this umbrella observation.
+**Implementation note:** Skipped as an implementation ticket. `createSortedRowModel` has no primitive table-option dep to add; it reads sorting state plus column-defined/function-valued sort metadata. `createExpandedRowModel` already includes `paginateExpandedRows` in deps, and other primitive flag work is better tracked by focused entries with explicit semantics/tests. Do not add function-valued options such as `sortFns`, aggregation defs, `getSubRows`, or `getIsRowExpanded` to row-model deps without a separate design for stable option identity.
+
+**Location:** `packages/table-core/src/features/column-filtering/createFilteredRowModel.ts`, `packages/table-core/src/features/row-sorting/createSortedRowModel.ts`, `packages/table-core/src/features/column-grouping/createGroupedRowModel.ts`, `packages/table-core/src/features/row-expanding/createExpandedRowModel.ts`, `packages/table-core/src/core/row-models/createCoreRowModel.ts`
+**Category:** `observation`, `memoization`
+
+createFilteredRowModel/createSortedRowModel/createGroupedRowModel/createExpandedRowModel/createCoreRowModel all read options (`filterFromLeafRows`, `maxLeafRowFilterDepth`, sort/aggregation defs, `getIsRowExpanded`, ...) that are not deps; runtime option changes serve stale models until an unrelated state change. This is a deliberate single-slot tradeoff for function-valued options (adding them would thrash memos when adapters rebuild options objects); the actionable scope is PRIMITIVE-FLAG additions only (e.g. `filterFromLeafRows`, `maxLeafRowFilterDepth`, `paginateExpandedRows`, the last already fixed in B21's micro entry).
+
+**Fix:** Add the primitive-flag options as deps only; leave the function-valued options (sort/aggregation defs, `getIsRowExpanded`) out of the dep tuples.
+
+**Risk:** Adding the function-valued options as deps would thrash memos when adapters rebuild options objects; the fix must stay scoped to primitive flags only.
+**Verification:** CONFIRMED (observation; primitive-only scope is the right boundary).
+
+---
+
+## 78. B9+E14: Sort-key precomputation (decorate-sort-undecorate), built-in sortFns only; design-level — Score: 6
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** 6  
+**Score note:** Not actionable as filed: the built-ins-only fast path would require `createSortedRowModel` to import or identity-match built-in sortFns, coupling the row model to optional sortFn code and breaking tree-shaking. A future design would need opt-in key-extractor metadata on the registered sortFn/registry, so built-ins and custom sortFns flow through the same external contract.
+**Implementation note:** Rejected after implementation spike. Importing built-in sortFns or their private comparator helpers into `createSortedRowModel` makes the row model retain built-in sortFn code even when users do not register those functions. That violates the package's feature/registry boundary. Leave the current comparator path intact. If revisited, design a tree-shake-safe API where sortFns can optionally expose a key extractor/comparator over extracted keys without the row model knowing which implementation is built in.
+
+**Location:** `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:88–112` (with `rowSortingFeature.ts:39` default `sortUndefined: 1`; `fns/sortFns.ts:18–30, 58–70` re-derive `toString(value).toLowerCase()` per comparison)
+**Category:** `big-o`
+
+Hot path: Per state-change: O(R log R) comparator invocations per sort. `row_getValue` caches in `_valuesCache`, so the accessor runs once per row; the remaining per-comparison cost with the default `sortUndefined: 1` is 2 getValue calls here plus 2 more inside the sortFn = 4 hashed lookups per comparison per column (~7M at R=100k). Worse, the text/alphanumeric sortFns rebuild `toString(value).toLowerCase()` (and, pre-E2, a regex split) on every comparison: O(R log R) string allocations that `_valuesCache` cannot amortize (~3.4M `toLowerCase` allocations per 100k-row sort). A decorate-sort-undecorate pass (one O(R) key extraction into a parallel array, index sort, then materialize) eliminates all per-comparison derivation.
+
+**Before**
+
+```ts
+if (sortUndefined) {
+  const aValue = rowA.getValue(sortEntry.id)
+  const bValue = rowB.getValue(sortEntry.id)
+
+  const aUndefined = aValue === undefined
+  const bUndefined = bValue === undefined
+  // ...
+}
+
+if (sortInt === 0) {
+  sortInt = columnInfo.sortFn(rowA, rowB, sortEntry.id)
+}
+```
+
+**After**
+
+(sketch; flat, single-column fast path, falling back to the current path for multi-column/hierarchy/custom fns)
+
+```ts
+// one O(R) pass
+const keys = new Array(sortedData.length)
+for (let i = 0; i < sortedData.length; i++) {
+  keys[i] = sortedData[i]!.getValue(entry.id)
+}
+```
+
+then a comparator over precomputed keys via an index sort, with `sortUndefined` handled on the extracted keys and stability via index pairing.
+
+**Big-O:** Per-comparison work drops from 4 hashed lookups (+ string realloc for text sorts) to 1 array read. At R=100k text sort: ~1.7M `toLowerCase` allocations → 100k; sort time typically 2-5× faster.
+
+**Risk:** Highest-risk row-model finding; design-level, not a drop-in edit. The fast path must exactly replicate `sortUndefined`/`invertSorting`/tiebreak-by-`row.index` semantics. **Built-in sortFns only** (E14's constraint): user-supplied sortFns can read arbitrary row state and must keep the current path. Sequencing: land E2 first (kills per-comparison split allocations at low risk); B9/E14 kills key re-derivation later.
+**Verification:** CONFIRMED (design-level); B9 and E14 merged (same Schwartzian direction; B9's formulation is the actionable one, E14 contributes the built-ins-only constraint).
+
+---
 
 ## 2. `assignPrototypeAPIs` allocates wrapper closures on every call — Score: 6
 

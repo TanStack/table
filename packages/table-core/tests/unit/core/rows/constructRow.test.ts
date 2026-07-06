@@ -60,4 +60,32 @@ describe('constructRow', () => {
     expect(row.subRows).toBe(subRows)
     expect(row.parentId).toBe(parentId)
   })
+
+  it('memoizes getLeafRows until subRows changes', () => {
+    const table = {
+      _features: { coreRowsFeature },
+      options: {},
+    } as unknown as Table_Internal<TestFeatures, Person>
+
+    const leafA = constructRow(table, 'leaf-a', { firstName: 'A' }, 0, 1, [])
+    const leafB = constructRow(table, 'leaf-b', { firstName: 'B' }, 1, 1, [])
+    const parent = constructRow(
+      table,
+      'parent',
+      { firstName: 'Parent' },
+      0,
+      0,
+      [leafA, leafB],
+    )
+
+    const firstLeafRows = parent.getLeafRows()
+    expect(parent.getLeafRows()).toBe(firstLeafRows)
+    expect(firstLeafRows).toEqual([leafA, leafB])
+
+    parent.subRows = [leafB, leafA]
+
+    const nextLeafRows = parent.getLeafRows()
+    expect(nextLeafRows).not.toBe(firstLeafRows)
+    expect(nextLeafRows).toEqual([leafB, leafA])
+  })
 })
