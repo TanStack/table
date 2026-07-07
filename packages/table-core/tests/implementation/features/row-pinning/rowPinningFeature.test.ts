@@ -1,46 +1,51 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import {
   constructTable,
-  coreFeatures,
-  createColumnHelper,
   createPaginatedRowModel,
   rowPaginationFeature,
   rowPinningFeature,
 } from '../../../../src'
-import {
-  createRowPinningTable,
-  createTableWithMockOnPinningChange,
-} from '../../../helpers/rowPinningHelpers'
+import { testFeatures } from '../../../fixtures/features'
+import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
-import type { ColumnDef, TableFeatures } from '../../../../src'
+import type { Table, TableOptions } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
-// Define feature set with proper typing
-const features = {
-  ...coreFeatures,
+const features = testFeatures({
   rowPinningFeature,
-  coreReactivityFeature: storeReactivityBindings(),
+})
+
+const featuresWithPagination = testFeatures({
+  rowPaginationFeature,
+  rowPinningFeature,
+  paginatedRowModel: createPaginatedRowModel(),
+})
+
+function makeTable(
+  options?: Partial<
+    Omit<TableOptions<typeof features, Person>, 'data' | 'columns' | 'features'>
+  >,
+  lengths: Array<number> | number = 10,
+): Table<typeof features, Person> {
+  const lengthsArray = Array.isArray(lengths) ? lengths : [lengths]
+  const data = generateTestData(...lengthsArray)
+  return constructTable({
+    features,
+    data,
+    columns: generateTestColumnDefs<typeof features>(data),
+    getSubRows: (row) => row.subRows,
+    enableRowPinning: true,
+    ...options,
+  })
 }
 
-type personKeys = keyof Person
-type PersonColumn<TFeatures extends TableFeatures = typeof features> =
-  ColumnDef<TFeatures, Person, any>
-
-function generateColumnDefs<TFeatures extends TableFeatures = typeof features>(
-  people: Array<Person>,
-): Array<PersonColumn<TFeatures>> {
-  const columnHelper = createColumnHelper<TFeatures, Person>()
-  const person = people[0]
-
-  if (!person) {
-    return []
-  }
-
-  return Object.keys(person).map((key) => {
-    const typedKey = key as personKeys
-    return columnHelper.accessor(typedKey, { id: typedKey } as any)
-  })
+function makeTableWithMockOnPinningChange(rowCount = 10) {
+  const onRowPinningChangeMock = vi.fn()
+  const table = makeTable(
+    { onRowPinningChange: onRowPinningChangeMock },
+    rowCount,
+  )
+  return { table, onRowPinningChangeMock }
 }
 
 const ROW = {
@@ -48,11 +53,6 @@ const ROW = {
   1: '1',
   2: '2',
 } as const
-
-const SUB_ROW = {
-  0: '0.0',
-  1: '0.1',
-}
 
 const EMPTY_PINNING_STATE = {
   top: [],
@@ -63,7 +63,7 @@ describe('table methods', () => {
   describe('setRowPinning', () => {
     it('should call onRowPinningChange when invoked', () => {
       const { table, onRowPinningChangeMock } =
-        createTableWithMockOnPinningChange()
+        makeTableWithMockOnPinningChange()
 
       const newState = {
         top: [ROW[0]],
@@ -78,7 +78,7 @@ describe('table methods', () => {
 
   describe('resetRowPinning', () => {
     it('should reset to default state when defaultState is true', () => {
-      const table = createRowPinningTable()
+      const table = makeTable()
 
       table.setRowPinning({
         top: [ROW[0]],
@@ -95,7 +95,7 @@ describe('table methods', () => {
         top: [ROW[0]],
         bottom: [ROW[1]],
       }
-      const table = createRowPinningTable({
+      const table = makeTable({
         initialState: {
           rowPinning: initialState,
         },
@@ -114,14 +114,14 @@ describe('table methods', () => {
 
   describe('getIsSomeRowsPinned', () => {
     it('should return false when no rows are pinned', () => {
-      const table = createRowPinningTable()
+      const table = makeTable()
       expect(table.getIsSomeRowsPinned()).toBe(false)
       expect(table.getIsSomeRowsPinned('top')).toBe(false)
       expect(table.getIsSomeRowsPinned('bottom')).toBe(false)
     })
 
     it('should return true when rows are pinned', () => {
-      const table = createRowPinningTable({
+      const table = makeTable({
         initialState: {
           rowPinning: {
             top: [ROW[0]],
@@ -138,7 +138,7 @@ describe('table methods', () => {
 
   describe('getTopRows/getBottomRows/getCenterRows', () => {
     it('should return correct rows for each section', () => {
-      const table = createRowPinningTable({
+      const table = makeTable({
         initialState: {
           rowPinning: {
             top: [ROW[0]],
@@ -159,31 +159,21 @@ describe('table methods', () => {
 
       expect(centerRows).toHaveLength(8)
       expect(
-        centerRows.every(
-          (row: (typeof centerRows)[number]) =>
-            row.id !== ROW[0] && row.id !== ROW[2],
-        ),
+        centerRows.every((row) => row.id !== ROW[0] && row.id !== ROW[2]),
       ).toBe(true)
     })
 
     it('should handle keepPinnedRows - false', () => {
       const data = generateTestData(10)
-      const _featuresWithPagination = {
-        ...coreFeatures,
-        rowPinningFeature,
-        rowPaginationFeature,
-        coreReactivityFeature: storeReactivityBindings(),
-        paginatedRowModel: createPaginatedRowModel(),
-      }
-      const columns = generateColumnDefs<typeof _featuresWithPagination>(data)
+      const columns =
+        generateTestColumnDefs<typeof featuresWithPagination>(data)
 
-      const table = constructTable<typeof _featuresWithPagination, Person>({
-        features: _featuresWithPagination,
+      const table = constructTable({
+        features: featuresWithPagination,
         data,
         columns,
-        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        getSubRows: (row) => row.subRows,
         enableRowPinning: true,
-        renderFallbackValue: '',
         initialState: {
           // Make first 2 rows visible
           pagination: {
@@ -205,22 +195,14 @@ describe('table methods', () => {
 
   it('should handle keepPinnedRows - true', () => {
     const data = generateTestData(10)
-    const _featuresWithPagination = {
-      ...coreFeatures,
-      rowPinningFeature,
-      rowPaginationFeature,
-      coreReactivityFeature: storeReactivityBindings(),
-      paginatedRowModel: createPaginatedRowModel(),
-    }
-    const columns = generateColumnDefs<typeof _featuresWithPagination>(data)
+    const columns = generateTestColumnDefs<typeof featuresWithPagination>(data)
 
-    const table = constructTable<typeof _featuresWithPagination, Person>({
-      features: _featuresWithPagination,
+    const table = constructTable({
+      features: featuresWithPagination,
       data,
       columns,
-      getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+      getSubRows: (row) => row.subRows,
       enableRowPinning: true,
-      renderFallbackValue: '',
       initialState: {
         // Make first 2 rows visible
         pagination: {
@@ -243,14 +225,14 @@ describe('table methods', () => {
 describe('row methods', () => {
   describe('getCanPin', () => {
     it('should return true by default', () => {
-      const table = createRowPinningTable()
+      const table = makeTable()
       const row = table.getRow(ROW[0])
 
       expect(row.getCanPin()).toBe(true)
     })
 
     it('should return false when enableRowPinning is false', () => {
-      const table = createRowPinningTable({
+      const table = makeTable({
         enableRowPinning: false,
       })
       const row = table.getRow(ROW[0])
@@ -259,7 +241,7 @@ describe('row methods', () => {
     })
 
     it('should use enableRowPinning function when provided', () => {
-      const table = createRowPinningTable({
+      const table = makeTable({
         enableRowPinning: (row) => row.id === ROW[1],
       })
 
@@ -270,14 +252,14 @@ describe('row methods', () => {
 
   describe('getIsPinned', () => {
     it('should return false when row is not pinned', () => {
-      const table = createRowPinningTable()
+      const table = makeTable()
       const row = table.getRow(ROW[0])
 
       expect(row.getIsPinned()).toBe(false)
     })
 
     it('should return correct position when row is pinned', () => {
-      const table = createRowPinningTable({
+      const table = makeTable({
         initialState: {
           rowPinning: {
             top: [ROW[0]],
@@ -293,14 +275,14 @@ describe('row methods', () => {
 
   describe('getPinnedIndex', () => {
     it('should return -1 when row is not pinned', () => {
-      const table = createRowPinningTable()
+      const table = makeTable()
       const row = table.getRow(ROW[0])
 
       expect(row.getPinnedIndex()).toBe(-1)
     })
 
     it('should return correct index for pinned rows', () => {
-      const table = createRowPinningTable({
+      const table = makeTable({
         initialState: {
           rowPinning: {
             top: [ROW[0], ROW[1]],
@@ -318,7 +300,7 @@ describe('row methods', () => {
   describe('pin', () => {
     it('should call onRowPinningChange when pinning row', () => {
       const { table, onRowPinningChangeMock } =
-        createTableWithMockOnPinningChange()
+        makeTableWithMockOnPinningChange()
       const row = table.getRow(ROW[0])
 
       row.pin('top')
@@ -330,7 +312,7 @@ describe('row methods', () => {
 
     it('should call onRowPinningChange when unpinning row', () => {
       const { table, onRowPinningChangeMock } =
-        createTableWithMockOnPinningChange()
+        makeTableWithMockOnPinningChange()
       // Set up initial state with a pinned row
       table.baseAtoms.rowPinning.set({
         top: [ROW[0]],
@@ -345,7 +327,7 @@ describe('row methods', () => {
 
     it('should call onRowPinningChange when including leaf rows', () => {
       const { table, onRowPinningChangeMock } =
-        createTableWithMockOnPinningChange(10)
+        makeTableWithMockOnPinningChange(10)
       const row = table.getRow(ROW[0])
 
       row.pin('top', true)
@@ -356,7 +338,7 @@ describe('row methods', () => {
 
     it('should call onRowPinningChange when including parent rows', () => {
       const { table, onRowPinningChangeMock } =
-        createTableWithMockOnPinningChange(10)
+        makeTableWithMockOnPinningChange(10)
       const row = table.getRow(ROW[0])
 
       row.pin('top', false, true)

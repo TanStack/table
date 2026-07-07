@@ -1,16 +1,11 @@
 import { describe, expect, it } from 'vitest'
-import { coreColumnsFeature } from '../../../../src/core/columns/coreColumnsFeature'
 import { constructColumn } from '../../../../src/core/columns/constructColumn'
 import { constructTable } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src/types/ColumnDef'
-import type { Table_Internal } from '../../../../src/types/Table'
 import type { TableFeature } from '../../../../src/types/TableFeatures'
 
-const features = {
-  coreColumnsFeature,
-  coreReactivityFeature: storeReactivityBindings(),
-}
+const features = testFeatures({})
 
 interface TestRow {
   'test-accessor-key'?: string
@@ -33,12 +28,12 @@ describe('constructColumn', () => {
       features,
       columns: [],
       data: [],
-    }) as unknown as Table_Internal<typeof features, TestRow>
+    })
 
-    const columnDef = {
+    const columnDef: ColumnDef<typeof features, TestRow> = {
       id: 'test-column',
       accessorKey: 'test-accessor-key',
-    } as ColumnDef<typeof features, TestRow>
+    }
     const depth = 0
     const parent = undefined
 

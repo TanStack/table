@@ -1,26 +1,29 @@
 import { describe, expect, it } from 'vitest'
+import { constructTable } from '../../../../src'
 import { constructCell } from '../../../../src/core/cells/constructCell'
-import { coreCellsFeature } from '../../../../src/core/cells/coreCellsFeature'
-import type { Row } from '../../../../src/types/Row'
-import type { Column } from '../../../../src/types/Column'
-import type { Table_Internal } from '../../../../src/types/Table'
+import { testFeatures } from '../../../fixtures/features'
+import type { ColumnDef } from '../../../../src/types/ColumnDef'
 
-type TestData = Record<string, unknown>
-type TestFeatures = {
-  coreCellsFeature: typeof coreCellsFeature
+interface Person {
+  firstName: string
 }
+
+const features = testFeatures({})
+
+const columns: Array<ColumnDef<typeof features, Person, any>> = [
+  { id: 'test-column', accessorKey: 'firstName' },
+]
 
 describe('constructCell', () => {
   it('should populate the cell with all core cell APIs and properties', () => {
-    const column = { id: 'test-column' } as unknown as Column<
-      TestFeatures,
-      TestData
-    >
-    const row = { id: 'test-row' } as unknown as Row<TestFeatures, TestData>
-    const table = {
-      _features: { coreCellsFeature },
-      options: {},
-    } as unknown as Table_Internal<TestFeatures, TestData>
+    const table = constructTable<typeof features, Person>({
+      features,
+      columns,
+      data: [{ firstName: 'Tanner' }],
+    })
+    const column = table.getAllLeafColumns()[0]!
+    const row = table.getRowModel().rows[0]!
+
     const coreCell = constructCell(column, row, table)
 
     expect(coreCell).toBeDefined()

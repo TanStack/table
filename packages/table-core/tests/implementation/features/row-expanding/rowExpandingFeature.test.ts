@@ -1,14 +1,13 @@
 import { describe, expect, it } from 'vitest'
 import {
   constructTable,
-  coreFeatures,
   createColumnHelper,
   createExpandedRowModel,
   createPaginatedRowModel,
   rowExpandingFeature,
   rowPaginationFeature,
 } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src'
 
 type Person = {
@@ -16,14 +15,12 @@ type Person = {
   subRows?: Array<Person>
 }
 
-const features = {
-  ...coreFeatures,
+const features = testFeatures({
   rowExpandingFeature,
   rowPaginationFeature,
-  coreReactivityFeature: storeReactivityBindings(),
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-}
+})
 
 function createTable(options?: { paginateExpandedRows?: boolean }) {
   const data: Array<Person> = [

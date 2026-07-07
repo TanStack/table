@@ -9,17 +9,44 @@ import {
   table_resetHeaderSizeInfo,
   table_setColumnResizing,
 } from '../../../../src/static-functions'
-import { columnResizingFeature, columnSizingFeature } from '../../../../src'
-import { generateTestTableWithData } from '../../../helpers/generateTestTable'
+import {
+  columnResizingFeature,
+  columnSizingFeature,
+  constructTable,
+} from '../../../../src'
+import { testFeatures } from '../../../fixtures/features'
+import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
+import { generateTestData } from '../../../fixtures/data/generateTestData'
+import type { ColumnDef, Table, TableOptions } from '../../../../src'
+import type { Person } from '../../../fixtures/data/types'
 
-// Add type for the features we need
-type TestFeatures = {
-  columnResizingFeature: {}
-  columnSizingFeature: {}
+const features = testFeatures({
+  columnResizingFeature,
+  columnSizingFeature,
+})
+
+function makeTable(
+  rowCount: number,
+  options?: Partial<
+    Omit<TableOptions<typeof features, Person>, 'data' | 'columns' | 'features'>
+  >,
+): Table<typeof features, Person> {
+  const data = generateTestData(rowCount)
+  return constructTable({
+    features,
+    data,
+    columns: generateTestColumnDefs<typeof features>(data),
+    ...options,
+  })
 }
 
-// Helper function to create a properly structured test header
-function createTestResizeHeader(table: any, overrides = {}) {
+// Helper function to create a properly structured test header. The assertions
+// below encode this fake's geometry (getSize: () => 100), so it stays a
+// synthetic object rather than a real header.
+function createTestResizeHeader(
+  table: Table<typeof features, Person>,
+  overrides = {},
+) {
   const baseColumn = {
     ...table.getAllColumns()[0],
     id: 'firstName',
@@ -70,42 +97,37 @@ describe('getDefaultColumnResizingState', () => {
 
 describe('column_getCanResize', () => {
   it('should return true when column resizing is enabled', () => {
-    const table = generateTestTableWithData(1)
-    const column = {
-      ...table.getAllColumns()[0],
-      columnDef: {},
-      table,
-    }
+    const table = makeTable(1)
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getCanResize(column as any)
+    const result = column_getCanResize(column)
 
     expect(result).toBe(true)
   })
 
   it('should return false when column resizing is disabled globally', () => {
-    const table = generateTestTableWithData(1, {
+    const table = makeTable(1, {
       enableColumnResizing: false,
     })
-    const column = {
-      ...table.getAllColumns()[0],
-      columnDef: {},
-      table,
-    }
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getCanResize(column as any)
+    const result = column_getCanResize(column)
 
     expect(result).toBe(false)
   })
 
   it('should return false when column resizing is disabled for specific column', () => {
-    const table = generateTestTableWithData(1)
-    const column = {
-      ...table.getAllColumns()[0],
-      columnDef: { enableResizing: false },
-      table,
-    }
+    const columns: Array<ColumnDef<typeof features, Person, any>> = [
+      { accessorKey: 'firstName', id: 'firstName', enableResizing: false },
+    ]
+    const table = constructTable({
+      features,
+      data: generateTestData(1),
+      columns,
+    })
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getCanResize(column as any)
+    const result = column_getCanResize(column)
 
     expect(result).toBe(false)
   })
@@ -113,7 +135,7 @@ describe('column_getCanResize', () => {
 
 describe('column_getIsResizing', () => {
   it('should return true when column is being resized', () => {
-    const table = generateTestTableWithData(1, {
+    const table = makeTable(1, {
       initialState: {
         columnResizing: {
           isResizingColumn: 'firstName',
@@ -125,25 +147,18 @@ describe('column_getIsResizing', () => {
         },
       },
     })
-    const column = {
-      ...table.getAllColumns()[0],
-      id: 'firstName',
-      table,
-    }
+    const column = table.getColumn('firstName')!
 
-    const result = column_getIsResizing(column as any)
+    const result = column_getIsResizing(column)
 
     expect(result).toBe(true)
   })
 
   it('should return false when column is not being resized', () => {
-    const table = generateTestTableWithData(1)
-    const column = {
-      ...table.getAllColumns()[0],
-      table,
-    }
+    const table = makeTable(1)
+    const column = table.getAllColumns()[0]!
 
-    const result = column_getIsResizing(column as any)
+    const result = column_getIsResizing(column)
 
     expect(result).toBe(false)
   })
@@ -152,7 +167,7 @@ describe('column_getIsResizing', () => {
 describe('table_setColumnResizing', () => {
   it('should call onColumnResizingChange with updater', () => {
     const onColumnResizingChange = vi.fn()
-    const table = generateTestTableWithData(1, {
+    const table = makeTable(1, {
       onColumnResizingChange,
     })
 
@@ -174,7 +189,7 @@ describe('table_setColumnResizing', () => {
 describe('table_resetHeaderSizeInfo', () => {
   it('should reset to default state when defaultState is true', () => {
     const onColumnResizingChange = vi.fn()
-    const table = generateTestTableWithData(1, {
+    const table = makeTable(1, {
       onColumnResizingChange,
     })
 
@@ -197,7 +212,7 @@ describe('table_resetHeaderSizeInfo', () => {
       },
     }
     const onColumnResizingChange = vi.fn()
-    const table = generateTestTableWithData(1, {
+    const table = makeTable(1, {
       onColumnResizingChange,
       initialState,
     })
@@ -234,7 +249,7 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should return a function', () => {
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       initialState: {
         columnSizing: {},
       },
@@ -245,7 +260,7 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should not resize when column resizing is disabled', () => {
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       enableColumnResizing: false,
     })
     const onColumnResizingChange = vi.fn()
@@ -259,7 +274,7 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should ignore multi-touch events', () => {
-    const table = generateTestTableWithData<TestFeatures>(1)
+    const table = makeTable(1)
     const onColumnResizingChange = vi.fn()
     table.options.onColumnResizingChange = onColumnResizingChange
 
@@ -274,7 +289,7 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should update immediately in onChange mode', () => {
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       columnResizeMode: 'onChange',
     })
     const onColumnSizingChange = vi.fn()
@@ -295,21 +310,21 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should allow resizing a column from zero width', () => {
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       columnResizeMode: 'onChange',
     })
 
     let resizingState = getDefaultColumnResizingState()
-    table.options.onColumnResizingChange = (updater: any) => {
+    table.options.onColumnResizingChange = (updater) => {
       resizingState =
         typeof updater === 'function' ? updater(resizingState) : updater
       ;(table.store.state as any).columnResizing = resizingState
     }
 
     const sizingUpdates: Array<Record<string, number>> = []
-    table.options.onColumnSizingChange = (updater: any) => {
+    table.options.onColumnSizingChange = (updater) => {
       if (typeof updater === 'function') {
-        const result = updater(table.atoms.columnSizing?.get() ?? {})
+        const result = updater(table.atoms.columnSizing.get())
         sizingUpdates.push(result)
       } else {
         sizingUpdates.push(updater)
@@ -350,13 +365,13 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should not produce NaN when startSize is zero', () => {
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       columnResizeMode: 'onChange',
     })
 
     let resizingState = getDefaultColumnResizingState()
-    const resizingUpdates: Array<any> = []
-    table.options.onColumnResizingChange = (updater: any) => {
+    const resizingUpdates: Array<typeof resizingState> = []
+    table.options.onColumnResizingChange = (updater) => {
       resizingState =
         typeof updater === 'function' ? updater(resizingState) : updater
       ;(table.store.state as any).columnResizing = resizingState
@@ -388,8 +403,8 @@ describe('header_getResizeHandler', () => {
 
     const lastResizing = resizingUpdates[resizingUpdates.length - 1]
     expect(lastResizing).toBeDefined()
-    expect(Number.isNaN(lastResizing.deltaPercentage)).toBe(false)
-    expect(Number.isFinite(lastResizing.deltaPercentage)).toBe(true)
+    expect(Number.isNaN(lastResizing!.deltaPercentage)).toBe(false)
+    expect(Number.isFinite(lastResizing!.deltaPercentage)).toBe(true)
 
     const upEvent = new MouseEvent('mouseup', { clientX: 150 })
     document.dispatchEvent(upEvent)
@@ -407,7 +422,7 @@ describe('header_getResizeHandler', () => {
       .spyOn(globalThis, 'cancelAnimationFrame')
       .mockImplementation(() => {})
 
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       columnResizeMode: 'onChange',
     })
     const onColumnSizingChange = vi.fn()
@@ -449,15 +464,14 @@ describe('header_getResizeHandler', () => {
         canceledIds.push(id)
       })
 
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       columnResizeMode: 'onChange',
-      features: { columnResizingFeature, columnSizingFeature },
     })
     const sizingUpdates: Array<Record<string, number>> = []
-    table.options.onColumnSizingChange = (updater: any) => {
+    table.options.onColumnSizingChange = (updater) => {
       sizingUpdates.push(
         typeof updater === 'function'
-          ? updater(table.atoms.columnSizing?.get() ?? {})
+          ? updater(table.atoms.columnSizing.get())
           : updater,
       )
     }
@@ -484,9 +498,8 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should flush one store notification per move tick and per drag end (batched writes)', () => {
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       columnResizeMode: 'onChange',
-      features: { columnResizingFeature, columnSizingFeature } as any,
     })
     const notifications: Array<string> = []
     table.store.subscribe(() => notifications.push('flush'))
@@ -510,15 +523,14 @@ describe('header_getResizeHandler', () => {
   })
 
   it('should not commit sizing on move ticks in onEnd mode, only at drag end', () => {
-    const table = generateTestTableWithData<TestFeatures>(1, {
+    const table = makeTable(1, {
       columnResizeMode: 'onEnd',
-      features: { columnResizingFeature, columnSizingFeature } as any,
     })
     const sizingUpdates: Array<Record<string, number>> = []
-    table.options.onColumnSizingChange = (updater: any) => {
+    table.options.onColumnSizingChange = (updater) => {
       sizingUpdates.push(
         typeof updater === 'function'
-          ? updater(table.atoms.columnSizing?.get() ?? {})
+          ? updater(table.atoms.columnSizing.get())
           : updater,
       )
     }
@@ -533,18 +545,18 @@ describe('header_getResizeHandler', () => {
     expect(sizingUpdates).toHaveLength(0)
 
     // transient resize info still tracks the drag during moves
-    expect(table.atoms.columnResizing?.get()?.deltaOffset).toBe(40)
+    expect(table.atoms.columnResizing.get().deltaOffset).toBe(40)
 
     document.dispatchEvent(new MouseEvent('mouseup', { clientX: 150 }))
     expect(sizingUpdates).toHaveLength(1)
     // default size 150 at startOffset 100: 150 * (1 + 50/150) = 200
     expect(sizingUpdates[0]!['firstName']).toBe(200)
-    expect(table.atoms.columnResizing?.get()?.isResizingColumn).toBe(false)
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
   })
 
   it('should cleanup event listeners on mouse up', () => {
     const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener')
-    const table = generateTestTableWithData<TestFeatures>(1)
+    const table = makeTable(1)
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any, document)

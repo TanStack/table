@@ -1,12 +1,10 @@
 import { describe, expect, it } from 'vitest'
 import {
   constructTable,
-  coreFeatures,
   createSortedRowModel,
   rowSortingFeature,
-  tableFeatures,
 } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src'
 
 type Person = {
@@ -15,8 +13,7 @@ type Person = {
   subRows?: Array<Person>
 }
 
-const features = tableFeatures({
-  ...coreFeatures,
+const features = testFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
 })
@@ -39,10 +36,7 @@ function makeTable(
   return constructTable<typeof features, Person>({
     data: tableData,
     columns,
-    features: {
-      ...features,
-      coreReactivityFeature: storeReactivityBindings(),
-    },
+    features,
     initialState: { sorting },
     getSubRows: (row) => row.subRows,
   })

@@ -2,14 +2,12 @@ import { describe, expect, it } from 'vitest'
 import {
   columnFilteringFeature,
   constructTable,
-  coreFeatures,
   filterFn_arrIncludes,
   filterFn_equals,
   filterFns,
-  tableFeatures,
 } from '../../../../src'
 import { column_getAutoFilterFn } from '../../../../src/static-functions'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src'
 
 type Sample = {
@@ -17,7 +15,7 @@ type Sample = {
   details: { active: boolean }
 }
 
-const features = tableFeatures({ ...coreFeatures, columnFilteringFeature })
+const features = testFeatures({ columnFilteringFeature, filterFns })
 
 const sampleKeys: Array<keyof Sample> = ['tags', 'details']
 
@@ -25,18 +23,11 @@ function generateAutoFilterTestTable(data: Array<Sample>) {
   const columns: Array<ColumnDef<typeof features, Sample, any>> =
     sampleKeys.map((key) => ({ accessorKey: key, id: key }))
 
-  const table = constructTable<typeof features, Sample>({
+  return constructTable<typeof features, Sample>({
     data,
     columns,
-    features: {
-      ...features,
-      coreReactivityFeature: storeReactivityBindings(),
-    },
+    features,
   })
-
-  table._rowModelFns.filterFns = filterFns
-
-  return table
 }
 
 describe('column_getAutoFilterFn', () => {

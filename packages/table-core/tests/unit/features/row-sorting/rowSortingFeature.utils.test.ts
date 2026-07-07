@@ -1,17 +1,15 @@
 import { describe, expect, it } from 'vitest'
 import {
   constructTable,
-  coreFeatures,
   rowSortingFeature,
   sortFn_alphanumeric,
   sortFn_basic,
   sortFn_datetime,
   sortFn_text,
   sortFns,
-  tableFeatures,
 } from '../../../../src'
 import { column_getAutoSortFn } from '../../../../src/static-functions'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src'
 
 type Sample = {
@@ -21,7 +19,7 @@ type Sample = {
   amount: number
 }
 
-const features = tableFeatures({ ...coreFeatures, rowSortingFeature })
+const features = testFeatures({ rowSortingFeature, sortFns })
 
 const sampleKeys: Array<keyof Sample> = [
   'plainText',
@@ -34,19 +32,11 @@ function generateAutoSortTestTable(data: Array<Sample>) {
   const columns: Array<ColumnDef<typeof features, Sample, any>> =
     sampleKeys.map((key) => ({ accessorKey: key, id: key }))
 
-  const table = constructTable<typeof features, Sample>({
+  return constructTable<typeof features, Sample>({
     data,
     columns,
-    features: {
-      ...features,
-      coreReactivityFeature: storeReactivityBindings(),
-    },
+    features,
   })
-
-  // Normally assigned by createSortedRowModel when the sorted row model is wired up
-  table._rowModelFns.sortFns = sortFns
-
-  return table
 }
 
 describe('column_getAutoSortFn', () => {

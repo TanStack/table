@@ -3,19 +3,16 @@ import {
   aggregationFns,
   columnGroupingFeature,
   constructTable,
-  coreFeatures,
   createGroupedRowModel,
 } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src'
 
-const features = {
-  ...coreFeatures,
+const features = testFeatures({
   columnGroupingFeature,
-  coreReactivityFeature: storeReactivityBindings(),
   groupedRowModel: createGroupedRowModel(),
   aggregationFns,
-}
+})
 
 interface TestRow {
   bucket: string

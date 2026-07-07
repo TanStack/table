@@ -1,14 +1,11 @@
 import { describe, expect, it } from 'vitest'
 import { constructTable, stockFeatures } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 
 describe('constructTable with stockFeatures', () => {
   it('should include all feature states in initial state', () => {
     const table = constructTable({
-      features: {
-        ...stockFeatures,
-        coreReactivityFeature: storeReactivityBindings(),
-      },
+      features: testFeatures(stockFeatures),
       columns: [],
       data: [],
     })

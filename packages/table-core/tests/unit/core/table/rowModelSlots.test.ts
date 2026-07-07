@@ -4,7 +4,6 @@ import {
   columnResizingFeature,
   columnSizingFeature,
   constructTable,
-  coreFeatures,
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
@@ -15,7 +14,7 @@ import {
   sortFns,
   tableFeatures,
 } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type {
   AggregationFns,
   ExtractAggregationFnKeys,
@@ -81,11 +80,7 @@ function createTestTable(
   initialState?: TableOptions<typeof features, Person>['initialState'],
 ) {
   return constructTable({
-    features: {
-      ...coreFeatures,
-      coreReactivityFeature: storeReactivityBindings(),
-      ...features,
-    },
+    features: testFeatures(features),
     columns: [
       { accessorKey: 'firstName', id: 'firstName' },
       { accessorKey: 'age', id: 'age', sortFn: 'reverseAge' },
@@ -128,11 +123,7 @@ describe('row model and fn registry feature slots', () => {
 
   it('preserves multi-sort metadata resolution order', () => {
     const table = constructTable({
-      features: {
-        ...coreFeatures,
-        coreReactivityFeature: storeReactivityBindings(),
-        ...features,
-      },
+      features: testFeatures(features),
       columns: [
         { accessorKey: 'name', id: 'name' },
         {

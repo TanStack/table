@@ -5,7 +5,6 @@ import {
   columnGroupingFeature,
   columnVisibilityFeature,
   constructTable,
-  coreFeatures,
   createFilteredRowModel,
   createGroupedRowModel,
   createSortedRowModel,
@@ -14,26 +13,24 @@ import {
   rowSortingFeature,
   sortFns,
 } from '../../src'
-import { storeReactivityBindings } from '../../src/store-reactivity-bindings'
+import { testFeatures } from '../fixtures/features'
 import type { ColumnDef } from '../../src'
 
 type TestRow = Record<string, unknown>
 
-const features = {
-  ...coreFeatures,
+const features = testFeatures({
   columnFilteringFeature,
   columnGroupingFeature,
   columnVisibilityFeature,
   rowSelectionFeature,
   rowSortingFeature,
-  coreReactivityFeature: storeReactivityBindings(),
   filteredRowModel: createFilteredRowModel(),
   groupedRowModel: createGroupedRowModel(),
   sortedRowModel: createSortedRowModel(),
   aggregationFns,
   filterFns,
   sortFns,
-}
+})
 
 const PROTOTYPE_IDS = [
   'hasOwnProperty',

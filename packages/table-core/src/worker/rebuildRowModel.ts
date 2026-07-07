@@ -2,6 +2,8 @@ import { constructRow } from '../core/rows/constructRow'
 import { hasOwn } from '../utils'
 import type { RowModel } from '../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../types/Table'
+import type { TableFeatures } from '../types/TableFeatures'
+import type { RowData } from '../types/type-utils'
 import type {
   TableWorkerRowNode,
   TableWorkerStagePayload,
@@ -12,8 +14,6 @@ export type TableWorkerDataPayload = Exclude<
   TableWorkerStagePayload,
   { kind: 'unchanged' }
 >
-
-type AnyTable = Table_Internal<any, any>
 
 // Main-thread side: payload + this table's core rows -> RowModel. Mirrors how
 // the sync row models treat rows: data rows are reused (with depth/parentId
@@ -32,8 +32,11 @@ function collectLeafRows(subRows: Array<any>, out: Array<any>) {
   }
 }
 
-export function rebuildRowModel(
-  table: AnyTable,
+export function rebuildRowModel<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
   payload: TableWorkerDataPayload,
   /**
    * Whether a flat payload should rewrite row depth/parentId. Mirrors core:
@@ -42,7 +45,7 @@ export function rebuildRowModel(
    * depths a grouped/sorted tree rebuild just assigned to shared row objects.
    */
   resetDepths: boolean,
-): RowModel<any, any> {
+): RowModel<TFeatures, TData> {
   const core = table.getCoreRowModel()
 
   if (payload.kind === 'flat') {

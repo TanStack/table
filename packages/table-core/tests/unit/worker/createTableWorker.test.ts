@@ -2,16 +2,15 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   columnFilteringFeature,
   constructTable,
-  coreFeatures,
   rowSortingFeature,
 } from '../../../src'
-import { storeReactivityBindings } from '../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../fixtures/features'
 import {
   createTableWorker,
   createWorkerRowModel,
   workerRowModelsFeature,
 } from '../../../src/experimental-worker-plugin'
-import type { Table_Internal } from '../../../src'
+import type { ColumnDef } from '../../../src'
 
 type Person = { firstName: string; age: number }
 
@@ -20,7 +19,18 @@ const data = Array.from({ length: 8 }, (_, i) => ({
   age: i * 5,
 }))
 
-const columns: any = [
+function makeFeatures(tableWorker: ReturnType<typeof createTableWorker>) {
+  return testFeatures({
+    columnFilteringFeature,
+    rowSortingFeature,
+    workerRowModelsFeature,
+    filteredRowModel: createWorkerRowModel(tableWorker, 'filtered'),
+    sortedRowModel: createWorkerRowModel(tableWorker, 'sorted'),
+  })
+}
+type WorkerTestFeatures = ReturnType<typeof makeFeatures>
+
+const columns: Array<ColumnDef<WorkerTestFeatures, Person, any>> = [
   { accessorKey: 'firstName', header: 'First Name' },
   { accessorKey: 'age', header: 'Age' },
 ]
@@ -69,19 +79,11 @@ function reversedIndices(count: number) {
 }
 
 function makeTable(tableWorker: ReturnType<typeof createTableWorker>) {
-  return constructTable({
+  return constructTable<WorkerTestFeatures, Person>({
     data,
     columns,
-    features: {
-      ...coreFeatures,
-      coreReactivityFeature: storeReactivityBindings(),
-      rowSortingFeature,
-      columnFilteringFeature,
-      workerRowModelsFeature,
-      filteredRowModel: createWorkerRowModel(tableWorker, 'filtered'),
-      sortedRowModel: createWorkerRowModel(tableWorker, 'sorted'),
-    },
-  } as any) as unknown as Table_Internal<any, Person>
+    features: makeFeatures(tableWorker),
+  })
 }
 
 const flushMicrotasks = () => new Promise((resolve) => setTimeout(resolve, 0))
@@ -101,8 +103,8 @@ describe('createTableWorker bridge', () => {
     })
     const table = makeTable(tableWorker)
 
-    ;(table as any).getSortedRowModel()
-    ;(table as any).getFilteredRowModel()
+    table.getSortedRowModel()
+    table.getFilteredRowModel()
 
     expect(FakeWorker.instances).toHaveLength(1)
     const worker = FakeWorker.instances[0]!
@@ -129,16 +131,16 @@ describe('createTableWorker bridge', () => {
     expect(worker.processMessages()).toHaveLength(2)
 
     // rebuilt sorted model reflects the payload
-    const sorted = (table as any).getSortedRowModel()
-    expect(sorted.rows[0].id).toBe('7')
+    const sorted = table.getSortedRowModel()
+    expect(sorted.rows[0]!.id).toBe('7')
 
     // repeat reads post nothing new
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     expect(worker.posted).toHaveLength(3)
 
     // new data identity posts a second data message
-    table.setOptions((prev: any) => ({ ...prev, data: [...data] }))
-    ;(table as any).getSortedRowModel()
+    table.setOptions((prev) => ({ ...prev, data: [...data] }))
+    table.getSortedRowModel()
     expect(worker.dataMessages()).toHaveLength(2)
     await flushMicrotasks()
   })
@@ -148,21 +150,21 @@ describe('createTableWorker bridge', () => {
       createWorker: () => new (globalThis as any).Worker(),
     })
     const table = makeTable(tableWorker)
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     const worker = FakeWorker.instances[0]!
     worker.emitResult({ stages: {} })
     worker.emitResult({ stages: {} }) // settle stage-growth trailing request
     const settled = worker.processMessages().length
 
-    ;(table.baseAtoms as any).sorting.set([{ id: 'age', desc: false }])
-    ;(table as any).getSortedRowModel()
+    table.baseAtoms.sorting.set([{ id: 'age', desc: false }])
+    table.getSortedRowModel()
     expect(worker.processMessages()).toHaveLength(settled + 1)
 
     // two more changes while in flight: no additional posts
-    ;(table.baseAtoms as any).sorting.set([{ id: 'age', desc: true }])
-    ;(table as any).getSortedRowModel()
-    ;(table.baseAtoms as any).sorting.set([{ id: 'firstName', desc: false }])
-    ;(table as any).getSortedRowModel()
+    table.baseAtoms.sorting.set([{ id: 'age', desc: true }])
+    table.getSortedRowModel()
+    table.baseAtoms.sorting.set([{ id: 'firstName', desc: false }])
+    table.getSortedRowModel()
     expect(worker.processMessages()).toHaveLength(settled + 1)
 
     // result arrives -> exactly one trailing request with the latest state
@@ -178,13 +180,13 @@ describe('createTableWorker bridge', () => {
       createWorker: () => new (globalThis as any).Worker(),
     })
     const table = makeTable(tableWorker)
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     const worker = FakeWorker.instances[0]!
     const staleProcess = worker.processMessages().at(-1)!
 
     // data changes while request 1 is in flight
-    table.setOptions((prev: any) => ({ ...prev, data: [...data] }))
-    ;(table as any).getSortedRowModel()
+    table.setOptions((prev) => ({ ...prev, data: [...data] }))
+    table.getSortedRowModel()
 
     worker.emitResult({
       requestId: staleProcess.requestId,
@@ -193,8 +195,8 @@ describe('createTableWorker bridge', () => {
     })
 
     // stale payload not applied; an immediate reprocess was posted
-    const sorted = (table as any).getSortedRowModel()
-    expect(sorted.rows[0].id).toBe('0')
+    const sorted = table.getSortedRowModel()
+    expect(sorted.rows[0]!.id).toBe('0')
     const latest = worker.processMessages().at(-1)!
     expect(latest.dataVersion).toBe(2)
   })
@@ -204,7 +206,7 @@ describe('createTableWorker bridge', () => {
       createWorker: () => new (globalThis as any).Worker(),
     })
     const table = makeTable(tableWorker)
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     const worker = FakeWorker.instances[0]!
 
     worker.emitResult({
@@ -216,21 +218,19 @@ describe('createTableWorker bridge', () => {
         sorted: { kind: 'unchanged' },
       },
     })
-    const modelA = (table as any).getSortedRowModel()
-    expect(modelA.rows[0].id).toBe('7')
+    const modelA = table.getSortedRowModel()
+    expect(modelA.rows[0]!.id).toBe('7')
 
     // another round trip reporting sorted unchanged -> identical model object
-    ;(table.baseAtoms as any).columnFilters.set([
-      { id: 'firstName', value: 'person' },
-    ])
-    ;(table as any).getSortedRowModel()
+    table.baseAtoms.columnFilters.set([{ id: 'firstName', value: 'person' }])
+    table.getSortedRowModel()
     worker.emitResult({
       stages: {
         filtered: { kind: 'flat', indices: reversedIndices(8) },
         sorted: { kind: 'unchanged' },
       },
     })
-    const modelB = (table as any).getSortedRowModel()
+    const modelB = table.getSortedRowModel()
     expect(modelB).toBe(modelA)
   })
 
@@ -241,25 +241,25 @@ describe('createTableWorker bridge', () => {
     const table = makeTable(tableWorker)
     const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
 
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     const worker = FakeWorker.instances[0]!
     await flushMicrotasks()
-    expect((table.atoms as any).workerRowModels.get().isPending).toBe(true)
+    expect(table.atoms.workerRowModels.get().isPending).toBe(true)
 
     worker.onerror?.(new Event('error'))
     await flushMicrotasks()
-    expect((table.atoms as any).workerRowModels.get().isPending).toBe(false)
+    expect(table.atoms.workerRowModels.get().isPending).toBe(false)
     expect(worker.terminated).toBe(true)
     expect(consoleSpy).toHaveBeenCalledOnce()
 
     // further state changes never post or create workers again
     const postedBefore = worker.posted.length
-    ;(table.baseAtoms as any).sorting.set([{ id: 'age', desc: true }])
-    const model = (table as any).getSortedRowModel()
+    table.baseAtoms.sorting.set([{ id: 'age', desc: true }])
+    const model = table.getSortedRowModel()
     expect(worker.posted).toHaveLength(postedBefore)
     expect(FakeWorker.instances).toHaveLength(1)
     // falls back to the pre-stage model
-    expect(model.rows[0].id).toBe('0')
+    expect(model.rows[0]!.id).toBe('0')
     consoleSpy.mockRestore()
   })
 
@@ -268,12 +268,12 @@ describe('createTableWorker bridge', () => {
       createWorker: () => new (globalThis as any).Worker(),
     })
     const table = makeTable(tableWorker)
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     const firstWorker = FakeWorker.instances[0]!
 
     tableWorker.terminate()
     expect(firstWorker.terminated).toBe(true)
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     expect(FakeWorker.instances).toHaveLength(2)
     const secondWorker = FakeWorker.instances[1]!
     expect(secondWorker.dataMessages()).toHaveLength(1)
@@ -285,11 +285,11 @@ describe('createTableWorker bridge', () => {
       createWorker: () => new (globalThis as any).Worker(),
     })
     const table = makeTable(tableWorker)
-    ;(table as any).getSortedRowModel()
+    table.getSortedRowModel()
     const worker = FakeWorker.instances[0]!
 
     worker.emitResult({ stages: {}, computeMs: 42 })
-    const slice = (table.atoms as any).workerRowModels.get()
+    const slice = table.atoms.workerRowModels.get()
     expect(slice.lastComputeMs).toBe(42)
     expect(typeof slice.lastRoundTripMs).toBe('number')
     expect(slice.version).toBe(1)
@@ -306,8 +306,8 @@ describe('createTableWorker without a Worker global (SSR)', () => {
     })
     const table = makeTable(tableWorker)
 
-    const model = (table as any).getSortedRowModel()
-    expect(model.rows.map((row: any) => row.id)).toEqual(
+    const model = table.getSortedRowModel()
+    expect(model.rows.map((row) => row.id)).toEqual(
       data.map((_, i) => String(i)),
     )
   })

@@ -2,44 +2,35 @@ import { describe, expect, it, vi } from 'vitest'
 import { createAtom } from '@tanstack/store'
 import {
   constructTable,
-  coreFeatures,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
-import { storeReactivityBindings } from '../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../fixtures/features'
 import type {
   PaginationState,
   SortingState,
-  TableFeatures,
-  Table_Internal,
-  Table_RowPagination,
-  Table_RowSorting,
+  Table,
+  TableOptions,
 } from '../../../src'
 
-const features = {
+const features = testFeatures({
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
-}
+})
 
-function makeTable<TFeatures extends TableFeatures>(
-  options: any = {},
-): Table_Internal<TFeatures, any> &
-  Table_RowSorting<TFeatures, any> &
-  Table_RowPagination<TFeatures, any> {
+function makeTable(
+  options?: Partial<
+    Omit<TableOptions<typeof features, any>, 'data' | 'columns' | 'features'>
+  >,
+): Table<typeof features, any> {
   return constructTable({
-    features: {
-      ...coreFeatures,
-      ...features,
-      coreReactivityFeature: storeReactivityBindings(),
-    },
+    features,
     columns: [],
     data: [],
     ...options,
-  }) as unknown as Table_Internal<TFeatures, any> &
-    Table_RowSorting<TFeatures, any> &
-    Table_RowPagination<TFeatures, any>
+  })
 }
 
 describe('three-layer atom architecture', () => {

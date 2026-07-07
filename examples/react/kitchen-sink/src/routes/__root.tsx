@@ -45,7 +45,10 @@ export const Route = createRootRoute({
       { title: 'TanStack Table Kitchen Sink (Start SSR)' },
     ],
     links: [{ rel: 'stylesheet', href: appCss }],
-    scripts: [{ children: consoleProbe }],
+    scripts: [
+      { src: 'https://unpkg.com/react-scan/dist/auto.global.js' },
+      { children: consoleProbe },
+    ],
   }),
   component: RootComponent,
 })

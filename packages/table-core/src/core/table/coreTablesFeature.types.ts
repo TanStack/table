@@ -74,13 +74,13 @@ export type ExternalAtoms<TFeatures extends TableFeatures> = Partial<{
  * use optional chaining (`table.atoms.columnPinning?.get() ?? default`).
  */
 export type BaseAtoms_All = {
-  [K in keyof TableState_All]?: Atom<TableState_All[K]>
+  [K in keyof TableState_All]?: Atom<Exclude<TableState_All[K], undefined>>
 }
 export type Atoms_All = {
   [K in keyof TableState_All]?: ReadonlyAtom<TableState_All[K]>
 }
 export type ExternalAtoms_All = Partial<{
-  [K in keyof TableState_All]: Atom<TableState_All[K]>
+  [K in keyof TableState_All]: Atom<Exclude<TableState_All[K], undefined>>
 }>
 
 export interface TableOptions_Table<

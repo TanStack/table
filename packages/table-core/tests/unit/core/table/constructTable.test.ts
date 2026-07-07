@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
-import { constructTable, coreFeatures } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { constructTable } from '../../../../src'
+import { testFeatures } from '../../../fixtures/features'
 
 function getterOnlyMerge(...sources: Array<any>) {
   const target = {}
@@ -35,10 +35,7 @@ function getterOnlyMerge(...sources: Array<any>) {
 describe('constructTable', () => {
   it('should create a table with all core table APIs and properties', () => {
     const table = constructTable({
-      features: {
-        ...coreFeatures,
-        coreReactivityFeature: storeReactivityBindings(),
-      },
+      features: testFeatures({}),
       columns: [],
       data: [],
     })
@@ -78,18 +75,12 @@ describe('constructTable', () => {
   })
 
   it('preserves static options without mutating mergeOptions results', () => {
-    const features = {
-      ...coreFeatures,
-      coreReactivityFeature: storeReactivityBindings(),
-    }
+    const features = testFeatures({})
     const atoms = {}
     const initialState = {}
     const data: Array<{ id: number }> = []
     const nextData = [{ id: 1 }]
-    const nextFeatures = {
-      ...coreFeatures,
-      coreReactivityFeature: storeReactivityBindings(),
-    }
+    const nextFeatures = testFeatures({})
     const nextAtoms = {}
     const nextInitialState = {}
 

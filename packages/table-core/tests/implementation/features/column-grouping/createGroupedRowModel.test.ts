@@ -3,21 +3,18 @@ import {
   aggregationFns,
   columnGroupingFeature,
   constructTable,
-  coreFeatures,
   createGroupedRowModel,
 } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
 import type { Person } from '../../../fixtures/data/types'
 import type { ColumnDef, RowModel } from '../../../../src'
 
-const features = {
-  ...coreFeatures,
+const features = testFeatures({
   columnGroupingFeature,
-  coreReactivityFeature: storeReactivityBindings(),
   groupedRowModel: createGroupedRowModel(),
   aggregationFns,
-}
+})
 
 interface TestRow {
   status: string | undefined

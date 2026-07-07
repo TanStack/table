@@ -12,16 +12,63 @@ import {
   table_resetRowPinning,
   table_setRowPinning,
 } from '../../../../src/static-functions'
-import { generateTestTableWithData } from '../../../helpers/generateTestTable'
+import { constructTable, rowPinningFeature } from '../../../../src'
+import { testFeatures } from '../../../fixtures/features'
+import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
+import { generateTestData } from '../../../fixtures/data/generateTestData'
 import { getUpdaterResult } from '../../../helpers/testUtils'
-import {
-  createTableWithMockOnPinningChange,
-  createTableWithPinningState,
-} from '../../../helpers/rowPinningHelpers'
-import type { Row, TableFeatures } from '../../../../src'
+import type { Table, TableOptions } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
 
+const features = testFeatures({
+  rowPinningFeature,
+})
+
+// Core-only tables exercise the static functions' handling of tables that
+// never registered rowPinningFeature (no rowPinning state slice at all).
+const coreOnlyFeatures = testFeatures({})
+
 const DEFAULT_ROW_COUNT = 10
+
+function makeTable(
+  rowCount = DEFAULT_ROW_COUNT,
+  options?: Partial<
+    Omit<TableOptions<typeof features, Person>, 'data' | 'columns' | 'features'>
+  >,
+): Table<typeof features, Person> {
+  const data = generateTestData(rowCount)
+  return constructTable({
+    features,
+    data,
+    columns: generateTestColumnDefs<typeof features>(data),
+    ...options,
+  })
+}
+
+function makeTableWithMockOnPinningChange(
+  rowCount = DEFAULT_ROW_COUNT,
+  options?: Partial<
+    Omit<TableOptions<typeof features, Person>, 'data' | 'columns' | 'features'>
+  >,
+) {
+  const onRowPinningChangeMock = vi.fn()
+  const table = makeTable(rowCount, {
+    onRowPinningChange: onRowPinningChangeMock,
+    ...options,
+  })
+  return { table, onRowPinningChangeMock }
+}
+
+function makeCoreOnlyTable(
+  rowCount = DEFAULT_ROW_COUNT,
+): Table<typeof coreOnlyFeatures, Person> {
+  const data = generateTestData(rowCount)
+  return constructTable({
+    features: coreOnlyFeatures,
+    data,
+    columns: generateTestColumnDefs<typeof coreOnlyFeatures>(data),
+  })
+}
 
 const ROW = {
   0: '0',
@@ -64,8 +111,7 @@ describe('getDefaultRowPinningState', () => {
 
 describe('table_setRowPinning', () => {
   it('should call onRowPinningChange with the updater function', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
 
     const newState = {
       top: [ROW[1]],
@@ -79,7 +125,7 @@ describe('table_setRowPinning', () => {
   })
 
   it('should handle undefined onRowPinningChange without error', () => {
-    const table = generateTestTableWithData(DEFAULT_ROW_COUNT)
+    const table = makeTable(DEFAULT_ROW_COUNT)
 
     expect(() => {
       table_setRowPinning(table, EMPTY_PINNING_STATE)
@@ -89,8 +135,7 @@ describe('table_setRowPinning', () => {
 
 describe('table_resetRowPinning', () => {
   it('should reset to default state when defaultState is true', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
 
     table_resetRowPinning(table, true)
 
@@ -101,13 +146,14 @@ describe('table_resetRowPinning', () => {
   })
 
   it('should reset to initial state when defaultState is false', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
     const initialState = {
       top: [ROW[1]],
       bottom: [ROW[2]],
     }
-    table.initialState.rowPinning = initialState
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange(
+      DEFAULT_ROW_COUNT,
+      { initialState: { rowPinning: initialState } },
+    )
 
     table_resetRowPinning(table, false)
 
@@ -116,8 +162,7 @@ describe('table_resetRowPinning', () => {
   })
 
   it('should reset to default state when no initial state exists', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
 
     table_resetRowPinning(table, false)
 
@@ -130,7 +175,7 @@ describe('table_resetRowPinning', () => {
 
 describe('table_getIsSomeRowsPinned', () => {
   it('should return false when no rows are pinned', () => {
-    const table = createTableWithPinningState()
+    const table = makeTable()
 
     expect(table_getIsSomeRowsPinned(table)).toBe(false)
     expect(table_getIsSomeRowsPinned(table, 'top')).toBe(false)
@@ -138,9 +183,13 @@ describe('table_getIsSomeRowsPinned', () => {
   })
 
   it('should return true when rows are pinned to top', () => {
-    const table = createTableWithPinningState(10, {
-      top: [ROW[0]],
-      bottom: [],
+    const table = makeTable(10, {
+      initialState: {
+        rowPinning: {
+          top: [ROW[0]],
+          bottom: [],
+        },
+      },
     })
 
     expect(table_getIsSomeRowsPinned(table)).toBe(true)
@@ -149,9 +198,13 @@ describe('table_getIsSomeRowsPinned', () => {
   })
 
   it('should return true when rows are pinned to bottom', () => {
-    const table = createTableWithPinningState(10, {
-      top: [],
-      bottom: [ROW[0]],
+    const table = makeTable(10, {
+      initialState: {
+        rowPinning: {
+          top: [],
+          bottom: [ROW[0]],
+        },
+      },
     })
 
     expect(table_getIsSomeRowsPinned(table)).toBe(true)
@@ -160,7 +213,7 @@ describe('table_getIsSomeRowsPinned', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeCoreOnlyTable(10)
 
     expect(table_getIsSomeRowsPinned(table)).toBe(false)
     expect(table_getIsSomeRowsPinned(table, 'top')).toBe(false)
@@ -170,7 +223,7 @@ describe('table_getIsSomeRowsPinned', () => {
 
 describe('table_getTopRows and table_getBottomRows', () => {
   it('should return empty arrays when no rows are pinned', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: getDefaultRowPinningState(),
       },
@@ -181,7 +234,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should return pinned rows with position property', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: {
           top: [ROW[0]],
@@ -203,7 +256,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should handle keepPinnedRows=false by only returning visible rows', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       keepPinnedRows: false,
       initialState: {
         rowPinning: {
@@ -232,7 +285,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should handle keepPinnedRows=true by returning all pinned rows regardless of visibility', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       keepPinnedRows: true,
       initialState: {
         rowPinning: {
@@ -261,7 +314,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeCoreOnlyTable(10)
 
     expect(table_getTopRows(table)).toEqual([])
     expect(table_getBottomRows(table)).toEqual([])
@@ -270,7 +323,7 @@ describe('table_getTopRows and table_getBottomRows', () => {
 
 describe('table_getCenterRows', () => {
   it('should return all rows when no rows are pinned', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: getDefaultRowPinningState(),
       },
@@ -283,7 +336,7 @@ describe('table_getCenterRows', () => {
   })
 
   it('should return only unpinned rows when some rows are pinned', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: {
           top: [ROW[0], ROW[1]],
@@ -302,7 +355,7 @@ describe('table_getCenterRows', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeCoreOnlyTable(10)
     const allRows = table.getRowModel().rows
 
     const centerRows = table_getCenterRows(table)
@@ -313,14 +366,14 @@ describe('table_getCenterRows', () => {
 
 describe('row_getCanPin', () => {
   it('should return true when enableRowPinning is undefined', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeTable(10)
     const row = table.getRow('0')
 
     expect(row_getCanPin(row)).toBe(true)
   })
 
   it('should return false when enableRowPinning is false', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeTable(10)
     table.options.enableRowPinning = false
 
     const row = table.getRow('0')
@@ -329,7 +382,7 @@ describe('row_getCanPin', () => {
   })
 
   it('should return true when enableRowPinning is true', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeTable(10)
     table.options.enableRowPinning = true
 
     const row = table.getRow('0')
@@ -339,7 +392,7 @@ describe('row_getCanPin', () => {
 
   it('should use enableRowPinning function when provided', () => {
     const enableRowPinning = vi.fn((row) => row.id === '1')
-    const table = generateTestTableWithData(10)
+    const table = makeTable(10)
 
     table.options.enableRowPinning = enableRowPinning
 
@@ -354,7 +407,7 @@ describe('row_getCanPin', () => {
 
 describe('row_getIsPinned', () => {
   it('should return false when no rows are pinned', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: getDefaultRowPinningState(),
       },
@@ -365,7 +418,7 @@ describe('row_getIsPinned', () => {
   })
 
   it('should return "top" when row is pinned to top', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: {
           top: [ROW[0]],
@@ -379,7 +432,7 @@ describe('row_getIsPinned', () => {
   })
 
   it('should return "bottom" when row is pinned to bottom', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: {
           top: [],
@@ -393,7 +446,7 @@ describe('row_getIsPinned', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeCoreOnlyTable(10)
 
     const row = table.getRow('0')
     expect(row_getIsPinned(row)).toBe(false)
@@ -402,7 +455,7 @@ describe('row_getIsPinned', () => {
 
 describe('row_getPinnedIndex', () => {
   it('should return -1 when row is not pinned', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: getDefaultRowPinningState(),
       },
@@ -413,7 +466,7 @@ describe('row_getPinnedIndex', () => {
   })
 
   it('should return correct index for top pinned rows', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: {
           top: [ROW[0], ROW[1], ROW[2]],
@@ -428,7 +481,7 @@ describe('row_getPinnedIndex', () => {
   })
 
   it('should return correct index for bottom pinned rows', () => {
-    const table = generateTestTableWithData(10, {
+    const table = makeTable(10, {
       initialState: {
         rowPinning: {
           top: [],
@@ -443,7 +496,7 @@ describe('row_getPinnedIndex', () => {
   })
 
   it('should handle undefined state', () => {
-    const table = generateTestTableWithData(10)
+    const table = makeCoreOnlyTable(10)
 
     const row = table.getRow('0')
     expect(row_getPinnedIndex(row)).toBe(-1)
@@ -452,8 +505,7 @@ describe('row_getPinnedIndex', () => {
 
 describe('row_pin', () => {
   it('should pin a row to top', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
     const row = table.getRow('0')
 
     row_pin(row, 'top')
@@ -468,8 +520,7 @@ describe('row_pin', () => {
   })
 
   it('should pin a row to bottom', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
     const row = table.getRow('0')
 
     row_pin(row, 'bottom')
@@ -484,8 +535,7 @@ describe('row_pin', () => {
   })
 
   it('should unpin a row when position is false', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
     table.baseAtoms.rowPinning.set({
       top: [ROW[0]],
       bottom: [],
@@ -504,8 +554,7 @@ describe('row_pin', () => {
   })
 
   it('should include leaf rows when includeLeafRows is true', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
     const row = table.getRow('0')
     const leafRows = [{ id: LEAF[1] }, { id: LEAF[2] }]
     vi.spyOn(row, 'getLeafRows').mockReturnValue(leafRows as any)
@@ -522,8 +571,7 @@ describe('row_pin', () => {
   })
 
   it('should include parent rows when includeParentRows is true', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
     const row = table.getRow('0')
     const parentRows = [{ id: PARENT[1] }, { id: PARENT[2] }]
     vi.spyOn(row, 'getParentRows').mockReturnValue(parentRows as any)
@@ -540,8 +588,7 @@ describe('row_pin', () => {
   })
 
   it('should maintain existing pinned rows when pinning additional rows', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
     table.baseAtoms.rowPinning.set({
       top: [ROW[1]],
       bottom: [ROW[2]],
@@ -563,8 +610,7 @@ describe('row_pin', () => {
   })
 
   it('should remove row from other position when moving between top and bottom', () => {
-    const { table, onRowPinningChangeMock } =
-      createTableWithMockOnPinningChange()
+    const { table, onRowPinningChangeMock } = makeTableWithMockOnPinningChange()
     table.baseAtoms.rowPinning.set({
       top: [ROW[0]],
       bottom: [],

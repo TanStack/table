@@ -79,7 +79,7 @@ export function initTableWorker<
             ...config.features,
           },
           data: message.data,
-        }) as unknown as Table_Internal<TFeatures, TData>
+        })
         // Only columns with an explicit aggregation get eagerly aggregated
         // per group. Sync tables aggregate lazily (visible cells only), so
         // auto-aggregating every column would explode on high-cardinality

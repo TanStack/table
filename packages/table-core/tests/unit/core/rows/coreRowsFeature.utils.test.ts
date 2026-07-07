@@ -1,20 +1,28 @@
 import { describe, expect, it } from 'vitest'
-import { stockFeatures } from '../../../../src'
+import { columnOrderingFeature, constructTable } from '../../../../src'
 import { row_getAllCells } from '../../../../src/core/rows/coreRowsFeature.utils'
-import {
-  generateTestTableWithData,
-  generateTestTableWithDataAndState,
-} from '../../../helpers/generateTestTable'
+import { testFeatures } from '../../../fixtures/features'
+import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
+import { generateTestData } from '../../../fixtures/data/generateTestData'
+import type { Table } from '../../../../src'
 import type { Person } from '../../../fixtures/data/types'
-import type {
-  StockFeatures,
-  Table_ColumnOrdering,
-  Table_Internal,
-} from '../../../../src'
+
+const features = testFeatures({
+  columnOrderingFeature,
+})
+
+function makeTable(rowCount: number): Table<typeof features, Person> {
+  const data = generateTestData(rowCount)
+  return constructTable({
+    features,
+    data,
+    columns: generateTestColumnDefs<typeof features>(data),
+  })
+}
 
 describe('row_getAllCells', () => {
   it('should build one cell per leaf column in leaf column order', () => {
-    const table = generateTestTableWithData(1)
+    const table = makeTable(1)
     const row = table.getRowModel().rows[0]!
 
     const cells = row_getAllCells(row)
@@ -26,7 +34,7 @@ describe('row_getAllCells', () => {
   })
 
   it('should reuse cell instances across calls', () => {
-    const table = generateTestTableWithData(1)
+    const table = makeTable(1)
     const row = table.getRowModel().rows[0]!
 
     const firstCells = row_getAllCells(row)
@@ -39,10 +47,7 @@ describe('row_getAllCells', () => {
   })
 
   it('should preserve cell identity across column order changes', () => {
-    const table = generateTestTableWithDataAndState(1, {
-      features: stockFeatures,
-    }) as Table_Internal<StockFeatures, Person> &
-      Table_ColumnOrdering<StockFeatures, Person>
+    const table = makeTable(1)
     const row = table.getRowModel().rows[0]!
 
     const cellsBefore = row.getAllCells()

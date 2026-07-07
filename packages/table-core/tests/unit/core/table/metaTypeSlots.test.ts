@@ -2,12 +2,11 @@ import { describe, expect, it } from 'vitest'
 import {
   columnFilteringFeature,
   constructTable,
-  coreFeatures,
   metaHelper,
   rowSortingFeature,
   tableFeatures,
 } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import type {
   CellData,
   ColumnMeta,
@@ -51,11 +50,7 @@ describe('tableMeta/columnMeta type-only feature slots', () => {
 
   it('strips the type-only slots from the registered features at runtime', () => {
     const table = constructTable({
-      features: {
-        ...coreFeatures,
-        coreReactivityFeature: storeReactivityBindings(),
-        ...features,
-      },
+      features: testFeatures(features),
       columns: [],
       data: [] as Array<Person>,
       meta: {
@@ -142,11 +137,7 @@ describe('tableMeta/columnMeta type-only feature slots', () => {
 
     it('strips the filterMeta slot from the registered features at runtime', () => {
       const table = constructTable({
-        features: {
-          ...coreFeatures,
-          coreReactivityFeature: storeReactivityBindings(),
-          ...filteringFeatures,
-        },
+        features: testFeatures(filteringFeatures),
         columns: [],
         data: [] as Array<Person>,
       })

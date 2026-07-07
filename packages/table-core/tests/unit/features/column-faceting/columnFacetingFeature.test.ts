@@ -3,14 +3,13 @@ import {
   columnFacetingFeature,
   columnFilteringFeature,
   constructTable,
-  coreFeatures,
   createFacetedMinMaxValues,
   createFacetedRowModel,
   createFacetedUniqueValues,
   createFilteredRowModel,
   filterFns,
 } from '../../../../src'
-import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../../fixtures/features'
 import {
   column_getFacetedMinMaxValues,
   column_getFacetedRowModel,
@@ -26,17 +25,15 @@ type Person = {
   status: string | undefined
 }
 
-const features = {
-  ...coreFeatures,
+const features = testFeatures({
   columnFacetingFeature,
   columnFilteringFeature,
-  coreReactivityFeature: storeReactivityBindings(),
   facetedMinMaxValues: createFacetedMinMaxValues(),
   facetedRowModel: createFacetedRowModel(),
   facetedUniqueValues: createFacetedUniqueValues(),
   filteredRowModel: createFilteredRowModel(),
   filterFns,
-}
+})
 
 const columns: Array<ColumnDef<typeof features, Person, any>> = [
   {
@@ -113,19 +110,23 @@ describe('column faceting row model', () => {
         new Map<any, number>([['cached', 1]]),
     )
 
-    const cacheFeatures = {
-      ...coreFeatures,
-      coreReactivityFeature: storeReactivityBindings(),
+    const cacheFeatures = testFeatures({
+      columnFacetingFeature,
+      columnFilteringFeature,
       facetedMinMaxValues,
       facetedRowModel,
       facetedUniqueValues,
-    }
+    })
 
-    const table = constructTable<any, Person>({
+    const cacheColumns: Array<ColumnDef<typeof cacheFeatures, Person, any>> = [
+      { accessorKey: 'firstName', id: 'firstName' },
+      { accessorKey: 'status', id: 'status' },
+    ]
+    const table = constructTable<typeof cacheFeatures, Person>({
       data,
-      columns: columns as any,
+      columns: cacheColumns,
       features: cacheFeatures,
-    }) as any
+    })
     const statusColumn = table.getColumn('status')!
 
     column_getFacetedRowModel(statusColumn, table)

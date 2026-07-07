@@ -1,24 +1,27 @@
 import { describe, expect, it } from 'vitest'
-import { coreHeadersFeature } from '../../../../src/core/headers/coreHeadersFeature'
+import { constructTable } from '../../../../src'
 import { constructHeader } from '../../../../src/core/headers/constructHeader'
-import type { Column } from '../../../../src/types/Column'
-import type { Table_Internal } from '../../../../src/types/Table'
+import { testFeatures } from '../../../fixtures/features'
+import type { ColumnDef } from '../../../../src/types/ColumnDef'
 
-type TestData = Record<string, unknown>
-type TestFeatures = {
-  coreHeadersFeature: typeof coreHeadersFeature
+interface Person {
+  firstName: string
 }
+
+const features = testFeatures({})
+
+const columns: Array<ColumnDef<typeof features, Person, any>> = [
+  { id: 'test-column', accessorKey: 'firstName' },
+]
 
 describe('constructHeader', () => {
   it('should create a column with all core column APIs and properties', () => {
-    const table = {
-      _features: { coreHeadersFeature },
-      options: {},
-    } as unknown as Table_Internal<TestFeatures, TestData>
-    const column = {
-      id: 'test-column',
-      columnDef: { id: 'test-column-def' },
-    } as unknown as Column<TestFeatures, TestData>
+    const table = constructTable<typeof features, Person>({
+      features,
+      columns,
+      data: [],
+    })
+    const column = table.getAllLeafColumns()[0]!
     const index = 0
     const depth = 0
 

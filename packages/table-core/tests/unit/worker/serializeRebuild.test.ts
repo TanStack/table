@@ -4,7 +4,6 @@ import {
   columnFilteringFeature,
   columnGroupingFeature,
   constructTable,
-  coreFeatures,
   createFilteredRowModel,
   createGroupedRowModel,
   createSortedRowModel,
@@ -13,11 +12,11 @@ import {
   rowSortingFeature,
   sortFns,
 } from '../../../src'
-import { storeReactivityBindings } from '../../../src/store-reactivity-bindings'
+import { testFeatures } from '../../fixtures/features'
 import { serializeRowModel } from '../../../src/worker/serializeRowModel'
 import { rebuildRowModel } from '../../../src/worker/rebuildRowModel'
 import { makeObjectMap } from '../../../src/utils'
-import type { Table_Internal } from '../../../src'
+import type { ColumnDef, RowModel, Table } from '../../../src'
 
 type Person = {
   firstName: string
@@ -37,7 +36,20 @@ function makeData(count: number): Array<Person> {
   }))
 }
 
-const columns: any = [
+const features = testFeatures({
+  columnFilteringFeature,
+  columnGroupingFeature,
+  globalFilteringFeature,
+  rowSortingFeature,
+  filteredRowModel: createFilteredRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+  filterFns,
+  aggregationFns,
+})
+
+const columns: Array<ColumnDef<typeof features, Person, any>> = [
   { accessorKey: 'firstName', header: 'First Name' },
   { accessorKey: 'age', header: 'Age', aggregationFn: 'mean' },
   { accessorKey: 'visits', header: 'Visits', aggregationFn: 'sum' },
@@ -47,28 +59,15 @@ const columns: any = [
 // Columns with an explicit aggregation, mirroring initTableWorker's selection.
 const aggregateColumnIds = ['age', 'visits']
 
-function makeTable(data: Array<Person>): Table_Internal<any, Person> {
+function makeTable(data: Array<Person>): Table<typeof features, Person> {
   return constructTable({
     data,
     columns,
-    features: {
-      ...coreFeatures,
-      coreReactivityFeature: storeReactivityBindings(),
-      rowSortingFeature,
-      columnFilteringFeature,
-      globalFilteringFeature,
-      columnGroupingFeature,
-      filteredRowModel: createFilteredRowModel(),
-      groupedRowModel: createGroupedRowModel(),
-      sortedRowModel: createSortedRowModel(),
-      sortFns,
-      filterFns,
-      aggregationFns,
-    },
-  } as any) as unknown as Table_Internal<any, Person>
+    features,
+  })
 }
 
-function coreIndexMap(table: Table_Internal<any, Person>) {
+function coreIndexMap(table: Table<typeof features, Person>) {
   const map = makeObjectMap<number>()
   const flatRows = table.getCoreRowModel().flatRows
   for (let i = 0; i < flatRows.length; i++) {
@@ -79,9 +78,9 @@ function coreIndexMap(table: Table_Internal<any, Person>) {
 
 /** Serialize a stage from the "worker" table, rebuild on the "main" table. */
 function roundTrip(
-  workerTable: Table_Internal<any, Person>,
-  mainTable: Table_Internal<any, Person>,
-  model: any,
+  workerTable: Table<typeof features, Person>,
+  mainTable: Table<typeof features, Person>,
+  model: RowModel<typeof features, Person>,
   resetDepths = true,
 ) {
   const transfer: Array<Transferable> = []
@@ -91,30 +90,32 @@ function roundTrip(
     aggregateColumnIds,
     transfer,
   )
-  expect(payload.kind).not.toBe('unchanged')
+  if (payload.kind === 'unchanged') {
+    throw new Error('expected a data payload, got "unchanged"')
+  }
   return {
     payload,
-    rebuilt: rebuildRowModel(mainTable as any, payload as any, resetDepths),
+    rebuilt: rebuildRowModel(mainTable, payload, resetDepths),
   }
 }
 
-const ids = (rows: Array<any>) => rows.map((row) => row.id)
+const ids = (rows: Array<{ id: string }>) => rows.map((row) => row.id)
 
 describe('serializeRowModel -> rebuildRowModel round trip', () => {
   it('round-trips a flat sorted model as a transferable permutation', () => {
     const data = makeData(12)
     const workerTable = makeTable(data)
     const mainTable = makeTable(data)
-    ;(workerTable.baseAtoms as any).sorting.set([{ id: 'age', desc: true }])
+    workerTable.baseAtoms.sorting.set([{ id: 'age', desc: true }])
 
-    const model = (workerTable as any).getSortedRowModel()
+    const model = workerTable.getSortedRowModel()
     const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
 
     expect(payload.kind).toBe('flat')
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
     // rows are the main table's own core rows, not clones
     expect(rebuilt.rows[0]!).toBe(
-      mainTable.getCoreRowModel().flatRows[Number(model.rows[0].id)],
+      mainTable.getCoreRowModel().flatRows[Number(model.rows[0]!.id)],
     )
     expect(rebuilt.rowsById).toBe(mainTable.getCoreRowModel().rowsById)
   })
@@ -123,11 +124,9 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const data = makeData(12)
     const workerTable = makeTable(data)
     const mainTable = makeTable(data)
-    ;(workerTable.baseAtoms as any).columnFilters.set([
-      { id: 'status', value: 'single' },
-    ])
+    workerTable.baseAtoms.columnFilters.set([{ id: 'status', value: 'single' }])
 
-    const model = (workerTable as any).getFilteredRowModel()
+    const model = workerTable.getFilteredRowModel()
     const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
 
     expect(payload.kind).toBe('flat')
@@ -140,17 +139,17 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const data = makeData(12)
     const workerTable = makeTable(data)
     const mainTable = makeTable(data)
-    ;(workerTable.baseAtoms as any).grouping.set(['status'])
+    workerTable.baseAtoms.grouping.set(['status'])
 
-    const model = (workerTable as any).getGroupedRowModel()
+    const model = workerTable.getGroupedRowModel()
     const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
 
     expect(payload.kind).toBe('tree')
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
 
     for (let i = 0; i < model.rows.length; i++) {
-      const syncGroup = model.rows[i]
-      const rebuiltGroup = rebuilt.rows[i]! as any
+      const syncGroup = model.rows[i]!
+      const rebuiltGroup = rebuilt.rows[i]!
       expect(rebuiltGroup.groupingColumnId).toBe('status')
       expect(rebuiltGroup.groupingValue).toBe(syncGroup.groupingValue)
       // explicit-aggregate columns match the sync model exactly
@@ -166,7 +165,11 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
         expect(leaf.depth).toBe(1)
         expect(leaf.parentId).toBe(rebuiltGroup.id)
       }
-      expect(rebuiltGroup.leafRows.length).toBe(syncGroup.leafRows.length)
+      // `leafRows` is a runtime augmentation on grouped rows with no typed
+      // surface, so both sides need the same structural assertion type
+      const leafRows = (row: unknown) =>
+        (row as { leafRows: Array<unknown> }).leafRows
+      expect(leafRows(rebuiltGroup).length).toBe(leafRows(syncGroup).length)
       // rowsById resolves both group ids and (via prototype chain) leaf ids
       expect(rebuilt.rowsById[rebuiltGroup.id]).toBe(rebuiltGroup)
       expect(rebuilt.rowsById[rebuiltGroup.subRows[0]!.id]).toBeDefined()
@@ -177,17 +180,17 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const data = makeData(12)
     const workerTable = makeTable(data)
     const mainTable = makeTable(data)
-    ;(workerTable.baseAtoms as any).grouping.set(['status'])
-    ;(workerTable.baseAtoms as any).sorting.set([{ id: 'age', desc: false }])
+    workerTable.baseAtoms.grouping.set(['status'])
+    workerTable.baseAtoms.sorting.set([{ id: 'age', desc: false }])
 
-    const model = (workerTable as any).getSortedRowModel()
+    const model = workerTable.getSortedRowModel()
     const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)
 
     expect(payload.kind).toBe('tree')
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
     // leaves within each group are in the worker's sorted order
     for (let i = 0; i < model.rows.length; i++) {
-      expect(ids(rebuilt.rows[i]!.subRows)).toEqual(ids(model.rows[i].subRows))
+      expect(ids(rebuilt.rows[i]!.subRows)).toEqual(ids(model.rows[i]!.subRows))
     }
   })
 
@@ -195,9 +198,9 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const data = makeData(18)
     const workerTable = makeTable(data)
     const mainTable = makeTable(data)
-    ;(workerTable.baseAtoms as any).grouping.set(['status', 'age'])
+    workerTable.baseAtoms.grouping.set(['status', 'age'])
 
-    const model = (workerTable as any).getGroupedRowModel()
+    const model = workerTable.getGroupedRowModel()
     const { rebuilt } = roundTrip(workerTable, mainTable, model)
 
     expect(ids(rebuilt.rows)).toEqual(ids(model.rows))
@@ -214,16 +217,16 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const data = makeData(12)
     const workerTable = makeTable(data)
     const mainTable = makeTable(data)
-    ;(workerTable.baseAtoms as any).grouping.set(['status'])
+    workerTable.baseAtoms.grouping.set(['status'])
 
     // Tree rebuild assigns leaf depths on the main table's shared row objects
-    const grouped = (workerTable as any).getGroupedRowModel()
+    const grouped = workerTable.getGroupedRowModel()
     const { rebuilt: rebuiltTree } = roundTrip(workerTable, mainTable, grouped)
     const someLeaf = rebuiltTree.rows[0]!.subRows[0]!
     expect(someLeaf.depth).toBe(1)
 
     // A filtered (flat) rebuild afterward must not zero those depths
-    const filtered = (workerTable as any).getFilteredRowModel()
+    const filtered = workerTable.getFilteredRowModel()
     roundTrip(workerTable, mainTable, filtered, false)
     expect(someLeaf.depth).toBe(1)
 
