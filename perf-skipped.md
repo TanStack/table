@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 12
-- **Source findings:** 12
+- **Entries:** 16
+- **Source findings:** 16
 - **Cross-cutting sweeps:** 0
 
 ## Score 1
@@ -313,6 +313,72 @@ Both walk the `sorting` array; called for every visible sortable column on every
 ---
 
 ## Score 0
+
+## 28. Row filter state reset allocates even when already reset (superseded by B2: rowModel-marker skip of the O(R) tag-map reset) — Score: 7
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** 7  
+**Score note:** Implementation discarded after review; the required row-model dirty-marker bookkeeping was judged too subtle for the maintenance cost.
+**Implementation note:** Attempted and then discarded. The performance claim is legitimate on large unfiltered data updates: fresh rows already receive empty `columnFilters`/`columnFiltersMeta` maps from `columnFilteringFeature.initRowInstanceData`, so the empty-filter branch's O(R) reset and 2R map allocations are waste. However, preserving correctness for active-filters → no-filters over the same row objects requires tracking exactly which pre-filtered row model objects contain stale tags. Both own-property markers and `WeakSet`/closure marker variants made the code harder to reason about than the local win justified. Leave the straightforward reset in place unless a simpler design emerges.
+
+**Location:** `src/features/column-filtering/createFilteredRowModel.ts:57–67` (plus `columnFilteringFeature.ts:72–75`)
+**Category:** `big-o` (short-circuit), `allocation`
+
+**Verification:** AMENDED: verifier identified the rowModel-marker variant as the safe shape, but implementation review rejected carrying that marker complexity.
+
+---
+
+## 69. B5: Per-row early exit across filters once the row has failed, gated on faceting absence — Score: 7
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** 7  
+**Score note:** Implementation discarded after review; partial per-row filter tags and faceting-gated control flow were judged too complex for the hot path.
+**Implementation note:** Attempted and then discarded. The optimization can save filterFn calls after a strict `false` when no faceted row model is registered, but the implementation makes `row.columnFilters`/`columnFiltersMeta` intentionally partial on failed rows and adds a faceting-specific branch inside the tagging loop. Although the verifier proved the in-repo readers short-circuit safely and the faceting gate is necessary, the resulting behavior surface was not accepted. Keep the simpler full-tagging pass for now.
+
+**Location:** `packages/table-core/src/features/column-filtering/createFilteredRowModel.ts:121–167`
+**Category:** `big-o` (short-circuit)
+
+**Verification:** CONFIRMED by audit, but skipped by implementation review due to maintainability/observable partial-tag concerns.
+
+---
+
+## 77. B4: Per-row-per-filter addMeta closures → one cursor closure — Score: 6
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** 6  
+**Score note:** Implementation discarded after review; the cursor callback narrows public `addMeta` behavior and is easy to misuse.
+**Implementation note:** Attempted and then discarded. Reusing one cursor-style `addMeta` callback removes R×F closure allocations and the dead `columnFiltersMeta` guard, but it relies on `addMeta` being called synchronously during the filterFn invocation. That sync-only contract is defensible, but it changes the practical behavior of a public callback if user filterFns store `addMeta` and call it later. The resulting mutable-cursor code was not accepted for this API surface. Keep per-call closures unless the public contract is explicitly redesigned.
+
+**Location:** `packages/table-core/src/features/column-filtering/createFilteredRowModel.ts:116–168`
+**Category:** `allocation`
+
+**Verification:** CONFIRMED by audit, but skipped by implementation review due to public callback contract/maintainability concerns.
+
+---
+
+## 59. `table.getAllLeafColumns()` is called many places per row-model build — Score: 4
+
+**Status:** `[-]` skipped
+
+**Adjusted score:** 0  
+**Original score:** 4  
+**Score note:** Audit-only entry; current source already memoizes `getAllLeafColumns()` on the complete leaf-column identity inputs.
+**Implementation note:** Audited current source and found no row-model lifecycle dep churn to optimize. `coreColumnsFeature` registers `table_getAllLeafColumns` with deps `[columnOrder, grouping, options.columns, groupedColumnMode]`, exactly the inputs that can change the leaf-column list or order. Row-model rebuild inputs such as `data`, `columnFilters`, `globalFilter`, grouping row-model state, and faceting row-model state do not invalidate this memo. Hot-path consumers (`row_getAllCells`, `createFilteredRowModel` global-filter column discovery, faceted min/max/unique values, grouped row models, and pinning/visibility derived lists) either consume the table-level memo directly or depend on its array identity through their own memos. The known stale derived-column dependency class referenced by this entry was fixed separately in #67/A2 and #16, where visibility/header derived memos were given the missing grouping/groupedColumnMode coverage. No standalone implementation remains for #59.
+
+**Location:** filterFns, faceting, grouping, pinning, global filtering
+**Category:** `memoization`
+
+`getAllLeafColumns()` is memoized at the table level, but its deps are sometimes computed inline (see #16 type defects). Verify the memo holds across the row-model rebuild lifecycle. If it doesn't, this is the most-leveraged optimization in the package.
+
+**Risk:** Already memoized in `coreColumnsFeature`; just audit for accidental dep churn.
+
+---
 
 ## 108. B22: Row-model memoDeps systematically omit options they read (observation) — Score: 4
 

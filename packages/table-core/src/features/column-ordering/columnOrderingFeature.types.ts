@@ -4,6 +4,25 @@ import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeatu
 
 export type ColumnOrderState = Array<string>
 
+export interface ColumnIndexes {
+  /**
+   * Maps each visible leaf column id to its index in the full visible column list.
+   */
+  all: Record<string, number>
+  /**
+   * Maps each unpinned visible leaf column id to its index within the center region.
+   */
+  center: Record<string, number>
+  /**
+   * Maps each left-pinned visible leaf column id to its index within the left region.
+   */
+  left: Record<string, number>
+  /**
+   * Maps each right-pinned visible leaf column id to its index within the right region.
+   */
+  right: Record<string, number>
+}
+
 export interface TableState_ColumnOrdering {
   columnOrder: ColumnOrderState
 }
@@ -47,6 +66,13 @@ export interface Table_ColumnOrdering<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  /**
+   * Builds column-id to index records for each visible pinning region.
+   *
+   * This is the memoized source that `column.getIndex` reads from; most apps
+   * will not need to call it directly.
+   */
+  getColumnIndexes: () => ColumnIndexes
   /**
    * Resets `columnOrder` to `initialState.columnOrder`.
    *

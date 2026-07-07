@@ -169,11 +169,23 @@ export function row_getAllCells<
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
   const columns = row.table.getAllLeafColumns()
+  // WeakMap so cells keyed by replaced column instances can be collected;
+  // rows are memoized on data only and outlive column generations
+  let cache = row._cellsCache
+  if (!cache) {
+    cache = row._cellsCache = new WeakMap()
+  }
   const cells: Array<Cell<TFeatures, TData, unknown>> = new Array(
     columns.length,
   )
   for (let i = 0; i < columns.length; i++) {
-    cells[i] = constructCell(columns[i]!, row, row.table)
+    const column = columns[i]!
+    let cell = cache.get(column)
+    if (!cell) {
+      cell = constructCell(column, row, row.table)
+      cache.set(column, cell)
+    }
+    cells[i] = cell
   }
   return cells
 }

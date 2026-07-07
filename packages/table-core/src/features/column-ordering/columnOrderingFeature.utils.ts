@@ -1,12 +1,15 @@
 import { table_getPinnedVisibleLeafColumns } from '../column-pinning/columnPinningFeature.utils'
-import { cloneState } from '../../utils'
+import { callMemoOrStaticFn, cloneState, makeObjectMap } from '../../utils'
 import type { GroupingState } from '../column-grouping/columnGroupingFeature.types'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
-import type { Column_Internal } from '../../types/Column'
+import type { Column, Column_Internal } from '../../types/Column'
 import type { ColumnPinningPosition } from '../column-pinning/columnPinningFeature.types'
-import type { ColumnOrderState } from './columnOrderingFeature.types'
+import type {
+  ColumnIndexes,
+  ColumnOrderState,
+} from './columnOrderingFeature.types'
 
 /**
  * Creates the default column order state.
@@ -21,6 +24,42 @@ import type { ColumnOrderState } from './columnOrderingFeature.types'
  */
 export function getDefaultColumnOrderState(): ColumnOrderState {
   return []
+}
+
+/**
+ * Builds column-id to index records for each visible pinning region.
+ *
+ * All four regions are built in one pass so a single memo entry serves every
+ * `column_getIndex` lookup without per-column scans.
+ *
+ * @example
+ * ```ts
+ * const indexes = table_getColumnIndexes(table)
+ * ```
+ */
+export function table_getColumnIndexes<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): ColumnIndexes {
+  const buildIndexes = (
+    columns: ReadonlyArray<
+      | Column<TFeatures, TData, unknown>
+      | Column_Internal<TFeatures, TData, unknown>
+    >,
+  ): Record<string, number> => {
+    const indexes = makeObjectMap<number>()
+    for (let i = 0; i < columns.length; i++) {
+      indexes[columns[i]!.id] = i
+    }
+    return indexes
+  }
+
+  return {
+    all: buildIndexes(table_getPinnedVisibleLeafColumns(table)),
+    center: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'center')),
+    left: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'left')),
+    right: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'right')),
+  }
 }
 
 /**
@@ -42,8 +81,20 @@ export function column_getIndex<
   column: Column_Internal<TFeatures, TData, TValue>,
   position?: ColumnPinningPosition | 'center',
 ) {
-  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
-  return columns.findIndex((d) => d.id === column.id)
+  const indexes = callMemoOrStaticFn(
+    column.table,
+    'getColumnIndexes',
+    table_getColumnIndexes,
+  )
+  const key =
+    position === 'left'
+      ? 'left'
+      : position === 'right'
+        ? 'right'
+        : position === 'center'
+          ? 'center'
+          : 'all'
+  return indexes[key][column.id] ?? -1
 }
 
 /**

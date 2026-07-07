@@ -52,7 +52,8 @@ export function cloneState<T>(value: T): T {
 
 /**
  * Copies prototype-instance own properties without carrying over lazy memo
- * closures that were bound to the source instance.
+ * closures or the per-row cell cache, both of which are bound to the source
+ * instance (cached cells reference the source row).
  */
 export function copyInstancePropertiesWithoutMemos<
   TTarget extends Record<string, any>,
@@ -63,7 +64,7 @@ export function copyInstancePropertiesWithoutMemos<
 
   for (let i = 0; i < keys.length; i++) {
     const key = keys[i]!
-    if (!key.startsWith('_memo_')) {
+    if (!key.startsWith('_memo_') && key !== '_cellsCache') {
       targetRecord[key] = source[key]
     }
   }
