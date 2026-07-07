@@ -7,8 +7,8 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 90
-- **Source findings:** 90
+- **Entries:** 83
+- **Source findings:** 83
 - **Cross-cutting sweeps:** 0
 - 2026-07-03: #102 (C9) completed and moved to perf-done.md.
 
@@ -739,54 +739,6 @@ for (let i = 0; i < flatRows.length; i++) {
 
 **Risk:** Breaks only if a user filterFn stores `addMeta` and invokes it after the loop advances (asynchronous meta). Built-in filterFns never even declare the addMeta param. Must be applied to BOTH loops (131–137 and 151–157), and the sync-only addMeta contract documented, since it narrows a technically public FilterFn API behavior.
 **Verification:** CONFIRMED (dead guard proven; both-loops + contract-documentation requirements added).
-
----
-
-## 78. B9+E14: Sort-key precomputation (decorate-sort-undecorate), built-in sortFns only; design-level — Score: 6
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:88–112` (with `rowSortingFeature.ts:39` default `sortUndefined: 1`; `fns/sortFns.ts:18–30, 58–70` re-derive `toString(value).toLowerCase()` per comparison)
-**Category:** `big-o`
-
-Hot path: Per state-change: O(R log R) comparator invocations per sort. `row_getValue` caches in `_valuesCache`, so the accessor runs once per row; the remaining per-comparison cost with the default `sortUndefined: 1` is 2 getValue calls here plus 2 more inside the sortFn = 4 hashed lookups per comparison per column (~7M at R=100k). Worse, the text/alphanumeric sortFns rebuild `toString(value).toLowerCase()` (and, pre-E2, a regex split) on every comparison: O(R log R) string allocations that `_valuesCache` cannot amortize (~3.4M `toLowerCase` allocations per 100k-row sort). A decorate-sort-undecorate pass (one O(R) key extraction into a parallel array, index sort, then materialize) eliminates all per-comparison derivation.
-
-**Before**
-
-```ts
-if (sortUndefined) {
-  const aValue = rowA.getValue(sortEntry.id)
-  const bValue = rowB.getValue(sortEntry.id)
-
-  const aUndefined = aValue === undefined
-  const bUndefined = bValue === undefined
-  // ...
-}
-
-if (sortInt === 0) {
-  sortInt = columnInfo.sortFn(rowA, rowB, sortEntry.id)
-}
-```
-
-**After**
-
-(sketch; flat, single-column fast path, falling back to the current path for multi-column/hierarchy/custom fns)
-
-```ts
-// one O(R) pass
-const keys = new Array(sortedData.length)
-for (let i = 0; i < sortedData.length; i++) {
-  keys[i] = sortedData[i]!.getValue(entry.id)
-}
-```
-
-then a comparator over precomputed keys via an index sort, with `sortUndefined` handled on the extracted keys and stability via index pairing.
-
-**Big-O:** Per-comparison work drops from 4 hashed lookups (+ string realloc for text sorts) to 1 array read. At R=100k text sort: ~1.7M `toLowerCase` allocations → 100k; sort time typically 2-5× faster.
-
-**Risk:** Highest-risk row-model finding; design-level, not a drop-in edit. The fast path must exactly replicate `sortUndefined`/`invertSorting`/tiebreak-by-`row.index` semantics. **Built-in sortFns only** (E14's constraint): user-supplied sortFns can read arbitrary row state and must keep the current path. Sequencing: land E2 first (kills per-comparison split allocations at low risk); B9/E14 kills key re-derivation later.
-**Verification:** CONFIRMED (design-level); B9 and E14 merged (same Schwartzian direction; B9's formulation is the actionable one, E14 contributes the built-ins-only constraint).
 
 ---
 
@@ -2056,48 +2008,6 @@ Trivial `for` loop replacement of `.reduce`.
 
 ---
 
-## 103. C10: Object.assign row clones copy `_memo_*` closures bound to the original row (bug) — Score: 4 (bug)
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts:736–741`; same pattern at `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:135–138`; interacts with `packages/table-core/src/utils.ts:430–445` (assignPrototypeAPIs)
-**Category:** `bug`
-
-`assignPrototypeAPIs` stores lazily created memos as own enumerable `_memo_<fnKey>` props whose closures captured `self = <original row>`. `Object.assign(cloned, row)` copies them, so any memoized API called on a clone executes against the ORIGINAL row: `cloned.subRows = newSubRows` is invisible to every copied memoized method (e.g. `cloned.getVisibleCells()`, `cloned.getIsSomeSelected()`), and returned cells have `cell.row === original`. Verified end-to-end. This is a pre-existing hazard for ALL per-instance memoized row APIs on any cloned row, and it BLOCKS D14 (memoizing `row_getLeafRows`) as filed: a clone's copied `getLeafRows` memo would keep returning the flatten of the original (e.g. unsorted) subRows.
-
-**Cross-refs / gating:** Blocks #131 (D14: memoizing row_getLeafRows) until this clone fix lands.
-
-**Before**
-
-```ts
-// Preserve prototype chain so methods like getValue() remain accessible
-const cloned = Object.create(Object.getPrototypeOf(row))
-Object.assign(cloned, row)
-cloned.subRows = newSubRows
-```
-
-**After**
-
-```ts
-const cloned = Object.create(Object.getPrototypeOf(row))
-const keys = Object.keys(row)
-for (let i = 0; i < keys.length; i++) {
-  const key = keys[i]!
-  if (!key.startsWith('_memo_')) {
-    cloned[key] = (row as Record<string, any>)[key]
-  }
-}
-cloned.subRows = newSubRows
-```
-
-Apply to BOTH clone sites (rowSelectionFeature.utils.ts and createSortedRowModel.ts).
-
-**Risk:** Clones lose warm caches (first call re-memoizes against the clone), which is the correct behavior; `_valuesCache` stays shared by reference (values identical, fine). Behavior delta to flag: post-fix, clone getters answer for the clone's own (e.g. filtered) subRows; that is the sane semantics but observable (e.g. `getIsAllSubRowsSelected` may flip from `'some'`-derived to `'all'`-derived on selected-model rows).
-**Verification:** CONFIRMED-BUG, severity MODERATE; scope extended to createSortedRowModel; D14 blocked until this lands.
-
----
-
 ## 105. A10: contextDocument operator precedence: parameter always ignored; SSR ReferenceError path (bug) — Score: 4 (bug)
 
 **Status:** `[ ]` not started
@@ -2123,23 +2033,6 @@ const contextDocument =
 ```
 
 **Verification:** CONFIRMED-BUG (both consequences re-derived).
-
----
-
-## 108. B22: Row-model memoDeps systematically omit options they read (observation) — Score: 4
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/column-filtering/createFilteredRowModel.ts`, `packages/table-core/src/features/row-sorting/createSortedRowModel.ts`, `packages/table-core/src/features/column-grouping/createGroupedRowModel.ts`, `packages/table-core/src/features/row-expanding/createExpandedRowModel.ts`, `packages/table-core/src/core/row-models/createCoreRowModel.ts`
-**Category:** `observation`, `memoization`
-
-createFilteredRowModel/createSortedRowModel/createGroupedRowModel/createExpandedRowModel/createCoreRowModel all read options (`filterFromLeafRows`, `maxLeafRowFilterDepth`, sort/aggregation defs, `getIsRowExpanded`, ...) that are not deps; runtime option changes serve stale models until an unrelated state change. This is a deliberate single-slot tradeoff for function-valued options (adding them would thrash memos when adapters rebuild options objects); the actionable scope is PRIMITIVE-FLAG additions only (e.g. `filterFromLeafRows`, `maxLeafRowFilterDepth`, `paginateExpandedRows`, the last already fixed in B21's micro entry).
-
-**Fix:** Add the primitive-flag options as deps only; leave the function-valued options (sort/aggregation defs, `getIsRowExpanded`) out of the dep tuples.
-
-**Risk:** Adding the function-valued options as deps would thrash memos when adapters rebuild options objects; the fix must stay scoped to primitive flags only.
-**Verification:** CONFIRMED (observation; primitive-only scope is the right boundary).
 
 ---
 
@@ -2175,25 +2068,6 @@ The `.reduce` closure calls the STATIC `header_getSize` (full subtree recursion,
 **Fix:** Explicit-stack loop, pushing subHeaders in REVERSE order (mandatory, not optional, to preserve summation order exactly).
 
 **Risk:** Order-sensitive: subHeaders must be pushed onto the stack in reverse order or the rewrite silently changes summation order for group headers. This is a correctness requirement of the rewrite, not an optional tuning choice.
-**Verification:** Verified (2026-07-01 audit).
-
----
-
-## 116. B10: createSortedRowModel: no availableSorting.length guard; branch rows cloned even when subRows unchanged — Score: 4
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `createSortedRowModel.ts:47–58, 130–147`
-**Category:** `micro`
-
-(a) No `availableSorting.length` guard: when all sorting ids miss, the code still pays O(R log R) no-op comparator calls + slice + flatRows rebuild + branch-row clones; (b) every branch row is cloned even when the sorted subRows are element-wise identical.
-
-**Fix:** `if (!availableSorting.length) return preSortedRowModel` (comparator provably order-preserving; edge flatRows order becomes parent-first, consistent with the existing empty-sorting branch) + identity-scan-before-clone (cloned descendants replace elements, so element-wise compare catches subtree changes).
-
-**Big-O:** O(R log R) no-op comparator calls (plus slice + flatRows rebuild + branch-row clones) avoided entirely when no sorting ids match.
-
-**Risk:** None noted; comparator is provably order-preserving, and the identity-scan-before-clone catches subtree changes via element-wise compare since cloned descendants replace elements.
 **Verification:** Verified (2026-07-01 audit).
 
 ---
@@ -2334,23 +2208,6 @@ Inline selectors change identity per render, so `useSyncExternalStoreWithSelecto
 
 **Risk:** Low; the fix is a standard stable-ref wrapper pattern. Must preserve default-selector semantics exactly.
 **Verification:** Verified (2026-07-01 audit).
-
----
-
-## 142. NR1: Pre-existing crash on unknown sorting column id in createSortedRowModel (bug) — Score: 4 (bug)
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/row-sorting/createSortedRowModel.ts:54–57` (dereference at `packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:363–368`)
-**Category:** `bug`
-
-A `sorting` entry whose id matches no column makes `createSortedRowModel.ts:54-57` pass `undefined` into `column_getCanSort`, which dereferences `column.columnDef` (`rowSortingFeature.utils.ts:363-368`) → TypeError.
-
-**Fix:** Not proposed in this audit; deserves an independent correctness ticket to guard against an unknown sorting column id before the `column.columnDef` dereference. #88 (B8)'s fusion incidentally removes the double fetch on this path but does not fix the crash.
-
-**Risk:** Crash (TypeError) reachable whenever a `sorting` state entry's id matches no column, e.g. after a column is removed while its sort state persists. Correctness bug, not a perf regression; independent of #88 (B8).
-**Verification:** CONFIRMED-BUG (2026-07-01 audit).
 
 ---
 
@@ -2709,23 +2566,6 @@ Returns N×D short-lived `{colSpan, rowSpan}` objects plus per-parent arrays tha
 
 ---
 
-## 131. D14: row_getLeafRows unmemoized (BLOCKED on #103) — Score: 3
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/core/rows/coreRowsFeature.ts:30–32` (`row_getLeafRows` unmemoized)
-**Category:** `micro`, `memoization`
-
-Re-flattens the whole subtree on every call; the ideal fix is a per-instance memo with deps `[row.subRows]` (all `subRows` writes are whole-array reassignments, verified).
-
-**Fix:** Add a per-instance memo with deps `[row.subRows]`. **BLOCKED until the C10 clone fix (#103) lands:** `Object.assign` row clones would copy the `_memo_getLeafRows` closure bound to the original row and serve stale (e.g. unsorted) flattens on clones. Do not land this memo before #103 ships.
-
-**Risk:** High if sequenced wrong: landing this memo before #103's clone fix would silently serve stale flattens from cloned rows. Must be sequenced strictly after #103.
-**Verification:** Verified (2026-07-01 audit); blocked pending #103 (C10 clone fix).
-
----
-
 ## 132. D15: cloneState uses Object.defineProperty per key — Score: 3
 
 **Status:** `[ ]` not started
@@ -3058,22 +2898,5 @@ if (props.footer) { ... }
 Guard against the `undefined` return from `feature.getDefaultTableOptions?.()`.
 
 **Risk:** None.
-
----
-
-## 135. E12: column_toggleSorting scans the tiny sorting array twice — Score: 1
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts:211–214` (`column_toggleSorting`)
-**Category:** `micro`
-
-`old.find` + `old.findIndex` scan the tiny sorting array twice.
-
-**Fix:** `findIndex` once, index into `old`. Per header click; negligible.
-
-**Risk:** None noted; per-interaction-click cost on an already-tiny (2-3 entry) array, consistent with the doctrine that these arrays don't warrant hashing.
-**Verification:** Verified (2026-07-01 audit).
 
 ---

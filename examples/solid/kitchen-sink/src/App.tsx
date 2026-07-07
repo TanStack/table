@@ -473,7 +473,10 @@ const columns = columnHelper.columns([
     getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
     cell: ({ row, getValue }) => (
       <div style={{ 'padding-left': `${row.depth * 1.5}rem` }}>
-        {row.getCanExpand() ? (
+        {/* On a grouped row the grouped-cell wrapper already renders the
+            expander, so don't render a second one here. This expander is only
+            for expanding nested sub-rows. */}
+        {row.getIsGrouped() ? null : row.getCanExpand() ? (
           <button
             onClick={row.getToggleExpandedHandler()}
             style={{ cursor: 'pointer', 'margin-right': '0.25rem' }}

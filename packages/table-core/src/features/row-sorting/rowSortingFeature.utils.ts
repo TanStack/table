@@ -201,8 +201,9 @@ export function column_toggleSorting<
 
   table_setSorting(column.table, (old) => {
     // Find any existing sorting for this column
-    const existingSorting = old.find((d) => d.id === column.id)
     const existingIndex = old.findIndex((d) => d.id === column.id)
+    const existingSorting =
+      existingIndex === -1 ? undefined : old[existingIndex]
 
     let newSorting: SortingState = []
 

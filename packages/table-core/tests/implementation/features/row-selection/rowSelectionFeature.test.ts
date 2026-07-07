@@ -175,6 +175,41 @@ describe('rowSelectionFeature', () => {
       expect(clonedParent.getValue('id')).toBe(rowModel.rows[0]!.getValue('id'))
     })
 
+    it('should not copy memoized row APIs from the original row to cloned parent rows', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0': true,
+            '0.0': true,
+          },
+        },
+        columns,
+      })
+      const rowModel = table.getCoreRowModel()
+      const originalParent = rowModel.rows[0]!
+
+      // Warm a per-row memo on the original. Clones must not copy this closure,
+      // because it is bound to originalParent.
+      originalParent.getAllCells()
+
+      const result = RowSelectionUtils.selectRowsFn(
+        rowModel,
+        table as Table_Internal<typeof features, Person>,
+      )
+
+      const clonedParent = result.rows[0]!
+      expect(clonedParent).not.toBe(originalParent)
+      expect(clonedParent.getAllCells()[0]!.row).toBe(clonedParent)
+    })
+
     it('should return an empty list if no rows are selected', () => {
       const data = generateTestData(5)
       const columns = generateColumnDefs(data)

@@ -51,6 +51,27 @@ export function cloneState<T>(value: T): T {
 }
 
 /**
+ * Copies prototype-instance own properties without carrying over lazy memo
+ * closures that were bound to the source instance.
+ */
+export function copyInstancePropertiesWithoutMemos<
+  TTarget extends Record<string, any>,
+  TSource extends Record<string, any>,
+>(target: TTarget, source: TSource): TTarget & TSource {
+  const keys = Object.keys(source)
+  const targetRecord = target as Record<string, any>
+
+  for (let i = 0; i < keys.length; i++) {
+    const key = keys[i]!
+    if (!key.startsWith('_memo_')) {
+      targetRecord[key] = source[key]
+    }
+  }
+
+  return target as TTarget & TSource
+}
+
+/**
  * Creates an object intended only for string-keyed dictionary lookups.
  *
  * The null prototype keeps user-controlled ids such as `__proto__` and
