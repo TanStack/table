@@ -7,10 +7,14 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 54
-- **Source findings:** 52
+- **Entries:** 58
+- **Source findings:** 56
 - **Cross-cutting sweeps:** 2
 - 2026-07-03: #102 (C9) moved here from perf-todo.md after the row-model benchmark confirmed and the fix landed.
+- 2026-07-07: #68 (A4) moved here from perf-todo.md after implementation.
+- 2026-07-07: #76 (A5) moved here from perf-todo.md after implementation.
+- 2026-07-07: #85 (A6) moved here from perf-todo.md after implementation.
+- 2026-07-07: #92 (C11) moved here from perf-todo.md after implementation.
 
 ## Score 9
 
@@ -800,6 +804,116 @@ Eliminated back-to-back Array method chains across `packages/table-core/src/**` 
 
 ## Score 7
 
+## 68. A4: column_getIndex: O(N) findIndex per column, O(N²) cascade per ordering change → table-level index records — Score: 7
+
+**Status:** `[x]` done
+**Implementation note:** Implemented as proposed: added `table_getColumnIndexes` (single memo building `all`/`center`/`left`/`right` id-to-index records via `makeObjectMap`), registered in `columnOrderingFeature.constructTableAPIs` with the full deps chain (`options.columns`, `columnOrder`, `columnPinning`, `columnVisibility`, `grouping`, `groupedColumnMode`); `column_getIndex` is now a plain prototype fn doing an O(1) record lookup through `callMemoOrStaticFn(column.table, 'getColumnIndexes', ...)`, with `?? -1` preserving miss semantics. One deviation: `buildIndexes` accepts `Column | Column_Internal` (union element type) because `table_getPinnedVisibleLeafColumns` returns a union of the two array types. Also closes the pre-existing `groupedColumnMode` staleness gap flagged in the A1/A2 sweep notes. Regression tests added: region records vs `table_getPinnedVisibleLeafColumns`, per-region `getIndex` lookups (including -1 misses), and instance-API invalidation after `setColumnOrder`. Full table-core unit tests, type checks, build, and size-limit (16.86 kB / 20 kB) pass.
+
+**Location:** `packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts:37–47`; registration at `columnOrderingFeature.ts:36–45`
+**Category:** `big-o`
+
+Hot path: Per state-change (columnOrder/columnPinning/grouping/columnVisibility): all N per-column memos invalidate; each recompute is an O(N) scan → O(N²). Also on first render. (Not per-tick: `columnSizing` is correctly absent from its deps.) `findIndex` with a fresh closure per recompute, O(N) per column. After any ordering-affecting state change, every column recomputes → O(N²) id comparisons (N=500 → 250k). With A1 applied the internal callers disappear, but `getIndex` remains public API. Since the iterated dimension scales with N, a keyed record is warranted.
+
+**Before**
+
+```ts
+export function column_getIndex<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+  position?: ColumnPinningPosition | 'center',
+) {
+  const columns = table_getPinnedVisibleLeafColumns(column.table, position)
+  return columns.findIndex((d) => d.id === column.id)
+}
+```
+
+**After**
+
+(Table-level index records, all four position keys in ONE memo so there is no single-slot thrash; unmemoized per-column lookup.)
+
+```ts
+// columnOrderingFeature.utils.ts
+export function table_getColumnIndexes<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>) {
+  const buildIndexes = (
+    columns: Array<Column<TFeatures, TData, unknown>>,
+  ): Record<string, number> => {
+    const indexes = makeObjectMap<number>()
+    for (let i = 0; i < columns.length; i++) {
+      indexes[columns[i]!.id] = i
+    }
+    return indexes
+  }
+
+  return {
+    all: buildIndexes(table_getPinnedVisibleLeafColumns(table)),
+    center: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'center')),
+    left: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'left')),
+    right: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'right')),
+  }
+}
+
+export function column_getIndex<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+  position?: ColumnPinningPosition | 'center',
+) {
+  const indexes = callMemoOrStaticFn(
+    column.table,
+    'getColumnIndexes',
+    table_getColumnIndexes,
+  )
+  const key =
+    position === 'left'
+      ? 'left'
+      : position === 'right'
+        ? 'right'
+        : position === 'center'
+          ? 'center'
+          : 'all'
+  return indexes[key][column.id] ?? -1
+}
+```
+
+```ts
+// columnOrderingFeature.ts
+    assignTableAPIs('columnOrderingFeature', table, {
+      table_getColumnIndexes: {
+        fn: () => table_getColumnIndexes(table),
+        memoDeps: () => [
+          table.options.columns,
+          table.atoms.columnOrder?.get(),
+          table.atoms.columnPinning?.get(),
+          table.atoms.columnVisibility?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
+        ],
+      },
+      // ...
+    })
+    // column_getIndex: drop memoDeps, register as a plain prototype fn:
+      column_getIndex: {
+        fn: (column, position) => column_getIndex(column, position),
+      },
+```
+
+Deps coverage: same transitive chain as A1 (columns, columnOrder, columnPinning, columnVisibility, grouping, groupedColumnMode); no `columnSizing`, so resize ticks never invalidate index records. Keep this memo SEPARATE from A1's offsets memo. `?? -1` preserves miss semantics.
+
+**Big-O:** O(N²) → O(N) per ordering state-change (N=500: 250k comparisons + N closures → 500 loop iterations, 4 record allocs). Removes N per-instance `_memo_getIndex` closures.
+
+**Risk:** Low. The proposed deps are a strict superset of the current ones (adds `options.columns` and `groupedColumnMode`, closing a small `groupedColumnMode` staleness gap). Duplicate column ids would flip first-wins to last-wins; ids are unique by construction, or guard with `if (indexes[id] === undefined)`.
+**Verification:** CONFIRMED (deps superset verified; no import cycle; keep offsets/index memos separate exactly as proposed).
+
+---
+
 ## 1. `memo()` deps equality uses `.some()` callback per call — Score: 7
 
 **Status:** `[x]` done
@@ -1431,6 +1545,76 @@ Lowercasing an already-lowercased string hits the V8 no-change fast path (no all
 
 ## Score 6
 
+## 76. A5: column_getIsPinned: unmemoized per-call .map allocation on a per-cell render path — Score: 6
+
+**Status:** `[x]` done
+**Implementation note:** Implemented exactly as proposed: replaced the `.map` + two `.some` closures with two classic indexed loops over `column.getLeafColumns()`, returning `'left'` on first left hit (preserving left-before-right precedence) and skipping the right scan entirely on a left hit. Zero allocations per call. Added regression tests for the both-regions precedence case and the group-column multi-leaf case (group column reports `'right'` when a leaf is pinned right). Full table-core unit tests (438), type checks, build, and size-limit (16.85 kB / 20 kB) pass.
+
+**Location:** `packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:135–151`, registered without memo at `columnPinningFeature.ts:74–76`
+**Category:** `allocation`, `render-path`
+
+Hot path: Per render: sticky-pinning layouts call `column.getIsPinned()` per visible cell and header (R_vis × N per render; see `examples/react/column-pinning-sticky`), including during resize-driven re-renders. Every call allocates an ids array via `.map` plus two `.some` closures; for leaf columns (`getLeafColumns()` returns `[column]`) that is 3 allocations to do 2 tiny `.includes` checks, and both sides always run. At 50 visible rows × 100 columns = 5,000 calls per render → ~15k transient allocations per render pass, per tick when resize re-renders. The `left`/`right` arrays themselves are tiny (1-3), so `.includes` is optimal; the waste is the closures/array, not the scan.
+
+**Before**
+
+```ts
+export function column_getIsPinned<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+): ColumnPinningPosition | false {
+  const leafColumnIds = column.getLeafColumns().map((d) => d.id)
+
+  const { left, right } =
+    column.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+
+  const isLeft = leafColumnIds.some((d) => left.includes(d))
+  const isRight = leafColumnIds.some((d) => right.includes(d))
+
+  return isLeft ? 'left' : isRight ? 'right' : false
+}
+```
+
+**After**
+
+(classic loops, no closures, right side skipped after a left hit)
+
+```ts
+export function column_getIsPinned<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData = CellData,
+>(
+  column: Column_Internal<TFeatures, TData, TValue>,
+): ColumnPinningPosition | false {
+  const leafColumns = column.getLeafColumns()
+
+  const { left, right } =
+    column.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+
+  for (let i = 0; i < leafColumns.length; i++) {
+    if (left.includes(leafColumns[i]!.id)) {
+      return 'left'
+    }
+  }
+  for (let i = 0; i < leafColumns.length; i++) {
+    if (right.includes(leafColumns[i]!.id)) {
+      return 'right'
+    }
+  }
+  return false
+}
+```
+
+**Big-O:** Same O(leaf × pin) worst case, but 0 allocations per call vs 3, and early return on first hit. ~15k allocations per render eliminated at 50×100 scale. `column_getPinnedIndex` calls this and benefits too.
+
+**Risk:** Very low. Return values and left-before-right precedence provably identical, including the group-column multi-leaf case.
+**Verification:** CONFIRMED.
+
+---
+
 ## 102. C9: getFilteredSelectedRowModel / getGroupedSelectedRowModel read the CORE row model while memoDeps declare filtered/sorted models (bug) — Score: 6 (bug)
 
 **Status:** `[x]` done
@@ -1836,6 +2020,106 @@ Typecheck verified clean after the sweep (`pnpm tsc --noEmit` passes).
 - `features/row-sorting/rowSortingFeature.utils.ts` (1)
 
 ## Score 5
+
+## 92. C11: row_getAllCells reconstructs all cell instances whenever leaf-column array identity changes: per-row cell cache keyed by column instance (WeakMap REQUIRED) — Score: 5
+
+**Status:** `[x]` done
+**Implementation note:** Implemented as proposed with the mandated `WeakMap`, lazily created on first `row_getAllCells` call (unrendered rows never allocate one). `_cellsCache` added to `Row_CoreProperties` as an optional field. All three premises re-verified in code before implementing: rows memoized on `[options.data]` only (survive columns swaps), column instances keyed on `[options.columns]` only (stable across reorders), cells hold only `column`/`id`/`row` on a shared prototype. One required follow-on fix the entry did not anticipate: `copyInstancePropertiesWithoutMemos` (used by sorted-model branch clones and selection parent clones) copied `_cellsCache` onto clone rows, making clones return cells whose `.row` pointed at the source row AND sharing one WeakMap between two rows; `_cellsCache` is now excluded there alongside `_memo_*` keys (caught by the two existing clone regression tests). New tests: cell-instance reuse across calls, cell identity preserved across `setColumnOrder` (array rebuilt, instances reused, new order). Full table-core unit tests (444), type checks, build, and size-limit (16.94 kB / 20 kB) pass.
+
+**Location:** `packages/table-core/src/core/rows/coreRowsFeature.utils.ts:167–179` + registration `coreRowsFeature.ts:26–29`
+**Category:** `allocation`
+
+Hot path: per rendered row after any `columnOrder`, `grouping`, `groupedColumnMode`, or `columns` change: `getAllLeafColumns` memoDeps invalidate on all four, cascading into `row_getAllCells` (dep `[row.table.getAllLeafColumns()]`), then `row_getVisibleCells`, `row_getAllCellsByColumnId`, and `cell_getContext` (new instances → new context objects and closures). Reordering columns (drag) or toggling grouping does not change any (row, column) pair, yet every rendered row rebuilds N cell objects; each cell later rebuilds its context (1 object + 2 closures + a lazy tableMemo per instance). At 100 rendered rows × 100 columns per drag step: ~10k cells + ~10k contexts + ~20k closures churned, and all cell identities change, defeating adapter-level cell memoization (full DOM-level cell re-render). Column instances are stable across order/grouping changes (`getAllColumns` deps are `[options.columns]` only; ordering reorders existing instances), so instance-keyed reuse works.
+
+**Cross-refs / gating:** WeakMap is REQUIRED, not optional (see risk). Legacy entry #20 (perf-todo.md) records the underlying observation this rationale depends on: `createCoreRowModel` memoDeps are `[table.options.data]` only, so rows survive `columns` swaps.
+
+**Before**
+
+```ts
+const columns = row.table.getAllLeafColumns()
+const cells: Array<Cell<TFeatures, TData, unknown>> = new Array(columns.length)
+for (let i = 0; i < columns.length; i++) {
+  cells[i] = constructCell(columns[i]!, row, row.table)
+}
+return cells
+```
+
+**After** (verifier-corrected: MUST be a `WeakMap`, not a `Map`)
+
+```ts
+const columns = row.table.getAllLeafColumns()
+let cache = row._cellsCache
+if (!cache) {
+  cache = row._cellsCache = new WeakMap<
+    Column<TFeatures, TData, unknown>,
+    Cell<TFeatures, TData, unknown>
+  >()
+}
+const cells: Array<Cell<TFeatures, TData, unknown>> = new Array(columns.length)
+for (let i = 0; i < columns.length; i++) {
+  const column = columns[i]!
+  let cell = cache.get(column)
+  if (!cell) {
+    cell = constructCell(column, row, row.table)
+    cache.set(column, cell)
+  }
+  cells[i] = cell
+}
+return cells
+```
+
+**Big-O:** Column reorder / grouping toggle: rendered-rows × N cell constructions + context/memo churn → 0 reconstructions (array reorder only); preserves cell identity so adapter cell memoization survives reorders. Steady-state renders unchanged (the outer memo still short-circuits).
+
+**Risk (WeakMap rationale):** The finder's claim "rows are rebuilt on data/columns change" is FALSE for columns: `createCoreRowModel` memoDeps are `[table.options.data]` ONLY, so rows survive a `columns` swap. A plain `Map` would accumulate one generation of stale column→cell entries per columns-identity change; with the common user error of unstable `columns` per render, that is an unbounded R×N leak. `WeakMap` ephemeron semantics collect the circular key→cell→column entries once old column instances are unreachable. Cells hold only `column`/`id`/`row` + shared prototype (verified); no fresh-cell assumption found in scope. Behavior delta to flag: cell identity now survives leaf-array changes (an adapter memoization win).
+**Verification:** AMENDED: WeakMap made mandatory, with the createCoreRowModel-deps rationale (`[data]` only; rows survive columns swaps).
+
+---
+
+## 85. A6: Missing empty-pinning short-circuits in center-partition functions — Score: 5
+
+**Status:** `[x]` done
+**Implementation note:** Implemented as proposed at all three sites. `row_getCenterVisibleCells` returns the shared `getVisibleCells` array when both pinning sides are empty; `table_getCenterLeafColumns` returns `table.getAllLeafColumns()` directly; `table_getCenterHeaderGroups` skips the spread + filter and passes the visible leaf columns straight to `buildHeaderGroups`. The identity-return behavior delta is locked in by regression tests (`getCenterVisibleCells` === `getVisibleCells` via instance memos with stockFeatures; `table_getCenterLeafColumns` === `getAllLeafColumns`; center header groups cover all visible columns when unpinned). Full table-core unit tests (441), type checks, build, and size-limit (16.91 kB / 20 kB) pass.
+
+**Location:** `packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts:189–202` (row_getCenterVisibleCells), `:738–746` (table_getCenterLeafColumns), `:430–450` (table_getCenterHeaderGroups)
+**Category:** `big-o` (short-circuit), `allocation`
+
+Hot path: per state-change recompute (pinning/visibility/order/columns) × R rows for the row variant; the vast majority of tables have EMPTY pinning yet still pay the copy. The siblings `row_getLeftVisibleCells`/`row_getRightVisibleCells` already have the empty fast path (`if (!left.length) return []`, lines 221/257); the center variants do not. With no pinning (the default), every recompute still allocates the spread array plus a filtered COPY of all N cells per row, and returns a new array identity where returning `allCells` directly would preserve reference equality for downstream consumers. `.includes` over the tiny `leftAndRight` is fine per doctrine; the issue is only the missing short-circuit and the copies.
+
+**Cross-refs / gating:** Skipped entry #36 (perf-skipped.md) deliberately rejected the Set conversion for the tiny `[...left, ...right]` arrays; that decision stands. This entry is the doctrine-compliant alternative: the empty-pinning short-circuit plus identity preservation, which needs no data-structure change.
+
+**Before**
+
+```ts
+const allCells = callMemoOrStaticFn(row, 'getVisibleCells', row_getVisibleCells)
+const { left, right } =
+  row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+const leftAndRight: Array<string> = [...left, ...right]
+return allCells.filter((d) => !leftAndRight.includes(d.column.id))
+```
+
+(the other two use the identical `[...left, ...right]` + `.filter` shape)
+
+**After**
+
+```ts
+const { left, right } =
+  row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+const allCells = callMemoOrStaticFn(row, 'getVisibleCells', row_getVisibleCells)
+if (!left.length && !right.length) {
+  return allCells
+}
+const leftAndRight: Array<string> = [...left, ...right]
+return allCells.filter((d) => !leftAndRight.includes(d.column.id))
+```
+
+For `table_getCenterLeafColumns`: `if (!left.length && !right.length) return table.getAllLeafColumns()`. For `table_getCenterHeaderGroups`: skip the spread+filter when both are empty and pass `leafColumns` straight to `buildHeaderGroups`.
+
+**Big-O:** In the unpinned case: O(N) filter copy + spread per recompute → O(1). Row variant: R × (1 array alloc + N includes-checks + N-element copy) per pinning-adjacent state change eliminated. Referential identity of `allCells` preserved, so downstream dep tuples keyed on the cells array stop invalidating spuriously.
+
+**Risk:** Very low. Returning the shared array matches the `table_getPinnedVisibleLeafColumns(table, undefined)` precedent; `buildHeaderGroups` does not mutate `columnsToGroup` (verified: it only `.map`s it); no in-repo mutation of the returned arrays.
+**Verification:** CONFIRMED, demoted 6 → 5 (fires only for pinning-layout tables that happen to have empty pinning; per state-change, not per tick).
+
+---
 
 ## 13. `buildHeaderGroups.findMaxDepth` allocates intermediate filtered arrays — Score: 5
 

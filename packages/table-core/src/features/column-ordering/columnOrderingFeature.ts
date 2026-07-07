@@ -8,6 +8,7 @@ import {
   column_getIsFirstColumn,
   column_getIsLastColumn,
   getDefaultColumnOrderState,
+  table_getColumnIndexes,
   table_getOrderColumnsFn,
   table_resetColumnOrder,
   table_setColumnOrder,
@@ -35,14 +36,6 @@ export const columnOrderingFeature: TableFeature = {
     assignPrototypeAPIs('columnOrderingFeature', prototype, table, {
       column_getIndex: {
         fn: (column, position) => column_getIndex(column, position),
-        memoDeps: (column, position) => [
-          position,
-          column.table.atoms.columnOrder?.get(),
-          column.table.atoms.columnPinning?.get(),
-          column.table.atoms.grouping?.get(),
-          column.table.atoms.columnVisibility?.get(),
-          column.table.options.groupedColumnMode,
-        ],
       },
       column_getIsFirstColumn: {
         fn: (column, position) => column_getIsFirstColumn(column, position),
@@ -55,6 +48,17 @@ export const columnOrderingFeature: TableFeature = {
 
   constructTableAPIs: (table) => {
     assignTableAPIs('columnOrderingFeature', table, {
+      table_getColumnIndexes: {
+        fn: () => table_getColumnIndexes(table),
+        memoDeps: () => [
+          table.options.columns,
+          table.atoms.columnOrder?.get(),
+          table.atoms.columnPinning?.get(),
+          table.atoms.columnVisibility?.get(),
+          table.atoms.grouping?.get(),
+          table.options.groupedColumnMode,
+        ],
+      },
       table_setColumnOrder: {
         fn: (updater) => table_setColumnOrder(table, updater),
       },

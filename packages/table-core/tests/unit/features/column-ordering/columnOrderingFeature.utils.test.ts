@@ -1,20 +1,62 @@
 import { describe, expect, it, vi } from 'vitest'
-import { generateTestTableWithData } from '../../../helpers/generateTestTable'
+import { stockFeatures } from '../../../../src'
+import {
+  generateTestTableWithData,
+  generateTestTableWithDataAndState,
+} from '../../../helpers/generateTestTable'
 import {
   column_getIndex,
   column_getIsFirstColumn,
   column_getIsLastColumn,
   getDefaultColumnOrderState,
   orderColumns,
+  table_getColumnIndexes,
   table_getOrderColumnsFn,
+  table_getPinnedVisibleLeafColumns,
   table_resetColumnOrder,
   table_setColumnOrder,
 } from '../../../../src/static-functions'
-import type { TableFeatures } from '../../../../src'
+import type { Person } from '../../../fixtures/data/types'
+import type {
+  StockFeatures,
+  TableFeatures,
+  Table_ColumnOrdering,
+  Table_Internal,
+} from '../../../../src'
 
 describe('getDefaultColumnOrderState', () => {
   it('should return an empty array', () => {
     expect(getDefaultColumnOrderState()).toEqual([])
+  })
+})
+
+describe('table_getColumnIndexes', () => {
+  it('should map each visible column id to its index within each region', () => {
+    const table = generateTestTableWithData<TableFeatures>(3, {
+      initialState: {
+        columnPinning: {
+          left: ['lastName'],
+          right: ['age'],
+        },
+        columnVisibility: {
+          firstName: false,
+        },
+      },
+    })
+
+    const indexes = table_getColumnIndexes(table)
+
+    for (const [key, position] of [
+      ['all', undefined],
+      ['left', 'left'],
+      ['right', 'right'],
+      ['center', 'center'],
+    ] as const) {
+      const columns = table_getPinnedVisibleLeafColumns(table, position)
+      expect(indexes[key]).toEqual(
+        Object.fromEntries(columns.map((col, i) => [col.id, i])),
+      )
+    }
   })
 })
 
@@ -35,6 +77,44 @@ describe('column_getIndex', () => {
     }
 
     expect(column_getIndex(column as any)).toBe(-1)
+  })
+
+  it('should return the index within the requested pinning region', () => {
+    const table = generateTestTableWithData<TableFeatures>(3, {
+      initialState: {
+        columnPinning: {
+          left: ['lastName', 'firstName'],
+          right: ['age'],
+        },
+      },
+    })
+    const columns = table.getAllLeafColumns()
+    const firstName = columns.find((col) => col.id === 'firstName')!
+    const age = columns.find((col) => col.id === 'age')!
+    const visits = columns.find((col) => col.id === 'visits')!
+
+    expect(column_getIndex(firstName, 'left')).toBe(1)
+    expect(column_getIndex(age, 'right')).toBe(0)
+    expect(column_getIndex(visits, 'center')).toBeGreaterThanOrEqual(0)
+    expect(column_getIndex(firstName, 'right')).toBe(-1)
+    expect(column_getIndex(firstName, 'center')).toBe(-1)
+  })
+
+  it('should recompute the instance API after column order changes', () => {
+    const table = generateTestTableWithDataAndState(1, {
+      features: stockFeatures,
+    }) as Table_Internal<StockFeatures, Person> &
+      Table_ColumnOrdering<StockFeatures, Person>
+
+    const lastName = table.getColumn('lastName')!
+
+    expect(lastName.getIndex()).toBe(2)
+    expect(table.getColumnIndexes().all['lastName']).toBe(2)
+
+    table.setColumnOrder(['lastName', 'firstName'])
+
+    expect(lastName.getIndex()).toBe(0)
+    expect(table.getColumnIndexes().all['lastName']).toBe(0)
   })
 })
 

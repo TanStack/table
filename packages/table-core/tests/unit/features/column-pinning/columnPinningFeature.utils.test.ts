@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
-import { stockFeatures } from '../../../../src'
+import { constructTable, coreFeatures, stockFeatures } from '../../../../src'
+import { storeReactivityBindings } from '../../../../src/store-reactivity-bindings'
 import {
   column_getCanPin,
   column_getIsPinned,
@@ -221,6 +222,49 @@ describe('column_getIsPinned', () => {
 
     expect(result).toBe(false)
   })
+
+  it('should prefer left when column is pinned in both regions', () => {
+    const table = generateTestTableWithData(1, {
+      initialState: {
+        columnPinning: {
+          left: ['firstName'],
+          right: ['firstName'],
+        },
+      },
+    })
+    const column = table.getColumn('firstName')!
+
+    expect(column_getIsPinned(column)).toBe('left')
+  })
+
+  it('should report the pinned region of a group column from its leaf columns', () => {
+    const table = constructTable({
+      features: {
+        ...coreFeatures,
+        coreReactivityFeature: storeReactivityBindings(),
+      },
+      columns: [
+        {
+          id: 'name',
+          header: 'Name',
+          columns: [
+            { accessorKey: 'firstName', id: 'firstName' },
+            { accessorKey: 'lastName', id: 'lastName' },
+          ],
+        },
+      ],
+      data: [],
+      initialState: {
+        columnPinning: {
+          left: [],
+          right: ['lastName'],
+        },
+      },
+    } as any)
+    const groupColumn = table.getAllColumns()[0]!
+
+    expect(column_getIsPinned(groupColumn as any)).toBe('right')
+  })
 })
 
 describe('table_setColumnPinning', () => {
@@ -378,6 +422,15 @@ describe('row_getCenterVisibleCells', () => {
     expect(centerCells.map((cell) => cell.column.id)).not.toContain('lastName')
     expect(centerCells.length).toBeGreaterThan(0)
   })
+
+  it('should return the shared visible cells array when nothing is pinned', () => {
+    const table = generateTestTableWithData(1, {
+      features: stockFeatures,
+    }) as any
+    const row = table.getRowModel().rows[0]!
+
+    expect(row.getCenterVisibleCells()).toBe(row.getVisibleCells())
+  })
 })
 
 describe('row_getLeftVisibleCells', () => {
@@ -490,6 +543,16 @@ describe('table_getCenterHeaderGroups', () => {
     expect(centerColumnIds).not.toContain('lastName')
     expect(headerGroups[0]?.headers.length).toBeGreaterThan(0)
   })
+
+  it('should include all visible columns when nothing is pinned', () => {
+    const table = generateTestTableWithData(1)
+
+    const headerGroups = table_getCenterHeaderGroups(table)
+
+    expect(headerGroups[0]?.headers.map((header) => header.column.id)).toEqual(
+      table_getVisibleLeafColumns(table).map((col) => col.id),
+    )
+  })
 })
 
 describe('table_getLeftLeafColumns', () => {
@@ -545,6 +608,12 @@ describe('table_getCenterLeafColumns', () => {
     expect(centerColumnIds).not.toContain('firstName')
     expect(centerColumnIds).not.toContain('lastName')
     expect(leafColumns.length).toBeGreaterThan(0)
+  })
+
+  it('should return the shared leaf columns array when nothing is pinned', () => {
+    const table = generateTestTableWithData(1)
+
+    expect(table_getCenterLeafColumns(table)).toBe(table.getAllLeafColumns())
   })
 })
 

@@ -3,11 +3,16 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
+import type { Column } from '../../types/Column'
 
 export interface Row_CoreProperties<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  _cellsCache?: WeakMap<
+    Column<TFeatures, TData, unknown>,
+    Cell<TFeatures, TData, unknown>
+  >
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
   /**

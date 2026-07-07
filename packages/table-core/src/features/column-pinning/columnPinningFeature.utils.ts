@@ -139,15 +139,22 @@ export function column_getIsPinned<
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
 ): ColumnPinningPosition | false {
-  const leafColumnIds = column.getLeafColumns().map((d) => d.id)
+  const leafColumns = column.getLeafColumns()
 
   const { left, right } =
     column.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
-  const isLeft = leafColumnIds.some((d) => left.includes(d))
-  const isRight = leafColumnIds.some((d) => right.includes(d))
-
-  return isLeft ? 'left' : isRight ? 'right' : false
+  for (let i = 0; i < leafColumns.length; i++) {
+    if (left.includes(leafColumns[i]!.id)) {
+      return 'left'
+    }
+  }
+  for (let i = 0; i < leafColumns.length; i++) {
+    if (right.includes(leafColumns[i]!.id)) {
+      return 'right'
+    }
+  }
+  return false
 }
 
 /**
@@ -197,6 +204,9 @@ export function row_getCenterVisibleCells<
   )
   const { left, right } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+  if (!left.length && !right.length) {
+    return allCells
+  }
   const leftAndRight: Array<string> = [...left, ...right]
   return allCells.filter((d) => !leftAndRight.includes(d.column.id))
 }
@@ -441,11 +451,12 @@ export function table_getCenterHeaderGroups<
   )
   const { left, right } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  const leftAndRight: Array<string> = [...left, ...right]
-
-  leafColumns = leafColumns.filter(
-    (column) => !leftAndRight.includes(column.id),
-  )
+  if (left.length || right.length) {
+    const leftAndRight: Array<string> = [...left, ...right]
+    leafColumns = leafColumns.filter(
+      (column) => !leftAndRight.includes(column.id),
+    )
+  }
   return buildHeaderGroups(allColumns, leafColumns, table, 'center')
 }
 
@@ -741,6 +752,9 @@ export function table_getCenterLeafColumns<
 >(table: Table_Internal<TFeatures, TData>) {
   const { left, right } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
+  if (!left.length && !right.length) {
+    return table.getAllLeafColumns()
+  }
   const leftAndRight: Array<string> = [...left, ...right]
   return table.getAllLeafColumns().filter((d) => !leftAndRight.includes(d.id))
 }
