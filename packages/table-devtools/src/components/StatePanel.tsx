@@ -1,4 +1,4 @@
-import { For, Show, createEffect, createMemo, createSignal } from 'solid-js'
+import { For, Show, createMemo, createSignal } from 'solid-js'
 import { JsonTree } from '@tanstack/devtools-ui'
 import { batch } from '@tanstack/solid-store'
 import { useTableDevtoolsContext } from '../TableContextProvider'

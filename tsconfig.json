@@ -14,14 +14,14 @@
     "module": "ESNext",
     "moduleResolution": "Bundler",
     "noEmit": true,
-    "noImplicitReturns": false, // TODO enable
+    "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true,
-    "noUnusedLocals": false, // TODO enable
-    "noUnusedParameters": false, // TODO enable
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
     "resolveJsonModule": true,
     "skipLibCheck": true,
     "strict": true,
-    "target": "ES2020",
+    "target": "ES2022",
     "noErrorTruncation": true
   },
   "include": ["*.config.*", "scripts", "tests/e2e", "vitest.workspace.mjs"]

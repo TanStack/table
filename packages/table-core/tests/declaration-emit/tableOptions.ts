@@ -31,37 +31,37 @@ export const optionsWithFeaturesDataAndColumns = tableOptions({
   columns: [],
 })
 
-type _OptionsWithFeaturesOnlyDoesNotInferAny = Assert<
+true satisfies Assert<
   IsAny<typeof optionsWithFeaturesOnly> extends false ? true : false
 >
-type _OptionsWithFeaturesOnlyPreservesFeatures = Assert<
+true satisfies Assert<
   (typeof optionsWithFeaturesOnly)['features'] extends typeof features
     ? true
     : false
 >
 
-type _OptionsWithFeaturesAndDataDoesNotInferAny = Assert<
+true satisfies Assert<
   IsAny<typeof optionsWithFeaturesAndData> extends false ? true : false
 >
-type _OptionsWithFeaturesAndDataPreservesFeatures = Assert<
+true satisfies Assert<
   (typeof optionsWithFeaturesAndData)['features'] extends typeof features
     ? true
     : false
 >
 
-type _OptionsWithFeaturesAndColumnsDoesNotInferAny = Assert<
+true satisfies Assert<
   IsAny<typeof optionsWithFeaturesAndColumns> extends false ? true : false
 >
-type _OptionsWithFeaturesAndColumnsPreservesFeatures = Assert<
+true satisfies Assert<
   (typeof optionsWithFeaturesAndColumns)['features'] extends typeof features
     ? true
     : false
 >
 
-type _OptionsWithFeaturesDataAndColumnsDoesNotInferAny = Assert<
+true satisfies Assert<
   IsAny<typeof optionsWithFeaturesDataAndColumns> extends false ? true : false
 >
-type _OptionsWithFeaturesDataAndColumnsPreservesFeatures = Assert<
+true satisfies Assert<
   (typeof optionsWithFeaturesDataAndColumns)['features'] extends typeof features
     ? true
     : false

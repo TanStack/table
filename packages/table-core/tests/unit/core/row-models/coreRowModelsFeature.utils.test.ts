@@ -11,7 +11,6 @@ import {
 import { testFeatures } from '../../../fixtures/features'
 import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
 import { generateTestData } from '../../../fixtures/data/generateTestData'
-import type { Person } from '../../../fixtures/data/types'
 
 const coreOnlyFeatures = testFeatures({})
 
@@ -52,7 +51,7 @@ describe('row model fallback chains', () => {
   })
 
   it('should cache the core row model factory across calls', () => {
-    const coreRowModelFactory = vi.fn((table: any) => () => ({
+    const coreRowModelFactory = vi.fn((_table: any) => () => ({
       rows: [],
       flatRows: [],
       rowsById: {},

@@ -63,8 +63,8 @@ export interface ColumnOrderDefaultOptions {
 }
 
 export interface Table_ColumnOrdering<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
+  in out _TFeatures extends TableFeatures,
+  in out _TData extends RowData,
 > {
   /**
    * Builds column-id to index records for each visible pinning region.

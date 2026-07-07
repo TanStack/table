@@ -35,8 +35,6 @@ describe('angularReactivityFeature', () => {
     )
   }
 
-  const table = createTestTable()
-
   describe('Integration', () => {
     // TODO this switches between 1 and 2 calls on every other run, so it's not a reliable test
     test('methods within effect will be re-trigger when options/state changes', () => {

@@ -1,4 +1,3 @@
-import type { Table } from '../../types/Table'
 import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -71,8 +70,8 @@ export interface TableOptions_RowExpanding<
 }
 
 export interface Table_RowExpanding<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
+  in out _TFeatures extends TableFeatures,
+  in out _TData extends RowData,
 > {
   autoResetExpanded: () => void
   /**

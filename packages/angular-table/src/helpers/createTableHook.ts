@@ -28,7 +28,6 @@ import type {
   TableFeature,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 import type { Signal, Type } from '@angular/core'
 
@@ -439,10 +438,7 @@ export function createTableHook<
     return injectFlexRenderContext<CellContext<TFeatures, TData, TValue>>()
   }
 
-  function injectAppTable<
-    TData extends RowData,
-    TSelected = TableState<TFeatures>,
-  >(
+  function injectAppTable<TData extends RowData>(
     tableOptions: () => Omit<TableOptions<TFeatures, TData>, 'features'>,
   ): AppAngularTable<
     TFeatures,

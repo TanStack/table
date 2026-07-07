@@ -56,47 +56,16 @@ import {
   CommandList,
 } from '@/components/ui/command'
 
-// TODO: column.getFacetedUniqueValues() is broken rn, remove this once it's fixed
-function createManualFacetedValues<TData extends RowData>(
-  table: ReactTable<typeof features, TData>,
-  columnId: string,
-): Map<unknown, number> {
-  const facetedValues = new Map<unknown, number>()
-
-  const rows = table.getPreFilteredRowModel().flatRows
-
-  for (const row of rows) {
-    const value = row.getValue(columnId)
-    if (value !== undefined && value !== null) {
-      const count = facetedValues.get(value) ?? 0
-      facetedValues.set(value, count + 1)
-    }
-  }
-
-  return facetedValues
-}
-
 function getColumnOptions<TData extends RowData, TValue extends CellData>({
   column,
-  table,
 }: {
   column: Column<typeof features, TData, TValue>
-  table: ReactTable<typeof features, TData>
 }): Array<{ label: string; value: string; count?: number }> {
   const customOptions = column.columnDef.meta?.options
 
   if (customOptions) return customOptions
 
-  let uniqueValues: Map<unknown, number>
-  try {
-    uniqueValues = column.getFacetedUniqueValues()
-
-    if (!(uniqueValues instanceof Map)) {
-      uniqueValues = createManualFacetedValues(table, column.id)
-    }
-  } catch (_err) {
-    uniqueValues = createManualFacetedValues(table, column.id)
-  }
+  const uniqueValues = column.getFacetedUniqueValues()
 
   return Array.from(uniqueValues.entries()).map(([value, count]) => ({
     label: String(value),
@@ -515,7 +484,7 @@ export function DataTableFilterList<TData extends RowData>({
             />
           )
         case 'select':
-          const selectOptions = getColumnOptions({ column, table })
+          const selectOptions = getColumnOptions({ column })
 
           return (
             <Faceted
@@ -572,7 +541,7 @@ export function DataTableFilterList<TData extends RowData>({
           )
 
         case 'multi-select':
-          const multiSelectOptions = getColumnOptions({ column, table })
+          const multiSelectOptions = getColumnOptions({ column })
           const selectedValues = Array.isArray(currentFilter?.value)
             ? currentFilter.value
             : []

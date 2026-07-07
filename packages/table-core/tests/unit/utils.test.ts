@@ -175,7 +175,7 @@ describe('callMemoOrStaticFn', () => {
   })
 
   test('falls back to the static fn with the object as first argument', () => {
-    const staticFn = vi.fn((obj: object, suffix: string) => `static-${suffix}`)
+    const staticFn = vi.fn((_obj: object, suffix: string) => `static-${suffix}`)
     const obj = {}
 
     expect(callMemoOrStaticFn(obj, 'getThing', staticFn, 'x')).toBe('static-x')

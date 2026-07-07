@@ -197,8 +197,8 @@ export interface TableOptions_ColumnGrouping {
 export type GroupingColumnMode = false | 'reorder' | 'remove'
 
 export interface Table_ColumnGrouping<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
+  in out _TFeatures extends TableFeatures,
+  in out _TData extends RowData,
 > {
   /**
    * Resets `grouping` to `initialState.grouping`.

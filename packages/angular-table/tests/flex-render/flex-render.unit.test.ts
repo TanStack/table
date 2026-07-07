@@ -6,7 +6,6 @@ import {
   type TemplateRef,
 } from '@angular/core'
 import { TestBed, type ComponentFixture } from '@angular/core/testing'
-import { createColumnHelper } from '@tanstack/table-core'
 import { describe, expect, test } from 'vitest'
 import {
   FlexRender,
@@ -16,17 +15,7 @@ import {
 } from '../../src'
 import { setFixtureSignalInput, setFixtureSignalInputs } from '../test-utils'
 
-interface Data {
-  id: string
-  title: string
-  description: string
-  status: 'success' | 'failed' | 'pending'
-  favorite?: boolean
-}
-
 describe('FlexRenderDirective', () => {
-  const helper = createColumnHelper<{}, Data>()
-
   test('should render primitives', () => {
     const fixture = TestBed.createComponent(TestRenderComponent)
 

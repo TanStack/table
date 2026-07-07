@@ -360,7 +360,7 @@ export function tableMemo<
   })
 }
 
-export interface API<TDeps extends ReadonlyArray<any>, TDepArgs> {
+export interface API<_TDeps extends ReadonlyArray<any>, _TDepArgs> {
   fn: (...args: any) => any
   memoDeps?: (depArgs?: any) => [...any] | undefined
 }
@@ -415,7 +415,7 @@ export function assignTableAPIs<
   }
 }
 
-export interface PrototypeAPI<TDeps extends ReadonlyArray<any>, TDepArgs> {
+export interface PrototypeAPI<_TDeps extends ReadonlyArray<any>, _TDepArgs> {
   fn: (self: any, ...args: any) => any
   memoDeps?: (self: any, depArgs?: any) => [...any] | undefined
 }

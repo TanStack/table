@@ -199,8 +199,8 @@ export interface TableOptions_RowSorting {
 }
 
 export interface Table_RowSorting<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
+  in out _TFeatures extends TableFeatures,
+  in out _TData extends RowData,
 > {
   /**
    * Resets `sorting` to `initialState.sorting`.
