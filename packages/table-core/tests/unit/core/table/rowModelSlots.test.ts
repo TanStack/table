@@ -177,10 +177,10 @@ describe('row model and fn registry feature slots', () => {
 
   it('infers fn name unions from the registries', () => {
     // registered keys (built-ins spread + custom) are the valid names
-    type _sortKeys = Expect<
+    true satisfies Expect<
       Equal<ExtractSortFnKeys<typeof features>, BuiltInSortFn | 'reverseAge'>
     >
-    type _filterKeys = Expect<
+    true satisfies Expect<
       Equal<
         ExtractFilterFnKeys<typeof features>,
         BuiltInFilterFn | 'startsWithA'
@@ -221,13 +221,13 @@ describe('row model and fn registry feature slots', () => {
       'alphanumeric'
 
     // declaration-merged interfaces remain the fallback (empty by default)
-    type _sortFallback = Expect<
+    true satisfies Expect<
       Equal<ExtractSortFnKeys<typeof slotlessFeatures>, keyof SortFns>
     >
-    type _filterFallback = Expect<
+    true satisfies Expect<
       Equal<ExtractFilterFnKeys<typeof slotlessFeatures>, keyof FilterFns>
     >
-    type _aggregationFallback = Expect<
+    true satisfies Expect<
       Equal<
         ExtractAggregationFnKeys<typeof slotlessFeatures>,
         keyof AggregationFns
@@ -235,10 +235,10 @@ describe('row model and fn registry feature slots', () => {
     >
 
     // internal `any` feature paths keep the broad unions
-    type _anySortKeys = Expect<
+    true satisfies Expect<
       Equal<ExtractSortFnKeys<any>, keyof SortFns | BuiltInSortFn>
     >
-    type _anyAggregationKeys = Expect<
+    true satisfies Expect<
       Equal<
         ExtractAggregationFnKeys<any>,
         keyof AggregationFns | BuiltInAggregationFn
@@ -252,11 +252,9 @@ describe('row model and fn registry feature slots', () => {
     type Options = TableOptions<typeof features, Person>
 
     // the rowModels table option is gone
-    type _noRowModelsOption = Expect<
-      Equal<Extract<keyof Options, 'rowModels'>, never>
-    >
+    true satisfies Expect<Equal<Extract<keyof Options, 'rowModels'>, never>>
     // no debug keys for the slots
-    type _noDebugKeys = Expect<
+    true satisfies Expect<
       Equal<
         Extract<
           keyof Options,
@@ -269,7 +267,7 @@ describe('row model and fn registry feature slots', () => {
       >
     >
     // feature-gated options are still inferred
-    type _featureOptions = Expect<
+    true satisfies Expect<
       'onSortingChange' extends keyof Options ? true : false
     >
 
@@ -330,16 +328,21 @@ describe('row model and fn registry feature slots', () => {
   })
 
   it('validates slots on the features table option too', () => {
-    type _featuresOption = TableOptions<
-      { rowSortingFeature: typeof rowSortingFeature },
-      Person
-    >['features']
+    // the features table option type resolves without collapsing to never
+    true satisfies [
+      TableOptions<
+        { rowSortingFeature: typeof rowSortingFeature },
+        Person
+      >['features'],
+    ] extends [never]
+      ? false
+      : true
 
     // the misplaced slot's type collapses to the error message string
     type _misplacedSlot = ValidateFeatureSlots<{
       sortedRowModel: NonNullable<TableFeatures['sortedRowModel']>
     }>['sortedRowModel']
-    type _isErrorMessage = Expect<
+    true satisfies Expect<
       _misplacedSlot extends `Error: 'sortedRowModel' requires '${string}'${string}`
         ? true
         : false
@@ -350,7 +353,7 @@ describe('row model and fn registry feature slots', () => {
       rowSortingFeature: typeof rowSortingFeature
       sortFns: typeof sortFns
     }>['sortFns']
-    type _keepsType = Expect<Equal<_validSlot, typeof sortFns>>
+    true satisfies Expect<Equal<_validSlot, typeof sortFns>>
 
     expect(true).toBe(true)
   })

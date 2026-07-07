@@ -165,7 +165,7 @@ export interface Column_ColumnFiltering<
 
 export interface Row_ColumnFiltering<
   in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
+  in out _TData extends RowData,
 > {
   /**
    * The column filters map for the row. This object tracks whether a row is passing/failing specific filters by their column ID.
@@ -178,8 +178,8 @@ export interface Row_ColumnFiltering<
 }
 
 export interface TableOptions_ColumnFiltering<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
+  in out _TFeatures extends TableFeatures,
+  in out _TData extends RowData,
 > {
   /**
    * Enables column-specific filtering for all columns that also allow it.

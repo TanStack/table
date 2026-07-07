@@ -679,7 +679,7 @@ export function createTableHook<
       return AppTableSvelte(internal, { ...props })
     }) as Component<{ children: Snippet }>
 
-    const AppCell = ((internal: any, { children, cell, ...rest }: any) => {
+    const AppCell = ((internal: any, { children, cell }: any) => {
       setContext(cellContextKey, cell)
       return AppCellSvelte(internal, {
         cell,
@@ -691,7 +691,7 @@ export function createTableHook<
       children: Snippet<[any]>
     }>
 
-    const AppHeader = ((internal: any, { children, header, ...rest }: any) => {
+    const AppHeader = ((internal: any, { children, header }: any) => {
       setContext(headerContextKey, header)
       return AppHeaderSvelte(internal, {
         header,
@@ -704,7 +704,7 @@ export function createTableHook<
     }>
 
     // AppFooter reuses AppHeaderSvelte (footers use Header type in table-core)
-    const AppFooter = ((internal: any, { children, header, ...rest }: any) => {
+    const AppFooter = ((internal: any, { children, header }: any) => {
       setContext(headerContextKey, header)
       return AppHeaderSvelte(internal, {
         header,

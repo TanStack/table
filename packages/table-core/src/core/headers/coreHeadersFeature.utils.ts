@@ -10,7 +10,6 @@ import type { Header } from '../../types/Header'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Header_Header } from './coreHeadersFeature.types'
-import type { Column } from '../../types/Column'
 
 /**
  * Walks a header tree and collects all descendant leaf headers.

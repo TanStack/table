@@ -166,6 +166,8 @@ export function column_getAutoAggregationFn<
   if (Object.prototype.toString.call(value) === '[object Date]') {
     return aggregationFns?.extent
   }
+
+  return undefined
 }
 
 /**

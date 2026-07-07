@@ -28,7 +28,7 @@ export const TableDevtoolsPanel: TableDevtoolsPanelComponent =
   }
 
 export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent =
-  () => (props, host) => {
+  () => (_props, _host) => {
     const panel = TableDevtoolsPanelNoOpBase()
     return () => panel
   }

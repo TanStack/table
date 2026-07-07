@@ -107,7 +107,7 @@ export class FlexRenderTemplateView extends FlexRenderView<
     super(initialContent, view)
   }
 
-  override updateProps(props: Record<string, any>) {
+  override updateProps(_props: Record<string, any>) {
     this.view.markForCheck()
   }
 

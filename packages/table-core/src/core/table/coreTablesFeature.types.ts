@@ -12,6 +12,7 @@ import type { CachedRowModels } from '../../types/RowModel'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState, TableState_All } from '../../types/TableState'
 
+// @ts-expect-error Phantom type params: unused in this empty base declaration, but required with these exact names so user `declare module` augmentations merge correctly.
 export interface TableMeta<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,

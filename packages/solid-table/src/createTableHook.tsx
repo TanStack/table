@@ -25,7 +25,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 
 export type ComponentType<T extends Record<string, any>> = Component<T>
@@ -336,7 +335,7 @@ export interface AppHeaderComponent<
 /**
  * Component type for AppTable - root wrapper with optional Subscribe
  */
-export interface AppTableComponent<TFeatures extends TableFeatures> {
+export interface AppTableComponent<_TFeatures extends TableFeatures> {
   (props: AppTableProps): JSXElement
 }
 
@@ -346,7 +345,6 @@ export interface AppTableComponent<TFeatures extends TableFeatures> {
 export type AppSolidTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected,
   TTableComponents extends Record<string, ComponentType<any>>,
   TCellComponents extends Record<string, ComponentType<any>>,
   THeaderComponents extends Record<string, ComponentType<any>>,
@@ -432,7 +430,6 @@ export interface CreateTableHookResult<
   ) => AppSolidTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -445,7 +442,6 @@ export interface CreateTableHookResult<
   useTableContext: <TData extends RowData = RowData>() => AppSolidTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -664,7 +660,6 @@ export function createTableHook<
   function useTableContext<TData extends RowData = RowData>(): AppSolidTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -684,7 +679,6 @@ export function createTableHook<
     return table as unknown as AppSolidTable<
       TFeatures,
       TData,
-      TableState<TFeatures>,
       TTableComponents,
       TCellComponents,
       THeaderComponents
@@ -817,7 +811,6 @@ export function createTableHook<
   ): AppSolidTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -908,7 +901,6 @@ export function createTableHook<
     }) as AppSolidTable<
       TFeatures,
       TData,
-      TableState<TFeatures>,
       TTableComponents,
       TCellComponents,
       THeaderComponents

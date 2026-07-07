@@ -15,6 +15,7 @@ import type { ColumnDef_ColumnVisibility } from '../features/column-visibility/c
 import type { ColumnDef_GlobalFiltering } from '../features/global-filtering/globalFilteringFeature.types'
 import type { ColumnDef_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
 
+// @ts-expect-error Phantom type params: unused in this empty base declaration, but required with these exact names so user `declare module` augmentations merge correctly.
 export interface ColumnMeta<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,

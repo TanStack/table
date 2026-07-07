@@ -5,7 +5,7 @@ import { mergeProxy } from './merge-proxy'
 import { useTable } from './useTable'
 import type { TableOptionsWithReactiveData, VueTable } from './useTable'
 import type { FlexRenderCell, FlexRenderHeader } from './FlexRender'
-import type { Component, InjectionKey, PropType, VNodeChild } from 'vue'
+import type { Component, InjectionKey, PropType } from 'vue'
 import type {
   AccessorFn,
   AccessorFnColumnDef,
@@ -26,7 +26,6 @@ import type {
   RowData,
   Table,
   TableFeatures,
-  TableState,
 } from '@tanstack/table-core'
 
 export type ComponentType<T extends Record<string, any>> = Component<T>
@@ -213,10 +212,9 @@ export interface AppHeaderProps<
 export type AppVueTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected,
   TTableComponents extends Record<string, ComponentType<any>>,
-  TCellComponents extends Record<string, ComponentType<any>>,
-  THeaderComponents extends Record<string, ComponentType<any>>,
+  _TCellComponents extends Record<string, ComponentType<any>>,
+  _THeaderComponents extends Record<string, ComponentType<any>>,
 > = VueTable<TFeatures, TData> &
   NoInfer<TTableComponents> & {
     AppTable: Component<AppTableProps>
@@ -256,7 +254,6 @@ export interface CreateTableHookResult<
   ) => AppVueTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -269,7 +266,6 @@ export interface CreateTableHookResult<
   useTableContext: <TData extends RowData = RowData>() => AppVueTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -406,7 +402,6 @@ export function createTableHook<
   function useTableContext<TData extends RowData = RowData>(): AppVueTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -426,7 +421,6 @@ export function createTableHook<
     return table as unknown as AppVueTable<
       TFeatures,
       TData,
-      TableState<TFeatures>,
       TTableComponents,
       TCellComponents,
       THeaderComponents
@@ -506,7 +500,6 @@ export function createTableHook<
   ): AppVueTable<
     TFeatures,
     TData,
-    TableState<TFeatures>,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -613,7 +606,6 @@ export function createTableHook<
     }) as AppVueTable<
       TFeatures,
       TData,
-      TableState<TFeatures>,
       TTableComponents,
       TCellComponents,
       THeaderComponents

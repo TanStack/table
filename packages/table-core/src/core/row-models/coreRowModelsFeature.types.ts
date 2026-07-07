@@ -1,4 +1,3 @@
-import type { Table } from '../../types/Table'
 import type { Table_RowModels_Faceted } from '../../features/column-faceting/columnFacetingFeature.types'
 import type { Table_RowModels_Filtered } from '../../features/column-filtering/columnFilteringFeature.types'
 import type { Table_RowModels_Grouped } from '../../features/column-grouping/columnGroupingFeature.types'

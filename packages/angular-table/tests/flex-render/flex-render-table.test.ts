@@ -34,18 +34,9 @@ const defaultData: Array<TestData> = [
   { id: '1', title: 'My title' },
 ] as Array<TestData>
 
-const defaultColumns: Array<ColumnDef<typeof stockFeatures, TestData>> = [
-  {
-    id: 'title',
-    accessorKey: 'title',
-    header: 'Title',
-    cell: (props) => props.renderValue(),
-  },
-]
-
 describe('FlexRenderDirective', () => {
   test.each([null, undefined])('Render %s as empty', (value) => {
-    const { fixture, dom } = createTestTable(defaultData, [
+    const { dom } = createTestTable(defaultData, [
       { id: 'first_cell', header: 'header', cell: () => value },
     ])
     const row = dom.getBodyRow(0)!
@@ -60,7 +51,7 @@ describe('FlexRenderDirective', () => {
     ['Number column via function', () => 0],
     ['Number column', 0],
   ])('Render primitive (%s)', (columnName, columnValue) => {
-    const { fixture, dom } = createTestTable(defaultData, [
+    const { dom } = createTestTable(defaultData, [
       { id: 'first_cell', header: columnName, cell: columnValue as any },
     ])
     const row = dom.getBodyRow(0)!
@@ -202,7 +193,7 @@ describe('FlexRenderDirective', () => {
     })
     class EmptyCell {}
 
-    const { dom, fixture } = createTestTable(defaultData, [
+    const { fixture } = createTestTable(defaultData, [
       {
         id: 'cell',
         header: 'Header',
@@ -537,7 +528,7 @@ export function createTestTable(
         features: stockFeatures,
         columns: this.columns(),
         data: this.data(),
-      } as TableOptions<typeof stockFeatures, TestData>
+      }
     })
   }
 

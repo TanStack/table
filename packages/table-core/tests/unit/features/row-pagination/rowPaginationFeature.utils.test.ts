@@ -13,7 +13,6 @@ import {
   table_getPageCount,
   table_getPageOptions,
   table_getRowCount,
-  table_lastPage,
   table_nextPage,
   table_previousPage,
   table_resetPageIndex,
