@@ -263,17 +263,29 @@ export function header_getResizeHandler<
         return false
       },
       upHandler: (e: TouchEvent) => {
-        contextDocument?.removeEventListener(
-          'touchmove',
-          touchEvents.moveHandler,
-        )
-        contextDocument?.removeEventListener('touchend', touchEvents.upHandler)
+        removeTouchEvents()
         if (e.cancelable) {
           e.preventDefault()
           e.stopPropagation()
         }
         onEnd(e.touches[0]?.clientX)
       },
+      // the browser fires touchcancel instead of touchend when it takes over
+      // the gesture (system gesture, scroll takeover, tab switch); without
+      // this the non-passive touchmove listener stays on the document forever
+      cancelHandler: () => {
+        removeTouchEvents()
+        onEnd()
+      },
+    }
+
+    const removeTouchEvents = () => {
+      contextDocument?.removeEventListener('touchmove', touchEvents.moveHandler)
+      contextDocument?.removeEventListener('touchend', touchEvents.upHandler)
+      contextDocument?.removeEventListener(
+        'touchcancel',
+        touchEvents.cancelHandler,
+      )
     }
 
     const passiveIfSupported = passiveEventSupported()
@@ -289,6 +301,11 @@ export function header_getResizeHandler<
       contextDocument?.addEventListener(
         'touchend',
         touchEvents.upHandler,
+        passiveIfSupported,
+      )
+      contextDocument?.addEventListener(
+        'touchcancel',
+        touchEvents.cancelHandler,
         passiveIfSupported,
       )
     } else {

@@ -582,6 +582,56 @@ describe('header_getResizeHandler', () => {
 
     removeEventListenerSpy.mockRestore()
   })
+
+  it('should cleanup event listeners and reset state on touchcancel', () => {
+    const removeEventListenerSpy = vi.spyOn(document, 'removeEventListener')
+    const table = makeTable(1, {
+      columnResizeMode: 'onChange',
+    })
+    const sizingUpdates: Array<Record<string, number>> = []
+    table.options.onColumnSizingChange = (updater) => {
+      sizingUpdates.push(
+        typeof updater === 'function'
+          ? updater(table.atoms.columnSizing.get())
+          : updater,
+      )
+    }
+
+    const header = createTestResizeHeader(table)
+    const handler = header_getResizeHandler(header as any, document)
+    handler({ type: 'touchstart', touches: [{ clientX: 100 }] })
+
+    document.dispatchEvent(
+      Object.assign(new Event('touchmove'), { touches: [{ clientX: 150 }] }),
+    )
+    expect(sizingUpdates).toHaveLength(1)
+
+    removeEventListenerSpy.mockClear()
+    document.dispatchEvent(new Event('touchcancel'))
+
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'touchmove',
+      expect.any(Function),
+    )
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'touchend',
+      expect.any(Function),
+    )
+    expect(removeEventListenerSpy).toHaveBeenCalledWith(
+      'touchcancel',
+      expect.any(Function),
+    )
+    expect(table.atoms.columnResizing.get().isResizingColumn).toBe(false)
+
+    // cancel commits at the last observed position, then moves are ignored
+    const updatesAfterCancel = sizingUpdates.length
+    document.dispatchEvent(
+      Object.assign(new Event('touchmove'), { touches: [{ clientX: 300 }] }),
+    )
+    expect(sizingUpdates).toHaveLength(updatesAfterCancel)
+
+    removeEventListenerSpy.mockRestore()
+  })
 })
 
 describe('passiveEventSupported', () => {
