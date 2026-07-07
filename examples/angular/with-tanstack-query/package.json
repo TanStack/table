@@ -21,7 +21,7 @@
     "@angular/router": "^22.0.2",
     "@faker-js/faker": "^10.5.0",
     "@tanstack/angular-query-experimental": "^5.101.1",
-    "@tanstack/angular-table": "^9.0.0-beta.35",
+    "@tanstack/angular-table": "^9.0.0-beta.36",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
   },

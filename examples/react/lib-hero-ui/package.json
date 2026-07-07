@@ -16,7 +16,7 @@
     "@heroui/react": "^3.2.1",
     "@heroui/styles": "^3.2.1",
     "@tailwindcss/vite": "^4.3.1",
-    "@tanstack/react-table": "^9.0.0-beta.35",
+    "@tanstack/react-table": "^9.0.0-beta.36",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "tailwindcss": "^4.3.1"
