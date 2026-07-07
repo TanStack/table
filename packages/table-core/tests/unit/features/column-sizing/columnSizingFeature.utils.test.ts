@@ -1,13 +1,28 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import {
   columnGroupingFeature,
+  columnPinningFeature,
   columnSizingFeature,
   columnVisibilityFeature,
   constructTable,
   createCoreRowModel,
 } from '../../../../src'
+import {
+  column_getSize,
+  column_resetSize,
+  getDefaultColumnSizingColumnDef,
+  getDefaultColumnSizingState,
+  table_getCenterTotalSize,
+  table_getColumnOffsets,
+  table_getLeftTotalSize,
+  table_getRightTotalSize,
+  table_getTotalSize,
+  table_resetColumnSizing,
+  table_setColumnSizing,
+} from '../../../../src/static-functions'
 import { testFeatures } from '../../../fixtures/features'
-import type { ColumnDef, Table } from '../../../../src'
+import { getUpdaterResult } from '../../../helpers/testUtils'
+import type { ColumnDef, Table, TableOptions } from '../../../../src'
 
 const features = testFeatures({
   columnSizingFeature,
@@ -64,7 +79,7 @@ describe('header_getSize', () => {
       ],
     })
     const groupRow = table.getHeaderGroups()[0]
-    const groupHeader = groupRow!.headers[0]!!
+    const groupHeader = groupRow!.headers[0]!
     expect(groupHeader.getSize()).toBe(300)
   })
 
@@ -388,5 +403,201 @@ describe('column offsets with grouping (memo invalidation)', () => {
     expect(table.getColumn('b')!.getAfter()).toBe(150)
     expect(table.getColumn('a')!.getAfter()).toBe(50)
     expect(table.getColumn('c')!.getAfter()).toBe(0)
+  })
+})
+
+describe('sizing state defaults', () => {
+  it('getDefaultColumnSizingState should return an empty map and a new instance each time', () => {
+    expect(getDefaultColumnSizingState()).toEqual({})
+    expect(getDefaultColumnSizingState()).not.toBe(
+      getDefaultColumnSizingState(),
+    )
+  })
+
+  it('getDefaultColumnSizingColumnDef should return the built-in sizing defaults', () => {
+    expect(getDefaultColumnSizingColumnDef()).toEqual({
+      size: 150,
+      minSize: 20,
+      maxSize: Number.MAX_SAFE_INTEGER,
+    })
+  })
+})
+
+describe('column_getSize', () => {
+  it('should fall back to the built-in default size', () => {
+    const table = makeTable({ columns: [{ id: 'a', accessorKey: 'a' }] })
+
+    expect(column_getSize(table.getColumn('a')!)).toBe(150)
+  })
+
+  it('should prefer committed sizing state over the columnDef size', () => {
+    const table = makeTable({
+      columns: [{ id: 'a', accessorKey: 'a', size: 100 }],
+      columnSizing: { a: 250 },
+    })
+
+    expect(column_getSize(table.getColumn('a')!)).toBe(250)
+  })
+
+  it('should clamp to minSize', () => {
+    const table = makeTable({
+      columns: [{ id: 'a', accessorKey: 'a', minSize: 50 }],
+      columnSizing: { a: 5 },
+    })
+
+    expect(column_getSize(table.getColumn('a')!)).toBe(50)
+  })
+
+  it('should clamp to maxSize', () => {
+    const table = makeTable({
+      columns: [{ id: 'a', accessorKey: 'a', size: 500, maxSize: 300 }],
+    })
+
+    expect(column_getSize(table.getColumn('a')!)).toBe(300)
+  })
+})
+
+describe('column_resetSize', () => {
+  it('should remove only this column from the sizing state', () => {
+    const onColumnSizingChange = vi.fn()
+    const table = constructTable({
+      features,
+      columns: [
+        { id: 'a', accessorKey: 'a' },
+        { id: 'b', accessorKey: 'b' },
+      ] as Array<ColumnDef<typeof features, Item, any>>,
+      data,
+      onColumnSizingChange,
+    })
+
+    column_resetSize(table.getColumn('a')!)
+
+    expect(getUpdaterResult(onColumnSizingChange, { a: 250, b: 300 })).toEqual({
+      b: 300,
+    })
+  })
+})
+
+describe('table_setColumnSizing / table_resetColumnSizing', () => {
+  function makeSizingTable(
+    options?: Partial<
+      Omit<TableOptions<typeof features, Item>, 'data' | 'columns' | 'features'>
+    >,
+  ) {
+    return constructTable({
+      features,
+      columns: [{ id: 'a', accessorKey: 'a' }] as Array<
+        ColumnDef<typeof features, Item, any>
+      >,
+      data,
+      ...options,
+    })
+  }
+
+  it('should route the updater through onColumnSizingChange', () => {
+    const onColumnSizingChange = vi.fn()
+    const table = makeSizingTable({ onColumnSizingChange })
+
+    table_setColumnSizing(table, { a: 123 })
+
+    expect(onColumnSizingChange).toHaveBeenCalledWith({ a: 123 })
+  })
+
+  it('should reset to an empty map when defaultState is true', () => {
+    const onColumnSizingChange = vi.fn()
+    const table = makeSizingTable({
+      onColumnSizingChange,
+      initialState: { columnSizing: { a: 250 } },
+    })
+
+    table_resetColumnSizing(table, true)
+
+    expect(onColumnSizingChange).toHaveBeenCalledWith({})
+  })
+
+  it('should reset to the initial sizing by default', () => {
+    const onColumnSizingChange = vi.fn()
+    const table = makeSizingTable({
+      onColumnSizingChange,
+      initialState: { columnSizing: { a: 250 } },
+    })
+
+    table_resetColumnSizing(table)
+
+    expect(onColumnSizingChange).toHaveBeenCalledWith({ a: 250 })
+  })
+})
+
+describe('table_getColumnOffsets', () => {
+  it('should build start and after offsets per column', () => {
+    const table = makeTable({
+      columns: [
+        { id: 'a', accessorKey: 'a', size: 100 },
+        { id: 'b', accessorKey: 'b', size: 200 },
+        { id: 'c', accessorKey: 'c', size: 50 },
+      ],
+    })
+
+    const offsets = table_getColumnOffsets(table)
+
+    expect(offsets.all.starts).toEqual({ a: 0, b: 100, c: 300 })
+    expect(offsets.all.afters).toEqual({ a: 250, b: 50, c: 0 })
+    // nothing pinned: the center region matches the full visible list
+    expect(offsets.center.starts).toEqual(offsets.all.starts)
+    expect(offsets.left.starts).toEqual({})
+    expect(offsets.right.starts).toEqual({})
+  })
+})
+
+describe('total sizes', () => {
+  const pinnedFeatures = testFeatures({
+    columnPinningFeature,
+    columnSizingFeature,
+    coreRowModel: createCoreRowModel(),
+  })
+
+  function makePinnedTable() {
+    return constructTable({
+      features: pinnedFeatures,
+      columns: [
+        { id: 'a', accessorKey: 'a', size: 100 },
+        { id: 'b', accessorKey: 'b', size: 200 },
+        { id: 'c', accessorKey: 'c', size: 50 },
+      ] as Array<ColumnDef<typeof pinnedFeatures, Item, any>>,
+      data,
+      initialState: {
+        columnPinning: { left: ['a'], right: ['c'] },
+      },
+    })
+  }
+
+  it('table_getTotalSize should sum the full header row', () => {
+    const table = makeTable({
+      columns: [
+        { id: 'a', accessorKey: 'a', size: 100 },
+        { id: 'b', accessorKey: 'b', size: 200 },
+      ],
+    })
+
+    expect(table_getTotalSize(table)).toBe(300)
+  })
+
+  it('should sum each pinning region separately', () => {
+    const table = makePinnedTable()
+
+    expect(table_getLeftTotalSize(table)).toBe(100)
+    expect(table_getCenterTotalSize(table)).toBe(200)
+    expect(table_getRightTotalSize(table)).toBe(50)
+    expect(table_getTotalSize(table)).toBe(350)
+  })
+
+  it('should return 0 for empty pinning regions', () => {
+    const table = makeTable({
+      columns: [{ id: 'a', accessorKey: 'a', size: 100 }],
+    })
+
+    expect(table_getLeftTotalSize(table)).toBe(0)
+    expect(table_getRightTotalSize(table)).toBe(0)
+    expect(table_getCenterTotalSize(table)).toBe(100)
   })
 })

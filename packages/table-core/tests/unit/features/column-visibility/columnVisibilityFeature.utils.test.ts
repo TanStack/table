@@ -7,6 +7,7 @@ import {
   column_toggleVisibility,
   getDefaultColumnVisibilityState,
   row_getVisibleCells,
+  row_getVisibleCellsByColumnId,
   table_getIsAllColumnsVisible,
   table_getIsSomeColumnsVisible,
   table_getToggleAllColumnsVisibilityHandler,
@@ -406,5 +407,26 @@ describe('columnVisibilityFeature.utils', () => {
         allColumnIds.map((id) => [id, true]),
       )
     })
+  })
+})
+
+describe('row_getVisibleCellsByColumnId', () => {
+  it('should key only visible cells by column id', () => {
+    const table = makeTable(1, {
+      initialState: {
+        columnVisibility: {
+          firstName: false,
+        },
+      },
+    })
+    const row = table.getRowModel().rows[0]!
+
+    const cellsById = row_getVisibleCellsByColumnId(row)
+
+    expect(cellsById['firstName']).toBeUndefined()
+    expect(cellsById['lastName']!.column.id).toBe('lastName')
+    expect(Object.keys(cellsById)).toEqual(
+      row.getVisibleCells().map((cell) => cell.column.id),
+    )
   })
 })

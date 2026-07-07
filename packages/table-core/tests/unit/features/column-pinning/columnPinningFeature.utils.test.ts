@@ -19,17 +19,23 @@ import {
   table_getCenterFooterGroups,
   table_getCenterHeaderGroups,
   table_getCenterLeafColumns,
+  table_getCenterLeafHeaders,
+  table_getCenterVisibleLeafColumns,
   table_getIsSomeColumnsPinned,
   table_getLeftFlatHeaders,
   table_getLeftFooterGroups,
   table_getLeftHeaderGroups,
   table_getLeftLeafColumns,
+  table_getLeftLeafHeaders,
+  table_getLeftVisibleLeafColumns,
   table_getPinnedLeafColumns,
   table_getPinnedVisibleLeafColumns,
   table_getRightFlatHeaders,
   table_getRightFooterGroups,
   table_getRightHeaderGroups,
   table_getRightLeafColumns,
+  table_getRightLeafHeaders,
+  table_getRightVisibleLeafColumns,
   table_getVisibleLeafColumns,
   table_resetColumnPinning,
   table_setColumnPinning,
@@ -889,5 +895,76 @@ describe('table_getFlatHeaders', () => {
     expect(centerColumnIds).not.toContain('firstName')
     expect(centerColumnIds).not.toContain('lastName')
     expect(flatHeaders.length).toBeGreaterThan(0)
+  })
+})
+
+describe('pinned leaf headers and visible leaf columns', () => {
+  function makePinnedTable() {
+    return makeTable(1, {
+      initialState: {
+        columnPinning: {
+          left: ['firstName'],
+          right: ['lastName'],
+        },
+        columnVisibility: {
+          age: false,
+        },
+      },
+    })
+  }
+
+  it('table_getLeftLeafHeaders should return headers for left pinned columns', () => {
+    const table = makePinnedTable()
+
+    expect(
+      table_getLeftLeafHeaders(table).map((header) => header.column.id),
+    ).toEqual(['firstName'])
+  })
+
+  it('table_getRightLeafHeaders should return headers for right pinned columns', () => {
+    const table = makePinnedTable()
+
+    expect(
+      table_getRightLeafHeaders(table).map((header) => header.column.id),
+    ).toEqual(['lastName'])
+  })
+
+  it('table_getCenterLeafHeaders should return headers for unpinned columns', () => {
+    const table = makePinnedTable()
+    const centerIds = table_getCenterLeafHeaders(table).map(
+      (header) => header.column.id,
+    )
+
+    expect(centerIds).not.toContain('firstName')
+    expect(centerIds).not.toContain('lastName')
+    expect(centerIds.length).toBeGreaterThan(0)
+  })
+
+  it('table_getLeftVisibleLeafColumns should return visible left pinned columns', () => {
+    const table = makePinnedTable()
+
+    expect(table_getLeftVisibleLeafColumns(table).map((col) => col.id)).toEqual(
+      ['firstName'],
+    )
+  })
+
+  it('table_getRightVisibleLeafColumns should return visible right pinned columns', () => {
+    const table = makePinnedTable()
+
+    expect(
+      table_getRightVisibleLeafColumns(table).map((col) => col.id),
+    ).toEqual(['lastName'])
+  })
+
+  it('table_getCenterVisibleLeafColumns should exclude pinned and hidden columns', () => {
+    const table = makePinnedTable()
+    const centerIds = table_getCenterVisibleLeafColumns(table).map(
+      (col) => col.id,
+    )
+
+    expect(centerIds).not.toContain('firstName')
+    expect(centerIds).not.toContain('lastName')
+    expect(centerIds).not.toContain('age')
+    expect(centerIds.length).toBeGreaterThan(0)
   })
 })
