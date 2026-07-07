@@ -9,5 +9,11 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./tests/fixtures/setup/test-setup.ts'],
     globals: true,
+    coverage: {
+      // report-only: no coverage thresholds are enforced
+      provider: 'v8',
+      include: ['src/**'],
+      reporter: ['text-summary', 'json-summary'],
+    },
   },
 })

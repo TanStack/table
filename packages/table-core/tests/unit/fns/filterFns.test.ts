@@ -7,6 +7,7 @@ import {
   filterFn_equalsStringSensitive,
   filterFn_greaterThan,
   filterFn_greaterThanOrEqualTo,
+  filterFn_inNumberRange,
   filterFn_includesString,
   filterFn_includesStringSensitive,
   filterFn_lessThan,
@@ -571,7 +572,7 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFns.between.autoRemove', () => {
-      const autoRemove = filterFns.between.autoRemove!
+      const autoRemove = filterFns.between.autoRemove
 
       it('should auto-remove when both endpoints are undefined', () => {
         expect(autoRemove([undefined, undefined])).toBe(true)
@@ -595,7 +596,7 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFns.betweenInclusive.autoRemove', () => {
-      const autoRemove = filterFns.betweenInclusive.autoRemove!
+      const autoRemove = filterFns.betweenInclusive.autoRemove
 
       it('should auto-remove when both endpoints are undefined', () => {
         expect(autoRemove([undefined, undefined])).toBe(true)
@@ -727,7 +728,7 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFns.arrHas.autoRemove', () => {
-      const autoRemove = filterFns.arrHas.autoRemove!
+      const autoRemove = filterFns.arrHas.autoRemove
 
       it('should auto-remove when the filter value is undefined', () => {
         expect(autoRemove(undefined)).toBe(true)
@@ -744,6 +745,53 @@ describe('Filter Functions', () => {
       it('should NOT auto-remove when the filter value is a non-empty array', () => {
         expect(autoRemove(['a'])).toBe(false)
       })
+    })
+  })
+})
+
+describe('Number Range Filters', () => {
+  describe('filterFn_inNumberRange', () => {
+    it('should match values inclusively within the range', () => {
+      const row = mockRows[0]! // age 30
+
+      expect(filterFn_inNumberRange(row, 'age', [29, 31])).toBe(true)
+      expect(filterFn_inNumberRange(row, 'age', [30, 30])).toBe(true)
+      expect(filterFn_inNumberRange(row, 'age', [31, 40])).toBe(false)
+      expect(filterFn_inNumberRange(row, 'age', [10, 29])).toBe(false)
+    })
+
+    it('should coerce string endpoints in resolveFilterValue', () => {
+      expect(filterFn_inNumberRange.resolveFilterValue(['29', '31'])).toEqual([
+        29, 31,
+      ])
+    })
+
+    it('should treat null and non-numeric endpoints as open-ended', () => {
+      expect(filterFn_inNumberRange.resolveFilterValue([null, 31])).toEqual([
+        -Infinity,
+        31,
+      ])
+      expect(filterFn_inNumberRange.resolveFilterValue([29, 'abc'])).toEqual([
+        29,
+        Infinity,
+      ])
+    })
+
+    it('should swap reversed ranges', () => {
+      expect(filterFn_inNumberRange.resolveFilterValue([31, 29])).toEqual([
+        29, 31,
+      ])
+    })
+
+    it('should auto-remove only fully empty ranges', () => {
+      const autoRemove = filterFn_inNumberRange.autoRemove
+
+      expect(autoRemove(undefined)).toBe(true)
+      expect(autoRemove([null, null])).toBe(true)
+      expect(autoRemove(['', ''])).toBe(true)
+      expect(autoRemove([5, undefined])).toBe(false)
+      expect(autoRemove([undefined, 10])).toBe(false)
+      expect(autoRemove([0, 10])).toBe(false)
     })
   })
 })

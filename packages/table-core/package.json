@@ -70,6 +70,7 @@
     "clean": "rimraf ./build && rimraf ./dist",
     "lint:fix": "eslint ./src --fix",
     "test:eslint": "eslint ./src",
+    "test:coverage": "vitest run --coverage",
     "test:lib": "vitest",
     "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc && tsc -p tests/tsconfig.declaration-emit.json",
