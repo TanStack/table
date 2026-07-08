@@ -8,14 +8,8 @@ import {
   GripVertical,
   Trash2,
 } from 'lucide-react'
-import type {
-  ColumnSort,
-  ReactTable,
-  RowData,
-  SortDirection,
-  SortingState,
-} from '@tanstack/react-table'
-import type { features } from '@/main'
+import type { ColumnSort, SortDirection } from '@tanstack/react-table'
+import { useTableContext } from '@/hooks/table'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -48,17 +42,10 @@ import {
 } from '@/components/ui/sortable'
 import { cn } from '@/lib/utils'
 
-interface DataTableSortListProps<TData extends RowData> {
-  table: ReactTable<typeof features, TData>
-  sorting: SortingState
-  onSortingChange: (sorting: SortingState) => void
-}
+export function DataTableSortList(): React.ReactNode {
+  const table = useTableContext()
+  const sorting = table.state.sorting
 
-export function DataTableSortList<TData extends RowData>({
-  table,
-  sorting,
-  onSortingChange,
-}: DataTableSortListProps<TData>) {
   const labelId = React.useId()
   const descriptionId = React.useId()
   const listId = React.useId()
@@ -112,7 +99,7 @@ export function DataTableSortList<TData extends RowData>({
   return (
     <Sortable
       value={sorting}
-      onValueChange={onSortingChange}
+      onValueChange={(value) => table.setSorting(value)}
       getItemValue={(item) => item.id}
     >
       <Popover open={open} onOpenChange={setOpen}>

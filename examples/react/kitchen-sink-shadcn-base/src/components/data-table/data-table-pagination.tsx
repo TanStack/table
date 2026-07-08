@@ -6,8 +6,8 @@ import {
   ChevronsLeft,
   ChevronsRight,
 } from 'lucide-react'
-import type { ReactTable, RowData } from '@tanstack/react-table'
-import type { features } from '@/main'
+import * as React from 'react'
+import { useTableContext } from '@/hooks/table'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -18,15 +18,13 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 
-interface DataTablePaginationProps<TData extends RowData> {
-  table: ReactTable<typeof features, TData>
-  pageSizeOptions?: Array<number>
-}
-
-export function DataTablePagination<TData extends RowData>({
-  table,
+export function DataTablePagination({
   pageSizeOptions = [10, 20, 30, 40, 50],
-}: DataTablePaginationProps<TData>) {
+}: {
+  pageSizeOptions?: Array<number>
+}): React.ReactNode {
+  const table = useTableContext()
+
   return (
     <div className="flex w-full flex-col-reverse items-center justify-between gap-4 overflow-auto p-1 sm:flex-row sm:gap-8">
       <div className="flex-1 whitespace-nowrap text-muted-foreground text-sm">

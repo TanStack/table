@@ -15,9 +15,8 @@ import type {
   JoinOperator,
 } from '@/types'
 import type { FilterFn } from '@tanstack/react-table'
-import type { features } from '../main'
 
-export const fuzzyFilter: FilterFn<typeof features, any> = (
+export const fuzzyFilter: FilterFn<any, any> = (
   row,
   columnId,
   value,
@@ -60,7 +59,7 @@ function isSameDay(date1: Date, date2: Date): boolean {
   return date1Str === date2Str
 }
 
-const filterFn_enhancedEquals: FilterFn<typeof features, any> = (
+const filterFn_enhancedEquals: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: unknown,
@@ -85,7 +84,7 @@ const filterFn_enhancedEquals: FilterFn<typeof features, any> = (
 
 filterFn_enhancedEquals.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedGreaterThan: FilterFn<typeof features, any> = (
+const filterFn_enhancedGreaterThan: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: unknown,
@@ -106,7 +105,7 @@ const filterFn_enhancedGreaterThan: FilterFn<typeof features, any> = (
 
 filterFn_enhancedGreaterThan.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<typeof features, any> = (row, columnId: string, filterValue: unknown) => {
+const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<any, any> = (row, columnId: string, filterValue: unknown) => {
   const rowValue = row.getValue(columnId)
 
   if (isValidDate(rowValue) && isValidDate(filterValue)) {
@@ -124,7 +123,7 @@ const filterFn_enhancedGreaterThanOrEqualTo: FilterFn<typeof features, any> = (r
 filterFn_enhancedGreaterThanOrEqualTo.resolveFilterValue = (val: any) =>
   isFalsy(val)
 
-const filterFn_enhancedLessThan: FilterFn<typeof features, any> = (
+const filterFn_enhancedLessThan: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: unknown,
@@ -145,7 +144,7 @@ const filterFn_enhancedLessThan: FilterFn<typeof features, any> = (
 
 filterFn_enhancedLessThan.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_enhancedLessThanOrEqualTo: FilterFn<typeof features, any> = (
+const filterFn_enhancedLessThanOrEqualTo: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: unknown,
@@ -167,7 +166,7 @@ const filterFn_enhancedLessThanOrEqualTo: FilterFn<typeof features, any> = (
 filterFn_enhancedLessThanOrEqualTo.resolveFilterValue = (val: any) =>
   isFalsy(val)
 
-const filterFn_startsWith: FilterFn<typeof features, any> = (
+const filterFn_startsWith: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: string,
@@ -178,7 +177,7 @@ const filterFn_startsWith: FilterFn<typeof features, any> = (
 
 filterFn_startsWith.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_endsWith: FilterFn<typeof features, any> = (
+const filterFn_endsWith: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: string,
@@ -189,7 +188,7 @@ const filterFn_endsWith: FilterFn<typeof features, any> = (
 
 filterFn_endsWith.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_isEmpty: FilterFn<typeof features, any> = (
+const filterFn_isEmpty: FilterFn<any, any> = (
   row,
   columnId: string,
 ) => {
@@ -204,7 +203,7 @@ const filterFn_isEmpty: FilterFn<typeof features, any> = (
 
 filterFn_isEmpty.resolveFilterValue = (val: any) => isFalsy(val)
 
-const filterFn_inBetween: FilterFn<typeof features, any> = (
+const filterFn_inBetween: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: unknown,
@@ -246,7 +245,7 @@ const filterFn_inBetween: FilterFn<typeof features, any> = (
 
 filterFn_inBetween.autoRemove = (val: any) => isFalsy(val)
 
-const filterFn_isRelativeToToday: FilterFn<typeof features, any> = (
+const filterFn_isRelativeToToday: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: unknown,
@@ -289,7 +288,7 @@ const filterFn_isRelativeToToday: FilterFn<typeof features, any> = (
 
 filterFn_isRelativeToToday.autoRemove = (val: any) => isFalsy(val)
 
-export const dynamicFilterFn: FilterFn<typeof features, any> = (
+export const dynamicFilterFn: FilterFn<any, any> = (
   row,
   columnId: string,
   filterValue: unknown,

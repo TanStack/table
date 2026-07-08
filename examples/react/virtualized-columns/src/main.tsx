@@ -257,35 +257,37 @@ interface TableHeadCellProps {
 function TableHeadCell({ header, table }: TableHeadCellProps) {
   return (
     <table.Subscribe source={table.atoms.columnSizing}>
-      <th
-        key={header.id}
-        style={{
-          display: 'flex',
-          position: 'relative', // needed for absolute positioning of the resizer
-          width: header.getSize(),
-        }}
-      >
-        <div
-          {...{
-            className: header.column.getCanSort() ? 'sortable-header' : '',
-            onClick: header.column.getToggleSortingHandler(),
+      {() => (
+        <th
+          key={header.id}
+          style={{
+            display: 'flex',
+            position: 'relative', // needed for absolute positioning of the resizer
+            width: header.getSize(),
           }}
         >
-          <table.FlexRender header={header} />
-          {{
-            asc: ' 🔼',
-            desc: ' 🔽',
-          }[header.column.getIsSorted() as string] ?? null}
-        </div>
-        <div
-          onDoubleClick={() => header.column.resetSize()}
-          onMouseDown={header.getResizeHandler()}
-          onTouchStart={header.getResizeHandler()}
-          className={`resizer ${
-            header.column.getIsResizing() ? 'isResizing' : ''
-          }`}
-        />
-      </th>
+          <div
+            {...{
+              className: header.column.getCanSort() ? 'sortable-header' : '',
+              onClick: header.column.getToggleSortingHandler(),
+            }}
+          >
+            <table.FlexRender header={header} />
+            {{
+              asc: ' 🔼',
+              desc: ' 🔽',
+            }[header.column.getIsSorted() as string] ?? null}
+          </div>
+          <div
+            onDoubleClick={() => header.column.resetSize()}
+            onMouseDown={header.getResizeHandler()}
+            onTouchStart={header.getResizeHandler()}
+            className={`resizer ${
+              header.column.getIsResizing() ? 'isResizing' : ''
+            }`}
+          />
+        </th>
+      )}
     </table.Subscribe>
   )
 }
@@ -408,15 +410,17 @@ interface TableBodyCellProps {
 function TableBodyCell({ cell, table }: TableBodyCellProps) {
   return (
     <table.Subscribe source={table.atoms.columnSizing}>
-      <td
-        key={cell.id}
-        style={{
-          display: 'flex',
-          width: cell.column.getSize(),
-        }}
-      >
-        <table.FlexRender cell={cell} />
-      </td>
+      {() => (
+        <td
+          key={cell.id}
+          style={{
+            display: 'flex',
+            width: cell.column.getSize(),
+          }}
+        >
+          <table.FlexRender cell={cell} />
+        </td>
+      )}
     </table.Subscribe>
   )
 }

@@ -1,0 +1,72 @@
+import {
+  aggregationFns,
+  columnFacetingFeature,
+  columnFilteringFeature,
+  columnGroupingFeature,
+  columnOrderingFeature,
+  columnPinningFeature,
+  columnResizingFeature,
+  columnSizingFeature,
+  columnVisibilityFeature,
+  createExpandedRowModel,
+  createFacetedRowModel,
+  createFacetedUniqueValues,
+  createFilteredRowModel,
+  createGroupedRowModel,
+  createPaginatedRowModel,
+  createSortedRowModel,
+  filterFns,
+  globalFilteringFeature,
+  metaHelper,
+  rowExpandingFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/react-table'
+import { rankItem } from '@tanstack/match-sorter-utils'
+
+export interface MyColumnMeta {
+  label?: string
+  variant?: 'text' | 'number' | 'date' | 'boolean' | 'select' | 'multi-select'
+  options?: Array<{ label: string; value: string; count?: number }>
+}
+
+const fuzzyFilterFn = (
+  row: { getValue: (id: string) => unknown },
+  columnId: string,
+  value: unknown,
+  addMeta?: (meta: object) => void,
+) => {
+  const itemRank = rankItem(row.getValue(columnId), value as string)
+  addMeta?.({ itemRank })
+  return itemRank.passed
+}
+
+export const features = tableFeatures({
+  rowSortingFeature,
+  rowPaginationFeature,
+  rowSelectionFeature,
+  rowExpandingFeature,
+  columnFilteringFeature,
+  columnFacetingFeature,
+  columnOrderingFeature,
+  columnVisibilityFeature,
+  columnSizingFeature,
+  columnResizingFeature,
+  columnPinningFeature,
+  columnGroupingFeature,
+  globalFilteringFeature,
+  columnMeta: metaHelper<MyColumnMeta>(),
+  filteredRowModel: createFilteredRowModel(),
+  facetedRowModel: createFacetedRowModel(),
+  facetedUniqueValues: createFacetedUniqueValues(),
+  paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  groupedRowModel: createGroupedRowModel(),
+  expandedRowModel: createExpandedRowModel(),
+  filterFns: { ...filterFns, fuzzy: fuzzyFilterFn },
+  sortFns,
+  aggregationFns,
+})

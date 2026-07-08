@@ -15,7 +15,7 @@ import type {
   JoinOperator,
 } from '@/types'
 import type { FilterFn } from '@tanstack/react-table'
-import type { features } from '../main'
+import type { features } from '@/hooks/features'
 
 export const fuzzyFilter: FilterFn<typeof features, any> = (
   row,

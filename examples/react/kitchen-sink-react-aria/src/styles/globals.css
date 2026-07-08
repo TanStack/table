@@ -249,6 +249,14 @@ body {
   padding: 0.25rem 0.5rem;
 }
 
+.header-cell .icon-button {
+  min-width: 1.5rem;
+  min-height: 1.5rem;
+  padding: 0.125rem 0.25rem;
+  border: 0;
+  background: transparent;
+}
+
 .header-sort-button,
 .group-toggle-button {
   min-height: 1.75rem;

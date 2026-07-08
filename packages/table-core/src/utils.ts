@@ -254,8 +254,7 @@ export function tableMemo<
   let debugCache: boolean | undefined
 
   if (process.env.NODE_ENV === 'development') {
-    const { debugCache: _debugCache, debugAll } = table.options
-    debugCache = _debugCache
+    const { debugAll } = table.options
     const { parentName } = getFunctionNameInfo(fnName, '.')
 
     const debugByParent =

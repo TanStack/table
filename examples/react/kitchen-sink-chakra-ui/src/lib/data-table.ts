@@ -14,19 +14,35 @@ import type {
   FilterOperator,
   JoinOperator,
 } from '@/types'
-import type { FilterFn } from '@tanstack/react-table'
-import type { features } from '../main'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
+import type {
+  FilterFn,
+  Row,
+  RowData,
+  TableFeatures,
+} from '@tanstack/react-table'
+import type { features } from '@/hooks/features'
 
-export const fuzzyFilter: FilterFn<typeof features, any> = (
-  row,
-  columnId,
-  value,
-  addMeta,
-) => {
+declare module '@tanstack/react-table' {
+  interface FilterFns {
+    fuzzy: FilterFn<TableFeatures, RowData>
+  }
+  interface FilterMeta {
+    itemRank?: RankingInfo
+  }
+}
+
+export function fuzzyFilter<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  columnId: string,
+  value: string,
+  addMeta?: (meta: { itemRank: RankingInfo }) => void,
+): boolean {
   const itemRank = rankItem(row.getValue(columnId), value)
-
   addMeta?.({ itemRank })
-
   return itemRank.passed
 }
 

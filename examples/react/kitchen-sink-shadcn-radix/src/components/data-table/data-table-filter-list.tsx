@@ -14,13 +14,8 @@ import type {
   FilterOperator,
   JoinOperator,
 } from '@/types'
-import type {
-  CellData,
-  Column,
-  ReactTable,
-  RowData,
-} from '@tanstack/react-table'
-import type { features } from '@/main'
+import type { Column, RowData } from '@tanstack/react-table'
+import type { features } from '@/hooks/features'
 
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -59,11 +54,12 @@ import {
   CommandItem,
   CommandList,
 } from '@/components/ui/command'
+import { useTableContext } from '@/hooks/table'
 
-function getColumnOptions<TData extends RowData, TValue extends CellData>({
+function getColumnOptions({
   column,
 }: {
-  column: Column<typeof features, TData, TValue>
+  column: Column<typeof features, RowData>
 }): Array<{ label: string; value: string; count?: number }> {
   const customOptions = column.columnDef.meta?.options
 
@@ -78,17 +74,18 @@ function getColumnOptions<TData extends RowData, TValue extends CellData>({
   }))
 }
 
-interface DataTableFilterListProps<TData extends RowData> {
-  table: ReactTable<typeof features, TData>
-  columnFilters: Array<ExtendedColumnFilter>
-  onColumnFiltersChange: (filters: Array<ExtendedColumnFilter>) => void
-}
+export function DataTableFilterList(): React.ReactNode {
+  const table = useTableContext()
+  const columnFilters = table.state.columnFilters as Array<ExtendedColumnFilter>
 
-export function DataTableFilterList<TData extends RowData>({
-  table,
-  columnFilters,
-  onColumnFiltersChange,
-}: DataTableFilterListProps<TData>) {
+  // Write through the raw controlled-state handler instead of
+  // `table.setColumnFilters`: the table API auto-removes filters with empty
+  // values, but a just-added filter row legitimately starts with `value: ''`
+  // while the user is still building it.
+  const setColumnFilters = (filters: Array<ExtendedColumnFilter>) => {
+    table.options.onColumnFiltersChange?.(filters)
+  }
+
   const id = React.useId()
   const labelId = React.useId()
   const descriptionId = React.useId()
@@ -101,7 +98,7 @@ export function DataTableFilterList<TData extends RowData>({
   )
 
   const getColumnFilterVariant = React.useCallback(
-    (column: Column<typeof features, TData>) => {
+    (column: Column<typeof features, RowData>) => {
       if (column.columnDef.meta?.variant) {
         return column.columnDef.meta.variant
       }
@@ -145,9 +142,9 @@ export function DataTableFilterList<TData extends RowData>({
 
     const newFilter = onFilterAddImpl(firstFilterableColumn.id)
     if (newFilter) {
-      onColumnFiltersChange([...columnFilters, newFilter])
+      setColumnFilters([...columnFilters, newFilter])
     }
-  }, [columnFilters, onFilterAddImpl, filterableColumns, onColumnFiltersChange])
+  }, [columnFilters, onFilterAddImpl, filterableColumns, table])
 
   const onFilterUpdate = React.useCallback(
     (
@@ -203,14 +200,14 @@ export function DataTableFilterList<TData extends RowData>({
         }
         return filter
       })
-      onColumnFiltersChange(newFilters)
+      setColumnFilters(newFilters)
     },
     [
       columnFilters,
       filterableColumns,
       getColumnFilterVariant,
       getFilterOperators,
-      onColumnFiltersChange,
+      table,
     ],
   )
 
@@ -219,9 +216,9 @@ export function DataTableFilterList<TData extends RowData>({
       const newFilters = columnFilters.filter((filter) => {
         return filter.filterId !== filterId
       })
-      onColumnFiltersChange(newFilters)
+      setColumnFilters(newFilters)
     },
-    [columnFilters, onColumnFiltersChange],
+    [columnFilters, table],
   )
 
   const onFilterInputRender = React.useCallback(
@@ -231,7 +228,7 @@ export function DataTableFilterList<TData extends RowData>({
       filterId,
       inputId,
     }: {
-      column: Column<typeof features, TData>
+      column: Column<typeof features, RowData>
       operator: FilterOperator
       filterId: string
       inputId: string
@@ -666,7 +663,7 @@ export function DataTableFilterList<TData extends RowData>({
                     ...f,
                     joinOperator: value,
                   }))
-                  onColumnFiltersChange(updatedFilters)
+                  setColumnFilters(updatedFilters)
                 }
               }}
             >
@@ -903,7 +900,7 @@ export function DataTableFilterList<TData extends RowData>({
               aria-label="Reset all filters"
               variant="outline"
               size="sm"
-              onClick={() => onColumnFiltersChange([])}
+              onClick={() => setColumnFilters([])}
             >
               Reset filters
             </Button>

@@ -2,12 +2,7 @@
 
 import * as React from 'react'
 import { Check, ChevronsUpDown, GripVertical, Settings2 } from 'lucide-react'
-import type {
-  ColumnOrderState,
-  ReactTable,
-  RowData,
-} from '@tanstack/react-table'
-import type { features } from '@/main'
+import { useTableContext } from '@/hooks/table'
 
 import { Button } from '@/components/ui/button'
 import {
@@ -33,21 +28,16 @@ import {
   SortableOverlay,
 } from '@/components/ui/sortable'
 
-interface DataTableViewOptionsProps<TRowData extends RowData> {
-  table: ReactTable<typeof features, TRowData>
-  columnOrder: ColumnOrderState
-  onColumnOrderChange: (columnOrder: ColumnOrderState) => void
-}
-
-export function DataTableViewOptions<TRowData extends RowData>({
-  table,
-  columnOrder,
-  onColumnOrderChange,
-}: DataTableViewOptionsProps<TRowData>) {
+export function DataTableViewOptions(): React.ReactNode {
+  const table = useTableContext()
   const triggerRef = React.useRef<HTMLButtonElement>(null)
+  const columnOrder = table.state.columnOrder
 
   return (
-    <Sortable value={columnOrder} onValueChange={onColumnOrderChange}>
+    <Sortable
+      value={columnOrder}
+      onValueChange={(order) => table.setColumnOrder(order)}
+    >
       <Popover>
         <PopoverTrigger
           render={
@@ -59,8 +49,6 @@ export function DataTableViewOptions<TRowData extends RowData>({
               size="sm"
               className="ml-auto hidden h-8 gap-2 focus:outline-none focus:ring-1 focus:ring-ring lg:flex"
               onPointerDown={(event) => {
-                // prevent implicit pointer capture
-                // https://www.w3.org/TR/pointerevents3/#implicit-pointer-capture
                 const target = event.target
                 if (!(target instanceof HTMLElement)) return
                 if (target.hasPointerCapture(event.pointerId)) {
@@ -72,7 +60,6 @@ export function DataTableViewOptions<TRowData extends RowData>({
                   event.ctrlKey === false &&
                   event.pointerType === 'mouse'
                 ) {
-                  // prevent trigger from stealing focus from the active item after opening.
                   event.preventDefault()
                 }
               }}
