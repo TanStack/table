@@ -18,12 +18,8 @@ import {
 } from '../../utils/column.utils'
 import { getValueAndLabel, parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_FilterOptionMenu } from '../menus/MRT_FilterOptionMenu'
-import type {
-  DropdownOption,
-  MRT_Header,
-  MRT_RowData,
-  MRT_TableInstance,
-} from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
+import type { DropdownOption, MRT_Header, MRT_RowData } from '../../types'
 import type { TextFieldProps } from '@mui/material/TextField'
 import type { ChangeEvent, MouseEvent, SyntheticEvent } from 'react'
 import type { AutocompleteInputChangeReason } from '@mui/material/Autocomplete'
@@ -33,15 +29,14 @@ export interface MRT_FilterTextFieldProps<
 > extends TextFieldProps<'standard'> {
   header: MRT_Header<TData>
   rangeFilterIndex?: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_FilterTextField = <TData extends MRT_RowData>({
   header,
   rangeFilterIndex,
-  table,
   ...rest
 }: MRT_FilterTextFieldProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: {
       enableColumnFilterModes,
@@ -103,11 +98,11 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
 
   const dropdownOptions = useDropdownOptions({ header, table })
 
-  const filterChipLabel = ['empty', 'notEmpty'].includes(currentFilterOption)
+  const filterChipLabel = ['empty', 'notEmpty'].includes(currentFilterOption!)
     ? localization[
         `filter${
-          currentFilterOption?.charAt?.(0)?.toUpperCase() +
-          currentFilterOption?.slice(1)
+          currentFilterOption!.charAt(0)?.toUpperCase() +
+          currentFilterOption!.slice(1)
         }` as keyof typeof localization
       ]
     : ''
@@ -312,8 +307,8 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
           '{filterType}',
           localization[
             `filter${
-              currentFilterOption?.charAt(0)?.toUpperCase() +
-              currentFilterOption?.slice(1)
+              currentFilterOption!.charAt(0)?.toUpperCase() +
+              currentFilterOption!.slice(1)
             }` as keyof typeof localization
           ],
         )}
@@ -568,7 +563,6 @@ export const MRT_FilterTextField = <TData extends MRT_RowData>({
         header={header}
         setAnchorEl={setAnchorEl}
         setFilterValue={setFilterValue}
-        table={table}
       />
     </>
   )

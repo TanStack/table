@@ -32,5 +32,15 @@ export const MaterialReactTable = <TData extends MRT_RowData>(
     table = useMaterialReactTable(props)
   }
 
-  return <MRT_TablePaper table={table} />
+  // `AppTable` (attached by `useAppTable`) provides the table via React context
+  // so MRT components can read it with `useTableContext()` instead of a prop.
+  const AppTable = (table as any).AppTable as React.FC<{
+    children: React.ReactNode
+  }>
+
+  return (
+    <AppTable>
+      <MRT_TablePaper />
+    </AppTable>
+  )
 }

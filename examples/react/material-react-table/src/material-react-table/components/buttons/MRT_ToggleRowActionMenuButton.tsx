@@ -4,13 +4,9 @@ import Tooltip from '@mui/material/Tooltip'
 import { getCommonTooltipProps } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_RowActionMenu } from '../menus/MRT_RowActionMenu'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_EditActionButtons } from './MRT_EditActionButtons'
-import type {
-  MRT_Cell,
-  MRT_Row,
-  MRT_RowData,
-  MRT_TableInstance,
-} from '../../types'
+import type { MRT_Cell, MRT_Row, MRT_RowData } from '../../types'
 import type { IconButtonProps } from '@mui/material/IconButton'
 import type { MouseEvent } from 'react'
 
@@ -31,16 +27,15 @@ export interface MRT_ToggleRowActionMenuButtonProps<
   cell: MRT_Cell<TData>
   row: MRT_Row<TData>
   staticRowIndex?: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
   cell,
   row,
   staticRowIndex,
-  table,
   ...rest
 }: MRT_ToggleRowActionMenuButtonProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {
@@ -83,7 +78,7 @@ export const MRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
       {renderRowActions && !showEditActionButtons ? (
         renderRowActions({ cell, row, staticRowIndex, table })
       ) : showEditActionButtons ? (
-        <MRT_EditActionButtons row={row} table={table} />
+        <MRT_EditActionButtons row={row} />
       ) : !renderRowActionMenuItems &&
         parseFromValuesOrFunc(enableEditing, row) &&
         ['modal', 'row'].includes(editDisplayMode!) ? (
@@ -120,7 +115,6 @@ export const MRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
             row={row}
             setAnchorEl={setAnchorEl}
             staticRowIndex={staticRowIndex}
-            table={table}
           />
         </>
       ) : null}

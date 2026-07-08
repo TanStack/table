@@ -232,7 +232,7 @@ export function CheckboxField({
       checked={indeterminate ? 'indeterminate' : checked}
       onCheckedChange={(details) => onCheckedChange?.(details.checked === true)}
     >
-      <Checkbox.HiddenInput {...(props as any)} />
+      <Checkbox.HiddenInput {...props} />
       <Checkbox.Control />
       {label ? <Checkbox.Label>{label}</Checkbox.Label> : null}
     </Checkbox.Root>

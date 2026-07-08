@@ -2,21 +2,21 @@ import Badge from '@mui/material/Badge'
 import TableSortLabel from '@mui/material/TableSortLabel'
 import Tooltip from '@mui/material/Tooltip'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { TableSortLabelProps } from '@mui/material/TableSortLabel'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Header, MRT_RowData } from '../../types'
 
 export interface MRT_TableHeadCellSortLabelProps<
   TData extends MRT_RowData,
 > extends TableSortLabelProps {
   header: MRT_Header<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableHeadCellSortLabel = <TData extends MRT_RowData>({
   header,
-  table,
   ...rest
 }: MRT_TableHeadCellSortLabelProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {

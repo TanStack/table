@@ -1,26 +1,23 @@
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { getCommonTooltipProps } from '../../utils/style.utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 import type { IconButtonProps } from '@mui/material/IconButton'
 import type { DragEventHandler } from 'react'
 
-export interface MRT_GrabHandleButtonProps<
-  TData extends MRT_RowData,
-> extends IconButtonProps {
+export interface MRT_GrabHandleButtonProps extends IconButtonProps {
   iconButtonProps?: IconButtonProps
   location?: 'column' | 'row'
   onDragEnd: DragEventHandler<HTMLButtonElement>
   onDragStart: DragEventHandler<HTMLButtonElement>
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_GrabHandleButton = <TData extends MRT_RowData>({
+export const MRT_GrabHandleButton = ({
   location,
-  table,
   ...rest
-}: MRT_GrabHandleButtonProps<TData>) => {
+}: MRT_GrabHandleButtonProps) => {
+  const table = useMRTContext()
   const {
     options: {
       icons: { DragHandleIcon },

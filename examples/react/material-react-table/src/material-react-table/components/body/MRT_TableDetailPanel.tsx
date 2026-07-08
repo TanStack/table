@@ -2,12 +2,12 @@ import Collapse from '@mui/material/Collapse'
 import TableCell from '@mui/material/TableCell'
 import TableRow from '@mui/material/TableRow'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { TableCellProps } from '@mui/material/TableCell'
 import type {
   MRT_Row,
   MRT_RowData,
   MRT_RowVirtualizer,
-  MRT_TableInstance,
   MRT_VirtualItem,
 } from '../../types'
 import type { RefObject } from 'react'
@@ -19,7 +19,6 @@ export interface MRT_TableDetailPanelProps<
   row: MRT_Row<TData>
   rowVirtualizer?: MRT_RowVirtualizer
   staticRowIndex: number
-  table: MRT_TableInstance<TData>
   virtualRow?: MRT_VirtualItem
 }
 
@@ -28,10 +27,10 @@ export const MRT_TableDetailPanel = <TData extends MRT_RowData>({
   row,
   rowVirtualizer,
   staticRowIndex,
-  table,
   virtualRow,
   ...rest
 }: MRT_TableDetailPanelProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     getVisibleLeafColumns,

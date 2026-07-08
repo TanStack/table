@@ -130,9 +130,9 @@ export const getDefaultColumnOrderIds = <TData extends MRT_RowData>(
   const trailingDisplayColIds: Array<string> =
     getTrailingDisplayColumnIds(tableOptions)
 
-  const defaultColumnDefIds = getAllLeafColumnDefs(tableOptions.columns).map(
-    (columnDef) => getColumnId(columnDef),
-  )
+  const defaultColumnDefIds = getAllLeafColumnDefs(
+    tableOptions.columns as any,
+  ).map((columnDef) => getColumnId(columnDef))
 
   let allLeafColumnDefIds = reset
     ? defaultColumnDefIds

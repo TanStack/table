@@ -10,12 +10,11 @@ export const getMRT_RowActionsColumnDef = <TData extends MRT_RowData>(
   tableOptions: MRT_StatefulTableOptions<TData>,
 ): MRT_ColumnDef<TData> => {
   return {
-    Cell: ({ cell, row, staticRowIndex, table }) => (
+    Cell: ({ cell, row, staticRowIndex }) => (
       <MRT_ToggleRowActionMenuButton
         cell={cell}
         row={row}
         staticRowIndex={staticRowIndex}
-        table={table}
       />
     ),
     ...defaultDisplayColumnProps({

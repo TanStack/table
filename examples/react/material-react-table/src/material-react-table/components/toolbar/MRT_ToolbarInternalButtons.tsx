@@ -5,19 +5,15 @@ import { MRT_ToggleDensePaddingButton } from '../buttons/MRT_ToggleDensePaddingB
 import { MRT_ToggleFiltersButton } from '../buttons/MRT_ToggleFiltersButton'
 import { MRT_ToggleFullScreenButton } from '../buttons/MRT_ToggleFullScreenButton'
 import { MRT_ToggleGlobalFilterButton } from '../buttons/MRT_ToggleGlobalFilterButton'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { BoxProps } from '@mui/material/Box'
 
-export interface MRT_ToolbarInternalButtonsProps<
-  TData extends MRT_RowData,
-> extends BoxProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_ToolbarInternalButtonsProps extends BoxProps {}
 
-export const MRT_ToolbarInternalButtons = <TData extends MRT_RowData>({
-  table,
+export const MRT_ToolbarInternalButtons = ({
   ...rest
-}: MRT_ToolbarInternalButtonsProps<TData>) => {
+}: MRT_ToolbarInternalButtonsProps) => {
+  const table = useMRTContext()
   const {
     options: {
       columnFilterDisplayMode,
@@ -50,23 +46,17 @@ export const MRT_ToolbarInternalButtons = <TData extends MRT_RowData>({
         <>
           {enableFilters &&
             enableGlobalFilter &&
-            !initialState?.showGlobalFilter && (
-              <MRT_ToggleGlobalFilterButton table={table} />
-            )}
+            !initialState?.showGlobalFilter && <MRT_ToggleGlobalFilterButton />}
           {enableFilters &&
             enableColumnFilters &&
             columnFilterDisplayMode !== 'popover' && (
-              <MRT_ToggleFiltersButton table={table} />
+              <MRT_ToggleFiltersButton />
             )}
           {(enableHiding || enableColumnOrdering || enableColumnPinning) && (
-            <MRT_ShowHideColumnsButton table={table} />
+            <MRT_ShowHideColumnsButton />
           )}
-          {enableDensityToggle && (
-            <MRT_ToggleDensePaddingButton table={table} />
-          )}
-          {enableFullScreenToggle && (
-            <MRT_ToggleFullScreenButton table={table} />
-          )}
+          {enableDensityToggle && <MRT_ToggleDensePaddingButton />}
+          {enableFullScreenToggle && <MRT_ToggleFullScreenButton />}
         </>
       )}
     </Box>

@@ -1,7 +1,8 @@
 import Box from '@mui/material/Box'
 import highlightWords from 'highlight-words'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { ReactNode, RefObject } from 'react'
-import type { MRT_Cell, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Cell, MRT_RowData } from '../../types'
 
 const allowedTypes = ['string', 'number']
 
@@ -10,7 +11,6 @@ export interface MRT_TableBodyCellValueProps<TData extends MRT_RowData> {
   rowRef?: RefObject<HTMLTableRowElement | null>
   staticColumnIndex?: number
   staticRowIndex?: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableBodyCellValue = <TData extends MRT_RowData>({
@@ -18,8 +18,8 @@ export const MRT_TableBodyCellValue = <TData extends MRT_RowData>({
   rowRef,
   staticColumnIndex,
   staticRowIndex,
-  table,
 }: MRT_TableBodyCellValueProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {

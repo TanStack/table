@@ -1,19 +1,5 @@
 import { useId, useMemo } from 'react'
-import {
-  createExpandedRowModel,
-  createFacetedMinMaxValues,
-  createFacetedRowModel,
-  createFacetedUniqueValues,
-  createFilteredRowModel,
-  createGroupedRowModel,
-  createPaginatedRowModel,
-  createSortedRowModel,
-  stockFeatures,
-} from '@tanstack/react-table'
 import { useTheme } from '@mui/material/styles'
-import { MRT_AggregationFns } from '../fns/aggregationFns'
-import { MRT_FilterFns } from '../fns/filterFns'
-import { MRT_SortFns } from '../fns/sortingFns'
 import { MRT_Default_Icons } from '../icons'
 import { MRT_Localization_EN } from '../locales/en'
 import { getMRTTheme } from '../utils/style.utils'
@@ -48,7 +34,6 @@ export const MRT_DefaultDisplayColumn = {
 export const useMRT_TableOptions: <TData extends MRT_RowData>(
   tableOptions: MRT_TableOptions<TData>,
 ) => MRT_DefinedTableOptions<TData> = <TData extends MRT_RowData>({
-  aggregationFns,
   autoResetExpanded = false,
   columnFilterDisplayMode = 'subheader',
   columnResizeDirection,
@@ -90,7 +75,6 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
   enableTableHead = true,
   enableToolbarInternalActions = true,
   enableTopToolbar = true,
-  filterFns,
   icons,
   id = useId(),
   layoutMode,
@@ -111,7 +95,6 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
   rowNumberDisplayMode = 'static',
   rowPinningDisplayMode = 'sticky',
   selectAllMode = 'page',
-  sortFns,
   ...rest
 }: MRT_TableOptions<TData>) => {
   const theme = useTheme()
@@ -125,15 +108,6 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     [localization],
   )
   mrtTheme = useMemo(() => getMRTTheme(mrtTheme, theme), [mrtTheme, theme])
-  aggregationFns = useMemo(
-    () => ({ ...MRT_AggregationFns, ...aggregationFns }),
-    [],
-  )
-  filterFns = useMemo(
-    () => ({ ...MRT_FilterFns, ...filterFns }) as typeof filterFns,
-    [],
-  )
-  sortFns = useMemo(() => ({ ...MRT_SortFns, ...sortFns }), [])
   defaultColumn = useMemo(
     () => ({ ...MRT_DefaultColumn, ...defaultColumn }),
     [defaultColumn],
@@ -180,7 +154,6 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
   }
 
   return {
-    aggregationFns,
     autoResetExpanded,
     columnFilterDisplayMode,
     columnResizeDirection,
@@ -222,36 +195,11 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     enableTableHead,
     enableToolbarInternalActions,
     enableTopToolbar,
-    filterFns,
-    features: {
-      ...stockFeatures,
-      ...((enableColumnFilters || enableGlobalFilter || enableFilters) &&
-      !manualFiltering
-        ? { filteredRowModel: createFilteredRowModel(), filterFns }
-        : {}),
-      ...(enableSorting && !manualSorting
-        ? { sortedRowModel: createSortedRowModel(), sortFns }
-        : {}),
-      ...(enablePagination && !manualPagination
-        ? { paginatedRowModel: createPaginatedRowModel() }
-        : {}),
-      ...(enableExpanding || enableGrouping
-        ? { expandedRowModel: createExpandedRowModel() }
-        : {}),
-      ...(enableGrouping && !manualGrouping
-        ? {
-            groupedRowModel: createGroupedRowModel(),
-            aggregationFns,
-          }
-        : {}),
-      ...(enableFacetedValues
-        ? {
-            facetedRowModel: createFacetedRowModel(),
-            facetedMinMaxValues: createFacetedMinMaxValues(),
-            facetedUniqueValues: createFacetedUniqueValues(),
-          }
-        : {}),
-    },
+    // `features` is no longer assembled here — the static `mrtFeatures` bundle
+    // owns every feature + row model, gated at runtime by the `manual*` flags
+    // computed below. `useMRT_TableInstance` merges any client-supplied custom
+    // `filterFns` / `sortFns` / `aggregationFns` (carried through `...rest`) over
+    // the built-ins registered on `mrtFeatures`.
     getSubRows: (row: TData) => (row as any)?.subRows,
     icons,
     id,
@@ -273,7 +221,6 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     rowNumberDisplayMode,
     rowPinningDisplayMode,
     selectAllMode,
-    sortFns,
     ...rest,
   } as MRT_DefinedTableOptions<TData>
 }

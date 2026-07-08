@@ -4,30 +4,29 @@ import Button from '@mui/material/Button'
 import Divider from '@mui/material/Divider'
 import Menu from '@mui/material/Menu'
 import { getDefaultColumnOrderIds } from '../../utils/displayColumn.utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_ShowHideColumnsMenuItems } from './MRT_ShowHideColumnsMenuItems'
 import type {
   MRT_Column,
   MRT_ColumnVisibilityState,
   MRT_RowData,
-  MRT_TableInstance,
 } from '../../types'
 import type { MenuProps } from '@mui/material/Menu'
 
-export interface MRT_ShowHideColumnsMenuProps<
-  TData extends MRT_RowData,
-> extends Partial<MenuProps> {
+export interface MRT_ShowHideColumnsMenuProps extends Partial<MenuProps> {
   anchorEl: HTMLElement | null
   isSubMenu?: boolean
   setAnchorEl: (anchorEl: HTMLElement | null) => void
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
+export const MRT_ShowHideColumnsMenu = <
+  TData extends MRT_RowData = MRT_RowData,
+>({
   anchorEl,
   setAnchorEl,
-  table,
   ...rest
-}: MRT_ShowHideColumnsMenuProps<TData>) => {
+}: MRT_ShowHideColumnsMenuProps) => {
+  const table = useMRTContext<TData>()
   const {
     getAllColumns,
     getAllLeafColumns,
@@ -172,7 +171,6 @@ export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
           isNestedColumns={isNestedColumns}
           key={`${index}-${column.id}`}
           setHoveredColumn={setHoveredColumn}
-          table={table}
         />
       ))}
     </Menu>

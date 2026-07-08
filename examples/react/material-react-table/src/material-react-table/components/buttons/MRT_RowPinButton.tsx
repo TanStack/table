@@ -2,26 +2,26 @@ import { useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { getCommonTooltipProps } from '../../utils/style.utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import type { MouseEvent } from 'react'
 import type { RowPinningPosition } from '@tanstack/react-table'
 import type { IconButtonProps } from '@mui/material/IconButton'
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Row, MRT_RowData } from '../../types'
 
 export interface MRT_RowPinButtonProps<
   TData extends MRT_RowData,
 > extends IconButtonProps {
   pinningPosition: RowPinningPosition
   row: MRT_Row<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_RowPinButton = <TData extends MRT_RowData>({
   pinningPosition,
   row,
-  table,
   ...rest
 }: MRT_RowPinButtonProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: {
       icons: { CloseIcon, PushPinIcon },

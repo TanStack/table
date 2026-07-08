@@ -3,24 +3,18 @@ import TableContainer from '@mui/material/TableContainer'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_CellActionMenu } from '../menus/MRT_CellActionMenu'
 import { MRT_EditRowModal } from '../modals/MRT_EditRowModal'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableLoadingOverlay } from './MRT_TableLoadingOverlay'
 import { MRT_Table } from './MRT_Table'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 import type { TableContainerProps } from '@mui/material/TableContainer'
 
 const useIsomorphicLayoutEffect =
   typeof window !== 'undefined' ? useLayoutEffect : useEffect
 
-export interface MRT_TableContainerProps<
-  TData extends MRT_RowData,
-> extends TableContainerProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_TableContainerProps extends TableContainerProps {}
 
-export const MRT_TableContainer = <TData extends MRT_RowData>({
-  table,
-  ...rest
-}: MRT_TableContainerProps<TData>) => {
+export const MRT_TableContainer = ({ ...rest }: MRT_TableContainerProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: {
@@ -100,12 +94,10 @@ export const MRT_TableContainer = <TData extends MRT_RowData>({
         ...(parseFromValuesOrFunc(tableContainerProps?.sx, theme) as any),
       })}
     >
-      {loading ? <MRT_TableLoadingOverlay table={table} /> : null}
-      <MRT_Table table={table} />
-      {(createModalOpen || editModalOpen) && (
-        <MRT_EditRowModal open table={table} />
-      )}
-      {enableCellActions && actionCell && <MRT_CellActionMenu table={table} />}
+      {loading ? <MRT_TableLoadingOverlay /> : null}
+      <MRT_Table />
+      {(createModalOpen || editModalOpen) && <MRT_EditRowModal open />}
+      {enableCellActions && actionCell && <MRT_CellActionMenu />}
     </TableContainer>
   )
 }

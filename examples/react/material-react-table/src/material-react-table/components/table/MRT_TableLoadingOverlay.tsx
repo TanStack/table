@@ -2,19 +2,15 @@ import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import { alpha } from '@mui/material/styles'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { CircularProgressProps } from '@mui/material/CircularProgress'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
-export interface MRT_TableLoadingOverlayProps<
-  TData extends MRT_RowData,
-> extends CircularProgressProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_TableLoadingOverlayProps extends CircularProgressProps {}
 
-export const MRT_TableLoadingOverlay = <TData extends MRT_RowData>({
-  table,
+export const MRT_TableLoadingOverlay = ({
   ...rest
-}: MRT_TableLoadingOverlayProps<TData>) => {
+}: MRT_TableLoadingOverlayProps) => {
+  const table = useMRTContext()
   const {
     options: {
       id,

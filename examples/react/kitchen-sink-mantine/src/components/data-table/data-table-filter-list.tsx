@@ -18,11 +18,11 @@ import { IconFilter, IconTrash } from '@tabler/icons-react'
 import type { Column, RowData } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 import type { features } from '@/hooks/features'
-
-type AppColumn = Column<typeof features, RowData, any>
 import { useTableContext } from '@/hooks/table'
 import { getFilterOperators } from '@/lib/data-table'
 import { toDateInputValue } from '@/components/data-table/shared'
+
+type AppColumn = Column<typeof features, RowData, any>
 
 function FilterValueInput({
   column,

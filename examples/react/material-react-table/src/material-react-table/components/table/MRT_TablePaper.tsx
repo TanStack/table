@@ -3,20 +3,14 @@ import { useTheme } from '@mui/material/styles'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_BottomToolbar } from '../toolbar/MRT_BottomToolbar'
 import { MRT_TopToolbar } from '../toolbar/MRT_TopToolbar'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableContainer } from './MRT_TableContainer'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 import type { PaperProps } from '@mui/material/Paper'
 
-export interface MRT_TablePaperProps<
-  TData extends MRT_RowData,
-> extends PaperProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_TablePaperProps extends PaperProps {}
 
-export const MRT_TablePaper = <TData extends MRT_RowData>({
-  table,
-  ...rest
-}: MRT_TablePaperProps<TData>) => {
+export const MRT_TablePaper = ({ ...rest }: MRT_TablePaperProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: {
@@ -79,12 +73,12 @@ export const MRT_TablePaper = <TData extends MRT_RowData>({
     >
       {enableTopToolbar &&
         (parseFromValuesOrFunc(renderTopToolbar, { table }) ?? (
-          <MRT_TopToolbar table={table} />
+          <MRT_TopToolbar />
         ))}
-      <MRT_TableContainer table={table} />
+      <MRT_TableContainer />
       {enableBottomToolbar &&
         (parseFromValuesOrFunc(renderBottomToolbar, { table }) ?? (
-          <MRT_BottomToolbar table={table} />
+          <MRT_BottomToolbar />
         ))}
     </Paper>
   )

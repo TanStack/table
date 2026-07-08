@@ -7,20 +7,17 @@ import Tooltip from '@mui/material/Tooltip'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_FilterOptionMenu } from '../menus/MRT_FilterOptionMenu'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
+import type { MRT_RowData } from '../../types'
 import type { TextFieldProps } from '@mui/material/TextField'
 import type { ChangeEvent, MouseEvent } from 'react'
 
-export interface MRT_GlobalFilterTextFieldProps<
-  TData extends MRT_RowData,
-> extends TextFieldProps<'standard'> {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_GlobalFilterTextFieldProps extends TextFieldProps<'standard'> {}
 
 export const MRT_GlobalFilterTextField = <TData extends MRT_RowData>({
-  table,
   ...rest
-}: MRT_GlobalFilterTextFieldProps<TData>) => {
+}: MRT_GlobalFilterTextFieldProps) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {
@@ -152,7 +149,6 @@ export const MRT_GlobalFilterTextField = <TData extends MRT_RowData>({
         anchorEl={anchorEl}
         onSelect={handleClear}
         setAnchorEl={setAnchorEl}
-        table={table}
       />
     </Collapse>
   )

@@ -5,6 +5,7 @@ import { useTheme } from '@mui/material/styles'
 import { getCommonMRTCellStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { cellKeyboardShortcuts } from '../../utils/cell.utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableHeadCellColumnActionsButton } from './MRT_TableHeadCellColumnActionsButton'
 import { MRT_TableHeadCellFilterContainer } from './MRT_TableHeadCellFilterContainer'
 import { MRT_TableHeadCellFilterLabel } from './MRT_TableHeadCellFilterLabel'
@@ -15,7 +16,6 @@ import type {
   MRT_ColumnVirtualizer,
   MRT_Header,
   MRT_RowData,
-  MRT_TableInstance,
 } from '../../types'
 import type { Theme } from '@mui/material/styles'
 import type { DragEvent } from 'react'
@@ -27,16 +27,15 @@ export interface MRT_TableHeadCellProps<
   columnVirtualizer?: MRT_ColumnVirtualizer
   header: MRT_Header<TData>
   staticColumnIndex?: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableHeadCell = <TData extends MRT_RowData>({
   columnVirtualizer,
   header,
   staticColumnIndex,
-  table,
   ...rest
 }: MRT_TableHeadCellProps<TData>) => {
+  const table = useMRTContext<TData>()
   const theme = useTheme()
   const {
     state,
@@ -309,10 +308,10 @@ export const MRT_TableHeadCell = <TData extends MRT_RowData>({
                   {HeaderElement}
                 </Box>
                 {column.getCanFilter() && (
-                  <MRT_TableHeadCellFilterLabel header={header} table={table} />
+                  <MRT_TableHeadCellFilterLabel header={header} />
                 )}
                 {column.getCanSort() && (
-                  <MRT_TableHeadCellSortLabel header={header} table={table} />
+                  <MRT_TableHeadCellSortLabel header={header} />
                 )}
               </Box>
               {columnDefType !== 'group' && (
@@ -325,27 +324,23 @@ export const MRT_TableHeadCell = <TData extends MRT_RowData>({
                   {showDragHandle && (
                     <MRT_TableHeadCellGrabHandle
                       column={column}
-                      table={table}
                       tableHeadCellRef={{
-                        current: tableHeadCellRefs.current?.[column.id]!,
+                        current: tableHeadCellRefs.current?.[column.id] ?? null,
                       }}
                     />
                   )}
                   {showColumnActions && (
-                    <MRT_TableHeadCellColumnActionsButton
-                      header={header}
-                      table={table}
-                    />
+                    <MRT_TableHeadCellColumnActionsButton header={header} />
                   )}
                 </Box>
               )}
               {column.getCanResize() && (
-                <MRT_TableHeadCellResizeHandle header={header} table={table} />
+                <MRT_TableHeadCellResizeHandle header={header} />
               )}
             </Box>
           ))}
       {columnFilterDisplayMode === 'subheader' && column.getCanFilter() && (
-        <MRT_TableHeadCellFilterContainer header={header} table={table} />
+        <MRT_TableHeadCellFilterContainer header={header} />
       )}
     </TableCell>
   )

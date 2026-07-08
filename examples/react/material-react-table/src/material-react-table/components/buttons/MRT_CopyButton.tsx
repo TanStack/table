@@ -2,8 +2,9 @@ import { useState } from 'react'
 import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import { getCommonTooltipProps } from '../../utils/style.utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_Cell, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Cell, MRT_RowData } from '../../types'
 import type { ButtonProps } from '@mui/material/Button'
 import type { MouseEvent } from 'react'
 
@@ -11,14 +12,13 @@ export interface MRT_CopyButtonProps<
   TData extends MRT_RowData,
 > extends ButtonProps {
   cell: MRT_Cell<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_CopyButton = <TData extends MRT_RowData>({
   cell,
-  table,
   ...rest
 }: MRT_CopyButtonProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: { localization, muiCopyButtonProps },
   } = table

@@ -9,21 +9,18 @@ import Stack from '@mui/material/Stack'
 import { getMRT_SelectAllHandler } from '../../utils/row.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_SelectCheckbox } from '../inputs/MRT_SelectCheckbox'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { AlertProps } from '@mui/material/Alert'
 
-export interface MRT_ToolbarAlertBannerProps<
-  TData extends MRT_RowData,
-> extends AlertProps {
+export interface MRT_ToolbarAlertBannerProps extends AlertProps {
   stackAlertBanner?: boolean
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
+export const MRT_ToolbarAlertBanner = ({
   stackAlertBanner,
-  table,
   ...rest
-}: MRT_ToolbarAlertBannerProps<TData>) => {
+}: MRT_ToolbarAlertBannerProps) => {
+  const table = useMRTContext()
   const {
     getFilteredSelectedRowModel,
     getCoreRowModel,
@@ -96,8 +93,8 @@ export const MRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
           <Fragment key={`${index}-${columnId}`}>
             {index > 0 ? localization.thenBy : ''}
             <Chip
-              label={table.getColumn(columnId).columnDef.header}
-              onDelete={() => table.getColumn(columnId).toggleGrouping()}
+              label={table.getColumn(columnId)!.columnDef.header}
+              onDelete={() => table.getColumn(columnId)!.toggleGrouping()}
               {...chipProps}
             />
           </Fragment>
@@ -165,7 +162,7 @@ export const MRT_ToolbarAlertBanner = <TData extends MRT_RowData>({
                 {enableRowSelection &&
                   enableSelectAll &&
                   positionToolbarAlertBanner === 'head-overlay' && (
-                    <MRT_SelectCheckbox table={table} />
+                    <MRT_SelectCheckbox />
                   )}{' '}
                 {selectedAlert}
               </Box>

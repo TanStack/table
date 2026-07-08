@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import Menu from '@mui/material/Menu'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_ActionMenuItem } from './MRT_ActionMenuItem'
 import { MRT_FilterOptionMenu } from './MRT_FilterOptionMenu'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Header, MRT_RowData } from '../../types'
 import type { MenuProps } from '@mui/material/Menu'
 import type { MouseEvent } from 'react'
 
@@ -12,16 +13,15 @@ export interface MRT_ColumnActionMenuProps<
   anchorEl: HTMLElement | null
   header: MRT_Header<TData>
   setAnchorEl: (anchorEl: HTMLElement | null) => void
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
   anchorEl,
   header,
   setAnchorEl,
-  table,
   ...rest
 }: MRT_ColumnActionMenuProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     getAllLeafColumns,
     state,
@@ -105,7 +105,7 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
   const handleClearFilter = () => {
     column.setFilterValue(undefined)
     setAnchorEl(null)
-    if (['empty', 'notEmpty'].includes(columnDef._filterFn)) {
+    if (['empty', 'notEmpty'].includes(columnDef._filterFn!)) {
       setColumnFilterFns((prev) => ({
         ...prev,
         [header.id]: allowedColumnFilterOptions?.[0] ?? 'fuzzy',
@@ -153,7 +153,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               key={0}
               label={localization.clearSort}
               onClick={handleClearSort}
-              table={table}
             />
           ),
           <MRT_ActionMenuItem
@@ -167,7 +166,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               String(columnDef.header),
             )}
             onClick={handleSortAsc}
-            table={table}
           />,
           <MRT_ActionMenuItem
             disabled={column.getIsSorted() === 'desc'}
@@ -179,7 +177,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               String(columnDef.header),
             )}
             onClick={handleSortDesc}
-            table={table}
           />,
         ]
       : []),
@@ -195,7 +192,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
             key={3}
             label={localization.clearFilter}
             onClick={handleClearFilter}
-            table={table}
           />,
           columnFilterDisplayMode === 'subheader' && (
             <MRT_ActionMenuItem
@@ -215,7 +211,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               onOpenSubMenu={
                 showFilterModeSubMenu ? handleOpenFilterModeMenu : undefined
               }
-              table={table}
             />
           ),
           showFilterModeSubMenu && (
@@ -225,7 +220,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               key={5}
               onSelect={handleFilterByColumn}
               setAnchorEl={setFilterMenuAnchorEl}
-              table={table}
             />
           ),
         ].filter(Boolean)
@@ -240,7 +234,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               column.getIsGrouped() ? 'ungroupByColumn' : 'groupByColumn'
             ]?.replace('{column}', String(columnDef.header))}
             onClick={handleGroupByColumn}
-            table={table}
           />,
         ]
       : []),
@@ -252,7 +245,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
             key={7}
             label={localization.pinToLeft}
             onClick={() => handlePinColumn('left')}
-            table={table}
           />,
           <MRT_ActionMenuItem
             disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
@@ -260,7 +252,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
             key={8}
             label={localization.pinToRight}
             onClick={() => handlePinColumn('right')}
-            table={table}
           />,
           <MRT_ActionMenuItem
             disabled={!column.getIsPinned()}
@@ -269,7 +260,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
             key={9}
             label={localization.unpin}
             onClick={() => handlePinColumn(false)}
-            table={table}
           />,
         ]
       : []),
@@ -281,7 +271,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
             key={10}
             label={localization.resetColumnSize}
             onClick={handleResetColumnSize}
-            table={table}
           />,
         ]
       : []),
@@ -296,7 +285,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               String(columnDef.header),
             )}
             onClick={handleHideColumn}
-            table={table}
           />,
           <MRT_ActionMenuItem
             disabled={
@@ -310,7 +298,6 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
               String(columnDef.header),
             )}
             onClick={handleShowAllColumns}
-            table={table}
           />,
         ]
       : []),

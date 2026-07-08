@@ -1,13 +1,13 @@
 import TableRow from '@mui/material/TableRow'
 import { alpha } from '@mui/material/styles'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableHeadCell } from './MRT_TableHeadCell'
 import type {
   MRT_ColumnVirtualizer,
   MRT_Header,
   MRT_HeaderGroup,
   MRT_RowData,
-  MRT_TableInstance,
   MRT_VirtualItem,
 } from '../../types'
 import type { TableRowProps } from '@mui/material/TableRow'
@@ -17,15 +17,14 @@ export interface MRT_TableHeadRowProps<
 > extends TableRowProps {
   columnVirtualizer?: MRT_ColumnVirtualizer
   headerGroup: MRT_HeaderGroup<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableHeadRow = <TData extends MRT_RowData>({
   columnVirtualizer,
   headerGroup,
-  table,
   ...rest
 }: MRT_TableHeadRowProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: {
       enableStickyHeader,
@@ -78,7 +77,6 @@ export const MRT_TableHeadRow = <TData extends MRT_RowData>({
               header={header}
               key={header.id}
               staticColumnIndex={staticColumnIndex}
-              table={table}
             />
           ) : null
         },

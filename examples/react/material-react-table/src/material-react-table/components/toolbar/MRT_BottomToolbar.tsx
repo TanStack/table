@@ -3,23 +3,17 @@ import { alpha } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { getCommonToolbarStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_LinearProgressBar } from './MRT_LinearProgressBar'
 import { MRT_TablePagination } from './MRT_TablePagination'
 import { MRT_ToolbarAlertBanner } from './MRT_ToolbarAlertBanner'
 import { MRT_ToolbarDropZone } from './MRT_ToolbarDropZone'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 import type { BoxProps } from '@mui/material/Box'
 
-export interface MRT_BottomToolbarProps<
-  TData extends MRT_RowData,
-> extends BoxProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_BottomToolbarProps extends BoxProps {}
 
-export const MRT_BottomToolbar = <TData extends MRT_RowData>({
-  table,
-  ...rest
-}: MRT_BottomToolbarProps<TData>) => {
+export const MRT_BottomToolbar = ({ ...rest }: MRT_BottomToolbarProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: {
@@ -68,15 +62,12 @@ export const MRT_BottomToolbar = <TData extends MRT_RowData>({
         ...(parseFromValuesOrFunc(toolbarProps?.sx, theme) as any),
       })}
     >
-      <MRT_LinearProgressBar isTopToolbar={false} table={table} />
+      <MRT_LinearProgressBar isTopToolbar={false} />
       {positionToolbarAlertBanner === 'bottom' && (
-        <MRT_ToolbarAlertBanner
-          stackAlertBanner={stackAlertBanner}
-          table={table}
-        />
+        <MRT_ToolbarAlertBanner stackAlertBanner={stackAlertBanner} />
       )}
       {['both', 'bottom'].includes(positionToolbarDropZone ?? '') && (
-        <MRT_ToolbarDropZone table={table} />
+        <MRT_ToolbarDropZone />
       )}
       <Box
         sx={{
@@ -104,7 +95,7 @@ export const MRT_BottomToolbar = <TData extends MRT_RowData>({
         >
           {enablePagination &&
             ['both', 'bottom'].includes(positionPagination ?? '') && (
-              <MRT_TablePagination position="bottom" table={table} />
+              <MRT_TablePagination position="bottom" />
             )}
         </Box>
       </Box>

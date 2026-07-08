@@ -1,23 +1,23 @@
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_GrabHandleButton } from '../buttons/MRT_GrabHandleButton'
 import type { DragEvent, RefObject } from 'react'
 import type { IconButtonProps } from '@mui/material/IconButton'
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Row, MRT_RowData } from '../../types'
 
 export interface MRT_TableBodyRowGrabHandleProps<
   TData extends MRT_RowData,
 > extends IconButtonProps {
   row: MRT_Row<TData>
   rowRef: RefObject<HTMLTableRowElement | null>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableBodyRowGrabHandle = <TData extends MRT_RowData>({
   row,
   rowRef,
-  table,
   ...rest
 }: MRT_TableBodyRowGrabHandleProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: { muiRowDragHandleProps },
   } = table
@@ -52,7 +52,6 @@ export const MRT_TableBodyRowGrabHandle = <TData extends MRT_RowData>({
       location="row"
       onDragEnd={handleDragEnd}
       onDragStart={handleDragStart}
-      table={table}
     />
   )
 }

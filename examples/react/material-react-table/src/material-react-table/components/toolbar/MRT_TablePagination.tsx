@@ -11,15 +11,13 @@ import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { flipIconStyles, getCommonTooltipProps } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { SelectProps } from '@mui/material/Select'
 import type { PaginationProps } from '@mui/material/Pagination'
 
 const defaultRowsPerPage = [5, 10, 15, 20, 25, 30, 50, 100]
 
-export interface MRT_TablePaginationProps<
-  TData extends MRT_RowData,
-> extends Partial<
+export interface MRT_TablePaginationProps extends Partial<
   PaginationProps & {
     SelectProps?: Partial<SelectProps>
     disabled?: boolean
@@ -28,14 +26,13 @@ export interface MRT_TablePaginationProps<
   }
 > {
   position?: 'bottom' | 'top'
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_TablePagination = <TData extends MRT_RowData>({
+export const MRT_TablePagination = ({
   position = 'bottom',
-  table,
   ...rest
-}: MRT_TablePaginationProps<TData>) => {
+}: MRT_TablePaginationProps) => {
+  const table = useMRTContext()
   const theme = useTheme()
   const isMobile = useMediaQuery('(max-width: 720px)')
 

@@ -4,7 +4,8 @@ import Tooltip from '@mui/material/Tooltip'
 import { getCommonTooltipProps } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_ColumnActionMenu } from '../menus/MRT_ColumnActionMenu'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
+import type { MRT_Header, MRT_RowData } from '../../types'
 import type { IconButtonProps } from '@mui/material/IconButton'
 import type { MouseEvent } from 'react'
 
@@ -12,16 +13,15 @@ export interface MRT_TableHeadCellColumnActionsButtonProps<
   TData extends MRT_RowData,
 > extends IconButtonProps {
   header: MRT_Header<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableHeadCellColumnActionsButton = <
   TData extends MRT_RowData,
 >({
   header,
-  table,
   ...rest
 }: MRT_TableHeadCellColumnActionsButtonProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: {
       icons: { MoreVertIcon },
@@ -86,7 +86,6 @@ export const MRT_TableHeadCellColumnActionsButton = <
           anchorEl={anchorEl}
           header={header}
           setAnchorEl={setAnchorEl}
-          table={table}
         />
       )}
     </>

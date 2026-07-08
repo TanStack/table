@@ -13,10 +13,15 @@ import type {
   MRT_TableInstance,
 } from '../types'
 
+// `MRT_ColumnDef` is now the core `ColumnDef` union, so accessor-key / group /
+// MRT-specific fields live on individual union members. This resolution code
+// reads and mutates them freely, so it operates on a loose view via `any`.
 export const getColumnId = <TData extends MRT_RowData>(
   columnDef: MRT_ColumnDef<TData>,
-): string =>
-  columnDef.id ?? columnDef.accessorKey?.toString?.() ?? columnDef.header
+): string => {
+  const def = columnDef as any
+  return def.id ?? def.accessorKey?.toString?.() ?? def.header
+}
 
 export const getAllLeafColumnDefs = <TData extends MRT_RowData>(
   columns: Array<MRT_ColumnDef<TData>>,
@@ -24,8 +29,11 @@ export const getAllLeafColumnDefs = <TData extends MRT_RowData>(
   const allLeafColumnDefs: Array<MRT_ColumnDef<TData>> = []
   const getLeafColumns = (cols: Array<MRT_ColumnDef<TData>>) => {
     cols.forEach((col) => {
-      if (col.columns) {
-        getLeafColumns(col.columns)
+      const subCols = (col as any).columns as
+        | Array<MRT_ColumnDef<TData>>
+        | undefined
+      if (subCols) {
+        getLeafColumns(subCols)
       } else {
         allLeafColumnDefs.push(col)
       }
@@ -42,30 +50,34 @@ export const prepareColumns = <TData extends MRT_RowData>({
   columnDefs: Array<MRT_ColumnDef<TData>>
   tableOptions: MRT_DefinedTableOptions<TData>
 }): Array<MRT_DefinedColumnDef<TData>> => {
+  // `aggregationFns` / `filterFns` / `sortFns` are carried on the options object
+  // at runtime (client-supplied custom fns), but aren't declared as core options
+  // (they're feature-slot registries), so read them off a loose view.
   const {
     aggregationFns = {},
     defaultDisplayColumn,
     filterFns = {},
     sortFns = {},
     state: { columnFilterFns = {} } = {},
-  } = tableOptions
+  } = tableOptions as any
   return columnDefs.map((columnDef) => {
+    const def = columnDef as any
     // assign columnId
-    if (!columnDef.id) columnDef.id = getColumnId(columnDef)
+    if (!def.id) def.id = getColumnId(columnDef)
     // assign columnDefType
-    if (!columnDef.columnDefType) columnDef.columnDefType = 'data'
-    if (columnDef.columns?.length) {
-      columnDef.columnDefType = 'group'
+    if (!def.columnDefType) def.columnDefType = 'data'
+    if (def.columns?.length) {
+      def.columnDefType = 'group'
       // recursively prepare columns if this is a group column
-      columnDef.columns = prepareColumns({
-        columnDefs: columnDef.columns,
+      def.columns = prepareColumns({
+        columnDefs: def.columns,
         tableOptions,
       })
-    } else if (columnDef.columnDefType === 'data') {
+    } else if (def.columnDefType === 'data') {
       // assign aggregationFns if multiple aggregationFns are provided
-      if (Array.isArray(columnDef.aggregationFn)) {
-        const aggFns = columnDef.aggregationFn as Array<string>
-        columnDef.aggregationFn = (
+      if (Array.isArray(def.aggregationFn)) {
+        const aggFns = def.aggregationFn as Array<string>
+        def.aggregationFn = (
           columnId: string,
           leafRows: Array<Row<StockFeatures, TData>>,
           childRows: Array<Row<StockFeatures, TData>>,
@@ -76,18 +88,16 @@ export const prepareColumns = <TData extends MRT_RowData>({
       }
 
       // assign filterFns
-      if (Object.keys(filterFns).includes(columnFilterFns[columnDef.id])) {
-        columnDef.filterFn =
-          filterFns[columnFilterFns[columnDef.id]] ?? filterFns.fuzzy
-        ;(columnDef as MRT_DefinedColumnDef<TData>)._filterFn =
-          columnFilterFns[columnDef.id]
+      if (Object.keys(filterFns).includes(columnFilterFns[def.id])) {
+        def.filterFn = filterFns[columnFilterFns[def.id]] ?? filterFns.fuzzy
+        def._filterFn = columnFilterFns[def.id]
       }
 
       // assign sortFns
-      if (Object.keys(sortFns).includes(columnDef.sortFn as string)) {
-        columnDef.sortFn = sortFns[columnDef.sortFn as string]
+      if (Object.keys(sortFns).includes(def.sortFn as string)) {
+        def.sortFn = sortFns[def.sortFn as string]
       }
-    } else if (columnDef.columnDefType === 'display') {
+    } else if (def.columnDefType === 'display') {
       columnDef = {
         ...(defaultDisplayColumn as MRT_ColumnDef<TData>),
         ...columnDef,
@@ -146,7 +156,7 @@ export const getColumnFilterInfo = <TData extends MRT_RowData>({
   const isRangeFilter =
     filterVariant?.includes('range') ||
     ['between', 'betweenInclusive', 'inNumberRange'].includes(
-      columnDef._filterFn,
+      columnDef._filterFn!,
     )
   const isSelectFilter = filterVariant === 'select'
   const isMultiSelectFilter = filterVariant === 'multi-select'

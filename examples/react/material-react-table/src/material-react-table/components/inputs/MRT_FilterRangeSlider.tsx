@@ -3,21 +3,21 @@ import FormHelperText from '@mui/material/FormHelperText'
 import Slider from '@mui/material/Slider'
 import Stack from '@mui/material/Stack'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { SliderProps } from '@mui/material/Slider'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Header, MRT_RowData } from '../../types'
 
 export interface MRT_FilterRangeSliderProps<
   TData extends MRT_RowData,
 > extends SliderProps {
   header: MRT_Header<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_FilterRangeSlider = <TData extends MRT_RowData>({
   header,
-  table,
   ...rest
 }: MRT_FilterRangeSliderProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: { enableColumnFilterModes, localization, muiFilterSliderProps },
     refs: { filterInputRefs },
@@ -25,7 +25,7 @@ export const MRT_FilterRangeSlider = <TData extends MRT_RowData>({
   const { column } = header
   const { columnDef } = column
 
-  const currentFilterOption = columnDef._filterFn
+  const currentFilterOption = columnDef._filterFn!
 
   const showChangeModeButton =
     enableColumnFilterModes && columnDef.enableColumnFilterModes !== false

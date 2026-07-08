@@ -2,22 +2,22 @@ import { useState } from 'react'
 import MenuItem from '@mui/material/MenuItem'
 import TextField from '@mui/material/TextField'
 import { getValueAndLabel, parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { ChangeEvent, FocusEvent, KeyboardEvent } from 'react'
 import type { TextFieldProps } from '@mui/material/TextField'
-import type { MRT_Cell, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Cell, MRT_RowData } from '../../types'
 
 export interface MRT_EditCellTextFieldProps<
   TData extends MRT_RowData,
 > extends TextFieldProps<'standard'> {
   cell: MRT_Cell<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_EditCellTextField = <TData extends MRT_RowData>({
   cell,
-  table,
   ...rest
 }: MRT_EditCellTextFieldProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: { createDisplayMode, editDisplayMode, muiEditTextFieldProps },
@@ -63,7 +63,6 @@ export const MRT_EditCellTextField = <TData extends MRT_RowData>({
   const isSelectEdit = editVariant === 'select' || textFieldProps?.select
 
   const saveInputValueToRowCache = (newValue: string) => {
-    // @ts-expect-error
     row._valuesCache[column.id] = newValue
     if (isCreating) {
       setCreatingRow(row)

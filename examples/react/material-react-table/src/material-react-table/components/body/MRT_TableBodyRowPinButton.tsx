@@ -1,21 +1,21 @@
 import Box from '@mui/material/Box'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_RowPinButton } from '../buttons/MRT_RowPinButton'
 import type { IconButtonProps } from '@mui/material/IconButton'
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Row, MRT_RowData } from '../../types'
 
 export interface MRT_TableBodyRowPinButtonProps<
   TData extends MRT_RowData,
 > extends IconButtonProps {
   row: MRT_Row<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableBodyRowPinButton = <TData extends MRT_RowData>({
   row,
-  table,
   ...rest
 }: MRT_TableBodyRowPinButtonProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: { enableRowPinning, rowPinningDisplayMode },
@@ -28,7 +28,6 @@ export const MRT_TableBodyRowPinButton = <TData extends MRT_RowData>({
 
   const rowPinButtonProps = {
     row,
-    table,
     ...rest,
   }
 

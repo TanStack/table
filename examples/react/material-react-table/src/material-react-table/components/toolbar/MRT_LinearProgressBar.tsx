@@ -1,21 +1,18 @@
 import Collapse from '@mui/material/Collapse'
 import LinearProgress from '@mui/material/LinearProgress'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { LinearProgressProps } from '@mui/material/LinearProgress'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
-export interface MRT_LinearProgressBarProps<
-  TData extends MRT_RowData,
-> extends LinearProgressProps {
+export interface MRT_LinearProgressBarProps extends LinearProgressProps {
   isTopToolbar: boolean
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_LinearProgressBar = <TData extends MRT_RowData>({
+export const MRT_LinearProgressBar = ({
   isTopToolbar,
-  table,
   ...rest
-}: MRT_LinearProgressBarProps<TData>) => {
+}: MRT_LinearProgressBarProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: { muiLinearProgressProps },

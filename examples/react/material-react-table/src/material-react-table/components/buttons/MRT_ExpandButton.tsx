@@ -2,8 +2,9 @@ import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { useTheme } from '@mui/material/styles'
 import { getCommonTooltipProps } from '../../utils/style.utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Row, MRT_RowData } from '../../types'
 import type { IconButtonProps } from '@mui/material/IconButton'
 import type { MouseEvent } from 'react'
 
@@ -12,14 +13,13 @@ export interface MRT_ExpandButtonProps<
 > extends IconButtonProps {
   row: MRT_Row<TData>
   staticRowIndex?: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_ExpandButton = <TData extends MRT_RowData>({
   row,
   staticRowIndex,
-  table,
 }: MRT_ExpandButtonProps<TData>) => {
+  const table = useMRTContext<TData>()
   const theme = useTheme()
   const {
     state,

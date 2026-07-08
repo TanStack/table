@@ -6,17 +6,13 @@ import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_TableBody, Memo_MRT_TableBody } from '../body/MRT_TableBody'
 import { MRT_TableFooter } from '../footer/MRT_TableFooter'
 import { MRT_TableHead } from '../head/MRT_TableHead'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { TableProps } from '@mui/material/Table'
 
-export interface MRT_TableProps<TData extends MRT_RowData> extends TableProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_TableProps extends TableProps {}
 
-export const MRT_Table = <TData extends MRT_RowData>({
-  table,
-  ...rest
-}: MRT_TableProps<TData>) => {
+export const MRT_Table = ({ ...rest }: MRT_TableProps) => {
+  const table = useMRTContext()
   const {
     getFlatHeaders,
     state,
@@ -56,7 +52,6 @@ export const MRT_Table = <TData extends MRT_RowData>({
 
   const commonTableGroupProps = {
     columnVirtualizer,
-    table,
   }
 
   return (

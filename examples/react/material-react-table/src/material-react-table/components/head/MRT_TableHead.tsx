@@ -1,26 +1,20 @@
 import TableHead from '@mui/material/TableHead'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_ToolbarAlertBanner } from '../toolbar/MRT_ToolbarAlertBanner'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableHeadRow } from './MRT_TableHeadRow'
-import type {
-  MRT_ColumnVirtualizer,
-  MRT_RowData,
-  MRT_TableInstance,
-} from '../../types'
+import type { MRT_ColumnVirtualizer, MRT_RowData } from '../../types'
 import type { TableHeadProps } from '@mui/material/TableHead'
 
-export interface MRT_TableHeadProps<
-  TData extends MRT_RowData,
-> extends TableHeadProps {
+export interface MRT_TableHeadProps extends TableHeadProps {
   columnVirtualizer?: MRT_ColumnVirtualizer
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableHead = <TData extends MRT_RowData>({
   columnVirtualizer,
-  table,
   ...rest
-}: MRT_TableHeadProps<TData>) => {
+}: MRT_TableHeadProps) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {
@@ -73,7 +67,7 @@ export const MRT_TableHead = <TData extends MRT_RowData>({
               padding: 0,
             }}
           >
-            <MRT_ToolbarAlertBanner table={table} />
+            <MRT_ToolbarAlertBanner />
           </th>
         </tr>
       ) : (
@@ -84,7 +78,6 @@ export const MRT_TableHead = <TData extends MRT_RowData>({
               columnVirtualizer={columnVirtualizer}
               headerGroup={headerGroup as any}
               key={headerGroup.id}
-              table={table}
             />
           ))
       )}

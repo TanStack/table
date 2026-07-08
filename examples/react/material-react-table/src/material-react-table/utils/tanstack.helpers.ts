@@ -75,7 +75,7 @@ export const createRow = <TData extends MRT_RowData>(
     originalRow ??
       Object.assign(
         {},
-        ...getAllLeafColumnDefs(table.options.columns).map((col) => ({
+        ...getAllLeafColumnDefs(table.options.columns as any).map((col) => ({
           [getColumnId(col)]: '',
         })),
       ),

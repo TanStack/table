@@ -188,7 +188,7 @@ export function DataTableFilterList(): React.ReactNode {
     setColumnFilters(
       columnFilters.map((filter: ExtendedColumnFilter) =>
         filter.filterId === filterId ? { ...filter, ...patch } : filter,
-      ) as any,
+      ),
     )
   }
 
@@ -240,7 +240,7 @@ export function DataTableFilterList(): React.ReactNode {
                         columnFilters.map((item: ExtendedColumnFilter) => ({
                           ...item,
                           joinOperator: joinOperator as 'and' | 'or',
-                        })) as any,
+                        })),
                       )
                     }
                   />
@@ -293,7 +293,7 @@ export function DataTableFilterList(): React.ReactNode {
                       columnFilters.filter(
                         (item: ExtendedColumnFilter) =>
                           item.filterId !== filter.filterId,
-                      ) as any,
+                      ),
                     )
                   }
                 >
@@ -309,7 +309,7 @@ export function DataTableFilterList(): React.ReactNode {
             <Button
               size="sm"
               variant="ghost"
-              onPress={() => setColumnFilters([] as any)}
+              onPress={() => setColumnFilters([])}
             >
               Reset
             </Button>

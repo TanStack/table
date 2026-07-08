@@ -1,8 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   Injector,
+  computed,
   inject,
   signal,
   viewChild,

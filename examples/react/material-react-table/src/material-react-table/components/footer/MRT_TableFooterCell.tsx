@@ -3,7 +3,8 @@ import { useTheme } from '@mui/material/styles'
 import { getCommonMRTCellStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { cellKeyboardShortcuts } from '../../utils/cell.utils'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
+import type { MRT_Header, MRT_RowData } from '../../types'
 import type { TableCellProps } from '@mui/material/TableCell'
 
 export interface MRT_TableFooterCellProps<
@@ -11,15 +12,14 @@ export interface MRT_TableFooterCellProps<
 > extends TableCellProps {
   footer: MRT_Header<TData>
   staticColumnIndex?: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableFooterCell = <TData extends MRT_RowData>({
   footer,
   staticColumnIndex,
-  table,
   ...rest
 }: MRT_TableFooterCellProps<TData>) => {
+  const table = useMRTContext<TData>()
   const theme = useTheme()
   const {
     state,

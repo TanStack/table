@@ -1,19 +1,15 @@
 import { useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { IconButtonProps } from '@mui/material/IconButton'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
-export interface MRT_ToggleFullScreenButtonProps<
-  TData extends MRT_RowData,
-> extends IconButtonProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_ToggleFullScreenButtonProps extends IconButtonProps {}
 
-export const MRT_ToggleFullScreenButton = <TData extends MRT_RowData>({
-  table,
+export const MRT_ToggleFullScreenButton = ({
   ...rest
-}: MRT_ToggleFullScreenButtonProps<TData>) => {
+}: MRT_ToggleFullScreenButtonProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: {

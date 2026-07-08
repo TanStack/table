@@ -7,6 +7,7 @@ import {
   getCommonPinnedCellStyles,
 } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableDetailPanel } from './MRT_TableDetailPanel'
 import { MRT_TableBodyCell, Memo_MRT_TableBodyCell } from './MRT_TableBodyCell'
 import type {
@@ -15,7 +16,6 @@ import type {
   MRT_Row,
   MRT_RowData,
   MRT_RowVirtualizer,
-  MRT_TableInstance,
   MRT_VirtualItem,
 } from '../../types'
 import type { Theme } from '@mui/material/styles'
@@ -32,7 +32,6 @@ export interface MRT_TableBodyRowProps<
   row: MRT_Row<TData>
   rowVirtualizer?: MRT_RowVirtualizer
   staticRowIndex: number
-  table: MRT_TableInstance<TData>
   virtualRow?: VirtualItem
 }
 
@@ -43,10 +42,10 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
   row,
   rowVirtualizer,
   staticRowIndex,
-  table,
   virtualRow,
   ...rest
 }: MRT_TableBodyRowProps<TData>) => {
+  const table = useMRTContext<TData>()
   const theme = useTheme()
 
   const {
@@ -244,7 +243,6 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
               rowRef,
               staticColumnIndex,
               staticRowIndex,
-              table,
             }
             const key = `${cell.id}-${staticRowIndex}`
             return cell ? (
@@ -271,7 +269,6 @@ export const MRT_TableBodyRow = <TData extends MRT_RowData>({
           row={row}
           rowVirtualizer={rowVirtualizer}
           staticRowIndex={staticRowIndex}
-          table={table}
           virtualRow={virtualRow}
         />
       )}

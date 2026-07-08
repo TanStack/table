@@ -2,20 +2,16 @@ import { useState } from 'react'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
 import { MRT_ShowHideColumnsMenu } from '../menus/MRT_ShowHideColumnsMenu'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { MouseEvent } from 'react'
 import type { IconButtonProps } from '@mui/material/IconButton'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
-export interface MRT_ShowHideColumnsButtonProps<
-  TData extends MRT_RowData,
-> extends IconButtonProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_ShowHideColumnsButtonProps extends IconButtonProps {}
 
-export const MRT_ShowHideColumnsButton = <TData extends MRT_RowData>({
-  table,
+export const MRT_ShowHideColumnsButton = ({
   ...rest
-}: MRT_ShowHideColumnsButtonProps<TData>) => {
+}: MRT_ShowHideColumnsButtonProps) => {
+  const table = useMRTContext()
   const {
     options: {
       icons: { ViewColumnIcon },
@@ -45,7 +41,6 @@ export const MRT_ShowHideColumnsButton = <TData extends MRT_RowData>({
         <MRT_ShowHideColumnsMenu
           anchorEl={anchorEl}
           setAnchorEl={setAnchorEl}
-          table={table}
         />
       )}
     </>

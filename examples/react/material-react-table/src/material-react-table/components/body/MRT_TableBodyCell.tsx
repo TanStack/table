@@ -11,8 +11,9 @@ import { getCommonMRTCellStyles } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_CopyButton } from '../buttons/MRT_CopyButton'
 import { MRT_EditCellTextField } from '../inputs/MRT_EditCellTextField'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableBodyCellValue } from './MRT_TableBodyCellValue'
-import type { MRT_Cell, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Cell, MRT_RowData } from '../../types'
 import type { TableCellProps } from '@mui/material/TableCell'
 import type { DragEvent, MouseEvent, RefObject } from 'react'
 
@@ -24,7 +25,6 @@ export interface MRT_TableBodyCellProps<
   rowRef: RefObject<HTMLTableRowElement | null>
   staticColumnIndex?: number
   staticRowIndex: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableBodyCell = <TData extends MRT_RowData>({
@@ -33,9 +33,9 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
   rowRef,
   staticColumnIndex,
   staticRowIndex,
-  table,
   ...rest
 }: MRT_TableBodyCellProps<TData>) => {
+  const table = useMRTContext<TData>()
   const theme = useTheme()
   const {
     state,
@@ -185,7 +185,6 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
 
   const cellValueProps = {
     cell,
-    table,
     staticColumnIndex,
     staticRowIndex,
   }
@@ -316,9 +315,9 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
               table,
             })
           ) : isCreating || isEditing ? (
-            <MRT_EditCellTextField cell={cell} table={table} />
+            <MRT_EditCellTextField cell={cell} />
           ) : showClickToCopyButton && columnDef.enableClickToCopy !== false ? (
-            <MRT_CopyButton cell={cell} table={table}>
+            <MRT_CopyButton cell={cell}>
               <MRT_TableBodyCellValue {...cellValueProps} />
             </MRT_CopyButton>
           ) : (

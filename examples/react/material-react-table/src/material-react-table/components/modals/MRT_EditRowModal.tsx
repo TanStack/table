@@ -6,21 +6,19 @@ import Stack from '@mui/material/Stack'
 import { parseFromValuesOrFunc } from '../../utils/utils'
 import { MRT_EditActionButtons } from '../buttons/MRT_EditActionButtons'
 import { MRT_EditCellTextField } from '../inputs/MRT_EditCellTextField'
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
+import type { MRT_Row, MRT_RowData } from '../../types'
 import type { DialogProps } from '@mui/material/Dialog'
 
-export interface MRT_EditRowModalProps<
-  TData extends MRT_RowData,
-> extends Partial<DialogProps> {
+export interface MRT_EditRowModalProps extends Partial<DialogProps> {
   open: boolean
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_EditRowModal = <TData extends MRT_RowData>({
+export const MRT_EditRowModal = <TData extends MRT_RowData = MRT_RowData>({
   open,
-  table,
   ...rest
-}: MRT_EditRowModalProps<TData>) => {
+}: MRT_EditRowModalProps) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {
@@ -48,13 +46,7 @@ export const MRT_EditRowModal = <TData extends MRT_RowData>({
   const internalEditComponents = row
     .getAllCells()
     .filter((cell) => cell.column.columnDef.columnDefType === 'data')
-    .map((cell) => (
-      <MRT_EditCellTextField
-        cell={cell as any}
-        key={cell.id}
-        table={table as any}
-      />
-    ))
+    .map((cell) => <MRT_EditCellTextField cell={cell as any} key={cell.id} />)
 
   return (
     <Dialog
@@ -68,7 +60,7 @@ export const MRT_EditRowModal = <TData extends MRT_RowData>({
           onEditingRowCancel?.({ row, table })
           setEditingRow(null)
         }
-        row._valuesCache = {} as any // reset values cache
+        row._valuesCache = {} // reset values cache
         dialogProps.onClose?.(event, reason)
       }}
       open={open}
@@ -103,7 +95,7 @@ export const MRT_EditRowModal = <TData extends MRT_RowData>({
             </form>
           </DialogContent>
           <DialogActions sx={{ p: '1.25rem' }}>
-            <MRT_EditActionButtons row={row} table={table} variant="text" />
+            <MRT_EditActionButtons row={row} variant="text" />
           </DialogActions>
         </>
       )}

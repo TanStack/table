@@ -8,7 +8,8 @@ import {
 } from '../../utils/row.utils'
 import { getCommonTooltipProps } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
+import type { MRT_Row, MRT_RowData } from '../../types'
 import type { Theme } from '@mui/material/styles'
 import type { RadioProps } from '@mui/material/Radio'
 import type { CheckboxProps } from '@mui/material/Checkbox'
@@ -19,15 +20,14 @@ export interface MRT_SelectCheckboxProps<
 > extends CheckboxProps {
   row?: MRT_Row<TData>
   staticRowIndex?: number
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_SelectCheckbox = <TData extends MRT_RowData>({
   row,
   staticRowIndex,
-  table,
   ...rest
 }: MRT_SelectCheckboxProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {

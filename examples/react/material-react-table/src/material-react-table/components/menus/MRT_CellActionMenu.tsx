@@ -1,20 +1,15 @@
 import Menu from '@mui/material/Menu'
 import { openEditingCell } from '../../utils/cell.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_ActionMenuItem } from './MRT_ActionMenuItem'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 import type { MenuProps } from '@mui/material/Menu'
+import type { MRT_Cell, MRT_RowData } from '../../types'
 
-export interface MRT_CellActionMenuProps<
-  TData extends MRT_RowData,
-> extends Partial<MenuProps> {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_CellActionMenuProps extends Partial<MenuProps> {}
 
-export const MRT_CellActionMenu = <TData extends MRT_RowData>({
-  table,
-  ...rest
-}: MRT_CellActionMenuProps<TData>) => {
+export const MRT_CellActionMenu = ({ ...rest }: MRT_CellActionMenuProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: {
@@ -29,7 +24,9 @@ export const MRT_CellActionMenu = <TData extends MRT_RowData>({
     refs: { actionCellRef },
   } = table
   const { actionCell, density } = state
-  const cell = actionCell!
+  // `actionCell` is stored as `Cell<any, any, any>` on the (non-generic) state
+  // map; narrow it back to the MRT cell shape for the render props below.
+  const cell = actionCell! as MRT_Cell<MRT_RowData>
   const { row } = cell
   const { column } = cell
   const { columnDef } = column
@@ -53,7 +50,6 @@ export const MRT_CellActionMenu = <TData extends MRT_RowData>({
           navigator.clipboard.writeText(cell.getValue() as string)
           handleClose()
         }}
-        table={table}
       />
     ),
     parseFromValuesOrFunc(enableEditing, row) && editDisplayMode === 'cell' && (
@@ -65,7 +61,6 @@ export const MRT_CellActionMenu = <TData extends MRT_RowData>({
           openEditingCell({ cell, table })
           handleClose()
         }}
-        table={table}
       />
     ),
   ].filter(Boolean)

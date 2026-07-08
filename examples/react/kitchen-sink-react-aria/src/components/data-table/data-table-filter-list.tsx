@@ -197,7 +197,7 @@ export function DataTableFilterList(): React.ReactNode {
     setColumnFilters(
       columnFilters.map((filter) =>
         filter.filterId === filterId ? { ...filter, ...patch } : filter,
-      ) as any,
+      ),
     )
   }
 
@@ -212,8 +212,8 @@ export function DataTableFilterList(): React.ReactNode {
         value: '',
         operator: 'includesString',
         joinOperator: columnFilters[0]?.joinOperator ?? 'and',
-      } as ExtendedColumnFilter,
-    ] as any)
+      },
+    ])
   }
 
   return (
@@ -249,7 +249,7 @@ export function DataTableFilterList(): React.ReactNode {
                         columnFilters.map((item) => ({
                           ...item,
                           joinOperator: joinOperator as 'and' | 'or',
-                        })) as any,
+                        })),
                       )
                     }
                   />
@@ -299,7 +299,7 @@ export function DataTableFilterList(): React.ReactNode {
                     setColumnFilters(
                       columnFilters.filter(
                         (item) => item.filterId !== filter.filterId,
-                      ) as any,
+                      ),
                     )
                   }
                 >

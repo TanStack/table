@@ -6,10 +6,10 @@ import * as ReactDOM from 'react-dom/client'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
 import {
   Button,
+  Table as HeroTable,
   Input,
   Surface,
   Switch,
-  Table as HeroTable,
   Tooltip,
   cn,
   useTheme,

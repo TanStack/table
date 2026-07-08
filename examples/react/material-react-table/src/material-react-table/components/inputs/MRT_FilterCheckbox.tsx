@@ -3,21 +3,21 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import Tooltip from '@mui/material/Tooltip'
 import { getCommonTooltipProps } from '../../utils/style.utils'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_Column, MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
+import type { MRT_Column, MRT_RowData } from '../../types'
 import type { CheckboxProps } from '@mui/material/Checkbox'
 
 export interface MRT_FilterCheckboxProps<
   TData extends MRT_RowData,
 > extends CheckboxProps {
   column: MRT_Column<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_FilterCheckbox = <TData extends MRT_RowData>({
   column,
-  table,
   ...rest
 }: MRT_FilterCheckboxProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: { localization, muiFilterCheckboxProps },

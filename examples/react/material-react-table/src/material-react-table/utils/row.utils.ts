@@ -70,7 +70,7 @@ export const getMRT_Rows = <TData extends MRT_RowData>(
         : rows.length
     rows = [
       ...rows.slice(0, creatingRowIndex),
-      creatingRow,
+      creatingRow as MRT_Row<TData>,
       ...rows.slice(creatingRowIndex),
     ]
   }

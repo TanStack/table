@@ -9,8 +9,9 @@ import {
   useDropdownOptions,
 } from '../../utils/column.utils'
 import { getValueAndLabel, parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableHeadCellFilterContainer } from './MRT_TableHeadCellFilterContainer'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Header, MRT_RowData } from '../../types'
 import type { IconButtonProps } from '@mui/material/IconButton'
 import type { MouseEvent } from 'react'
 
@@ -18,14 +19,13 @@ export interface MRT_TableHeadCellFilterLabelProps<
   TData extends MRT_RowData,
 > extends IconButtonProps {
   header: MRT_Header<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableHeadCellFilterLabel = <TData extends MRT_RowData = {}>({
   header,
-  table,
   ...rest
 }: MRT_TableHeadCellFilterLabelProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: {
       columnFilterDisplayMode,
@@ -168,7 +168,7 @@ export const MRT_TableHeadCellFilterLabel = <TData extends MRT_RowData = {}>({
           }}
         >
           <Box sx={{ p: '1rem' }}>
-            <MRT_TableHeadCellFilterContainer header={header} table={table} />
+            <MRT_TableHeadCellFilterContainer header={header} />
           </Box>
         </Popover>
       )}

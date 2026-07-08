@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import Menu from '@mui/material/Menu'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_ActionMenuItem } from './MRT_ActionMenuItem'
 import type {
   MRT_FilterOption,
@@ -7,7 +8,6 @@ import type {
   MRT_InternalFilterOption,
   MRT_Localization,
   MRT_RowData,
-  MRT_TableInstance,
 } from '../../types'
 import type { MenuProps } from '@mui/material/Menu'
 
@@ -113,7 +113,6 @@ export interface MRT_FilterOptionMenuProps<
   onSelect?: () => void
   setAnchorEl: (anchorEl: HTMLElement | null) => void
   setFilterValue?: (filterValue: any) => void
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
@@ -122,9 +121,9 @@ export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
   onSelect,
   setAnchorEl,
   setFilterValue,
-  table,
   ...rest
 }: MRT_FilterOptionMenuProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {
@@ -284,7 +283,6 @@ export const MRT_FilterOptionMenu = <TData extends MRT_RowData>({
               label={label}
               onClick={() => handleSelectFilterMode(option)}
               selected={option === filterOption}
-              table={table}
               value={option}
             />
           ),

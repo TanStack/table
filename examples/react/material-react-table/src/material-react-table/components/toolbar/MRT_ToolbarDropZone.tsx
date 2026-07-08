@@ -4,20 +4,14 @@ import Fade from '@mui/material/Fade'
 import Typography from '@mui/material/Typography'
 import { alpha } from '@mui/material/styles'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { BoxProps } from '@mui/material/Box'
 import type { DragEvent } from 'react'
 
-export interface MRT_ToolbarDropZoneProps<
-  TData extends MRT_RowData,
-> extends BoxProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_ToolbarDropZoneProps extends BoxProps {}
 
-export const MRT_ToolbarDropZone = <TData extends MRT_RowData>({
-  table,
-  ...rest
-}: MRT_ToolbarDropZoneProps<TData>) => {
+export const MRT_ToolbarDropZone = ({ ...rest }: MRT_ToolbarDropZoneProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: { enableGrouping, localization },

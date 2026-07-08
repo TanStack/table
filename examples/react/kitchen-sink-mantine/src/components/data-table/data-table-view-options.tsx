@@ -26,9 +26,9 @@ import type { DragEndEvent } from '@dnd-kit/core'
 import type { Column, RowData } from '@tanstack/react-table'
 import type { features } from '@/hooks/features'
 import { useTableContext } from '@/hooks/table'
+import { SortableFrame } from '@/components/data-table/shared'
 
 type AppColumn = Column<typeof features, RowData, any>
-import { SortableFrame } from '@/components/data-table/shared'
 
 export function DataTableViewOptions(): React.ReactNode {
   const table = useTableContext()

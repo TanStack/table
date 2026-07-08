@@ -11,11 +11,10 @@ export const getMRT_RowDragColumnDef = <TData extends MRT_RowData>(
   tableOptions: MRT_StatefulTableOptions<TData>,
 ): MRT_ColumnDef<TData> => {
   return {
-    Cell: ({ row, rowRef, table }) => (
+    Cell: ({ row, rowRef }) => (
       <MRT_TableBodyRowGrabHandle
         row={row}
         rowRef={rowRef as RefObject<HTMLTableRowElement | null>}
-        table={table}
       />
     ),
     grow: false,

@@ -9,11 +9,7 @@ import {
   ListFilter,
   Trash2,
 } from 'lucide-react'
-import type {
-  ExtendedColumnFilter,
-  FilterOperator,
-  JoinOperator,
-} from '@/types'
+import type { ExtendedColumnFilter, FilterOperator } from '@/types'
 import type { Column, RowData } from '@tanstack/react-table'
 import type { features } from '@/hooks/features'
 
@@ -670,7 +666,7 @@ export function DataTableFilterList(): React.ReactNode {
                 if (columnFilters.length > 0) {
                   const updatedFilters = columnFilters.map((f) => ({
                     ...f,
-                    joinOperator: value as JoinOperator,
+                    joinOperator: value,
                   }))
                   setColumnFilters(updatedFilters)
                 }

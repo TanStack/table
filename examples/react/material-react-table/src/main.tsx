@@ -16,6 +16,7 @@ import {
 } from './material-react-table'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
+import type { MRT_ColumnDef } from './material-react-table'
 import './index.css'
 
 const columnHelper = createMRTColumnHelper<Person>()
@@ -109,8 +110,8 @@ const theme = createTheme({
 function App() {
   const [data, setData] = React.useState(() => makeData(50))
 
-  const table = useMaterialReactTable({
-    columns,
+  const table = useMaterialReactTable<Person>({
+    columns: columns as Array<MRT_ColumnDef<Person>>,
     data,
     enableColumnFilters: true,
     enableColumnOrdering: true,

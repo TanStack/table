@@ -4,28 +4,21 @@ import Typography from '@mui/material/Typography'
 import { useMRT_RowVirtualizer } from '../../hooks/useMRT_RowVirtualizer'
 import { useMRT_Rows } from '../../hooks/useMRT_Rows'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableBodyRow, Memo_MRT_TableBodyRow } from './MRT_TableBodyRow'
-import type {
-  MRT_ColumnVirtualizer,
-  MRT_Row,
-  MRT_RowData,
-  MRT_TableInstance,
-} from '../../types'
+import type { MRT_ColumnVirtualizer, MRT_Row, MRT_RowData } from '../../types'
 import type { TableBodyProps } from '@mui/material/TableBody'
 import type { VirtualItem } from '@tanstack/react-virtual'
 
-export interface MRT_TableBodyProps<
-  TData extends MRT_RowData,
-> extends TableBodyProps {
+export interface MRT_TableBodyProps extends TableBodyProps {
   columnVirtualizer?: MRT_ColumnVirtualizer
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_TableBody = <TData extends MRT_RowData>({
+export const MRT_TableBody = <TData extends MRT_RowData = MRT_RowData>({
   columnVirtualizer,
-  table,
   ...rest
-}: MRT_TableBodyProps<TData>) => {
+}: MRT_TableBodyProps) => {
+  const table = useMRTContext<TData>()
   const {
     getBottomRows,
     getIsSomeRowsPinned,
@@ -75,7 +68,6 @@ export const MRT_TableBody = <TData extends MRT_RowData>({
   const commonRowProps = {
     columnVirtualizer,
     numRows: rows.length,
-    table,
   }
 
   return (
@@ -219,7 +211,4 @@ export const MRT_TableBody = <TData extends MRT_RowData>({
   )
 }
 
-export const Memo_MRT_TableBody = memo(
-  MRT_TableBody,
-  (prev, next) => prev.table.options.data === next.table.options.data,
-) as typeof MRT_TableBody
+export const Memo_MRT_TableBody = memo(MRT_TableBody) as typeof MRT_TableBody

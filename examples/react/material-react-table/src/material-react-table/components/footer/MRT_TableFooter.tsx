@@ -1,25 +1,19 @@
 import TableFooter from '@mui/material/TableFooter'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { MRT_TableFooterRow } from './MRT_TableFooterRow'
-import type {
-  MRT_ColumnVirtualizer,
-  MRT_RowData,
-  MRT_TableInstance,
-} from '../../types'
+import type { MRT_ColumnVirtualizer, MRT_RowData } from '../../types'
 import type { TableFooterProps } from '@mui/material/TableFooter'
 
-export interface MRT_TableFooterProps<
-  TData extends MRT_RowData,
-> extends TableFooterProps {
+export interface MRT_TableFooterProps extends TableFooterProps {
   columnVirtualizer?: MRT_ColumnVirtualizer
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableFooter = <TData extends MRT_RowData>({
   columnVirtualizer,
-  table,
   ...rest
-}: MRT_TableFooterProps<TData>) => {
+}: MRT_TableFooterProps) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: { enableStickyFooter, layoutMode, muiTableFooterProps },
@@ -82,7 +76,6 @@ export const MRT_TableFooter = <TData extends MRT_RowData>({
           columnVirtualizer={columnVirtualizer}
           footerGroup={footerGroup as any}
           key={footerGroup.id}
-          table={table}
         />
       ))}
     </TableFooter>

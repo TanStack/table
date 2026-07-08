@@ -2,26 +2,23 @@ import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import MenuItem from '@mui/material/MenuItem'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { ReactNode } from 'react'
 import type { MenuItemProps } from '@mui/material/MenuItem'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
-export interface MRT_ActionMenuItemProps<
-  TData extends MRT_RowData,
-> extends MenuItemProps {
+export interface MRT_ActionMenuItemProps extends MenuItemProps {
   icon: ReactNode
   label: string
   onOpenSubMenu?: MenuItemProps['onClick'] | MenuItemProps['onMouseEnter']
-  table: MRT_TableInstance<TData>
 }
 
-export const MRT_ActionMenuItem = <TData extends MRT_RowData>({
+export const MRT_ActionMenuItem = ({
   icon,
   label,
   onOpenSubMenu,
-  table,
   ...rest
-}: MRT_ActionMenuItemProps<TData>) => {
+}: MRT_ActionMenuItemProps) => {
+  const table = useMRTContext()
   const {
     options: {
       icons: { ArrowRightIcon },

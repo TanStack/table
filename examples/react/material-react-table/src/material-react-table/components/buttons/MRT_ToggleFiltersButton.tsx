@@ -1,18 +1,14 @@
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { IconButtonProps } from '@mui/material/IconButton'
-import type { MRT_RowData, MRT_TableInstance } from '../../types'
 
-export interface MRT_ToggleFiltersButtonProps<
-  TData extends MRT_RowData,
-> extends IconButtonProps {
-  table: MRT_TableInstance<TData>
-}
+export interface MRT_ToggleFiltersButtonProps extends IconButtonProps {}
 
-export const MRT_ToggleFiltersButton = <TData extends MRT_RowData>({
-  table,
+export const MRT_ToggleFiltersButton = ({
   ...rest
-}: MRT_ToggleFiltersButtonProps<TData>) => {
+}: MRT_ToggleFiltersButtonProps) => {
+  const table = useMRTContext()
   const {
     state,
     options: {

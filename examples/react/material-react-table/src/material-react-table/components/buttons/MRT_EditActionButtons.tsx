@@ -3,24 +3,24 @@ import Button from '@mui/material/Button'
 import CircularProgress from '@mui/material/CircularProgress'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_Row, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Row, MRT_RowData } from '../../types'
 import type { BoxProps } from '@mui/material/Box'
 
 export interface MRT_EditActionButtonsProps<
   TData extends MRT_RowData,
 > extends BoxProps {
   row: MRT_Row<TData>
-  table: MRT_TableInstance<TData>
   variant?: 'icon' | 'text'
 }
 
 export const MRT_EditActionButtons = <TData extends MRT_RowData>({
   row,
-  table,
   variant = 'icon',
   ...rest
 }: MRT_EditActionButtonsProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: {
@@ -48,7 +48,7 @@ export const MRT_EditActionButtons = <TData extends MRT_RowData>({
       onEditingRowCancel?.({ row, table })
       setEditingRow(null)
     }
-    row._valuesCache = {} as any // reset values cache
+    row._valuesCache = {} // reset values cache
   }
 
   const handleSubmitRow = () => {
@@ -60,7 +60,6 @@ export const MRT_EditActionButtons = <TData extends MRT_RowData>({
           input.value !== undefined &&
           Object.hasOwn(row?._valuesCache, input.name)
         ) {
-          // @ts-expect-error
           row._valuesCache[input.name] = input.value
         }
       })

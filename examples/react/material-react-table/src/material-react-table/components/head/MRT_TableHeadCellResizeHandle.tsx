@@ -1,21 +1,21 @@
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
 import { parseFromValuesOrFunc } from '../../utils/utils'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import type { DividerProps } from '@mui/material/Divider'
-import type { MRT_Header, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Header, MRT_RowData } from '../../types'
 
 export interface MRT_TableHeadCellResizeHandleProps<
   TData extends MRT_RowData,
 > extends DividerProps {
   header: MRT_Header<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_TableHeadCellResizeHandle = <TData extends MRT_RowData>({
   header,
-  table,
   ...rest
 }: MRT_TableHeadCellResizeHandleProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     state,
     options: { columnResizeDirection, columnResizeMode },

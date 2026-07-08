@@ -32,7 +32,7 @@ export const getMRT_RowExpandColumnDef = <TData extends MRT_RowData>(
 
   return {
     Cell: ({ cell, column, row, staticRowIndex, table }) => {
-      const expandButtonProps = { row, staticRowIndex, table }
+      const expandButtonProps = { row, staticRowIndex }
       const subRowsLength = row.subRows?.length
       if (groupedColumnMode === 'remove' && row.groupingColumnId) {
         return (
@@ -46,7 +46,7 @@ export const getMRT_RowExpandColumnDef = <TData extends MRT_RowData>(
             <MRT_ExpandButton {...expandButtonProps} />
             <Tooltip
               {...getCommonTooltipProps('right')}
-              title={table.getColumn(row.groupingColumnId).columnDef.header}
+              title={table.getColumn(row.groupingColumnId)!.columnDef.header}
             >
               <span>{row.groupingValue as ReactNode}</span>
             </Tooltip>
@@ -66,12 +66,12 @@ export const getMRT_RowExpandColumnDef = <TData extends MRT_RowData>(
       ? ({ table }) => {
           return (
             <>
-              <MRT_ExpandAllButton table={table} />
+              <MRT_ExpandAllButton />
               {groupedColumnMode === 'remove' &&
                 grouping
                   ?.map(
                     (groupedColumnId) =>
-                      table.getColumn(groupedColumnId).columnDef.header,
+                      table.getColumn(groupedColumnId)!.columnDef.header,
                   )
                   ?.join(', ')}
             </>

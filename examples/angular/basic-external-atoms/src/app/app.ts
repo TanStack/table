@@ -1,8 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   Injector,
+  effect,
   inject,
   signal,
 } from '@angular/core'

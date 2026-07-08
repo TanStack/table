@@ -1,22 +1,22 @@
 import Box from '@mui/material/Box'
 import IconButton from '@mui/material/IconButton'
 import Tooltip from '@mui/material/Tooltip'
+import { useMRTContext } from '../../hooks/mrtTableHook'
 import { parseFromValuesOrFunc } from '../../utils/utils'
-import type { MRT_Column, MRT_RowData, MRT_TableInstance } from '../../types'
+import type { MRT_Column, MRT_RowData } from '../../types'
 import type { BoxProps } from '@mui/material/Box'
 
 export interface MRT_ColumnPinningButtonsProps<
   TData extends MRT_RowData,
 > extends BoxProps {
   column: MRT_Column<TData>
-  table: MRT_TableInstance<TData>
 }
 
 export const MRT_ColumnPinningButtons = <TData extends MRT_RowData>({
   column,
-  table,
   ...rest
 }: MRT_ColumnPinningButtonsProps<TData>) => {
+  const table = useMRTContext<TData>()
   const {
     options: {
       icons: { PushPinIcon },
