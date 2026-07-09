@@ -214,12 +214,15 @@ module('Integration | reactivity', function (hooks) {
         { firstName: 'B' },
       );
 
-      table = useTable(() => ({
+      table = useTable(() => {
+        assert.step('setup table');
+
+        return ({
         data: this.data,
         columns,
         features,
         initialState: { pagination: { pageIndex: 0, pageSize: 2 } },
-      }));
+      })});
 
       get pageSize() {
         assert.step('assess pageSize')
@@ -243,9 +246,10 @@ module('Integration | reactivity', function (hooks) {
     await render(<template><TableComponent /></template>);
 
     assert.verifySteps([
+      'setup table',
       'assess pageSize',
       'assess sortState'
-    ], 'no state assessments have occurred yet');
+    ], 'all initial state steps have been recorded');
 
     assert.dom('[data-test-page-size]').hasText('2');
     assert.dom('[data-test-sort]').hasText('[]', 'sorting slice starts empty');
@@ -262,7 +266,7 @@ module('Integration | reactivity', function (hooks) {
       .hasText('10', 'pagination slice updated');
     assert
       .dom('[data-test-sort]')
-      .hasText('[]', 'unrelated sorting slice unaffected by a pagination change');
+      .hasText('[]', 'unrelated sorting slice unaffected by a pagination change and does not re-setup table');
   });
 
   test('flex-render reacts to content and swaps between primitive and component', async function (assert) {
