@@ -12,4 +12,4 @@ export {
   FlexRenderHeader,
   FlexRenderFooter,
 } from './FlexRender.gts'
-export { emberReactivity } from './reactivity.ts'
+export { emberReactivity, createAtom } from './reactivity.ts'

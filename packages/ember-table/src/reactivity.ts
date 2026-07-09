@@ -1,4 +1,4 @@
-import type { Subscription } from '@tanstack/store'
+import type { Atom, Observer, Subscription } from '@tanstack/store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
@@ -49,6 +49,11 @@ export class Signal<T> {
   @tracked _value;
 
   #options: TableAtomOptions<T> | undefined;
+
+  // Ember reads are tag-tracked; this observer list exists for the plain-JS
+  // subscribers core wires up (external-atom sync in constructTable, the
+  // inspector), which have no access to framework tracking.
+  #listeners = new Set<(value: T) => void>();
 
   constructor(value: T, options: TableAtomOptions<T> | undefined) {
     this._value = value;
@@ -108,6 +113,22 @@ export class ComputedSignal<T> {
 
 export function signal<T>(value: T, options: TableAtomOptions<T> | undefined) {
   return new Signal(value, options);
+}
+
+/**
+ * Creates an Ember-native writable atom, satisfying the `@tanstack/store`
+ * `Atom` contract so it can be passed to `options.atoms`. Because it is backed
+ * by a `@tracked` Signal, reading `atom.get()` directly in a template or
+ * getter is reactive — unlike a foreign `@tanstack/store` atom, whose reads
+ * create no Glimmer tag dependency.
+ *
+ * Takes a plain initial value only; there is no derived/function overload.
+ */
+export function createAtom<T>(
+  initialValue: T,
+  options?: TableAtomOptions<T>,
+): Atom<T> {
+  return signal(initialValue, options);
 }
 
 export function computed<T>(fn: () => T) {
