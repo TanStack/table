@@ -10126,7 +10126,7 @@ importers:
         version: 4.61.1
       testem:
         specifier: ^3.15.1
-        version: 3.20.1(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
+        version: 3.20.1(@babel/core@7.29.7)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
       typescript:
         specifier: ~5.8.3
         version: 5.8.3
@@ -16861,9 +16861,6 @@ packages:
   async@2.6.4:
     resolution: {integrity: sha512-mzo5dfJYwAn29PeiJ0zvwTo04zj8HDJj0Mn8TD7sno7q12prdbnasKJHhkm2c1LgrhlJ0teaea8860oxi51mGA==}
 
-  async@3.2.6:
-    resolution: {integrity: sha512-htCUDlxyyCLMgaM3xXg0C0LW2xqfuQ6p05pCEIsXuyQ+a1koYKTuBMzRNwmybfLgvJDMd0r1LTn4+E0Ti6C2AA==}
-
   asynckit@0.4.0:
     resolution: {integrity: sha512-Oei9OH4tRh0YqU3GxhX79dM/mwVgvbZJaSNaRk+bshkj0S5cfHcgYakreBjrHwatXKbz+IoIdYLxrKim2MjW0Q==}
 
@@ -17927,11 +17924,6 @@ packages:
   ee-first@1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
 
-  ejs@3.1.10:
-    resolution: {integrity: sha512-UeJmFfOrAQS8OJWPZ4qtgHyWExa088/MtK5UEyoJGFH67cDEXkZSviOiKRCZ4Xij0zxI3JECgYs3oKx+AizQBA==}
-    engines: {node: '>=0.10.0'}
-    hasBin: true
-
   ejs@5.0.1:
     resolution: {integrity: sha512-COqBPFMxuPTPspXl2DkVYaDS3HtrD1GpzOGkNTJ1IYkifq/r9h8SVEFrjA3D9/VJGOEoMQcrlhpntcSUrM8k6A==}
     engines: {node: '>=0.12.18'}
@@ -18596,9 +18588,6 @@ packages:
   file-entry-cache@8.0.0:
     resolution: {integrity: sha512-XXTUwCvisa5oacNGRP9SfNtYBNAMi+RPwBFmblZEF7N7swHYQS6/Zfk7SRwx4D5j3CH211YNRco1DEMNVfZCnQ==}
     engines: {node: '>=16.0.0'}
-
-  filelist@1.0.6:
-    resolution: {integrity: sha512-5giy2PkLYY1cP39p17Ech+2xlpTRL9HLspOfEgm0L6CwBXBTgsK5ou0JtzYuepxkaQ/tvhCFIJ5uXo0OrM2DxA==}
 
   fill-range@7.1.1:
     resolution: {integrity: sha512-YsGpe3WHLK8ZYi4tWDg2Jy3ebRz2rXowDxnld4bkQB00cc/1Zw9AWnC0i9ztDJitivtQvaI9KaLyKrc+hBW0yg==}
@@ -19468,11 +19457,6 @@ packages:
   jackspeak@3.4.3:
     resolution: {integrity: sha512-OGlZQpz2yfahA/Rd1Y8Cd9SIEsqvXkLVoSw/cgwhnhFMDbsQFeZYoJJ7bIZBS9BcamUW96asq/npPWugM+RQBw==}
 
-  jake@10.9.4:
-    resolution: {integrity: sha512-wpHYzhxiVQL+IV05BLE2Xn34zW1S223hvjtqk0+gsPrwd/8JNLXJgZZM/iPFsYc1xyphF+6M6EvdE5E9MBGkDA==}
-    engines: {node: '>=10'}
-    hasBin: true
-
   jest-worker@27.5.1:
     resolution: {integrity: sha512-7vuh85V5cdDofPyxn58nrPjBktZo0u9x1g8WtjQol+jZDaE+fhN+cIvTj11GndBnMnyfrUOG1sZQxCdjKh+DKg==}
     engines: {node: '>= 10.13.0'}
@@ -20006,10 +19990,6 @@ packages:
 
   minimatch@3.1.5:
     resolution: {integrity: sha512-VgjWUsnnT6n+NUk6eZq77zeFdpW2LWDzP6zFGrCbHXiYNul5Dzqk2HHQ5uFH2DNW5Xbp8+jVzaeNt94ssEEl4w==}
-
-  minimatch@5.1.9:
-    resolution: {integrity: sha512-7o1wEA2RyMP7Iu7GNba9vc0RWWGACJOCZBJX2GJWip0ikV+wcOsgVuY9uE8CPiyQhkGFSlhuSkZPavN7u1c2Fw==}
-    engines: {node: '>=10'}
 
   minimatch@8.0.7:
     resolution: {integrity: sha512-V+1uQNdzybxa14e/p00HZnQNNcTjnRJjDxg2V8wtkjFctq4M7hXFws4oekyTP0Jebeq7QYtpFyOeBAjc88zvYg==}
@@ -31177,9 +31157,6 @@ snapshots:
     dependencies:
       lodash: 4.18.1
 
-  async@3.2.6:
-    optional: true
-
   asynckit@0.4.0: {}
 
   at-least-node@1.0.0: {}
@@ -31934,10 +31911,9 @@ snapshots:
       ora: 3.4.0
       through2: 3.0.2
 
-  consolidate@1.0.4(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(lodash@4.18.1)(mustache@4.2.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8):
+  consolidate@1.0.4(@babel/core@7.29.7)(handlebars@4.7.9)(lodash@4.18.1)(mustache@4.2.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8):
     optionalDependencies:
       '@babel/core': 7.29.7
-      ejs: 3.1.10
       handlebars: 4.7.9
       lodash: 4.18.1
       mustache: 4.2.0
@@ -32282,11 +32258,6 @@ snapshots:
       semver: 6.3.1
 
   ee-first@1.1.1: {}
-
-  ejs@3.1.10:
-    dependencies:
-      jake: 10.9.4
-    optional: true
 
   ejs@5.0.1: {}
 
@@ -33380,11 +33351,6 @@ snapshots:
     dependencies:
       flat-cache: 4.0.1
 
-  filelist@1.0.6:
-    dependencies:
-      minimatch: 5.1.9
-    optional: true
-
   fill-range@7.1.1:
     dependencies:
       to-regex-range: 5.0.1
@@ -34293,13 +34259,6 @@ snapshots:
     optionalDependencies:
       '@pkgjs/parseargs': 0.11.0
 
-  jake@10.9.4:
-    dependencies:
-      async: 3.2.6
-      filelist: 1.0.6
-      picocolors: 1.1.1
-    optional: true
-
   jest-worker@27.5.1:
     dependencies:
       '@types/node': 26.0.0
@@ -34897,11 +34856,6 @@ snapshots:
     dependencies:
       brace-expansion: 1.1.15
 
-  minimatch@5.1.9:
-    dependencies:
-      brace-expansion: 2.1.1
-    optional: true
-
   minimatch@8.0.7:
     dependencies:
       brace-expansion: 2.1.1
@@ -35312,7 +35266,7 @@ snapshots:
       call-bind: 1.0.9
       call-bound: 1.0.4
       define-properties: 1.2.1
-      es-object-atoms: 1.1.2
+      es-object-atoms: 1.1.1
 
   object.fromentries@2.0.8:
     dependencies:
@@ -37345,7 +37299,7 @@ snapshots:
       commander: 2.20.3
       source-map-support: 0.5.21
 
-  testem@3.20.1(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8):
+  testem@3.20.1(@babel/core@7.29.7)(handlebars@4.7.9)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8):
     dependencies:
       '@xmldom/xmldom': 0.9.10
       backbone: 1.6.1
@@ -37353,7 +37307,7 @@ snapshots:
       chokidar: 5.0.0
       commander: 14.0.3
       compression: 1.8.1
-      consolidate: 1.0.4(@babel/core@7.29.7)(ejs@3.1.10)(handlebars@4.7.9)(lodash@4.18.1)(mustache@4.2.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
+      consolidate: 1.0.4(@babel/core@7.29.7)(handlebars@4.7.9)(lodash@4.18.1)(mustache@4.2.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(underscore@1.13.8)
       execa: 9.6.1
       express: 5.2.1
       glob: 13.0.6
