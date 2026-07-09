@@ -78,17 +78,29 @@ export class Signal<T> {
   }
 
   set value(next: T) {
-      if (this.#options?.compare?.(this._value, next)) {
-        return;
-      }
+    const prev = untrack(() => this._value);
+    // Default Object.is cutoff guarantees the wrapped<->external atom sync
+    // loop terminates: an echoed-back equal value stops here instead of
+    // re-notifying. Table state is replaced immutably, so real changes always
+    // differ by identity.
+    const isEqual = this.#options?.compare
+      ? this.#options.compare(prev, next)
+      : Object.is(prev, next);
+    if (isEqual) {
+      return;
+    }
 
     this._value = next;
+
+    for (const listener of this.#listeners) {
+      listener(next);
+    }
   }
 
   update(fn: (value: T) => T) {
     const original = untrack(() => this._value);
 
-    this._value = fn(original);
+    this.value = fn(original);
   }
 }
 
