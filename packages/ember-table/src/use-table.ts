@@ -114,5 +114,41 @@ export function useTable<
       )
   }
 
+  // Core's `table.store` is a single computed that eagerly snapshots every
+  // state slice, so under tag-based tracking any consumer of
+  // `store.state.<slice>` is entangled with *all* slices. Replace it with a
+  // stable Proxy that reads the per-key derived atom lazily on property
+  // access, so e.g. `store.state.sorting` only invalidates when the sorting
+  // slice changes. Enumeration (`ownKeys`/descriptors) reads every slice,
+  // which is correct: a full-state dump depends on all of them.
+  const stateKeys = Object.keys(table.baseAtoms)
+  const atoms = table.atoms as Record<string, { get(): unknown }>
+
+  const stateProxy = new Proxy({}, {
+    get: (_target, key) =>
+      typeof key === 'string' ? atoms[key]?.get() : undefined,
+    has: (_target, key) => typeof key === 'string' && stateKeys.includes(key),
+    ownKeys: () => stateKeys,
+    getOwnPropertyDescriptor: (_target, key) =>
+      typeof key === 'string' && stateKeys.includes(key)
+        ? {
+            enumerable: true,
+            configurable: true,
+            value: atoms[key]!.get(),
+          }
+        : undefined,
+  })
+
+  // `atomToStore` defines `state` non-configurably on the store atom, so the
+  // store is replaced rather than patched. Core's store is readonly (no
+  // `setState`); writes go through `baseAtoms[key].set()`.
+  ;(table as { store: unknown }).store = {
+    get: () => stateProxy,
+    get state() {
+      return stateProxy
+    },
+    subscribe: () => null,
+  }
+
   return table
 }
