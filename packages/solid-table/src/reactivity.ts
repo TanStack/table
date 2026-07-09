@@ -1,11 +1,11 @@
 import {
+  batch,
   createMemo,
   createSignal,
   observable,
   runWithOwner,
   untrack,
 } from 'solid-js'
-import { batch } from '@tanstack/store'
 import type {
   Atom,
   Observer,
