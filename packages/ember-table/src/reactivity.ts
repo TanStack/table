@@ -60,7 +60,21 @@ export class Signal<T> {
     this.#options = options;
   }
 
-    subscribe(): Subscription { return null as unknown as Subscription/* handled by framework */}
+  subscribe(
+    listenerOrObserver: Observer<T> | ((value: T) => void),
+  ): Subscription {
+    const listener =
+      typeof listenerOrObserver === 'function'
+        ? listenerOrObserver
+        : listenerOrObserver.next;
+
+    if (!listener) {
+      return { unsubscribe: () => {} };
+    }
+
+    this.#listeners.add(listener);
+    return { unsubscribe: () => this.#listeners.delete(listener) };
+  }
 
     get() {
       return this.value;
