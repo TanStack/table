@@ -9,7 +9,7 @@ title: ColumnDefResolved
 type ColumnDefResolved<TFeatures, TData, TValue> = Partial<UnionToIntersection<ColumnDef<TFeatures, TData, TValue>>> & object;
 ```
 
-Defined in: [types/ColumnDef.ts:248](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L248)
+Defined in: [types/ColumnDef.ts:249](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L249)
 
 ## Type Declaration
 

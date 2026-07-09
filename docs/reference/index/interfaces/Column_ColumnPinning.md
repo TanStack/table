@@ -33,7 +33,7 @@ getIsPinned: () => ColumnPinningPosition;
 
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L57)
 
-Reads the column's pinned position: `'left'`, `'right'`, or `false`.
+Reads the column's pinned position: `'start'`, `'end'`, or `false`.
 
 #### Returns
 
@@ -65,7 +65,7 @@ pin: (position) => void;
 
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L66)
 
-Pins this column's leaf columns left or right, or unpins them when `false`
+Pins this column's leaf columns start or end, or unpins them when `false`
 is passed.
 
 #### Parameters

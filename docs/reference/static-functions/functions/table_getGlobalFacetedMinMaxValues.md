@@ -9,7 +9,7 @@ title: table_getGlobalFacetedMinMaxValues
 function table_getGlobalFacetedMinMaxValues<TFeatures, TData>(table): [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L94)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L117)
 
 Computes min and max numeric facet values for the global filter context.
 

@@ -64,7 +64,7 @@ import {FlexRender} from '@tanstack/angular-table
 new FlexRenderCell<TFeatures, TData, TValue>(): FlexRenderCell<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:118](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L118)
+Defined in: [packages/angular-table/src/helpers/flexRenderCell.ts:132](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/flexRenderCell.ts#L132)
 
 #### Returns
 

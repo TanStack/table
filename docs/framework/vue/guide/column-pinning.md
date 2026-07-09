@@ -34,17 +34,17 @@ const table = useTable({
 
 ## Column Pinning (Vue) Guide
 
-TanStack Table offers state and APIs helpful for implementing column pinning features in your table UI. You can implement column pinning in multiple ways. You can either split pinned columns into their own separate tables, or you can keep all columns in the same table, but use the pinning state to order the columns correctly and use sticky CSS to pin the columns to the left or right.
+TanStack Table offers state and APIs helpful for implementing column pinning features in your table UI. You can implement column pinning in multiple ways. You can either split pinned columns into their own separate tables, or you can keep all columns in the same table, but use the pinning state to order the columns correctly and use sticky CSS to pin the columns to the start or end.
 
 ### How Column Pinning Affects Column Order
 
 There are 3 table features that can reorder columns, which happen in the following order:
 
-1. **Column Pinning** - If pinning, columns are split into left, center (unpinned), and right pinned columns.
+1. **Column Pinning** - If pinning, columns are split into start, center (unpinned), and end pinned columns.
 2. Manual [Column Ordering](./column-ordering) - A manually specified column order is applied.
 3. [Grouping](./grouping) - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 
-The only way to change the order of the pinned columns is in the `columnPinning.left` and `columnPinning.right` state itself. `columnOrder` state will only affect the order of the unpinned ("center") columns.
+The only way to change the order of the pinned columns is in the `columnPinning.start` and `columnPinning.end` state itself. `columnOrder` state will only affect the order of the unpinned ("center") columns.
 
 ### Column Pinning State
 
@@ -64,8 +64,8 @@ import type { ColumnPinningState } from '@tanstack/vue-table'
 const features = tableFeatures({ columnPinningFeature })
 
 const columnPinningAtom = createAtom<ColumnPinningState>({
-  left: [],
-  right: [],
+  start: [],
+  end: [],
 })
 
 const columnPinning = useSelector(columnPinningAtom) // subscribe wherever it is needed (a Vue ref)
@@ -84,8 +84,8 @@ Alternatively, the v8-style `state.columnPinning` plus `onColumnPinningChange` p
 
 ```ts
 const columnPinning = ref<ColumnPinningState>({
-  left: [],
-  right: [],
+  start: [],
+  end: [],
 })
 
 const table = useTable({
@@ -115,8 +115,8 @@ const table = useTable({
   //...
   initialState: {
     columnPinning: {
-      left: ['expand-column'],
-      right: ['actions-column'],
+      start: ['expand-column'],
+      end: ['actions-column'],
     },
     //...
   },
@@ -131,11 +131,11 @@ const table = useTable({
 There are a handful of useful Column API methods to help you implement column pinning features:
 
 - `column.getCanPin`: Use to determine if a column can be pinned.
-- `column.pin`: Use to pin a column to the left or right. Or use to unpin a column.
+- `column.pin`: Use to pin a column to the start or end. Or use to unpin a column.
 - `column.getIsPinned`: Use to determine where a column is pinned.
 - `column.getPinnedIndex`: Use to read the column's index within its pinned column group.
-- `column.getStart`: Use to provide the correct `left` CSS value for a pinned column.
-- `column.getAfter`: Use to provide the correct `right` CSS value for a pinned column.
+- `column.getStart`: Use to provide the correct `start` CSS value for a pinned column.
+- `column.getAfter`: Use to provide the correct `end` CSS value for a pinned column.
 - `column.getIsLastColumn`: Use to determine if a column is the last column in its pinned group. Useful for adding a box-shadow.
 - `column.getIsFirstColumn`: Use to determine if a column is the first column in its pinned group. Useful for adding a box-shadow.
 
@@ -143,8 +143,8 @@ Use `table.setColumnPinning` to update the pinning state directly. Use `table.re
 
 ```ts
 table.setColumnPinning({
-  left: ['firstName'],
-  right: ['actions'],
+  start: ['firstName'],
+  end: ['actions'],
 })
 
 table.resetColumnPinning()
@@ -154,47 +154,47 @@ table.resetColumnPinning(true)
 The table instance exposes pinned column and header helpers for each region:
 
 ```ts
-table.getLeftLeafColumns()
+table.getStartLeafColumns()
 table.getCenterLeafColumns()
-table.getRightLeafColumns()
+table.getEndLeafColumns()
 
-table.getLeftVisibleLeafColumns()
+table.getStartVisibleLeafColumns()
 table.getCenterVisibleLeafColumns()
-table.getRightVisibleLeafColumns()
+table.getEndVisibleLeafColumns()
 
-table.getLeftHeaderGroups()
+table.getStartHeaderGroups()
 table.getCenterHeaderGroups()
-table.getRightHeaderGroups()
+table.getEndHeaderGroups()
 
-table.getLeftFooterGroups()
+table.getStartFooterGroups()
 table.getCenterFooterGroups()
-table.getRightFooterGroups()
+table.getEndFooterGroups()
 
-table.getLeftFlatHeaders()
+table.getStartFlatHeaders()
 table.getCenterFlatHeaders()
-table.getRightFlatHeaders()
+table.getEndFlatHeaders()
 
-table.getLeftLeafHeaders()
+table.getStartLeafHeaders()
 table.getCenterLeafHeaders()
-table.getRightLeafHeaders()
+table.getEndLeafHeaders()
 ```
 
 You can also request pinned leaf columns by region with `table.getPinnedLeafColumns(position)` and visible pinned leaf columns with `table.getPinnedVisibleLeafColumns(position)`.
 
 ```ts
-table.getPinnedLeafColumns('left')
+table.getPinnedLeafColumns('start')
 table.getPinnedLeafColumns('center')
-table.getPinnedLeafColumns('right')
+table.getPinnedLeafColumns('end')
 
-table.getPinnedVisibleLeafColumns('left')
+table.getPinnedVisibleLeafColumns('start')
 table.getPinnedVisibleLeafColumns('center')
-table.getPinnedVisibleLeafColumns('right')
+table.getPinnedVisibleLeafColumns('end')
 ```
 
-Use `table.getIsSomeColumnsPinned()` to check if any columns are pinned, or pass `'left'` or `'right'` to check one pinned side.
+Use `table.getIsSomeColumnsPinned()` to check if any columns are pinned, or pass `'start'` or `'end'` to check one pinned side.
 
 ### Split Table Column Pinning
 
 If you are just using sticky CSS to pin columns, you can for the most part, just render the table as you normally would with the `table.getHeaderGroups` and `row.getVisibleCells` methods.
 
-However, if you are splitting up pinned columns into their own separate tables, you can make use of the `table.getLeftHeaderGroups`, `table.getCenterHeaderGroups`, `table.getRightHeaderGroups`, `row.getLeftVisibleCells`, `row.getCenterVisibleCells`, and `row.getRightVisibleCells` methods to only render the columns that are relevant to the current table.
+However, if you are splitting up pinned columns into their own separate tables, you can make use of the `table.getStartHeaderGroups`, `table.getCenterHeaderGroups`, `table.getEndHeaderGroups`, `row.getStartVisibleCells`, `row.getCenterVisibleCells`, and `row.getEndVisibleCells` methods to only render the columns that are relevant to the current table.

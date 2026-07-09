@@ -69,8 +69,8 @@
                       <div class="header-controls">
                         @if (header.column.getCanPin()) {
                           <span class="pin-actions">
-                            @if (header.column.getIsPinned() !== 'left') {
-                              <button class="pin-button" (click)="header.column.pin('left')">
+                            @if (header.column.getIsPinned() !== 'start') {
+                              <button class="pin-button" (click)="header.column.pin('start')">
                                 <
                               </button>
                             }
@@ -79,8 +79,8 @@
                                 x
                               </button>
                             }
-                            @if (header.column.getIsPinned() !== 'right') {
-                              <button class="pin-button" (click)="header.column.pin('right')">
+                            @if (header.column.getIsPinned() !== 'end') {
+                              <button class="pin-button" (click)="header.column.pin('end')">
                                 >
                               </button>
                             }

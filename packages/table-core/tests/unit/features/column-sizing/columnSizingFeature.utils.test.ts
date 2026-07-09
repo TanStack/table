@@ -14,8 +14,8 @@ import {
   getDefaultColumnSizingState,
   table_getCenterTotalSize,
   table_getColumnOffsets,
-  table_getLeftTotalSize,
-  table_getRightTotalSize,
+  table_getStartTotalSize,
+  table_getEndTotalSize,
   table_getTotalSize,
   table_resetColumnSizing,
   table_setColumnSizing,
@@ -544,8 +544,8 @@ describe('table_getColumnOffsets', () => {
     expect(offsets.all.afters).toEqual({ a: 250, b: 50, c: 0 })
     // nothing pinned: the center region matches the full visible list
     expect(offsets.center.starts).toEqual(offsets.all.starts)
-    expect(offsets.left.starts).toEqual({})
-    expect(offsets.right.starts).toEqual({})
+    expect(offsets.start.starts).toEqual({})
+    expect(offsets.end.starts).toEqual({})
   })
 })
 
@@ -566,7 +566,7 @@ describe('total sizes', () => {
       ] as Array<ColumnDef<typeof pinnedFeatures, Item, any>>,
       data,
       initialState: {
-        columnPinning: { left: ['a'], right: ['c'] },
+        columnPinning: { start: ['a'], end: ['c'] },
       },
     })
   }
@@ -585,9 +585,9 @@ describe('total sizes', () => {
   it('should sum each pinning region separately', () => {
     const table = makePinnedTable()
 
-    expect(table_getLeftTotalSize(table)).toBe(100)
+    expect(table_getStartTotalSize(table)).toBe(100)
     expect(table_getCenterTotalSize(table)).toBe(200)
-    expect(table_getRightTotalSize(table)).toBe(50)
+    expect(table_getEndTotalSize(table)).toBe(50)
     expect(table_getTotalSize(table)).toBe(350)
   })
 
@@ -596,8 +596,8 @@ describe('total sizes', () => {
       columns: [{ id: 'a', accessorKey: 'a', size: 100 }],
     })
 
-    expect(table_getLeftTotalSize(table)).toBe(0)
-    expect(table_getRightTotalSize(table)).toBe(0)
+    expect(table_getStartTotalSize(table)).toBe(0)
+    expect(table_getEndTotalSize(table)).toBe(0)
     expect(table_getCenterTotalSize(table)).toBe(100)
   })
 })

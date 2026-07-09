@@ -23,8 +23,8 @@ export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
     getIsAllColumnsVisible,
     getIsSomeColumnsPinned,
     getIsSomeColumnsVisible,
-    getLeftLeafColumns,
-    getRightLeafColumns,
+    getStartLeafColumns,
+    getEndLeafColumns,
     state,
     options: {
       enableColumnOrdering,
@@ -48,11 +48,11 @@ export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
       !columns.some((col) => col.columnDef.columnDefType === 'group')
     ) {
       return [
-        ...getLeftLeafColumns(),
+        ...getStartLeafColumns(),
         ...Array.from(new Set(columnOrder)).map((colId) =>
           getCenterLeafColumns().find((col) => col?.id === colId),
         ),
-        ...getRightLeafColumns(),
+        ...getEndLeafColumns(),
       ].filter(Boolean)
     }
     return columns
@@ -61,8 +61,8 @@ export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
     columnPinning,
     getAllColumns(),
     getCenterLeafColumns(),
-    getLeftLeafColumns(),
-    getRightLeafColumns(),
+    getStartLeafColumns(),
+    getEndLeafColumns(),
   ]) as Array<MRT_Column<TData>>
 
   const [hoveredColumn, setHoveredColumn] = useState<MRT_Column<TData> | null>(

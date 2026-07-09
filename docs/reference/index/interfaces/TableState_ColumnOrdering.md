@@ -5,7 +5,7 @@ title: TableState_ColumnOrdering
 
 # Interface: TableState\_ColumnOrdering
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:7](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L7)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L26)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [features/column-ordering/columnOrderingFeature.types.ts:7](https://
 columnOrder: ColumnOrderState;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L8)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L27)

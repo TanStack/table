@@ -19,8 +19,8 @@ export const useMRT_ColumnVirtualizer = <
   table: MRT_TableInstance<TData>,
 ): MRT_ColumnVirtualizer | undefined => {
   const {
-    getLeftLeafColumns,
-    getRightLeafColumns,
+    getStartLeafColumns,
+    getEndLeafColumns,
     state,
     getVisibleLeafColumns,
     options: {
@@ -48,8 +48,8 @@ export const useMRT_ColumnVirtualizer = <
     () =>
       enableColumnPinning
         ? [
-            getLeftLeafColumns().map((c) => c.getPinnedIndex()),
-            getRightLeafColumns()
+            getStartLeafColumns().map((c) => c.getPinnedIndex()),
+            getEndLeafColumns()
               .map(
                 (column) => visibleColumns.length - column.getPinnedIndex() - 1,
               )
@@ -120,7 +120,7 @@ export const useMRT_ColumnVirtualizer = <
   }
 
   if (columnVirtualizerInstanceRef) {
-    // @ts-ignore
+    // @ts-ignore - TODO: fix this
     columnVirtualizerInstanceRef.current = columnVirtualizer
   }
 

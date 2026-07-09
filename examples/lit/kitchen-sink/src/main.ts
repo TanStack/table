@@ -184,7 +184,7 @@ class LitTableExample extends LitElement {
         defaultColumn: { minSize: 200, maxSize: 800 },
         initialState: {
           columnOrder: columns.map((c) => c.id!),
-          columnPinning: { left: ['select'], right: [] },
+          columnPinning: { start: ['select'], end: [] },
           pagination: { pageIndex: 0, pageSize: 20 },
         },
         keepPinnedRows: true,
@@ -422,10 +422,10 @@ class LitTableExample extends LitElement {
             ${column.getCanPin()
               ? html`
                   <span class="pin-actions">
-                    ${column.getIsPinned() !== 'left'
+                    ${column.getIsPinned() !== 'start'
                       ? html`<button
                           class="pin-button"
-                          @click=${() => column.pin('left')}
+                          @click=${() => column.pin('start')}
                         >
                           &lt;
                         </button>`
@@ -438,10 +438,10 @@ class LitTableExample extends LitElement {
                           x
                         </button>`
                       : null}
-                    ${column.getIsPinned() !== 'right'
+                    ${column.getIsPinned() !== 'end'
                       ? html`<button
                           class="pin-button"
-                          @click=${() => column.pin('right')}
+                          @click=${() => column.pin('end')}
                         >
                           &gt;
                         </button>`
@@ -671,9 +671,9 @@ class LitTableExample extends LitElement {
   private getCommonPinningStyle(column: Column<typeof features, Person>) {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
-      isPinned === 'left' && column.getIsLastColumn('left')
+      isPinned === 'start' && column.getIsLastColumn('start')
     const isFirstRightPinnedColumn =
-      isPinned === 'right' && column.getIsFirstColumn('right')
+      isPinned === 'end' && column.getIsFirstColumn('end')
 
     return {
       boxShadow: isLastLeftPinnedColumn
@@ -681,8 +681,10 @@ class LitTableExample extends LitElement {
         : isFirstRightPinnedColumn
           ? '4px 0 4px -4px gray inset'
           : undefined,
-      left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-      right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+      insetInlineStart:
+        isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+      insetInlineEnd:
+        isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
       opacity: isPinned ? '0.97' : '1',
       position: isPinned ? 'sticky' : 'relative',
       zIndex: isPinned ? '1' : '0',

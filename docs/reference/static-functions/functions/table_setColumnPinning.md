@@ -9,11 +9,11 @@ title: table_setColumnPinning
 function table_setColumnPinning<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L289)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:299](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L299)
 
 Routes a column pinning updater through the table's pinning change handler.
 
-The updater may be a next `{ left, right }` state or a function of the
+The updater may be a next `{ start, end }` state or a function of the
 previous state, matching the instance `table.setColumnPinning` behavior.
 
 ## Type Parameters
@@ -43,5 +43,5 @@ previous state, matching the instance `table.setColumnPinning` behavior.
 ## Example
 
 ```ts
-table_setColumnPinning(table, (old) => ({ ...old, left: ['select'] }))
+table_setColumnPinning(table, (old) => ({ ...old, start: ['select'] }))
 ```

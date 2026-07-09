@@ -5,7 +5,7 @@ title: TableOptions_RowExpanding
 
 # Interface: TableOptions\_RowExpanding\<TFeatures, TData\>
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L37)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L36)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/row-expanding/rowExpandingFeature.types.ts:37](https://git
 optional autoResetExpanded: boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L44)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L43)
 
 Enables automatic expanded-state resets when page-altering table state changes.
 
@@ -37,7 +37,7 @@ Enables automatic expanded-state resets when page-altering table state changes.
 optional enableExpanding: boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L48)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L47)
 
 Allows rows with subRows to be expanded.
 
@@ -49,7 +49,7 @@ Allows rows with subRows to be expanded.
 optional getIsRowExpanded: (row) => boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L52)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L51)
 
 If provided, allows you to override the default behavior of determining whether a row is currently expanded.
 
@@ -71,7 +71,7 @@ If provided, allows you to override the default behavior of determining whether 
 optional getRowCanExpand: (row) => boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L56)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L55)
 
 If provided, allows you to override the default behavior of determining whether a row can be expanded.
 
@@ -93,7 +93,7 @@ If provided, allows you to override the default behavior of determining whether 
 optional manualExpanding: boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L60)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L59)
 
 Enables manual row expansion. If this is set to `true`, `getExpandedRowModel` will not be used to expand rows and you would be expected to perform the expansion in your own data model. This is useful if you are doing server-side expansion.
 
@@ -105,7 +105,7 @@ Enables manual row expansion. If this is set to `true`, `getExpandedRowModel` wi
 optional onExpandedChange: OnChangeFn<ExpandedState>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L66)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L65)
 
 Called with an updater when expanded state changes. Pair this with
 `state.expanded` when using external state; external atoms can own the
@@ -119,6 +119,6 @@ slice without this callback.
 optional paginateExpandedRows: boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L70)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L69)
 
 If `true` expanded rows will be paginated along with the rest of the table (which means expanded rows may span multiple pages). If `false` expanded rows will not be considered for pagination (which means expanded rows will always render on their parents page. This also means more rows will be rendered than the set page size)

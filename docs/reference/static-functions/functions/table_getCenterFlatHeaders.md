@@ -9,7 +9,7 @@ title: table_getCenterFlatHeaders
 function table_getCenterFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:590](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L590)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:601](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L601)
 
 Flattens every header from the center header groups.
 

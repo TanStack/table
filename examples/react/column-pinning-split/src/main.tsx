@@ -148,7 +148,7 @@ function App() {
       <div className="split-tables">
         <table className="outlined-table">
           <thead>
-            {table.getLeftHeaderGroups().map((headerGroup) => (
+            {table.getStartHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
@@ -159,11 +159,11 @@ function App() {
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="pin-actions">
-                        {header.column.getIsPinned() !== 'left' ? (
+                        {header.column.getIsPinned() !== 'start' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
-                              header.column.pin('left')
+                              header.column.pin('start')
                             }}
                           >
                             {'<='}
@@ -179,11 +179,11 @@ function App() {
                             X
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() !== 'right' ? (
+                        {header.column.getIsPinned() !== 'end' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
-                              header.column.pin('right')
+                              header.column.pin('end')
                             }}
                           >
                             {'=>'}
@@ -203,7 +203,7 @@ function App() {
               .map((row) => {
                 return (
                   <tr key={row.id}>
-                    {row.getLeftVisibleCells().map((cell) => {
+                    {row.getStartVisibleCells().map((cell) => {
                       return (
                         <td key={cell.id}>
                           <table.FlexRender cell={cell} />
@@ -228,11 +228,11 @@ function App() {
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="pin-actions">
-                        {header.column.getIsPinned() !== 'left' ? (
+                        {header.column.getIsPinned() !== 'start' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
-                              header.column.pin('left')
+                              header.column.pin('start')
                             }}
                           >
                             {'<='}
@@ -248,11 +248,11 @@ function App() {
                             X
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() !== 'right' ? (
+                        {header.column.getIsPinned() !== 'end' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
-                              header.column.pin('right')
+                              header.column.pin('end')
                             }}
                           >
                             {'=>'}
@@ -286,7 +286,7 @@ function App() {
         </table>
         <table className="outlined-table">
           <thead>
-            {table.getRightHeaderGroups().map((headerGroup) => (
+            {table.getEndHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => (
                   <th key={header.id} colSpan={header.colSpan}>
@@ -297,11 +297,11 @@ function App() {
                     </div>
                     {!header.isPlaceholder && header.column.getCanPin() && (
                       <div className="pin-actions">
-                        {header.column.getIsPinned() !== 'left' ? (
+                        {header.column.getIsPinned() !== 'start' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
-                              header.column.pin('left')
+                              header.column.pin('start')
                             }}
                           >
                             {'<='}
@@ -317,11 +317,11 @@ function App() {
                             X
                           </button>
                         ) : null}
-                        {header.column.getIsPinned() !== 'right' ? (
+                        {header.column.getIsPinned() !== 'end' ? (
                           <button
                             className="pin-button"
                             onClick={() => {
-                              header.column.pin('right')
+                              header.column.pin('end')
                             }}
                           >
                             {'=>'}
@@ -341,7 +341,7 @@ function App() {
               .map((row) => {
                 return (
                   <tr key={row.id}>
-                    {row.getRightVisibleCells().map((cell) => {
+                    {row.getEndVisibleCells().map((cell) => {
                       return (
                         <td key={cell.id}>
                           <table.FlexRender cell={cell} />

@@ -9,6 +9,6 @@ title: columnOrderingFeature
 const columnOrderingFeature: TableFeature;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.ts#L20)
+Defined in: [features/column-ordering/columnOrderingFeature.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.ts#L21)
 
 Feature that adds column ordering state and APIs for ordering leaf columns.

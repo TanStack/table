@@ -13,7 +13,7 @@ Defined in: [features/column-pinning/columnPinningFeature.utils.ts:135](https://
 
 Reads this column's current pinning region.
 
-Group columns report `'left'` or `'right'` when any leaf column is pinned in
+Group columns report `'start'` or `'end'` when any leaf column is pinned in
 that region. Unpinned columns return `false`.
 
 ## Type Parameters

@@ -71,9 +71,9 @@
                     >
                       <div class="pin-actions">
                         <button
-                          x-show="header.column.getIsPinned() !== 'left'"
+                          x-show="header.column.getIsPinned() !== 'start'"
                           class="pin-button"
-                          @click="header.column.pin('left')"
+                          @click="header.column.pin('start')"
                         >
                           &lt;=
                         </button>
@@ -85,9 +85,9 @@
                           X
                         </button>
                         <button
-                          x-show="header.column.getIsPinned() !== 'right'"
+                          x-show="header.column.getIsPinned() !== 'end'"
                           class="pin-button"
-                          @click="header.column.pin('right')"
+                          @click="header.column.pin('end')"
                         >
                           =&gt;
                         </button>

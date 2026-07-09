@@ -78,7 +78,7 @@ export function table_getHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { left, right } =
+  const { start, end } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const allColumns = table.getAllColumns()
   const leafColumns = callMemoOrStaticFn(
@@ -88,15 +88,15 @@ export function table_getHeaderGroups<
   )
 
   // Fast path: no columns are pinned — skip per-side lookups, partition, and spread.
-  if (!left.length && !right.length) {
+  if (!start.length && !end.length) {
     return buildHeaderGroups(allColumns, leafColumns, table)
   }
 
   const leafColumnsById = table.getAllLeafColumnsById()
 
   const leftColumns: typeof leafColumns = []
-  for (let i = 0; i < left.length; i++) {
-    const column = leafColumnsById[left[i]!]
+  for (let i = 0; i < start.length; i++) {
+    const column = leafColumnsById[start[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -106,8 +106,8 @@ export function table_getHeaderGroups<
   }
 
   const rightColumns: typeof leafColumns = []
-  for (let i = 0; i < right.length; i++) {
-    const column = leafColumnsById[right[i]!]
+  for (let i = 0; i < end.length; i++) {
+    const column = leafColumnsById[end[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -117,7 +117,7 @@ export function table_getHeaderGroups<
   }
 
   const centerColumns = leafColumns.filter(
-    (column) => !left.includes(column.id) && !right.includes(column.id),
+    (column) => !start.includes(column.id) && !end.includes(column.id),
   )
 
   return buildHeaderGroups(

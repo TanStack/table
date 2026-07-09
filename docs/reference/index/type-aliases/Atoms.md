@@ -9,7 +9,7 @@ title: Atoms
 type Atoms<TFeatures> = { [K in keyof TableState<TFeatures>]-?: ReadonlyAtom<TableState<TFeatures>[K]> };
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L53)
+Defined in: [core/table/coreTablesFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L54)
 
 A map of readonly derived atoms, one per `TableState` slice. Each derives
 from its corresponding `baseAtom` plus, optionally, a per-slice external

@@ -99,15 +99,15 @@ export function ColumnHeader({ title }: { title?: string }): React.ReactNode {
                       <>
                         <Dropdown.Item
                           id="pin-left"
-                          isDisabled={pinned === 'left'}
-                          onAction={() => column.pin('left')}
+                          isDisabled={pinned === 'start'}
+                          onAction={() => column.pin('start')}
                         >
                           Pin left
                         </Dropdown.Item>
                         <Dropdown.Item
                           id="pin-right"
-                          isDisabled={pinned === 'right'}
-                          onAction={() => column.pin('right')}
+                          isDisabled={pinned === 'end'}
+                          onAction={() => column.pin('end')}
                         >
                           Pin right
                         </Dropdown.Item>

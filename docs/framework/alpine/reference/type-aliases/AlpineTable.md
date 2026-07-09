@@ -9,7 +9,7 @@ title: AlpineTable
 type AlpineTable<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [createTable.ts:12](https://github.com/TanStack/table/blob/main/packages/alpine-table/src/createTable.ts#L12)
+Defined in: [createTable.ts:14](https://github.com/TanStack/table/blob/main/packages/alpine-table/src/createTable.ts#L14)
 
 ## Type Declaration
 

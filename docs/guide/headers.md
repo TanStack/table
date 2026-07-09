@@ -36,7 +36,7 @@ If you are in a header group, the headers are stored as an array in the `headerG
 
 ### Header Table Instance APIs
 
-There are multiple `table` instance APIs that you can use to retrieve a list of headers depending on the features that you are using. The most common API you might use is `table.getFlatHeaders`, which will return a flat list of all headers in the table, but there are at least a dozen other headers that are useful in tandem with the column visibility and column pinning features. APIs like `table.getLeftLeafHeaders` or `table.getRightFlatHeaders` could be useful depending on your use case.
+There are multiple `table` instance APIs that you can use to retrieve a list of headers depending on the features that you are using. The most common API you might use is `table.getFlatHeaders`, which will return a flat list of all headers in the table, but there are at least a dozen other headers that are useful in tandem with the column visibility and column pinning features. APIs like `table.getStartLeafHeaders` or `table.getEndFlatHeaders` could be useful depending on your use case.
 
 ## Header Objects
 

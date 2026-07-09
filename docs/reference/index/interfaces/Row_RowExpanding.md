@@ -5,7 +5,7 @@ title: Row_RowExpanding
 
 # Interface: Row\_RowExpanding
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L14)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L13)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/row-expanding/rowExpandingFeature.types.ts:14](https://git
 getCanExpand: () => boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L18)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L17)
 
 Checks whether this row can be expanded.
 
@@ -31,7 +31,7 @@ Checks whether this row can be expanded.
 getIsAllParentsExpanded: () => boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L22)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L21)
 
 Checks whether every ancestor of this row is expanded.
 
@@ -47,7 +47,7 @@ Checks whether every ancestor of this row is expanded.
 getIsExpanded: () => boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L26)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L25)
 
 Checks whether this row is currently expanded.
 
@@ -63,7 +63,7 @@ Checks whether this row is currently expanded.
 getToggleExpandedHandler: () => () => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L30)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L29)
 
 Creates a handler that toggles this row's expanded state.
 
@@ -85,7 +85,7 @@ Creates a handler that toggles this row's expanded state.
 toggleExpanded: (expanded?) => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L34)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L33)
 
 Toggles the expanded state (or sets it if `expanded` is provided) for the row.
 

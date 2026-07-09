@@ -1,17 +1,17 @@
 ---
-id: table_getLeftFlatHeaders
-title: table_getLeftFlatHeaders
+id: table_getEndFlatHeaders
+title: table_getEndFlatHeaders
 ---
 
-# Function: table\_getLeftFlatHeaders()
+# Function: table\_getEndFlatHeaders()
 
 ```ts
-function table_getLeftFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
+function table_getEndFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:532](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L532)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:572](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L572)
 
-Flattens every header from the left pinned header groups.
+Flattens every header from the end pinned header groups.
 
 Parent headers and placeholder headers are included.
 
@@ -38,5 +38,5 @@ Parent headers and placeholder headers are included.
 ## Example
 
 ```ts
-const headers = table_getLeftFlatHeaders(table)
+const headers = table_getEndFlatHeaders(table)
 ```

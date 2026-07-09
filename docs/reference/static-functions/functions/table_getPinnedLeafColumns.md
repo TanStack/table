@@ -11,11 +11,11 @@ function table_getPinnedLeafColumns<TFeatures, TData>(table, position):
   | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:759](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L759)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:773](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L773)
 
 Resolves leaf columns for a requested pinning region.
 
-Pass `'left'`, `'center'`, or `'right'` for a partition, or pass `false` to
+Pass `'start'`, `'center'`, or `'end'` for a partition, or pass `false` to
 read all leaf columns without partitioning.
 
 ## Type Parameters

@@ -38,7 +38,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:33](https
 optional columnOrder: ColumnOrderState;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.types.ts:8](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L8)
+Defined in: [features/column-ordering/columnOrderingFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.types.ts#L27)
 
 #### Inherited from
 
@@ -108,7 +108,7 @@ Defined in: [features/column-visibility/columnVisibilityFeature.types.ts:9](http
 optional expanded: ExpandedState;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L11)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L10)
 
 #### Inherited from
 
@@ -150,7 +150,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:17](https:/
 optional pagination: PaginationState;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L12)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L11)
 
 #### Inherited from
 

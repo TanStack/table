@@ -9,7 +9,7 @@ title: table_getHeaderGroups
 function table_getHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L78)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L77)
 
 Builds visible header groups for the current column tree.
 

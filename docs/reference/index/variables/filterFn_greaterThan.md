@@ -9,7 +9,7 @@ title: filterFn_greaterThan
 const filterFn_greaterThan: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L127)
+Defined in: [fns/filterFns.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L139)
 
 Keeps rows whose value is greater than the filter value.
 
@@ -18,10 +18,10 @@ numbers; otherwise normalized strings are compared.
 
 ## Type Declaration
 
-### resolveFilterValue()
+### autoRemove()
 
 ```ts
-resolveFilterValue: (val) => boolean;
+autoRemove: (val) => boolean;
 ```
 
 #### Parameters

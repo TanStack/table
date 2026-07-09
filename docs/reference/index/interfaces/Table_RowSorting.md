@@ -3,19 +3,19 @@ id: Table_RowSorting
 title: Table_RowSorting
 ---
 
-# Interface: Table\_RowSorting\<TFeatures, TData\>
+# Interface: Table\_RowSorting\<_TFeatures, _TData\>
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L201)
 
 ## Type Parameters
 
-### TFeatures
+### _TFeatures
 
-`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+`_TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
 
-### TData
+### _TData
 
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+`_TData` *extends* [`RowData`](../type-aliases/RowData.md)
 
 ## Properties
 

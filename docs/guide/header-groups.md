@@ -10,7 +10,7 @@ Header Groups are simply "rows" of headers. Don't let the name confuse you, it's
 
 ## Where to Get Header Groups From
 
-There are multiple `table` instance APIs you can use to retrieve header groups from the table instance. `table.getHeaderGroups` is the most common API to use, but depending on the features that you are using, you may need to use other APIs, such as `table.get[Left/Center/Right]HeaderGroups` if you are using column pinning features.
+There are multiple `table` instance APIs you can use to retrieve header groups from the table instance. `table.getHeaderGroups` is the most common API to use, but depending on the features that you are using, you may need to use other APIs, such as `table.get[Start/Center/End]HeaderGroups` if you are using column pinning features.
 
 ## Header Group Objects
 

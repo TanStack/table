@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [createTableHook.tsx:408](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L408)
+Defined in: [createTableHook.tsx:406](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L406)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [createTableHook.tsx:408](https://github.com/TanStack/table/blob/mai
 appFeatures: TFeatures;
 ```
 
-Defined in: [createTableHook.tsx:415](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L415)
+Defined in: [createTableHook.tsx:413](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L413)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:420](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L420)
+Defined in: [createTableHook.tsx:418](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L418)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -65,10 +65,10 @@ the cell/header/footer render props expose the bound components.
 ### createAppTable()
 
 ```ts
-createAppTable: <TData>(tableOptions) => AppSolidTable<TFeatures, TData, TableState<TFeatures>, TTableComponents, TCellComponents, THeaderComponents>;
+createAppTable: <TData>(tableOptions) => AppSolidTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:430](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L430)
+Defined in: [createTableHook.tsx:428](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L428)
 
 Creates a table with the `App*` wrapper components and registered
 `tableComponents` attached. `TData` is inferred from the `data` option.
@@ -87,7 +87,7 @@ Creates a table with the `App*` wrapper components and registered
 
 #### Returns
 
-[`AppSolidTable`](../type-aliases/AppSolidTable.md)\<`TFeatures`, `TData`, `TableState`\<`TFeatures`\>, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
+[`AppSolidTable`](../type-aliases/AppSolidTable.md)\<`TFeatures`, `TData`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
 
 ***
 
@@ -97,7 +97,7 @@ Creates a table with the `App*` wrapper components and registered
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:457](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L457)
+Defined in: [createTableHook.tsx:453](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L453)
 
 Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 `cellComponents` and a context-bound `FlexRender`.
@@ -120,7 +120,7 @@ Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:468](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L468)
+Defined in: [createTableHook.tsx:464](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L464)
 
 Reads the header provided by the nearest `<table.AppHeader>` /
 `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -141,10 +141,10 @@ context-bound `FlexRender`.
 ### useTableContext()
 
 ```ts
-useTableContext: <TData>() => AppSolidTable<TFeatures, TData, TableState<TFeatures>, TTableComponents, TCellComponents, THeaderComponents>;
+useTableContext: <TData>() => AppSolidTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:445](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L445)
+Defined in: [createTableHook.tsx:442](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L442)
 
 Reads the table provided by the nearest `<table.AppTable>`. This is the same
 extended instance `createAppTable` returns, so the `App*` components and your
@@ -158,4 +158,4 @@ extended instance `createAppTable` returns, so the `App*` components and your
 
 #### Returns
 
-[`AppSolidTable`](../type-aliases/AppSolidTable.md)\<`TFeatures`, `TData`, `TableState`\<`TFeatures`\>, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
+[`AppSolidTable`](../type-aliases/AppSolidTable.md)\<`TFeatures`, `TData`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>

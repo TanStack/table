@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures>(__namedParameters): object;
 ```
 
-Defined in: [createTableHook.ts:21](https://github.com/TanStack/table/blob/main/packages/alpine-table/src/createTableHook.ts#L21)
+Defined in: [createTableHook.ts:26](https://github.com/TanStack/table/blob/main/packages/alpine-table/src/createTableHook.ts#L26)
 
 ## Type Parameters
 
@@ -52,7 +52,7 @@ createAppColumnHelper: <TData>() => ColumnHelper<TFeatures, TData>;
 ### createAppTable()
 
 ```ts
-createAppTable: <TData>(tableOptions) => AppAlpineTable<TFeatures, TData>;
+createAppTable: <TData>(tableOptions, selector?) => AppAlpineTable<TFeatures, TData>;
 ```
 
 #### Type Parameters
@@ -66,6 +66,10 @@ createAppTable: <TData>(tableOptions) => AppAlpineTable<TFeatures, TData>;
 ##### tableOptions
 
 `Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"`\>
+
+##### selector?
+
+(`state`) => `unknown`
 
 #### Returns
 

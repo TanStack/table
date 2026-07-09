@@ -96,8 +96,8 @@ function App() {
     column: ReturnType<typeof table.getAllLeafColumns>[0]
   }) => (
     <div class="pin-actions">
-      {props.column.getIsPinned() !== 'left' ? (
-        <button class="pin-button" onClick={() => props.column.pin('left')}>
+      {props.column.getIsPinned() !== 'start' ? (
+        <button class="pin-button" onClick={() => props.column.pin('start')}>
           {'<='}
         </button>
       ) : null}
@@ -106,8 +106,8 @@ function App() {
           X
         </button>
       ) : null}
-      {props.column.getIsPinned() !== 'right' ? (
-        <button class="pin-button" onClick={() => props.column.pin('right')}>
+      {props.column.getIsPinned() !== 'end' ? (
+        <button class="pin-button" onClick={() => props.column.pin('end')}>
           {'=>'}
         </button>
       ) : null}
@@ -168,7 +168,7 @@ function App() {
       <div class="split-tables">
         <table class="outlined-table">
           <thead>
-            <For each={table.getLeftHeaderGroups()}>
+            <For each={table.getStartHeaderGroups()}>
               {(headerGroup) => (
                 <tr>
                   <For each={headerGroup.headers}>
@@ -193,7 +193,7 @@ function App() {
             <For each={table.getRowModel().rows.slice(0, 20)}>
               {(row) => (
                 <tr>
-                  <For each={row.getLeftVisibleCells()}>
+                  <For each={row.getStartVisibleCells()}>
                     {(cell) => (
                       <td>
                         <table.FlexRender cell={cell} />
@@ -246,7 +246,7 @@ function App() {
         </table>
         <table class="outlined-table">
           <thead>
-            <For each={table.getRightHeaderGroups()}>
+            <For each={table.getEndHeaderGroups()}>
               {(headerGroup) => (
                 <tr>
                   <For each={headerGroup.headers}>
@@ -271,7 +271,7 @@ function App() {
             <For each={table.getRowModel().rows.slice(0, 20)}>
               {(row) => (
                 <tr>
-                  <For each={row.getRightVisibleCells()}>
+                  <For each={row.getEndVisibleCells()}>
                     {(cell) => (
                       <td>
                         <table.FlexRender cell={cell} />

@@ -1,5 +1,6 @@
 // @ts-check
 
+import tsParser from '@typescript-eslint/parser'
 import pluginSvelte from 'eslint-plugin-svelte'
 import rootConfig from '../../eslint.config.js'
 
@@ -21,7 +22,7 @@ export default [
     files: ['**/*.svelte'],
     languageOptions: {
       parserOptions: {
-        parser: '@typescript-eslint/parser',
+        parser: tsParser,
       },
     },
   },

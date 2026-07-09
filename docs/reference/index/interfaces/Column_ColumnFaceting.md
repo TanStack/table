@@ -5,7 +5,7 @@ title: Column_ColumnFaceting
 
 # Interface: Column\_ColumnFaceting\<TFeatures, TData\>
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:6](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L6)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:5](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L5)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:6](https://
 getFacetedMinMaxValues: () => [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L13)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L12)
 
 Computes min/max numeric facet values for this column.
 
@@ -41,7 +41,7 @@ Computes min/max numeric facet values for this column.
 getFacetedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L20)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L19)
 
 Computes the row model used to derive this column's facet values.
 
@@ -60,7 +60,7 @@ excluded.
 getFacetedUniqueValues: () => Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L24)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L23)
 
 Computes unique facet values and occurrence counts for this column.
 

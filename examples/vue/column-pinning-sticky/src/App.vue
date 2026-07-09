@@ -126,9 +126,9 @@ const getCommonPinningStyles = (
 ): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left')
+    isPinned === 'start' && column.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'right' && column.getIsFirstColumn('right')
+    isPinned === 'end' && column.getIsFirstColumn('end')
 
   return {
     boxShadow: isLastLeftPinnedColumn
@@ -136,8 +136,10 @@ const getCommonPinningStyles = (
       : isFirstRightPinnedColumn
         ? '4px 0 4px -4px gray inset'
         : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    insetInlineStart:
+      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    insetInlineEnd:
+      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
     width: `${column.getSize()}px`,
@@ -215,8 +217,8 @@ const getCommonPinningStyles = (
                 class="pin-actions"
               >
                 <button
-                  v-if="header.column.getIsPinned() !== 'left'"
-                  @click="header.column.pin('left')"
+                  v-if="header.column.getIsPinned() !== 'start'"
+                  @click="header.column.pin('start')"
                   class="pin-button"
                 >
                   {{ '<=' }}
@@ -229,8 +231,8 @@ const getCommonPinningStyles = (
                   X
                 </button>
                 <button
-                  v-if="header.column.getIsPinned() !== 'right'"
-                  @click="header.column.pin('right')"
+                  v-if="header.column.getIsPinned() !== 'end'"
+                  @click="header.column.pin('end')"
                   class="pin-button"
                 >
                   {{ '=>' }}

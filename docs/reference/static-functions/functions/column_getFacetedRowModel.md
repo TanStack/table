@@ -9,7 +9,7 @@ title: column_getFacetedRowModel
 function column_getFacetedRowModel<TFeatures, TData, TValue>(column, table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L44)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L52)
 
 Computes the row model used to derive one column's facet values.
 

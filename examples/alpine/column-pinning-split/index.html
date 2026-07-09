@@ -53,7 +53,7 @@
         <table class="outlined-table">
           <thead>
             <template
-              x-for="headerGroup in table.getLeftHeaderGroups()"
+              x-for="headerGroup in table.getStartHeaderGroups()"
               :key="headerGroup.id"
             >
               <tr>
@@ -72,9 +72,9 @@
                     >
                       <div class="pin-actions">
                         <button
-                          x-show="header.column.getIsPinned() !== 'left'"
+                          x-show="header.column.getIsPinned() !== 'start'"
                           class="pin-button"
-                          @click="header.column.pin('left')"
+                          @click="header.column.pin('start')"
                         >
                           &lt;=
                         </button>
@@ -86,9 +86,9 @@
                           X
                         </button>
                         <button
-                          x-show="header.column.getIsPinned() !== 'right'"
+                          x-show="header.column.getIsPinned() !== 'end'"
                           class="pin-button"
-                          @click="header.column.pin('right')"
+                          @click="header.column.pin('end')"
                         >
                           =&gt;
                         </button>
@@ -106,7 +106,7 @@
             >
               <tr>
                 <template
-                  x-for="cell in row.getLeftVisibleCells()"
+                  x-for="cell in row.getStartVisibleCells()"
                   :key="cell.id"
                 >
                   <td x-html="FlexRender({ cell })"></td>
@@ -138,9 +138,9 @@
                     >
                       <div class="pin-actions">
                         <button
-                          x-show="header.column.getIsPinned() !== 'left'"
+                          x-show="header.column.getIsPinned() !== 'start'"
                           class="pin-button"
-                          @click="header.column.pin('left')"
+                          @click="header.column.pin('start')"
                         >
                           &lt;=
                         </button>
@@ -152,9 +152,9 @@
                           X
                         </button>
                         <button
-                          x-show="header.column.getIsPinned() !== 'right'"
+                          x-show="header.column.getIsPinned() !== 'end'"
                           class="pin-button"
-                          @click="header.column.pin('right')"
+                          @click="header.column.pin('end')"
                         >
                           =&gt;
                         </button>
@@ -185,7 +185,7 @@
         <table class="outlined-table">
           <thead>
             <template
-              x-for="headerGroup in table.getRightHeaderGroups()"
+              x-for="headerGroup in table.getEndHeaderGroups()"
               :key="headerGroup.id"
             >
               <tr>
@@ -204,9 +204,9 @@
                     >
                       <div class="pin-actions">
                         <button
-                          x-show="header.column.getIsPinned() !== 'left'"
+                          x-show="header.column.getIsPinned() !== 'start'"
                           class="pin-button"
-                          @click="header.column.pin('left')"
+                          @click="header.column.pin('start')"
                         >
                           &lt;=
                         </button>
@@ -218,9 +218,9 @@
                           X
                         </button>
                         <button
-                          x-show="header.column.getIsPinned() !== 'right'"
+                          x-show="header.column.getIsPinned() !== 'end'"
                           class="pin-button"
-                          @click="header.column.pin('right')"
+                          @click="header.column.pin('end')"
                         >
                           =&gt;
                         </button>
@@ -238,7 +238,7 @@
             >
               <tr>
                 <template
-                  x-for="cell in row.getRightVisibleCells()"
+                  x-for="cell in row.getEndVisibleCells()"
                   :key="cell.id"
                 >
                   <td x-html="FlexRender({ cell })"></td>

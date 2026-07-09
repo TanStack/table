@@ -17,7 +17,7 @@ optional enableColumnPinning: boolean;
 
 Defined in: [features/column-pinning/columnPinningFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L26)
 
-Allows columns to be pinned into left and right regions.
+Allows columns to be pinned into start and end regions.
 
 Defaults to `true`; column-level `enablePinning` can still opt individual
 columns out.

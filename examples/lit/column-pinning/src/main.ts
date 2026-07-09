@@ -91,7 +91,7 @@ class LitTableExample extends LitElement {
   private columnVisibility: ColumnVisibilityState = {}
 
   @state()
-  private columnPinning: ColumnPinningState = { left: [], right: [] }
+  private columnPinning: ColumnPinningState = { start: [], end: [] }
 
   protected render() {
     const table = this.tableController.table(
@@ -221,12 +221,12 @@ class LitTableExample extends LitElement {
                           ${!header.isPlaceholder && header.column.getCanPin()
                             ? html`
                                 <div class="pin-actions">
-                                  ${header.column.getIsPinned() !== 'left'
+                                  ${header.column.getIsPinned() !== 'start'
                                     ? html`
                                         <button
                                           class="pin-button"
                                           @click="${() =>
-                                            header.column.pin('left')}"
+                                            header.column.pin('start')}"
                                         >
                                           ${'<='}
                                         </button>
@@ -243,12 +243,12 @@ class LitTableExample extends LitElement {
                                         </button>
                                       `
                                     : null}
-                                  ${header.column.getIsPinned() !== 'right'
+                                  ${header.column.getIsPinned() !== 'end'
                                     ? html`
                                         <button
                                           class="pin-button"
                                           @click="${() =>
-                                            header.column.pin('right')}"
+                                            header.column.pin('end')}"
                                         >
                                           ${'=>'}
                                         </button>

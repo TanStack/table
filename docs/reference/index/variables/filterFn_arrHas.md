@@ -9,7 +9,7 @@ title: filterFn_arrHas
 const filterFn_arrHas: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:299](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L299)
+Defined in: [fns/filterFns.ts:341](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L341)
 
 Keeps rows whose scalar column value equals at least one filter value.
 

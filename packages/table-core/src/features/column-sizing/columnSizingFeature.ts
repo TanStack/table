@@ -14,8 +14,8 @@ import {
   header_getStart,
   table_getCenterTotalSize,
   table_getColumnOffsets,
-  table_getLeftTotalSize,
-  table_getRightTotalSize,
+  table_getEndTotalSize,
+  table_getStartTotalSize,
   table_getTotalSize,
   table_resetColumnSizing,
   table_setColumnSizing,
@@ -119,8 +119,8 @@ export const columnSizingFeature: TableFeature = {
           table.getHeaderGroups(),
         ],
       },
-      table_getLeftTotalSize: {
-        fn: () => table_getLeftTotalSize(table),
+      table_getStartTotalSize: {
+        fn: () => table_getStartTotalSize(table),
         memoDeps: () => [
           table.atoms.columnSizing?.get(),
           table.getHeaderGroups(),
@@ -133,8 +133,8 @@ export const columnSizingFeature: TableFeature = {
           table.getHeaderGroups(),
         ],
       },
-      table_getRightTotalSize: {
-        fn: () => table_getRightTotalSize(table),
+      table_getEndTotalSize: {
+        fn: () => table_getEndTotalSize(table),
         memoDeps: () => [
           table.atoms.columnSizing?.get(),
           table.getHeaderGroups(),

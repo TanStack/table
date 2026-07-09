@@ -43,9 +43,9 @@ export const useMRT_ColumnVirtualizer = <
     () =>
       enableColumnPinning
         ? [
-            table.getLeftVisibleLeafColumns().map((c) => c.getPinnedIndex()),
+            table.getStartVisibleLeafColumns().map((c) => c.getPinnedIndex()),
             table
-              .getRightVisibleLeafColumns()
+              .getEndVisibleLeafColumns()
               .map(
                 (column) => visibleColumns.length - column.getPinnedIndex() - 1,
               )

@@ -5,7 +5,7 @@ title: TableMeta
 
 # Interface: TableMeta\<TFeatures, TData\>
 
-Defined in: [core/table/coreTablesFeature.types.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L15)
+Defined in: [core/table/coreTablesFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L16)
 
 ## Type Parameters
 

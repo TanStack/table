@@ -9,11 +9,11 @@ title: table_getTotalSize
 function table_getTotalSize<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:319](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L319)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:374](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L374)
 
 Sums the rendered size of the full table header row.
 
-This includes left, center, and right columns in the main header group.
+This includes start, center, and end columns in the main header group.
 
 ## Type Parameters
 

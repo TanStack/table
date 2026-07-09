@@ -9,7 +9,7 @@ title: row_getIsSelected
 function row_getIsSelected<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:528](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L528)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:531](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L531)
 
 Checks whether this row id is selected in `state.rowSelection`.
 

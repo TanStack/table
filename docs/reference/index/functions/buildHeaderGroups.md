@@ -49,7 +49,7 @@ The result accounts for visible leaf columns, pinned column groups, and placehol
 
 ### headerFamily?
 
-`"left"` | `"right"` | `"center"`
+`"start"` | `"end"` | `"center"`
 
 ## Returns
 

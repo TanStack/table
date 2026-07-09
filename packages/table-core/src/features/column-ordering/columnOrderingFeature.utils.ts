@@ -57,15 +57,15 @@ export function table_getColumnIndexes<
   return {
     all: buildIndexes(table_getPinnedVisibleLeafColumns(table)),
     center: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'center')),
-    left: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'left')),
-    right: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'right')),
+    start: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'start')),
+    end: buildIndexes(table_getPinnedVisibleLeafColumns(table, 'end')),
   }
 }
 
 /**
  * Finds this column's index within a visible pinning region.
  *
- * Pass `'left'`, `'center'`, or `'right'` to search that region; omit the
+ * Pass `'start'`, `'center'`, or `'end'` to search that region; omit the
  * position to search the full visible leaf column list.
  *
  * @example
@@ -87,10 +87,10 @@ export function column_getIndex<
     table_getColumnIndexes,
   )
   const key =
-    position === 'left'
-      ? 'left'
-      : position === 'right'
-        ? 'right'
+    position === 'start'
+      ? 'start'
+      : position === 'end'
+        ? 'end'
         : position === 'center'
           ? 'center'
           : 'all'
@@ -104,7 +104,7 @@ export function column_getIndex<
  *
  * @example
  * ```ts
- * const isFirst = column_getIsFirstColumn(column, 'left')
+ * const isFirst = column_getIsFirstColumn(column, 'start')
  * ```
  */
 export function column_getIsFirstColumn<
@@ -126,7 +126,7 @@ export function column_getIsFirstColumn<
  *
  * @example
  * ```ts
- * const isLast = column_getIsLastColumn(column, 'right')
+ * const isLast = column_getIsLastColumn(column, 'end')
  * ```
  */
 export function column_getIsLastColumn<

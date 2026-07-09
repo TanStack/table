@@ -9,7 +9,7 @@ title: AppColumnHelper
 type AppColumnHelper<TFeatures, TData> = ReturnType<typeof coreCreateColumnHelper>;
 ```
 
-Defined in: [createTableHook.ts:16](https://github.com/TanStack/table/blob/main/packages/alpine-table/src/createTableHook.ts#L16)
+Defined in: [createTableHook.ts:21](https://github.com/TanStack/table/blob/main/packages/alpine-table/src/createTableHook.ts#L21)
 
 ## Type Parameters
 

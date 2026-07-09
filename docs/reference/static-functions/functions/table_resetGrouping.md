@@ -9,7 +9,7 @@ title: table_resetGrouping
 function table_resetGrouping<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:229](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L229)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:231](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L231)
 
 Resets `grouping` to the configured initial state or feature default.
 

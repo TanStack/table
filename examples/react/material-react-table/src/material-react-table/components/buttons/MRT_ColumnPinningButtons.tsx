@@ -24,7 +24,7 @@ export const MRT_ColumnPinningButtons = <TData extends MRT_RowData>({
     },
   } = table
 
-  const handlePinColumn = (pinDirection: 'left' | 'right' | false) => {
+  const handlePinColumn = (pinDirection: 'start' | 'end' | false) => {
     column.pin(pinDirection)
   }
 
@@ -46,7 +46,7 @@ export const MRT_ColumnPinningButtons = <TData extends MRT_RowData>({
       ) : (
         <>
           <Tooltip title={localization.pinToLeft}>
-            <IconButton onClick={() => handlePinColumn('left')} size="small">
+            <IconButton onClick={() => handlePinColumn('start')} size="small">
               <PushPinIcon
                 style={{
                   transform: 'rotate(90deg)',
@@ -55,7 +55,7 @@ export const MRT_ColumnPinningButtons = <TData extends MRT_RowData>({
             </IconButton>
           </Tooltip>
           <Tooltip title={localization.pinToRight}>
-            <IconButton onClick={() => handlePinColumn('right')} size="small">
+            <IconButton onClick={() => handlePinColumn('end')} size="small">
               <PushPinIcon
                 style={{
                   transform: 'rotate(-90deg)',

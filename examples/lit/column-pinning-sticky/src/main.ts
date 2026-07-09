@@ -36,9 +36,9 @@ const getCommonPinningStyles = (
 ): Record<string, string | undefined> => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left')
+    isPinned === 'start' && column.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'right' && column.getIsFirstColumn('right')
+    isPinned === 'end' && column.getIsFirstColumn('end')
 
   return {
     'box-shadow': isLastLeftPinnedColumn
@@ -46,8 +46,10 @@ const getCommonPinningStyles = (
       : isFirstRightPinnedColumn
         ? '4px 0 4px -4px gray inset'
         : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    insetInlineStart:
+      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    insetInlineEnd:
+      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     opacity: isPinned ? '0.95' : '1',
     position: isPinned ? 'sticky' : 'relative',
     width: `${column.getSize()}px`,
@@ -113,7 +115,7 @@ class LitTableExample extends LitElement {
   private columnVisibility: ColumnVisibilityState = {}
 
   @state()
-  private columnPinning: ColumnPinningState = { left: [], right: [] }
+  private columnPinning: ColumnPinningState = { start: [], end: [] }
 
   @state()
   private columnSizing: ColumnSizingState = {}
@@ -252,12 +254,12 @@ class LitTableExample extends LitElement {
                             ${!header.isPlaceholder && header.column.getCanPin()
                               ? html`
                                   <div class="pin-actions">
-                                    ${header.column.getIsPinned() !== 'left'
+                                    ${header.column.getIsPinned() !== 'start'
                                       ? html`
                                           <button
                                             class="pin-button"
                                             @click="${() =>
-                                              header.column.pin('left')}"
+                                              header.column.pin('start')}"
                                           >
                                             ${'<='}
                                           </button>
@@ -274,12 +276,12 @@ class LitTableExample extends LitElement {
                                           </button>
                                         `
                                       : null}
-                                    ${header.column.getIsPinned() !== 'right'
+                                    ${header.column.getIsPinned() !== 'end'
                                       ? html`
                                           <button
                                             class="pin-button"
                                             @click="${() =>
-                                              header.column.pin('right')}"
+                                              header.column.pin('end')}"
                                           >
                                             ${'=>'}
                                           </button>

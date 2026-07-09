@@ -81,7 +81,7 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
     column.toggleVisibility(false)
   }
 
-  const handlePinColumn = (pinDirection: 'left' | 'right' | false) => {
+  const handlePinColumn = (pinDirection: 'start' | 'end' | false) => {
     column.pin(pinDirection)
   }
 
@@ -180,16 +180,16 @@ export const MRT_ColumnActionMenu = <TData extends MRT_RowData>({
       {enableColumnPinning && column.getCanPin() && (
         <>
           <Menu.Item
-            disabled={column.getIsPinned() === 'left' || !column.getCanPin()}
+            disabled={column.getIsPinned() === 'start' || !column.getCanPin()}
             leftSection={<IconPinned className={classes.left} />}
-            onClick={() => handlePinColumn('left')}
+            onClick={() => handlePinColumn('start')}
           >
             {localization.pinToLeft}
           </Menu.Item>
           <Menu.Item
-            disabled={column.getIsPinned() === 'right' || !column.getCanPin()}
+            disabled={column.getIsPinned() === 'end' || !column.getCanPin()}
             leftSection={<IconPinned className={classes.right} />}
-            onClick={() => handlePinColumn('right')}
+            onClick={() => handlePinColumn('end')}
           >
             {localization.pinToRight}
           </Menu.Item>

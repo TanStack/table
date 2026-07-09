@@ -34,9 +34,9 @@ const getCommonPinningStyles = (
 ): CSSProperties => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left')
+    isPinned === 'start' && column.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'right' && column.getIsFirstColumn('right')
+    isPinned === 'end' && column.getIsFirstColumn('end')
 
   return {
     boxShadow: isLastLeftPinnedColumn
@@ -44,8 +44,10 @@ const getCommonPinningStyles = (
       : isFirstRightPinnedColumn
         ? '4px 0 4px -4px gray inset'
         : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    insetInlineStart:
+      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    insetInlineEnd:
+      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
     width: column.getSize(),
@@ -200,11 +202,11 @@ function App() {
                       </div>
                       {!header.isPlaceholder && header.column.getCanPin() && (
                         <div className="pin-actions">
-                          {header.column.getIsPinned() !== 'left' ? (
+                          {header.column.getIsPinned() !== 'start' ? (
                             <button
                               className="pin-button"
                               onClick={() => {
-                                header.column.pin('left')
+                                header.column.pin('start')
                               }}
                             >
                               {'<='}
@@ -220,11 +222,11 @@ function App() {
                               X
                             </button>
                           ) : null}
-                          {header.column.getIsPinned() !== 'right' ? (
+                          {header.column.getIsPinned() !== 'end' ? (
                             <button
                               className="pin-button"
                               onClick={() => {
-                                header.column.pin('right')
+                                header.column.pin('end')
                               }}
                             >
                               {'=>'}

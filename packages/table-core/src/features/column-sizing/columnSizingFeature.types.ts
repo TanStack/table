@@ -30,13 +30,13 @@ export interface ColumnOffsetsByPosition {
    */
   center: ColumnOffsets
   /**
-   * Offsets within the left pinned region.
+   * Offsets within the start pinned region.
    */
-  left: ColumnOffsets
+  start: ColumnOffsets
   /**
-   * Offsets within the right pinned region.
+   * Offsets within the end pinned region.
    */
-  right: ColumnOffsets
+  end: ColumnOffsets
 }
 
 export interface TableOptions_ColumnSizing {
@@ -66,13 +66,13 @@ export interface Table_ColumnSizing {
    */
   getColumnOffsets: () => ColumnOffsetsByPosition
   /**
-   * Sums the current sizes of visible left-pinned leaf columns.
+   * Sums the current sizes of visible start-pinned leaf columns.
    */
-  getLeftTotalSize: () => number
+  getStartTotalSize: () => number
   /**
-   * Sums the current sizes of visible right-pinned leaf columns.
+   * Sums the current sizes of visible end-pinned leaf columns.
    */
-  getRightTotalSize: () => number
+  getEndTotalSize: () => number
   /**
    * Sums the current sizes of all visible leaf columns.
    */

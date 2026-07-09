@@ -57,8 +57,8 @@ describe('table_getColumnIndexes', () => {
     const table = makeTable(3, {
       initialState: {
         columnPinning: {
-          left: ['lastName'],
-          right: ['age'],
+          start: ['lastName'],
+          end: ['age'],
         },
         columnVisibility: {
           firstName: false,
@@ -70,8 +70,8 @@ describe('table_getColumnIndexes', () => {
 
     for (const [key, position] of [
       ['all', undefined],
-      ['left', 'left'],
-      ['right', 'right'],
+      ['start', 'start'],
+      ['end', 'end'],
       ['center', 'center'],
     ] as const) {
       const columns = table_getPinnedVisibleLeafColumns(table, position)
@@ -107,8 +107,8 @@ describe('column_getIndex', () => {
     const table = makeTable(3, {
       initialState: {
         columnPinning: {
-          left: ['lastName', 'firstName'],
-          right: ['age'],
+          start: ['lastName', 'firstName'],
+          end: ['age'],
         },
       },
     })
@@ -117,10 +117,10 @@ describe('column_getIndex', () => {
     const age = columns.find((col) => col.id === 'age')!
     const visits = columns.find((col) => col.id === 'visits')!
 
-    expect(column_getIndex(firstName, 'left')).toBe(1)
-    expect(column_getIndex(age, 'right')).toBe(0)
+    expect(column_getIndex(firstName, 'start')).toBe(1)
+    expect(column_getIndex(age, 'end')).toBe(0)
     expect(column_getIndex(visits, 'center')).toBeGreaterThanOrEqual(0)
-    expect(column_getIndex(firstName, 'right')).toBe(-1)
+    expect(column_getIndex(firstName, 'end')).toBe(-1)
     expect(column_getIndex(firstName, 'center')).toBe(-1)
   })
 

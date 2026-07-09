@@ -14,7 +14,7 @@ Defined in: [features/column-pinning/columnPinningFeature.utils.ts:56](https://g
 Moves this column's leaf column ids into a pinning region.
 
 Pinning a group column pins all of its leaves. The leaf ids are first removed
-from both regions, then appended to the requested `'left'` or `'right'`
+from both regions, then appended to the requested `'start'` or `'end'`
 region. Passing `false` unpins them back to the center.
 
 ## Type Parameters
@@ -48,5 +48,5 @@ region. Passing `false` unpins them back to the center.
 ## Example
 
 ```ts
-column_pin(column, 'left')
+column_pin(column, 'start')
 ```

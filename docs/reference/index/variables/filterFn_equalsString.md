@@ -9,7 +9,7 @@ title: filterFn_equalsString
 const filterFn_equalsString: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L89)
+Defined in: [fns/filterFns.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L95)
 
 Keeps rows whose stringified column value equals the filter text.
 
@@ -33,3 +33,19 @@ autoRemove: (val) => boolean;
 #### Returns
 
 `boolean`
+
+### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => string;
+```
+
+#### Parameters
+
+##### val
+
+`any`
+
+#### Returns
+
+`string`

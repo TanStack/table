@@ -46,7 +46,7 @@ from a framework adapter or table factory.
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "features" | "data"> & object;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "features"> & object;
 ```
 
 Defined in: [helpers/tableOptions.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L25)
@@ -71,12 +71,12 @@ Preserves table option inference when reusable options omit `data`.
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"features"` \| `"data"`\> & `object`
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"features"`\> & `object`
 
 ## Call Signature
 
 ```ts
-function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "columns" | "features" | "data"> & object;
+function tableOptions<TFeatures, TData>(options): Omit<TableOptions<TFeatures, TData>, "data" | "columns" | "features"> & object;
 ```
 
 Defined in: [helpers/tableOptions.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableOptions.ts#L40)
@@ -98,11 +98,11 @@ Preserves table option inference when reusable options omit both `data` and
 
 #### options
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"columns"` \| `"data"`\> & `object`
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"columns"`\> & `object`
 
 ### Returns
 
-`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"columns"` \| `"features"` \| `"data"`\> & `object`
+`Omit`\<[`TableOptions`](../type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>, `"data"` \| `"columns"` \| `"features"`\> & `object`
 
 ## Call Signature
 

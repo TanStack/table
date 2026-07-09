@@ -25,8 +25,8 @@
 
   type PinningStyles = {
     boxShadow: string | undefined
-    left: string | undefined
-    right: string | undefined
+    'inset-inline-start': string | undefined
+    'inset-inline-end': string | undefined
     opacity: number
     position: string
     width: string
@@ -38,9 +38,9 @@
   ): PinningStyles => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
-      isPinned === 'left' && column.getIsLastColumn('left')
+      isPinned === 'start' && column.getIsLastColumn('start')
     const isFirstRightPinnedColumn =
-      isPinned === 'right' && column.getIsFirstColumn('right')
+      isPinned === 'end' && column.getIsFirstColumn('end')
 
     return {
       boxShadow: isLastLeftPinnedColumn
@@ -48,8 +48,8 @@
         : isFirstRightPinnedColumn
           ? '4px 0 4px -4px gray inset'
           : undefined,
-      left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-      right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+      'inset-inline-start': isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+      'inset-inline-end': isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
       opacity: isPinned ? 0.95 : 1,
       position: isPinned ? 'sticky' : 'relative',
       width: `${column.getSize()}px`,
@@ -176,7 +176,10 @@
               {@const styles = getCommonPinningStyles(header.column)}
               <th
                 colSpan={header.colSpan}
-                style="box-shadow: {styles.boxShadow ?? 'none'}; left: {styles.left ?? 'auto'}; right: {styles.right ?? 'auto'}; opacity: {styles.opacity}; position: {styles.position}; width: {styles.width}; z-index: {styles.zIndex}"
+                style="box-shadow: {styles.boxShadow ?? 'none'}; inset-inline-start: {styles[
+                  'inset-inline-start'
+                ] ?? 'auto'}; inset-inline-end: {styles['inset-inline-end'] ??
+                  'auto'}; opacity: {styles.opacity}; position: {styles.position}; width: {styles.width}; z-index: {styles.zIndex}"
               >
                 <div class="nowrap">
                   {#if !header.isPlaceholder}
@@ -187,10 +190,10 @@
                 </div>
                 {#if !header.isPlaceholder && header.column.getCanPin()}
                   <div class="pin-actions">
-                    {#if header.column.getIsPinned() !== 'left'}
+                    {#if header.column.getIsPinned() !== 'start'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('left')}
+                        onclick={() => header.column.pin('start')}
                       >
                         {'<='}
                       </button>
@@ -203,10 +206,10 @@
                         X
                       </button>
                     {/if}
-                    {#if header.column.getIsPinned() !== 'right'}
+                    {#if header.column.getIsPinned() !== 'end'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('right')}
+                        onclick={() => header.column.pin('end')}
                       >
                         {'=>'}
                       </button>
@@ -231,7 +234,10 @@
             {#each row.getVisibleCells() as cell (cell.id)}
               {@const styles = getCommonPinningStyles(cell.column)}
               <td
-                style="box-shadow: {styles.boxShadow ?? 'none'}; left: {styles.left ?? 'auto'}; right: {styles.right ?? 'auto'}; opacity: {styles.opacity}; position: {styles.position}; width: {styles.width}; z-index: {styles.zIndex}"
+                style="box-shadow: {styles.boxShadow ?? 'none'}; inset-inline-start: {styles[
+                  'inset-inline-start'
+                ] ?? 'auto'}; inset-inline-end: {styles['inset-inline-end'] ??
+                  'auto'}; opacity: {styles.opacity}; position: {styles.position}; width: {styles.width}; z-index: {styles.zIndex}"
               >
                 <FlexRender cell={cell} />
               </td>

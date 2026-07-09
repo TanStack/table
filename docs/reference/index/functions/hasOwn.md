@@ -9,7 +9,7 @@ title: hasOwn
 function hasOwn(obj, key): boolean;
 ```
 
-Defined in: [utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L66)
+Defined in: [utils.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L88)
 
 Checks whether an object owns a key, including null-prototype dictionaries.
 

@@ -9,7 +9,7 @@ title: GroupColumnDef
 type GroupColumnDef<TFeatures, TData, TValue> = GroupColumnDefBase<TFeatures, TData, TValue> & ColumnIdentifiers<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/ColumnDef.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L193)
+Defined in: [types/ColumnDef.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L194)
 
 ## Type Parameters
 

@@ -9,7 +9,7 @@ title: table_getCenterVisibleLeafColumns
 function table_getCenterVisibleLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:846](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L846)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:860](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L860)
 
 Resolves visible leaf columns that are not pinned.
 

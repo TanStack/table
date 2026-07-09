@@ -32,7 +32,7 @@ export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
  * Updates this column's visibility when hiding is allowed.
  *
  * Passing `visible` stores that value. Omitting it flips the column's current
- * visibility state. Columns that cannot hide are left unchanged.
+ * visibility state. Columns that cannot hide are start unchanged.
  *
  * @example
  * ```ts
@@ -137,8 +137,8 @@ export function column_getToggleVisibilityHandler<
 /**
  * Collects the cells from this row whose columns are visible.
  *
- * When column pinning is active, the result is ordered as left-pinned cells,
- * center cells, then right-pinned cells.
+ * When column pinning is active, the result is ordered as start-pinned cells,
+ * center cells, then end-pinned cells.
  *
  * @example
  * ```ts
@@ -158,9 +158,9 @@ export function row_getVisibleCells<
     }
   }
 
-  const { left, right } =
+  const { start, end } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (!left.length && !right.length) return visibleCells // no pinning, return early
+  if (!start.length && !end.length) return visibleCells // no pinning, return early
 
   const visibleCellsByColumnId = callMemoOrStaticFn(
     row,
@@ -169,14 +169,14 @@ export function row_getVisibleCells<
   )
 
   const leftCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < left.length; i++) {
-    const cell = visibleCellsByColumnId[left[i]!]
+  for (let i = 0; i < start.length; i++) {
+    const cell = visibleCellsByColumnId[start[i]!]
     if (cell) leftCells.push(cell)
   }
 
   const rightCells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < right.length; i++) {
-    const cell = visibleCellsByColumnId[right[i]!]
+  for (let i = 0; i < end.length; i++) {
+    const cell = visibleCellsByColumnId[end[i]!]
     if (cell) rightCells.push(cell)
   }
 
@@ -185,7 +185,7 @@ export function row_getVisibleCells<
   for (let i = 0; i < visibleCells.length; i++) {
     const cell = visibleCells[i]!
     const id = cell.column.id
-    if (!left.includes(id) && !right.includes(id)) centerCells.push(cell)
+    if (!start.includes(id) && !end.includes(id)) centerCells.push(cell)
   }
 
   return [...leftCells, ...centerCells, ...rightCells]

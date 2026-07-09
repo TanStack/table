@@ -13,7 +13,7 @@ function callMemoOrStaticFn<TObject, TArgs, TReturn>(
    args): TReturn;
 ```
 
-Defined in: [utils.ts:459](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L459)
+Defined in: [utils.ts:480](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L480)
 
 Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fallback to the static method passed in.
 

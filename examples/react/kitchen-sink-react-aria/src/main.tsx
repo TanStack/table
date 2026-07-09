@@ -43,9 +43,9 @@ function getCommonPinningStyles(
 ): React.CSSProperties {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left')
+    isPinned === 'start' && column.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'right' && column.getIsFirstColumn('right')
+    isPinned === 'end' && column.getIsFirstColumn('end')
 
   return {
     boxShadow: isLastLeftPinnedColumn
@@ -53,8 +53,10 @@ function getCommonPinningStyles(
       : isFirstRightPinnedColumn
         ? '4px 0 4px -4px var(--border) inset'
         : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    insetInlineStart:
+      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    insetInlineEnd:
+      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     position: isPinned ? 'sticky' : 'relative',
     borderRight: isLastLeftPinnedColumn ? '1px solid var(--border)' : undefined,
     borderLeft: isFirstRightPinnedColumn
@@ -147,7 +149,7 @@ function App() {
       onColumnFiltersChange: setColumnFilters,
       onGlobalFilterChange: setGlobalFilter,
       initialState: {
-        columnPinning: { left: ['select'], right: ['actions'] },
+        columnPinning: { start: ['select'], end: ['actions'] },
         columnOrder: columns.map((c) => c.id ?? ''),
       },
     },

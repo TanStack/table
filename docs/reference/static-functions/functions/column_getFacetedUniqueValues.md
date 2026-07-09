@@ -9,7 +9,7 @@ title: column_getFacetedUniqueValues
 function column_getFacetedUniqueValues<TFeatures, TData, TValue>(column, table): Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L69)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L85)
 
 Computes unique facet values and their occurrence counts for one column.
 

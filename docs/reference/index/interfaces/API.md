@@ -3,19 +3,19 @@ id: API
 title: API
 ---
 
-# Interface: API\<TDeps, TDepArgs\>
+# Interface: API\<_TDeps, _TDepArgs\>
 
-Defined in: [utils.ts:341](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L341)
+Defined in: [utils.ts:362](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L362)
 
 ## Type Parameters
 
-### TDeps
+### _TDeps
 
-`TDeps` *extends* `ReadonlyArray`\<`any`\>
+`_TDeps` *extends* `ReadonlyArray`\<`any`\>
 
-### TDepArgs
+### _TDepArgs
 
-`TDepArgs`
+`_TDepArgs`
 
 ## Properties
 
@@ -25,7 +25,7 @@ Defined in: [utils.ts:341](https://github.com/TanStack/table/blob/main/packages/
 fn: (...args) => any;
 ```
 
-Defined in: [utils.ts:342](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L342)
+Defined in: [utils.ts:363](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L363)
 
 #### Parameters
 
@@ -45,7 +45,7 @@ Defined in: [utils.ts:342](https://github.com/TanStack/table/blob/main/packages/
 optional memoDeps: (depArgs?) => any[] | undefined;
 ```
 
-Defined in: [utils.ts:343](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L343)
+Defined in: [utils.ts:364](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L364)
 
 #### Parameters
 

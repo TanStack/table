@@ -96,15 +96,15 @@ Use the column and header APIs to read the calculated size and offsets for rende
 column.getSize()
 header.getSize()
 
-column.getStart() // left offset in the current column flow
-column.getStart('left')
+column.getStart() // start offset in the current column flow
+column.getStart('start')
 column.getStart('center')
-column.getStart('right')
+column.getStart('end')
 
-column.getAfter() // right offset in the current column flow
-column.getAfter('left')
+column.getAfter() // end offset in the current column flow
+column.getAfter('start')
 column.getAfter('center')
-column.getAfter('right')
+column.getAfter('end')
 
 column.resetSize()
 ```
@@ -113,9 +113,9 @@ The table instance also exposes total size helpers. These are useful when buildi
 
 ```ts
 table.getTotalSize()
-table.getLeftTotalSize()
+table.getStartTotalSize()
 table.getCenterTotalSize()
-table.getRightTotalSize()
+table.getEndTotalSize()
 ```
 
 If you need to update sizing state directly, use `table.setColumnSizing`. Use `table.resetColumnSizing` to reset to `initialState.columnSizing`, or pass `true` to reset to the feature default.

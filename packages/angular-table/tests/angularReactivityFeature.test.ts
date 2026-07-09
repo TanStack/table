@@ -300,7 +300,7 @@ describe('angularReactivityFeature', () => {
           getRowId: (row) => row.id,
           initialState: {
             columnOrder: columns.map((column) => column.id!),
-            columnPinning: { left: ['id'], right: [] },
+            columnPinning: { start: ['id'], end: [] },
             pagination: {
               pageIndex: 0,
               pageSize: 20,

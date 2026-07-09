@@ -9,6 +9,6 @@ title: columnSizingFeature
 const columnSizingFeature: TableFeature;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L27)
+Defined in: [features/column-sizing/columnSizingFeature.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.ts#L28)
 
 Feature that adds column sizing state, defaults, and size measurement APIs.

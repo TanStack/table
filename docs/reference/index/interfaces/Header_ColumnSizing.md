@@ -5,7 +5,7 @@ title: Header_ColumnSizing
 
 # Interface: Header\_ColumnSizing
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L93)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:132](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L132)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-sizing/columnSizingFeature.types.ts:93](https://git
 getSize: () => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L97)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L136)
 
 Computes this header's rendered size from its leaf columns.
 
@@ -31,7 +31,7 @@ Computes this header's rendered size from its leaf columns.
 getStart: (position?) => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L101)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L140)
 
 Returns the offset measurement along the row-axis (usually the x-axis for standard tables) for the header. This is effectively a sum of the offset measurements of all preceding headers.
 

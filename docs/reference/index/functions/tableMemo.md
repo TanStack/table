@@ -9,7 +9,7 @@ title: tableMemo
 function tableMemo<TFeatures, TDeps, TDepArgs, TResult>(__namedParameters): (depArgs?) => TResult;
 ```
 
-Defined in: [utils.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L213)
+Defined in: [utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L235)
 
 Creates a table-aware memoized function.
 

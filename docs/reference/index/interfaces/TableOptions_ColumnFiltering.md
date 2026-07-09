@@ -3,19 +3,19 @@ id: TableOptions_ColumnFiltering
 title: TableOptions_ColumnFiltering
 ---
 
-# Interface: TableOptions\_ColumnFiltering\<TFeatures, TData\>
+# Interface: TableOptions\_ColumnFiltering\<_TFeatures, _TData\>
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L180)
 
 ## Type Parameters
 
-### TFeatures
+### _TFeatures
 
-`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+`_TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
 
-### TData
+### _TData
 
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+`_TData` *extends* [`RowData`](../type-aliases/RowData.md)
 
 ## Properties
 

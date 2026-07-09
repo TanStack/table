@@ -172,7 +172,7 @@ function toggleAllColumnsVisibility() {
       <table v-if="isSplit" class="outlined-table table-left">
         <thead>
           <tr
-            v-for="headerGroup in table.getLeftHeaderGroups()"
+            v-for="headerGroup in table.getStartHeaderGroups()"
             :key="headerGroup.id"
           >
             <th
@@ -188,8 +188,8 @@ function toggleAllColumnsVisibility() {
                 class="pin-actions"
               >
                 <button
-                  v-if="header.column.getIsPinned() !== 'left'"
-                  @click="header.column.pin('left')"
+                  v-if="header.column.getIsPinned() !== 'start'"
+                  @click="header.column.pin('start')"
                   class="pin-button"
                 >
                   {{ '<=' }}
@@ -202,8 +202,8 @@ function toggleAllColumnsVisibility() {
                   X
                 </button>
                 <button
-                  v-if="header.column.getIsPinned() !== 'right'"
-                  @click="header.column.pin('right')"
+                  v-if="header.column.getIsPinned() !== 'end'"
+                  @click="header.column.pin('end')"
                   class="pin-button"
                 >
                   {{ '=>' }}
@@ -217,7 +217,7 @@ function toggleAllColumnsVisibility() {
             v-for="row in table.getRowModel().rows.slice(0, 20)"
             :key="row.id"
           >
-            <td v-for="cell in row.getLeftVisibleCells()" :key="cell.id">
+            <td v-for="cell in row.getStartVisibleCells()" :key="cell.id">
               <FlexRender :cell="cell" />
             </td>
           </tr>
@@ -245,8 +245,8 @@ function toggleAllColumnsVisibility() {
                 class="pin-actions"
               >
                 <button
-                  v-if="header.column.getIsPinned() !== 'left'"
-                  @click="header.column.pin('left')"
+                  v-if="header.column.getIsPinned() !== 'start'"
+                  @click="header.column.pin('start')"
                   class="pin-button"
                 >
                   {{ '<=' }}
@@ -259,8 +259,8 @@ function toggleAllColumnsVisibility() {
                   X
                 </button>
                 <button
-                  v-if="header.column.getIsPinned() !== 'right'"
-                  @click="header.column.pin('right')"
+                  v-if="header.column.getIsPinned() !== 'end'"
+                  @click="header.column.pin('end')"
                   class="pin-button"
                 >
                   {{ '=>' }}
@@ -289,7 +289,7 @@ function toggleAllColumnsVisibility() {
       <table v-if="isSplit" class="outlined-table table-right">
         <thead>
           <tr
-            v-for="headerGroup in table.getRightHeaderGroups()"
+            v-for="headerGroup in table.getEndHeaderGroups()"
             :key="headerGroup.id"
           >
             <th
@@ -305,8 +305,8 @@ function toggleAllColumnsVisibility() {
                 class="pin-actions"
               >
                 <button
-                  v-if="header.column.getIsPinned() !== 'left'"
-                  @click="header.column.pin('left')"
+                  v-if="header.column.getIsPinned() !== 'start'"
+                  @click="header.column.pin('start')"
                   class="pin-button"
                 >
                   {{ '<=' }}
@@ -319,8 +319,8 @@ function toggleAllColumnsVisibility() {
                   X
                 </button>
                 <button
-                  v-if="header.column.getIsPinned() !== 'right'"
-                  @click="header.column.pin('right')"
+                  v-if="header.column.getIsPinned() !== 'end'"
+                  @click="header.column.pin('end')"
                   class="pin-button"
                 >
                   {{ '=>' }}
@@ -334,7 +334,7 @@ function toggleAllColumnsVisibility() {
             v-for="row in table.getRowModel().rows.slice(0, 20)"
             :key="row.id"
           >
-            <td v-for="cell in row.getRightVisibleCells()" :key="cell.id">
+            <td v-for="cell in row.getEndVisibleCells()" :key="cell.id">
               <FlexRender :cell="cell" />
             </td>
           </tr>

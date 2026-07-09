@@ -21,7 +21,7 @@ export function buildHeaderGroups<
   allColumns: Array<Column<TFeatures, TData, TValue>>,
   columnsToGroup: Array<Column<TFeatures, TData, TValue>>,
   table: Table_Internal<TFeatures, TData>,
-  headerFamily?: 'center' | 'left' | 'right',
+  headerFamily?: 'center' | 'start' | 'end',
 ) {
   // Find the max depth of the columns:
   // build the leaf column row

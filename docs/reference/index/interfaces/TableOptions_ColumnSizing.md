@@ -5,7 +5,7 @@ title: TableOptions_ColumnSizing
 
 # Interface: TableOptions\_ColumnSizing
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L10)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L42)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-sizing/columnSizingFeature.types.ts:10](https://git
 optional onColumnSizingChange: OnChangeFn<ColumnSizingState>;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L16)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L48)
 
 Called with an updater when committed column sizing state changes. Pair
 this with `state.columnSizing` when using external state; external atoms

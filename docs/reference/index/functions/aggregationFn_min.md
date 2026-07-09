@@ -12,7 +12,7 @@ function aggregationFn_min<TFeatures, TData>(
    childRows): number | undefined;
 ```
 
-Defined in: [fns/aggregationFns.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L33)
+Defined in: [fns/aggregationFns.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L35)
 
 Finds the minimum numeric child-row value for a grouped column.
 

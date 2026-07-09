@@ -5,7 +5,7 @@ title: TableState_RowPagination
 
 # Interface: TableState\_RowPagination
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L11)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L10)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [features/row-pagination/rowPaginationFeature.types.ts:11](https://g
 pagination: PaginationState;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L12)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L11)

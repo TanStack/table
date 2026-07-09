@@ -5,7 +5,7 @@ title: AppTableProps
 
 # Interface: AppTableProps
 
-Defined in: [createTableHook.tsx:274](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L274)
+Defined in: [createTableHook.tsx:273](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L273)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [createTableHook.tsx:274](https://github.com/TanStack/table/blob/mai
 children: Element;
 ```
 
-Defined in: [createTableHook.tsx:275](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L275)
+Defined in: [createTableHook.tsx:274](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L274)

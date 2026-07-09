@@ -121,15 +121,15 @@ export function ColumnHeader({
                   <>
                     {canSort || canGroup ? <DropdownMenuSeparator /> : null}
                     <DropdownMenuItem
-                      onClick={() => column.pin('left')}
-                      disabled={pinned === 'left'}
+                      onClick={() => column.pin('start')}
+                      disabled={pinned === 'start'}
                     >
                       <Pin className="mr-2 size-3.5 text-muted-foreground/70" />
                       Pin left
                     </DropdownMenuItem>
                     <DropdownMenuItem
-                      onClick={() => column.pin('right')}
-                      disabled={pinned === 'right'}
+                      onClick={() => column.pin('end')}
+                      disabled={pinned === 'end'}
                     >
                       <Pin className="mr-2 size-3.5 rotate-180 text-muted-foreground/70" />
                       Pin right

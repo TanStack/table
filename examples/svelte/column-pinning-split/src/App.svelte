@@ -141,7 +141,7 @@
   <div class="split-tables">
     <table class="outlined-table">
       <thead>
-        {#each table.getLeftHeaderGroups() as headerGroup (headerGroup.id)
+        {#each table.getStartHeaderGroups() as headerGroup (headerGroup.id)
         }
           <tr>
             {#each headerGroup.headers as header (header.id)}
@@ -153,10 +153,10 @@
                 </div>
                 {#if !header.isPlaceholder && header.column.getCanPin()}
                   <div class="pin-actions">
-                    {#if header.column.getIsPinned() !== 'left'}
+                    {#if header.column.getIsPinned() !== 'start'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('left')}
+                        onclick={() => header.column.pin('start')}
                       >
                         {'<='}
                       </button>
@@ -169,10 +169,10 @@
                         X
                       </button>
                     {/if}
-                    {#if header.column.getIsPinned() !== 'right'}
+                    {#if header.column.getIsPinned() !== 'end'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('right')}
+                        onclick={() => header.column.pin('end')}
                       >
                         {'=>'}
                       </button>
@@ -187,7 +187,7 @@
       <tbody>
         {#each table.getRowModel().rows.slice(0, 20) as row (row.id)}
           <tr>
-            {#each row.getLeftVisibleCells() as cell (cell.id)}
+            {#each row.getStartVisibleCells() as cell (cell.id)}
               <td>
                 <FlexRender cell={cell} />
               </td>
@@ -210,10 +210,10 @@
                 </div>
                 {#if !header.isPlaceholder && header.column.getCanPin()}
                   <div class="pin-actions">
-                    {#if header.column.getIsPinned() !== 'left'}
+                    {#if header.column.getIsPinned() !== 'start'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('left')}
+                        onclick={() => header.column.pin('start')}
                       >
                         {'<='}
                       </button>
@@ -226,10 +226,10 @@
                         X
                       </button>
                     {/if}
-                    {#if header.column.getIsPinned() !== 'right'}
+                    {#if header.column.getIsPinned() !== 'end'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('right')}
+                        onclick={() => header.column.pin('end')}
                       >
                         {'=>'}
                       </button>
@@ -255,7 +255,7 @@
     </table>
     <table class="outlined-table">
       <thead>
-        {#each table.getRightHeaderGroups() as headerGroup (headerGroup.id)
+        {#each table.getEndHeaderGroups() as headerGroup (headerGroup.id)
         }
           <tr>
             {#each headerGroup.headers as header (header.id)}
@@ -267,10 +267,10 @@
                 </div>
                 {#if !header.isPlaceholder && header.column.getCanPin()}
                   <div class="pin-actions">
-                    {#if header.column.getIsPinned() !== 'left'}
+                    {#if header.column.getIsPinned() !== 'start'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('left')}
+                        onclick={() => header.column.pin('start')}
                       >
                         {'<='}
                       </button>
@@ -283,10 +283,10 @@
                         X
                       </button>
                     {/if}
-                    {#if header.column.getIsPinned() !== 'right'}
+                    {#if header.column.getIsPinned() !== 'end'}
                       <button
                         class="pin-button"
-                        onclick={() => header.column.pin('right')}
+                        onclick={() => header.column.pin('end')}
                       >
                         {'=>'}
                       </button>
@@ -301,7 +301,7 @@
       <tbody>
         {#each table.getRowModel().rows.slice(0, 20) as row (row.id)}
           <tr>
-            {#each row.getRightVisibleCells() as cell (cell.id)}
+            {#each row.getEndVisibleCells() as cell (cell.id)}
               <td>
                 <FlexRender cell={cell} />
               </td>

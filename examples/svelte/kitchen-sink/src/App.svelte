@@ -184,7 +184,7 @@
       defaultColumn: { minSize: 200, maxSize: 800 },
       initialState: {
         columnOrder: columns.map((c) => c.id!),
-        columnPinning: { left: ['select'], right: [] },
+        columnPinning: { start: ['select'], end: [] },
         pagination: { pageIndex: 0, pageSize: 20 },
       },
       keepPinnedRows: true,
@@ -207,9 +207,9 @@
   function getCommonPinningStyle(column: Column<typeof features, Person>) {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
-      isPinned === 'left' && column.getIsLastColumn('left')
+      isPinned === 'start' && column.getIsLastColumn('start')
     const isFirstRightPinnedColumn =
-      isPinned === 'right' && column.getIsFirstColumn('right')
+      isPinned === 'end' && column.getIsFirstColumn('end')
 
     return [
       isLastLeftPinnedColumn
@@ -217,8 +217,8 @@
         : isFirstRightPinnedColumn
           ? 'box-shadow: 4px 0 4px -4px gray inset'
           : '',
-      isPinned === 'left' ? `left: ${column.getStart('left')}px` : '',
-      isPinned === 'right' ? `right: ${column.getAfter('right')}px` : '',
+      isPinned === 'start' ? `inset-inline-start: ${column.getStart('start')}px` : '',
+      isPinned === 'end' ? `inset-inline-end: ${column.getAfter('end')}px` : '',
       `opacity: ${isPinned ? 0.97 : 1}`,
       `position: ${isPinned ? 'sticky' : 'relative'}`,
       `z-index: ${isPinned ? 1 : 0}`,
@@ -369,14 +369,14 @@
                       <div class="header-controls">
                         {#if header.column.getCanPin()}
                           <span class="pin-actions">
-                            {#if header.column.getIsPinned() !== 'left'}
-                              <button class="pin-button" onclick={() => header.column.pin('left')}>{'<'}</button>
+                            {#if header.column.getIsPinned() !== 'start'}
+                              <button class="pin-button" onclick={() => header.column.pin('start')}>{'<'}</button>
                             {/if}
                             {#if header.column.getIsPinned()}
                               <button class="pin-button" onclick={() => header.column.pin(false)}>x</button>
                             {/if}
-                            {#if header.column.getIsPinned() !== 'right'}
-                              <button class="pin-button" onclick={() => header.column.pin('right')}>{'>'}</button>
+                            {#if header.column.getIsPinned() !== 'end'}
+                              <button class="pin-button" onclick={() => header.column.pin('end')}>{'>'}</button>
                             {/if}
                           </span>
                         {/if}

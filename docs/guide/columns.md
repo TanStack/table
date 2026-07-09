@@ -33,7 +33,7 @@ const column = table.getColumn('firstName')
 
 #### Get Columns
 
-The simplest column API is `table.getAllColumns`, which will return a list of all columns in the table. There are dozens of other column APIs that are affected by other features and the state of the table that come alongside this API though. `table.getAllFlatColumns`, `table.getAllLeafColumns`, `getCenterLeafColumns`, `table.getLeftVisibleLeafColumns` are just some examples of other column APIs that you might use in tandem with the column visibility or column pinning features.
+The simplest column API is `table.getAllColumns`, which will return a list of all columns in the table. There are dozens of other column APIs that are affected by other features and the state of the table that come alongside this API though. `table.getAllFlatColumns`, `table.getAllLeafColumns`, `getCenterLeafColumns`, `table.getStartVisibleLeafColumns` are just some examples of other column APIs that you might use in tandem with the column visibility or column pinning features.
 
 ## Column Objects
 

@@ -9,7 +9,7 @@ title: column_getIsLastColumn
 function column_getIsLastColumn<TFeatures, TData, TValue>(column, position?): boolean;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L81)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:132](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L132)
 
 Checks whether this column is the last visible column in a pinning region.
 
@@ -46,5 +46,5 @@ The same `position` semantics as `column_getIndex` apply.
 ## Example
 
 ```ts
-const isLast = column_getIsLastColumn(column, 'right')
+const isLast = column_getIsLastColumn(column, 'end')
 ```
