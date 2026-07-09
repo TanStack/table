@@ -113,6 +113,20 @@ function filterRowModelFromRoot<
   const newFilteredRowsById = makeObjectMap<Row<TFeatures, TData>>()
   const maxDepth = table.options.maxLeafRowFilterDepth ?? 100
 
+  // Recursively flatten a row's sub-rows into flatRows and rowsById.
+  // Used when a parent row passes the filter but recursion past
+  // maxLeafRowFilterDepth was skipped, so sub-rows would otherwise be
+  // missing from the flattened representation.
+  const addSubRowsToFlatArrays = (row: Row<TFeatures, TData>) => {
+    for (const subRow of row.subRows) {
+      newFilteredFlatRows.push(subRow)
+      newFilteredRowsById[subRow.id] = subRow
+      if (subRow.subRows.length) {
+        addSubRowsToFlatArrays(subRow)
+      }
+    }
+  }
+
   // Filters top level and nested rows
   const recurseFilterRows = (
     rowsToFilter: Array<Row<TFeatures, TData>>,
@@ -139,6 +153,12 @@ function filterRowModelFromRoot<
           )
           newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
           row = newRow
+        } else if (row.subRows.length) {
+          // Parent passed but recursion past maxDepth was skipped;
+          // the sub-rows are still accessible via row.subRows, so
+          // mirror them into flatRows / rowsById to keep the
+          // flattened representation in sync with the visible tree.
+          addSubRowsToFlatArrays(row)
         }
 
         filteredRows.push(row)
