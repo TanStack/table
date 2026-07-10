@@ -1,6 +1,6 @@
 import * as goober from 'goober'
 import { createEffect, createSignal } from 'solid-js'
-import { useTheme } from '@tanstack/devtools-ui'
+import { createTheme } from '@tanstack/devtools-ui'
 import { tokens } from './tokens'
 
 const stylesFactory = (theme: 'light' | 'dark') => {
@@ -397,7 +397,7 @@ const stylesFactory = (theme: 'light' | 'dark') => {
 }
 
 export function useStyles() {
-  const { theme } = useTheme()
+  const { theme } = createTheme()
   const [styles, setStyles] = createSignal(stylesFactory(theme()))
 
   createEffect(() => {

@@ -12,10 +12,10 @@
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.37",
-    "@tanstack/vue-query": "^5.101.1",
+    "@tanstack/vue-query": "^5.101.2",
     "@tanstack/vue-store": "^0.11.0",
     "@tanstack/vue-table": "^9.0.0-beta.38",
-    "@tanstack/vue-virtual": "^3.13.29",
+    "@tanstack/vue-virtual": "^3.13.31",
     "vue": "^3.5.38"
   },
   "devDependencies": {

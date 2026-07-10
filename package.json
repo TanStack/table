@@ -61,7 +61,7 @@
     "@playwright/test": "^1.61.1",
     "@size-limit/preset-small-lib": "^12.1.0",
     "@tanstack/eslint-config": "0.4.0",
-    "@tanstack/intent": "^0.3.2",
+    "@tanstack/intent": "^0.3.5",
     "@tanstack/publish-config": "0.2.7",
     "@tanstack/typedoc-config": "0.3.3",
     "@testing-library/jest-dom": "^6.9.1",

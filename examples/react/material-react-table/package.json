@@ -22,7 +22,7 @@
     "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-store": "^0.11.0",
     "@tanstack/react-table": "^9.0.0-beta.38",
-    "@tanstack/react-virtual": "^3.14.3",
+    "@tanstack/react-virtual": "^3.14.5",
     "highlight-words": "^2.0.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"

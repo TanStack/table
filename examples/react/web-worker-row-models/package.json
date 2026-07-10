@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
-    "@tanstack/react-devtools": "^0.10.5",
-    "@tanstack/react-router": "^1.170.16",
-    "@tanstack/react-start": "^1.168.26",
+    "@tanstack/react-devtools": "^0.10.8",
+    "@tanstack/react-router": "^1.170.17",
+    "@tanstack/react-start": "^1.168.27",
     "@tanstack/react-store": "^0.11.0",
     "@tanstack/react-table": "^9.0.0-beta.38",
     "@tanstack/react-table-devtools": "^9.0.0-beta.38",

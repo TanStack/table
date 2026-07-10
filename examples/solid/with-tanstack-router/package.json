@@ -13,15 +13,15 @@
   "license": "MIT",
   "devDependencies": {
     "@faker-js/faker": "^10.5.0",
-    "@tanstack/router-vite-plugin": "^1.167.18",
+    "@tanstack/router-vite-plugin": "^1.167.19",
     "typescript": "6.0.3",
     "vite": "^8.1.0",
     "vite-plugin-solid": "^2.11.12"
   },
   "dependencies": {
     "@tanstack/solid-pacer": "^0.21.1",
-    "@tanstack/solid-query": "^5.101.1",
-    "@tanstack/solid-router": "^1.170.16",
+    "@tanstack/solid-query": "^5.101.2",
+    "@tanstack/solid-router": "^1.170.17",
     "@tanstack/solid-table": "^9.0.0-beta.38",
     "solid-js": "^1.9.13"
   }
