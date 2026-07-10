@@ -233,12 +233,16 @@ export default class FiltersFuzzyTable extends Component {
                 <th colspan={{header.colSpan}}>
                   {{#unless header.isPlaceholder}}
                     <div
-                      class="{{if (getCanSort header.column) 'sortable-header'}}"
+                      class="{{if
+                          (getCanSort header.column)
+                          'sortable-header'
+                        }}"
                       {{on "click" (toggleSort header.column)}}
                     >
-                      <FlexRenderHeader
-                        @header={{header}}
-                      />{{lookup this.sortIndicators header.column.id}}
+                      <FlexRenderHeader @header={{header}} />{{lookup
+                        this.sortIndicators
+                        header.column.id
+                      }}
                     </div>
                   {{/unless}}
                 </th>

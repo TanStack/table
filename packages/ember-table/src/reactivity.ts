@@ -1,14 +1,14 @@
-import type { Subscription } from '@tanstack/store'
+import type { Subscription } from '@tanstack/store';
 import type {
   TableAtomOptions,
   TableReactivityBindings,
-} from '@tanstack/table-core/reactivity'
+} from '@tanstack/table-core/reactivity';
 
 import { untrack } from '@glimmer/validator';
 import { computed, signal } from './signal.ts';
 
 export function emberReactivity(): TableReactivityBindings {
-  const subscriptions = new Set<Subscription>()
+  const subscriptions = new Set<Subscription>();
 
   return {
     createOptionsStore: true,
@@ -29,11 +29,11 @@ export function emberReactivity(): TableReactivityBindings {
     },
     // Not for the ember integration, but for the tanstack inspector
     addSubscription: (subscription) => {
-      subscriptions.add(subscription)
+      subscriptions.add(subscription);
     },
     unmount: () => {
-      subscriptions.forEach((s) => s.unsubscribe())
-      subscriptions.clear()
+      subscriptions.forEach((s) => s.unsubscribe());
+      subscriptions.clear();
     },
-  }
+  };
 }

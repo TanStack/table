@@ -283,7 +283,8 @@ export default class CustomPluginTable extends Component {
     <div class="demo-root">
       <div class="controls">
         <button class="demo-button" {{on "click" this.toggleDensity}}>
-          Toggle Density (current: {{this.density}})
+          Toggle Density (current:
+          {{this.density}})
         </button>
         <button class="demo-button" {{on "click" this.regenerateData}}>
           Regenerate Data
@@ -362,13 +363,16 @@ export default class CustomPluginTable extends Component {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
+            {{this.currentPage}}
+            of
+            {{this.pageCountDisplay}}
           </strong>
         </span>
         <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |size|}}
             <option value={{size}} selected={{eq size this.pageSize}}>
-              Show {{size}}
+              Show
+              {{size}}
             </option>
           {{/each}}
         </select>

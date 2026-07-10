@@ -164,7 +164,8 @@ export default class ColumnResizingPerformantTable extends Component {
         </button>
       </div>
       <div class="spacer-md"></div>
-      ({{this.rowCount}} rows)
+      ({{this.rowCount}}
+      rows)
       <div class="spacer-md"></div>
       <div class="scroll-container">
         <div class="divTable" style={{this.tableStyle}}>
@@ -177,7 +178,8 @@ export default class ColumnResizingPerformantTable extends Component {
                       <FlexRenderHeader @header={{header}} />
                     {{/unless}}
                     <div
-                      class="resizer {{if (getIsResizing header.column) 'isResizing'}}"
+                      class="resizer
+                        {{if (getIsResizing header.column) 'isResizing'}}"
                       {{on "dblclick" (resetSize header.column)}}
                       {{on "mousedown" (getResizeHandler header)}}
                       {{on "touchstart" (getResizeHandler header)}}

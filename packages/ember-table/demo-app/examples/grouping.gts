@@ -74,7 +74,8 @@ const columns = columnHelper.columns([
           columnHelper.accessor('visits', {
             header: () => 'Visits',
             aggregationFn: 'sum',
-            aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
+            aggregatedCell: ({ getValue }) =>
+              getValue<number>().toLocaleString(),
           }),
           columnHelper.accessor('status', {
             header: 'Status',
@@ -111,7 +112,8 @@ class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
     | null
     | FlexRenderComponentConfig<typeof features, Person> {
     const cell = this.args.cell;
-    const def = cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell;
+    const def =
+      cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell;
     return flexRender(def, cell.getContext()) as
       | string
       | number
@@ -317,10 +319,10 @@ export default class GroupingTable extends Component {
                   {{#if (cellIsGrouped cell)}}
                     <button
                       style="cursor: {{if
-                          (rowCanExpand row)
-                          'pointer'
-                          'normal'
-                        }}"
+                        (rowCanExpand row)
+                        'pointer'
+                        'normal'
+                      }}"
                       {{on "click" (toggleExpanded row)}}
                     >
                       {{if (rowIsExpanded row) "👇" "👉"}}
@@ -376,7 +378,8 @@ export default class GroupingTable extends Component {
               value={{pageSize}}
               selected={{eq pageSize this.pagination.pageSize}}
             >
-              Show {{pageSize}}
+              Show
+              {{pageSize}}
             </option>
           {{/each}}
         </select>

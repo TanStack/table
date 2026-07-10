@@ -113,7 +113,11 @@ module('Integration | reactivity', function (hooks) {
       };
 
       <template>
-        <button type="button" data-test-add {{on "click" this.addRow}}>Add</button>
+        <button
+          type="button"
+          data-test-add
+          {{on "click" this.addRow}}
+        >Add</button>
         {{#each this.rows as |row|}}
           <tr data-test-row>
             {{#each (getAllCells row) as |cell|}}
@@ -167,11 +171,20 @@ module('Integration | reactivity', function (hooks) {
       }
 
       growPage = () => this.table.setPageSize(5);
-      selectFirst = () => this.table.getRowModel().rows[0]?.toggleSelected(true);
+      selectFirst = () =>
+        this.table.getRowModel().rows[0]?.toggleSelected(true);
 
       <template>
-        <button type="button" data-test-grow {{on "click" this.growPage}}>Grow</button>
-        <button type="button" data-test-select {{on "click" this.selectFirst}}>Select</button>
+        <button
+          type="button"
+          data-test-grow
+          {{on "click" this.growPage}}
+        >Grow</button>
+        <button
+          type="button"
+          data-test-select
+          {{on "click" this.selectFirst}}
+        >Select</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-selected>{{this.selectedCount}}</span>
         {{#each this.rows as |row|}}
@@ -198,7 +211,9 @@ module('Integration | reactivity', function (hooks) {
       .dom('[data-test-row]')
       .exists({ count: 4 }, 'larger page reveals all rows');
 
-    assert.dom('[data-test-selected]').hasText('0', 'nothing selected initially');
+    assert
+      .dom('[data-test-selected]')
+      .hasText('0', 'nothing selected initially');
 
     await click('[data-test-select]');
 
@@ -217,27 +232,32 @@ module('Integration | reactivity', function (hooks) {
       table = useTable(() => {
         assert.step('setup table');
 
-        return ({
-        data: this.data,
-        columns,
-        features,
-        initialState: { pagination: { pageIndex: 0, pageSize: 2 } },
-      })});
+        return {
+          data: this.data,
+          columns,
+          features,
+          initialState: { pagination: { pageIndex: 0, pageSize: 2 } },
+        };
+      });
 
       get pageSize() {
-        assert.step('assess pageSize')
+        assert.step('assess pageSize');
         return this.table.store.state.pagination.pageSize;
       }
 
       get sortState() {
-        assert.step('assess sortState')
+        assert.step('assess sortState');
         return JSON.stringify(this.table.store.state.sorting ?? []);
       }
 
       growPage = () => this.table.setPageSize(10);
 
       <template>
-        <button type="button" data-test-grow {{on "click" this.growPage}}>Grow</button>
+        <button
+          type="button"
+          data-test-grow
+          {{on "click" this.growPage}}
+        >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>
       </template>
@@ -245,11 +265,10 @@ module('Integration | reactivity', function (hooks) {
 
     await render(<template><TableComponent /></template>);
 
-    assert.verifySteps([
-      'setup table',
-      'assess pageSize',
-      'assess sortState'
-    ], 'all initial state steps have been recorded');
+    assert.verifySteps(
+      ['setup table', 'assess pageSize', 'assess sortState'],
+      'all initial state steps have been recorded',
+    );
 
     assert.dom('[data-test-page-size]').hasText('2');
     assert.dom('[data-test-sort]').hasText('[]', 'sorting slice starts empty');
@@ -257,23 +276,31 @@ module('Integration | reactivity', function (hooks) {
     await click('[data-test-grow]');
 
     // Currently failing! States are not sliced independently as expected
-    assert.verifySteps([
-      'assess pageSize',
-    ], 'no state assessments have occurred yet');
+    assert.verifySteps(
+      ['assess pageSize'],
+      'no state assessments have occurred yet',
+    );
 
     assert
       .dom('[data-test-page-size]')
       .hasText('10', 'pagination slice updated');
     assert
       .dom('[data-test-sort]')
-      .hasText('[]', 'unrelated sorting slice unaffected by a pagination change and does not re-setup table');
+      .hasText(
+        '[]',
+        'unrelated sorting slice unaffected by a pagination change and does not re-setup table',
+      );
   });
 
   test('flex-render reacts to content and swaps between primitive and component', async function (assert) {
     class TableComponent extends Component {
       @tracked data: Array<Person> = makeData({ firstName: 'Alice', age: 30 });
 
-      table = useTable(() => ({ data: this.data, columns: swapColumns, features }));
+      table = useTable(() => ({
+        data: this.data,
+        columns: swapColumns,
+        features,
+      }));
 
       get rows() {
         return this.table.getRowModel().rows;

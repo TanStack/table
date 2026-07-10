@@ -199,10 +199,16 @@ export default class BasicExternalStateTable extends Component {
                 <th colspan={{header.colSpan}}>
                   {{#unless header.isPlaceholder}}
                     <div
-                      class="{{if (getCanSort header.column) 'sortable-header'}}"
+                      class="{{if
+                          (getCanSort header.column)
+                          'sortable-header'
+                        }}"
                       {{on "click" (toggleSort header.column)}}
                     >
-                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
+                      <FlexRenderHeader @header={{header}} />{{lookup
+                        this.sortIndicators
+                        header.column.id
+                      }}
                     </div>
                   {{/unless}}
                 </th>
@@ -253,7 +259,9 @@ export default class BasicExternalStateTable extends Component {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
+            {{this.currentPage}}
+            of
+            {{this.pageCountDisplay}}
           </strong>
         </span>
         <span class="inline-controls">
@@ -267,12 +275,14 @@ export default class BasicExternalStateTable extends Component {
             {{on "input" this.handleGoToPage}}
           />
         </span>
-        <select
-          {{on "change" this.handlePageSizeChange}}
-        >
+        <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |pageSize|}}
-            <option value={{pageSize}} selected={{eq pageSize this.pagination.pageSize}}>
-              Show {{pageSize}}
+            <option
+              value={{pageSize}}
+              selected={{eq pageSize this.pagination.pageSize}}
+            >
+              Show
+              {{pageSize}}
             </option>
           {{/each}}
         </select>

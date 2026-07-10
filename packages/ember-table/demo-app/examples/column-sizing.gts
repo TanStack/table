@@ -164,7 +164,10 @@ export default class ColumnSizingTable extends Component {
             {{#each this.headerGroups as |headerGroup|}}
               <tr>
                 {{#each headerGroup.headers as |header|}}
-                  <th colspan={{header.colSpan}} style="width:{{getHeaderSize header}}px">
+                  <th
+                    colspan={{header.colSpan}}
+                    style="width:{{getHeaderSize header}}px"
+                  >
                     {{#unless header.isPlaceholder}}
                       <FlexRenderHeader @header={{header}} />
                     {{/unless}}
@@ -188,7 +191,10 @@ export default class ColumnSizingTable extends Component {
             {{#each this.footerGroups as |footerGroup|}}
               <tr>
                 {{#each footerGroup.headers as |header|}}
-                  <th colspan={{header.colSpan}} style="width:{{getHeaderSize header}}px">
+                  <th
+                    colspan={{header.colSpan}}
+                    style="width:{{getHeaderSize header}}px"
+                  >
                     {{#unless header.isPlaceholder}}
                       <FlexRenderFooter @footer={{header}} />
                     {{/unless}}

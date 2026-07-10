@@ -162,12 +162,16 @@ export default class ColumnResizingTable extends Component {
             {{#each this.headerGroups as |headerGroup|}}
               <tr>
                 {{#each headerGroup.headers as |header|}}
-                  <th colspan={{header.colSpan}} style="width:{{getHeaderSize header}}px">
+                  <th
+                    colspan={{header.colSpan}}
+                    style="width:{{getHeaderSize header}}px"
+                  >
                     {{#unless header.isPlaceholder}}
                       <FlexRenderHeader @header={{header}} />
                     {{/unless}}
                     <div
-                      class="resizer {{if (getIsResizing header.column) 'isResizing'}}"
+                      class="resizer
+                        {{if (getIsResizing header.column) 'isResizing'}}"
                       {{on "dblclick" (resetSize header.column)}}
                       {{on "mousedown" (getResizeHandler header)}}
                       {{on "touchstart" (getResizeHandler header)}}

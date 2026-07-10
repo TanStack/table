@@ -253,7 +253,8 @@ export default class ExpandingTable extends Component {
               value={{pageSize}}
               selected={{eq pageSize this.pagination.pageSize}}
             >
-              Show {{pageSize}}
+              Show
+              {{pageSize}}
             </option>
           {{/each}}
         </select>

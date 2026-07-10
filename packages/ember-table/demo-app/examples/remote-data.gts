@@ -266,10 +266,16 @@ export default class RemoteDataTable extends Component {
                   <th colspan={{header.colSpan}}>
                     {{#unless header.isPlaceholder}}
                       <div
-                        class="{{if (getCanSort header.column) 'sortable-header'}}"
+                        class="{{if
+                            (getCanSort header.column)
+                            'sortable-header'
+                          }}"
                         {{on "click" (toggleSort header.column)}}
                       >
-                        <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
+                        <FlexRenderHeader @header={{header}} />{{lookup
+                          this.sortIndicators
+                          header.column.id
+                        }}
                       </div>
                     {{/unless}}
                   </th>
@@ -324,7 +330,9 @@ export default class RemoteDataTable extends Component {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
+            {{this.currentPage}}
+            of
+            {{this.pageCountDisplay}}
           </strong>
         </span>
         <span class="inline-controls">
@@ -340,8 +348,12 @@ export default class RemoteDataTable extends Component {
         </span>
         <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |size|}}
-            <option value={{size}} selected={{eq size this.pagination.pageSize}}>
-              Show {{size}}
+            <option
+              value={{size}}
+              selected={{eq size this.pagination.pageSize}}
+            >
+              Show
+              {{size}}
             </option>
           {{/each}}
         </select>

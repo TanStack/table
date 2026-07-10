@@ -259,7 +259,9 @@ export default class PaginationTable extends Component {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
+            {{this.currentPage}}
+            of
+            {{this.pageCountDisplay}}
           </strong>
         </span>
         <span class="inline-controls">
@@ -276,7 +278,8 @@ export default class PaginationTable extends Component {
         <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |pageSize|}}
             <option value={{pageSize}} selected={{eq pageSize this.pageSize}}>
-              Show {{pageSize}}
+              Show
+              {{pageSize}}
             </option>
           {{/each}}
         </select>

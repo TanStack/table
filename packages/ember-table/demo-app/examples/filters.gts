@@ -240,9 +240,7 @@ export default class FiltersTable extends Component {
     },
     onColumnFiltersChange: (updater) => {
       this.columnFilters =
-        typeof updater === 'function'
-          ? updater(this.columnFilters)
-          : updater;
+        typeof updater === 'function' ? updater(this.columnFilters) : updater;
     },
   }));
 
@@ -275,9 +273,7 @@ export default class FiltersTable extends Component {
   }
 
   get pagination() {
-    return (
-      this.table.store.state.pagination ?? { pageIndex: 0, pageSize: 10 }
-    );
+    return this.table.store.state.pagination ?? { pageIndex: 0, pageSize: 10 };
   }
 
   get currentPage() {
@@ -419,7 +415,9 @@ export default class FiltersTable extends Component {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
+            {{this.currentPage}}
+            of
+            {{this.pageCountDisplay}}
           </strong>
         </span>
         <span class="inline-controls">
@@ -435,8 +433,12 @@ export default class FiltersTable extends Component {
         </span>
         <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |pageSize|}}
-            <option value={{pageSize}} selected={{eq pageSize this.currentPageSize}}>
-              Show {{pageSize}}
+            <option
+              value={{pageSize}}
+              selected={{eq pageSize this.currentPageSize}}
+            >
+              Show
+              {{pageSize}}
             </option>
           {{/each}}
         </select>

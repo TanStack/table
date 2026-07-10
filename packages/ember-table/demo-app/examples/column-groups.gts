@@ -110,8 +110,10 @@ export default class ColumnGroupsTable extends Component {
   <template>
     <div class="demo-root">
       <div>
-        <button class="demo-button" {{on "click" this.refreshData}}>Regenerate Data</button>
-        <button class="demo-button" {{on "click" this.stressTest}}>Stress Test (1k rows)</button>
+        <button class="demo-button" {{on "click" this.refreshData}}>Regenerate
+          Data</button>
+        <button class="demo-button" {{on "click" this.stressTest}}>Stress Test
+          (1k rows)</button>
       </div>
       <div class="spacer-md"></div>
       <table>

@@ -33,17 +33,49 @@ interface Person {
 }
 
 const FIRST_NAMES = [
-  'Alice', 'Bob', 'Charlie', 'Diana', 'Eve', 'Frank',
-  'Grace', 'Hank', 'Ivy', 'Jack', 'Karen', 'Leo',
-  'Mona', 'Nate', 'Olivia', 'Paul', 'Quinn', 'Rita',
-  'Sam', 'Tina',
+  'Alice',
+  'Bob',
+  'Charlie',
+  'Diana',
+  'Eve',
+  'Frank',
+  'Grace',
+  'Hank',
+  'Ivy',
+  'Jack',
+  'Karen',
+  'Leo',
+  'Mona',
+  'Nate',
+  'Olivia',
+  'Paul',
+  'Quinn',
+  'Rita',
+  'Sam',
+  'Tina',
 ];
 
 const LAST_NAMES = [
-  'Smith', 'Johnson', 'Williams', 'Brown', 'Jones', 'Garcia',
-  'Miller', 'Davis', 'Rodriguez', 'Martinez', 'Hernandez', 'Lopez',
-  'Gonzalez', 'Wilson', 'Anderson', 'Thomas', 'Taylor', 'Moore',
-  'Jackson', 'Martin',
+  'Smith',
+  'Johnson',
+  'Williams',
+  'Brown',
+  'Jones',
+  'Garcia',
+  'Miller',
+  'Davis',
+  'Rodriguez',
+  'Martinez',
+  'Hernandez',
+  'Lopez',
+  'Gonzalez',
+  'Wilson',
+  'Anderson',
+  'Thomas',
+  'Taylor',
+  'Moore',
+  'Jackson',
+  'Martin',
 ];
 
 const STATUSES = ['relationship', 'complicated', 'single'] as const;
@@ -61,7 +93,14 @@ function makeData(count: number): Array<Person> {
 
 // --- Custom cell component example ---
 
-class StatusBadge extends Component<FlexRenderableSignature<typeof features, Person, string, { color: 'red' | 'green' | 'blue' }>> {
+class StatusBadge extends Component<
+  FlexRenderableSignature<
+    typeof features,
+    Person,
+    string,
+    { color: 'red' | 'green' | 'blue' }
+  >
+> {
   get value(): string {
     const ctx = this.args.ctx as { getValue: () => string };
     return ctx.getValue();
@@ -93,11 +132,18 @@ function getValue<T>(ctx: CellContext<typeof features, Person, T>): T {
   return ctx.getValue();
 }
 
-const ProgressBar: TOC<CellRenderableSignature<typeof features, Person, string, undefined | { color: 'red' | 'blue'}>> = <template>
+const ProgressBar: TOC<
+  CellRenderableSignature<
+    typeof features,
+    Person,
+    string,
+    undefined | { color: 'red' | 'blue' }
+  >
+> = <template>
   <div class="status-bar">
     <span>Status: {{getValue @ctx}}</span>
   </div>
-</template>
+</template>;
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -121,18 +167,20 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    cell: () => flexRenderComponent(StatusBadge, {
-      color: 'blue',
-    }),
+    cell: () =>
+      flexRenderComponent(StatusBadge, {
+        color: 'blue',
+      }),
     footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
     footer: (info) => info.column.id,
-    cell: () => flexRenderComponent(ProgressBar, {
-      'color': 'red'
-    }),
-  })
+    cell: () =>
+      flexRenderComponent(ProgressBar, {
+        color: 'red',
+      }),
+  }),
 ]);
 
 // --- Template helpers ---
@@ -140,9 +188,13 @@ const columns = columnHelper.columns([
 // Ember templates extract function references without binding, so we provide
 // helpers that call methods on the correct object.
 
-const getCanSort = (column: Column<typeof features, Person> ): boolean => column.getCanSort();
-const getAllCells = (row: Row<typeof features, Person>): Array<Cell<typeof features, Person>> => row.getAllCells();
-const lookup = (obj: Record<string, string>, key: string): string => obj[key] ?? '';
+const getCanSort = (column: Column<typeof features, Person>): boolean =>
+  column.getCanSort();
+const getAllCells = (
+  row: Row<typeof features, Person>,
+): Array<Cell<typeof features, Person>> => row.getAllCells();
+const lookup = (obj: Record<string, string>, key: string): string =>
+  obj[key] ?? '';
 
 const toggleSort = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
@@ -182,7 +234,8 @@ export class BasicAppTable extends Component {
     for (const hg of this.table.getHeaderGroups()) {
       for (const h of hg.headers) {
         const sorted = h.column.getIsSorted();
-        indicators[h.column.id] = sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : '';
+        indicators[h.column.id] =
+          sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : '';
       }
     }
     return indicators;
@@ -211,9 +264,16 @@ export class BasicAppTable extends Component {
                   {{#unless header.isPlaceholder}}
                     <div
                       {{on "click" (toggleSort header.column)}}
-                      style="cursor: {{if (getCanSort header.column) "pointer" "not-allowed"}}; user-select: none"
+                      style="cursor: {{if
+                        (getCanSort header.column)
+                        'pointer'
+                        'not-allowed'
+                      }}; user-select: none"
                     >
-                      <FlexRenderHeader @header={{header}} />{{lookup this.sortIndicators header.column.id}}
+                      <FlexRenderHeader @header={{header}} />{{lookup
+                        this.sortIndicators
+                        header.column.id
+                      }}
                     </div>
                   {{/unless}}
                 </th>

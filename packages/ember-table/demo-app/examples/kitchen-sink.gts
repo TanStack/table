@@ -132,7 +132,8 @@ const columns = columnHelper.columns([
     header: () => 'Age',
     meta: { filterVariant: 'range' },
     aggregationFn: 'median',
-    aggregatedCell: ({ getValue }) => Math.round(getValue<number>() * 100) / 100,
+    aggregatedCell: ({ getValue }) =>
+      Math.round(getValue<number>() * 100) / 100,
   }),
   columnHelper.accessor('visits', {
     id: 'visits',
@@ -228,10 +229,7 @@ class TableFilter extends Component<TableFilterSignature> {
     return this.args.column.getFilterValue();
   }
 
-  get range(): [
-    string | number | undefined,
-    string | number | undefined,
-  ] {
+  get range(): [string | number | undefined, string | number | undefined] {
     const value = this.filterValue as
       | [string | number | undefined, string | number | undefined]
       | undefined;
@@ -585,9 +583,10 @@ export default class KitchenSinkTable extends Component {
                         class="sortable-header"
                         {{on "click" (toggleSort header.column)}}
                       >
-                        <FlexRenderHeader
-                          @header={{header}}
-                        />{{lookup this.sortIndicators header.column.id}}
+                        <FlexRenderHeader @header={{header}} />{{lookup
+                          this.sortIndicators
+                          header.column.id
+                        }}
                       </div>
                     {{else}}
                       <FlexRenderHeader @header={{header}} />

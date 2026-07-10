@@ -88,9 +88,7 @@ const getAfter = (column: Column<typeof features, Person>): number =>
 const getSize = (column: Column<typeof features, Person>): number =>
   column.getSize();
 
-const pinningStyle = (
-  column: Column<typeof features, Person>,
-): SafeString => {
+const pinningStyle = (column: Column<typeof features, Person>): SafeString => {
   const isPinned = getIsPinned(column);
   const parts: Array<string> = [`width:${getSize(column)}px`];
 
@@ -193,7 +191,10 @@ export default class ColumnPinningStickyTable extends Component {
             {{#each this.headerGroups as |headerGroup|}}
               <tr>
                 {{#each headerGroup.headers as |header|}}
-                  <th colspan={{header.colSpan}} style={{pinningStyle header.column}}>
+                  <th
+                    colspan={{header.colSpan}}
+                    style={{pinningStyle header.column}}
+                  >
                     {{#unless header.isPlaceholder}}
                       <div class="nowrap">
                         <FlexRenderHeader @header={{header}} />

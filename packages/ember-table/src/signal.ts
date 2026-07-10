@@ -1,7 +1,16 @@
-import type { Atom, AtomOptions, Observer, Subscription } from '@tanstack/store'
+import type {
+  Atom,
+  AtomOptions,
+  Observer,
+  Subscription,
+} from '@tanstack/store';
 
 import { tracked, cached } from '@glimmer/tracking';
 import { untrack } from '@glimmer/validator';
+
+export function subscribeNoEffect(): Subscription {
+  return null as unknown as Subscription;
+}
 
 /**
  * Ember-native signal implementation.
@@ -39,16 +48,16 @@ export class Signal<T> {
     return { unsubscribe: () => this.#listeners.delete(listener) };
   }
 
-    get() {
-      return this.value;
+  get() {
+    return this.value;
+  }
+  set(value: T | ((prev: T) => T)) {
+    if (typeof value === 'function') {
+      return this.update(value as unknown as (prev: T) => T);
     }
-    set(value: T | ((prev: T) => T)) {
-      if (typeof value === 'function') {
-       return this.update(value as unknown as (prev: T) => T);
-      }
 
-     this.value =  value;
-    }
+    this.value = value;
+  }
 
   get value() {
     return this._value;
@@ -58,7 +67,8 @@ export class Signal<T> {
     const prev = untrack(() => this._value);
 
     const isEqual = this.#options?.compare
-      ? this.#options.compare(prev, next) : prev === next;
+      ? this.#options.compare(prev, next)
+      : prev === next;
     if (isEqual) {
       return;
     }
@@ -88,7 +98,7 @@ export class ComputedSignal<T> {
     return this.value;
   }
 
-  subscribe(): Subscription { return null as unknown as Subscription/* handled by framework */}
+  subscribe = subscribeNoEffect;
 
   @cached
   get value() {

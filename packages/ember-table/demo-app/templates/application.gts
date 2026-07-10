@@ -148,7 +148,9 @@ export default class Application extends Component {
   @tracked activeId: string = exampleIdFromUrl();
 
   get activeExample(): Example {
-    return EXAMPLES.find((example) => example.id === this.activeId) ?? EXAMPLES[0]!;
+    return (
+      EXAMPLES.find((example) => example.id === this.activeId) ?? EXAMPLES[0]!
+    );
   }
 
   selectExample = (example: Example) => () => {

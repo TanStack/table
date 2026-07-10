@@ -60,9 +60,7 @@ class EditableCell extends Component<
     );
   };
 
-  <template>
-    <input value={{this.value}} {{on "blur" this.onBlur}} />
-  </template>
+  <template><input value={{this.value}} {{on "blur" this.onBlur}} /></template>
 }
 
 const defaultColumn: Partial<ColumnDef<typeof features, Person>> = {
@@ -288,7 +286,9 @@ export default class EditableTable extends Component {
         <span class="inline-controls">
           <div>Page</div>
           <strong>
-            {{this.currentPage}} of {{this.pageCountDisplay}}
+            {{this.currentPage}}
+            of
+            {{this.pageCountDisplay}}
           </strong>
         </span>
         <span class="inline-controls">
@@ -305,7 +305,8 @@ export default class EditableTable extends Component {
         <select {{on "change" this.handlePageSizeChange}}>
           {{#each this.pageSizes as |size|}}
             <option value={{size}} selected={{eq size this.pageSize}}>
-              Show {{size}}
+              Show
+              {{size}}
             </option>
           {{/each}}
         </select>

@@ -112,7 +112,11 @@ module('Integration | external state (controlled)', function (hooks) {
         this.table.setSorting([{ id: 'firstName', desc: false }]);
 
       <template>
-        <button type="button" data-test-sort-by-name {{on "click" this.sortByName}}>Sort</button>
+        <button
+          type="button"
+          data-test-sort-by-name
+          {{on "click" this.sortByName}}
+        >Sort</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>
         {{#each this.rows as |row|}}
@@ -184,7 +188,11 @@ module('Integration | external state (controlled)', function (hooks) {
       };
 
       <template>
-        <button type="button" data-test-grow {{on "click" this.growExternally}}>Grow</button>
+        <button
+          type="button"
+          data-test-grow
+          {{on "click" this.growExternally}}
+        >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         {{#each this.rows as |row|}}
           <tr data-test-row>
@@ -241,7 +249,11 @@ module('Integration | external state (controlled)', function (hooks) {
         this.table.setSorting([{ id: 'firstName', desc: false }]);
 
       <template>
-        <button type="button" data-test-sort-by-name {{on "click" this.sortByName}}>Sort</button>
+        <button
+          type="button"
+          data-test-sort-by-name
+          {{on "click" this.sortByName}}
+        >Sort</button>
         <span data-test-sort>{{this.sortState}}</span>
         {{#each this.rows as |row|}}
           <tr data-test-row>
@@ -311,7 +323,11 @@ module('Integration | external state (controlled)', function (hooks) {
       growPage = () => this.table.setPageSize(10);
 
       <template>
-        <button type="button" data-test-grow {{on "click" this.growPage}}>Grow</button>
+        <button
+          type="button"
+          data-test-grow
+          {{on "click" this.growPage}}
+        >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>
       </template>
@@ -419,7 +435,11 @@ module('Integration | external atoms', function (hooks) {
       };
 
       <template>
-        <button type="button" data-test-grow {{on "click" this.growViaAtom}}>Grow</button>
+        <button
+          type="button"
+          data-test-grow
+          {{on "click" this.growViaAtom}}
+        >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         {{#each this.rows as |row|}}
           <tr data-test-row>
@@ -479,7 +499,11 @@ module('Integration | external atoms', function (hooks) {
       growPage = () => this.table.setPageSize(4);
 
       <template>
-        <button type="button" data-test-grow {{on "click" this.growPage}}>Grow</button>
+        <button
+          type="button"
+          data-test-grow
+          {{on "click" this.growPage}}
+        >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-atom-page-size>{{this.atomPageSize}}</span>
         {{#each this.rows as |row|}}
@@ -506,7 +530,10 @@ module('Integration | external atoms', function (hooks) {
     );
     assert
       .dom('[data-test-atom-page-size]')
-      .hasText('4', 'raw reads of an ember createAtom are reactive in the template');
+      .hasText(
+        '4',
+        'raw reads of an ember createAtom are reactive in the template',
+      );
   });
 
   test('atom-backed slices are tracked independently', async function (assert) {
@@ -547,7 +574,11 @@ module('Integration | external atoms', function (hooks) {
       };
 
       <template>
-        <button type="button" data-test-grow {{on "click" this.growViaAtom}}>Grow</button>
+        <button
+          type="button"
+          data-test-grow
+          {{on "click" this.growViaAtom}}
+        >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>
       </template>

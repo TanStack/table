@@ -134,8 +134,10 @@ export default class ColumnVisibilityTable extends Component {
 
   <template>
     <div class="demo-root">
-      <button class="demo-button" {{on "click" this.refreshData}}>Regenerate Data</button>
-      <button class="demo-button" {{on "click" this.stressTest}}>Stress Test (1k rows)</button>
+      <button class="demo-button" {{on "click" this.refreshData}}>Regenerate
+        Data</button>
+      <button class="demo-button" {{on "click" this.stressTest}}>Stress Test (1k
+        rows)</button>
       <div class="spacer-md"></div>
       <div class="column-toggle-panel">
         <div class="column-toggle-panel-header">

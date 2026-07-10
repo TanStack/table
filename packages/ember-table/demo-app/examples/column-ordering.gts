@@ -183,10 +183,22 @@ export default class ColumnOrderingTable extends Component {
 
       <div class="spacer-md"></div>
       <div class="button-row">
-        <button class="demo-button demo-button-sm" {{on "click" this.refreshData}}>Regenerate Data</button>
-        <button class="demo-button demo-button-sm" {{on "click" this.stressTest}}>Stress Test (1k rows)</button>
-        <button class="demo-button demo-button-sm" {{on "click" this.shuffleColumns}}>Shuffle Columns</button>
-        <button class="demo-button demo-button-sm" {{on "click" this.resetOrder}}>Reset Order</button>
+        <button
+          class="demo-button demo-button-sm"
+          {{on "click" this.refreshData}}
+        >Regenerate Data</button>
+        <button
+          class="demo-button demo-button-sm"
+          {{on "click" this.stressTest}}
+        >Stress Test (1k rows)</button>
+        <button
+          class="demo-button demo-button-sm"
+          {{on "click" this.shuffleColumns}}
+        >Shuffle Columns</button>
+        <button
+          class="demo-button demo-button-sm"
+          {{on "click" this.resetOrder}}
+        >Reset Order</button>
       </div>
 
       <table>
