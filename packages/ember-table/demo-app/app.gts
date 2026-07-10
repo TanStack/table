@@ -1,10 +1,10 @@
-import EmberApp from 'ember-strict-application-resolver';
-import EmberRouter from '@ember/routing/router';
-import PageTitleService from 'ember-page-title/services/page-title';
+import EmberApp from 'ember-strict-application-resolver'
+import EmberRouter from '@ember/routing/router'
+import PageTitleService from 'ember-page-title/services/page-title'
 
 class Router extends EmberRouter {
-  location = 'history';
-  rootURL = '/';
+  location = 'history'
+  rootURL = '/'
 }
 
 export class App extends EmberApp {
@@ -32,7 +32,7 @@ export class App extends EmberApp {
      * See: https://rfcs.emberjs.com/id/1132-default-strict-resolver
      */
     ...import.meta.glob('./templates/**/*', { eager: true }),
-  };
+  }
 }
 
-Router.map(function () {});
+Router.map(function () {})

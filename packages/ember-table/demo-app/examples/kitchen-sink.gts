@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -26,25 +26,25 @@ import {
   type FilterFn,
   type SortFn,
   type TableFeatures,
-} from '#src/index.ts';
-import { compareItems, rankItem } from '@tanstack/match-sorter-utils';
-import { makeData, type Person } from '../utils/make-data';
-import type { RankingInfo } from '@tanstack/match-sorter-utils';
+} from '#src/index.ts'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+import { makeData, type Person } from '../utils/make-data'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // --- Custom column meta: drives the per-column filter variant ---
 
 interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select';
+  filterVariant?: 'text' | 'range' | 'select'
 }
 
 interface FuzzyFilterMeta {
-  itemRank?: RankingInfo;
+  itemRank?: RankingInfo
 }
 
 type KitchenSinkFeatures = TableFeatures & {
-  filterMeta: FuzzyFilterMeta;
-  columnMeta: MyColumnMeta;
-};
+  filterMeta: FuzzyFilterMeta
+  columnMeta: MyColumnMeta
+}
 
 // --- Fuzzy filter + sort (see filters-fuzzy example) ---
 
@@ -54,32 +54,32 @@ const fuzzyFilter: FilterFn<KitchenSinkFeatures, Person> = (
   value,
   addMeta,
 ) => {
-  const itemRank = rankItem(row.getValue(columnId), value as string);
-  addMeta?.({ itemRank });
-  return itemRank.passed;
-};
+  const itemRank = rankItem(row.getValue(columnId), value as string)
+  addMeta?.({ itemRank })
+  return itemRank.passed
+}
 
 const fuzzySort: SortFn<KitchenSinkFeatures, Person> = (
   rowA,
   rowB,
   columnId,
 ) => {
-  let dir = 0;
-  const rankA = rowA.columnFiltersMeta[columnId]?.itemRank;
-  const rankB = rowB.columnFiltersMeta[columnId]?.itemRank;
+  let dir = 0
+  const rankA = rowA.columnFiltersMeta[columnId]?.itemRank
+  const rankB = rowB.columnFiltersMeta[columnId]?.itemRank
   if (rankA && rankB) {
-    dir = compareItems(rankA, rankB);
+    dir = compareItems(rankA, rankB)
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+}
 
 const sortStatusFn: SortFn<KitchenSinkFeatures, Person> = (rowA, rowB) => {
-  const statusOrder = ['single', 'complicated', 'relationship'];
+  const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
     statusOrder.indexOf(rowB.original.status)
-  );
-};
+  )
+}
 
 const features = tableFeatures({
   ...stockFeatures,
@@ -96,11 +96,11 @@ const features = tableFeatures({
   filterFns: { ...filterFns, fuzzy: fuzzyFilter },
   sortFns: { ...sortFns, fuzzy: fuzzySort, sortStatus: sortStatusFn },
   aggregationFns,
-});
+})
 
-type Feats = typeof features;
+type Feats = typeof features
 
-const columnHelper = createColumnHelper<Feats, Person>();
+const columnHelper = createColumnHelper<Feats, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -157,140 +157,140 @@ const columns = columnHelper.columns([
     aggregatedCell: ({ getValue }) =>
       `${Math.round(getValue<number>() * 100) / 100}%`,
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 50, 100];
+const PAGE_SIZES = [10, 20, 30, 50, 100]
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
-type Col = Column<Feats, Person>;
-type Rw = Row<Feats, Person>;
-type Cl = Cell<Feats, Person>;
+type Col = Column<Feats, Person>
+type Rw = Row<Feats, Person>
+type Cl = Cell<Feats, Person>
 
-const getVisibleCells = (row: Rw): Array<Cl> => row.getVisibleCells();
-const getCanSort = (column: Col): boolean => column.getCanSort();
-const getCanFilter = (column: Col): boolean => column.getCanFilter();
-const getCanPin = (column: Col): boolean => column.getCanPin();
-const getCanGroup = (column: Col): boolean => column.getCanGroup();
-const getCanHide = (column: Col): boolean => column.getCanHide();
-const getIsVisible = (column: Col): boolean => column.getIsVisible();
+const getVisibleCells = (row: Rw): Array<Cl> => row.getVisibleCells()
+const getCanSort = (column: Col): boolean => column.getCanSort()
+const getCanFilter = (column: Col): boolean => column.getCanFilter()
+const getCanPin = (column: Col): boolean => column.getCanPin()
+const getCanGroup = (column: Col): boolean => column.getCanGroup()
+const getCanHide = (column: Col): boolean => column.getCanHide()
+const getIsVisible = (column: Col): boolean => column.getIsVisible()
 const getIsPinned = (column: Col): false | 'left' | 'right' =>
-  column.getIsPinned();
-const getIsGrouped = (column: Col): boolean => column.getIsGrouped();
-const getGroupedIndex = (column: Col): number => column.getGroupedIndex();
-const getColumnId = (column: Col): string => column.id;
+  column.getIsPinned()
+const getIsGrouped = (column: Col): boolean => column.getIsGrouped()
+const getGroupedIndex = (column: Col): number => column.getGroupedIndex()
+const getColumnId = (column: Col): string => column.id
 
-const cellIsSelect = (cell: Cl): boolean => cell.column.id === 'select';
-const cellIsFirstName = (cell: Cl): boolean => cell.column.id === 'firstName';
-const cellIsGrouped = (cell: Cl): boolean => cell.getIsGrouped();
-const rowGetCanExpand = (row: Rw): boolean => row.getCanExpand();
-const rowGetIsExpanded = (row: Rw): boolean => row.getIsExpanded();
-const rowGetIsSelected = (row: Rw): boolean => row.getIsSelected();
-const rowSubRowCount = (row: Rw): number => row.subRows.length;
-const rowDepthPad = (row: Rw): string => `padding-left: ${row.depth * 1.5}rem`;
+const cellIsSelect = (cell: Cl): boolean => cell.column.id === 'select'
+const cellIsFirstName = (cell: Cl): boolean => cell.column.id === 'firstName'
+const cellIsGrouped = (cell: Cl): boolean => cell.getIsGrouped()
+const rowGetCanExpand = (row: Rw): boolean => row.getCanExpand()
+const rowGetIsExpanded = (row: Rw): boolean => row.getIsExpanded()
+const rowGetIsSelected = (row: Rw): boolean => row.getIsSelected()
+const rowSubRowCount = (row: Rw): number => row.subRows.length
+const rowDepthPad = (row: Rw): string => `padding-left: ${row.depth * 1.5}rem`
 
 const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+  obj[key] ?? ''
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 const toggleSort = (column: Col) => (event: Event) => {
-  column.getToggleSortingHandler()?.(event);
-};
+  column.getToggleSortingHandler()?.(event)
+}
 const toggleGroup = (column: Col) => () => {
-  column.getToggleGroupingHandler()?.();
-};
+  column.getToggleGroupingHandler()?.()
+}
 const pinColumn = (column: Col, side: false | 'left' | 'right') => () => {
-  column.pin(side);
-};
+  column.pin(side)
+}
 const toggleVisibility = (column: Col) => (event: Event) => {
-  column.getToggleVisibilityHandler()(event);
-};
+  column.getToggleVisibilityHandler()(event)
+}
 const toggleRowSelected = (row: Rw) => (event: Event) => {
-  row.getToggleSelectedHandler()(event);
-};
+  row.getToggleSelectedHandler()(event)
+}
 const toggleRowExpanded = (row: Rw) => () => {
-  row.getToggleExpandedHandler()();
-};
+  row.getToggleExpandedHandler()()
+}
 
 // --- Per-column filter sub-component (text / range / select via facets) ---
 
 interface TableFilterSignature {
-  Args: { column: Col };
-  Element: null;
+  Args: { column: Col }
+  Element: null
 }
 
 class TableFilter extends Component<TableFilterSignature> {
   get variant(): string {
-    return this.args.column.columnDef.meta?.filterVariant ?? 'text';
+    return this.args.column.columnDef.meta?.filterVariant ?? 'text'
   }
 
   get filterValue(): unknown {
-    return this.args.column.getFilterValue();
+    return this.args.column.getFilterValue()
   }
 
   get range(): [string | number | undefined, string | number | undefined] {
     const value = this.filterValue as
       | [string | number | undefined, string | number | undefined]
-      | undefined;
-    return value ?? [undefined, undefined];
+      | undefined
+    return value ?? [undefined, undefined]
   }
 
   get rangeMin(): string {
-    const min = this.range[0];
-    return min == null ? '' : String(min);
+    const min = this.range[0]
+    return min == null ? '' : String(min)
   }
 
   get rangeMax(): string {
-    const max = this.range[1];
-    return max == null ? '' : String(max);
+    const max = this.range[1]
+    return max == null ? '' : String(max)
   }
 
   get textValue(): string {
-    return (this.filterValue as string | undefined) ?? '';
+    return (this.filterValue as string | undefined) ?? ''
   }
 
   get selectValue(): string {
-    const value = this.filterValue as string | number | undefined;
-    return value == null ? '' : String(value);
+    const value = this.filterValue as string | number | undefined
+    return value == null ? '' : String(value)
   }
 
   get facetedUniqueCount(): number {
-    return this.args.column.getFacetedUniqueValues().size;
+    return this.args.column.getFacetedUniqueValues().size
   }
 
   get sortedUniqueValues(): Array<string> {
-    if (this.variant === 'range') return [];
+    if (this.variant === 'range') return []
     return Array.from(this.args.column.getFacetedUniqueValues().keys())
       .map((v) => String(v))
       .sort()
-      .slice(0, 5000);
+      .slice(0, 5000)
   }
 
   handleText = (event: Event) => {
-    this.args.column.setFilterValue((event.target as HTMLInputElement).value);
-  };
+    this.args.column.setFilterValue((event.target as HTMLInputElement).value)
+  }
 
   handleSelect = (event: Event) => {
-    const value = (event.target as HTMLSelectElement).value;
-    this.args.column.setFilterValue(value === '' ? undefined : value);
-  };
+    const value = (event.target as HTMLSelectElement).value
+    this.args.column.setFilterValue(value === '' ? undefined : value)
+  }
 
   handleMin = (event: Event) => {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value
     this.args.column.setFilterValue((old?: [unknown, unknown]) => [
       value,
       old?.[1],
-    ]);
-  };
+    ])
+  }
 
   handleMax = (event: Event) => {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value
     this.args.column.setFilterValue((old?: [unknown, unknown]) => [
       old?.[0],
       value,
-    ]);
-  };
+    ])
+  }
 
   <template>
     {{#if (eq this.variant "range")}}
@@ -329,7 +329,7 @@ class TableFilter extends Component<TableFilterSignature> {
 }
 
 export default class KitchenSinkTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
+  @tracked data: Array<Person> = makeData(1_000)
 
   table = useTable(() => ({
     features,
@@ -342,137 +342,137 @@ export default class KitchenSinkTable extends Component {
       pagination: { pageIndex: 0, pageSize: 20 },
     },
     enableRowSelection: true,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get leafColumns() {
-    return this.table.getAllLeafColumns();
+    return this.table.getAllLeafColumns()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   get globalFilterValue(): string {
-    return (this.table.store.state.globalFilter as string | undefined) ?? '';
+    return (this.table.store.state.globalFilter as string | undefined) ?? ''
   }
 
   get isAllColumnsVisible() {
-    return this.table.getIsAllColumnsVisible();
+    return this.table.getIsAllColumnsVisible()
   }
 
   get isAllPageRowsSelected() {
-    return this.table.getIsAllPageRowsSelected();
+    return this.table.getIsAllPageRowsSelected()
   }
 
   get selectedCount() {
-    return this.table.getSelectedRowModel().flatRows.length.toLocaleString();
+    return this.table.getSelectedRowModel().flatRows.length.toLocaleString()
   }
 
   get totalCount() {
-    return this.table.getCoreRowModel().flatRows.length.toLocaleString();
+    return this.table.getCoreRowModel().flatRows.length.toLocaleString()
   }
 
   get filteredCount() {
-    return this.table.getFilteredRowModel().rows.length.toLocaleString();
+    return this.table.getFilteredRowModel().rows.length.toLocaleString()
   }
 
   get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
+    const indicators: Record<string, string> = {}
     for (const hg of this.table.getHeaderGroups()) {
       for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
+        const sorted = h.column.getIsSorted()
         indicators[h.column.id] =
-          sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : '';
+          sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : ''
       }
     }
-    return indicators;
+    return indicators
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get currentPage() {
-    return (this.table.store.state.pagination.pageIndex + 1).toLocaleString();
+    return (this.table.store.state.pagination.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get pageSize() {
-    return this.table.store.state.pagination.pageSize;
+    return this.table.store.state.pagination.pageSize
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   regenerateData = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   nestedData = () => {
-    this.data = makeData(100, 5, 3);
-  };
+    this.data = makeData(100, 5, 3)
+  }
 
   stressTest = () => {
-    this.data = makeData(10_000);
-  };
+    this.data = makeData(10_000)
+  }
 
   resetTable = () => {
-    this.table.reset();
-  };
+    this.table.reset()
+  }
 
   handleGlobalFilter = (event: Event) => {
-    this.table.setGlobalFilter((event.currentTarget as HTMLInputElement).value);
-  };
+    this.table.setGlobalFilter((event.currentTarget as HTMLInputElement).value)
+  }
 
   toggleAllColumns = (event: Event) => {
-    this.table.getToggleAllColumnsVisibilityHandler()(event);
-  };
+    this.table.getToggleAllColumnsVisibilityHandler()(event)
+  }
 
   toggleAllPageRows = (event: Event) => {
-    this.table.getToggleAllPageRowsSelectedHandler()(event);
-  };
+    this.table.getToggleAllPageRowsSelectedHandler()(event)
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handlePageSizeChange = (event: Event) => {
     this.table.setPageSize(
       Number((event.currentTarget as HTMLSelectElement).value),
-    );
-  };
+    )
+  }
 
   <template>
     <div class="demo-root">

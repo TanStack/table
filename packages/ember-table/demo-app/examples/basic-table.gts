@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -17,19 +17,19 @@ import {
   type Cell,
   type FlexRenderableSignature,
   type CellContext,
-} from '#src/index.ts';
-import type { TOC } from '@ember/component/template-only';
-import type { CellRenderableSignature } from '#src/flex-render.ts';
+} from '#src/index.ts'
+import type { TOC } from '@ember/component/template-only'
+import type { CellRenderableSignature } from '#src/flex-render.ts'
 
 // --- Data types and generation ---
 
 interface Person {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  status: string;
-  progress: number;
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  status: string
+  progress: number
 }
 
 const FIRST_NAMES = [
@@ -53,7 +53,7 @@ const FIRST_NAMES = [
   'Rita',
   'Sam',
   'Tina',
-];
+]
 
 const LAST_NAMES = [
   'Smith',
@@ -76,9 +76,9 @@ const LAST_NAMES = [
   'Moore',
   'Jackson',
   'Martin',
-];
+]
 
-const STATUSES = ['relationship', 'complicated', 'single'] as const;
+const STATUSES = ['relationship', 'complicated', 'single'] as const
 
 function makeData(count: number): Array<Person> {
   return Array.from({ length: count }, (_, i) => ({
@@ -88,7 +88,7 @@ function makeData(count: number): Array<Person> {
     visits: (i * 37) % 1000,
     status: STATUSES[i % STATUSES.length]!,
     progress: (i * 13) % 100,
-  }));
+  }))
 }
 
 // --- Custom cell component example ---
@@ -102,15 +102,15 @@ class StatusBadge extends Component<
   >
 > {
   get value(): string {
-    const ctx = this.args.ctx as { getValue: () => string };
-    return ctx.getValue();
+    const ctx = this.args.ctx as { getValue: () => string }
+    return ctx.getValue()
   }
 
   get className(): string {
-    const value = this.value;
-    if (value === 'relationship') return 'status-relationship';
-    if (value === 'complicated') return 'status-complicated';
-    return 'status-single';
+    const value = this.value
+    if (value === 'relationship') return 'status-relationship'
+    if (value === 'complicated') return 'status-complicated'
+    return 'status-single'
   }
 
   <template>
@@ -124,12 +124,12 @@ const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   sortFns,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 function getValue<T>(ctx: CellContext<typeof features, Person, T>): T {
-  return ctx.getValue();
+  return ctx.getValue()
 }
 
 const ProgressBar: TOC<
@@ -143,7 +143,7 @@ const ProgressBar: TOC<
   <div class="status-bar">
     <span>Status: {{getValue @ctx}}</span>
   </div>
-</template>;
+</template>
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -181,7 +181,7 @@ const columns = columnHelper.columns([
         color: 'red',
       }),
   }),
-]);
+])
 
 // --- Template helpers ---
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
@@ -189,65 +189,65 @@ const columns = columnHelper.columns([
 // helpers that call methods on the correct object.
 
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort();
+  column.getCanSort()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
+  obj[key] ?? ''
 
 const toggleSort = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
-    column.getToggleSortingHandler()?.(event);
-  };
-};
+    column.getToggleSortingHandler()?.(event)
+  }
+}
 
 // --- Component ---
 
 export class BasicAppTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
+  @tracked data: Array<Person> = makeData(20)
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get footerGroups() {
-    return this.table.getFooterGroups();
+    return this.table.getFooterGroups()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
+    const indicators: Record<string, string> = {}
     for (const hg of this.table.getHeaderGroups()) {
       for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
+        const sorted = h.column.getIsSorted()
         indicators[h.column.id] =
-          sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : '';
+          sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : ''
       }
     }
-    return indicators;
+    return indicators
   }
 
   regenerateData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   <template>
     <div class="demo-root">

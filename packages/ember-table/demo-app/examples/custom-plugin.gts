@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -20,38 +20,38 @@ import {
   type TableFeature,
   type TableFeatures,
   type Updater,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 // --- Custom "density" feature plugin (translated from the Angular example) ---
 
 // State contributed by the feature.
-export type DensityState = 'sm' | 'md' | 'lg';
+export type DensityState = 'sm' | 'md' | 'lg'
 export interface TableState_Density {
-  density: DensityState;
+  density: DensityState
 }
 
 // Options contributed by the feature.
 export interface TableOptions_Density {
-  enableDensity?: boolean;
-  onDensityChange?: OnChangeFn<DensityState>;
+  enableDensity?: boolean
+  onDensityChange?: OnChangeFn<DensityState>
 }
 
 // Table instance APIs contributed by the feature.
 export interface Table_Density {
-  setDensity: (updater: Updater<DensityState>) => void;
-  toggleDensity: (value?: DensityState) => void;
+  setDensity: (updater: Updater<DensityState>) => void
+  toggleDensity: (value?: DensityState) => void
 }
 
 // Register the plugin's types via declaration merging so the table types
 // (state / options / instance) all resolve cleanly.
 declare module '@tanstack/table-core' {
   interface Plugins {
-    densityPlugin: TableFeature;
+    densityPlugin: TableFeature
   }
 
   interface TableState_FeatureMap {
-    densityPlugin: TableState_Density;
+    densityPlugin: TableState_Density
   }
 
   interface TableOptions_FeatureMap<
@@ -60,7 +60,7 @@ declare module '@tanstack/table-core' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     TData extends RowData,
   > {
-    densityPlugin: TableOptions_Density;
+    densityPlugin: TableOptions_Density
   }
 
   interface Table_FeatureMap<
@@ -69,7 +69,7 @@ declare module '@tanstack/table-core' {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     TData extends RowData,
   > {
-    densityPlugin: Table_Density;
+    densityPlugin: Table_Density
   }
 }
 
@@ -78,14 +78,14 @@ export const densityPlugin: TableFeature = {
     return {
       density: 'md',
       ...initialState, // must come last so user state wins
-    };
+    }
   },
 
   getDefaultTableOptions: (table) => {
     return {
       enableDensity: true,
       onDensityChange: makeStateUpdater('density', table),
-    };
+    }
   },
 
   constructTableAPIs: (table) => {
@@ -93,28 +93,28 @@ export const densityPlugin: TableFeature = {
       table_setDensity: {
         fn: (updater: Updater<DensityState>) => {
           const safeUpdater: Updater<DensityState> = (old) => {
-            return functionalUpdate(updater, old);
-          };
+            return functionalUpdate(updater, old)
+          }
           return (table.options as TableOptions_Density).onDensityChange?.(
             safeUpdater,
-          );
+          )
         },
       },
       table_toggleDensity: {
         fn: (value?: DensityState) => {
           const safeUpdater: Updater<DensityState> = (old) => {
-            if (value) return value;
+            if (value) return value
             // cycle through the 3 options
-            return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg';
-          };
+            return old === 'lg' ? 'md' : old === 'md' ? 'sm' : 'lg'
+          }
           return (table.options as TableOptions_Density).onDensityChange?.(
             safeUpdater,
-          );
+          )
         },
       },
-    });
+    })
   },
-};
+}
 
 // --- Table setup ---
 
@@ -122,9 +122,9 @@ const features = tableFeatures({
   rowPaginationFeature,
   densityPlugin,
   paginatedRowModel: createPaginatedRowModel(),
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -153,25 +153,25 @@ const columns = columnHelper.columns([
     header: 'Profile Progress',
     footer: (props) => props.column.id,
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Template helpers ---
 
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+): Array<Cell<typeof features, Person>> => row.getAllCells()
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 const isFunction = (value: unknown): value is (...args: never[]) => unknown =>
-  typeof value === 'function';
+  typeof value === 'function'
 
 export default class CustomPluginTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
-  @tracked density: DensityState = 'md';
-  @tracked pageIndex = 0;
-  @tracked pageSize = 10;
+  @tracked data: Array<Person> = makeData(20)
+  @tracked density: DensityState = 'md'
+  @tracked pageIndex = 0
+  @tracked pageSize = 10
 
   table = useTable(() => ({
     features,
@@ -182,102 +182,102 @@ export default class CustomPluginTable extends Component {
       pagination: { pageIndex: this.pageIndex, pageSize: this.pageSize },
     },
     onDensityChange: (updater) => {
-      this.density = isFunction(updater) ? updater(this.density) : updater;
+      this.density = isFunction(updater) ? updater(this.density) : updater
     },
     onPaginationChange: (updater) => {
       const next =
         typeof updater === 'function'
           ? updater({ pageIndex: this.pageIndex, pageSize: this.pageSize })
-          : updater;
-      this.pageIndex = next.pageIndex;
-      this.pageSize = next.pageSize;
+          : updater
+      this.pageIndex = next.pageIndex
+      this.pageSize = next.pageSize
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get footerGroups() {
-    return this.table.getFooterGroups();
+    return this.table.getFooterGroups()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   // Padding is driven by the current density, read reactively via a getter.
   get cellPadding() {
     switch (this.density) {
       case 'sm':
-        return '4px';
+        return '4px'
       case 'lg':
-        return '16px';
+        return '16px'
       default:
-        return '8px';
+        return '8px'
     }
   }
 
   get cellStyle() {
-    return `padding: ${this.cellPadding};`;
+    return `padding: ${this.cellPadding};`
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get currentPage() {
-    return (this.pageIndex + 1).toLocaleString();
+    return (this.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   toggleDensity = () => {
-    this.table.toggleDensity();
-  };
+    this.table.toggleDensity()
+  }
 
   regenerateData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

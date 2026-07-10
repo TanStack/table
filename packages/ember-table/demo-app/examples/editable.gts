@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -16,23 +16,23 @@ import {
   type Cell,
   type CellContext,
   type ColumnDef,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
-import type { CellRenderableSignature } from '#src/flex-render.ts';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
+import type { CellRenderableSignature } from '#src/flex-render.ts'
 
 // Provide our `updateData` meta function to the table via the feature-set
 // `tableMeta` slot so `table.options.meta.updateData` types cleanly.
 interface MyTableMeta {
-  updateData: (rowIndex: number, columnId: string, value: unknown) => void;
+  updateData: (rowIndex: number, columnId: string, value: unknown) => void
 }
 
 const features = tableFeatures({
   rowPaginationFeature,
   paginatedRowModel: createPaginatedRowModel(),
   tableMeta: metaHelper<MyTableMeta>(),
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 // --- Editable cell component ---
 // Renders an <input> bound to the cell value. On blur it calls the table's
@@ -42,30 +42,30 @@ class EditableCell extends Component<
   CellRenderableSignature<typeof features, Person>
 > {
   get ctx(): CellContext<typeof features, Person, unknown> {
-    return this.args.ctx;
+    return this.args.ctx
   }
 
   get value(): string {
-    const value = this.ctx.getValue() as string | number | null | undefined;
-    return value == null ? '' : String(value);
+    const value = this.ctx.getValue() as string | number | null | undefined
+    return value == null ? '' : String(value)
   }
 
   onBlur = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const ctx = this.ctx;
+    const target = event.currentTarget as HTMLInputElement
+    const ctx = this.ctx
     ctx.table.options.meta?.updateData(
       ctx.row.index,
       ctx.column.id,
       target.value,
-    );
-  };
+    )
+  }
 
   <template><input value={{this.value}} {{on "blur" this.onBlur}} /></template>
 }
 
 const defaultColumn: Partial<ColumnDef<typeof features, Person>> = {
   cell: () => flexRenderComponent(EditableCell),
-};
+}
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -93,22 +93,22 @@ const columns = columnHelper.columns([
     header: 'Profile Progress',
     footer: (info) => info.column.id,
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Template helpers (v9 methods need explicit `this`) ---
 
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+): Array<Cell<typeof features, Person>> => row.getAllCells()
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 export default class EditableTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
-  @tracked pageIndex = 0;
-  @tracked pageSize = 10;
+  @tracked data: Array<Person> = makeData(20)
+  @tracked pageIndex = 0
+  @tracked pageSize = 10
 
   table = useTable(() => ({
     features,
@@ -122,93 +122,93 @@ export default class EditableTable extends Component {
       const next =
         typeof updater === 'function'
           ? updater({ pageIndex: this.pageIndex, pageSize: this.pageSize })
-          : updater;
-      this.pageIndex = next.pageIndex;
-      this.pageSize = next.pageSize;
+          : updater
+      this.pageIndex = next.pageIndex
+      this.pageSize = next.pageSize
     },
     meta: {
       updateData: (rowIndex, columnId, value) => {
         this.data = this.data.map((row, index) =>
           index === rowIndex ? { ...row, [columnId]: value } : row,
-        );
+        )
       },
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get footerGroups() {
-    return this.table.getFooterGroups();
+    return this.table.getFooterGroups()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get currentPage() {
-    return (this.pageIndex + 1).toLocaleString();
+    return (this.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get currentPageInputValue() {
-    return String(this.pageIndex + 1);
+    return String(this.pageIndex + 1)
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   regenerateData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handleGoToPage = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const page = target.value ? Number(target.value) - 1 : 0;
-    this.table.setPageIndex(page);
-  };
+    const target = event.currentTarget as HTMLInputElement
+    const page = target.value ? Number(target.value) - 1 : 0
+    this.table.setPageIndex(page)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

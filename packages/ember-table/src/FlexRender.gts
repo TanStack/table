@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { FlexRenderComponentConfig } from './flex-render.ts';
-import { flexRender } from '@tanstack/table-core/flex-render';
+import Component from '@glimmer/component'
+import { FlexRenderComponentConfig } from './flex-render.ts'
+import { flexRender } from '@tanstack/table-core/flex-render'
 import type {
   Cell_Core,
   CellContext,
@@ -9,10 +9,10 @@ import type {
   HeaderContext,
   RowData,
   TableFeatures,
-} from '@tanstack/table-core';
-import type { ComponentLike, ContentValue } from '@glint/template';
+} from '@tanstack/table-core'
+import type { ComponentLike, ContentValue } from '@glint/template'
 
-type RenderArgs = Record<string, unknown> | undefined;
+type RenderArgs = Record<string, unknown> | undefined
 
 type CellRenderResult<
   TFeatures extends TableFeatures,
@@ -22,7 +22,7 @@ type CellRenderResult<
   | string
   | number
   | null
-  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderArgs>;
+  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderArgs>
 
 type HeaderRenderResult<
   TFeatures extends TableFeatures,
@@ -32,7 +32,7 @@ type HeaderRenderResult<
   | string
   | number
   | null
-  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderArgs>;
+  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderArgs>
 
 interface CellRenderSignature<
   TFeatures extends TableFeatures,
@@ -40,9 +40,9 @@ interface CellRenderSignature<
   TValue extends CellData,
 > {
   Args: {
-    ctx: CellContext<TFeatures, TData, TValue>;
-    args?: Record<string, unknown>;
-  };
+    ctx: CellContext<TFeatures, TData, TValue>
+    args?: Record<string, unknown>
+  }
 }
 
 interface HeaderRenderSignature<
@@ -51,9 +51,9 @@ interface HeaderRenderSignature<
   TValue extends CellData,
 > {
   Args: {
-    ctx: HeaderContext<TFeatures, TData, TValue>;
-    args?: Record<string, unknown>;
-  };
+    ctx: HeaderContext<TFeatures, TData, TValue>
+    args?: Record<string, unknown>
+  }
 }
 
 // --- FlexRenderCell ---
@@ -64,9 +64,9 @@ export interface FlexRenderCellSignature<
   TValue extends CellData = CellData,
 > {
   Args: {
-    cell: Cell_Core<TFeatures, TData, TValue>;
-  };
-  Element: null;
+    cell: Cell_Core<TFeatures, TData, TValue>
+  }
+  Element: null
 }
 
 export class FlexRenderCell<
@@ -75,41 +75,41 @@ export class FlexRenderCell<
   TValue extends CellData = CellData,
 > extends Component<FlexRenderCellSignature<TFeatures, TData, TValue>> {
   get result(): CellRenderResult<TFeatures, TData, TValue> {
-    const cell = this.args.cell;
+    const cell = this.args.cell
     return flexRender(
       cell.column.columnDef.cell,
       cell.getContext(),
-    ) as CellRenderResult<TFeatures, TData, TValue>;
+    ) as CellRenderResult<TFeatures, TData, TValue>
   }
 
   get resolvedContext(): CellContext<TFeatures, TData, TValue> {
-    return this.args.cell.getContext();
+    return this.args.cell.getContext()
   }
 
   get isComponent(): boolean {
-    return this.result instanceof FlexRenderComponentConfig;
+    return this.result instanceof FlexRenderComponentConfig
   }
 
   get componentToRender():
     | ComponentLike<CellRenderSignature<TFeatures, TData, TValue>>
     | undefined {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.component;
+      return result.component
     }
-    return undefined;
+    return undefined
   }
 
   get componentArgs(): RenderArgs {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args;
+      return result.args
     }
-    return undefined;
+    return undefined
   }
 
   get content(): ContentValue {
-    return this.result as ContentValue;
+    return this.result as ContentValue
   }
 
   <template>
@@ -132,9 +132,9 @@ export interface FlexRenderHeaderSignature<
   TValue extends CellData = CellData,
 > {
   Args: {
-    header: Header_Core<TFeatures, TData, TValue>;
-  };
-  Element: null;
+    header: Header_Core<TFeatures, TData, TValue>
+  }
+  Element: null
 }
 
 export class FlexRenderHeader<
@@ -143,44 +143,44 @@ export class FlexRenderHeader<
   TValue extends CellData = CellData,
 > extends Component<FlexRenderHeaderSignature<TFeatures, TData, TValue>> {
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
-    const header = this.args.header;
-    if (header.isPlaceholder) return null;
+    const header = this.args.header
+    if (header.isPlaceholder) return null
     return flexRender(
       header.column.columnDef.header,
       header.getContext(),
-    ) as HeaderRenderResult<TFeatures, TData, TValue>;
+    ) as HeaderRenderResult<TFeatures, TData, TValue>
   }
 
   get resolvedContext(): HeaderContext<TFeatures, TData, TValue> {
-    return this.args.header.getContext();
+    return this.args.header.getContext()
   }
 
   get isComponent(): boolean {
-    return this.result instanceof FlexRenderComponentConfig;
+    return this.result instanceof FlexRenderComponentConfig
   }
 
   get componentToRender():
     | ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>>
     | undefined {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component as unknown as ComponentLike<
         HeaderRenderSignature<TFeatures, TData, TValue>
-      >;
+      >
     }
-    return undefined;
+    return undefined
   }
 
   get componentArgs(): RenderArgs {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args;
+      return result.args
     }
-    return undefined;
+    return undefined
   }
 
   get content(): ContentValue {
-    return this.result as ContentValue;
+    return this.result as ContentValue
   }
 
   <template>
@@ -203,9 +203,9 @@ export interface FlexRenderFooterSignature<
   TValue extends CellData = CellData,
 > {
   Args: {
-    footer: Header_Core<TFeatures, TData, TValue>;
-  };
-  Element: null;
+    footer: Header_Core<TFeatures, TData, TValue>
+  }
+  Element: null
 }
 
 export class FlexRenderFooter<
@@ -214,44 +214,44 @@ export class FlexRenderFooter<
   TValue extends CellData = CellData,
 > extends Component<FlexRenderFooterSignature<TFeatures, TData, TValue>> {
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
-    const footer = this.args.footer;
-    if (footer.isPlaceholder) return null;
+    const footer = this.args.footer
+    if (footer.isPlaceholder) return null
     return flexRender(
       footer.column.columnDef.footer,
       footer.getContext(),
-    ) as HeaderRenderResult<TFeatures, TData, TValue>;
+    ) as HeaderRenderResult<TFeatures, TData, TValue>
   }
 
   get resolvedContext(): HeaderContext<TFeatures, TData, TValue> {
-    return this.args.footer.getContext();
+    return this.args.footer.getContext()
   }
 
   get isComponent(): boolean {
-    return this.result instanceof FlexRenderComponentConfig;
+    return this.result instanceof FlexRenderComponentConfig
   }
 
   get componentToRender():
     | ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>>
     | undefined {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component as unknown as ComponentLike<
         HeaderRenderSignature<TFeatures, TData, TValue>
-      >;
+      >
     }
-    return undefined;
+    return undefined
   }
 
   get componentArgs(): RenderArgs {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args;
+      return result.args
     }
-    return undefined;
+    return undefined
   }
 
   get content(): ContentValue {
-    return this.result as ContentValue;
+    return this.result as ContentValue
   }
 
   <template>

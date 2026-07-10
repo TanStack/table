@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -15,8 +15,8 @@ import {
   type Row,
   type Cell,
   type SortFn,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 // --- Table setup ---
 
@@ -24,19 +24,19 @@ const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   sortFns,
-});
+})
 
 // Custom sorting function for the `status` column: orders statuses in a
 // deliberate (non-alphabetical) sequence.
 const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
-  const statusOrder = ['single', 'complicated', 'relationship'];
+  const statusOrder = ['single', 'complicated', 'relationship']
   return (
     statusOrder.indexOf(rowA.original.status) -
     statusOrder.indexOf(rowB.original.status)
-  );
-};
+  )
+}
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -73,7 +73,7 @@ const columns = columnHelper.columns([
     // Invert the sort direction for this column.
     invertSorting: true,
   }),
-]);
+])
 
 // --- Template helpers ---
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
@@ -81,69 +81,69 @@ const columns = columnHelper.columns([
 // helpers that call methods on the correct object.
 
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort();
+  column.getCanSort()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
+  obj[key] ?? ''
 
 const toggleSort = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
-    column.getToggleSortingHandler()?.(event);
-  };
-};
+    column.getToggleSortingHandler()?.(event)
+  }
+}
 
 // --- Component ---
 
 export default class SortingTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
+  @tracked data: Array<Person> = makeData(1_000)
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows.slice(0, 10);
+    return this.table.getRowModel().rows.slice(0, 10)
   }
 
   get footerGroups() {
-    return this.table.getFooterGroups();
+    return this.table.getFooterGroups()
   }
 
   get rowCount() {
-    return this.table.getRowModel().rows.length.toLocaleString();
+    return this.table.getRowModel().rows.length.toLocaleString()
   }
 
   get sortingState() {
-    return JSON.stringify(this.table.store.state.sorting ?? [], null, 2);
+    return JSON.stringify(this.table.store.state.sorting ?? [], null, 2)
   }
 
   get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
+    const indicators: Record<string, string> = {}
     for (const hg of this.table.getHeaderGroups()) {
       for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
+        const sorted = h.column.getIsSorted()
         indicators[h.column.id] =
-          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : '';
+          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : ''
       }
     }
-    return indicators;
+    return indicators
   }
 
   regenerateData = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000_000);
-  };
+    this.data = makeData(1_000_000)
+  }
 
   <template>
     <div class="demo-root">

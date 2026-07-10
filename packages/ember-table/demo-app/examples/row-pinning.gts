@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -18,8 +18,8 @@ import {
   type Row,
   type Cell,
   type RowPinningState,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   rowPinningFeature,
@@ -30,9 +30,9 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filterFns,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -56,41 +56,40 @@ const columns = columnHelper.columns([
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
 const getVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const getCanExpand = (row: Row<typeof features, Person>): boolean =>
-  row.getCanExpand();
+  row.getCanExpand()
 const getIsExpanded = (row: Row<typeof features, Person>): boolean =>
-  row.getIsExpanded();
+  row.getIsExpanded()
 const getIsPinned = (
   row: Row<typeof features, Person>,
-): false | 'top' | 'bottom' => row.getIsPinned();
+): false | 'top' | 'bottom' => row.getIsPinned()
 const isFirstNameCell = (cell: Cell<typeof features, Person>): boolean =>
-  cell.column.id === 'firstName';
+  cell.column.id === 'firstName'
 const depthPadding = (row: Row<typeof features, Person>): string =>
-  `padding-left: ${row.depth * 2}rem`;
+  `padding-left: ${row.depth * 2}rem`
 
 const toggleExpanded = (row: Row<typeof features, Person>) => () =>
-  row.toggleExpanded();
-const pinTop = (row: Row<typeof features, Person>) => () => row.pin('top');
-const pinBottom = (row: Row<typeof features, Person>) => () =>
-  row.pin('bottom');
-const unpin = (row: Row<typeof features, Person>) => () => row.pin(false);
+  row.toggleExpanded()
+const pinTop = (row: Row<typeof features, Person>) => () => row.pin('top')
+const pinBottom = (row: Row<typeof features, Person>) => () => row.pin('bottom')
+const unpin = (row: Row<typeof features, Person>) => () => row.pin(false)
 
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 export default class RowPinningTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000, 2, 2);
-  @tracked rowPinning: RowPinningState = { top: [], bottom: [] };
-  @tracked keepPinnedRows = true;
+  @tracked data: Array<Person> = makeData(1_000, 2, 2)
+  @tracked rowPinning: RowPinningState = { top: [], bottom: [] }
+  @tracked keepPinnedRows = true
 
   table = useTable(() => ({
     features,
@@ -105,76 +104,76 @@ export default class RowPinningTable extends Component {
     },
     onRowPinningChange: (updater) => {
       this.rowPinning =
-        typeof updater === 'function' ? updater(this.rowPinning) : updater;
+        typeof updater === 'function' ? updater(this.rowPinning) : updater
     },
     keepPinnedRows: this.keepPinnedRows,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get topRows() {
-    return this.table.getTopRows();
+    return this.table.getTopRows()
   }
 
   get centerRows() {
-    return this.table.getCenterRows();
+    return this.table.getCenterRows()
   }
 
   get bottomRows() {
-    return this.table.getBottomRows();
+    return this.table.getBottomRows()
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pagination() {
-    return this.table.store.state.pagination;
+    return this.table.store.state.pagination
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   regenerateData = () => {
-    this.data = makeData(1_000, 2, 2);
-  };
+    this.data = makeData(1_000, 2, 2)
+  }
 
   toggleKeepPinnedRows = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    this.keepPinnedRows = target.checked;
-  };
+    const target = event.currentTarget as HTMLInputElement
+    this.keepPinnedRows = target.checked
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

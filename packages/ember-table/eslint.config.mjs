@@ -12,25 +12,25 @@
  *     npx eslint --inspect-config
  *
  */
-import babelParser from '@babel/eslint-parser/experimental-worker';
-import js from '@eslint/js';
-import { defineConfig, globalIgnores } from 'eslint/config';
-import prettier from 'eslint-config-prettier';
-import ember from 'eslint-plugin-ember/recommended';
-import importPlugin from 'eslint-plugin-import';
-import n from 'eslint-plugin-n';
-import globals from 'globals';
-import ts from 'typescript-eslint';
+import babelParser from '@babel/eslint-parser/experimental-worker'
+import js from '@eslint/js'
+import { defineConfig, globalIgnores } from 'eslint/config'
+import prettier from 'eslint-config-prettier'
+import ember from 'eslint-plugin-ember/recommended'
+import importPlugin from 'eslint-plugin-import'
+import n from 'eslint-plugin-n'
+import globals from 'globals'
+import ts from 'typescript-eslint'
 
 const esmParserOptions = {
   ecmaFeatures: { modules: true },
   ecmaVersion: 'latest',
-};
+}
 
 const tsParserOptions = {
   projectService: true,
   tsconfigRootDir: import.meta.dirname,
-};
+}
 
 export default defineConfig([
   globalIgnores(['dist/', 'dist-*/', 'declarations/', 'coverage/', '!**/.*']),
@@ -126,4 +126,4 @@ export default defineConfig([
       },
     },
   },
-]);
+])

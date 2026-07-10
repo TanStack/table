@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -14,12 +14,12 @@ import {
   type Cell,
   type Header,
   type ColumnResizeMode,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
-const features = tableFeatures({ columnResizingFeature, columnSizingFeature });
+const features = tableFeatures({ columnResizingFeature, columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -65,7 +65,7 @@ const columns = columnHelper.columns([
       }),
     ]),
   }),
-]);
+])
 
 // --- Template helpers ---
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
@@ -73,68 +73,68 @@ const columns = columnHelper.columns([
 // module-scope helpers that call methods on the correct object.
 
 const getHeaderSize = (header: Header<typeof features, Person>): number =>
-  header.getSize();
+  header.getSize()
 const getCellColumnSize = (cell: Cell<typeof features, Person>): number =>
-  cell.column.getSize();
+  cell.column.getSize()
 const getIsResizing = (column: Column<typeof features, Person>): boolean =>
-  column.getIsResizing();
+  column.getIsResizing()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const resetSize = (column: Column<typeof features, Person>) => {
-  return () => column.resetSize();
-};
+  return () => column.resetSize()
+}
 const getResizeHandler = (header: Header<typeof features, Person>) => {
-  return (event: Event) => header.getResizeHandler()?.(event);
-};
+  return (event: Event) => header.getResizeHandler()?.(event)
+}
 
 export default class ColumnResizingTable extends Component {
-  @tracked data: Array<Person> = makeData(10);
-  @tracked resizeMode: ColumnResizeMode = 'onChange';
+  @tracked data: Array<Person> = makeData(10)
+  @tracked resizeMode: ColumnResizeMode = 'onChange'
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
     columnResizeMode: this.resizeMode,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get centerTotalSize() {
-    return this.table.getCenterTotalSize();
+    return this.table.getCenterTotalSize()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   get isOnChange() {
-    return this.resizeMode === 'onChange';
+    return this.resizeMode === 'onChange'
   }
 
   get isOnEnd() {
-    return this.resizeMode === 'onEnd';
+    return this.resizeMode === 'onEnd'
   }
 
   regenerateData = () => {
-    this.data = makeData(10);
-  };
+    this.data = makeData(10)
+  }
 
   stressTest = () => {
-    this.data = makeData(100);
-  };
+    this.data = makeData(100)
+  }
 
   setResizeMode = (event: Event) => {
-    const target = event.target as HTMLSelectElement;
-    this.resizeMode = target.value as ColumnResizeMode;
-  };
+    const target = event.target as HTMLSelectElement
+    this.resizeMode = target.value as ColumnResizeMode
+  }
 
   <template>
     <div class="demo-root">

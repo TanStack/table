@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -17,8 +17,8 @@ import {
   type Cell,
   type SortingState,
   type PaginationState,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   rowPaginationFeature,
@@ -26,9 +26,9 @@ const features = tableFeatures({
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortFns,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -51,30 +51,30 @@ const columns = columnHelper.columns([
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort();
+  column.getCanSort()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+  obj[key] ?? ''
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 const toggleSort = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
-    column.getToggleSortingHandler()?.(event);
-  };
-};
+    column.getToggleSortingHandler()?.(event)
+  }
+}
 
 export default class BasicExternalStateTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked sorting: SortingState = [];
-  @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 };
+  @tracked data: Array<Person> = makeData(1_000)
+  @tracked sorting: SortingState = []
+  @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 }
 
   table = useTable(() => ({
     features,
@@ -86,100 +86,100 @@ export default class BasicExternalStateTable extends Component {
     },
     onSortingChange: (updater) => {
       this.sorting =
-        typeof updater === 'function' ? updater(this.sorting) : updater;
+        typeof updater === 'function' ? updater(this.sorting) : updater
     },
     onPaginationChange: (updater) => {
       this.pagination =
-        typeof updater === 'function' ? updater(this.pagination) : updater;
+        typeof updater === 'function' ? updater(this.pagination) : updater
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
+    const indicators: Record<string, string> = {}
     for (const hg of this.table.getHeaderGroups()) {
       for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
+        const sorted = h.column.getIsSorted()
         indicators[h.column.id] =
-          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : '';
+          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : ''
       }
     }
-    return indicators;
+    return indicators
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get currentPage() {
-    return (this.pagination.pageIndex + 1).toLocaleString();
+    return (this.pagination.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get currentPageInputValue() {
-    return String(this.pagination.pageIndex + 1);
+    return String(this.pagination.pageIndex + 1)
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   regenerateData = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000_000);
-  };
+    this.data = makeData(1_000_000)
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handleGoToPage = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const page = target.value ? Number(target.value) - 1 : 0;
-    this.table.setPageIndex(page);
-  };
+    const target = event.currentTarget as HTMLInputElement
+    const page = target.value ? Number(target.value) - 1 : 0
+    this.table.setPageIndex(page)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

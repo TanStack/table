@@ -1,7 +1,7 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
-import { Input } from '@ember/component';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
+import { Input } from '@ember/component'
 import {
   useTable,
   FlexRenderCell,
@@ -22,9 +22,9 @@ import {
   type Column,
   type RowSelectionState,
   type FlexRenderableSignature,
-} from '#src/index.ts';
+} from '#src/index.ts'
 
-import { makeData, type Person } from '../utils/make-data';
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   rowSelectionFeature,
@@ -34,7 +34,7 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filterFns,
-});
+})
 
 // --- Selection checkbox components (rendered via flexRenderComponent) ---
 // The `ctx` passed to these components is either a HeaderContext (for the
@@ -45,16 +45,16 @@ class SelectionHeaderCheckbox extends Component<
   FlexRenderableSignature<typeof features, Person>
 > {
   get table() {
-    return this.args.ctx.table;
+    return this.args.ctx.table
   }
 
   get checked(): boolean {
-    return this.table.getIsAllRowsSelected();
+    return this.table.getIsAllRowsSelected()
   }
 
   handleChange = (event: Event) => {
-    this.table.getToggleAllRowsSelectedHandler()(event);
-  };
+    this.table.getToggleAllRowsSelectedHandler()(event)
+  }
 
   <template>
     <Input
@@ -70,16 +70,16 @@ class SelectionRowCheckbox extends Component<
 > {
   get row(): Row<typeof features, Person> {
     // Only cells carry a `row`; this component is only used as a cell renderer.
-    return (this.args.ctx as { row: Row<typeof features, Person> }).row;
+    return (this.args.ctx as { row: Row<typeof features, Person> }).row
   }
 
   get checked(): boolean {
-    return this.row.getIsSelected();
+    return this.row.getIsSelected()
   }
 
   handleChange = (event: Event) => {
-    this.row.getToggleSelectedHandler()(event);
-  };
+    this.row.getToggleSelectedHandler()(event)
+  }
 
   <template>
     <Input
@@ -90,7 +90,7 @@ class SelectionRowCheckbox extends Component<
   </template>
 }
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -145,25 +145,25 @@ const columns = columnHelper.columns([
       }),
     ]),
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
 // Ember templates extract function references without binding, so we provide
 // helpers that call methods on the correct object.
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+): Array<Cell<typeof features, Person>> => row.getAllCells()
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 const getFilterValue = (column: Column<typeof features, Person>): string =>
-  (column.getFilterValue() as string | undefined) ?? '';
+  (column.getFilterValue() as string | undefined) ?? ''
 
 export default class RowSelectionTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked rowSelection: RowSelectionState = {};
+  @tracked data: Array<Person> = makeData(1_000)
+  @tracked rowSelection: RowSelectionState = {}
 
   table = useTable(() => ({
     features,
@@ -175,113 +175,113 @@ export default class RowSelectionTable extends Component {
     enableRowSelection: true,
     onRowSelectionChange: (updater) => {
       this.rowSelection =
-        typeof updater === 'function' ? updater(this.rowSelection) : updater;
+        typeof updater === 'function' ? updater(this.rowSelection) : updater
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get footerGroups() {
-    return this.table.getFooterGroups();
+    return this.table.getFooterGroups()
   }
 
   get firstNameColumn(): Column<typeof features, Person> {
-    return this.table.getColumn('firstName')!;
+    return this.table.getColumn('firstName')!
   }
 
   get firstNameFilter(): string {
-    return getFilterValue(this.firstNameColumn);
+    return getFilterValue(this.firstNameColumn)
   }
 
   get selectedRowCount() {
-    return this.table.getSelectedRowModel().rows.length;
+    return this.table.getSelectedRowModel().rows.length
   }
 
   get pagination() {
-    return this.table.store.state.pagination;
+    return this.table.store.state.pagination
   }
 
   get selectionState() {
-    return JSON.stringify(this.table.store.state.rowSelection, null, 2);
+    return JSON.stringify(this.table.store.state.rowSelection, null, 2)
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get currentPage() {
-    return (this.pagination.pageIndex + 1).toLocaleString();
+    return (this.pagination.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get currentPageInputValue() {
-    return String(this.pagination.pageIndex + 1);
+    return String(this.pagination.pageIndex + 1)
   }
 
   get pageSize() {
-    return this.pagination.pageSize;
+    return this.pagination.pageSize
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   refreshData = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000_000);
-  };
+    this.data = makeData(1_000_000)
+  }
 
   handleFirstNameFilter = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    this.firstNameColumn.setFilterValue(target.value);
-  };
+    const target = event.currentTarget as HTMLInputElement
+    this.firstNameColumn.setFilterValue(target.value)
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handleGoToPage = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const page = target.value ? Number(target.value) - 1 : 0;
-    this.table.setPageIndex(page);
-  };
+    const target = event.currentTarget as HTMLInputElement
+    const page = target.value ? Number(target.value) - 1 : 0
+    this.table.setPageIndex(page)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

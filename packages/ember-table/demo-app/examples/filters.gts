@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -18,12 +18,12 @@ import {
   type Cell,
   type Table,
   type ColumnFiltersState,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 // Custom column meta so columns can declare a `filterVariant`.
 interface MyColumnMeta {
-  filterVariant?: 'text' | 'range' | 'select';
+  filterVariant?: 'text' | 'range' | 'select'
 }
 
 // --- Table setup ---
@@ -35,9 +35,9 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filterFns,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -65,49 +65,49 @@ const columns = columnHelper.columns([
     header: 'Profile Progress',
     meta: { filterVariant: 'range' },
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Template helpers ---
 
 const getCanFilter = (column: Column<typeof features, Person>): boolean =>
-  column.getCanFilter();
+  column.getCanFilter()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+): Array<Cell<typeof features, Person>> => row.getAllCells()
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 // Filter helpers that receive the column so `this` is bound correctly.
 const filterVariant = (
   column: Column<typeof features, Person>,
 ): 'text' | 'range' | 'select' | undefined =>
-  column.columnDef.meta?.filterVariant;
+  column.columnDef.meta?.filterVariant
 
 const rangeMin = (column: Column<typeof features, Person>): string => {
   const value = column.getFilterValue() as
     | [string | number, string | number]
-    | undefined;
-  return value?.[0] != null ? String(value[0]) : '';
-};
+    | undefined
+  return value?.[0] != null ? String(value[0]) : ''
+}
 
 const rangeMax = (column: Column<typeof features, Person>): string => {
   const value = column.getFilterValue() as
     | [string | number, string | number]
-    | undefined;
-  return value?.[1] != null ? String(value[1]) : '';
-};
+    | undefined
+  return value?.[1] != null ? String(value[1]) : ''
+}
 
 const selectValue = (column: Column<typeof features, Person>): string => {
-  const value = column.getFilterValue() as string | number | undefined;
-  return value == null ? '' : String(value);
-};
+  const value = column.getFilterValue() as string | number | undefined
+  return value == null ? '' : String(value)
+}
 
 const textValue = (column: Column<typeof features, Person>): string => {
-  const value = column.getFilterValue() as string | number | undefined;
-  return value == null ? '' : String(value);
-};
+  const value = column.getFilterValue() as string | number | undefined
+  return value == null ? '' : String(value)
+}
 
 // Unique, sorted values for the select variant, derived from the
 // pre-filtered row model.
@@ -115,7 +115,7 @@ const sortedUniqueValues = (
   table: Table<typeof features, Person>,
   column: Column<typeof features, Person>,
 ): Array<string> => {
-  const columnId = column.id;
+  const columnId = column.id
   return Array.from(
     new Set(
       table
@@ -124,67 +124,67 @@ const sortedUniqueValues = (
     ),
   )
     .sort()
-    .slice(0, 5000);
-};
+    .slice(0, 5000)
+}
 
 // --- Per-column filter sub-component ---
 
 interface ColumnFilterSignature {
   Args: {
-    column: Column<typeof features, Person>;
-    table: Table<typeof features, Person>;
-  };
+    column: Column<typeof features, Person>
+    table: Table<typeof features, Person>
+  }
 }
 
 class ColumnFilter extends Component<ColumnFilterSignature> {
   get variant(): 'text' | 'range' | 'select' | undefined {
-    return filterVariant(this.args.column);
+    return filterVariant(this.args.column)
   }
 
   get minValue(): string {
-    return rangeMin(this.args.column);
+    return rangeMin(this.args.column)
   }
 
   get maxValue(): string {
-    return rangeMax(this.args.column);
+    return rangeMax(this.args.column)
   }
 
   get selected(): string {
-    return selectValue(this.args.column);
+    return selectValue(this.args.column)
   }
 
   get text(): string {
-    return textValue(this.args.column);
+    return textValue(this.args.column)
   }
 
   get uniqueValues(): Array<string> {
-    if (this.variant === 'range') return [];
-    return sortedUniqueValues(this.args.table, this.args.column);
+    if (this.variant === 'range') return []
+    return sortedUniqueValues(this.args.table, this.args.column)
   }
 
   changeMin = (event: Event) => {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value
     this.args.column.setFilterValue((old?: [unknown, unknown]) => [
       value,
       old?.[1],
-    ]);
-  };
+    ])
+  }
 
   changeMax = (event: Event) => {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value
     this.args.column.setFilterValue((old?: [unknown, unknown]) => [
       old?.[0],
       value,
-    ]);
-  };
+    ])
+  }
 
   changeSelect = (event: Event) => {
-    this.args.column.setFilterValue((event.target as HTMLSelectElement).value);
-  };
+    this.args.column.setFilterValue((event.target as HTMLSelectElement).value)
+  }
 
   changeText = (event: Event) => {
-    this.args.column.setFilterValue((event.target as HTMLInputElement).value);
-  };
+    this.args.column.setFilterValue((event.target as HTMLInputElement).value)
+  }
 
   <template>
     {{#if (eq this.variant "range")}}
@@ -228,8 +228,8 @@ class ColumnFilter extends Component<ColumnFilterSignature> {
 // --- Component ---
 
 export default class FiltersTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked columnFilters: ColumnFiltersState = [];
+  @tracked data: Array<Person> = makeData(1_000)
+  @tracked columnFilters: ColumnFiltersState = []
 
   table = useTable(() => ({
     features,
@@ -240,96 +240,96 @@ export default class FiltersTable extends Component {
     },
     onColumnFiltersChange: (updater) => {
       this.columnFilters =
-        typeof updater === 'function' ? updater(this.columnFilters) : updater;
+        typeof updater === 'function' ? updater(this.columnFilters) : updater
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get preFilteredRowCount() {
-    return this.table.getPreFilteredRowModel().rows.length.toLocaleString();
+    return this.table.getPreFilteredRowModel().rows.length.toLocaleString()
   }
 
   get filterState() {
-    return JSON.stringify(this.columnFilters, null, 2);
+    return JSON.stringify(this.columnFilters, null, 2)
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get pagination() {
-    return this.table.store.state.pagination ?? { pageIndex: 0, pageSize: 10 };
+    return this.table.store.state.pagination ?? { pageIndex: 0, pageSize: 10 }
   }
 
   get currentPage() {
-    return (this.pagination.pageIndex + 1).toLocaleString();
+    return (this.pagination.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get currentPageInputValue() {
-    return String(this.pagination.pageIndex + 1);
+    return String(this.pagination.pageIndex + 1)
   }
 
   get currentPageSize() {
-    return this.pagination.pageSize;
+    return this.pagination.pageSize
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   regenerateData = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000_000);
-  };
+    this.data = makeData(1_000_000)
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handleGoToPage = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const page = target.value ? Number(target.value) - 1 : 0;
-    this.table.setPageIndex(page);
-  };
+    const target = event.currentTarget as HTMLInputElement
+    const page = target.value ? Number(target.value) - 1 : 0
+    this.table.setPageIndex(page)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

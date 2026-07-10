@@ -1,15 +1,10 @@
-import type {
-  Atom,
-  AtomOptions,
-  Observer,
-  Subscription,
-} from '@tanstack/store';
+import type { Atom, AtomOptions, Observer, Subscription } from '@tanstack/store'
 
-import { tracked, cached } from '@glimmer/tracking';
-import { untrack } from '@glimmer/validator';
+import { tracked, cached } from '@glimmer/tracking'
+import { untrack } from '@glimmer/validator'
 
 export function subscribeNoEffect(): Subscription {
-  return null as unknown as Subscription;
+  return null as unknown as Subscription
 }
 
 /**
@@ -18,18 +13,18 @@ export function subscribeNoEffect(): Subscription {
  * so the class wrapper will not be needed for those versions
  */
 export class Signal<T> {
-  @tracked _value;
+  @tracked _value
 
-  #options: AtomOptions<T> | undefined;
+  #options: AtomOptions<T> | undefined
 
   // Ember reads are tag-tracked; this observer list exists for the plain-JS
   // subscribers core wires up (external-atom sync in constructTable, the
   // inspector), which have no access to framework tracking.
-  #listeners = new Set<(value: T) => void>();
+  #listeners = new Set<(value: T) => void>()
 
   constructor(value: T, options: AtomOptions<T> | undefined) {
-    this._value = value;
-    this.#options = options;
+    this._value = value
+    this.#options = options
   }
 
   subscribe(
@@ -38,76 +33,76 @@ export class Signal<T> {
     const listener =
       typeof listenerOrObserver === 'function'
         ? listenerOrObserver
-        : listenerOrObserver.next;
+        : listenerOrObserver.next
 
     if (!listener) {
-      return { unsubscribe: () => {} };
+      return { unsubscribe: () => {} }
     }
 
-    this.#listeners.add(listener);
-    return { unsubscribe: () => this.#listeners.delete(listener) };
+    this.#listeners.add(listener)
+    return { unsubscribe: () => this.#listeners.delete(listener) }
   }
 
   get() {
-    return this.value;
+    return this.value
   }
   set(value: T | ((prev: T) => T)) {
     if (typeof value === 'function') {
-      return this.update(value as unknown as (prev: T) => T);
+      return this.update(value as unknown as (prev: T) => T)
     }
 
-    this.value = value;
+    this.value = value
   }
 
   get value() {
-    return this._value;
+    return this._value
   }
 
   set value(next: T) {
-    const prev = untrack(() => this._value);
+    const prev = untrack(() => this._value)
 
     const isEqual = this.#options?.compare
       ? this.#options.compare(prev, next)
-      : prev === next;
+      : prev === next
     if (isEqual) {
-      return;
+      return
     }
 
-    this._value = next;
+    this._value = next
 
     for (const listener of this.#listeners) {
-      listener(next);
+      listener(next)
     }
   }
 
   update(fn: (value: T) => T) {
-    const original = untrack(() => this._value);
+    const original = untrack(() => this._value)
 
-    this.value = fn(original);
+    this.value = fn(original)
   }
 }
 
 export class ComputedSignal<T> {
-  #compute;
+  #compute
 
   constructor(compute: () => T) {
-    this.#compute = compute;
+    this.#compute = compute
   }
 
   get() {
-    return this.value;
+    return this.value
   }
 
-  subscribe = subscribeNoEffect;
+  subscribe = subscribeNoEffect
 
   @cached
   get value() {
-    return this.#compute();
+    return this.#compute()
   }
 }
 
 export function signal<T>(value: T, options: AtomOptions<T> | undefined) {
-  return new Signal(value, options);
+  return new Signal(value, options)
 }
 
 /**
@@ -123,9 +118,9 @@ export function createAtom<T>(
   initialValue: T,
   options?: AtomOptions<T>,
 ): Atom<T> {
-  return signal(initialValue, options);
+  return signal(initialValue, options)
 }
 
 export function computed<T>(fn: () => T) {
-  return new ComputedSignal(fn);
+  return new ComputedSignal(fn)
 }

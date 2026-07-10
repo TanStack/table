@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -12,14 +12,14 @@ import {
   type Column,
   type Row,
   type Cell,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   columnVisibilityFeature,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -69,68 +69,68 @@ const columns = columnHelper.columns([
       }),
     ]),
   }),
-]);
+])
 
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
 // Ember templates extract function references without binding, so we provide
 // helpers that call methods on the correct object.
 const getVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getVisibleCells();
+): Array<Cell<typeof features, Person>> => row.getVisibleCells()
 
 const getIsVisible = (column: Column<typeof features, Person>): boolean =>
-  column.getIsVisible();
+  column.getIsVisible()
 
 const toggleColumnVisibility = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
-    column.getToggleVisibilityHandler()(event);
-  };
-};
+    column.getToggleVisibilityHandler()(event)
+  }
+}
 
 export default class ColumnVisibilityTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
+  @tracked data: Array<Person> = makeData(20)
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get footerGroups() {
-    return this.table.getFooterGroups();
+    return this.table.getFooterGroups()
   }
 
   get leafColumns() {
-    return this.table.getAllLeafColumns();
+    return this.table.getAllLeafColumns()
   }
 
   get isAllColumnsVisible() {
-    return this.table.getIsAllColumnsVisible();
+    return this.table.getIsAllColumnsVisible()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   refreshData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   toggleAllColumnsVisibility = (event: Event) => {
-    this.table.getToggleAllColumnsVisibilityHandler()(event);
-  };
+    this.table.getToggleAllColumnsVisibilityHandler()(event)
+  }
 
   <template>
     <div class="demo-root">

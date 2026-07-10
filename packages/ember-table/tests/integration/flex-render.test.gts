@@ -1,9 +1,9 @@
-import { module, test } from 'qunit';
-import { render, click } from '@ember/test-helpers';
-import { setupRenderingTest } from 'ember-qunit';
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import { module, test } from 'qunit'
+import { render, click } from '@ember/test-helpers'
+import { setupRenderingTest } from 'ember-qunit'
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -15,18 +15,18 @@ import {
   type CellContext,
   type FlexRenderableSignature,
   type ColumnDef,
-} from '#src/index.ts';
-import type { TOC } from '@ember/component/template-only';
+} from '#src/index.ts'
+import type { TOC } from '@ember/component/template-only'
 
-type Person = { id: string; firstName: string };
+type Person = { id: string; firstName: string }
 
-const defaultData: Array<Person> = [{ id: '0', firstName: 'Alice' }];
+const defaultData: Array<Person> = [{ id: '0', firstName: 'Alice' }]
 
 // Templates can't call bound table methods with `this` context, so expose them
 // as plain helpers (mirrors the demo-app table templates).
 const getVisibleCells = (
   row: Row<typeof stockFeatures, Person>,
-): Array<Cell<typeof stockFeatures, Person>> => row.getVisibleCells();
+): Array<Cell<typeof stockFeatures, Person>> => row.getVisibleCells()
 
 // --- Cell/header components used by the tests ---
 
@@ -39,7 +39,7 @@ class Badge extends Component<
   >
 > {
   get status(): string {
-    return this.args.args?.status ?? '';
+    return this.args.args?.status ?? ''
   }
 
   <template>
@@ -51,13 +51,13 @@ const BadgeA: TOC<
   FlexRenderableSignature<typeof stockFeatures, Person, string, undefined>
 > = <template>
   <span data-test-a>A component</span>
-</template>;
+</template>
 
 const BadgeB: TOC<
   FlexRenderableSignature<typeof stockFeatures, Person, string, undefined>
 > = <template>
   <span data-test-b>B component</span>
-</template>;
+</template>
 
 class ExpandBadge extends Component<
   FlexRenderableSignature<typeof stockFeatures, Person, string, undefined>
@@ -67,8 +67,8 @@ class ExpandBadge extends Component<
       typeof stockFeatures,
       Person,
       unknown
-    >;
-    return ctx.row.getIsExpanded() ? 'expanded' : 'collapsed';
+    >
+    return ctx.row.getIsExpanded() ? 'expanded' : 'collapsed'
   }
 
   <template>
@@ -77,20 +77,20 @@ class ExpandBadge extends Component<
 }
 
 interface ExpandArgs {
-  expanded: boolean;
-  onToggle: () => void;
+  expanded: boolean
+  onToggle: () => void
 }
 
 class ExpandCell extends Component<
   FlexRenderableSignature<typeof stockFeatures, Person, string, ExpandArgs>
 > {
   get label(): string {
-    return this.args.args?.expanded ? 'Expanded' : 'Collapsed';
+    return this.args.args?.expanded ? 'Expanded' : 'Collapsed'
   }
 
   toggle = () => {
-    this.args.args?.onToggle();
-  };
+    this.args.args?.onToggle()
+  }
 
   <template>
     <button
@@ -105,10 +105,10 @@ const HeaderBadge: TOC<
   FlexRenderableSignature<typeof stockFeatures, Person, string, undefined>
 > = <template>
   <span data-test-header-badge>Badge Header</span>
-</template>;
+</template>
 
 module('Integration | FlexRender', function (hooks) {
-  setupRenderingTest(hooks);
+  setupRenderingTest(hooks)
 
   // Angular: unit "should render primitives" + table "Render null/undefined as
   // empty" + "Render primitive". Covers both the function and the raw-value
@@ -120,19 +120,19 @@ module('Integration | FlexRender', function (hooks) {
       { id: 'c-string', cell: 'My string' },
       { id: 'c-number', cell: 0 as unknown as string },
       { id: 'c-fn', cell: () => 'fn value' },
-    ];
+    ]
 
     class TableComponent extends Component {
-      @tracked data = defaultData;
+      @tracked data = defaultData
 
       table = useTable(() => ({
         data: this.data,
         features: stockFeatures,
         columns,
-      }));
+      }))
 
       get rows() {
-        return this.table.getRowModel().rows;
+        return this.table.getRowModel().rows
       }
 
       <template>
@@ -152,28 +152,28 @@ module('Integration | FlexRender', function (hooks) {
       </template>
     }
 
-    await render(<template><TableComponent /></template>);
+    await render(<template><TableComponent /></template>)
 
-    assert.dom('[data-test-cell="c-null"]').hasText('', 'null renders empty');
+    assert.dom('[data-test-cell="c-null"]').hasText('', 'null renders empty')
     assert
       .dom('[data-test-cell="c-undefined"]')
-      .hasText('', 'undefined renders empty');
+      .hasText('', 'undefined renders empty')
     assert
       .dom('[data-test-cell="c-string"]')
-      .hasText('My string', 'string value renders');
+      .hasText('My string', 'string value renders')
     assert
       .dom('[data-test-cell="c-number"]')
-      .hasText('0', 'number value renders even if falsey');
+      .hasText('0', 'number value renders even if falsey')
     assert
       .dom('[data-test-cell="c-fn"]')
-      .hasText('fn value', 'function return value renders');
-  });
+      .hasText('fn value', 'function return value renders')
+  })
 
   // Angular: "should render components" / "Render component with FlexRenderComponent".
   test('renders a component cell and reacts to arg changes', async (assert) => {
     class TableComponent extends Component {
-      @tracked data = defaultData;
-      @tracked status = 'Initial status';
+      @tracked data = defaultData
+      @tracked status = 'Initial status'
 
       table = useTable(() => ({
         data: this.data,
@@ -184,15 +184,15 @@ module('Integration | FlexRender', function (hooks) {
             cell: () => flexRenderComponent(Badge, { status: this.status }),
           },
         ],
-      }));
+      }))
 
       get rows() {
-        return this.table.getRowModel().rows;
+        return this.table.getRowModel().rows
       }
 
       update = () => {
-        this.status = 'Updated status';
-      };
+        this.status = 'Updated status'
+      }
 
       <template>
         <table>
@@ -214,27 +214,27 @@ module('Integration | FlexRender', function (hooks) {
       </template>
     }
 
-    await render(<template><TableComponent /></template>);
+    await render(<template><TableComponent /></template>)
 
     assert
       .dom('[data-test-badge]')
-      .hasText('Initial status', 'component renders initial arg');
+      .hasText('Initial status', 'component renders initial arg')
 
-    await click('[data-test-update]');
+    await click('[data-test-update]')
 
     assert
       .dom('[data-test-badge]')
       .hasText(
         'Updated status',
         'component re-renders when the reactive arg changes',
-      );
-  });
+      )
+  })
 
   // Angular: "Render content reactively when flexRenderComponent class changes".
   test('switches component type reactively', async (assert) => {
     class TableComponent extends Component {
-      @tracked data = defaultData;
-      @tracked showB = false;
+      @tracked data = defaultData
+      @tracked showB = false
 
       table = useTable(() => ({
         data: this.data,
@@ -248,15 +248,15 @@ module('Integration | FlexRender', function (hooks) {
                 : flexRenderComponent(BadgeA),
           },
         ],
-      }));
+      }))
 
       get rows() {
-        return this.table.getRowModel().rows;
+        return this.table.getRowModel().rows
       }
 
       toggle = () => {
-        this.showB = !this.showB;
-      };
+        this.showB = !this.showB
+      }
 
       <template>
         <table>
@@ -278,24 +278,24 @@ module('Integration | FlexRender', function (hooks) {
       </template>
     }
 
-    await render(<template><TableComponent /></template>);
+    await render(<template><TableComponent /></template>)
 
-    assert.dom('[data-test-a]').exists('renders the first component');
-    assert.dom('[data-test-b]').doesNotExist();
+    assert.dom('[data-test-a]').exists('renders the first component')
+    assert.dom('[data-test-b]').doesNotExist()
 
-    await click('[data-test-toggle]');
+    await click('[data-test-toggle]')
 
     assert
       .dom('[data-test-b]')
-      .exists('renders the second component after the type changes');
-    assert.dom('[data-test-a]').doesNotExist();
-  });
+      .exists('renders the second component after the type changes')
+    assert.dom('[data-test-a]').doesNotExist()
+  })
 
   // Angular: "Render content reactively based on signal value".
   test('switches between primitive, null, and component reactively', async (assert) => {
     class TableComponent extends Component {
-      @tracked data = defaultData;
-      @tracked content: unknown = 'Initial status';
+      @tracked data = defaultData
+      @tracked content: unknown = 'Initial status'
 
       table = useTable(() => ({
         data: this.data,
@@ -306,19 +306,19 @@ module('Integration | FlexRender', function (hooks) {
             cell: () => this.content,
           },
         ],
-      }));
+      }))
 
       get rows() {
-        return this.table.getRowModel().rows;
+        return this.table.getRowModel().rows
       }
 
       setNull = () => {
-        this.content = null;
-      };
+        this.content = null
+      }
 
       setComponent = () => {
-        this.content = flexRenderComponent(Badge, { status: 'Updated status' });
-      };
+        this.content = flexRenderComponent(Badge, { status: 'Updated status' })
+      }
 
       <template>
         <table>
@@ -345,32 +345,32 @@ module('Integration | FlexRender', function (hooks) {
       </template>
     }
 
-    await render(<template><TableComponent /></template>);
+    await render(<template><TableComponent /></template>)
 
     assert
       .dom('[data-test-cell]')
-      .hasText('Initial status', 'renders the primitive value');
+      .hasText('Initial status', 'renders the primitive value')
 
-    await click('[data-test-null]');
+    await click('[data-test-null]')
 
     assert
       .dom('[data-test-cell]')
-      .hasText('', 'renders empty when the value becomes null');
+      .hasText('', 'renders empty when the value becomes null')
 
-    await click('[data-test-component]');
+    await click('[data-test-component]')
 
     assert
       .dom('[data-test-badge]')
       .hasText(
         'Updated status',
         'renders a component when the value becomes a component config',
-      );
-  });
+      )
+  })
 
   // Angular: "Cell content always get the latest context value".
   test('cell component receives the latest context', async (assert) => {
     class TableComponent extends Component {
-      @tracked data = defaultData;
+      @tracked data = defaultData
 
       table = useTable(() => ({
         data: this.data,
@@ -381,15 +381,15 @@ module('Integration | FlexRender', function (hooks) {
             cell: () => flexRenderComponent(ExpandBadge),
           },
         ],
-      }));
+      }))
 
       get rows() {
-        return this.table.getRowModel().rows;
+        return this.table.getRowModel().rows
       }
 
       toggle = () => {
-        this.table.getRow('0').toggleExpanded();
-      };
+        this.table.getRow('0').toggleExpanded()
+      }
 
       <template>
         <table>
@@ -411,27 +411,27 @@ module('Integration | FlexRender', function (hooks) {
       </template>
     }
 
-    await render(<template><TableComponent /></template>);
+    await render(<template><TableComponent /></template>)
 
     assert
       .dom('[data-test-badge]')
-      .hasText('collapsed', 'reads the initial context');
+      .hasText('collapsed', 'reads the initial context')
 
-    await click('[data-test-toggle]');
+    await click('[data-test-toggle]')
 
     assert
       .dom('[data-test-badge]')
       .hasText(
         'expanded',
         'cell component re-renders with the latest context value',
-      );
-  });
+      )
+  })
 
   // Angular: "Support cell with component output" — adapted to ember by passing
   // a callback through the component args.
   test('cell component can invoke a callback passed through args', async (assert) => {
     class TableComponent extends Component {
-      @tracked data = defaultData;
+      @tracked data = defaultData
 
       table = useTable(() => ({
         data: this.data,
@@ -448,10 +448,10 @@ module('Integration | FlexRender', function (hooks) {
               }),
           },
         ],
-      }));
+      }))
 
       get rows() {
-        return this.table.getRowModel().rows;
+        return this.table.getRowModel().rows
       }
 
       <template>
@@ -469,26 +469,26 @@ module('Integration | FlexRender', function (hooks) {
       </template>
     }
 
-    await render(<template><TableComponent /></template>);
+    await render(<template><TableComponent /></template>)
 
     assert
       .dom('[data-test-expand-btn]')
-      .hasText('Collapsed', 'renders the initial state');
+      .hasText('Collapsed', 'renders the initial state')
 
-    await click('[data-test-expand-btn]');
+    await click('[data-test-expand-btn]')
 
     assert
       .dom('[data-test-expand-btn]')
       .hasText(
         'Expanded',
         'the cell callback updates state and the component re-renders',
-      );
-  });
+      )
+  })
 
   // Header rendering via FlexRenderHeader (string and component headers).
   test('renders header content via FlexRenderHeader', async (assert) => {
     class TableComponent extends Component {
-      @tracked data = defaultData;
+      @tracked data = defaultData
 
       table = useTable(() => ({
         data: this.data,
@@ -501,10 +501,10 @@ module('Integration | FlexRender', function (hooks) {
             cell: () => '',
           },
         ],
-      }));
+      }))
 
       get headerGroups() {
-        return this.table.getHeaderGroups();
+        return this.table.getHeaderGroups()
       }
 
       <template>
@@ -524,11 +524,11 @@ module('Integration | FlexRender', function (hooks) {
       </template>
     }
 
-    await render(<template><TableComponent /></template>);
+    await render(<template><TableComponent /></template>)
 
     assert
       .dom('[data-test-header="h1"]')
-      .hasText('My Header', 'renders a string header');
-    assert.dom('[data-test-header-badge]').exists('renders a component header');
-  });
-});
+      .hasText('My Header', 'renders a string header')
+    assert.dom('[data-test-header-badge]').exists('renders a component header')
+  })
+})

@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -12,17 +12,17 @@ import {
   createColumnHelper,
   type Row,
   type Cell,
-} from '#src/index.ts';
-import type { TOC } from '@ember/component/template-only';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import type { TOC } from '@ember/component/template-only'
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   rowExpandingFeature,
   columnVisibilityFeature,
   expandedRowModel: createExpandedRowModel(),
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -46,64 +46,64 @@ const columns = columnHelper.columns([
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
   }),
-]);
+])
 
 // --- Sub-component rendered in the expanded detail row ---
 
 interface SubComponentSignature {
-  Args: { row: Row<typeof features, Person> };
+  Args: { row: Row<typeof features, Person> }
 }
 
 const SubComponent: TOC<SubComponentSignature> = <template>
   <pre class="code-block" style="font-size: 10px">
     <code>{{jsonify @row}}</code>
   </pre>
-</template>;
+</template>
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
 const getVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getVisibleCells();
+): Array<Cell<typeof features, Person>> => row.getVisibleCells()
 const getCanExpand = (row: Row<typeof features, Person>): boolean =>
-  row.getCanExpand();
+  row.getCanExpand()
 const getIsExpanded = (row: Row<typeof features, Person>): boolean =>
-  row.getIsExpanded();
+  row.getIsExpanded()
 const toggleExpanded = (row: Row<typeof features, Person>) => () =>
-  row.toggleExpanded();
+  row.toggleExpanded()
 const jsonify = (row: Row<typeof features, Person>): string =>
-  JSON.stringify(row.original, null, 2);
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+  JSON.stringify(row.original, null, 2)
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 export default class SubComponentsTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
+  @tracked data: Array<Person> = makeData(20)
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
     getRowCanExpand: () => true,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get visibleColumnCount() {
-    return this.table.getVisibleLeafColumns().length;
+    return this.table.getVisibleLeafColumns().length
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   regenerateData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   <template>
     <div class="demo-root">

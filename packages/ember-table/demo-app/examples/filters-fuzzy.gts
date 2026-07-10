@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -23,20 +23,20 @@ import {
   type FilterFn,
   type SortFn,
   type TableFeatures,
-} from '#src/index.ts';
-import { compareItems, rankItem } from '@tanstack/match-sorter-utils';
-import { makeData, type Person } from '../utils/make-data';
-import type { RankingInfo } from '@tanstack/match-sorter-utils';
+} from '#src/index.ts'
+import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
+import { makeData, type Person } from '../utils/make-data'
+import type { RankingInfo } from '@tanstack/match-sorter-utils'
 
 // --- Fuzzy filter/sort meta ---
 // The `filterMeta` slot on the feature set stores the `RankingInfo` produced by
 // `rankItem` so the fuzzy sort can compare rows by relevance.
 
 interface FuzzyFilterMeta {
-  itemRank?: RankingInfo;
+  itemRank?: RankingInfo
 }
 
-type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta };
+type FuzzyFeatures = TableFeatures & { filterMeta: FuzzyFilterMeta }
 
 // The fuzzy filter ranks the cell value against the search term and stores the
 // ranking on the row's filter meta (so the sort can reuse it). It tolerates
@@ -47,22 +47,22 @@ const fuzzyFilter: FilterFn<FuzzyFeatures, Person> = (
   value,
   addMeta,
 ) => {
-  const itemRank = rankItem(row.getValue(columnId), value as string);
-  addMeta?.({ itemRank });
-  return itemRank.passed;
-};
+  const itemRank = rankItem(row.getValue(columnId), value as string)
+  addMeta?.({ itemRank })
+  return itemRank.passed
+}
 
 // When a global filter is active, sort by the stored rank so the best matches
 // float to the top. Falls back to alphanumeric when ranks tie.
 const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
-  let dir = 0;
-  const rankA = rowA.columnFiltersMeta[columnId]?.itemRank;
-  const rankB = rowB.columnFiltersMeta[columnId]?.itemRank;
+  let dir = 0
+  const rankA = rowA.columnFiltersMeta[columnId]?.itemRank
+  const rankB = rowB.columnFiltersMeta[columnId]?.itemRank
   if (rankA && rankB) {
-    dir = compareItems(rankA, rankB);
+    dir = compareItems(rankA, rankB)
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir;
-};
+  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+}
 
 const features = tableFeatures({
   columnFilteringFeature,
@@ -75,9 +75,9 @@ const features = tableFeatures({
   filterFns: { ...filterFns, fuzzy: fuzzyFilter },
   sortFns: { ...sortFns, fuzzy: fuzzySort },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -97,119 +97,119 @@ const columns = columnHelper.columns([
   columnHelper.accessor('visits', { header: () => 'Visits' }),
   columnHelper.accessor('status', { header: 'Status' }),
   columnHelper.accessor('progress', { header: 'Profile Progress' }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort();
+  column.getCanSort()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+  obj[key] ?? ''
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 const toggleSort = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
-    column.getToggleSortingHandler()?.(event);
-  };
-};
+    column.getToggleSortingHandler()?.(event)
+  }
+}
 
 export default class FiltersFuzzyTable extends Component {
-  @tracked data: Array<Person> = makeData(2_000);
+  @tracked data: Array<Person> = makeData(2_000)
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
     globalFilterFn: 'fuzzy',
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   get globalFilterValue(): string {
-    return (this.table.store.state.globalFilter as string | undefined) ?? '';
+    return (this.table.store.state.globalFilter as string | undefined) ?? ''
   }
 
   get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
+    const indicators: Record<string, string> = {}
     for (const hg of this.table.getHeaderGroups()) {
       for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
+        const sorted = h.column.getIsSorted()
         indicators[h.column.id] =
-          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : '';
+          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : ''
       }
     }
-    return indicators;
+    return indicators
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get currentPage() {
-    return (this.table.store.state.pagination.pageIndex + 1).toLocaleString();
+    return (this.table.store.state.pagination.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get pageSize() {
-    return this.table.store.state.pagination.pageSize;
+    return this.table.store.state.pagination.pageSize
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   regenerateData = () => {
-    this.data = makeData(2_000);
-  };
+    this.data = makeData(2_000)
+  }
 
   stressTest = () => {
-    this.data = makeData(50_000);
-  };
+    this.data = makeData(50_000)
+  }
 
   handleGlobalFilter = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    this.table.setGlobalFilter(target.value);
-  };
+    const target = event.currentTarget as HTMLInputElement
+    this.table.setGlobalFilter(target.value)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

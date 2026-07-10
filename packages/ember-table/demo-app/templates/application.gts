@@ -1,39 +1,39 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
-import { pageTitle } from 'ember-page-title';
-import { BasicAppTable } from '../examples/basic-table.gts';
-import BasicExternalStateTable from '../examples/basic-external-state.gts';
-import ColumnGroupsTable from '../examples/column-groups.gts';
-import ColumnVisibilityTable from '../examples/column-visibility.gts';
-import ColumnOrderingTable from '../examples/column-ordering.gts';
-import ColumnPinningTable from '../examples/column-pinning.gts';
-import ColumnPinningStickyTable from '../examples/column-pinning-sticky.gts';
-import ColumnPinningSplitTable from '../examples/column-pinning-split.gts';
-import ColumnSizingTable from '../examples/column-sizing.gts';
-import ColumnResizingTable from '../examples/column-resizing.gts';
-import ColumnResizingPerformantTable from '../examples/column-resizing-performant.gts';
-import SortingTable from '../examples/sorting.gts';
-import FiltersTable from '../examples/filters.gts';
-import FiltersFacetedTable from '../examples/filters-faceted.gts';
-import FiltersFuzzyTable from '../examples/filters-fuzzy.gts';
-import PaginationTable from '../examples/pagination.gts';
-import RowSelectionTable from '../examples/row-selection.gts';
-import ExpandingTable from '../examples/expanding.gts';
-import SubComponentsTable from '../examples/sub-components.gts';
-import RowPinningTable from '../examples/row-pinning.gts';
-import GroupingTable from '../examples/grouping.gts';
-import EditableTable from '../examples/editable.gts';
-import CustomPluginTable from '../examples/custom-plugin.gts';
-import RowDndTable from '../examples/row-dnd.gts';
-import RemoteDataTable from '../examples/remote-data.gts';
-import KitchenSinkTable from '../examples/kitchen-sink.gts';
-import type { ComponentLike } from '@glint/template';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
+import { pageTitle } from 'ember-page-title'
+import { BasicAppTable } from '../examples/basic-table.gts'
+import BasicExternalStateTable from '../examples/basic-external-state.gts'
+import ColumnGroupsTable from '../examples/column-groups.gts'
+import ColumnVisibilityTable from '../examples/column-visibility.gts'
+import ColumnOrderingTable from '../examples/column-ordering.gts'
+import ColumnPinningTable from '../examples/column-pinning.gts'
+import ColumnPinningStickyTable from '../examples/column-pinning-sticky.gts'
+import ColumnPinningSplitTable from '../examples/column-pinning-split.gts'
+import ColumnSizingTable from '../examples/column-sizing.gts'
+import ColumnResizingTable from '../examples/column-resizing.gts'
+import ColumnResizingPerformantTable from '../examples/column-resizing-performant.gts'
+import SortingTable from '../examples/sorting.gts'
+import FiltersTable from '../examples/filters.gts'
+import FiltersFacetedTable from '../examples/filters-faceted.gts'
+import FiltersFuzzyTable from '../examples/filters-fuzzy.gts'
+import PaginationTable from '../examples/pagination.gts'
+import RowSelectionTable from '../examples/row-selection.gts'
+import ExpandingTable from '../examples/expanding.gts'
+import SubComponentsTable from '../examples/sub-components.gts'
+import RowPinningTable from '../examples/row-pinning.gts'
+import GroupingTable from '../examples/grouping.gts'
+import EditableTable from '../examples/editable.gts'
+import CustomPluginTable from '../examples/custom-plugin.gts'
+import RowDndTable from '../examples/row-dnd.gts'
+import RemoteDataTable from '../examples/remote-data.gts'
+import KitchenSinkTable from '../examples/kitchen-sink.gts'
+import type { ComponentLike } from '@glint/template'
 
 interface Example {
-  id: string;
-  label: string;
-  component: ComponentLike;
+  id: string
+  label: string
+  component: ComponentLike
 }
 
 const EXAMPLES: Array<Example> = [
@@ -123,40 +123,40 @@ const EXAMPLES: Array<Example> = [
   },
   { id: 'remote-data', label: 'Remote Data', component: RemoteDataTable },
   { id: 'kitchen-sink', label: 'Kitchen Sink', component: KitchenSinkTable },
-];
+]
 
-const eq = (a: unknown, b: unknown): boolean => a === b;
+const eq = (a: unknown, b: unknown): boolean => a === b
 
-const QUERY_PARAM = 'example';
+const QUERY_PARAM = 'example'
 
 function exampleIdFromUrl(): string {
-  const id = new URLSearchParams(window.location.search).get(QUERY_PARAM);
-  return EXAMPLES.some((example) => example.id === id) ? id! : EXAMPLES[0]!.id;
+  const id = new URLSearchParams(window.location.search).get(QUERY_PARAM)
+  return EXAMPLES.some((example) => example.id === id) ? id! : EXAMPLES[0]!.id
 }
 
 function writeExampleIdToUrl(id: string): void {
-  const url = new URL(window.location.href);
+  const url = new URL(window.location.href)
   if (id === EXAMPLES[0]!.id) {
-    url.searchParams.delete(QUERY_PARAM);
+    url.searchParams.delete(QUERY_PARAM)
   } else {
-    url.searchParams.set(QUERY_PARAM, id);
+    url.searchParams.set(QUERY_PARAM, id)
   }
-  window.history.replaceState(null, '', url);
+  window.history.replaceState(null, '', url)
 }
 
 export default class Application extends Component {
-  @tracked activeId: string = exampleIdFromUrl();
+  @tracked activeId: string = exampleIdFromUrl()
 
   get activeExample(): Example {
     return (
       EXAMPLES.find((example) => example.id === this.activeId) ?? EXAMPLES[0]!
-    );
+    )
   }
 
   selectExample = (example: Example) => () => {
-    this.activeId = example.id;
-    writeExampleIdToUrl(example.id);
-  };
+    this.activeId = example.id
+    writeExampleIdToUrl(example.id)
+  }
 
   <template>
     {{pageTitle "Ember Table Demo"}}

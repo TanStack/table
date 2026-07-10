@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -24,9 +24,9 @@ import {
   type Cell,
   type CellContext,
   type GroupingState,
-} from '#src/index.ts';
-import type { ComponentLike, ContentValue } from '@glint/template';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import type { ComponentLike, ContentValue } from '@glint/template'
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   columnGroupingFeature,
@@ -39,9 +39,9 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   aggregationFns,
   filterFns,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -92,17 +92,17 @@ const columns = columnHelper.columns([
       }),
     ]),
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Aggregated cell renderer (renders aggregatedCell ?? cell) ---
 
-type RenderArgs = Record<string, unknown> | undefined;
+type RenderArgs = Record<string, unknown> | undefined
 
 interface AggregatedCellSignature {
-  Args: { cell: Cell<typeof features, Person> };
-  Element: null;
+  Args: { cell: Cell<typeof features, Person> }
+  Element: null
 }
 
 class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
@@ -111,54 +111,54 @@ class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
     | number
     | null
     | FlexRenderComponentConfig<typeof features, Person> {
-    const cell = this.args.cell;
+    const cell = this.args.cell
     const def =
-      cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell;
+      cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell
     return flexRender(def, cell.getContext()) as
       | string
       | number
       | null
-      | FlexRenderComponentConfig<typeof features, Person>;
+      | FlexRenderComponentConfig<typeof features, Person>
   }
 
   get resolvedContext(): CellContext<typeof features, Person, unknown> {
-    return this.args.cell.getContext();
+    return this.args.cell.getContext()
   }
 
   get isComponent(): boolean {
-    return this.result instanceof FlexRenderComponentConfig;
+    return this.result instanceof FlexRenderComponentConfig
   }
 
   get componentToRender():
     | ComponentLike<{
         Args: {
-          ctx: CellContext<typeof features, Person, unknown>;
-          args?: RenderArgs;
-        };
+          ctx: CellContext<typeof features, Person, unknown>
+          args?: RenderArgs
+        }
       }>
     | undefined {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component as ComponentLike<{
         Args: {
-          ctx: CellContext<typeof features, Person, unknown>;
-          args?: RenderArgs;
-        };
-      }>;
+          ctx: CellContext<typeof features, Person, unknown>
+          args?: RenderArgs
+        }
+      }>
     }
-    return undefined;
+    return undefined
   }
 
   get componentArgs(): RenderArgs {
-    const result = this.result;
+    const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args;
+      return result.args
     }
-    return undefined;
+    return undefined
   }
 
   get content(): ContentValue {
-    return this.result as ContentValue;
+    return this.result as ContentValue
   }
 
   <template>
@@ -177,37 +177,37 @@ class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
 
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const getCanGroup = (column: Column<typeof features, Person>): boolean =>
-  column.getCanGroup();
+  column.getCanGroup()
 const getIsGrouped = (column: Column<typeof features, Person>): boolean =>
-  column.getIsGrouped();
+  column.getIsGrouped()
 const getGroupedIndex = (column: Column<typeof features, Person>): number =>
-  column.getGroupedIndex();
+  column.getGroupedIndex()
 const cellIsGrouped = (cell: Cell<typeof features, Person>): boolean =>
-  cell.getIsGrouped();
+  cell.getIsGrouped()
 const cellIsAggregated = (cell: Cell<typeof features, Person>): boolean =>
-  cell.getIsAggregated();
+  cell.getIsAggregated()
 const cellIsPlaceholder = (cell: Cell<typeof features, Person>): boolean =>
-  cell.getIsPlaceholder();
+  cell.getIsPlaceholder()
 const rowIsExpanded = (row: Row<typeof features, Person>): boolean =>
-  row.getIsExpanded();
+  row.getIsExpanded()
 const rowCanExpand = (row: Row<typeof features, Person>): boolean =>
-  row.getCanExpand();
+  row.getCanExpand()
 const subRowCount = (row: Row<typeof features, Person>): string =>
-  row.subRows.length.toLocaleString();
+  row.subRows.length.toLocaleString()
 
 const toggleGrouping = (column: Column<typeof features, Person>) => () =>
-  column.toggleGrouping();
+  column.toggleGrouping()
 const toggleExpanded = (row: Row<typeof features, Person>) => () =>
-  row.toggleExpanded();
+  row.toggleExpanded()
 
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 export default class GroupingTable extends Component {
-  @tracked data: Array<Person> = makeData(1_000);
-  @tracked grouping: GroupingState = [];
+  @tracked data: Array<Person> = makeData(1_000)
+  @tracked grouping: GroupingState = []
 
   table = useTable(() => ({
     features,
@@ -219,62 +219,62 @@ export default class GroupingTable extends Component {
     },
     onGroupingChange: (updater) => {
       this.grouping =
-        typeof updater === 'function' ? updater(this.grouping) : updater;
+        typeof updater === 'function' ? updater(this.grouping) : updater
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pagination() {
-    return this.table.store.state.pagination;
+    return this.table.store.state.pagination
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   regenerateData = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

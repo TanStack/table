@@ -1,7 +1,7 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
-import { htmlSafe, type SafeString } from '@ember/template';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
+import { htmlSafe, type SafeString } from '@ember/template'
 import {
   useTable,
   FlexRenderCell,
@@ -14,15 +14,15 @@ import {
   type Row,
   type Cell,
   type ColumnPinningPosition,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   columnPinningFeature,
   columnSizingFeature,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -58,39 +58,39 @@ const columns = columnHelper.columns([
     footer: (props) => props.column.id,
     size: 180,
   }),
-]);
+])
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
 const getVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 
 const getCanPin = (column: Column<typeof features, Person>): boolean =>
-  column.getCanPin();
+  column.getCanPin()
 
 const getIsPinned = (
   column: Column<typeof features, Person>,
-): ColumnPinningPosition => column.getIsPinned();
+): ColumnPinningPosition => column.getIsPinned()
 
 const isPinnedLeft = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'left';
+  column.getIsPinned() === 'left'
 
 const isPinnedRight = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'right';
+  column.getIsPinned() === 'right'
 
 const getStart = (column: Column<typeof features, Person>): number =>
-  column.getStart('left');
+  column.getStart('left')
 
 const getAfter = (column: Column<typeof features, Person>): number =>
-  column.getAfter('right');
+  column.getAfter('right')
 
 const getSize = (column: Column<typeof features, Person>): number =>
-  column.getSize();
+  column.getSize()
 
 const pinningStyle = (column: Column<typeof features, Person>): SafeString => {
-  const isPinned = getIsPinned(column);
-  const parts: Array<string> = [`width:${getSize(column)}px`];
+  const isPinned = getIsPinned(column)
+  const parts: Array<string> = [`width:${getSize(column)}px`]
 
   if (isPinned === 'left') {
     parts.push(
@@ -100,7 +100,7 @@ const pinningStyle = (column: Column<typeof features, Person>): SafeString => {
       'opacity:0.97',
       'background:#f5f5f5',
       'box-shadow:-4px 0 4px -4px gray inset',
-    );
+    )
   } else if (isPinned === 'right') {
     parts.push(
       'position:sticky',
@@ -109,23 +109,23 @@ const pinningStyle = (column: Column<typeof features, Person>): SafeString => {
       'opacity:0.97',
       'background:#f5f5f5',
       'box-shadow:4px 0 4px -4px gray inset',
-    );
+    )
   } else {
-    parts.push('position:relative');
+    parts.push('position:relative')
   }
 
-  return htmlSafe(parts.join(';'));
-};
+  return htmlSafe(parts.join(';'))
+}
 
 const pin = (
   column: Column<typeof features, Person>,
   side: ColumnPinningPosition,
 ) => {
-  return () => column.pin(side);
-};
+  return () => column.pin(side)
+}
 
 export default class ColumnPinningStickyTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
+  @tracked data: Array<Person> = makeData(20)
 
   table = useTable(() => ({
     features,
@@ -137,35 +137,35 @@ export default class ColumnPinningStickyTable extends Component {
         right: ['progress'],
       },
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get totalSizeStyle(): SafeString {
-    return htmlSafe(`width:${this.table.getTotalSize()}px`);
+    return htmlSafe(`width:${this.table.getTotalSize()}px`)
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   regenerateData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   resetPinning = () => {
-    this.table.resetColumnPinning();
-  };
+    this.table.resetColumnPinning()
+  }
 
   <template>
     <div class="demo-root">

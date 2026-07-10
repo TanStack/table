@@ -3,17 +3,17 @@
  * It's only for the local editing experience
  * (and linting)
  */
-const { buildMacros } = require('@embroider/macros/babel');
+const { buildMacros } = require('@embroider/macros/babel')
 
 const {
   babelCompatSupport,
   templateCompatSupport,
-} = require('@embroider/compat/babel');
+} = require('@embroider/compat/babel')
 
-const macros = buildMacros();
+const macros = buildMacros()
 
 // For scenario testing
-const isCompat = Boolean(process.env.ENABLE_COMPAT_BUILD);
+const isCompat = Boolean(process.env.ENABLE_COMPAT_BUILD)
 
 module.exports = {
   plugins: [
@@ -47,4 +47,4 @@ module.exports = {
   generatorOpts: {
     compact: false,
   },
-};
+}

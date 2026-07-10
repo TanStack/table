@@ -1,22 +1,22 @@
-import { faker } from '@faker-js/faker';
+import { faker } from '@faker-js/faker'
 
 export type Person = {
-  firstName: string;
-  lastName: string;
-  age: number;
-  visits: number;
-  progress: number;
-  status: 'relationship' | 'complicated' | 'single';
-  subRows?: Array<Person>;
-};
+  firstName: string
+  lastName: string
+  age: number
+  visits: number
+  progress: number
+  status: 'relationship' | 'complicated' | 'single'
+  subRows?: Array<Person>
+}
 
 const range = (len: number) => {
-  const arr: Array<number> = [];
+  const arr: Array<number> = []
   for (let i = 0; i < len; i++) {
-    arr.push(i);
+    arr.push(i)
   }
-  return arr;
-};
+  return arr
+}
 
 const newPerson = (): Person => {
   return {
@@ -30,18 +30,18 @@ const newPerson = (): Person => {
       'complicated',
       'single',
     ])[0]!,
-  };
-};
+  }
+}
 
 export function makeData(...lens: Array<number>) {
   const makeDataLevel = (depth = 0): Array<Person> => {
-    const len = lens[depth] ?? 0;
+    const len = lens[depth] ?? 0
     return range(len).map((): Person => {
       return {
         ...newPerson(),
         subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
-      };
-    });
-  };
-  return makeDataLevel();
+      }
+    })
+  }
+  return makeDataLevel()
 }

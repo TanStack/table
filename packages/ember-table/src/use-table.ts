@@ -1,15 +1,15 @@
-import { constructTable } from '@tanstack/table-core';
-import { untrack } from '@glimmer/validator';
-import { emberReactivity } from './reactivity.ts';
-import { computed, subscribeNoEffect } from './signal.ts';
+import { constructTable } from '@tanstack/table-core'
+import { untrack } from '@glimmer/validator'
+import { emberReactivity } from './reactivity.ts'
+import { computed, subscribeNoEffect } from './signal.ts'
 import type {
   RowData,
   Table,
   TableFeatures,
   TableOptions,
   TableState,
-} from '@tanstack/table-core';
-import type { Atom, ReadonlyAtom, ReadonlyStore } from '@tanstack/store';
+} from '@tanstack/table-core'
+import type { Atom, ReadonlyAtom, ReadonlyStore } from '@tanstack/store'
 
 // Internal table slots used by the pull-based options/state wiring below.
 // `Table_Internal` is not exported from the table-core build, so the shape is
@@ -19,24 +19,24 @@ interface TableInternals<
   TData extends RowData,
 > {
   optionsStore?: {
-    get(): TableOptions<TFeatures, TData>;
-    set(value: () => TableOptions<TFeatures, TData>): void;
-  };
-  baseAtoms: Record<string, { get(): unknown }>;
-  atoms: Record<string, unknown>;
+    get(): TableOptions<TFeatures, TData>
+    set(value: () => TableOptions<TFeatures, TData>): void
+  }
+  baseAtoms: Record<string, { get(): unknown }>
+  atoms: Record<string, unknown>
 }
 
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(getOptions: () => TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
-  const reactivity = emberReactivity();
+  const reactivity = emberReactivity()
 
   // Creates reactive read only signal for options
-  const userOptions = computed(getOptions);
+  const userOptions = computed(getOptions)
 
   // Untracked to prevent possible "set on same computation as read" errors in Ember.
-  const initialOptions = untrack(() => userOptions.get());
+  const initialOptions = untrack(() => userOptions.get())
 
   const table = constructTable<TFeatures, TData>({
     ...initialOptions,
@@ -51,12 +51,12 @@ export function useTable<
       ...defaultOptions,
       ...newOptions,
     }),
-  }) as Table<TFeatures, TData> & TableInternals<TFeatures, TData>;
+  }) as Table<TFeatures, TData> & TableInternals<TFeatures, TData>
 
-  const optionsStore = table.optionsStore!;
+  const optionsStore = table.optionsStore!
 
   const liveOptions = computed(() => {
-    const stored = optionsStore.get();
+    const stored = optionsStore.get()
     return {
       ...stored,
       ...userOptions.get(),
@@ -65,8 +65,8 @@ export function useTable<
       // options.
       features: stored.features,
       atoms: stored.atoms,
-    };
-  });
+    }
+  })
 
   /**
    * This is to get around core table not using lazy access so we need to re-wrap
@@ -78,17 +78,17 @@ export function useTable<
     enumerable: true,
     get: () => liveOptions.get(),
     set: (value: TableOptions<TFeatures, TData>) => {
-      optionsStore.set(() => value);
+      optionsStore.set(() => value)
     },
-  });
+  })
 
-  const atoms: Record<string, ReadonlyAtom<unknown>> = table.atoms;
-  const stateKeys = Object.keys(table.baseAtoms);
+  const atoms: Record<string, ReadonlyAtom<unknown>> = table.atoms
+  const stateKeys = Object.keys(table.baseAtoms)
 
   for (const key of stateKeys) {
     const baseAtom = (table.baseAtoms as Record<string, ReadonlyAtom<unknown>>)[
       key
-    ]!;
+    ]!
 
     /**
      * Original atoms could cause effects for top level properties
@@ -100,20 +100,20 @@ export function useTable<
       () => {
         const externalAtom = (
           table.options.atoms as Record<string, Atom<unknown>> | undefined
-        )?.[key];
+        )?.[key]
         if (externalAtom) {
-          return externalAtom.get();
+          return externalAtom.get()
         }
         const stateSlice = (
           table.options.state as Record<string, unknown> | undefined
-        )?.[key];
+        )?.[key]
         if (stateSlice !== undefined) {
-          return stateSlice;
+          return stateSlice
         }
-        return baseAtom.get();
+        return baseAtom.get()
       },
       { debugName: `table/atoms/${key}` },
-    );
+    )
   }
 
   const stateProxy: TableState<TFeatures> = new Proxy(
@@ -132,7 +132,7 @@ export function useTable<
             }
           : undefined,
     },
-  ) as TableState<TFeatures>;
+  ) as TableState<TFeatures>
 
   /**
    * Store is reasigned to point to proxy object to allow individual state slices to be independently reactive.
@@ -140,15 +140,15 @@ export function useTable<
    * Type cast is needed because we are setting during construction
    * Table store is readonly after first initialization.
    */
-  (
+  ;(
     table as { store: Omit<ReadonlyStore<TableState<TFeatures>>, 'atom'> }
   ).store = {
     get: () => stateProxy,
     get state() {
-      return stateProxy;
+      return stateProxy
     },
     subscribe: subscribeNoEffect,
-  };
+  }
 
-  return table;
+  return table
 }

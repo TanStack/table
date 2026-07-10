@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -14,34 +14,34 @@ import {
   type Cell,
   type PaginationState,
   type SortingState,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
-import type Owner from '@ember/owner';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
+import type Owner from '@ember/owner'
 
 // --- Dep-free simulated async "server" -------------------------------------
 // A fixed in-memory dataset stands in for a remote backend. `fetchData`
 // resolves after a small delay with a manually sorted + sliced page, mirroring
 // what a paginated/sorted API endpoint would return.
 
-const fakeServer: Array<Person> = makeData(1_000);
+const fakeServer: Array<Person> = makeData(1_000)
 
 interface FetchParams {
-  pageIndex: number;
-  pageSize: number;
-  sorting: SortingState;
+  pageIndex: number
+  pageSize: number
+  sorting: SortingState
 }
 
 interface FetchResult {
-  rows: Array<Person>;
-  pageCount: number;
-  total: number;
+  rows: Array<Person>
+  pageCount: number
+  total: number
 }
 
 function compareValues(a: unknown, b: unknown): number {
   if (typeof a === 'number' && typeof b === 'number') {
-    return a - b;
+    return a - b
   }
-  return String(a).localeCompare(String(b));
+  return String(a).localeCompare(String(b))
 }
 
 function fetchData({
@@ -51,29 +51,29 @@ function fetchData({
 }: FetchParams): Promise<FetchResult> {
   return new Promise((resolve) => {
     setTimeout(() => {
-      const rows = [...fakeServer];
+      const rows = [...fakeServer]
 
       if (sorting.length) {
-        const [sort] = sorting;
+        const [sort] = sorting
         if (sort) {
-          const key = sort.id as keyof Person;
+          const key = sort.id as keyof Person
           rows.sort((a, b) => {
-            const result = compareValues(a[key], b[key]);
-            return sort.desc ? -result : result;
-          });
+            const result = compareValues(a[key], b[key])
+            return sort.desc ? -result : result
+          })
         }
       }
 
-      const start = pageIndex * pageSize;
-      const paged = rows.slice(start, start + pageSize);
+      const start = pageIndex * pageSize
+      const paged = rows.slice(start, start + pageSize)
 
       resolve({
         rows: paged,
         pageCount: Math.ceil(fakeServer.length / pageSize),
         total: fakeServer.length,
-      });
-    }, 500);
-  });
+      })
+    }, 500)
+  })
 }
 
 // --- Table setup -----------------------------------------------------------
@@ -81,9 +81,9 @@ function fetchData({
 const features = tableFeatures({
   rowPaginationFeature,
   rowSortingFeature,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -106,39 +106,39 @@ const columns = columnHelper.columns([
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
   }),
-]);
+])
 
-const PAGE_SIZES = [10, 20, 30, 40, 50];
+const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Template helpers (v9 methods need explicit `this`) ---
 
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort();
+  column.getCanSort()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? '';
-const not = (value: unknown): boolean => !value;
-const eq = (a: unknown, b: unknown): boolean => String(a) === String(b);
+  obj[key] ?? ''
+const not = (value: unknown): boolean => !value
+const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 const toggleSort = (column: Column<typeof features, Person>) => {
   return (event: Event) => {
-    column.getToggleSortingHandler()?.(event);
-  };
-};
+    column.getToggleSortingHandler()?.(event)
+  }
+}
 
 export default class RemoteDataTable extends Component {
-  @tracked data: Array<Person> = [];
-  @tracked isLoading = false;
-  @tracked rowCount = 0;
-  @tracked pageCountValue = 0;
-  @tracked sorting: SortingState = [{ id: 'age', desc: false }];
-  @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 };
+  @tracked data: Array<Person> = []
+  @tracked isLoading = false
+  @tracked rowCount = 0
+  @tracked pageCountValue = 0
+  @tracked sorting: SortingState = [{ id: 'age', desc: false }]
+  @tracked pagination: PaginationState = { pageIndex: 0, pageSize: 10 }
 
   constructor(owner: Owner, args: object) {
-    super(owner, args);
-    void this.load();
+    super(owner, args)
+    void this.load()
   }
 
   table = useTable(() => ({
@@ -155,105 +155,105 @@ export default class RemoteDataTable extends Component {
     },
     onSortingChange: (updater) => {
       this.sorting =
-        typeof updater === 'function' ? updater(this.sorting) : updater;
+        typeof updater === 'function' ? updater(this.sorting) : updater
       // reset to the first page on a sort change, then refetch
-      this.pagination = { ...this.pagination, pageIndex: 0 };
-      void this.load();
+      this.pagination = { ...this.pagination, pageIndex: 0 }
+      void this.load()
     },
     onPaginationChange: (updater) => {
       this.pagination =
-        typeof updater === 'function' ? updater(this.pagination) : updater;
-      void this.load();
+        typeof updater === 'function' ? updater(this.pagination) : updater
+      void this.load()
     },
-  }));
+  }))
 
   load = async () => {
-    this.isLoading = true;
+    this.isLoading = true
     const result = await fetchData({
       pageIndex: this.pagination.pageIndex,
       pageSize: this.pagination.pageSize,
       sorting: this.sorting,
-    });
-    this.data = result.rows;
-    this.rowCount = result.total;
-    this.pageCountValue = result.pageCount;
-    this.isLoading = false;
-  };
+    })
+    this.data = result.rows
+    this.rowCount = result.total
+    this.pageCountValue = result.pageCount
+    this.isLoading = false
+  }
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {};
+    const indicators: Record<string, string> = {}
     for (const hg of this.table.getHeaderGroups()) {
       for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted();
+        const sorted = h.column.getIsSorted()
         indicators[h.column.id] =
-          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : '';
+          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : ''
       }
     }
-    return indicators;
+    return indicators
   }
 
   get canPreviousPage() {
-    return this.table.getCanPreviousPage();
+    return this.table.getCanPreviousPage()
   }
 
   get canNextPage() {
-    return this.table.getCanNextPage();
+    return this.table.getCanNextPage()
   }
 
   get pageCount() {
-    return this.table.getPageCount();
+    return this.table.getPageCount()
   }
 
   get currentPage() {
-    return (this.pagination.pageIndex + 1).toLocaleString();
+    return (this.pagination.pageIndex + 1).toLocaleString()
   }
 
   get pageCountDisplay() {
-    return this.table.getPageCount().toLocaleString();
+    return this.table.getPageCount().toLocaleString()
   }
 
   get currentPageInputValue() {
-    return String(this.pagination.pageIndex + 1);
+    return String(this.pagination.pageIndex + 1)
   }
 
   get pageSizes() {
-    return PAGE_SIZES;
+    return PAGE_SIZES
   }
 
   goToFirstPage = () => {
-    this.table.setPageIndex(0);
-  };
+    this.table.setPageIndex(0)
+  }
 
   goToPreviousPage = () => {
-    this.table.previousPage();
-  };
+    this.table.previousPage()
+  }
 
   goToNextPage = () => {
-    this.table.nextPage();
-  };
+    this.table.nextPage()
+  }
 
   goToLastPage = () => {
-    this.table.setPageIndex(this.table.getPageCount() - 1);
-  };
+    this.table.setPageIndex(this.table.getPageCount() - 1)
+  }
 
   handleGoToPage = (event: Event) => {
-    const target = event.currentTarget as HTMLInputElement;
-    const page = target.value ? Number(target.value) - 1 : 0;
-    this.table.setPageIndex(page);
-  };
+    const target = event.currentTarget as HTMLInputElement
+    const page = target.value ? Number(target.value) - 1 : 0
+    this.table.setPageIndex(page)
+  }
 
   handlePageSizeChange = (event: Event) => {
-    const target = event.currentTarget as HTMLSelectElement;
-    this.table.setPageSize(Number(target.value));
-  };
+    const target = event.currentTarget as HTMLSelectElement
+    this.table.setPageSize(Number(target.value))
+  }
 
   <template>
     <div class="demo-root">

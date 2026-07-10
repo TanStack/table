@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked, cached } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked, cached } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -13,12 +13,12 @@ import {
   type Row,
   type Cell,
   type Header,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
-const features = tableFeatures({ columnSizingFeature, columnResizingFeature });
+const features = tableFeatures({ columnSizingFeature, columnResizingFeature })
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.group({
@@ -59,7 +59,7 @@ const columns = columnHelper.columns([
       }),
     ]),
   }),
-]);
+])
 
 // --- Template helpers ---
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
@@ -67,27 +67,27 @@ const columns = columnHelper.columns([
 // module-scope helpers that call methods on the correct object.
 
 const getIsResizing = (column: Column<typeof features, Person>): boolean =>
-  column.getIsResizing();
+  column.getIsResizing()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 const resetSize = (column: Column<typeof features, Person>) => {
-  return () => column.resetSize();
-};
+  return () => column.resetSize()
+}
 const getResizeHandler = (header: Header<typeof features, Person>) => {
-  return (event: Event) => header.getResizeHandler()?.(event);
-};
+  return (event: Event) => header.getResizeHandler()?.(event)
+}
 
 // Instead of reading a per-cell `getSize()` on every render (very expensive for
 // large tables), sizes are published once as CSS variables on the table wrapper
 // and each header/cell reads its width from the matching variable by id.
 const headerWidthStyle = (header: Header<typeof features, Person>): string =>
-  `width: calc(var(--header-${header.id}-size) * 1px)`;
+  `width: calc(var(--header-${header.id}-size) * 1px)`
 const colWidthStyle = (cell: Cell<typeof features, Person>): string =>
-  `width: calc(var(--col-${cell.column.id}-size) * 1px)`;
+  `width: calc(var(--col-${cell.column.id}-size) * 1px)`
 
 export default class ColumnResizingPerformantTable extends Component {
-  @tracked data: Array<Person> = makeData(50);
+  @tracked data: Array<Person> = makeData(50)
 
   table = useTable(() => ({
     features,
@@ -98,26 +98,26 @@ export default class ColumnResizingPerformantTable extends Component {
       minSize: 60,
       maxSize: 800,
     },
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get totalSize() {
-    return this.table.getTotalSize();
+    return this.table.getTotalSize()
   }
 
   get rowCount() {
-    return this.data.length.toLocaleString();
+    return this.data.length.toLocaleString()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   /**
@@ -129,29 +129,29 @@ export default class ColumnResizingPerformantTable extends Component {
   @cached
   get columnSizeVars(): string {
     // Establish a reactive dependency on the current column sizing state.
-    void this.table.store.state.columnSizing;
-    const headers = this.table.getFlatHeaders();
-    const parts: Array<string> = [];
-    let i = headers.length;
+    void this.table.store.state.columnSizing
+    const headers = this.table.getFlatHeaders()
+    const parts: Array<string> = []
+    let i = headers.length
     while (--i >= 0) {
-      const header = headers[i]!;
-      parts.push(`--header-${header.id}-size: ${header.getSize()}`);
-      parts.push(`--col-${header.column.id}-size: ${header.column.getSize()}`);
+      const header = headers[i]!
+      parts.push(`--header-${header.id}-size: ${header.getSize()}`)
+      parts.push(`--col-${header.column.id}-size: ${header.column.getSize()}`)
     }
-    return parts.join('; ');
+    return parts.join('; ')
   }
 
   get tableStyle(): string {
-    return `${this.columnSizeVars}; width: ${this.totalSize}px`;
+    return `${this.columnSizeVars}; width: ${this.totalSize}px`
   }
 
   regenerateData = () => {
-    this.data = makeData(50);
-  };
+    this.data = makeData(50)
+  }
 
   stressTest = () => {
-    this.data = makeData(2_000);
-  };
+    this.data = makeData(2_000)
+  }
 
   <template>
     <div class="demo-root">

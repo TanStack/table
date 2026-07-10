@@ -33,4 +33,4 @@ module.exports = {
   generatorOpts: {
     compact: false,
   },
-};
+}

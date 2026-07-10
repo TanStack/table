@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -9,12 +9,12 @@ import {
   createColumnHelper,
   type Row,
   type Cell,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
-const features = tableFeatures({});
+const features = tableFeatures({})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.display({
@@ -43,19 +43,19 @@ const columns = columnHelper.columns([
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
   }),
-]);
+])
 
 // --- Template helpers (v9 methods need explicit `this`) ---
 
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 
 export default class RowDndTable extends Component {
-  @tracked data: Array<Person> = makeData(15);
+  @tracked data: Array<Person> = makeData(15)
 
   // Row index of the item currently being dragged.
-  draggedIndex: number | null = null;
+  draggedIndex: number | null = null
 
   table = useTable(() => ({
     features,
@@ -63,14 +63,14 @@ export default class RowDndTable extends Component {
     data: this.data,
     // Person has no natural id, so use the stable row index.
     getRowId: (_row: Person, index: number) => String(index),
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get sortedIds() {
@@ -78,47 +78,47 @@ export default class RowDndTable extends Component {
       this.data.map((row) => `${row.firstName} ${row.lastName}`),
       null,
       2,
-    );
+    )
   }
 
   dragStart = (index: number) => (event: DragEvent) => {
-    this.draggedIndex = index;
+    this.draggedIndex = index
     if (event.dataTransfer) {
-      event.dataTransfer.effectAllowed = 'move';
+      event.dataTransfer.effectAllowed = 'move'
       // Firefox requires data to be set for the drag to start.
-      event.dataTransfer.setData('text/plain', String(index));
+      event.dataTransfer.setData('text/plain', String(index))
     }
-  };
+  }
 
   handleDragOver = (event: DragEvent) => {
-    event.preventDefault();
+    event.preventDefault()
     if (event.dataTransfer) {
-      event.dataTransfer.dropEffect = 'move';
+      event.dataTransfer.dropEffect = 'move'
     }
-  };
+  }
 
   drop = (targetIndex: number) => (event: DragEvent) => {
-    event.preventDefault();
-    const from = this.draggedIndex;
-    this.draggedIndex = null;
+    event.preventDefault()
+    const from = this.draggedIndex
+    this.draggedIndex = null
     if (from === null || from === targetIndex) {
-      return;
+      return
     }
-    const next = [...this.data];
-    const [moved] = next.splice(from, 1);
+    const next = [...this.data]
+    const [moved] = next.splice(from, 1)
     if (moved) {
-      next.splice(targetIndex, 0, moved);
+      next.splice(targetIndex, 0, moved)
     }
-    this.data = next;
-  };
+    this.data = next
+  }
 
   handleDragEnd = () => {
-    this.draggedIndex = null;
-  };
+    this.draggedIndex = null
+  }
 
   regenerateData = () => {
-    this.data = makeData(15);
-  };
+    this.data = makeData(15)
+  }
 
   <template>
     <div class="demo-root">

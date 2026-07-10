@@ -1,7 +1,7 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
-import type { TOC } from '@ember/component/template-only';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
+import type { TOC } from '@ember/component/template-only'
 import {
   useTable,
   FlexRenderCell,
@@ -14,14 +14,14 @@ import {
   type Cell,
   type Header,
   type ColumnPinningPosition,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   columnPinningFeature,
-});
+})
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -45,48 +45,48 @@ const columns = columnHelper.columns([
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
   }),
-]);
+])
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
 const getLeftVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getLeftVisibleCells();
+): Array<Cell<typeof features, Person>> => row.getLeftVisibleCells()
 
 const getCenterVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getCenterVisibleCells();
+): Array<Cell<typeof features, Person>> => row.getCenterVisibleCells()
 
 const getRightVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getRightVisibleCells();
+): Array<Cell<typeof features, Person>> => row.getRightVisibleCells()
 
 const getCanPin = (column: Column<typeof features, Person>): boolean =>
-  column.getCanPin();
+  column.getCanPin()
 
 const getIsPinned = (
   column: Column<typeof features, Person>,
-): ColumnPinningPosition => column.getIsPinned();
+): ColumnPinningPosition => column.getIsPinned()
 
 const isPinnedLeft = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'left';
+  column.getIsPinned() === 'left'
 
 const isPinnedRight = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'right';
+  column.getIsPinned() === 'right'
 
 const pin = (
   column: Column<typeof features, Person>,
   side: ColumnPinningPosition,
 ) => {
-  return () => column.pin(side);
-};
+  return () => column.pin(side)
+}
 
 // --- Reusable header cell (label + pin controls) ---
 
 interface PinHeaderSignature {
   Args: {
-    header: Header<typeof features, Person>;
-  };
+    header: Header<typeof features, Person>
+  }
 }
 
 const PinHeader: TOC<PinHeaderSignature> = <template>
@@ -117,10 +117,10 @@ const PinHeader: TOC<PinHeaderSignature> = <template>
       </div>
     {{/if}}
   {{/unless}}
-</template>;
+</template>
 
 export default class ColumnPinningSplitTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
+  @tracked data: Array<Person> = makeData(20)
 
   table = useTable(() => ({
     features,
@@ -132,35 +132,35 @@ export default class ColumnPinningSplitTable extends Component {
         right: ['progress'],
       },
     },
-  }));
+  }))
 
   get leftHeaderGroups() {
-    return this.table.getLeftHeaderGroups();
+    return this.table.getLeftHeaderGroups()
   }
 
   get centerHeaderGroups() {
-    return this.table.getCenterHeaderGroups();
+    return this.table.getCenterHeaderGroups()
   }
 
   get rightHeaderGroups() {
-    return this.table.getRightHeaderGroups();
+    return this.table.getRightHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   regenerateData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   <template>
     <div class="demo-root">

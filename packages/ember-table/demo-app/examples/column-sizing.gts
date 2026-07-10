@@ -1,6 +1,6 @@
-import Component from '@glimmer/component';
-import { tracked } from '@glimmer/tracking';
-import { on } from '@ember/modifier';
+import Component from '@glimmer/component'
+import { tracked } from '@glimmer/tracking'
+import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
@@ -13,15 +13,15 @@ import {
   type Row,
   type Cell,
   type Header,
-} from '#src/index.ts';
-import { makeData, type Person } from '../utils/make-data';
+} from '#src/index.ts'
+import { makeData, type Person } from '../utils/make-data'
 
 // This is not the Column Resizing Example, this is a simplified version that
 // just sets static column sizes via `size` on the column definitions.
 
-const features = tableFeatures({ columnSizingFeature });
+const features = tableFeatures({ columnSizingFeature })
 
-const columnHelper = createColumnHelper<typeof features, Person>();
+const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
@@ -58,7 +58,7 @@ const columns = columnHelper.columns([
     footer: (props) => props.column.id,
     size: 200,
   }),
-]);
+])
 
 // --- Template helpers ---
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
@@ -66,68 +66,68 @@ const columns = columnHelper.columns([
 // module-scope helpers that call methods on the correct object.
 
 const getHeaderSize = (header: Header<typeof features, Person>): number =>
-  header.getSize();
+  header.getSize()
 const getColumnSize = (column: Column<typeof features, Person>): number =>
-  column.getSize();
+  column.getSize()
 const getCellColumnSize = (cell: Cell<typeof features, Person>): number =>
-  cell.column.getSize();
+  cell.column.getSize()
 const getAllCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getAllCells();
+): Array<Cell<typeof features, Person>> => row.getAllCells()
 
 export default class ColumnSizingTable extends Component {
-  @tracked data: Array<Person> = makeData(20);
+  @tracked data: Array<Person> = makeData(20)
 
   table = useTable(() => ({
     features,
     columns,
     data: this.data,
-  }));
+  }))
 
   get headerGroups() {
-    return this.table.getHeaderGroups();
+    return this.table.getHeaderGroups()
   }
 
   get rows() {
-    return this.table.getRowModel().rows;
+    return this.table.getRowModel().rows
   }
 
   get footerGroups() {
-    return this.table.getFooterGroups();
+    return this.table.getFooterGroups()
   }
 
   get allColumns() {
-    return this.table.getAllColumns();
+    return this.table.getAllColumns()
   }
 
   get centerTotalSize() {
-    return this.table.getCenterTotalSize();
+    return this.table.getCenterTotalSize()
   }
 
   get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2);
+    return JSON.stringify(this.table.store.state, null, 2)
   }
 
   regenerateData = () => {
-    this.data = makeData(20);
-  };
+    this.data = makeData(20)
+  }
 
   stressTest = () => {
-    this.data = makeData(1_000);
-  };
+    this.data = makeData(1_000)
+  }
 
   setColumnSize = (columnId: string) => {
     // Don't actually do this to resize columns. This is just for demonstration
     // purposes. See the Column Resizing Example for how to do this with
     // dedicated resizing APIs efficiently.
     return (event: Event) => {
-      const target = event.target as HTMLInputElement;
+      const target = event.target as HTMLInputElement
       this.table.setColumnSizing({
         ...this.table.store.state.columnSizing,
         [columnId]: Number(target.value),
-      });
-    };
-  };
+      })
+    }
+  }
 
   <template>
     <div class="demo-root">
