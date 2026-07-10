@@ -9,7 +9,6 @@
     "src/**/*",
     "tests/**/*",
     "unpublished-development-types/**/*",
-    "demo-app/**/*"
   ],
   "compilerOptions": {
     "rootDir": ".",
