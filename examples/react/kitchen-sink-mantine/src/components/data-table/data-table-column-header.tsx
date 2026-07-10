@@ -108,16 +108,16 @@ export function ColumnHeader({ title }: { title?: string }): React.ReactNode {
                   <>
                     <Menu.Divider />
                     <Menu.Item
-                      disabled={pinned === 'left'}
+                      disabled={pinned === 'start'}
                       leftSection={<IconPinned size={16} />}
-                      onClick={() => column.pin('left')}
+                      onClick={() => column.pin('start')}
                     >
                       Pin left
                     </Menu.Item>
                     <Menu.Item
-                      disabled={pinned === 'right'}
+                      disabled={pinned === 'end'}
                       leftSection={<IconPinned size={16} />}
-                      onClick={() => column.pin('right')}
+                      onClick={() => column.pin('end')}
                     >
                       Pin right
                     </Menu.Item>

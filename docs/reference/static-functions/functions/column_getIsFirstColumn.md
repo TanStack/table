@@ -9,7 +9,7 @@ title: column_getIsFirstColumn
 function column_getIsFirstColumn<TFeatures, TData, TValue>(column, position?): boolean;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L59)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:110](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L110)
 
 Checks whether this column is the first visible column in a pinning region.
 
@@ -46,5 +46,5 @@ The same `position` semantics as `column_getIndex` apply.
 ## Example
 
 ```ts
-const isFirst = column_getIsFirstColumn(column, 'left')
+const isFirst = column_getIsFirstColumn(column, 'start')
 ```

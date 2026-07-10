@@ -3,19 +3,19 @@ id: Table_ColumnGrouping
 title: Table_ColumnGrouping
 ---
 
-# Interface: Table\_ColumnGrouping\<TFeatures, TData\>
+# Interface: Table\_ColumnGrouping\<_TFeatures, _TData\>
 
 Defined in: [features/column-grouping/columnGroupingFeature.types.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L199)
 
 ## Type Parameters
 
-### TFeatures
+### _TFeatures
 
-`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+`_TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
 
-### TData
+### _TData
 
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+`_TData` *extends* [`RowData`](../type-aliases/RowData.md)
 
 ## Properties
 

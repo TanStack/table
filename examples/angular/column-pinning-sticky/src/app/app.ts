@@ -82,8 +82,8 @@ export class App {
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
   readonly columnPinning = signal<ColumnPinningState>({
-    left: [],
-    right: [],
+    start: [],
+    end: [],
   })
   readonly split = signal(false)
 
@@ -106,9 +106,9 @@ export class App {
   ): Record<string, any> => {
     const isPinned = column.getIsPinned()
     const isLastLeftPinnedColumn =
-      isPinned === 'left' && column.getIsLastColumn('left')
+      isPinned === 'start' && column.getIsLastColumn('start')
     const isFirstRightPinnedColumn =
-      isPinned === 'right' && column.getIsFirstColumn('right')
+      isPinned === 'end' && column.getIsFirstColumn('end')
 
     return {
       boxShadow: isLastLeftPinnedColumn
@@ -116,8 +116,10 @@ export class App {
         : isFirstRightPinnedColumn
           ? '4px 0 4px -4px gray inset'
           : undefined,
-      left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-      right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+      insetInlineStart:
+        isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+      insetInlineEnd:
+        isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
       opacity: isPinned ? 0.95 : 1,
       position: isPinned ? 'sticky' : 'relative',
       width: `${column.getSize()}px`,

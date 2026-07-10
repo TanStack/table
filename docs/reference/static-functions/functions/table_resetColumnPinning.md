@@ -9,12 +9,12 @@ title: table_resetColumnPinning
 function table_resetColumnPinning<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:312](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L312)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:330](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L330)
 
 Resets `columnPinning` to the configured initial state or feature default.
 
 With no argument, the reset clones `table.initialState.columnPinning` when it
-exists. Passing `true` ignores initial state and resets to empty left/right
+exists. Passing `true` ignores initial state and resets to empty start/end
 arrays.
 
 ## Type Parameters

@@ -45,7 +45,7 @@
     @if (split()) {
       <table class="outlined-table">
         <thead>
-          @for (headerGroup of table.getLeftHeaderGroups(); track headerGroup.id) {
+          @for (headerGroup of table.getStartHeaderGroups(); track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th [attr.colSpan]="header.colSpan">
@@ -75,7 +75,7 @@
         <tbody>
           @for (row of table.getRowModel().rows | slice: 0 : 20; track row.id) {
             <tr>
-              @for (cell of row.getLeftVisibleCells(); track cell.id) {
+              @for (cell of row.getStartVisibleCells(); track cell.id) {
                 <td>
                   <ng-container
                     *flexRender="
@@ -152,7 +152,7 @@
     @if (split()) {
       <table class="outlined-table">
         <thead>
-          @for (headerGroup of table.getRightHeaderGroups(); track headerGroup.id) {
+          @for (headerGroup of table.getEndHeaderGroups(); track headerGroup.id) {
             <tr>
               @for (header of headerGroup.headers; track header.id) {
                 <th [attr.colSpan]="header.colSpan">
@@ -182,7 +182,7 @@
         <tbody>
           @for (row of table.getRowModel().rows | slice: 0 : 20; track row.id) {
             <tr>
-              @for (cell of row.getRightVisibleCells(); track cell.id) {
+              @for (cell of row.getEndVisibleCells(); track cell.id) {
                 <td>
                   <ng-container
                     *flexRender="
@@ -209,16 +209,16 @@
 <ng-template #headerContentTpl let-header>
   @if (!header.isPlaceholder && header.column.getCanPin()) {
     <div class="pin-actions">
-      @if (header.column.getIsPinned() !== 'left') {
-        <button class="pin-button" (click)="header.column.pin('left')"><=</button>
+      @if (header.column.getIsPinned() !== 'start') {
+        <button class="pin-button" (click)="header.column.pin('start')"><=</button>
       }
 
       @if (header.column.getIsPinned()) {
         <button class="pin-button" (click)="header.column.pin(false)">X</button>
       }
 
-      @if (header.column.getIsPinned() !== 'right') {
-        <button class="pin-button" (click)="header.column.pin('right')">=></button>
+      @if (header.column.getIsPinned() !== 'end') {
+        <button class="pin-button" (click)="header.column.pin('end')">=></button>
       }
     </div>
   }

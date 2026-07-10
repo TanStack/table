@@ -32,3 +32,19 @@ autoRemove: (val) => boolean;
 #### Returns
 
 `boolean`
+
+### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => string;
+```
+
+#### Parameters
+
+##### val
+
+`any`
+
+#### Returns
+
+`string`

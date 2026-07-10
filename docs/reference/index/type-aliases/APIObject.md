@@ -9,7 +9,7 @@ title: APIObject
 type APIObject<TDeps, TDepArgs> = Record<string, API<TDeps, TDepArgs>>;
 ```
 
-Defined in: [utils.ts:346](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L346)
+Defined in: [utils.ts:367](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L367)
 
 ## Type Parameters
 

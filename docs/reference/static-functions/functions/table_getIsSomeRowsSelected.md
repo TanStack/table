@@ -9,7 +9,7 @@ title: table_getIsSomeRowsSelected
 function table_getIsSomeRowsSelected<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:394](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L394)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:397](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L397)
 
 Checks whether selection is partially applied across filtered rows.
 

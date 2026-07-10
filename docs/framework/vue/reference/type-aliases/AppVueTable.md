@@ -3,13 +3,13 @@ id: AppVueTable
 title: AppVueTable
 ---
 
-# Type Alias: AppVueTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
+# Type Alias: AppVueTable\<TFeatures, TData, TTableComponents, _TCellComponents, _THeaderComponents\>
 
 ```ts
-type AppVueTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = VueTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
+type AppVueTable<TFeatures, TData, TTableComponents, _TCellComponents, _THeaderComponents> = VueTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:213](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L213)
+Defined in: [packages/vue-table/src/createTableHook.ts:212](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L212)
 
 ## Type Declaration
 
@@ -53,18 +53,14 @@ FlexRender: typeof AppFlexRender;
 
 `TData` *extends* `RowData`
 
-### TSelected
-
-`TSelected`
-
 ### TTableComponents
 
 `TTableComponents` *extends* `Record`\<`string`, [`ComponentType`](ComponentType.md)\<`any`\>\>
 
-### TCellComponents
+### _TCellComponents
 
-`TCellComponents` *extends* `Record`\<`string`, [`ComponentType`](ComponentType.md)\<`any`\>\>
+`_TCellComponents` *extends* `Record`\<`string`, [`ComponentType`](ComponentType.md)\<`any`\>\>
 
-### THeaderComponents
+### _THeaderComponents
 
-`THeaderComponents` *extends* `Record`\<`string`, [`ComponentType`](ComponentType.md)\<`any`\>\>
+`_THeaderComponents` *extends* `Record`\<`string`, [`ComponentType`](ComponentType.md)\<`any`\>\>

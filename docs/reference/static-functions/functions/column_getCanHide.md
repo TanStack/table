@@ -9,7 +9,7 @@ title: column_getCanHide
 function column_getCanHide<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L100)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L102)
 
 Checks whether this column is allowed to be hidden.
 

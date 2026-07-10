@@ -73,9 +73,9 @@ export const getCommonPinnedCellStyles = <TData extends MRT_RowData>({
           0.97,
         ),
         boxShadow: column
-          ? isPinned === 'left' && column.getIsLastColumn(isPinned)
+          ? isPinned === 'start' && column.getIsLastColumn(isPinned)
             ? `-4px 0 4px -4px ${alpha(theme.palette.grey[700], 0.5)} inset`
-            : isPinned === 'right' && column.getIsFirstColumn(isPinned)
+            : isPinned === 'end' && column.getIsFirstColumn(isPinned)
               ? `4px 0 4px -4px ${alpha(theme.palette.grey[700], 0.5)} inset`
               : undefined
           : undefined,
@@ -133,16 +133,14 @@ export const getCommonMRTCellStyles = <TData extends MRT_RowData>({
   const pinnedStyles = isColumnPinned
     ? {
         ...getCommonPinnedCellStyles({ column, table, theme }),
-        left:
-          isColumnPinned === 'left'
-            ? `${column.getStart('left')}px`
+        insetInlineStart:
+          isColumnPinned === 'start'
+            ? `${column.getStart('start')}px`
             : undefined,
         opacity: 0.97,
         position: 'sticky',
-        right:
-          isColumnPinned === 'right'
-            ? `${column.getAfter('right')}px`
-            : undefined,
+        insetInlineEnd:
+          isColumnPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
       }
     : {}
 

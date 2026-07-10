@@ -14,7 +14,7 @@ Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:42](htt
 Updates this column's visibility when hiding is allowed.
 
 Passing `visible` stores that value. Omitting it flips the column's current
-visibility state. Columns that cannot hide are left unchanged.
+visibility state. Columns that cannot hide are start unchanged.
 
 ## Type Parameters
 

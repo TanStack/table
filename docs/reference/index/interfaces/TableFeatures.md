@@ -700,3 +700,17 @@ ignored and stripped from the table's registered features at runtime — only
 its type is used, inferred wherever `TFeatures` flows.
 
 When omitted, the global declaration-merged `TableMeta` interface applies.
+
+***
+
+### workerRowModelsFeature?
+
+```ts
+optional workerRowModelsFeature: TableFeature;
+```
+
+Defined in: [worker/createTableWorker.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L23)
+
+#### Inherited from
+
+[`Plugins`](Plugins.md).[`workerRowModelsFeature`](Plugins.md#workerrowmodelsfeature)

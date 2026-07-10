@@ -3,7 +3,7 @@ id: Row_ColumnFiltering
 title: Row_ColumnFiltering
 ---
 
-# Interface: Row\_ColumnFiltering\<TFeatures, TData\>
+# Interface: Row\_ColumnFiltering\<TFeatures, _TData\>
 
 Defined in: [features/column-filtering/columnFilteringFeature.types.ts:166](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L166)
 
@@ -13,9 +13,9 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:166](http
 
 `TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
 
-### TData
+### _TData
 
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+`_TData` *extends* [`RowData`](../type-aliases/RowData.md)
 
 ## Properties
 

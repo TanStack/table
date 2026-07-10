@@ -181,7 +181,7 @@ const table = useTable({
   defaultColumn: { minSize: 200, maxSize: 800 },
   initialState: {
     columnOrder: columns.value.map((c) => c.id!),
-    columnPinning: { left: ['select'], right: [] },
+    columnPinning: { start: ['select'], end: [] },
     pagination: { pageIndex: 0, pageSize: 20 },
   },
   keepPinnedRows: true,
@@ -219,9 +219,9 @@ function getCommonPinningStyles(
 ): CSSProperties {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left')
+    isPinned === 'start' && column.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'right' && column.getIsFirstColumn('right')
+    isPinned === 'end' && column.getIsFirstColumn('end')
 
   return {
     boxShadow: isLastLeftPinnedColumn
@@ -229,8 +229,10 @@ function getCommonPinningStyles(
       : isFirstRightPinnedColumn
         ? '4px 0 4px -4px gray inset'
         : undefined,
-    left: isPinned === 'left' ? `${column.getStart('left')}px` : undefined,
-    right: isPinned === 'right' ? `${column.getAfter('right')}px` : undefined,
+    insetInlineStart:
+      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+    insetInlineEnd:
+      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
     opacity: isPinned ? 0.97 : 1,
     position: isPinned ? 'sticky' : 'relative',
     zIndex: isPinned ? 1 : 0,
@@ -418,9 +420,9 @@ function shuffleColumns() {
                         class="pin-actions"
                       >
                         <button
-                          v-if="header.column.getIsPinned() !== 'left'"
+                          v-if="header.column.getIsPinned() !== 'start'"
                           class="pin-button"
-                          @click="header.column.pin('left')"
+                          @click="header.column.pin('start')"
                         >
                           &lt;
                         </button>
@@ -432,9 +434,9 @@ function shuffleColumns() {
                           x
                         </button>
                         <button
-                          v-if="header.column.getIsPinned() !== 'right'"
+                          v-if="header.column.getIsPinned() !== 'end'"
                           class="pin-button"
-                          @click="header.column.pin('right')"
+                          @click="header.column.pin('end')"
                         >
                           &gt;
                         </button>

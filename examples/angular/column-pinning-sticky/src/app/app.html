@@ -60,16 +60,16 @@
 
                 @if (!header.isPlaceholder && header.column.getCanPin()) {
                   <div class="pin-actions">
-                    @if (header.column.getIsPinned() !== 'left') {
-                      <button class="pin-button" (click)="header.column.pin('left')"><=</button>
+                    @if (header.column.getIsPinned() !== 'start') {
+                      <button class="pin-button" (click)="header.column.pin('start')"><=</button>
                     }
 
                     @if (header.column.getIsPinned()) {
                       <button class="pin-button" (click)="header.column.pin(false)">X</button>
                     }
 
-                    @if (header.column.getIsPinned() !== 'right') {
-                      <button class="pin-button" (click)="header.column.pin('right')">=></button>
+                    @if (header.column.getIsPinned() !== 'end') {
+                      <button class="pin-button" (click)="header.column.pin('end')">=></button>
                     }
                   </div>
                 }

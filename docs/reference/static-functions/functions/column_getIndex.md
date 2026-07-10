@@ -9,11 +9,11 @@ title: column_getIndex
 function column_getIndex<TFeatures, TData, TValue>(column, position?): number;
 ```
 
-Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L37)
+Defined in: [features/column-ordering/columnOrderingFeature.utils.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-ordering/columnOrderingFeature.utils.ts#L76)
 
 Finds this column's index within a visible pinning region.
 
-Pass `'left'`, `'center'`, or `'right'` to search that region; omit the
+Pass `'start'`, `'center'`, or `'end'` to search that region; omit the
 position to search the full visible leaf column list.
 
 ## Type Parameters

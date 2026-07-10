@@ -9,7 +9,7 @@ title: table_resetColumnSizing
 function table_resetColumnSizing<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:294](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L294)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:353](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L353)
 
 Resets `columnSizing` to the configured initial state or feature default.
 

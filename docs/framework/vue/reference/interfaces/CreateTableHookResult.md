@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [packages/vue-table/src/createTableHook.ts:229](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L229)
+Defined in: [packages/vue-table/src/createTableHook.ts:227](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L227)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [packages/vue-table/src/createTableHook.ts:229](https://github.com/T
 appFeatures: TFeatures;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:236](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L236)
+Defined in: [packages/vue-table/src/createTableHook.ts:234](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L234)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:241](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L241)
+Defined in: [packages/vue-table/src/createTableHook.ts:239](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L239)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -65,10 +65,10 @@ the cell/header/footer render props expose the bound components.
 ### useAppTable()
 
 ```ts
-useAppTable: <TData>(tableOptions) => AppVueTable<TFeatures, TData, TableState<TFeatures>, TTableComponents, TCellComponents, THeaderComponents>;
+useAppTable: <TData>(tableOptions) => AppVueTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:251](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L251)
+Defined in: [packages/vue-table/src/createTableHook.ts:249](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L249)
 
 Creates a table with the `App*` wrapper components and registered
 `tableComponents` attached. `TData` is inferred from the `data` option.
@@ -87,7 +87,7 @@ Creates a table with the `App*` wrapper components and registered
 
 #### Returns
 
-[`AppVueTable`](../type-aliases/AppVueTable.md)\<`TFeatures`, `TData`, `TableState`\<`TFeatures`\>, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
+[`AppVueTable`](../type-aliases/AppVueTable.md)\<`TFeatures`, `TData`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
 
 ***
 
@@ -97,7 +97,7 @@ Creates a table with the `App*` wrapper components and registered
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:281](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L281)
+Defined in: [packages/vue-table/src/createTableHook.ts:277](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L277)
 
 Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 `cellComponents` and a context-bound `FlexRender`.
@@ -120,7 +120,7 @@ Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:292](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L292)
+Defined in: [packages/vue-table/src/createTableHook.ts:288](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L288)
 
 Reads the header provided by the nearest `<table.AppHeader>` /
 `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -141,10 +141,10 @@ context-bound `FlexRender`.
 ### useTableContext()
 
 ```ts
-useTableContext: <TData>() => AppVueTable<TFeatures, TData, TableState<TFeatures>, TTableComponents, TCellComponents, THeaderComponents>;
+useTableContext: <TData>() => AppVueTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:269](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L269)
+Defined in: [packages/vue-table/src/createTableHook.ts:266](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L266)
 
 Reads the table provided by the nearest `<table.AppTable>`. This is the same
 extended instance `useAppTable` returns, so the `App*` components and your
@@ -158,4 +158,4 @@ extended instance `useAppTable` returns, so the `App*` components and your
 
 #### Returns
 
-[`AppVueTable`](../type-aliases/AppVueTable.md)\<`TFeatures`, `TData`, `TableState`\<`TFeatures`\>, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
+[`AppVueTable`](../type-aliases/AppVueTable.md)\<`TFeatures`, `TData`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>

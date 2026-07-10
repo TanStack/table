@@ -9,7 +9,7 @@ title: filterFn_equalsStringSensitive
 const filterFn_equalsStringSensitive: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L108)
+Defined in: [fns/filterFns.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L117)
 
 Keeps rows whose stringified column value exactly equals the filter text.
 
@@ -32,3 +32,19 @@ autoRemove: (val) => boolean;
 #### Returns
 
 `boolean`
+
+### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => string;
+```
+
+#### Parameters
+
+##### val
+
+`any`
+
+#### Returns
+
+`string`

@@ -5,24 +5,24 @@ title: ColumnPinningState
 
 # Interface: ColumnPinningState
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:10](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L10)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L17)
 
 ## Properties
 
-### left
+### end
 
 ```ts
-left: string[];
+end: string[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L11)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L19)
 
 ***
 
-### right
+### start
 
 ```ts
-right: string[];
+start: string[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L12)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L18)

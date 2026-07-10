@@ -12,7 +12,7 @@ function aggregationFn_max<TFeatures, TData>(
    childRows): number | undefined;
 ```
 
-Defined in: [fns/aggregationFns.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L64)
+Defined in: [fns/aggregationFns.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L65)
 
 Finds the maximum numeric child-row value for a grouped column.
 

@@ -5,7 +5,7 @@ title: CachedRowModels_FeatureMap
 
 # Interface: CachedRowModels\_FeatureMap\<TFeatures, TData\>
 
-Defined in: [types/RowModel.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L14)
+Defined in: [types/RowModel.ts:11](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L11)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [types/RowModel.ts:14](https://github.com/TanStack/table/blob/main/p
 columnFacetingFeature: CachedRowModel_Faceted<TFeatures, TData>;
 ```
 
-Defined in: [types/RowModel.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L18)
+Defined in: [types/RowModel.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L15)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [types/RowModel.ts:18](https://github.com/TanStack/table/blob/main/p
 columnFilteringFeature: CachedRowModel_Filtered<TFeatures, TData>;
 ```
 
-Defined in: [types/RowModel.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L19)
+Defined in: [types/RowModel.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L16)
 
 ***
 
@@ -45,7 +45,7 @@ Defined in: [types/RowModel.ts:19](https://github.com/TanStack/table/blob/main/p
 columnGroupingFeature: CachedRowModel_Grouped<TFeatures, TData>;
 ```
 
-Defined in: [types/RowModel.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L21)
+Defined in: [types/RowModel.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L18)
 
 ***
 
@@ -55,7 +55,7 @@ Defined in: [types/RowModel.ts:21](https://github.com/TanStack/table/blob/main/p
 rowExpandingFeature: CachedRowModel_Expanded<TFeatures, TData>;
 ```
 
-Defined in: [types/RowModel.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L20)
+Defined in: [types/RowModel.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L17)
 
 ***
 
@@ -65,7 +65,7 @@ Defined in: [types/RowModel.ts:20](https://github.com/TanStack/table/blob/main/p
 rowPaginationFeature: CachedRowModel_Paginated<TFeatures, TData>;
 ```
 
-Defined in: [types/RowModel.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L22)
+Defined in: [types/RowModel.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L19)
 
 ***
 
@@ -75,4 +75,4 @@ Defined in: [types/RowModel.ts:22](https://github.com/TanStack/table/blob/main/p
 rowSortingFeature: CachedRowModel_Sorted<TFeatures, TData>;
 ```
 
-Defined in: [types/RowModel.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L23)
+Defined in: [types/RowModel.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModel.ts#L20)

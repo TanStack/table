@@ -6,8 +6,8 @@
 
   <div class="button-row">
     @for (column of table.getAllLeafColumns(); track column.id) {
-      <button class="demo-button" (click)="column.pin(column.getIsPinned() ? false : 'left')">
-        {{ column.id }}: {{ column.getIsPinned() || 'center' }}
+      <button class="demo-button" (click)="column.pin(column.getIsPinned() ? false : 'start')">
+        {{ column.id }}: {{ pinningLabel(column.getIsPinned()) }}
       </button>
     }
   </div>
@@ -15,14 +15,14 @@
   <div class="spacer-md"></div>
 
   <p class="demo-note">
-    This example takes advantage of the "splitting" APIs. (APIs that have "left", "center", and
-    "right" modifiers)
+    This example takes advantage of the "splitting" APIs. (APIs that have "start", "center", and
+    "end" modifiers)
   </p>
 
   <div class="split-tables">
     <table class="outlined-table">
       <thead>
-        @for (headerGroup of leftHeaderGroups(); track headerGroup.id) {
+        @for (headerGroup of startHeaderGroups(); track headerGroup.id) {
           <tr>
             @for (header of headerGroup.headers; track header.id) {
               <th [attr.colSpan]="header.colSpan">
@@ -35,7 +35,7 @@
       <tbody>
         @for (row of visibleRows(); track row.id) {
           <tr>
-            @for (cell of row.getLeftVisibleCells(); track cell.id) {
+            @for (cell of row.getStartVisibleCells(); track cell.id) {
               <td>
                 <ng-container *flexRenderCell="cell; let renderCell">
                   {{ renderCell }}
@@ -76,7 +76,7 @@
 
     <table class="outlined-table">
       <thead>
-        @for (headerGroup of rightHeaderGroups(); track headerGroup.id) {
+        @for (headerGroup of endHeaderGroups(); track headerGroup.id) {
           <tr>
             @for (header of headerGroup.headers; track header.id) {
               <th [attr.colSpan]="header.colSpan">
@@ -89,7 +89,7 @@
       <tbody>
         @for (row of visibleRows(); track row.id) {
           <tr>
-            @for (cell of row.getRightVisibleCells(); track cell.id) {
+            @for (cell of row.getEndVisibleCells(); track cell.id) {
               <td>
                 <ng-container *flexRenderCell="cell; let renderCell">
                   {{ renderCell }}
@@ -116,16 +116,16 @@
 
   @if (!header.isPlaceholder && header.column.getCanPin()) {
     <div class="pin-actions">
-      @if (header.column.getIsPinned() !== 'left') {
-        <button class="pin-button" (click)="header.column.pin('left')"><=</button>
+      @if (header.column.getIsPinned() !== 'start') {
+        <button class="pin-button" (click)="header.column.pin('start')"><=</button>
       }
 
       @if (header.column.getIsPinned()) {
         <button class="pin-button" (click)="header.column.pin(false)">X</button>
       }
 
-      @if (header.column.getIsPinned() !== 'right') {
-        <button class="pin-button" (click)="header.column.pin('right')">=></button>
+      @if (header.column.getIsPinned() !== 'end') {
+        <button class="pin-button" (click)="header.column.pin('end')">=></button>
       }
     </div>
   }

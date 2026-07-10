@@ -1,8 +1,8 @@
 import {
   table_getCenterHeaderGroups,
-  table_getLeftHeaderGroups,
+  table_getEndHeaderGroups,
   table_getPinnedVisibleLeafColumns,
-  table_getRightHeaderGroups,
+  table_getStartHeaderGroups,
 } from '../column-pinning/columnPinningFeature.utils'
 import {
   callMemoOrStaticFn,
@@ -125,7 +125,7 @@ function buildColumnOffsets<
  * @example
  * ```ts
  * const offsets = table_getColumnOffsets(table)
- * const leftOffset = offsets.left.starts[column.id]
+ * const startOffset = offsets.start.starts[column.id]
  * ```
  */
 export function table_getColumnOffsets<
@@ -143,13 +143,13 @@ export function table_getColumnOffsets<
         Column_Internal<TFeatures, TData, unknown>
       >,
     ),
-    left: buildColumnOffsets(
-      table_getPinnedVisibleLeafColumns(table, 'left') as Array<
+    start: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'start') as Array<
         Column_Internal<TFeatures, TData, unknown>
       >,
     ),
-    right: buildColumnOffsets(
-      table_getPinnedVisibleLeafColumns(table, 'right') as Array<
+    end: buildColumnOffsets(
+      table_getPinnedVisibleLeafColumns(table, 'end') as Array<
         Column_Internal<TFeatures, TData, unknown>
       >,
     ),
@@ -159,10 +159,10 @@ export function table_getColumnOffsets<
 function toOffsetsKey(
   position: ColumnPinningPosition | 'center' | undefined,
 ): keyof ColumnOffsetsByPosition {
-  return position === 'left'
-    ? 'left'
-    : position === 'right'
-      ? 'right'
+  return position === 'start'
+    ? 'start'
+    : position === 'end'
+      ? 'end'
       : position === 'center'
         ? 'center'
         : 'all' // undefined | false use the full visible list
@@ -172,11 +172,15 @@ function toOffsetsKey(
  * Computes the offset from the start edge of a pinning region to this column.
  *
  * The value is the sum of all previous visible leaf column sizes in the
- * requested `'left'`, `'center'`, or `'right'` region.
+ * requested `'start'`, `'center'`, or `'end'` region.
+ *
+ * `start` and `end` are logical positions. In LTR languages/layouts, `start`
+ * usually corresponds to left and `end` to right. In RTL languages/layouts,
+ * `start` usually corresponds to right and `end` to left.
  *
  * @example
  * ```ts
- * const leftOffset = column_getStart(column, 'left')
+ * const startOffset = column_getStart(column, 'start')
  * ```
  */
 export function column_getStart<
@@ -203,7 +207,7 @@ export function column_getStart<
  *
  * @example
  * ```ts
- * const rightOffset = column_getAfter(column, 'right')
+ * const endOffset = column_getAfter(column, 'end')
  * ```
  */
 export function column_getAfter<
@@ -364,7 +368,7 @@ export function table_resetColumnSizing<
 /**
  * Sums the rendered size of the full table header row.
  *
- * This includes left, center, and right columns in the main header group.
+ * This includes start, center, and end columns in the main header group.
  *
  * @example
  * ```ts
@@ -383,24 +387,24 @@ export function table_getTotalSize<
 }
 
 /**
- * Sums the rendered size of the left pinned header region.
+ * Sums the rendered size of the logical start pinned header region.
  *
- * An empty left pinning region returns `0`.
+ * An empty start pinning region returns `0`.
  *
  * @example
  * ```ts
- * const width = table_getLeftTotalSize(table)
+ * const width = table_getStartTotalSize(table)
  * ```
  */
-export function table_getLeftTotalSize<
+export function table_getStartTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
     callMemoOrStaticFn(
       table,
-      'getLeftHeaderGroups',
-      table_getLeftHeaderGroups,
+      'getStartHeaderGroups',
+      table_getStartHeaderGroups,
     )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
       return sum + header_getSize(header)
     }, 0) ?? 0
@@ -433,24 +437,24 @@ export function table_getCenterTotalSize<
 }
 
 /**
- * Sums the rendered size of the right pinned header region.
+ * Sums the rendered size of the logical end pinned header region.
  *
- * An empty right pinning region returns `0`.
+ * An empty end pinning region returns `0`.
  *
  * @example
  * ```ts
- * const width = table_getRightTotalSize(table)
+ * const width = table_getEndTotalSize(table)
  * ```
  */
-export function table_getRightTotalSize<
+export function table_getEndTotalSize<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return (
     callMemoOrStaticFn(
       table,
-      'getRightHeaderGroups',
-      table_getRightHeaderGroups,
+      'getEndHeaderGroups',
+      table_getEndHeaderGroups,
     )[0]?.headers.reduce((sum: number, header: Header<TFeatures, TData>) => {
       return sum + header_getSize(header)
     }, 0) ?? 0

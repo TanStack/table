@@ -9,7 +9,7 @@ title: filterFns
 const filterFns: object;
 ```
 
-Defined in: [fns/filterFns.ts:367](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L367)
+Defined in: [fns/filterFns.ts:431](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L431)
 
 The built-in filter function registry.
 
@@ -209,6 +209,22 @@ autoRemove: (val) => boolean;
 
 `boolean`
 
+##### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => string;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`string`
+
 ### includesString
 
 ```ts
@@ -233,6 +249,22 @@ autoRemove: (val) => boolean;
 
 `boolean`
 
+##### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => string;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`string`
+
 ### includesStringSensitive
 
 ```ts
@@ -256,6 +288,22 @@ autoRemove: (val) => boolean;
 ###### Returns
 
 `boolean`
+
+##### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => string;
+```
+
+###### Parameters
+
+###### val
+
+`any`
+
+###### Returns
+
+`string`
 
 ### inNumberRange
 

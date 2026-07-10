@@ -9,7 +9,7 @@ title: table_setColumnResizing
 function table_setColumnResizing<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-resizing/columnResizingFeature.utils.ts:278](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L278)
+Defined in: [features/column-resizing/columnResizingFeature.utils.ts:347](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-resizing/columnResizingFeature.utils.ts#L347)
 
 Routes a transient column resizing updater through the table's resize handler.
 

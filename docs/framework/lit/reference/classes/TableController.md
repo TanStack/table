@@ -5,7 +5,7 @@ title: TableController
 
 # Class: TableController\<TFeatures, TData\>
 
-Defined in: [packages/lit-table/src/TableController.ts:117](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L117)
+Defined in: [packages/lit-table/src/TableController.ts:118](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L118)
 
 A Lit ReactiveController for TanStack Table integration.
 
@@ -56,7 +56,7 @@ class MyTable extends LitElement {
 new TableController<TFeatures, TData>(host): TableController<TFeatures, TData>;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:128](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L128)
+Defined in: [packages/lit-table/src/TableController.ts:132](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L132)
 
 #### Parameters
 
@@ -76,7 +76,7 @@ Defined in: [packages/lit-table/src/TableController.ts:128](https://github.com/T
 host: ReactiveControllerHost;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:121](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L121)
+Defined in: [packages/lit-table/src/TableController.ts:122](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L122)
 
 ## Methods
 
@@ -86,7 +86,7 @@ Defined in: [packages/lit-table/src/TableController.ts:121](https://github.com/T
 hostConnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:210](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L210)
+Defined in: [packages/lit-table/src/TableController.ts:238](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L238)
 
 Called when the host is connected to the component tree. For custom
 element hosts, this corresponds to the `connectedCallback()` lifecycle,
@@ -110,7 +110,7 @@ ReactiveController.hostConnected
 hostDisconnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:214](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L214)
+Defined in: [packages/lit-table/src/TableController.ts:242](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L242)
 
 Called when the host is disconnected from the component tree. For custom
 element hosts, this corresponds to the `disconnectedCallback()` lifecycle,
@@ -135,7 +135,7 @@ ReactiveController.hostDisconnected
 table<TSelected>(tableOptions, selector?): LitTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [packages/lit-table/src/TableController.ts:148](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L148)
+Defined in: [packages/lit-table/src/TableController.ts:152](https://github.com/TanStack/table/blob/main/packages/lit-table/src/TableController.ts#L152)
 
 Returns the Lit-backed table instance for the current render pass.
 

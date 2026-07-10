@@ -3,13 +3,13 @@ id: AppSolidTable
 title: AppSolidTable
 ---
 
-# Type Alias: AppSolidTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
+# Type Alias: AppSolidTable\<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents\>
 
 ```ts
-type AppSolidTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = SolidTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
+type AppSolidTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = SolidTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [createTableHook.tsx:346](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L346)
+Defined in: [createTableHook.tsx:345](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L345)
 
 Extended table API returned by createAppTable with all App wrapper components
 
@@ -105,10 +105,6 @@ Renders cell, header, or footer content from column definitions.
 ### TData
 
 `TData` *extends* `RowData`
-
-### TSelected
-
-`TSelected`
 
 ### TTableComponents
 

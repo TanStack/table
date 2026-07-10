@@ -28,9 +28,9 @@ const getCommonPinningStyles = (
 ): string => {
   const isPinned = column.getIsPinned()
   const isLastLeftPinnedColumn =
-    isPinned === 'left' && column.getIsLastColumn('left')
+    isPinned === 'start' && column.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'right' && column.getIsFirstColumn('right')
+    isPinned === 'end' && column.getIsFirstColumn('end')
 
   const boxShadow = isLastLeftPinnedColumn
     ? '-4px 0 4px -4px gray inset'
@@ -40,8 +40,10 @@ const getCommonPinningStyles = (
 
   const styles: Array<string> = []
   if (boxShadow) styles.push(`box-shadow: ${boxShadow}`)
-  if (isPinned === 'left') styles.push(`left: ${column.getStart('left')}px`)
-  if (isPinned === 'right') styles.push(`right: ${column.getAfter('right')}px`)
+  if (isPinned === 'start')
+    styles.push(`inset-inline-start: ${column.getStart('start')}px`)
+  if (isPinned === 'end')
+    styles.push(`inset-inline-end: ${column.getAfter('end')}px`)
   styles.push(`opacity: ${isPinned ? '0.95' : '1'}`)
   styles.push(`position: ${isPinned ? 'sticky' : 'relative'}`)
   styles.push(`width: ${column.getSize()}px`)

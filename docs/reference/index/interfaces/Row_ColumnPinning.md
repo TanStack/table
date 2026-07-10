@@ -5,7 +5,7 @@ title: Row_ColumnPinning
 
 # Interface: Row\_ColumnPinning\<TFeatures, TData\>
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L69)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L80)
 
 ## Type Parameters
 
@@ -25,25 +25,9 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:69](https://g
 getCenterVisibleCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:76](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L76)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L87)
 
-Gets visible row cells whose columns are not pinned left or right.
-
-#### Returns
-
-[`Cell`](../type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
-
-***
-
-### getLeftVisibleCells()
-
-```ts
-getLeftVisibleCells: () => Cell<TFeatures, TData, unknown>[];
-```
-
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:80](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L80)
-
-Gets visible row cells whose columns are pinned left.
+Gets visible row cells whose columns are not pinned start or end.
 
 #### Returns
 
@@ -51,15 +35,31 @@ Gets visible row cells whose columns are pinned left.
 
 ***
 
-### getRightVisibleCells()
+### getEndVisibleCells()
 
 ```ts
-getRightVisibleCells: () => Cell<TFeatures, TData, unknown>[];
+getEndVisibleCells: () => Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L84)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L95)
 
-Gets visible row cells whose columns are pinned right.
+Gets visible row cells whose columns are pinned to logical end.
+
+#### Returns
+
+[`Cell`](../type-aliases/Cell.md)\<`TFeatures`, `TData`, `unknown`\>[]
+
+***
+
+### getStartVisibleCells()
+
+```ts
+getStartVisibleCells: () => Cell<TFeatures, TData, unknown>[];
+```
+
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L91)
+
+Gets visible row cells whose columns are pinned to logical start.
 
 #### Returns
 

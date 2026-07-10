@@ -9,12 +9,12 @@ title: row_getVisibleCells
 function row_getVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L146)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:148](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L148)
 
 Collects the cells from this row whose columns are visible.
 
-When column pinning is active, the result is ordered as left-pinned cells,
-center cells, then right-pinned cells.
+When column pinning is active, the result is ordered as start-pinned cells,
+center cells, then end-pinned cells.
 
 ## Type Parameters
 

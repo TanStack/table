@@ -9,7 +9,7 @@ title: ExtractColumnMeta
 type ExtractColumnMeta<TFeatures, TData, TValue> = IsAny<TFeatures> extends true ? ColumnMeta<TFeatures, TData, TValue> : TFeatures extends object ? TMeta : ColumnMeta<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/ColumnDef.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L32)
+Defined in: [types/ColumnDef.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L33)
 
 Resolves the type of `columnDef.meta` for a feature set.
 

@@ -32,7 +32,7 @@ No features are included.
 optional _cellPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L165)
+Defined in: [core/table/coreTablesFeature.types.ts:166](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L166)
 
 Prototype cache for Cell objects - shared by all cells in this table
 
@@ -48,7 +48,7 @@ Prototype cache for Cell objects - shared by all cells in this table
 optional _columnPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:169](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L169)
+Defined in: [core/table/coreTablesFeature.types.ts:170](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L170)
 
 Prototype cache for Column objects - shared by all columns in this table
 
@@ -64,7 +64,7 @@ Prototype cache for Column objects - shared by all columns in this table
 readonly _features: Partial<CoreFeatures> & TFeatures;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L173)
+Defined in: [core/table/coreTablesFeature.types.ts:174](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L174)
 
 The features that are enabled for the table.
 
@@ -80,7 +80,7 @@ The features that are enabled for the table.
 optional _headerPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L177)
+Defined in: [core/table/coreTablesFeature.types.ts:178](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L178)
 
 Prototype cache for Header objects - shared by all headers in this table
 
@@ -96,7 +96,7 @@ Prototype cache for Header objects - shared by all headers in this table
 readonly _reactivity: TableReactivityBindings;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L161)
+Defined in: [core/table/coreTablesFeature.types.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L162)
 
 Table reactivity bindings for interacting with TanStack Store.
 
@@ -112,7 +112,7 @@ Table reactivity bindings for interacting with TanStack Store.
 readonly _rowModelFns: RowModelFns<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L181)
+Defined in: [core/table/coreTablesFeature.types.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L182)
 
 The row model processing functions that are used to process the data by features.
 
@@ -128,7 +128,7 @@ The row model processing functions that are used to process the data by features
 readonly _rowModels: CachedRowModels<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:185](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L185)
+Defined in: [core/table/coreTablesFeature.types.ts:186](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L186)
 
 The row models that are enabled for the table.
 
@@ -144,7 +144,7 @@ The row models that are enabled for the table.
 optional _rowPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L189)
+Defined in: [core/table/coreTablesFeature.types.ts:190](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L190)
 
 Prototype cache for Row objects - shared by all rows in this table
 
@@ -160,7 +160,7 @@ Prototype cache for Row objects - shared by all rows in this table
 readonly atoms: Atoms<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L195)
+Defined in: [core/table/coreTablesFeature.types.ts:196](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L196)
 
 The readonly derived atoms for each `TableState` slice. Each derives from
 its corresponding `baseAtom` plus, optionally, a per-slice external atom or
@@ -178,7 +178,7 @@ external state value (precedence: external atom > external state > base atom).
 readonly baseAtoms: BaseAtoms<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L200)
+Defined in: [core/table/coreTablesFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L201)
 
 The internal writable atoms for each `TableState` slice. This is the library's
 single write surface — all state mutations from features land here.
@@ -324,7 +324,7 @@ Returns a single column by its ID.
 getCoreRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L35)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L34)
 
 Returns the core row model before any processing has been applied.
 
@@ -366,7 +366,7 @@ Resolves built-in, feature-level, and user-defined default column options.
 getExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L121)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L120)
 
 Resolves the row model after expanded rows have been flattened into view.
 
@@ -388,7 +388,7 @@ Table_RowModels.getExpandedRowModel
 getFacetedMinMaxValues: () => [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L36)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L35)
 
 Computes min/max numeric facet values for the active faceting context.
 
@@ -412,7 +412,7 @@ Table_RowModels.getFacetedMinMaxValues
 getFacetedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L42)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L41)
 
 Computes the row model used to derive facet values.
 
@@ -436,7 +436,7 @@ Table_RowModels.getFacetedRowModel
 getFacetedUniqueValues: () => Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L48)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L47)
 
 Computes unique facet values and occurrence counts.
 
@@ -586,7 +586,7 @@ Collects only leaf headers, excluding parent/group headers.
 getPaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L126)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L125)
 
 Resolves the row model after pagination has sliced the current page.
 
@@ -608,7 +608,7 @@ Table_RowModels.getPaginatedRowModel
 getPreExpandedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.types.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L125)
+Defined in: [features/row-expanding/rowExpandingFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.types.ts#L124)
 
 Reads the row model immediately before expansion.
 
@@ -674,7 +674,7 @@ Table_RowModels.getPreGroupedRowModel
 getPrePaginatedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-pagination/rowPaginationFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L130)
+Defined in: [features/row-pagination/rowPaginationFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L129)
 
 Reads the row model immediately before pagination.
 
@@ -718,7 +718,7 @@ Table_RowModels.getPreSortedRowModel
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L116)
+Defined in: [core/rows/coreRowsFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L121)
 
 Returns the row with the given ID.
 
@@ -748,7 +748,7 @@ Returns the row with the given ID.
 getRowId: (_, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L112)
+Defined in: [core/rows/coreRowsFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L117)
 
 #### Parameters
 
@@ -780,7 +780,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:112](https://github.com/TanStack
 getRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/coreRowModelsFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L39)
+Defined in: [core/row-models/coreRowModelsFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/coreRowModelsFeature.types.ts#L38)
 
 Returns the final model after all processing from other used features has been applied. This is the row model that is most commonly used for rendering.
 
@@ -824,7 +824,7 @@ Table_RowModels.getSortedRowModel
 readonly initialState: ExtractFeatureMapTypes<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:204](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L204)
+Defined in: [core/table/coreTablesFeature.types.ts:205](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L205)
 
 This is the resolved initial state of the table.
 
@@ -840,7 +840,7 @@ This is the resolved initial state of the table.
 readonly options: TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L208)
+Defined in: [core/table/coreTablesFeature.types.ts:209](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L209)
 
 A read-only reference to the table's current options.
 
@@ -856,7 +856,7 @@ A read-only reference to the table's current options.
 readonly optional optionsStore: Atom<TableOptions<TFeatures, TData>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:214](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L214)
+Defined in: [core/table/coreTablesFeature.types.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L215)
 
 Writable atom for table options. Only created when `createOptionsStore` is
 true on the active core reactivity bindings. Adapters that opt out keep
@@ -874,7 +874,7 @@ options as plain resolved data instead of backing them with an atom.
 reset: () => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L233)
+Defined in: [core/table/coreTablesFeature.types.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L234)
 
 Resets the table's internal base atoms to `table.initialState`.
 
@@ -898,7 +898,7 @@ reset behavior.
 setOptions: (newOptions) => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:238](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L238)
+Defined in: [core/table/coreTablesFeature.types.ts:239](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L239)
 
 Updates the table options by applying a value or updater to the current
 resolved options and then merging them through `options.mergeOptions`.
@@ -925,7 +925,7 @@ resolved options and then merging them through `options.mergeOptions`.
 readonly store: ReadonlyStore<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L219)
+Defined in: [core/table/coreTablesFeature.types.ts:220](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L220)
 
 The readonly flat store for the table state. Derives from `table.atoms`
 only; never reads external state directly.

@@ -154,10 +154,10 @@ function App() {
                         </div>
                         {!header.isPlaceholder && header.column.getCanPin() && (
                           <div class="pin-actions">
-                            {header.column.getIsPinned() !== 'left' ? (
+                            {header.column.getIsPinned() !== 'start' ? (
                               <button
                                 class="pin-button"
-                                onClick={() => header.column.pin('left')}
+                                onClick={() => header.column.pin('start')}
                               >
                                 {'<='}
                               </button>
@@ -170,10 +170,10 @@ function App() {
                                 X
                               </button>
                             ) : null}
-                            {header.column.getIsPinned() !== 'right' ? (
+                            {header.column.getIsPinned() !== 'end' ? (
                               <button
                                 class="pin-button"
-                                onClick={() => header.column.pin('right')}
+                                onClick={() => header.column.pin('end')}
                               >
                                 {'=>'}
                               </button>

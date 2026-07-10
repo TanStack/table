@@ -42,8 +42,8 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 export class App {
   readonly data = signal(makeData(20))
   readonly columnPinning = signal<ColumnPinningState>({
-    left: ['firstName'],
-    right: ['progress'],
+    start: ['firstName'],
+    end: ['progress'],
   })
   readonly table = injectTable<typeof features, Person>(() => ({
     features,
@@ -60,11 +60,11 @@ export class App {
     debugTable: true,
   }))
 
-  readonly leftHeaderGroups = computed(() => this.table.getLeftHeaderGroups())
+  readonly startHeaderGroups = computed(() => this.table.getStartHeaderGroups())
   readonly centerHeaderGroups = computed(() =>
     this.table.getCenterHeaderGroups(),
   )
-  readonly rightHeaderGroups = computed(() => this.table.getRightHeaderGroups())
+  readonly endHeaderGroups = computed(() => this.table.getEndHeaderGroups())
   readonly visibleRows = computed(() =>
     this.table.getRowModel().rows.slice(0, 20),
   )
@@ -74,4 +74,6 @@ export class App {
 
   refreshData = () => this.data.set(makeData(20))
   stressTest = () => this.data.set(makeData(1_000))
+  pinningLabel = (position: false | 'start' | 'end') =>
+    position === 'start' ? 'left' : position === 'end' ? 'right' : 'center'
 }

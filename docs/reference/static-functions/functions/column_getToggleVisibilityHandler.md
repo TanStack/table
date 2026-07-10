@@ -9,7 +9,7 @@ title: column_getToggleVisibilityHandler
 function column_getToggleVisibilityHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L122)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L124)
 
 Creates a checkbox-style handler that writes this column's visibility.
 

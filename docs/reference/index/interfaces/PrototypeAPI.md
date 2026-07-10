@@ -3,19 +3,19 @@ id: PrototypeAPI
 title: PrototypeAPI
 ---
 
-# Interface: PrototypeAPI\<TDeps, TDepArgs\>
+# Interface: PrototypeAPI\<_TDeps, _TDepArgs\>
 
-Defined in: [utils.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L396)
+Defined in: [utils.ts:417](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L417)
 
 ## Type Parameters
 
-### TDeps
+### _TDeps
 
-`TDeps` *extends* `ReadonlyArray`\<`any`\>
+`_TDeps` *extends* `ReadonlyArray`\<`any`\>
 
-### TDepArgs
+### _TDepArgs
 
-`TDepArgs`
+`_TDepArgs`
 
 ## Properties
 
@@ -25,7 +25,7 @@ Defined in: [utils.ts:396](https://github.com/TanStack/table/blob/main/packages/
 fn: (self, ...args) => any;
 ```
 
-Defined in: [utils.ts:397](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L397)
+Defined in: [utils.ts:418](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L418)
 
 #### Parameters
 
@@ -49,7 +49,7 @@ Defined in: [utils.ts:397](https://github.com/TanStack/table/blob/main/packages/
 optional memoDeps: (self, depArgs?) => any[] | undefined;
 ```
 
-Defined in: [utils.ts:398](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L398)
+Defined in: [utils.ts:419](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L419)
 
 #### Parameters
 

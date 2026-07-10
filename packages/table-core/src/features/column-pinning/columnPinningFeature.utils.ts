@@ -34,8 +34,8 @@ import type {
  */
 export function getDefaultColumnPinningState(): ColumnPinningState {
   return {
-    left: [],
-    right: [],
+    start: [],
+    end: [],
   }
 }
 
@@ -45,12 +45,16 @@ export function getDefaultColumnPinningState(): ColumnPinningState {
  * Moves this column's leaf column ids into a pinning region.
  *
  * Pinning a group column pins all of its leaves. The leaf ids are first removed
- * from both regions, then appended to the requested `'left'` or `'right'`
+ * from both regions, then appended to the requested `'start'` or `'end'`
  * region. Passing `false` unpins them back to the center.
+ *
+ * `start` and `end` are logical positions. In LTR languages/layouts, `start`
+ * usually corresponds to left and `end` to right. In RTL languages/layouts,
+ * `start` usually corresponds to right and `end` to left.
  *
  * @example
  * ```ts
- * column_pin(column, 'left')
+ * column_pin(column, 'start')
  * ```
  */
 export function column_pin<
@@ -70,26 +74,26 @@ export function column_pin<
   }
 
   table_setColumnPinning(column.table, (old) => {
-    if (position === 'right') {
+    if (position === 'end') {
       return {
-        left: old.left.filter((d) => !columnIds.includes(d)),
-        right: [
-          ...old.right.filter((d) => !columnIds.includes(d)),
-          ...columnIds,
-        ],
+        start: old.start.filter((d) => !columnIds.includes(d)),
+        end: [...old.end.filter((d) => !columnIds.includes(d)), ...columnIds],
       }
     }
 
-    if (position === 'left') {
+    if (position === 'start') {
       return {
-        left: [...old.left.filter((d) => !columnIds.includes(d)), ...columnIds],
-        right: old.right.filter((d) => !columnIds.includes(d)),
+        start: [
+          ...old.start.filter((d) => !columnIds.includes(d)),
+          ...columnIds,
+        ],
+        end: old.end.filter((d) => !columnIds.includes(d)),
       }
     }
 
     return {
-      left: old.left.filter((d) => !columnIds.includes(d)),
-      right: old.right.filter((d) => !columnIds.includes(d)),
+      start: old.start.filter((d) => !columnIds.includes(d)),
+      end: old.end.filter((d) => !columnIds.includes(d)),
     }
   })
 }
@@ -124,8 +128,12 @@ export function column_getCanPin<
 /**
  * Reads this column's current pinning region.
  *
- * Group columns report `'left'` or `'right'` when any leaf column is pinned in
+ * Group columns report `'start'` or `'end'` when any leaf column is pinned in
  * that region. Unpinned columns return `false`.
+ *
+ * `start` and `end` are logical positions. In LTR languages/layouts, `start`
+ * usually corresponds to left and `end` to right. In RTL languages/layouts,
+ * `start` usually corresponds to right and `end` to left.
  *
  * @example
  * ```ts
@@ -141,17 +149,17 @@ export function column_getIsPinned<
 ): ColumnPinningPosition | false {
   const leafColumns = column.getLeafColumns()
 
-  const { left, right } =
+  const { start, end } =
     column.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
   for (let i = 0; i < leafColumns.length; i++) {
-    if (left.includes(leafColumns[i]!.id)) {
-      return 'left'
+    if (start.includes(leafColumns[i]!.id)) {
+      return 'start'
     }
   }
   for (let i = 0; i < leafColumns.length; i++) {
-    if (right.includes(leafColumns[i]!.id)) {
-      return 'right'
+    if (end.includes(leafColumns[i]!.id)) {
+      return 'end'
     }
   }
   return false
@@ -161,7 +169,7 @@ export function column_getIsPinned<
  * Finds this column's index within its pinned region.
  *
  * Unpinned columns return `0`; pinned columns return their position in
- * `state.columnPinning.left` or `state.columnPinning.right`.
+ * `state.columnPinning.start` or `state.columnPinning.end`.
  *
  * @example
  * ```ts
@@ -184,7 +192,7 @@ export function column_getPinnedIndex<
 // Row APIs
 
 /**
- * Collects visible cells whose columns are not pinned left or right.
+ * Collects visible cells whose columns are not pinned start or end.
  *
  * The result preserves the row's visible-cell order for center columns.
  *
@@ -202,45 +210,45 @@ export function row_getCenterVisibleCells<
     'getVisibleCells',
     row_getVisibleCells,
   )
-  const { left, right } =
+  const { start, end } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (!left.length && !right.length) {
+  if (!start.length && !end.length) {
     return allCells
   }
-  const leftAndRight: Array<string> = [...left, ...right]
-  return allCells.filter((d) => !leftAndRight.includes(d.column.id))
+  const startAndEnd: Array<string> = [...start, ...end]
+  return allCells.filter((d) => !startAndEnd.includes(d.column.id))
 }
 
 /**
- * Collects visible cells for columns pinned to the left region.
+ * Collects visible cells for columns pinned to the start region.
  *
- * Cells are returned in `state.columnPinning.left` order and are marked with
- * `cell.position = 'left'`.
+ * Cells are returned in `state.columnPinning.start` order and are marked with
+ * `cell.position = 'start'`.
  *
  * @example
  * ```ts
- * const leftCells = row_getLeftVisibleCells(row)
+ * const startCells = row_getStartVisibleCells(row)
  * ```
  */
-export function row_getLeftVisibleCells<
+export function row_getStartVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Cell<TFeatures, TData, unknown>> {
-  const { left } =
+  const { start } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (!left.length) return []
+  if (!start.length) return []
   const allVisibleCells = callMemoOrStaticFn(
     row,
     'getVisibleCellsByColumnId',
     row_getVisibleCellsByColumnId,
   )
   const cells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < left.length; i++) {
-    const columnId = left[i]!
+  for (let i = 0; i < start.length; i++) {
+    const columnId = start[i]!
     const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
-      ;(cell as any).position = 'left'
+      ;(cell as any).position = 'start'
       cells.push(cell)
     }
   }
@@ -248,35 +256,35 @@ export function row_getLeftVisibleCells<
 }
 
 /**
- * Collects visible cells for columns pinned to the right region.
+ * Collects visible cells for columns pinned to the end region.
  *
- * Cells are returned in `state.columnPinning.right` order and are marked with
- * `cell.position = 'right'`.
+ * Cells are returned in `state.columnPinning.end` order and are marked with
+ * `cell.position = 'end'`.
  *
  * @example
  * ```ts
- * const rightCells = row_getRightVisibleCells(row)
+ * const endCells = row_getEndVisibleCells(row)
  * ```
  */
-export function row_getRightVisibleCells<
+export function row_getEndVisibleCells<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const { right } =
+  const { end } =
     row.table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (!right.length) return [] as Array<Cell<TFeatures, TData, unknown>>
+  if (!end.length) return [] as Array<Cell<TFeatures, TData, unknown>>
   const allVisibleCells = callMemoOrStaticFn(
     row,
     'getVisibleCellsByColumnId',
     row_getVisibleCellsByColumnId,
   )
   const cells: Array<Cell<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < right.length; i++) {
-    const columnId = right[i]!
+  for (let i = 0; i < end.length; i++) {
+    const columnId = end[i]!
     const cell = allVisibleCells[columnId]
     if (cell) {
       // Assign position property directly to preserve prototype chain
-      ;(cell as any).position = 'right'
+      ;(cell as any).position = 'end'
       cells.push(cell)
     }
   }
@@ -288,12 +296,12 @@ export function row_getRightVisibleCells<
 /**
  * Routes a column pinning updater through the table's pinning change handler.
  *
- * The updater may be a next `{ left, right }` state or a function of the
+ * The updater may be a next `{ start, end }` state or a function of the
  * previous state, matching the instance `table.setColumnPinning` behavior.
  *
  * @example
  * ```ts
- * table_setColumnPinning(table, (old) => ({ ...old, left: ['select'] }))
+ * table_setColumnPinning(table, (old) => ({ ...old, start: ['select'] }))
  * ```
  */
 export function table_setColumnPinning<
@@ -310,7 +318,7 @@ export function table_setColumnPinning<
  * Resets `columnPinning` to the configured initial state or feature default.
  *
  * With no argument, the reset clones `table.initialState.columnPinning` when it
- * exists. Passing `true` ignores initial state and resets to empty left/right
+ * exists. Passing `true` ignores initial state and resets to empty start/end
  * arrays.
  *
  * @example
@@ -336,7 +344,7 @@ export function table_resetColumnPinning<
 /**
  * Checks whether any columns are pinned.
  *
- * Omit `position` to check both sides, or pass `'left'`/`'right'` to inspect a
+ * Omit `position` to check both sides, or pass `'start'`/`'end'` to inspect a
  * single pinning region.
  *
  * @example
@@ -351,7 +359,7 @@ export function table_getIsSomeColumnsPinned<
   const pinningState = table.atoms.columnPinning?.get()
 
   if (!position) {
-    return Boolean(pinningState?.left.length || pinningState?.right.length)
+    return Boolean(pinningState?.start.length || pinningState?.end.length)
   }
   return Boolean(pinningState?.[position].length)
 }
@@ -359,28 +367,28 @@ export function table_getIsSomeColumnsPinned<
 // header groups
 
 /**
- * Builds header groups for visible columns pinned to the left region.
+ * Builds header groups for visible columns pinned to the start region.
  *
- * The leaf columns are read in `state.columnPinning.left` order and then passed
+ * The leaf columns are read in `state.columnPinning.start` order and then passed
  * through the same header-group builder as the unpinned table.
  *
  * @example
  * ```ts
- * const headerGroups = table_getLeftHeaderGroups(table)
+ * const headerGroups = table_getStartHeaderGroups(table)
  * ```
  */
-export function table_getLeftHeaderGroups<
+export function table_getStartHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
   const leafColumnsById = table.getAllLeafColumnsById()
-  const { left } =
+  const { start } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
   const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < left.length; i++) {
-    const column = leafColumnsById[left[i]!]
+  for (let i = 0; i < start.length; i++) {
+    const column = leafColumnsById[start[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -389,32 +397,32 @@ export function table_getLeftHeaderGroups<
     }
   }
 
-  return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'left')
+  return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'start')
 }
 
 /**
- * Builds header groups for visible columns pinned to the right region.
+ * Builds header groups for visible columns pinned to the end region.
  *
- * The leaf columns are read in `state.columnPinning.right` order and then
+ * The leaf columns are read in `state.columnPinning.end` order and then
  * passed through the same header-group builder as the unpinned table.
  *
  * @example
  * ```ts
- * const headerGroups = table_getRightHeaderGroups(table)
+ * const headerGroups = table_getEndHeaderGroups(table)
  * ```
  */
-export function table_getRightHeaderGroups<
+export function table_getEndHeaderGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const allColumns = table.getAllColumns()
   const leafColumnsById = table.getAllLeafColumnsById()
-  const { right } =
+  const { end } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
 
   const orderedLeafColumns: Array<Column<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < right.length; i++) {
-    const column = leafColumnsById[right[i]!]
+  for (let i = 0; i < end.length; i++) {
+    const column = leafColumnsById[end[i]!]
     if (
       column &&
       callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
@@ -423,13 +431,13 @@ export function table_getRightHeaderGroups<
     }
   }
 
-  return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'right')
+  return buildHeaderGroups(allColumns, orderedLeafColumns, table, 'end')
 }
 
 /**
  * Builds header groups for visible columns that are not pinned.
  *
- * Left- and right-pinned column ids are removed from the visible leaf column
+ * Start- and end-pinned column ids are removed from the visible leaf column
  * list before header groups are built for the center region.
  *
  * @example
@@ -449,12 +457,12 @@ export function table_getCenterHeaderGroups<
     'getVisibleLeafColumns',
     table_getVisibleLeafColumns,
   )
-  const { left, right } =
+  const { start, end } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (left.length || right.length) {
-    const leftAndRight: Array<string> = [...left, ...right]
+  if (start.length || end.length) {
+    const startAndEnd: Array<string> = [...start, ...end]
     leafColumns = leafColumns.filter(
-      (column) => !leftAndRight.includes(column.id),
+      (column) => !startAndEnd.includes(column.id),
     )
   }
   return buildHeaderGroups(allColumns, leafColumns, table, 'center')
@@ -463,45 +471,45 @@ export function table_getCenterHeaderGroups<
 // footer groups
 
 /**
- * Builds footer groups for the left pinned region.
+ * Builds footer groups for the start pinned region.
  *
- * Footer groups reuse the left header groups in reverse order.
+ * Footer groups reuse the start header groups in reverse order.
  *
  * @example
  * ```ts
- * const footerGroups = table_getLeftFooterGroups(table)
+ * const footerGroups = table_getStartFooterGroups(table)
  * ```
  */
-export function table_getLeftFooterGroups<
+export function table_getStartFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = callMemoOrStaticFn(
     table,
-    'getLeftHeaderGroups',
-    table_getLeftHeaderGroups,
+    'getStartHeaderGroups',
+    table_getStartHeaderGroups,
   )
   return [...headerGroups].reverse()
 }
 
 /**
- * Builds footer groups for the right pinned region.
+ * Builds footer groups for the end pinned region.
  *
- * Footer groups reuse the right header groups in reverse order.
+ * Footer groups reuse the end header groups in reverse order.
  *
  * @example
  * ```ts
- * const footerGroups = table_getRightFooterGroups(table)
+ * const footerGroups = table_getEndFooterGroups(table)
  * ```
  */
-export function table_getRightFooterGroups<
+export function table_getEndFooterGroups<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const headerGroups = callMemoOrStaticFn(
     table,
-    'getRightHeaderGroups',
-    table_getRightHeaderGroups,
+    'getEndHeaderGroups',
+    table_getEndHeaderGroups,
   )
   return [...headerGroups].reverse()
 }
@@ -531,23 +539,23 @@ export function table_getCenterFooterGroups<
 // flat headers
 
 /**
- * Flattens every header from the left pinned header groups.
+ * Flattens every header from the start pinned header groups.
  *
  * Parent headers and placeholder headers are included.
  *
  * @example
  * ```ts
- * const headers = table_getLeftFlatHeaders(table)
+ * const headers = table_getStartFlatHeaders(table)
  * ```
  */
-export function table_getLeftFlatHeaders<
+export function table_getStartFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const leftHeaderGroups = callMemoOrStaticFn(
     table,
-    'getLeftHeaderGroups',
-    table_getLeftHeaderGroups,
+    'getStartHeaderGroups',
+    table_getStartHeaderGroups,
   )
   const result: Array<Header<TFeatures, TData, unknown>> = []
   for (let i = 0; i < leftHeaderGroups.length; i++) {
@@ -560,23 +568,23 @@ export function table_getLeftFlatHeaders<
 }
 
 /**
- * Flattens every header from the right pinned header groups.
+ * Flattens every header from the end pinned header groups.
  *
  * Parent headers and placeholder headers are included.
  *
  * @example
  * ```ts
- * const headers = table_getRightFlatHeaders(table)
+ * const headers = table_getEndFlatHeaders(table)
  * ```
  */
-export function table_getRightFlatHeaders<
+export function table_getEndFlatHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   const rightHeaderGroups = callMemoOrStaticFn(
     table,
-    'getRightHeaderGroups',
-    table_getRightHeaderGroups,
+    'getEndHeaderGroups',
+    table_getEndHeaderGroups,
   )
   const result: Array<Header<TFeatures, TData, unknown>> = []
   for (let i = 0; i < rightHeaderGroups.length; i++) {
@@ -620,44 +628,44 @@ export function table_getCenterFlatHeaders<
 // leaf headers
 
 /**
- * Collects leaf headers for the left pinned region.
+ * Collects leaf headers for the start pinned region.
  *
- * Parent headers are filtered out from the left flat header list.
+ * Parent headers are filtered out from the start flat header list.
  *
  * @example
  * ```ts
- * const headers = table_getLeftLeafHeaders(table)
+ * const headers = table_getStartLeafHeaders(table)
  * ```
  */
-export function table_getLeftLeafHeaders<
+export function table_getStartLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(
     table,
-    'getLeftFlatHeaders',
-    table_getLeftFlatHeaders,
+    'getStartFlatHeaders',
+    table_getStartFlatHeaders,
   ).filter((header) => !header.subHeaders.length)
 }
 
 /**
- * Collects leaf headers for the right pinned region.
+ * Collects leaf headers for the end pinned region.
  *
- * Parent headers are filtered out from the right flat header list.
+ * Parent headers are filtered out from the end flat header list.
  *
  * @example
  * ```ts
- * const headers = table_getRightLeafHeaders(table)
+ * const headers = table_getEndLeafHeaders(table)
  * ```
  */
-export function table_getRightLeafHeaders<
+export function table_getEndLeafHeaders<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(
     table,
-    'getRightFlatHeaders',
-    table_getRightFlatHeaders,
+    'getEndFlatHeaders',
+    table_getEndFlatHeaders,
   ).filter((header) => !header.subHeaders.length)
 }
 
@@ -685,61 +693,61 @@ export function table_getCenterLeafHeaders<
 // leaf columns
 
 /**
- * Resolves leaf columns pinned to the left region.
+ * Resolves leaf columns pinned to the start region.
  *
- * The result follows `state.columnPinning.left` order and skips stale ids that
+ * The result follows `state.columnPinning.start` order and skips stale ids that
  * no longer correspond to a leaf column.
  *
  * @example
  * ```ts
- * const columns = table_getLeftLeafColumns(table)
+ * const columns = table_getStartLeafColumns(table)
  * ```
  */
-export function table_getLeftLeafColumns<
+export function table_getStartLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { left } =
+  const { start } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < left.length; i++) {
-    const column = leafColumnsById[left[i]!]
+  for (let i = 0; i < start.length; i++) {
+    const column = leafColumnsById[start[i]!]
     if (column) result.push(column)
   }
   return result
 }
 
 /**
- * Resolves leaf columns pinned to the right region.
+ * Resolves leaf columns pinned to the end region.
  *
- * The result follows `state.columnPinning.right` order and skips stale ids that
+ * The result follows `state.columnPinning.end` order and skips stale ids that
  * no longer correspond to a leaf column.
  *
  * @example
  * ```ts
- * const columns = table_getRightLeafColumns(table)
+ * const columns = table_getEndLeafColumns(table)
  * ```
  */
-export function table_getRightLeafColumns<
+export function table_getEndLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { right } =
+  const { end } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   const leafColumnsById = table.getAllLeafColumnsById()
   const result: Array<Column_Internal<TFeatures, TData, unknown>> = []
-  for (let i = 0; i < right.length; i++) {
-    const column = leafColumnsById[right[i]!]
+  for (let i = 0; i < end.length; i++) {
+    const column = leafColumnsById[end[i]!]
     if (column) result.push(column)
   }
   return result
 }
 
 /**
- * Resolves leaf columns that are not pinned to either side.
+ * Resolves leaf columns that are not pinned to either logical side.
  *
- * Left- and right-pinned ids are removed from `table.getAllLeafColumns()`.
+ * Start- and end-pinned ids are removed from `table.getAllLeafColumns()`.
  *
  * @example
  * ```ts
@@ -750,19 +758,19 @@ export function table_getCenterLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const { left, right } =
+  const { start, end } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
-  if (!left.length && !right.length) {
+  if (!start.length && !end.length) {
     return table.getAllLeafColumns()
   }
-  const leftAndRight: Array<string> = [...left, ...right]
-  return table.getAllLeafColumns().filter((d) => !leftAndRight.includes(d.id))
+  const startAndEnd: Array<string> = [...start, ...end]
+  return table.getAllLeafColumns().filter((d) => !startAndEnd.includes(d.id))
 }
 
 /**
  * Resolves leaf columns for a requested pinning region.
  *
- * Pass `'left'`, `'center'`, or `'right'` for a partition, or pass `false` to
+ * Pass `'start'`, `'center'`, or `'end'` for a partition, or pass `false` to
  * read all leaf columns without partitioning.
  *
  * @example
@@ -779,17 +787,17 @@ export function table_getPinnedLeafColumns<
 ) {
   return !position
     ? table.getAllLeafColumns()
-    : position === 'left'
+    : position === 'start'
       ? callMemoOrStaticFn(
           table,
-          'getLeftLeafColumns',
-          table_getLeftLeafColumns,
+          'getStartLeafColumns',
+          table_getStartLeafColumns,
         )
-      : position === 'right'
+      : position === 'end'
         ? callMemoOrStaticFn(
             table,
-            'getRightLeafColumns',
-            table_getRightLeafColumns,
+            'getEndLeafColumns',
+            table_getEndLeafColumns,
           )
         : callMemoOrStaticFn(
             table,
@@ -801,46 +809,46 @@ export function table_getPinnedLeafColumns<
 // visible leaf columns
 
 /**
- * Resolves visible leaf columns pinned to the left region.
+ * Resolves visible leaf columns pinned to the start region.
  *
- * Hidden pinned columns are filtered out after the left pin order is applied.
+ * Hidden pinned columns are filtered out after the start pin order is applied.
  *
  * @example
  * ```ts
- * const columns = table_getLeftVisibleLeafColumns(table)
+ * const columns = table_getStartVisibleLeafColumns(table)
  * ```
  */
-export function table_getLeftVisibleLeafColumns<
+export function table_getStartVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(
     table,
-    'getLeftLeafColumns',
-    table_getLeftLeafColumns,
+    'getStartLeafColumns',
+    table_getStartLeafColumns,
   ).filter((column) =>
     callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
   )
 }
 
 /**
- * Resolves visible leaf columns pinned to the right region.
+ * Resolves visible leaf columns pinned to the end region.
  *
- * Hidden pinned columns are filtered out after the right pin order is applied.
+ * Hidden pinned columns are filtered out after the end pin order is applied.
  *
  * @example
  * ```ts
- * const columns = table_getRightVisibleLeafColumns(table)
+ * const columns = table_getEndVisibleLeafColumns(table)
  * ```
  */
-export function table_getRightVisibleLeafColumns<
+export function table_getEndVisibleLeafColumns<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
   return callMemoOrStaticFn(
     table,
-    'getRightLeafColumns',
-    table_getRightLeafColumns,
+    'getEndLeafColumns',
+    table_getEndLeafColumns,
   ).filter((column) =>
     callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible),
   )
@@ -873,12 +881,12 @@ export function table_getCenterVisibleLeafColumns<
 /**
  * Resolves visible leaf columns for a requested pinning region.
  *
- * Omit `position` to get all visible leaf columns, or pass `'left'`, `'center'`,
- * or `'right'` to get one partition.
+ * Omit `position` to get all visible leaf columns, or pass `'start'`, `'center'`,
+ * or `'end'` to get one partition.
  *
  * @example
  * ```ts
- * const columns = table_getPinnedVisibleLeafColumns(table, 'left')
+ * const columns = table_getPinnedVisibleLeafColumns(table, 'start')
  * ```
  */
 export function table_getPinnedVisibleLeafColumns<
@@ -894,17 +902,17 @@ export function table_getPinnedVisibleLeafColumns<
         'getVisibleLeafColumns',
         table_getVisibleLeafColumns,
       )
-    : position === 'left'
+    : position === 'start'
       ? callMemoOrStaticFn(
           table,
-          'getLeftVisibleLeafColumns',
-          table_getLeftVisibleLeafColumns,
+          'getStartVisibleLeafColumns',
+          table_getStartVisibleLeafColumns,
         )
-      : position === 'right'
+      : position === 'end'
         ? callMemoOrStaticFn(
             table,
-            'getRightVisibleLeafColumns',
-            table_getRightVisibleLeafColumns,
+            'getEndVisibleLeafColumns',
+            table_getEndVisibleLeafColumns,
           )
         : callMemoOrStaticFn(
             table,

@@ -243,15 +243,15 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
     <TableTd
       data-column-pinned={isColumnPinned || undefined}
       data-dragging-column={isDraggingColumn || undefined}
-      data-first-right-pinned={
-        (isColumnPinned === 'right' &&
-          column.getIsFirstColumn(isColumnPinned)) ||
+      data-first-end-pinned={
+        (isColumnPinned === 'end' && column.getIsFirstColumn(isColumnPinned)) ||
         undefined
       }
       data-hovered-column-target={isHoveredColumn || undefined}
       data-index={renderedColumnIndex}
-      data-last-left-pinned={
-        (isColumnPinned === 'left' && column.getIsLastColumn(isColumnPinned)) ||
+      data-last-start-pinned={
+        (isColumnPinned === 'start' &&
+          column.getIsLastColumn(isColumnPinned)) ||
         undefined
       }
       data-last-row={renderedRowIndex === numRows - 1 || undefined}
@@ -265,12 +265,12 @@ export const MRT_TableBodyCell = <TData extends MRT_RowData>({
       __vars={{
         '--mrt-cell-align':
           tableCellProps.align ?? (direction.dir === 'rtl' ? 'right' : 'left'),
-        '--mrt-table-cell-left':
-          isColumnPinned === 'left'
+        '--mrt-table-cell-start':
+          isColumnPinned === 'start'
             ? `${column.getStart(isColumnPinned)}`
             : undefined,
-        '--mrt-table-cell-right':
-          isColumnPinned === 'right'
+        '--mrt-table-cell-end':
+          isColumnPinned === 'end'
             ? `${column.getAfter(isColumnPinned)}`
             : undefined,
         ...tableCellProps.__vars,

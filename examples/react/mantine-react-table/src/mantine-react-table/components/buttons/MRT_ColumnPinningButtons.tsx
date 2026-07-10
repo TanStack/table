@@ -38,7 +38,7 @@ export const MRT_ColumnPinningButtons = <TData extends MRT_RowData>({
           <Tooltip label={localization.pinToLeft} withinPortal>
             <ActionIcon
               color="gray"
-              onClick={() => column.pin('left')}
+              onClick={() => column.pin('start')}
               size="md"
               variant="subtle"
             >
@@ -48,7 +48,7 @@ export const MRT_ColumnPinningButtons = <TData extends MRT_RowData>({
           <Tooltip label={localization.pinToRight} withinPortal>
             <ActionIcon
               color="gray"
-              onClick={() => column.pin('right')}
+              onClick={() => column.pin('end')}
               size="md"
               variant="subtle"
             >

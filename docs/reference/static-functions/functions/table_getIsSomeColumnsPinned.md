@@ -9,11 +9,11 @@ title: table_getIsSomeColumnsPinned
 function table_getIsSomeColumnsPinned<TFeatures, TData>(table, position?): boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:337](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L337)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:355](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L355)
 
 Checks whether any columns are pinned.
 
-Omit `position` to check both sides, or pass `'left'`/`'right'` to inspect a
+Omit `position` to check both sides, or pass `'start'`/`'end'` to inspect a
 single pinning region.
 
 ## Type Parameters

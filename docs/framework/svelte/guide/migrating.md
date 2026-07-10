@@ -3,6 +3,9 @@ title: Migrating to TanStack Table V9 (Svelte)
 ---
 
 > [!NOTE]
+> `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology. These are logical positions: in LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. If you migrated on an earlier beta, update `columnPinning.left` to `columnPinning.start`, `columnPinning.right` to `columnPinning.end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*` / `getRight*` table and row APIs to `getStart*` / `getEnd*`. See the [Column Pinning](#column-pinning) section below for the full mapping.
+
+> [!NOTE]
 > `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Models](#row-models) section below for the new shape.
 
 ## What's New in TanStack Table V9
@@ -62,6 +65,35 @@ There is no Svelte 3/4 compatibility shim for the v9 Svelte adapter.
 ---
 
 ## Core Breaking Changes
+
+### Column Pinning
+
+`v9.0.0-beta.38` changes column pinning to use logical `start`/`end` terminology instead of physical `left`/`right` terminology. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases in beta.38.
+
+| Before beta.38                       | beta.38+                             |
+| ------------------------------------ | ------------------------------------ |
+| `columnPinning.left`                 | `columnPinning.start`                |
+| `columnPinning.right`                | `columnPinning.end`                  |
+| `column.pin('left')`                 | `column.pin('start')`                |
+| `column.pin('right')`                | `column.pin('end')`                  |
+| `column.getIsPinned() === 'left'`    | `column.getIsPinned() === 'start'`   |
+| `column.getIsPinned() === 'right'`   | `column.getIsPinned() === 'end'`     |
+| `row.getLeftVisibleCells()`          | `row.getStartVisibleCells()`         |
+| `row.getRightVisibleCells()`         | `row.getEndVisibleCells()`           |
+| `table.getLeftHeaderGroups()`        | `table.getStartHeaderGroups()`       |
+| `table.getRightHeaderGroups()`       | `table.getEndHeaderGroups()`         |
+| `table.getLeftLeafColumns()`         | `table.getStartLeafColumns()`        |
+| `table.getRightLeafColumns()`        | `table.getEndLeafColumns()`          |
+| `table.getLeftVisibleLeafColumns()`  | `table.getStartVisibleLeafColumns()` |
+| `table.getRightVisibleLeafColumns()` | `table.getEndVisibleLeafColumns()`   |
+| `table.getLeftTotalSize()`           | `table.getStartTotalSize()`          |
+| `table.getRightTotalSize()`          | `table.getEndTotalSize()`            |
+| `column.getStart('left')`            | `column.getStart('start')`           |
+| `column.getAfter('right')`           | `column.getAfter('end')`             |
+| `column.getIndex('left')`            | `column.getIndex('start')`           |
+| `column.getIndex('right')`           | `column.getIndex('end')`             |
+
+This rename is about logical table regions, not automatic DOM direction handling. For sticky column pinning, prefer CSS logical properties like `insetInlineStart` and `insetInlineEnd`. The `columnResizeDirection` table option is unchanged.
 
 ### Entrypoint Rename
 

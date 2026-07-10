@@ -5,7 +5,7 @@ title: Table_ColumnSizing
 
 # Interface: Table\_ColumnSizing
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L24)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L62)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-sizing/columnSizingFeature.types.ts:24](https://git
 getCenterTotalSize: () => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L28)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L66)
 
 Sums the current sizes of visible center-region leaf columns.
 
@@ -25,15 +25,34 @@ Sums the current sizes of visible center-region leaf columns.
 
 ***
 
-### getLeftTotalSize()
+### getColumnOffsets()
 
 ```ts
-getLeftTotalSize: () => number;
+getColumnOffsets: () => ColumnOffsetsByPosition;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L32)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L73)
 
-Sums the current sizes of visible left-pinned leaf columns.
+Returns memoized column offset maps (start and after offsets keyed by
+column id) for each pinning region plus the full visible leaf column list.
+
+Backs `column.getStart()` and `column.getAfter()` with O(1) lookups.
+
+#### Returns
+
+[`ColumnOffsetsByPosition`](ColumnOffsetsByPosition.md)
+
+***
+
+### getEndTotalSize()
+
+```ts
+getEndTotalSize: () => number;
+```
+
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L81)
+
+Sums the current sizes of visible logical end-pinned leaf columns.
 
 #### Returns
 
@@ -41,15 +60,15 @@ Sums the current sizes of visible left-pinned leaf columns.
 
 ***
 
-### getRightTotalSize()
+### getStartTotalSize()
 
 ```ts
-getRightTotalSize: () => number;
+getStartTotalSize: () => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L36)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L77)
 
-Sums the current sizes of visible right-pinned leaf columns.
+Sums the current sizes of visible logical start-pinned leaf columns.
 
 #### Returns
 
@@ -63,7 +82,7 @@ Sums the current sizes of visible right-pinned leaf columns.
 getTotalSize: () => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L40)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L85)
 
 Sums the current sizes of all visible leaf columns.
 
@@ -79,7 +98,7 @@ Sums the current sizes of all visible leaf columns.
 resetColumnSizing: (defaultState?) => void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L45)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:90](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L90)
 
 Resets column sizing to `initialState.columnSizing`. Pass `true` to reset
 to the feature default of `{}`.
@@ -102,7 +121,7 @@ to the feature default of `{}`.
 setColumnSizing: (updater) => void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L49)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L94)
 
 Updates committed column sizing state with a next map or updater function.
 

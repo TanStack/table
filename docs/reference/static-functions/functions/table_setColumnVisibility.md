@@ -9,7 +9,7 @@ title: table_setColumnVisibility
 function table_setColumnVisibility<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:272](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L272)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:274](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L274)
 
 Routes a column visibility updater through the table's visibility change handler.
 

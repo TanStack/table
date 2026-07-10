@@ -9,11 +9,11 @@ title: table_getCenterHeaderGroups
 function table_getCenterHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:430](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L430)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:448](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L448)
 
 Builds header groups for visible columns that are not pinned.
 
-Left- and right-pinned column ids are removed from the visible leaf column
+Start- and end-pinned column ids are removed from the visible leaf column
 list before header groups are built for the center region.
 
 ## Type Parameters

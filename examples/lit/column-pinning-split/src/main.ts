@@ -91,7 +91,7 @@ class LitTableExample extends LitElement {
   private columnVisibility: ColumnVisibilityState = {}
 
   @state()
-  private columnPinning: ColumnPinningState = { left: [], right: [] }
+  private columnPinning: ColumnPinningState = { start: [], end: [] }
 
   protected render() {
     const table = this.tableController.table(
@@ -146,9 +146,9 @@ class LitTableExample extends LitElement {
       column: ReturnType<typeof table.getAllLeafColumns>[0],
     ) => html`
       <div class="pin-actions">
-        ${column.getIsPinned() !== 'left'
+        ${column.getIsPinned() !== 'start'
           ? html`
-              <button class="pin-button" @click="${() => column.pin('left')}">
+              <button class="pin-button" @click="${() => column.pin('start')}">
                 ${'<='}
               </button>
             `
@@ -160,9 +160,9 @@ class LitTableExample extends LitElement {
               </button>
             `
           : null}
-        ${column.getIsPinned() !== 'right'
+        ${column.getIsPinned() !== 'end'
           ? html`
-              <button class="pin-button" @click="${() => column.pin('right')}">
+              <button class="pin-button" @click="${() => column.pin('end')}">
                 ${'=>'}
               </button>
             `
@@ -233,7 +233,7 @@ class LitTableExample extends LitElement {
           <table class="outlined-table">
             <thead>
               ${repeat(
-                table.getLeftHeaderGroups(),
+                table.getStartHeaderGroups(),
                 (headerGroup) => headerGroup.id,
                 (headerGroup) => html`
                   <tr>
@@ -264,7 +264,7 @@ class LitTableExample extends LitElement {
                 (row) => html`
                   <tr>
                     ${repeat(
-                      row.getLeftVisibleCells(),
+                      row.getStartVisibleCells(),
                       (cell) => cell.id,
                       (cell) => html` <td>${FlexRender({ cell })}</td> `,
                     )}
@@ -321,7 +321,7 @@ class LitTableExample extends LitElement {
           <table class="outlined-table">
             <thead>
               ${repeat(
-                table.getRightHeaderGroups(),
+                table.getEndHeaderGroups(),
                 (headerGroup) => headerGroup.id,
                 (headerGroup) => html`
                   <tr>
@@ -352,7 +352,7 @@ class LitTableExample extends LitElement {
                 (row) => html`
                   <tr>
                     ${repeat(
-                      row.getRightVisibleCells(),
+                      row.getEndVisibleCells(),
                       (cell) => cell.id,
                       (cell) => html` <td>${FlexRender({ cell })}</td> `,
                     )}

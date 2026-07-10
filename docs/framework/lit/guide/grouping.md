@@ -54,7 +54,7 @@ Grouping in TanStack table is a feature that applies to columns and allows you t
 
 Grouping can also affect column order. There are 3 table features that can reorder columns, which happen in the following order:
 
-1. [Column Pinning](./column-pinning) - If pinning, columns are split into left, center (unpinned), and right pinned columns.
+1. [Column Pinning](./column-pinning) - If pinning, columns are split into start, center (unpinned), and end pinned columns.
 2. Manual [Column Ordering](./column-ordering) - A manually specified column order is applied.
 3. **Grouping** - If grouping is enabled, a grouping state is active, and `tableOptions.groupedColumnMode` is set to `'reorder' | 'remove'`, then the grouped columns are reordered to the start of the column flow.
 

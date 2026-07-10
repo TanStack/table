@@ -66,7 +66,7 @@ describe('table_getHeaderGroups', () => {
 
   it('should order pinned columns first via the pin partitioning path', () => {
     const table = makeTable({
-      initialState: { columnPinning: { left: ['c'], right: [] } },
+      initialState: { columnPinning: { start: ['c'], end: [] } },
     })
     const headerGroups = table_getHeaderGroups(table)
 

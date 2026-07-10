@@ -14,13 +14,13 @@ export interface ColumnIndexes {
    */
   center: Record<string, number>
   /**
-   * Maps each left-pinned visible leaf column id to its index within the left region.
+   * Maps each start-pinned visible leaf column id to its index within the start region.
    */
-  left: Record<string, number>
+  start: Record<string, number>
   /**
-   * Maps each right-pinned visible leaf column id to its index within the right region.
+   * Maps each end-pinned visible leaf column id to its index within the end region.
    */
-  right: Record<string, number>
+  end: Record<string, number>
 }
 
 export interface TableState_ColumnOrdering {
@@ -40,7 +40,7 @@ export interface Column_ColumnOrdering {
   /**
    * Finds this column's zero-based index among visible columns.
    *
-   * Pass `'left'`, `'center'`, or `'right'` to measure within that pinned
+   * Pass `'start'`, `'center'`, or `'end'` to measure within that pinned
    * region instead of the full visible leaf order.
    */
   getIndex: (position?: ColumnPinningPosition | 'center') => number

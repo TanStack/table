@@ -9,7 +9,7 @@ title: filterFn_includesString
 const filterFn_includesString: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L66)
+Defined in: [fns/filterFns.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L69)
 
 Keeps rows whose stringified column value includes the filter text.
 
@@ -33,3 +33,19 @@ autoRemove: (val) => boolean;
 #### Returns
 
 `boolean`
+
+### resolveFilterValue()
+
+```ts
+resolveFilterValue: (val) => string;
+```
+
+#### Parameters
+
+##### val
+
+`any`
+
+#### Returns
+
+`string`

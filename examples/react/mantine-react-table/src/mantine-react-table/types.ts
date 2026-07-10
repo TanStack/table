@@ -317,11 +317,11 @@ export type MRT_TableInstance<TData extends MRT_RowData> = {
   getFilteredSelectedRowModel: () => MRT_RowModel<TData>
   getFlatHeaders: () => Array<MRT_Header<TData>>
   getHeaderGroups: () => Array<MRT_HeaderGroup<TData>>
-  getLeftLeafColumns: () => Array<MRT_Column<TData>>
+  getStartLeafColumns: () => Array<MRT_Column<TData>>
   getPaginationRowModel: () => MRT_RowModel<TData>
   getPreFilteredRowModel: () => MRT_RowModel<TData>
   getPrePaginatedRowModel: () => MRT_RowModel<TData>
-  getRightLeafColumns: () => Array<MRT_Column<TData>>
+  getEndLeafColumns: () => Array<MRT_Column<TData>>
   getRowModel: () => MRT_RowModel<TData>
   getSelectedRowModel: () => MRT_RowModel<TData>
   getState: () => MRT_TableState<TData>
@@ -380,11 +380,11 @@ export type MRT_TableInstance<TData extends MRT_RowData> = {
   | 'getExpandedRowModel'
   | 'getFlatHeaders'
   | 'getHeaderGroups'
-  | 'getLeftLeafColumns'
+  | 'getStartLeafColumns'
   | 'getPaginationRowModel'
   | 'getPreFilteredRowModel'
   | 'getPrePaginatedRowModel'
-  | 'getRightLeafColumns'
+  | 'getEndLeafColumns'
   | 'getRowModel'
   | 'getSelectedRowModel'
   | 'getState'

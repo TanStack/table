@@ -9,7 +9,7 @@ title: filterFn_inNumberRange
 const filterFn_inNumberRange: <TFeatures, TData>(row, columnId, filterValue) => boolean & object;
 ```
 
-Defined in: [fns/filterFns.ts:256](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L256)
+Defined in: [fns/filterFns.ts:298](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L298)
 
 Keeps rows whose numeric value is inside an inclusive `[min, max]` range.
 

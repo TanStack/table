@@ -9,7 +9,7 @@ title: row_getGroupingValue
 function row_getGroupingValue<TFeatures, TData>(row, columnId): any;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L267)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L269)
 
 Reads and caches this row's grouping value for a column.
 

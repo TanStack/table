@@ -9,7 +9,7 @@ title: AppCellContext
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:47](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L47)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:46](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L46)
 
 Enhanced CellContext with pre-bound cell components.
 The `cell` property includes the registered cellComponents.
@@ -40,7 +40,7 @@ The `cell` property includes the registered cellComponents.
 cell: Cell<TFeatures, TData, TValue> & TCellComponents & object;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:53](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L53)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:52](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L52)
 
 #### Type Declaration
 
@@ -62,7 +62,7 @@ FlexRender: () => unknown;
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:55](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L55)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:54](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L54)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:55](https://g
 getValue: CellContext<TFeatures, TData, TValue>["getValue"];
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:56](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L56)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:55](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L55)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:56](https://g
 renderValue: CellContext<TFeatures, TData, TValue>["renderValue"];
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:57](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L57)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:56](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L56)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:57](https://g
 row: Row<TFeatures, TData>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:58](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L58)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:57](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L57)
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: [packages/angular-table/src/helpers/createTableHook.ts:58](https://g
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:59](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L59)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:58](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L58)

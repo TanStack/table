@@ -5,7 +5,7 @@ title: CachedRowModel_Faceted
 
 # Interface: CachedRowModel\_Faceted\<TFeatures, TData\>
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L51)
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L50)
 
 ## Type Parameters
 
@@ -19,65 +19,71 @@ Defined in: [features/column-faceting/columnFacetingFeature.types.ts:51](https:/
 
 ## Properties
 
-### facetedMinMaxValues()?
+### facetedMinMaxValues?
 
 ```ts
-optional facetedMinMaxValues: (columnId) => [number, number];
-```
-
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L56)
-
-#### Parameters
-
-##### columnId
-
-`string`
-
-#### Returns
-
-\[`number`, `number`\]
-
-***
-
-### facetedRowModel()?
-
-```ts
-optional facetedRowModel: (columnId) => () => RowModel<TFeatures, TData>;
+optional facetedMinMaxValues: Record<string, () => [number, number] | undefined>;
 ```
 
 Defined in: [features/column-faceting/columnFacetingFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L55)
 
-#### Parameters
+***
 
-##### columnId
+### facetedRowModels?
 
-`string`
+```ts
+optional facetedRowModels: Record<string, () => RowModel<TFeatures, TData>>;
+```
+
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L54)
+
+***
+
+### facetedUniqueValues?
+
+```ts
+optional facetedUniqueValues: Record<string, () => Map<any, number>>;
+```
+
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L56)
+
+***
+
+### globalFacetedMinMaxValues()?
+
+```ts
+optional globalFacetedMinMaxValues: () => [number, number] | undefined;
+```
+
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L58)
 
 #### Returns
 
+\[`number`, `number`\] \| `undefined`
+
+***
+
+### globalFacetedRowModel()?
+
 ```ts
-(): RowModel<TFeatures, TData>;
+optional globalFacetedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-##### Returns
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L57)
+
+#### Returns
 
 [`RowModel`](RowModel.md)\<`TFeatures`, `TData`\>
 
 ***
 
-### facetedUniqueValues()?
+### globalFacetedUniqueValues()?
 
 ```ts
-optional facetedUniqueValues: (columnId) => Map<any, number>;
+optional globalFacetedUniqueValues: () => Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L57)
-
-#### Parameters
-
-##### columnId
-
-`string`
+Defined in: [features/column-faceting/columnFacetingFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.types.ts#L59)
 
 #### Returns
 

@@ -136,3 +136,13 @@ rowSortingFeature: TableState_RowSorting;
 ```
 
 Defined in: [types/TableState.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L29)
+
+***
+
+### workerRowModelsFeature
+
+```ts
+workerRowModelsFeature: TableState_WorkerRowModels;
+```
+
+Defined in: [worker/createTableWorker.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L28)

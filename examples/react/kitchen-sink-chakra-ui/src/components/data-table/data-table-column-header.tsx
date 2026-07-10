@@ -122,17 +122,17 @@ export function ColumnHeader(): React.ReactNode {
                   <Menu.Separator />
                   <DropdownMenuItem
                     value={`${column.id}-pin-left`}
-                    disabled={pinned === 'left'}
+                    disabled={pinned === 'start'}
                     icon={<IconPinned size={16} />}
-                    onSelect={() => column.pin('left')}
+                    onSelect={() => column.pin('start')}
                   >
                     Pin left
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     value={`${column.id}-pin-right`}
-                    disabled={pinned === 'right'}
+                    disabled={pinned === 'end'}
                     icon={<IconPinned size={16} />}
-                    onSelect={() => column.pin('right')}
+                    onSelect={() => column.pin('end')}
                   >
                     Pin right
                   </DropdownMenuItem>

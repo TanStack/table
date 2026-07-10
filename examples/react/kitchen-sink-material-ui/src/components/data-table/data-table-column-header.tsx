@@ -66,8 +66,8 @@ export function ColumnHeader({ title }: { title?: string }): React.ReactNode {
             onSortAsc={() => column.toggleSorting(false)}
             onSortDesc={() => column.toggleSorting(true)}
             onToggleGrouping={column.getToggleGroupingHandler()}
-            onPinLeft={() => column.pin('left')}
-            onPinRight={() => column.pin('right')}
+            onPinLeft={() => column.pin('start')}
+            onPinRight={() => column.pin('end')}
             onUnpin={() => column.pin(false)}
             onHide={() => column.toggleVisibility(false)}
           />
@@ -103,7 +103,7 @@ function ColumnHeaderMenu({
   canGroup: boolean
   direction: 'asc' | 'desc' | undefined
   isSorted: boolean
-  pinned: false | 'left' | 'right'
+  pinned: false | 'start' | 'end'
   grouped: boolean
   onToggleSorting: ((event: unknown) => void) | undefined
   onSortAsc: () => void
@@ -195,7 +195,7 @@ function ColumnHeaderMenu({
           <Box>
             <Divider />
             <MenuItem
-              disabled={pinned === 'left'}
+              disabled={pinned === 'start'}
               onClick={() => {
                 onPinLeft()
                 setAnchorEl(null)
@@ -207,7 +207,7 @@ function ColumnHeaderMenu({
               <ListItemText>Pin left</ListItemText>
             </MenuItem>
             <MenuItem
-              disabled={pinned === 'right'}
+              disabled={pinned === 'end'}
               onClick={() => {
                 onPinRight()
                 setAnchorEl(null)

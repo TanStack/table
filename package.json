@@ -66,6 +66,7 @@
     "@tanstack/typedoc-config": "0.3.3",
     "@testing-library/jest-dom": "^6.9.1",
     "@types/node": "^26.0.0",
+    "@typescript-eslint/parser": "8.60.1",
     "@vitest/coverage-v8": "4.1.9",
     "eslint": "^10.5.0",
     "jsdom": "^29.1.1",

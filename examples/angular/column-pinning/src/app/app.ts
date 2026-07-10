@@ -87,8 +87,8 @@ export class App {
   readonly columnVisibility = signal<ColumnVisibilityState>({})
   readonly columnOrder = signal<ColumnOrderState>([])
   readonly columnPinning = signal<ColumnPinningState>({
-    left: [],
-    right: [],
+    start: [],
+    end: [],
   })
   readonly split = signal(false)
 

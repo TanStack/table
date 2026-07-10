@@ -5,7 +5,7 @@ title: AppHeaderProps
 
 # Interface: AppHeaderProps\<TFeatures, TData, TValue, THeaderComponents\>
 
-Defined in: [createTableHook.tsx:297](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L297)
+Defined in: [createTableHook.tsx:296](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L296)
 
 Props for AppHeader/AppFooter component.
 
@@ -35,7 +35,7 @@ Props for AppHeader/AppFooter component.
 children: (header) => Element;
 ```
 
-Defined in: [createTableHook.tsx:304](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L304)
+Defined in: [createTableHook.tsx:303](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L303)
 
 #### Parameters
 
@@ -55,4 +55,4 @@ Defined in: [createTableHook.tsx:304](https://github.com/TanStack/table/blob/mai
 header: Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:303](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L303)
+Defined in: [createTableHook.tsx:302](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L302)

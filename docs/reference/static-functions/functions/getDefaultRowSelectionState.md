@@ -9,7 +9,7 @@ title: getDefaultRowSelectionState
 function getDefaultRowSelectionState(): RowSelectionState;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L27)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L28)
 
 Creates the default row selection state.
 

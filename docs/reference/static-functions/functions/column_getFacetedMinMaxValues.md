@@ -9,7 +9,7 @@ title: column_getFacetedMinMaxValues
 function column_getFacetedMinMaxValues<TFeatures, TData, TValue>(column, table): [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L18)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L19)
 
 Computes min and max numeric facet values for one column.
 

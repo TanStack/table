@@ -9,13 +9,17 @@ title: column_pin
 function column_pin<TFeatures, TData, TValue>(column, position): void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L56)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L60)
 
 Moves this column's leaf column ids into a pinning region.
 
 Pinning a group column pins all of its leaves. The leaf ids are first removed
-from both regions, then appended to the requested `'left'` or `'right'`
+from both regions, then appended to the requested `'start'` or `'end'`
 region. Passing `false` unpins them back to the center.
+
+`start` and `end` are logical positions. In LTR languages/layouts, `start`
+usually corresponds to left and `end` to right. In RTL languages/layouts,
+`start` usually corresponds to right and `end` to left.
 
 ## Type Parameters
 
@@ -48,5 +52,5 @@ region. Passing `false` unpins them back to the center.
 ## Example
 
 ```ts
-column_pin(column, 'left')
+column_pin(column, 'start')
 ```
