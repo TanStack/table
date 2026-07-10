@@ -2972,6 +2972,76 @@ importers:
         specifier: 8.1.4
         version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/ember/row-selection:
+    dependencies:
+      '@embroider/macros':
+        specifier: 1.20.5
+        version: 1.20.5(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/router':
+        specifier: 3.0.6
+        version: 3.0.6(@embroider/core@4.6.2(@glint/template@1.7.8))
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@glimmer/component':
+        specifier: 2.1.1
+        version: 2.1.1
+      '@tanstack/ember-table':
+        specifier: ^9.0.0-beta.36
+        version: link:../../../packages/ember-table
+      decorator-transforms:
+        specifier: 2.4.0
+        version: 2.4.0(@babel/core@7.29.7)
+      ember-source:
+        specifier: 7.0.0
+        version: 7.0.0(@glimmer/component@2.1.1)
+      ember-strict-application-resolver:
+        specifier: 0.1.1
+        version: 0.1.1(@babel/core@7.29.7)
+    devDependencies:
+      '@babel/core':
+        specifier: 7.29.7
+        version: 7.29.7
+      '@babel/plugin-transform-runtime':
+        specifier: 7.29.7
+        version: 7.29.7(@babel/core@7.29.7)
+      '@babel/plugin-transform-typescript':
+        specifier: 7.29.7
+        version: 7.29.7(@babel/core@7.29.7)
+      '@babel/runtime':
+        specifier: 7.29.7
+        version: 7.29.7
+      '@ember/app-tsconfig':
+        specifier: 2.0.0
+        version: 2.0.0
+      '@embroider/core':
+        specifier: 4.6.2
+        version: 4.6.2(@glint/template@1.7.8)
+      '@glint/ember-tsc':
+        specifier: 1.8.11
+        version: 1.8.11(ember-source@7.0.0(@glimmer/component@2.1.1))(typescript@5.9.3)
+      '@glint/template':
+        specifier: 1.7.8
+        version: 1.7.8
+      '@glint/tsserver-plugin':
+        specifier: 2.5.17
+        version: 2.5.17(ember-source@7.0.0(@glimmer/component@2.1.1))
+      '@nullvoxpopuli/ember-vite':
+        specifier: 1.0.3
+        version: 1.0.3(@glint/template@1.7.8)(@types/babel__core@7.20.5)(rollup@4.61.1)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      '@rollup/plugin-babel':
+        specifier: 7.1.0
+        version: 7.1.0(@babel/core@7.29.7)(@types/babel__core@7.20.5)(rollup@4.61.1)
+      babel-plugin-ember-template-compilation:
+        specifier: 4.0.0
+        version: 4.0.0
+      typescript:
+        specifier: 5.9.3
+        version: 5.9.3
+      vite:
+        specifier: 8.1.4
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
   examples/ember/sorting:
     dependencies:
       '@embroider/macros':
