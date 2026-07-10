@@ -9,7 +9,7 @@ title: column_getAfter
 function column_getAfter<TFeatures, TData, TValue>(column, position?): number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:209](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L209)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L213)
 
 Computes the offset from the end edge of a pinning region after this column.
 
@@ -47,5 +47,5 @@ requested region.
 ## Example
 
 ```ts
-const rightOffset = column_getAfter(column, 'end')
+const endOffset = column_getAfter(column, 'end')
 ```

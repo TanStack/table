@@ -5,7 +5,7 @@ title: Table_ColumnPinning
 
 # Interface: Table\_ColumnPinning\<TFeatures, TData\>
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L87)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L98)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:87](https://g
 getCenterFlatHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L95)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L106)
 
 Builds flat center-region headers for columns that are not pinned,
 including parent headers.
@@ -42,7 +42,7 @@ including parent headers.
 getCenterFooterGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L99)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:110](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L110)
 
 Builds footer groups for the center region of unpinned columns.
 
@@ -58,7 +58,7 @@ Builds footer groups for the center region of unpinned columns.
 getCenterHeaderGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L103)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L114)
 
 Builds header groups for the center region of unpinned columns.
 
@@ -74,7 +74,7 @@ Builds header groups for the center region of unpinned columns.
 getCenterLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L107)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:118](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L118)
 
 Gets leaf columns that are not pinned start or end.
 
@@ -90,7 +90,7 @@ Gets leaf columns that are not pinned start or end.
 getCenterLeafHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L111)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L122)
 
 Builds center-region leaf headers for columns that are not pinned.
 
@@ -106,7 +106,7 @@ Builds center-region leaf headers for columns that are not pinned.
 getCenterVisibleLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L115)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L126)
 
 Lists visible leaf columns in the unpinned center region.
 
@@ -122,9 +122,9 @@ Lists visible leaf columns in the unpinned center region.
 getEndFlatHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L149)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L160)
 
-Builds flat end-region headers for pinned columns, including parent
+Builds flat logical end-region headers for pinned columns, including parent
 headers.
 
 #### Returns
@@ -139,9 +139,9 @@ headers.
 getEndFooterGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L153)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L164)
 
-Builds footer groups for end-pinned columns.
+Builds footer groups for logical end-pinned columns.
 
 #### Returns
 
@@ -155,9 +155,9 @@ Builds footer groups for end-pinned columns.
 getEndHeaderGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:157](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L157)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L168)
 
-Builds header groups for end-pinned columns.
+Builds header groups for logical end-pinned columns.
 
 #### Returns
 
@@ -171,9 +171,9 @@ Builds header groups for end-pinned columns.
 getEndLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L161)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:172](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L172)
 
-Gets leaf columns pinned to the end region in pinning-state order.
+Gets leaf columns pinned to the logical end region in pinning-state order.
 
 #### Returns
 
@@ -187,9 +187,9 @@ Gets leaf columns pinned to the end region in pinning-state order.
 getEndLeafHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:165](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L165)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:176](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L176)
 
-Builds leaf headers for end-pinned columns.
+Builds leaf headers for logical end-pinned columns.
 
 #### Returns
 
@@ -203,9 +203,9 @@ Builds leaf headers for end-pinned columns.
 getEndVisibleLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:169](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L169)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L180)
 
-Lists visible leaf columns in the end pinned region.
+Lists visible leaf columns in the logical end pinned region.
 
 #### Returns
 
@@ -219,7 +219,7 @@ Lists visible leaf columns in the end pinned region.
 getIsSomeColumnsPinned: (position?) => boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L119)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L130)
 
 Checks whether any columns are pinned, optionally limited to one side.
 
@@ -241,7 +241,7 @@ Checks whether any columns are pinned, optionally limited to one side.
 getPinnedLeafColumns: (position) => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:183](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L183)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L194)
 
 Returns pinned leaf columns for the requested pinning region.
 
@@ -263,7 +263,7 @@ Returns pinned leaf columns for the requested pinning region.
 getPinnedVisibleLeafColumns: (position) => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L189)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:200](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L200)
 
 Lists visible leaf columns for the requested pinning region.
 
@@ -285,9 +285,9 @@ Lists visible leaf columns for the requested pinning region.
 getStartFlatHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L124)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L135)
 
-Builds flat start-region headers for pinned columns, including parent
+Builds flat logical start-region headers for pinned columns, including parent
 headers.
 
 #### Returns
@@ -302,9 +302,9 @@ headers.
 getStartFooterGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L128)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L139)
 
-Builds footer groups for start-pinned columns.
+Builds footer groups for logical start-pinned columns.
 
 #### Returns
 
@@ -318,9 +318,9 @@ Builds footer groups for start-pinned columns.
 getStartHeaderGroups: () => HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:132](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L132)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L143)
 
-Builds header groups for start-pinned columns.
+Builds header groups for logical start-pinned columns.
 
 #### Returns
 
@@ -334,9 +334,9 @@ Builds header groups for start-pinned columns.
 getStartLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L136)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L147)
 
-Gets leaf columns pinned to the start region in pinning-state order.
+Gets leaf columns pinned to the logical start region in pinning-state order.
 
 #### Returns
 
@@ -350,9 +350,9 @@ Gets leaf columns pinned to the start region in pinning-state order.
 getStartLeafHeaders: () => Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L140)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L151)
 
-Builds leaf headers for start-pinned columns.
+Builds leaf headers for logical start-pinned columns.
 
 #### Returns
 
@@ -366,9 +366,9 @@ Builds leaf headers for start-pinned columns.
 getStartVisibleLeafColumns: () => Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:144](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L144)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L155)
 
-Lists visible leaf columns in the start pinned region.
+Lists visible leaf columns in the logical start pinned region.
 
 #### Returns
 
@@ -382,7 +382,7 @@ Lists visible leaf columns in the start pinned region.
 resetColumnPinning: (defaultState?) => void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L175)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:186](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L186)
 
 Resets `columnPinning` to `initialState.columnPinning`.
 
@@ -406,7 +406,7 @@ Pass `true` to ignore initial state and reset to empty start/end arrays.
 setColumnPinning: (updater) => void;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L179)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:190](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L190)
 
 Updates column pinning state with a next state or updater function.
 

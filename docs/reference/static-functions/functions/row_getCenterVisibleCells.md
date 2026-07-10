@@ -9,7 +9,7 @@ title: row_getCenterVisibleCells
 function row_getCenterVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:196](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L196)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:204](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L204)
 
 Collects visible cells whose columns are not pinned start or end.
 

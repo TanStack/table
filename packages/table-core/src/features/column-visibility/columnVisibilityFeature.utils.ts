@@ -168,16 +168,16 @@ export function row_getVisibleCells<
     row_getVisibleCellsByColumnId,
   )
 
-  const leftCells: Array<Cell<TFeatures, TData, unknown>> = []
+  const startCells: Array<Cell<TFeatures, TData, unknown>> = []
   for (let i = 0; i < start.length; i++) {
     const cell = visibleCellsByColumnId[start[i]!]
-    if (cell) leftCells.push(cell)
+    if (cell) startCells.push(cell)
   }
 
-  const rightCells: Array<Cell<TFeatures, TData, unknown>> = []
+  const endCells: Array<Cell<TFeatures, TData, unknown>> = []
   for (let i = 0; i < end.length; i++) {
     const cell = visibleCellsByColumnId[end[i]!]
-    if (cell) rightCells.push(cell)
+    if (cell) endCells.push(cell)
   }
 
   // Center cells: visible cells in natural column order, minus pinned ones.
@@ -188,7 +188,7 @@ export function row_getVisibleCells<
     if (!start.includes(id) && !end.includes(id)) centerCells.push(cell)
   }
 
-  return [...leftCells, ...centerCells, ...rightCells]
+  return [...startCells, ...centerCells, ...endCells]
 }
 
 /**

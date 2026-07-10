@@ -41,7 +41,12 @@ import {
 import type { TableFeature } from '../../types/TableFeatures'
 
 /**
- * Feature that adds column pinning state and APIs for start, center, and end regions.
+ * Feature that adds column pinning state and APIs for logical start, center,
+ * and end regions.
+ *
+ * In LTR languages/layouts, start usually corresponds to left and end to
+ * right. In RTL languages/layouts, start usually corresponds to right and end
+ * to left.
  */
 export const columnPinningFeature: TableFeature = {
   getInitialState: (initialState) => {

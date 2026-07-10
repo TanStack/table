@@ -9,7 +9,7 @@ title: row_getStartVisibleCells
 function row_getStartVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:225](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L225)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L233)
 
 Collects visible cells for columns pinned to the start region.
 
@@ -39,5 +39,5 @@ Cells are returned in `state.columnPinning.start` order and are marked with
 ## Example
 
 ```ts
-const leftCells = row_getStartVisibleCells(row)
+const startCells = row_getStartVisibleCells(row)
 ```

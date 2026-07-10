@@ -30,11 +30,17 @@ export interface ColumnOffsetsByPosition {
    */
   center: ColumnOffsets
   /**
-   * Offsets within the start pinned region.
+   * Offsets within the logical start pinned region.
+   *
+   * In LTR languages/layouts, start usually corresponds to left. In RTL
+   * languages/layouts, start usually corresponds to right.
    */
   start: ColumnOffsets
   /**
-   * Offsets within the end pinned region.
+   * Offsets within the logical end pinned region.
+   *
+   * In LTR languages/layouts, end usually corresponds to right. In RTL
+   * languages/layouts, end usually corresponds to left.
    */
   end: ColumnOffsets
 }
@@ -66,11 +72,11 @@ export interface Table_ColumnSizing {
    */
   getColumnOffsets: () => ColumnOffsetsByPosition
   /**
-   * Sums the current sizes of visible start-pinned leaf columns.
+   * Sums the current sizes of visible logical start-pinned leaf columns.
    */
   getStartTotalSize: () => number
   /**
-   * Sums the current sizes of visible end-pinned leaf columns.
+   * Sums the current sizes of visible logical end-pinned leaf columns.
    */
   getEndTotalSize: () => number
   /**
@@ -107,8 +113,8 @@ export interface Column_ColumnSizing {
   /**
    * Measures the offset from this column's end edge to the end of its region.
    *
-   * Pass a pinned region to measure within that region. The value is the sum
-   * of visible leaf column sizes after this column.
+   * Pass a pinned region to measure within that logical region. The value is
+   * the sum of visible leaf column sizes after this column.
    */
   getAfter: (position?: ColumnPinningPosition | 'center') => number
   /**
@@ -119,8 +125,8 @@ export interface Column_ColumnSizing {
    * Measures the offset from the start of this column's region to its start
    * edge.
    *
-   * Pass a pinned region to measure within that region. The value is the sum
-   * of visible leaf column sizes before this column.
+   * Pass a pinned region to measure within that logical region. The value is
+   * the sum of visible leaf column sizes before this column.
    */
   getStart: (position?: ColumnPinningPosition | 'center') => number
   /**

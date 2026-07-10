@@ -125,7 +125,7 @@ function buildColumnOffsets<
  * @example
  * ```ts
  * const offsets = table_getColumnOffsets(table)
- * const leftOffset = offsets.start.starts[column.id]
+ * const startOffset = offsets.start.starts[column.id]
  * ```
  */
 export function table_getColumnOffsets<
@@ -174,9 +174,13 @@ function toOffsetsKey(
  * The value is the sum of all previous visible leaf column sizes in the
  * requested `'start'`, `'center'`, or `'end'` region.
  *
+ * `start` and `end` are logical positions. In LTR languages/layouts, `start`
+ * usually corresponds to left and `end` to right. In RTL languages/layouts,
+ * `start` usually corresponds to right and `end` to left.
+ *
  * @example
  * ```ts
- * const leftOffset = column_getStart(column, 'start')
+ * const startOffset = column_getStart(column, 'start')
  * ```
  */
 export function column_getStart<
@@ -203,7 +207,7 @@ export function column_getStart<
  *
  * @example
  * ```ts
- * const rightOffset = column_getAfter(column, 'end')
+ * const endOffset = column_getAfter(column, 'end')
  * ```
  */
 export function column_getAfter<
@@ -383,7 +387,7 @@ export function table_getTotalSize<
 }
 
 /**
- * Sums the rendered size of the start pinned header region.
+ * Sums the rendered size of the logical start pinned header region.
  *
  * An empty start pinning region returns `0`.
  *
@@ -433,7 +437,7 @@ export function table_getCenterTotalSize<
 }
 
 /**
- * Sums the rendered size of the end pinned header region.
+ * Sums the rendered size of the logical end pinned header region.
  *
  * An empty end pinning region returns `0`.
  *

@@ -11,7 +11,7 @@ function table_getPinnedVisibleLeafColumns<TFeatures, TData>(table, position?):
   | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:884](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L884)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:892](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L892)
 
 Resolves visible leaf columns for a requested pinning region.
 

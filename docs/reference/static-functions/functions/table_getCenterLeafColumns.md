@@ -9,9 +9,9 @@ title: table_getCenterLeafColumns
 function table_getCenterLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:749](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L749)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:757](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L757)
 
-Resolves leaf columns that are not pinned to either side.
+Resolves leaf columns that are not pinned to either logical side.
 
 Start- and end-pinned ids are removed from `table.getAllLeafColumns()`.
 

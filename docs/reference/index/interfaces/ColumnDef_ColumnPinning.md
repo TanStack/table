@@ -5,7 +5,7 @@ title: ColumnDef_ColumnPinning
 
 # Interface: ColumnDef\_ColumnPinning
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L39)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L50)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:39](https://g
 optional enablePinning: boolean;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L46)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L57)
 
 Allows this column's leaf columns to be pinned.
 

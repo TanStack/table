@@ -9,7 +9,7 @@ title: row_getEndVisibleCells
 function row_getEndVisibleCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L261)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L269)
 
 Collects visible cells for columns pinned to the end region.
 
@@ -39,5 +39,5 @@ Cells are returned in `state.columnPinning.end` order and are marked with
 ## Example
 
 ```ts
-const rightCells = row_getEndVisibleCells(row)
+const endCells = row_getEndVisibleCells(row)
 ```

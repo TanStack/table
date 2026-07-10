@@ -9,7 +9,7 @@ title: table_getStartLeafColumns
 function table_getStartLeafColumns<TFeatures, TData>(table): Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:698](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L698)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:706](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L706)
 
 Resolves leaf columns pinned to the start region.
 

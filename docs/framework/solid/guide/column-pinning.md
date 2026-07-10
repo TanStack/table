@@ -38,6 +38,8 @@ const table = createTable({
 
 TanStack Table offers state and APIs helpful for implementing column pinning features in your table UI. You can implement column pinning in multiple ways. You can either split pinned columns into their own separate tables, or you can keep all columns in the same table, but use the pinning state to order the columns correctly and use sticky CSS to pin the columns to the start or end.
 
+`start` and `end` are logical pinning regions. In LTR languages/layouts, `start` usually corresponds to left and `end` to right. In RTL languages/layouts, `start` usually corresponds to right and `end` to left.
+
 ### How Column Pinning Affects Column Order
 
 There are 3 table features that can reorder columns, which happen in the following order:

@@ -5,7 +5,7 @@ title: ColumnPinningDefaultOptions
 
 # Interface: ColumnPinningDefaultOptions
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L35)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L46)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [features/column-pinning/columnPinningFeature.types.ts:35](https://g
 onColumnPinningChange: OnChangeFn<ColumnPinningState>;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L36)
+Defined in: [features/column-pinning/columnPinningFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.types.ts#L47)

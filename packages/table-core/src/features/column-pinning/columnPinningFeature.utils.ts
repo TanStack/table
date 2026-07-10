@@ -48,6 +48,10 @@ export function getDefaultColumnPinningState(): ColumnPinningState {
  * from both regions, then appended to the requested `'start'` or `'end'`
  * region. Passing `false` unpins them back to the center.
  *
+ * `start` and `end` are logical positions. In LTR languages/layouts, `start`
+ * usually corresponds to left and `end` to right. In RTL languages/layouts,
+ * `start` usually corresponds to right and `end` to left.
+ *
  * @example
  * ```ts
  * column_pin(column, 'start')
@@ -126,6 +130,10 @@ export function column_getCanPin<
  *
  * Group columns report `'start'` or `'end'` when any leaf column is pinned in
  * that region. Unpinned columns return `false`.
+ *
+ * `start` and `end` are logical positions. In LTR languages/layouts, `start`
+ * usually corresponds to left and `end` to right. In RTL languages/layouts,
+ * `start` usually corresponds to right and `end` to left.
  *
  * @example
  * ```ts
@@ -207,8 +215,8 @@ export function row_getCenterVisibleCells<
   if (!start.length && !end.length) {
     return allCells
   }
-  const leftAndEnd: Array<string> = [...start, ...end]
-  return allCells.filter((d) => !leftAndEnd.includes(d.column.id))
+  const startAndEnd: Array<string> = [...start, ...end]
+  return allCells.filter((d) => !startAndEnd.includes(d.column.id))
 }
 
 /**
@@ -219,7 +227,7 @@ export function row_getCenterVisibleCells<
  *
  * @example
  * ```ts
- * const leftCells = row_getStartVisibleCells(row)
+ * const startCells = row_getStartVisibleCells(row)
  * ```
  */
 export function row_getStartVisibleCells<
@@ -255,7 +263,7 @@ export function row_getStartVisibleCells<
  *
  * @example
  * ```ts
- * const rightCells = row_getEndVisibleCells(row)
+ * const endCells = row_getEndVisibleCells(row)
  * ```
  */
 export function row_getEndVisibleCells<
@@ -452,9 +460,9 @@ export function table_getCenterHeaderGroups<
   const { start, end } =
     table.atoms.columnPinning?.get() ?? getDefaultColumnPinningState()
   if (start.length || end.length) {
-    const leftAndEnd: Array<string> = [...start, ...end]
+    const startAndEnd: Array<string> = [...start, ...end]
     leafColumns = leafColumns.filter(
-      (column) => !leftAndEnd.includes(column.id),
+      (column) => !startAndEnd.includes(column.id),
     )
   }
   return buildHeaderGroups(allColumns, leafColumns, table, 'center')
@@ -737,7 +745,7 @@ export function table_getEndLeafColumns<
 }
 
 /**
- * Resolves leaf columns that are not pinned to either side.
+ * Resolves leaf columns that are not pinned to either logical side.
  *
  * Start- and end-pinned ids are removed from `table.getAllLeafColumns()`.
  *
@@ -755,8 +763,8 @@ export function table_getCenterLeafColumns<
   if (!start.length && !end.length) {
     return table.getAllLeafColumns()
   }
-  const leftAndEnd: Array<string> = [...start, ...end]
-  return table.getAllLeafColumns().filter((d) => !leftAndEnd.includes(d.id))
+  const startAndEnd: Array<string> = [...start, ...end]
+  return table.getAllLeafColumns().filter((d) => !startAndEnd.includes(d.id))
 }
 
 /**

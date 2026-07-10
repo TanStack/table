@@ -9,7 +9,7 @@ title: table_getEndFooterGroups
 function table_getEndFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:497](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L497)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:505](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L505)
 
 Builds footer groups for the end pinned region.
 

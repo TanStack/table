@@ -3,7 +3,7 @@ title: Migrating to TanStack Table V9 (Solid)
 ---
 
 > [!NOTE]
-> `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology. If you migrated on an earlier beta, update `columnPinning.left` to `columnPinning.start`, `columnPinning.right` to `columnPinning.end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*` / `getRight*` table and row APIs to `getStart*` / `getEnd*`. See the [Column Pinning](#column-pinning) section below for the full mapping.
+> `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology. These are logical positions: in LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. If you migrated on an earlier beta, update `columnPinning.left` to `columnPinning.start`, `columnPinning.right` to `columnPinning.end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*` / `getRight*` table and row APIs to `getStart*` / `getEnd*`. See the [Column Pinning](#column-pinning) section below for the full mapping.
 
 > [!NOTE]
 > `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Model Factories](#row-model-factories) section below for the new shape.
@@ -55,7 +55,7 @@ The main migration is replacing `createSolidTable` with `createTable`, then movi
 
 ### Column Pinning
 
-`v9.0.0-beta.38` changes column pinning to use logical `start`/`end` terminology instead of physical `left`/`right` terminology. There are no deprecated aliases in beta.38.
+`v9.0.0-beta.38` changes column pinning to use logical `start`/`end` terminology instead of physical `left`/`right` terminology. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases in beta.38.
 
 | Before beta.38                       | beta.38+                             |
 | ------------------------------------ | ------------------------------------ |

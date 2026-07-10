@@ -9,7 +9,7 @@ title: table_getStartHeaderGroups
 function table_getStartHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:372](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L372)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:380](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L380)
 
 Builds header groups for visible columns pinned to the start region.
 

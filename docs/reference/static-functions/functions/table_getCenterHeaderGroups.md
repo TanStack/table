@@ -9,7 +9,7 @@ title: table_getCenterHeaderGroups
 function table_getCenterHeaderGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:440](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L440)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:448](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L448)
 
 Builds header groups for visible columns that are not pinned.
 

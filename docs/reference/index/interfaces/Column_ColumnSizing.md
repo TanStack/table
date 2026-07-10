@@ -5,7 +5,7 @@ title: Column_ColumnSizing
 
 # Interface: Column\_ColumnSizing
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L106)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L112)
 
 ## Properties
 
@@ -15,12 +15,12 @@ Defined in: [features/column-sizing/columnSizingFeature.types.ts:106](https://gi
 getAfter: (position?) => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L113)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L119)
 
 Measures the offset from this column's end edge to the end of its region.
 
-Pass a pinned region to measure within that region. The value is the sum
-of visible leaf column sizes after this column.
+Pass a pinned region to measure within that logical region. The value is
+the sum of visible leaf column sizes after this column.
 
 #### Parameters
 
@@ -40,7 +40,7 @@ of visible leaf column sizes after this column.
 getSize: () => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L117)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L123)
 
 Resolves the column's current size after state and min/max constraints.
 
@@ -56,13 +56,13 @@ Resolves the column's current size after state and min/max constraints.
 getStart: (position?) => number;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L125)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L131)
 
 Measures the offset from the start of this column's region to its start
 edge.
 
-Pass a pinned region to measure within that region. The value is the sum
-of visible leaf column sizes before this column.
+Pass a pinned region to measure within that logical region. The value is
+the sum of visible leaf column sizes before this column.
 
 #### Parameters
 
@@ -82,7 +82,7 @@ of visible leaf column sizes before this column.
 resetSize: () => void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L129)
+Defined in: [features/column-sizing/columnSizingFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.types.ts#L135)
 
 Resets the column to its initial size.
 

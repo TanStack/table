@@ -11,7 +11,7 @@ function table_getPinnedLeafColumns<TFeatures, TData>(table, position):
   | Column_Internal<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.utils.ts:773](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L773)
+Defined in: [features/column-pinning/columnPinningFeature.utils.ts:781](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.utils.ts#L781)
 
 Resolves leaf columns for a requested pinning region.
 

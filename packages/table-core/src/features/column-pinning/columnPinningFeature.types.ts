@@ -5,6 +5,13 @@ import type { Header } from '../../types/Header'
 import type { HeaderGroup } from '../../types/HeaderGroup'
 import type { Column } from '../../types/Column'
 
+/**
+ * Logical column pinning region.
+ *
+ * In LTR languages/layouts, `start` usually corresponds to left and `end`
+ * usually corresponds to right. In RTL languages/layouts, `start` usually
+ * corresponds to right and `end` usually corresponds to left.
+ */
 export type ColumnPinningPosition = false | 'start' | 'end'
 
 export interface ColumnPinningState {
@@ -18,7 +25,11 @@ export interface TableState_ColumnPinning {
 
 export interface TableOptions_ColumnPinning {
   /**
-   * Allows columns to be pinned into start and end regions.
+   * Allows columns to be pinned into logical start and end regions.
+   *
+   * In LTR languages/layouts, start usually corresponds to left and end to
+   * right. In RTL languages/layouts, start usually corresponds to right and end
+   * to left.
    *
    * Defaults to `true`; column-level `enablePinning` can still opt individual
    * columns out.
@@ -52,7 +63,7 @@ export interface Column_ColumnPinning {
    */
   getCanPin: () => boolean
   /**
-   * Reads the column's pinned position: `'start'`, `'end'`, or `false`.
+   * Reads the column's logical pinned position: `'start'`, `'end'`, or `false`.
    */
   getIsPinned: () => ColumnPinningPosition
   /**
@@ -60,8 +71,8 @@ export interface Column_ColumnPinning {
    */
   getPinnedIndex: () => number
   /**
-   * Pins this column's leaf columns start or end, or unpins them when `false`
-   * is passed.
+   * Pins this column's leaf columns to logical start or end, or unpins them
+   * when `false` is passed.
    */
   pin: (position: ColumnPinningPosition) => void
 }
@@ -75,11 +86,11 @@ export interface Row_ColumnPinning<
    */
   getCenterVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
-   * Gets visible row cells whose columns are pinned start.
+   * Gets visible row cells whose columns are pinned to logical start.
    */
   getStartVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
   /**
-   * Gets visible row cells whose columns are pinned end.
+   * Gets visible row cells whose columns are pinned to logical end.
    */
   getEndVisibleCells: () => Array<Cell<TFeatures, TData, unknown>>
 }
@@ -118,53 +129,53 @@ export interface Table_ColumnPinning<
    */
   getIsSomeColumnsPinned: (position?: ColumnPinningPosition) => boolean
   /**
-   * Builds flat start-region headers for pinned columns, including parent
+   * Builds flat logical start-region headers for pinned columns, including parent
    * headers.
    */
   getStartFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * Builds footer groups for start-pinned columns.
+   * Builds footer groups for logical start-pinned columns.
    */
   getStartFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Builds header groups for start-pinned columns.
+   * Builds header groups for logical start-pinned columns.
    */
   getStartHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Gets leaf columns pinned to the start region in pinning-state order.
+   * Gets leaf columns pinned to the logical start region in pinning-state order.
    */
   getStartLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Builds leaf headers for start-pinned columns.
+   * Builds leaf headers for logical start-pinned columns.
    */
   getStartLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * Lists visible leaf columns in the start pinned region.
+   * Lists visible leaf columns in the logical start pinned region.
    */
   getStartVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Builds flat end-region headers for pinned columns, including parent
+   * Builds flat logical end-region headers for pinned columns, including parent
    * headers.
    */
   getEndFlatHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * Builds footer groups for end-pinned columns.
+   * Builds footer groups for logical end-pinned columns.
    */
   getEndFooterGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Builds header groups for end-pinned columns.
+   * Builds header groups for logical end-pinned columns.
    */
   getEndHeaderGroups: () => Array<HeaderGroup<TFeatures, TData>>
   /**
-   * Gets leaf columns pinned to the end region in pinning-state order.
+   * Gets leaf columns pinned to the logical end region in pinning-state order.
    */
   getEndLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**
-   * Builds leaf headers for end-pinned columns.
+   * Builds leaf headers for logical end-pinned columns.
    */
   getEndLeafHeaders: () => Array<Header<TFeatures, TData, unknown>>
   /**
-   * Lists visible leaf columns in the end pinned region.
+   * Lists visible leaf columns in the logical end pinned region.
    */
   getEndVisibleLeafColumns: () => Array<Column<TFeatures, TData, unknown>>
   /**

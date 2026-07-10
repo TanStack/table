@@ -41,5 +41,5 @@ A single table-level memo of this result backs all `column.getStart()` and
 
 ```ts
 const offsets = table_getColumnOffsets(table)
-const leftOffset = offsets.start.starts[column.id]
+const startOffset = offsets.start.starts[column.id]
 ```
