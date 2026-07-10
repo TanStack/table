@@ -1,0 +1,12 @@
+{
+  "extends": "@ember/app-tsconfig",
+  "compilerOptions": {
+    "allowJs": true,
+    "types": [
+      "ember-source/types",
+      "@embroider/core/virtual",
+      "vite/client",
+      "@glint/ember-tsc/types"
+    ]
+  }
+}
