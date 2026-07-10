@@ -1,5 +1,4 @@
 import { computed, shallowRef, watch } from 'vue'
-import { batch } from '@tanstack/store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
@@ -84,6 +83,6 @@ export function vueReactivity(): TableReactivityBindings {
       return refToWritableAtom(shallowRef(value) as ShallowRef<T>)
     },
     untrack: (fn) => fn(),
-    batch,
+    batch: (fn) => fn(),
   }
 }
