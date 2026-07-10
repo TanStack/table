@@ -80,6 +80,9 @@ importers:
       prettier:
         specifier: ^3.8.4
         version: 3.8.4
+      prettier-plugin-ember-template-tag:
+        specifier: ^2.0.4
+        version: 2.1.7(prettier@3.8.4)
       prettier-plugin-svelte:
         specifier: ^4.1.1
         version: 4.1.1(prettier@3.8.4)(svelte@5.56.2(@typescript-eslint/types@8.62.0))
@@ -10109,9 +10112,6 @@ importers:
       prettier:
         specifier: ^3.4.2
         version: 3.8.4
-      prettier-plugin-ember-template-tag:
-        specifier: ^2.0.4
-        version: 2.1.7(prettier@3.8.4)
       publint:
         specifier: ^0.3.16
         version: 0.3.21
@@ -35266,7 +35266,7 @@ snapshots:
       call-bind: 1.0.9
       call-bound: 1.0.4
       define-properties: 1.2.1
-      es-object-atoms: 1.1.1
+      es-object-atoms: 1.1.2
 
   object.fromentries@2.0.8:
     dependencies:

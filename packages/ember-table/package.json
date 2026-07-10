@@ -96,7 +96,6 @@
     "eslint-plugin-n": "^17.15.1",
     "globals": "^16.1.0",
     "prettier": "^3.4.2",
-    "prettier-plugin-ember-template-tag": "^2.0.4",
     "publint": "^0.3.16",
     "qunit": "^2.24.1",
     "qunit-dom": "^3.4.0",

@@ -5,7 +5,7 @@ const config = {
   semi: false,
   singleQuote: true,
   trailingComma: 'all',
-  plugins: ['prettier-plugin-svelte'],
+  plugins: ['prettier-plugin-svelte', 'prettier-plugin-ember-template-tag'],
   overrides: [
     { files: '*.svelte', options: { parser: 'svelte' } },
     {
@@ -13,6 +13,12 @@ const config = {
       options: {
         printWidth: 100,
         parser: 'angular',
+      },
+    },
+    {
+      files: '*.{gjs,gts}',
+      options: {
+        templateSingleQuote: false,
       },
     },
   ],

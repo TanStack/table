@@ -79,6 +79,7 @@
     "markdown-link-extractor": "^4.0.3",
     "nx": "^22.7.5",
     "prettier": "^3.8.4",
+    "prettier-plugin-ember-template-tag": "^2.0.4",
     "prettier-plugin-svelte": "^4.1.1",
     "publint": "^0.3.21",
     "rimraf": "^6.1.3",
