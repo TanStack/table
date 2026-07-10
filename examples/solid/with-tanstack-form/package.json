@@ -22,7 +22,7 @@
     "@tanstack/solid-form": "^1.33.1",
     "@tanstack/solid-form-devtools": "^0.2.30",
     "@tanstack/solid-table": "^9.0.0-beta.38",
-    "@tanstack/solid-table-devtools": "^9.0.0-beta.38",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.40",
     "solid-js": "^1.9.13",
     "zod": "^4.4.3"
   }
