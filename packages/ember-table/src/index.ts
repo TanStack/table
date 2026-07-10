@@ -6,7 +6,7 @@ export {
   flexRenderComponent,
   FlexRenderComponentConfig,
 } from './flex-render.ts'
-export type { FlexRenderableSignature } from './flex-render.ts'
+export type { FlexRenderableSignature, CellRenderableSignature } from './flex-render.ts'
 export {
   FlexRenderCell,
   FlexRenderHeader,
