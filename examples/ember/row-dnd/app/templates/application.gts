@@ -122,9 +122,9 @@ export default class RowDndTable extends Component {
 
   <template>
     <div>
-      <button {{on "click" this.regenerateData}}>Regenerate Data</button>
+      <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -142,11 +142,11 @@ export default class RowDndTable extends Component {
       <tbody>
         {{#each this.rows as |row index|}}
           <tr
-            draggable="true"
-            {{on "dragstart" (this.dragStart index)}}
-            {{on "dragover" this.handleDragOver}}
-            {{on "drop" (this.drop index)}}
-            {{on "dragend" this.handleDragEnd}}
+            draggable='true'
+            {{on 'dragstart' (this.dragStart index)}}
+            {{on 'dragover' this.handleDragOver}}
+            {{on 'drop' (this.drop index)}}
+            {{on 'dragend' this.handleDragEnd}}
           >
             {{#each (getAllCells row) as |cell|}}
               <td><FlexRenderCell @cell={{cell}} /></td>
@@ -155,7 +155,7 @@ export default class RowDndTable extends Component {
         {{/each}}
       </tbody>
     </table>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.sortedIds}}</pre>
   </template>
 }

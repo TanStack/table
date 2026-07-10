@@ -140,7 +140,7 @@ const ProgressBar: TOC<
     undefined | { color: 'red' | 'blue' }
   >
 > = <template>
-  <div class="status-bar">
+  <div class='status-bar'>
     <span>Status: {{getValue @ctx}}</span>
   </div>
 </template>
@@ -250,10 +250,10 @@ export default class BasicAppTable extends Component {
   }
 
   <template>
-    <div class="demo-root">
+    <div class='demo-root'>
       <div>
-        <button {{on "click" this.regenerateData}}>Regenerate Data</button>
-        <button {{on "click" this.stressTest}}>Stress Test (1k rows)</button>
+        <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
+        <button {{on 'click' this.stressTest}}>Stress Test (1k rows)</button>
       </div>
       <table>
         <thead>
@@ -263,12 +263,12 @@ export default class BasicAppTable extends Component {
                 <th colspan={{header.colSpan}}>
                   {{#unless header.isPlaceholder}}
                     <div
-                      {{on "click" (toggleSort header.column)}}
-                      style="cursor: {{if
+                      {{on 'click' (toggleSort header.column)}}
+                      style='cursor: {{if
                         (getCanSort header.column)
-                        'pointer'
-                        'not-allowed'
-                      }}; user-select: none"
+                        "pointer"
+                        "not-allowed"
+                      }}; user-select: none'
                     >
                       <FlexRenderHeader @header={{header}} />{{lookup
                         this.sortIndicators

@@ -278,9 +278,9 @@ export default class GroupingTable extends Component {
 
   <template>
     <div>
-      <button {{on "click" this.regenerateData}}>Regenerate Data</button>
+      <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -290,7 +290,7 @@ export default class GroupingTable extends Component {
                 {{#unless header.isPlaceholder}}
                   <div>
                     {{#if (getCanGroup header.column)}}
-                      <button {{on "click" (toggleGrouping header.column)}}>
+                      <button {{on 'click' (toggleGrouping header.column)}}>
                         {{#if (getIsGrouped header.column)}}
                           🛑({{getGroupedIndex header.column}})
                         {{else}}
@@ -311,16 +311,16 @@ export default class GroupingTable extends Component {
           <tr>
             {{#each (getAllCells row) as |cell|}}
               <td
-                class="{{if (cellIsGrouped cell) 'cell-grouped'}}
-                  {{if (cellIsAggregated cell) 'cell-aggregated'}}
-                  {{if (cellIsPlaceholder cell) 'cell-placeholder'}}"
+                class='{{if (cellIsGrouped cell) "cell-grouped"}}
+                  {{if (cellIsAggregated cell) "cell-aggregated"}}
+                  {{if (cellIsPlaceholder cell) "cell-placeholder"}}'
               >
                 {{#if (cellIsGrouped cell)}}
                   <button
-                    style="cursor: {{if (rowCanExpand row) 'pointer' 'normal'}}"
-                    {{on "click" (toggleExpanded row)}}
+                    style='cursor: {{if (rowCanExpand row) "pointer" "normal"}}'
+                    {{on 'click' (toggleExpanded row)}}
                   >
-                    {{if (rowIsExpanded row) "👇" "👉"}}
+                    {{if (rowIsExpanded row) '👇' '👉'}}
                   </button>
                   <FlexRenderCell @cell={{cell}} />
                   ({{subRowCount row}})
@@ -337,37 +337,37 @@ export default class GroupingTable extends Component {
         {{/each}}
       </tbody>
     </table>
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >
         &lt;&lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
       </button>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |pageSize|}}
           <option
             value={{pageSize}}
@@ -379,7 +379,7 @@ export default class GroupingTable extends Component {
         {{/each}}
       </select>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

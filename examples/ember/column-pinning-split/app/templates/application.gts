@@ -91,27 +91,27 @@ interface PinHeaderSignature {
 
 const PinHeader: TOC<PinHeaderSignature> = <template>
   {{#unless @header.isPlaceholder}}
-    <div class="nowrap">
+    <div class='nowrap'>
       <FlexRenderHeader @header={{@header}} />
     </div>
     {{#if (getCanPin @header.column)}}
-      <div class="pin-actions">
+      <div class='pin-actions'>
         {{#unless (isPinnedLeft @header.column)}}
           <button
-            class="pin-button"
-            {{on "click" (pin @header.column "left")}}
+            class='pin-button'
+            {{on 'click' (pin @header.column 'left')}}
           >◀</button>
         {{/unless}}
         {{#if (getIsPinned @header.column)}}
           <button
-            class="pin-button"
-            {{on "click" (pin @header.column false)}}
+            class='pin-button'
+            {{on 'click' (pin @header.column false)}}
           >✕</button>
         {{/if}}
         {{#unless (isPinnedRight @header.column)}}
           <button
-            class="pin-button"
-            {{on "click" (pin @header.column "right")}}
+            class='pin-button'
+            {{on 'click' (pin @header.column 'right')}}
           >▶</button>
         {{/unless}}
       </div>
@@ -163,27 +163,27 @@ export default class ColumnPinningSplitTable extends Component {
   }
 
   <template>
-    <div class="button-row">
+    <div class='button-row'>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.regenerateData}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.regenerateData}}
       >Regenerate Data</button>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.stressTest}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.stressTest}}
       >Stress Test (1k rows)</button>
     </div>
 
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
 
-    <p class="demo-note">
+    <p class='demo-note'>
       This example takes advantage of the "splitting" APIs. (APIs that have
       "left", "center", and "right" modifiers)
     </p>
 
-    <div class="split-tables">
+    <div class='split-tables'>
       {{! Left Side }}
-      <table class="outlined-table">
+      <table class='outlined-table'>
         <thead>
           {{#each this.leftHeaderGroups as |headerGroup|}}
             <tr>
@@ -207,7 +207,7 @@ export default class ColumnPinningSplitTable extends Component {
       </table>
 
       {{! Center Side }}
-      <table class="outlined-table">
+      <table class='outlined-table'>
         <thead>
           {{#each this.centerHeaderGroups as |headerGroup|}}
             <tr>
@@ -231,7 +231,7 @@ export default class ColumnPinningSplitTable extends Component {
       </table>
 
       {{! Right Side }}
-      <table class="outlined-table">
+      <table class='outlined-table'>
         <thead>
           {{#each this.rightHeaderGroups as |headerGroup|}}
             <tr>
@@ -255,7 +255,7 @@ export default class ColumnPinningSplitTable extends Component {
       </table>
     </div>
 
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

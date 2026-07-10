@@ -155,44 +155,44 @@ export default class ColumnResizingPerformantTable extends Component {
 
   <template>
     <div>
-      <button class="demo-button" {{on "click" this.regenerateData}}>
+      <button class='demo-button' {{on 'click' this.regenerateData}}>
         Regenerate Data
       </button>
-      <button class="demo-button" {{on "click" this.stressTest}}>
+      <button class='demo-button' {{on 'click' this.stressTest}}>
         Stress Test (2k rows)
       </button>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     ({{this.rowCount}}
     rows)
-    <div class="spacer-md"></div>
-    <div class="scroll-container">
-      <div class="divTable" style={{this.tableStyle}}>
-        <div class="thead">
+    <div class='spacer-md'></div>
+    <div class='scroll-container'>
+      <div class='divTable' style={{this.tableStyle}}>
+        <div class='thead'>
           {{#each this.headerGroups as |headerGroup|}}
-            <div class="tr">
+            <div class='tr'>
               {{#each headerGroup.headers as |header|}}
-                <div class="th" style={{headerWidthStyle header}}>
+                <div class='th' style={{headerWidthStyle header}}>
                   {{#unless header.isPlaceholder}}
                     <FlexRenderHeader @header={{header}} />
                   {{/unless}}
                   <div
-                    class="resizer
-                      {{if (getIsResizing header.column) 'isResizing'}}"
-                    {{on "dblclick" (resetSize header.column)}}
-                    {{on "mousedown" (getResizeHandler header)}}
-                    {{on "touchstart" (getResizeHandler header)}}
+                    class='resizer
+                      {{if (getIsResizing header.column) "isResizing"}}'
+                    {{on 'dblclick' (resetSize header.column)}}
+                    {{on 'mousedown' (getResizeHandler header)}}
+                    {{on 'touchstart' (getResizeHandler header)}}
                   ></div>
                 </div>
               {{/each}}
             </div>
           {{/each}}
         </div>
-        <div class="tbody">
+        <div class='tbody'>
           {{#each this.rows as |row|}}
-            <div class="tr">
+            <div class='tr'>
               {{#each (getAllCells row) as |cell|}}
-                <div class="td" style={{colWidthStyle cell}}>
+                <div class='td' style={{colWidthStyle cell}}>
                   <FlexRenderCell @cell={{cell}} />
                 </div>
               {{/each}}
@@ -201,7 +201,7 @@ export default class ColumnResizingPerformantTable extends Component {
         </div>
       </div>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

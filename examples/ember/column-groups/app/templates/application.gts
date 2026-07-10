@@ -109,12 +109,12 @@ export default class ColumnGroupsTable extends Component {
 
   <template>
     <div>
-      <button class="demo-button" {{on "click" this.refreshData}}>Regenerate
+      <button class='demo-button' {{on 'click' this.refreshData}}>Regenerate
         Data</button>
-      <button class="demo-button" {{on "click" this.stressTest}}>Stress Test (1k
+      <button class='demo-button' {{on 'click' this.stressTest}}>Stress Test (1k
         rows)</button>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -152,7 +152,7 @@ export default class ColumnGroupsTable extends Component {
         {{/each}}
       </tfoot>
     </table>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

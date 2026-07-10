@@ -213,17 +213,17 @@ export default class FiltersFuzzyTable extends Component {
 
   <template>
     <div>
-      <button {{on "click" this.regenerateData}}>Regenerate Data</button>
-      <button {{on "click" this.stressTest}}>Stress Test (50k rows)</button>
+      <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
+      <button {{on 'click' this.stressTest}}>Stress Test (50k rows)</button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <input
-      type="text"
+      type='text'
       value={{this.globalFilterValue}}
-      placeholder="Fuzzy search all columns (typos ok)..."
-      {{on "input" this.handleGlobalFilter}}
+      placeholder='Fuzzy search all columns (typos ok)...'
+      {{on 'input' this.handleGlobalFilter}}
     />
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -232,8 +232,8 @@ export default class FiltersFuzzyTable extends Component {
               <th colspan={{header.colSpan}}>
                 {{#unless header.isPlaceholder}}
                   <div
-                    class="{{if (getCanSort header.column) 'sortable-header'}}"
-                    {{on "click" (toggleSort header.column)}}
+                    class='{{if (getCanSort header.column) "sortable-header"}}'
+                    {{on 'click' (toggleSort header.column)}}
                   >
                     <FlexRenderHeader @header={{header}} />{{lookup
                       this.sortIndicators
@@ -256,27 +256,27 @@ export default class FiltersFuzzyTable extends Component {
         {{/each}}
       </tbody>
     </table>
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         <div>Page</div>
         <strong>{{this.currentPage}} of {{this.pageCountDisplay}}</strong>
       </span>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |size|}}
           <option value={{size}} selected={{eq size this.pageSize}}>
             Show
@@ -285,7 +285,7 @@ export default class FiltersFuzzyTable extends Component {
         {{/each}}
       </select>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

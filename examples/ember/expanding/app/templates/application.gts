@@ -161,12 +161,12 @@ export default class ExpandingTable extends Component {
 
   <template>
     <div>
-      <button {{on "click" this.regenerateData}}>Regenerate Data</button>
-      <button {{on "click" this.toggleAllExpanded}}>
-        {{if this.isAllRowsExpanded "Collapse All" "Expand All"}}
+      <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
+      <button {{on 'click' this.toggleAllExpanded}}>
+        {{if this.isAllRowsExpanded 'Collapse All' 'Expand All'}}
       </button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -189,14 +189,14 @@ export default class ExpandingTable extends Component {
                 {{#if (eq index 0)}}
                   <div style={{depthPadding row}}>
                     <input
-                      type="checkbox"
+                      type='checkbox'
                       checked={{getIsSelected row}}
                       indeterminate={{getIsSomeSelected row}}
-                      {{on "change" (toggleSelected row)}}
+                      {{on 'change' (toggleSelected row)}}
                     />
                     {{#if (getCanExpand row)}}
-                      <button {{on "click" (toggleExpanded row)}}>
-                        {{if (getIsExpanded row) "👇" "👉"}}
+                      <button {{on 'click' (toggleExpanded row)}}>
+                        {{if (getIsExpanded row) '👇' '👉'}}
                       </button>
                     {{else}}
                       <span>🔵</span>
@@ -212,41 +212,41 @@ export default class ExpandingTable extends Component {
         {{/each}}
       </tbody>
     </table>
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >
         &lt;&lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
       </button>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         <div>Page</div>
         <strong>{{this.currentPage}} of {{this.pageCountDisplay}}</strong>
       </span>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |pageSize|}}
           <option
             value={{pageSize}}
@@ -258,7 +258,7 @@ export default class ExpandingTable extends Component {
         {{/each}}
       </select>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

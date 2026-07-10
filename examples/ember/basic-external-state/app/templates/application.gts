@@ -183,10 +183,10 @@ export default class BasicExternalStateTable extends Component {
 
   <template>
     <div>
-      <button {{on "click" this.regenerateData}}>
+      <button {{on 'click' this.regenerateData}}>
         Regenerate Data
       </button>
-      <button {{on "click" this.stressTest}}>
+      <button {{on 'click' this.stressTest}}>
         Stress Test (1M rows)
       </button>
     </div>
@@ -198,8 +198,8 @@ export default class BasicExternalStateTable extends Component {
               <th colspan={{header.colSpan}}>
                 {{#unless header.isPlaceholder}}
                   <div
-                    class="{{if (getCanSort header.column) 'sortable-header'}}"
-                    {{on "click" (toggleSort header.column)}}
+                    class='{{if (getCanSort header.column) "sortable-header"}}'
+                    {{on 'click' (toggleSort header.column)}}
                   >
                     <FlexRenderHeader @header={{header}} />{{lookup
                       this.sortIndicators
@@ -222,37 +222,37 @@ export default class BasicExternalStateTable extends Component {
         {{/each}}
       </tbody>
     </table>
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >
         &lt;&lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
       </button>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         <div>Page</div>
         <strong>
           {{this.currentPage}}
@@ -260,18 +260,18 @@ export default class BasicExternalStateTable extends Component {
           {{this.pageCountDisplay}}
         </strong>
       </span>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         | Go to page:
         <input
-          type="number"
-          min="1"
+          type='number'
+          min='1'
           max={{this.pageCount}}
           value={{this.currentPageInputValue}}
-          class="page-size-input"
-          {{on "input" this.handleGoToPage}}
+          class='page-size-input'
+          {{on 'input' this.handleGoToPage}}
         />
       </span>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |pageSize|}}
           <option
             value={{pageSize}}
@@ -283,7 +283,7 @@ export default class BasicExternalStateTable extends Component {
         {{/each}}
       </select>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

@@ -293,24 +293,24 @@ class TableFilter extends Component<TableFilterSignature> {
   }
 
   <template>
-    {{#if (eq this.variant "range")}}
+    {{#if (eq this.variant 'range')}}
       <div>
         <input
-          type="number"
-          placeholder="Min"
+          type='number'
+          placeholder='Min'
           value={{this.rangeMin}}
-          {{on "input" this.handleMin}}
+          {{on 'input' this.handleMin}}
         />
         <input
-          type="number"
-          placeholder="Max"
+          type='number'
+          placeholder='Max'
           value={{this.rangeMax}}
-          {{on "input" this.handleMax}}
+          {{on 'input' this.handleMax}}
         />
       </div>
-    {{else if (eq this.variant "select")}}
-      <select {{on "change" this.handleSelect}}>
-        <option value="" selected={{eq this.selectValue ""}}>All</option>
+    {{else if (eq this.variant 'select')}}
+      <select {{on 'change' this.handleSelect}}>
+        <option value='' selected={{eq this.selectValue ''}}>All</option>
         {{#each this.sortedUniqueValues as |value|}}
           <option value={{value}} selected={{eq value this.selectValue}}>
             {{value}}
@@ -319,10 +319,10 @@ class TableFilter extends Component<TableFilterSignature> {
       </select>
     {{else}}
       <input
-        type="text"
-        placeholder="Search ({{this.facetedUniqueCount}})"
+        type='text'
+        placeholder='Search ({{this.facetedUniqueCount}})'
         value={{this.textValue}}
-        {{on "input" this.handleText}}
+        {{on 'input' this.handleText}}
       />
     {{/if}}
   </template>
@@ -479,42 +479,42 @@ export default class KitchenSinkTable extends Component {
 
     <div>
       <input
-        type="text"
-        placeholder="Fuzzy search all columns..."
+        type='text'
+        placeholder='Fuzzy search all columns...'
         value={{this.globalFilterValue}}
-        {{on "input" this.handleGlobalFilter}}
+        {{on 'input' this.handleGlobalFilter}}
       />
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <div>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.regenerateData}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.regenerateData}}
       >Flat 1k</button>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.nestedData}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.nestedData}}
       >Nested 100x5x3</button>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.stressTest}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.stressTest}}
       >Stress 10k</button>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.resetTable}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.resetTable}}
       >Reset Table</button>
       <span>{{this.selectedCount}} of {{this.totalCount}} selected</span>
     </div>
 
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <details>
       <summary>Column visibility</summary>
       <div>
         <label>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={{this.isAllColumnsVisible}}
-            {{on "change" this.toggleAllColumns}}
+            {{on 'change' this.toggleAllColumns}}
           />
           Toggle All
         </label>
@@ -523,10 +523,10 @@ export default class KitchenSinkTable extends Component {
         <div>
           <label>
             <input
-              type="checkbox"
+              type='checkbox'
               checked={{getIsVisible column}}
               disabled={{not (getCanHide column)}}
-              {{on "change" (toggleVisibility column)}}
+              {{on 'change' (toggleVisibility column)}}
             />
             {{getColumnId column}}
           </label>
@@ -534,7 +534,7 @@ export default class KitchenSinkTable extends Component {
       {{/each}}
     </details>
 
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -542,26 +542,26 @@ export default class KitchenSinkTable extends Component {
             {{#each headerGroup.headers as |header|}}
               <th colspan={{header.colSpan}}>
                 {{#unless header.isPlaceholder}}
-                  <div class="header-controls">
+                  <div class='header-controls'>
                     {{#if (getCanPin header.column)}}
-                      {{#unless (eq (getIsPinned header.column) "left")}}
+                      {{#unless (eq (getIsPinned header.column) 'left')}}
                         <button
-                          {{on "click" (pinColumn header.column "left")}}
+                          {{on 'click' (pinColumn header.column 'left')}}
                         >&lt;</button>
                       {{/unless}}
                       {{#if (getIsPinned header.column)}}
                         <button
-                          {{on "click" (pinColumn header.column false)}}
+                          {{on 'click' (pinColumn header.column false)}}
                         >x</button>
                       {{/if}}
-                      {{#unless (eq (getIsPinned header.column) "right")}}
+                      {{#unless (eq (getIsPinned header.column) 'right')}}
                         <button
-                          {{on "click" (pinColumn header.column "right")}}
+                          {{on 'click' (pinColumn header.column 'right')}}
                         >&gt;</button>
                       {{/unless}}
                     {{/if}}
                     {{#if (getCanGroup header.column)}}
-                      <button {{on "click" (toggleGroup header.column)}}>
+                      <button {{on 'click' (toggleGroup header.column)}}>
                         {{#if (getIsGrouped header.column)}}
                           Stop ({{getGroupedIndex header.column}})
                         {{else}}
@@ -571,16 +571,16 @@ export default class KitchenSinkTable extends Component {
                     {{/if}}
                   </div>
 
-                  {{#if (eq (getColumnId header.column) "select")}}
+                  {{#if (eq (getColumnId header.column) 'select')}}
                     <input
-                      type="checkbox"
+                      type='checkbox'
                       checked={{this.isAllPageRowsSelected}}
-                      {{on "change" this.toggleAllPageRows}}
+                      {{on 'change' this.toggleAllPageRows}}
                     />
                   {{else if (getCanSort header.column)}}
                     <div
-                      class="sortable-header"
-                      {{on "click" (toggleSort header.column)}}
+                      class='sortable-header'
+                      {{on 'click' (toggleSort header.column)}}
                     >
                       <FlexRenderHeader @header={{header}} />{{lookup
                         this.sortIndicators
@@ -609,22 +609,22 @@ export default class KitchenSinkTable extends Component {
               <td>
                 {{#if (cellIsSelect cell)}}
                   <input
-                    type="checkbox"
+                    type='checkbox'
                     checked={{rowGetIsSelected cell.row}}
-                    {{on "change" (toggleRowSelected cell.row)}}
+                    {{on 'change' (toggleRowSelected cell.row)}}
                   />
                 {{else if (cellIsFirstName cell)}}
                   <span style={{rowDepthPad cell.row}}>
                     {{#if (rowGetCanExpand cell.row)}}
-                      <button {{on "click" (toggleRowExpanded cell.row)}}>
-                        {{if (rowGetIsExpanded cell.row) "v" ">"}}
+                      <button {{on 'click' (toggleRowExpanded cell.row)}}>
+                        {{if (rowGetIsExpanded cell.row) 'v' '>'}}
                       </button>
                     {{/if}}
                     <FlexRenderCell @cell={{cell}} />
                   </span>
                 {{else if (cellIsGrouped cell)}}
-                  <button {{on "click" (toggleRowExpanded cell.row)}}>
-                    {{if (rowGetIsExpanded cell.row) "v" ">"}}
+                  <button {{on 'click' (toggleRowExpanded cell.row)}}>
+                    {{if (rowGetIsExpanded cell.row) 'v' '>'}}
                     <FlexRenderCell @cell={{cell}} />
                     ({{rowSubRowCount cell.row}})
                   </button>
@@ -638,33 +638,33 @@ export default class KitchenSinkTable extends Component {
       </tbody>
     </table>
 
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >&lt;&lt;</button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >&lt;</button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >&gt;</button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >&gt;&gt;</button>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         <div>Page</div>
         <strong>{{this.currentPage}} of {{this.pageCountDisplay}}</strong>
       </span>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |size|}}
           <option value={{size}} selected={{eq size this.pageSize}}>
             Show
@@ -674,10 +674,10 @@ export default class KitchenSinkTable extends Component {
       </select>
     </div>
 
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <div>{{this.filteredCount}} filtered of {{this.totalCount}} total</div>
 
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <details>
       <summary>Table state (live)</summary>
       <pre>{{this.tableState}}</pre>

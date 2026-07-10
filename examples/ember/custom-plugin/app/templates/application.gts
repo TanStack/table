@@ -280,16 +280,16 @@ export default class CustomPluginTable extends Component {
   }
 
   <template>
-    <div class="controls">
-      <button class="demo-button" {{on "click" this.toggleDensity}}>
+    <div class='controls'>
+      <button class='demo-button' {{on 'click' this.toggleDensity}}>
         Toggle Density (current:
         {{this.density}})
       </button>
-      <button class="demo-button" {{on "click" this.regenerateData}}>
+      <button class='demo-button' {{on 'click' this.regenerateData}}>
         Regenerate Data
       </button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -329,37 +329,37 @@ export default class CustomPluginTable extends Component {
         {{/each}}
       </tfoot>
     </table>
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >
         &lt;&lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
       </button>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         <div>Page</div>
         <strong>
           {{this.currentPage}}
@@ -367,7 +367,7 @@ export default class CustomPluginTable extends Component {
           {{this.pageCountDisplay}}
         </strong>
       </span>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |size|}}
           <option value={{size}} selected={{eq size this.pageSize}}>
             Show
@@ -376,7 +376,7 @@ export default class CustomPluginTable extends Component {
         {{/each}}
       </select>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>Density: {{this.density}}</pre>
     <pre>{{this.tableState}}</pre>
   </template>

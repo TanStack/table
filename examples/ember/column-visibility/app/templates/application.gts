@@ -133,29 +133,29 @@ export default class ColumnVisibilityTable extends Component {
   }
 
   <template>
-    <button class="demo-button" {{on "click" this.refreshData}}>Regenerate Data</button>
-    <button class="demo-button" {{on "click" this.stressTest}}>Stress Test (1k
+    <button class='demo-button' {{on 'click' this.refreshData}}>Regenerate Data</button>
+    <button class='demo-button' {{on 'click' this.stressTest}}>Stress Test (1k
       rows)</button>
-    <div class="spacer-md"></div>
-    <div class="column-toggle-panel">
-      <div class="column-toggle-panel-header">
+    <div class='spacer-md'></div>
+    <div class='column-toggle-panel'>
+      <div class='column-toggle-panel-header'>
         <label>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={{this.isAllColumnsVisible}}
-            {{on "change" this.toggleAllColumnsVisibility}}
+            {{on 'change' this.toggleAllColumnsVisibility}}
           />
           Toggle All
         </label>
       </div>
 
       {{#each this.leafColumns as |column|}}
-        <div class="column-toggle-row">
+        <div class='column-toggle-row'>
           <label>
             <input
-              type="checkbox"
+              type='checkbox'
               checked={{getIsVisible column}}
-              {{on "change" (toggleColumnVisibility column)}}
+              {{on 'change' (toggleColumnVisibility column)}}
             />
             {{column.id}}
           </label>
@@ -163,7 +163,7 @@ export default class ColumnVisibilityTable extends Component {
       {{/each}}
     </div>
 
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
 
     <table>
       <thead>
@@ -203,7 +203,7 @@ export default class ColumnVisibilityTable extends Component {
       </tfoot>
     </table>
 
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

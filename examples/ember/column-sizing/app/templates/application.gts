@@ -131,41 +131,41 @@ export default class ColumnSizingTable extends Component {
 
   <template>
     <div>
-      <button class="demo-button" {{on "click" this.regenerateData}}>
+      <button class='demo-button' {{on 'click' this.regenerateData}}>
         Regenerate Data
       </button>
-      <button class="demo-button" {{on "click" this.stressTest}}>
+      <button class='demo-button' {{on 'click' this.stressTest}}>
         Stress Test (1k rows)
       </button>
     </div>
-    <div class="spacer-md"></div>
-    <div class="button-row">
-      <div class="section-title">Initial Column Sizes</div>
+    <div class='spacer-md'></div>
+    <div class='button-row'>
+      <div class='section-title'>Initial Column Sizes</div>
       <br />
       {{#each this.allColumns as |column|}}
         <div>
           <label>
             {{column.id}}
             <input
-              type="number"
-              class="column-size-input"
+              type='number'
+              class='column-size-input'
               value={{getColumnSize column}}
-              {{on "change" (this.setColumnSize column.id)}}
+              {{on 'change' (this.setColumnSize column.id)}}
             />
           </label>
         </div>
       {{/each}}
     </div>
-    <div class="spacer-md"></div>
-    <div class="scroll-container">
-      <table style="width:{{this.centerTotalSize}}px">
+    <div class='spacer-md'></div>
+    <div class='scroll-container'>
+      <table style='width:{{this.centerTotalSize}}px'>
         <thead>
           {{#each this.headerGroups as |headerGroup|}}
             <tr>
               {{#each headerGroup.headers as |header|}}
                 <th
                   colspan={{header.colSpan}}
-                  style="width:{{getHeaderSize header}}px"
+                  style='width:{{getHeaderSize header}}px'
                 >
                   {{#unless header.isPlaceholder}}
                     <FlexRenderHeader @header={{header}} />
@@ -179,7 +179,7 @@ export default class ColumnSizingTable extends Component {
           {{#each this.rows as |row|}}
             <tr>
               {{#each (getAllCells row) as |cell|}}
-                <td style="width:{{getCellColumnSize cell}}px">
+                <td style='width:{{getCellColumnSize cell}}px'>
                   <FlexRenderCell @cell={{cell}} />
                 </td>
               {{/each}}
@@ -192,7 +192,7 @@ export default class ColumnSizingTable extends Component {
               {{#each footerGroup.headers as |header|}}
                 <th
                   colspan={{header.colSpan}}
-                  style="width:{{getHeaderSize header}}px"
+                  style='width:{{getHeaderSize header}}px'
                 >
                   {{#unless header.isPlaceholder}}
                     <FlexRenderFooter @footer={{header}} />
@@ -204,7 +204,7 @@ export default class ColumnSizingTable extends Component {
         </tfoot>
       </table>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

@@ -154,25 +154,25 @@ export default class ColumnOrderingTable extends Component {
   }
 
   <template>
-    <div class="column-toggle-panel">
-      <div class="column-toggle-panel-header">
+    <div class='column-toggle-panel'>
+      <div class='column-toggle-panel-header'>
         <label>
           <input
-            type="checkbox"
+            type='checkbox'
             checked={{this.isAllColumnsVisible}}
-            {{on "change" this.toggleAllColumnsVisibility}}
+            {{on 'change' this.toggleAllColumnsVisibility}}
           />
           Toggle All
         </label>
       </div>
 
       {{#each this.leafColumns as |column|}}
-        <div class="column-toggle-row">
+        <div class='column-toggle-row'>
           <label>
             <input
-              type="checkbox"
+              type='checkbox'
               checked={{getIsVisible column}}
-              {{on "change" (toggleColumnVisibility column)}}
+              {{on 'change' (toggleColumnVisibility column)}}
             />
             {{column.id}}
           </label>
@@ -180,23 +180,23 @@ export default class ColumnOrderingTable extends Component {
       {{/each}}
     </div>
 
-    <div class="spacer-md"></div>
-    <div class="button-row">
+    <div class='spacer-md'></div>
+    <div class='button-row'>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.refreshData}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.refreshData}}
       >Regenerate Data</button>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.stressTest}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.stressTest}}
       >Stress Test (1k rows)</button>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.shuffleColumns}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.shuffleColumns}}
       >Shuffle Columns</button>
       <button
-        class="demo-button demo-button-sm"
-        {{on "click" this.resetOrder}}
+        class='demo-button demo-button-sm'
+        {{on 'click' this.resetOrder}}
       >Reset Order</button>
     </div>
 
@@ -238,7 +238,7 @@ export default class ColumnOrderingTable extends Component {
       </tfoot>
     </table>
 
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

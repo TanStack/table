@@ -148,19 +148,19 @@ export default class SortingTable extends Component {
   <template>
     <div>
       <button
-        class="demo-button demo-button-spaced"
-        {{on "click" this.regenerateData}}
+        class='demo-button demo-button-spaced'
+        {{on 'click' this.regenerateData}}
       >
         Regenerate Data
       </button>
       <button
-        class="demo-button demo-button-spaced"
-        {{on "click" this.stressTest}}
+        class='demo-button demo-button-spaced'
+        {{on 'click' this.stressTest}}
       >
         Stress Test (1M rows)
       </button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -169,8 +169,8 @@ export default class SortingTable extends Component {
               <th colspan={{header.colSpan}}>
                 {{#unless header.isPlaceholder}}
                   <div
-                    class="{{if (getCanSort header.column) 'sortable-header'}}"
-                    {{on "click" (toggleSort header.column)}}
+                    class='{{if (getCanSort header.column) "sortable-header"}}'
+                    {{on 'click' (toggleSort header.column)}}
                   >
                     <FlexRenderHeader @header={{header}} />{{lookup
                       this.sortIndicators
@@ -207,7 +207,7 @@ export default class SortingTable extends Component {
       </tfoot>
     </table>
     <div>{{this.rowCount}} Rows</div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <p>Tip: shift-click a header to sort by multiple columns.</p>
     <pre>{{this.sortingState}}</pre>
   </template>

@@ -256,7 +256,7 @@ export default class RemoteDataTable extends Component {
   }
 
   <template>
-    <div class="scroll-container">
+    <div class='scroll-container'>
       <table>
         <thead>
           {{#each this.headerGroups as |headerGroup|}}
@@ -265,11 +265,11 @@ export default class RemoteDataTable extends Component {
                 <th colspan={{header.colSpan}}>
                   {{#unless header.isPlaceholder}}
                     <div
-                      class="{{if
+                      class='{{if
                           (getCanSort header.column)
-                          'sortable-header'
-                        }}"
-                      {{on "click" (toggleSort header.column)}}
+                          "sortable-header"
+                        }}'
+                      {{on 'click' (toggleSort header.column)}}
                     >
                       <FlexRenderHeader @header={{header}} />{{lookup
                         this.sortIndicators
@@ -296,37 +296,37 @@ export default class RemoteDataTable extends Component {
     {{#if this.isLoading}}
       <div>Loading...</div>
     {{/if}}
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >
         &lt;&lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
       </button>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         <div>Page</div>
         <strong>
           {{this.currentPage}}
@@ -334,18 +334,18 @@ export default class RemoteDataTable extends Component {
           {{this.pageCountDisplay}}
         </strong>
       </span>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         | Go to page:
         <input
-          type="number"
-          min="1"
+          type='number'
+          min='1'
           max={{this.pageCount}}
           value={{this.currentPageInputValue}}
-          class="page-size-input"
-          {{on "input" this.handleGoToPage}}
+          class='page-size-input'
+          {{on 'input' this.handleGoToPage}}
         />
       </span>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |size|}}
           <option value={{size}} selected={{eq size this.pagination.pageSize}}>
             Show

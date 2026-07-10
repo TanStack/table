@@ -55,7 +55,7 @@ interface SubComponentSignature {
 }
 
 const SubComponent: TOC<SubComponentSignature> = <template>
-  <pre class="code-block" style="font-size: 10px">
+  <pre class='code-block' style='font-size: 10px'>
     <code>{{jsonify @row}}</code>
   </pre>
 </template>
@@ -107,9 +107,9 @@ export default class SubComponentsTable extends Component {
 
   <template>
     <div>
-      <button {{on "click" this.regenerateData}}>Regenerate Data</button>
+      <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -131,8 +131,8 @@ export default class SubComponentsTable extends Component {
               <td>
                 {{#if (eq index 0)}}
                   {{#if (getCanExpand row)}}
-                    <button {{on "click" (toggleExpanded row)}}>
-                      {{if (getIsExpanded row) "👇" "👉"}}
+                    <button {{on 'click' (toggleExpanded row)}}>
+                      {{if (getIsExpanded row) '👇' '👉'}}
                     </button>
                   {{else}}
                     <span>🔵</span>
@@ -152,7 +152,7 @@ export default class SubComponentsTable extends Component {
         {{/each}}
       </tbody>
     </table>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }

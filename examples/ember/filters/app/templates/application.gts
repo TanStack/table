@@ -187,26 +187,26 @@ class ColumnFilter extends Component<ColumnFilterSignature> {
   }
 
   <template>
-    {{#if (eq this.variant "range")}}
-      <div class="filter-row">
+    {{#if (eq this.variant 'range')}}
+      <div class='filter-row'>
         <input
-          type="number"
-          class="filter-input"
-          placeholder="Min"
+          type='number'
+          class='filter-input'
+          placeholder='Min'
           value={{this.minValue}}
-          {{on "input" this.changeMin}}
+          {{on 'input' this.changeMin}}
         />
         <input
-          type="number"
-          class="filter-input"
-          placeholder="Max"
+          type='number'
+          class='filter-input'
+          placeholder='Max'
           value={{this.maxValue}}
-          {{on "input" this.changeMax}}
+          {{on 'input' this.changeMax}}
         />
       </div>
-    {{else if (eq this.variant "select")}}
-      <select {{on "change" this.changeSelect}}>
-        <option value="" selected={{eq this.selected ""}}>All</option>
+    {{else if (eq this.variant 'select')}}
+      <select {{on 'change' this.changeSelect}}>
+        <option value='' selected={{eq this.selected ''}}>All</option>
         {{#each this.uniqueValues as |value|}}
           <option value={{value}} selected={{eq this.selected value}}>
             {{value}}
@@ -215,11 +215,11 @@ class ColumnFilter extends Component<ColumnFilterSignature> {
       </select>
     {{else}}
       <input
-        type="text"
-        class="filter-select"
-        placeholder="Search..."
+        type='text'
+        class='filter-select'
+        placeholder='Search...'
         value={{this.text}}
-        {{on "input" this.changeText}}
+        {{on 'input' this.changeText}}
       />
     {{/if}}
   </template>
@@ -334,19 +334,19 @@ export default class FiltersTable extends Component {
   <template>
     <div>
       <button
-        class="demo-button demo-button-spaced"
-        {{on "click" this.regenerateData}}
+        class='demo-button demo-button-spaced'
+        {{on 'click' this.regenerateData}}
       >
         Regenerate Data
       </button>
       <button
-        class="demo-button demo-button-spaced"
-        {{on "click" this.stressTest}}
+        class='demo-button demo-button-spaced'
+        {{on 'click' this.stressTest}}
       >
         Stress Test (1M rows)
       </button>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -381,37 +381,37 @@ export default class FiltersTable extends Component {
         {{/each}}
       </tbody>
     </table>
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >
         &lt;&lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
       </button>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         <div>Page</div>
         <strong>
           {{this.currentPage}}
@@ -419,18 +419,18 @@ export default class FiltersTable extends Component {
           {{this.pageCountDisplay}}
         </strong>
       </span>
-      <span class="inline-controls">
+      <span class='inline-controls'>
         | Go to page:
         <input
-          type="number"
-          min="1"
+          type='number'
+          min='1'
           max={{this.pageCount}}
           value={{this.currentPageInputValue}}
-          class="page-size-input"
-          {{on "input" this.handleGoToPage}}
+          class='page-size-input'
+          {{on 'input' this.handleGoToPage}}
         />
       </span>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |pageSize|}}
           <option
             value={{pageSize}}
@@ -443,7 +443,7 @@ export default class FiltersTable extends Component {
       </select>
     </div>
     <div>{{this.preFilteredRowCount}} Rows</div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.filterState}}</pre>
   </template>
 }

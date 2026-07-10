@@ -177,17 +177,17 @@ export default class RowPinningTable extends Component {
 
   <template>
     <div>
-      <button {{on "click" this.regenerateData}}>Regenerate Data</button>
+      <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
       <label>
         <input
-          type="checkbox"
+          type='checkbox'
           checked={{this.keepPinnedRows}}
-          {{on "change" this.toggleKeepPinnedRows}}
+          {{on 'change' this.toggleKeepPinnedRows}}
         />
         Keep pinned rows
       </label>
     </div>
-    <div class="spacer-sm"></div>
+    <div class='spacer-sm'></div>
     <table>
       <thead>
         {{#each this.headerGroups as |headerGroup|}}
@@ -205,19 +205,19 @@ export default class RowPinningTable extends Component {
       </thead>
 
       {{#if this.topRows.length}}
-        <tbody class="pinned-rows-top">
+        <tbody class='pinned-rows-top'>
           {{#each this.topRows as |row|}}
             <tr>
               <td>
-                <button {{on "click" (unpin row)}}>Unpin</button>
+                <button {{on 'click' (unpin row)}}>Unpin</button>
               </td>
               {{#each (getVisibleCells row) as |cell|}}
                 <td>
                   {{#if (isFirstNameCell cell)}}
                     <div style={{depthPadding row}}>
                       {{#if (getCanExpand row)}}
-                        <button {{on "click" (toggleExpanded row)}}>
-                          {{if (getIsExpanded row) "👇" "👉"}}
+                        <button {{on 'click' (toggleExpanded row)}}>
+                          {{if (getIsExpanded row) '👇' '👉'}}
                         </button>
                       {{/if}}
                       <FlexRenderCell @cell={{cell}} />
@@ -237,10 +237,10 @@ export default class RowPinningTable extends Component {
           <tr>
             <td>
               {{#if (getIsPinned row)}}
-                <button {{on "click" (unpin row)}}>Unpin</button>
+                <button {{on 'click' (unpin row)}}>Unpin</button>
               {{else}}
-                <button {{on "click" (pinTop row)}}>Pin Top</button>
-                <button {{on "click" (pinBottom row)}}>Pin Bottom</button>
+                <button {{on 'click' (pinTop row)}}>Pin Top</button>
+                <button {{on 'click' (pinBottom row)}}>Pin Bottom</button>
               {{/if}}
             </td>
             {{#each (getVisibleCells row) as |cell|}}
@@ -248,8 +248,8 @@ export default class RowPinningTable extends Component {
                 {{#if (isFirstNameCell cell)}}
                   <div style={{depthPadding row}}>
                     {{#if (getCanExpand row)}}
-                      <button {{on "click" (toggleExpanded row)}}>
-                        {{if (getIsExpanded row) "👇" "👉"}}
+                      <button {{on 'click' (toggleExpanded row)}}>
+                        {{if (getIsExpanded row) '👇' '👉'}}
                       </button>
                     {{/if}}
                     <FlexRenderCell @cell={{cell}} />
@@ -264,19 +264,19 @@ export default class RowPinningTable extends Component {
       </tbody>
 
       {{#if this.bottomRows.length}}
-        <tbody class="pinned-rows-bottom">
+        <tbody class='pinned-rows-bottom'>
           {{#each this.bottomRows as |row|}}
             <tr>
               <td>
-                <button {{on "click" (unpin row)}}>Unpin</button>
+                <button {{on 'click' (unpin row)}}>Unpin</button>
               </td>
               {{#each (getVisibleCells row) as |cell|}}
                 <td>
                   {{#if (isFirstNameCell cell)}}
                     <div style={{depthPadding row}}>
                       {{#if (getCanExpand row)}}
-                        <button {{on "click" (toggleExpanded row)}}>
-                          {{if (getIsExpanded row) "👇" "👉"}}
+                        <button {{on 'click' (toggleExpanded row)}}>
+                          {{if (getIsExpanded row) '👇' '👉'}}
                         </button>
                       {{/if}}
                       <FlexRenderCell @cell={{cell}} />
@@ -292,37 +292,37 @@ export default class RowPinningTable extends Component {
       {{/if}}
     </table>
 
-    <div class="spacer-sm"></div>
-    <div class="controls">
+    <div class='spacer-sm'></div>
+    <div class='controls'>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToFirstPage}}
+        {{on 'click' this.goToFirstPage}}
       >
         &lt;&lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canPreviousPage}}
-        {{on "click" this.goToPreviousPage}}
+        {{on 'click' this.goToPreviousPage}}
       >
         &lt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToNextPage}}
+        {{on 'click' this.goToNextPage}}
       >
         &gt;
       </button>
       <button
-        class="demo-button demo-button-sm"
+        class='demo-button demo-button-sm'
         disabled={{not this.canNextPage}}
-        {{on "click" this.goToLastPage}}
+        {{on 'click' this.goToLastPage}}
       >
         &gt;&gt;
       </button>
-      <select {{on "change" this.handlePageSizeChange}}>
+      <select {{on 'change' this.handlePageSizeChange}}>
         {{#each this.pageSizes as |pageSize|}}
           <option
             value={{pageSize}}
@@ -334,7 +334,7 @@ export default class RowPinningTable extends Component {
         {{/each}}
       </select>
     </div>
-    <div class="spacer-md"></div>
+    <div class='spacer-md'></div>
     <pre>{{this.tableState}}</pre>
   </template>
 }
