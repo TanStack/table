@@ -30,6 +30,10 @@ title: Overview
 
 - [Migrating to v9](./framework/angular/guide/migrating)
 
+# Ember
+
+- Ember support is new in v9, so there is nothing to migrate. Start with the [Quick Start](./framework/ember/quick-start).
+
 # Lit
 
 - [Migrating to v9](./framework/lit/guide/migrating)
@@ -233,6 +237,37 @@ Here's the difference in practice. With a pre-built table component, you pass pr
 + </table>
 ```
 
+# Ember
+
+```diff
+- <!-- Pass props into a pre-built component and hope you can style it -->
+- <PrebuiltDataGrid
+-   @data={{this.data}}
+-   @columns={{this.columns}}
+-   @theme={{this.messyThemeOverrides}}
+-   @styleOverrides={{this.cssOverridesThatHopefullyWork}}
+-   @positionPagination="however-my-stakeholders-are-feeling-today"
+- />
++ // Build your own markup from the table instance's state and APIs
++ table = useTable(() => ({ features, columns, data: this.data }))
++
++ get rows() { return this.table.getRowModel().rows }
++ get headerGroups() { return this.table.getHeaderGroups() }
++
++ <template>
++   <table class="anything-you-want">
++     <thead>
++       {{! need to really customize the functionality in your headers? no problem! }}
++       {{#each this.headerGroups as |headerGroup|}} ... {{/each}}
++     </thead>
++     <tbody>
++       {{! want to add virtualization here? no problem! }}
++       {{#each this.rows as |row|}} ... {{/each}}
++     </tbody>
++   </table>
++ </template>
+```
+
 # Lit
 
 ```diff
@@ -424,6 +459,23 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Row Selection](./framework/angular/guide/row-selection) - Select/deselect rows (checkboxes)
 - [Row Sorting](./framework/angular/guide/sorting) - Sort rows by column values
 
+# Ember
+
+- [Column Filtering](./framework/ember/guide/column-filtering) - Filter rows based on search values for a column
+- [Column Grouping](./framework/ember/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Ordering](./framework/ember/guide/column-ordering) - Dynamically change the order of columns
+- [Column Pinning](./framework/ember/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
+- [Column Resizing](./framework/ember/guide/column-resizing) - Let users resize columns with drag handles
+- [Column Sizing](./framework/ember/guide/column-sizing) - Dynamically change the size of columns
+- [Column Visibility](./framework/ember/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/ember/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
+- [Global Filtering](./framework/ember/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Expanding](./framework/ember/guide/expanding) - Expand/collapse rows (sub-rows)
+- [Row Pagination](./framework/ember/guide/pagination) - Paginate rows
+- [Row Pinning](./framework/ember/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
+- [Row Selection](./framework/ember/guide/row-selection) - Select/deselect rows (checkboxes)
+- [Row Sorting](./framework/ember/guide/sorting) - Sort rows by column values
+
 # Lit
 
 - [Column Filtering](./framework/lit/guide/column-filtering) - Filter rows based on search values for a column
@@ -522,6 +574,11 @@ Using a component library? These examples pair TanStack Table with popular React
 
 - [Angular Quick Start](./framework/angular/quick-start)
 - [Kitchen Sink example](./framework/angular/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Ember
+
+- [Ember Quick Start](./framework/ember/quick-start)
+- [Kitchen Sink example](./framework/ember/examples/kitchen-sink) - Most of the built-in features working together in one table
 
 # Lit
 

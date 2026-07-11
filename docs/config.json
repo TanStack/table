@@ -128,6 +128,13 @@
           ]
         },
         {
+          "label": "ember",
+          "children": [
+            { "label": "Table State", "to": "framework/ember/guide/table-state" },
+            { "label": "Custom Plugins", "to": "framework/ember/guide/custom-features" }
+          ]
+        },
+        {
           "label": "lit",
           "children": [
             { "label": "Table State", "to": "framework/lit/guide/table-state" },
@@ -228,6 +235,26 @@
             { "label": "Row Selection", "to": "framework/angular/guide/row-selection" },
             { "label": "Sorting", "to": "framework/angular/guide/sorting" },
             { "label": "Virtualization", "to": "framework/angular/guide/virtualization" }
+          ]
+        },
+        {
+          "label": "ember",
+          "children": [
+            { "label": "Column Ordering", "to": "framework/ember/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/ember/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/ember/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/ember/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/ember/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/ember/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/ember/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/ember/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/ember/guide/column-faceting" },
+            { "label": "Grouping", "to": "framework/ember/guide/grouping" },
+            { "label": "Expanding", "to": "framework/ember/guide/expanding" },
+            { "label": "Pagination", "to": "framework/ember/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/ember/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/ember/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/ember/guide/sorting" }
           ]
         },
         {

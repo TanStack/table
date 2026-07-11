@@ -121,6 +121,21 @@ readonly table = injectTable(() => ({
 }))
 ```
 
+# Ember
+
+```ts
+import { tableFeatures, useTable } from '@tanstack/ember-table'
+
+const features = tableFeatures({}) // Core features only; add columnFilteringFeature, rowSortingFeature, etc. as needed
+
+// inside a Glimmer component, pass options as a thunk that reads tracked state:
+table = useTable(() => ({
+  features,
+  columns,
+  data: this.data,
+}))
+```
+
 # Lit
 
 ```ts
@@ -232,6 +247,12 @@ readonly table = injectTable(() => ({
 }))
 ```
 
+# Ember
+
+```ts
+table = useTable(() => ({ features, columns, data: this.data }))
+```
+
 # Lit
 
 ```ts
@@ -306,6 +327,10 @@ Direct reads like `table.atoms.rowSelection.get()` and `table.store.state.rowSel
 # Angular
 
 [Table State Guide](../framework/angular/guide/table-state)
+
+# Ember
+
+[Table State Guide](../framework/ember/guide/table-state)
 
 # Lit
 

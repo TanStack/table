@@ -31,6 +31,10 @@
       "types": "./declarations/index.d.ts",
       "default": "./dist/index.js"
     },
+    "./static-functions": {
+      "types": "./declarations/static-functions.d.ts",
+      "default": "./dist/static-functions.js"
+    },
     "./addon-main.js": "./addon-main.cjs",
     "./package.json": "./package.json"
   },

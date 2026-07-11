@@ -12,6 +12,7 @@
     "packages/ember-table": {
       "entry": [
         "src/index.ts!",
+        "src/static-functions.ts!",
         "babel.publish.config.cjs",
         "testem.cjs",
         "tests/test-helper.ts"
