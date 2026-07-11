@@ -42,8 +42,8 @@ jobs:
         with:
           node-version: 22.13.0
 
-      - name: Enable pnpm
-        run: corepack enable
+      - name: Install pnpm
+        run: npm install --global "$(node -p 'require("./package.json").packageManager')"
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
