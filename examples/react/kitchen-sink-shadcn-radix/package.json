@@ -19,7 +19,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@faker-js/faker": "^10.5.0",
     "@tailwindcss/vite": "^4.3.1",
-    "@tanstack/match-sorter-utils": "^9.0.0-beta.37",
+    "@tanstack/match-sorter-utils": "^9.0.0-beta.41",
     "@tanstack/react-devtools": "^0.10.8",
     "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-table": "^9.0.0-beta.38",
