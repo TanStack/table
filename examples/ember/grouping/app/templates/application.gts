@@ -98,7 +98,7 @@ const PAGE_SIZES = [10, 20, 30, 40, 50]
 
 // --- Aggregated cell renderer (renders aggregatedCell ?? cell) ---
 
-type RenderArgs = Record<string, unknown> | undefined
+type RenderOptions = Record<string, unknown> | undefined
 
 interface AggregatedCellSignature {
   Args: { cell: Cell<typeof features, Person> }
@@ -133,7 +133,7 @@ class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
     | ComponentLike<{
         Args: {
           ctx: CellContext<typeof features, Person, unknown>
-          args?: RenderArgs
+          options?: RenderOptions
         }
       }>
     | undefined {
@@ -142,17 +142,17 @@ class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
       return result.component as ComponentLike<{
         Args: {
           ctx: CellContext<typeof features, Person, unknown>
-          args?: RenderArgs
+          options?: RenderOptions
         }
       }>
     }
     return undefined
   }
 
-  get componentArgs(): RenderArgs {
+  get componentOptions(): RenderOptions {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args
+      return result.options
     }
     return undefined
   }
@@ -165,7 +165,7 @@ class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
     {{#if this.isComponent}}
       <this.componentToRender
         @ctx={{this.resolvedContext}}
-        @args={{this.componentArgs}}
+        @options={{this.componentOptions}}
       />
     {{else}}
       {{this.content}}

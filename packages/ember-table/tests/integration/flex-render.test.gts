@@ -39,7 +39,7 @@ class Badge extends Component<
   >
 > {
   get status(): string {
-    return this.args.args?.status ?? ''
+    return this.args.options?.status ?? ''
   }
 
   <template>
@@ -85,11 +85,11 @@ class ExpandCell extends Component<
   FlexRenderableSignature<typeof stockFeatures, Person, string, ExpandArgs>
 > {
   get label(): string {
-    return this.args.args?.expanded ? 'Expanded' : 'Collapsed'
+    return this.args.options?.expanded ? 'Expanded' : 'Collapsed'
   }
 
   toggle = () => {
-    this.args.args?.onToggle()
+    this.args.options?.onToggle()
   }
 
   <template>

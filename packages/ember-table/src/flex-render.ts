@@ -20,11 +20,11 @@ export interface FlexRenderableSignature<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
   TValue extends CellData = CellData,
-  TArgs = undefined,
+  TOptions = undefined,
 > {
   Args: {
     ctx: FlexRenderContext<TFeatures, TData, TValue>
-    args?: TArgs
+    options?: TOptions
   }
 }
 
@@ -32,11 +32,11 @@ export interface CellRenderableSignature<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
   TValue extends CellData = CellData,
-  TArgs = undefined,
+  TOptions = undefined,
 > {
   Args: {
     ctx: CellContext<TFeatures, TData, TValue>
-    args?: TArgs
+    options?: TOptions
   }
 }
 
@@ -44,26 +44,31 @@ type FlexRenderableComponent<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData,
-  TArgs,
+  TOptions,
 > =
-  | ComponentLike<FlexRenderableSignature<TFeatures, TData, TValue, TArgs>>
-  | ComponentLike<CellRenderableSignature<TFeatures, TData, TValue, TArgs>>
+  | ComponentLike<FlexRenderableSignature<TFeatures, TData, TValue, TOptions>>
+  | ComponentLike<CellRenderableSignature<TFeatures, TData, TValue, TOptions>>
 
 export class FlexRenderComponentConfig<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
   TValue extends CellData = CellData,
-  TArgs = undefined,
+  TOptions = undefined,
 > {
-  readonly component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>
-  readonly args?: TArgs
+  readonly component: FlexRenderableComponent<
+    TFeatures,
+    TData,
+    TValue,
+    TOptions
+  >
+  readonly options?: TOptions
 
   constructor(
-    component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>,
-    args?: TArgs,
+    component: FlexRenderableComponent<TFeatures, TData, TValue, TOptions>,
+    options?: TOptions,
   ) {
     this.component = component
-    this.args = args
+    this.options = options
   }
 }
 
@@ -79,20 +84,20 @@ export function flexRenderComponent<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData,
-  TArgs,
+  TOptions,
 >(
-  component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>,
-  args: TArgs,
-): FlexRenderComponentConfig<TFeatures, TData, TValue, TArgs>
+  component: FlexRenderableComponent<TFeatures, TData, TValue, TOptions>,
+  options: TOptions,
+): FlexRenderComponentConfig<TFeatures, TData, TValue, TOptions>
 
 export function flexRenderComponent<
   TFeatures extends TableFeatures = TableFeatures,
   TData extends RowData = RowData,
   TValue extends CellData = CellData,
-  TArgs = undefined,
+  TOptions = undefined,
 >(
-  component: FlexRenderableComponent<TFeatures, TData, TValue, TArgs>,
-  args?: TArgs,
-): FlexRenderComponentConfig<TFeatures, TData, TValue, TArgs> {
-  return new FlexRenderComponentConfig(component, args)
+  component: FlexRenderableComponent<TFeatures, TData, TValue, TOptions>,
+  options?: TOptions,
+): FlexRenderComponentConfig<TFeatures, TData, TValue, TOptions> {
+  return new FlexRenderComponentConfig(component, options)
 }

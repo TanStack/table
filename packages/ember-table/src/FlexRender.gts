@@ -12,7 +12,7 @@ import type {
 } from '@tanstack/table-core'
 import type { ComponentLike, ContentValue } from '@glint/template'
 
-type RenderArgs = Record<string, unknown> | undefined
+type RenderOptions = Record<string, unknown> | undefined
 
 type CellRenderResult<
   TFeatures extends TableFeatures,
@@ -22,7 +22,7 @@ type CellRenderResult<
   | string
   | number
   | null
-  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderArgs>
+  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderOptions>
 
 type HeaderRenderResult<
   TFeatures extends TableFeatures,
@@ -32,7 +32,7 @@ type HeaderRenderResult<
   | string
   | number
   | null
-  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderArgs>
+  | FlexRenderComponentConfig<TFeatures, TData, TValue, RenderOptions>
 
 interface CellRenderSignature<
   TFeatures extends TableFeatures,
@@ -41,7 +41,7 @@ interface CellRenderSignature<
 > {
   Args: {
     ctx: CellContext<TFeatures, TData, TValue>
-    args?: Record<string, unknown>
+    options?: Record<string, unknown>
   }
 }
 
@@ -52,7 +52,7 @@ interface HeaderRenderSignature<
 > {
   Args: {
     ctx: HeaderContext<TFeatures, TData, TValue>
-    args?: Record<string, unknown>
+    options?: Record<string, unknown>
   }
 }
 
@@ -100,10 +100,10 @@ export class FlexRenderCell<
     return undefined
   }
 
-  get componentArgs(): RenderArgs {
+  get componentOptions(): RenderOptions {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args
+      return result.options
     }
     return undefined
   }
@@ -116,7 +116,7 @@ export class FlexRenderCell<
     {{#if this.isComponent}}
       <this.componentToRender
         @ctx={{this.resolvedContext}}
-        @args={{this.componentArgs}}
+        @options={{this.componentOptions}}
       />
     {{else}}
       {{this.content}}
@@ -171,10 +171,10 @@ export class FlexRenderHeader<
     return undefined
   }
 
-  get componentArgs(): RenderArgs {
+  get componentOptions(): RenderOptions {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args
+      return result.options
     }
     return undefined
   }
@@ -187,7 +187,7 @@ export class FlexRenderHeader<
     {{#if this.isComponent}}
       <this.componentToRender
         @ctx={{this.resolvedContext}}
-        @args={{this.componentArgs}}
+        @options={{this.componentOptions}}
       />
     {{else}}
       {{this.content}}
@@ -242,10 +242,10 @@ export class FlexRenderFooter<
     return undefined
   }
 
-  get componentArgs(): RenderArgs {
+  get componentOptions(): RenderOptions {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
-      return result.args
+      return result.options
     }
     return undefined
   }
@@ -258,7 +258,7 @@ export class FlexRenderFooter<
     {{#if this.isComponent}}
       <this.componentToRender
         @ctx={{this.resolvedContext}}
-        @args={{this.componentArgs}}
+        @options={{this.componentOptions}}
       />
     {{else}}
       {{this.content}}
