@@ -30,8 +30,8 @@
     "@embroider/router": "3.0.6",
     "@faker-js/faker": "^10.5.0",
     "@glimmer/component": "2.1.1",
-    "@tanstack/ember-table": "^9.0.0-beta.36",
-    "@tanstack/match-sorter-utils": "^9.0.0-beta.33",
+    "@tanstack/ember-table": "^9.0.0-beta.38",
+    "@tanstack/match-sorter-utils": "^9.0.0-beta.41",
     "decorator-transforms": "2.4.0",
     "ember-source": "7.0.0",
     "ember-strict-application-resolver": "0.1.1"
@@ -49,8 +49,8 @@
     "@nullvoxpopuli/ember-vite": "1.0.3",
     "@rollup/plugin-babel": "7.1.0",
     "babel-plugin-ember-template-compilation": "4.0.0",
-    "typescript": "5.9.3",
-    "vite": "8.1.4"
+    "typescript": "6.0.3",
+    "vite": "^8.1.0"
   },
   "engines": {
     "node": ">= 24"

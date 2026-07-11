@@ -45,10 +45,10 @@
     "@glint/tsserver-plugin": "2.5.17",
     "@nullvoxpopuli/ember-vite": "1.0.3",
     "@rollup/plugin-babel": "7.1.0",
-    "@tanstack/ember-table": "^9.0.0-beta.36",
+    "@tanstack/ember-table": "^9.0.0-beta.38",
     "babel-plugin-ember-template-compilation": "4.0.0",
-    "typescript": "5.9.3",
-    "vite": "8.1.4"
+    "typescript": "6.0.3",
+    "vite": "^8.1.0"
   },
   "engines": {
     "node": ">= 24"
