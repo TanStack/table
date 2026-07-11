@@ -87,7 +87,7 @@
     "ember-source": "7.0.0",
     "ember-strict-application-resolver": "0.1.1",
     "ember-template-lint": "^7.9.0",
-    "eslint": "^10.5.0",
+    "eslint": "^9.17.0",
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-ember": "^12.3.3",
     "eslint-plugin-import": "^2.31.0",

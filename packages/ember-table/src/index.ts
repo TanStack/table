@@ -9,6 +9,7 @@ export {
 export type {
   FlexRenderableSignature,
   CellRenderableSignature,
+  FlexRenderContext,
 } from './flex-render.ts'
 export {
   FlexRenderCell,
@@ -16,4 +17,10 @@ export {
   FlexRenderFooter,
 } from './FlexRender.gts'
 export { emberReactivity } from './reactivity.ts'
-export { computed, signal, createAtom } from './signal.ts'
+export {
+  computed,
+  signal,
+  createAtom,
+  Signal,
+  ComputedSignal,
+} from './signal.ts'

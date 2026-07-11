@@ -94,9 +94,9 @@ module('Integration | useTable', function (hooks) {
           <div data-test-row>{{row.id}}</div>
         {{/each}}
         <button
-          type='button'
+          type="button"
           data-test-shrink
-          {{on 'click' this.shrink}}
+          {{on "click" this.shrink}}
         >shrink</button>
       </template>
     }
@@ -127,15 +127,15 @@ module('Integration | useTable', function (hooks) {
       }))
 
       <template>
-        <div data-test-has-options>{{hasKey this.table 'options'}}</div>
-        <div data-test-has-getrowmodel>{{hasKey this.table 'getRowModel'}}</div>
+        <div data-test-has-options>{{hasKey this.table "options"}}</div>
+        <div data-test-has-getrowmodel>{{hasKey this.table "getRowModel"}}</div>
         <div data-test-keys-getrowmodel>{{keysInclude
             this.table
-            'getRowModel'
+            "getRowModel"
           }}</div>
-        <div data-test-keys-options>{{keysInclude this.table 'options'}}</div>
+        <div data-test-keys-options>{{keysInclude this.table "options"}}</div>
 
-        <div data-test-has-notfound>{{hasKey this.table 'notFound'}}</div>
+        <div data-test-has-notfound>{{hasKey this.table "notFound"}}</div>
       </template>
     }
 
@@ -207,9 +207,9 @@ module('Integration | useTable', function (hooks) {
         {{/each}}
         <div data-test-core-count>{{this.coreRowCount}}</div>
         <button
-          type='button'
+          type="button"
           data-test-shrink-page
-          {{on 'click' this.shrinkPage}}
+          {{on "click" this.shrinkPage}}
         >shrink</button>
       </template>
     }

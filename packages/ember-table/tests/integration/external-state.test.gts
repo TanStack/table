@@ -113,9 +113,9 @@ module('Integration | external state (controlled)', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-sort-by-name
-          {{on 'click' this.sortByName}}
+          {{on "click" this.sortByName}}
         >Sort</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>
@@ -189,9 +189,9 @@ module('Integration | external state (controlled)', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-grow
-          {{on 'click' this.growExternally}}
+          {{on "click" this.growExternally}}
         >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         {{#each this.rows as |row|}}
@@ -250,9 +250,9 @@ module('Integration | external state (controlled)', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-sort-by-name
-          {{on 'click' this.sortByName}}
+          {{on "click" this.sortByName}}
         >Sort</button>
         <span data-test-sort>{{this.sortState}}</span>
         {{#each this.rows as |row|}}
@@ -324,9 +324,9 @@ module('Integration | external state (controlled)', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-grow
-          {{on 'click' this.growPage}}
+          {{on "click" this.growPage}}
         >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>
@@ -436,9 +436,9 @@ module('Integration | external atoms', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-grow
-          {{on 'click' this.growViaAtom}}
+          {{on "click" this.growViaAtom}}
         >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         {{#each this.rows as |row|}}
@@ -500,9 +500,9 @@ module('Integration | external atoms', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-grow
-          {{on 'click' this.growPage}}
+          {{on "click" this.growPage}}
         >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-atom-page-size>{{this.atomPageSize}}</span>
@@ -575,9 +575,9 @@ module('Integration | external atoms', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-grow
-          {{on 'click' this.growViaAtom}}
+          {{on "click" this.growViaAtom}}
         >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>

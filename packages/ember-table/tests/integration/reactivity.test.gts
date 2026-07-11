@@ -114,9 +114,9 @@ module('Integration | reactivity', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-add
-          {{on 'click' this.addRow}}
+          {{on "click" this.addRow}}
         >Add</button>
         {{#each this.rows as |row|}}
           <tr data-test-row>
@@ -175,14 +175,14 @@ module('Integration | reactivity', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-grow
-          {{on 'click' this.growPage}}
+          {{on "click" this.growPage}}
         >Grow</button>
         <button
-          type='button'
+          type="button"
           data-test-select
-          {{on 'click' this.selectFirst}}
+          {{on "click" this.selectFirst}}
         >Select</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-selected>{{this.selectedCount}}</span>
@@ -253,9 +253,9 @@ module('Integration | reactivity', function (hooks) {
 
       <template>
         <button
-          type='button'
+          type="button"
           data-test-grow
-          {{on 'click' this.growPage}}
+          {{on "click" this.growPage}}
         >Grow</button>
         <span data-test-page-size>{{this.pageSize}}</span>
         <span data-test-sort>{{this.sortState}}</span>
@@ -310,7 +310,7 @@ module('Integration | reactivity', function (hooks) {
       }
 
       <template>
-        <button type='button' data-test-age {{on 'click' this.age}}>Age</button>
+        <button type="button" data-test-age {{on "click" this.age}}>Age</button>
         {{#each this.rows as |row|}}
           <tr data-test-row>
             {{#each (getAllCells row) as |cell|}}
