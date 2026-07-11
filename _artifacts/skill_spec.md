@@ -9,7 +9,7 @@ This specification is the generation contract for a deliberately smaller, foot-g
 
 ## Outcome
 
-Generate 72 short package-local skills across all 16 public packages. A loaded skill should quickly do three things:
+Generate 75 short package-local skills across all 17 public packages. A loaded skill should quickly do three things:
 
 1. Correct the user or agent mental model.
 2. Show the smallest reliable setup or decision pattern.
@@ -233,7 +233,13 @@ Alpine ships three:
 - table-state
 - create-table-hook
 
-Do not add Query where no maintained adapter example exists. Do not add an Alpine migration skill because there is no v8 Alpine adapter journey to teach. Do not invent Preact virtualization examples; its Virtual skill should rely on the maintained adapter guide and installed APIs.
+Ember ships three:
+
+- getting-started
+- table-state
+- create-table-hook
+
+Do not add Query where no maintained adapter example exists. Do not add Alpine or Ember migration skills because neither has a v8 adapter journey to teach. Do not add Ember Query or Virtual skills until maintained adapter examples exist. Do not invent Preact virtualization examples; its Virtual skill should rely on the maintained adapter guide and installed APIs.
 
 ### Devtools set (6)
 
@@ -265,6 +271,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 | @tanstack/angular-table          |      6 |
 | @tanstack/lit-table              |      5 |
 | @tanstack/alpine-table           |      3 |
+| @tanstack/ember-table            |      3 |
 | @tanstack/table-devtools         |      1 |
 | @tanstack/react-table-devtools   |      1 |
 | @tanstack/preact-table-devtools  |      1 |
@@ -272,7 +279,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 | @tanstack/vue-table-devtools     |      1 |
 | @tanstack/angular-table-devtools |      1 |
 | @tanstack/match-sorter-utils     |      1 |
-| Total                            |     72 |
+| Total                            |     75 |
 
 ## Framework distinctions that must survive generation
 
@@ -322,6 +329,14 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 - The table proxy automatically makes API reads reactive inside Alpine bindings; there is no table.Subscribe.
 - x-html does not initialize nested Alpine directives.
 - createTableHook shares features/options/helpers, not a reusable component registry.
+
+### Ember
+
+- `useTable` and `createAppTable` take options thunks; tracked values must be read inside the thunk while features, atoms, and columns remain stable.
+- Glimmer tracks table API and Ember atom reads directly. There is no table.Subscribe, `table.store.subscribe` is intentionally a no-op, and v8 `table.getState()` is removed.
+- V9 prototype methods need their receiver, so templates use getters or module helpers rather than extracted table/column/row methods.
+- FlexRender components receive `@ctx` and optional `@options`.
+- Ember createTableHook shares features/defaults and inferred column helpers; it does not provide component or context registries.
 
 ## Cross-cutting placement rules
 

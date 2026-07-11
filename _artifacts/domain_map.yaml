@@ -31,7 +31,7 @@ scope:
     - 'Use docs and examples for intended workflows, and direct exact API discovery to the installed package src directory.'
     - 'Teach headless rendering, feature registration, row-model ownership, framework state, and v8-to-v9 changes as foundations.'
   included:
-    - 'All 16 public workspace packages.'
+    - 'All 17 public workspace packages.'
     - 'All 14 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
     - 'Renderer-owned CSS edge cases for sticky positioning, column widths, resizing, layout, and virtualization.'
   excluded:
@@ -1270,6 +1270,62 @@ skills:
       - 'Creating a virtualizer/controller with the wrong host lifecycle or a stale item count.'
       - 'Virtualizing raw input data instead of table.getRowModel().rows.'
       - 'Assuming Virtual or Table owns absolute positioning, measurement attributes, sticky CSS, or column widths.'
+
+  - slug: getting-started
+    package: '@tanstack/ember-table'
+    domain: framework-adapters
+    type: framework
+    framework: ember
+    purpose: 'Create an Ember v9 table through the tracked useTable options thunk and render it with Glimmer-native FlexRender components.'
+    sources:
+      [
+        'TanStack/table:docs/framework/ember/quick-start.md',
+        'TanStack/table:examples/ember/basic-table',
+        'TanStack/table:packages/ember-table/src/index.ts',
+        'TanStack/table:packages/ember-table/src/use-table.ts',
+        'TanStack/table:packages/ember-table/src/FlexRender.gts',
+      ]
+    failure_modes:
+      - 'Passing an options object instead of a thunk, or failing to read tracked data inside that thunk.'
+      - 'Passing extracted v9 prototype methods through Ember templates without preserving their receiver.'
+      - 'Recreating features, columns, or derived data whenever tracked options rerun.'
+
+  - slug: table-state
+    package: '@tanstack/ember-table'
+    domain: framework-adapters
+    type: framework
+    framework: ember
+    purpose: 'Use Glimmer-tracked table reads and own slices internally, through Ember atoms, or through tracked controlled state.'
+    sources:
+      [
+        'TanStack/table:docs/framework/ember/guide/table-state.md',
+        'TanStack/table:examples/ember/basic-external-atoms',
+        'TanStack/table:examples/ember/basic-external-state',
+        'TanStack/table:packages/ember-table/src/use-table.ts',
+        'TanStack/table:packages/ember-table/src/reactivity.ts',
+        'TanStack/table:packages/ember-table/src/signal.ts',
+      ]
+    failure_modes:
+      - 'Inventing table.Subscribe or using the intentionally no-op table.store.subscribe instead of Glimmer-tracked reads.'
+      - 'Using removed table.getState() rather than table.store.state or a slice atom.'
+      - 'Mixing atoms and state ownership, omitting updater resolution, or trying to replace construct-time atoms after table creation.'
+
+  - slug: create-table-hook
+    package: '@tanstack/ember-table'
+    domain: framework-adapters
+    type: framework
+    framework: ember
+    purpose: 'Share Ember table features, row-model slots, defaults, and inferred column helpers without inventing a component registry.'
+    sources:
+      [
+        'TanStack/table:docs/framework/ember/guide/composable-tables.md',
+        'TanStack/table:examples/ember/basic-app-table',
+        'TanStack/table:packages/ember-table/src/create-table-hook.ts',
+      ]
+    failure_modes:
+      - 'Expecting AppTable/AppCell/context registries that the Ember factory does not implement.'
+      - 'Passing features at each createAppTable call or recreating the app hook in tracked scope.'
+      - 'Putting shared mutable state in factory defaults instead of keeping state ownership per table.'
 
   - slug: getting-started
     package: '@tanstack/alpine-table'

@@ -7,6 +7,7 @@ overrides:
   '@tanstack/alpine-table': 'workspace:*'
   '@tanstack/angular-table-devtools': 'workspace:*'
   '@tanstack/angular-table': 'workspace:*'
+  '@tanstack/ember-table': 'workspace:*'
   '@tanstack/lit-table': 'workspace:*'
   '@tanstack/match-sorter-utils': 'workspace:*'
   '@tanstack/preact-table-devtools': 'workspace:*'
@@ -52,5 +53,6 @@ preferWorkspacePackages: true
 blockExoticSubdeps: true
 trustPolicy: 'no-downgrade'
 trustPolicyExclude:
+  - ember-modifier@4.3.0
   - chokidar@4.0.3
   - semver@5.7.2 || 6.3.1

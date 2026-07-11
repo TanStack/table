@@ -29,6 +29,10 @@ export const packages = [
     packageDir: 'packages/angular-table-devtools',
   },
   {
+    name: '@tanstack/ember-table',
+    packageDir: 'packages/ember-table',
+  },
+  {
     name: '@tanstack/lit-table',
     packageDir: 'packages/lit-table',
   },

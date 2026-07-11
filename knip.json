@@ -9,6 +9,25 @@
     "packages/match-sorter-utils": {
       "ignoreDependencies": ["remove-accents"]
     },
+    "packages/ember-table": {
+      "entry": [
+        "src/index.ts!",
+        "src/static-functions.ts!",
+        "src/flex-render.ts!",
+        "src/experimental-worker-plugin.ts!",
+        "babel.publish.config.cjs",
+        "testem.cjs",
+        "tests/test-helper.ts"
+      ],
+      "ignoreDependencies": [
+        "@ember/library-tsconfig",
+        "@ember/routing",
+        "@embroider/shared-internals",
+        "@glimmer/tracking",
+        "@glimmer/validator",
+        "@glint/tsserver-plugin"
+      ]
+    },
     "packages/angular-table": {
       "entry": [
         "src/index.ts!",

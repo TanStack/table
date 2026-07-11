@@ -14,6 +14,7 @@ vue: @tanstack/vue-table@beta
 solid: @tanstack/solid-table@beta
 svelte: @tanstack/svelte-table@beta
 angular: @tanstack/angular-table@beta
+ember: @tanstack/ember-table@beta
 lit: @tanstack/lit-table@beta
 alpine: @tanstack/alpine-table@beta
 
@@ -47,6 +48,10 @@ The `@tanstack/svelte-table` package works with Svelte 5 (it is built on runes).
 # Angular
 
 The `@tanstack/angular-table` package works with Angular 19 or newer. The Angular adapter is built on Angular Signals.
+
+# Ember
+
+The `@tanstack/ember-table` package is a v2 addon that works with Ember 5.8 or newer (Embroider or ember-auto-import v2). It is built on Glimmer's tracking system and supports `.gts`/`.gjs` template tag components and Glint.
 
 # Lit
 

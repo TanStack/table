@@ -76,6 +76,21 @@ await generateReferenceDocs({
       exclude: ['packages/table-core/**/*'],
     },
     {
+      name: 'ember-table',
+      // TypeDoc cannot parse .gts template-tag files, so document the built
+      // declarations (rollup's `addon.declarations` emits plain .d.ts).
+      // Requires `pnpm build` in packages/ember-table first.
+      entryPoints: [
+        resolve(__dirname, '../packages/ember-table/declarations/index.d.ts'),
+      ],
+      tsconfig: resolve(
+        __dirname,
+        '../packages/ember-table/tsconfig.docs.json',
+      ),
+      outputDir: resolve(__dirname, '../docs/framework/ember/reference'),
+      exclude: ['packages/table-core/**/*'],
+    },
+    {
       name: 'alpine-table',
       entryPoints: [
         resolve(__dirname, '../packages/alpine-table/src/index.ts'),
