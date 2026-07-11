@@ -1,18 +1,24 @@
 import Component from '@glimmer/component'
 import { tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
+import { htmlSafe } from '@ember/template'
 import {
   useTable,
   FlexRenderCell,
   FlexRenderHeader,
   tableFeatures,
+  columnSizingFeature,
   createColumnHelper,
   type Row,
   type Cell,
+  type Header,
 } from '@tanstack/ember-table'
+import type { SafeString } from '@ember/template'
 import { makeData, type Person } from '../utils/make-data'
 
-const features = tableFeatures({})
+const features = tableFeatures({
+  columnSizingFeature,
+})
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
@@ -21,6 +27,7 @@ const columns = columnHelper.columns([
     id: 'drag-handle',
     header: 'Move',
     cell: () => '☰',
+    size: 60,
   }),
   columnHelper.accessor('firstName', {
     header: 'First Name',
@@ -50,6 +57,10 @@ const columns = columnHelper.columns([
 const getAllCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getAllCells()
+const headerWidth = (header: Header<typeof features, Person>): SafeString =>
+  htmlSafe(`width: ${header.getSize()}px`)
+const cellWidth = (cell: Cell<typeof features, Person>): SafeString =>
+  htmlSafe(`width: ${cell.column.getSize()}px`)
 
 export default class RowDndTable extends Component {
   @tracked data: Array<Person> = makeData(15)
@@ -130,7 +141,7 @@ export default class RowDndTable extends Component {
         {{#each this.headerGroups as |headerGroup|}}
           <tr>
             {{#each headerGroup.headers as |header|}}
-              <th colspan={{header.colSpan}}>
+              <th colspan={{header.colSpan}} style={{headerWidth header}}>
                 {{#unless header.isPlaceholder}}
                   <FlexRenderHeader @header={{header}} />
                 {{/unless}}
@@ -149,7 +160,9 @@ export default class RowDndTable extends Component {
             {{on 'dragend' this.handleDragEnd}}
           >
             {{#each (getAllCells row) as |cell|}}
-              <td><FlexRenderCell @cell={{cell}} /></td>
+              <td style={{cellWidth cell}}><FlexRenderCell
+                  @cell={{cell}}
+                /></td>
             {{/each}}
           </tr>
         {{/each}}

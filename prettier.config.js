@@ -15,12 +15,6 @@ const config = {
         parser: 'angular',
       },
     },
-    {
-      files: '*.{gjs,gts}',
-      options: {
-        templateSingleQuote: false,
-      },
-    },
   ],
 }
 

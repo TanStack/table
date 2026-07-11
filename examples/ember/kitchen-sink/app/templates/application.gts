@@ -23,6 +23,7 @@ import {
   type Column,
   type Row,
   type Cell,
+  type Header,
   type FilterFn,
   type SortFn,
   type TableFeatures,
@@ -109,6 +110,7 @@ const columns = columnHelper.columns([
     enableSorting: false,
     enableGrouping: false,
     enableHiding: false,
+    enableResizing: false,
     header: 'Select',
     cell: '',
   }),
@@ -167,6 +169,8 @@ type Col = Column<Feats, Person>
 type Rw = Row<Feats, Person>
 type Cl = Cell<Feats, Person>
 
+type Hd = Header<Feats, Person>
+
 const getVisibleCells = (row: Rw): Array<Cl> => row.getVisibleCells()
 const getCanSort = (column: Col): boolean => column.getCanSort()
 const getCanFilter = (column: Col): boolean => column.getCanFilter()
@@ -179,6 +183,15 @@ const getIsPinned = (column: Col): false | 'start' | 'end' =>
 const getIsGrouped = (column: Col): boolean => column.getIsGrouped()
 const getGroupedIndex = (column: Col): number => column.getGroupedIndex()
 const getColumnId = (column: Col): string => column.id
+
+// --- Column resizing helpers ---
+const getCanResize = (column: Col): boolean => column.getCanResize()
+const getIsResizing = (column: Col): boolean => column.getIsResizing()
+const getHeaderSize = (header: Hd): number => header.getSize()
+const getCellColumnSize = (cell: Cl): number => cell.column.getSize()
+const resetSize = (column: Col) => () => column.resetSize()
+const getResizeHandler = (header: Hd) => (event: Event) =>
+  header.getResizeHandler()?.(event)
 
 const cellIsSelect = (cell: Cl): boolean => cell.column.id === 'select'
 const cellIsFirstName = (cell: Cl): boolean => cell.column.id === 'firstName'
@@ -259,6 +272,31 @@ class TableFilter extends Component<TableFilterSignature> {
     return this.args.column.getFacetedUniqueValues().size
   }
 
+  // Faceted min/max drives the numeric range filter bounds + hints.
+  get facetedMinMax(): [number, number] | undefined {
+    return this.args.column.getFacetedMinMaxValues()
+  }
+
+  get rangeMinBound(): string {
+    const value = this.facetedMinMax?.[0]
+    return value == null ? '' : String(value)
+  }
+
+  get rangeMaxBound(): string {
+    const value = this.facetedMinMax?.[1]
+    return value == null ? '' : String(value)
+  }
+
+  get minPlaceholder(): string {
+    const value = this.facetedMinMax?.[0]
+    return `Min${value == null ? '' : ` (${value})`}`
+  }
+
+  get maxPlaceholder(): string {
+    const value = this.facetedMinMax?.[1]
+    return `Max${value == null ? '' : ` (${value})`}`
+  }
+
   get sortedUniqueValues(): Array<string> {
     if (this.variant === 'range') return []
     return Array.from(this.args.column.getFacetedUniqueValues().keys())
@@ -294,22 +332,28 @@ class TableFilter extends Component<TableFilterSignature> {
 
   <template>
     {{#if (eq this.variant 'range')}}
-      <div>
+      <div class='filter-row'>
         <input
+          class='filter-input'
           type='number'
-          placeholder='Min'
+          min={{this.rangeMinBound}}
+          max={{this.rangeMaxBound}}
+          placeholder={{this.minPlaceholder}}
           value={{this.rangeMin}}
           {{on 'input' this.handleMin}}
         />
         <input
+          class='filter-input'
           type='number'
-          placeholder='Max'
+          min={{this.rangeMinBound}}
+          max={{this.rangeMaxBound}}
+          placeholder={{this.maxPlaceholder}}
           value={{this.rangeMax}}
           {{on 'input' this.handleMax}}
         />
       </div>
     {{else if (eq this.variant 'select')}}
-      <select {{on 'change' this.handleSelect}}>
+      <select class='filter-select' {{on 'change' this.handleSelect}}>
         <option value='' selected={{eq this.selectValue ''}}>All</option>
         {{#each this.sortedUniqueValues as |value|}}
           <option value={{value}} selected={{eq value this.selectValue}}>
@@ -319,6 +363,7 @@ class TableFilter extends Component<TableFilterSignature> {
       </select>
     {{else}}
       <input
+        class='filter-input'
         type='text'
         placeholder='Search ({{this.facetedUniqueCount}})'
         value={{this.textValue}}
@@ -337,7 +382,9 @@ export default class KitchenSinkTable extends Component {
     data: this.data,
     getSubRows: (row: Person) => row.subRows,
     globalFilterFn: 'fuzzy',
+    columnResizeMode: 'onChange',
     initialState: {
+      columnOrder: columns.map((column) => column.id ?? ''),
       columnPinning: { start: ['select'], end: [] },
       pagination: { pageIndex: 0, pageSize: 20 },
     },
@@ -350,6 +397,10 @@ export default class KitchenSinkTable extends Component {
 
   get rows() {
     return this.table.getRowModel().rows
+  }
+
+  get totalSize() {
+    return this.table.getTotalSize()
   }
 
   get leafColumns() {
@@ -444,6 +495,57 @@ export default class KitchenSinkTable extends Component {
     this.table.setGlobalFilter((event.currentTarget as HTMLInputElement).value)
   }
 
+  // --- Column ordering via native HTML5 drag and drop ---
+  draggedColumnId: string | null = null
+
+  columnDragStart = (columnId: string) => (event: DragEvent) => {
+    this.draggedColumnId = columnId
+    if (event.dataTransfer) {
+      event.dataTransfer.effectAllowed = 'move'
+      // Firefox requires data to be set for the drag to start.
+      event.dataTransfer.setData('text/plain', columnId)
+    }
+  }
+
+  columnDragOver = (event: DragEvent) => {
+    event.preventDefault()
+    if (event.dataTransfer) {
+      event.dataTransfer.dropEffect = 'move'
+    }
+  }
+
+  columnDrop = (targetId: string) => (event: DragEvent) => {
+    event.preventDefault()
+    const from = this.draggedColumnId
+    this.draggedColumnId = null
+    if (from === null || from === targetId) {
+      return
+    }
+    this.table.setColumnOrder((prev) => {
+      const order = prev.length
+        ? [...prev]
+        : this.table.getAllLeafColumns().map((column) => column.id)
+      const oldIndex = order.indexOf(from)
+      const newIndex = order.indexOf(targetId)
+      if (oldIndex === -1 || newIndex === -1) {
+        return order
+      }
+      const [moved] = order.splice(oldIndex, 1)
+      if (moved !== undefined) {
+        order.splice(newIndex, 0, moved)
+      }
+      return order
+    })
+  }
+
+  columnDragEnd = () => {
+    this.draggedColumnId = null
+  }
+
+  resetColumnOrder = () => {
+    this.table.resetColumnOrder()
+  }
+
   toggleAllColumns = (event: Event) => {
     this.table.getToggleAllColumnsVisibilityHandler()(event)
   }
@@ -503,6 +605,10 @@ export default class KitchenSinkTable extends Component {
         class='demo-button demo-button-sm'
         {{on 'click' this.resetTable}}
       >Reset Table</button>
+      <button
+        class='demo-button demo-button-sm'
+        {{on 'click' this.resetColumnOrder}}
+      >Reset Order</button>
       <span>{{this.selectedCount}} of {{this.totalCount}} selected</span>
     </div>
 
@@ -535,108 +641,135 @@ export default class KitchenSinkTable extends Component {
     </details>
 
     <div class='spacer-sm'></div>
-    <table>
-      <thead>
-        {{#each this.headerGroups as |headerGroup|}}
-          <tr>
-            {{#each headerGroup.headers as |header|}}
-              <th colspan={{header.colSpan}}>
-                {{#unless header.isPlaceholder}}
-                  <div class='header-controls'>
-                    {{#if (getCanPin header.column)}}
-                      {{#unless (eq (getIsPinned header.column) 'start')}}
-                        <button
-                          {{on 'click' (pinColumn header.column 'start')}}
-                        >&lt;</button>
-                      {{/unless}}
-                      {{#if (getIsPinned header.column)}}
-                        <button
-                          {{on 'click' (pinColumn header.column false)}}
-                        >x</button>
-                      {{/if}}
-                      {{#unless (eq (getIsPinned header.column) 'end')}}
-                        <button
-                          {{on 'click' (pinColumn header.column 'end')}}
-                        >&gt;</button>
-                      {{/unless}}
-                    {{/if}}
-                    {{#if (getCanGroup header.column)}}
-                      <button {{on 'click' (toggleGroup header.column)}}>
-                        {{#if (getIsGrouped header.column)}}
-                          Stop ({{getGroupedIndex header.column}})
-                        {{else}}
-                          Group
+    <div class='scroll-container'>
+      <table style='width:{{this.totalSize}}px'>
+        <thead>
+          {{#each this.headerGroups as |headerGroup|}}
+            <tr>
+              {{#each headerGroup.headers as |header|}}
+                <th
+                  colspan={{header.colSpan}}
+                  style='width:{{getHeaderSize header}}px'
+                  {{on 'dragover' this.columnDragOver}}
+                  {{on 'drop' (this.columnDrop header.column.id)}}
+                >
+                  {{#unless header.isPlaceholder}}
+                    <div class='header-controls'>
+                      <button
+                        class='pin-button'
+                        type='button'
+                        draggable='true'
+                        title='Drag to reorder'
+                        {{on
+                          'dragstart'
+                          (this.columnDragStart header.column.id)
+                        }}
+                        {{on 'dragend' this.columnDragEnd}}
+                      >⠿</button>
+                      {{#if (getCanPin header.column)}}
+                        {{#unless (eq (getIsPinned header.column) 'start')}}
+                          <button
+                            {{on 'click' (pinColumn header.column 'start')}}
+                          >&lt;</button>
+                        {{/unless}}
+                        {{#if (getIsPinned header.column)}}
+                          <button
+                            {{on 'click' (pinColumn header.column false)}}
+                          >x</button>
                         {{/if}}
-                      </button>
-                    {{/if}}
-                  </div>
+                        {{#unless (eq (getIsPinned header.column) 'end')}}
+                          <button
+                            {{on 'click' (pinColumn header.column 'end')}}
+                          >&gt;</button>
+                        {{/unless}}
+                      {{/if}}
+                      {{#if (getCanGroup header.column)}}
+                        <button {{on 'click' (toggleGroup header.column)}}>
+                          {{#if (getIsGrouped header.column)}}
+                            Stop ({{getGroupedIndex header.column}})
+                          {{else}}
+                            Group
+                          {{/if}}
+                        </button>
+                      {{/if}}
+                    </div>
 
-                  {{#if (eq (getColumnId header.column) 'select')}}
+                    {{#if (eq (getColumnId header.column) 'select')}}
+                      <input
+                        type='checkbox'
+                        checked={{this.isAllPageRowsSelected}}
+                        {{on 'change' this.toggleAllPageRows}}
+                      />
+                    {{else if (getCanSort header.column)}}
+                      <div
+                        class='sortable-header'
+                        {{on 'click' (toggleSort header.column)}}
+                      >
+                        <FlexRenderHeader @header={{header}} />{{lookup
+                          this.sortIndicators
+                          header.column.id
+                        }}
+                      </div>
+                    {{else}}
+                      <FlexRenderHeader @header={{header}} />
+                    {{/if}}
+
+                    {{#if (getCanFilter header.column)}}
+                      <div>
+                        <TableFilter @column={{header.column}} />
+                      </div>
+                    {{/if}}
+                    {{#if (getCanResize header.column)}}
+                      <div
+                        class='resizer
+                          {{if (getIsResizing header.column) "isResizing"}}'
+                        {{on 'dblclick' (resetSize header.column)}}
+                        {{on 'mousedown' (getResizeHandler header)}}
+                        {{on 'touchstart' (getResizeHandler header)}}
+                      ></div>
+                    {{/if}}
+                  {{/unless}}
+                </th>
+              {{/each}}
+            </tr>
+          {{/each}}
+        </thead>
+        <tbody>
+          {{#each this.rows as |row|}}
+            <tr>
+              {{#each (getVisibleCells row) as |cell|}}
+                <td style='width:{{getCellColumnSize cell}}px'>
+                  {{#if (cellIsSelect cell)}}
                     <input
                       type='checkbox'
-                      checked={{this.isAllPageRowsSelected}}
-                      {{on 'change' this.toggleAllPageRows}}
+                      checked={{rowGetIsSelected cell.row}}
+                      {{on 'change' (toggleRowSelected cell.row)}}
                     />
-                  {{else if (getCanSort header.column)}}
-                    <div
-                      class='sortable-header'
-                      {{on 'click' (toggleSort header.column)}}
-                    >
-                      <FlexRenderHeader @header={{header}} />{{lookup
-                        this.sortIndicators
-                        header.column.id
-                      }}
-                    </div>
+                  {{else if (cellIsFirstName cell)}}
+                    <span style={{rowDepthPad cell.row}}>
+                      {{#if (rowGetCanExpand cell.row)}}
+                        <button {{on 'click' (toggleRowExpanded cell.row)}}>
+                          {{if (rowGetIsExpanded cell.row) 'v' '>'}}
+                        </button>
+                      {{/if}}
+                      <FlexRenderCell @cell={{cell}} />
+                    </span>
+                  {{else if (cellIsGrouped cell)}}
+                    <button {{on 'click' (toggleRowExpanded cell.row)}}>
+                      {{if (rowGetIsExpanded cell.row) 'v' '>'}}
+                      <FlexRenderCell @cell={{cell}} />
+                      ({{rowSubRowCount cell.row}})
+                    </button>
                   {{else}}
-                    <FlexRenderHeader @header={{header}} />
-                  {{/if}}
-
-                  {{#if (getCanFilter header.column)}}
-                    <div>
-                      <TableFilter @column={{header.column}} />
-                    </div>
-                  {{/if}}
-                {{/unless}}
-              </th>
-            {{/each}}
-          </tr>
-        {{/each}}
-      </thead>
-      <tbody>
-        {{#each this.rows as |row|}}
-          <tr>
-            {{#each (getVisibleCells row) as |cell|}}
-              <td>
-                {{#if (cellIsSelect cell)}}
-                  <input
-                    type='checkbox'
-                    checked={{rowGetIsSelected cell.row}}
-                    {{on 'change' (toggleRowSelected cell.row)}}
-                  />
-                {{else if (cellIsFirstName cell)}}
-                  <span style={{rowDepthPad cell.row}}>
-                    {{#if (rowGetCanExpand cell.row)}}
-                      <button {{on 'click' (toggleRowExpanded cell.row)}}>
-                        {{if (rowGetIsExpanded cell.row) 'v' '>'}}
-                      </button>
-                    {{/if}}
                     <FlexRenderCell @cell={{cell}} />
-                  </span>
-                {{else if (cellIsGrouped cell)}}
-                  <button {{on 'click' (toggleRowExpanded cell.row)}}>
-                    {{if (rowGetIsExpanded cell.row) 'v' '>'}}
-                    <FlexRenderCell @cell={{cell}} />
-                    ({{rowSubRowCount cell.row}})
-                  </button>
-                {{else}}
-                  <FlexRenderCell @cell={{cell}} />
-                {{/if}}
-              </td>
-            {{/each}}
-          </tr>
-        {{/each}}
-      </tbody>
-    </table>
+                  {{/if}}
+                </td>
+              {{/each}}
+            </tr>
+          {{/each}}
+        </tbody>
+      </table>
+    </div>
 
     <div class='spacer-sm'></div>
     <div class='controls'>

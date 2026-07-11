@@ -131,6 +131,7 @@
           "label": "ember",
           "children": [
             { "label": "Table State", "to": "framework/ember/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/ember/guide/composable-tables" },
             { "label": "Custom Plugins", "to": "framework/ember/guide/custom-features" }
           ]
         },
@@ -516,6 +517,9 @@
           "label": "ember",
           "children": [
             { "label": "useTable", "to": "framework/ember/reference/functions/useTable" },
+            { "label": "createTableHook", "to": "framework/ember/reference/functions/createTableHook" },
+            { "label": "AppEmberTable", "to": "framework/ember/reference/type-aliases/AppEmberTable" },
+            { "label": "CreateTableHookOptions", "to": "framework/ember/reference/type-aliases/CreateTableHookOptions" },
             { "label": "FlexRenderCell", "to": "framework/ember/reference/classes/FlexRenderCell" },
             { "label": "FlexRenderHeader", "to": "framework/ember/reference/classes/FlexRenderHeader" },
             { "label": "FlexRenderFooter", "to": "framework/ember/reference/classes/FlexRenderFooter" },
@@ -633,6 +637,12 @@
           "label": "angular",
           "children": [
             { "label": "AppColumnHelper", "to": "framework/angular/reference/type-aliases/AppColumnHelper" }
+          ]
+        },
+        {
+          "label": "ember",
+          "children": [
+            { "label": "AppColumnHelper", "to": "framework/ember/reference/type-aliases/AppColumnHelper" }
           ]
         },
         {
@@ -934,6 +944,7 @@
           "label": "ember",
           "children": [
             { "label": "Basic (useTable)", "to": "framework/ember/examples/basic-table" },
+            { "label": "Basic (createAppTable)", "to": "framework/ember/examples/basic-app-table" },
             { "label": "Basic (External State)", "to": "framework/ember/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/ember/examples/basic-external-atoms" },
             { "label": "Header Groups", "to": "framework/ember/examples/column-groups" }

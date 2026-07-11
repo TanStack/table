@@ -42,7 +42,7 @@ The table instance already manages the row selection state for you. You can acce
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting
 
 ```ts
-console.log(table.getState().rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
+console.log(table.store.state.rowSelection) // get the row selection state - { 1: true, 2: false, etc... }
 console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
 console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
 console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
@@ -194,6 +194,7 @@ import {
   createColumnHelper,
   type Row,
   type FlexRenderableSignature,
+  type CellRenderableSignature,
 } from '@tanstack/ember-table'
 
 // Header "select all" checkbox
@@ -221,13 +222,13 @@ class SelectionHeaderCheckbox extends Component<
   </template>
 }
 
-// Per-row checkbox
+// Per-row checkbox. It renders in a cell, so it uses `CellRenderableSignature`:
+// `ctx` is a `CellContext` and exposes `ctx.row` directly (no cast needed).
 class SelectionRowCheckbox extends Component<
-  FlexRenderableSignature<typeof features, Person>
+  CellRenderableSignature<typeof features, Person>
 > {
   get row(): Row<typeof features, Person> {
-    // Only cells carry a `row`; this component is only used as a cell renderer.
-    return (this.args.ctx as { row: Row<typeof features, Person> }).row
+    return this.args.ctx.row
   }
 
   get checked(): boolean {

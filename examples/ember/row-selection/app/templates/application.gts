@@ -12,7 +12,7 @@ import {
   rowSelectionFeature,
   rowPaginationFeature,
   columnFilteringFeature,
-  columnVisibilityFeature,
+  globalFilteringFeature,
   createPaginatedRowModel,
   createFilteredRowModel,
   filterFns,
@@ -22,6 +22,7 @@ import {
   type Column,
   type RowSelectionState,
   type FlexRenderableSignature,
+  type CellRenderableSignature,
 } from '@tanstack/ember-table'
 
 import { makeData, type Person } from '../utils/make-data'
@@ -30,16 +31,17 @@ const features = tableFeatures({
   rowSelectionFeature,
   rowPaginationFeature,
   columnFilteringFeature,
-  columnVisibilityFeature,
+  globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filterFns,
 })
 
 // --- Selection checkbox components (rendered via flexRenderComponent) ---
-// The `ctx` passed to these components is either a HeaderContext (for the
-// header) or a CellContext (for cells); both expose `table`, and CellContext
-// also exposes `row`. We narrow to the pieces each component needs.
+// The header checkbox renders in a header, so it uses `FlexRenderableSignature`
+// and reads only `ctx.table` (available on both cell and header contexts). The
+// row checkbox renders in a cell, so it uses `CellRenderableSignature`, whose
+// `ctx` is a `CellContext` and exposes `ctx.row` directly (no cast needed).
 
 class SelectionHeaderCheckbox extends Component<
   FlexRenderableSignature<typeof features, Person>
@@ -66,11 +68,10 @@ class SelectionHeaderCheckbox extends Component<
 }
 
 class SelectionRowCheckbox extends Component<
-  FlexRenderableSignature<typeof features, Person>
+  CellRenderableSignature<typeof features, Person>
 > {
   get row(): Row<typeof features, Person> {
-    // Only cells carry a `row`; this component is only used as a cell renderer.
-    return (this.args.ctx as { row: Row<typeof features, Person> }).row
+    return this.args.ctx.row
   }
 
   get checked(): boolean {
@@ -203,6 +204,10 @@ export default class RowSelectionTable extends Component {
     return this.table.getSelectedRowModel().rows.length
   }
 
+  get globalFilter(): string {
+    return (this.table.store.state.globalFilter as string | undefined) ?? ''
+  }
+
   get pagination() {
     return this.table.store.state.pagination
   }
@@ -256,6 +261,11 @@ export default class RowSelectionTable extends Component {
     this.firstNameColumn.setFilterValue(target.value)
   }
 
+  handleGlobalFilter = (event: Event) => {
+    const target = event.currentTarget as HTMLInputElement
+    this.table.setGlobalFilter(target.value)
+  }
+
   goToFirstPage = () => {
     this.table.setPageIndex(0)
   }
@@ -291,6 +301,16 @@ export default class RowSelectionTable extends Component {
       <button class='demo-button' {{on 'click' this.stressTest}}>
         Stress Test (1M rows)
       </button>
+    </div>
+    <div class='spacer-sm'></div>
+    <div class='controls'>
+      <input
+        type='text'
+        placeholder='Search all columns...'
+        class='filter-input'
+        value={{this.globalFilter}}
+        {{on 'input' this.handleGlobalFilter}}
+      />
     </div>
     <div class='spacer-sm'></div>
     <div class='controls'>

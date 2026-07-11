@@ -7,16 +7,26 @@ import {
   FlexRenderHeader,
   FlexRenderFooter,
   tableFeatures,
+  columnFilteringFeature,
+  createFilteredRowModel,
+  filterFns,
+  rowSortingFeature,
+  createSortedRowModel,
+  sortFns,
   rowPaginationFeature,
   createPaginatedRowModel,
   createColumnHelper,
   assignTableAPIs,
   functionalUpdate,
   makeStateUpdater,
+  type Column,
   type Row,
   type Cell,
+  type Table,
+  type ColumnFiltersState,
   type OnChangeFn,
   type RowData,
+  type SortingState,
   type TableFeature,
   type TableFeatures,
   type Updater,
@@ -119,9 +129,15 @@ export const densityPlugin: TableFeature = {
 // --- Table setup ---
 
 const features = tableFeatures({
+  columnFilteringFeature,
+  rowSortingFeature,
   rowPaginationFeature,
-  densityPlugin,
+  densityPlugin, // pass in our plugin just like any other stock feature
+  filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
+  sortedRowModel: createSortedRowModel(),
+  filterFns,
+  sortFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -162,14 +178,116 @@ const PAGE_SIZES = [10, 20, 30, 40, 50]
 const getAllCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getAllCells()
+const getCanSort = (column: Column<typeof features, Person>): boolean =>
+  column.getCanSort()
+const getCanFilter = (column: Column<typeof features, Person>): boolean =>
+  column.getCanFilter()
+const lookup = (obj: Record<string, string>, key: string): string =>
+  obj[key] ?? ''
 const not = (value: unknown): boolean => !value
 const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 const isFunction = (value: unknown): value is (...args: never[]) => unknown =>
   typeof value === 'function'
 
+const toggleSort = (column: Column<typeof features, Person>) => {
+  return (event: Event) => {
+    column.getToggleSortingHandler()?.(event)
+  }
+}
+
+// --- Per-column filter sub-component ---
+// Numeric columns render a min/max range; everything else renders a text
+// search input, mirroring the React example's `Filter` component.
+
+interface ColumnFilterSignature {
+  Args: {
+    column: Column<typeof features, Person>
+    table: Table<typeof features, Person>
+  }
+}
+
+class ColumnFilter extends Component<ColumnFilterSignature> {
+  get isRange(): boolean {
+    const firstValue = this.args.table
+      .getPreFilteredRowModel()
+      .flatRows[0]?.getValue(this.args.column.id)
+    return typeof firstValue === 'number'
+  }
+
+  get minValue(): string {
+    const value = this.args.column.getFilterValue() as
+      | [number, number]
+      | undefined
+    return value?.[0] != null ? String(value[0]) : ''
+  }
+
+  get maxValue(): string {
+    const value = this.args.column.getFilterValue() as
+      | [number, number]
+      | undefined
+    return value?.[1] != null ? String(value[1]) : ''
+  }
+
+  get text(): string {
+    const value = this.args.column.getFilterValue() as string | undefined
+    return value ?? ''
+  }
+
+  changeMin = (event: Event) => {
+    const value = (event.target as HTMLInputElement).value
+    this.args.column.setFilterValue((old?: [number, number]) => [
+      value,
+      old?.[1],
+    ])
+  }
+
+  changeMax = (event: Event) => {
+    const value = (event.target as HTMLInputElement).value
+    this.args.column.setFilterValue((old?: [number, number]) => [
+      old?.[0],
+      value,
+    ])
+  }
+
+  changeText = (event: Event) => {
+    this.args.column.setFilterValue((event.target as HTMLInputElement).value)
+  }
+
+  <template>
+    {{#if this.isRange}}
+      <div class='filter-row'>
+        <input
+          type='number'
+          class='filter-input'
+          placeholder='Min'
+          value={{this.minValue}}
+          {{on 'input' this.changeMin}}
+        />
+        <input
+          type='number'
+          class='filter-input'
+          placeholder='Max'
+          value={{this.maxValue}}
+          {{on 'input' this.changeMax}}
+        />
+      </div>
+    {{else}}
+      <input
+        type='text'
+        class='filter-select'
+        placeholder='Search...'
+        value={{this.text}}
+        {{on 'input' this.changeText}}
+      />
+    {{/if}}
+  </template>
+}
+
 export default class CustomPluginTable extends Component {
   @tracked data: Array<Person> = makeData(20)
   @tracked density: DensityState = 'md'
+  @tracked sorting: SortingState = []
+  @tracked columnFilters: ColumnFiltersState = []
   @tracked pageIndex = 0
   @tracked pageSize = 10
 
@@ -179,10 +297,20 @@ export default class CustomPluginTable extends Component {
     data: this.data,
     state: {
       density: this.density,
+      sorting: this.sorting,
+      columnFilters: this.columnFilters,
       pagination: { pageIndex: this.pageIndex, pageSize: this.pageSize },
     },
     onDensityChange: (updater) => {
       this.density = isFunction(updater) ? updater(this.density) : updater
+    },
+    onSortingChange: (updater) => {
+      this.sorting = isFunction(updater) ? updater(this.sorting) : updater
+    },
+    onColumnFiltersChange: (updater) => {
+      this.columnFilters = isFunction(updater)
+        ? updater(this.columnFilters)
+        : updater
     },
     onPaginationChange: (updater) => {
       const next =
@@ -204,6 +332,18 @@ export default class CustomPluginTable extends Component {
 
   get footerGroups() {
     return this.table.getFooterGroups()
+  }
+
+  get sortIndicators(): Record<string, string> {
+    const indicators: Record<string, string> = {}
+    for (const hg of this.table.getHeaderGroups()) {
+      for (const h of hg.headers) {
+        const sorted = h.column.getIsSorted()
+        indicators[h.column.id] =
+          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : ''
+      }
+    }
+    return indicators
   }
 
   get tableState() {
@@ -297,7 +437,23 @@ export default class CustomPluginTable extends Component {
             {{#each headerGroup.headers as |header|}}
               <th colspan={{header.colSpan}} style={{this.cellStyle}}>
                 {{#unless header.isPlaceholder}}
-                  <FlexRenderHeader @header={{header}} />
+                  <div
+                    class='{{if (getCanSort header.column) "sortable-header"}}'
+                    {{on 'click' (toggleSort header.column)}}
+                  >
+                    <FlexRenderHeader @header={{header}} />{{lookup
+                      this.sortIndicators
+                      header.column.id
+                    }}
+                  </div>
+                  {{#if (getCanFilter header.column)}}
+                    <div>
+                      <ColumnFilter
+                        @column={{header.column}}
+                        @table={{this.table}}
+                      />
+                    </div>
+                  {{/if}}
                 {{/unless}}
               </th>
             {{/each}}

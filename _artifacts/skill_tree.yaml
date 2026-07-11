@@ -938,6 +938,51 @@ skills:
       - 'TanStack/table:examples/lit/virtualized-columns'
       - 'TanStack/table:examples/lit/virtualized-infinite-scrolling'
 
+  - name: 'Ember Getting Started'
+    slug: getting-started
+    type: framework
+    domain: framework-adapters
+    path: 'packages/ember-table/skills/getting-started/SKILL.md'
+    package: 'packages/ember-table'
+    description: "Create a TanStack Ember Table v9 table with useTable, a tracked options thunk, stable tableFeatures and columns, .gts templates, FlexRenderCell/Header/Footer, and correctly bound template helpers. Load for first-table setup, Glimmer reactivity, component cell renderers, or adapting another framework's example to Ember."
+    requires:
+      ['@tanstack/table-core#core', '@tanstack/table-core#table-features']
+    sources:
+      - 'TanStack/table:docs/framework/ember/quick-start.md'
+      - 'TanStack/table:examples/ember/basic-table'
+      - 'TanStack/table:packages/ember-table/src/index.ts'
+      - 'TanStack/table:packages/ember-table/src/use-table.ts'
+      - 'TanStack/table:packages/ember-table/src/FlexRender.gts'
+
+  - name: 'Ember Table State'
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: 'packages/ember-table/skills/table-state/SKILL.md'
+    package: 'packages/ember-table'
+    description: 'Read, track, initialize, control, and reset TanStack Ember Table v9 state through Glimmer-reactive table APIs, baseAtoms, atoms, store, Ember createAtom, or @tracked state plus on*Change. Load for ownership precedence, updater callbacks, stale template state, options-thunk reactivity, or incorrect table.Subscribe/store.subscribe usage.'
+    requires: ['@tanstack/table-core#core', 'getting-started']
+    sources:
+      - 'TanStack/table:docs/framework/ember/guide/table-state.md'
+      - 'TanStack/table:examples/ember/basic-external-atoms'
+      - 'TanStack/table:examples/ember/basic-external-state'
+      - 'TanStack/table:packages/ember-table/src/use-table.ts'
+      - 'TanStack/table:packages/ember-table/src/reactivity.ts'
+      - 'TanStack/table:packages/ember-table/src/signal.ts'
+
+  - name: 'Ember createTableHook'
+    slug: create-table-hook
+    type: framework
+    domain: framework-adapters
+    path: 'packages/ember-table/skills/create-table-hook/SKILL.md'
+    package: 'packages/ember-table'
+    description: 'Share TanStack Ember Table v9 features, row-model slots, defaults, and inferred column helpers with createTableHook, createAppTable, createAppColumnHelper, and appFeatures. Load for recurring Ember table conventions, per-table overrides, or confusion with component/context registries from other adapters.'
+    requires: ['@tanstack/table-core#core', 'getting-started', 'table-state']
+    sources:
+      - 'TanStack/table:docs/framework/ember/guide/composable-tables.md'
+      - 'TanStack/table:examples/ember/basic-app-table'
+      - 'TanStack/table:packages/ember-table/src/create-table-hook.ts'
+
   - name: 'Alpine Getting Started'
     slug: getting-started
     type: framework

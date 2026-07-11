@@ -25,7 +25,12 @@ export default {
     // up your addon's public API. Also make sure your package.json#exports
     // is aligned to the config here.
     // See https://github.com/embroider-build/embroider/blob/main/docs/v2-faq.md#how-can-i-define-the-public-exports-of-my-addon
-    addon.publicEntrypoints(['index.js', 'static-functions.js']),
+    addon.publicEntrypoints([
+      'index.js',
+      'static-functions.js',
+      'flex-render.js',
+      'experimental-worker-plugin.js',
+    ]),
 
     // These are the modules that should get reexported into the traditional
     // "app" tree. Things in here should also be in publicEntrypoints above, but

@@ -12,18 +12,22 @@ import {
   rowExpandingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
+  rowSortingFeature,
   createGroupedRowModel,
   createExpandedRowModel,
   createPaginatedRowModel,
   createFilteredRowModel,
+  createSortedRowModel,
   aggregationFns,
   filterFns,
+  sortFns,
   createColumnHelper,
   type Column,
   type Row,
   type Cell,
   type CellContext,
   type GroupingState,
+  type SortingState,
 } from '@tanstack/ember-table'
 import type { ComponentLike, ContentValue } from '@glint/template'
 import { makeData, type Person } from '../utils/make-data'
@@ -33,12 +37,15 @@ const features = tableFeatures({
   rowExpandingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
+  rowSortingFeature,
   groupedRowModel: createGroupedRowModel(),
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filteredRowModel: createFilteredRowModel(),
+  sortedRowModel: createSortedRowModel(),
   aggregationFns,
   filterFns,
+  sortFns,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -178,6 +185,14 @@ class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
 const getAllCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getAllCells()
+const getCanSort = (column: Column<typeof features, Person>): boolean =>
+  column.getCanSort()
+const toggleSort =
+  (column: Column<typeof features, Person>) => (event: Event) => {
+    column.getToggleSortingHandler()?.(event)
+  }
+const lookup = (obj: Record<string, string>, key: string): string =>
+  obj[key] ?? ''
 const getCanGroup = (column: Column<typeof features, Person>): boolean =>
   column.getCanGroup()
 const getIsGrouped = (column: Column<typeof features, Person>): boolean =>
@@ -208,6 +223,7 @@ const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 export default class GroupingTable extends Component {
   @tracked data: Array<Person> = makeData(1_000)
   @tracked grouping: GroupingState = []
+  @tracked sorting: SortingState = []
 
   table = useTable(() => ({
     features,
@@ -216,10 +232,15 @@ export default class GroupingTable extends Component {
     initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
     state: {
       grouping: this.grouping,
+      sorting: this.sorting,
     },
     onGroupingChange: (updater) => {
       this.grouping =
         typeof updater === 'function' ? updater(this.grouping) : updater
+    },
+    onSortingChange: (updater) => {
+      this.sorting =
+        typeof updater === 'function' ? updater(this.sorting) : updater
     },
   }))
 
@@ -245,6 +266,18 @@ export default class GroupingTable extends Component {
 
   get pageSizes() {
     return PAGE_SIZES
+  }
+
+  get sortIndicators(): Record<string, string> {
+    const indicators: Record<string, string> = {}
+    for (const hg of this.table.getHeaderGroups()) {
+      for (const h of hg.headers) {
+        const sorted = h.column.getIsSorted()
+        indicators[h.column.id] =
+          sorted === 'asc' ? ' 🔼' : sorted === 'desc' ? ' 🔽' : ''
+      }
+    }
+    return indicators
   }
 
   get tableState() {
@@ -298,7 +331,18 @@ export default class GroupingTable extends Component {
                         {{/if}}
                       </button>
                     {{/if}}
-                    <FlexRenderHeader @header={{header}} />
+                    <span
+                      class='{{if
+                          (getCanSort header.column)
+                          "sortable-header"
+                        }}'
+                      {{on 'click' (toggleSort header.column)}}
+                    >
+                      <FlexRenderHeader @header={{header}} />{{lookup
+                        this.sortIndicators
+                        header.column.id
+                      }}
+                    </span>
                   </div>
                 {{/unless}}
               </th>

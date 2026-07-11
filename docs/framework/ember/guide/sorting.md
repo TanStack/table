@@ -55,7 +55,7 @@ Since the sorting state is an array, it is possible to sort by multiple columns 
 
 #### Accessing Sorting State
 
-For reactive reads that should re-render your UI, read `table.store.state.sorting` (or `table.getState().sorting`) from a getter or directly in a template; Glimmer tracks the read and re-renders when the slice changes. In event handlers or other non-render code, you can read the current snapshot with `table.atoms.sorting.get()`, but be aware that this read does not subscribe the component to future changes.
+For reactive reads that should re-render your UI, read `table.store.state.sorting` from a getter or directly in a template; Glimmer tracks the read and re-renders when the slice changes. In event handlers or other non-render code, you can read the current snapshot with `table.atoms.sorting.get()`, but be aware that this read does not subscribe the component to future changes.
 
 ```gts
 table = useTable(() => ({

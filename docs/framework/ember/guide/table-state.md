@@ -70,7 +70,7 @@ There are two different questions when reading table state:
 - Do you only need the current value?
 - Or should the markup update when that value changes?
 
-Use direct atom reads for slice values. Use `table.getState()` or `table.store.state` for the current flat state snapshot. Because the adapter makes table reads reactive, reads inside a template binding or a getter update your markup automatically when the value changes.
+Use direct atom reads for slice values. Use `table.store.state` for the current flat state snapshot. Because the adapter makes table reads reactive, reads inside a template binding or a getter update your markup automatically when the value changes.
 
 #### Reading State
 
@@ -84,11 +84,11 @@ const sorting = this.table.atoms.sorting.get()
 You can also read the current flat store snapshot:
 
 ```ts
-const tableState = this.table.getState()
+const tableState = this.table.store.state
 const pagination = this.table.store.state.pagination
 ```
 
-Prefer `table.atoms.<slice>.get()` for narrow reads. Use `table.getState()` or `table.store.state` for full-state debug output or when a binding intentionally depends on the whole table state.
+Prefer `table.atoms.<slice>.get()` for narrow reads. Use `table.store.state` for full-state debug output or when a binding intentionally depends on the whole table state.
 
 #### Reading State Reactively in Templates
 

@@ -1,6 +1,7 @@
 import Component from '@glimmer/component'
 import { tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
+import { htmlSafe } from '@ember/template'
 import {
   useTable,
   FlexRenderCell,
@@ -9,6 +10,7 @@ import {
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
+  columnSizingFeature,
   rowPaginationFeature,
   createExpandedRowModel,
   createFilteredRowModel,
@@ -17,14 +19,17 @@ import {
   createColumnHelper,
   type Row,
   type Cell,
+  type Header,
   type RowPinningState,
 } from '@tanstack/ember-table'
+import type { SafeString } from '@ember/template'
 import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
   rowPinningFeature,
   rowExpandingFeature,
   columnFilteringFeature,
+  columnSizingFeature,
   rowPaginationFeature,
   expandedRowModel: createExpandedRowModel(),
   filteredRowModel: createFilteredRowModel(),
@@ -46,15 +51,18 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('age', {
     header: 'Age',
+    size: 50,
   }),
   columnHelper.accessor('visits', {
     header: 'Visits',
+    size: 50,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
+    size: 80,
   }),
 ])
 
@@ -74,6 +82,10 @@ const getIsPinned = (
 ): false | 'top' | 'bottom' => row.getIsPinned()
 const isFirstNameCell = (cell: Cell<typeof features, Person>): boolean =>
   cell.column.id === 'firstName'
+const headerWidth = (header: Header<typeof features, Person>): SafeString =>
+  htmlSafe(`width: ${header.getSize()}px`)
+const cellWidth = (cell: Cell<typeof features, Person>): SafeString =>
+  htmlSafe(`width: ${cell.column.getSize()}px`)
 const depthPadding = (row: Row<typeof features, Person>): string =>
   `padding-left: ${row.depth * 2}rem`
 
@@ -194,7 +206,7 @@ export default class RowPinningTable extends Component {
           <tr>
             <th>Pin</th>
             {{#each headerGroup.headers as |header|}}
-              <th colspan={{header.colSpan}}>
+              <th colspan={{header.colSpan}} style={{headerWidth header}}>
                 {{#unless header.isPlaceholder}}
                   <FlexRenderHeader @header={{header}} />
                 {{/unless}}
@@ -212,7 +224,7 @@ export default class RowPinningTable extends Component {
                 <button {{on 'click' (unpin row)}}>Unpin</button>
               </td>
               {{#each (getVisibleCells row) as |cell|}}
-                <td>
+                <td style={{cellWidth cell}}>
                   {{#if (isFirstNameCell cell)}}
                     <div style={{depthPadding row}}>
                       {{#if (getCanExpand row)}}
@@ -244,7 +256,7 @@ export default class RowPinningTable extends Component {
               {{/if}}
             </td>
             {{#each (getVisibleCells row) as |cell|}}
-              <td>
+              <td style={{cellWidth cell}}>
                 {{#if (isFirstNameCell cell)}}
                   <div style={{depthPadding row}}>
                     {{#if (getCanExpand row)}}
@@ -271,7 +283,7 @@ export default class RowPinningTable extends Component {
                 <button {{on 'click' (unpin row)}}>Unpin</button>
               </td>
               {{#each (getVisibleCells row) as |cell|}}
-                <td>
+                <td style={{cellWidth cell}}>
                   {{#if (isFirstNameCell cell)}}
                     <div style={{depthPadding row}}>
                       {{#if (getCanExpand row)}}

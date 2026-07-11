@@ -1,5 +1,11 @@
 export * from '@tanstack/table-core'
 export { useTable } from './use-table.ts'
+export { createTableHook } from './create-table-hook.ts'
+export type {
+  CreateTableHookOptions,
+  AppEmberTable,
+  AppColumnHelper,
+} from './create-table-hook.ts'
 export {
   flexRender,
   flexRenderComponent,

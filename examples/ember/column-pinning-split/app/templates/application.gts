@@ -8,6 +8,8 @@ import {
   FlexRenderHeader,
   tableFeatures,
   columnPinningFeature,
+  columnOrderingFeature,
+  columnVisibilityFeature,
   createColumnHelper,
   type Column,
   type Row,
@@ -18,7 +20,9 @@ import {
 import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
+  columnVisibilityFeature,
   columnPinningFeature,
+  columnOrderingFeature,
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -79,6 +83,24 @@ const pin = (
   side: ColumnPinningPosition,
 ) => {
   return () => column.pin(side)
+}
+
+const getIsVisible = (column: Column<typeof features, Person>): boolean =>
+  column.getIsVisible()
+
+const toggleColumnVisibility = (column: Column<typeof features, Person>) => {
+  return (event: Event) => {
+    column.getToggleVisibilityHandler()(event)
+  }
+}
+
+const shuffle = <T,>(arr: Array<T>): Array<T> => {
+  const result = [...arr]
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1))
+    ;[result[i], result[j]] = [result[j]!, result[i]!]
+  }
+  return result
 }
 
 // --- Reusable header cell (label + pin controls) ---
@@ -150,6 +172,14 @@ export default class ColumnPinningSplitTable extends Component {
     return this.table.getRowModel().rows
   }
 
+  get leafColumns() {
+    return this.table.getAllLeafColumns()
+  }
+
+  get isAllColumnsVisible() {
+    return this.table.getIsAllColumnsVisible()
+  }
+
   get tableState() {
     return JSON.stringify(this.table.store.state, null, 2)
   }
@@ -162,7 +192,49 @@ export default class ColumnPinningSplitTable extends Component {
     this.data = makeData(1_000)
   }
 
+  toggleAllColumnsVisibility = (event: Event) => {
+    this.table.getToggleAllColumnsVisibilityHandler()(event)
+  }
+
+  shuffleColumns = () => {
+    this.table.setColumnOrder(
+      shuffle(this.table.getAllLeafColumns().map((column) => column.id)),
+    )
+  }
+
+  resetOrder = () => {
+    this.table.resetColumnOrder()
+  }
+
   <template>
+    <div class='column-toggle-panel'>
+      <div class='column-toggle-panel-header'>
+        <label>
+          <input
+            type='checkbox'
+            checked={{this.isAllColumnsVisible}}
+            {{on 'change' this.toggleAllColumnsVisibility}}
+          />
+          Toggle All
+        </label>
+      </div>
+
+      {{#each this.leafColumns as |column|}}
+        <div class='column-toggle-row'>
+          <label>
+            <input
+              type='checkbox'
+              checked={{getIsVisible column}}
+              {{on 'change' (toggleColumnVisibility column)}}
+            />
+            {{column.id}}
+          </label>
+        </div>
+      {{/each}}
+    </div>
+
+    <div class='spacer-md'></div>
+
     <div class='button-row'>
       <button
         class='demo-button demo-button-sm'
@@ -172,6 +244,14 @@ export default class ColumnPinningSplitTable extends Component {
         class='demo-button demo-button-sm'
         {{on 'click' this.stressTest}}
       >Stress Test (1k rows)</button>
+      <button
+        class='demo-button demo-button-sm'
+        {{on 'click' this.shuffleColumns}}
+      >Shuffle Columns</button>
+      <button
+        class='demo-button demo-button-sm'
+        {{on 'click' this.resetOrder}}
+      >Reset Order</button>
     </div>
 
     <div class='spacer-md'></div>

@@ -13,6 +13,8 @@
       "entry": [
         "src/index.ts!",
         "src/static-functions.ts!",
+        "src/flex-render.ts!",
+        "src/experimental-worker-plugin.ts!",
         "babel.publish.config.cjs",
         "testem.cjs",
         "tests/test-helper.ts"

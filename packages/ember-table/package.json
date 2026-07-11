@@ -35,6 +35,14 @@
       "types": "./declarations/static-functions.d.ts",
       "default": "./dist/static-functions.js"
     },
+    "./flex-render": {
+      "types": "./declarations/flex-render.d.ts",
+      "default": "./dist/flex-render.js"
+    },
+    "./experimental-worker-plugin": {
+      "types": "./declarations/experimental-worker-plugin.d.ts",
+      "default": "./dist/experimental-worker-plugin.js"
+    },
     "./addon-main.js": "./addon-main.cjs",
     "./package.json": "./package.json"
   },
@@ -45,7 +53,8 @@
     "addon-main.cjs",
     "declarations",
     "dist",
-    "src"
+    "src",
+    "skills"
   ],
   "scripts": {
     "build": "rollup --config",
@@ -91,6 +100,7 @@
     "@glint/ember-tsc": "1.8.11",
     "@glint/template": "1.7.8",
     "@glint/tsserver-plugin": "2.5.17",
+    "@playwright/test": "^1.61.1",
     "@rollup/plugin-babel": "7.1.0",
     "@types/qunit": "^2.19.12",
     "babel-plugin-ember-template-compilation": "4.0.0",

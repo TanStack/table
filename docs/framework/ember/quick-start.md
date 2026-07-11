@@ -187,18 +187,22 @@ Return `flexRenderComponent` from a column's `cell` (or `header`/`footer`) defin
 import Component from '@glimmer/component'
 import {
   flexRenderComponent,
-  type FlexRenderableSignature,
+  type CellRenderableSignature,
 } from '@tanstack/ember-table'
 
+// Use `CellRenderableSignature` for a cell component: its `ctx` is a
+// `CellContext`, so `ctx.getValue()` is available directly with no cast. Use
+// `FlexRenderableSignature` only for a component rendered in both cell and
+// header slots; its `ctx` is a cell-or-header union.
 class StatusBadge extends Component<
-  FlexRenderableSignature<typeof features, Person, string, { color: string }>
+  CellRenderableSignature<typeof features, Person, string, { color: string }>
 > {
   get value(): string {
-    return (this.args.ctx as { getValue: () => string }).getValue()
+    return this.args.ctx.getValue()
   }
 
   <template>
-    <span class='badge badge-{{@color}}'>{{this.value}}</span>
+    <span class='badge badge-{{@options.color}}'>{{this.value}}</span>
   </template>
 }
 
@@ -209,6 +213,22 @@ const columns = columnHelper.columns([
   }),
 ])
 ```
+
+## Composable Tables
+
+When multiple tables in your app share the same features, row models, and default options, define them once with `createTableHook` instead of repeating them at every call site:
+
+```ts
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
+
+const { createAppTable, createAppColumnHelper } = createTableHook({ features })
+```
+
+Then call `createAppTable(() => ({ columns, data: this.data }))` from your component instead of `useTable` (it takes the same options thunk, minus `features`), and define columns with `createAppColumnHelper`. See the [Composable Tables Guide](./guide/composable-tables.md) and the [Basic createAppTable example](./examples/basic-app-table) for the full pattern.
 
 ## What to Read Next
 

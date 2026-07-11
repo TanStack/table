@@ -1,5 +1,5 @@
 import Component from '@glimmer/component'
-import { FlexRenderComponentConfig } from './flex-render.ts'
+import { FlexRenderComponentConfig } from './flex-render-helpers.ts'
 import { flexRender } from '@tanstack/table-core/flex-render'
 import type {
   Cell_Core,

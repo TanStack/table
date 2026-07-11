@@ -1,28 +1,20 @@
 import Component from '@glimmer/component'
 import { tracked } from '@glimmer/tracking'
-import { on } from '@ember/modifier'
 import {
   useTable,
   FlexRenderCell,
   FlexRenderHeader,
   FlexRenderFooter,
-  flexRenderComponent,
   tableFeatures,
-  rowSortingFeature,
-  createSortedRowModel,
-  sortFns,
   createColumnHelper,
-  type Column,
   type Row,
   type Cell,
-  type FlexRenderableSignature,
-  type CellContext,
 } from '@tanstack/ember-table'
-import type { TOC } from '@ember/component/template-only'
-import type { CellRenderableSignature } from '@tanstack/ember-table'
 
-// --- Data types and generation ---
+// This example uses the standalone `useTable` hook to create a basic table
+// with no additional features.
 
+// 1. Define what the shape of your data will be for each row.
 interface Person {
   firstName: string
   lastName: string
@@ -32,185 +24,83 @@ interface Person {
   progress: number
 }
 
-const FIRST_NAMES = [
-  'Alice',
-  'Bob',
-  'Charlie',
-  'Diana',
-  'Eve',
-  'Frank',
-  'Grace',
-  'Hank',
-  'Ivy',
-  'Jack',
-  'Karen',
-  'Leo',
-  'Mona',
-  'Nate',
-  'Olivia',
-  'Paul',
-  'Quinn',
-  'Rita',
-  'Sam',
-  'Tina',
+// 2. Create some dummy data with a stable reference.
+const defaultData: Array<Person> = [
+  {
+    firstName: 'tanner',
+    lastName: 'linsley',
+    age: 24,
+    visits: 100,
+    status: 'In Relationship',
+    progress: 50,
+  },
+  {
+    firstName: 'tandy',
+    lastName: 'miller',
+    age: 40,
+    visits: 40,
+    status: 'Single',
+    progress: 80,
+  },
+  {
+    firstName: 'joe',
+    lastName: 'dirte',
+    age: 45,
+    visits: 20,
+    status: 'Complicated',
+    progress: 10,
+  },
+  {
+    firstName: 'kevin',
+    lastName: 'vandy',
+    age: 12,
+    visits: 100,
+    status: 'Single',
+    progress: 70,
+  },
 ]
 
-const LAST_NAMES = [
-  'Smith',
-  'Johnson',
-  'Williams',
-  'Brown',
-  'Jones',
-  'Garcia',
-  'Miller',
-  'Davis',
-  'Rodriguez',
-  'Martinez',
-  'Hernandez',
-  'Lopez',
-  'Gonzalez',
-  'Wilson',
-  'Anderson',
-  'Thomas',
-  'Taylor',
-  'Moore',
-  'Jackson',
-  'Martin',
-]
+// 3. Tell the table which features to use. This is a basic table with none.
+const features = tableFeatures({})
 
-const STATUSES = ['relationship', 'complicated', 'single'] as const
-
-function makeData(count: number): Array<Person> {
-  // Random offset so "Regenerate Data" produces a visibly different data set.
-  const offset = Math.floor(Math.random() * 1000)
-  return Array.from({ length: count }, (_, index) => {
-    const i = index + offset
-    return {
-      firstName: FIRST_NAMES[i % FIRST_NAMES.length]!,
-      lastName: LAST_NAMES[(i * 3) % LAST_NAMES.length]!,
-      age: 20 + ((i * 7) % 30),
-      visits: (i * 37) % 1000,
-      status: STATUSES[i % STATUSES.length]!,
-      progress: (i * 13) % 100,
-    }
-  })
-}
-
-// --- Custom cell component example ---
-
-class StatusBadge extends Component<
-  FlexRenderableSignature<
-    typeof features,
-    Person,
-    string,
-    { color: 'red' | 'green' | 'blue' }
-  >
-> {
-  get value(): string {
-    const ctx = this.args.ctx as { getValue: () => string }
-    return ctx.getValue()
-  }
-
-  get className(): string {
-    const value = this.value
-    if (value === 'relationship') return 'status-relationship'
-    if (value === 'complicated') return 'status-complicated'
-    return 'status-single'
-  }
-
-  <template>
-    <span class={{this.className}}>{{this.value}}</span>
-  </template>
-}
-
-// --- Table setup ---
-
-const features = tableFeatures({
-  rowSortingFeature,
-  sortedRowModel: createSortedRowModel(),
-  sortFns,
-})
-
+// 4. Define the columns for your table.
 const columnHelper = createColumnHelper<typeof features, Person>()
-
-function getValue<T>(ctx: CellContext<typeof features, Person, T>): T {
-  return ctx.getValue()
-}
-
-const ProgressBar: TOC<
-  CellRenderableSignature<
-    typeof features,
-    Person,
-    string,
-    undefined | { color: 'red' | 'blue' }
-  >
-> = <template>
-  <div class='status-bar'>
-    <span>Status: {{getValue @ctx}}</span>
-  </div>
-</template>
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {
+    header: 'First Name',
     cell: (info) => info.getValue(),
-    footer: (info) => info.column.id,
   }),
   columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
-    cell: (info) => info.getValue(),
     header: () => 'Last Name',
-    footer: (info) => info.column.id,
+    cell: (info) => info.getValue(),
   }),
-  columnHelper.accessor('age', {
+  columnHelper.accessor((row) => Number(row.age), {
+    id: 'age',
     header: () => 'Age',
     cell: (info) => info.renderValue(),
-    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('visits', {
     header: () => 'Visits',
-    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    cell: () =>
-      flexRenderComponent(StatusBadge, {
-        color: 'blue',
-      }),
-    footer: (info) => info.column.id,
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
-    footer: (info) => info.column.id,
-    cell: () =>
-      flexRenderComponent(ProgressBar, {
-        color: 'red',
-      }),
   }),
 ])
 
-// --- Template helpers ---
 // TanStack Table v9 uses prototype-based methods that require `this` binding.
-// Ember templates extract function references without binding, so we provide
-// helpers that call methods on the correct object.
-
-const getCanSort = (column: Column<typeof features, Person>): boolean =>
-  column.getCanSort()
+// Ember templates extract function references without binding, so we provide a
+// helper that calls the method on the correct object.
 const getAllCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getAllCells()
-const lookup = (obj: Record<string, string>, key: string): string =>
-  obj[key] ?? ''
 
-const toggleSort = (column: Column<typeof features, Person>) => {
-  return (event: Event) => {
-    column.getToggleSortingHandler()?.(event)
-  }
-}
-
-// --- Component ---
-
-export default class BasicAppTable extends Component {
-  @tracked data: Array<Person> = makeData(20)
+export default class BasicTable extends Component {
+  @tracked data: Array<Person> = [...defaultData]
 
   table = useTable(() => ({
     features,
@@ -230,56 +120,16 @@ export default class BasicAppTable extends Component {
     return this.table.getFooterGroups()
   }
 
-  get tableState() {
-    return JSON.stringify(this.table.store.state, null, 2)
-  }
-
-  get sortIndicators(): Record<string, string> {
-    const indicators: Record<string, string> = {}
-    for (const hg of this.table.getHeaderGroups()) {
-      for (const h of hg.headers) {
-        const sorted = h.column.getIsSorted()
-        indicators[h.column.id] =
-          sorted === 'asc' ? ' ▲' : sorted === 'desc' ? ' ▼' : ''
-      }
-    }
-    return indicators
-  }
-
-  regenerateData = () => {
-    this.data = makeData(20)
-  }
-
-  stressTest = () => {
-    this.data = makeData(1_000)
-  }
-
   <template>
     <div class='demo-root'>
-      <div>
-        <button {{on 'click' this.regenerateData}}>Regenerate Data</button>
-        <button {{on 'click' this.stressTest}}>Stress Test (1k rows)</button>
-      </div>
       <table>
         <thead>
           {{#each this.headerGroups as |headerGroup|}}
             <tr>
               {{#each headerGroup.headers as |header|}}
-                <th colspan={{header.colSpan}}>
+                <th>
                   {{#unless header.isPlaceholder}}
-                    <div
-                      {{on 'click' (toggleSort header.column)}}
-                      style='cursor: {{if
-                        (getCanSort header.column)
-                        "pointer"
-                        "not-allowed"
-                      }}; user-select: none'
-                    >
-                      <FlexRenderHeader @header={{header}} />{{lookup
-                        this.sortIndicators
-                        header.column.id
-                      }}
-                    </div>
+                    <FlexRenderHeader @header={{header}} />
                   {{/unless}}
                 </th>
               {{/each}}
@@ -309,7 +159,7 @@ export default class BasicAppTable extends Component {
           {{/each}}
         </tfoot>
       </table>
-      <pre>{{this.tableState}}</pre>
+      <div class='spacer-md'></div>
     </div>
   </template>
 }
