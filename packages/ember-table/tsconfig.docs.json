@@ -1,0 +1,15 @@
+/**
+ * Used only by `pnpm generate-docs` (scripts/generateDocs.js).
+ *
+ * TypeDoc cannot parse .gts template-tag sources, so reference docs are
+ * generated from the built declarations. Run `pnpm build` in this package
+ * before generating docs.
+ */
+{
+  "extends": "@ember/library-tsconfig",
+  "include": ["./declarations/**/*"],
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["ember-source/types", "@glint/ember-tsc/types"]
+  }
+}

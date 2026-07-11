@@ -73,17 +73,17 @@ const getIsPinned = (
   column: Column<typeof features, Person>,
 ): ColumnPinningPosition => column.getIsPinned()
 
-const isPinnedLeft = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'left'
+const isPinnedStart = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'start'
 
-const isPinnedRight = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'right'
+const isPinnedEnd = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'end'
 
 const getStart = (column: Column<typeof features, Person>): number =>
-  column.getStart('left')
+  column.getStart('start')
 
 const getAfter = (column: Column<typeof features, Person>): number =>
-  column.getAfter('right')
+  column.getAfter('end')
 
 const getSize = (column: Column<typeof features, Person>): number =>
   column.getSize()
@@ -92,7 +92,7 @@ const pinningStyle = (column: Column<typeof features, Person>): SafeString => {
   const isPinned = getIsPinned(column)
   const parts: Array<string> = [`width:${getSize(column)}px`]
 
-  if (isPinned === 'left') {
+  if (isPinned === 'start') {
     parts.push(
       'position:sticky',
       `left:${getStart(column)}px`,
@@ -101,7 +101,7 @@ const pinningStyle = (column: Column<typeof features, Person>): SafeString => {
       'background:#f5f5f5',
       'box-shadow:-4px 0 4px -4px gray inset',
     )
-  } else if (isPinned === 'right') {
+  } else if (isPinned === 'end') {
     parts.push(
       'position:sticky',
       `right:${getAfter(column)}px`,
@@ -133,8 +133,8 @@ export default class ColumnPinningStickyTable extends Component {
     data: this.data,
     initialState: {
       columnPinning: {
-        left: ['firstName'],
-        right: ['progress'],
+        start: ['firstName'],
+        end: ['progress'],
       },
     },
   }))
@@ -200,10 +200,10 @@ export default class ColumnPinningStickyTable extends Component {
                     </div>
                     {{#if (getCanPin header.column)}}
                       <div class='pin-actions'>
-                        {{#unless (isPinnedLeft header.column)}}
+                        {{#unless (isPinnedStart header.column)}}
                           <button
                             class='pin-button'
-                            {{on 'click' (pin header.column 'left')}}
+                            {{on 'click' (pin header.column 'start')}}
                           >◀</button>
                         {{/unless}}
                         {{#if (getIsPinned header.column)}}
@@ -212,10 +212,10 @@ export default class ColumnPinningStickyTable extends Component {
                             {{on 'click' (pin header.column false)}}
                           >✕</button>
                         {{/if}}
-                        {{#unless (isPinnedRight header.column)}}
+                        {{#unless (isPinnedEnd header.column)}}
                           <button
                             class='pin-button'
-                            {{on 'click' (pin header.column 'right')}}
+                            {{on 'click' (pin header.column 'end')}}
                           >▶</button>
                         {{/unless}}
                       </div>

@@ -174,7 +174,7 @@ const getCanPin = (column: Col): boolean => column.getCanPin()
 const getCanGroup = (column: Col): boolean => column.getCanGroup()
 const getCanHide = (column: Col): boolean => column.getCanHide()
 const getIsVisible = (column: Col): boolean => column.getIsVisible()
-const getIsPinned = (column: Col): false | 'left' | 'right' =>
+const getIsPinned = (column: Col): false | 'start' | 'end' =>
   column.getIsPinned()
 const getIsGrouped = (column: Col): boolean => column.getIsGrouped()
 const getGroupedIndex = (column: Col): number => column.getGroupedIndex()
@@ -200,7 +200,7 @@ const toggleSort = (column: Col) => (event: Event) => {
 const toggleGroup = (column: Col) => () => {
   column.getToggleGroupingHandler()?.()
 }
-const pinColumn = (column: Col, side: false | 'left' | 'right') => () => {
+const pinColumn = (column: Col, side: false | 'start' | 'end') => () => {
   column.pin(side)
 }
 const toggleVisibility = (column: Col) => (event: Event) => {
@@ -338,7 +338,7 @@ export default class KitchenSinkTable extends Component {
     getSubRows: (row: Person) => row.subRows,
     globalFilterFn: 'fuzzy',
     initialState: {
-      columnPinning: { left: ['select'], right: [] },
+      columnPinning: { start: ['select'], end: [] },
       pagination: { pageIndex: 0, pageSize: 20 },
     },
     enableRowSelection: true,
@@ -544,9 +544,9 @@ export default class KitchenSinkTable extends Component {
                 {{#unless header.isPlaceholder}}
                   <div class='header-controls'>
                     {{#if (getCanPin header.column)}}
-                      {{#unless (eq (getIsPinned header.column) 'left')}}
+                      {{#unless (eq (getIsPinned header.column) 'start')}}
                         <button
-                          {{on 'click' (pinColumn header.column 'left')}}
+                          {{on 'click' (pinColumn header.column 'start')}}
                         >&lt;</button>
                       {{/unless}}
                       {{#if (getIsPinned header.column)}}
@@ -554,9 +554,9 @@ export default class KitchenSinkTable extends Component {
                           {{on 'click' (pinColumn header.column false)}}
                         >x</button>
                       {{/if}}
-                      {{#unless (eq (getIsPinned header.column) 'right')}}
+                      {{#unless (eq (getIsPinned header.column) 'end')}}
                         <button
-                          {{on 'click' (pinColumn header.column 'right')}}
+                          {{on 'click' (pinColumn header.column 'end')}}
                         >&gt;</button>
                       {{/unless}}
                     {{/if}}

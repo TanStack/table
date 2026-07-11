@@ -170,8 +170,18 @@ module('Integration | reactivity', function (hooks) {
         return this.table.getSelectedRowModel().rows.length
       }
 
-      growPage = () => this.table.setPageSize(5)
-      selectFirst = () => this.table.getRowModel().rows[0]?.toggleSelected(true)
+      // Feature methods (setPageSize, ...) must be called on a local copy of
+      // the table: calling them through `this.table` makes glint/TS resolve
+      // them as `void` when `useTable` is initialized inline in a class with
+      // a template.
+      growPage = () => {
+        const table = this.table
+        table.setPageSize(5)
+      }
+      selectFirst = () => {
+        const table = this.table
+        table.getRowModel().rows[0]?.toggleSelected(true)
+      }
 
       <template>
         <button
@@ -249,7 +259,10 @@ module('Integration | reactivity', function (hooks) {
         return JSON.stringify(this.table.store.state.sorting ?? [])
       }
 
-      growPage = () => this.table.setPageSize(10)
+      growPage = () => {
+        const table = this.table
+        table.setPageSize(10)
+      }
 
       <template>
         <button

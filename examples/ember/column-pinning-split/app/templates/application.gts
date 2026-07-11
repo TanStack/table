@@ -49,17 +49,17 @@ const columns = columnHelper.columns([
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
-const getLeftVisibleCells = (
+const getStartVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getLeftVisibleCells()
+): Array<Cell<typeof features, Person>> => row.getStartVisibleCells()
 
 const getCenterVisibleCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getCenterVisibleCells()
 
-const getRightVisibleCells = (
+const getEndVisibleCells = (
   row: Row<typeof features, Person>,
-): Array<Cell<typeof features, Person>> => row.getRightVisibleCells()
+): Array<Cell<typeof features, Person>> => row.getEndVisibleCells()
 
 const getCanPin = (column: Column<typeof features, Person>): boolean =>
   column.getCanPin()
@@ -68,11 +68,11 @@ const getIsPinned = (
   column: Column<typeof features, Person>,
 ): ColumnPinningPosition => column.getIsPinned()
 
-const isPinnedLeft = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'left'
+const isPinnedStart = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'start'
 
-const isPinnedRight = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'right'
+const isPinnedEnd = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'end'
 
 const pin = (
   column: Column<typeof features, Person>,
@@ -96,10 +96,10 @@ const PinHeader: TOC<PinHeaderSignature> = <template>
     </div>
     {{#if (getCanPin @header.column)}}
       <div class='pin-actions'>
-        {{#unless (isPinnedLeft @header.column)}}
+        {{#unless (isPinnedStart @header.column)}}
           <button
             class='pin-button'
-            {{on 'click' (pin @header.column 'left')}}
+            {{on 'click' (pin @header.column 'start')}}
           >◀</button>
         {{/unless}}
         {{#if (getIsPinned @header.column)}}
@@ -108,10 +108,10 @@ const PinHeader: TOC<PinHeaderSignature> = <template>
             {{on 'click' (pin @header.column false)}}
           >✕</button>
         {{/if}}
-        {{#unless (isPinnedRight @header.column)}}
+        {{#unless (isPinnedEnd @header.column)}}
           <button
             class='pin-button'
-            {{on 'click' (pin @header.column 'right')}}
+            {{on 'click' (pin @header.column 'end')}}
           >▶</button>
         {{/unless}}
       </div>
@@ -128,14 +128,14 @@ export default class ColumnPinningSplitTable extends Component {
     data: this.data,
     initialState: {
       columnPinning: {
-        left: ['firstName'],
-        right: ['progress'],
+        start: ['firstName'],
+        end: ['progress'],
       },
     },
   }))
 
   get leftHeaderGroups() {
-    return this.table.getLeftHeaderGroups()
+    return this.table.getStartHeaderGroups()
   }
 
   get centerHeaderGroups() {
@@ -143,7 +143,7 @@ export default class ColumnPinningSplitTable extends Component {
   }
 
   get rightHeaderGroups() {
-    return this.table.getRightHeaderGroups()
+    return this.table.getEndHeaderGroups()
   }
 
   get rows() {
@@ -198,7 +198,7 @@ export default class ColumnPinningSplitTable extends Component {
         <tbody>
           {{#each this.rows as |row|}}
             <tr>
-              {{#each (getLeftVisibleCells row) as |cell|}}
+              {{#each (getStartVisibleCells row) as |cell|}}
                 <td><FlexRenderCell @cell={{cell}} /></td>
               {{/each}}
             </tr>
@@ -246,7 +246,7 @@ export default class ColumnPinningSplitTable extends Component {
         <tbody>
           {{#each this.rows as |row|}}
             <tr>
-              {{#each (getRightVisibleCells row) as |cell|}}
+              {{#each (getEndVisibleCells row) as |cell|}}
                 <td><FlexRenderCell @cell={{cell}} /></td>
               {{/each}}
             </tr>

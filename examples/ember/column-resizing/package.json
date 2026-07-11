@@ -2,10 +2,6 @@
   "name": "tanstack-ember-table-example-column-resizing",
   "version": "0.0.0",
   "private": true,
-  "description": "Your Ember App's description here",
-  "repository": "",
-  "license": "MIT",
-  "author": "",
   "type": "module",
   "imports": {
     "#app/*": "./app/*",
@@ -20,10 +16,12 @@
     "./*": "./app/*"
   },
   "scripts": {
-    "build": "vite build",
     "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
     "start": "vite",
-    "lint:types": "ember-tsc --noEmit"
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
+    "test:types": "ember-tsc --noEmit"
   },
   "dependencies": {
     "@embroider/macros": "1.20.5",

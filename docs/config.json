@@ -29,6 +29,12 @@
           ]
         },
         {
+          "label": "ember",
+          "children": [
+            { "label": "Quick Start", "to": "framework/ember/quick-start" }
+          ]
+        },
+        {
           "label": "lit",
           "children": [
             { "label": "Quick Start", "to": "framework/lit/quick-start" },
@@ -371,6 +377,12 @@
           ]
         },
         {
+          "label": "ember",
+          "children": [
+            { "label": "Ember API Reference", "to": "framework/ember/reference/index" }
+          ]
+        },
+        {
           "label": "react",
           "children": [
             { "label": "React API Reference", "to": "framework/react/reference/index" }
@@ -471,6 +483,22 @@
             { "label": "FlexRender", "to": "framework/angular/reference/variables/FlexRender" },
             { "label": "TanStackTable", "to": "framework/angular/reference/classes/TanStackTable" },
             { "label": "injectTableContext", "to": "framework/angular/reference/functions/injectTableContext" }
+          ]
+        },
+        {
+          "label": "ember",
+          "children": [
+            { "label": "useTable", "to": "framework/ember/reference/functions/useTable" },
+            { "label": "FlexRenderCell", "to": "framework/ember/reference/classes/FlexRenderCell" },
+            { "label": "FlexRenderHeader", "to": "framework/ember/reference/classes/FlexRenderHeader" },
+            { "label": "FlexRenderFooter", "to": "framework/ember/reference/classes/FlexRenderFooter" },
+            { "label": "flexRenderComponent", "to": "framework/ember/reference/functions/flexRenderComponent" },
+            { "label": "FlexRenderableSignature", "to": "framework/ember/reference/interfaces/FlexRenderableSignature" },
+            { "label": "CellRenderableSignature", "to": "framework/ember/reference/interfaces/CellRenderableSignature" },
+            { "label": "emberReactivity", "to": "framework/ember/reference/functions/emberReactivity" },
+            { "label": "createAtom", "to": "framework/ember/reference/functions/createAtom" },
+            { "label": "signal", "to": "framework/ember/reference/functions/signal" },
+            { "label": "computed", "to": "framework/ember/reference/functions/computed" }
           ]
         },
         {
@@ -876,6 +904,15 @@
           ]
         },
         {
+          "label": "ember",
+          "children": [
+            { "label": "Basic (useTable)", "to": "framework/ember/examples/basic-table" },
+            { "label": "Basic (External State)", "to": "framework/ember/examples/basic-external-state" },
+            { "label": "Basic (External Atoms)", "to": "framework/ember/examples/basic-external-atoms" },
+            { "label": "Header Groups", "to": "framework/ember/examples/column-groups" }
+          ]
+        },
+        {
           "label": "lit",
           "children": [
             { "label": "Basic (TableController)", "to": "framework/lit/examples/basic-table-controller" },
@@ -1003,6 +1040,30 @@
             { "label": "Row Pinning", "to": "framework/angular/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/angular/examples/row-selection" },
             { "label": "Sorting", "to": "framework/angular/examples/sorting" }
+          ]
+        },
+        {
+          "label": "ember",
+          "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/ember/examples/kitchen-sink" },
+            { "label": "Column Filters", "to": "framework/ember/examples/filters" },
+            { "label": "Column Filters (Faceted)", "to": "framework/ember/examples/filters-faceted" },
+            { "label": "Fuzzy Search Filters", "to": "framework/ember/examples/filters-fuzzy" },
+            { "label": "Column Ordering", "to": "framework/ember/examples/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/ember/examples/column-pinning" },
+            { "label": "Column Pinning (Split)", "to": "framework/ember/examples/column-pinning-split" },
+            { "label": "Sticky Column Pinning", "to": "framework/ember/examples/column-pinning-sticky" },
+            { "label": "Column Sizing", "to": "framework/ember/examples/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/ember/examples/column-resizing" },
+            { "label": "Performant Column Resizing", "to": "framework/ember/examples/column-resizing-performant" },
+            { "label": "Column Visibility", "to": "framework/ember/examples/column-visibility" },
+            { "label": "Expanding", "to": "framework/ember/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/ember/examples/sub-components" },
+            { "label": "Grouping", "to": "framework/ember/examples/grouping" },
+            { "label": "Pagination", "to": "framework/ember/examples/pagination" },
+            { "label": "Row Pinning", "to": "framework/ember/examples/row-pinning" },
+            { "label": "Row Selection", "to": "framework/ember/examples/row-selection" },
+            { "label": "Sorting", "to": "framework/ember/examples/sorting" }
           ]
         },
         {
@@ -1186,6 +1247,15 @@
             { "label": "Row Selection (Signal)", "to": "framework/angular/examples/row-selection-signal" },
             { "label": "Editable data", "to": "framework/angular/examples/editable" },
             { "label": "Row Drag & Drop", "to": "framework/angular/examples/row-dnd" }
+          ]
+        },
+        {
+          "label": "ember",
+          "children": [
+            { "label": "Custom Plugin", "to": "framework/ember/examples/custom-plugin" },
+            { "label": "Editable data", "to": "framework/ember/examples/editable" },
+            { "label": "Fetch API data (SPA / SSR)", "to": "framework/ember/examples/remote-data" },
+            { "label": "Row Drag & Drop", "to": "framework/ember/examples/row-dnd" }
           ]
         },
         {

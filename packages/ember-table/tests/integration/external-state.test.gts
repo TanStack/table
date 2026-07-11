@@ -108,8 +108,14 @@ module('Integration | external state (controlled)', function (hooks) {
         return JSON.stringify(this.table.store.state.sorting ?? [])
       }
 
-      sortByName = () =>
-        this.table.setSorting([{ id: 'firstName', desc: false }])
+      // Feature methods (setSorting, setPageSize, ...) must be called on a
+      // local copy of the table: calling them through `this.table` makes
+      // glint/TS resolve them as `void` when `useTable` is initialized inline
+      // in a class with a template.
+      sortByName = () => {
+        const table = this.table
+        table.setSorting([{ id: 'firstName', desc: false }])
+      }
 
       <template>
         <button
@@ -245,8 +251,10 @@ module('Integration | external state (controlled)', function (hooks) {
         return JSON.stringify(this.table.store.state.sorting ?? [])
       }
 
-      sortByName = () =>
-        this.table.setSorting([{ id: 'firstName', desc: false }])
+      sortByName = () => {
+        const table = this.table
+        table.setSorting([{ id: 'firstName', desc: false }])
+      }
 
       <template>
         <button
@@ -320,7 +328,10 @@ module('Integration | external state (controlled)', function (hooks) {
         return JSON.stringify(this.table.store.state.sorting ?? [])
       }
 
-      growPage = () => this.table.setPageSize(10)
+      growPage = () => {
+        const table = this.table
+        table.setPageSize(10)
+      }
 
       <template>
         <button
@@ -496,7 +507,10 @@ module('Integration | external atoms', function (hooks) {
         return paginationAtom.get().pageSize
       }
 
-      growPage = () => this.table.setPageSize(4)
+      growPage = () => {
+        const table = this.table
+        table.setPageSize(4)
+      }
 
       <template>
         <button

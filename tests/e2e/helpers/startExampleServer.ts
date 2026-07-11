@@ -3,12 +3,12 @@ import path from 'node:path'
 import { spawn } from 'node:child_process'
 import { createServer } from 'vite'
 
-function isTanStackStartExample(exampleDir: string) {
+function hasDependency(exampleDir: string, dependency: string) {
   const pkgPath = path.join(exampleDir, 'package.json')
   if (!existsSync(pkgPath)) return false
   try {
     const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'))
-    return Boolean(pkg.dependencies?.['@tanstack/react-start'])
+    return Boolean(pkg.dependencies?.[dependency])
   } catch {
     return false
   }
@@ -29,8 +29,13 @@ export async function startExampleServer(exampleDir: string) {
 
   // TanStack Start apps (SSR) need their own dev server process: running the
   // Start plugin through a programmatic createServer from the repo root
-  // breaks its client/server environment resolution.
-  if (isTanStackStartExample(exampleDir)) {
+  // breaks its client/server environment resolution. Ember apps do too: their
+  // config is vite.config.mjs (not detected above) and the embroider plugins
+  // resolve babel config relative to the app directory.
+  if (
+    hasDependency(exampleDir, '@tanstack/react-start') ||
+    hasDependency(exampleDir, 'ember-source')
+  ) {
     return startSpawnedViteServer(exampleDir)
   }
 

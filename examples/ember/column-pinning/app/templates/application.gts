@@ -65,11 +65,11 @@ const getIsPinned = (
   column: Column<typeof features, Person>,
 ): ColumnPinningPosition => column.getIsPinned()
 
-const isPinnedLeft = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'left'
+const isPinnedStart = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'start'
 
-const isPinnedRight = (column: Column<typeof features, Person>): boolean =>
-  column.getIsPinned() === 'right'
+const isPinnedEnd = (column: Column<typeof features, Person>): boolean =>
+  column.getIsPinned() === 'end'
 
 const pin = (
   column: Column<typeof features, Person>,
@@ -87,8 +87,8 @@ export default class ColumnPinningTable extends Component {
     data: this.data,
     initialState: {
       columnPinning: {
-        left: ['firstName'],
-        right: ['progress'],
+        start: ['firstName'],
+        end: ['progress'],
       },
     },
   }))
@@ -149,10 +149,10 @@ export default class ColumnPinningTable extends Component {
                   </div>
                   {{#if (getCanPin header.column)}}
                     <div class='pin-actions'>
-                      {{#unless (isPinnedLeft header.column)}}
+                      {{#unless (isPinnedStart header.column)}}
                         <button
                           class='pin-button'
-                          {{on 'click' (pin header.column 'left')}}
+                          {{on 'click' (pin header.column 'start')}}
                         >◀</button>
                       {{/unless}}
                       {{#if (getIsPinned header.column)}}
@@ -161,10 +161,10 @@ export default class ColumnPinningTable extends Component {
                           {{on 'click' (pin header.column false)}}
                         >✕</button>
                       {{/if}}
-                      {{#unless (isPinnedRight header.column)}}
+                      {{#unless (isPinnedEnd header.column)}}
                         <button
                           class='pin-button'
-                          {{on 'click' (pin header.column 'right')}}
+                          {{on 'click' (pin header.column 'end')}}
                         >▶</button>
                       {{/unless}}
                     </div>

@@ -6,7 +6,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TanStack/table.git",
+    "url": "https://github.com/TanStack/table.git",
     "directory": "packages/ember-table"
   },
   "homepage": "https://tanstack.com/table",
@@ -15,12 +15,14 @@
     "url": "https://github.com/sponsors/tannerlinsley"
   },
   "keywords": [
+    "ember",
     "ember-addon",
     "table",
     "ember-table",
     "datagrid",
     "tanstack-intent"
   ],
+  "type": "module",
   "imports": {
     "#src/*": "./src/*"
   },
@@ -29,7 +31,11 @@
       "types": "./declarations/index.d.ts",
       "default": "./dist/index.js"
     },
-    "./addon-main.js": "./addon-main.cjs"
+    "./addon-main.js": "./addon-main.cjs",
+    "./package.json": "./package.json"
+  },
+  "engines": {
+    "node": ">=20"
   },
   "files": [
     "addon-main.cjs",
@@ -39,6 +45,7 @@
   ],
   "scripts": {
     "build": "rollup --config",
+    "clean": "rimraf ./dist ./declarations ./dist-tests",
     "format": "prettier . --cache --write",
     "lint": "concurrently \"pnpm:lint:*(!fix)\" --names \"lint:\" --prefixColors auto",
     "lint:fix": "concurrently \"pnpm:lint:*:fix\" --names \"fix:\" --prefixColors auto && pnpm run format",
@@ -47,15 +54,18 @@
     "lint:hbs:fix": "ember-template-lint . --fix --no-error-on-unmatched-pattern",
     "lint:js": "eslint . --cache",
     "lint:js:fix": "eslint . --fix",
-    "lint:publish": "pnpm build && publint run --level error",
     "lint:types": "ember-tsc --noEmit",
     "prepack": "rollup --config",
     "start": "vite dev",
-    "test": "vite build --mode=development --out-dir dist-tests && testem --file testem.cjs ci --port 0"
+    "test:build": "publint --strict",
+    "test:eslint": "eslint . --cache",
+    "test:lib": "vite build --mode=development --out-dir dist-tests && testem --file testem.cjs ci --port 0",
+    "test:types": "ember-tsc --noEmit"
   },
   "dependencies": {
     "@embroider/addon-shim": "^1.8.9",
-    "@tanstack/table-core": "workspace:^",
+    "@tanstack/store": "^0.11.0",
+    "@tanstack/table-core": "workspace:*",
     "decorator-transforms": "2.4.0"
   },
   "devDependencies": {
@@ -78,7 +88,6 @@
     "@glint/template": "1.7.8",
     "@glint/tsserver-plugin": "2.5.17",
     "@rollup/plugin-babel": "7.1.0",
-    "@tanstack/store": "^0.11.0",
     "@types/qunit": "^2.19.12",
     "babel-plugin-ember-template-compilation": "4.0.0",
     "concurrently": "^9.0.1",

@@ -81,14 +81,19 @@ const LAST_NAMES = [
 const STATUSES = ['relationship', 'complicated', 'single'] as const
 
 function makeData(count: number): Array<Person> {
-  return Array.from({ length: count }, (_, i) => ({
-    firstName: FIRST_NAMES[i % FIRST_NAMES.length]!,
-    lastName: LAST_NAMES[(i * 3) % LAST_NAMES.length]!,
-    age: 20 + ((i * 7) % 30),
-    visits: (i * 37) % 1000,
-    status: STATUSES[i % STATUSES.length]!,
-    progress: (i * 13) % 100,
-  }))
+  // Random offset so "Regenerate Data" produces a visibly different data set.
+  const offset = Math.floor(Math.random() * 1000)
+  return Array.from({ length: count }, (_, index) => {
+    const i = index + offset
+    return {
+      firstName: FIRST_NAMES[i % FIRST_NAMES.length]!,
+      lastName: LAST_NAMES[(i * 3) % LAST_NAMES.length]!,
+      age: 20 + ((i * 7) % 30),
+      visits: (i * 37) % 1000,
+      status: STATUSES[i % STATUSES.length]!,
+      progress: (i * 13) % 100,
+    }
+  })
 }
 
 // --- Custom cell component example ---

@@ -12,6 +12,8 @@ import {
   createPaginatedRowModel,
   createColumnHelper,
   type PaginationState,
+  type StockFeatures,
+  type Table,
 } from '@tanstack/table-core'
 
 type Person = { id: string; firstName: string; age: number }
@@ -43,9 +45,16 @@ module('Integration | useTable', function (hooks) {
         columns: [],
       }))
 
+      // Templates must not read `this.table` directly while `useTable` is
+      // initialized inline: glint/TS then reports the `useTable` call itself
+      // as non-callable (inference cycle). Hop through a typed getter.
+      get tableRef(): Table<StockFeatures, never> {
+        return this.table
+      }
+
       <template>
         {{! @glint-expect-error Incorrect type for column because no columns are defined }}
-        {{#each this.table.columns as |column index|}}
+        {{#each this.tableRef.columns as |column index|}}
           <p data-test-column={{index}}>{{column}}</p>
         {{/each}}
 
@@ -126,16 +135,27 @@ module('Integration | useTable', function (hooks) {
         columns: [],
       }))
 
+      // Typed getter hop for the same glint/TS inference cycle as above.
+      get tableRef(): Table<StockFeatures, Person> {
+        return this.table
+      }
+
       <template>
-        <div data-test-has-options>{{hasKey this.table 'options'}}</div>
-        <div data-test-has-getrowmodel>{{hasKey this.table 'getRowModel'}}</div>
-        <div data-test-keys-getrowmodel>{{keysInclude
-            this.table
+        <div data-test-has-options>{{hasKey this.tableRef 'options'}}</div>
+        <div data-test-has-getrowmodel>{{hasKey
+            this.tableRef
             'getRowModel'
           }}</div>
-        <div data-test-keys-options>{{keysInclude this.table 'options'}}</div>
+        <div data-test-keys-getrowmodel>{{keysInclude
+            this.tableRef
+            'getRowModel'
+          }}</div>
+        <div data-test-keys-options>{{keysInclude
+            this.tableRef
+            'options'
+          }}</div>
 
-        <div data-test-has-notfound>{{hasKey this.table 'notFound'}}</div>
+        <div data-test-has-notfound>{{hasKey this.tableRef 'notFound'}}</div>
       </template>
     }
 
@@ -198,7 +218,8 @@ module('Integration | useTable', function (hooks) {
       }
 
       shrinkPage = () => {
-        this.table.setPageSize(3)
+        const table = this.table
+        table.setPageSize(3)
       }
 
       <template>
