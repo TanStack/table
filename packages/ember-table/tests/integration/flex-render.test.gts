@@ -94,9 +94,9 @@ class ExpandCell extends Component<
 
   <template>
     <button
-      type="button"
+      type='button'
       data-test-expand-btn
-      {{on "click" this.toggle}}
+      {{on 'click' this.toggle}}
     >{{this.label}}</button>
   </template>
 }
@@ -207,9 +207,9 @@ module('Integration | FlexRender', function (hooks) {
           </tbody>
         </table>
         <button
-          type="button"
+          type='button'
           data-test-update
-          {{on "click" this.update}}
+          {{on 'click' this.update}}
         >update</button>
       </template>
     }
@@ -271,9 +271,9 @@ module('Integration | FlexRender', function (hooks) {
           </tbody>
         </table>
         <button
-          type="button"
+          type='button'
           data-test-toggle
-          {{on "click" this.toggle}}
+          {{on 'click' this.toggle}}
         >toggle</button>
       </template>
     }
@@ -333,14 +333,14 @@ module('Integration | FlexRender', function (hooks) {
           </tbody>
         </table>
         <button
-          type="button"
+          type='button'
           data-test-null
-          {{on "click" this.setNull}}
+          {{on 'click' this.setNull}}
         >null</button>
         <button
-          type="button"
+          type='button'
           data-test-component
-          {{on "click" this.setComponent}}
+          {{on 'click' this.setComponent}}
         >component</button>
       </template>
     }
@@ -404,9 +404,9 @@ module('Integration | FlexRender', function (hooks) {
           </tbody>
         </table>
         <button
-          type="button"
+          type='button'
           data-test-toggle
-          {{on "click" this.toggle}}
+          {{on 'click' this.toggle}}
         >toggle</button>
       </template>
     }
