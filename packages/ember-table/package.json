@@ -133,5 +133,15 @@
     "version": 2,
     "type": "addon",
     "main": "addon-main.cjs"
+  },
+  "nx": {
+    "targets": {
+      "build": {
+        "outputs": [
+          "{projectRoot}/dist",
+          "{projectRoot}/declarations"
+        ]
+      }
+    }
   }
 }
