@@ -5,7 +5,7 @@ title: CellRenderableSignature
 
 # Interface: CellRenderableSignature\<TFeatures, TData, TValue, TOptions\>
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:11
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:11
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: packages/ember-table/declarations/flex-render.d.ts:11
 Args: object;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:12
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:12
 
 #### ctx
 

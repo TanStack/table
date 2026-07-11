@@ -11,7 +11,7 @@ type FlexRenderContext<TFeatures, TData, TValue> =
 | HeaderContext<TFeatures, TData, TValue>;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:4
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:4
 
 ## Type Parameters
 

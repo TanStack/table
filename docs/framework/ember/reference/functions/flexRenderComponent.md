@@ -11,7 +11,7 @@ title: flexRenderComponent
 function flexRenderComponent<TFeatures, TData, TValue>(component): FlexRenderComponentConfig<TFeatures, TData, TValue, undefined>;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:23
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:23
 
 ### Type Parameters
 
@@ -43,7 +43,7 @@ Defined in: packages/ember-table/declarations/flex-render.d.ts:23
 function flexRenderComponent<TFeatures, TData, TValue, TOptions>(component, options): FlexRenderComponentConfig<TFeatures, TData, TValue, TOptions>;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:24
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:24
 
 ### Type Parameters
 

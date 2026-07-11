@@ -41,7 +41,7 @@
     "test:lib": "nx affected --targets=test:lib",
     "test:lib:dev": "pnpm test:lib && nx watch --all -- pnpm test:lib",
     "test:pr": "nx affected --targets=test:eslint,test:sherif,test:knip,test:lib,test:types,test:build,build",
-    "test:sherif": "sherif -i eslint",
+    "test:sherif": "sherif",
     "test:types": "nx affected --targets=test:types",
     "skills:versions:check": "node scripts/sync-skill-versions.mjs",
     "skills:versions:fix": "node scripts/sync-skill-versions.mjs --write",

@@ -12,13 +12,11 @@
  *     npx eslint --inspect-config
  *
  */
-import babelParser from '@babel/eslint-parser/experimental-worker'
 import js from '@eslint/js'
 import { defineConfig, globalIgnores } from 'eslint/config'
 import prettier from 'eslint-config-prettier'
 import ember from 'eslint-plugin-ember/recommended'
-import importPlugin from 'eslint-plugin-import'
-import n from 'eslint-plugin-n'
+import importPlugin from 'eslint-plugin-import-x'
 import globals from 'globals'
 import ts from 'typescript-eslint'
 
@@ -45,12 +43,6 @@ export default defineConfig([
   {
     linterOptions: {
       reportUnusedDisableDirectives: 'error',
-    },
-  },
-  {
-    files: ['**/*.js'],
-    languageOptions: {
-      parser: babelParser,
     },
   },
   {
@@ -84,11 +76,11 @@ export default defineConfig([
   {
     files: ['src/**/*'],
     plugins: {
-      import: importPlugin,
+      'import-x': importPlugin,
     },
     rules: {
       // require relative imports use full extensions
-      'import/extensions': ['error', 'always', { ignorePackages: true }],
+      'import-x/extensions': ['error', 'always', { ignorePackages: true }],
     },
   },
   /**
@@ -96,10 +88,6 @@ export default defineConfig([
    */
   {
     files: ['**/*.cjs'],
-    plugins: {
-      n,
-    },
-
     languageOptions: {
       sourceType: 'script',
       ecmaVersion: 'latest',
@@ -113,10 +101,6 @@ export default defineConfig([
    */
   {
     files: ['**/*.mjs'],
-    plugins: {
-      n,
-    },
-
     languageOptions: {
       sourceType: 'module',
       ecmaVersion: 'latest',

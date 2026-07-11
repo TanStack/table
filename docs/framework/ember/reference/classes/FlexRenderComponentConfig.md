@@ -5,7 +5,7 @@ title: FlexRenderComponentConfig
 
 # Class: FlexRenderComponentConfig\<TFeatures, TData, TValue, TOptions\>
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:18
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:18
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: packages/ember-table/declarations/flex-render.d.ts:18
 new FlexRenderComponentConfig<TFeatures, TData, TValue, TOptions>(component, options?): FlexRenderComponentConfig<TFeatures, TData, TValue, TOptions>;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:21
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:21
 
 #### Parameters
 
@@ -57,7 +57,7 @@ Defined in: packages/ember-table/declarations/flex-render.d.ts:21
 readonly component: FlexRenderableComponent<TFeatures, TData, TValue, TOptions>;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:19
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:19
 
 ***
 
@@ -67,4 +67,4 @@ Defined in: packages/ember-table/declarations/flex-render.d.ts:19
 readonly optional options: TOptions;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:20
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:20

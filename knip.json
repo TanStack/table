@@ -20,15 +20,12 @@
         "tests/test-helper.ts"
       ],
       "ignoreDependencies": [
-        "@babel/runtime",
         "@ember/library-tsconfig",
         "@ember/routing",
-        "@ember/test-waiters",
         "@embroider/shared-internals",
         "@glimmer/tracking",
         "@glimmer/validator",
-        "@glint/tsserver-plugin",
-        "ember-page-title"
+        "@glint/tsserver-plugin"
       ]
     },
     "packages/angular-table": {

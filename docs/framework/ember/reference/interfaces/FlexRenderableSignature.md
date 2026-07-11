@@ -5,7 +5,7 @@ title: FlexRenderableSignature
 
 # Interface: FlexRenderableSignature\<TFeatures, TData, TValue, TOptions\>
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:5
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:5
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: packages/ember-table/declarations/flex-render.d.ts:5
 Args: object;
 ```
 
-Defined in: packages/ember-table/declarations/flex-render.d.ts:6
+Defined in: packages/ember-table/declarations/flex-render-helpers.d.ts:6
 
 #### ctx
 
