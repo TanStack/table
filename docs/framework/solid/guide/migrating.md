@@ -546,7 +546,7 @@ const features = tableFeatures({
 })
 ```
 
-`columnSizingInfo` became `columnResizing`, and `onColumnSizingInfoChange` became `onColumnResizingChange`. The `setColumnSizingInfo()` API became `setcolumnResizing()` (note the lowercase `c`, the current v9 spelling).
+`columnSizingInfo` became `columnResizing`, and `onColumnSizingInfoChange` became `onColumnResizingChange`. The `setColumnSizingInfo()` API became `setColumnResizing()`.
 
 ### Sorting API Renames
 

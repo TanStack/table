@@ -16,6 +16,12 @@ on:
       - '**/skills/**'
       - '_artifacts/**'
       - '**/_artifacts/**'
+      - 'scripts/sync-skill-versions.mjs'
+      - 'scripts/typecheck-skill-snippets.mjs'
+      - 'scripts/validate-skill-content.mjs'
+      - 'package.json'
+      - 'pnpm-lock.yaml'
+      - '.github/workflows/check-skills.yml'
   workflow_dispatch: {}
 
 permissions:
@@ -36,8 +42,11 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install intent
-        run: npm install -g @tanstack/intent
+      - name: Enable pnpm
+        run: corepack enable
 
-      - name: Validate skills
-        run: intent validate --github-summary
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Validate skills and examples
+        run: pnpm test:skills

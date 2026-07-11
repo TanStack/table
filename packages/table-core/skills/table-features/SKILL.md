@@ -1,0 +1,153 @@
+---
+name: table-features
+description: >
+  Register TanStack Table v9 tableFeatures, feature plugins, create*RowModel factories, and function registries in prerequisite order. Load when an option, state slice, or instance API is missing, or when choosing explicit features versus stockFeatures.
+metadata:
+  type: sub-skill
+  library: '@tanstack/table-core'
+  library_version: '9.0.0-beta.38'
+requires: ['core']
+sources:
+  - 'TanStack/table:docs/guide/row-models.md'
+  - 'TanStack/table:packages/table-core/src/types/TableFeatures.ts'
+  - 'TanStack/table:packages/table-core/src/features/stockFeatures.ts'
+  - 'TanStack/table:packages/table-core/src/core/table/constructTable.ts'
+---
+
+This skill builds on `core`. Read it first for the headless model and stable inputs.
+
+## Setup
+
+<!-- skill-snippet:check -->
+
+```ts
+import {
+  aggregationFns,
+  columnGroupingFeature,
+  createFilteredRowModel,
+  createSortedRowModel,
+  columnFilteringFeature,
+  filterFns,
+  rowSortingFeature,
+  sortFns,
+  tableFeatures,
+} from '@tanstack/table-core'
+
+export const features = tableFeatures({
+  columnFilteringFeature,
+  filteredRowModel: createFilteredRowModel(),
+  filterFns,
+  columnGroupingFeature,
+  aggregationFns,
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns,
+})
+```
+
+## Core Patterns
+
+### Register feature before its dependent slot
+
+```ts
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+})
+```
+
+`tableFeatures` checks slot prerequisites and its inferred type gates APIs throughout the table.
+
+### Register named function slots with their features
+
+```ts
+const features = tableFeatures({
+  columnFilteringFeature,
+  filterFns,
+  rowSortingFeature,
+  sortFns,
+  columnGroupingFeature,
+  aggregationFns,
+})
+```
+
+`filterFns`, `sortFns`, and `aggregationFns` are feature slots, not table
+options. They respectively require `columnFilteringFeature`,
+`rowSortingFeature`, and `columnGroupingFeature`. A registered key can be used
+as a typed string name; pass a function directly when no registry name is
+needed.
+
+### Prefer explicit features
+
+```ts
+const features = tableFeatures({ columnFilteringFeature })
+```
+
+Use `stockFeatures` only for deliberate kitchen-sink or temporary migration behavior.
+
+## Common Mistakes
+
+### [CRITICAL] Calling an unregistered feature API
+
+Wrong:
+
+```ts
+const features = tableFeatures({})
+table.setSorting([{ id: 'name', desc: false }])
+```
+
+Correct:
+
+```ts
+const features = tableFeatures({ rowSortingFeature })
+```
+
+Optional feature state and APIs are installed only when their feature is registered.
+
+Source: `packages/table-core/src/core/table/constructTable.ts`
+
+### [HIGH] Omitting a slot prerequisite
+
+Wrong:
+
+```ts
+const features = tableFeatures({ sortedRowModel: createSortedRowModel() })
+```
+
+Correct:
+
+```ts
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+})
+```
+
+The sorted model slot requires `rowSortingFeature`; the same rule applies to every mapped slot.
+
+Source: `packages/table-core/src/types/TableFeatures.ts#FeatureSlotPrereqs`
+
+### [MEDIUM] Shipping all features by default
+
+Wrong:
+
+```ts
+const features = stockFeatures
+```
+
+Correct:
+
+```ts
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+})
+```
+
+`stockFeatures` registers every stock plugin and processing slot, defeating v9's normal tree-shaking strategy.
+
+Source: `packages/table-core/src/features/stockFeatures.ts`
+
+## API Discovery
+
+Inspect `node_modules/@tanstack/table-core/src/types/TableFeatures.ts` for current slots and `FeatureSlotPrereqs`, and `src/features/stockFeatures.ts` for the stock inventory.

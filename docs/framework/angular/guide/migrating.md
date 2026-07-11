@@ -719,12 +719,12 @@ All internal APIs prefixed with `_` have been removed. If you were using any of 
 
 In v8, column sizing and resizing were combined in a single feature. In v9, they've been split into separate features for better tree-shaking.
 
-| v8                                | v9                                                                      |
-| --------------------------------- | ----------------------------------------------------------------------- |
-| `ColumnSizing` (combined feature) | `columnSizingFeature` + `columnResizingFeature`                         |
-| `columnSizingInfo` state          | `columnResizing` state                                                  |
-| `setColumnSizingInfo()`           | `setcolumnResizing()` (note the lowercase `c`, the current v9 spelling) |
-| `onColumnSizingInfoChange` option | `onColumnResizingChange` option                                         |
+| v8                                | v9                                              |
+| --------------------------------- | ----------------------------------------------- |
+| `ColumnSizing` (combined feature) | `columnSizingFeature` + `columnResizingFeature` |
+| `columnSizingInfo` state          | `columnResizing` state                          |
+| `setColumnSizingInfo()`           | `setColumnResizing()`                           |
+| `onColumnSizingInfoChange` option | `onColumnResizingChange` option                 |
 
 If you only need column sizing (fixed widths) without interactive resizing, you can import just `columnSizingFeature`. If you need drag-to-resize functionality, import both.
 

@@ -54,10 +54,18 @@ jobs:
           git switch -c "$branch"
           git push --set-upstream origin "$branch"
           echo "branch=$branch" >> "$GITHUB_OUTPUT"
-      - name: Publish
+      - name: Prepare package versions
         run: |
           git config --global user.name 'github-actions[bot]'
           git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          env -u CI pnpm run cipublish
+          pnpm run skills:versions:fix
+          pnpm run skills:versions:check
+        env:
+          BRANCH: ${{ github.ref_name }}
+          TAG: ${{ inputs.tag }}
+      - name: Publish
+        run: |
           pnpm run cipublish
         env:
           BRANCH: ${{ github.ref_name }}

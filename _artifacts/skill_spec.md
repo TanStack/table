@@ -1,194 +1,361 @@
-# @tanstack/table — Skill Spec
+# TanStack Table v9 skill specification
 
-Headless data-grid library: features, state, and APIs for building powerful, type-safe tables and datagrids while keeping full control of markup, styles, and behavior. Framework-agnostic core (`@tanstack/table-core`) with adapters for React, Vue, Solid, Svelte, Angular, Lit, and Preact.
+Status: reviewed  
+Date: 2026-07-10  
+Library target: TanStack Table v9, authored in stable-release voice  
+Package metadata target: exact workspace package versions; release automation keeps every shipped skill synchronized
 
-**Version:** 9.0.0-alpha.48 · **Status:** reviewed · **Date:** 2026-05-17
+This specification is the generation contract for a deliberately smaller, foot-gun-first TanStack Intent skill set. It is not a documentation outline. The complete evidence and failure-mode inventory is in domain_map.yaml.
 
-> Generated via the `@tanstack/intent` three-phase scaffold flow (domain discovery → tree generation → SKILL.md generation). Domain map artifacts live at the repo root (`_artifacts/`); skills will live inside each package's `skills/` directory. Status is `reviewed` after the maintainer interview on 2026-05-17.
+## Outcome
 
-## Domains
+Generate 72 short package-local skills across all 16 public packages. A loaded skill should quickly do three things:
 
-| Domain                                        | Description                                                                                                            | Skill count |
-| --------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- | ----------: |
-| **Core foundations** (`core-foundations`)     | Setup, column definitions, state management, and customization of built-in feature behavior. State-management is the … |           4 |
-| **Row-model features** (`row-model-features`) | Features driven by entries in `rowModels` — filtering (column+global+faceting+fuzzy), sorting, pagination, grouping,…  |           5 |
-| **UI-state features** (`ui-state-features`)   | Features that are pure UI state — no row model needed. Column layout (visibility/ordering/pinning/sizing/resizing), r… |           3 |
-| **Framework adapters** (`framework-adapters`) | Per-framework reactivity bindings and rendering integration. Each adapter has its own `table-state` skill; React adds… |          10 |
-| **Lifecycle** (`lifecycle`)                   | End-to-end journeys that cross-cut features: getting-started, v8→v9 migration, client-to-server conversion, productio… |           4 |
-| **Composition** (`composition`)               | Patterns for using TanStack Table with sibling TanStack libraries (Store, Query, Virtual, Form, Pacer, Devtools). Per… |           7 |
+1. Correct the user or agent mental model.
+2. Show the smallest reliable setup or decision pattern.
+3. Route exact API discovery to src shipped in the installed package.
 
-## Skill Inventory
+The skills should not enumerate every option or method. That duplicates generated reference docs, ages badly, and encourages agents to recall the wrong major version.
 
-| Skill                                                    | Type        | Domain             | Package(s)                                                                                                             | Failure modes |
-| -------------------------------------------------------- | ----------- | ------------------ | ---------------------------------------------------------------------------------------------------------------------- | ------------: |
-| `setup`                                                  | core        | core-foundations   | table-core                                                                                                             |            10 |
-| `column-definitions` *(*📝 maintainer notes*)*           | core        | core-foundations   | table-core                                                                                                             |            10 |
-| `state-management`                                       | core        | core-foundations   | table-core                                                                                                             |             8 |
-| `customizing-feature-behavior`                           | core        | core-foundations   | table-core                                                                                                             |             5 |
-| `filtering`                                              | core        | row-model-features | table-core                                                                                                             |             9 |
-| `sorting`                                                | core        | row-model-features | table-core                                                                                                             |             7 |
-| `pagination`                                             | core        | row-model-features | table-core                                                                                                             |             7 |
-| `grouping`                                               | core        | row-model-features | table-core                                                                                                             |             6 |
-| `row-expanding`                                          | core        | row-model-features | table-core                                                                                                             |             5 |
-| `column-layout`                                          | core        | ui-state-features  | table-core                                                                                                             |             8 |
-| `row-pinning`                                            | core        | ui-state-features  | table-core                                                                                                             |             4 |
-| `row-selection`                                          | core        | ui-state-features  | table-core                                                                                                             |             7 |
-| `table-state`                                            | framework   | framework-adapters | react-table                                                                                                            |             4 |
-| `table-state`                                            | framework   | framework-adapters | vue-table                                                                                                              |             4 |
-| `table-state` *(*📝 maintainer notes*)*                  | framework   | framework-adapters | solid-table                                                                                                            |             4 |
-| `table-state` *(*📝 maintainer notes*)*                  | framework   | framework-adapters | svelte-table                                                                                                           |             4 |
-| `table-state` *(*📝 maintainer notes*)*                  | framework   | framework-adapters | angular-table                                                                                                          |             4 |
-| `table-state` *(*📝 maintainer notes*)*                  | framework   | framework-adapters | lit-table                                                                                                              |             4 |
-| `table-state`                                            | framework   | framework-adapters | preact-table                                                                                                           |             4 |
-| `react-subscribe-compiler-compat`                        | framework   | framework-adapters | react-table                                                                                                            |            11 |
-| `angular-rendering-directives`                           | framework   | framework-adapters | angular-table                                                                                                          |             7 |
-| `lit-table-controller` *(*📝 maintainer notes*)*         | framework   | framework-adapters | lit-table                                                                                                              |             4 |
-| `getting-started`                                        | lifecycle   | lifecycle          | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table, lit-table                              |             8 |
-| `migrate-v8-to-v9`                                       | lifecycle   | lifecycle          | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table, lit-table, table-core                  |            17 |
-| `client-to-server`                                       | lifecycle   | lifecycle          | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table                                         |             7 |
-| `production-readiness`                                   | lifecycle   | lifecycle          | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table                                         |            10 |
-| `compose-with-tanstack-store`                            | composition | composition        | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table, store, react-store                     |             5 |
-| `compose-with-tanstack-query`                            | composition | composition        | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table, react-query, query-core                |             8 |
-| `compose-with-tanstack-virtual`                          | composition | composition        | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table, lit-table, react-virtual, virtual-core |             7 |
-| `compose-with-tanstack-form`                             | composition | composition        | react-table, vue-table, solid-table, svelte-table, preact-table, react-form                                            |             5 |
-| `compose-with-tanstack-pacer`                            | composition | composition        | react-table, vue-table, solid-table, svelte-table, preact-table, react-pacer, pacer                                    |             6 |
-| `compose-with-tanstack-devtools`                         | composition | composition        | react-table-devtools, vue-table-devtools, solid-table-devtools, preact-table-devtools, table-devtools                  |             6 |
-| `compose-with-tanstack-hotkeys` *(*⏸ deferred to v1.1*)* | composition | composition        | react-table, vue-table, angular-table, solid-table, svelte-table, preact-table, hotkeys                                |             3 |
+## Maintainer intent
 
-**Total failure modes:** 218
+- TanStack Table is headless. It coordinates table state and row processing; the user owns markup, styles, accessibility, and component-library integration.
+- V9 optional features are plugins. A feature API, state slice, row model, or function registry exists only when the matching feature is registered through tableFeatures.
+- The client/server row-model boundary is a first-order architecture decision. Manual modes bypass Table processing; they do not perform server work.
+- Most userland TypeScript should be inferred through helpers, features, options, and app-hook factories. Deep manual generics are a smell.
+- createTableHook is important v9 guidance for reusable app-level table infrastructure. It deserves one dedicated skill in every framework package.
+- Framework table-state guidance is fundamental and should retain substantially more depth than ordinary feature skills.
+- Data and columns are model inputs and must retain stable references between meaningful changes in every adapter and composition example.
+- V8-to-v9 migration is a primary route. Deprecated useLegacyTable is not the destination and must not be promoted.
+- TanStack Query usually owns data before it reaches Table. TanStack Virtual is intertwined with Table rendering after the final row/column model exists.
+- CSS/layout failure modes belong in the relevant pinning, sizing, resizing, and virtualization skills. Component-library-specific skills do not.
+- Worker row models are excluded.
 
-## Tensions
+## Source-of-truth hierarchy
 
-| Tension                                                 | Skills                                                                   | Agent gets wrong                                                                                                                                                                                         |
-| ------------------------------------------------------- | ------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| getting-started simplicity vs production correctness    | getting-started ↔ production-readiness                                   | Agents copy the getting-started pattern verbatim into 10k-row tables and ship slow code, blaming the library rather than the selector                                                                    |
-| client-side feature richness vs server-side correctness | filtering ↔ sorting ↔ pagination ↔ client-to-server                      | Agents converting a working client table to use a server endpoint flip `manualPagination` without auditing filtering/sorting consistency                                                                 |
-| atomic-state granularity vs API simplicity              | state-management ↔ compose-with-tanstack-store ↔ getting-started         | Agents default to `state` + `on*Change` because it looks like the v8 idiom, then hit re-render storms or sync issues with Query and patch around them, when the v9 atoms option would have been cleaner. |
-| React Compiler safety vs render-cost simplicity         | react-subscribe-compiler-compat ↔ production-readiness ↔ getting-started | Agents either over-wrap every component in Subscribe (verbose, slow to author) or under-wrap and ship tables that look fine in dev but break under React Compiler in prod                                |
-| tree-shaking via \features vs ergonomic useLegacyTable  | setup ↔ production-readiness ↔ migrate-v8-to-v9                          | Agents reach for `useLegacyTable` on v8→v9 migrations and never circle back to declare `features`, sacrificing the bundle wins that motivated the v9 redesign.                                           |
+Use evidence in this order:
 
-## Cross-References
+1. Installed package src for exact exports, type signatures, feature prerequisites, defaults, and instance APIs.
+2. Current v9 guides for intended mental models and supported workflows.
+3. Current examples for maintained composition and rendering patterns.
+4. Recent and recurring GitHub issues/discussions for silent failures and misconceptions.
 
-| From                              | To                                | Reason                                                                                             |
-| --------------------------------- | --------------------------------- | -------------------------------------------------------------------------------------------------- |
-| `setup`                           | `state-management`                | state-management is the prerequisite for every other skill; setup users will need it as soon as t… |
-| `state-management`                | `compose-with-tanstack-store`     | external atoms are the recommended state ownership pattern for server-side work                    |
-| `state-management`                | `migrate-v8-to-v9`                | state model is the biggest v8→v9 shift; migration explanation depends on the v9 atom mental model  |
-| `filtering`                       | `sorting`                         | filter→sort handoff via addMeta + columnFiltersMeta (e.g. itemRank for fuzzy)                      |
-| `filtering`                       | `customizing-feature-behavior`    | custom filterFn / globalFilterFn                                                                   |
-| `sorting`                         | `customizing-feature-behavior`    | custom sortFn — especially when combined with fuzzy filter rank                                    |
-| `grouping`                        | `customizing-feature-behavior`    | custom aggregationFn                                                                               |
-| `grouping`                        | `row-expanding`                   | grouped rows expand via the row-expanding feature; both are required together                      |
-| `grouping`                        | `row-selection`                   | getGroupedSelectedRowModel + selection state interpretation inside groups                          |
-| `row-expanding`                   | `filtering`                       | filterFromLeafRows + maxLeafRowFilterDepth interactions                                            |
-| `row-expanding`                   | `pagination`                      | paginateExpandedRows controls whether expanded rows respect page boundaries                        |
-| `pagination`                      | `row-selection`                   | manualPagination + selection state — getSelectedRowModel only returns rows in current page when m… |
-| `column-layout`                   | `grouping`                        | groupedColumnMode reorders columns; affects column layout precedence                               |
-| `row-selection`                   | `column-definitions`              | tristate parent checkbox patterns + getRowId requirement for stable selection                      |
-| `client-to-server`                | `compose-with-tanstack-query`     | Query is the canonical server-side fetch layer; client-to-server skill expects it                  |
-| `client-to-server`                | `state-management`                | external atoms via atoms option is the cleanest pattern for sharing pagination/sort/filter with Q… |
-| `production-readiness`            | `react-subscribe-compiler-compat` | Subscribe boundaries are a top perf optimization on React                                          |
-| `production-readiness`            | `setup`                           | `features` tree-shaking is decided at setup                                                        |
-| `compose-with-tanstack-virtual`   | `row-expanding`                   | virtualized + expanding requires careful measurer + getSubRows interaction                         |
-| `compose-with-tanstack-virtual`   | `column-layout`                   | virtualized columns interact with sizing and pinning                                               |
-| `compose-with-tanstack-form`      | `row-selection`                   | editable rows + selection — common together                                                        |
-| `compose-with-tanstack-devtools`  | `state-management`                | devtools surface the atoms model; understanding state-management makes devtools readable           |
-| `migrate-v8-to-v9`                | `setup`                           | v9 setup IS the migration target                                                                   |
-| `migrate-v8-to-v9`                | `column-definitions`              | createColumnHelper generic order changed in v9                                                     |
-| `migrate-v8-to-v9`                | `filtering`                       | sortingFn → sortFn rename; filterFn registry semantics                                             |
-| `react-subscribe-compiler-compat` | `column-definitions`              | header/cell render fns are the main location where Subscribe is needed                             |
-| `angular-rendering-directives`    | `table-state`                     | Angular rendering depends on the signal-backed state model unique to that adapter                  |
-| `lit-table-controller`            | `table-state`                     | Lit reactivity is owned by TableController; table-state mental model relies on that                |
+Every skill that discusses APIs must tell the consuming agent how to inspect the matching installed source. Preferred routes:
 
-## Maintainer Interview Highlights
+- Adapter API: node_modules/@tanstack/FRAMEWORK-table/src/index.ts, then the exported implementation/type file.
+- Core API: node_modules/@tanstack/table-core/src/index.ts.
+- Stock feature API: node_modules/@tanstack/table-core/src/features/FEATURE/.
+- Devtools API: node_modules/@tanstack/FRAMEWORK-table-devtools/src/index.ts or @tanstack/table-devtools/src/index.ts.
+- Fuzzy ranking API: node_modules/@tanstack/match-sorter-utils/src/index.ts.
 
-From Phase 4 (2026-05-17). Full Q&A is in `domain_map.yaml :: maintainer_interview`.
+Do not direct agents to a GitHub main-branch source file when an installed package is available. Installed source keeps guidance aligned with the consumer package version.
 
-**Resolved structural questions:**
+## Skill writing contract
 
-- `column-layout` renamed to display name _Column Layout Features_ (slug unchanged).
-- Filter / aggregation / sort fn counts: do **not** cite numbers — registries are open-ended.
-- `useLegacyTable` stays available in v9 as deprecated; removed in v10.
-- `compose-with-tanstack-hotkeys` deferred to v1.1; canonical example coming.
-- `examples/react/with-tanstack-query` IS the canonical Query+Table pattern (added to compose-with-tanstack-query skill).
-- Three `*SelectedRowModel` APIs sharing one implementation is as designed.
-- `column_getAutoSortFn` `.slice(10)` is a known bug to be fixed later — not a v1 failure mode.
-- Lit adapter scheduled for rewrite with TanStack Lit Store during beta — Lit skills note this.
+### Frontmatter
 
-**Resolved scope/style questions:**
+Each generated SKILL.md must satisfy the current TanStack Intent validator:
 
-- Signal-based adapters (Solid / Angular / Svelte) support BOTH native framework state and TanStack Store atoms equally. Skills should lead with native state in those frameworks; atoms are the alternative for cross-app sharing.
-- Non-React adapter docs are intentionally thinner — React Compiler complicated React; Subscribe matters less in signal-based adapters.
-- `state` + `on*Change` is intentionally redundant with `atoms` — kept for backward-compat.
+- name is the leaf directory segment.
+- description is a dense routing description no longer than 1024 characters.
+- metadata contains type, library, library_version, and framework when applicable.
+- sources remains top-level and lists only repo files/directories actually used by that skill.
+- framework skills include a top-level requires array.
+- no skill exceeds 500 lines.
 
-**New maintainer-sourced top-tier failure modes (added across 12+ skills):**
+The metadata version must record the exact package version even though prose treats v9 as stable. Do not call ordinary v9 APIs experimental or advise waiting for stable.
 
-1. **Hallucinating react-table v7 / pre-v9 `@tanstack/[framework]-table` APIs** (CRITICAL). Every major version was a substantial upgrade; agents confidently produce v7/v8 shapes.
-2. **Reimplementing what TanStack Table's built-in APIs already provide** (CRITICAL). The #1 tell of AI-written code. TanStack Table IS a state-management coordinator with APIs for nearly every transition (`setSorting`, `toggleSelected`, `nextPage`, `setColumnFilters`, …).
-3. **API or state slice "missing" because feature not registered in `features`** (CRITICAL, v9-specific). v9 is the first version where features must be declared for TS inference and runtime API exposure.
-4. **Bundling `stockFeatures` or unused features wastes the v9 tree-shake** (HIGH).
-5. **Premature `Subscribe`/selector optimization on small tables** (MEDIUM). Advanced state-management patterns are for advanced use cases.
+### Body shape
 
-## Open Gaps (carry forward)
+Prefer 60-180 lines. Table-state, migration, createTableHook, and Virtual skills may be longer when the adapter genuinely differs.
 
-26 gaps remain after the Phase 4 interview. The maintainer addressed scope/style centrally; remaining gaps are mostly forward-looking (Phase 6 SKILL.md generation will resolve or note as future work).
+Use this default structure:
 
-| Skill                             | Question                                                                                                                         | Status |
-| --------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- | ------ |
-| `state-management`                | When `atoms.x` is registered, does calling `table.resetX()` reset the external atom or only the baseAtom? Docs say "Slice reset… | open   |
-| `state-management`                | Is there a runtime warning when `state.x` and `atoms.x` are both supplied? Source shows silent precedence (atom wins) — should … | open   |
-| `setup`                           | For vanilla JS (`@tanstack/table-core` direct), is `storeReactivityBindings()` strictly required, or is there a no-reactivity p… | open   |
-| `customizing-feature-behavior`    | Are `filterFn.autoRemove` and `filterFn.resolveFilterValue` part of the recommended public surface for custom fns, or implement… | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `—`                               |                                                                                                                                  | open   |
-| `table-state (Angular)`           | Is there a recommended pattern for using TanStack Store external atoms with Angular signals end-to-end, or do users always go t… | open   |
-| `react-subscribe-compiler-compat` | When the agent emits `table.getState().X` in render, is that wrong?                                                              | open   |
-| `migrate-v8-to-v9`                | How do v8 `getCoreRowModel()` / `getSortedRowModel()` etc. map to v9?                                                            | open   |
-| `migrate-v8-to-v9`                | How do I convert a v8 useReactTable site to v9 useTable + Subscribe?                                                             | open   |
-| `composable-tables`               | When should I use createTableHook vs useTable directly?                                                                          | open   |
-| `angular-rendering-directives`    | How do I correctly render Angular components from cells / handle signals?                                                        | open   |
-| `rendering`                       | How do I write a performant Svelte 5 table without mergeObjects chain growth?                                                    | open   |
-| `compose-with-tanstack-virtual`   | How do I combine TanStack Table v9 with TanStack Virtual safely?                                                                 | open   |
-| `state-management`                | What is the "controlled vs uncontrolled" model in v9?                                                                            | open   |
-| `row-selection`                   | How do I implement "tristate parent + selectable leaves" UX?                                                                     | open   |
-| `pagination`                      | How do I avoid the autoResetPageIndex + deep-linking trap?                                                                       | open   |
-| `setup`                           | What stability requirements do v9 options have?                                                                                  | open   |
-| `customizing-feature-behavior`    | How do I author or extend a custom TableFeature in v9?                                                                           | open   |
-| `compose-with-tanstack-form`      | How do I put editable form inputs in cells without losing focus?                                                                 | open   |
+1. One-paragraph mental model.
+2. Setup: imports and the smallest valid configuration.
+3. Two to four decision or implementation patterns.
+4. Common mistakes: at least three concrete failures with correction.
+5. API discovery: exact installed src route and identifiers to inspect.
+6. Cross-skill routing only when another skill owns the next decision.
 
-## Excluded From v1 (Confirmed)
+Do not add a reference folder by default. Add one only when a large migration mapping or framework-specific content cannot stay concise in SKILL.md. Progressive disclosure is a size tool, not permission to recreate all docs as references.
 
-- **Custom-feature authoring** (writing your own plugin via the `TableFeature` interface) — experimental, `TData` generic doesn't flow through. NOTE: `tableFeatures()` the utility itself is essential and stable; it's in every v9 setup. Only authoring custom features is excluded.
-- **Per-UI-library composition skills** (shadcn, Mantine, Material UI, React Aria, HeroUI) — third-party libs update independently; agents should adapt from kitchen-sink examples.
-- **Built-in data editing** — `compose-with-tanstack-form` covers this.
-- **Drag-and-drop** — `@dnd-kit/core` is the recommended external lib.
-- **Virtualization** — `compose-with-tanstack-virtual`.
-- **Async fetching** — `compose-with-tanstack-query`.
-- **Accessibility hotkeys** — `compose-with-tanstack-hotkeys` deferred to v1.1.
+### Migration skill exception
 
-## Recommended Skill File Structure
+The table-core and seven adapter migrate-v8-to-v9 skills are intentionally comprehensive. They may approach the 500-line limit and must list every breaking change in the maintained migration guide, not merely three common mistakes or a short route to the docs.
 
-```text
-_artifacts/
-  domain_map.yaml          # this domain map
-  skill_spec.md            # this human-readable companion
-packages/
-  table-core/skills/<slug>/SKILL.md          # 12 core skills (setup, column-definitions, state-management, customizing-feature-behavior, filtering, sorting, pagination, grouping, row-expanding, column-layout, row-pinning, row-selection)
-  react-table/skills/<slug>/SKILL.md         # table-state, react-subscribe-compiler-compat, getting-started, migrate-v8-to-v9, client-to-server, production-readiness, compose-with-tanstack-store, compose-with-tanstack-query, compose-with-tanstack-virtual, compose-with-tanstack-form, compose-with-tanstack-pacer
-  vue-table/skills/<slug>/SKILL.md           # table-state, getting-started, migrate-v8-to-v9, client-to-server, production-readiness + composition skills
-  solid-table/skills/<slug>/SKILL.md         # same pattern
-  svelte-table/skills/<slug>/SKILL.md        # same pattern
-  angular-table/skills/<slug>/SKILL.md       # adds angular-rendering-directives
-  lit-table/skills/<slug>/SKILL.md           # adds lit-table-controller; beta-rewrite caveat
-  preact-table/skills/<slug>/SKILL.md        # mirrors React minus Subscribe-compat
-  react-table-devtools/skills/compose-with-tanstack-devtools/SKILL.md
-  vue-table-devtools/skills/compose-with-tanstack-devtools/SKILL.md
-  solid-table-devtools/skills/compose-with-tanstack-devtools/SKILL.md
-  preact-table-devtools/skills/compose-with-tanstack-devtools/SKILL.md
-```
+Every adapter migration skill must be usable on its own and include:
+
+- its framework-version prerequisite, package change, and construction entrypoint mapping;
+- the complete shared architecture changes for tableFeatures, all stock feature imports, row-model slots, function registries, and stockFeatures audit guidance;
+- the full logical start/end column-pinning mapping;
+- prototype-method binding and enumeration/spread consequences;
+- state access, selector/subscription, controlled-state, external-atom, precedence, and onStateChange changes for that adapter;
+- createColumnHelper/columns(), rendering, tableOptions, and createTableHook changes;
+- pinning-option, sizing/resizing, sorting, removed-internal, row, and row-selection API changes;
+- all TypeScript generic, meta, function-registry augmentation, StockFeatures, and RowData changes;
+- an exhaustive checkbox audit at the end.
+
+Do not rely on the core migration skill to hide shared changes from an adapter migration. The requires relationship supplies context, but migration users commonly load only the adapter skill and need the full audit surface there. Keep detailed mappings in SKILL.md unless the file would exceed Intent's 500-line limit.
+
+### Table-state skill exception
+
+Every framework table-state skill must preserve substantially more of its guide than an ordinary feature skill because state coordination is the library's foundational behavior. Include:
+
+- internal state as the default and the reasons to hoist only selected slices;
+- feature-gated state and typing;
+- `baseAtoms`, readonly derived `atoms`, the flat `store`, and any adapter-selected `table.state` surface;
+- snapshot reads versus the adapter's tracked/subscribed reads;
+- one owner per slice across internal state, `initialState`, external `atoms`, and `state` plus `on[State]Change`;
+- precedence, value-or-updater handling, and removal of the v8 global `onStateChange` option;
+- preferred feature-method writes, low-level base-atom writes, initial/reset semantics, and externally owned reset limitations;
+- feature-specific types and `TableState<typeof features>` inference;
+- framework-specific selector, subscription, compiler, signal, rune, ref, controller, or proxy behavior.
+
+Retain concrete wrong-versus-correct examples for the adapter's most likely subscription and controlled-state mistakes. Table-state skills may exceed the normal 180-line target while remaining below Intent's 500-line limit.
+
+### Stable model-input invariant
+
+Treat stable `data` and `columns` references as a correctness and performance invariant, including in client/server and Query examples. Never place `.map()`, `.filter()`, `.slice()`, a column factory, or a fresh `[]` fallback inline in table options that can be reevaluated. Use module/component-lifetime constants, framework memo/computed primitives, stable reactive containers, or stable Query result arrays. “Manual” row processing changes ownership; it does not relax reference stability.
+
+### Custom-feature completeness exception
+
+The custom-features skill must enumerate all 10 public declaration-merge FeatureMaps: table state, table options, table, column definition, column, row, cell, header, row-model functions, and cached row models. Explain that `Plugins` registers the feature key and that declarations add types only; each advertised runtime surface needs matching lifecycle wiring.
+
+Enumerate both API utilities and every installation path: `assignTableAPIs` in `constructTableAPIs`, plus `assignPrototypeAPIs` in `assignColumnPrototype`, `assignRowPrototype`, `assignCellPrototype`, and `assignHeaderPrototype`. Include the static-name prefixes, prototype self argument, optional `memoDeps`, shared-prototype constraint, `initColumnInstanceData`/`initRowInstanceData`, and the fact that per-object `assignColumnAPIs`-style utilities do not exist. Clearly label row-model maps as advanced internal pipeline surfaces requiring explicit runtime/cache wiring.
+
+Use one annotated, authoritative feature example for the complete shape. Do not stack a minimal density example, a second FeatureMap example, a third API-installation example, and then repeat their distinction under Common Mistakes. Keep selection guidance and foot-guns as compact prose around the single example.
+
+### Code examples
+
+- Use v9 names and shapes only unless a migration skill is explicitly contrasting v8.
+- Use the smallest feature set needed by the example.
+- Keep features, data, columns, and other static inputs stable. Derive changing data with the adapter's memo/computed primitive and never use fresh inline fallback arrays in repeated option evaluation.
+- Show row-model factories as slots in tableFeatures, after their prerequisite feature.
+- Keep markup generic and unstyled unless demonstrating a CSS/layout foot-gun.
+- Prefer helper inference over explicit Table feature generic plumbing.
+- Never show useLegacyTable as the recommended solution.
+
+### Common Mistakes quality bar
+
+A mistake must be plausible, consequential, and grounded in source, docs, examples, or maintainer/community evidence. Prefer failures that compile or render but behave incorrectly:
+
+- missing feature registration;
+- manual mode bypasses a row model;
+- snapshot read is not a framework subscription;
+- controlled callback does not write back the updater;
+- unstable data/columns/features redo work;
+- hidden columns rendered from non-visibility-aware APIs;
+- pinning/sizing state not applied in CSS;
+- off-page selected IDs mistaken for loaded Row objects;
+- v8 or another adapter API hallucinated from memory.
+
+Avoid padding Common Mistakes with generic advice such as read the docs, handle errors, or add tests.
+
+Use Wrong/Correct only when the Wrong form is demonstrably broken or misleading. Do not place a valid default, canonical adapter pattern, or supported tradeoff in the Wrong slot. Present those cases as decisions with consequences instead.
+
+### Executable validation
+
+- `intent validate` checks structure, frontmatter, sources, requires, and artifacts.
+- `skills:versions:check` compares each skill's `metadata.library_version` with its package and verifies artifact overrides.
+- `test:skill-content` checks high-risk generated-content invariants, including Markdown table shape, package imports, feature gating, stable empty fallbacks, adapter subscription shapes, and resize input events.
+- Add `<!-- skill-snippet:check -->` immediately before a self-contained TypeScript/TSX fence when its exact code is load-bearing. `test:skill-snippets` compiles each marked fence against workspace source. A marker may specify `prelude=path` or `tsconfig=path` when the snippet needs an explicit checked context.
+- Virtual composition guidance must be copied from or kept structurally faithful to the maintained adapter guide/example. When evidence is absent, route to the documented supported composition instead of inventing an adapter package or API.
+
+These checks run in `pnpm test:skills`. They supplement review; they do not justify expanding skills into API summaries.
+
+### Release version synchronization
+
+Skill versions ship with package versions. After release tooling calculates package versions, run `pnpm skills:versions:fix` before publishing and `pnpm skills:versions:check` as a guard. The sync updates package-local skill frontmatter and repo-root artifact version overrides together.
+
+## Routing taxonomy
+
+### Foundations and migration — @tanstack/table-core (7)
+
+- core — headless philosophy, core model, stable inputs, renderer ownership.
+- table-features — explicit registration, prerequisites, row-model/function slots, tree-shaking.
+- client-vs-server — choose ownership for filtering/grouping/sorting/expanding/pagination.
+- typescript — columnHelper, meta helpers, tableOptions, inference, avoid manual generics.
+- api-not-found — inspect installed src, feature gating, version/adapter mismatch, prototypes.
+- custom-features — plugin lifecycle after exhausting built-in APIs and meta.
+- migrate-v8-to-v9 — shared breaking changes and adapter migration routing.
+
+### Stock feature plugins — @tanstack/table-core (14)
+
+- column-faceting
+- column-filtering
+- grouping
+- column-ordering
+- column-pinning
+- column-resizing
+- column-sizing
+- column-visibility
+- global-filtering
+- expanding
+- pagination
+- row-pinning
+- row-selection
+- sorting
+
+Each feature skill must:
+
+- name the feature import;
+- name only row-model and registry slots relevant to that feature;
+- state its tableFeatures prerequisites;
+- distinguish state from row processing and renderer behavior;
+- route exact API discovery to its shipped feature directory;
+- include feature-specific edge cases from domain_map.yaml.
+
+Do not combine all column layout features into one summary. Their plugin prerequisites and CSS responsibilities differ enough to route independently.
+
+### Framework adapter set
+
+React, Preact, Solid, Svelte, Vue, and Angular each ship six skills:
+
+- getting-started
+- table-state
+- migrate-v8-to-v9
+- create-table-hook
+- with-tanstack-query
+- with-tanstack-virtual
+
+Lit ships five:
+
+- getting-started
+- table-state
+- migrate-v8-to-v9
+- create-table-hook
+- with-tanstack-virtual
+
+Alpine ships three:
+
+- getting-started
+- table-state
+- create-table-hook
+
+Do not add Query where no maintained adapter example exists. Do not add an Alpine migration skill because there is no v8 Alpine adapter journey to teach. Do not invent Preact virtualization examples; its Virtual skill should rely on the maintained adapter guide and installed APIs.
+
+### Devtools set (6)
+
+Each Devtools package ships one skill named devtools:
+
+- @tanstack/table-devtools
+- @tanstack/react-table-devtools
+- @tanstack/preact-table-devtools
+- @tanstack/solid-table-devtools
+- @tanstack/vue-table-devtools
+- @tanstack/angular-table-devtools
+
+All Devtools skills must emphasize the required non-empty table options.key, lifecycle-aware registration, unique keys, and development/production export behavior. Keep the framework-neutral package focused on target registration and inspection; keep adapters focused on their hook/injection/plugin lifecycle.
+
+### Utility set (1)
+
+@tanstack/match-sorter-utils ships fuzzy-ranking. Teach the three-stage pattern: rank with rankItem, filter with RankingInfo.passed, then sort stored metadata with compareItems. Route Table-specific filter metadata wiring to column-filtering/global-filtering rather than turning this utility skill into a Table feature summary.
+
+## Package coverage
+
+| Package                          | Skills |
+| -------------------------------- | -----: |
+| @tanstack/table-core             |     21 |
+| @tanstack/react-table            |      6 |
+| @tanstack/preact-table           |      6 |
+| @tanstack/solid-table            |      6 |
+| @tanstack/svelte-table           |      6 |
+| @tanstack/vue-table              |      6 |
+| @tanstack/angular-table          |      6 |
+| @tanstack/lit-table              |      5 |
+| @tanstack/alpine-table           |      3 |
+| @tanstack/table-devtools         |      1 |
+| @tanstack/react-table-devtools   |      1 |
+| @tanstack/preact-table-devtools  |      1 |
+| @tanstack/solid-table-devtools   |      1 |
+| @tanstack/vue-table-devtools     |      1 |
+| @tanstack/angular-table-devtools |      1 |
+| @tanstack/match-sorter-utils     |      1 |
+| Total                            |     72 |
+
+## Framework distinctions that must survive generation
+
+### React
+
+- useTable returns selected table.state; the default selector selects all registered state.
+- table.atoms.get and table.store.state are snapshot reads, not React subscriptions.
+- Subscribe is the supported fine-grained boundary and React Compiler escape hatch for builder-method reads hidden in memoized children.
+- Do not prescribe fine-grained subscription machinery until render cost or compiler behavior requires it.
+
+### Preact
+
+- Use the native Preact package, not React through preact/compat.
+- State selection and Subscribe resemble React but must use Preact adapter/store imports.
+
+### Solid
+
+- createTable atoms are backed by Solid primitives; reads are reactive only inside tracked scopes.
+- Prefer native signals for framework-owned state and external TanStack Store atoms for cross-app atom ownership.
+
+### Svelte
+
+- V9 targets Svelte 5 and runes.
+- Reactive data and controlled values commonly need getters; avoid passing snapshots.
+- createTableHook implementation belongs in a rune-capable module.
+
+### Vue
+
+- Preserve refs/computed/reactive option shapes rather than destructuring snapshots.
+- In JSX, table.Subscribe receives children as an explicit prop.
+- The composable component registry may require explicit exported context-hook types to break circular inference.
+
+### Angular
+
+- injectTable, injectAppTable, Devtools injection, and returned context helpers require Angular injection context.
+- Signal reads inside the options initializer cause setOptions to run again; keep features/columns and other static values outside it.
+- Preserve FlexRender directive and component-vs-function rendering distinctions.
+
+### Lit
+
+- TableController is a stable host field; v9 passes options to controller.table during render.
+- Keep selector references stable.
+- createTableHook table-level controls may consume context from custom elements rather than a JSX-style tableComponents registry.
+
+### Alpine
+
+- The table proxy automatically makes API reads reactive inside Alpine bindings; there is no table.Subscribe.
+- x-html does not initialize nested Alpine directives.
+- createTableHook shares features/options/helpers, not a reusable component registry.
+
+## Cross-cutting placement rules
+
+- Performance: stable inputs in getting-started/core; selectors in table-state; CSS variables in resizing; measurement/overscan in Virtual; row ownership in client-vs-server.
+- CSS: pinning, sizing, resizing, and Virtual skills only. Core may state that CSS is user-owned.
+- Accessibility: core/getting-started may remind that headless rendering leaves semantics and interaction accessibility with the renderer; do not create a component-library integration skill.
+- Query: data source and manual processing boundaries, not Table rendering.
+- Virtual: final Table models and renderer geometry, never tableFeatures.
+- Context: createTableHook skills; mention context over prop drilling when a registered reusable component needs typed table/cell/header access.
+- API lookup: api-not-found establishes the workflow; every other skill includes its direct installed src route.
+
+## Anti-patterns forbidden during generation
+
+- A skill that is primarily a list of every exported API.
+- One giant all-features or all-frameworks skill.
+- Per-component-library skills or shadcn/MUI/Mantine-specific code.
+- Worker row-model instructions.
+- A dedicated generic performance checklist divorced from the feature causing the work.
+- V8 setup in non-migration examples.
+- useLegacyTable as a recommended quick start.
+- Deep explicit generic signatures copied from internal types when helpers can infer them.
+- Claims that pinning, sizing, resizing, expansion, or virtualization render their UI/CSS automatically.
+- Claims that a manual flag calls a backend.
+
+## Maintainer review decisions
+
+The maintainer accepted these generation positions on 2026-07-10:
+
+1. Explicit features are the default; stockFeatures is for migration and kitchen-sink convenience.
+2. Mixed client/server pipelines are valid only when the skill names the owner and available dataset for every stage.
+3. createTableHook is recommended for recurring app conventions; standalone construction remains appropriate for one-offs.
+4. Typed context/injection helpers from createTableHook are preferred over prop drilling inside registered components.
+5. useLegacyTable is mentioned only when encountered, as a deprecated temporary bridge rather than a migration target.
+6. Virtual skills teach maintained examples and only identify unsupported combinations as user-owned composition.
+7. Devtools guidance is development-only by default; production entrypoints are explained only when explicitly requested.
+
+Domain discovery is reviewed and tree generation may proceed.
