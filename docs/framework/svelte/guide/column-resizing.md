@@ -234,10 +234,10 @@ column.getCanResize()
 column.getIsResizing()
 ```
 
-The table instance exposes APIs for the transient resize state. Note that the current v9 API spelling is `table.setcolumnResizing` with a lowercase `c` in `column`; use that exact name.
+The table instance exposes APIs for the transient resize state through `table.setColumnResizing`.
 
 ```ts
-table.setcolumnResizing((old) => ({
+table.setColumnResizing((old) => ({
   ...old,
   deltaOffset: 12,
 }))

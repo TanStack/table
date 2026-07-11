@@ -24,7 +24,8 @@
     "utils",
     "split",
     "separate",
-    "datagrid"
+    "datagrid",
+    "tanstack-intent"
   ],
   "type": "module",
   "types": "./dist/index.d.cts",
@@ -43,7 +44,8 @@
   },
   "files": [
     "dist",
-    "src"
+    "src",
+    "skills"
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
