@@ -1,6 +1,6 @@
 import { createHash } from 'node:crypto'
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises'
-import { dirname, extname, resolve } from 'node:path'
+import { dirname, resolve } from 'node:path'
 import ts from 'typescript'
 import { glob } from 'tinyglobby'
 
@@ -12,9 +12,9 @@ const skillPaths = await glob('packages/*/skills/**/SKILL.md', {
   absolute: true,
 })
 const workspacePaths = Object.fromEntries(
-  packages.map((pkg) => [
-    pkg.name,
-    [resolve(rootDir, pkg.packageDir, 'src/index.ts')],
+  packages.flatMap((pkg) => [
+    [pkg.name, [resolve(rootDir, pkg.packageDir, 'src/index.ts')]],
+    [`${pkg.name}/*`, [resolve(rootDir, pkg.packageDir, 'src/*')]],
   ]),
 )
 const diagnostics = []
