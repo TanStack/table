@@ -673,10 +673,9 @@ export function row_getToggleSelectedHandler<
     event.persist?.()
 
     const table = row.table
-    // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
-    const rowSelectionTable = table._lastSelectedRowId
     const checked = event.target.checked
-    const anchorId = rowSelectionTable._lastSelectedRowId
+    // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
+    const anchorId = table._lastSelectedRowId
     const canSelectRange =
       table.options.enableRowRangeSelection !== false &&
       anchorId !== null &&
@@ -690,7 +689,8 @@ export function row_getToggleSelectedHandler<
       row_toggleSelected(row, checked, opts)
     }
 
-    rowSelectionTable._lastSelectedRowId = row.id
+    // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
+    table._lastSelectedRowId = row.id
   }
 }
 

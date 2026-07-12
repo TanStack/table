@@ -35,8 +35,10 @@ jobs:
         uses: nrwl/nx-set-shas@3e9ad7370203c1e93d109be57f3b72eb0eb511b1 # v4.4.0
         with:
           main-branch-name: main
+      - name: Install Playwright Browsers
+        run: pnpm run test:e2e:install
       - name: Run Checks
-        run: pnpm run test:pr --parallel=3
+        run: pnpm run test:pr --parallel=8
       - name: Stop Nx Agents
         if: ${{ always() }}
         run: npx nx-cloud stop-all-agents

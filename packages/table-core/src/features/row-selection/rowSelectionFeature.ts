@@ -36,12 +36,12 @@ import type { TableFeature } from '../../types/TableFeatures'
  */
 export const rowSelectionFeature: TableFeature = {
   initTableInstanceData: (table) => {
-    // @ts-expect-error - _lastSelectedRowId is a row selection table instance data
+    // @ts-ignore - _lastSelectedRowId is row selection table instance data
     table._lastSelectedRowId = null
   },
 
   resetTableInstanceData: (table) => {
-    // @ts-expect-error - _lastSelectedRowId is a row selection table instance data
+    // @ts-ignore - _lastSelectedRowId is row selection table instance data
     table._lastSelectedRowId = null
   },
 
