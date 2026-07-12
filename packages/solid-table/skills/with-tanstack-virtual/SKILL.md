@@ -6,7 +6,7 @@ metadata:
   {
     type: composition,
     library: '@tanstack/solid-table',
-    library_version: '9.0.0-beta.43',
+    library_version: '9.0.0-beta.44',
     framework: solid,
   }
 requires: ['@tanstack/table-core#core', getting-started, table-state]
