@@ -6,7 +6,7 @@ metadata:
   {
     type: sub-skill,
     library: '@tanstack/table-core',
-    library_version: '9.0.0-beta.44',
+    library_version: '9.0.0-beta.45',
   }
 requires: ['core', 'table-features', 'column-filtering']
 sources:
