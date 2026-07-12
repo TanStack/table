@@ -13,6 +13,15 @@ export interface Row_CoreProperties<
     Column<TFeatures, TData, unknown>,
     Cell<TFeatures, TData, unknown>
   >
+  /**
+   * Internal cache used while resolving the current display order.
+   *
+   * This value may be stale until display order is recomputed. Use
+   * `row.getDisplayIndex()` instead; it refreshes and validates the cached
+   * position before returning it.
+   *
+   * @internal
+   */
   _displayIndexCache: number
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
@@ -56,7 +65,9 @@ export interface Row_Row<
 > extends Row_CoreProperties<TFeatures, TData> {
   /**
    * Returns the zero-based index of the row in the current display order
-   * before pagination, or `-1` if the row is not in that model.
+   * before pagination, or `-1` if the row is not in that model. Use this for
+   * display row-number columns instead of `row.index` or the internal
+   * `_displayIndexCache` field.
    */
   getDisplayIndex: () => number
   /**

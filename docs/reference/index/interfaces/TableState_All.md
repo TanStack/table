@@ -178,7 +178,7 @@ Defined in: [features/row-pinning/rowPinningFeature.types.ts:13](https://github.
 optional rowSelection: RowSelectionState;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L9)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L20)
 
 #### Inherited from
 

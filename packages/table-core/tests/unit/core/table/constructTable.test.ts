@@ -1,7 +1,8 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { constructTable } from '../../../../src'
 import { table_mergeOptions } from '../../../../src/static-functions'
 import { testFeatures } from '../../../fixtures/features'
+import type { TableFeature } from '../../../../src'
 
 function getterOnlyMerge(...sources: Array<any>) {
   const target = {}
@@ -34,6 +35,116 @@ function getterOnlyMerge(...sources: Array<any>) {
 }
 
 describe('constructTable', () => {
+  it('initializes feature-owned table data before constructing any table APIs', () => {
+    const calls: Array<string> = []
+    const initA = vi.fn((table: any) => {
+      calls.push('init-a')
+      expect(table.options.lifecycleMarker).toBe('available')
+      expect(table.baseAtoms.lifecycle.get()).toBe('initial')
+      expect(table.atoms.lifecycle.get()).toBe('initial')
+      expect(table.store.state.lifecycle).toBe('initial')
+      expect(table.reset).toBeUndefined()
+      table.firstInitialized = true
+    })
+    const initB = vi.fn((table: any) => {
+      calls.push('init-b')
+      expect(table.firstInitialized).toBe(true)
+      table.secondInitialized = true
+    })
+    const apiA = vi.fn((table: any) => {
+      calls.push('api-a')
+      expect(table.firstInitialized).toBe(true)
+      expect(table.secondInitialized).toBe(true)
+    })
+    const apiB = vi.fn((table: any) => {
+      calls.push('api-b')
+      expect(table.firstInitialized).toBe(true)
+      expect(table.secondInitialized).toBe(true)
+    })
+    const apiWithoutInit = vi.fn((table: any) => {
+      calls.push('api-without-init')
+      table.apiWithoutInit = true
+    })
+    const featureA: TableFeature = {
+      getInitialState: (initialState) =>
+        ({ lifecycle: 'initial', ...initialState }) as any,
+      initTableInstanceData: initA,
+      constructTableAPIs: apiA,
+    }
+    const featureB: TableFeature = {
+      initTableInstanceData: initB,
+      constructTableAPIs: apiB,
+    }
+    const featureWithoutInit: TableFeature = {
+      constructTableAPIs: apiWithoutInit,
+    }
+    const features = {
+      ...testFeatures({}),
+      featureA,
+      featureB,
+      featureWithoutInit,
+    } as any
+
+    const table = constructTable({
+      features,
+      columns: [],
+      data: [],
+      lifecycleMarker: 'available',
+    } as any) as any
+
+    expect(calls).toEqual([
+      'init-a',
+      'init-b',
+      'api-a',
+      'api-b',
+      'api-without-init',
+    ])
+    expect(initA).toHaveBeenCalledOnce()
+    expect(initB).toHaveBeenCalledOnce()
+    expect(apiWithoutInit).toHaveBeenCalledOnce()
+    expect(table.apiWithoutInit).toBe(true)
+  })
+
+  it('resets feature-owned table data after internal atoms without rerunning initialization', () => {
+    const init = vi.fn((table: any) => {
+      table.transientValue = 'initialized'
+    })
+    const reset = vi.fn((table: any) => {
+      expect(table.baseAtoms.lifecycle.get()).toBe('initial')
+      expect(table.store.state.lifecycle).toBe('initial')
+      table.transientValue = null
+    })
+    const lifecycleFeature: TableFeature = {
+      getInitialState: (initialState) =>
+        ({ lifecycle: 'initial', ...initialState }) as any,
+      initTableInstanceData: init,
+      resetTableInstanceData: reset,
+    }
+    const features = {
+      ...testFeatures({}),
+      lifecycleFeature,
+    } as any
+    const table = constructTable({
+      features,
+      columns: [],
+      data: [],
+    } as any) as any
+
+    table.baseAtoms.lifecycle.set('changed')
+    table.transientValue = 'changed'
+    table.reset()
+
+    expect(reset).toHaveBeenCalledOnce()
+    expect(init).toHaveBeenCalledOnce()
+    expect(table.transientValue).toBeNull()
+
+    table.baseAtoms.lifecycle.set('changed-again')
+    table.reset()
+
+    expect(reset).toHaveBeenCalledTimes(2)
+    expect(init).toHaveBeenCalledOnce()
+  })
+
   it('should create a table with all core table APIs and properties', () => {
     const table = constructTable({
       features: testFeatures({}),

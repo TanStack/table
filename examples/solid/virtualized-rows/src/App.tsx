@@ -3,12 +3,13 @@ import {
   columnSizingFeature,
   createSortedRowModel,
   createTable,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { createVirtualizer } from '@tanstack/solid-virtual'
-import { For, createSignal } from 'solid-js'
+import { For, createEffect, createSignal } from 'solid-js'
 import { makeData } from './makeData'
 import type { Row, SolidTable } from '@tanstack/solid-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/solid-virtual'
@@ -16,6 +17,7 @@ import type { Person } from './makeData'
 
 const features = tableFeatures({
   columnSizingFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   sortFns,
@@ -25,6 +27,27 @@ const features = tableFeatures({
 // See https://tanstack.com/virtual/v3/docs/examples/solid/table for a simpler fixed row height example.
 function App() {
   const columns = [
+    {
+      id: 'select',
+      header: ({ table }: any) => (
+        <IndeterminateCheckbox
+          checked={table.getIsAllRowsSelected()}
+          indeterminate={table.getIsSomeRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }: any) => (
+        <IndeterminateCheckbox
+          checked={row.getIsSelected()}
+          disabled={!row.getCanSelect()}
+          indeterminate={row.getIsSomeSelected()}
+          onChange={row.getToggleSelectedHandler({
+            // selectChildren: false
+          })}
+        />
+      ),
+      size: 40,
+    },
     {
       accessorKey: 'id',
       header: 'ID',
@@ -78,8 +101,7 @@ function App() {
     get data() {
       return data()
     },
-    getRowId: (row) =>
-      `${row.id}-${row.firstName}-${row.lastName}-${row.createdAt.getTime()}`,
+    getRowId: (row) => String(row.id),
     debugTable: true,
   })
 
@@ -91,9 +113,10 @@ function App() {
           <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
         </div>
         ({data().length.toLocaleString()} rows)
+        <p>Hold Shift while selecting rows to select or deselect a range.</p>
+        <p>{table.getSelectedRowIds().length.toLocaleString()} rows selected</p>
         <VirtualizedTable table={table} />
       </div>
-      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
     </>
   )
 }
@@ -233,6 +256,33 @@ function TableBodyRow(props: {
         )}
       </For>
     </tr>
+  )
+}
+
+function IndeterminateCheckbox(props: {
+  indeterminate?: boolean
+  class?: string
+  checked?: boolean
+  disabled?: boolean
+  onChange?: (event: Event) => void
+}) {
+  let ref: HTMLInputElement | undefined
+
+  createEffect(() => {
+    if (typeof props.indeterminate === 'boolean' && ref) {
+      ref.indeterminate = !props.checked && props.indeterminate
+    }
+  })
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      class={(props.class ?? '') + ' sortable-header'}
+      checked={props.checked}
+      disabled={props.disabled}
+      onChange={props.onChange}
+    />
   )
 }
 

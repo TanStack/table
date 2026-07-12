@@ -1,7 +1,7 @@
 ---
 name: custom-features
 description: >
-  Author a TanStack Table v9 feature plugin across every FeatureMap and API installation surface: state, options, column definitions, table, column, row, cell, header, row-model functions/caches, defaults, prototypes, and instance data. Load only for reusable behavior not covered by built-ins, meta, or option composition.
+  Author a TanStack Table v9 feature plugin across every FeatureMap and API installation surface: state, options, column definitions, table, column, row, cell, header, row-model functions/caches, defaults, prototypes, and table/row/column instance data lifecycles. Load for initTableInstanceData, resetTableInstanceData, constructTableAPIs, or reusable behavior not covered by built-ins, meta, or option composition.
 metadata:
   type: sub-skill
   library: '@tanstack/table-core'
@@ -36,6 +36,32 @@ Declaration-merge `Plugins` to register the feature key, then merge only the map
 | `CachedRowModels_FeatureMap<TFeatures, TData>`   | Advanced `table._rowModels` cache getters |
 
 `assignTableAPIs` installs singleton table methods. Use `assignPrototypeAPIs` inside `assignColumnPrototype`, `assignRowPrototype`, `assignCellPrototype`, or `assignHeaderPrototype` for shared object methods. Use `initColumnInstanceData` and `initRowInstanceData` only for per-instance fields.
+
+Use `initTableInstanceData` for mutable, non-reactive data owned by one table. It runs once after options, state atoms, and the store exist, and every feature initialization finishes before any `constructTableAPIs` hook runs. Use `resetTableInstanceData` to clear transient instance data after internal atoms reset during `table.reset()`; it does not own state slices or externally controlled state. Keep `constructTableAPIs` exclusively for method assignment.
+
+## Table Instance Lifecycle
+
+```ts
+import type { TableFeature } from '@tanstack/table-core'
+
+interface InteractionData {
+  _interactionHistory: Set<string>
+}
+
+const interactionData = (table: object): InteractionData =>
+  table as unknown as InteractionData
+
+export const interactionFeature: TableFeature = {
+  initTableInstanceData: (table) => {
+    interactionData(table)._interactionHistory = new Set()
+  },
+  resetTableInstanceData: (table) => {
+    interactionData(table)._interactionHistory.clear()
+  },
+}
+```
+
+Initialization may allocate resources once while reset clears their transient contents. Do not rerun initialization during `table.reset()`.
 
 ## Complete Example
 
@@ -198,6 +224,8 @@ export const features = tableFeatures({ densityFeature })
 - Preserve incoming state in `getInitialState`; put user state after defaults.
 - Method keys use `table_`, `column_`, `row_`, `cell_`, or `header_`; the prefix is removed on installation.
 - Table API `fn` receives declared arguments. Prototype API `fn` receives the current object first.
+- Initialize table-owned mutable data in `initTableInstanceData`, not `constructTableAPIs`; all feature data is initialized before any table API is assigned.
+- Clear transient table-owned data in `resetTableInstanceData`. Reset state slices through atoms/updaters, and do not expect this hook to reset externally controlled state.
 - Add `memoDeps` only for a genuinely derived method. Prototype methods are shared and must not close over per-object mutable data.
 - There are no `assignColumnAPIs`, `assignRowAPIs`, `assignCellAPIs`, or `assignHeaderAPIs`; use `assignPrototypeAPIs` in the matching hook.
 - Do not mutate constructed instances ad hoc or use a feature for renderer-only callbacks that belong in meta.

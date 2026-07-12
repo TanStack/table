@@ -39,7 +39,15 @@ Defined in: [core/rows/coreRowsFeature.types.ts:12](https://github.com/TanStack/
 _displayIndexCache: number;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L16)
+Defined in: [core/rows/coreRowsFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L25)
+
+**`Internal`**
+
+Internal cache used while resolving the current display order.
+
+This value may be stale until display order is recomputed. Use
+`row.getDisplayIndex()` instead; it refreshes and validates the cached
+position before returning it.
 
 ***
 
@@ -49,7 +57,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:16](https://github.com/TanStack/
 _uniqueValuesCache: Record<string, unknown>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L17)
+Defined in: [core/rows/coreRowsFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L26)
 
 ***
 
@@ -59,7 +67,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:17](https://github.com/TanStack/
 _valuesCache: Record<string, unknown>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L18)
+Defined in: [core/rows/coreRowsFeature.types.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L27)
 
 ***
 
@@ -69,7 +77,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:18](https://github.com/TanStack/
 depth: number;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L22)
+Defined in: [core/rows/coreRowsFeature.types.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L31)
 
 The depth of the row (if nested or grouped) relative to the root row array.
 
@@ -81,7 +89,7 @@ The depth of the row (if nested or grouped) relative to the root row array.
 id: string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L26)
+Defined in: [core/rows/coreRowsFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L35)
 
 The resolved unique identifier for the row resolved via the `options.getRowId` option. Defaults to the row's index (or relative index if it is a subRow).
 
@@ -93,7 +101,7 @@ The resolved unique identifier for the row resolved via the `options.getRowId` o
 index: number;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L30)
+Defined in: [core/rows/coreRowsFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L39)
 
 The index of the row within its parent array (or the root data array).
 
@@ -105,7 +113,7 @@ The index of the row within its parent array (or the root data array).
 original: TData;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L34)
+Defined in: [core/rows/coreRowsFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L43)
 
 The original row object provided to the table. If the row is a grouped row, the original row object will be the first original in the group.
 
@@ -117,7 +125,7 @@ The original row object provided to the table. If the row is a grouped row, the 
 optional originalSubRows: readonly TData[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L38)
+Defined in: [core/rows/coreRowsFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L47)
 
 An array of the original subRows as returned by the `options.getSubRows` option.
 
@@ -129,7 +137,7 @@ An array of the original subRows as returned by the `options.getSubRows` option.
 optional parentId: string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L42)
+Defined in: [core/rows/coreRowsFeature.types.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L51)
 
 If nested, this row's parent row id.
 
@@ -141,7 +149,7 @@ If nested, this row's parent row id.
 subRows: Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L46)
+Defined in: [core/rows/coreRowsFeature.types.ts:55](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L55)
 
 An array of subRows for the row as returned and created by the `options.getSubRows` option.
 
@@ -153,6 +161,6 @@ An array of subRows for the row as returned and created by the `options.getSubRo
 table: Table_Internal<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L50)
+Defined in: [core/rows/coreRowsFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L59)
 
 Reference to the parent table instance.

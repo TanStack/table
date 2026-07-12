@@ -12,7 +12,7 @@ function row_toggleSelected<TFeatures, TData>(
    opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:492](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L492)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:501](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L501)
 
 Selects or deselects this row.
 
@@ -41,9 +41,7 @@ Omitting `value` toggles the row. Child rows are selected recursively unless
 
 ### opts?
 
-#### selectChildren?
-
-`boolean`
+[`ToggleSelectedOptions`](../../index/interfaces/ToggleSelectedOptions.md)
 
 ## Returns
 

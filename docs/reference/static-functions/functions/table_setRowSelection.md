@@ -9,7 +9,7 @@ title: table_setRowSelection
 function table_setRowSelection<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L43)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L46)
 
 Routes a row selection updater through the table's selection change handler.
 

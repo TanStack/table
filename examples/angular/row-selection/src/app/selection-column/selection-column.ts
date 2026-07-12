@@ -30,7 +30,7 @@ export class TableHeaderSelection {
       type="checkbox"
       [checked]="context.row.getIsSelected()"
       [disabled]="!context.row.getCanSelect()"
-      (change)="context.row.getToggleSelectedHandler()($event)"
+      (change)="toggleSelected($event)"
     />
   `,
   host: {
@@ -43,4 +43,10 @@ export class TableRowSelection {
   readonly cell = injectTableCellContext()
   readonly row = computed(() => this.cell().row)
   readonly context = injectFlexRenderCellContext()
+
+  toggleSelected(event: Event) {
+    this.context.row.getToggleSelectedHandler({
+      // selectChildren: false
+    })(event)
+  }
 }

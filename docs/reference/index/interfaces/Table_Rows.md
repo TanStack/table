@@ -5,7 +5,7 @@ title: Table_Rows
 
 # Interface: Table\_Rows\<TFeatures, TData\>
 
-Defined in: [core/rows/coreRowsFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L119)
+Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L130)
 
 ## Extended by
 
@@ -30,7 +30,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:119](https://github.com/TanStack
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L134)
+Defined in: [core/rows/coreRowsFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L145)
 
 Returns the row with the given ID.
 
@@ -56,7 +56,7 @@ Returns the row with the given ID.
 getRowId: (_, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L130)
+Defined in: [core/rows/coreRowsFeature.types.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L141)
 
 #### Parameters
 
@@ -84,7 +84,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack
 getRowsInDisplayOrder: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L129)
+Defined in: [core/rows/coreRowsFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L140)
 
 Returns the rows in the current display order and assigns their display
 indexes. When expanded rows bypass pagination, expanded descendants are

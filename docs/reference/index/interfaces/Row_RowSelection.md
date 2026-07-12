@@ -5,7 +5,7 @@ title: Row_RowSelection
 
 # Interface: Row\_RowSelection
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L54)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L77)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/row-selection/rowSelectionFeature.types.ts:54](https://git
 getCanMultiSelect: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L58)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L81)
 
 Checks whether this row can be selected alongside other rows.
 
@@ -31,7 +31,7 @@ Checks whether this row can be selected alongside other rows.
 getCanSelect: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L62)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:85](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L85)
 
 Checks whether this row can currently be selected.
 
@@ -47,7 +47,7 @@ Checks whether this row can currently be selected.
 getCanSelectSubRows: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L66)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L89)
 
 Checks whether selecting this row should also select its subRows.
 
@@ -63,7 +63,7 @@ Checks whether selecting this row should also select its subRows.
 getIsAllSubRowsSelected: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L70)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:93](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L93)
 
 Checks whether all selectable descendants are selected.
 
@@ -79,7 +79,7 @@ Checks whether all selectable descendants are selected.
 getIsSelected: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L74)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L97)
 
 Checks whether this row id is selected.
 
@@ -95,7 +95,7 @@ Checks whether this row id is selected.
 getIsSomeSelected: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L78)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L101)
 
 Checks whether some selectable descendants are selected.
 
@@ -108,12 +108,18 @@ Checks whether some selectable descendants are selected.
 ### getToggleSelectedHandler()
 
 ```ts
-getToggleSelectedHandler: () => (event) => void;
+getToggleSelectedHandler: (opts?) => (event) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L82)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L105)
 
 Creates a checkbox-style handler that toggles this row's selected state.
+
+#### Parameters
+
+##### opts?
+
+[`ToggleSelectedOptions`](ToggleSelectedOptions.md)
 
 #### Returns
 
@@ -139,7 +145,7 @@ Creates a checkbox-style handler that toggles this row's selected state.
 toggleSelected: (value?, opts?) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L86)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L111)
 
 Selects/deselects the row.
 
@@ -151,9 +157,7 @@ Selects/deselects the row.
 
 ##### opts?
 
-###### selectChildren?
-
-`boolean`
+[`ToggleSelectedOptions`](ToggleSelectedOptions.md)
 
 #### Returns
 

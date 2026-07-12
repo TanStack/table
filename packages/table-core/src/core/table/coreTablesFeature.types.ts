@@ -229,7 +229,8 @@ export interface Table_Table<
    *
    * Prefer feature-specific reset APIs, such as `resetPagination`, when a state
    * slice may be owned by an external atom or needs that feature's blank/default
-   * reset behavior.
+   * reset behavior. After resetting internal atoms, this also invokes feature
+   * reset hooks for mutable, transient table-instance data.
    */
   reset: () => void
   /**

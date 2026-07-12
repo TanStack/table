@@ -6,15 +6,19 @@ title: row_getToggleSelectedHandler
 # Function: row\_getToggleSelectedHandler()
 
 ```ts
-function row_getToggleSelectedHandler<TFeatures, TData>(row): (e) => void;
+function row_getToggleSelectedHandler<TFeatures, TData>(row, opts?): (e) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:653](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L653)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:660](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L660)
 
 Creates a checkbox-style handler that selects or deselects this row.
 
 The handler is a no-op when the row cannot be selected and reads
-`event.target.checked`.
+`event.target.checked`. Shift events select or deselect the inclusive range
+from the most recent selectable row handled by this table. The event's
+optional `persist()` method is called before it is read. Pass
+`selectChildren: false` to limit changes to rows explicitly present in the
+display-order interval.
 
 ## Type Parameters
 
@@ -31,6 +35,10 @@ The handler is a no-op when the row cannot be selected and reads
 ### row
 
 [`Row`](../../index/type-aliases/Row.md)\<`TFeatures`, `TData`\>
+
+### opts?
+
+[`ToggleSelectedOptions`](../../index/interfaces/ToggleSelectedOptions.md)
 
 ## Returns
 

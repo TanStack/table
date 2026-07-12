@@ -166,7 +166,9 @@ export default defineComponent({
                   (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
                 }
                 indeterminate={row.getIsSomeSelected()}
-                onChange={row.getToggleSelectedHandler()}
+                onChange={row.getToggleSelectedHandler({
+                  // selectChildren: false
+                })}
               />{' '}
               {row.getCanExpand() ? (
                 <button

@@ -47,7 +47,7 @@ export class ExpandableHeaderCell<T extends RowData> {
             row.getIsSelected() ||
             (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
           "
-          (change)="row.getToggleSelectedHandler()($event)"
+          (change)="toggleSelected($event)"
         />
         {{ ' ' }}
 
@@ -78,5 +78,11 @@ export class ExpandableCell<T extends RowData> {
 
   get row() {
     return this.context().row
+  }
+
+  toggleSelected(event: Event) {
+    this.row.getToggleSelectedHandler({
+      // selectChildren: false
+    })(event)
   }
 }

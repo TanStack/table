@@ -165,7 +165,9 @@
                         (row.getCanSelectSubRows() &&
                           row.getIsAllSubRowsSelected())}
                       use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
-                      onchange={row.getToggleSelectedHandler()}
+                      onchange={row.getToggleSelectedHandler({
+                        // selectChildren: false
+                      })}
                       class="sortable-header"
                     />
                     {' '}

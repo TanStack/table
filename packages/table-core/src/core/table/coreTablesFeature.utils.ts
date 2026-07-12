@@ -40,7 +40,8 @@ export function table_syncExternalStateToBaseAtoms<
 }
 
 /**
- * Resets all internal table base atoms to `table.initialState`.
+ * Resets all internal table base atoms to `table.initialState`, then clears
+ * transient instance data through registered feature reset hooks.
  *
  * This resets internally owned state slices in a single reactivity batch. Use
  * feature-specific reset APIs when a slice may be externally owned.
@@ -62,6 +63,11 @@ export function table_reset<
       ;(table.baseAtoms as any)[key].set(snap[key])
     }
   })
+
+  const features = Object.values(table._features)
+  for (let i = 0; i < features.length; i++) {
+    features[i]!.resetTableInstanceData?.(table)
+  }
 }
 
 /**

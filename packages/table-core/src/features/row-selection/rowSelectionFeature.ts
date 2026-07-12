@@ -35,6 +35,16 @@ import type { TableFeature } from '../../types/TableFeatures'
  * Feature that adds row selection state and APIs for row and page selection.
  */
 export const rowSelectionFeature: TableFeature = {
+  initTableInstanceData: (table) => {
+    // @ts-expect-error - _lastSelectedRowId is a row selection table instance data
+    table._lastSelectedRowId = null
+  },
+
+  resetTableInstanceData: (table) => {
+    // @ts-expect-error - _lastSelectedRowId is a row selection table instance data
+    table._lastSelectedRowId = null
+  },
+
   getInitialState: (initialState) => {
     return {
       rowSelection: getDefaultRowSelectionState(),
@@ -47,7 +57,15 @@ export const rowSelectionFeature: TableFeature = {
       onRowSelectionChange: makeStateUpdater('rowSelection', table),
       enableRowSelection: true,
       enableMultiRowSelection: true,
+      enableRowRangeSelection: true,
       enableSubRowSelection: true,
+      isRowRangeSelectionEvent: (event) => {
+        const rangeEvent = event as {
+          shiftKey?: boolean
+          nativeEvent?: { shiftKey?: boolean }
+        }
+        return Boolean(rangeEvent.shiftKey || rangeEvent.nativeEvent?.shiftKey)
+      },
     }
   },
 
@@ -85,7 +103,7 @@ export const rowSelectionFeature: TableFeature = {
         fn: (row) => row_getCanMultiSelect(row),
       },
       row_getToggleSelectedHandler: {
-        fn: (row) => row_getToggleSelectedHandler(row),
+        fn: (row, opts) => row_getToggleSelectedHandler(row, opts),
       },
     })
   },

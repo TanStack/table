@@ -132,7 +132,9 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
             row.getIsSelected() ||
             (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()),
           indeterminate: row.getIsSomeSelected(),
-          onChange: row.getToggleSelectedHandler(),
+          onChange: row.getToggleSelectedHandler({
+            // selectChildren: false
+          }),
         })}
         ${row.getCanExpand()
           ? html`<button

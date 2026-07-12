@@ -79,7 +79,9 @@ class SelectionRowCheckbox extends Component<
   }
 
   handleChange = (event: Event) => {
-    this.row.getToggleSelectedHandler()(event)
+    this.row.getToggleSelectedHandler({
+      // selectChildren: false
+    })(event)
   }
 
   <template>

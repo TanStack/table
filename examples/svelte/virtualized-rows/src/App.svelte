@@ -4,6 +4,7 @@
     columnSizingFeature,
     createSortedRowModel,
     createTable,
+    rowSelectionFeature,
     rowSortingFeature,
     sortFns,
     tableFeatures,
@@ -17,6 +18,7 @@
 
   const features = tableFeatures({
     columnSizingFeature,
+    rowSelectionFeature,
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
     sortFns,
@@ -25,6 +27,12 @@
   // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.
   // See https://tanstack.com/virtual/v3/docs/examples/svelte/table for a simpler fixed row height example.
   const columns: Array<ColumnDef<typeof features, Person>> = [
+    {
+      id: 'select',
+      header: '',
+      cell: '',
+      size: 40,
+    },
     {
       accessorKey: 'id',
       header: 'ID',
@@ -71,12 +79,23 @@
   const refreshData = () => { data = makeData(200_000) }
   const stressTest = () => { data = makeData(1_000_000) }
 
+  // Svelte action to set indeterminate property on checkbox inputs
+  function setIndeterminate(node: HTMLInputElement, value: boolean) {
+    node.indeterminate = value
+    return {
+      update(newValue: boolean) {
+        node.indeterminate = newValue
+      },
+    }
+  }
+
   const table = createTable({
     features,
     columns,
     get data() {
       return data
     },
+    getRowId: (row) => String(row.id),
     debugTable: true,
   })
 
@@ -127,6 +146,8 @@
     <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   ({data.length.toLocaleString()} rows)
+  <p>Hold Shift while selecting rows to select or deselect a range.</p>
+  <p>{table.getSelectedRowIds().length.toLocaleString()} rows selected</p>
   <div
     class="container"
     bind:this={tableContainerRef}
@@ -140,26 +161,35 @@
           <tr style="display: flex; width: 100%;">
             {#each headerGroup.headers as header (header.id)}
               <th style="display: flex; width: {header.getSize()}px;">
-                <div
-                  class={header.column.getCanSort()
-                    ? 'sortable-header'
-                    : ''}
-                  role="button"
-                  tabindex="0"
-                  onclick={header.column.getToggleSortingHandler()}
-                  onkeydown={(e) => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                      header.column.getToggleSortingHandler()?.(e)
-                    }
-                  }}
-                >
-                  <FlexRender header={header} />
-                  {#if header.column.getIsSorted() === 'asc'}
-                    {' '}🔼
-                  {:else if header.column.getIsSorted() === 'desc'}
-                    {' '}🔽
-                  {/if}
-                </div>
+                {#if header.column.id === 'select'}
+                  <input
+                    type="checkbox"
+                    checked={table.getIsAllRowsSelected()}
+                    use:setIndeterminate={!table.getIsAllRowsSelected() && table.getIsSomeRowsSelected()}
+                    onchange={table.getToggleAllRowsSelectedHandler()}
+                  />
+                {:else}
+                  <div
+                    class={header.column.getCanSort()
+                      ? 'sortable-header'
+                      : ''}
+                    role="button"
+                    tabindex="0"
+                    onclick={header.column.getToggleSortingHandler()}
+                    onkeydown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        header.column.getToggleSortingHandler()?.(e)
+                      }
+                    }}
+                  >
+                    <FlexRender header={header} />
+                    {#if header.column.getIsSorted() === 'asc'}
+                      {' '}🔼
+                    {:else if header.column.getIsSorted() === 'desc'}
+                      {' '}🔽
+                    {/if}
+                  </div>
+                {/if}
               </th>
             {/each}
           </tr>
@@ -177,7 +207,19 @@
           >
             {#each row.getAllCells() as cell (cell.id)}
               <td style="display: flex; width: {cell.column.getSize()}px;">
-                <FlexRender cell={cell} />
+                {#if cell.column.id === 'select'}
+                  <input
+                    type="checkbox"
+                    checked={row.getIsSelected()}
+                    disabled={!row.getCanSelect()}
+                    use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
+                    onchange={row.getToggleSelectedHandler({
+                      // selectChildren: false
+                    })}
+                  />
+                {:else}
+                  <FlexRender cell={cell} />
+                {/if}
               </td>
             {/each}
           </tr>
