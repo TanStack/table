@@ -58,7 +58,9 @@ function App() {
                 checked={row.getIsSelected()}
                 disabled={!row.getCanSelect()}
                 indeterminate={row.getIsSomeSelected()}
-                onChange={row.getToggleSelectedHandler()}
+                onChange={row.getToggleSelectedHandler({
+                  // selectChildren: false
+                })}
               />
             </div>
           ),
@@ -113,6 +115,8 @@ function App() {
       getRowId: (row) => row.id,
       enableRowSelection: true, // enable row selection for all rows
       // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
+      // enableRowRangeSelection: false,
+      // isRowRangeSelectionEvent: event => Boolean((event as React.MouseEvent).metaKey),
       debugTable: true,
     },
     (state) => state, // default selector
@@ -146,6 +150,7 @@ function App() {
           />
         </div>
         <div className="spacer-sm" />
+        <p>Hold Shift while selecting rows to select or deselect a range.</p>
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (

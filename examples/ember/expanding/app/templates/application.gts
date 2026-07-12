@@ -95,7 +95,9 @@ const getCanFilter = (column: Column<typeof features, Person>): boolean =>
 const toggleExpanded = (row: Row<typeof features, Person>) => () =>
   row.toggleExpanded()
 const toggleSelected = (row: Row<typeof features, Person>) => (event: Event) =>
-  row.getToggleSelectedHandler()(event)
+  row.getToggleSelectedHandler({
+    // selectChildren: false
+  })(event)
 const toggleSort =
   (column: Column<typeof features, Person>) => (event: Event) =>
     column.getToggleSortingHandler()?.(event)
@@ -362,7 +364,7 @@ export default class ExpandingTable extends Component {
                       type='checkbox'
                       checked={{getIsSelected row}}
                       indeterminate={{getIsSomeSelected row}}
-                      {{on 'change' (toggleSelected row)}}
+                      {{on 'click' (toggleSelected row)}}
                     />
                     {{#if (getCanExpand row)}}
                       <button {{on 'click' (toggleExpanded row)}}>

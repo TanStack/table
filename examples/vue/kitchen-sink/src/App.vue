@@ -637,7 +637,7 @@ function shuffleColumns() {
                     :checked="cell.row.getIsSelected()"
                     :disabled="!cell.row.getCanSelect()"
                     :indeterminate="cell.row.getIsSomeSelected()"
-                    @change="cell.row.getToggleSelectedHandler()?.($event)"
+                    @click="cell.row.getToggleSelectedHandler()?.($event)"
                   />
                   <button
                     class="pin-button"

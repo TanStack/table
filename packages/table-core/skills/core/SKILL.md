@@ -1,7 +1,7 @@
 ---
 name: core
 description: >
-  Use TanStack Table v9 as a headless data-grid state and row-processing engine. Load for first-table architecture, stable data and columns, semantic rendering, framework adapter choice, or deciding what Table owns versus the renderer.
+  Use TanStack Table v9 as a headless data-grid state and row-processing engine. Load for first-table architecture, stable data and columns, row numbering with getDisplayIndex, semantic rendering, framework adapter choice, or deciding what Table owns versus the renderer.
 metadata:
   type: core
   library: '@tanstack/table-core'
@@ -10,6 +10,7 @@ sources:
   - 'TanStack/table:docs/overview.md'
   - 'TanStack/table:docs/guide/tables.md'
   - 'TanStack/table:docs/guide/data.md'
+  - 'TanStack/table:docs/guide/rows.md'
   - 'TanStack/table:packages/table-core/src/index.ts'
 ---
 
@@ -68,6 +69,21 @@ const columns = helper.columns([helper.accessor('name', { header: 'Name' })])
 ```
 
 Define static inputs once and preserve query/store references when data has not changed.
+
+### Number rows in current display order
+
+```ts
+const rowNumberColumn = helper.display({
+  id: 'rowNumber',
+  header: '#',
+  cell: ({ row }) => {
+    const displayIndex = row.getDisplayIndex()
+    return displayIndex === -1 ? '' : displayIndex + 1
+  },
+})
+```
+
+`row.getDisplayIndex()` follows the current filtering, grouping, sorting, and expansion order before pagination. `row.index` remains the row's creation-time position within its parent array.
 
 ## Common Mistakes
 
@@ -134,6 +150,25 @@ row.getValue('name')
 V9 row, cell, column, and header methods use their instance as `this`.
 
 Source: `docs/framework/react/guide/migrating.md#instance-methods-must-be-called-on-their-instance`
+
+### [HIGH] Reading the display-index cache directly
+
+Wrong:
+
+```ts
+const rowNumber = row._displayIndexCache + 1
+```
+
+Correct:
+
+```ts
+const displayIndex = row.getDisplayIndex()
+const rowNumber = displayIndex === -1 ? undefined : displayIndex + 1
+```
+
+`_displayIndexCache` is internal and may be stale until display order is recomputed. The public method refreshes display order, validates that the cached slot still contains the row, and returns `-1` when it does not.
+
+Source: `docs/guide/rows.md#row-numbers-and-display-indexes`, `packages/table-core/src/core/rows/coreRowsFeature.utils.ts`
 
 ## API Discovery
 

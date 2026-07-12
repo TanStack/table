@@ -579,6 +579,11 @@ If you were accessing this internal API, you can now use it without the undersco
 
 ### Row Selection API Changes
 
+> [!WARNING]
+> **Minor breaking change:** `row.getToggleSelectedHandler()` now enables inclusive Shift range selection by default when `rowSelectionFeature` is enabled. Existing checkboxes or rows wired through this handler establish an anchor on an ordinary interaction and select or deselect the current display-order range on a Shift interaction. Direct `row.toggleSelected()` calls are unchanged.
+>
+> Set `enableRowRangeSelection: false` to preserve the previous non-range handler behavior. The handler must receive an event that exposes Shift directly or through `nativeEvent`; see [Shift Range Selection](./row-selection.md#shift-range-selection).
+
 The "some rows selected" checks were simplified to mean "at least one row is selected":
 
 | API                                 | v8                                                  | v9                                            |

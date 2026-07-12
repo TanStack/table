@@ -246,13 +246,14 @@ options as plain resolved data instead of backing them with an atom.
 reset: () => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L234)
+Defined in: [core/table/coreTablesFeature.types.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L235)
 
 Resets the table's internal base atoms to `table.initialState`.
 
 Prefer feature-specific reset APIs, such as `resetPagination`, when a state
 slice may be owned by an external atom or needs that feature's blank/default
-reset behavior.
+reset behavior. After resetting internal atoms, this also invokes feature
+reset hooks for mutable, transient table-instance data.
 
 #### Returns
 
@@ -266,7 +267,7 @@ reset behavior.
 setOptions: (newOptions) => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:239](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L239)
+Defined in: [core/table/coreTablesFeature.types.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L240)
 
 Updates the table options by applying a value or updater to the current
 resolved options and then merging them through `options.mergeOptions`.

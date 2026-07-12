@@ -186,14 +186,15 @@ mutable data.
 optional constructTableAPIs: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:374](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L374)
+Defined in: [types/TableFeatures.ts:375](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L375)
 
 Adds feature APIs directly to the table instance.
 
 The table is a singleton, unlike rows, columns, headers, and cells, so
 table APIs are assigned directly instead of through a shared prototype.
-This runs while the table is being constructed, after options and initial
-state have been resolved.
+This hook is exclusively for assigning table methods. It runs after
+options, state atoms, and the store have been created and after every
+feature's `initTableInstanceData` hook has completed.
 
 #### Type Parameters
 
@@ -223,7 +224,7 @@ state have been resolved.
 optional getDefaultColumnDef: <TFeatures, TData, TValue>() => ColumnDefBase_All<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/TableFeatures.ts:384](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L384)
+Defined in: [types/TableFeatures.ts:385](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L385)
 
 Returns default column definition options contributed by this feature.
 
@@ -257,7 +258,7 @@ resolved, so users can override values supplied here.
 optional getDefaultTableOptions: <TFeatures, TData>(table) => Partial<TableOptions_All<TFeatures, TData>>;
 ```
 
-Defined in: [types/TableFeatures.ts:397](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L397)
+Defined in: [types/TableFeatures.ts:398](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L398)
 
 Returns default table options contributed by this feature.
 
@@ -294,7 +295,7 @@ here.
 optional getInitialState: (initialState) => TableState_All;
 ```
 
-Defined in: [types/TableFeatures.ts:411](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L411)
+Defined in: [types/TableFeatures.ts:412](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L412)
 
 Returns this feature's initial table state.
 
@@ -321,7 +322,7 @@ override feature defaults.
 optional initColumnInstanceData: <TFeatures, TData, TValue>(column) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:420](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L420)
+Defined in: [types/TableFeatures.ts:437](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L437)
 
 Initializes instance-specific data on each column.
 
@@ -362,7 +363,7 @@ methods should be assigned via `assignColumnPrototype` instead.
 optional initRowInstanceData: <TFeatures, TData>(row) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:435](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L435)
+Defined in: [types/TableFeatures.ts:452](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L452)
 
 Initializes instance-specific data on each row.
 
@@ -386,6 +387,81 @@ should be assigned via `assignRowPrototype` instead.
 ##### row
 
 [`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`
+
+***
+
+### initTableInstanceData()?
+
+```ts
+optional initTableInstanceData: <TFeatures, TData>(table) => void;
+```
+
+Defined in: [types/TableFeatures.ts:423](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L423)
+
+Initializes mutable, non-reactive data owned by this feature on the table
+instance.
+
+This runs once during table construction after options, state atoms, and
+the store are available, and before any feature's `constructTableAPIs`
+hook runs. Use `constructTableAPIs` exclusively for assigning table
+methods. Table resets do not rerun this hook; use
+`resetTableInstanceData` to clear transient instance data instead.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
+
+#### Returns
+
+`void`
+
+***
+
+### resetTableInstanceData()?
+
+```ts
+optional resetTableInstanceData: <TFeatures, TData>(table) => void;
+```
+
+Defined in: [types/TableFeatures.ts:465](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L465)
+
+Resets mutable, non-reactive table-instance data owned by this feature.
+
+This runs after internally owned state atoms have been restored to
+`table.initialState` by `table.reset()`. It is intended for transient
+feature data, not table state slices or externally controlled state.
+
+#### Type Parameters
+
+##### TFeatures
+
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+
+##### TData
+
+`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+
+#### Parameters
+
+##### table
+
+[`Table_Internal`](Table_Internal.md)\<`TFeatures`, `TData`\>
 
 #### Returns
 

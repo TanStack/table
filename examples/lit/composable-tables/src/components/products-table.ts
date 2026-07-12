@@ -24,7 +24,7 @@ const columns = productColumnHelper.columns([
     cell: ({ row }) => html`
       <input
         type="checkbox"
-        @change=${row.getToggleSelectedHandler()}
+        @click=${row.getToggleSelectedHandler()}
         .checked=${row.getIsSelected()}
         ?disabled=${!row.getCanSelect()}
         .indeterminate=${row.getIsSomeSelected()}

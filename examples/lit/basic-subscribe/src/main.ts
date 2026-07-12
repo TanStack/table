@@ -75,7 +75,7 @@ const columns = columnHelper.columns([
             type="checkbox"
             .checked=${!!isRowSelected}
             ?disabled=${!row.getCanSelect()}
-            @change=${row.getToggleSelectedHandler()}
+            @click=${row.getToggleSelectedHandler()}
           />
         `,
       ),

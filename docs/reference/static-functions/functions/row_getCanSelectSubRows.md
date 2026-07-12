@@ -9,7 +9,7 @@ title: row_getCanSelectSubRows
 function row_getCanSelectSubRows<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:607](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L607)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:610](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L610)
 
 Checks whether selecting this row should also select its subRows.
 

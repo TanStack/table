@@ -174,7 +174,9 @@
                   checked={row.getIsSelected()}
                   disabled={!row.getCanSelect()}
                   use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
-                  onchange={row.getToggleSelectedHandler()}
+                  onclick={row.getToggleSelectedHandler({
+                    // selectChildren: false
+                  })}
                   class="sortable-header"
                 />
               {:else}

@@ -52,6 +52,12 @@ export interface TableFeature {
   constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData>,
   ) => void
+  initTableInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    table: Table_Internal<TFeatures, TData>,
+  ) => void
   getDefaultColumnDef?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
@@ -69,6 +75,12 @@ export interface TableFeature {
     TData extends RowData,
   >(
     row: Row<TFeatures, TData>,
+  ) => void
+  resetTableInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    table: Table_Internal<TFeatures, TData>,
   ) => void
 }
 ```
@@ -99,9 +111,19 @@ The `getInitialState` method in a table feature is responsible for setting the d
 
 <br />
 
+#### initTableInstanceData and resetTableInstanceData
+
+Use `initTableInstanceData` for mutable, non-reactive data that belongs to one table instance, such as an interaction anchor or an imperative cache. It runs once after table options, state atoms, and the store have been created. Every feature's initialization hook runs before any feature's `constructTableAPIs` hook.
+
+Use `resetTableInstanceData` to clear that transient data when `table.reset()` runs. Reset hooks run after internally owned table state atoms have been restored to `table.initialState`. They do not reset table state slices or externally controlled state, and `table.reset()` does not rerun `initTableInstanceData`.
+
+Keep API assignment in `constructTableAPIs`; initialization and reset hooks are for data owned by the feature.
+
+<br />
+
 #### constructTableAPIs
 
-The `constructTableAPIs` method in a table feature is responsible for adding methods to the `table` instance. For example, in the [Row Selection](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature, the `constructTableAPIs` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
+The `constructTableAPIs` method in a table feature is exclusively responsible for adding methods to the `table` instance. It runs after all feature-owned table instance data has been initialized. For example, in the [Row Selection](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-selection/rowSelectionFeature.ts) feature, the `constructTableAPIs` method adds many table instance API methods such as `toggleAllRowsSelected`, `getIsAllRowsSelected`, `getIsSomeRowsSelected`, etc. So then, when you call `table.toggleAllRowsSelected()`, you are calling a method that was added to the table instance by the `rowSelectionFeature` feature.
 
 <br />
 

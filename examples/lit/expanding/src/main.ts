@@ -38,14 +38,14 @@ const features = tableFeatures({
 function indeterminateCheckbox(options: {
   checked: boolean
   indeterminate: boolean
-  onChange: (e: Event) => void
+  onClick: (e: Event) => void
 }) {
   return html`
     <input
       type="checkbox"
       .checked="${options.checked}"
       .indeterminate="${!options.checked && options.indeterminate}"
-      @change="${options.onChange}"
+      @click="${options.onClick}"
       style="cursor: pointer"
     />
   `
@@ -118,7 +118,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
       ${indeterminateCheckbox({
         checked: table.getIsAllRowsSelected(),
         indeterminate: table.getIsSomeRowsSelected(),
-        onChange: table.getToggleAllRowsSelectedHandler(),
+        onClick: table.getToggleAllRowsSelectedHandler(),
       })}
       <button @click="${table.getToggleAllRowsExpandedHandler()}">
         ${table.getIsAllRowsExpanded() ? '👇' : '👉'}
@@ -132,7 +132,9 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
             row.getIsSelected() ||
             (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected()),
           indeterminate: row.getIsSomeSelected(),
-          onChange: row.getToggleSelectedHandler(),
+          onClick: row.getToggleSelectedHandler({
+            // selectChildren: false
+          }),
         })}
         ${row.getCanExpand()
           ? html`<button

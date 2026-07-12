@@ -102,3 +102,25 @@ test('renders the table without crashing', async ({ page }) => {
     await server.close()
   }
 })
+
+test('selects an inclusive row range with Shift-click', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = getTable(page)
+    const rowCheckboxes = getBodyRows(table).locator('input[type="checkbox"]')
+
+    await expect(rowCheckboxes.nth(2)).toBeVisible()
+
+    await rowCheckboxes.nth(0).click()
+    await rowCheckboxes.nth(2).click({ modifiers: ['Shift'] })
+
+    await expect(rowCheckboxes.nth(0)).toBeChecked()
+    await expect(rowCheckboxes.nth(1)).toBeChecked()
+    await expect(rowCheckboxes.nth(2)).toBeChecked()
+    await expect(rowCheckboxes.nth(3)).not.toBeChecked()
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

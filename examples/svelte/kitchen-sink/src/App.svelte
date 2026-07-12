@@ -523,7 +523,7 @@
                       checked={cell.row.getIsSelected()}
                       disabled={!cell.row.getCanSelect()}
                       indeterminate={cell.row.getIsSomeSelected()}
-                      onchange={cell.row.getToggleSelectedHandler()}
+                      onclick={cell.row.getToggleSelectedHandler()}
                     />{' '}
                     <button
                       class="pin-button"

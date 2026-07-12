@@ -177,6 +177,37 @@ readonly table = injectTable(() => ({
 }))
 ```
 
+### Shift Range Selection
+
+`row.getToggleSelectedHandler()` supports Shift range selection by default. After an ordinary selectable-row interaction establishes an anchor, Shift-selecting another row selects or deselects the inclusive interval between them. The clicked checkbox's resulting checked value controls the whole range, and the clicked endpoint becomes the anchor for the next Shift interaction.
+
+The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
+
+Bind an Angular checkbox handler with `(click)`, not `(change)`, so the handler receives the click event and its `shiftKey` modifier.
+
+```ts
+readonly table = injectTable(() => ({
+  // ...
+  enableRowRangeSelection: false,
+
+  // For example, use the platform modifier instead of Shift:
+  // isRowRangeSelectionEvent: event =>
+  //   Boolean((event as { metaKey?: boolean }).metaKey),
+}))
+```
+
+Range selection follows the table's current logical display order, including filtering, grouping, sorting, and expansion. With client-side pagination, ranges can cross pages because the complete pre-pagination order is used. With manual/server pagination, only rows loaded in the current `data` can participate.
+
+By default, a parent encountered in a range recursively toggles its selectable descendants when sub-row selection is enabled. Pass `selectChildren: false` when only rows explicitly present in the display-order interval should change:
+
+```ts
+const handler = row.getToggleSelectedHandler({
+  selectChildren: false,
+})
+```
+
+The interaction anchor is preserved across sorting, filtering, grouping, expansion, pagination, and data updates while its row id remains in the display order. If filtering or data replacement removes the anchor, the next Shift interaction falls back to an ordinary row toggle and establishes a new anchor. `resetRowSelection`, either select-all API, and `table.reset()` clear the anchor. Direct calls to `row.toggleSelected()` or `table.setRowSelection()`, and external controlled-state changes, do not establish or move it.
+
 ### Render Row Selection UI
 
 TanStack table does not dictate how you should render your row selection UI. You can use checkboxes, radio buttons, or simply hook up click events to the row itself. The table instance provides a few APIs to help you render your row selection UI.
@@ -204,7 +235,7 @@ If you need more granular control over these function handlers, you can always j
   [checked]="row.getIsSelected()"
   [disabled]="!row.getCanSelect()"
   [indeterminate]="row.getIsSomeSelected()"
-  (change)="row.getToggleSelectedHandler()?.($event)"
+  (click)="row.getToggleSelectedHandler()?.($event)"
 />
 ```
 

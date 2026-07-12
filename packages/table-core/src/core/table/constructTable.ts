@@ -166,6 +166,10 @@ export function constructTable<
     ),
   )
 
+  for (let i = 0; i < featuresList.length; i++) {
+    featuresList[i]!.initTableInstanceData?.(table)
+  }
+
   if (
     process.env.NODE_ENV === 'development' &&
     (tableOptions.debugAll || tableOptions.debugTable)

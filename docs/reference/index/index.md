@@ -171,6 +171,7 @@ title: index
 - [TableState\_RowPinning](interfaces/TableState_RowPinning.md)
 - [TableState\_RowSelection](interfaces/TableState_RowSelection.md)
 - [TableState\_RowSorting](interfaces/TableState_RowSorting.md)
+- [ToggleSelectedOptions](interfaces/ToggleSelectedOptions.md)
 
 ## Type Aliases
 

@@ -37,7 +37,9 @@ const columns = columnHelper.columns([
             checked={row.getIsSelected()}
             disabled={!row.getCanSelect()}
             indeterminate={row.getIsSomeSelected()}
-            onChange={row.getToggleSelectedHandler()}
+            onClick={row.getToggleSelectedHandler({
+              // selectChildren: false
+            })}
           ></IndeterminateCheckbox>
           {/* @ts-ignore */}
         </div>

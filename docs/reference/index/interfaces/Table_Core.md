@@ -718,7 +718,7 @@ Table_RowModels.getPreSortedRowModel
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L134)
+Defined in: [core/rows/coreRowsFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L145)
 
 Returns the row with the given ID.
 
@@ -748,7 +748,7 @@ Returns the row with the given ID.
 getRowId: (_, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L130)
+Defined in: [core/rows/coreRowsFeature.types.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L141)
 
 #### Parameters
 
@@ -802,7 +802,7 @@ Table_RowModels.getRowModel
 getRowsInDisplayOrder: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L129)
+Defined in: [core/rows/coreRowsFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L140)
 
 Returns the rows in the current display order and assigns their display
 indexes. When expanded rows bypass pagination, expanded descendants are
@@ -897,13 +897,14 @@ options as plain resolved data instead of backing them with an atom.
 reset: () => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L234)
+Defined in: [core/table/coreTablesFeature.types.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L235)
 
 Resets the table's internal base atoms to `table.initialState`.
 
 Prefer feature-specific reset APIs, such as `resetPagination`, when a state
 slice may be owned by an external atom or needs that feature's blank/default
-reset behavior.
+reset behavior. After resetting internal atoms, this also invokes feature
+reset hooks for mutable, transient table-instance data.
 
 #### Returns
 
@@ -921,7 +922,7 @@ reset behavior.
 setOptions: (newOptions) => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:239](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L239)
+Defined in: [core/table/coreTablesFeature.types.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L240)
 
 Updates the table options by applying a value or updater to the current
 resolved options and then merging them through `options.mergeOptions`.

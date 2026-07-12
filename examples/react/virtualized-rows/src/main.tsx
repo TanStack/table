@@ -7,18 +7,21 @@ import {
   columnSizingFeature,
   createColumnHelper,
   createSortedRowModel,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   useTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { makeData } from './makeData'
+import type { HTMLProps } from 'react'
 import type { ReactTable, Row } from '@tanstack/react-table'
 import type { VirtualItem, Virtualizer } from '@tanstack/react-virtual'
 import type { Person } from './makeData'
 
 const features = {
   columnSizingFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   sortFns,
@@ -31,6 +34,27 @@ function App() {
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
+        columnHelper.display({
+          id: 'select',
+          header: ({ table }) => (
+            <IndeterminateCheckbox
+              checked={table.getIsAllRowsSelected()}
+              indeterminate={table.getIsSomeRowsSelected()}
+              onChange={table.getToggleAllRowsSelectedHandler()}
+            />
+          ),
+          cell: ({ row }) => (
+            <IndeterminateCheckbox
+              checked={row.getIsSelected()}
+              disabled={!row.getCanSelect()}
+              indeterminate={row.getIsSomeSelected()}
+              onChange={row.getToggleSelectedHandler({
+                // selectChildren: false
+              })}
+            />
+          ),
+          size: 40,
+        }),
         columnHelper.accessor('id', {
           header: 'ID',
           size: 60,
@@ -85,6 +109,7 @@ function App() {
       features,
       columns,
       data,
+      getRowId: (row) => String(row.id),
       debugTable: true,
     },
     (state) => state, // default selector
@@ -102,6 +127,8 @@ function App() {
           </p>
         ) : null}
         ({data.length.toLocaleString()} rows)
+        <p>Hold Shift while selecting rows to select or deselect a range.</p>
+        <p>{table.getSelectedRowIds().length.toLocaleString()} rows selected</p>
         <div>
           <button onClick={refreshData}>Regenerate Data</button>
           <button onClick={stressTest}>Stress Test (1M rows)</button>
@@ -166,7 +193,6 @@ function App() {
           </table>
         </div>
       </div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
     </>
   )
 }
@@ -260,6 +286,29 @@ function TableBodyRow({
         )
       })}
     </tr>
+  )
+}
+
+function IndeterminateCheckbox({
+  indeterminate,
+  className = '',
+  ...rest
+}: { indeterminate?: boolean } & HTMLProps<HTMLInputElement>) {
+  const ref = React.useRef<HTMLInputElement>(null!)
+
+  React.useEffect(() => {
+    if (typeof indeterminate === 'boolean') {
+      ref.current.indeterminate = !rest.checked && indeterminate
+    }
+  }, [indeterminate, rest.checked])
+
+  return (
+    <input
+      type="checkbox"
+      ref={ref}
+      className={className + ' sortable-header'}
+      {...rest}
+    />
   )
 }
 

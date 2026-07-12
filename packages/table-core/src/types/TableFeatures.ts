@@ -368,8 +368,9 @@ export interface TableFeature {
    *
    * The table is a singleton, unlike rows, columns, headers, and cells, so
    * table APIs are assigned directly instead of through a shared prototype.
-   * This runs while the table is being constructed, after options and initial
-   * state have been resolved.
+   * This hook is exclusively for assigning table methods. It runs after
+   * options, state atoms, and the store have been created and after every
+   * feature's `initTableInstanceData` hook has completed.
    */
   constructTableAPIs?: <TFeatures extends TableFeatures, TData extends RowData>(
     table: Table_Internal<TFeatures, TData>,
@@ -410,6 +411,22 @@ export interface TableFeature {
    */
   getInitialState?: (initialState: Partial<TableState_All>) => TableState_All
   /**
+   * Initializes mutable, non-reactive data owned by this feature on the table
+   * instance.
+   *
+   * This runs once during table construction after options, state atoms, and
+   * the store are available, and before any feature's `constructTableAPIs`
+   * hook runs. Use `constructTableAPIs` exclusively for assigning table
+   * methods. Table resets do not rerun this hook; use
+   * `resetTableInstanceData` to clear transient instance data instead.
+   */
+  initTableInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    table: Table_Internal<TFeatures, TData>,
+  ) => void
+  /**
    * Initializes instance-specific data on each column.
    *
    * This runs for every constructed column after core column fields such as
@@ -437,5 +454,18 @@ export interface TableFeature {
     TData extends RowData,
   >(
     row: Row<TFeatures, TData>,
+  ) => void
+  /**
+   * Resets mutable, non-reactive table-instance data owned by this feature.
+   *
+   * This runs after internally owned state atoms have been restored to
+   * `table.initialState` by `table.reset()`. It is intended for transient
+   * feature data, not table state slices or externally controlled state.
+   */
+  resetTableInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    table: Table_Internal<TFeatures, TData>,
   ) => void
 }

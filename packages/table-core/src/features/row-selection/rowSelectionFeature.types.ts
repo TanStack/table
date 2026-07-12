@@ -5,6 +5,17 @@ import type { Row } from '../../types/Row'
 
 export type RowSelectionState = Record<string, true>
 
+/**
+ * Controls how toggling a row affects its descendants.
+ */
+export interface ToggleSelectedOptions {
+  /**
+   * Whether selectable child rows should be toggled recursively. Defaults to
+   * `true`.
+   */
+  selectChildren?: boolean
+}
+
 export interface TableState_RowSelection {
   rowSelection: RowSelectionState
 }
@@ -13,6 +24,11 @@ export interface TableOptions_RowSelection<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  /**
+   * Enables inclusive row range selection through
+   * `row.getToggleSelectedHandler()`. Defaults to `true`.
+   */
+  enableRowRangeSelection?: boolean
   /**
    * Allows rows to be selected alongside other rows.
    *
@@ -33,6 +49,14 @@ export interface TableOptions_RowSelection<
    */
   enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
+   * Determines whether a row-selection handler event should select or
+   * deselect the inclusive range from the most recent handler interaction.
+   *
+   * By default, events with `shiftKey` directly on the event or on
+   * `event.nativeEvent` are treated as range-selection events.
+   */
+  isRowRangeSelectionEvent?: (event: unknown) => boolean
+  /**
    * Called with an updater when row selection state changes. Pair this with
    * `state.rowSelection` when using external state; external atoms can own the
    * slice without this callback.
@@ -44,7 +68,6 @@ export interface TableOptions_RowSelection<
   //       row: Row<TFeatures, TData>
   //     ) => boolean)
   // isAdditiveSelectEvent?: (e: unknown) => boolean
-  // isInclusiveSelectEvent?: (e: unknown) => boolean
   // selectRowsFn?: (
   //   table: Table<TFeatures, TData>,
   //   rowModel: RowModel<TFeatures, TData>
@@ -78,18 +101,29 @@ export interface Row_RowSelection {
   getIsSomeSelected: () => boolean
   /**
    * Creates a checkbox-style handler that toggles this row's selected state.
+   * Pass the original checkbox click event, or a framework event whose
+   * `nativeEvent` is that click, so Shift range selection can detect the
+   * modifier key.
    */
-  getToggleSelectedHandler: () => (event: unknown) => void
+  getToggleSelectedHandler: (
+    opts?: ToggleSelectedOptions,
+  ) => (event: unknown) => void
   /**
    * Selects/deselects the row.
    */
-  toggleSelected: (value?: boolean, opts?: { selectChildren?: boolean }) => void
+  toggleSelected: (value?: boolean, opts?: ToggleSelectedOptions) => void
 }
 
 export interface Table_RowSelection<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  /**
+   * The most recent row interacted with through the row selection handler.
+   *
+   * @internal
+   */
+  _lastSelectedRowId: string | null
   /**
    * Builds a selected-row model from rows after filtering.
    */

@@ -4,6 +4,8 @@
     rendering performance will be slightly degraded until this application is built for production.
   </p>
   ({{ data().length.toLocaleString() }} rows)
+  <p>Hold Shift while selecting rows to select or deselect a range.</p>
+  <p>{{ table.getSelectedRowIds().length.toLocaleString() }} rows selected</p>
   <div>
     <button (click)="refreshData()">Regenerate Data</button>
     <button (click)="stressTest()">Stress Test (1M rows)</button>
@@ -19,7 +21,14 @@
                 style="align-items: center; display: flex; height: 34px"
                 [style.width.px]="header.getSize()"
               >
-                @if (!header.isPlaceholder) {
+                @if (header.column.id === 'select') {
+                  <input
+                    type="checkbox"
+                    [checked]="table.getIsAllRowsSelected()"
+                    [indeterminate]="table.getIsSomeRowsSelected()"
+                    (change)="table.getToggleAllRowsSelectedHandler()($event)"
+                  />
+                } @else if (!header.isPlaceholder) {
                   <div
                     [class.sortable-header]="header.column.getCanSort()"
                     (click)="header.column.getToggleSortingHandler()?.($event)"
@@ -45,9 +54,19 @@
           >
             @for (cell of row.getAllCells(); track cell.id) {
               <td style="display: flex" [style.width.px]="cell.column.getSize()">
-                <ng-container *flexRenderCell="cell; let renderCell">
-                  {{ renderCell }}
-                </ng-container>
+                @if (cell.column.id === 'select') {
+                  <input
+                    type="checkbox"
+                    [checked]="row.getIsSelected()"
+                    [disabled]="!row.getCanSelect()"
+                    [indeterminate]="row.getIsSomeSelected()"
+                    (click)="toggleSelected(row, $event)"
+                  />
+                } @else {
+                  <ng-container *flexRenderCell="cell; let renderCell">
+                    {{ renderCell }}
+                  </ng-container>
+                }
               </td>
             }
           </tr>
@@ -56,4 +75,3 @@
     </table>
   </div>
 </div>
-<pre>{{ stringifiedState() }}</pre>

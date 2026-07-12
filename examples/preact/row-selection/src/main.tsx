@@ -62,7 +62,9 @@ function App() {
                 checked={row.getIsSelected()}
                 disabled={!row.getCanSelect()}
                 indeterminate={row.getIsSomeSelected()}
-                onChange={row.getToggleSelectedHandler()}
+                onClick={row.getToggleSelectedHandler({
+                  // selectChildren: false
+                })}
               />
             </div>
           ),

@@ -10,7 +10,10 @@ import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table_Internal } from '../../types/Table'
 import type { Row } from '../../types/Row'
-import type { RowSelectionState } from './rowSelectionFeature.types'
+import type {
+  RowSelectionState,
+  ToggleSelectedOptions,
+} from './rowSelectionFeature.types'
 
 // State APIs
 
@@ -66,6 +69,8 @@ export function table_resetRowSelection<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, defaultState?: boolean) {
+  // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
+  table._lastSelectedRowId = null
   table_setRowSelection(
     table,
     defaultState
@@ -98,6 +103,8 @@ export function table_toggleAllRowsSelected<
   value?: boolean,
   opts?: { deselectAll?: boolean },
 ) {
+  // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
+  table._lastSelectedRowId = null
   table_setRowSelection(table, (old) => {
     value =
       typeof value !== 'undefined'
@@ -153,6 +160,8 @@ export function table_toggleAllPageRowsSelected<
   value?: boolean,
   opts?: { deselectAll?: boolean },
 ) {
+  // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
+  table._lastSelectedRowId = null
   table_setRowSelection(table, (old) => {
     const resolvedValue =
       typeof value !== 'undefined'
@@ -492,13 +501,7 @@ export function table_getToggleAllPageRowsSelectedHandler<
 export function row_toggleSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  value?: boolean,
-  opts?: {
-    selectChildren?: boolean
-  },
-) {
+>(row: Row<TFeatures, TData>, value?: boolean, opts?: ToggleSelectedOptions) {
   const isSelected = row_getIsSelected(row)
 
   table_setRowSelection(row.table, (old) => {
@@ -643,7 +646,11 @@ export function row_getCanMultiSelect<
  * Creates a checkbox-style handler that selects or deselects this row.
  *
  * The handler is a no-op when the row cannot be selected and reads
- * `event.target.checked`.
+ * `event.target.checked`. Shift events select or deselect the inclusive range
+ * from the most recent selectable row handled by this table. The event's
+ * optional `persist()` method is called before it is read. Pass
+ * `selectChildren: false` to limit changes to rows explicitly present in the
+ * display-order interval.
  *
  * @example
  * ```ts
@@ -653,16 +660,109 @@ export function row_getCanMultiSelect<
 export function row_getToggleSelectedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(row: Row<TFeatures, TData>) {
+>(row: Row<TFeatures, TData>, opts?: ToggleSelectedOptions) {
   const canSelect = row_getCanSelect(row)
 
   return (e: unknown) => {
     if (!canSelect) return
-    row_toggleSelected(
-      row,
-      ((e as MouseEvent).target as HTMLInputElement).checked,
-    )
+
+    const event = e as {
+      persist?: () => void
+      target: { checked: boolean }
+    }
+    event.persist?.()
+
+    const table = row.table
+    const checked = event.target.checked
+    // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
+    const anchorId = table._lastSelectedRowId
+    const canSelectRange =
+      table.options.enableRowRangeSelection !== false &&
+      anchorId !== null &&
+      row_getCanMultiSelect(row) &&
+      (table.options.isRowRangeSelectionEvent?.(e) ?? false)
+
+    if (
+      !canSelectRange ||
+      !selectRowRange(row, anchorId, checked, opts?.selectChildren ?? true)
+    ) {
+      row_toggleSelected(row, checked, opts)
+    }
+
+    // @ts-ignore - _lastSelectedRowId is part of the RowSelection feature
+    table._lastSelectedRowId = row.id
   }
+}
+
+/**
+ * Resolves and mutates an inclusive interval in the table's latest logical
+ * display order.
+ *
+ * The anchor is resolved without throwing from the pre-pagination row model,
+ * then the core row model. Both endpoint display indexes must still identify
+ * those rows in the current order and both endpoints must support
+ * multi-selection. Eligible interval rows are applied through one row
+ * selection updater; non-selectable and non-multi-selectable rows are skipped.
+ * Returns `false` when the interaction should fall back to an ordinary toggle.
+ */
+function selectRowRange<TFeatures extends TableFeatures, TData extends RowData>(
+  row: Row<TFeatures, TData>,
+  anchorId: string,
+  value: boolean,
+  includeChildren: boolean,
+): boolean {
+  const table = row.table
+  const rows = table.getRowsInDisplayOrder()
+  const anchorRow =
+    table.getPrePaginatedRowModel().rowsById[anchorId] ??
+    table.getCoreRowModel().rowsById[anchorId]
+
+  if (!anchorRow) {
+    return false
+  }
+
+  const anchorIndex = anchorRow.getDisplayIndex()
+  const rowIndex = row.getDisplayIndex()
+  const anchorAtIndex = rows[anchorIndex]
+  const rowAtIndex = rows[rowIndex]
+
+  if (
+    anchorIndex < 0 ||
+    rowIndex < 0 ||
+    anchorIndex >= rows.length ||
+    rowIndex >= rows.length ||
+    anchorAtIndex?.id !== anchorRow.id ||
+    rowAtIndex?.id !== row.id ||
+    !row_getCanMultiSelect(anchorRow) ||
+    !row_getCanMultiSelect(row)
+  ) {
+    return false
+  }
+
+  const start = Math.min(anchorIndex, rowIndex)
+  const end = Math.max(anchorIndex, rowIndex)
+
+  table_setRowSelection(table, (old) => {
+    const rowSelection = Object.assign(makeObjectMap<true>(), old)
+
+    for (let index = start; index <= end; index++) {
+      const rangeRow = rows[index]!
+      if (!row_getCanSelect(rangeRow) || !row_getCanMultiSelect(rangeRow)) {
+        continue
+      }
+      mutateRowIsSelected(
+        rowSelection,
+        rangeRow.id,
+        value,
+        includeChildren,
+        table,
+      )
+    }
+
+    return rowSelection
+  })
+
+  return true
 }
 
 const mutateRowIsSelected = <
