@@ -139,6 +139,11 @@ There are several column API methods that are useful for rendering column visibi
 - `column.getToggleVisibilityHandler` - Shortcut for hooking up the `column.toggleVisibility` method to a UI event handler.
 
 ```tsx
+const columnLabels: Record<string, string> = {
+  firstName: 'First Name',
+  lastName: 'Last Name',
+}
+
 {
   table.getAllColumns().map((column) => (
     <label key={column.id}>
@@ -148,11 +153,20 @@ There are several column API methods that are useful for rendering column visibi
         onChange={column.getToggleVisibilityHandler()}
         type="checkbox"
       />
-      {column.columnDef.header}
+      {columnLabels[column.id] ?? column.id}
     </label>
   ))
 }
 ```
+
+> **Note**: `column.columnDef.header` is a header render template. It can be a
+> string, JSX, or a function that needs a header context and should be rendered
+> with `flexRender` when you are rendering actual table headers. A column
+> visibility menu is usually rendering columns rather than header objects, and a
+> hidden column may not have an active header context. For visibility toggles,
+> prefer a stable text label such as a custom map of labels keyed by column ID,
+> typed `columnDef.meta` (for example `column.columnDef.meta.label`), or
+> `column.id`.
 
 ### Column Visibility Aware Table APIs
 
