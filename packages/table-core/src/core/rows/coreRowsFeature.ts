@@ -10,8 +10,8 @@ import {
   row_getValue,
   row_renderValue,
   table_getRow,
-  table_getRowDisplayIndexRows,
   table_getRowId,
+  table_getRowsInDisplayOrder,
 } from './coreRowsFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 
@@ -55,8 +55,8 @@ export const coreRowsFeature: TableFeature = {
   },
   constructTableAPIs: (table) => {
     assignTableAPIs('coreRowsFeature', table, {
-      table_getRowDisplayIndexRows: {
-        fn: () => table_getRowDisplayIndexRows(table),
+      table_getRowsInDisplayOrder: {
+        fn: () => table_getRowsInDisplayOrder(table),
         memoDeps: () => [
           table.getPrePaginatedRowModel().rows,
           table.options.paginateExpandedRows,

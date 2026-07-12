@@ -126,7 +126,7 @@ export interface Table_Rows<
    * included in this order. This is the memoized source for
    * `row.getDisplayIndex()`.
    */
-  getRowDisplayIndexRows: () => Array<Row<TFeatures, TData>>
+  getRowsInDisplayOrder: () => Array<Row<TFeatures, TData>>
   getRowId: (_: TData, index: number, parent?: Row<TFeatures, TData>) => string
   /**
    * Returns the row with the given ID.

@@ -40,7 +40,7 @@ describe('row model fallback chains', () => {
     expect(coreRowModel.rows.map((row) => row._displayIndexCache)).toEqual([
       -1, -1, -1,
     ])
-    expect(table.getRowDisplayIndexRows()).toBe(coreRowModel.rows)
+    expect(table.getRowsInDisplayOrder()).toBe(coreRowModel.rows)
     expect(coreRowModel.rows.map((row) => row.getDisplayIndex())).toEqual([
       0, 1, 2,
     ])

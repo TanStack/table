@@ -15,7 +15,7 @@ export function row_getDisplayIndex<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  const rows = row.table.getRowDisplayIndexRows()
+  const rows = row.table.getRowsInDisplayOrder()
   const displayIndex = row._displayIndexCache
 
   return rows[displayIndex] === row ? displayIndex : -1
@@ -29,7 +29,7 @@ export function row_getDisplayIndex<
  * the returned order even though they are absent from the pre-pagination row
  * model.
  */
-export function table_getRowDisplayIndexRows<
+export function table_getRowsInDisplayOrder<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {

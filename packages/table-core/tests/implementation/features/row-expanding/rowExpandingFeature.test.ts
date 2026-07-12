@@ -74,7 +74,7 @@ describe('row expanding feature', () => {
     const table = createTable({ paginateExpandedRows: false })
 
     expect(table.getRowModel().rows.map((row) => row.id)).toEqual(['0'])
-    expect(table.getRowDisplayIndexRows().map((row) => row.id)).toEqual([
+    expect(table.getRowsInDisplayOrder().map((row) => row.id)).toEqual([
       '0',
       '1',
     ])
@@ -83,7 +83,7 @@ describe('row expanding feature', () => {
 
     expect(table.atoms.expanded.get()).toEqual({ 0: true })
     expect(table.getRowModel().rows.map((row) => row.id)).toEqual(['0', '0.0'])
-    expect(table.getRowDisplayIndexRows().map((row) => row.id)).toEqual([
+    expect(table.getRowsInDisplayOrder().map((row) => row.id)).toEqual([
       '0',
       '0.0',
       '1',
@@ -99,7 +99,7 @@ describe('row expanding feature', () => {
 
     table.getRow('0').toggleExpanded()
 
-    expect(table.getRowDisplayIndexRows().map((row) => row.id)).toEqual([
+    expect(table.getRowsInDisplayOrder().map((row) => row.id)).toEqual([
       '0',
       '1',
     ])
