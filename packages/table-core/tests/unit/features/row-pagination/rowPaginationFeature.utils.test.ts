@@ -447,6 +447,19 @@ describe('table_autoResetPageIndex', () => {
     expect(table.atoms.pagination.get().pageIndex).toBe(0)
   })
 
+  it('should reset to the first page instead of the initial page index', () => {
+    const table = makeTable(25, {
+      initialState: { pagination: { pageIndex: 1, pageSize: 10 } },
+    })
+
+    table.setPageIndex(2)
+    expect(table.atoms.pagination.get().pageIndex).toBe(2)
+
+    table_autoResetPageIndex(table)
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(0)
+  })
+
   it('should not reset when manualPagination is set', () => {
     const onPaginationChange = vi.fn()
     const table = makeTable(25, {

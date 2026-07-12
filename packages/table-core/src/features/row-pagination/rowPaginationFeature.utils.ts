@@ -46,7 +46,7 @@ export function table_autoResetPageIndex<
     table.options.autoResetPageIndex ??
     !table.options.manualPagination
   ) {
-    table_resetPageIndex(table)
+    table_resetPageIndex(table, true)
   }
 }
 
