@@ -117,7 +117,7 @@ Partial.facetedUniqueValues
 optional filteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:247](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L247)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:307](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L307)
 
 #### Returns
 
@@ -197,7 +197,7 @@ Partial.globalFacetedUniqueValues
 optional groupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L233)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:288](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L288)
 
 #### Returns
 
@@ -237,7 +237,7 @@ Partial.paginatedRowModel
 optional sortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L235)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:287](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L287)
 
 #### Returns
 

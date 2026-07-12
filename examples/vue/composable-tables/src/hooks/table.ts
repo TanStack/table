@@ -4,12 +4,14 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/vue-table'
 import {
@@ -55,8 +57,14 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const _hook = createTableHook({

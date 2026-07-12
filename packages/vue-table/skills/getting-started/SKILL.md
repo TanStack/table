@@ -67,18 +67,18 @@ const table = useTable({ features, columns, data })
 import {
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
   tableFeatures,
 } from '@tanstack/vue-table'
 
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 ```
 
-The slot follows its prerequisite feature in the same call.
+The slot follows its prerequisite feature in the same call. Import individual `sortFn_*` built-ins and register only the ones your columns reference; the full `sortFns` registry object still works but bundles every built-in.
 
 ## Common Mistakes
 

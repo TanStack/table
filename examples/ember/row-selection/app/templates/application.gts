@@ -15,7 +15,8 @@ import {
   globalFilteringFeature,
   createPaginatedRowModel,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   createColumnHelper,
   type Row,
   type Cell,
@@ -34,7 +35,10 @@ const features = tableFeatures({
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 // --- Selection checkbox components (rendered via flexRenderComponent) ---

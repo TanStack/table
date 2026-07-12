@@ -4,7 +4,9 @@ import { computed, ref } from 'vue'
 import { faker } from '@faker-js/faker'
 import {
   FlexRender,
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   createColumnHelper,
   createExpandedRowModel,
   createFacetedMinMaxValues,
@@ -14,9 +16,11 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   stockFeatures,
   tableFeatures,
   useTable,
@@ -65,7 +69,7 @@ const fuzzySort: SortFn<KitchenSinkFeatures, any> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId].itemRank as RankingInfo,
     )
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const sortStatusFn: SortFn<KitchenSinkFeatures, Person> = (rowA, rowB) => {
@@ -88,9 +92,22 @@ const features = tableFeatures({
   groupedRowModel: createGroupedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort, status: sortStatusFn },
-  aggregationFns,
+  filterFns: {
+    fuzzy: fuzzyFilter,
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    fuzzy: fuzzySort,
+    status: sortStatusFn,
+    text: sortFn_text,
+  },
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

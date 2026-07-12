@@ -15,9 +15,13 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
-  sortFns,
-  aggregationFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
+  sortFn_alphanumeric,
+  sortFn_text,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   metaHelper,
   createColumnHelper,
   type Column,
@@ -71,7 +75,7 @@ const fuzzySort: SortFn<KitchenSinkFeatures, Person> = (
   if (rankA && rankB) {
     dir = compareItems(rankA, rankB)
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const sortStatusFn: SortFn<KitchenSinkFeatures, Person> = (rowA, rowB) => {
@@ -94,9 +98,22 @@ const features = tableFeatures({
   groupedRowModel: createGroupedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort, sortStatus: sortStatusFn },
-  aggregationFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    fuzzy: fuzzyFilter,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    fuzzy: fuzzySort,
+    sortStatus: sortStatusFn,
+  },
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
 })
 
 type Feats = typeof features

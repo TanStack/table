@@ -184,9 +184,11 @@ export interface TableFeatures
    * Registry of aggregation functions available to this table by name.
    *
    * Keys registered here become the valid string values for `aggregationFn` on
-   * column definitions, with full inference. Spread the exported
-   * `aggregationFns` to register the built-in aggregation functions:
-   * `aggregationFns: { ...aggregationFns, myCustomAggregationFn }`.
+   * column definitions, with full inference. Import the built-in aggregation
+   * functions you use individually and register them by their conventional
+   * names: `aggregationFns: { sum: aggregationFn_sum, myCustomAggregationFn }`.
+   * Spreading the exported `aggregationFns` registry also works, but puts
+   * every built-in aggregation function in your bundle.
    */
   aggregationFns?: Record<string, AggregationFn<any, any>>
   /**
@@ -243,8 +245,11 @@ export interface TableFeatures
    *
    * Keys registered here become the valid string values for `filterFn` on
    * column definitions and the `globalFilterFn` option, with full inference.
-   * Spread the exported `filterFns` to register the built-in filter functions:
-   * `filterFns: { ...filterFns, myCustomFilterFn }`.
+   * Import the built-in filter functions you use individually and register
+   * them by their conventional names:
+   * `filterFns: { includesString: filterFn_includesString, myCustomFilterFn }`.
+   * Spreading the exported `filterFns` registry also works, but puts every
+   * built-in filter function in your bundle.
    */
   filterFns?: Record<string, FilterFn<any, any>>
   /**
@@ -281,8 +286,11 @@ export interface TableFeatures
    * Registry of sorting functions available to this table by name.
    *
    * Keys registered here become the valid string values for `sortFn` on column
-   * definitions, with full inference. Spread the exported `sortFns` to register
-   * the built-in sorting functions: `sortFns: { ...sortFns, myCustomSortFn }`.
+   * definitions, with full inference. Import the built-in sorting functions
+   * you use individually and register them by their conventional names:
+   * `sortFns: { alphanumeric: sortFn_alphanumeric, myCustomSortFn }`. Spreading
+   * the exported `sortFns` registry also works, but puts every built-in
+   * sorting function in your bundle.
    */
   sortFns?: Record<string, SortFn<any, any>>
   /**

@@ -4,7 +4,9 @@ import {
   createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/table-core'
 import { FlexRender } from '@tanstack/table-core/flex-render'
@@ -19,7 +21,11 @@ const features = tableFeatures({
   rowSortingFeature,
   coreReactivityFeature: storeReactivityBindings(),
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
 })
 
 // Custom sorting logic for one of our enum columns

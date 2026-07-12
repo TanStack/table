@@ -31,9 +31,10 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_includesString,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/react-table'
 
@@ -42,10 +43,12 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
 })
 ```
+
+> Note: the full built-in registries (`filterFns`, `sortFns`, `aggregationFns`) can still be spread into these slots, but they are deprecated because they put every built-in function in your bundle. Register only the functions you use under their conventional string keys, or pass functions directly to the `filterFn`, `sortFn`, and `aggregationFn` column options with no registration at all. String keys, including the default `'auto'`, only resolve functions that are registered.
 
 Keep `features` stable. In most apps, define it outside your component or in shared table setup code. Since `typeof features` is used throughout the table's types, stable features also make it easier to reuse column helpers, column definitions, and shared options.
 
@@ -91,7 +94,6 @@ import {
   createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
   tableFeatures,
 } from '@tanstack/react-table'
 
@@ -103,7 +105,6 @@ const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   sortFns: {
-    ...sortFns,
     byRank: (rowA, rowB, columnId) => {
       return rowA.getValue<number>(columnId) - rowB.getValue<number>(columnId)
     },

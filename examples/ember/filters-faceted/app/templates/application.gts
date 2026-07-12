@@ -12,7 +12,8 @@ import {
   createFacetedRowModel,
   createFacetedMinMaxValues,
   createFacetedUniqueValues,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   rowPaginationFeature,
   createPaginatedRowModel,
   metaHelper,
@@ -41,7 +42,10 @@ const features = tableFeatures({
   facetedUniqueValues: createFacetedUniqueValues(),
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

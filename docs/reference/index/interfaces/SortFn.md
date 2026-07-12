@@ -5,7 +5,7 @@ title: SortFn
 
 # Interface: SortFn()\<TFeatures, TData\>
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L29)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L34)
 
 ## Type Parameters
 
@@ -24,7 +24,7 @@ SortFn(
    columnId): number;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L33)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L38)
 
 ## Parameters
 
@@ -43,3 +43,17 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:33](https://github.
 ## Returns
 
 `number`
+
+## Properties
+
+### resolveDataValue?
+
+```ts
+optional resolveDataValue: TransformDataValueFn;
+```
+
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L48)
+
+Normalizes each row's value before the two sides are compared. Only
+honored by sorting functions built with `constructSortFn` (including all
+built-in sorting functions).

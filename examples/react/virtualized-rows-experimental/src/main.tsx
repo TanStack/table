@@ -6,7 +6,9 @@ import {
   createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
   useTable,
 } from '@tanstack/react-table'
 import { useVirtualizer } from '@tanstack/react-virtual'
@@ -20,7 +22,11 @@ const features = {
   columnSizingFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
 }
 
 const columnHelper = createColumnHelper<typeof features, Person>()

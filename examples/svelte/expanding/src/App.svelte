@@ -7,13 +7,15 @@
     createPaginatedRowModel,
     createSortedRowModel,
     createTable,
-    filterFns,
+    filterFn_includesString,
+    filterFn_inNumberRange,
     FlexRender,
     rowExpandingFeature,
     rowPaginationFeature,
     rowSelectionFeature,
     rowSortingFeature,
-    sortFns,
+    sortFn_alphanumeric,
+    sortFn_text,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import type { Column, SvelteTable } from '@tanstack/svelte-table'
@@ -31,8 +33,14 @@
     filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(),
-    filterFns,
-    sortFns,
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()
@@ -71,7 +79,7 @@
     columnHelper.accessor('age', {
       header: () => 'Age',
       footer: (props) => props.column.id,
-      filterFn: 'between',
+      filterFn: 'inNumberRange',
     }),
     columnHelper.accessor('visits', {
       header: () => 'Visits',

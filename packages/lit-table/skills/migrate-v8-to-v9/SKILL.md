@@ -35,7 +35,7 @@ Framework prerequisites: Lit 3.1.3 or newer within v3 (`lit ^3.1.3`) and
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 
 class PeopleTable extends LitElement {
@@ -75,7 +75,7 @@ Feature imports are `columnFilteringFeature`, `globalFilteringFeature`, `rowSort
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues: createFacetedMinMaxValues()`                  |
 | `getFacetedUniqueValues()` | `facetedUniqueValues: createFacetedUniqueValues()`                  |
 
-Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFns` as sibling feature slots.
+Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFns` as sibling feature slots holding individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`) under their conventional keys. The full registry objects still work but bundle every built-in.
 
 ## Lit State Migration
 

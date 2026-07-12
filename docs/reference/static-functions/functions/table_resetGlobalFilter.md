@@ -9,7 +9,7 @@ title: table_resetGlobalFilter
 function table_resetGlobalFilter<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:110](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L110)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L122)
 
 Resets `globalFilter` to the configured initial state or feature default.
 

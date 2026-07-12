@@ -4,10 +4,12 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   rowPaginationFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { ColumnFilter, SortIndicator } from './header-components'
@@ -20,8 +22,14 @@ export const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 export const {

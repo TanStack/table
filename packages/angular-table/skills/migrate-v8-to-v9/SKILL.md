@@ -34,7 +34,7 @@ Framework prerequisite: Angular 19 or newer (`@angular/core >=19`).
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 
 class TableCmp {
@@ -74,7 +74,7 @@ Feature imports are `columnFilteringFeature`, `globalFilteringFeature`, `rowSort
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues: createFacetedMinMaxValues()`                  |
 | `getFacetedUniqueValues()` | `facetedUniqueValues: createFacetedUniqueValues()`                  |
 
-Factories take no arguments. `filterFns`, `sortFns`, and `aggregationFns` are sibling feature slots.
+Factories take no arguments. `filterFns`, `sortFns`, and `aggregationFns` are sibling feature slots; register individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`) under their conventional keys. The full registry objects still work but bundle every built-in.
 
 ## Angular State Migration
 

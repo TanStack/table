@@ -9,7 +9,8 @@ import {
   tableFeatures,
   rowSortingFeature,
   createSortedRowModel,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   createColumnHelper,
   type Column,
   type Row,
@@ -23,7 +24,10 @@ import { makeData, type Person } from '../utils/make-data'
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 // Custom sorting function for the `status` column: orders statuses in a

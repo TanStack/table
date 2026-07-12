@@ -10,7 +10,8 @@ import {
   rowPaginationFeature,
   createSortedRowModel,
   createPaginatedRowModel,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   createColumnHelper,
   type Column,
   type Row,
@@ -25,7 +26,10 @@ const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

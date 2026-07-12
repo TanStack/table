@@ -29,9 +29,9 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_includesString,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -41,8 +41,8 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 
 const table = useTable({ features, columns, data })
@@ -71,6 +71,8 @@ Prefer explicit features as the end state. `stockFeatures` is a useful kitchen-s
 | `filterFns` table option/factory argument      | `filterFns` slot in `tableFeatures()`                           |
 | `aggregationFns` table option/factory argument | `aggregationFns` slot in `tableFeatures()`                      |
 | Early-v9-beta `rowModels: { ... }`             | Named row-model slots directly in `tableFeatures()`             |
+
+In the registry slots, register individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) under their conventional keys alongside custom functions; the full `filterFns`/`sortFns`/`aggregationFns` registry objects still work but bundle every built-in.
 
 Declare each prerequisite feature before its row-model slot in the same `tableFeatures()` call. Available stock features are `columnFilteringFeature`, `globalFilteringFeature`, `rowSortingFeature`, `rowPaginationFeature`, `rowSelectionFeature`, `rowExpandingFeature`, `rowPinningFeature`, `columnPinningFeature`, `columnVisibilityFeature`, `columnOrderingFeature`, `columnSizingFeature`, `columnResizingFeature`, `columnGroupingFeature`, and `columnFacetingFeature`.
 

@@ -29,11 +29,12 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_includesString,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
   useTable,
 } from '@tanstack/react-table'
@@ -49,8 +50,13 @@ const features = tableFeatures({
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filteredRowModel: createFilteredRowModel(),
-  sortFns,
-  filterFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
+  filterFns: {
+    includesString: filterFn_includesString,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

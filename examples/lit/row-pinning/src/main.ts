@@ -8,7 +8,8 @@ import {
   createExpandedRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   rowExpandingFeature,
   rowPaginationFeature,
   rowPinningFeature,
@@ -26,7 +27,10 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 function renderFilter(

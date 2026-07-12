@@ -27,8 +27,12 @@ export function getDefaultColumnFiltersState(): ColumnFiltersState {
  * Chooses a built-in filter function from the column's first core row value.
  *
  * Strings use `includesString`, numbers use `inNumberRange`, booleans and
- * objects use `equals`, arrays use `arrIncludes`, and unknown values fall back
- * to `weakEquals`.
+ * objects use `equals`, dates use `inDateRange`, arrays use `arrIncludes`,
+ * and unknown values fall back to `weakEquals`.
+ *
+ * The chosen filter function is looked up in the table's `filterFns`
+ * registry. When it is not registered there, this returns `undefined` and
+ * warns in development instead of substituting a different filter function.
  *
  * @example
  * ```ts
@@ -47,27 +51,33 @@ export function column_getAutoFilterFn<
 
   const value = firstRow ? firstRow.getValue(column.id) : undefined
 
+  let filterFnName: string
+
   if (typeof value === 'string') {
-    return filterFns?.includesString
+    filterFnName = 'includesString'
+  } else if (typeof value === 'number') {
+    filterFnName = 'inNumberRange'
+  } else if (typeof value === 'boolean') {
+    filterFnName = 'equals'
+  } else if (Array.isArray(value)) {
+    filterFnName = 'arrIncludes'
+  } else if (Object.prototype.toString.call(value) === '[object Date]') {
+    filterFnName = 'inDateRange'
+  } else if (value !== null && typeof value === 'object') {
+    filterFnName = 'equals'
+  } else {
+    filterFnName = 'weakEquals'
   }
 
-  if (typeof value === 'number') {
-    return filterFns?.inNumberRange
+  const filterFn = filterFns?.[filterFnName]
+
+  if (process.env.NODE_ENV === 'development' && !filterFn) {
+    console.warn(
+      `filterFn '${filterFnName}' (auto) for column '${column.id}' is not registered`,
+    )
   }
 
-  if (typeof value === 'boolean') {
-    return filterFns?.equals
-  }
-
-  if (Array.isArray(value)) {
-    return filterFns?.arrIncludes
-  }
-
-  if (value !== null && typeof value === 'object') {
-    return filterFns?.equals
-  }
-
-  return filterFns?.weakEquals
+  return filterFn
 }
 
 /**
@@ -98,9 +108,13 @@ export function column_getFilterFn<
       ? column_getAutoFilterFn(column)
       : filterFns?.[column.columnDef.filterFn as string]
 
-  if (process.env.NODE_ENV === 'development' && !filterFn) {
+  if (
+    process.env.NODE_ENV === 'development' &&
+    !filterFn &&
+    column.columnDef.filterFn !== 'auto' // the auto picker warns on its own
+  ) {
     console.warn(
-      `Could not find a valid 'column.filterFn' for column with the ID: ${column.id}.`,
+      `filterFn '${String(column.columnDef.filterFn)}' for column '${column.id}' is not registered`,
     )
   }
 

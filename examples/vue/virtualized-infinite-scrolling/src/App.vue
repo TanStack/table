@@ -6,7 +6,6 @@ import {
   createColumnHelper,
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
@@ -24,7 +23,7 @@ const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  // no sortFns registered: this example uses `manualSorting` (server-side sorting)
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

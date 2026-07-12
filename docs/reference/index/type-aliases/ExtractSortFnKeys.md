@@ -11,7 +11,7 @@ type ExtractSortFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | BuiltInSortFn : TFeatures extends object ? Extract<keyof TSortFns, string> : keyof SortFns;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L54)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L106)
 
 Resolves the valid string names for `columnDef.sortFn` for a feature set.
 

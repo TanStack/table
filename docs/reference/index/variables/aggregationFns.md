@@ -3,21 +3,25 @@ id: aggregationFns
 title: aggregationFns
 ---
 
-# Variable: aggregationFns
+# ~~Variable: aggregationFns~~
 
 ```ts
 const aggregationFns: object;
 ```
 
-Defined in: [fns/aggregationFns.ts:233](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L233)
+Defined in: [fns/aggregationFns.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L289)
 
 The built-in aggregation function registry.
 
-Pass this object to grouped row model creation or extend it with custom aggregation functions for grouped columns.
+Registering this full object opts out of tree-shaking: every built-in
+aggregation function ends up in your bundle. Prefer importing the
+`aggregationFn_*` functions you actually use and registering just those in
+the `aggregationFns` slot, or passing them directly to the `aggregationFn`
+column option.
 
 ## Type Declaration
 
-### count()
+### ~~count()~~
 
 ```ts
 count: <TFeatures, TData>(_columnId, leafRows) => number = aggregationFn_count;
@@ -26,6 +30,8 @@ count: <TFeatures, TData>(_columnId, leafRows) => number = aggregationFn_count;
 Counts the number of leaf rows in the group.
 
 The column id is ignored because the result is based only on group size.
+This is a plain row-level function (not built with
+`constructAggregationFn`) because it never reads row values.
 
 #### Type Parameters
 
@@ -51,94 +57,22 @@ The column id is ignored because the result is based only on group size.
 
 `number`
 
-### extent()
+### ~~extent~~
 
 ```ts
-extent: <TFeatures, TData>(columnId, _leafRows, childRows) => (number | undefined)[] = aggregationFn_extent;
+extent: CreatedAggregationFn<any, any> = aggregationFn_extent;
 ```
 
-Finds the numeric extent for a grouped column.
-
-Returns `[min, max]`, where each entry is `undefined` when no numeric value is
-present.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### columnId
-
-`string`
-
-##### \_leafRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-##### childRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-#### Returns
-
-(`number` \| `undefined`)[]
-
-### max()
+### ~~first()~~
 
 ```ts
-max: <TFeatures, TData>(columnId, _leafRows, childRows) => number | undefined = aggregationFn_max;
+first: <TFeatures, TData>(columnId, leafRows) => unknown = aggregationFn_first;
 ```
 
-Finds the maximum numeric child-row value for a grouped column.
+Returns the first leaf-row value for a grouped column.
 
-Nullish and non-number values are ignored. Returns `undefined` when no
-numeric value is found.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### columnId
-
-`string`
-
-##### \_leafRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-##### childRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-#### Returns
-
-`number` \| `undefined`
-
-### mean()
-
-```ts
-mean: <TFeatures, TData>(columnId, leafRows) => number | undefined = aggregationFn_mean;
-```
-
-Averages numeric leaf-row values for a grouped column.
-
-Number-like values are coerced with unary `+`; nullish and non-numeric values
-are ignored.
+This is a plain row-level function (not built with
+`constructAggregationFn`) because it only reads one positional value.
 
 #### Type Parameters
 
@@ -162,18 +96,18 @@ are ignored.
 
 #### Returns
 
-`number` \| `undefined`
+`unknown`
 
-### median()
+### ~~last()~~
 
 ```ts
-median: <TFeatures, TData>(columnId, leafRows) => number | undefined = aggregationFn_median;
+last: <TFeatures, TData>(columnId, leafRows) => unknown = aggregationFn_last;
 ```
 
-Computes the median of numeric leaf-row values for a grouped column.
+Returns the last leaf-row value for a grouped column.
 
-All values must be numbers. If any value is non-numeric, or no leaf rows are
-present, the result is `undefined`.
+This is a plain row-level function (not built with
+`constructAggregationFn`) because it only reads one positional value.
 
 #### Type Parameters
 
@@ -197,150 +131,53 @@ present, the result is `undefined`.
 
 #### Returns
 
-`number` \| `undefined`
+`unknown`
 
-### min()
-
-```ts
-min: <TFeatures, TData>(columnId, _leafRows, childRows) => number | undefined = aggregationFn_min;
-```
-
-Finds the minimum numeric child-row value for a grouped column.
-
-Nullish and non-number values are ignored. Returns `undefined` when no
-numeric value is found.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### columnId
-
-`string`
-
-##### \_leafRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-##### childRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-#### Returns
-
-`number` \| `undefined`
-
-### sum()
+### ~~max~~
 
 ```ts
-sum: <TFeatures, TData>(columnId, _leafRows, childRows) => number = aggregationFn_sum;
+max: CreatedAggregationFn<any, any> = aggregationFn_max;
 ```
 
-Sums numeric child-row values for a grouped column.
-
-Non-number values contribute `0`. Child rows are used so nested group totals
-can reuse already aggregated values.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### columnId
-
-`string`
-
-##### \_leafRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-##### childRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-#### Returns
-
-`number`
-
-### unique()
+### ~~mean~~
 
 ```ts
-unique: <TFeatures, TData>(columnId, leafRows) => unknown[] = aggregationFn_unique;
+mean: CreatedAggregationFn<any, any> = aggregationFn_mean;
 ```
 
-Collects unique leaf-row values for a grouped column.
-
-Values are compared with JavaScript `Set` semantics.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### columnId
-
-`string`
-
-##### leafRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-#### Returns
-
-`unknown`[]
-
-### uniqueCount()
+### ~~median~~
 
 ```ts
-uniqueCount: <TFeatures, TData>(columnId, leafRows) => number = aggregationFn_uniqueCount;
+median: CreatedAggregationFn<any, any> = aggregationFn_median;
 ```
 
-Counts unique leaf-row values for a grouped column.
+### ~~min~~
 
-Values are compared with JavaScript `Set` semantics.
+```ts
+min: CreatedAggregationFn<any, any> = aggregationFn_min;
+```
 
-#### Type Parameters
+### ~~sum~~
 
-##### TFeatures
+```ts
+sum: CreatedAggregationFn<any, any> = aggregationFn_sum;
+```
 
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
+### ~~unique~~
 
-##### TData
+```ts
+unique: CreatedAggregationFn<any, any> = aggregationFn_unique;
+```
 
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+### ~~uniqueCount~~
 
-#### Parameters
+```ts
+uniqueCount: CreatedAggregationFn<any, any> = aggregationFn_uniqueCount;
+```
 
-##### columnId
+## Deprecated
 
-`string`
-
-##### leafRows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-#### Returns
-
-`number`
+Import individual `aggregationFn_*` functions instead for a
+smaller bundle. This export still works and is not going away in v9, but
+built-in name resolution (including `aggregationFn: 'auto'`) only finds
+functions you register yourself.

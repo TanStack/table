@@ -3,368 +3,134 @@ id: filterFns
 title: filterFns
 ---
 
-# Variable: filterFns
+# ~~Variable: filterFns~~
 
 ```ts
 const filterFns: object;
 ```
 
-Defined in: [fns/filterFns.ts:431](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L431)
+Defined in: [fns/filterFns.ts:434](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L434)
 
 The built-in filter function registry.
 
-Pass this object to filtered row model creation or extend it with custom filter functions.
+Registering this full object opts out of tree-shaking: every built-in
+filter function ends up in your bundle. Prefer importing the `filterFn_*`
+functions you actually use and registering just those in the `filterFns`
+slot, or passing them directly to the `filterFn` column option.
 
 ## Type Declaration
 
-### arrHas
+### ~~arrHas~~
 
 ```ts
-arrHas: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrHas;
+arrHas: CreatedFilterFn<any, any> = filterFn_arrHas;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~arrIncludes~~
 
 ```ts
-autoRemove: (val) => boolean;
+arrIncludes: CreatedFilterFn<any, any> = filterFn_arrIncludes;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-### arrIncludes
+### ~~arrIncludesAll~~
 
 ```ts
-arrIncludes: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrIncludes;
+arrIncludesAll: CreatedFilterFn<any, any> = filterFn_arrIncludesAll;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~arrIncludesSome~~
 
 ```ts
-autoRemove: (val) => boolean;
+arrIncludesSome: CreatedFilterFn<any, any> = filterFn_arrIncludesSome;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-### arrIncludesAll
+### ~~between~~
 
 ```ts
-arrIncludesAll: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrIncludesAll;
+between: CreatedFilterFn<any, any> = filterFn_between;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~betweenInclusive~~
 
 ```ts
-autoRemove: (val) => boolean;
+betweenInclusive: CreatedFilterFn<any, any> = filterFn_betweenInclusive;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-### arrIncludesSome
+### ~~empty~~
 
 ```ts
-arrIncludesSome: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_arrIncludesSome;
+empty: CreatedFilterFn<any, any> = filterFn_empty;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~endsWith~~
 
 ```ts
-autoRemove: (val) => boolean;
+endsWith: CreatedFilterFn<any, any> = filterFn_endsWith;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-### between
+### ~~equals~~
 
 ```ts
-between: <TFeatures, TData>(row, columnId, filterValues) => boolean & object = filterFn_between;
+equals: CreatedFilterFn<any, any> = filterFn_equals;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~equalsString~~
 
 ```ts
-autoRemove: (val) => boolean;
+equalsString: CreatedFilterFn<any, any> = filterFn_equalsString;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-### betweenInclusive
+### ~~equalsStringSensitive~~
 
 ```ts
-betweenInclusive: <TFeatures, TData>(row, columnId, filterValues) => boolean & object = filterFn_betweenInclusive;
+equalsStringSensitive: CreatedFilterFn<any, any> = filterFn_equalsStringSensitive;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~includesString~~
 
 ```ts
-autoRemove: (val) => boolean;
+includesString: CreatedFilterFn<any, any> = filterFn_includesString;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-### equals
+### ~~includesStringSensitive~~
 
 ```ts
-equals: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_equals;
+includesStringSensitive: CreatedFilterFn<any, any> = filterFn_includesStringSensitive;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~inDateRange~~
 
 ```ts
-autoRemove: (val) => boolean;
+inDateRange: CreatedFilterFn<any, any> = filterFn_inDateRange;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-### equalsString
+### ~~inNumberRange~~
 
 ```ts
-equalsString: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_equalsString;
+inNumberRange: CreatedFilterFn<any, any> = filterFn_inNumberRange;
 ```
 
-#### Type Declaration
-
-##### autoRemove()
+### ~~notEmpty~~
 
 ```ts
-autoRemove: (val) => boolean;
+notEmpty: CreatedFilterFn<any, any> = filterFn_notEmpty;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-##### resolveFilterValue()
+### ~~startsWith~~
 
 ```ts
-resolveFilterValue: (val) => string;
+startsWith: CreatedFilterFn<any, any> = filterFn_startsWith;
 ```
 
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`string`
-
-### includesString
+### ~~weakEquals~~
 
 ```ts
-includesString: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_includesString;
+weakEquals: CreatedFilterFn<any, any> = filterFn_weakEquals;
 ```
 
-#### Type Declaration
+## Deprecated
 
-##### autoRemove()
-
-```ts
-autoRemove: (val) => boolean;
-```
-
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-##### resolveFilterValue()
-
-```ts
-resolveFilterValue: (val) => string;
-```
-
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`string`
-
-### includesStringSensitive
-
-```ts
-includesStringSensitive: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_includesStringSensitive;
-```
-
-#### Type Declaration
-
-##### autoRemove()
-
-```ts
-autoRemove: (val) => boolean;
-```
-
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-##### resolveFilterValue()
-
-```ts
-resolveFilterValue: (val) => string;
-```
-
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`string`
-
-### inNumberRange
-
-```ts
-inNumberRange: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_inNumberRange;
-```
-
-#### Type Declaration
-
-##### autoRemove()
-
-```ts
-autoRemove: (val) => boolean;
-```
-
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
-
-##### resolveFilterValue()
-
-```ts
-resolveFilterValue: (val) => readonly [number, number];
-```
-
-###### Parameters
-
-###### val
-
-\[`any`, `any`\]
-
-###### Returns
-
-readonly \[`number`, `number`\]
-
-### weakEquals
-
-```ts
-weakEquals: <TFeatures, TData>(row, columnId, filterValue) => boolean & object = filterFn_weakEquals;
-```
-
-#### Type Declaration
-
-##### autoRemove()
-
-```ts
-autoRemove: (val) => boolean;
-```
-
-###### Parameters
-
-###### val
-
-`any`
-
-###### Returns
-
-`boolean`
+Import individual `filterFn_*` functions instead for a smaller
+bundle. This export still works and is not going away in v9, but built-in
+name resolution (including `filterFn: 'auto'`) only finds functions you
+register yourself.

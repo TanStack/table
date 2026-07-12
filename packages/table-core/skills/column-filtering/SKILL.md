@@ -23,16 +23,21 @@ This skill builds on `core`, `table-features`, and `client-vs-server`. Filtering
 import {
   columnFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
   tableFeatures,
 } from '@tanstack/table-core'
 
 export const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns,
+  filterFns: { includesString: filterFn_includesString },
 })
 ```
+
+Import individual `filterFn_*` built-ins and register only those your columns
+reference by string name or that `filterFn: 'auto'` should resolve for your
+data types. The full `filterFns` registry object still works but bundles every
+built-in.
 
 ## Core Patterns
 

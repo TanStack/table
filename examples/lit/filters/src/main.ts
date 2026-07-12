@@ -7,7 +7,8 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
   rowPaginationFeature,
   tableFeatures,
@@ -26,7 +27,10 @@ const features = tableFeatures({
   rowPaginationFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
   columnMeta: metaHelper<MyColumnMeta>(),
 })
 

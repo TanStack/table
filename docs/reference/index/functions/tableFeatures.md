@@ -9,7 +9,7 @@ title: tableFeatures
 function tableFeatures<TFeatures>(features): TFeatures;
 ```
 
-Defined in: [helpers/tableFeatures.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableFeatures.ts#L45)
+Defined in: [helpers/tableFeatures.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/helpers/tableFeatures.ts#L46)
 
 A helper function to help define the features that are to be imported and applied to a table instance.
 Use this utility to make it easier to have the correct type inference for the features that are being imported.
@@ -49,9 +49,10 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_includesString,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/react-table'
 const features = tableFeatures({
@@ -59,8 +60,8 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, myCustomFilterFn },
-  sortFns,
+  filterFns: { includesString: filterFn_includesString, myCustomFilterFn },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
   tableMeta: {} as { updateData: (rowIndex: number, columnId: string, value: unknown) => void },
   columnMeta: {} as { align?: 'left' | 'right' },
 });

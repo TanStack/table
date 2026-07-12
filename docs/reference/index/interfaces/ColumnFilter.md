@@ -5,7 +5,7 @@ title: ColumnFilter
 
 # Interface: ColumnFilter
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L38)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L39)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:38](https
 id: string;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:39](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L39)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L40)
 
 ***
 
@@ -25,4 +25,4 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:39](https
 value: unknown;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L40)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L41)

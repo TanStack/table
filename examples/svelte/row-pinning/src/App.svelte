@@ -7,7 +7,8 @@
     createPaginatedRowModel,
     createTable,
     createTableState,
-    filterFns,
+    filterFn_includesString,
+    filterFn_inNumberRange,
     FlexRender,
     rowExpandingFeature,
     rowPaginationFeature,
@@ -33,7 +34,10 @@
     filteredRowModel: createFilteredRowModel(),
     expandedRowModel: createExpandedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    filterFns,
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
   })
 
   const [rowPinning, setRowPinning] = createTableState<RowPinningState>({

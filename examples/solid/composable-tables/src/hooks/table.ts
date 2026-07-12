@@ -11,11 +11,13 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/solid-table'
 
@@ -71,8 +73,14 @@ export const {
     sortedRowModel: createSortedRowModel(),
     filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    sortFns,
-    filterFns,
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
   }),
 
   // set any default table options here too

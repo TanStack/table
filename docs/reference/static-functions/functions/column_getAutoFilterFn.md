@@ -11,13 +11,17 @@ function column_getAutoFilterFn<TFeatures, TData, TValue>(column):
   | undefined;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L38)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:42](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L42)
 
 Chooses a built-in filter function from the column's first core row value.
 
 Strings use `includesString`, numbers use `inNumberRange`, booleans and
-objects use `equals`, arrays use `arrIncludes`, and unknown values fall back
-to `weakEquals`.
+objects use `equals`, dates use `inDateRange`, arrays use `arrIncludes`,
+and unknown values fall back to `weakEquals`.
+
+The chosen filter function is looked up in the table's `filterFns`
+registry. When it is not registered there, this returns `undefined` and
+warns in development instead of substituting a different filter function.
 
 ## Type Parameters
 

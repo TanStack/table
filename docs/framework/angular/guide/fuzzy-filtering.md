@@ -22,8 +22,6 @@ import {
   rowSortingFeature,
   createFilteredRowModel,
   createSortedRowModel,
-  filterFns,
-  sortFns,
   metaHelper,
 } from '@tanstack/angular-table'
 import type { RankingInfo } from '@tanstack/match-sorter-utils'
@@ -38,8 +36,8 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
   sortedRowModel: createSortedRowModel(), // if using client-side sorting
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter }, // fuzzyFilter defined below
-  sortFns: { ...sortFns, fuzzy: fuzzySort }, // fuzzySort defined below
+  filterFns: { fuzzy: fuzzyFilter }, // fuzzyFilter defined below
+  sortFns: { fuzzy: fuzzySort }, // fuzzySort defined below
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
@@ -53,6 +51,8 @@ export class App {
   }))
 }
 ```
+
+> **Note:** The `filterFns` and `sortFns` registries above list only the custom `fuzzy` functions this guide uses. Spreading the entire built-in registries (`filterFns: { ...filterFns, fuzzy: fuzzyFilter }`) still works, but it puts every built-in function in your bundle. Register just the functions you use, or pass functions directly to the `filterFn` and `sortFn` column options with no registration.
 
 ## Fuzzy Filtering (Angular) Guide
 
@@ -113,7 +113,7 @@ const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  filterFns: { fuzzy: fuzzyFilter },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 ```
@@ -133,8 +133,6 @@ import {
   rowSortingFeature,
   createFilteredRowModel,
   createSortedRowModel,
-  filterFns,
-  sortFns,
   metaHelper,
 } from '@tanstack/angular-table'
 
@@ -144,8 +142,8 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(), // needed if you want sorting with fuzzy rank
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterFns: { fuzzy: fuzzyFilter },
+  sortFns: { fuzzy: fuzzySort },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
@@ -182,7 +180,7 @@ When using fuzzy filtering with column filtering, you might also want to sort th
 
 ```typescript
 import { compareItems } from '@tanstack/match-sorter-utils'
-import { sortFns } from '@tanstack/angular-table'
+import { sortFn_alphanumeric } from '@tanstack/angular-table'
 import type { SortFn } from '@tanstack/angular-table'
 
 const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
@@ -197,7 +195,7 @@ const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 ```
 

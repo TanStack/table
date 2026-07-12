@@ -9,10 +9,12 @@ import {
   tableFeatures,
   columnFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   rowSortingFeature,
   createSortedRowModel,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   rowPaginationFeature,
   createPaginatedRowModel,
   createColumnHelper,
@@ -136,8 +138,14 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

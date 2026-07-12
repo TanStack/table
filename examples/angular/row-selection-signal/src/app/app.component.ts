@@ -13,7 +13,8 @@ import {
   columnVisibilityFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   injectTable,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -37,7 +38,10 @@ export const features = tableFeatures({
   rowSelectionFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 @Component({

@@ -23,8 +23,6 @@ import {
   rowSortingFeature,
   createFilteredRowModel,
   createSortedRowModel,
-  filterFns,
-  sortFns,
 } from '@tanstack/solid-table'
 
 const features = tableFeatures({
@@ -33,8 +31,8 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
   sortedRowModel: createSortedRowModel(), // if using client-side sorting
-  filterFns,
-  sortFns,
+  filterFns: { fuzzy: fuzzyFilter },
+  sortFns: { fuzzy: fuzzySort },
 })
 
 const table = createTable({
@@ -45,6 +43,8 @@ const table = createTable({
   },
 })
 ```
+
+> **Note:** The `filterFns` and `sortFns` registries above list only the custom `fuzzy` functions this guide uses. Spreading the entire built-in registries (`filterFns: { ...filterFns, fuzzy: fuzzyFilter }`) still works, but it puts every built-in function in your bundle. Register just the functions you use, or pass functions directly to the `filterFn` and `sortFn` column options with no registration.
 
 ## Fuzzy Filtering (Solid) Guide
 
@@ -120,8 +120,8 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns,
+  filterFns: { fuzzy: fuzzyFilter },
+  sortFns: { fuzzy: fuzzySort },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 ```
@@ -140,8 +140,6 @@ import {
   rowSortingFeature,
   createFilteredRowModel,
   createSortedRowModel,
-  filterFns,
-  sortFns,
 } from '@tanstack/solid-table'
 
 const features = tableFeatures({
@@ -150,8 +148,8 @@ const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(), // needed if you want sorting with fuzzy rank
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns,
+  filterFns: { fuzzy: fuzzyFilter },
+  sortFns: { fuzzy: fuzzySort },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 
@@ -165,7 +163,7 @@ const table = createTable({
 
 ### Using Fuzzy Filtering with Column Filtering
 
-To use fuzzy filtering with column filtering, pass your fuzzy filter function to `createFilteredRowModel` (merging it with the built-in `filterFns`). You can then specify the fuzzy filter by name in the `filterFn` option of the column definition:
+To use fuzzy filtering with column filtering, register your fuzzy filter function in the `filterFns` slot on `tableFeatures` (as shown above). You can then specify the fuzzy filter by name in the `filterFn` option of the column definition:
 
 ```typescript
 const column = [
@@ -188,7 +186,7 @@ When using fuzzy filtering with column filtering, you might also want to sort th
 
 ```typescript
 import { compareItems } from '@tanstack/match-sorter-utils'
-import { sortFns } from '@tanstack/solid-table'
+import { sortFn_alphanumeric } from '@tanstack/solid-table'
 import type { SortFn } from '@tanstack/solid-table'
 
 const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
@@ -203,7 +201,7 @@ const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 ```
 
@@ -222,4 +220,4 @@ You can then pass this sorting function directly to the `sortFn` option of the c
 }
 ```
 
-> **Note:** Unlike `filterFn: 'fuzzy'` above, `fuzzySort` is passed as a function rather than a string. A string reference like `sortFn: 'fuzzySort'` would only work if you also registered the function in the `sortFns` slot on `tableFeatures` (e.g. `sortFns: { ...sortFns, fuzzySort }`). Passing the function directly skips that step.
+> **Note:** Unlike `filterFn: 'fuzzy'` above, `fuzzySort` is passed as a function rather than a string. A string reference like `sortFn: 'fuzzySort'` would only work if you also registered the function in the `sortFns` slot on `tableFeatures` (e.g. `sortFns: { fuzzySort }`). Passing the function directly skips that step.

@@ -18,9 +18,13 @@ import {
   createPaginatedRowModel,
   createFilteredRowModel,
   createSortedRowModel,
-  aggregationFns,
-  filterFns,
-  sortFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
+  filterFn_includesString,
+  filterFn_inNumberRange,
+  sortFn_alphanumeric,
+  sortFn_text,
   createColumnHelper,
   type Column,
   type Row,
@@ -43,9 +47,19 @@ const features = tableFeatures({
   paginatedRowModel: createPaginatedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  aggregationFns,
-  filterFns,
-  sortFns,
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

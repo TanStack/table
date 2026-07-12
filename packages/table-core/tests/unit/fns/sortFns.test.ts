@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
+  constructSortFn,
   reSplitAlphaNumeric,
   sortFn_alphanumeric,
   sortFn_alphanumericCaseSensitive,
@@ -297,5 +298,58 @@ describe('reSplitAlphaNumeric', () => {
   it('should handle leading digits and empty strings', () => {
     expect('10abc'.split(reSplitAlphaNumeric)).toEqual(['', '10', 'abc'])
     expect(''.split(reSplitAlphaNumeric)).toEqual([''])
+  })
+})
+
+describe('constructSortFn', () => {
+  const stripDiacritics = (value: string) =>
+    value.normalize('NFD').replace(/\p{Diacritic}/gu, '')
+
+  // The PR-6241 use case: an ignore-diacritics variant of a built-in sort fn,
+  // built by spreading the base fn and wrapping its resolveDataValue.
+  const alphanumericIgnoreDiacritics = constructSortFn({
+    ...sortFn_alphanumeric,
+    resolveDataValue: (value) =>
+      stripDiacritics(sortFn_alphanumeric.resolveDataValue!(value)),
+  })
+
+  it('sorts names with diacritics next to their plain counterparts', () => {
+    const names = [
+      "Zak O'Sullivan",
+      'Éric Bernard',
+      'Enrico Toccacelo',
+      'Eric Brandon',
+      'Fred Wacker',
+    ]
+
+    const sorted = [...names].sort((a, b) =>
+      alphanumericIgnoreDiacritics(makeRow(a), makeRow(b), 'col'),
+    )
+
+    expect(sorted).toEqual([
+      'Enrico Toccacelo',
+      'Éric Bernard',
+      'Eric Brandon',
+      'Fred Wacker',
+      "Zak O'Sullivan",
+    ])
+  })
+
+  it('keeps the base behavior for values without diacritics', () => {
+    expect(cmp(alphanumericIgnoreDiacritics, 'item2', 'item10')).toBe(-1)
+    expect(cmp(alphanumericIgnoreDiacritics, 'ABC', 'abc')).toBe(0)
+  })
+
+  it('sorts diacritics last with the unmodified base sort fn', () => {
+    // Documents the behavior the variant exists to fix
+    expect(cmp(sortFn_alphanumeric, 'Éric Bernard', 'Zak')).toBe(1)
+    expect(cmp(alphanumericIgnoreDiacritics, 'Éric Bernard', 'Zak')).toBe(-1)
+  })
+
+  it('honors resolveDataValue assigned after creation', () => {
+    const bySecondWord = constructSortFn({ ...sortFn_text })
+    bySecondWord.resolveDataValue = (value) => String(value).split(' ')[1] ?? ''
+
+    expect(cmp(bySecondWord, 'Zak Adams', 'Al Zimmer')).toBe(-1)
   })
 })

@@ -453,7 +453,7 @@ Table_RowModels.getFacetedUniqueValues
 getFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:236](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L236)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:296](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L296)
 
 Resolves the row model after column and global filters have been applied.
 
@@ -516,7 +516,7 @@ Builds footer groups by reversing the current header group order.
 getGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:222](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L222)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:277](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L277)
 
 Resolves the row model after grouping and aggregation have been applied.
 
@@ -623,7 +623,7 @@ Table_RowModels.getPreExpandedRowModel
 getPreFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L240)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L300)
 
 Reads the row model immediately before filtering.
 
@@ -645,7 +645,7 @@ Table_RowModels.getPreFilteredRowModel
 getPreGroupedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:226](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L226)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:281](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L281)
 
 Reads the row model immediately before grouping.
 
@@ -689,7 +689,7 @@ Table_RowModels.getPrePaginatedRowModel
 getPreSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:224](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L224)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:276](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L276)
 
 Reads the row model immediately before sorting.
 
@@ -818,7 +818,7 @@ included in this order. This is the memoized source for
 getSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:228](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L228)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:280](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L280)
 
 Resolves the row model after sorting has been applied.
 

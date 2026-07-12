@@ -1,5 +1,8 @@
 import {
-  aggregationFns,
+  aggregationFn_extent,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createColumnHelper,
@@ -8,13 +11,15 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_includesString,
   globalFilteringFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/react-table'
 import { workerRowModelsFeature } from '@tanstack/react-table/experimental-worker-plugin'
@@ -50,9 +55,20 @@ export const sharedFeatures = tableFeatures({
   sortedRowModel: createSortedRowModel(),
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  sortFns,
-  filterFns,
-  aggregationFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
+  filterFns: {
+    includesString: filterFn_includesString,
+  },
+  aggregationFns: {
+    extent: aggregationFn_extent,
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
 })
 
 export const columnHelper = createColumnHelper<typeof sharedFeatures, Person>()

@@ -54,8 +54,9 @@ import {
   createFilteredRowModel,
   createSortedRowModel,
   createPaginatedRowModel,
-  filterFns,
-  sortFns,
+  filterFn_includesString,
+  sortFn_alphanumeric,
+  sortFn_text,
 } from '@tanstack/react-table'
 
 const features = tableFeatures({
@@ -65,8 +66,8 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
 })
 
 const table = useTable({
@@ -75,6 +76,8 @@ const table = useTable({
   data,
 })
 ```
+
+> Note: the full built-in registries (`filterFns`, `sortFns`, `aggregationFns`) can still be spread into these slots, but they are deprecated because they pull every built-in function into your bundle. Register only the functions you use under their conventional string keys, or pass functions directly to the `filterFn`, `sortFn`, and `aggregationFn` column options with no registration at all. String keys, including the default `'auto'`, only resolve functions that are registered.
 
 ## Function Registries
 
@@ -85,7 +88,6 @@ import {
   tableFeatures,
   columnFilteringFeature,
   createFilteredRowModel,
-  filterFns,
 } from '@tanstack/react-table'
 
 const myFuzzyFilter: FilterFn<typeof features, Person> = (
@@ -101,7 +103,7 @@ const myFuzzyFilter: FilterFn<typeof features, Person> = (
 const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns: { ...filterFns, fuzzy: myFuzzyFilter },
+  filterFns: { fuzzy: myFuzzyFilter },
 })
 
 // 'fuzzy' is now a valid type-safe value for filterFn in column defs:
@@ -112,10 +114,10 @@ columnHelper.accessor('name', { filterFn: 'fuzzy' })
 
 The same pattern applies for sorting and grouping:
 
-- `sortFns: { ...sortFns, myCustomSort }` makes `'myCustomSort'` valid for `sortFn` in column defs.
-- `aggregationFns: { ...aggregationFns, myAgg }` makes `'myAgg'` valid for `aggregationFn` in column defs.
+- `sortFns: { myCustomSort }` makes `'myCustomSort'` valid for `sortFn` in column defs.
+- `aggregationFns: { myAgg }` makes `'myAgg'` valid for `aggregationFn` in column defs.
 
-You can spread in the built-in maps (`filterFns`, `sortFns`, `aggregationFns`) to retain the defaults, add your own, or pass only your own to keep the bundle lean.
+To use built-in functions by string name, import them individually (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) and register them under their conventional keys, e.g. `filterFns: { includesString: filterFn_includesString }`. If a column option accepts a function directly, you can also skip registration entirely and pass the imported function as the `filterFn`, `sortFn`, or `aggregationFn` value.
 
 ## Customize/Fork Row Models
 

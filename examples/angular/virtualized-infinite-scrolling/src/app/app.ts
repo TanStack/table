@@ -14,7 +14,9 @@ import {
   functionalUpdate,
   injectTable,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { injectVirtualizer } from '@tanstack/angular-virtual'
@@ -29,7 +31,11 @@ const features = tableFeatures({
   columnSizingFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

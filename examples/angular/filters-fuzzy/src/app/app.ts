@@ -7,13 +7,13 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
   globalFilteringFeature,
   injectTable,
   metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { DebouncedInput } from './debounced-input/debounced-input'
@@ -47,7 +47,7 @@ const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const features = tableFeatures({
@@ -58,8 +58,12 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterFns: { fuzzy: fuzzyFilter },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    fuzzy: fuzzySort,
+    text: sortFn_text,
+  },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 const columnHelper = createColumnHelper<typeof features, Person>()

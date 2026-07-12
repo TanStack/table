@@ -1,7 +1,7 @@
 import type {
+  BuiltInFilterFn,
   ColumnFilter,
   TableFeatures,
-  filterFns,
 } from '@tanstack/react-table'
 
 export type TableFilterFeatures<TFeatures extends TableFeatures> = Pick<
@@ -10,7 +10,7 @@ export type TableFilterFeatures<TFeatures extends TableFeatures> = Pick<
 >
 
 export type FilterOperator =
-  | keyof typeof filterFns
+  | BuiltInFilterFn
   | 'notIncludesString'
   | 'notEqualsString'
   | 'notEquals'

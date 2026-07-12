@@ -5,7 +5,7 @@ title: Cell_ColumnGrouping
 
 # Interface: Cell\_ColumnGrouping
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L156)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:211](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L211)
 
 ## Properties
 
@@ -15,7 +15,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:156](https:
 getIsAggregated: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L160)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L215)
 
 Checks whether this cell should render an aggregated value.
 
@@ -31,7 +31,7 @@ Checks whether this cell should render an aggregated value.
 getIsGrouped: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L164)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L219)
 
 Checks whether this cell represents the active grouping column.
 
@@ -47,7 +47,7 @@ Checks whether this cell represents the active grouping column.
 getIsPlaceholder: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L168)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L223)
 
 Checks whether this cell is hidden as a grouping placeholder.
 

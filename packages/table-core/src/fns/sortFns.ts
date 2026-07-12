@@ -1,3 +1,7 @@
+import type {
+  CreatedSortFn,
+  SortFnDef,
+} from '../features/row-sorting/rowSortingFeature.types'
 import type { RowData } from '../types/type-utils'
 import type { TableFeatures } from '../types/TableFeatures'
 import type { Row } from '../types/Row'
@@ -11,122 +15,127 @@ import type { Row } from '../types/Row'
 export const reSplitAlphaNumeric = /([0-9]+)/gm
 
 /**
+ * Builds a `SortFn` from a value-level comparator plus an optional
+ * `resolveDataValue` normalizer.
+ *
+ * The `sort` comparator receives both rows' data values, each already passed
+ * through `resolveDataValue` when one is defined. Keeping normalization in the
+ * resolver means a variant of an existing sorting function only has to swap
+ * the resolver, not re-implement the comparison.
+ *
+ * The definition is attached to the returned function, so a variant can be
+ * created by spreading a built-in sorting function and overriding what
+ * differs:
+ *
+ * ```ts
+ * const stripDiacritics = (value: string) =>
+ *   value.normalize('NFD').replace(/\p{Diacritic}/gu, '')
+ *
+ * const alphanumericIgnoreDiacritics = constructSortFn({
+ *   ...sortFn_alphanumeric,
+ *   resolveDataValue: (value) =>
+ *     stripDiacritics(sortFn_alphanumeric.resolveDataValue!(value)),
+ * })
+ * ```
+ */
+export function constructSortFn<
+  TFeatures extends TableFeatures = any,
+  TData extends RowData = any,
+>(def: SortFnDef<TFeatures, TData>): CreatedSortFn<TFeatures, TData> {
+  const sortFn: CreatedSortFn<TFeatures, TData> = Object.assign(
+    <TRowFeatures extends TableFeatures, TRowData extends RowData>(
+      rowA: Row<TRowFeatures, TRowData>,
+      rowB: Row<TRowFeatures, TRowData>,
+      columnId: string,
+    ): number => {
+      let dataValueA = rowA.getValue(columnId)
+      let dataValueB = rowB.getValue(columnId)
+      const resolveDataValue = sortFn.resolveDataValue
+      if (resolveDataValue) {
+        dataValueA = resolveDataValue(dataValueA)
+        dataValueB = resolveDataValue(dataValueB)
+      }
+      // The def's comparator is typed against the factory's TFeatures/TData;
+      // the caller's row generics are erased at this boundary.
+      return sortFn.sort(
+        dataValueA,
+        dataValueB,
+        rowA as any,
+        rowB as any,
+        columnId,
+      )
+    },
+    def,
+  )
+  return sortFn
+}
+
+/**
  * Sorts rows with the built-in alphanumeric strategy.
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_alphanumeric = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
-  columnId: string,
-) => {
-  return compareAlphanumeric(
-    toString(rowA.getValue(columnId)).toLowerCase(),
-    toString(rowB.getValue(columnId)).toLowerCase(),
-  )
-}
+export const sortFn_alphanumeric = constructSortFn({
+  resolveDataValue: (dataValue) => toString(dataValue).toLowerCase(),
+  sort: (dataValueA, dataValueB) => compareAlphanumeric(dataValueA, dataValueB),
+})
 
 /**
  * Sorts rows with the built-in alphanumeric case sensitive strategy.
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_alphanumericCaseSensitive = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
-  columnId: string,
-) => {
-  return compareAlphanumeric(
-    toString(rowA.getValue(columnId)),
-    toString(rowB.getValue(columnId)),
-  )
-}
+export const sortFn_alphanumericCaseSensitive = constructSortFn({
+  resolveDataValue: (dataValue) => toString(dataValue),
+  sort: (dataValueA, dataValueB) => compareAlphanumeric(dataValueA, dataValueB),
+})
 
-// The text filter is more basic (less numeric support)
+// The text sort is more basic (less numeric support)
 // but is much faster
 /**
  * Sorts rows with the built-in text strategy.
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_text = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
-  columnId: string,
-) => {
-  return compareBasic(
-    toString(rowA.getValue(columnId)).toLowerCase(),
-    toString(rowB.getValue(columnId)).toLowerCase(),
-  )
-}
+export const sortFn_text = constructSortFn({
+  resolveDataValue: (dataValue) => toString(dataValue).toLowerCase(),
+  sort: (dataValueA, dataValueB) => compareBasic(dataValueA, dataValueB),
+})
 
-// The text filter is more basic (less numeric support)
+// The text sort is more basic (less numeric support)
 // but is much faster
 /**
  * Sorts rows with the built-in text case sensitive strategy.
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_textCaseSensitive = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
-  columnId: string,
-) => {
-  return compareBasic(
-    toString(rowA.getValue(columnId)),
-    toString(rowB.getValue(columnId)),
-  )
-}
+export const sortFn_textCaseSensitive = constructSortFn({
+  resolveDataValue: (dataValue) => toString(dataValue),
+  sort: (dataValueA, dataValueB) => compareBasic(dataValueA, dataValueB),
+})
 
 /**
  * Sorts rows with the built-in datetime strategy.
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_datetime = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
-  columnId: string,
-) => {
-  const a = toDateSortValue(rowA.getValue(columnId))
-  const b = toDateSortValue(rowB.getValue(columnId))
-
+export const sortFn_datetime = constructSortFn({
+  resolveDataValue: (dataValue) => toDateSortValue(dataValue),
   // Can handle nullish values
   // Use > and < because == (and ===) doesn't work with
   // Date objects (would require calling getTime()).
-  return a > b ? 1 : a < b ? -1 : 0
-}
+  sort: (dataValueA, dataValueB) =>
+    dataValueA > dataValueB ? 1 : dataValueA < dataValueB ? -1 : 0,
+})
 
 /**
  * Sorts rows with the built-in basic strategy.
  *
  * This comparator returns ascending-order results; descending order is applied by the sorting row model.
  */
-export const sortFn_basic = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  rowA: Row<TFeatures, TData>,
-  rowB: Row<TFeatures, TData>,
-  columnId: string,
-) => {
-  return compareBasic(rowA.getValue(columnId), rowB.getValue(columnId))
-}
+export const sortFn_basic = constructSortFn({
+  sort: (dataValueA, dataValueB) => compareBasic(dataValueA, dataValueB),
+})
 
 // Utils
 
@@ -338,7 +347,15 @@ function countRemainingChunks(str: string, start: number) {
 /**
  * The built-in sorting function registry.
  *
- * Pass this object to sorted row model creation or extend it with custom sorting functions.
+ * Registering this full object opts out of tree-shaking: every built-in
+ * sorting function ends up in your bundle. Prefer importing the `sortFn_*`
+ * functions you actually use and registering just those in the `sortFns`
+ * slot, or passing them directly to the `sortFn` column option.
+ *
+ * @deprecated Import individual `sortFn_*` functions instead for a smaller
+ * bundle. This export still works and is not going away in v9, but built-in
+ * name resolution (including `sortFn: 'auto'`) only finds functions you
+ * register yourself.
  */
 export const sortFns = {
   alphanumeric: sortFn_alphanumeric,

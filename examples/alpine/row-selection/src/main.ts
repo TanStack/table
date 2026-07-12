@@ -5,7 +5,8 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTable,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
@@ -21,7 +22,10 @@ const features = tableFeatures({
   rowPaginationFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 // The `select` column renders interactive checkboxes in its header (select-all)

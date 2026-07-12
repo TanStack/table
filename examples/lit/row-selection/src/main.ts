@@ -7,7 +7,8 @@ import {
   columnFilteringFeature,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   rowPaginationFeature,
   rowSelectionFeature,
   tableFeatures,
@@ -22,7 +23,10 @@ const features = tableFeatures({
   rowPaginationFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [

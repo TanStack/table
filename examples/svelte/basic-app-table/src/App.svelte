@@ -8,7 +8,8 @@
     FlexRender,
     rowSortingFeature,
     createSortedRowModel,
-    sortFns,
+    sortFn_alphanumeric,
+    sortFn_text,
   } from '@tanstack/svelte-table'
   import { makeData, type Person } from './makeData'
   import './index.css'
@@ -16,7 +17,11 @@
   // 1. New in V9! Tell the table which features and row models we want to use.
   const { createAppTable, createAppColumnHelper
   } = createTableHook({
-    features: { rowSortingFeature, sortedRowModel: createSortedRowModel(), sortFns },
+    features: {
+      rowSortingFeature,
+      sortedRowModel: createSortedRowModel(),
+      sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+    },
     debugTable: true,
   })
 

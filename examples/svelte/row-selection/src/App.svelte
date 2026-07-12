@@ -4,7 +4,8 @@
     createFilteredRowModel,
     createPaginatedRowModel,
     createTable,
-    filterFns,
+    filterFn_includesString,
+    filterFn_inNumberRange,
     FlexRender,
     globalFilteringFeature,
     rowPaginationFeature,
@@ -27,7 +28,10 @@
     globalFilteringFeature,
     filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    filterFns,
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
   })
 
   let data = $state(makeData(1_000))

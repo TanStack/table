@@ -11,7 +11,8 @@ import {
   createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   globalFilteringFeature,
   rowPaginationFeature,
   tableFeatures,
@@ -37,7 +38,10 @@ const features = tableFeatures({
   facetedUniqueValues: createFacetedUniqueValues(),
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [

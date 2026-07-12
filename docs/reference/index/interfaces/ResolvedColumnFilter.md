@@ -5,7 +5,7 @@ title: ResolvedColumnFilter
 
 # Interface: ResolvedColumnFilter\<TFeatures, TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L43)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L44)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:43](https
 filterFn: FilterFn<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L47)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L48)
 
 ***
 
@@ -35,7 +35,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:47](https
 id: string;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L48)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L49)
 
 ***
 
@@ -45,4 +45,4 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:48](https
 resolvedValue: unknown;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L49)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L50)

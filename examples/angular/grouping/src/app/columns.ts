@@ -1,5 +1,7 @@
 import {
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createExpandedRowModel,
@@ -7,7 +9,6 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createTableHook,
-  filterFns,
   rowExpandingFeature,
   rowPaginationFeature,
   tableFeatures,
@@ -23,8 +24,11 @@ const features = tableFeatures({
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   filteredRowModel: createFilteredRowModel(),
-  aggregationFns,
-  filterFns,
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
 })
 
 export const { createAppColumnHelper, injectAppTable: injectTable } =

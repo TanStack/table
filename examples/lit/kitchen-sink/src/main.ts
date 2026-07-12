@@ -6,7 +6,9 @@ import { faker } from '@faker-js/faker'
 import {
   FlexRender,
   TableController,
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   createColumnHelper,
   createExpandedRowModel,
   createFacetedMinMaxValues,
@@ -16,9 +18,11 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   stockFeatures,
   tableFeatures,
 } from '@tanstack/lit-table'
@@ -67,7 +71,7 @@ const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const features = tableFeatures({
@@ -82,9 +86,21 @@ const features = tableFeatures({
   groupedRowModel: createGroupedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort },
-  aggregationFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    fuzzy: fuzzyFilter,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    fuzzy: fuzzySort,
+  },
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
 })
 
 const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {

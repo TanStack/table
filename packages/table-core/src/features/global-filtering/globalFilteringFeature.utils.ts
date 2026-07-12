@@ -74,6 +74,14 @@ export function table_getGlobalFilterFn<
       ? table_getGlobalAutoFilterFn()
       : filterFns?.[globalFilterFn as string]
 
+  if (
+    process.env.NODE_ENV === 'development' &&
+    !filterFn &&
+    globalFilterFn != null
+  ) {
+    console.warn(`globalFilterFn '${String(globalFilterFn)}' is not registered`)
+  }
+
   return filterFn
 }
 

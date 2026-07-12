@@ -23,7 +23,7 @@ This skill builds on `core`, `table-features`, `client-vs-server`, and `column-f
 import {
   columnFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
   globalFilteringFeature,
   tableFeatures,
 } from '@tanstack/table-core'
@@ -32,7 +32,7 @@ export const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns,
+  filterFns: { includesString: filterFn_includesString },
 })
 ```
 

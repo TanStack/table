@@ -9,7 +9,7 @@ title: PartialKeys
 type PartialKeys<T, K> = Omit<T, K> & Partial<Pick<T, K>>;
 ```
 
-Defined in: [types/type-utils.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/type-utils.ts#L9)
+Defined in: [types/type-utils.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/type-utils.ts#L17)
 
 ## Type Parameters
 

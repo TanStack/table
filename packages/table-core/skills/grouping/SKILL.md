@@ -21,7 +21,7 @@ This skill builds on `core`, `table-features`, and `client-vs-server`. Grouping 
 
 ```ts
 import {
-  aggregationFns,
+  aggregationFn_sum,
   columnGroupingFeature,
   createGroupedRowModel,
   tableFeatures,
@@ -30,9 +30,14 @@ import {
 export const features = tableFeatures({
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
-  aggregationFns,
+  aggregationFns: { sum: aggregationFn_sum },
 })
 ```
+
+Import individual `aggregationFn_*` built-ins and register only those your
+columns reference by string name or that `aggregationFn: 'auto'` should
+resolve (numbers resolve to `sum`, dates to `extent`). The full
+`aggregationFns` registry object still works but bundles every built-in.
 
 ## Core Patterns
 

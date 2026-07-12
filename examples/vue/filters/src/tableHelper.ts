@@ -7,7 +7,8 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   globalFilteringFeature,
   rowPaginationFeature,
 } from '@tanstack/vue-table'
@@ -33,6 +34,9 @@ export const { appFeatures, createAppColumnHelper, useAppTable } =
       facetedRowModel: createFacetedRowModel(),
       facetedMinMaxValues: createFacetedMinMaxValues(),
       facetedUniqueValues: createFacetedUniqueValues(),
-      filterFns,
+      filterFns: {
+        includesString: filterFn_includesString,
+        inNumberRange: filterFn_inNumberRange,
+      },
     },
   })

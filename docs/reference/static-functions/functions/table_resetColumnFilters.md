@@ -9,7 +9,7 @@ title: table_resetColumnFilters
 function table_resetColumnFilters<TFeatures, TData>(table, defaultState?): void;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:295](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L295)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:311](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L311)
 
 Resets `columnFilters` to the configured initial state or feature default.
 

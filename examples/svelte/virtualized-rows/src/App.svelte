@@ -6,7 +6,9 @@
     createTable,
     rowSelectionFeature,
     rowSortingFeature,
-    sortFns,
+    sortFn_alphanumeric,
+    sortFn_datetime,
+    sortFn_text,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import type { ColumnDef } from '@tanstack/svelte-table'
@@ -21,7 +23,11 @@
     rowSelectionFeature,
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
-    sortFns,
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      datetime: sortFn_datetime,
+      text: sortFn_text,
+    },
   })
 
   // This is a dynamic row height example, which is more complicated, but allows for a more realistic table.

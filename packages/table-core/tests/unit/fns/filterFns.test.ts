@@ -1,17 +1,24 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   columnFilteringFeature,
+  constructFilterFn,
   constructTable,
+  createFilteredRowModel,
+  filterFn_empty,
+  filterFn_endsWith,
   filterFn_equals,
   filterFn_equalsString,
   filterFn_equalsStringSensitive,
   filterFn_greaterThan,
   filterFn_greaterThanOrEqualTo,
+  filterFn_inDateRange,
   filterFn_inNumberRange,
   filterFn_includesString,
   filterFn_includesStringSensitive,
   filterFn_lessThan,
   filterFn_lessThanOrEqualTo,
+  filterFn_notEmpty,
+  filterFn_startsWith,
   filterFn_weakEquals,
   filterFns,
 } from '../../../src'
@@ -143,24 +150,28 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFn_includesString', () => {
+      // The table applies `resolveFilterValue` once per filter before rows are
+      // tested; direct calls mirror that contract here.
+      const resolveFilterValue = filterFn_includesString.resolveFilterValue!
+
       it('should match case-insensitive substrings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'John'
+        const filterValue = resolveFilterValue('John')
         const result = filterFn_includesString(row, columnId, filterValue)
         expect(result).toBe(true)
       })
       it('should match different case substrings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'john' // lowercase
+        const filterValue = resolveFilterValue('jOhN')
         const result = filterFn_includesString(row, columnId, filterValue)
         expect(result).toBe(true)
       })
       it('should handle partial matches', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'ohn'
+        const filterValue = resolveFilterValue('OHN')
         const result = filterFn_includesString(row, columnId, filterValue)
         expect(result).toBe(true)
       })
@@ -171,24 +182,28 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFn_equalsString', () => {
+      // The table applies `resolveFilterValue` once per filter before rows are
+      // tested; direct calls mirror that contract here.
+      const resolveFilterValue = filterFn_equalsString.resolveFilterValue!
+
       it('should match exact strings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'John'
+        const filterValue = resolveFilterValue('John')
         const result = filterFn_equalsString(row, columnId, filterValue)
         expect(result).toBe(true)
       })
       it('should match case-insensitive exact strings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'john' // lowercase
+        const filterValue = resolveFilterValue('jOhN')
         const result = filterFn_equalsString(row, columnId, filterValue)
         expect(result).toBe(true)
       })
       it('should not match partial strings', () => {
         const row = mockRows[0]!
         const columnId = 'firstName'
-        const filterValue = 'ohn'
+        const filterValue = resolveFilterValue('ohn')
         const result = filterFn_equalsString(row, columnId, filterValue)
         expect(result).toBe(false)
       })
@@ -572,7 +587,7 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFns.between.autoRemove', () => {
-      const autoRemove = filterFns.between.autoRemove
+      const autoRemove = filterFns.between.autoRemove!
 
       it('should auto-remove when both endpoints are undefined', () => {
         expect(autoRemove([undefined, undefined])).toBe(true)
@@ -602,7 +617,7 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFns.betweenInclusive.autoRemove', () => {
-      const autoRemove = filterFns.betweenInclusive.autoRemove
+      const autoRemove = filterFns.betweenInclusive.autoRemove!
 
       it('should auto-remove when both endpoints are undefined', () => {
         expect(autoRemove([undefined, undefined])).toBe(true)
@@ -777,7 +792,7 @@ describe('Filter Functions', () => {
     })
 
     describe('filterFns.arrHas.autoRemove', () => {
-      const autoRemove = filterFns.arrHas.autoRemove
+      const autoRemove = filterFns.arrHas.autoRemove!
 
       it('should auto-remove when the filter value is undefined', () => {
         expect(autoRemove(undefined)).toBe(true)
@@ -810,30 +825,30 @@ describe('Number Range Filters', () => {
     })
 
     it('should coerce string endpoints in resolveFilterValue', () => {
-      expect(filterFn_inNumberRange.resolveFilterValue(['29', '31'])).toEqual([
+      expect(filterFn_inNumberRange.resolveFilterValue!(['29', '31'])).toEqual([
         29, 31,
       ])
     })
 
     it('should treat null and non-numeric endpoints as open-ended', () => {
-      expect(filterFn_inNumberRange.resolveFilterValue([null, 31])).toEqual([
+      expect(filterFn_inNumberRange.resolveFilterValue!([null, 31])).toEqual([
         -Infinity,
         31,
       ])
-      expect(filterFn_inNumberRange.resolveFilterValue([29, 'abc'])).toEqual([
+      expect(filterFn_inNumberRange.resolveFilterValue!([29, 'abc'])).toEqual([
         29,
         Infinity,
       ])
     })
 
     it('should swap reversed ranges', () => {
-      expect(filterFn_inNumberRange.resolveFilterValue([31, 29])).toEqual([
+      expect(filterFn_inNumberRange.resolveFilterValue!([31, 29])).toEqual([
         29, 31,
       ])
     })
 
     it('should auto-remove only fully empty ranges', () => {
-      const autoRemove = filterFn_inNumberRange.autoRemove
+      const autoRemove = filterFn_inNumberRange.autoRemove!
 
       expect(autoRemove(undefined)).toBe(true)
       expect(autoRemove([null, null])).toBe(true)
@@ -842,5 +857,301 @@ describe('Number Range Filters', () => {
       expect(autoRemove([undefined, 10])).toBe(false)
       expect(autoRemove([0, 10])).toBe(false)
     })
+  })
+})
+
+describe('constructFilterFn', () => {
+  const normalize = (val: any) =>
+    String(val ?? '')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/\p{Diacritic}/gu, '')
+
+  // A variant of a built-in filter fn: same comparator and autoRemove, only
+  // the resolvers change.
+  const includesStringIgnoreDiacritics = constructFilterFn({
+    ...filterFn_includesString,
+    resolveFilterValue: normalize,
+    resolveDataValue: normalize,
+  })
+
+  type Sample = { name: string | null }
+  const sampleColumns: Array<ColumnDef<typeof features, Sample, any>> = [
+    { accessorKey: 'name', id: 'name' },
+  ]
+
+  function makeRow(name: string | null) {
+    const sampleTable = constructTable<typeof features, Sample>({
+      features,
+      data: [{ name }],
+      columns: sampleColumns,
+    })
+    return sampleTable.getRowModel().rows[0]!
+  }
+
+  it('matches data with diacritics against plain filter text', () => {
+    const row = makeRow('Éric Bernard')
+    const filterValue =
+      includesStringIgnoreDiacritics.resolveFilterValue!('eric')
+
+    expect(includesStringIgnoreDiacritics(row, 'name', filterValue)).toBe(true)
+    // The base filter fn does not match across diacritics
+    expect(
+      filterFn_includesString(
+        row,
+        'name',
+        filterFn_includesString.resolveFilterValue!('eric'),
+      ),
+    ).toBe(false)
+  })
+
+  it('matches filter text with diacritics against plain data', () => {
+    const row = makeRow('Zoe Smith')
+    const filterValue =
+      includesStringIgnoreDiacritics.resolveFilterValue!('Zoë')
+
+    expect(includesStringIgnoreDiacritics(row, 'name', filterValue)).toBe(true)
+  })
+
+  it('inherits the base autoRemove behavior through the spread', () => {
+    expect(includesStringIgnoreDiacritics.autoRemove!('')).toBe(true)
+    expect(includesStringIgnoreDiacritics.autoRemove!('x')).toBe(false)
+  })
+
+  it('honors resolveDataValue assigned after creation', () => {
+    const upperCaseEquals = constructFilterFn({
+      ...filterFn_equalsStringSensitive,
+    })
+    upperCaseEquals.resolveDataValue = (val: any) => String(val).toUpperCase()
+
+    expect(upperCaseEquals(makeRow('john'), 'name', 'JOHN')).toBe(true)
+  })
+
+  it('applies both resolvers when filtering through the table row model', () => {
+    const filteringFeatures = testFeatures({
+      columnFilteringFeature,
+      filteredRowModel: createFilteredRowModel(),
+    })
+    const filteredTable = constructTable<typeof filteringFeatures, Sample>({
+      features: filteringFeatures,
+      data: [
+        { name: 'Enrico Toccacelo' },
+        { name: 'Éric Bernard' },
+        { name: 'Eric Brandon' },
+        { name: null },
+      ],
+      columns: [
+        {
+          accessorKey: 'name',
+          id: 'name',
+          filterFn: includesStringIgnoreDiacritics,
+        },
+      ],
+      initialState: {
+        columnFilters: [{ id: 'name', value: 'ERIC' }],
+      },
+    })
+
+    expect(
+      filteredTable.getFilteredRowModel().rows.map((row) => row.original.name),
+    ).toEqual(['Éric Bernard', 'Eric Brandon'])
+  })
+})
+
+describe('filterFn_startsWith / filterFn_endsWith', () => {
+  it('matches prefixes case-insensitively', () => {
+    const row = mockRows[0]! // firstName 'John'
+    const resolve = filterFn_startsWith.resolveFilterValue!
+
+    expect(filterFn_startsWith(row, 'firstName', resolve('JO'))).toBe(true)
+    expect(filterFn_startsWith(row, 'firstName', resolve('ohn'))).toBe(false)
+  })
+
+  it('matches suffixes case-insensitively', () => {
+    const row = mockRows[0]! // firstName 'John'
+    const resolve = filterFn_endsWith.resolveFilterValue!
+
+    expect(filterFn_endsWith(row, 'firstName', resolve('HN'))).toBe(true)
+    expect(filterFn_endsWith(row, 'firstName', resolve('Jo'))).toBe(false)
+  })
+
+  it('auto-removes empty filter values', () => {
+    expect(filterFn_startsWith.autoRemove!('')).toBe(true)
+    expect(filterFn_endsWith.autoRemove!(undefined)).toBe(true)
+    expect(filterFn_startsWith.autoRemove!('j')).toBe(false)
+  })
+})
+
+describe('filterFn_empty / filterFn_notEmpty', () => {
+  function makeValueRow(value: unknown) {
+    const sampleTable = constructTable<typeof features, { value: unknown }>({
+      features,
+      data: [{ value }],
+      columns: [{ accessorKey: 'value', id: 'value' }],
+    })
+    return sampleTable.getRowModel().rows[0]!
+  }
+
+  it('treats nullish and whitespace-only values as empty', () => {
+    expect(filterFn_empty(makeValueRow(null), 'value', true)).toBe(true)
+    expect(filterFn_empty(makeValueRow(undefined), 'value', true)).toBe(true)
+    expect(filterFn_empty(makeValueRow(''), 'value', true)).toBe(true)
+    expect(filterFn_empty(makeValueRow('   '), 'value', true)).toBe(true)
+    expect(filterFn_empty(makeValueRow([]), 'value', true)).toBe(true)
+  })
+
+  it('treats real values as not empty, including falsy ones', () => {
+    expect(filterFn_empty(makeValueRow('x'), 'value', true)).toBe(false)
+    expect(filterFn_empty(makeValueRow(0), 'value', true)).toBe(false)
+    expect(filterFn_empty(makeValueRow(false), 'value', true)).toBe(false)
+  })
+
+  it('mirrors empty with notEmpty', () => {
+    expect(filterFn_notEmpty(makeValueRow(null), 'value', true)).toBe(false)
+    expect(filterFn_notEmpty(makeValueRow('x'), 'value', true)).toBe(true)
+  })
+
+  it('auto-removes only when the flag is turned off or blank', () => {
+    for (const filterFn of [filterFn_empty, filterFn_notEmpty]) {
+      expect(filterFn.autoRemove!(false)).toBe(true)
+      expect(filterFn.autoRemove!(undefined)).toBe(true)
+      expect(filterFn.autoRemove!('')).toBe(true)
+      expect(filterFn.autoRemove!(true)).toBe(false)
+    }
+  })
+})
+
+describe('filterFn_inDateRange', () => {
+  const resolve = filterFn_inDateRange.resolveFilterValue!
+
+  function makeValueRow(value: unknown) {
+    const sampleTable = constructTable<typeof features, { value: unknown }>({
+      features,
+      data: [{ value }],
+      columns: [{ accessorKey: 'value', id: 'value' }],
+    })
+    return sampleTable.getRowModel().rows[0]!
+  }
+
+  it('coerces Date, string, and timestamp endpoints to timestamps', () => {
+    const min = new Date('2026-01-01')
+    const max = new Date('2026-01-31')
+
+    expect(resolve([min, max])).toEqual([min.getTime(), max.getTime()])
+    expect(resolve(['2026-01-01', max.getTime()])).toEqual([
+      min.getTime(),
+      max.getTime(),
+    ])
+  })
+
+  it('treats blank or invalid endpoints as open-ended and swaps reversed ranges', () => {
+    const min = new Date('2026-01-01')
+
+    expect(resolve([null, null])).toEqual([-Infinity, Infinity])
+    expect(resolve([min, ''])).toEqual([min.getTime(), Infinity])
+    expect(resolve(['not a date', min])).toEqual([-Infinity, min.getTime()])
+    expect(resolve([new Date('2026-01-31'), min])).toEqual([
+      min.getTime(),
+      new Date('2026-01-31').getTime(),
+    ])
+  })
+
+  it('matches Date, string, and timestamp row values inside the range', () => {
+    const range = resolve([new Date('2026-01-05'), new Date('2026-01-15')])
+
+    expect(
+      filterFn_inDateRange(
+        makeValueRow(new Date('2026-01-10')),
+        'value',
+        range,
+      ),
+    ).toBe(true)
+    expect(
+      filterFn_inDateRange(makeValueRow('2026-01-10'), 'value', range),
+    ).toBe(true)
+    expect(
+      filterFn_inDateRange(
+        makeValueRow(new Date('2026-01-10').getTime()),
+        'value',
+        range,
+      ),
+    ).toBe(true)
+    expect(
+      filterFn_inDateRange(
+        makeValueRow(new Date('2026-01-20')),
+        'value',
+        range,
+      ),
+    ).toBe(false)
+  })
+
+  it('never matches rows without a valid date', () => {
+    const range = resolve([null, null]) // fully open range
+
+    expect(filterFn_inDateRange(makeValueRow(null), 'value', range)).toBe(false)
+    expect(filterFn_inDateRange(makeValueRow('nope'), 'value', range)).toBe(
+      false,
+    )
+  })
+
+  it('auto-removes only fully blank ranges', () => {
+    expect(filterFn_inDateRange.autoRemove!(undefined)).toBe(true)
+    expect(filterFn_inDateRange.autoRemove!([null, null])).toBe(true)
+    expect(filterFn_inDateRange.autoRemove!([new Date(0), null])).toBe(false)
+  })
+})
+
+describe('filter fn registry', () => {
+  it('registers the case-sensitive string equality filter fn', () => {
+    expect(filterFns.equalsStringSensitive).toBe(filterFn_equalsStringSensitive)
+  })
+
+  it('registers the new built-in filter fns', () => {
+    expect(filterFns.startsWith).toBe(filterFn_startsWith)
+    expect(filterFns.endsWith).toBe(filterFn_endsWith)
+    expect(filterFns.empty).toBe(filterFn_empty)
+    expect(filterFns.notEmpty).toBe(filterFn_notEmpty)
+    expect(filterFns.inDateRange).toBe(filterFn_inDateRange)
+  })
+})
+
+describe('auto filter fn for date columns', () => {
+  const dateFeatures = testFeatures({
+    columnFilteringFeature,
+    filteredRowModel: createFilteredRowModel(),
+    filterFns,
+  })
+
+  type Event = { name: string; when: Date | null }
+
+  const dateTable = constructTable<typeof dateFeatures, Event>({
+    features: dateFeatures,
+    data: [
+      { name: 'too early', when: new Date('2026-01-01') },
+      { name: 'in range', when: new Date('2026-01-10') },
+      { name: 'no date', when: null },
+      { name: 'too late', when: new Date('2026-01-20') },
+    ],
+    columns: [
+      { accessorKey: 'name', id: 'name' },
+      { accessorKey: 'when', id: 'when', filterFn: 'auto' },
+    ],
+    initialState: {
+      columnFilters: [
+        { id: 'when', value: [new Date('2026-01-05'), new Date('2026-01-15')] },
+      ],
+    },
+  })
+
+  it('resolves inDateRange for Date-valued columns', () => {
+    expect(dateTable.getColumn('when')!.getAutoFilterFn()).toBe(
+      filterFns.inDateRange,
+    )
+  })
+
+  it('filters date rows through the table row model', () => {
+    expect(
+      dateTable.getFilteredRowModel().rows.map((row) => row.original.name),
+    ).toEqual(['in range'])
   })
 })

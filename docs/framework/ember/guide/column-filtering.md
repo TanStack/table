@@ -20,13 +20,17 @@ import {
   tableFeatures,
   columnFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
 } from '@tanstack/ember-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 // inside your component class
@@ -36,6 +40,8 @@ table = useTable(() => ({
   data: this.data,
 }))
 ```
+
+> **Note:** The `filterFns` registry above lists only the built-in filter functions this table uses. Spreading the entire built-in `filterFns` registry (`filterFns: { ...filterFns }`) still works, but it puts every built-in filter function in your bundle. Register just the functions you use, or pass a function directly to the `filterFn` column option with no registration at all.
 
 ## Column Filtering (Ember) Guide
 
@@ -82,7 +88,7 @@ table = useTable(() => ({
 
 ### Client-Side Filtering
 
-If you are using the built-in client-side filtering features, add the `columnFilteringFeature` and the `filteredRowModel` factory to your features. Import `createFilteredRowModel` and `filterFns` from TanStack Table:
+If you are using the built-in client-side filtering features, add the `columnFilteringFeature` and the `filteredRowModel` factory to your features. Import `createFilteredRowModel` and the filter functions you need from TanStack Table:
 
 ```gts
 import {
@@ -90,13 +96,17 @@ import {
   tableFeatures,
   columnFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
 } from '@tanstack/ember-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 table = useTable(() => ({
@@ -214,28 +224,34 @@ table = useTable(() => ({
 
 Each column can have its own unique filtering logic. Choose from any of the filter functions that are provided by TanStack Table, or create your own.
 
-By default there are 12 built-in filter functions to choose from:
+By default there are 18 built-in filter functions to choose from:
 
 - `includesString` - Case-insensitive string inclusion
 - `includesStringSensitive` - Case-sensitive string inclusion
+- `startsWith` - Case-insensitive string prefix match
+- `endsWith` - Case-insensitive string suffix match
 - `equalsString` - Case-insensitive string equality
+- `equalsStringSensitive` - Case-sensitive string equality
 - `equals` - Strict equality `===`
 - `weakEquals` - Weak equality `==`
+- `empty` - The row's value is nullish or whitespace-only (the filter value is an on/off flag)
+- `notEmpty` - The row's value is not nullish or whitespace-only (the filter value is an on/off flag)
 - `arrIncludes` - The row's array (or string) value includes at least one of the filter values
 - `arrIncludesAll` - The row's array value includes every filter value
 - `arrIncludesSome` - The row's array value includes at least one of the filter values
 - `arrHas` - The row's scalar value equals at least one of the filter values
 - `inNumberRange` - Inclusive `[min, max]` number range (endpoints normalized and swapped if reversed)
+- `inDateRange` - Inclusive `[min, max]` date range accepting `Date` objects, timestamps, or date strings (blank endpoints are open-ended)
 - `between` - Exclusive min/max range (blank endpoints are open-ended)
 - `betweenInclusive` - Inclusive min/max range (blank endpoints are open-ended)
 
-You can also define your own custom filter functions, either inline as the `filterFn` column option, or by name in the filter function registry that you pass to `createFilteredRowModel`.
+You can also define your own custom filter functions, either inline as the `filterFn` column option, or by name in the `filterFns` registry slot on `tableFeatures`.
 
 #### Custom Filter Functions
 
 > **Note:** These filter functions only run during client-side filtering.
 
-Whether you register a custom filter function in the registry passed to `createFilteredRowModel` or pass it directly as a `filterFn` column option, it should have the following signature:
+Whether you register a custom filter function in the `filterFns` slot on `tableFeatures` or pass it directly as a `filterFn` column option, it should have the following signature:
 
 ```ts
 const myCustomFilterFn: FilterFn<typeof features, MyData> = (
@@ -267,7 +283,8 @@ const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns: {
-    ...filterFns,
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
     myCustomFilterFn,
     startsWith: startsWithFilterFn, // defined elsewhere
   },
@@ -308,33 +325,47 @@ table = useTable(() => ({
 
 You can attach a few other properties to filter functions to customize their behavior:
 
-- `filterFn.resolveFilterValue` - This optional "hanging" method on any given `filterFn` allows the filter function to transform/sanitize/format the filter value before it is passed to the filter function.
+- `filterFn.resolveFilterValue` - This optional "hanging" method on any given `filterFn` allows the filter function to transform/sanitize/format the filter value before it is passed to the filter function. The table applies it once per filter (not once per row), so it is also the right place for expensive preparation work.
+
+- `filterFn.resolveDataValue` - This optional "hanging" method normalizes each row's value before it is compared against the filter value. It is honored by every filter function built with the `constructFilterFn` helper, which includes all built-in filter functions.
 
 - `filterFn.autoRemove` - This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
 
+The `constructFilterFn` helper builds a filter function from a value-level comparator plus those optional resolvers:
+
 ```ts
-const startsWithFilterFn = <
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  columnId: string,
-  filterValue: string, // resolveFilterValue below transforms the raw value to a string
-) =>
-  row
-    .getValue<number | string>(columnId)
-    .toString()
-    .toLowerCase()
-    .trim()
-    .startsWith(filterValue) // toString, toLowerCase, and trim the filter value in `resolveFilterValue`
-
-// remove the filter value from filter state if it is falsy (empty string in this case)
-startsWithFilterFn.autoRemove = (val: any) => !val
-
-// transform/sanitize/format the filter value before it is passed to the filter function
-startsWithFilterFn.resolveFilterValue = (val: any) =>
-  val.toString().toLowerCase().trim()
+const startsWithFilterFn = constructFilterFn({
+  // compare the (resolved) row value against the (resolved) filter value
+  filter: (dataValue, filterValue) =>
+    Boolean(dataValue?.startsWith(filterValue)),
+  // normalize the filter value once, before any rows are tested
+  resolveFilterValue: (value) => String(value).toLowerCase().trim(),
+  // normalize each row's value before it reaches the comparator
+  resolveDataValue: (value) => String(value ?? '').toLowerCase(),
+  // remove the filter value from filter state if it is falsy (empty string in this case)
+  autoRemove: (value) => !value,
+})
 ```
+
+Keeping the comparison in `filter` and the normalization in the resolvers pays off when you need a variant of an existing filter function: the definition is attached to the returned function, so you can spread any filter function built with `constructFilterFn` and override only what differs. For example, a version of `includesString` that also ignores diacritics (so a search for "eric" matches "Éric"):
+
+```ts
+const normalize = (value: unknown) =>
+  String(value ?? '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+
+const includesStringIgnoreDiacritics = constructFilterFn({
+  ...filterFn_includesString, // reuse the comparator and autoRemove behavior
+  resolveFilterValue: normalize,
+  resolveDataValue: normalize,
+})
+```
+
+Register the variant by name in the `filterFns` registry or pass it directly to the `filterFn` column option, just like any other custom filter function.
+
+> **Note:** The table applies `resolveFilterValue` once per filter before any rows are tested. If you ever call a filter function directly (outside of a table), resolve the filter value yourself: `myFilterFn(row, columnId, myFilterFn.resolveFilterValue?.(rawValue) ?? rawValue)`.
 
 ### Customize Column Filtering
 
@@ -379,7 +410,10 @@ const features = tableFeatures({
   rowExpandingFeature,
   filteredRowModel: createFilteredRowModel(),
   expandedRowModel: createExpandedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 table = useTable(() => ({
@@ -402,7 +436,10 @@ const features = tableFeatures({
   rowExpandingFeature,
   filteredRowModel: createFilteredRowModel(),
   expandedRowModel: createExpandedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 table = useTable(() => ({

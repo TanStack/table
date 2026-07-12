@@ -15,8 +15,11 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
-  sortFns,
+  filterFn_between,
+  filterFn_includesString,
+  filterFn_inNumberRange,
+  sortFn_alphanumeric,
+  sortFn_text,
   createColumnHelper,
   type Column,
   type Row,
@@ -35,8 +38,15 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: {
+    between: filterFn_between,
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

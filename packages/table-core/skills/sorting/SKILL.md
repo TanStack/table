@@ -23,16 +23,22 @@ This skill builds on `core`, `table-features`, and `client-vs-server`. Sorting s
 import {
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/table-core'
 
 export const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
 })
 ```
+
+Import individual `sortFn_*` built-ins and register only those your columns
+reference by string name or that `sortFn: 'auto'` should resolve for your data
+types. The full `sortFns` registry object still works but bundles every
+built-in; numeric columns fall back to a basic comparator without registration.
 
 ## Core Patterns
 

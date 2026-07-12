@@ -6,7 +6,8 @@ import {
   createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
   rowPaginationFeature,
   tableFeatures,
@@ -28,6 +29,9 @@ export const appFeatures = tableFeatures({
   facetedRowModel: createFacetedRowModel(),
   facetedMinMaxValues: createFacetedMinMaxValues(),
   facetedUniqueValues: createFacetedUniqueValues(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
   columnMeta: metaHelper<MyColumnMeta>(),
 })

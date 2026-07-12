@@ -9,7 +9,8 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   isFunction,
   metaHelper,
   rowPaginationFeature,
@@ -35,7 +36,10 @@ export const features = tableFeatures({
   facetedUniqueValues: createFacetedUniqueValues(),
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({

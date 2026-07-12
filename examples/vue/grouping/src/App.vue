@@ -1,7 +1,9 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createColumnHelper,
@@ -10,11 +12,9 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
-  sortFns,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
@@ -33,9 +33,12 @@ const features = tableFeatures({
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
-  aggregationFns,
+  // register only the aggregation fns referenced by name in the column definitions
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
