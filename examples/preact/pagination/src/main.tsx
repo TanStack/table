@@ -22,6 +22,11 @@ function App() {
   const columns = useMemo(
     () =>
       columnHelper.columns([
+        columnHelper.display({
+          id: 'rowNumber',
+          header: '#',
+          cell: ({ row }) => row.getDisplayIndex() + 1,
+        }),
         columnHelper.accessor('firstName', {
           cell: (info) => info.getValue(),
           footer: (props) => props.column.id,

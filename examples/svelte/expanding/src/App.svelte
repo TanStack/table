@@ -52,6 +52,11 @@
   const stressTest = () => { data = makeData(10_000, 5, 3) }
 
   const columns = columnHelper.columns([
+    columnHelper.display({
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    }),
     columnHelper.accessor('firstName', {
       header: () => 'firstName',
       cell: ({ row, getValue }) => getValue<string>(),

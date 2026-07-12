@@ -2,6 +2,7 @@ import { assignPrototypeAPIs, assignTableAPIs } from '../../utils'
 import {
   row_getAllCells,
   row_getAllCellsByColumnId,
+  row_getDisplayIndex,
   row_getLeafRows,
   row_getParentRow,
   row_getParentRows,
@@ -10,6 +11,7 @@ import {
   row_renderValue,
   table_getRow,
   table_getRowId,
+  table_getRowsInDisplayOrder,
 } from './coreRowsFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 
@@ -19,6 +21,9 @@ import type { TableFeature } from '../../types/TableFeatures'
 export const coreRowsFeature: TableFeature = {
   assignRowPrototype: (prototype, table) => {
     assignPrototypeAPIs('coreRowsFeature', prototype, table, {
+      row_getDisplayIndex: {
+        fn: (row) => row_getDisplayIndex(row),
+      },
       row_getAllCellsByColumnId: {
         fn: (row) => row_getAllCellsByColumnId(row),
         memoDeps: (row) => [row.getAllCells()],
@@ -50,6 +55,16 @@ export const coreRowsFeature: TableFeature = {
   },
   constructTableAPIs: (table) => {
     assignTableAPIs('coreRowsFeature', table, {
+      table_getRowsInDisplayOrder: {
+        fn: () => table_getRowsInDisplayOrder(table),
+        memoDeps: () => [
+          table.getPrePaginatedRowModel().rows,
+          table.options.paginateExpandedRows,
+          table.options.paginateExpandedRows === false
+            ? table.atoms.expanded?.get()
+            : undefined,
+        ],
+      },
       table_getRowId: {
         fn: (originalRow, index, parent) =>
           table_getRowId(originalRow, table, index, parent),

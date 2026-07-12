@@ -9,7 +9,7 @@ title: row_getLeafRows
 function row_getLeafRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L105)
+Defined in: [core/rows/coreRowsFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L163)
 
 Flattens this row's descendant tree into leaf rows.
 

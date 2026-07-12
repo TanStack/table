@@ -11,7 +11,7 @@ function row_getParentRow<TFeatures, TData>(row):
   | undefined;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L123)
+Defined in: [core/rows/coreRowsFeature.utils.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L181)
 
 Looks up this row's direct parent, if it has one.
 

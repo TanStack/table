@@ -37,6 +37,14 @@ describe('row model fallback chains', () => {
     const table = makeCoreOnlyTable()
     const coreRowModel = table.getCoreRowModel()
 
+    expect(coreRowModel.rows.map((row) => row._displayIndexCache)).toEqual([
+      -1, -1, -1,
+    ])
+    expect(table.getRowsInDisplayOrder()).toBe(coreRowModel.rows)
+    expect(coreRowModel.rows.map((row) => row.getDisplayIndex())).toEqual([
+      0, 1, 2,
+    ])
+
     expect(table.getPreFilteredRowModel()).toBe(coreRowModel)
     expect(table.getFilteredRowModel()).toBe(coreRowModel)
     expect(table.getPreGroupedRowModel()).toBe(coreRowModel)

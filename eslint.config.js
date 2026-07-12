@@ -8,6 +8,14 @@ const config = [
   ...tanstackConfig,
   {
     name: 'tanstack/temp',
+    // Anchor type-aware linting to the repo root so `project: true` does not
+    // fall back to process.cwd() (e.g. packages/ember-table in the IDE).
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {
       'no-case-declarations': 'off',
       'no-shadow': 'off',

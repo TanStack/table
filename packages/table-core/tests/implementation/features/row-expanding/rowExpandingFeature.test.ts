@@ -54,14 +54,55 @@ function createTable(options?: { paginateExpandedRows?: boolean }) {
 }
 
 describe('row expanding feature', () => {
+  it('assigns display indexes in expanded row order before pagination', () => {
+    const table = createTable({ paginateExpandedRows: true })
+
+    table.getRow('0').toggleExpanded()
+
+    const rows = table.getPrePaginatedRowModel().rows
+    expect(rows.map((row) => row.id)).toEqual(['0', '0.0', '1'])
+    expect(rows.map((row) => row.getDisplayIndex())).toEqual([0, 1, 2])
+
+    table.getRow('0').toggleExpanded()
+
+    const collapsedRows = table.getPrePaginatedRowModel().rows
+    expect(collapsedRows.map((row) => row.id)).toEqual(['0', '1'])
+    expect(collapsedRows.map((row) => row.getDisplayIndex())).toEqual([0, 1])
+  })
+
   it('updates the paginated row model when expanded state changes and expanded rows are not paginated', () => {
     const table = createTable({ paginateExpandedRows: false })
 
     expect(table.getRowModel().rows.map((row) => row.id)).toEqual(['0'])
+    expect(table.getRowsInDisplayOrder().map((row) => row.id)).toEqual([
+      '0',
+      '1',
+    ])
 
     table.getRow('0').toggleExpanded()
 
     expect(table.atoms.expanded.get()).toEqual({ 0: true })
     expect(table.getRowModel().rows.map((row) => row.id)).toEqual(['0', '0.0'])
+    expect(table.getRowsInDisplayOrder().map((row) => row.id)).toEqual([
+      '0',
+      '0.0',
+      '1',
+    ])
+    expect(
+      table.getRowModel().rows.map((row) => row.getDisplayIndex()),
+    ).toEqual([0, 1])
+
+    table.setPageIndex(1)
+
+    expect(table.getRowModel().rows.map((row) => row.id)).toEqual(['1'])
+    expect(table.getRowModel().rows[0]!.getDisplayIndex()).toBe(2)
+
+    table.getRow('0').toggleExpanded()
+
+    expect(table.getRowsInDisplayOrder().map((row) => row.id)).toEqual([
+      '0',
+      '1',
+    ])
+    expect(table.getRow('0.0').getDisplayIndex()).toBe(-1)
   })
 })

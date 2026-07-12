@@ -31,6 +31,11 @@ const sortStatusFn: SortFn<typeof features, Person> = (
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
   {
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  },
+  {
     accessorKey: 'firstName',
     cell: (info) => info.getValue(),
     // this column will sort in ascending order by default since it is a string column

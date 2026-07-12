@@ -6,6 +6,12 @@ import rootConfig from '../../eslint.config.js'
 const config = [
   ...rootConfig,
   {
+    languageOptions: {
+      parserOptions: {
+        project: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {},
   },
 ]

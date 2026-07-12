@@ -5,7 +5,7 @@ title: Table_Rows
 
 # Interface: Table\_Rows\<TFeatures, TData\>
 
-Defined in: [core/rows/coreRowsFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L113)
+Defined in: [core/rows/coreRowsFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L119)
 
 ## Extended by
 
@@ -30,7 +30,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:113](https://github.com/TanStack
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L121)
+Defined in: [core/rows/coreRowsFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L134)
 
 Returns the row with the given ID.
 
@@ -56,7 +56,7 @@ Returns the row with the given ID.
 getRowId: (_, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L117)
+Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L130)
 
 #### Parameters
 
@@ -75,3 +75,22 @@ Defined in: [core/rows/coreRowsFeature.types.ts:117](https://github.com/TanStack
 #### Returns
 
 `string`
+
+***
+
+### getRowsInDisplayOrder()
+
+```ts
+getRowsInDisplayOrder: () => Row<TFeatures, TData>[];
+```
+
+Defined in: [core/rows/coreRowsFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L129)
+
+Returns the rows in the current display order and assigns their display
+indexes. When expanded rows bypass pagination, expanded descendants are
+included in this order. This is the memoized source for
+`row.getDisplayIndex()`.
+
+#### Returns
+
+[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]

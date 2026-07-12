@@ -39,6 +39,11 @@ const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  }),
   columnHelper.accessor('firstName', {
     cell: (info) => info.getValue(),
     footer: (info) => info.column.id,

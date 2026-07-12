@@ -23,7 +23,19 @@ export default [
     languageOptions: {
       parserOptions: {
         parser: tsParser,
+        project: false,
+        projectService: true,
+        extraFileExtensions: ['.svelte'],
+        tsconfigRootDir: import.meta.dirname,
       },
+    },
+  },
+  {
+    files: ['**/FlexRender.svelte'],
+    rules: {
+      // The rule does not detect property reads through this component's
+      // generic union-based Props type.
+      'svelte/no-unused-props': 'off',
     },
   },
 ]

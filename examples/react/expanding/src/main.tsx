@@ -43,6 +43,11 @@ function App() {
   const columns = React.useMemo(
     () =>
       columnHelper.columns([
+        columnHelper.display({
+          id: 'rowNumber',
+          header: '#',
+          cell: ({ row }) => row.getDisplayIndex() + 1,
+        }),
         columnHelper.accessor('firstName', {
           header: ({ table }) => (
             <>
@@ -129,6 +134,7 @@ function App() {
       columns,
       data,
       getSubRows: (row) => row.subRows,
+      // paginateExpandedRows: false,
       // filterFromLeafRows: true,
       // maxLeafRowFilterDepth: 0,
       debugTable: true,
