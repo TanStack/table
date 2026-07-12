@@ -9,7 +9,7 @@ title: row_getAllCellsByColumnId
 function row_getAllCellsByColumnId<TFeatures, TData>(row): Record<string, Cell<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L203)
+Defined in: [core/rows/coreRowsFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L261)
 
 Builds a lookup map of this row's cells keyed by column id.
 

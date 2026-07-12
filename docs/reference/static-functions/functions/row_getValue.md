@@ -9,7 +9,7 @@ title: row_getValue
 function row_getValue<TFeatures, TData>(row, columnId): unknown;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L20)
+Defined in: [core/rows/coreRowsFeature.utils.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L78)
 
 Reads and caches this row's value for a column.
 

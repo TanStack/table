@@ -718,7 +718,7 @@ Table_RowModels.getPreSortedRowModel
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L121)
+Defined in: [core/rows/coreRowsFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L134)
 
 Returns the row with the given ID.
 
@@ -748,7 +748,7 @@ Returns the row with the given ID.
 getRowId: (_, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L117)
+Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L130)
 
 #### Parameters
 
@@ -793,6 +793,29 @@ Returns the final model after all processing from other used features has been a
 ```ts
 Table_RowModels.getRowModel
 ```
+
+***
+
+### getRowsInDisplayOrder()
+
+```ts
+getRowsInDisplayOrder: () => Row<TFeatures, TData>[];
+```
+
+Defined in: [core/rows/coreRowsFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L129)
+
+Returns the rows in the current display order and assigns their display
+indexes. When expanded rows bypass pagination, expanded descendants are
+included in this order. This is the memoized source for
+`row.getDisplayIndex()`.
+
+#### Returns
+
+[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
+
+#### Inherited from
+
+[`Table_Rows`](Table_Rows.md).[`getRowsInDisplayOrder`](Table_Rows.md#getrowsindisplayorder)
 
 ***
 
