@@ -51,9 +51,16 @@ describe('createGroupedRowModel flatRows contain every row exactly once', () => 
       { status: 'b', firstName: 'five' },
     ]
     const table = makeTable(data, ['status'])
-    const rowModel = table.getGroupedRowModel()
+    const rowModel = table.getRowModel()
 
     expect(rowModel.rows.length).toBe(2)
+    expect(rowModel.rows.map((row) => row.getDisplayIndex())).toEqual([0, 1])
+
+    table.setGrouping([])
+
+    expect(
+      table.getRowModel().rows.map((row) => row.getDisplayIndex()),
+    ).toEqual([0, 1, 2, 3, 4])
     // 2 group rows + 5 leaf rows, each exactly once
     expect(rowModel.flatRows.length).toBe(7)
     expectUniqueFlatRowIds(rowModel)

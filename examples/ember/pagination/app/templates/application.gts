@@ -23,6 +23,11 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  }),
   columnHelper.group({
     id: 'name',
     header: 'Name',

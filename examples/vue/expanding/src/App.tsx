@@ -138,6 +138,11 @@ export default defineComponent({
     }
 
     const columns = columnHelper.columns([
+      columnHelper.display({
+        id: 'rowNumber',
+        header: '#',
+        cell: ({ row }) => row.getDisplayIndex() + 1,
+      }),
       columnHelper.accessor('firstName', {
         header: ({ table }) => (
           <>

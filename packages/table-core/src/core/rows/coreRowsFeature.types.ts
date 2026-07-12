@@ -13,6 +13,7 @@ export interface Row_CoreProperties<
     Column<TFeatures, TData, unknown>,
     Cell<TFeatures, TData, unknown>
   >
+  _displayIndexCache: number
   _uniqueValuesCache: Record<string, unknown>
   _valuesCache: Record<string, unknown>
   /**
@@ -53,6 +54,11 @@ export interface Row_Row<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > extends Row_CoreProperties<TFeatures, TData> {
+  /**
+   * Returns the zero-based index of the row in the current display order
+   * before pagination, or `-1` if the row is not in that model.
+   */
+  getDisplayIndex: () => number
   /**
    * Builds a lookup of this row's cells keyed by leaf column id.
    */
@@ -114,6 +120,13 @@ export interface Table_Rows<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  /**
+   * Returns the rows in the current display order and assigns their display
+   * indexes. When expanded rows bypass pagination, expanded descendants are
+   * included in this order. This is the memoized source for
+   * `row.getDisplayIndex()`.
+   */
+  getRowDisplayIndexRows: () => Array<Row<TFeatures, TData>>
   getRowId: (_: TData, index: number, parent?: Row<TFeatures, TData>) => string
   /**
    * Returns the row with the given ID.

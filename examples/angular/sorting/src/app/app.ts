@@ -26,6 +26,11 @@ const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {
 }
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  },
   { accessorKey: 'firstName', cell: (info) => info.getValue() },
   {
     accessorFn: (row) => row.lastName,

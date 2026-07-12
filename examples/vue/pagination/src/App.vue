@@ -26,6 +26,11 @@ const data = ref(makeData(1_000))
 
 const columns = ref(
   columnHelper.columns([
+    columnHelper.display({
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    }),
     columnHelper.group({
       header: 'Name',
       footer: (props) => props.column.id,

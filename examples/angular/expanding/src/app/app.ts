@@ -29,6 +29,11 @@ export const features = tableFeatures({
 
 const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  },
+  {
     accessorKey: 'firstName',
     header: () =>
       flexRenderComponent(ExpandableHeaderCell, {

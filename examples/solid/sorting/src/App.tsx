@@ -24,6 +24,11 @@ function App() {
 
   const columns: Array<ColumnDef<typeof features, Person>> = [
     {
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    },
+    {
       header: 'Name',
       footer: (props) => props.column.id,
       columns: [

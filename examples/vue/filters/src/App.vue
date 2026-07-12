@@ -10,6 +10,11 @@ const columnHelper = createAppColumnHelper<Person>()
 
 const columns = ref(
   columnHelper.columns([
+    columnHelper.display({
+      id: 'rowNumber',
+      header: '#',
+      cell: ({ row }) => row.getDisplayIndex() + 1,
+    }),
     columnHelper.group({
       header: 'Name',
       footer: (props) => props.column.id,

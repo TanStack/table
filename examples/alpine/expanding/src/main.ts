@@ -40,6 +40,11 @@ const features = tableFeatures({
 // id), so here the column just exposes the plain value.
 const columns: Array<ColumnDef<typeof features, Person>> = [
   {
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  },
+  {
     accessorKey: 'firstName',
     header: () => 'First Name',
     cell: (info) => info.getValue(),

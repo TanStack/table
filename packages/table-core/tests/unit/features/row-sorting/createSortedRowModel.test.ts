@@ -74,6 +74,39 @@ describe('createSortedRowModel', () => {
     ).toEqual(['amy', 'alice', 'bob'])
   })
 
+  it('assigns display indexes in the final sorted order', () => {
+    const table = makeTable([{ id: 'age', desc: false }])
+
+    let rows = table.getRowModel().rows
+
+    expect(rows.map((row) => row.original.firstName)).toEqual([
+      'amy',
+      'alice',
+      'bob',
+    ])
+    expect(rows.map((row) => row.getDisplayIndex())).toEqual([0, 1, 2])
+
+    table.setSorting([{ id: 'age', desc: true }])
+    rows = table.getRowModel().rows
+
+    expect(rows.map((row) => row.original.firstName)).toEqual([
+      'bob',
+      'alice',
+      'amy',
+    ])
+    expect(rows.map((row) => row.getDisplayIndex())).toEqual([0, 1, 2])
+
+    table.setSorting([])
+    rows = table.getRowModel().rows
+
+    expect(rows.map((row) => row.original.firstName)).toEqual([
+      'amy',
+      'bob',
+      'alice',
+    ])
+    expect(rows.map((row) => row.getDisplayIndex())).toEqual([0, 1, 2])
+  })
+
   it('keeps branch row identity when sorted subRows are unchanged', () => {
     const table = makeTable(
       [{ id: 'age', desc: false }],

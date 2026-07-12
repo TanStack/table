@@ -108,6 +108,11 @@ function renderFilter(
 
 const columns: Array<ColumnDef<typeof features, Person>> = [
   {
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  },
+  {
     accessorKey: 'firstName',
     header: ({ table }) => html`
       ${indeterminateCheckbox({

@@ -42,6 +42,11 @@ const features = tableFeatures({
 const columnHelper = createColumnHelper<typeof features, Person>()
 
 const columns = columnHelper.columns([
+  columnHelper.display({
+    id: 'rowNumber',
+    header: '#',
+    cell: ({ row }) => row.getDisplayIndex() + 1,
+  }),
   columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
@@ -349,9 +354,9 @@ export default class ExpandingTable extends Component {
       <tbody>
         {{#each this.rows as |row|}}
           <tr>
-            {{#each (getVisibleCells row) as |cell index|}}
+            {{#each (getVisibleCells row) as |cell|}}
               <td>
-                {{#if (eq index 0)}}
+                {{#if (eq cell.column.id 'firstName')}}
                   <div style={{depthPadding row}}>
                     <input
                       type='checkbox'

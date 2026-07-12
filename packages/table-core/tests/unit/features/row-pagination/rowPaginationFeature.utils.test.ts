@@ -172,6 +172,16 @@ describe('table_setPageIndex', () => {
       getUpdaterResult(onPaginationChange, getDefaultPaginationState()),
     ).toEqual({ pageIndex: 99, pageSize: 10 })
   })
+
+  it('keeps pre-pagination display indexes on the current page', () => {
+    const table = makeTable(DEFAULT_ROW_COUNT, {
+      initialState: { pagination: { pageIndex: 2, pageSize: 10 } },
+    })
+
+    expect(
+      table.getRowModel().rows.map((row) => row.getDisplayIndex()),
+    ).toEqual([20, 21, 22, 23, 24])
+  })
 })
 
 describe('table_resetPageIndex', () => {
