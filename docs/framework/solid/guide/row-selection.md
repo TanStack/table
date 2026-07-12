@@ -179,6 +179,8 @@ const table = createTable({
 
 The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
 
+Bind a Solid checkbox handler with `onClick`, not `onChange`, so the handler receives the click event and its `shiftKey` modifier.
+
 ```ts
 const table = createTable({
   // ...
@@ -231,7 +233,7 @@ const columns = [
       <Checkbox
         checked={row.getIsSelected()}
         disabled={!row.getCanSelect()}
-        onChange={row.getToggleSelectedHandler()}
+        onClick={row.getToggleSelectedHandler()}
       />
     ),
   },

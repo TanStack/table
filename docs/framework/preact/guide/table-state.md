@@ -175,7 +175,7 @@ You can also subscribe directly to a single atom and select one value from it:
     <input
       type="checkbox"
       checked={!!isSelected}
-      onChange={row.getToggleSelectedHandler()}
+      onClick={row.getToggleSelectedHandler()}
     />
   )}
 </table.Subscribe>

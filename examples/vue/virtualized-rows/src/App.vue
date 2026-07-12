@@ -265,7 +265,7 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
                 :checked="rows[vRow.index].getIsSelected()"
                 :disabled="!rows[vRow.index].getCanSelect()"
                 :indeterminate="rows[vRow.index].getIsSomeSelected()"
-                :onChange="(event) => toggleSelected(rows[vRow.index], event)"
+                :onClick="(event) => toggleSelected(rows[vRow.index], event)"
               />
               <FlexRender v-else :cell="cell" />
             </td>

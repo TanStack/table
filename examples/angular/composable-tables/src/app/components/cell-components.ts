@@ -31,7 +31,7 @@ export class TextCell {
       [checked]="row().getIsSelected()"
       [disabled]="!row().getCanSelect()"
       [indeterminate]="row().getIsSomeSelected()"
-      (change)="row().getToggleSelectedHandler()($event)"
+      (click)="row().getToggleSelectedHandler()($event)"
     />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,

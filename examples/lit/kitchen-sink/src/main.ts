@@ -611,7 +611,7 @@ class LitTableExample extends LitElement {
                 ?checked=${cell.row.getIsSelected()}
                 ?disabled=${!cell.row.getCanSelect()}
                 .indeterminate=${cell.row.getIsSomeSelected()}
-                @change=${cell.row.getToggleSelectedHandler()}
+                @click=${cell.row.getToggleSelectedHandler()}
               />
               <button
                 class="pin-button"

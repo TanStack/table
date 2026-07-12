@@ -190,6 +190,8 @@ const table = this.tableController.table({
 
 The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
 
+Bind a Lit checkbox handler with `@click`, not `@change`, so the handler receives the click event and its `shiftKey` modifier.
+
 ```ts
 const table = this.tableController.table({
   // ...
@@ -241,7 +243,7 @@ html`
     .checked=${row.getIsSelected()}
     ?disabled=${!row.getCanSelect()}
     .indeterminate=${row.getIsSomeSelected()}
-    @change=${row.getToggleSelectedHandler()}
+    @click=${row.getToggleSelectedHandler()}
   />
 `
 ```

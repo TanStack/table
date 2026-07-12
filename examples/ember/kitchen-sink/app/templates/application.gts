@@ -743,7 +743,7 @@ export default class KitchenSinkTable extends Component {
                     <input
                       type='checkbox'
                       checked={{rowGetIsSelected cell.row}}
-                      {{on 'change' (toggleRowSelected cell.row)}}
+                      {{on 'click' (toggleRowSelected cell.row)}}
                     />
                   {{else if (cellIsFirstName cell)}}
                     <span style={{rowDepthPad cell.row}}>

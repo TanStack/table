@@ -173,6 +173,8 @@ const table = useTable({
 
 The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
 
+React checkbox `onChange` events expose the underlying click through `nativeEvent`, so the handler receives the Shift modifier in the examples below.
+
 ```ts
 const table = useTable({
   // ...

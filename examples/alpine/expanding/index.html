@@ -99,7 +99,7 @@
                         style="cursor: pointer"
                         :checked="cell.row.getIsSelected() || (cell.row.getCanSelectSubRows() && cell.row.getIsAllSubRowsSelected())"
                         x-effect="$el.indeterminate = !cell.row.getIsSelected() && cell.row.getIsSomeSelected()"
-                        @change="cell.row.getToggleSelectedHandler()($event)"
+                        @click="cell.row.getToggleSelectedHandler()($event)"
                       />
                       <button
                         x-show="cell.row.getCanExpand()"

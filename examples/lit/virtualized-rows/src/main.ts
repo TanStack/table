@@ -42,7 +42,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
         .checked=${row.getIsSelected()}
         ?disabled=${!row.getCanSelect()}
         .indeterminate=${row.getIsSomeSelected()}
-        @change=${row.getToggleSelectedHandler({
+        @click=${row.getToggleSelectedHandler({
           // selectChildren: false
         })}
       />

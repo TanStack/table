@@ -51,7 +51,9 @@ export function getSelectionHandler(row: Row<typeof features, Person>) {
 }
 ```
 
-The handler establishes a table-local anchor on ordinary interactions and applies the checked value to the inclusive current display-order range on Shift interactions. Direct `row.toggleSelected()` and `table.setRowSelection()` calls do not move that anchor.
+The handler establishes a table-local anchor on ordinary interactions and applies the checked value to the inclusive current display-order range on Shift interactions. Range behavior is enabled by default; set `enableRowRangeSelection: false` to preserve non-range handler behavior. Direct `row.toggleSelected()` and `table.setRowSelection()` calls do not move that anchor.
+
+Pass the original checkbox click event to this handler. DOM `change` events often omit modifier keys, so use the framework's click binding for row checkboxes unless its change event exposes the original click through `nativeEvent` (as React does).
 
 ### Limit a range to explicitly displayed rows
 
@@ -113,6 +115,24 @@ const onChange = row.getToggleSelectedHandler()
 Only successful interactions through `getToggleSelectedHandler()` establish or advance the Shift-range anchor. The handler also supports custom range-event detection through `isRowRangeSelectionEvent`.
 
 Source: `docs/framework/react/guide/row-selection.md#shift-range-selection`
+
+### [HIGH] Binding a DOM change event that drops Shift
+
+Wrong:
+
+```ts
+checkbox.addEventListener('change', row.getToggleSelectedHandler())
+```
+
+Correct:
+
+```ts
+checkbox.addEventListener('click', row.getToggleSelectedHandler())
+```
+
+The range modifier must be present on the event passed to the handler. Raw DOM `change` events do not reliably expose click modifier keys.
+
+Source: `docs/framework/svelte/guide/row-selection.md#shift-range-selection`
 
 ### [MEDIUM] Expecting ranges across unloaded server pages
 

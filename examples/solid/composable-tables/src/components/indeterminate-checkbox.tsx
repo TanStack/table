@@ -14,6 +14,7 @@ export function IndeterminateCheckbox(props: {
   checked?: boolean
   disabled?: boolean
   onChange?: (event: Event) => void
+  onClick?: (event: MouseEvent) => void
 }) {
   let ref: HTMLInputElement | undefined
 
@@ -31,6 +32,7 @@ export function IndeterminateCheckbox(props: {
       checked={props.checked}
       disabled={props.disabled}
       onChange={props.onChange}
+      onClick={props.onClick}
     />
   )
 }

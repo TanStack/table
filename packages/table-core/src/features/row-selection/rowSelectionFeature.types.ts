@@ -101,6 +101,9 @@ export interface Row_RowSelection {
   getIsSomeSelected: () => boolean
   /**
    * Creates a checkbox-style handler that toggles this row's selected state.
+   * Pass the original checkbox click event, or a framework event whose
+   * `nativeEvent` is that click, so Shift range selection can detect the
+   * modifier key.
    */
   getToggleSelectedHandler: (
     opts?: ToggleSelectedOptions,

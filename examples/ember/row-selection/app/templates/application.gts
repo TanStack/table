@@ -78,7 +78,7 @@ class SelectionRowCheckbox extends Component<
     return this.row.getIsSelected()
   }
 
-  handleChange = (event: Event) => {
+  handleClick = (event: Event) => {
     this.row.getToggleSelectedHandler({
       // selectChildren: false
     })(event)
@@ -88,7 +88,7 @@ class SelectionRowCheckbox extends Component<
     <Input
       @type='checkbox'
       @checked={{this.checked}}
-      {{on 'change' this.handleChange}}
+      {{on 'click' this.handleClick}}
     />
   </template>
 }

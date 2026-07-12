@@ -175,6 +175,8 @@ const table = useTable(() => ({
 
 The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
 
+Bind an Ember checkbox handler to `click`, not `change`, so the handler receives the click event and its `shiftKey` modifier.
+
 ```ts
 const table = useTable(() => ({
   // ...
@@ -264,7 +266,7 @@ class SelectionRowCheckbox extends Component<
     return this.row.getIsSelected()
   }
 
-  handleChange = (event: Event) => {
+  handleClick = (event: Event) => {
     this.row.getToggleSelectedHandler()(event)
   }
 
@@ -272,7 +274,7 @@ class SelectionRowCheckbox extends Component<
     <Input
       @type='checkbox'
       @checked={{this.checked}}
-      {{on 'change' this.handleChange}}
+      {{on 'click' this.handleClick}}
     />
   </template>
 }

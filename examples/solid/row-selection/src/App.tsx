@@ -57,7 +57,7 @@ function App() {
               checked={row.getIsSelected()}
               disabled={!row.getCanSelect()}
               indeterminate={row.getIsSomeSelected()}
-              onChange={row.getToggleSelectedHandler({
+              onClick={row.getToggleSelectedHandler({
                 // selectChildren: false
               })}
             />
@@ -346,6 +346,7 @@ function IndeterminateCheckbox(props: {
   checked?: boolean
   disabled?: boolean
   onChange?: (event: Event) => void
+  onClick?: (event: MouseEvent) => void
 }) {
   let ref: HTMLInputElement | undefined
 
@@ -363,6 +364,7 @@ function IndeterminateCheckbox(props: {
       checked={props.checked}
       disabled={props.disabled}
       onChange={props.onChange}
+      onClick={props.onClick}
     />
   )
 }

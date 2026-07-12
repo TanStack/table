@@ -41,7 +41,7 @@ function App() {
           checked={row.getIsSelected()}
           disabled={!row.getCanSelect()}
           indeterminate={row.getIsSomeSelected()}
-          onChange={row.getToggleSelectedHandler({
+          onClick={row.getToggleSelectedHandler({
             // selectChildren: false
           })}
         />
@@ -265,6 +265,7 @@ function IndeterminateCheckbox(props: {
   checked?: boolean
   disabled?: boolean
   onChange?: (event: Event) => void
+  onClick?: (event: MouseEvent) => void
 }) {
   let ref: HTMLInputElement | undefined
 
@@ -278,10 +279,11 @@ function IndeterminateCheckbox(props: {
     <input
       type="checkbox"
       ref={ref}
-      class={(props.class ?? '') + ' sortable-header'}
+      class={props.class ?? ''}
       checked={props.checked}
       disabled={props.disabled}
       onChange={props.onChange}
+      onClick={props.onClick}
     />
   )
 }

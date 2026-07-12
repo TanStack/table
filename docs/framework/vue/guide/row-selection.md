@@ -178,6 +178,8 @@ const table = useTable({
 
 The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
 
+Bind a Vue checkbox handler with `@click`, not `@change`, so the handler receives the click event and its `shiftKey` modifier.
+
 ```ts
 const table = useTable({
   // ...
@@ -228,7 +230,7 @@ If you need more granular control over these function handlers, you can always j
   :checked="row.getIsSelected()"
   :disabled="!row.getCanSelect()"
   :indeterminate="row.getIsSomeSelected()"
-  @change="row.getToggleSelectedHandler()?.($event)"
+  @click="row.getToggleSelectedHandler()?.($event)"
 />
 ```
 

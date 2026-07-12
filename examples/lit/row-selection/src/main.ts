@@ -39,7 +39,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     cell: ({ row }) => html`
       <input
         type="checkbox"
-        @change="${row.getToggleSelectedHandler({
+        @click="${row.getToggleSelectedHandler({
           // selectChildren: false
         })}"
         .checked="${row.getIsSelected()}"

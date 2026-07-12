@@ -7,6 +7,7 @@ const props = defineProps<{
   indeterminate: boolean
   className?: string
   onChange?: (event: Event) => void
+  onClick?: (event: MouseEvent) => void
 }>()
 
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -26,6 +27,7 @@ watchEffect(() => {
     :checked="props.checked"
     :disabled="props.disabled"
     @change="props.onChange"
+    @click="props.onClick"
     v-bind="$attrs"
   />
 </template>

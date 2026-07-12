@@ -111,9 +111,12 @@ Checks whether some selectable descendants are selected.
 getToggleSelectedHandler: (opts?) => (event) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L105)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L108)
 
 Creates a checkbox-style handler that toggles this row's selected state.
+Pass the original checkbox click event, or a framework event whose
+`nativeEvent` is that click, so Shift range selection can detect the
+modifier key.
 
 #### Parameters
 
@@ -145,7 +148,7 @@ Creates a checkbox-style handler that toggles this row's selected state.
 toggleSelected: (value?, opts?) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L111)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L114)
 
 Selects/deselects the row.
 

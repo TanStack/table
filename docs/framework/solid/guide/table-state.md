@@ -158,7 +158,7 @@ Use `table.Subscribe` when you want a specific part of the Solid tree to create 
                 <input
                   type="checkbox"
                   checked={!!isSelected()}
-                  onChange={row.getToggleSelectedHandler()}
+                  onClick={row.getToggleSelectedHandler()}
                 />
               </td>
             </tr>

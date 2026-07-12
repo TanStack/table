@@ -6,6 +6,7 @@ const props = defineProps<{
   disabled?: boolean
   indeterminate?: boolean
   onChange?: (event: Event) => void
+  onClick?: (event: MouseEvent) => void
 }>()
 
 const inputRef = ref<HTMLInputElement | null>(null)
@@ -24,5 +25,6 @@ watchEffect(() => {
     :checked="props.checked"
     :disabled="props.disabled"
     @change="props.onChange"
+    @click="props.onClick"
   />
 </template>

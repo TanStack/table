@@ -49,6 +49,7 @@ const IndeterminateCheckbox = defineComponent({
     checked: Boolean,
     indeterminate: Boolean,
     onChange: Function,
+    onClick: Function,
     className: String,
   },
   setup(props) {
@@ -67,6 +68,7 @@ const IndeterminateCheckbox = defineComponent({
         class={`${props.className ?? ''} sortable-header`}
         checked={props.checked}
         onChange={props.onChange as any}
+        onClick={props.onClick as any}
       />
     )
   },
@@ -166,7 +168,7 @@ export default defineComponent({
                   (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
                 }
                 indeterminate={row.getIsSomeSelected()}
-                onChange={row.getToggleSelectedHandler({
+                onClick={row.getToggleSelectedHandler({
                   // selectChildren: false
                 })}
               />{' '}

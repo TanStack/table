@@ -60,7 +60,7 @@
                       :checked="cell.row.getIsSelected()"
                       :disabled="!cell.row.getCanSelect()"
                       x-effect="$el.indeterminate = cell.row.getIsSomeSelected()"
-                      @change="cell.row.getToggleSelectedHandler()($event)"
+                      @click="cell.row.getToggleSelectedHandler()($event)"
                     />
                   </template>
                   <!-- other cells -->

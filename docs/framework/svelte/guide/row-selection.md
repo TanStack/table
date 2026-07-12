@@ -181,6 +181,8 @@ const table = createTable({
 
 The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
 
+Bind a Svelte checkbox handler with `onclick`, not `onchange`, so the handler receives the click event and its `shiftKey` modifier.
+
 ```ts
 const table = createTable({
   // ...
@@ -246,7 +248,7 @@ The `indeterminate` checkbox property cannot be set from markup, so define a sma
   checked={row.getIsSelected()}
   disabled={!row.getCanSelect()}
   use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
-  onchange={row.getToggleSelectedHandler()}
+  onclick={row.getToggleSelectedHandler()}
 />
 ```
 

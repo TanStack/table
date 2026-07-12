@@ -78,7 +78,7 @@ function App() {
                     (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
                   }
                   indeterminate={row.getIsSomeSelected()}
-                  onChange={row.getToggleSelectedHandler({
+                  onClick={row.getToggleSelectedHandler({
                     // selectChildren: false
                   })}
                 />{' '}

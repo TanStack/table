@@ -30,7 +30,7 @@ export class TableHeaderSelection {
       type="checkbox"
       [checked]="context.row.getIsSelected()"
       [disabled]="!context.row.getCanSelect()"
-      (change)="toggleSelected($event)"
+      (click)="toggleSelected($event)"
     />
   `,
   host: {

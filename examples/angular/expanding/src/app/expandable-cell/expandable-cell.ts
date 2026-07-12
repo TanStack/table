@@ -47,7 +47,7 @@ export class ExpandableHeaderCell<T extends RowData> {
             row.getIsSelected() ||
             (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
           "
-          (change)="toggleSelected($event)"
+          (click)="toggleSelected($event)"
         />
         {{ ' ' }}
 

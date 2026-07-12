@@ -184,6 +184,8 @@ const table = createTable({
 
 The handler recognizes Shift when the event exposes either `event.shiftKey` or `event.nativeEvent.shiftKey`. You can disable range behavior or replace event detection:
 
+Bind an Alpine checkbox handler with `@click`, not `@change`, so the handler receives the click event and its `shiftKey` modifier.
+
 ```ts
 const table = createTable({
   // ...
@@ -260,7 +262,7 @@ const columns = [
     :checked="cell.row.getIsSelected()"
     :disabled="!cell.row.getCanSelect()"
     x-effect="$el.indeterminate = !cell.row.getIsSelected() && cell.row.getIsSomeSelected()"
-    @change="cell.row.getToggleSelectedHandler()($event)"
+    @click="cell.row.getToggleSelectedHandler()($event)"
   />
 </template>
 <!-- other cells -->

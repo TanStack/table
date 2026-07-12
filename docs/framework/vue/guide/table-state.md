@@ -157,7 +157,7 @@ You can also call it as a plain function inside a render function:
               <input
                 type="checkbox"
                 checked={!!atoms.rowSelection.get()[row.id]}
-                onChange={row.getToggleSelectedHandler()}
+                onClick={row.getToggleSelectedHandler()}
               />
             </td>
           </tr>

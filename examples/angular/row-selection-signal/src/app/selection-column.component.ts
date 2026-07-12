@@ -34,7 +34,7 @@ export class TableHeadSelectionComponent<T extends RowData> {
     <input
       type="checkbox"
       [checked]="row().getIsSelected()"
-      (change)="row().getToggleSelectedHandler()($event)"
+      (click)="row().getToggleSelectedHandler()($event)"
     />
   `,
   host: {

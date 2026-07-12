@@ -60,7 +60,7 @@
                     [checked]="row.getIsSelected()"
                     [disabled]="!row.getCanSelect()"
                     [indeterminate]="row.getIsSomeSelected()"
-                    (change)="toggleSelected(row, $event)"
+                    (click)="toggleSelected(row, $event)"
                   />
                 } @else {
                   <ng-container *flexRenderCell="cell; let renderCell">
