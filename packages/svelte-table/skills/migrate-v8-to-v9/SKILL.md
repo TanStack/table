@@ -6,7 +6,7 @@ metadata:
   type: lifecycle
   library: '@tanstack/svelte-table'
   framework: svelte
-  library_version: '9.0.0-beta.42'
+  library_version: '9.0.0-beta.43'
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'
   - getting-started

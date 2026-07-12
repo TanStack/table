@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/angular-table-devtools'
   framework: angular
-  library_version: '9.0.0-beta.42'
+  library_version: '9.0.0-beta.43'
 requires:
   - '@tanstack/table-core#core'
   - '@tanstack/table-devtools#devtools'

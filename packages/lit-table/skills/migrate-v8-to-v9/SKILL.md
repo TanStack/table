@@ -6,7 +6,7 @@ metadata:
   type: lifecycle
   library: '@tanstack/lit-table'
   framework: lit
-  library_version: '9.0.0-beta.42'
+  library_version: '9.0.0-beta.43'
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'
   - getting-started
