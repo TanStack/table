@@ -593,6 +593,12 @@ describe('Filter Functions', () => {
         expect(autoRemove([undefined, 10])).toBe(false)
         expect(autoRemove([5, undefined])).toBe(false)
       })
+      it('should NOT auto-remove a scalar value passed instead of a range tuple', () => {
+        // Regression test for #6353 - without the Array.isArray guard,
+        // `val[0]` and `val[1]` are undefined for a scalar and the index
+        // checks incorrectly auto-remove the filter.
+        expect(autoRemove(99 as any)).toBe(false)
+      })
     })
 
     describe('filterFns.betweenInclusive.autoRemove', () => {
@@ -616,6 +622,49 @@ describe('Filter Functions', () => {
       it('should NOT auto-remove when only one endpoint is provided', () => {
         expect(autoRemove([undefined, 10])).toBe(false)
         expect(autoRemove([5, undefined])).toBe(false)
+      })
+      it('should NOT auto-remove a scalar value passed instead of a range tuple', () => {
+        // Regression test for #6353 - same Array.isArray guard needed
+        // here as in `between` and `inNumberRange`.
+        expect(autoRemove(99 as any)).toBe(false)
+      })
+    })
+
+    describe('filterFns.inNumberRange.autoRemove', () => {
+      const autoRemove = filterFns.inNumberRange.autoRemove!
+
+      it('should auto-remove when both endpoints are undefined', () => {
+        expect(autoRemove([undefined, undefined])).toBe(true)
+      })
+      it('should auto-remove when both endpoints are null', () => {
+        expect(autoRemove([null, null])).toBe(true)
+      })
+      it('should auto-remove when both endpoints are empty strings', () => {
+        expect(autoRemove(['', ''])).toBe(true)
+      })
+      it('should NOT auto-remove when both endpoints are valid numbers', () => {
+        expect(autoRemove([5, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when lower bound is 0 (falsy number)', () => {
+        expect(autoRemove([0, 10])).toBe(false)
+      })
+      it('should NOT auto-remove when only one endpoint is provided', () => {
+        expect(autoRemove([undefined, 10])).toBe(false)
+        expect(autoRemove([5, undefined])).toBe(false)
+      })
+      it('should NOT auto-remove a non-empty scalar number passed instead of a range tuple', () => {
+        // Regression test for #6353 - `val[0]` and `val[1]` were both
+        // undefined for a non-array scalar, so the previous index checks
+        // produced true && true and the filter was discarded.
+        expect(autoRemove(99 as any)).toBe(false)
+        expect(autoRemove(0 as any)).toBe(false)
+      })
+      it('should auto-remove an empty-string scalar (matches existing testFalsy behavior)', () => {
+        // `testFalsy` treats '' as falsy, and the leading `testFalsy(val)`
+        // branch short-circuits to true for an empty string. The new
+        // Array.isArray guard is intentionally additive and only kicks in
+        // when the value is not already caught by `testFalsy`.
+        expect(autoRemove('' as any)).toBe(true)
       })
     })
   })
