@@ -84,12 +84,17 @@ export default defineComponent({
     }
 
     const table = useTable({
-      debugTable: true,
       features,
       columns,
       get data() {
         return data.value
       },
+      // initialState: { columnVisibility: { visits: false } }, // hide columns on first render
+      // atoms: { columnVisibility: columnVisibilityAtom }, // preferred: own visibility state with an external atom
+      // state: { columnVisibility }, // classic controlled state; pair with onColumnVisibilityChange
+      // onColumnVisibilityChange: setColumnVisibility,
+      // enableHiding: false, // prevent every column from being hidden; default true
+      debugTable: true,
     })
 
     return () => (

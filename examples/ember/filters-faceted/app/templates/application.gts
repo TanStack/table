@@ -269,6 +269,14 @@ export default class FiltersFacetedTable extends Component {
       this.columnFilters =
         typeof updater === 'function' ? updater(this.columnFilters) : updater
     },
+    // Column faceting has no table-level options; configure its row-model factories in `features`.
+    // initialState: { columnFilters: [{ id: 'firstName', value: 'Jane' }] }, // set filters once
+    // atoms: { columnFilters: columnFiltersAtom }, // preferred: own column filters with an external atom
+    // enableFilters: false, // disable all column and global filtering; default true
+    // enableColumnFilters: false, // disable per-column filters; default true
+    // filterFromLeafRows: true, // keep parents whose descendants match; default filters from parents down
+    // maxLeafRowFilterDepth: 1, // only filter through this nested-row depth; default 100
+    // manualFiltering: true, // pass data that is already filtered, for example from a server
   }))
 
   get headerGroups() {

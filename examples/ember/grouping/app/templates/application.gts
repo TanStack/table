@@ -242,6 +242,10 @@ export default class GroupingTable extends Component {
       this.sorting =
         typeof updater === 'function' ? updater(this.sorting) : updater
     },
+    // atoms: { grouping: groupingAtom }, // preferred: own grouping state with an external atom
+    // enableGrouping: false, // disable grouping for every column; default true
+    // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
+    // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
   }))
 
   get headerGroups() {

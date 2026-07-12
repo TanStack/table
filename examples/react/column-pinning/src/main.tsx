@@ -81,9 +81,14 @@ function App() {
 
   const table = useAppTable(
     {
-      debugTable: true,
       columns,
       data,
+      // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+      // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+      // state: { columnPinning }, // classic controlled state; pair with onColumnPinningChange
+      // onColumnPinningChange: setColumnPinning,
+      // enableColumnPinning: false, // disable pinning for every column; default true
+      debugTable: true,
     },
     (state) => state, // default selector
   )

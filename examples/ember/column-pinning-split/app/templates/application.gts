@@ -154,6 +154,10 @@ export default class ColumnPinningSplitTable extends Component {
         end: ['progress'],
       },
     },
+    // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+    // state: { columnPinning }, // classic controlled state; pair with onColumnPinningChange
+    // onColumnPinningChange: setColumnPinning,
+    // enableColumnPinning: false, // disable pinning for every column; default true
   }))
 
   get leftHeaderGroups() {

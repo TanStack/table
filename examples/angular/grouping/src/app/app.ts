@@ -16,7 +16,6 @@ export class App {
   readonly grouping = signal<GroupingState>([])
 
   readonly table = injectTable(() => ({
-    debugTable: true,
     data: this.data(),
     columns: columns,
     initialState: {
@@ -31,6 +30,11 @@ export class App {
         : updaterOrValue
       this.grouping.set(groupingState)
     },
+    // atoms: { grouping: groupingAtom }, // preferred: own grouping state with an external atom
+    // enableGrouping: false, // disable grouping for every column; default true
+    // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
+    // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
+    debugTable: true,
   }))
 
   stringifiedState() {

@@ -152,7 +152,6 @@ function App() {
 
   const table = useTable(
     {
-      debugTable: true,
       features,
       columns,
       data,
@@ -165,6 +164,9 @@ function App() {
       onRowPinningChange: setRowPinning,
       getSubRows: (row) => row.subRows,
       keepPinnedRows,
+      // atoms: { rowPinning: rowPinningAtom }, // preferred: own pinning state with an external atom
+      // enableRowPinning: row => row.original.age > 18, // allow pinning only for matching rows; default true
+      debugTable: true,
       debugAll: true,
     },
     (state) => state, // default selector

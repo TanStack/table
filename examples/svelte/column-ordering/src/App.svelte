@@ -103,6 +103,8 @@
     },
     onColumnOrderChange: setColumnOrder,
     onColumnVisibilityChange: setColumnVisibility,
+    // initialState: { columnOrder: ['lastName', 'firstName'] }, // set column order on first render
+    // atoms: { columnOrder: columnOrderAtom }, // preferred: own ordering state with an external atom
     debugTable: true,
   })
 </script>

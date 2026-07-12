@@ -74,11 +74,16 @@ function App() {
   const stressTest = () => setData(makeData(1_000_000))
 
   const table = createAppTable({
-    debugTable: true,
     columns,
     get data() {
       return data()
     },
+    // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+    // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+    // state: { columnPinning }, // classic controlled state; pair with onColumnPinningChange
+    // onColumnPinningChange: setColumnPinning,
+    // enableColumnPinning: false, // disable pinning for every column; default true
+    debugTable: true,
   })
 
   const randomizeColumns = () => {

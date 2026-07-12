@@ -95,6 +95,11 @@ Alpine.data('table', () => {
     get columnResizeDirection() {
       return local.columnResizeDirection
     },
+    // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
+    // atoms: { columnResizing: columnResizingAtom }, // preferred: own transient resize state with an external atom
+    // state: { columnResizing }, // classic controlled state; pair with onColumnResizingChange
+    // onColumnResizingChange: setColumnResizing,
+    // enableColumnResizing: false, // disable resizing for every column; default true
     debugTable: true,
     debugHeaders: true,
     debugColumns: true,

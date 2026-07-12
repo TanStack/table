@@ -92,6 +92,9 @@
       },
     },
     onColumnVisibilityChange: setColumnVisibility,
+    // initialState: { columnVisibility: { visits: false } }, // hide columns on first render
+    // atoms: { columnVisibility: columnVisibilityAtom }, // preferred: own visibility state with an external atom
+    // enableHiding: false, // prevent every column from being hidden; default true
     debugTable: true,
   })
 </script>

@@ -98,6 +98,12 @@ export default class ColumnResizingPerformantTable extends Component {
       minSize: 60,
       maxSize: 800,
     },
+    // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
+    // atoms: { columnResizing: columnResizingAtom }, // preferred: own transient resize state with an external atom
+    // state: { columnResizing }, // classic controlled state; pair with onColumnResizingChange
+    // onColumnResizingChange: setColumnResizing,
+    // columnResizeDirection: 'rtl', // calculate resize offsets right-to-left; default 'ltr'
+    // enableColumnResizing: false, // disable resizing for every column; default true
   }))
 
   get headerGroups() {

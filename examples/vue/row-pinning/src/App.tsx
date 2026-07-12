@@ -238,6 +238,10 @@ export default defineComponent({
       get keepPinnedRows() {
         return keepPinnedRows.value
       },
+      // atoms: { rowPinning: rowPinningAtom }, // preferred: own pinning state with an external atom
+      // state: { rowPinning }, // classic controlled state; pair with onRowPinningChange
+      // onRowPinningChange: setRowPinning,
+      // enableRowPinning: row => row.original.age > 18, // allow pinning only for matching rows; default true
       debugTable: true,
     })
 

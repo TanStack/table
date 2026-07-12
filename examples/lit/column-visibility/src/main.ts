@@ -80,6 +80,11 @@ class LitTableExample extends LitElement {
         features,
         columns,
         data: this._data,
+        // initialState: { columnVisibility: { visits: false } }, // hide columns on first render
+        // atoms: { columnVisibility: columnVisibilityAtom }, // preferred: own visibility state with an external atom
+        // state: { columnVisibility }, // classic controlled state; pair with onColumnVisibilityChange
+        // onColumnVisibilityChange: setColumnVisibility,
+        // enableHiding: false, // prevent every column from being hidden; default true
         debugTable: true,
       },
       (state) => ({ columnVisibility: state.columnVisibility }),

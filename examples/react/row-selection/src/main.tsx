@@ -114,9 +114,13 @@ function App() {
       data,
       getRowId: (row) => row.id,
       enableRowSelection: true, // enable row selection for all rows
-      // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
-      // enableRowRangeSelection: false,
-      // isRowRangeSelectionEvent: event => Boolean((event as React.MouseEvent).metaKey),
+      // initialState: { rowSelection: { '0': true } }, // select rows on first render
+      // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
+      // onRowSelectionChange: setRowSelection,
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableRowRangeSelection: false, // disable Shift-click range selection; default true
+      // enableSubRowSelection: false, // do not select a parent's subrows with it; default true
+      // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
       debugTable: true,
     },
     (state) => state, // default selector

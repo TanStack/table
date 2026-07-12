@@ -108,6 +108,19 @@ export default class SortingTable extends Component {
     features,
     columns,
     data: this.data,
+    // initialState: { sorting: [{ id: 'firstName', desc: false }] }, // set the initial sort once
+    // atoms: { sorting: sortingAtom }, // preferred: own sorting state with an external atom
+    // state: { sorting }, // classic controlled state; pair with onSortingChange
+    // onSortingChange: setSorting,
+    // enableSorting: false, // disable sorting for every column; default true
+    // sortDescFirst: true, // start every sort cycle with descending order; inferred by column data by default
+    // enableSortingRemoval: false, // keep a sorted column sorted when toggling; default true
+    // enableMultiSort: false, // disable Shift-click multi-sorting; default true
+    // enableMultiRemove: false, // prevent a multi-sort toggle from removing a sorted column; default true
+    // isMultiSortEvent: () => true, // make every sort interaction a multi-sort; default requires Shift
+    // maxMultiSortColCount: 3, // limit multi-sorting to three columns; default Infinity
+    // manualSorting: true, // pass data that is already sorted, for example from a server
+    // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
   }))
 
   get headerGroups() {

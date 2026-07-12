@@ -68,6 +68,10 @@ class LitTableExample extends LitElement {
         columns,
         columnResizeMode: 'onChange',
         columnResizeDirection: 'ltr',
+        // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
+        // atoms: { columnSizing: columnSizingAtom }, // preferred: own sizing state with an external atom
+        // state: { columnSizing }, // classic controlled state; pair with onColumnSizingChange
+        // onColumnSizingChange: setColumnSizing,
         debugTable: true,
         debugHeaders: true,
         debugColumns: true,

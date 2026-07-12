@@ -125,6 +125,9 @@ class LitTableExample extends LitElement {
             this.columnPinning = updaterOrValue
           }
         },
+        // initialState: { columnPinning: { start: ['firstName'], end: [] } }, // `start`/`end` follow layout direction
+        // atoms: { columnPinning: columnPinningAtom }, // preferred: own pinning state with an external atom
+        // enableColumnPinning: false, // disable pinning for every column; default true
         debugTable: true,
         debugHeaders: true,
         debugColumns: true,

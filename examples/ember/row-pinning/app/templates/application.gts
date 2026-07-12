@@ -119,6 +119,8 @@ export default class RowPinningTable extends Component {
         typeof updater === 'function' ? updater(this.rowPinning) : updater
     },
     keepPinnedRows: this.keepPinnedRows,
+    // atoms: { rowPinning: rowPinningAtom }, // preferred: own pinning state with an external atom
+    // enableRowPinning: row => row.original.age > 18, // allow pinning only for matching rows; default true
   }))
 
   get headerGroups() {

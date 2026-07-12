@@ -94,7 +94,6 @@ export class App {
 
   readonly table = injectTable(() => ({
     key: 'row-selection', // needed for devtools
-    debugTable: true,
     data: this.data(),
     columns: this.columns,
     state: {
@@ -103,7 +102,6 @@ export class App {
     },
 
     enableRowSelection: this.enableRowSelection(), // enable row selection for all rows
-    // enableRowSelection: row => row.original.age > 18, // or enable row selection conditionally per row
     onRowSelectionChange: (updaterOrValue) => {
       this.rowSelection.set(
         typeof updaterOrValue === 'function'
@@ -118,6 +116,13 @@ export class App {
           : updaterOrValue,
       )
     },
+    // initialState: { rowSelection: { '0': true } }, // select rows on first render
+    // atoms: { rowSelection: rowSelectionAtom }, // preferred: own selection state with an external atom
+    // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+    // enableRowRangeSelection: false, // disable Shift-click range selection; default true
+    // enableSubRowSelection: false, // do not select a parent's subrows with it; default true
+    // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
+    debugTable: true,
   }))
 
   ngOnInit() {

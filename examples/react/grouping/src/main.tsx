@@ -93,6 +93,13 @@ function App() {
     {
       columns,
       data,
+      // initialState: { grouping: ['status'] }, // group by a column on first render
+      // atoms: { grouping: groupingAtom }, // preferred: own grouping state with an external atom
+      // state: { grouping }, // classic controlled state; pair with onGroupingChange
+      // onGroupingChange: setGrouping,
+      // enableGrouping: false, // disable grouping for every column; default true
+      // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
+      // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
       debugTable: true,
     },
     (state) => state, // default selector

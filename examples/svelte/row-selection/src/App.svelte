@@ -109,6 +109,14 @@
       ],
       getRowId: (row) => row.id,
       enableRowSelection: true,
+      // initialState: { rowSelection: { '0': true } }, // select rows on first render
+      // atoms: { rowSelection: rowSelectionAtom }, // preferred: own selection state with an external atom
+      // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
+      // onRowSelectionChange: setRowSelection,
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableRowRangeSelection: false, // disable Shift-click range selection; default true
+      // enableSubRowSelection: false, // do not select a parent's subrows with it; default true
+      // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
       debugTable: true,
     },
     (state) => ({

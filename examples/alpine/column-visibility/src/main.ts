@@ -75,6 +75,11 @@ Alpine.data('table', () => {
     get data() {
       return local.data
     },
+    // initialState: { columnVisibility: { visits: false } }, // hide columns on first render
+    // atoms: { columnVisibility: columnVisibilityAtom }, // preferred: own visibility state with an external atom
+    // state: { columnVisibility }, // classic controlled state; pair with onColumnVisibilityChange
+    // onColumnVisibilityChange: setColumnVisibility,
+    // enableHiding: false, // prevent every column from being hidden; default true
     debugTable: true,
   })
 

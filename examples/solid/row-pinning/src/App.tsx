@@ -127,7 +127,6 @@ function App() {
   ])
 
   const table = createTable({
-    debugTable: true,
     features,
     get columns() {
       return columns()
@@ -148,6 +147,9 @@ function App() {
     get keepPinnedRows() {
       return keepPinnedRows()
     },
+    // atoms: { rowPinning: rowPinningAtom }, // preferred: own pinning state with an external atom
+    // enableRowPinning: row => row.original.age > 18, // allow pinning only for matching rows; default true
+    debugTable: true,
     debugAll: true,
   })
 

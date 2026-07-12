@@ -138,12 +138,15 @@ function App() {
 
   const table = useAppTable(
     {
-      debugTable: true,
       columns,
       data,
       initialState: {
         columnOrder: columns.map((c) => c.id!),
-      },
+      }, // establish the initial DnD column order once
+      // atoms: { columnOrder: columnOrderAtom }, // preferred: own ordering state with an external atom
+      // state: { columnOrder }, // classic controlled state; pair with onColumnOrderChange
+      // onColumnOrderChange: setColumnOrder,
+      debugTable: true,
     },
     (state) => state, // default selector
   )

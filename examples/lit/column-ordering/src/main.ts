@@ -111,6 +111,8 @@ class LitTableExample extends LitElement {
             this.columnVisibility = updaterOrValue
           }
         },
+        // initialState: { columnOrder: ['lastName', 'firstName'] }, // set column order on first render
+        // atoms: { columnOrder: columnOrderAtom }, // preferred: own ordering state with an external atom
       },
       (state) => ({
         columnOrder: state.columnOrder,

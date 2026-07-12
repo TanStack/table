@@ -84,6 +84,10 @@ const table = useTable({
   get columns() {
     return columns.value
   },
+  // initialState: { columnOrder: ['lastName', 'firstName'] }, // set column order on first render
+  // atoms: { columnOrder: columnOrderAtom }, // preferred: own ordering state with an external atom
+  // state: { columnOrder }, // classic controlled state; pair with onColumnOrderChange
+  // onColumnOrderChange: setColumnOrder,
   debugTable: true,
   debugHeaders: true,
   debugColumns: true,
