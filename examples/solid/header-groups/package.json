@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-solid-table-example-column-groups",
+  "name": "tanstack-solid-table-example-header-groups",
   "description": "",
   "scripts": {
     "start": "vite",

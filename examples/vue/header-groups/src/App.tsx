@@ -65,7 +65,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 ]
 
 export default defineComponent({
-  name: 'ColumnGroupsExample',
+  name: 'HeaderGroupsExample',
   setup() {
     const data = ref(makeData(20))
 

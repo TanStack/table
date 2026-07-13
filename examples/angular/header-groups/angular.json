@@ -10,7 +10,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "column-groups": {
+    "header-groups": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -85,10 +85,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "column-groups:build:production"
+              "buildTarget": "header-groups:build:production"
             },
             "development": {
-              "buildTarget": "column-groups:build:development"
+              "buildTarget": "header-groups:build:development"
             }
           },
           "defaultConfiguration": "development"

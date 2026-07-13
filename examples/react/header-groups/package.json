@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-react-table-example-column-groups",
+  "name": "tanstack-react-table-example-header-groups",
   "private": true,
   "scripts": {
     "dev": "vite",

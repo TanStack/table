@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-angular-table-example-column-groups",
+  "name": "tanstack-angular-table-example-header-groups",
   "scripts": {
     "ng": "ng",
     "start": "ng serve --port 6565",

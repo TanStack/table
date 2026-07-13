@@ -1,24 +1,25 @@
 {
-  "name": "tanstack-alpine-table-example-column-groups",
+  "name": "tanstack-vue-table-example-header-groups",
   "private": true,
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview",
-    "start": "vite",
+    "preview": "vite preview",
     "lint": "eslint ./src",
-    "test:types": "tsc --noEmit",
+    "test:types": "vue-tsc",
     "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
   },
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
-    "@tanstack/alpine-table": "^9.0.0-beta.47",
-    "alpinejs": "^3.15.12"
+    "@tanstack/vue-table": "^9.0.0-beta.47",
+    "vue": "^3.5.38"
   },
   "devDependencies": {
-    "@rollup/plugin-replace": "^6.0.3",
-    "@types/alpinejs": "^3.13.11",
+    "@types/node": "^26.0.0",
+    "@vitejs/plugin-vue": "^6.0.7",
+    "@vitejs/plugin-vue-jsx": "^5.1.6",
     "typescript": "6.0.3",
-    "vite": "^8.1.0"
+    "vite": "^8.1.0",
+    "vue-tsc": "^3.3.5"
   }
 }

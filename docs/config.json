@@ -926,7 +926,7 @@
             { "to": "framework/alpine/examples/basic-external-state", "label": "Basic (External State)" },
             { "to": "framework/alpine/examples/basic-external-atoms", "label": "Basic (External Atoms)" },
             { "to": "framework/alpine/examples/basic-dynamic-columns", "label": "Basic (Dynamic Columns)" },
-            { "to": "framework/alpine/examples/column-groups", "label": "Header Groups" }
+            { "to": "framework/alpine/examples/header-groups", "label": "Header Groups" }
           ]
         },
         {
@@ -937,7 +937,7 @@
             { "label": "Basic (External State)", "to": "framework/angular/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/angular/examples/basic-external-atoms" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/angular/examples/basic-dynamic-columns" },
-            { "label": "Header Groups", "to": "framework/angular/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/angular/examples/header-groups" }
           ]
         },
         {
@@ -947,7 +947,7 @@
             { "label": "Basic (createAppTable)", "to": "framework/ember/examples/basic-app-table" },
             { "label": "Basic (External State)", "to": "framework/ember/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/ember/examples/basic-external-atoms" },
-            { "label": "Header Groups", "to": "framework/ember/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/ember/examples/header-groups" }
           ]
         },
         {
@@ -959,7 +959,7 @@
             { "label": "Basic (External Atoms)", "to": "framework/lit/examples/basic-external-atoms" },
             { "label": "Basic (Subscribe)", "to": "framework/lit/examples/basic-subscribe" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/lit/examples/basic-dynamic-columns" },
-            { "label": "Header Groups", "to": "framework/lit/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/lit/examples/header-groups" }
           ]
         },
         {
@@ -972,7 +972,7 @@
             { "label": "Basic (External Atoms)", "to": "framework/react/examples/basic-external-atoms" },
             { "label": "Basic (Subscribe)", "to": "framework/react/examples/basic-subscribe" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/react/examples/basic-dynamic-columns" },
-            { "label": "Header Groups", "to": "framework/react/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/react/examples/header-groups" }
           ]
         },
         {
@@ -983,7 +983,7 @@
             { "label": "Basic (External State)", "to": "framework/solid/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/solid/examples/basic-external-atoms" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/solid/examples/basic-dynamic-columns" },
-            { "label": "Header Groups", "to": "framework/solid/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/solid/examples/header-groups" }
           ]
         },
         {
@@ -995,7 +995,7 @@
             { "label": "Basic (External State)", "to": "framework/svelte/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/svelte/examples/basic-external-atoms" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/svelte/examples/basic-dynamic-columns" },
-            { "label": "Header Groups", "to": "framework/svelte/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/svelte/examples/header-groups" }
           ]
         },
         {
@@ -1006,7 +1006,7 @@
             { "label": "Basic (External State)", "to": "framework/vue/examples/basic-external-state" },
             { "label": "Basic (External Atoms)", "to": "framework/vue/examples/basic-external-atoms" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/vue/examples/basic-dynamic-columns" },
-            { "label": "Header Groups", "to": "framework/vue/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/vue/examples/header-groups" }
           ]
         },
         {
@@ -1018,7 +1018,7 @@
             { "label": "Basic (External Atoms)", "to": "framework/preact/examples/basic-external-atoms" },
             { "label": "Basic (Subscribe)", "to": "framework/preact/examples/basic-subscribe" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/preact/examples/basic-dynamic-columns" },
-            { "label": "Header Groups", "to": "framework/preact/examples/column-groups" }
+            { "label": "Header Groups", "to": "framework/preact/examples/header-groups" }
           ]
         },
         {

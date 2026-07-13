@@ -118,7 +118,7 @@ coverage:
     - 'tanstack-solid-table-example-basic-external-atoms'
     - 'tanstack-solid-table-example-basic-external-state'
     - 'tanstack-solid-table-example-basic-use-table'
-    - 'tanstack-solid-table-example-column-groups'
+    - 'tanstack-solid-table-example-header-groups'
     - 'tanstack-solid-table-example-column-ordering'
     - 'tanstack-solid-table-example-column-pinning'
     - 'tanstack-solid-table-example-column-pinning-split'

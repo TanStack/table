@@ -6,7 +6,7 @@ This quick guide will discuss the different ways you can retrieve and interact w
 
 ## What are Header Groups?
 
-Header Groups are simply "rows" of headers. Don't let the name confuse you, it's just that simple. The large majority of tables will only have one row of headers (a single header group), but if you define your column structure with nested columns as with the [Column Groups example](../framework/react/examples/column-groups), you can have multiple rows of headers (multiple header groups).
+Header Groups are simply "rows" of headers. Don't let the name confuse you, it's just that simple. The large majority of tables will only have one row of headers (a single header group), but if you define your column structure with nested columns as with the [Header Groups example](../framework/react/examples/header-groups), you can have multiple rows of headers (multiple header groups).
 
 ## Where to Get Header Groups From
 

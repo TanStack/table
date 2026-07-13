@@ -74,7 +74,7 @@ const getAllCells = (
   row: Row<typeof features, Person>,
 ): Array<Cell<typeof features, Person>> => row.getAllCells()
 
-export default class ColumnGroupsTable extends Component {
+export default class HeaderGroupsTable extends Component {
   @tracked data: Array<Person> = makeData(20)
 
   table = useTable(() => ({

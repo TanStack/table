@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-lit-table-example-column-groups",
+  "name": "tanstack-lit-table-example-header-groups",
   "private": true,
   "scripts": {
     "dev": "vite",

@@ -1,5 +1,5 @@
 {
-  "name": "tanstack-svelte-table-example-column-groups",
+  "name": "tanstack-svelte-table-example-header-groups",
   "private": true,
   "type": "module",
   "scripts": {
