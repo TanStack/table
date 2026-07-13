@@ -303,6 +303,34 @@ Function registries move to slots too: pass `filterFns`, `sortFns`, and `aggrega
 </script>
 ```
 
+### Prefer Individual Fn Imports Over Full Registries
+
+The `filterFns`, `sortFns`, and `aggregationFns` registry exports are now deprecated in favor of importing individual `filterFn_*`, `sortFn_*`, and `aggregationFn_*` functions and registering only the ones you use (or passing functions directly in column definitions with no registration at all). The full registries still work, but spreading them puts every built-in function in your bundle. Keep in mind that string names, including the default `'auto'`, only resolve functions you have registered.
+
+```ts
+// Before: registers every built-in function
+import { filterFns, sortFns } from '@tanstack/svelte-table'
+
+const features = tableFeatures({
+  // ...other features and row models
+  filterFns,
+  sortFns,
+})
+
+// After: registers only the functions you use
+import {
+  filterFn_includesString,
+  sortFn_alphanumeric,
+  sortFn_text,
+} from '@tanstack/svelte-table'
+
+const features = tableFeatures({
+  // ...other features and row models
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
+})
+```
+
 ---
 
 ## State Management Changes
@@ -757,7 +785,7 @@ interface FuzzyFilterMeta {
 const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  filterFns: { fuzzy: fuzzyFilter },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 

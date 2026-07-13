@@ -12,7 +12,7 @@ type SortFnOption<TFeatures, TData> =
 | SortFn<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L61)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L113)
 
 ## Type Parameters
 

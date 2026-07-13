@@ -5,7 +5,7 @@ title: TableFeature
 
 # Interface: TableFeature
 
-Defined in: [types/TableFeatures.ts:308](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L308)
+Defined in: [types/TableFeatures.ts:316](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L316)
 
 Lifecycle hooks and defaults contributed by a table feature.
 
@@ -22,7 +22,7 @@ or column data.
 optional assignCellPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:317](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L317)
+Defined in: [types/TableFeatures.ts:325](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L325)
 
 Adds feature methods to the shared cell prototype for a table.
 
@@ -63,7 +63,7 @@ per-cell mutable data.
 optional assignColumnPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:332](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L332)
+Defined in: [types/TableFeatures.ts:340](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L340)
 
 Adds feature methods to the shared column prototype for a table.
 
@@ -104,7 +104,7 @@ than per-column mutable data.
 optional assignHeaderPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:347](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L347)
+Defined in: [types/TableFeatures.ts:355](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L355)
 
 Adds feature methods to the shared header prototype for a table.
 
@@ -145,7 +145,7 @@ than per-header mutable data.
 optional assignRowPrototype: <TFeatures, TData>(prototype, table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:362](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L362)
+Defined in: [types/TableFeatures.ts:370](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L370)
 
 Adds feature methods to the shared row prototype for a table.
 
@@ -186,7 +186,7 @@ mutable data.
 optional constructTableAPIs: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:375](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L375)
+Defined in: [types/TableFeatures.ts:383](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L383)
 
 Adds feature APIs directly to the table instance.
 
@@ -224,7 +224,7 @@ feature's `initTableInstanceData` hook has completed.
 optional getDefaultColumnDef: <TFeatures, TData, TValue>() => ColumnDefBase_All<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/TableFeatures.ts:385](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L385)
+Defined in: [types/TableFeatures.ts:393](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L393)
 
 Returns default column definition options contributed by this feature.
 
@@ -258,7 +258,7 @@ resolved, so users can override values supplied here.
 optional getDefaultTableOptions: <TFeatures, TData>(table) => Partial<TableOptions_All<TFeatures, TData>>;
 ```
 
-Defined in: [types/TableFeatures.ts:398](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L398)
+Defined in: [types/TableFeatures.ts:406](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L406)
 
 Returns default table options contributed by this feature.
 
@@ -295,7 +295,7 @@ here.
 optional getInitialState: (initialState) => TableState_All;
 ```
 
-Defined in: [types/TableFeatures.ts:412](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L412)
+Defined in: [types/TableFeatures.ts:420](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L420)
 
 Returns this feature's initial table state.
 
@@ -322,7 +322,7 @@ override feature defaults.
 optional initColumnInstanceData: <TFeatures, TData, TValue>(column) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:437](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L437)
+Defined in: [types/TableFeatures.ts:445](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L445)
 
 Initializes instance-specific data on each column.
 
@@ -363,7 +363,7 @@ methods should be assigned via `assignColumnPrototype` instead.
 optional initRowInstanceData: <TFeatures, TData>(row) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:452](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L452)
+Defined in: [types/TableFeatures.ts:460](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L460)
 
 Initializes instance-specific data on each row.
 
@@ -400,7 +400,7 @@ should be assigned via `assignRowPrototype` instead.
 optional initTableInstanceData: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:423](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L423)
+Defined in: [types/TableFeatures.ts:431](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L431)
 
 Initializes mutable, non-reactive data owned by this feature on the table
 instance.
@@ -439,7 +439,7 @@ methods. Table resets do not rerun this hook; use
 optional resetTableInstanceData: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:465](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L465)
+Defined in: [types/TableFeatures.ts:473](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L473)
 
 Resets mutable, non-reactive table-instance data owned by this feature.
 

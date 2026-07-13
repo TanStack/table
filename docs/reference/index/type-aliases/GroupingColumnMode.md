@@ -9,4 +9,4 @@ title: GroupingColumnMode
 type GroupingColumnMode = false | "reorder" | "remove";
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L197)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:252](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L252)

@@ -6,7 +6,6 @@ import {
   createExpandedRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
   injectTable,
   isFunction,
   rowExpandingFeature,
@@ -32,7 +31,6 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
 })
 const columns: Array<ColumnDef<typeof features, Person>> = [
   {

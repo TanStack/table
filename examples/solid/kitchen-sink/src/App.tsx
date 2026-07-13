@@ -1,6 +1,8 @@
 import { faker } from '@faker-js/faker'
 import {
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   createExpandedRowModel,
   createFacetedMinMaxValues,
   createFacetedRowModel,
@@ -10,9 +12,11 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   stockFeatures,
   tableFeatures,
 } from '@tanstack/solid-table'
@@ -65,7 +69,7 @@ const fuzzySortFn: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 interface MyColumnMeta {
@@ -84,9 +88,21 @@ const features = tableFeatures({
   groupedRowModel: createGroupedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilterFn },
-  sortFns: { ...sortFns, fuzzy: fuzzySortFn },
-  aggregationFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    fuzzy: fuzzyFilterFn,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    fuzzy: fuzzySortFn,
+  },
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
 })
 
 const { createAppTable, createAppColumnHelper } = createTableHook({

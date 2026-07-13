@@ -34,7 +34,7 @@ Framework prerequisite: Svelte 5 (`svelte ^5.0.0`).
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 
 const table = createTable({
@@ -73,7 +73,7 @@ Available feature imports are `columnFilteringFeature`, `globalFilteringFeature`
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues: createFacetedMinMaxValues()`                  |
 | `getFacetedUniqueValues()` | `facetedUniqueValues: createFacetedUniqueValues()`                  |
 
-Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFns` as sibling feature slots.
+Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFns` as sibling feature slots holding individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`) under their conventional keys. The full registry objects still work but bundle every built-in.
 
 ## Svelte State Migration
 

@@ -9,12 +9,15 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_equalsString,
+  filterFn_includesString,
+  filterFn_includesStringSensitive,
   globalFilteringFeature,
   metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
@@ -53,7 +56,7 @@ const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const features = tableFeatures({
@@ -64,8 +67,17 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterFns: {
+    equalsString: filterFn_equalsString,
+    includesString: filterFn_includesString,
+    includesStringSensitive: filterFn_includesStringSensitive,
+    fuzzy: fuzzyFilter,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    fuzzy: fuzzySort,
+  },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 

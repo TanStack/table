@@ -4,7 +4,9 @@ import {
   createSortedRowModel,
   injectTable,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/angular-table'
 import { makeData } from './makeData'
@@ -14,7 +16,11 @@ import type { Person } from './makeData'
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
 })
 
 const sortStatusFn: SortFn<typeof features, Person> = (rowA, rowB) => {

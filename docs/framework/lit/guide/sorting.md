@@ -21,13 +21,19 @@ import {
   tableFeatures,
   rowSortingFeature,
   createSortedRowModel,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
+  sortFn_datetime,
 } from '@tanstack/lit-table'
 
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(), // if using client-side sorting
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    datetime: sortFn_datetime,
+  },
 })
 
 @customElement('my-table')
@@ -48,6 +54,8 @@ class MyTable extends LitElement {
   }
 }
 ```
+
+> **NOTE**: Spreading the entire built-in registry (`sortFns: { ...sortFns }`) still works, but it puts every built-in sorting function in your bundle. Registering just the functions you use, or passing a function directly to the `sortFn` column option, is recommended. The default `sortFn: 'auto'` resolves to `alphanumeric`, `text`, or `datetime` from the registry based on the column's data type, so register the ones your columns rely on.
 
 ## Sorting (Lit) Guide
 
@@ -198,7 +206,7 @@ Hoisting the sorting state into your own scope (with an external atom or the `st
 
 ### Client-Side Sorting
 
-To implement client-side sorting, add the `rowSortingFeature` to your features and the `sortedRowModel` to your row models. Import `createSortedRowModel` and `sortFns` from TanStack Table:
+To implement client-side sorting, add the `rowSortingFeature` to your features and the `sortedRowModel` to your row models. Import `createSortedRowModel` and the individual sorting functions you use from TanStack Table:
 
 ```ts
 import {
@@ -206,13 +214,19 @@ import {
   tableFeatures,
   rowSortingFeature,
   createSortedRowModel,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
+  sortFn_datetime,
 } from '@tanstack/lit-table'
 
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    datetime: sortFn_datetime,
+  },
 })
 
 const table = this.tableController.table({
@@ -295,7 +309,8 @@ const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
   sortFns: {
-    ...sortFns,
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
     myCustomSortFn: (rowA, rowB, columnId) =>
       rowA.original[columnId] > rowB.original[columnId]
         ? 1
@@ -313,6 +328,46 @@ const table = this.tableController.table({
 ```
 
 > **TypeScript Note:** String references like `sortFn: 'myCustomSortFn'` are automatically typed when the function is registered in the `sortFns` slot on `tableFeatures`. The registry slot replaces the old `declare module` augmentation approach. Alternatively, skip the registry entirely by passing the function directly to the `sortFn` column option.
+
+#### Customize Sorting Function Behavior
+
+Sorting functions support an optional "hanging" property:
+
+- `sortFn.resolveDataValue` - normalizes each row's value before the two sides are compared. It is honored by every sorting function built with the `constructSortFn` helper, which includes all built-in sorting functions.
+
+The `constructSortFn` helper builds a sorting function from a value-level comparator (`sort`) plus that optional resolver. Keeping the comparison in `sort` and the normalization in `resolveDataValue` means a variant of an existing sorting function only has to swap the resolver: the definition is attached to the returned function, so you can spread any sorting function built with `constructSortFn` and override only what differs.
+
+For example, a version of `alphanumeric` that ignores diacritics, so that "Éric Bernard" sorts next to "Eric Brandon" instead of after "Zak O'Sullivan":
+
+```ts
+const stripDiacritics = (value: string) =>
+  value.normalize('NFD').replace(/\p{Diacritic}/gu, '')
+
+const alphanumericIgnoreDiacritics = constructSortFn({
+  ...sortFn_alphanumeric, // reuse the comparator
+  resolveDataValue: (value) =>
+    stripDiacritics(sortFn_alphanumeric.resolveDataValue!(value)),
+})
+
+const features = tableFeatures({
+  rowSortingFeature,
+  sortedRowModel: createSortedRowModel(),
+  sortFns: { alphanumeric: sortFn_alphanumeric, alphanumericIgnoreDiacritics },
+})
+```
+
+The same pattern works when defining a new sorting function from scratch:
+
+```ts
+const byLastName = constructSortFn({
+  sort: (dataValueA, dataValueB) =>
+    dataValueA === dataValueB ? 0 : dataValueA > dataValueB ? 1 : -1,
+  resolveDataValue: (value) =>
+    String(value ?? '')
+      .split(' ')
+      .at(-1) ?? '',
+})
+```
 
 ### Customize Sorting
 

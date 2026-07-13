@@ -13,8 +13,10 @@ import {
   createFilteredRowModel,
   createSortedRowModel,
   createPaginatedRowModel,
-  filterFns,
-  sortFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
+  sortFn_alphanumeric,
+  sortFn_text,
   metaHelper,
   createColumnHelper,
   type Column,
@@ -61,7 +63,7 @@ const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
   if (rankA && rankB) {
     dir = compareItems(rankA, rankB)
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const features = tableFeatures({
@@ -72,8 +74,16 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    fuzzy: fuzzyFilter,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+    fuzzy: fuzzySort,
+  },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 

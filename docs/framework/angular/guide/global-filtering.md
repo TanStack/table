@@ -21,14 +21,14 @@ import {
   columnFilteringFeature,
   globalFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
 } from '@tanstack/angular-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(), // if using client-side filtering
-  filterFns,
+  filterFns: { includesString: filterFn_includesString },
 })
 
 export class App {
@@ -41,6 +41,8 @@ export class App {
   }))
 }
 ```
+
+> **Note:** The `filterFns` registry above lists only the built-in filter function this table uses. Spreading the entire built-in `filterFns` registry (`filterFns: { ...filterFns }`) still works, but it puts every built-in filter function in your bundle. Register just the functions you use, or pass a function directly to the `globalFilterFn` option with no registration at all.
 
 ## Global Filtering (Angular) Guide
 
@@ -101,14 +103,14 @@ import {
   columnFilteringFeature,
   globalFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_includesString,
 } from '@tanstack/angular-table'
 
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns,
+  filterFns: { includesString: filterFn_includesString },
 })
 
 readonly table = injectTable(() => ({
@@ -119,7 +121,7 @@ readonly table = injectTable(() => ({
 
 ### Global Filter Function
 
-The `globalFilterFn` option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a built-in filter function, a string that references a custom filter function registered in the `filterFns` slot of `tableFeatures`, or a custom filter function passed directly.
+The `globalFilterFn` option allows you to specify the filter function that will be used for global filtering. The filter function can be a string that references a filter function (built-in or custom) registered in the `filterFns` slot of `tableFeatures`, or a filter function passed directly.
 
 ```ts
 readonly table = injectTable(() => ({

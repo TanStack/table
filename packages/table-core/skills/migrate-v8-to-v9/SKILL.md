@@ -42,9 +42,9 @@ import {
   createFilteredRowModel,
   createSortedRowModel,
   columnFilteringFeature,
-  filterFns,
+  filterFn_includesString,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
   tableFeatures,
 } from '@tanstack/table-core'
 
@@ -53,8 +53,8 @@ export const features = tableFeatures({
   rowSortingFeature,
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: { includesString: filterFn_includesString },
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 ```
 
@@ -118,7 +118,7 @@ Move registries from table options or factory arguments into these feature slots
 | `filterFns`      | `filterFns`      |
 | `aggregationFns` | `aggregationFns` |
 
-Register built-ins only when needed, or spread them with custom functions. A slot's keys become the valid string names in column definitions.
+Register only the built-ins the table references by string name, importing each individually (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) alongside any custom functions. The full registry objects (`filterFns`, `sortFns`, `aggregationFns` exports) still work but bundle every built-in. A slot's keys become the valid string names in column definitions, and `'auto'` resolves only registered functions.
 
 ### 3. Migrate state reads and whole-state observation
 
@@ -279,7 +279,7 @@ Do not confuse new capabilities with required breakages. After the table works, 
 - [ ] Remove `getCoreRowModel()` unless supplying a deliberate custom `coreRowModel` slot.
 - [ ] Move all remaining `get*RowModel()` options or earlier-beta `rowModels` entries to `create*RowModel()` feature slots.
 - [ ] Register each dependent feature before its row-model slot.
-- [ ] Move `filterFns`, `sortingFns`/`sortFns`, and `aggregationFns` into feature slots; pass no registries to factories.
+- [ ] Move `filterFns`, `sortingFns`/`sortFns`, and `aggregationFns` into feature slots, registering individually imported built-ins; pass no registries to factories.
 - [ ] Register `columnFilteringFeature` before global filtering and filter/facet dependencies.
 - [ ] Register `columnSizingFeature` before `columnResizingFeature`.
 - [ ] Replace `table.getState()` and top-level `onStateChange` according to the adapter state guide.

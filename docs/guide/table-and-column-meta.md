@@ -452,8 +452,7 @@ import {
   createFilteredRowModel,
   createSortedRowModel,
   createPaginatedRowModel,
-  filterFns,
-  sortFns,
+  sortFn_alphanumeric,
 } from '@tanstack/react-table'
 import type {
   FilterFn,
@@ -491,10 +490,10 @@ const fuzzySort: SortFn<FuzzyFeatures, Person> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId]?.itemRank!,
     )
   }
-  return dir === 0 ? sortingFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
-// 4. Register everything on tableFeatures() — including the filterMeta slot
+// 4. Register everything on tableFeatures(), including the filterMeta slot
 const features = tableFeatures({
   columnFilteringFeature,
   globalFilteringFeature,
@@ -503,11 +502,13 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterFns: { fuzzy: fuzzyFilter },
+  sortFns: { fuzzy: fuzzySort },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 ```
+
+> Note: the `filterFns` and `sortFns` slots above register only the functions this table uses. The full built-in registries (`filterFns`, `sortFns`, `aggregationFns` exported from the package) can still be spread into these slots, but they are deprecated because they put every built-in function in your bundle. Import individual functions such as `sortFn_alphanumeric` instead, or pass functions directly in your column definitions.
 
 Now `columnFiltersMeta` on every row is typed as `FuzzyFilterMeta` for tables built from this `features` object. The `filterMeta` slot is, like `tableMeta` and `columnMeta`, a phantom type-only entry: `metaHelper<FuzzyFilterMeta>()` returns `{}` at runtime and is stripped from the registered features.
 

@@ -2,7 +2,9 @@ import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createExpandedRowModel,
@@ -11,11 +13,13 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
 } from '@tanstack/preact-table'
 import { makeData } from './makeData'
 import type { Person } from './makeData'
@@ -33,9 +37,19 @@ const { useAppTable, createAppColumnHelper } = createTableHook({
     groupedRowModel: createGroupedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(),
-    filterFns,
-    sortFns,
-    aggregationFns,
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
+    aggregationFns: {
+      mean: aggregationFn_mean,
+      median: aggregationFn_median,
+      sum: aggregationFn_sum,
+    },
   },
 })
 

@@ -6,12 +6,15 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_equalsString,
+  filterFn_includesString,
+  filterFn_includesStringSensitive,
   globalFilteringFeature,
   metaHelper,
   rowPaginationFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
@@ -70,7 +73,7 @@ const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
   }
 
   // Provide an alphanumeric fallback for when the item ranks are equal
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const features = tableFeatures({
@@ -81,8 +84,17 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort },
+  filterFns: {
+    equalsString: filterFn_equalsString,
+    fuzzy: fuzzyFilter,
+    includesString: filterFn_includesString,
+    includesStringSensitive: filterFn_includesStringSensitive,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    fuzzy: fuzzySort,
+    text: sortFn_text,
+  },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 

@@ -9,7 +9,9 @@ import { NgStyle } from '@angular/common'
 import { faker } from '@faker-js/faker'
 import {
   FlexRender,
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   createColumnHelper,
   createExpandedRowModel,
   createFacetedMinMaxValues,
@@ -19,10 +21,12 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   injectTable,
   metaHelper,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   stockFeatures,
   tableFeatures,
 } from '@tanstack/angular-table'
@@ -76,7 +80,7 @@ const fuzzySort: SortFn<KitchenSinkFeatures, any> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const sortStatusFn: SortFn<KitchenSinkFeatures, Person> = (rowA, rowB) => {
@@ -98,9 +102,22 @@ export const features = tableFeatures({
   groupedRowModel: createGroupedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-  sortFns: { ...sortFns, fuzzy: fuzzySort, sortStatus: sortStatusFn },
-  aggregationFns,
+  filterFns: {
+    fuzzy: fuzzyFilter,
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    fuzzy: fuzzySort,
+    sortStatus: sortStatusFn,
+    text: sortFn_text,
+  },
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
 })
 

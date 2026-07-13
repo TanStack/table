@@ -17,7 +17,8 @@
     createTable,
     createTableState,
     tableFeatures,
-    sortFns,
+    sortFn_alphanumeric,
+    sortFn_text,
   } from '@tanstack/svelte-table'
   import './index.css'
   import { makeData, type Person } from './makeData'
@@ -28,7 +29,10 @@
     columnVisibilityFeature,
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
-    sortFns,
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
   })
 
   const columns: ColumnDef<typeof features, Person>[] = [

@@ -8,7 +8,9 @@ import {
   createSortedRowModel,
   rowSelectionFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_datetime,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { styleMap } from 'lit/directives/style-map.js'
@@ -22,7 +24,11 @@ const features = tableFeatures({
   rowSelectionFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    datetime: sortFn_datetime,
+    text: sortFn_text,
+  },
 })
 
 const columns: Array<ColumnDef<typeof features, Person>> = [

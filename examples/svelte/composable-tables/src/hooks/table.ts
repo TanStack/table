@@ -11,11 +11,13 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/svelte-table'
 
@@ -66,8 +68,14 @@ export const {
     sortedRowModel: createSortedRowModel(),
     filteredRowModel: createFilteredRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    sortFns,
-    filterFns,
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
+    filterFns: {
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
   }),
 
   // set any default table options here too

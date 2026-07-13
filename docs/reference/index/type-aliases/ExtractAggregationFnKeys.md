@@ -11,7 +11,7 @@ type ExtractAggregationFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | BuiltInAggregationFn : TFeatures extends object ? Extract<keyof TAggregationFns, string> : keyof AggregationFns;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L53)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L108)
 
 Resolves the valid string names for `columnDef.aggregationFn` for a feature
 set.

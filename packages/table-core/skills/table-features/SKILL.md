@@ -22,26 +22,26 @@ This skill builds on `core`. Read it first for the headless model and stable inp
 
 ```ts
 import {
-  aggregationFns,
+  aggregationFn_sum,
   columnGroupingFeature,
   createFilteredRowModel,
   createSortedRowModel,
   columnFilteringFeature,
-  filterFns,
+  filterFn_includesString,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
   tableFeatures,
 } from '@tanstack/table-core'
 
 export const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
-  filterFns,
+  filterFns: { includesString: filterFn_includesString },
   columnGroupingFeature,
-  aggregationFns,
+  aggregationFns: { sum: aggregationFn_sum },
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 ```
 
@@ -63,19 +63,22 @@ const features = tableFeatures({
 ```ts
 const features = tableFeatures({
   columnFilteringFeature,
-  filterFns,
+  filterFns: { includesString: filterFn_includesString },
   rowSortingFeature,
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
   columnGroupingFeature,
-  aggregationFns,
+  aggregationFns: { sum: aggregationFn_sum },
 })
 ```
 
 `filterFns`, `sortFns`, and `aggregationFns` are feature slots, not table
 options. They respectively require `columnFilteringFeature`,
-`rowSortingFeature`, and `columnGroupingFeature`. A registered key can be used
-as a typed string name; pass a function directly when no registry name is
-needed.
+`rowSortingFeature`, and `columnGroupingFeature`. Import individual built-ins
+(`filterFn_*`, `sortFn_*`, `aggregationFn_*`) and register them under their
+conventional keys; the full registry objects (`filterFns`, `sortFns`,
+`aggregationFns` exports) still work but bundle every built-in. A registered
+key can be used as a typed string name, and `'auto'` resolves only registered
+functions; pass a function directly when no registry name is needed.
 
 ### Prefer explicit features
 

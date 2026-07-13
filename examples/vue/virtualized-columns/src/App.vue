@@ -7,7 +7,8 @@ import {
   columnVisibilityFeature,
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
   useTable,
 } from '@tanstack/vue-table'
@@ -22,7 +23,10 @@ const features = tableFeatures({
   columnVisibilityFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const DEFAULT_ROW_COUNT = 1_000

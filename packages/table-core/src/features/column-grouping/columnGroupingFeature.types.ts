@@ -4,6 +4,7 @@ import type {
   CellData,
   OnChangeFn,
   RowData,
+  TransformDataValueFn,
   Updater,
 } from '../../types/type-utils'
 import type { IsAny, TableFeatures } from '../../types/TableFeatures'
@@ -26,14 +27,68 @@ export interface RowModelFns_ColumnGrouping<
 
 export interface AggregationFns {}
 
-export type AggregationFn<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = (
-  columnId: string,
-  leafRows: Array<Row<TFeatures, TData>>,
-  childRows: Array<Row<TFeatures, TData>>,
-) => any
+export interface AggregationFn<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  (
+    columnId: string,
+    leafRows: Array<Row<TFeatures, TData>>,
+    childRows: Array<Row<TFeatures, TData>>,
+  ): any
+  /**
+   * Normalizes each row's value before it is aggregated. Only honored by
+   * aggregation functions built with `constructAggregationFn` (including the
+   * value-based built-in aggregation functions).
+   */
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The definition object accepted by `constructAggregationFn`.
+ *
+ * `aggregate` is a value-level reducer: it receives the rows' (resolved)
+ * values instead of the rows themselves, so normalization concerns stay in
+ * `resolveDataValue`.
+ */
+export interface AggregationFnDef<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  aggregate: (
+    values: Array<any>,
+    rows: Array<Row<TFeatures, TData>>,
+    columnId: string,
+  ) => any
+  /**
+   * Which of the group's rows feed the aggregation: all of its `leafRows`
+   * (the default) or its immediate `childRows`. For nested groups, child rows
+   * expose already-aggregated values, which is faster for reaggregatable
+   * computations like sums and extents.
+   */
+  fromRows?: 'leafRows' | 'childRows'
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The shape returned by `constructAggregationFn`: an `AggregationFn` with its
+ * definition attached, so variants can be built by spreading it into another
+ * `constructAggregationFn` call.
+ *
+ * The call signature is generic so a created aggregation function can be used
+ * with any table's rows, regardless of the feature set it was defined
+ * against.
+ */
+export interface CreatedAggregationFn<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> extends AggregationFnDef<TFeatures, TData> {
+  <TRowFeatures extends TableFeatures, TRowData extends RowData>(
+    columnId: string,
+    leafRows: Array<Row<TRowFeatures, TRowData>>,
+    childRows: Array<Row<TRowFeatures, TRowData>>,
+  ): any
+}
 
 export type CustomAggregationFns<
   TFeatures extends TableFeatures,

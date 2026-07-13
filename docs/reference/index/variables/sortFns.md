@@ -3,244 +3,62 @@ id: sortFns
 title: sortFns
 ---
 
-# Variable: sortFns
+# ~~Variable: sortFns~~
 
 ```ts
 const sortFns: object;
 ```
 
-Defined in: [fns/sortFns.ts:343](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L343)
+Defined in: [fns/sortFns.ts:360](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L360)
 
 The built-in sorting function registry.
 
-Pass this object to sorted row model creation or extend it with custom sorting functions.
+Registering this full object opts out of tree-shaking: every built-in
+sorting function ends up in your bundle. Prefer importing the `sortFn_*`
+functions you actually use and registering just those in the `sortFns`
+slot, or passing them directly to the `sortFn` column option.
 
 ## Type Declaration
 
-### alphanumeric()
+### ~~alphanumeric~~
 
 ```ts
-alphanumeric: <TFeatures, TData>(rowA, rowB, columnId) => number = sortFn_alphanumeric;
+alphanumeric: CreatedSortFn<any, any> = sortFn_alphanumeric;
 ```
 
-Sorts rows with the built-in alphanumeric strategy.
-
-This comparator returns ascending-order results; descending order is applied by the sorting row model.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### rowA
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### rowB
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### columnId
-
-`string`
-
-#### Returns
-
-`number`
-
-### alphanumericCaseSensitive()
+### ~~alphanumericCaseSensitive~~
 
 ```ts
-alphanumericCaseSensitive: <TFeatures, TData>(rowA, rowB, columnId) => number = sortFn_alphanumericCaseSensitive;
+alphanumericCaseSensitive: CreatedSortFn<any, any> = sortFn_alphanumericCaseSensitive;
 ```
 
-Sorts rows with the built-in alphanumeric case sensitive strategy.
-
-This comparator returns ascending-order results; descending order is applied by the sorting row model.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### rowA
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### rowB
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### columnId
-
-`string`
-
-#### Returns
-
-`number`
-
-### basic()
+### ~~basic~~
 
 ```ts
-basic: <TFeatures, TData>(rowA, rowB, columnId) => -1 | 0 | 1 = sortFn_basic;
+basic: CreatedSortFn<any, any> = sortFn_basic;
 ```
 
-Sorts rows with the built-in basic strategy.
-
-This comparator returns ascending-order results; descending order is applied by the sorting row model.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### rowA
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### rowB
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### columnId
-
-`string`
-
-#### Returns
-
-`-1` \| `0` \| `1`
-
-### datetime()
+### ~~datetime~~
 
 ```ts
-datetime: <TFeatures, TData>(rowA, rowB, columnId) => -1 | 0 | 1 = sortFn_datetime;
+datetime: CreatedSortFn<any, any> = sortFn_datetime;
 ```
 
-Sorts rows with the built-in datetime strategy.
-
-This comparator returns ascending-order results; descending order is applied by the sorting row model.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### rowA
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### rowB
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### columnId
-
-`string`
-
-#### Returns
-
-`-1` \| `0` \| `1`
-
-### text()
+### ~~text~~
 
 ```ts
-text: <TFeatures, TData>(rowA, rowB, columnId) => -1 | 0 | 1 = sortFn_text;
+text: CreatedSortFn<any, any> = sortFn_text;
 ```
 
-Sorts rows with the built-in text strategy.
-
-This comparator returns ascending-order results; descending order is applied by the sorting row model.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### rowA
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### rowB
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### columnId
-
-`string`
-
-#### Returns
-
-`-1` \| `0` \| `1`
-
-### textCaseSensitive()
+### ~~textCaseSensitive~~
 
 ```ts
-textCaseSensitive: <TFeatures, TData>(rowA, rowB, columnId) => -1 | 0 | 1 = sortFn_textCaseSensitive;
+textCaseSensitive: CreatedSortFn<any, any> = sortFn_textCaseSensitive;
 ```
 
-Sorts rows with the built-in text case sensitive strategy.
+## Deprecated
 
-This comparator returns ascending-order results; descending order is applied by the sorting row model.
-
-#### Type Parameters
-
-##### TFeatures
-
-`TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-##### TData
-
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
-
-#### Parameters
-
-##### rowA
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### rowB
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>
-
-##### columnId
-
-`string`
-
-#### Returns
-
-`-1` \| `0` \| `1`
+Import individual `sortFn_*` functions instead for a smaller
+bundle. This export still works and is not going away in v9, but built-in
+name resolution (including `sortFn: 'auto'`) only finds functions you
+register yourself.

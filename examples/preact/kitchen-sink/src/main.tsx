@@ -3,7 +3,9 @@ import { TanStackDevtools } from '@tanstack/preact-devtools'
 import { useEffect, useMemo, useRef, useState } from 'preact/hooks'
 import { faker } from '@faker-js/faker'
 import {
-  aggregationFns,
+  aggregationFn_mean,
+  aggregationFn_median,
+  aggregationFn_sum,
   createColumnHelper,
   createExpandedRowModel,
   createFacetedMinMaxValues,
@@ -13,9 +15,11 @@ import {
   createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   stockFeatures,
   tableFeatures,
   useTable,
@@ -74,7 +78,7 @@ const fuzzySort: SortFn<FuzzyFeatures, any> = (rowA, rowB, columnId) => {
       rowB.columnFiltersMeta[columnId].itemRank!,
     )
   }
-  return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+  return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
 }
 
 const features = tableFeatures({
@@ -87,9 +91,14 @@ const features = tableFeatures({
   groupedRowModel: createGroupedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns: { ...filterFns, fuzzy: fuzzyFilter },
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    fuzzy: fuzzyFilter,
+  },
   sortFns: {
-    ...sortFns,
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
     fuzzy: fuzzySort,
     sortStatus: (rowA: any, rowB: any) => {
       const statusOrder = ['single', 'complicated', 'relationship']
@@ -99,7 +108,11 @@ const features = tableFeatures({
       )
     },
   },
-  aggregationFns,
+  aggregationFns: {
+    mean: aggregationFn_mean,
+    median: aggregationFn_median,
+    sum: aggregationFn_sum,
+  },
   filterMeta: metaHelper<FuzzyFilterMeta>(),
   columnMeta: metaHelper<MyColumnMeta>(),
 })

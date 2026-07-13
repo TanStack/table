@@ -77,18 +77,18 @@ Keep features and columns outside reactive work; expose changing rune values thr
 import {
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
   tableFeatures,
 } from '@tanstack/svelte-table'
 
 export const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 ```
 
-The row-model slot follows its prerequisite feature in the same call.
+The row-model slot follows its prerequisite feature in the same call. Import individual `sortFn_*` built-ins and register only the ones your columns reference; the full `sortFns` registry object still works but bundles every built-in.
 
 ### Treat markup and styles as application code
 

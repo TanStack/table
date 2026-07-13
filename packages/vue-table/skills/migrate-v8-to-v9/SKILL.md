@@ -33,7 +33,7 @@ Framework prerequisite: Vue 3.2 or newer (`vue >=3.2`).
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 const data = ref(makeData())
 const table = useTable({ features, columns, data })
@@ -66,7 +66,7 @@ Available feature imports are `columnFilteringFeature`, `globalFilteringFeature`
 | `getFacetedMinMaxValues()` | `facetedMinMaxValues: createFacetedMinMaxValues()`                  |
 | `getFacetedUniqueValues()` | `facetedUniqueValues: createFacetedUniqueValues()`                  |
 
-Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFns` as sibling feature slots.
+Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFns` as sibling feature slots holding individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`) under their conventional keys. The full registry objects still work but bundle every built-in.
 
 ## Vue State Migration
 

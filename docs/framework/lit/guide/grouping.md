@@ -20,13 +20,13 @@ import {
   tableFeatures,
   columnGroupingFeature,
   createGroupedRowModel,
-  aggregationFns,
+  aggregationFn_sum,
 } from '@tanstack/lit-table'
 
 const features = tableFeatures({
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(), // if using client-side grouping
-  aggregationFns,
+  aggregationFns: { sum: aggregationFn_sum },
 })
 
 @customElement('my-table')
@@ -48,6 +48,8 @@ class MyTable extends LitElement {
 }
 ```
 
+> **NOTE**: Spreading the entire built-in registry (`aggregationFns: { ...aggregationFns }`) still works, but it puts every built-in aggregation function in your bundle. Registering just the functions you use, or passing a function directly to the `aggregationFn` column option, is recommended.
+
 ## Grouping (Lit) Guide
 
 Grouping in TanStack table is a feature that applies to columns and allows you to categorize and organize the table rows based on specific columns. This can be useful in cases where you have a large amount of data and you want to group them together based on certain criteria.
@@ -66,13 +68,13 @@ import {
   tableFeatures,
   columnGroupingFeature,
   createGroupedRowModel,
-  aggregationFns,
+  aggregationFn_sum,
 } from '@tanstack/lit-table'
 
 const features = tableFeatures({
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
-  aggregationFns,
+  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = this.tableController.table({
@@ -90,7 +92,7 @@ const features = tableFeatures({
   rowExpandingFeature,
   groupedRowModel: createGroupedRowModel(),
   expandedRowModel: createExpandedRowModel(),
-  aggregationFns,
+  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = this.tableController.table({
@@ -134,7 +136,7 @@ const column = columnHelper.accessor('key', {
 ```
 
 In the above example, the sum aggregation function will be used to aggregate the data in the grouped rows.
-By default, numeric columns will use the sum aggregation function, and non-numeric columns will use the count aggregation function. You can override this behavior by specifying the aggregationFn option in the column definition.
+By default (`aggregationFn: 'auto'`), numeric columns use the `sum` aggregation function and date columns use the `extent` aggregation function, resolved from the `aggregationFns` registry (a development warning fires if the chosen function is not registered). Other column types are left unaggregated. You can override this behavior by specifying the `aggregationFn` option in the column definition.
 
 There are several built-in aggregation functions that you can use:
 
@@ -147,6 +149,8 @@ There are several built-in aggregation functions that you can use:
 - median - Finds the median of the values in the grouped rows.
 - unique - Returns an array of unique values in the grouped rows.
 - uniqueCount - Counts the number of unique values in the grouped rows.
+- first - Returns the first leaf value in the grouped rows.
+- last - Returns the last leaf value in the grouped rows.
 
 #### Custom Aggregations
 
@@ -157,7 +161,7 @@ const features = tableFeatures({
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns: {
-    ...aggregationFns,
+    sum: aggregationFn_sum,
     myCustomAggregation: (columnId, leafRows, childRows) => {
       // return the aggregated value
     },
@@ -179,6 +183,28 @@ const column = columnHelper.accessor('key', {
 ```
 
 > **TypeScript Note:** String references like `aggregationFn: 'myCustomAggregation'` are automatically typed when the function is registered in the `aggregationFns` slot on `tableFeatures`. The registry slot replaces the old `declare module` augmentation approach. Alternatively, skip the registry entirely by passing the function directly to the `aggregationFn` column option.
+
+#### Customize Aggregation Function Behavior
+
+Aggregation functions support an optional "hanging" property:
+
+- `aggregationFn.resolveDataValue` - normalizes each row's value before it is aggregated. It is honored by every aggregation function built with the `constructAggregationFn` helper, which includes the value-based built-in aggregation functions (`count`, `first`, and `last` are plain row-level functions that never read every value).
+
+The `constructAggregationFn` helper builds an aggregation function from a value-level reducer (`aggregate`) plus that optional resolver and a `fromRows` setting that picks between the group's `leafRows` (the default) and its immediate `childRows`. The definition is attached to the returned function, so you can spread any constructed aggregation function and override only what differs. For example, a `min` that works on date columns:
+
+```ts
+const earliest = constructAggregationFn({
+  ...aggregationFn_min, // reuse the numeric reducer
+  resolveDataValue: (value) =>
+    value instanceof Date ? value.getTime() : value,
+})
+
+const features = tableFeatures({
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: { min: aggregationFn_min, earliest },
+})
+```
 
 ### Manual Grouping
 

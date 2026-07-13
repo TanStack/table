@@ -28,14 +28,14 @@ import {
   createSortedRowModel,
   createTableHook,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
   tableFeatures,
 } from '@tanstack/ember-table'
 
 const features = tableFeatures({
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: { alphanumeric: sortFn_alphanumeric },
 })
 
 export const { appFeatures, createAppColumnHelper, createAppTable } =

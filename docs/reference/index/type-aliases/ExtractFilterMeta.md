@@ -9,7 +9,7 @@ title: ExtractFilterMeta
 type ExtractFilterMeta<TFeatures> = IsAny<TFeatures> extends true ? FilterMeta : TFeatures extends object ? TFilterMeta : FilterMeta;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L23)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L24)
 
 Resolves the type of the filter meta attached to rows for a feature set.
 

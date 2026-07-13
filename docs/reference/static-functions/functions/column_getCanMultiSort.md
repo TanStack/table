@@ -9,7 +9,7 @@ title: column_getCanMultiSort
 function column_getCanMultiSort<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:374](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L374)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:408](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L408)
 
 Checks whether this column can be added to a multi-sort state.
 

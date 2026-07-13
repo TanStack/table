@@ -9,7 +9,7 @@ title: column_getFilterValue
 function column_getFilterValue<TFeatures, TData, TValue>(column): unknown;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L163)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L179)
 
 Reads this column's current filter value from `state.columnFilters`.
 

@@ -7,7 +7,8 @@
     createSortedRowModel,
     createTable,
     rowSortingFeature,
-    sortFns,
+    sortFn_alphanumeric,
+    sortFn_text,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import { createVirtualizer } from '@tanstack/svelte-virtual'
@@ -22,7 +23,10 @@
     columnVisibilityFeature,
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
-    sortFns,
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
   })
 
   const DEFAULT_ROW_COUNT = 1_000

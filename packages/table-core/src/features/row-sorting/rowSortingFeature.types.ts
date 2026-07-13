@@ -1,6 +1,11 @@
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { BuiltInSortFn } from '../../fns/sortFns'
-import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type {
+  OnChangeFn,
+  RowData,
+  TransformDataValueFn,
+  Updater,
+} from '../../types/type-utils'
 import type { IsAny, TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
 
@@ -33,6 +38,53 @@ export interface SortFn<
   (
     rowA: Row<TFeatures, TData>,
     rowB: Row<TFeatures, TData>,
+    columnId: string,
+  ): number
+  /**
+   * Normalizes each row's value before the two sides are compared. Only
+   * honored by sorting functions built with `constructSortFn` (including all
+   * built-in sorting functions).
+   */
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The definition object accepted by `constructSortFn`.
+ *
+ * `sort` is a value-level comparator: it receives both rows' (resolved) data
+ * values instead of the whole rows, so normalization concerns stay in
+ * `resolveDataValue`.
+ */
+export interface SortFnDef<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  sort: (
+    dataValueA: any,
+    dataValueB: any,
+    rowA: Row<TFeatures, TData>,
+    rowB: Row<TFeatures, TData>,
+    columnId: string,
+  ) => number
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The shape returned by `constructSortFn`: a `SortFn` with its definition
+ * attached, so variants can be built by spreading it into another
+ * `constructSortFn` call.
+ *
+ * The call signature is generic so a created sorting function can be used
+ * with any table's rows, regardless of the feature set it was defined
+ * against.
+ */
+export interface CreatedSortFn<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> extends SortFnDef<TFeatures, TData> {
+  <TRowFeatures extends TableFeatures, TRowData extends RowData>(
+    rowA: Row<TRowFeatures, TRowData>,
+    rowB: Row<TRowFeatures, TRowData>,
     columnId: string,
   ): number
 }

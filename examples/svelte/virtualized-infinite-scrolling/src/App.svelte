@@ -6,7 +6,6 @@
     createSortedRowModel,
     createTable,
     rowSortingFeature,
-    sortFns,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import {
@@ -27,7 +26,7 @@
     columnSizingFeature,
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
-    sortFns,
+    // no sortFns registered: this example uses `manualSorting` (server-side sorting)
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()

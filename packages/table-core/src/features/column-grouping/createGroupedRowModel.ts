@@ -20,9 +20,12 @@ import type { RowData } from '../../types/type-utils'
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
  *
- * Register aggregation functions with the `aggregationFns` slot on the
- * `features` option:
- * `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns })`.
+ * Register the aggregation functions you use with the `aggregationFns` slot
+ * on the `features` option:
+ * `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns: { sum: aggregationFn_sum } })`.
+ * Importing individual `aggregationFn_*` functions keeps unused built-ins out
+ * of your bundle; aggregation functions passed directly to the
+ * `aggregationFn` column option need no registration at all.
  */
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,

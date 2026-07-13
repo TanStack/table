@@ -5,7 +5,8 @@ import {
   createSortedRowModel,
   createTableHook,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { makeData } from './makeData'
@@ -18,7 +19,10 @@ const { useAppTable, createAppColumnHelper } = createTableHook({
   features: tableFeatures({
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
-    sortFns,
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
   }),
   debugTable: true,
 })

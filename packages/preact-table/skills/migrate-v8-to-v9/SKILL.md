@@ -61,6 +61,8 @@ V8 did not have a first-party Preact adapter; many Preact apps used `@tanstack/r
 | Table/factory `sortingFns`, `filterFns`, `aggregationFns` | `sortFns`, `filterFns`, `aggregationFns` slots in `tableFeatures()` |
 | Early-beta `rowModels: { ... }`                           | Direct named slots in `tableFeatures()`                             |
 
+In the registry slots, register individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) under their conventional keys alongside custom functions; the full `filterFns`/`sortFns`/`aggregationFns` registry objects still work but bundle every built-in.
+
 Register each prerequisite feature before its row-model slot. Stock features are `columnFilteringFeature`, `globalFilteringFeature`, `rowSortingFeature`, `rowPaginationFeature`, `rowSelectionFeature`, `rowExpandingFeature`, `rowPinningFeature`, `columnPinningFeature`, `columnVisibilityFeature`, `columnOrderingFeature`, `columnSizingFeature`, `columnResizingFeature`, `columnGroupingFeature`, and `columnFacetingFeature`.
 
 ### Preact state and subscriptions

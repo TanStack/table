@@ -11,7 +11,8 @@
     FlexRender,
     rowPaginationFeature,
     rowSortingFeature,
-    sortFns,
+    sortFn_alphanumeric,
+    sortFn_text,
     tableFeatures,
   } from '@tanstack/svelte-table'
   import { makeData } from './makeData'
@@ -24,7 +25,10 @@
     rowSortingFeature,
     sortedRowModel: createSortedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
-    sortFns,
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      text: sortFn_text,
+    },
   })
 
   const columnHelper = createColumnHelper<typeof features, Person>()

@@ -5,7 +5,7 @@ title: Column_RowSorting
 
 # Interface: Column\_RowSorting\<TFeatures, TData\>
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L104)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L156)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:104](https://github
 clearSorting: () => void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:111](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L111)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L163)
 
 Removes this column from the table's sorting state
 
@@ -41,7 +41,7 @@ Removes this column from the table's sorting state
 getAutoSortDir: () => SortDirection;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L115)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:167](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L167)
 
 Returns a sort direction automatically inferred based on the columns values.
 
@@ -57,7 +57,7 @@ Returns a sort direction automatically inferred based on the columns values.
 getAutoSortFn: () => SortFn<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L119)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:171](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L171)
 
 Returns a sorting function automatically inferred based on the columns values.
 
@@ -73,7 +73,7 @@ Returns a sorting function automatically inferred based on the columns values.
 getCanMultiSort: () => boolean;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L123)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L175)
 
 Returns whether this column can be multi-sorted.
 
@@ -89,7 +89,7 @@ Returns whether this column can be multi-sorted.
 getCanSort: () => boolean;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L127)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:179](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L179)
 
 Returns whether this column can be sorted.
 
@@ -105,7 +105,7 @@ Returns whether this column can be sorted.
 getFirstSortDir: () => SortDirection;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L131)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:183](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L183)
 
 Returns the first direction that should be used when sorting this column.
 
@@ -121,7 +121,7 @@ Returns the first direction that should be used when sorting this column.
 getIsSorted: () => false | SortDirection;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L135)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L187)
 
 Reads this column's current sort direction, or `false` when unsorted.
 
@@ -137,7 +137,7 @@ Reads this column's current sort direction, or `false` when unsorted.
 getNextSortingOrder: () => false | SortDirection;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L139)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L191)
 
 Returns the next sorting order.
 
@@ -153,7 +153,7 @@ Returns the next sorting order.
 getSortFn: () => SortFn<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L147)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:199](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L199)
 
 Returns the resolved sorting function to be used for this column
 
@@ -169,7 +169,7 @@ Returns the resolved sorting function to be used for this column
 getSortIndex: () => number;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L143)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L195)
 
 Finds this column's position in the ordered sorting state.
 
@@ -185,7 +185,7 @@ Finds this column's position in the ordered sorting state.
 getToggleSortingHandler: () => (event) => void | undefined;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L151)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L203)
 
 Creates a header/control handler that toggles this column's sorting state.
 
@@ -201,7 +201,7 @@ Creates a header/control handler that toggles this column's sorting state.
 toggleSorting: (desc?, isMulti?) => void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L155)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L207)
 
 Toggles this columns sorting state. If `desc` is provided, it will force the sort direction to that value. If `isMulti` is provided, it will additivity multi-sort the column (or toggle it if it is already sorted).
 

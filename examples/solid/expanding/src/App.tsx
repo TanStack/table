@@ -6,12 +6,15 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   createTable,
-  filterFns,
+  filterFn_between,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createEffect, createSignal } from 'solid-js'
@@ -29,8 +32,15 @@ const features = tableFeatures({
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  filterFns,
-  sortFns,
+  filterFns: {
+    between: filterFn_between,
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

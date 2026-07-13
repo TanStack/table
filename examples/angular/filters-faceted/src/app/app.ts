@@ -9,7 +9,9 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_equalsString,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   isFunction,
   metaHelper,
   rowPaginationFeature,
@@ -35,7 +37,11 @@ export const features = tableFeatures({
   facetedUniqueValues: createFacetedUniqueValues(),
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    equalsString: filterFn_equalsString,
+  },
 })
 
 const { injectAppTable, createAppColumnHelper } = createTableHook({
@@ -70,6 +76,7 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('status', {
     header: 'Status',
+    filterFn: 'equalsString', // filterFn string to pick from filterFns
     meta: {
       filterVariant: 'select',
     },
@@ -79,6 +86,8 @@ const columns = columnHelper.columns([
     meta: {
       filterVariant: 'range',
     },
+    filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+    // you could also write your own custom filter function here
   }),
 ])
 

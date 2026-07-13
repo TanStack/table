@@ -141,6 +141,11 @@ export function column_getToggleGroupingHandler<
  * Numeric columns default to `sum`, date-like values default to `extent`, and
  * other value types leave aggregation unspecified.
  *
+ * The chosen aggregation function is looked up in the table's
+ * `aggregationFns` registry. When it is not registered there, this returns
+ * `undefined` and warns in development instead of substituting a different
+ * aggregation function.
+ *
  * @example
  * ```ts
  * const aggregationFn = column_getAutoAggregationFn(column)
@@ -159,15 +164,27 @@ export function column_getAutoAggregationFn<
 
   const value = firstRow?.getValue(column.id)
 
+  let aggregationFnName: string | undefined
+
   if (typeof value === 'number') {
-    return aggregationFns?.sum
+    aggregationFnName = 'sum'
+  } else if (Object.prototype.toString.call(value) === '[object Date]') {
+    aggregationFnName = 'extent'
   }
 
-  if (Object.prototype.toString.call(value) === '[object Date]') {
-    return aggregationFns?.extent
+  if (!aggregationFnName) {
+    return undefined
   }
 
-  return undefined
+  const aggregationFn = aggregationFns?.[aggregationFnName]
+
+  if (process.env.NODE_ENV === 'development' && !aggregationFn) {
+    console.warn(
+      `aggregationFn '${aggregationFnName}' (auto) for column '${column.id}' is not registered`,
+    )
+  }
+
+  return aggregationFn
 }
 
 /**
@@ -191,11 +208,28 @@ export function column_getAggregationFn<
     | Record<string, AggregationFn<TFeatures, TData>>
     | undefined = column.table._rowModelFns.aggregationFns
 
-  return isFunction(column.columnDef.aggregationFn)
-    ? column.columnDef.aggregationFn
-    : column.columnDef.aggregationFn === 'auto'
-      ? column_getAutoAggregationFn(column)
-      : aggregationFns?.[column.columnDef.aggregationFn as string]
+  if (isFunction(column.columnDef.aggregationFn)) {
+    return column.columnDef.aggregationFn
+  }
+
+  if (column.columnDef.aggregationFn === 'auto') {
+    return column_getAutoAggregationFn(column)
+  }
+
+  const aggregationFn =
+    aggregationFns?.[column.columnDef.aggregationFn as string]
+
+  if (
+    process.env.NODE_ENV === 'development' &&
+    !aggregationFn &&
+    column.columnDef.aggregationFn != null
+  ) {
+    console.warn(
+      `aggregationFn '${String(column.columnDef.aggregationFn)}' for column '${column.id}' is not registered`,
+    )
+  }
+
+  return aggregationFn
 }
 
 /**

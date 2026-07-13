@@ -6,6 +6,14 @@ export type RowData = Record<string, any> | Array<any>
 
 export type CellData = unknown
 
+/**
+ * Normalizes a row's value before a filter or sort comparator sees it.
+ *
+ * Attach as `resolveDataValue` on filter/sort functions built with
+ * `constructFilterFn`/`constructSortFn` (e.g. to lowercase or strip diacritics).
+ */
+export type TransformDataValueFn = (dataValue: any) => any
+
 export type PartialKeys<T, K extends keyof T> = Omit<T, K> & Partial<Pick<T, K>>
 
 export type RequiredKeys<T, K extends keyof T> = Omit<T, K> &

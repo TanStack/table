@@ -3,6 +3,7 @@ import type {
   CellData,
   OnChangeFn,
   RowData,
+  TransformDataValueFn,
   Updater,
 } from '../../types/type-utils'
 import type { IsAny, TableFeatures } from '../../types/TableFeatures'
@@ -66,8 +67,67 @@ export interface FilterFn<
     filterValue: any,
     addMeta?: (meta: ExtractFilterMeta<TFeatures>) => void,
   ): boolean
+  /**
+   * Removes the filter from `state.columnFilters` when the filter value fails
+   * this test (e.g. empty strings for text filters).
+   */
   autoRemove?: ColumnFilterAutoRemoveTestFn<TFeatures, TData>
+  /**
+   * Normalizes the filter value before filtering runs.
+   *
+   * The table applies this once per filter (not per row) and passes the
+   * resolved value to the filter function as `filterValue`.
+   */
   resolveFilterValue?: TransformFilterValueFn<TFeatures, TData>
+  /**
+   * Normalizes each row's value before it is compared against the filter
+   * value. Only honored by filter functions built with `constructFilterFn`
+   * (including all built-in filter functions).
+   */
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The definition object accepted by `constructFilterFn`.
+ *
+ * `filter` is a value-level comparator: it receives the row's (resolved) data
+ * value and the (resolved) filter value instead of the whole row, so
+ * normalization concerns stay in `resolveDataValue`/`resolveFilterValue`.
+ */
+export interface FilterFnDef<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  filter: (
+    dataValue: any,
+    filterValue: any,
+    row: Row<TFeatures, TData>,
+    columnId: string,
+    addMeta?: (meta: ExtractFilterMeta<TFeatures>) => void,
+  ) => boolean
+  autoRemove?: (filterValue: any) => boolean
+  resolveFilterValue?: (filterValue: any) => any
+  resolveDataValue?: TransformDataValueFn
+}
+
+/**
+ * The shape returned by `constructFilterFn`: a `FilterFn` with its definition
+ * attached, so variants can be built by spreading it into another
+ * `constructFilterFn` call.
+ *
+ * The call signature is generic so a created filter function can be used with
+ * any table's rows, regardless of the feature set it was defined against.
+ */
+export interface CreatedFilterFn<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> extends FilterFnDef<TFeatures, TData> {
+  <TRowFeatures extends TableFeatures, TRowData extends RowData>(
+    row: Row<TRowFeatures, TRowData>,
+    columnId: string,
+    filterValue: any,
+    addMeta?: (meta: ExtractFilterMeta<TRowFeatures>) => void,
+  ): boolean
 }
 
 export type TransformFilterValueFn<

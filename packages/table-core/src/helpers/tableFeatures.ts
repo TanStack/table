@@ -24,9 +24,10 @@ import type {
  *   columnFilteringFeature,
  *   createFilteredRowModel,
  *   createSortedRowModel,
- *   filterFns,
+ *   filterFn_includesString,
  *   rowSortingFeature,
- *   sortFns,
+ *   sortFn_alphanumeric,
+ *   sortFn_text,
  *   tableFeatures,
  * } from '@tanstack/react-table'
  * const features = tableFeatures({
@@ -34,8 +35,8 @@ import type {
  *   rowSortingFeature,
  *   filteredRowModel: createFilteredRowModel(),
  *   sortedRowModel: createSortedRowModel(),
- *   filterFns: { ...filterFns, myCustomFilterFn },
- *   sortFns,
+ *   filterFns: { includesString: filterFn_includesString, myCustomFilterFn },
+ *   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
  *   tableMeta: {} as { updateData: (rowIndex: number, columnId: string, value: unknown) => void },
  *   columnMeta: {} as { align?: 'left' | 'right' },
  * });

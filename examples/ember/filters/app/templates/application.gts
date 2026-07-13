@@ -8,7 +8,9 @@ import {
   tableFeatures,
   columnFilteringFeature,
   createFilteredRowModel,
-  filterFns,
+  filterFn_equalsString,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   rowPaginationFeature,
   createPaginatedRowModel,
   metaHelper,
@@ -34,7 +36,11 @@ const features = tableFeatures({
   columnMeta: metaHelper<MyColumnMeta>(),
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    equalsString: filterFn_equalsString,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -64,11 +70,14 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('status', {
     header: 'Status',
+    filterFn: 'equalsString', // filterFn string to pick from filterFns
     meta: { filterVariant: 'select' },
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
     meta: { filterVariant: 'range' },
+    filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+    // you could also write your own custom filter function here
   }),
 ])
 

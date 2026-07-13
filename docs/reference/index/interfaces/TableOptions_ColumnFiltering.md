@@ -5,7 +5,7 @@ title: TableOptions_ColumnFiltering
 
 # Interface: TableOptions\_ColumnFiltering\<_TFeatures, _TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L180)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L240)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:180](http
 optional enableColumnFilters: boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L187)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:247](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L247)
 
 Enables column-specific filtering for all columns that also allow it.
 
@@ -37,7 +37,7 @@ Enables column-specific filtering for all columns that also allow it.
 optional enableFilters: boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L193)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:253](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L253)
 
 Enables all filtering features for the table.
 
@@ -51,7 +51,7 @@ Set this to `false` to disable both column filtering and global filtering.
 optional filterFromLeafRows: boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L197)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:257](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L257)
 
 By default, filtering is done from parent rows down (so if a parent row is filtered out, all of its children will be filtered out as well). Setting this option to `true` will cause filtering to be done from leaf rows up (which means parent rows will be included so long as one of their child or grand-child rows is also included).
 
@@ -63,7 +63,7 @@ By default, filtering is done from parent rows down (so if a parent row is filte
 optional manualFiltering: boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L201)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L261)
 
 Disables the `getFilteredRowModel` from being used to filter data. This may be useful if your table needs to dynamically support both client-side and server-side filtering.
 
@@ -75,7 +75,7 @@ Disables the `getFilteredRowModel` from being used to filter data. This may be u
 optional maxLeafRowFilterDepth: number;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L207)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L267)
 
 By default, filtering is done for all rows (max depth of 100), no matter if they are root level parent rows or the child leaf rows of a parent row. Setting this option to `0` will cause filtering to only be applied to the root level parent rows, with all sub-rows remaining unfiltered. Similarly, setting this option to `1` will cause filtering to only be applied to child leaf rows 1 level deep, and so on.
 
@@ -89,7 +89,7 @@ This is useful for situations where you want a row's entire child hierarchy to b
 optional onColumnFiltersChange: OnChangeFn<ColumnFiltersState>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L213)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:273](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L273)
 
 Called with an updater when column filter state changes. Pair this with
 `state.columnFilters` when using external state; external atoms can own the

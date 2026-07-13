@@ -1,7 +1,9 @@
 <script lang="ts">
   import { faker } from '@faker-js/faker'
   import {
-    aggregationFns,
+    aggregationFn_mean,
+    aggregationFn_median,
+    aggregationFn_sum,
     createExpandedRowModel,
     createFacetedMinMaxValues,
     createFacetedRowModel,
@@ -11,10 +13,12 @@
     createPaginatedRowModel,
     createSortedRowModel,
     createTableHook,
-    filterFns,
+    filterFn_includesString,
+    filterFn_inNumberRange,
     FlexRender,
     metaHelper,
-    sortFns,
+    sortFn_alphanumeric,
+    sortFn_text,
     stockFeatures,
     tableFeatures,
   } from '@tanstack/svelte-table'
@@ -66,7 +70,7 @@
         rowB.columnFiltersMeta[columnId].itemRank!,
       )
     }
-    return dir === 0 ? sortFns.alphanumeric(rowA, rowB, columnId) : dir
+    return dir === 0 ? sortFn_alphanumeric(rowA, rowB, columnId) : dir
   }
 
   const sortStatusFn: SortFn<TableFeatures, Person> = (rowA, rowB) => {
@@ -89,9 +93,22 @@
     groupedRowModel: createGroupedRowModel(),
     paginatedRowModel: createPaginatedRowModel(),
     sortedRowModel: createSortedRowModel(),
-    filterFns: { ...filterFns, fuzzy: fuzzyFilter },
-    sortFns: { ...sortFns, fuzzy: fuzzySort, status: sortStatusFn },
-    aggregationFns,
+    filterFns: {
+      fuzzy: fuzzyFilter,
+      includesString: filterFn_includesString,
+      inNumberRange: filterFn_inNumberRange,
+    },
+    sortFns: {
+      alphanumeric: sortFn_alphanumeric,
+      fuzzy: fuzzySort,
+      status: sortStatusFn,
+      text: sortFn_text,
+    },
+    aggregationFns: {
+      mean: aggregationFn_mean,
+      median: aggregationFn_median,
+      sum: aggregationFn_sum,
+    },
   })
 
   const { createAppTable, createAppColumnHelper } = createTableHook({

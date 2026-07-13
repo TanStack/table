@@ -22,8 +22,12 @@ import type {
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
  *
- * Register filter functions with the `filterFns` slot on the `features` option:
- * `tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns })`.
+ * Register the filter functions you use with the `filterFns` slot on the
+ * `features` option:
+ * `tableFeatures({ columnFilteringFeature, filteredRowModel: createFilteredRowModel(), filterFns: { includesString: filterFn_includesString } })`.
+ * Importing individual `filterFn_*` functions keeps unused built-ins out of
+ * your bundle; filter functions passed directly to the `filterFn` column
+ * option need no registration at all.
  */
 export function createFilteredRowModel<
   TFeatures extends TableFeatures,
@@ -78,7 +82,13 @@ function _createFilteredRowModel<
       return
     }
 
-    const filterFn = column_getFilterFn(column)!
+    const filterFn = column_getFilterFn(column)
+
+    // A dev warning has already fired in column_getFilterFn; ignore the
+    // filter instead of crashing when its filter fn is not registered.
+    if (!filterFn) {
+      return
+    }
 
     resolvedColumnFilters.push({
       id: columnFilter.id,

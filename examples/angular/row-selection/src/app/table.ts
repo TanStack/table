@@ -3,7 +3,8 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -17,7 +18,10 @@ export const features = tableFeatures({
   rowSelectionFeature,
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 export const {

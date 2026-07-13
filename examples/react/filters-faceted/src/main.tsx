@@ -10,7 +10,9 @@ import {
   createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_equalsString,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
   rowPaginationFeature,
   tableFeatures,
@@ -35,7 +37,11 @@ const features = tableFeatures({
   facetedRowModel: createFacetedRowModel(),
   facetedMinMaxValues: createFacetedMinMaxValues(),
   facetedUniqueValues: createFacetedUniqueValues(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+    equalsString: filterFn_equalsString,
+  },
   columnMeta: metaHelper<MyColumnMeta>(),
 })
 
@@ -67,6 +73,7 @@ function App() {
         }),
         columnHelper.accessor('status', {
           header: 'Status',
+          filterFn: 'equalsString', // filterFn string to pick from filterFns
           meta: {
             filterVariant: 'select',
           },
@@ -76,6 +83,8 @@ function App() {
           meta: {
             filterVariant: 'range',
           },
+          filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+          // you could also write your own custom filter function here
         }),
       ]),
     [],

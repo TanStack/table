@@ -15,7 +15,8 @@ import {
   createExpandedRowModel,
   createFilteredRowModel,
   createPaginatedRowModel,
-  filterFns,
+  filterFn_includesString,
+  filterFn_inNumberRange,
   createColumnHelper,
   type Row,
   type Cell,
@@ -34,7 +35,10 @@ const features = tableFeatures({
   expandedRowModel: createExpandedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
-  filterFns,
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()

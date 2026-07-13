@@ -1,6 +1,8 @@
 <script lang="ts">
   import {
-    aggregationFns,
+    aggregationFn_mean,
+    aggregationFn_median,
+    aggregationFn_sum,
     columnFilteringFeature,
     columnGroupingFeature,
     createExpandedRowModel,
@@ -9,12 +11,10 @@
     createPaginatedRowModel,
     createSortedRowModel,
     createTableHook,
-    filterFns,
     FlexRender,
     rowExpandingFeature,
     rowPaginationFeature,
     rowSortingFeature,
-    sortFns,
   } from '@tanstack/svelte-table'
   import { makeData } from './makeData'
   import type { Person } from './makeData'
@@ -32,9 +32,12 @@
       groupedRowModel: createGroupedRowModel(),
       paginatedRowModel: createPaginatedRowModel(),
       sortedRowModel: createSortedRowModel(),
-      filterFns,
-      sortFns,
-      aggregationFns,
+      // register only the aggregation fns referenced by name in the column definitions
+      aggregationFns: {
+        mean: aggregationFn_mean,
+        median: aggregationFn_median,
+        sum: aggregationFn_sum,
+      },
     },
   })
 

@@ -9,7 +9,8 @@ import {
   columnVisibilityFeature,
   createSortedRowModel,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_text,
   tableFeatures,
 } from '@tanstack/lit-table'
 import { styleMap } from 'lit/directives/style-map.js'
@@ -24,7 +25,10 @@ const features = tableFeatures({
   columnVisibilityFeature,
   rowSortingFeature,
   sortedRowModel: createSortedRowModel(),
-  sortFns,
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    text: sortFn_text,
+  },
 })
 
 const DEFAULT_ROW_COUNT = 1_000

@@ -8,10 +8,13 @@ import {
   createFilteredRowModel,
   createSortedRowModel,
   createTable,
-  filterFns,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   metaHelper,
   rowSortingFeature,
-  sortFns,
+  sortFn_alphanumeric,
+  sortFn_basic,
+  sortFn_datetime,
   tableFeatures,
 } from '@tanstack/solid-table'
 import { For, Show, createMemo, createSignal } from 'solid-js'
@@ -53,8 +56,17 @@ export const features = tableFeatures({
   facetedRowModel: createFacetedRowModel(),
   facetedUniqueValues: createFacetedUniqueValues(), // powers the enum select options
   facetedMinMaxValues: createFacetedMinMaxValues(), // powers the numeric range hints
-  sortFns, // register the built-in sort fns so we can reference them by name
-  filterFns, // register the built-in filter fns so we can reference them by name
+  // register only the built-in sort fns we reference by name below
+  sortFns: {
+    alphanumeric: sortFn_alphanumeric,
+    basic: sortFn_basic,
+    datetime: sortFn_datetime,
+  },
+  // register only the built-in filter fns we reference by name below
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
   columnMeta: metaHelper<DynamicColumnMeta>(),
 })
 
