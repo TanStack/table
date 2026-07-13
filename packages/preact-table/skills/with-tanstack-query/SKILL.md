@@ -6,7 +6,7 @@ metadata:
   {
     type: composition,
     library: '@tanstack/preact-table',
-    library_version: '9.0.0-beta.46',
+    library_version: '9.0.0-beta.47',
     framework: preact,
   }
 requires:
