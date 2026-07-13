@@ -6,6 +6,7 @@ import {
   createFacetedUniqueValues,
   createFilteredRowModel,
   createPaginatedRowModel,
+  filterFn_equalsString,
   filterFn_inNumberRange,
   filterFn_includesString,
   metaHelper,
@@ -32,6 +33,7 @@ export const appFeatures = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    equalsString: filterFn_equalsString,
   },
   columnMeta: metaHelper<MyColumnMeta>(),
 })

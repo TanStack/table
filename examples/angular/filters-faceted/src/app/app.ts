@@ -9,8 +9,9 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTableHook,
-  filterFn_includesString,
+  filterFn_equalsString,
   filterFn_inNumberRange,
+  filterFn_includesString,
   isFunction,
   metaHelper,
   rowPaginationFeature,
@@ -39,6 +40,7 @@ export const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    equalsString: filterFn_equalsString,
   },
 })
 
@@ -74,6 +76,7 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('status', {
     header: 'Status',
+    filterFn: 'equalsString', // filterFn string to pick from filterFns
     meta: {
       filterVariant: 'select',
     },
@@ -83,6 +86,8 @@ const columns = columnHelper.columns([
     meta: {
       filterVariant: 'range',
     },
+    filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+    // you could also write your own custom filter function here
   }),
 ])
 

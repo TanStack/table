@@ -5,6 +5,7 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createTable,
+  filterFn_equalsString,
   filterFn_inNumberRange,
   filterFn_includesString,
   metaHelper,
@@ -29,6 +30,7 @@ const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    equalsString: filterFn_equalsString,
   },
   columnMeta: metaHelper<MyColumnMeta>(),
 })
@@ -72,6 +74,7 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
   {
     accessorKey: 'status',
     header: 'Status',
+    filterFn: 'equalsString', // filterFn string to pick from filterFns
     meta: {
       filterVariant: 'select',
     },
@@ -82,6 +85,8 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     meta: {
       filterVariant: 'range',
     },
+    filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+    // you could also write your own custom filter function here
   },
 ]
 

@@ -8,6 +8,7 @@ import {
   tableFeatures,
   columnFilteringFeature,
   createFilteredRowModel,
+  filterFn_equalsString,
   filterFn_includesString,
   filterFn_inNumberRange,
   rowPaginationFeature,
@@ -38,6 +39,7 @@ const features = tableFeatures({
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
+    equalsString: filterFn_equalsString,
   },
 })
 
@@ -68,11 +70,14 @@ const columns = columnHelper.columns([
   }),
   columnHelper.accessor('status', {
     header: 'Status',
+    filterFn: 'equalsString', // filterFn string to pick from filterFns
     meta: { filterVariant: 'select' },
   }),
   columnHelper.accessor('progress', {
     header: 'Profile Progress',
     meta: { filterVariant: 'range' },
+    filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+    // you could also write your own custom filter function here
   }),
 ])
 

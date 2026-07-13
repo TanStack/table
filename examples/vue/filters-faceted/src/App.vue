@@ -1,5 +1,10 @@
 <script setup lang="ts">
-import { FlexRender, createColumnHelper, useTable } from '@tanstack/vue-table'
+import {
+  FlexRender,
+  createColumnHelper,
+  filterFn_inNumberRange,
+  useTable,
+} from '@tanstack/vue-table'
 import { ref } from 'vue'
 import Filter from './Filter.vue'
 import { appFeatures } from './tableHelper'
@@ -44,6 +49,7 @@ const columns = ref(
     }),
     columnHelper.accessor('status', {
       header: 'Status',
+      filterFn: 'equalsString', // filterFn string to pick from filterFns
       meta: {
         filterVariant: 'select',
       },
@@ -53,6 +59,8 @@ const columns = ref(
       meta: {
         filterVariant: 'range',
       },
+      filterFn: filterFn_inNumberRange, // or just reference static filterFn from import
+      // you could also write your own custom filter function here
     }),
   ]),
 )
