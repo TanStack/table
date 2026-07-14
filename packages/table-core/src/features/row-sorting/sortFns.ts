@@ -1,10 +1,7 @@
-import type {
-  CreatedSortFn,
-  SortFnDef,
-} from '../features/row-sorting/rowSortingFeature.types'
-import type { RowData } from '../types/type-utils'
-import type { TableFeatures } from '../types/TableFeatures'
-import type { Row } from '../types/Row'
+import type { CreatedSortFn, SortFnDef } from './rowSortingFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Row } from '../../types/Row'
 
 /**
  * Regular expression used to split mixed text and numeric chunks.

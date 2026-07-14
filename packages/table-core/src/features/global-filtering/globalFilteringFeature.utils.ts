@@ -1,4 +1,4 @@
-import { filterFn_includesString } from '../../fns/filterFns'
+import { filterFn_includesString } from '../column-filtering/filterFns'
 import { cloneState, isFunction } from '../../utils'
 import type { Column_Internal } from '../../types/Column'
 import type { FilterFn } from '../column-filtering/columnFilteringFeature.types'

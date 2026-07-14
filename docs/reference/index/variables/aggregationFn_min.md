@@ -6,12 +6,10 @@ title: aggregationFn_min
 # Variable: aggregationFn\_min
 
 ```ts
-const aggregationFn_min: CreatedAggregationFn<any, any>;
+const aggregationFn_min: AggregationFnDef<any, any, unknown, RangeValue | undefined>;
 ```
 
-Defined in: [fns/aggregationFns.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L86)
+Defined in: [features/aggregation/aggregationFns.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L73)
 
-Finds the minimum numeric child-row value for a grouped column.
-
-Nullish and non-number values are ignored. Returns `undefined` when no
-numeric value is found.
+Finds the minimum numeric or Date value. Invalid value types are ignored;
+`NaN` preserves the legacy numeric seeding behavior.

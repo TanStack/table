@@ -2,6 +2,7 @@ import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
+  aggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -27,6 +28,7 @@ import type { Person } from './makeData'
 // this example happens to use the createTableHook pattern, but it is not required
 const { useAppTable, createAppColumnHelper } = createTableHook({
   features: {
+    aggregationFeature,
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,

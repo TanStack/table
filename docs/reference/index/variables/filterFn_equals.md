@@ -9,7 +9,7 @@ title: filterFn_equals
 const filterFn_equals: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L77)
+Defined in: [features/column-filtering/filterFns.ts:77](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L77)
 
 Keeps rows whose column value is strictly equal to the filter value.
 

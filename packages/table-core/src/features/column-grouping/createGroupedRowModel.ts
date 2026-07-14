@@ -1,13 +1,13 @@
-import { flattenBy, hasOwn, makeObjectMap, tableMemo } from '../../utils'
+import { hasOwn, makeObjectMap, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import {
-  column_getAggregationFn,
-  row_getGroupingValue,
-} from './columnGroupingFeature.utils'
-import type { Column } from '../../types/Column'
+  aggregateColumnValue,
+  normalizeAggregationRows,
+} from '../aggregation/aggregationFeature.utils'
+import { row_getGroupingValue } from './columnGroupingFeature.utils'
 import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -20,12 +20,8 @@ import type { RowData } from '../../types/type-utils'
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
  *
- * Register the aggregation functions you use with the `aggregationFns` slot
- * on the `features` option:
- * `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel(), aggregationFns: { sum: aggregationFn_sum } })`.
- * Importing individual `aggregationFn_*` functions keeps unused built-ins out
- * of your bundle; aggregation functions passed directly to the
- * `aggregationFn` column option need no registration at all.
+ * When aggregationFeature is also registered, grouped rows use its shared
+ * executor for non-group values. Grouping remains useful without aggregation.
  */
 export function createGroupedRowModel<
   TFeatures extends TableFeatures,
@@ -40,6 +36,7 @@ export function createGroupedRowModel<
       memoDeps: () => [
         table.atoms.grouping?.get(),
         table.getPreGroupedRowModel(),
+        table.options.columns,
       ],
       fn: () => _createGroupedRowModel(table),
       onAfterUpdate: () => {
@@ -121,10 +118,7 @@ function _createGroupedRowModel<
           subRow.parentId = id
         })
 
-        // Flatten the leaf rows of the rows in this group
-        const leafRows = depth
-          ? flattenBy(groupedRows, (row) => row.subRows)
-          : groupedRows
+        const leafRows = normalizeAggregationRows(groupedRows)
 
         const row = constructRow(
           table,
@@ -142,8 +136,12 @@ function _createGroupedRowModel<
           subRows,
           leafRows,
           getValue: (colId: string) => {
-            // Don't aggregate columns that are in the grouping
-            if (existingGrouping.includes(colId)) {
+            const groupingIndex = existingGrouping.indexOf(colId)
+
+            // The active grouping column and ancestor grouping columns expose
+            // their inherited grouping values. Columns grouped at deeper
+            // levels are still eligible for aggregation here.
+            if (groupingIndex !== -1 && groupingIndex <= depth) {
               if (hasOwn(row._valuesCache, colId)) {
                 return row._valuesCache[colId]
               }
@@ -156,32 +154,25 @@ function _createGroupedRowModel<
               return row._valuesCache[colId]
             }
 
-            if (
-              row._groupingValuesCache &&
-              hasOwn(row._groupingValuesCache, colId)
-            ) {
-              return row._groupingValuesCache[colId]
+            const aggregationCache = (row as any)._aggregationValuesCache as
+              | Record<string, unknown>
+              | undefined
+            if (aggregationCache && hasOwn(aggregationCache, colId)) {
+              return aggregationCache[colId]
             }
 
-            // Aggregate the values
-            const column = table.getColumn(colId)
-            const aggregateFn = column_getAggregationFn(
-              column as Column<TFeatures, TData, unknown>,
-            )
+            const column = table.getColumn(colId) as any
+            if (typeof column.getAggregationFns !== 'function') return undefined
 
-            if (!row._groupingValuesCache) {
-              row._groupingValuesCache = makeObjectMap()
-            }
-
-            if (aggregateFn) {
-              row._groupingValuesCache[colId] = aggregateFn(
-                colId,
-                leafRows,
-                groupedRows,
-              )
-
-              return row._groupingValuesCache[colId]
-            }
+            const cache = ((row as any)._aggregationValuesCache ??=
+              makeObjectMap())
+            cache[colId] = aggregateColumnValue({
+              childRows: subRows,
+              column,
+              groupingRow: row,
+              rows: leafRows,
+            })
+            return cache[colId]
           },
         })
 

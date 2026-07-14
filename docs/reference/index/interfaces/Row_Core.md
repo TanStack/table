@@ -5,7 +5,7 @@ title: Row_Core
 
 # Interface: Row\_Core\<TFeatures, TData\>
 
-Defined in: [types/Row.ts:12](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L12)
+Defined in: [types/Row.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L13)
 
 ## Extends
 

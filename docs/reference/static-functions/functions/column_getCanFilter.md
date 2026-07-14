@@ -9,7 +9,7 @@ title: column_getCanFilter
 function column_getCanFilter<TFeatures, TData, TValue>(column): boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L137)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L135)
 
 Checks whether column filtering is enabled for this accessor column.
 

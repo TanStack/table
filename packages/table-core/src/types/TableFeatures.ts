@@ -10,7 +10,7 @@ import type { StockFeatures } from '../features/stockFeatures'
 import type { RowModel } from '../core/row-models/coreRowModelsFeature.types'
 import type { FilterFn } from '../features/column-filtering/columnFilteringFeature.types'
 import type { SortFn } from '../features/row-sorting/rowSortingFeature.types'
-import type { AggregationFn } from '../features/column-grouping/columnGroupingFeature.types'
+import type { AggregationFnDef } from '../features/aggregation/aggregationFeature.types'
 
 /**
  * Detects whether a type is `any`.
@@ -90,9 +90,9 @@ export type NonFeatureKeys =
  */
 export interface FeatureSlotPrereqs {
   /**
-   * Named aggregation functions are only meaningful when grouping is enabled.
+   * Named aggregation functions require the independent aggregation feature.
    */
-  aggregationFns: 'columnGroupingFeature'
+  aggregationFns: 'aggregationFeature'
   /**
    * Column resizing builds on the column sizing state and APIs.
    */
@@ -190,7 +190,7 @@ export interface TableFeatures
    * Spreading the exported `aggregationFns` registry also works, but puts
    * every built-in aggregation function in your bundle.
    */
-  aggregationFns?: Record<string, AggregationFn<any, any>>
+  aggregationFns?: Record<string, AggregationFnDef<any, any, any, any>>
   /**
    * Type-only slot for declaring the type of `columnDef.meta` for all columns
    * of this table.

@@ -1,16 +1,7 @@
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { BuiltInAggregationFn } from '../../fns/aggregationFns'
-import type {
-  CellData,
-  OnChangeFn,
-  RowData,
-  TransformDataValueFn,
-  Updater,
-} from '../../types/type-utils'
-import type { IsAny, TableFeatures } from '../../types/TableFeatures'
+import type { OnChangeFn, RowData, Updater } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
 import type { Row } from '../../types/Row'
-import type { Cell } from '../../types/Cell'
-import type { ColumnDefTemplate } from '../../types/ColumnDef'
 
 export type GroupingState = Array<string>
 
@@ -18,123 +9,10 @@ export interface TableState_ColumnGrouping {
   grouping: GroupingState
 }
 
-export interface RowModelFns_ColumnGrouping<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
-> {
-  aggregationFns: Record<string, AggregationFn<TFeatures, TData>>
-}
-
-export interface AggregationFns {}
-
-export interface AggregationFn<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
-> {
-  (
-    columnId: string,
-    leafRows: Array<Row<TFeatures, TData>>,
-    childRows: Array<Row<TFeatures, TData>>,
-  ): any
-  /**
-   * Normalizes each row's value before it is aggregated. Only honored by
-   * aggregation functions built with `constructAggregationFn` (including the
-   * value-based built-in aggregation functions).
-   */
-  resolveDataValue?: TransformDataValueFn
-}
-
-/**
- * The definition object accepted by `constructAggregationFn`.
- *
- * `aggregate` is a value-level reducer: it receives the rows' (resolved)
- * values instead of the rows themselves, so normalization concerns stay in
- * `resolveDataValue`.
- */
-export interface AggregationFnDef<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
-> {
-  aggregate: (
-    values: Array<any>,
-    rows: Array<Row<TFeatures, TData>>,
-    columnId: string,
-  ) => any
-  /**
-   * Which of the group's rows feed the aggregation: all of its `leafRows`
-   * (the default) or its immediate `childRows`. For nested groups, child rows
-   * expose already-aggregated values, which is faster for reaggregatable
-   * computations like sums and extents.
-   */
-  fromRows?: 'leafRows' | 'childRows'
-  resolveDataValue?: TransformDataValueFn
-}
-
-/**
- * The shape returned by `constructAggregationFn`: an `AggregationFn` with its
- * definition attached, so variants can be built by spreading it into another
- * `constructAggregationFn` call.
- *
- * The call signature is generic so a created aggregation function can be used
- * with any table's rows, regardless of the feature set it was defined
- * against.
- */
-export interface CreatedAggregationFn<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
-> extends AggregationFnDef<TFeatures, TData> {
-  <TRowFeatures extends TableFeatures, TRowData extends RowData>(
-    columnId: string,
-    leafRows: Array<Row<TRowFeatures, TRowData>>,
-    childRows: Array<Row<TRowFeatures, TRowData>>,
-  ): any
-}
-
-export type CustomAggregationFns<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> = Record<string, AggregationFn<TFeatures, TData>>
-
-/**
- * Resolves the valid string names for `columnDef.aggregationFn` for a feature
- * set.
- *
- * When the features object declares an `aggregationFns` registry
- * (`tableFeatures({ ..., aggregationFns })`), its keys are the only valid
- * names; a name is only assignable if an aggregation function is actually
- * registered for it. Otherwise this falls back to the global
- * declaration-merged `AggregationFns` interface.
- */
-export type ExtractAggregationFnKeys<TFeatures extends TableFeatures> =
-  IsAny<TFeatures> extends true
-    ? keyof AggregationFns | BuiltInAggregationFn
-    : TFeatures extends { aggregationFns: infer TAggregationFns extends object }
-      ? Extract<keyof TAggregationFns, string>
-      : keyof AggregationFns
-
-export type AggregationFnOption<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> =
-  | 'auto'
-  | ExtractAggregationFnKeys<TFeatures>
-  | AggregationFn<TFeatures, TData>
-
 export interface ColumnDef_ColumnGrouping<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
-  TValue extends CellData = CellData,
 > {
-  /**
-   * The cell to display each row for the column if the cell is an aggregate. If a function is passed, it will be passed a props object with the context of the cell and should return the property type for your adapter (the exact type depends on the adapter being used).
-   */
-  aggregatedCell?: ColumnDefTemplate<
-    ReturnType<Cell<TFeatures, TData, TValue>['getContext']>
-  >
-  /**
-   * The resolved aggregation function for the column.
-   */
-  aggregationFn?: AggregationFnOption<TFeatures, TData>
   /**
    * Allows this column to be added to grouping state.
    *
@@ -154,18 +32,7 @@ export interface ColumnDef_ColumnGrouping<
   ) => any
 }
 
-export interface Column_ColumnGrouping<
-  in out TFeatures extends TableFeatures,
-  in out TData extends RowData,
-> {
-  /**
-   * Returns the aggregation function for the column.
-   */
-  getAggregationFn: () => AggregationFn<TFeatures, TData> | undefined
-  /**
-   * Returns the automatically inferred aggregation function for the column.
-   */
-  getAutoAggregationFn: () => AggregationFn<TFeatures, TData> | undefined
+export interface Column_ColumnGrouping {
   /**
    * Checks whether this column can currently be grouped.
    */
@@ -209,10 +76,6 @@ export interface Row_ColumnGrouping {
 }
 
 export interface Cell_ColumnGrouping {
-  /**
-   * Checks whether this cell should render an aggregated value.
-   */
-  getIsAggregated: () => boolean
   /**
    * Checks whether this cell represents the active grouping column.
    */
@@ -272,7 +135,7 @@ export interface Table_RowModels_Grouped<
   in out TData extends RowData,
 > {
   /**
-   * Resolves the row model after grouping and aggregation have been applied.
+   * Resolves the row model after grouping has been applied.
    */
   getGroupedRowModel: () => RowModel<TFeatures, TData>
   /**

@@ -84,7 +84,7 @@ export function initTableWorker<
         // per group. Sync tables aggregate lazily (visible cells only), so
         // auto-aggregating every column would explode on high-cardinality
         // grouping for values nothing renders. Read the RAW column defs:
-        // columnGroupingFeature injects default aggregatedCell/aggregationFn
+        // aggregationFeature injects default aggregatedCell/aggregationFn
         // into every resolved columnDef, so the resolved defs can't tell
         // explicit from default.
         aggregateColumnIds = flattenColumnDefs(config.columns as Array<any>)

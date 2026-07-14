@@ -4,6 +4,7 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   FlexRender,
   TableController,
+  aggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -29,6 +30,7 @@ import type { ColumnDef } from '@tanstack/lit-table'
 import type { Person } from './makeData'
 
 const features = tableFeatures({
+  aggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   rowExpandingFeature,

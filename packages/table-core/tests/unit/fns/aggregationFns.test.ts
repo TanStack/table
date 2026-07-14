@@ -14,150 +14,99 @@ import {
   constructAggregationFn,
 } from '../../../src'
 
-function makeRows(values: Array<unknown>) {
-  return values.map((value) => ({
+function context(values: Array<unknown>) {
+  const rows = values.map((value, index) => ({
+    id: String(index),
     getValue: () => value,
   }))
+  return {
+    column: { id: 'value' },
+    columnId: 'value',
+    getValue: (row: any) => row.getValue('value'),
+    rows,
+    table: {},
+  } as any
 }
 
-describe('Aggregation Functions', () => {
-  it('sums numeric child row values and treats non-numbers as zero', () => {
+describe('aggregation function definitions', () => {
+  it('preserves sum coercion and NaN behavior', () => {
+    expect(aggregationFn_sum.aggregate(context([1, '2', 3, null]))).toBe(4)
+    expect(aggregationFn_sum.aggregate(context([1, Number.NaN]))).toBeNaN()
+    expect(aggregationFn_sum.aggregate(context([]))).toBe(0)
     expect(
-      aggregationFn_sum('value', [], makeRows([1, '2', 3, null]) as any),
-    ).toBe(4)
+      aggregationFn_sum.merge!({
+        ...context([]),
+        childResults: [4, undefined, 6],
+        childRows: [],
+      }),
+    ).toBe(10)
   })
 
-  it('preserves NaN seeding behavior for min, max, and extent', () => {
-    const rows = makeRows([Number.NaN, 1, 2]) as any
+  it('calculates numeric and Date ranges while preserving types', () => {
+    const early = new Date('2024-01-01')
+    const late = new Date('2024-03-01')
 
-    expect(Number.isNaN(aggregationFn_min('value', [], rows))).toBe(true)
-    expect(Number.isNaN(aggregationFn_max('value', [], rows))).toBe(true)
-
-    const extent = aggregationFn_extent('value', [], rows)
-    expect(Number.isNaN(extent[0])).toBe(true)
-    expect(Number.isNaN(extent[1])).toBe(true)
-  })
-
-  it('ignores non-number values for min, max, and extent', () => {
-    const rows = makeRows([null, undefined, '1', 3, -1]) as any
-
-    expect(aggregationFn_min('value', [], rows)).toBe(-1)
-    expect(aggregationFn_max('value', [], rows)).toBe(3)
-    expect(aggregationFn_extent('value', [], rows)).toEqual([-1, 3])
-  })
-
-  it('keeps mean nullish handling distinct from numeric coercion', () => {
-    const rows = makeRows([null, undefined, '', '2', 4, 'x']) as any
-
-    expect(aggregationFn_mean('value', rows, [])).toBe(2)
-  })
-})
-
-describe('median', () => {
-  it('returns undefined for empty groups', () => {
+    expect(aggregationFn_min.aggregate(context([3, -1, 2]))).toBe(-1)
+    expect(aggregationFn_max.aggregate(context([3, -1, 2]))).toBe(3)
+    expect(aggregationFn_extent.aggregate(context([3, -1, 2]))).toEqual([-1, 3])
     expect(
-      aggregationFn_median('value', makeRows([]) as any, []),
+      aggregationFn_extent.aggregate(context([late, null, early])),
+    ).toEqual([early, late])
+    expect(aggregationFn_extent.aggregate(context([]))).toEqual([
+      undefined,
+      undefined,
+    ])
+  })
+
+  it('uses the first valid range type and ignores incompatible values', () => {
+    const date = new Date('2024-01-01')
+    expect(aggregationFn_extent.aggregate(context([2, date, 4]))).toEqual([
+      2, 4,
+    ])
+    expect(aggregationFn_extent.aggregate(context([date, 2]))).toEqual([
+      date,
+      date,
+    ])
+  })
+
+  it('preserves mean coercion and all-number median validation', () => {
+    expect(
+      aggregationFn_mean.aggregate(context([null, undefined, '', '2', 4, 'x'])),
+    ).toBe(2)
+    expect(
+      aggregationFn_median.aggregate(context([3, '2', 1, 2])),
     ).toBeUndefined()
+    expect(aggregationFn_median.aggregate(context([3, 1, 2]))).toBe(2)
+    expect(aggregationFn_mean.aggregate(context([]))).toBeUndefined()
+    expect(aggregationFn_median.aggregate(context([]))).toBeUndefined()
+    expect(aggregationFn_mean.merge).toBeUndefined()
+    expect(aggregationFn_median.merge).toBeUndefined()
   })
 
-  it('returns the single value for one-row groups', () => {
-    expect(aggregationFn_median('value', makeRows([5]) as any, [])).toBe(5)
-  })
-
-  it('returns the middle value for odd-length groups', () => {
-    expect(aggregationFn_median('value', makeRows([3, 1, 2]) as any, [])).toBe(
-      2,
-    )
-  })
-
-  it('averages the two middle values for even-length groups', () => {
+  it('uses Set semantics for unique values', () => {
     expect(
-      aggregationFn_median('value', makeRows([4, 1, 3, 2]) as any, []),
-    ).toBe(2.5)
-  })
-
-  it('returns undefined when any value is not a number', () => {
+      aggregationFn_unique.aggregate(context(['a', null, undefined, 'a'])),
+    ).toEqual(['a', null, undefined])
     expect(
-      aggregationFn_median('value', makeRows([1, '2', 3]) as any, []),
-    ).toBeUndefined()
-  })
-})
-
-describe('unique / uniqueCount', () => {
-  it('collects distinct values in first-seen order', () => {
-    expect(
-      aggregationFn_unique('value', makeRows(['a', 'b', 'a', 'c']) as any, []),
-    ).toEqual(['a', 'b', 'c'])
-  })
-
-  it('counts distinct values with Set semantics', () => {
-    expect(
-      aggregationFn_uniqueCount(
-        'value',
-        makeRows(['a', 'b', 'a', null, null]) as any,
-        [],
-      ),
+      aggregationFn_uniqueCount.aggregate(context(['a', null, undefined, 'a'])),
     ).toBe(3)
-  })
-})
-
-describe('count', () => {
-  it('counts leaf rows and ignores the column id', () => {
-    expect(aggregationFn_count('anything', makeRows([1, 2, 3]) as any)).toBe(3)
-    expect(aggregationFn_count('anything', makeRows([]) as any)).toBe(0)
-  })
-})
-
-describe('first / last', () => {
-  it('returns the first and last leaf values', () => {
-    const rows = makeRows(['a', 'b', 'c']) as any
-
-    expect(aggregationFn_first('value', rows)).toBe('a')
-    expect(aggregationFn_last('value', rows)).toBe('c')
+    expect(aggregationFn_unique.aggregate(context([]))).toEqual([])
+    expect(aggregationFn_uniqueCount.aggregate(context([]))).toBe(0)
   })
 
-  it('returns undefined for empty groups', () => {
-    expect(aggregationFn_first('value', [] as any)).toBeUndefined()
-    expect(aggregationFn_last('value', [] as any)).toBeUndefined()
+  it('counts rows and preserves positional nullish values', () => {
+    expect(aggregationFn_count.aggregate(context([null, 2, undefined]))).toBe(3)
+    expect(aggregationFn_count.aggregate(context([]))).toBe(0)
+    expect(aggregationFn_first.aggregate(context([null, 'a', 'b']))).toBeNull()
+    expect(
+      aggregationFn_last.aggregate(context(['a', 'b', undefined])),
+    ).toBeUndefined()
   })
-})
 
-describe('constructAggregationFn', () => {
-  it('applies resolveDataValue before aggregating (date min variant)', () => {
-    const earliest = constructAggregationFn({
-      ...aggregationFn_min, // keeps the numeric reducer and childRows source
-      resolveDataValue: (value) =>
-        value instanceof Date ? value.getTime() : value,
+  it('preserves custom definition result inference', () => {
+    const joined = constructAggregationFn<any, any, unknown, string>({
+      aggregate: ({ rows }) => rows.map((row) => row.id).join(','),
     })
-    const rows = makeRows([
-      new Date('2026-01-10'),
-      new Date('2026-01-02'),
-      null,
-    ]) as any
-
-    expect(earliest('value', [], rows)).toBe(new Date('2026-01-02').getTime())
-    // The base min ignores Date values entirely
-    expect(aggregationFn_min('value', [], rows)).toBeUndefined()
-  })
-
-  it('honors fromRows when choosing the row set', () => {
-    const leafRows = makeRows([1, 2, 3]) as any
-    const childRows = makeRows([10, 20]) as any
-
-    expect(aggregationFn_sum('value', leafRows, childRows)).toBe(30)
-    expect(aggregationFn_mean('value', leafRows, childRows)).toBe(2)
-
-    const leafSum = constructAggregationFn({
-      ...aggregationFn_sum,
-      fromRows: 'leafRows',
-    })
-    expect(leafSum('value', leafRows, childRows)).toBe(6)
-  })
-
-  it('honors resolveDataValue assigned after creation', () => {
-    const numericSum = constructAggregationFn({ ...aggregationFn_sum })
-    numericSum.resolveDataValue = (value) => Number(value) || 0
-
-    expect(numericSum('value', [], makeRows(['1', '2', 'x']) as any)).toBe(3)
+    expect(joined.aggregate(context([1, 2]))).toBe('0,1')
   })
 })

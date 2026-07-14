@@ -109,6 +109,10 @@ function JankMeter() {
   const stallRef = React.useRef<HTMLSpanElement>(null)
 
   React.useEffect(() => {
+    if (dotRef.current) {
+      dotRef.current.dataset.hydrated = 'true'
+    }
+
     let last = performance.now()
     let rafId = 0
     const tick = () => {

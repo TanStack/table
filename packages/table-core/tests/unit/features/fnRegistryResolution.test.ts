@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
+  aggregationFeature,
   columnFilteringFeature,
-  columnGroupingFeature,
   constructTable,
   createFilteredRowModel,
   createSortedRowModel,
@@ -136,7 +136,7 @@ describe('sort fn registry resolution', () => {
 describe('aggregation fn registry resolution', () => {
   it('warns and returns undefined when the auto aggregation fn is not registered', () => {
     const warn = spyOnDevWarnings()
-    const features = testFeatures({ columnGroupingFeature })
+    const features = testFeatures({ aggregationFeature })
     const table = constructTable<typeof features, Person>({
       features,
       data,
@@ -149,7 +149,7 @@ describe('aggregation fn registry resolution', () => {
 
   it('leaves non-aggregatable value types unspecified without warning', () => {
     const warn = spyOnDevWarnings()
-    const features = testFeatures({ columnGroupingFeature })
+    const features = testFeatures({ aggregationFeature })
     const table = constructTable<typeof features, Person>({
       features,
       data,

@@ -35,12 +35,33 @@ async function openExample(page: Page) {
   )
 
   await page.goto(server.url)
-  // SSR: wait for hydration before interacting. The jank meter dot only gets
-  // an inline transform from its rAF loop after the client has hydrated.
-  await page.waitForFunction(() => {
-    const dot = document.querySelector<HTMLElement>('.jank-dot')
-    return Boolean(dot?.style.transform)
-  })
+  await page.waitForTimeout(250)
+  if (errors.length) {
+    throw new Error(`Page failed during hydration:\n${errors.join('\n')}`)
+  }
+
+  // SSR: wait for the jank meter's effect to prove hydration before interacting.
+  // Do not depend on requestAnimationFrame, which browsers may throttle.
+  try {
+    await page.waitForFunction(
+      () => {
+        const dot = document.querySelector<HTMLElement>('.jank-dot')
+        return dot?.dataset.hydrated === 'true'
+      },
+      undefined,
+      { timeout: 5_000 },
+    )
+  } catch {
+    const diagnostics = await page.evaluate(() => ({
+      console: (window as any).__consoleLog,
+      readyState: document.readyState,
+      scripts: Array.from(document.scripts).map((script) => ({
+        src: script.src,
+        type: script.type,
+      })),
+    }))
+    throw new Error(`Hydration diagnostics: ${JSON.stringify(diagnostics)}`)
+  }
 
   return { errors, server }
 }
@@ -122,6 +143,8 @@ test('groups via the worker when a grouping toggle is clicked', async ({
 
     await expect.poll(() => getFirstBodyRowText(table)).toContain('👉')
     await expect.poll(() => getFirstBodyRowText(table)).toMatch(/\(\d/)
+    await expect.poll(() => getFirstBodyRowText(table)).toContain('Median')
+    await expect.poll(() => getFirstBodyRowText(table)).toContain('Range')
 
     // Expand the first group: leaf rows appear beneath it.
     await table.locator('tbody button').first().click()

@@ -8,6 +8,8 @@ Want to skip to the implementation? Check out these Ember examples:
 
 - [Grouping](../examples/grouping)
 
+Aggregation is an independent feature. See the core [Aggregation Guide](../../../guide/aggregation) for totals, multiple aggregations, custom definitions, and grouped aggregate values.
+
 ### Grouping Setup
 
 Here's how you set up your table to use grouping features. Adding the grouping feature enables the related APIs. Additionally, if using client-side grouping, you also need to set up `groupedRowModel` after its associated feature because row model slots are type-checked.
@@ -18,10 +20,12 @@ import {
   tableFeatures,
   columnGroupingFeature,
   createGroupedRowModel,
+  aggregationFeature,
   aggregationFn_sum,
 } from '@tanstack/ember-table'
 
 const features = tableFeatures({
+  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(), // if using client-side grouping
   aggregationFns: { sum: aggregationFn_sum },
@@ -54,10 +58,12 @@ import {
   tableFeatures,
   columnGroupingFeature,
   createGroupedRowModel,
+  aggregationFeature,
   aggregationFn_sum,
 } from '@tanstack/ember-table'
 
 const features = tableFeatures({
+  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns: { sum: aggregationFn_sum },
@@ -74,6 +80,7 @@ To allow the user to expand and collapse the grouped rows, you can use the expan
 
 ```ts
 const features = tableFeatures({
+  aggregationFeature,
   columnGroupingFeature,
   rowExpandingFeature,
   groupedRowModel: createGroupedRowModel(),
@@ -113,7 +120,7 @@ const table = useTable(() => ({
 
 ### Aggregations
 
-When rows are grouped, you can aggregate the data in the grouped rows by columns using the `aggregationFn` column option. This is a string that is the name of a built-in aggregation function, or a custom aggregation function registered in the registry passed to `createGroupedRowModel`.
+When both features are registered, grouped rows can aggregate data with the `aggregationFn` column option. It can be a registered name, an inline definition, or an array of aggregations.
 
 ```ts
 const column = columnHelper.accessor('key', {
@@ -140,14 +147,19 @@ There are several built-in aggregation functions that you can use:
 
 #### Custom Aggregations
 
-You can define custom aggregation functions in the registry that you pass to `createGroupedRowModel`. The registry is a record where the keys are the names of the aggregation functions, and the values are the aggregation functions themselves. You can then reference these aggregation functions by name in a column's `aggregationFn` option.
+You can register context-based custom definitions and reference them by name.
 
 ```ts
-const myCustomAggregation = (columnId, leafRows, childRows) => {
-  // return the aggregated value
-}
+const myCustomAggregation = constructAggregationFn({
+  aggregate: ({ rows, getValue }) =>
+    rows
+      .map((row) => getValue(row))
+      .filter(Boolean)
+      .join(', '),
+})
 
 const features = tableFeatures({
+  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns: { sum: aggregationFn_sum, myCustomAggregation },
@@ -159,7 +171,7 @@ const table = useTable(() => ({
 }))
 ```
 
-In the above example, `myCustomAggregation` is a custom aggregation function that takes the column ID, the leaf rows, and the child rows, and returns the aggregated value. You can then use this aggregation function in a column's `aggregationFn` option:
+The context supplies normalized terminal `rows`, `getValue`, `column`, `table`, and an optional `groupingRow`. You can then use the definition in a column's `aggregationFn` option:
 
 ```ts
 const column = columnHelper.accessor('key', {
@@ -169,27 +181,7 @@ const column = columnHelper.accessor('key', {
 
 > **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, register the function in the `aggregationFns` slot on `tableFeatures` (as shown above). Alternatively, skip the registry entirely by passing the function directly to the `aggregationFn` column option.
 
-#### Customize Aggregation Function Behavior
-
-Aggregation functions support an optional "hanging" property:
-
-- `aggregationFn.resolveDataValue` - normalizes each row's value before it is aggregated. It is honored by every aggregation function built with the `constructAggregationFn` helper, which includes the value-based built-in aggregation functions (`count`, `first`, and `last` are plain row-level functions that never read every value).
-
-The `constructAggregationFn` helper builds an aggregation function from a value-level reducer (`aggregate`) plus that optional resolver and a `fromRows` setting that picks between the group's `leafRows` (the default) and its immediate `childRows`. The definition is attached to the returned function, so you can spread any constructed aggregation function and override only what differs. For example, a `min` that works on date columns:
-
-```ts
-const earliest = constructAggregationFn({
-  ...aggregationFn_min, // reuse the numeric reducer
-  resolveDataValue: (value) =>
-    value instanceof Date ? value.getTime() : value,
-})
-
-const features = tableFeatures({
-  columnGroupingFeature,
-  groupedRowModel: createGroupedRowModel(),
-  aggregationFns: { min: aggregationFn_min, earliest },
-})
-```
+For efficient nested grouping, a definition can also provide `merge({ childResults, childRows })`. See the [Aggregation Guide](../../../guide/aggregation#custom-aggregation-definitions).
 
 ### Manual Grouping
 
@@ -256,8 +248,6 @@ column.getToggleGroupingHandler()
 column.getCanGroup()
 column.getIsGrouped()
 column.getGroupedIndex()
-column.getAutoAggregationFn()
-column.getAggregationFn()
 ```
 
 Rows expose grouping helpers for grouped row rendering:
@@ -269,13 +259,14 @@ row.groupingColumnId
 row.groupingValue
 ```
 
-Cells expose helpers for choosing between grouped, aggregated, placeholder, and normal cell rendering:
+Cells expose grouping and placeholder helpers:
 
 ```ts
 cell.getIsGrouped()
-cell.getIsAggregated()
 cell.getIsPlaceholder()
 ```
+
+`cell.getIsAggregated()`, `column.getAutoAggregationFn()`, `column.getAggregationFns()`, and `column.getAggregationValue()` belong to `aggregationFeature`.
 
 The table instance exposes grouped and pre-grouped row models:
 
@@ -285,5 +276,3 @@ table.getPreGroupedRowModel()
 ```
 
 Use `table.setGrouping` and `table.resetGrouping` to update the grouping state directly.
-</content>
-</invoke>

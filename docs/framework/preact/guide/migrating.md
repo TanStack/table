@@ -184,6 +184,35 @@ const table = useTable({
 })
 ```
 
+### Aggregation Feature Split
+
+Aggregation is now independent from column grouping. `stockFeatures` still includes both, so tables using it need no feature-registration change. If you declare features explicitly, add `aggregationFeature` whenever columns use `aggregationFn`, `aggregatedCell`, `getAggregationValue`, or `cell.getIsAggregated`. Add `columnGroupingFeature` and `groupedRowModel` only when you also group rows. Root totals can use aggregation without grouping.
+
+```ts
+const features = tableFeatures({
+  aggregationFeature,
+  columnGroupingFeature, // only for grouped rows
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: { sum: aggregationFn_sum },
+})
+```
+
+Custom aggregation callables have changed to context-based definitions:
+
+```ts
+// Table V8/earlier V9 betas
+const total = (columnId, leafRows, childRows) =>
+  leafRows.reduce((sum, row) => sum + row.getValue(columnId), 0)
+
+// Current V9
+const total = constructAggregationFn({
+  aggregate: ({ rows, getValue }) =>
+    rows.reduce((sum, row) => sum + Number(getValue(row)), 0),
+})
+```
+
+`column.getAggregationFn()` is now `column.getAggregationFns()` because a column can run multiple definitions. A single `aggregationFn` still returns a scalar; an array returns an object keyed by function name or descriptor `id`. The old callable `AggregationFn` and `CreatedAggregationFn` types are replaced by `AggregationFnDef`.
+
 ### Available Features
 
 | Feature           | Import Name               |
@@ -201,6 +230,7 @@ const table = useTable({
 | Column Sizing     | `columnSizingFeature`     |
 | Column Resizing   | `columnResizingFeature`   |
 | Column Grouping   | `columnGroupingFeature`   |
+| Aggregation       | `aggregationFeature`      |
 | Column Faceting   | `columnFacetingFeature`   |
 
 ---
@@ -769,7 +799,9 @@ type Person = {
 
 - [ ] Replace `@tanstack/react-table` imports used through `preact/compat` with `@tanstack/preact-table`.
 - [ ] Replace `useReactTable` with `useTable`.
-- [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`).
+- [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`)
+- [ ] If aggregating, add `aggregationFeature`; add `columnGroupingFeature` separately only when grouping rows
+- [ ] Convert custom aggregation callables to `constructAggregationFn({ aggregate, merge? })` definitions.
 - [ ] Migrate `get*RowModel()` options (or earlier-beta `rowModels: {...}` entries) to `tableFeatures({...})` slots (e.g. `filteredRowModel: createFilteredRowModel()`).
 - [ ] Drop `getCoreRowModel`; the core row model is automatic.
 - [ ] Move `sortingFns`, `filterFns`, and `aggregationFns` into `tableFeatures` slots (not factory args).

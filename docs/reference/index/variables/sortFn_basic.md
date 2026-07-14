@@ -9,7 +9,7 @@ title: sortFn_basic
 const sortFn_basic: CreatedSortFn<any, any>;
 ```
 
-Defined in: [fns/sortFns.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L136)
+Defined in: [features/row-sorting/sortFns.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L133)
 
 Sorts rows with the built-in basic strategy.
 

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   aggregationFns,
+  aggregationFeature,
   columnGroupingFeature,
   constructTable,
   createGroupedRowModel,
@@ -9,7 +10,6 @@ import {
   cell_getIsAggregated,
   cell_getIsGrouped,
   cell_getIsPlaceholder,
-  column_getAggregationFn,
   column_getAutoAggregationFn,
   column_getCanGroup,
   column_getGroupedIndex,
@@ -34,6 +34,7 @@ type Sale = {
 }
 
 const features = testFeatures({
+  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns,
@@ -199,56 +200,6 @@ describe('column_getAutoAggregationFn', () => {
     expect(
       column_getAutoAggregationFn(table.getColumn('status')!),
     ).toBeUndefined()
-  })
-})
-
-describe('column_getAggregationFn', () => {
-  it('should return a function-valued aggregationFn directly', () => {
-    const customAggregationFn = () => 0
-    const aggColumns: Array<ColumnDef<typeof features, Sale, any>> = [
-      {
-        accessorKey: 'amount',
-        id: 'amount',
-        aggregationFn: customAggregationFn,
-      },
-    ]
-    const table = constructTable({ features, data, columns: aggColumns })
-
-    expect(column_getAggregationFn(table.getColumn('amount')!)).toBe(
-      customAggregationFn,
-    )
-  })
-
-  it('should delegate to the auto aggregation fn for "auto"', () => {
-    const aggColumns: Array<ColumnDef<typeof features, Sale, any>> = [
-      { accessorKey: 'amount', id: 'amount', aggregationFn: 'auto' },
-    ]
-    const table = constructTable({ features, data, columns: aggColumns })
-
-    expect(column_getAggregationFn(table.getColumn('amount')!)).toBe(
-      aggregationFns.sum,
-    )
-  })
-
-  it('should look up registered aggregation fn names', () => {
-    const aggColumns: Array<ColumnDef<typeof features, Sale, any>> = [
-      { accessorKey: 'amount', id: 'amount', aggregationFn: 'mean' },
-    ]
-    const table = constructTable({ features, data, columns: aggColumns })
-
-    expect(column_getAggregationFn(table.getColumn('amount')!)).toBe(
-      aggregationFns.mean,
-    )
-  })
-
-  it('should return undefined for unknown aggregation fn names', () => {
-    const aggColumns: Array<ColumnDef<typeof features, Sale, any>> = [
-      // cast: deliberately exercises the unregistered-name fallback
-      { accessorKey: 'amount', id: 'amount', aggregationFn: 'nope' as any },
-    ]
-    const table = constructTable({ features, data, columns: aggColumns })
-
-    expect(column_getAggregationFn(table.getColumn('amount')!)).toBeUndefined()
   })
 })
 

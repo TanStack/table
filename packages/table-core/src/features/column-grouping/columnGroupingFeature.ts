@@ -5,11 +5,8 @@ import {
   makeStateUpdater,
 } from '../../utils'
 import {
-  cell_getIsAggregated,
   cell_getIsGrouped,
   cell_getIsPlaceholder,
-  column_getAggregationFn,
-  column_getAutoAggregationFn,
   column_getCanGroup,
   column_getGroupedIndex,
   column_getIsGrouped,
@@ -24,20 +21,13 @@ import {
 import type { TableFeature } from '../../types/TableFeatures'
 
 /**
- * Feature that adds column grouping state, aggregation defaults, and grouped row APIs.
+ * Feature that adds column grouping state and grouped row APIs.
  */
 export const columnGroupingFeature: TableFeature = {
   getInitialState: (initialState) => {
     return {
       grouping: getDefaultGroupingState(),
       ...initialState,
-    }
-  },
-
-  getDefaultColumnDef: () => {
-    return {
-      aggregatedCell: ({ getValue }: any) => getValue()?.toString?.() ?? null,
-      aggregationFn: 'auto',
     }
   },
 
@@ -55,9 +45,6 @@ export const columnGroupingFeature: TableFeature = {
       },
       cell_getIsPlaceholder: {
         fn: (cell) => cell_getIsPlaceholder(cell),
-      },
-      cell_getIsAggregated: {
-        fn: (cell) => cell_getIsAggregated(cell),
       },
     })
   },
@@ -78,12 +65,6 @@ export const columnGroupingFeature: TableFeature = {
       },
       column_getToggleGroupingHandler: {
         fn: (column) => column_getToggleGroupingHandler(column),
-      },
-      column_getAutoAggregationFn: {
-        fn: (column) => column_getAutoAggregationFn(column),
-      },
-      column_getAggregationFn: {
-        fn: (column) => column_getAggregationFn(column),
       },
     })
   },

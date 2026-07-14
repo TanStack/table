@@ -9,7 +9,7 @@ import type {
 
 import type {
   AccessorFn,
-  AggregationFn,
+  AggregationFnDef,
   Cell,
   Column,
   ColumnDef,
@@ -470,7 +470,12 @@ export type MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown> = {
     row: MRT_Row<TData>
     table: MRT_TableInstance<TData>
   }) => ReactNode
-  aggregationFn?: Array<MRT_AggregationFn<TData>> | MRT_AggregationFn<TData>
+  aggregationFn?:
+    | Array<
+        | MRT_AggregationOption
+        | { aggregationFn: MRT_AggregationFn<TData>; id: string }
+      >
+    | MRT_AggregationFn<TData>
   Cell?: (props: {
     cell: MRT_Cell<TData, TValue>
     column: MRT_Column<TData, TValue>
@@ -808,7 +813,7 @@ export type MRT_Cell<TData extends MRT_RowData, TValue = unknown> = {
 export type MRT_AggregationOption = keyof typeof MRT_AggregationFns & string
 
 export type MRT_AggregationFn<TData extends MRT_RowData> =
-  | AggregationFn<StockFeatures, TData>
+  | AggregationFnDef<StockFeatures, TData, any, any>
   | MRT_AggregationOption
 
 export type MRT_SortingOption = LiteralUnion<keyof typeof MRT_SortFns & string>
@@ -859,9 +864,12 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
   /**
    * Custom aggregation functions to apply to the table. These get merged with
    * MRT's built-ins (`mean`, `min`, `max`, etc.) and passed into
-   * `createGroupedRowModel(...)`.
+   * the aggregation feature registry.
    */
-  aggregationFns?: Record<string, AggregationFn<StockFeatures, TData>>
+  aggregationFns?: Record<
+    string,
+    AggregationFnDef<StockFeatures, TData, any, any>
+  >
   /**
    * Custom filter functions to apply to the table. These get merged with MRT's
    * built-ins (`fuzzy`, `contains`, `between`, etc.) and passed into

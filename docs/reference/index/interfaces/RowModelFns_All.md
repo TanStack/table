@@ -9,7 +9,7 @@ Defined in: [types/RowModelFns.ts:25](https://github.com/TanStack/table/blob/mai
 
 ## Extends
 
-- `Partial`\<[`RowModelFns_ColumnFiltering`](RowModelFns_ColumnFiltering.md)\<`TFeatures`, `TData`\> & [`RowModelFns_ColumnGrouping`](RowModelFns_ColumnGrouping.md)\<`TFeatures`, `TData`\> & [`RowModelFns_RowSorting`](RowModelFns_RowSorting.md)\<`TFeatures`, `TData`\>\>
+- `Partial`\<[`RowModelFns_ColumnFiltering`](RowModelFns_ColumnFiltering.md)\<`TFeatures`, `TData`\> & [`RowModelFns_Aggregation`](RowModelFns_Aggregation.md)\<`TFeatures`, `TData`\> & [`RowModelFns_RowSorting`](RowModelFns_RowSorting.md)\<`TFeatures`, `TData`\>\>
 
 ## Type Parameters
 
@@ -26,10 +26,10 @@ Defined in: [types/RowModelFns.ts:25](https://github.com/TanStack/table/blob/mai
 ### aggregationFns?
 
 ```ts
-optional aggregationFns: Record<string, AggregationFn<TFeatures, TData>>;
+optional aggregationFns: Record<string, AggregationFnDef<TFeatures, TData, any, any>>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L25)
+Defined in: [features/aggregation/aggregationFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L91)
 
 #### Inherited from
 

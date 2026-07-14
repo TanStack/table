@@ -1,5 +1,6 @@
 <script lang="ts">
   import {
+    aggregationFeature,
     aggregationFn_mean,
     aggregationFn_median,
     aggregationFn_sum,
@@ -22,6 +23,7 @@
 
   const { createAppTable, createAppColumnHelper } = createTableHook({
     features: {
+      aggregationFeature,
       columnFilteringFeature,
       columnGroupingFeature,
       rowExpandingFeature,

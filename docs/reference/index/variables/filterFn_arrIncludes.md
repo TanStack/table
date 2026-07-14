@@ -9,6 +9,6 @@ title: filterFn_arrIncludes
 const filterFn_arrIncludes: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:371](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L371)
+Defined in: [features/column-filtering/filterFns.ts:371](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L371)
 
 Keeps rows whose array or string column value includes at least one filter value.

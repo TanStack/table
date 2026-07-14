@@ -5,7 +5,7 @@ title: Table_ColumnGrouping
 
 # Interface: Table\_ColumnGrouping\<_TFeatures, _TData\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:254](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L254)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L117)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:254](https:
 resetGrouping: (defaultState?) => void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L263)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L126)
 
 Resets `grouping` to `initialState.grouping`.
 
@@ -49,7 +49,7 @@ Pass `true` to ignore initial state and reset to `[]`.
 setGrouping: (updater) => void;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L267)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L130)
 
 Updates grouping state with a next ordered id array or updater function.
 

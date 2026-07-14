@@ -1,7 +1,7 @@
 ---
 name: grouping
 description: >
-  Group and aggregate rows with columnGroupingFeature, groupedRowModel, aggregationFns, groupedColumnMode, and manualGrouping. Load for grouped, placeholder, or aggregated cells and grouping interactions with expansion or pagination.
+  Group rows with columnGroupingFeature, groupedRowModel, groupedColumnMode, and manualGrouping, and combine grouping with the independent aggregationFeature. Load for grouped or placeholder cells and grouping interactions with expansion, aggregation, or pagination.
 metadata:
   {
     type: sub-skill,
@@ -11,16 +11,18 @@ metadata:
 requires: ['core', 'table-features', 'client-vs-server']
 sources:
   - 'TanStack/table:docs/framework/react/guide/grouping.md'
+  - 'TanStack/table:docs/guide/aggregation.md'
   - 'TanStack/table:packages/table-core/src/features/column-grouping'
   - 'TanStack/table:examples/react/grouping'
 ---
 
-This skill builds on `core`, `table-features`, and `client-vs-server`. Grouping creates row structure and aggregate values; the renderer chooses grouped-cell UI.
+This skill builds on `core`, `table-features`, and `client-vs-server`. Grouping creates row structure; the independent aggregation feature creates aggregate values; the renderer chooses grouped-cell UI.
 
 ## Setup
 
 ```ts
 import {
+  aggregationFeature,
   aggregationFn_sum,
   columnGroupingFeature,
   createGroupedRowModel,
@@ -28,6 +30,7 @@ import {
 } from '@tanstack/table-core'
 
 export const features = tableFeatures({
+  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns: { sum: aggregationFn_sum },
@@ -62,7 +65,8 @@ Wrong: `tableFeatures({ groupedRowModel: createGroupedRowModel() })`
 
 Correct: `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel() })`
 
-The grouped slot and aggregation registry require `columnGroupingFeature`.
+The grouped row-model slot requires `columnGroupingFeature`. The aggregation
+registry and aggregation APIs independently require `aggregationFeature`.
 
 Source: `packages/table-core/src/types/TableFeatures.ts#FeatureSlotPrereqs`
 
@@ -101,4 +105,7 @@ Source: `examples/react/grouping/src/main.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-grouping/` and `src/fns/aggregationFns.ts`.
+Inspect `node_modules/@tanstack/table-core/src/features/column-grouping/` for
+grouping and `src/features/aggregation/` for aggregation. Load the
+`aggregation` skill when totals, multiple aggregations, or custom definitions
+are the main task.

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   aggregationFns,
+  aggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   constructTable,
@@ -37,6 +38,7 @@ function makeData(count: number): Array<Person> {
 }
 
 const features = testFeatures({
+  aggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   globalFilteringFeature,
@@ -51,7 +53,7 @@ const features = testFeatures({
 
 const columns: Array<ColumnDef<typeof features, Person, any>> = [
   { accessorKey: 'firstName', header: 'First Name' },
-  { accessorKey: 'age', header: 'Age', aggregationFn: 'mean' },
+  { accessorKey: 'age', header: 'Age', aggregationFn: ['mean', 'extent'] },
   { accessorKey: 'visits', header: 'Visits', aggregationFn: 'sum' },
   { accessorKey: 'status', header: 'Status' },
 ]
@@ -154,6 +156,10 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
       expect(rebuiltGroup.groupingValue).toBe(syncGroup.groupingValue)
       // explicit-aggregate columns match the sync model exactly
       expect(rebuiltGroup.getValue('age')).toBe(syncGroup.getValue('age'))
+      expect(rebuiltGroup.getValue('age')).toEqual({
+        extent: expect.any(Array),
+        mean: expect.any(Number),
+      })
       expect(rebuiltGroup.getValue('visits')).toBe(syncGroup.getValue('visits'))
       // the group's own column serializes its display value
       expect(rebuiltGroup.getValue('status')).toBe(syncGroup.getValue('status'))
@@ -181,7 +187,7 @@ describe('serializeRowModel -> rebuildRowModel round trip', () => {
     const workerTable = makeTable(data)
     const mainTable = makeTable(data)
     workerTable.baseAtoms.grouping.set(['status'])
-    workerTable.baseAtoms.sorting.set([{ id: 'age', desc: false }])
+    workerTable.baseAtoms.sorting.set([{ id: 'visits', desc: false }])
 
     const model = workerTable.getSortedRowModel()
     const { payload, rebuilt } = roundTrip(workerTable, mainTable, model)

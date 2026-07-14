@@ -1,4 +1,5 @@
 import {
+  aggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -24,6 +25,7 @@ import type { Person } from './makeData'
 
 const { createAppTable, createAppColumnHelper } = createTableHook({
   features: {
+    aggregationFeature,
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,

@@ -2,10 +2,10 @@ import type {
   CreatedFilterFn,
   ExtractFilterMeta,
   FilterFnDef,
-} from '../features/column-filtering/columnFilteringFeature.types'
-import type { RowData } from '../types/type-utils'
-import type { TableFeatures } from '../types/TableFeatures'
-import type { Row } from '../types/Row'
+} from './columnFilteringFeature.types'
+import type { RowData } from '../../types/type-utils'
+import type { TableFeatures } from '../../types/TableFeatures'
+import type { Row } from '../../types/Row'
 
 /**
  * Builds a `FilterFn` from a value-level comparator plus optional resolvers.

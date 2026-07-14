@@ -6,12 +6,10 @@ title: aggregationFn_extent
 # Variable: aggregationFn\_extent
 
 ```ts
-const aggregationFn_extent: CreatedAggregationFn<any, any>;
+const aggregationFn_extent: AggregationFnDef<any, any, unknown, [RangeValue | undefined, RangeValue | undefined]>;
 ```
 
-Defined in: [fns/aggregationFns.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L136)
+Defined in: [features/aggregation/aggregationFns.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L143)
 
-Finds the numeric extent for a grouped column.
-
-Returns `[min, max]`, where each entry is `undefined` when no numeric value is
-present.
+Finds the minimum and maximum numeric or Date values. Empty inputs return
+`[undefined, undefined]`, preserving the previous built-in result shape.

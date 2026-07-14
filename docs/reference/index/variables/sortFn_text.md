@@ -9,7 +9,7 @@ title: sortFn_text
 const sortFn_text: CreatedSortFn<any, any>;
 ```
 
-Defined in: [fns/sortFns.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L100)
+Defined in: [features/row-sorting/sortFns.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L97)
 
 Sorts rows with the built-in text strategy.
 

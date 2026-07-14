@@ -7,6 +7,7 @@ title: static-functions
 
 ## Functions
 
+- [aggregateColumnValue](functions/aggregateColumnValue.md)
 - [cell\_getContext](functions/cell_getContext.md)
 - [cell\_getIsAggregated](functions/cell_getIsAggregated.md)
 - [cell\_getIsGrouped](functions/cell_getIsGrouped.md)
@@ -15,7 +16,8 @@ title: static-functions
 - [cell\_renderValue](functions/cell_renderValue.md)
 - [column\_clearSorting](functions/column_clearSorting.md)
 - [column\_getAfter](functions/column_getAfter.md)
-- [column\_getAggregationFn](functions/column_getAggregationFn.md)
+- [column\_getAggregationFns](functions/column_getAggregationFns.md)
+- [column\_getAggregationValue](functions/column_getAggregationValue.md)
 - [column\_getAutoAggregationFn](functions/column_getAutoAggregationFn.md)
 - [column\_getAutoFilterFn](functions/column_getAutoFilterFn.md)
 - [column\_getAutoSortDir](functions/column_getAutoSortDir.md)
@@ -62,6 +64,7 @@ title: static-functions
 - [column\_toggleGrouping](functions/column_toggleGrouping.md)
 - [column\_toggleSorting](functions/column_toggleSorting.md)
 - [column\_toggleVisibility](functions/column_toggleVisibility.md)
+- [formatAggregatedCellValue](functions/formatAggregatedCellValue.md)
 - [getDefaultColumnFiltersState](functions/getDefaultColumnFiltersState.md)
 - [getDefaultColumnOrderState](functions/getDefaultColumnOrderState.md)
 - [getDefaultColumnPinningState](functions/getDefaultColumnPinningState.md)
@@ -83,6 +86,7 @@ title: static-functions
 - [isRowSelected](functions/isRowSelected.md)
 - [isSubRowSelected](functions/isSubRowSelected.md)
 - [isTouchStartEvent](functions/isTouchStartEvent.md)
+- [normalizeAggregationRows](functions/normalizeAggregationRows.md)
 - [orderColumns](functions/orderColumns.md)
 - [passiveEventSupported](functions/passiveEventSupported.md)
 - [row\_getAllCells](functions/row_getAllCells.md)

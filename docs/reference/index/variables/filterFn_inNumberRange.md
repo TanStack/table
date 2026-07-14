@@ -9,7 +9,7 @@ title: filterFn_inNumberRange
 const filterFn_inNumberRange: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:283](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L283)
+Defined in: [features/column-filtering/filterFns.ts:283](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L283)
 
 Keeps rows whose numeric value is inside an inclusive `[min, max]` range.
 

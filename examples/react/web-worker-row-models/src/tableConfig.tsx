@@ -1,4 +1,5 @@
 import {
+  aggregationFeature,
   aggregationFn_extent,
   aggregationFn_mean,
   aggregationFn_median,
@@ -42,6 +43,7 @@ import type { Person } from './makeData'
 // crosses threads at all.
 
 export const sharedFeatures = tableFeatures({
+  aggregationFeature,
   rowSortingFeature,
   columnFilteringFeature,
   globalFilteringFeature,
@@ -87,6 +89,17 @@ const sortStatusFn: SortFn<typeof sharedFeatures, Person> = (
   )
 }
 
+// Multi-aggregation values are keyed objects on grouped rows, so define which
+// result controls their order. Leaf rows still sort by their numeric age.
+const sortAgeFn: SortFn<typeof sharedFeatures, Person> = (rowA, rowB) => {
+  const getAge = (row: typeof rowA) => {
+    const value = row.getValue<number | { median: number }>('age')
+    return typeof value === 'number' ? value : value.median
+  }
+
+  return getAge(rowA) - getAge(rowB)
+}
+
 // The sorting example's column defs merged with the grouping example's
 // aggregation props, exercising both entirely off the main thread: default
 // string/number ordering, a named registry sortFn (alphanumeric),
@@ -113,9 +126,15 @@ export const columns = columnHelper.columns([
   }),
   columnHelper.accessor('age', {
     header: () => 'Age',
-    aggregationFn: 'median',
-    aggregatedCell: ({ getValue }) =>
-      Math.round(getValue<number>() * 100) / 100,
+    sortFn: sortAgeFn,
+    aggregationFn: ['median', { id: 'range', aggregationFn: 'extent' }],
+    aggregatedCell: ({ getValue }) => {
+      const value = getValue<{
+        median: number
+        range: [number | undefined, number | undefined]
+      }>()
+      return `Median ${Math.round(value.median * 100) / 100}; Range ${value.range[0]}–${value.range[1]}`
+    },
   }),
   columnHelper.accessor('visits', {
     header: () => <span>Visits</span>,

@@ -28,6 +28,7 @@ const STOCK_FEATURE_NAMES: Array<string> = Object.keys(stockFeatures)
 const PACKAGE_SIZE_LIMIT_BYTES = 16_987
 
 const FEATURE_SIZE_ESTIMATES_BYTES: Record<string, number> = {
+  aggregationFeature: 1500,
   coreCellsFeature: 358,
   coreColumnsFeature: 803,
   coreHeadersFeature: 1012,
@@ -87,8 +88,8 @@ const ROW_MODEL_TO_FN_KIND: Record<
   preFilteredRowModel: 'filterFns',
   sortedRowModel: 'sortFns',
   preSortedRowModel: 'sortFns',
-  groupedRowModel: 'aggregationFns',
-  preGroupedRowModel: 'aggregationFns',
+  groupedRowModel: null,
+  preGroupedRowModel: null,
 }
 
 const EXECUTION_ORDER_GETTERS = [
@@ -206,6 +207,10 @@ export function FeaturesPanel() {
     ])
     return [...currentFeatures].filter((f) => !knownFeatures.has(f)).sort()
   })
+
+  const aggregationFunctionNames = createMemo(() =>
+    getFnNames('aggregationFns'),
+  )
 
   const getRowModelFunctions = (rowModelName: string): Array<string> => {
     const fnKind = ROW_MODEL_TO_FN_KIND[rowModelName]
@@ -361,6 +366,21 @@ export function FeaturesPanel() {
                   </div>
                 )}
               </For>
+              {tableFeatures().has('aggregationFeature') && (
+                <div>
+                  <div class={styles().rowModelItem}>
+                    <span class={styles().featureLabel}>aggregationFns</span>
+                    <span class={styles().featureMeta}>
+                      {aggregationFunctionNames().length} registered
+                    </span>
+                  </div>
+                  <For each={aggregationFunctionNames()}>
+                    {(fnName) => (
+                      <div class={styles().rowModelFnItem}>{fnName}</div>
+                    )}
+                  </For>
+                </div>
+              )}
               {rowModelNames().length === 0 && (
                 <div class={styles().rowModelItem}>
                   No row models configured

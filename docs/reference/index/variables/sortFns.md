@@ -9,7 +9,7 @@ title: sortFns
 const sortFns: object;
 ```
 
-Defined in: [fns/sortFns.ts:360](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L360)
+Defined in: [features/row-sorting/sortFns.ts:357](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L357)
 
 The built-in sorting function registry.
 

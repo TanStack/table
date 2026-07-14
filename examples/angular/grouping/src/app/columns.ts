@@ -1,4 +1,5 @@
 import {
+  aggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -16,6 +17,7 @@ import {
 import type { Person } from './makeData'
 
 const features = tableFeatures({
+  aggregationFeature,
   columnGroupingFeature,
   rowPaginationFeature,
   columnFilteringFeature,
