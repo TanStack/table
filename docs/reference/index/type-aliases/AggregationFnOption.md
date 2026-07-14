@@ -3,16 +3,17 @@ id: AggregationFnOption
 title: AggregationFnOption
 ---
 
-# Type Alias: AggregationFnOption\<TFeatures, TData\>
+# Type Alias: AggregationFnOption\<TFeatures, TData, TValue\>
 
 ```ts
-type AggregationFnOption<TFeatures, TData> = 
-  | "auto"
-  | ExtractAggregationFnKeys<TFeatures>
-| AggregationFn<TFeatures, TData>;
+type AggregationFnOption<TFeatures, TData, TValue> =
+  | AggregationFnRef<TFeatures, TData, TValue, any>
+| ReadonlyArray<AggregationFnListItem<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L115)
+Defined in: [features/aggregation/aggregationFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L143)
+
+A scalar aggregation reference or a list that produces a keyed object.
 
 ## Type Parameters
 
@@ -23,3 +24,7 @@ Defined in: [features/column-grouping/columnGroupingFeature.types.ts:115](https:
 ### TData
 
 `TData` *extends* [`RowData`](RowData.md)
+
+### TValue
+
+`TValue` = `unknown`

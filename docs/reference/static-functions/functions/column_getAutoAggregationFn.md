@@ -7,21 +7,13 @@ title: column_getAutoAggregationFn
 
 ```ts
 function column_getAutoAggregationFn<TFeatures, TData, TValue>(column): 
-  | AggregationFn<TFeatures, TData>
+  | AggregationFnDef<TFeatures, TData, any, any>
   | undefined;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L154)
+Defined in: [features/aggregation/aggregationFeature.utils.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L100)
 
-Chooses a built-in aggregation function from the first core row value.
-
-Numeric columns default to `sum`, date-like values default to `extent`, and
-other value types leave aggregation unspecified.
-
-The chosen aggregation function is looked up in the table's
-`aggregationFns` registry. When it is not registered there, this returns
-`undefined` and warns in development instead of substituting a different
-aggregation function.
+Resolves the `sum` or `extent` definition inferred from the first core row.
 
 ## Type Parameters
 
@@ -45,11 +37,5 @@ aggregation function.
 
 ## Returns
 
-  \| [`AggregationFn`](../../index/interfaces/AggregationFn.md)\<`TFeatures`, `TData`\>
+  \| [`AggregationFnDef`](../../index/interfaces/AggregationFnDef.md)\<`TFeatures`, `TData`, `any`, `any`\>
   \| `undefined`
-
-## Example
-
-```ts
-const aggregationFn = column_getAutoAggregationFn(column)
-```

@@ -5,25 +5,9 @@ title: Cell_ColumnGrouping
 
 # Interface: Cell\_ColumnGrouping
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:211](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L211)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L78)
 
 ## Properties
-
-### getIsAggregated()
-
-```ts
-getIsAggregated: () => boolean;
-```
-
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L215)
-
-Checks whether this cell should render an aggregated value.
-
-#### Returns
-
-`boolean`
-
-***
 
 ### getIsGrouped()
 
@@ -31,7 +15,7 @@ Checks whether this cell should render an aggregated value.
 getIsGrouped: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L219)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:82](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L82)
 
 Checks whether this cell represents the active grouping column.
 
@@ -47,7 +31,7 @@ Checks whether this cell represents the active grouping column.
 getIsPlaceholder: () => boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L223)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L86)
 
 Checks whether this cell is hidden as a grouping placeholder.
 

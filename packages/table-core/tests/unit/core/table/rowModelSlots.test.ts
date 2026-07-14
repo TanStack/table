@@ -1,22 +1,29 @@
 import { describe, expect, it } from 'vitest'
 import {
+  aggregationFeature,
+  aggregationFns,
   columnFilteringFeature,
+  columnGroupingFeature,
   columnResizingFeature,
   columnSizingFeature,
   constructTable,
   createFilteredRowModel,
+  createGroupedRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
   filterFns,
   globalFilteringFeature,
   rowPaginationFeature,
+  rowSelectionFeature,
   rowSortingFeature,
   sortFns,
   tableFeatures,
 } from '../../../../src'
 import { testFeatures } from '../../../fixtures/features'
 import type {
+  AggregationFnOption,
   AggregationFns,
+  AggregationResult,
   ExtractAggregationFnKeys,
   ExtractFilterFnKeys,
   ExtractSortFnKeys,
@@ -31,9 +38,9 @@ import type {
   TableOptions,
   ValidateFeatureSlots,
 } from '../../../../src'
-import type { BuiltInAggregationFn } from '../../../../src/fns/aggregationFns'
-import type { BuiltInFilterFn } from '../../../../src/fns/filterFns'
-import type { BuiltInSortFn } from '../../../../src/fns/sortFns'
+import type { BuiltInAggregationFn } from '../../../../src/features/aggregation/aggregationFns'
+import type { BuiltInFilterFn } from '../../../../src/features/column-filtering/filterFns'
+import type { BuiltInSortFn } from '../../../../src/features/row-sorting/sortFns'
 
 type Equal<A, B> =
   (<T>() => T extends A ? 1 : 2) extends <T>() => T extends B ? 1 : 2
@@ -275,6 +282,16 @@ describe('row model and fn registry feature slots', () => {
   })
 
   it('errors when a slot is missing its prerequisite feature', () => {
+    const missingAggregation = tableFeatures({
+      // @ts-expect-error - aggregationFns requires aggregationFeature
+      aggregationFns,
+    })
+
+    const withAggregation = tableFeatures({
+      aggregationFeature,
+      aggregationFns,
+    })
+
     const missingSorting = tableFeatures({
       rowPaginationFeature,
       paginatedRowModel: createPaginatedRowModel(),
@@ -319,12 +336,80 @@ describe('row model and fn registry feature slots', () => {
       columnResizingFeature,
     })
 
+    expect(missingAggregation).toBeDefined()
+    expect(withAggregation).toBeDefined()
     expect(missingSorting).toBeDefined()
     expect(missingFiltering).toBeDefined()
     expect(globalOnly).toBeDefined()
     expect(withColumnFiltering).toBeDefined()
     expect(missingSizing).toBeDefined()
     expect(withSizing).toBeDefined()
+  })
+
+  it('types scalar, multi, and feature-aware aggregation APIs', () => {
+    const aggregateFeatures = tableFeatures({
+      aggregationFeature,
+      aggregationFns,
+    })
+    const option: AggregationFnOption<typeof aggregateFeatures, Person> = [
+      'count',
+      { id: 'average', aggregationFn: 'mean' },
+    ]
+    true satisfies Expect<
+      Equal<
+        AggregationResult<readonly ['count', 'mean'], typeof aggregateFeatures>,
+        { count: number; mean: number | undefined }
+      >
+    >
+
+    const table = constructTable({
+      features: testFeatures(aggregateFeatures),
+      data,
+      columns: [{ accessorKey: 'age', aggregationFn: option }],
+    })
+    const column = table.getColumn('age')!
+    column.getAggregationFns()
+    column.getAggregationValue(table.getCoreRowModel().rows)
+    if (false) {
+      // @ts-expect-error - grouping APIs are absent without columnGroupingFeature
+      column.getCanGroup()
+      // @ts-expect-error - row-selection row models require rowSelectionFeature
+      table.getFilteredSelectedRowModel()
+      // @ts-expect-error - aggregation values accept rows directly, not options
+      column.getAggregationValue({ rows: table.getCoreRowModel().rows })
+    }
+
+    const selectedFeatures = tableFeatures({
+      aggregationFeature,
+      aggregationFns,
+      rowSelectionFeature,
+    })
+    const selectedTable = constructTable({
+      features: testFeatures(selectedFeatures),
+      data,
+      columns: [{ accessorKey: 'age', aggregationFn: 'sum' }],
+    })
+    selectedTable
+      .getColumn('age')!
+      .getAggregationValue(selectedTable.getFilteredSelectedRowModel().rows)
+
+    const groupingFeatures = tableFeatures({
+      columnGroupingFeature,
+      groupedRowModel: createGroupedRowModel(),
+    })
+    const groupingTable = constructTable({
+      features: testFeatures(groupingFeatures),
+      data,
+      columns: [{ accessorKey: 'firstName' }],
+    })
+    const groupingColumn = groupingTable.getColumn('firstName')!
+    groupingColumn.getCanGroup()
+    if (false) {
+      // @ts-expect-error - aggregation APIs are absent without aggregationFeature
+      groupingColumn.getAggregationValue()
+    }
+
+    expect(option).toBeDefined()
   })
 
   it('validates slots on the features table option too', () => {

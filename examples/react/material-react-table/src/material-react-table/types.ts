@@ -1,6 +1,6 @@
 import type {
   AccessorFn,
-  AggregationFn,
+  AggregationFnDef,
   Cell,
   Column,
   ColumnDef,
@@ -388,7 +388,7 @@ export type MRT_Cell<TData extends MRT_RowData, TValue = unknown> = Cell<
 export type MRT_AggregationOption = string & keyof typeof MRT_AggregationFns
 
 export type MRT_AggregationFn<TData extends MRT_RowData> =
-  | AggregationFn<StockFeatures, TData>
+  | AggregationFnDef<StockFeatures, TData, any, any>
   | MRT_AggregationOption
 
 export type MRT_SortingOption = LiteralUnion<string & keyof typeof MRT_SortFns>

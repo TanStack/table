@@ -92,7 +92,7 @@ export function table_getPreGroupedRowModel<
 }
 
 /**
- * Resolves the row model after grouping has produced grouped and aggregated rows.
+ * Resolves the row model after grouping has produced grouped rows.
  *
  * When `manualGrouping` is enabled, or no grouped row-model factory was
  * registered, this returns the pre-grouped row model unchanged.

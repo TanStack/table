@@ -1,5 +1,5 @@
-import { reSplitAlphaNumeric, sortFn_basic } from '../../fns/sortFns'
 import { cloneState, isFunction } from '../../utils'
+import { reSplitAlphaNumeric, sortFn_basic } from './sortFns'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'

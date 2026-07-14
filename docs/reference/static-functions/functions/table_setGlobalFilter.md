@@ -9,7 +9,7 @@ title: table_setGlobalFilter
 function table_setGlobalFilter<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:103](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L103)
+Defined in: [features/global-filtering/globalFilteringFeature.utils.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/global-filtering/globalFilteringFeature.utils.ts#L99)
 
 Routes a global filter updater through the table's global filter handler.
 

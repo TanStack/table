@@ -9,7 +9,7 @@ title: sortFn_textCaseSensitive
 const sortFn_textCaseSensitive: CreatedSortFn<any, any>;
 ```
 
-Defined in: [fns/sortFns.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L112)
+Defined in: [features/row-sorting/sortFns.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L109)
 
 Sorts rows with the built-in text case sensitive strategy.
 

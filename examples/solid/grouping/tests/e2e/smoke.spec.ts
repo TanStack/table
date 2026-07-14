@@ -79,6 +79,8 @@ test('renders the table without crashing', async ({ page }) => {
     await expect(table).toBeVisible()
     await expect(getHeaderCells(table).first()).toBeVisible()
     await expect(bodyRows.first()).toBeVisible()
+    await expect(table.locator('tfoot')).toHaveCount(0)
+    await expect(table).not.toContainText('Grand Total')
 
     const regenerateButton = page
       .getByRole('button', { name: /^Regenerate Data$/i })

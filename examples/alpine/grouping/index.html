@@ -59,17 +59,13 @@
                       ></span>
                     </button>
                   </template>
-                  <!-- aggregated cell -->
-                  <template x-if="cell.getIsAggregated()">
-                    <span x-html="FlexRender({ cell })"></span>
-                  </template>
                   <!-- placeholder cell: nothing -->
                   <template x-if="cell.getIsPlaceholder()">
                     <span></span>
                   </template>
                   <!-- normal cell -->
                   <template
-                    x-if="!cell.getIsGrouped() && !cell.getIsAggregated() && !cell.getIsPlaceholder()"
+                    x-if="!cell.getIsGrouped() && !cell.row.getIsGrouped() && !cell.getIsPlaceholder()"
                   >
                     <span x-html="FlexRender({ cell })"></span>
                   </template>

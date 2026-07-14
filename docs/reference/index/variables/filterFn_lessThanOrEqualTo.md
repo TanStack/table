@@ -9,7 +9,7 @@ title: filterFn_lessThanOrEqualTo
 const filterFn_lessThanOrEqualTo: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:243](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L243)
+Defined in: [features/column-filtering/filterFns.ts:243](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L243)
 
 Keeps rows whose value is less than or equal to the filter value.
 

@@ -7,6 +7,7 @@ import type {
 import type { CellContext } from '../core/cells/coreCellsFeature.types'
 import type { HeaderContext } from '../core/headers/coreHeadersFeature.types'
 import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
+import type { ColumnDef_Aggregation } from '../features/aggregation/aggregationFeature.types'
 import type { ColumnDef_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { ColumnDef_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
 import type { ColumnDef_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
@@ -132,12 +133,13 @@ export interface ColumnDef_FeatureMap<
   in out TData extends RowData,
   TValue extends CellData,
 > {
+  aggregationFeature: ColumnDef_Aggregation<TFeatures, TData, TValue>
   columnVisibilityFeature: ColumnDef_ColumnVisibility
   columnPinningFeature: ColumnDef_ColumnPinning
   columnFilteringFeature: ColumnDef_ColumnFiltering<TFeatures, TData>
   globalFilteringFeature: ColumnDef_GlobalFiltering
   rowSortingFeature: ColumnDef_RowSorting<TFeatures, TData>
-  columnGroupingFeature: ColumnDef_ColumnGrouping<TFeatures, TData, TValue>
+  columnGroupingFeature: ColumnDef_ColumnGrouping<TFeatures, TData>
   columnSizingFeature: ColumnDef_ColumnSizing
   columnResizingFeature: ColumnDef_ColumnResizing
 }
@@ -158,12 +160,13 @@ export type ColumnDefBase_All<
   TValue extends CellData = CellData,
 > = ColumnDefBase_Core<TFeatures, TData, TValue> &
   Partial<
-    ColumnDef_ColumnVisibility &
+    ColumnDef_Aggregation<TFeatures, TData, TValue> &
+      ColumnDef_ColumnVisibility &
       ColumnDef_ColumnPinning &
       ColumnDef_ColumnFiltering<TFeatures, TData> &
       ColumnDef_GlobalFiltering &
       ColumnDef_RowSorting<TFeatures, TData> &
-      ColumnDef_ColumnGrouping<TFeatures, TData, TValue> &
+      ColumnDef_ColumnGrouping<TFeatures, TData> &
       ColumnDef_ColumnSizing &
       ColumnDef_ColumnResizing
   >

@@ -3,79 +3,71 @@ id: AggregationFnDef
 title: AggregationFnDef
 ---
 
-# Interface: AggregationFnDef\<TFeatures, TData\>
+# Interface: AggregationFnDef\<TFeatures, TData, TValue, TResult\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L54)
+Defined in: [features/aggregation/aggregationFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L54)
 
-The definition object accepted by `constructAggregationFn`.
-
-`aggregate` is a value-level reducer: it receives the rows' (resolved)
-values instead of the rows themselves, so normalization concerns stay in
-`resolveDataValue`.
-
-## Extended by
-
-- [`CreatedAggregationFn`](CreatedAggregationFn.md)
+A context-based aggregation definition and optional grouped-result merge.
 
 ## Type Parameters
 
 ### TFeatures
 
-`TFeatures` *extends* [`TableFeatures`](TableFeatures.md)
+`TFeatures` *extends* [`TableFeatures`](TableFeatures.md) = `any`
 
 ### TData
 
-`TData` *extends* [`RowData`](../type-aliases/RowData.md)
+`TData` *extends* [`RowData`](../type-aliases/RowData.md) = `any`
+
+### TValue
+
+`TValue` = `unknown`
+
+### TResult
+
+`TResult` = `unknown`
 
 ## Properties
 
 ### aggregate()
 
 ```ts
-aggregate: (values, rows, columnId) => any;
+aggregate: (context) => TResult;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L58)
+Defined in: [features/aggregation/aggregationFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L61)
+
+Computes a result directly from normalized terminal rows.
 
 #### Parameters
 
-##### values
+##### context
 
-`any`[]
-
-##### rows
-
-[`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
-
-##### columnId
-
-`string`
+[`AggregationContext`](AggregationContext.md)\<`TFeatures`, `TData`, `TValue`\>
 
 #### Returns
 
-`any`
+`TResult`
 
 ***
 
-### fromRows?
+### merge()?
 
 ```ts
-optional fromRows: "leafRows" | "childRows";
+optional merge: (context) => TResult;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L69)
+Defined in: [features/aggregation/aggregationFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L66)
 
-Which of the group's rows feed the aggregation: all of its `leafRows`
-(the default) or its immediate `childRows`. For nested groups, child rows
-expose already-aggregated values, which is faster for reaggregatable
-computations like sums and extents.
+Combines already-computed immediate child-group results. When omitted,
+nested grouping falls back to `aggregate` over the group's terminal rows.
 
-***
+#### Parameters
 
-### resolveDataValue?
+##### context
 
-```ts
-optional resolveDataValue: TransformDataValueFn;
-```
+[`AggregationMergeContext`](AggregationMergeContext.md)\<`TFeatures`, `TData`, `TValue`, `TResult`\>
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L70)
+#### Returns
+
+`TResult`

@@ -9,7 +9,7 @@ title: filterFn_notEmpty
 const filterFn_notEmpty: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L197)
+Defined in: [features/column-filtering/filterFns.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L197)
 
 Keeps rows whose column value is not empty.
 

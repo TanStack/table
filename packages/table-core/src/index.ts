@@ -59,18 +59,15 @@ export * from './core/table/coreTablesFeature'
 export * from './core/table/coreTablesFeature.types'
 
 /**
- * RowModelFns
- */
-
-export * from './fns/aggregationFns'
-export * from './fns/filterFns'
-export * from './fns/sortFns'
-
-/**
  * Features
  */
 
 export * from './features/stockFeatures'
+
+// aggregationFeature
+export * from './features/aggregation/aggregationFeature'
+export * from './features/aggregation/aggregationFeature.types'
+export * from './features/aggregation/aggregationFns'
 
 // columnFacetingFeature
 export * from './features/column-faceting/columnFacetingFeature'
@@ -83,6 +80,7 @@ export * from './features/column-faceting/createFacetedUniqueValues'
 export * from './features/column-filtering/columnFilteringFeature'
 export * from './features/column-filtering/columnFilteringFeature.types'
 export * from './features/column-filtering/createFilteredRowModel'
+export * from './features/column-filtering/filterFns'
 
 // columnGroupingFeature
 export * from './features/column-grouping/columnGroupingFeature'
@@ -135,5 +133,6 @@ export * from './features/row-selection/rowSelectionFeature.types'
 export * from './features/row-sorting/rowSortingFeature'
 export * from './features/row-sorting/rowSortingFeature.types'
 export * from './features/row-sorting/createSortedRowModel'
+export * from './features/row-sorting/sortFns'
 
 // force

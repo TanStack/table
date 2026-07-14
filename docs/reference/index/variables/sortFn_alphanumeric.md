@@ -9,7 +9,7 @@ title: sortFn_alphanumeric
 const sortFn_alphanumeric: CreatedSortFn<any, any>;
 ```
 
-Defined in: [fns/sortFns.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L78)
+Defined in: [features/row-sorting/sortFns.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L75)
 
 Sorts rows with the built-in alphanumeric strategy.
 

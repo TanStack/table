@@ -9,7 +9,7 @@ title: constructSortFn
 function constructSortFn<TFeatures, TData>(def): CreatedSortFn<TFeatures, TData>;
 ```
 
-Defined in: [fns/sortFns.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/sortFns.ts#L41)
+Defined in: [features/row-sorting/sortFns.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/sortFns.ts#L38)
 
 Builds a `SortFn` from a value-level comparator plus an optional
 `resolveDataValue` normalizer.

@@ -2,6 +2,9 @@
 title: Migrating to TanStack Table V9 (React)
 ---
 
+> [!IMPORTANT]
+> `v9.0.0-beta.48` introduces a breaking feature split: `columnGroupingFeature` no longer provides aggregation options or APIs. Tables that group rows and calculate aggregate values must now register both `columnGroupingFeature` and `aggregationFeature`. Grouping-only tables can register only `columnGroupingFeature`, while grand totals or other aggregation without grouping can register only `aggregationFeature`. `stockFeatures` already contains both. If you use an explicit feature list, add `aggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. See the [Grouping Guide](./grouping) and [Aggregation Guide](./aggregation).
+
 > [!NOTE]
 > `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology. These are logical positions: in LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. If you migrated on an earlier beta, update `columnPinning.left` to `columnPinning.start`, `columnPinning.right` to `columnPinning.end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*` / `getRight*` table and row APIs to `getStart*` / `getEnd*`. See the [Column Pinning](#column-pinning) section below for the full mapping.
 
@@ -204,6 +207,35 @@ const table = useTable({
 })
 ```
 
+### Aggregation Feature Split
+
+Aggregation is now independent from column grouping. `stockFeatures` still includes both, so tables using it need no feature-registration change. If you declare features explicitly, add `aggregationFeature` whenever columns use `aggregationFn`, `aggregatedCell`, `getAggregationValue`, or `cell.getIsAggregated`. Add `columnGroupingFeature` and `groupedRowModel` only when you also group rows. Root totals can use aggregation without grouping.
+
+```ts
+const features = tableFeatures({
+  aggregationFeature,
+  columnGroupingFeature, // only for grouped rows
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: { sum: aggregationFn_sum },
+})
+```
+
+Custom aggregation callables have changed to context-based definitions:
+
+```ts
+// Table V8/earlier V9 betas
+const total = (columnId, leafRows, childRows) =>
+  leafRows.reduce((sum, row) => sum + row.getValue(columnId), 0)
+
+// Current V9
+const total = constructAggregationFn({
+  aggregate: ({ rows, getValue }) =>
+    rows.reduce((sum, row) => sum + Number(getValue(row)), 0),
+})
+```
+
+`column.getAggregationFn()` is now `column.getAggregationFns()` because a column can run multiple definitions. A single `aggregationFn` still returns a scalar; an array returns an object keyed by function name or descriptor `id`. The old callable `AggregationFn` and `CreatedAggregationFn` types are replaced by `AggregationFnDef`.
+
 ### Available Features
 
 | Feature           | Import Name               |
@@ -221,6 +253,7 @@ const table = useTable({
 | Column Sizing     | `columnSizingFeature`     |
 | Column Resizing   | `columnResizingFeature`   |
 | Column Grouping   | `columnGroupingFeature`   |
+| Aggregation       | `aggregationFeature`      |
 | Column Faceting   | `columnFacetingFeature`   |
 
 ---
@@ -261,6 +294,7 @@ import {
 const features = tableFeatures({
   columnFilteringFeature,
   rowSortingFeature,
+  aggregationFeature,
   columnGroupingFeature,
   rowPaginationFeature,
   filteredRowModel: createFilteredRowModel(),
@@ -1126,6 +1160,8 @@ This change improves type safety. If you were passing unusual data types, ensure
 
 - [ ] Update import: `useReactTable` → `useTable`
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`)
+- [ ] If aggregating, add `aggregationFeature`; add `columnGroupingFeature` separately only when grouping rows
+- [ ] Convert custom aggregation callables to `constructAggregationFn({ aggregate, merge? })` definitions
 - [ ] Migrate `get*RowModel()` options to `tableFeatures` slots (e.g. `filteredRowModel: createFilteredRowModel()`)
 - [ ] Register `filterFns` / `sortFns` / `aggregationFns` registries as slots on `tableFeatures` (row model factories no longer take arguments)
 - [ ] Replace `declare module` augmentation of `FilterFns`/`SortFns`/`AggregationFns` with registry-slot registration, and `FilterMeta` augmentation with the `filterMeta` slot

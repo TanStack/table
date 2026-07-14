@@ -6,11 +6,9 @@ title: aggregationFn_unique
 # Variable: aggregationFn\_unique
 
 ```ts
-const aggregationFn_unique: CreatedAggregationFn<any, any>;
+const aggregationFn_unique: AggregationFnDef<any, any, unknown, unknown[]>;
 ```
 
-Defined in: [fns/aggregationFns.ts:222](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L222)
+Defined in: [features/aggregation/aggregationFns.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L241)
 
-Collects unique leaf-row values for a grouped column.
-
-Values are compared with JavaScript `Set` semantics.
+Collects distinct row values using JavaScript `Set` semantics.

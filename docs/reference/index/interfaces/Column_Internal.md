@@ -5,7 +5,7 @@ title: Column_Internal
 
 # Interface: Column\_Internal\<TFeatures, TData, TValue\>
 
-Defined in: [types/Column.ts:46](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L46)
+Defined in: [types/Column.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L48)
 
 ## Extends
 
@@ -51,7 +51,7 @@ Omit.accessorFn
 columnDef: ColumnDefBase_All<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types/Column.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L51)
+Defined in: [types/Column.ts:53](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L53)
 
 ***
 
@@ -177,4 +177,4 @@ Omit.parent
 table: Table_Internal<TFeatures, TData>;
 ```
 
-Defined in: [types/Column.ts:52](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L52)
+Defined in: [types/Column.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L54)

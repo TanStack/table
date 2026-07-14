@@ -1,7 +1,7 @@
 ---
 name: grouping
 description: >
-  Group and aggregate rows with columnGroupingFeature, groupedRowModel, aggregationFns, groupedColumnMode, and manualGrouping. Load for grouped, placeholder, or aggregated cells and grouping interactions with expansion or pagination.
+  Group rows with columnGroupingFeature, groupedRowModel, groupedColumnMode, and manualGrouping. Load for grouped or placeholder cells and grouping interactions with expansion or pagination.
 metadata:
   {
     type: sub-skill,
@@ -15,13 +15,12 @@ sources:
   - 'TanStack/table:examples/react/grouping'
 ---
 
-This skill builds on `core`, `table-features`, and `client-vs-server`. Grouping creates row structure and aggregate values; the renderer chooses grouped-cell UI.
+This skill builds on `core`, `table-features`, and `client-vs-server`. Grouping creates row structure and the renderer chooses grouped-cell UI. Load the separate `aggregation` skill when grouped rows should also calculate values.
 
 ## Setup
 
 ```ts
 import {
-  aggregationFn_sum,
   columnGroupingFeature,
   createGroupedRowModel,
   tableFeatures,
@@ -30,14 +29,8 @@ import {
 export const features = tableFeatures({
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum },
 })
 ```
-
-Import individual `aggregationFn_*` built-ins and register only those your
-columns reference by string name or that `aggregationFn: 'auto'` should
-resolve (numbers resolve to `sum`, dates to `extent`). The full
-`aggregationFns` registry object still works but bundles every built-in.
 
 ## Core Patterns
 
@@ -45,11 +38,9 @@ resolve (numbers resolve to `sum`, dates to `extent`). The full
 const options = { groupedColumnMode: 'reorder' as const }
 const mode = cell.getIsGrouped()
   ? 'grouped'
-  : cell.getIsAggregated()
-    ? 'aggregated'
-    : cell.getIsPlaceholder()
-      ? 'placeholder'
-      : 'value'
+  : cell.getIsPlaceholder()
+    ? 'placeholder'
+    : 'value'
 ```
 
 Render these cell modes deliberately.
@@ -62,7 +53,7 @@ Wrong: `tableFeatures({ groupedRowModel: createGroupedRowModel() })`
 
 Correct: `tableFeatures({ columnGroupingFeature, groupedRowModel: createGroupedRowModel() })`
 
-The grouped slot and aggregation registry require `columnGroupingFeature`.
+The grouped row-model slot requires `columnGroupingFeature`.
 
 Source: `packages/table-core/src/types/TableFeatures.ts#FeatureSlotPrereqs`
 
@@ -95,10 +86,13 @@ Wrong: `render(cell.getValue())`
 
 Correct: `render(cell.getIsPlaceholder() ? null : cell.getValue())`
 
-Placeholder and aggregated cells do not represent ordinary leaf values.
+Placeholder cells do not represent ordinary leaf values. Group rows should
+only render their grouped cell when aggregation is not enabled.
 
 Source: `examples/react/grouping/src/main.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-grouping/` and `src/fns/aggregationFns.ts`.
+Inspect `node_modules/@tanstack/table-core/src/features/column-grouping/` for
+grouping. Load the `aggregation` skill when totals, multiple aggregations,
+grouped aggregate values, or custom definitions are part of the task.

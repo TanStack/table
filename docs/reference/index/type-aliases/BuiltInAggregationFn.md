@@ -9,4 +9,4 @@ title: BuiltInAggregationFn
 type BuiltInAggregationFn = keyof typeof aggregationFns;
 ```
 
-Defined in: [fns/aggregationFns.ts:303](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L303)
+Defined in: [features/aggregation/aggregationFns.ts:336](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L336)

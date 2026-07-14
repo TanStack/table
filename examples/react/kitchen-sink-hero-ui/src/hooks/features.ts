@@ -1,4 +1,5 @@
 import {
+  aggregationFeature,
   aggregationFn_mean,
   aggregationFn_min,
   columnFacetingFeature,
@@ -47,6 +48,7 @@ const fuzzyFilterFn = (
 }
 
 export const features = tableFeatures({
+  aggregationFeature,
   rowSortingFeature,
   rowPaginationFeature,
   rowSelectionFeature,

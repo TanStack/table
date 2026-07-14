@@ -9,7 +9,7 @@ title: ColumnDefTemplate
 type ColumnDefTemplate<TProps> = string | (props) => any;
 ```
 
-Defined in: [types/ColumnDef.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L61)
+Defined in: [types/ColumnDef.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L62)
 
 A renderable column template value.
 

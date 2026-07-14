@@ -1,4 +1,5 @@
 import type { Row_ColumnVisibility } from '../features/column-visibility/columnVisibilityFeature.types'
+import type { Row_Aggregation } from '../features/aggregation/aggregationFeature.types'
 import type { Row_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
 import type { Row_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { Row_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -18,6 +19,7 @@ export interface Row_FeatureMap<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  aggregationFeature: Row_Aggregation
   columnFilteringFeature: Row_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: Row_ColumnGrouping
   columnPinningFeature: Row_ColumnPinning<TFeatures, TData>

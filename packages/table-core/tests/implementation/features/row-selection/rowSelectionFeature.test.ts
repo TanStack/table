@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   aggregationFns,
+  aggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   constructTable,
@@ -560,6 +561,7 @@ describe('rowSelectionFeature', () => {
     // Full pipeline: filtered -> grouped -> sorted, matching v8's sourcing of
     // getFilteredSelectedRowModel (filtered) and getGroupedSelectedRowModel (sorted).
     const pipelineFeatures = testFeatures({
+      aggregationFeature,
       aggregationFns,
       columnFilteringFeature,
       columnGroupingFeature,

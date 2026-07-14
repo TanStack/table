@@ -153,7 +153,7 @@ The `assignRowPrototype` method in a table feature is responsible for adding met
 
 ##### assignCellPrototype
 
-The `assignCellPrototype` method in a table feature is responsible for adding methods to the shared `cell` prototype. For example, the [Column Grouping](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts) feature adds cell instance API methods such as `getIsGrouped` and `getIsAggregated`.
+The `assignCellPrototype` method in a table feature is responsible for adding methods to the shared `cell` prototype. For example, Column Grouping adds `getIsGrouped` and `getIsPlaceholder`, while Aggregation adds `getIsAggregated`.
 
 ### Adding a Custom Feature
 

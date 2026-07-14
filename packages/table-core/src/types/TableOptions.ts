@@ -4,6 +4,7 @@ import type { TableOptions_Columns } from '../core/columns/coreColumnsFeature.ty
 import type { TableOptions_Rows } from '../core/rows/coreRowsFeature.types'
 import type { TableOptions_Table } from '../core/table/coreTablesFeature.types'
 import type { TableOptions_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
+import type { TableOptions_Aggregation } from '../features/aggregation/aggregationFeature.types'
 import type { TableOptions_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { TableOptions_ColumnOrdering } from '../features/column-ordering/columnOrderingFeature.types'
 import type { TableOptions_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
@@ -58,6 +59,7 @@ export interface TableOptions_FeatureMap<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  aggregationFeature: TableOptions_Aggregation
   columnFilteringFeature: TableOptions_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: TableOptions_ColumnGrouping
   columnOrderingFeature: TableOptions_ColumnOrdering
@@ -74,6 +76,7 @@ export interface TableOptions_FeatureMap<
 }
 
 type TableOptions_StockFeatureKeys =
+  | 'aggregationFeature'
   | 'columnFilteringFeature'
   | 'columnGroupingFeature'
   | 'columnOrderingFeature'
@@ -133,7 +136,8 @@ export type TableOptions_All<
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
   Partial<
-    TableOptions_ColumnFiltering<TFeatures, TData> &
+    TableOptions_Aggregation &
+      TableOptions_ColumnFiltering<TFeatures, TData> &
       TableOptions_ColumnGrouping &
       TableOptions_ColumnOrdering &
       TableOptions_ColumnPinning &

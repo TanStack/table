@@ -1,0 +1,24 @@
+{
+  "name": "tanstack-solid-table-example-aggregation",
+  "description": "",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint ./src",
+    "test:types": "tsc --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "typescript": "6.0.3",
+    "vite": "^8.1.0",
+    "vite-plugin-solid": "^2.11.12"
+  },
+  "dependencies": {
+    "@tanstack/solid-table": "^9.0.0-beta.47",
+    "solid-js": "^1.9.13"
+  }
+}

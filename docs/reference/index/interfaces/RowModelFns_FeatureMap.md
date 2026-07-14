@@ -19,20 +19,20 @@ Defined in: [types/RowModelFns.ts:9](https://github.com/TanStack/table/blob/main
 
 ## Properties
 
-### columnFilteringFeature
+### aggregationFeature
 
 ```ts
-columnFilteringFeature: RowModelFns_ColumnFiltering<TFeatures, TData>;
+aggregationFeature: RowModelFns_Aggregation<TFeatures, TData>;
 ```
 
 Defined in: [types/RowModelFns.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L13)
 
 ***
 
-### columnGroupingFeature
+### columnFilteringFeature
 
 ```ts
-columnGroupingFeature: RowModelFns_ColumnGrouping<TFeatures, TData>;
+columnFilteringFeature: RowModelFns_ColumnFiltering<TFeatures, TData>;
 ```
 
 Defined in: [types/RowModelFns.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L14)

@@ -136,7 +136,7 @@ Defined in: [features/global-filtering/globalFilteringFeature.types.ts:15](https
 optional grouping: GroupingState;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L18)
+Defined in: [features/column-grouping/columnGroupingFeature.types.ts:9](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L9)
 
 #### Inherited from
 

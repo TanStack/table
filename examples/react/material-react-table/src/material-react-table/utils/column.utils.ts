@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import type { Row, StockFeatures } from '@tanstack/react-table'
 import type {
   DropdownOption,
   MRT_Column,
@@ -50,11 +49,10 @@ export const prepareColumns = <TData extends MRT_RowData>({
   columnDefs: Array<MRT_ColumnDef<TData>>
   tableOptions: MRT_DefinedTableOptions<TData>
 }): Array<MRT_DefinedColumnDef<TData>> => {
-  // `aggregationFns` / `filterFns` / `sortFns` are carried on the options object
+  // `filterFns` / `sortFns` are carried on the options object
   // at runtime (client-supplied custom fns), but aren't declared as core options
   // (they're feature-slot registries), so read them off a loose view.
   const {
-    aggregationFns = {},
     defaultDisplayColumn,
     filterFns = {},
     sortFns = {},
@@ -74,19 +72,6 @@ export const prepareColumns = <TData extends MRT_RowData>({
         tableOptions,
       })
     } else if (def.columnDefType === 'data') {
-      // assign aggregationFns if multiple aggregationFns are provided
-      if (Array.isArray(def.aggregationFn)) {
-        const aggFns = def.aggregationFn as Array<string>
-        def.aggregationFn = (
-          columnId: string,
-          leafRows: Array<Row<StockFeatures, TData>>,
-          childRows: Array<Row<StockFeatures, TData>>,
-        ) =>
-          aggFns.map((fn) =>
-            aggregationFns[fn]?.(columnId, leafRows, childRows),
-          )
-      }
-
       // assign filterFns
       if (Object.keys(filterFns).includes(columnFilterFns[def.id])) {
         def.filterFn = filterFns[columnFilterFns[def.id]] ?? filterFns.fuzzy

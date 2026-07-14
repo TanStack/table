@@ -9,7 +9,7 @@ title: filterFn_includesStringSensitive
 const filterFn_includesStringSensitive: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L100)
+Defined in: [features/column-filtering/filterFns.ts:100](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L100)
 
 Keeps rows whose stringified column value includes the filter text.
 

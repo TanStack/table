@@ -9,7 +9,7 @@ title: cell_getIsPlaceholder
 function cell_getIsPlaceholder<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:365](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L365)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:265](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L265)
 
 Checks whether this cell is a placeholder hidden by grouping.
 

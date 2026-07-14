@@ -9,7 +9,7 @@ title: cell_getIsGrouped
 function cell_getIsGrouped<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:343](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L343)
+Defined in: [features/column-grouping/columnGroupingFeature.utils.ts:243](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.utils.ts#L243)
 
 Checks whether this cell represents the grouped column for a grouped row.
 

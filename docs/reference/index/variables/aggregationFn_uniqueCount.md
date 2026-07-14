@@ -6,11 +6,9 @@ title: aggregationFn_uniqueCount
 # Variable: aggregationFn\_uniqueCount
 
 ```ts
-const aggregationFn_uniqueCount: CreatedAggregationFn<any, any>;
+const aggregationFn_uniqueCount: AggregationFnDef<any, any, unknown, number>;
 ```
 
-Defined in: [fns/aggregationFns.ts:231](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L231)
+Defined in: [features/aggregation/aggregationFns.ts:257](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L257)
 
-Counts unique leaf-row values for a grouped column.
-
-Values are compared with JavaScript `Set` semantics.
+Counts distinct row values using JavaScript `Set` semantics.

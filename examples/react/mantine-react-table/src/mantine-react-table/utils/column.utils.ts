@@ -1,5 +1,3 @@
-import type { Row, StockFeatures } from '@tanstack/react-table'
-
 import type {
   MRT_Column,
   MRT_ColumnDef,
@@ -40,7 +38,6 @@ export const prepareColumns = <TData extends MRT_RowData>({
   tableOptions: MRT_DefinedTableOptions<TData>
 }): Array<MRT_DefinedColumnDef<TData>> => {
   const {
-    aggregationFns = {},
     defaultDisplayColumn,
     filterFns = {},
     sortFns = {},
@@ -59,19 +56,6 @@ export const prepareColumns = <TData extends MRT_RowData>({
         tableOptions,
       })
     } else if (columnDef.columnDefType === 'data') {
-      // assign aggregationFns if multiple aggregationFns are provided
-      if (Array.isArray(columnDef.aggregationFn)) {
-        const aggFns = columnDef.aggregationFn as Array<string>
-        columnDef.aggregationFn = (
-          columnId: string,
-          leafRows: Array<Row<StockFeatures, TData>>,
-          childRows: Array<Row<StockFeatures, TData>>,
-        ) =>
-          aggFns.map((fn) =>
-            aggregationFns[fn]?.(columnId, leafRows, childRows),
-          )
-      }
-
       // assign filterFns
       if (Object.keys(filterFns).includes(columnFilterFns[columnDef.id])) {
         columnDef.filterFn =

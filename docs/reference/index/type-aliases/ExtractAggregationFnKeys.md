@@ -11,16 +11,9 @@ type ExtractAggregationFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | BuiltInAggregationFn : TFeatures extends object ? Extract<keyof TAggregationFns, string> : keyof AggregationFns;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.types.ts#L108)
+Defined in: [features/aggregation/aggregationFeature.types.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L101)
 
-Resolves the valid string names for `columnDef.aggregationFn` for a feature
-set.
-
-When the features object declares an `aggregationFns` registry
-(`tableFeatures({ ..., aggregationFns })`), its keys are the only valid
-names; a name is only assignable if an aggregation function is actually
-registered for it. Otherwise this falls back to the global
-declaration-merged `AggregationFns` interface.
+String names available from a feature set's aggregation registry.
 
 ## Type Parameters
 

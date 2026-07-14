@@ -6,12 +6,10 @@ title: aggregationFn_sum
 # Variable: aggregationFn\_sum
 
 ```ts
-const aggregationFn_sum: CreatedAggregationFn<any, any>;
+const aggregationFn_sum: AggregationFnDef<any, any, unknown, number>;
 ```
 
-Defined in: [fns/aggregationFns.ts:68](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/aggregationFns.ts#L68)
+Defined in: [features/aggregation/aggregationFns.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L45)
 
-Sums numeric child-row values for a grouped column.
-
-Non-number values contribute `0`. Child rows are used so nested group totals
-can reuse already aggregated values.
+Sums numeric row values. Non-number values contribute zero. As in the
+previous API, `NaN` is a number and therefore propagates through the sum.

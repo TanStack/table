@@ -1,4 +1,5 @@
 import { columnFacetingFeature } from './column-faceting/columnFacetingFeature'
+import { aggregationFeature } from './aggregation/aggregationFeature'
 import { columnFilteringFeature } from './column-filtering/columnFilteringFeature'
 import { columnGroupingFeature } from './column-grouping/columnGroupingFeature'
 import { columnOrderingFeature } from './column-ordering/columnOrderingFeature'
@@ -14,6 +15,7 @@ import { rowSelectionFeature } from './row-selection/rowSelectionFeature'
 import { rowSortingFeature } from './row-sorting/rowSortingFeature'
 
 export interface StockFeatures {
+  aggregationFeature: typeof aggregationFeature
   columnFacetingFeature: typeof columnFacetingFeature
   columnFilteringFeature: typeof columnFilteringFeature
   columnGroupingFeature: typeof columnGroupingFeature
@@ -36,6 +38,7 @@ export interface StockFeatures {
  * Use individual feature exports for tree-shaking, or this aggregate when a table should include every built-in feature.
  */
 export const stockFeatures: StockFeatures = {
+  aggregationFeature,
   columnFacetingFeature,
   columnFilteringFeature,
   columnGroupingFeature,

@@ -9,7 +9,7 @@ title: filterFns
 const filterFns: object;
 ```
 
-Defined in: [fns/filterFns.ts:434](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L434)
+Defined in: [features/column-filtering/filterFns.ts:434](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L434)
 
 The built-in filter function registry.
 

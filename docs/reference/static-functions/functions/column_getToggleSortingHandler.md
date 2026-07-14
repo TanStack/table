@@ -9,7 +9,7 @@ title: column_getToggleSortingHandler
 function column_getToggleSortingHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:496](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L496)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:494](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L494)
 
 Creates a header event handler that toggles this column's sorting.
 

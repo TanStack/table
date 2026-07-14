@@ -5,7 +5,7 @@ title: TableOptions_Core
 
 # Interface: TableOptions\_Core\<TFeatures, TData\>
 
-Defined in: [types/TableOptions.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L30)
+Defined in: [types/TableOptions.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L31)
 
 Core options that are always available on a table, before optional feature
 options are mixed in.

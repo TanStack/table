@@ -4,9 +4,6 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   FlexRender,
   TableController,
-  aggregationFn_mean,
-  aggregationFn_median,
-  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createColumnHelper,
@@ -47,11 +44,6 @@ const features = tableFeatures({
     alphanumeric: sortFn_alphanumeric,
     text: sortFn_text,
   },
-  aggregationFns: {
-    mean: aggregationFn_mean,
-    median: aggregationFn_median,
-    sum: aggregationFn_sum,
-  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -70,14 +62,9 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
     }),
     columnHelper.accessor('age', {
       header: () => 'Age',
-      aggregatedCell: ({ getValue }) =>
-        Math.round(getValue<number>() * 100) / 100,
-      aggregationFn: 'median',
     }),
     columnHelper.accessor('visits', {
       header: () => html`<span>Visits</span>`,
-      aggregationFn: 'sum',
-      aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
     }),
     columnHelper.accessor('status', {
       header: 'Status',
@@ -85,9 +72,6 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
     columnHelper.accessor('progress', {
       header: 'Profile Progress',
       cell: ({ getValue }) => Math.round(getValue<number>() * 100) / 100 + '%',
-      aggregationFn: 'mean',
-      aggregatedCell: ({ getValue }) =>
-        Math.round(getValue<number>() * 100) / 100 + '%',
     }),
   ],
 )
@@ -111,7 +95,7 @@ class LitTableExample extends LitElement {
         // onGroupingChange: setGrouping,
         // enableGrouping: false, // disable grouping for every column; default true
         // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
-        // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
+        // manualGrouping: true, // pass rows that are already grouped, for example from a server
         debugTable: true,
       },
       (state) => ({
@@ -183,11 +167,9 @@ class LitTableExample extends LitElement {
                         <td
                           style="background: ${cell.getIsGrouped()
                             ? '#0aff0082'
-                            : cell.getIsAggregated()
-                              ? '#ffa50078'
-                              : cell.getIsPlaceholder()
-                                ? '#ff000042'
-                                : 'white'}"
+                            : cell.getIsPlaceholder()
+                              ? '#ff000042'
+                              : 'white'}"
                         >
                           ${cell.getIsGrouped()
                             ? html`<button
@@ -200,11 +182,9 @@ class LitTableExample extends LitElement {
                                 ${FlexRender({ cell })}
                                 (${row.subRows.length.toLocaleString()})
                               </button>`
-                            : cell.getIsAggregated()
-                              ? FlexRender({ cell })
-                              : cell.getIsPlaceholder()
-                                ? null
-                                : FlexRender({ cell })}
+                            : cell.getIsPlaceholder() || row.getIsGrouped()
+                              ? null
+                              : FlexRender({ cell })}
                         </td>
                       `,
                     )}

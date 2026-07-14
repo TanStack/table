@@ -1,5 +1,5 @@
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
-import type { BuiltInSortFn } from '../../fns/sortFns'
+import type { BuiltInSortFn } from './sortFns'
 import type {
   OnChangeFn,
   RowData,

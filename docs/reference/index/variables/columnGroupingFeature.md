@@ -9,6 +9,6 @@ title: columnGroupingFeature
 const columnGroupingFeature: TableFeature;
 ```
 
-Defined in: [features/column-grouping/columnGroupingFeature.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts#L29)
+Defined in: [features/column-grouping/columnGroupingFeature.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/columnGroupingFeature.ts#L26)
 
-Feature that adds column grouping state, aggregation defaults, and grouped row APIs.
+Feature that adds column grouping state and grouped row APIs.

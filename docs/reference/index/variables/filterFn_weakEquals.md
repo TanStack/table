@@ -9,7 +9,7 @@ title: filterFn_weakEquals
 const filterFn_weakEquals: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L88)
+Defined in: [features/column-filtering/filterFns.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L88)
 
 Keeps rows whose column value is loosely equal to the filter value.
 

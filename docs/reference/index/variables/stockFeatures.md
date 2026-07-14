@@ -9,7 +9,7 @@ title: stockFeatures
 const stockFeatures: StockFeatures;
 ```
 
-Defined in: [features/stockFeatures.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L38)
+Defined in: [features/stockFeatures.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L40)
 
 The complete set of stock optional table features.
 

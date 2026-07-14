@@ -1,9 +1,6 @@
 import Alpine from 'alpinejs'
 import {
   FlexRender,
-  aggregationFn_mean,
-  aggregationFn_median,
-  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createColumnHelper,
@@ -46,11 +43,6 @@ const features = tableFeatures({
     alphanumeric: sortFn_alphanumeric,
     text: sortFn_text,
   },
-  aggregationFns: {
-    mean: aggregationFn_mean,
-    median: aggregationFn_median,
-    sum: aggregationFn_sum,
-  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -72,14 +64,9 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
     }),
     columnHelper.accessor('age', {
       header: () => 'Age',
-      aggregatedCell: ({ getValue }) =>
-        Math.round(getValue<number>() * 100) / 100,
-      aggregationFn: 'median',
     }),
     columnHelper.accessor('visits', {
       header: () => '<span>Visits</span>',
-      aggregationFn: 'sum',
-      aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
     }),
     columnHelper.accessor('status', {
       header: 'Status',
@@ -87,9 +74,6 @@ const columns: Array<ColumnDef<typeof features, Person>> = columnHelper.columns(
     columnHelper.accessor('progress', {
       header: 'Profile Progress',
       cell: ({ getValue }) => Math.round(getValue<number>() * 100) / 100 + '%',
-      aggregationFn: 'mean',
-      aggregatedCell: ({ getValue }) =>
-        Math.round(getValue<number>() * 100) / 100 + '%',
     }),
   ],
 )
@@ -109,7 +93,7 @@ Alpine.data('table', () => {
     // onGroupingChange: setGrouping,
     // enableGrouping: false, // disable grouping for every column; default true
     // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
-    // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
+    // manualGrouping: true, // pass rows that are already grouped, for example from a server
     debugTable: true,
   })
 
@@ -118,7 +102,6 @@ Alpine.data('table', () => {
     FlexRender,
     cellBackground(cell: any) {
       if (cell.getIsGrouped()) return '#0aff0082'
-      if (cell.getIsAggregated()) return '#ffa50078'
       if (cell.getIsPlaceholder()) return '#ff000042'
       return 'white'
     },

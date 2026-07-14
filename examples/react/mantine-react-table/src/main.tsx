@@ -71,17 +71,21 @@ const columns = columnHelper.columns([
         currency: 'USD',
         maximumFractionDigits: 0,
       }),
-    aggregationFn: 'mean',
-    AggregatedCell: ({ cell }) => (
-      <Box component="span" fs="italic">
-        Avg:{' '}
-        {cell.getValue<number>().toLocaleString('en-US', {
+    aggregationFn: ['mean', 'min'],
+    AggregatedCell: ({ cell }) => {
+      const value = cell.getValue<{ mean: number; min: number }>()
+      const format = (amount: number) =>
+        amount.toLocaleString('en-US', {
           style: 'currency',
           currency: 'USD',
           maximumFractionDigits: 0,
-        })}
-      </Box>
-    ),
+        })
+      return (
+        <Box component="span" fs="italic">
+          Avg: {format(value.mean)} · Min: {format(value.min)}
+        </Box>
+      )
+    },
   }),
   columnHelper.accessor('status', {
     header: 'Status',

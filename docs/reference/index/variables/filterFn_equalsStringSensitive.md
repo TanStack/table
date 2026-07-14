@@ -9,7 +9,7 @@ title: filterFn_equalsStringSensitive
 const filterFn_equalsStringSensitive: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L140)
+Defined in: [features/column-filtering/filterFns.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L140)
 
 Keeps rows whose stringified column value exactly equals the filter text.
 

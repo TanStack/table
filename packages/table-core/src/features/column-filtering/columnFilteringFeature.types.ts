@@ -1,4 +1,4 @@
-import type { BuiltInFilterFn } from '../../fns/filterFns'
+import type { BuiltInFilterFn } from './filterFns'
 import type {
   CellData,
   OnChangeFn,

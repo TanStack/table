@@ -22,6 +22,7 @@ This skill builds on `core`. Read it first for the headless model and stable inp
 
 ```ts
 import {
+  aggregationFeature,
   aggregationFn_sum,
   columnGroupingFeature,
   createFilteredRowModel,
@@ -37,6 +38,7 @@ export const features = tableFeatures({
   columnFilteringFeature,
   filteredRowModel: createFilteredRowModel(),
   filterFns: { includesString: filterFn_includesString },
+  aggregationFeature,
   columnGroupingFeature,
   aggregationFns: { sum: aggregationFn_sum },
   rowSortingFeature,
@@ -66,6 +68,7 @@ const features = tableFeatures({
   filterFns: { includesString: filterFn_includesString },
   rowSortingFeature,
   sortFns: { alphanumeric: sortFn_alphanumeric },
+  aggregationFeature,
   columnGroupingFeature,
   aggregationFns: { sum: aggregationFn_sum },
 })
@@ -73,7 +76,7 @@ const features = tableFeatures({
 
 `filterFns`, `sortFns`, and `aggregationFns` are feature slots, not table
 options. They respectively require `columnFilteringFeature`,
-`rowSortingFeature`, and `columnGroupingFeature`. Import individual built-ins
+`rowSortingFeature`, and `aggregationFeature`. Import individual built-ins
 (`filterFn_*`, `sortFn_*`, `aggregationFn_*`) and register them under their
 conventional keys; the full registry objects (`filterFns`, `sortFns`,
 `aggregationFns` exports) still work but bundle every built-in. A registered

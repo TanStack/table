@@ -1,0 +1,162 @@
+<div class="demo-root">
+  <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+  <button class="demo-button demo-button-spaced" (click)="stressTest()">
+    Stress Test (200k rows)
+  </button>
+  <div class="spacer-sm"></div>
+  <table>
+    <thead>
+      @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+        <tr>
+          @for (header of headerGroup.headers; track header.id) {
+            <th [attr.colSpan]="header.colSpan">
+              @if (header.isPlaceholder) {
+                <ng-container />
+              } @else {
+                <div>
+                  @if (header.column.getCanGroup()) {
+                    <!-- If the header can be grouped, let's add a toggle -->
+                    <button (click)="header.column.toggleGrouping()" [style.cursor]="'pointer'">
+                      @if (header.column.getIsGrouped()) {
+                        🛑({{ header.column.getGroupedIndex() }})
+                      } @else {
+                        👊
+                      }
+                    </button>
+                  }
+                  <ng-container *flexRenderHeader="header; let header">
+                    <span>{{ header }}</span>
+                  </ng-container>
+                </div>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </thead>
+    <tbody>
+      @for (row of table.getRowModel().rows; track row.id) {
+        <tr>
+          @for (cell of row.getAllCells(); track cell.id) {
+            <td
+              [style.background]="
+                cell.getIsGrouped()
+                  ? '#0aff0082'
+                  : cell.getIsAggregated()
+                    ? '#ffa50078'
+                    : cell.getIsPlaceholder()
+                      ? '#ff000042'
+                      : 'white'
+              "
+            >
+              @if (cell.getIsGrouped()) {
+                <!-- If it's a grouped cell, add an expander and row count -->
+                <button
+                  (click)="row.toggleExpanded()"
+                  [style.cursor]="row.getCanExpand() ? 'pointer' : 'normal'"
+                >
+                  {{ row.getIsExpanded() ? '👇 ' : '👉' }}
+                </button>
+                <ng-container *flexRenderCell="cell; let cell">
+                  <span>{{ cell }}</span>
+                </ng-container>
+                {{ ' ' }}{{ row.subRows.length.toLocaleString() }}
+              } @else if (cell.getIsAggregated()) {
+                <!-- If the cell is aggregated, use the Aggregated -->
+                <!-- renderer for cell -->
+                <ng-container
+                  *flexRender="
+                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell;
+                    props: cell.getContext();
+                    let aggregatedCell
+                  "
+                >
+                  {{ aggregatedCell }}
+                </ng-container>
+              } @else if (cell.getIsPlaceholder()) {
+              } @else {
+                <!-- For cells with repeated values, render null-->
+                <!-- Otherwise, just render the regular cell-->
+                <ng-container *flexRenderCell="cell; let cell">
+                  {{ cell }}
+                </ng-container>
+              }
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+    <tfoot>
+      @for (footerGroup of table.getFooterGroups(); track footerGroup.id) {
+        <tr>
+          @for (footer of footerGroup.headers; track footer.id) {
+            <th [attr.colSpan]="footer.colSpan">
+              @if (!footer.isPlaceholder) {
+                <ng-container *flexRenderFooter="footer; let footerCell">{{
+                  footerCell
+                }}</ng-container>
+              }
+            </th>
+          }
+        </tr>
+      }
+    </tfoot>
+  </table>
+
+  <div class="spacer-sm"></div>
+  <div class="controls">
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.setPageIndex(0)"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;&lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.previousPage()"
+      [disabled]="!table.getCanPreviousPage()"
+    >
+      &lt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.nextPage()"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;
+    </button>
+    <button
+      class="demo-button demo-button-sm"
+      (click)="table.setPageIndex(table.getPageCount() - 1)"
+      [disabled]="!table.getCanNextPage()"
+    >
+      &gt;&gt;
+    </button>
+    <span class="inline-controls">
+      <div>Page</div>
+      <strong>
+        {{ (table.atoms.pagination.get().pageIndex + 1).toLocaleString() }} of
+        {{ table.getPageCount().toLocaleString() }}
+      </strong>
+    </span>
+    <span class="inline-controls">
+      | Go to page:
+      <input
+        type="number"
+        [value]="table.atoms.pagination.get().pageIndex + 1"
+        (input)="onPageInputChange($event)"
+        class="page-size-input"
+      />
+    </span>
+
+    <select [value]="table.atoms.pagination.get().pageSize" (change)="onPageSizeChange($event)">
+      @for (pageSize of [10, 20, 30, 40, 50]; track pageSize) {
+        <option [value]="pageSize">Show {{ pageSize }}</option>
+      }
+    </select>
+  </div>
+  <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
+  <div></div>
+  <pre>{{ stringifiedState() }}</pre>
+</div>

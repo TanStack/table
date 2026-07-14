@@ -9,7 +9,7 @@ title: filterFn_inDateRange
 const filterFn_inDateRange: CreatedFilterFn<any, any>;
 ```
 
-Defined in: [fns/filterFns.ts:323](https://github.com/TanStack/table/blob/main/packages/table-core/src/fns/filterFns.ts#L323)
+Defined in: [features/column-filtering/filterFns.ts:323](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/filterFns.ts#L323)
 
 Keeps rows whose date value is inside an inclusive `[min, max]` date range.
 
