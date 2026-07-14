@@ -60,10 +60,16 @@ export const ColumnFaceting: TableFeature = {
 
       return column._getFacetedRowModel()
     }
+    let getFacetedUniqueValues = table.options.getFacetedUniqueValues
     column._getFacetedUniqueValues =
-      table.options.getFacetedUniqueValues &&
-      table.options.getFacetedUniqueValues(table, column.id)
+      getFacetedUniqueValues && getFacetedUniqueValues(table, column.id)
     column.getFacetedUniqueValues = () => {
+      if (getFacetedUniqueValues !== table.options.getFacetedUniqueValues) {
+        getFacetedUniqueValues = table.options.getFacetedUniqueValues
+        column._getFacetedUniqueValues =
+          getFacetedUniqueValues && getFacetedUniqueValues(table, column.id)
+      }
+
       if (!column._getFacetedUniqueValues) {
         return new Map()
       }

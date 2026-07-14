@@ -41,10 +41,16 @@ export const GlobalFaceting: TableFeature = {
       return table._getGlobalFacetedRowModel()
     }
 
+    let getFacetedUniqueValues = table.options.getFacetedUniqueValues
     table._getGlobalFacetedUniqueValues =
-      table.options.getFacetedUniqueValues &&
-      table.options.getFacetedUniqueValues(table, '__global__')
+      getFacetedUniqueValues && getFacetedUniqueValues(table, '__global__')
     table.getGlobalFacetedUniqueValues = () => {
+      if (getFacetedUniqueValues !== table.options.getFacetedUniqueValues) {
+        getFacetedUniqueValues = table.options.getFacetedUniqueValues
+        table._getGlobalFacetedUniqueValues =
+          getFacetedUniqueValues && getFacetedUniqueValues(table, '__global__')
+      }
+
       if (!table._getGlobalFacetedUniqueValues) {
         return new Map()
       }
