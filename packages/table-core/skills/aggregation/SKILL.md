@@ -11,6 +11,7 @@ metadata:
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/guide/aggregation.md'
+  - 'TanStack/table:docs/framework/react/guide/aggregation.md'
   - 'TanStack/table:packages/table-core/src/features/aggregation'
   - 'TanStack/table:examples/react/aggregation'
   - 'TanStack/table:examples/react/grouped-aggregation'

@@ -8,7 +8,7 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 - [Grouping](../examples/grouping)
 
-Aggregation is an independent feature. See the core [Aggregation Guide](../../../guide/aggregation) for totals, multiple aggregations, custom definitions, and grouped aggregate values.
+> **Note:** `columnGroupingFeature` and `aggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 
@@ -22,15 +22,11 @@ import {
   tableFeatures,
   columnGroupingFeature,
   createGroupedRowModel,
-  aggregationFeature,
-  aggregationFn_sum,
 } from '@tanstack/svelte-table'
 
 const features = tableFeatures({
-  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(), // if using client-side grouping
-  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = createTable({
@@ -41,8 +37,6 @@ const table = createTable({
   },
 })
 ```
-
-> **NOTE**: Spreading the entire built-in registry (`aggregationFns: { ...aggregationFns }`) still works, but it puts every built-in aggregation function in your bundle. Registering just the functions you use, or passing a function directly to the `aggregationFn` column option, is recommended.
 
 ## Grouping (Svelte) Guide
 
@@ -62,15 +56,11 @@ import {
   tableFeatures,
   columnGroupingFeature,
   createGroupedRowModel,
-  aggregationFeature,
-  aggregationFn_sum,
 } from '@tanstack/svelte-table'
 
 const features = tableFeatures({
-  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = createTable({
@@ -84,12 +74,10 @@ To allow the user to expand and collapse the grouped rows, you can use the expan
 
 ```ts
 const features = tableFeatures({
-  aggregationFeature,
   columnGroupingFeature,
   rowExpandingFeature,
   groupedRowModel: createGroupedRowModel(),
   expandedRowModel: createExpandedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = createTable({
@@ -122,74 +110,9 @@ const table = createTable({
 })
 ```
 
-### Aggregations
-
-When both features are registered, grouped rows can aggregate data with the `aggregationFn` column option. It can be a registered name, an inline definition, or an array of aggregations.
-
-```ts
-const column = columnHelper.accessor('key', {
-  aggregationFn: 'sum',
-})
-```
-
-In the above example, the sum aggregation function will be used to aggregate the data in the grouped rows.
-By default (`aggregationFn: 'auto'`), numeric columns use the `sum` aggregation function and date columns use the `extent` aggregation function, resolved from the `aggregationFns` registry (a development warning fires if the chosen function is not registered). Other column types are left unaggregated. You can override this behavior by specifying the `aggregationFn` option in the column definition.
-
-There are several built-in aggregation functions that you can use:
-
-- sum - Sums the values in the grouped rows.
-- count - Counts the number of rows in the grouped rows.
-- min - Finds the minimum value in the grouped rows.
-- max - Finds the maximum value in the grouped rows.
-- extent - Finds the extent (min and max) of the values in the grouped rows.
-- mean - Finds the mean of the values in the grouped rows.
-- median - Finds the median of the values in the grouped rows.
-- unique - Returns an array of unique values in the grouped rows.
-- uniqueCount - Counts the number of unique values in the grouped rows.
-- first - Returns the first leaf value in the grouped rows.
-- last - Returns the last leaf value in the grouped rows.
-
-#### Custom Aggregations
-
-You can register context-based custom definitions and reference them by name.
-
-```ts
-const myCustomAggregation = constructAggregationFn({
-  aggregate: ({ rows, getValue }) =>
-    rows
-      .map((row) => getValue(row))
-      .filter(Boolean)
-      .join(', '),
-})
-
-const features = tableFeatures({
-  aggregationFeature,
-  columnGroupingFeature,
-  groupedRowModel: createGroupedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum, myCustomAggregation },
-})
-
-const table = createTable({
-  features,
-  // other options...
-})
-```
-
-The context supplies normalized terminal `rows`, `getValue`, `column`, `table`, and an optional `groupingRow`. You can then use the definition in a column's `aggregationFn` option:
-
-```ts
-const column = columnHelper.accessor('key', {
-  aggregationFn: 'myCustomAggregation',
-})
-```
-
-> **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, register the function in the `aggregationFns` slot of `tableFeatures({...})` as shown above. TypeScript infers the available aggregation function names from that registry. Alternatively, skip the registry entirely by passing the function directly to the `aggregationFn` column option.
-
-For efficient nested grouping, a definition can also provide `merge({ childResults, childRows })`. See the [Aggregation Guide](../../../guide/aggregation#custom-aggregation-definitions).
-
 ### Manual Grouping
 
-If you are doing server-side grouping and aggregation, you can enable manual grouping using the manualGrouping option. When this option is set to true, the table will not automatically group rows using getGroupedRowModel() and instead will expect you to manually group the rows before passing them to the table.
+If you are doing server-side grouping, you can enable manual grouping using the manualGrouping option. When this option is set to true, the table will not automatically group rows using getGroupedRowModel() and instead will expect you to group the rows before passing them to the table.
 
 ```ts
 const features = tableFeatures({ columnGroupingFeature })
@@ -274,8 +197,6 @@ Cells expose grouping and placeholder helpers:
 cell.getIsGrouped()
 cell.getIsPlaceholder()
 ```
-
-`cell.getIsAggregated()`, `column.getAutoAggregationFn()`, `column.getAggregationFns()`, and `column.getAggregationValue()` belong to `aggregationFeature`.
 
 The table instance exposes grouped and pre-grouped row models:
 

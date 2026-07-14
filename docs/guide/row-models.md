@@ -28,17 +28,17 @@ Row models run under the hood of TanStack Table to transform your original data 
 
 You should only add the row models that you need. Pass the row model factories as slots directly inside your `tableFeatures()` call alongside your feature objects:
 
-| Slot Key              | Factory Function              | Purpose                           |
-| --------------------- | ----------------------------- | --------------------------------- |
-| (automatic)           | (none)                        | Core row model (always included)  |
-| `filteredRowModel`    | `createFilteredRowModel()`    | Filtering (column + global)       |
-| `sortedRowModel`      | `createSortedRowModel()`      | Sorting                           |
-| `paginatedRowModel`   | `createPaginatedRowModel()`   | Pagination                        |
-| `expandedRowModel`    | `createExpandedRowModel()`    | Row expanding                     |
-| `groupedRowModel`     | `createGroupedRowModel()`     | Grouping and aggregation          |
-| `facetedRowModel`     | `createFacetedRowModel()`     | Faceted filtering                 |
-| `facetedMinMaxValues` | `createFacetedMinMaxValues()` | Min/max for faceted filters       |
-| `facetedUniqueValues` | `createFacetedUniqueValues()` | Unique values for faceted filters |
+| Slot Key              | Factory Function              | Purpose                            |
+| --------------------- | ----------------------------- | ---------------------------------- |
+| (automatic)           | (none)                        | Core row model (always included)   |
+| `filteredRowModel`    | `createFilteredRowModel()`    | Filtering (column + global)        |
+| `sortedRowModel`      | `createSortedRowModel()`      | Sorting                            |
+| `paginatedRowModel`   | `createPaginatedRowModel()`   | Pagination                         |
+| `expandedRowModel`    | `createExpandedRowModel()`    | Row expanding                      |
+| `groupedRowModel`     | `createGroupedRowModel()`     | Grouping; aggregation when enabled |
+| `facetedRowModel`     | `createFacetedRowModel()`     | Faceted filtering                  |
+| `facetedMinMaxValues` | `createFacetedMinMaxValues()` | Min/max for faceted filters        |
+| `facetedUniqueValues` | `createFacetedUniqueValues()` | Unique values for faceted filters  |
 
 The factory functions no longer accept `filterFns`, `sortFns`, or `aggregationFns` as arguments. Those function maps are registered as their own named slots on the features object (see [Function Registries](#function-registries) below).
 
@@ -138,8 +138,8 @@ For normal rendering use cases, you will probably only need to use the `table.ge
 - `getFilteredRowModel` - returns a row model that accounts for column filtering and global filtering.
 - `getPreFilteredRowModel` - returns a row model before column filtering and global filtering are applied.
 
-- `getGroupedRowModel` - returns a row model that applies grouping and aggregation to the data and creates sub-rows.
-- `getPreGroupedRowModel` - returns a row model before grouping and aggregation are applied.
+- `getGroupedRowModel` - returns a row model that applies grouping and creates sub-rows. When `aggregationFeature` is also registered, configured aggregate values are computed for those grouped rows.
+- `getPreGroupedRowModel` - returns the row model before grouping. It is also the default row set used by `column.getAggregationValue()` for grand totals.
 
 - `getSortedRowModel` - returns a row model that has had sorting applied to it.
 - `getPreSortedRowModel` - returns a row model before sorting is applied (rows are in original order).

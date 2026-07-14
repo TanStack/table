@@ -40,13 +40,7 @@
           @for (cell of row.getAllCells(); track cell.id) {
             <td
               [style.background]="
-                cell.getIsGrouped()
-                  ? '#0aff0082'
-                  : cell.getIsAggregated()
-                    ? '#ffa50078'
-                    : cell.getIsPlaceholder()
-                      ? '#ff000042'
-                      : 'white'
+                cell.getIsGrouped() ? '#0aff0082' : cell.getIsPlaceholder() ? '#ff000042' : 'white'
               "
             >
               @if (cell.getIsGrouped()) {
@@ -61,19 +55,7 @@
                   <span>{{ cell }}</span>
                 </ng-container>
                 {{ ' ' }}{{ row.subRows.length.toLocaleString() }}
-              } @else if (cell.getIsAggregated()) {
-                <!-- If the cell is aggregated, use the Aggregated -->
-                <!-- renderer for cell -->
-                <ng-container
-                  *flexRender="
-                    cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell;
-                    props: cell.getContext();
-                    let aggregatedCell
-                  "
-                >
-                  {{ aggregatedCell }}
-                </ng-container>
-              } @else if (cell.getIsPlaceholder()) {
+              } @else if (cell.getIsPlaceholder() || row.getIsGrouped()) {
               } @else {
                 <!-- For cells with repeated values, render null-->
                 <!-- Otherwise, just render the regular cell-->

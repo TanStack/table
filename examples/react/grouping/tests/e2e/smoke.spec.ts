@@ -71,6 +71,8 @@ test('regenerates table data', async ({ page }) => {
 
     await expect(table).toBeVisible()
     await expect(bodyRows.first()).toBeVisible()
+    await expect(table.locator('tfoot')).toHaveCount(0)
+    await expect(table).not.toContainText('Grand Total')
     await expect(regenerateButton).toBeVisible()
 
     const firstRowBefore = await getFirstBodyRowText(table)

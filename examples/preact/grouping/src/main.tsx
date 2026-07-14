@@ -2,10 +2,6 @@ import { useMemo, useState } from 'preact/hooks'
 import { render } from 'preact'
 import './index.css'
 import {
-  aggregationFeature,
-  aggregationFn_mean,
-  aggregationFn_median,
-  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createExpandedRowModel,
@@ -28,7 +24,6 @@ import type { Person } from './makeData'
 // this example happens to use the createTableHook pattern, but it is not required
 const { useAppTable, createAppColumnHelper } = createTableHook({
   features: {
-    aggregationFeature,
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,
@@ -46,11 +41,6 @@ const { useAppTable, createAppColumnHelper } = createTableHook({
     sortFns: {
       alphanumeric: sortFn_alphanumeric,
       text: sortFn_text,
-    },
-    aggregationFns: {
-      mean: aggregationFn_mean,
-      median: aggregationFn_median,
-      sum: aggregationFn_sum,
     },
   },
 })
@@ -77,14 +67,9 @@ function App() {
         }),
         columnHelper.accessor('age', {
           header: () => 'Age',
-          aggregatedCell: ({ getValue }) =>
-            Math.round(getValue<number>() * 100) / 100,
-          aggregationFn: 'median',
         }),
         columnHelper.accessor('visits', {
           header: () => <span>Visits</span>,
-          aggregationFn: 'sum',
-          aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
         }),
         columnHelper.accessor('status', {
           header: 'Status',
@@ -92,9 +77,6 @@ function App() {
         columnHelper.accessor('progress', {
           header: 'Profile Progress',
           cell: ({ getValue }) =>
-            Math.round(getValue<number>() * 100) / 100 + '%',
-          aggregationFn: 'mean',
-          aggregatedCell: ({ getValue }) =>
             Math.round(getValue<number>() * 100) / 100 + '%',
         }),
       ]),
@@ -115,7 +97,7 @@ function App() {
       // onGroupingChange: setGrouping,
       // enableGrouping: false, // disable grouping for every column; default true
       // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
-      // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
+      // manualGrouping: true, // pass rows that are already grouped, for example from a server
       debugTable: true,
     },
     (state) => state, // default selector
@@ -168,11 +150,9 @@ function App() {
                       style={{
                         background: cell.getIsGrouped()
                           ? '#0aff0082'
-                          : cell.getIsAggregated()
-                            ? '#ffa50078'
-                            : cell.getIsPlaceholder()
-                              ? '#ff000042'
-                              : 'white',
+                          : cell.getIsPlaceholder()
+                            ? '#ff000042'
+                            : 'white',
                       }}
                     >
                       {cell.getIsGrouped() ? (
@@ -189,11 +169,7 @@ function App() {
                             {row.subRows.length.toLocaleString()})
                           </button>
                         </>
-                      ) : cell.getIsAggregated() ? (
-                        // If the cell is aggregated, use the Aggregated
-                        // renderer for cell
-                        <table.FlexRender cell={cell} />
-                      ) : cell.getIsPlaceholder() ? null : ( // For cells with repeated values, render null
+                      ) : cell.getIsPlaceholder() ? null : row.getIsGrouped() ? null : ( // For cells with repeated values, render null
                         // Otherwise, just render the regular cell
                         <table.FlexRender cell={cell} />
                       )}

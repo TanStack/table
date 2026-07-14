@@ -5,8 +5,6 @@ import {
   useTable,
   FlexRenderCell,
   FlexRenderHeader,
-  flexRender,
-  FlexRenderComponentConfig,
   tableFeatures,
   columnGroupingFeature,
   rowExpandingFeature,
@@ -18,9 +16,6 @@ import {
   createPaginatedRowModel,
   createFilteredRowModel,
   createSortedRowModel,
-  aggregationFn_mean,
-  aggregationFn_median,
-  aggregationFn_sum,
   filterFn_includesString,
   filterFn_inNumberRange,
   sortFn_alphanumeric,
@@ -29,11 +24,9 @@ import {
   type Column,
   type Row,
   type Cell,
-  type CellContext,
   type GroupingState,
   type SortingState,
 } from '@tanstack/ember-table'
-import type { ComponentLike, ContentValue } from '@glint/template'
 import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
@@ -47,11 +40,6 @@ const features = tableFeatures({
   paginatedRowModel: createPaginatedRowModel(),
   filteredRowModel: createFilteredRowModel(),
   sortedRowModel: createSortedRowModel(),
-  aggregationFns: {
-    mean: aggregationFn_mean,
-    median: aggregationFn_median,
-    sum: aggregationFn_sum,
-  },
   filterFns: {
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
@@ -85,18 +73,12 @@ const columns = columnHelper.columns([
     columns: columnHelper.columns([
       columnHelper.accessor('age', {
         header: () => 'Age',
-        aggregationFn: 'median',
-        aggregatedCell: ({ getValue }) =>
-          Math.round(getValue<number>() * 100) / 100,
       }),
       columnHelper.group({
         header: 'More Info',
         columns: columnHelper.columns([
           columnHelper.accessor('visits', {
             header: () => 'Visits',
-            aggregationFn: 'sum',
-            aggregatedCell: ({ getValue }) =>
-              getValue<number>().toLocaleString(),
           }),
           columnHelper.accessor('status', {
             header: 'Status',
@@ -104,9 +86,6 @@ const columns = columnHelper.columns([
           columnHelper.accessor('progress', {
             header: 'Profile Progress',
             cell: ({ getValue }) =>
-              `${Math.round(getValue<number>() * 100) / 100}%`,
-            aggregationFn: 'mean',
-            aggregatedCell: ({ getValue }) =>
               `${Math.round(getValue<number>() * 100) / 100}%`,
           }),
         ]),
@@ -116,83 +95,6 @@ const columns = columnHelper.columns([
 ])
 
 const PAGE_SIZES = [10, 20, 30, 40, 50]
-
-// --- Aggregated cell renderer (renders aggregatedCell ?? cell) ---
-
-type RenderOptions = Record<string, unknown> | undefined
-
-interface AggregatedCellSignature {
-  Args: { cell: Cell<typeof features, Person> }
-  Element: null
-}
-
-class FlexRenderAggregatedCell extends Component<AggregatedCellSignature> {
-  get result():
-    | string
-    | number
-    | null
-    | FlexRenderComponentConfig<typeof features, Person> {
-    const cell = this.args.cell
-    const def =
-      cell.column.columnDef.aggregatedCell ?? cell.column.columnDef.cell
-    return flexRender(def, cell.getContext()) as
-      | string
-      | number
-      | null
-      | FlexRenderComponentConfig<typeof features, Person>
-  }
-
-  get resolvedContext(): CellContext<typeof features, Person, unknown> {
-    return this.args.cell.getContext()
-  }
-
-  get isComponent(): boolean {
-    return this.result instanceof FlexRenderComponentConfig
-  }
-
-  get componentToRender():
-    | ComponentLike<{
-        Args: {
-          ctx: CellContext<typeof features, Person, unknown>
-          options?: RenderOptions
-        }
-      }>
-    | undefined {
-    const result = this.result
-    if (result instanceof FlexRenderComponentConfig) {
-      return result.component as ComponentLike<{
-        Args: {
-          ctx: CellContext<typeof features, Person, unknown>
-          options?: RenderOptions
-        }
-      }>
-    }
-    return undefined
-  }
-
-  get componentOptions(): RenderOptions {
-    const result = this.result
-    if (result instanceof FlexRenderComponentConfig) {
-      return result.options
-    }
-    return undefined
-  }
-
-  get content(): ContentValue {
-    return this.result as ContentValue
-  }
-
-  <template>
-    {{#if this.isComponent}}
-      <this.componentToRender
-        @ctx={{this.resolvedContext}}
-        @options={{this.componentOptions}}
-      />
-    {{else}}
-      {{this.content}}
-    {{/if}}
-  </template>
-}
 
 // --- Template helpers (v9 methods need explicit `this` binding) ---
 
@@ -215,12 +117,12 @@ const getGroupedIndex = (column: Column<typeof features, Person>): number =>
   column.getGroupedIndex()
 const cellIsGrouped = (cell: Cell<typeof features, Person>): boolean =>
   cell.getIsGrouped()
-const cellIsAggregated = (cell: Cell<typeof features, Person>): boolean =>
-  cell.getIsAggregated()
 const cellIsPlaceholder = (cell: Cell<typeof features, Person>): boolean =>
   cell.getIsPlaceholder()
 const rowIsExpanded = (row: Row<typeof features, Person>): boolean =>
   row.getIsExpanded()
+const rowIsGrouped = (row: Row<typeof features, Person>): boolean =>
+  row.getIsGrouped()
 const rowCanExpand = (row: Row<typeof features, Person>): boolean =>
   row.getCanExpand()
 const subRowCount = (row: Row<typeof features, Person>): string =>
@@ -259,7 +161,7 @@ export default class GroupingTable extends Component {
     // atoms: { grouping: groupingAtom }, // preferred: own grouping state with an external atom
     // enableGrouping: false, // disable grouping for every column; default true
     // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
-    // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
+    // manualGrouping: true, // pass rows that are already grouped, for example from a server
   }))
 
   get headerGroups() {
@@ -374,7 +276,6 @@ export default class GroupingTable extends Component {
             {{#each (getAllCells row) as |cell|}}
               <td
                 class='{{if (cellIsGrouped cell) "cell-grouped"}}
-                  {{if (cellIsAggregated cell) "cell-aggregated"}}
                   {{if (cellIsPlaceholder cell) "cell-placeholder"}}'
               >
                 {{#if (cellIsGrouped cell)}}
@@ -386,11 +287,9 @@ export default class GroupingTable extends Component {
                   </button>
                   <FlexRenderCell @cell={{cell}} />
                   ({{subRowCount row}})
-                {{else if (cellIsAggregated cell)}}
-                  <FlexRenderAggregatedCell @cell={{cell}} />
                 {{else if (cellIsPlaceholder cell)}}
                   {{! placeholder cell - render nothing }}
-                {{else}}
+                {{else if (not (rowIsGrouped row))}}
                   <FlexRenderCell @cell={{cell}} />
                 {{/if}}
               </td>

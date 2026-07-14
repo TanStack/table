@@ -97,7 +97,7 @@ function App() {
       // onGroupingChange: setGrouping,
       // enableGrouping: false, // disable grouping for every column; default true
       // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
-      // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
+      // manualGrouping: true, // pass rows that are already grouped, for example from a server
       debugTable: true,
     },
     (state) => state, // default selector

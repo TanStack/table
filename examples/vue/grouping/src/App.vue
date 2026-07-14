@@ -1,10 +1,6 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  aggregationFeature,
-  aggregationFn_mean,
-  aggregationFn_median,
-  aggregationFn_sum,
   columnFilteringFeature,
   columnGroupingFeature,
   createColumnHelper,
@@ -24,7 +20,6 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 
 const features = tableFeatures({
-  aggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   rowExpandingFeature,
@@ -35,12 +30,6 @@ const features = tableFeatures({
   expandedRowModel: createExpandedRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
-  // register only the aggregation fns referenced by name in the column definitions
-  aggregationFns: {
-    mean: aggregationFn_mean,
-    median: aggregationFn_median,
-    sum: aggregationFn_sum,
-  },
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
@@ -66,14 +55,9 @@ const columns = ref(
     }),
     columnHelper.accessor('age', {
       header: () => 'Age',
-      aggregationFn: 'median',
-      aggregatedCell: ({ getValue }) =>
-        Math.round(getValue<number>() * 100) / 100,
     }),
     columnHelper.accessor('visits', {
       header: () => 'Visits',
-      aggregationFn: 'sum',
-      aggregatedCell: ({ getValue }) => getValue<number>().toLocaleString(),
     }),
     columnHelper.accessor('status', {
       header: 'Status',
@@ -81,9 +65,6 @@ const columns = ref(
     columnHelper.accessor('progress', {
       header: 'Profile Progress',
       cell: ({ getValue }) => Math.round(getValue<number>() * 100) / 100 + '%',
-      aggregationFn: 'mean',
-      aggregatedCell: ({ getValue }) =>
-        Math.round(getValue<number>() * 100) / 100 + '%',
     }),
   ]),
 )
@@ -100,7 +81,7 @@ const table = useTable({
   // onGroupingChange: setGrouping,
   // enableGrouping: false, // disable grouping for every column; default true
   // groupedColumnMode: 'remove', // remove grouped columns instead of moving them to the start; default 'reorder'
-  // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
+  // manualGrouping: true, // pass rows that are already grouped, for example from a server
   debugTable: true,
 })
 
@@ -169,11 +150,9 @@ function handleGoToPage(e: Event) {
             :style="{
               background: cell.getIsGrouped()
                 ? '#0aff0082'
-                : cell.getIsAggregated()
-                  ? '#ffa50078'
-                  : cell.getIsPlaceholder()
-                    ? '#ff000042'
-                    : 'white',
+                : cell.getIsPlaceholder()
+                  ? '#ff000042'
+                  : 'white',
             }"
           >
             <button
@@ -185,8 +164,9 @@ function handleGoToPage(e: Event) {
               <FlexRender :cell="cell" />
               ({{ row.subRows.length.toLocaleString() }})
             </button>
-            <FlexRender v-else-if="cell.getIsAggregated()" :cell="cell" />
-            <template v-else-if="cell.getIsPlaceholder()" />
+            <template
+              v-else-if="cell.getIsPlaceholder() || row.getIsGrouped()"
+            />
             <FlexRender v-else :cell="cell" />
           </td>
         </tr>

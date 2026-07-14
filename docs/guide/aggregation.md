@@ -199,6 +199,29 @@ aggregates in the worker. `column.getAggregationValue()` still executes its
 final total on the main thread over the selected row model. Aggregation results
 crossing the worker boundary must be structured-cloneable.
 
-See the React [Aggregation](../framework/react/examples/aggregation) and
-[Grouped Aggregation](../framework/react/examples/grouped-aggregation)
-examples for complete footer and grouped-cell rendering.
+Every adapter has a standalone example showing grand totals, multiple
+aggregations, and pagination:
+
+- [Alpine](../framework/alpine/examples/aggregation)
+- [Angular](../framework/angular/examples/aggregation)
+- [Ember](../framework/ember/examples/aggregation)
+- [Lit](../framework/lit/examples/aggregation)
+- [Preact](../framework/preact/examples/aggregation)
+- [React](../framework/react/examples/aggregation)
+- [Solid](../framework/solid/examples/aggregation)
+- [Svelte](../framework/svelte/examples/aggregation)
+- [Vue](../framework/vue/examples/aggregation)
+- [Vanilla](../framework/vanilla/examples/aggregation)
+
+Every framework adapter also has a grouped aggregation example combining the
+same API with grouped rows and grand-total footers:
+
+- [Alpine](../framework/alpine/examples/grouped-aggregation)
+- [Angular](../framework/angular/examples/grouped-aggregation)
+- [Ember](../framework/ember/examples/grouped-aggregation)
+- [Lit](../framework/lit/examples/grouped-aggregation)
+- [Preact](../framework/preact/examples/grouped-aggregation)
+- [React](../framework/react/examples/grouped-aggregation)
+- [Solid](../framework/solid/examples/grouped-aggregation)
+- [Svelte](../framework/svelte/examples/grouped-aggregation)
+- [Vue](../framework/vue/examples/grouped-aggregation)

@@ -8,7 +8,7 @@ Want to skip to the implementation? Check out these Alpine examples:
 
 - [Grouping](../examples/grouping)
 
-Aggregation is an independent feature. See the core [Aggregation Guide](../../../guide/aggregation) for totals, multiple aggregations, custom definitions, and grouped aggregate values.
+> **Note:** `columnGroupingFeature` and `aggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
 
 Read your reactive inputs such as `data` through a getter (for example backing them with `Alpine.reactive`) when creating the table, so the table sees updates.
 
@@ -18,8 +18,6 @@ Here's how you set up your table to use grouping features. Adding the grouping f
 
 ```ts
 import {
-  aggregationFeature,
-  aggregationFn_sum,
   columnGroupingFeature,
   createGroupedRowModel,
   createTable,
@@ -27,10 +25,8 @@ import {
 } from '@tanstack/alpine-table'
 
 const features = tableFeatures({
-  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(), // if using client-side grouping
-  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = createTable({
@@ -41,8 +37,6 @@ const table = createTable({
   },
 })
 ```
-
-> **NOTE**: Spreading the entire built-in registry (`aggregationFns: { ...aggregationFns }`) still works, but it puts every built-in aggregation function in your bundle. Registering just the functions you use, or passing a function directly to the `aggregationFn` column option, is recommended.
 
 ## Grouping (Alpine) Guide
 
@@ -58,8 +52,6 @@ To use the grouping feature, add the `columnGroupingFeature` and the `groupedRow
 
 ```ts
 import {
-  aggregationFeature,
-  aggregationFn_sum,
   columnGroupingFeature,
   createGroupedRowModel,
   createTable,
@@ -67,10 +59,8 @@ import {
 } from '@tanstack/alpine-table'
 
 const features = tableFeatures({
-  aggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = createTable({
@@ -84,12 +74,10 @@ To allow the user to expand and collapse the grouped rows, you can use the expan
 
 ```ts
 const features = tableFeatures({
-  aggregationFeature,
   columnGroupingFeature,
   rowExpandingFeature,
   groupedRowModel: createGroupedRowModel(),
   expandedRowModel: createExpandedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum },
 })
 
 const table = createTable({
@@ -122,74 +110,9 @@ const table = createTable({
 })
 ```
 
-### Aggregations
-
-When both features are registered, grouped rows can aggregate data with the `aggregationFn` column option. It can be a registered name, an inline definition, or an array of aggregations.
-
-```ts
-const column = columnHelper.accessor('key', {
-  aggregationFn: 'sum',
-})
-```
-
-In the above example, the sum aggregation function will be used to aggregate the data in the grouped rows.
-By default (`aggregationFn: 'auto'`), numeric columns use the `sum` aggregation function and date columns use the `extent` aggregation function, resolved from the `aggregationFns` registry (a development warning fires if the chosen function is not registered). Other column types are left unaggregated. You can override this behavior by specifying the `aggregationFn` option in the column definition.
-
-There are several built-in aggregation functions that you can use:
-
-- sum - Sums the values in the grouped rows.
-- count - Counts the number of rows in the grouped rows.
-- min - Finds the minimum value in the grouped rows.
-- max - Finds the maximum value in the grouped rows.
-- extent - Finds the extent (min and max) of the values in the grouped rows.
-- mean - Finds the mean of the values in the grouped rows.
-- median - Finds the median of the values in the grouped rows.
-- unique - Returns an array of unique values in the grouped rows.
-- uniqueCount - Counts the number of unique values in the grouped rows.
-- first - Returns the first leaf value in the grouped rows.
-- last - Returns the last leaf value in the grouped rows.
-
-#### Custom Aggregations
-
-You can define custom aggregation functions in the `aggregationFns` slot on `tableFeatures`. The slot is a record where the keys are the names of the aggregation functions, and the values are the aggregation functions themselves. You can then reference these aggregation functions by name in a column's `aggregationFn` option.
-
-```ts
-const myCustomAggregation = constructAggregationFn({
-  aggregate: ({ rows, getValue }) =>
-    rows
-      .map((row) => getValue(row))
-      .filter(Boolean)
-      .join(', '),
-})
-
-const features = tableFeatures({
-  aggregationFeature,
-  columnGroupingFeature,
-  groupedRowModel: createGroupedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum, myCustomAggregation },
-})
-
-const table = createTable({
-  features,
-  // other options...
-})
-```
-
-The context supplies normalized terminal `rows`, `getValue`, `column`, `table`, and an optional `groupingRow`. You can then use the definition in a column's `aggregationFn` option:
-
-```ts
-const column = columnHelper.accessor('key', {
-  aggregationFn: 'myCustomAggregation',
-})
-```
-
-> **TypeScript Note:** For `aggregationFn: 'myCustomAggregation'` string references to typecheck, register the function in the `aggregationFns` slot on `tableFeatures` (as shown above). The slot is the registry; no `declare module` augmentation is needed. Alternatively, skip the registry entirely by passing the function directly to the `aggregationFn` column option.
-
-For efficient nested grouping, a definition can also provide `merge({ childResults, childRows })`. See the [Aggregation Guide](../../../guide/aggregation#custom-aggregation-definitions).
-
 ### Manual Grouping
 
-If you are doing server-side grouping and aggregation, you can enable manual grouping using the manualGrouping option. When this option is set to true, the table will not automatically group rows using getGroupedRowModel() and instead will expect you to manually group the rows before passing them to the table.
+If you are doing server-side grouping, you can enable manual grouping using the manualGrouping option. When this option is set to true, the table will not automatically group rows using getGroupedRowModel() and instead will expect you to group the rows before passing them to the table.
 
 ```ts
 const features = tableFeatures({ columnGroupingFeature })
@@ -251,7 +174,7 @@ You can read the current grouping value with `table.atoms.grouping.get()`. Insid
 
 ### Wiring up the grouping UI
 
-Because Alpine does not initialize directives inside content set with `x-html`, the in-cell grouping controls (the header group toggle button and the grouped-cell expander) cannot live inside an `x-html` span. Render the header and cell content with `x-html="FlexRender(...)"`, but special-case the interactive parts directly in the markup using the cell helpers (`cell.getIsGrouped()`, `cell.getIsAggregated()`, `cell.getIsPlaceholder()`).
+Because Alpine does not initialize directives inside content set with `x-html`, the in-cell grouping controls (the header group toggle button and the grouped-cell expander) cannot live inside an `x-html` span. Render the header and cell content with `x-html="FlexRender(...)"`, but special-case the interactive parts directly in the markup using the cell helpers (`cell.getIsGrouped()` and `cell.getIsPlaceholder()`).
 
 The group toggle button lives in the header. Call the handler returned by `getToggleGroupingHandler` with the event.
 
@@ -272,7 +195,7 @@ The group toggle button lives in the header. Call the handler returned by `getTo
 </th>
 ```
 
-In the cell, choose between grouped, aggregated, placeholder, and normal rendering. The grouped cell also carries the expander button (which calls the row's `getToggleExpandedHandler`). It helps to expose a small helper on your `Alpine.data` object for the cell background.
+In the cell, choose between grouped, placeholder, and normal rendering. The grouped cell also carries the expander button (which calls the row's `getToggleExpandedHandler`). It helps to expose a small helper on your `Alpine.data` object for the cell background.
 
 ```ts
 Alpine.data('table', () => {
@@ -291,7 +214,6 @@ Alpine.data('table', () => {
     FlexRender,
     cellBackground(cell) {
       if (cell.getIsGrouped()) return '#0aff0082'
-      if (cell.getIsAggregated()) return '#ffa50078'
       if (cell.getIsPlaceholder()) return '#ff000042'
       return 'white'
     },
@@ -314,17 +236,13 @@ Alpine.data('table', () => {
       ></span>
     </button>
   </template>
-  <!-- aggregated cell -->
-  <template x-if="cell.getIsAggregated()">
-    <span x-html="FlexRender({ cell })"></span>
-  </template>
   <!-- placeholder cell: nothing -->
   <template x-if="cell.getIsPlaceholder()">
     <span></span>
   </template>
   <!-- normal cell -->
   <template
-    x-if="!cell.getIsGrouped() && !cell.getIsAggregated() && !cell.getIsPlaceholder()"
+    x-if="!cell.getIsGrouped() && !cell.row.getIsGrouped() && !cell.getIsPlaceholder()"
   >
     <span x-html="FlexRender({ cell })"></span>
   </template>
@@ -358,8 +276,6 @@ Cells expose grouping and placeholder helpers:
 cell.getIsGrouped()
 cell.getIsPlaceholder()
 ```
-
-`cell.getIsAggregated()`, `column.getAutoAggregationFn()`, `column.getAggregationFns()`, and `column.getAggregationValue()` belong to `aggregationFeature`.
 
 The table instance exposes grouped and pre-grouped row models:
 

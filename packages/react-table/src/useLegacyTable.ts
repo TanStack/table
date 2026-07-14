@@ -219,7 +219,7 @@ export interface LegacyRowModelOptions<TData extends RowData> {
   getExpandedRowModel?: RowModelFactory<TData>
   /**
    * Returns the grouped row model for the table.
-   * @deprecated Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
+   * @deprecated Use `columnGroupingFeature` with the `groupedRowModel` slot and `createGroupedRowModel()` instead. Add `aggregationFeature` separately when grouped rows aggregate values.
    */
   getGroupedRowModel?: RowModelFactory<TData>
   /**
@@ -249,7 +249,7 @@ export interface LegacyRowModelOptions<TData extends RowData> {
   sortFns?: SortFns
   /**
    * Additional aggregation functions to apply to the table.
-   * @deprecated Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
+   * @deprecated Use `aggregationFeature` with the `aggregationFns` slot instead. Add `columnGroupingFeature` and `groupedRowModel` only when grouping rows.
    */
   aggregationFns?: AggregationFns
 }
