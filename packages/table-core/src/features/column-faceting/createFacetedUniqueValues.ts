@@ -1,5 +1,9 @@
 import { callMemoOrStaticFn, tableMemo } from '../../utils'
-import { column_getFacetedRowModel } from './columnFacetingFeature.utils'
+import { column_getCanGlobalFilter } from '../global-filtering/globalFilteringFeature.utils'
+import {
+  column_getFacetedRowModel,
+  table_getGlobalFacetedRowModel,
+} from './columnFacetingFeature.utils'
 import type { Row } from '../../types/Row'
 import type { Table, Table_Internal } from '../../types/Table'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -24,6 +28,15 @@ export function createFacetedUniqueValues<
       table,
       fnName: 'table.getFacetedUniqueValues',
       memoDeps: () => {
+        if (columnId === '__global__') {
+          return [
+            callMemoOrStaticFn(
+              table,
+              'getGlobalFacetedRowModel',
+              table_getGlobalFacetedRowModel,
+            ).flatRows,
+          ]
+        }
         const column = table.getColumn(columnId)
         if (!column) return [table.getPreFilteredRowModel().flatRows]
         return [
@@ -35,7 +48,7 @@ export function createFacetedUniqueValues<
           ).flatRows,
         ]
       },
-      fn: (flatRows) => _createFacetedUniqueValues(columnId, flatRows),
+      fn: (flatRows) => _createFacetedUniqueValues(table, columnId, flatRows),
     })
   }
 }
@@ -43,19 +56,40 @@ export function createFacetedUniqueValues<
 function _createFacetedUniqueValues<
   TFeatures extends TableFeatures,
   TData extends RowData = any,
->(columnId: string, flatRows: Array<Row<TFeatures, TData>>): Map<any, number> {
+>(
+  table: Table_Internal<TFeatures, TData>,
+  columnId: string,
+  flatRows: Array<Row<TFeatures, TData>>,
+): Map<any, number> {
+  // The global context aggregates unique values across every column that
+  // participates in global filtering
+  const columnIds =
+    columnId === '__global__'
+      ? table
+          .getAllLeafColumns()
+          .filter((column) => column_getCanGlobalFilter(column))
+          .map((column) => column.id)
+      : [columnId]
+
   const facetedUniqueValues = new Map<any, number>()
 
   for (let i = 0; i < flatRows.length; i++) {
-    const values = flatRows[i]!.getUniqueValues(columnId)
+    for (let c = 0; c < columnIds.length; c++) {
+      // the declared return type is Array, but rows return undefined for
+      // columns without an accessor (e.g. display columns)
+      const values = flatRows[i]!.getUniqueValues(columnIds[c]!) as
+        | Array<unknown>
+        | undefined
+      if (!values) continue
 
-    for (let j = 0; j < values.length; j++) {
-      const value = values[j]
-      const previousValue = facetedUniqueValues.get(value)
-      facetedUniqueValues.set(
-        value,
-        previousValue === undefined ? 1 : previousValue + 1,
-      )
+      for (let j = 0; j < values.length; j++) {
+        const value = values[j]
+        const previousValue = facetedUniqueValues.get(value)
+        facetedUniqueValues.set(
+          value,
+          previousValue === undefined ? 1 : previousValue + 1,
+        )
+      }
     }
   }
 

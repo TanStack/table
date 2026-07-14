@@ -67,7 +67,10 @@ function _createFacetedRowModel<
       if (id !== columnId) filterableIds.push(id)
     }
   }
-  if (globalFilter) filterableIds.push('__global__')
+  // The global context excludes the global filter itself, mirroring how a
+  // column's faceted model excludes that column's own filter
+  if (globalFilter && columnId !== '__global__')
+    filterableIds.push('__global__')
 
   if (!filterableIds.length) {
     return preRowModel
