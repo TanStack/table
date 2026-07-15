@@ -26,9 +26,10 @@ function compareRangeValues(left: RangeValue, right: RangeValue) {
 function collectRangeValues(context: AggregationContext<any, any, unknown>) {
   const values: Array<RangeValue> = []
   let kind: 'date' | 'number' | undefined
+  const aggregationRows = context.subRows ?? context.rows
 
-  for (let i = 0; i < context.rows.length; i++) {
-    const value = context.getValue(context.rows[i]!)
+  for (let i = 0; i < aggregationRows.length; i++) {
+    const value = context.getValue(aggregationRows[i]!)
     const valueKind = getRangeKind(value)
     if (!valueKind) continue
     kind ??= valueKind
@@ -39,8 +40,9 @@ function collectRangeValues(context: AggregationContext<any, any, unknown>) {
 }
 
 /**
- * Sums numeric row values. Non-number values contribute zero. As in the
- * previous API, `NaN` is a number and therefore propagates through the sum.
+ * Sums numeric direct sub-row values for grouped aggregation and terminal row
+ * values otherwise. Non-number values contribute zero. As in the previous API,
+ * `NaN` is a number and therefore propagates through the sum.
  */
 export const aggregationFn_sum = constructAggregationFn<
   any,
@@ -50,8 +52,9 @@ export const aggregationFn_sum = constructAggregationFn<
 >({
   aggregate: (context) => {
     let sum = 0
-    for (let i = 0; i < context.rows.length; i++) {
-      const value = context.getValue(context.rows[i]!)
+    const aggregationRows = context.subRows ?? context.rows
+    for (let i = 0; i < aggregationRows.length; i++) {
+      const value = context.getValue(aggregationRows[i]!)
       sum += typeof value === 'number' ? value : 0
     }
     return sum
@@ -67,7 +70,8 @@ export const aggregationFn_sum = constructAggregationFn<
 })
 
 /**
- * Finds the minimum numeric or Date value. Invalid value types are ignored;
+ * Finds the minimum numeric or Date value from direct sub-rows for grouped
+ * aggregation and terminal rows otherwise. Invalid value types are ignored;
  * `NaN` preserves the legacy numeric seeding behavior.
  */
 export const aggregationFn_min = constructAggregationFn<
@@ -103,7 +107,8 @@ export const aggregationFn_min = constructAggregationFn<
 })
 
 /**
- * Finds the maximum numeric or Date value. Invalid value types are ignored;
+ * Finds the maximum numeric or Date value from direct sub-rows for grouped
+ * aggregation and terminal rows otherwise. Invalid value types are ignored;
  * `NaN` preserves the legacy numeric seeding behavior.
  */
 export const aggregationFn_max = constructAggregationFn<
@@ -139,7 +144,8 @@ export const aggregationFn_max = constructAggregationFn<
 })
 
 /**
- * Finds the minimum and maximum numeric or Date values. Empty inputs return
+ * Finds the minimum and maximum numeric or Date values from direct sub-rows for
+ * grouped aggregation and terminal rows otherwise. Empty inputs return
  * `[undefined, undefined]`, preserving the previous built-in result shape.
  */
 export const aggregationFn_extent = constructAggregationFn<

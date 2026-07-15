@@ -350,6 +350,64 @@ describe('aggregation and grouping integration', () => {
     expect(nestedContext.rows).toHaveLength(3)
   })
 
+  it('preserves direct sub-row semantics for reaggregatable built-ins', () => {
+    type Node = {
+      amount: number
+      region?: string
+      subRows?: Array<Node>
+      team?: string
+    }
+    const features = testFeatures({
+      aggregationFeature,
+      aggregationFns,
+      columnGroupingFeature,
+      groupedRowModel: createGroupedRowModel(),
+    })
+    const data: Array<Node> = [
+      {
+        amount: 100,
+        region: 'a',
+        team: 'x',
+        subRows: [{ amount: 1 }, { amount: 2 }],
+      },
+      {
+        amount: 200,
+        region: 'a',
+        team: 'y',
+        subRows: [{ amount: 3 }, { amount: 4 }],
+      },
+    ]
+    const table = constructTable({
+      features,
+      data,
+      columns: [
+        { accessorKey: 'region' },
+        { accessorKey: 'team' },
+        { accessorFn: (row) => row.amount, id: 'sum', aggregationFn: 'sum' },
+        { accessorFn: (row) => row.amount, id: 'min', aggregationFn: 'min' },
+        { accessorFn: (row) => row.amount, id: 'max', aggregationFn: 'max' },
+        {
+          accessorFn: (row) => row.amount,
+          id: 'extent',
+          aggregationFn: 'extent',
+        },
+      ],
+      getSubRows: (row) => row.subRows,
+      initialState: { grouping: ['region', 'team'] },
+    })
+
+    const region = table.getGroupedRowModel().rows[0]!
+    const teams = region.subRows
+
+    expect(teams.map((row) => row.getValue('sum'))).toEqual([100, 200])
+    expect(region.getValue('sum')).toBe(300)
+    expect(region.getValue('min')).toBe(100)
+    expect(region.getValue('max')).toBe(200)
+    expect(region.getValue('extent')).toEqual([100, 200])
+
+    expect(table.getColumn('sum')!.getAggregationValue()).toBe(10)
+  })
+
   it('keeps grouping structural when aggregationFeature is absent', () => {
     const features = testFeatures({
       columnGroupingFeature,
@@ -407,7 +465,7 @@ describe('aggregation and grouping integration', () => {
     const region = table.getGroupedRowModel().rows[0]!
     const level = region.subRows[0]!
 
-    expect(region.getValue('level')).toBe(4)
+    expect(region.getValue('level')).toBe(3)
     expect(level.getValue('level')).toBe(1)
     expect(region.getValue('amount')).toEqual({
       extent: [10, 100],
