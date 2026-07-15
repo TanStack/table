@@ -293,15 +293,61 @@ describe('aggregation and grouping integration', () => {
 
     expect(column.getAggregationValue()).toBe(2)
     const rootContext = aggregate.mock.calls[0]![0]
+    expect(rootContext).not.toHaveProperty('subRows')
     expect(rootContext).not.toHaveProperty('groupingRow')
     expect(rootContext).not.toHaveProperty('source')
 
     const groupingRow = table.getGroupedRowModel().rows[0]!
     expect(groupingRow.getValue('amount')).toBe(2)
     const groupedContext = aggregate.mock.calls[1]![0]
+    expect(groupedContext.subRows).toBe(groupingRow.subRows)
     expect(groupedContext.groupingRow).toBe(groupingRow)
     expect(groupedContext.groupingRow!.depth).toBe(0)
     expect(groupedContext).not.toHaveProperty('source')
+  })
+
+  it('lets aggregate choose immediate sub-rows instead of terminal rows', () => {
+    const aggregate = vi.fn(({ subRows, rows }) =>
+      subRows ? subRows.length : rows.length,
+    )
+    const childCount = constructAggregationFn<any, any, unknown, number>({
+      aggregate,
+    })
+    const features = testFeatures({
+      aggregationFeature,
+      aggregationFns: { childCount },
+      columnGroupingFeature,
+      groupedRowModel: createGroupedRowModel(),
+    })
+    const table = constructTable({
+      features,
+      data: [
+        { region: 'a', team: 'x', amount: 1 },
+        { region: 'a', team: 'x', amount: 2 },
+        { region: 'a', team: 'y', amount: 3 },
+      ],
+      columns: [
+        { accessorKey: 'region' },
+        { accessorKey: 'team' },
+        { accessorKey: 'amount', aggregationFn: 'childCount' },
+      ],
+      initialState: { grouping: ['region', 'team'] },
+    })
+
+    const region = table.getGroupedRowModel().rows[0]!
+    const team = region.subRows[0]!
+
+    expect(team.getValue('amount')).toBe(2)
+    expect(region.getValue('amount')).toBe(2)
+
+    const terminalContext = aggregate.mock.calls[0]![0]
+    expect(terminalContext.subRows).toBe(team.subRows)
+    expect(terminalContext.rows).toHaveLength(2)
+
+    const nestedContext = aggregate.mock.calls[1]![0]
+    expect(nestedContext.subRows).toBe(region.subRows)
+    expect(nestedContext.subRows).toHaveLength(2)
+    expect(nestedContext.rows).toHaveLength(3)
   })
 
   it('keeps grouping structural when aggregationFeature is absent', () => {
@@ -390,11 +436,15 @@ describe('aggregation and grouping integration', () => {
     ).toBe(false)
   })
 
-  it('caches grouped values and merges child results without rescanning parent leaves', () => {
+  it('caches grouped values and merges sub-row results without rescanning parent leaves', () => {
     const aggregate = vi.fn(({ rows }) => rows.length)
     const merge = vi.fn(
-      ({ childResults }: { childResults: ReadonlyArray<number> }) =>
-        childResults.reduce((total, value) => total + value, 0),
+      ({
+        subRowResults,
+      }: {
+        subRowResults: ReadonlyArray<number>
+        subRows: ReadonlyArray<unknown>
+      }) => subRowResults.reduce((total, value) => total + value, 0),
     )
     const sized = constructAggregationFn<any, any, unknown, number>({
       aggregate,
@@ -426,6 +476,8 @@ describe('aggregation and grouping integration', () => {
     expect(region.getValue('amount')).toBe(3)
     expect(aggregate).toHaveBeenCalledTimes(2)
     expect(merge).toHaveBeenCalledTimes(1)
+    expect(merge.mock.calls[0]![0].subRows).toBe(region.subRows)
+    expect(merge.mock.calls[0]![0].subRowResults).toEqual([2, 1])
   })
 
   it('rebuilds grouped aggregation values when column definitions change', () => {

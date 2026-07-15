@@ -5,6 +5,7 @@ import type { Row } from '../../types/Row'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { CellData, RowData } from '../../types/type-utils'
 import type {
+  AggregationContext,
   AggregationFnDef,
   AggregationFnDescriptor,
   AggregationFnRef,
@@ -232,15 +233,15 @@ export function column_getAggregationFns<
   return finish(resolved)
 }
 
-function getChildResult(
-  childValue: unknown,
+function getSubRowResult(
+  subRowValue: unknown,
   isMultiple: boolean,
   id: string | undefined,
 ) {
-  if (!isMultiple) return childValue
-  if (!id || !childValue || typeof childValue !== 'object') return undefined
-  return hasOwn(childValue, id)
-    ? (childValue as Record<string, unknown>)[id]
+  if (!isMultiple) return subRowValue
+  if (!id || !subRowValue || typeof subRowValue !== 'object') return undefined
+  return hasOwn(subRowValue, id)
+    ? (subRowValue as Record<string, unknown>)[id]
     : undefined
 }
 
@@ -249,18 +250,18 @@ export function aggregateColumnValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(args: {
-  childRows?: ReadonlyArray<Row<TFeatures, TData>>
+  subRows?: ReadonlyArray<Row<TFeatures, TData>>
   column: Column<TFeatures, TData, unknown>
   groupingRow?: Row<TFeatures, TData>
   rows: ReadonlyArray<Row<TFeatures, TData>>
 }): unknown {
-  const { childRows, column, groupingRow, rows } = args
+  const { subRows, column, groupingRow, rows } = args
   const internalColumn = column as Column_Internal<TFeatures, TData, unknown>
   const entries = column_getAggregationFns(internalColumn)
   const isMultiple = Array.isArray(internalColumn.columnDef.aggregationFn)
   const canMerge =
-    !!childRows?.length &&
-    childRows.every(
+    !!subRows?.length &&
+    subRows.every(
       (row) =>
         !!(row as any).groupingColumnId &&
         (row as any).groupingColumnId !== column.id,
@@ -270,7 +271,8 @@ export function aggregateColumnValue<
     const definition = entry.aggregationFn
     if (!definition) return undefined
 
-    const context = {
+    const context: AggregationContext<TFeatures, TData, unknown> = {
+      ...(subRows ? { subRows } : {}),
       column,
       columnId: column.id,
       getValue: (row: Row<TFeatures, TData>) => row.getValue(column.id),
@@ -282,10 +284,10 @@ export function aggregateColumnValue<
     if (canMerge && definition.merge) {
       return definition.merge({
         ...context,
-        childResults: childRows.map((row) =>
-          getChildResult(row.getValue(column.id), isMultiple, entry.id),
+        subRowResults: subRows.map((row) =>
+          getSubRowResult(row.getValue(column.id), isMultiple, entry.id),
         ),
-        childRows: childRows,
+        subRows,
       })
     }
 

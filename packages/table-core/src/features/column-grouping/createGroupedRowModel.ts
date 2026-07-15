@@ -167,7 +167,7 @@ function _createGroupedRowModel<
             const cache = ((row as any)._aggregationValuesCache ??=
               makeObjectMap())
             cache[colId] = aggregateColumnValue({
-              childRows: subRows,
+              subRows,
               column,
               groupingRow: row,
               rows: leafRows,

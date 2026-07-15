@@ -20,6 +20,12 @@ export interface AggregationContext<
   column: Column<TFeatures, TData, TValue>
   /** Convenience alias for `column.id`. */
   columnId: string
+  /**
+   * Immediate sub-rows for grouped aggregation. This property is omitted
+   * for root or caller-supplied-row aggregation. At a terminal grouping level
+   * these are the direct data rows; at a nested level they are sub-row groups.
+   */
+  subRows?: ReadonlyArray<Row<TFeatures, TData>>
   /** Reads this column's value from one of `rows`. */
   getValue: (row: Row<TFeatures, TData>) => TValue
   /**
@@ -44,10 +50,10 @@ export interface AggregationMergeContext<
   TValue,
   TResult,
 > extends AggregationContext<TFeatures, TData, TValue> {
-  /** Results produced for each immediate child group, in child-row order. */
-  childResults: ReadonlyArray<TResult>
-  /** Immediate child group rows corresponding to `childResults`. */
-  childRows: ReadonlyArray<Row<TFeatures, TData>>
+  /** Results produced for each immediate sub-row group, in sub-row order. */
+  subRowResults: ReadonlyArray<TResult>
+  /** Immediate sub-row groups corresponding to `subRowResults`. */
+  subRows: ReadonlyArray<Row<TFeatures, TData>>
 }
 
 /** A context-based aggregation definition and optional grouped-result merge. */
@@ -60,7 +66,7 @@ export interface AggregationFnDef<
   /** Computes a result directly from normalized terminal rows. */
   aggregate: (context: AggregationContext<TFeatures, TData, TValue>) => TResult
   /**
-   * Combines already-computed immediate child-group results. When omitted,
+   * Combines already-computed immediate sub-row results. When omitted,
    * nested grouping falls back to `aggregate` over the group's terminal rows.
    */
   merge?: (

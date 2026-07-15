@@ -36,8 +36,8 @@ describe('aggregation function definitions', () => {
     expect(
       aggregationFn_sum.merge!({
         ...context([]),
-        childResults: [4, undefined, 6],
-        childRows: [],
+        subRowResults: [4, undefined, 6],
+        subRows: [],
       }),
     ).toBe(10)
   })
