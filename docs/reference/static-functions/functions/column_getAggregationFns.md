@@ -9,7 +9,7 @@ title: column_getAggregationFns
 function column_getAggregationFns<TFeatures, TData, TValue>(column): readonly ResolvedAggregationFn<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.utils.ts:142](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L142)
+Defined in: [features/aggregation/aggregationFeature.utils.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L155)
 
 Resolves and validates a column's scalar or multiple aggregation option.
 

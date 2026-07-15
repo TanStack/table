@@ -139,7 +139,7 @@ For normal rendering use cases, you will probably only need to use the `table.ge
 - `getPreFilteredRowModel` - returns a row model before column filtering and global filtering are applied.
 
 - `getGroupedRowModel` - returns a row model that applies grouping and creates sub-rows. When `aggregationFeature` is also registered, configured aggregate values are computed for those grouped rows.
-- `getPreGroupedRowModel` - returns the row model before grouping. It is also the default row set used by `column.getAggregationValue()` for grand totals.
+- `getPreGroupedRowModel` - returns the row model before grouping. Its root rows are the default row set used by `column.getAggregationValue()` for grand totals; `maxAggregationDepth` can select a deeper frontier.
 
 - `getSortedRowModel` - returns a row model that has had sorting applied to it.
 - `getPreSortedRowModel` - returns a row model before sorting is applied (rows are in original order).

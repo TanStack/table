@@ -11,7 +11,7 @@ type AggregationFnOption<TFeatures, TData, TValue> =
 | ReadonlyArray<AggregationFnListItem<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L143)
+Defined in: [features/aggregation/aggregationFeature.types.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L151)
 
 A scalar aggregation reference or a list that produces a keyed object.
 

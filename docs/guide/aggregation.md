@@ -58,24 +58,53 @@ const amountColumn = columnHelper.accessor('amount', {
 })
 ```
 
-With no row argument, `column.getAggregationValue()` aggregates the table's
+With no options argument, `column.getAggregationValue()` aggregates the table's
 pre-grouped row model. In the normal client pipeline this includes filtering,
-but precedes grouping, sorting, expansion, and pagination.
+but precedes grouping, sorting, expansion, and pagination. It uses the column's
+`maxAggregationDepth` (`0` by default).
 
 ## Choosing Which Rows To Aggregate
 
-Pass any row array to override the default:
+Pass rows in the options object to override the default:
 
 ```ts
-column.getAggregationValue(table.getCoreRowModel().rows) // all core rows
-column.getAggregationValue(table.getRowModel().rows) // currently rendered model
-column.getAggregationValue(table.getFilteredSelectedRowModel().rows)
-column.getAggregationValue(customRows)
+column.getAggregationValue({ rows: table.getCoreRowModel().rows }) // all core rows
+column.getAggregationValue({ rows: table.getRowModel().rows }) // rendered model
+column.getAggregationValue({
+  rows: table.getFilteredSelectedRowModel().rows,
+})
+column.getAggregationValue({ rows: customRows })
+column.getAggregationValue({ rows: customRows, maxDepth: 1 })
 ```
 
-Hierarchical inputs are normalized to unique terminal leaves. Explicit row
-calls are recomputed each time; the default call is cached against its row
-model, registry, and column aggregation option.
+Depth is relative to the supplied row array. `0` selects those root rows, `1`
+selects their direct sub-rows, and so on. Selection returns a unique frontier:
+a branch that ends before the maximum depth contributes its deepest available
+row. `Infinity` selects terminal rows.
+
+Set the cached default depth on the column:
+
+```ts
+const amountColumn = columnHelper.accessor('amount', {
+  aggregationFn: ['sum', 'mean', 'count'],
+  maxAggregationDepth: 0,
+})
+```
+
+Every aggregation configured on the column receives the same selected rows.
+Explicit-row calls are recomputed each time; the default call is cached against
+its row model, depth, registry, and column aggregation option.
+
+`table.getMaxSubRowDepth()` returns the deepest structural depth in the core row
+model. To stop one level before the deepest sub-row frontier:
+
+```ts
+const maxDepth = Math.max(0, table.getMaxSubRowDepth() - 1)
+column.getAggregationValue({
+  rows: table.getCoreRowModel().rows,
+  maxDepth,
+})
+```
 
 ## Multiple Aggregations Per Column
 
@@ -104,8 +133,9 @@ an `undefined` value.
 
 ## Custom Aggregation Definitions
 
-Custom aggregations are context-based definitions. `rows` contains normalized
-terminal rows and `getValue(row)` reads the current column's value.
+Custom aggregations are context-based definitions. `rows` contains the unique
+frontier selected at `maxDepth`, and `getValue(row)` reads the current column's
+value.
 
 ```ts
 const joined = constructAggregationFn<any, any, string, string>({
@@ -117,12 +147,28 @@ const joined = constructAggregationFn<any, any, string, string>({
 })
 ```
 
-The context also includes `column`, `columnId`, and `table`. During grouped
-aggregation it includes `groupingRow`; root and caller-supplied-row aggregation
-omit that property. The grouping depth is `groupingRow.depth`.
+The context also includes `column`, `columnId`, `maxDepth`, and `table`. During grouped
+aggregation it includes `groupingRow` and `subRows`; root and
+caller-supplied-row aggregation omit those properties. The grouping depth is
+`groupingRow.depth`. `subRows` contains the immediate rows at that grouping
+level, so an aggregation can explicitly choose immediate sub-rows instead of
+the depth-selected `rows`:
 
-For a result that can be combined efficiently across nested groups, provide a
-`merge` function:
+```ts
+const subRowCount = constructAggregationFn<any, any, unknown, number>({
+  aggregate: ({ subRows, rows }) => (subRows ?? rows).length,
+})
+```
+
+At the terminal grouping level, `subRows` contains direct data rows. At a
+nested level, it contains the immediate synthetic sub-row groups.
+
+All built-in aggregation definitions consume the same depth-selected `rows`.
+`subRows` remains available when a custom definition intentionally needs the
+grouping row's immediate structural children.
+
+For a result that can be combined more efficiently from already-computed
+sub-row results, provide a `merge` function:
 
 ```ts
 const sum = constructAggregationFn<any, any, unknown, number>({
@@ -131,14 +177,18 @@ const sum = constructAggregationFn<any, any, unknown, number>({
       const value = getValue(row)
       return total + (typeof value === 'number' ? value : 0)
     }, 0),
-  merge: ({ childResults }) =>
-    childResults.reduce((total, value) => total + value, 0),
+  merge: ({ subRowResults }) =>
+    subRowResults.reduce((total, value) => total + value, 0),
 })
 ```
 
-Without `merge`, nested grouping calls `aggregate` over the group's terminal
-rows. This replaces the previous callable aggregation signature and its
-`fromRows` and `resolveDataValue` properties.
+For `merge`, `subRowResults[i]` is the aggregation result previously computed
+for `subRows[i]`.
+
+Without `merge`, nested grouping calls `aggregate` with both the group's
+depth-selected `rows` and its immediate `subRows`. This replaces the previous
+callable aggregation signature and its `fromRows` and `resolveDataValue`
+properties while preserving the ability to choose either row set.
 
 ## Grouped Cell Rendering
 

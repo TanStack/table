@@ -24,13 +24,30 @@ Defined in: [core/rows/coreRowsFeature.types.ts:130](https://github.com/TanStack
 
 ## Properties
 
+### getMaxSubRowDepth()
+
+```ts
+getMaxSubRowDepth: () => number;
+```
+
+Defined in: [core/rows/coreRowsFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L138)
+
+Returns the deepest structural row depth in the core row model.
+Root rows are depth `0`, direct sub-rows are depth `1`, and so on.
+
+#### Returns
+
+`number`
+
+***
+
 ### getRow()
 
 ```ts
 getRow: (id, searchAll?) => Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L145)
+Defined in: [core/rows/coreRowsFeature.types.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L153)
 
 Returns the row with the given ID.
 
@@ -56,7 +73,9 @@ Returns the row with the given ID.
 getRowId: (_, index, parent?) => string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L141)
+Defined in: [core/rows/coreRowsFeature.types.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L149)
+
+Returns the row id for a given row.
 
 #### Parameters
 
@@ -84,7 +103,7 @@ Defined in: [core/rows/coreRowsFeature.types.ts:141](https://github.com/TanStack
 getRowsInDisplayOrder: () => Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L140)
+Defined in: [core/rows/coreRowsFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.types.ts#L145)
 
 Returns the rows in the current display order and assigns their display
 indexes. When expanded rows bypass pagination, expanded descendants are

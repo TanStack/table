@@ -81,19 +81,24 @@ pagination do not change that default total.
 footer: ({ column }) => column.getAggregationValue<number>().toLocaleString()
 ```
 
-Pass rows from any row model to choose a different set explicitly:
+Pass one options object with rows from any row model to choose a different set:
 
 ```ts
-column.getAggregationValue(table.getCoreRowModel().rows) // all core rows
-column.getAggregationValue(table.getRowModel().rows) // visible page/pipeline
-column.getAggregationValue(table.getFilteredSelectedRowModel().rows)
-column.getAggregationValue(table.getCoreRowModel().rows.slice(0, 3))
+column.getAggregationValue({ rows: table.getCoreRowModel().rows })
+column.getAggregationValue({ rows: table.getRowModel().rows })
+column.getAggregationValue({ rows: table.getFilteredSelectedRowModel().rows })
+column.getAggregationValue({ rows: table.getCoreRowModel().rows.slice(0, 3) })
+column.getAggregationValue({ rows: table.getCoreRowModel().rows, maxDepth: 1 })
 ```
 
-There is no separate scope option. The row array is the complete override.
-Column option `getAggregationValue(context)` can provide an external or
-server-computed value; return `undefined` to fall back to the configured
-aggregation function.
+Depth is relative to the supplied row array. `0` selects those roots, `1`
+selects their direct sub-rows, and `Infinity` selects terminal rows. Configure
+`maxAggregationDepth` on the column for cached default calls, or pass
+`maxDepth` in the options object as an explicit override.
+`table.getMaxSubRowDepth()` returns
+the deepest structural depth in the core row model. Column option
+`getAggregationValue(context)` can provide an external or server-computed
+value; return `undefined` to fall back to the configured aggregation function.
 
 ## Grouped Aggregation
 
@@ -122,9 +127,11 @@ rendering uses the adapter's normal footer renderer.
 ## Custom Aggregation Definitions
 
 Use `constructAggregationFn({ aggregate, merge? })` for custom definitions.
-The aggregate context includes terminal `rows`, `getValue`, `column`,
-`table`, and an optional `groupingRow`. A `merge` implementation can make
-nested grouped aggregation more efficient.
+The aggregate context includes depth-selected `rows`, `maxDepth`, `getValue`,
+`column`, and `table`. Every aggregation configured on a column receives the
+same row frontier. Grouped calls also include `groupingRow` and immediate
+`subRows` for custom structural behavior. A `merge` implementation can more
+efficiently combine already-computed sub-row results.
 
 See [Custom Aggregation Definitions](../../../guide/aggregation#custom-aggregation-definitions)
 for the full contract, return typing, caching behavior, and worker limitations.

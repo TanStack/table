@@ -6,12 +6,12 @@ title: column_getAggregationValue
 # Function: column\_getAggregationValue()
 
 ```ts
-function column_getAggregationValue<TFeatures, TData, TValue>(column, rows?): ColumnAggregationValue<TFeatures>;
+function column_getAggregationValue<TFeatures, TData, TValue>(column, options?): ColumnAggregationValue<TFeatures>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.utils.ts:310](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L310)
+Defined in: [features/aggregation/aggregationFeature.utils.ts:330](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L330)
 
-Implements `column.getAggregationValue(rows?)` and its default-value cache.
+Implements `column.getAggregationValue(options?)` and its default cache.
 
 ## Type Parameters
 
@@ -33,9 +33,9 @@ Implements `column.getAggregationValue(rows?)` and its default-value cache.
 
 [`Column_Internal`](../../index/interfaces/Column_Internal.md)\<`TFeatures`, `TData`, `TValue`\>
 
-### rows?
+### options?
 
-readonly [`Row`](../../index/type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
+[`AggregationValueOptions`](../../index/interfaces/AggregationValueOptions.md)\<`TFeatures`, `TData`\>
 
 ## Returns
 

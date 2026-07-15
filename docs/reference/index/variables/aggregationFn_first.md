@@ -9,6 +9,6 @@ title: aggregationFn_first
 const aggregationFn_first: AggregationFnDef<any, any, unknown, unknown>;
 ```
 
-Defined in: [features/aggregation/aggregationFns.ts:291](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L291)
+Defined in: [features/aggregation/aggregationFns.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L300)
 
 Returns the first row's value, including a nullish value.

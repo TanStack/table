@@ -5,7 +5,7 @@ title: AggregationValueContext
 
 # Interface: AggregationValueContext\<TFeatures, TData, TValue\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:285](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L285)
+Defined in: [features/aggregation/aggregationFeature.types.ts:310](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L310)
 
 Values passed to a column-level aggregation-value provider.
 
@@ -31,9 +31,21 @@ Values passed to a column-level aggregation-value provider.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:291](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L291)
+Defined in: [features/aggregation/aggregationFeature.types.ts:316](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L316)
 
 The column whose value was requested.
+
+***
+
+### maxDepth
+
+```ts
+maxDepth: number;
+```
+
+Defined in: [features/aggregation/aggregationFeature.types.ts:318](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L318)
+
+Maximum relative sub-row depth used for the request.
 
 ***
 
@@ -43,7 +55,7 @@ The column whose value was requested.
 optional rows: readonly Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:293](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L293)
+Defined in: [features/aggregation/aggregationFeature.types.ts:320](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L320)
 
 Caller-provided rows, or `undefined` for the default row model.
 
@@ -55,6 +67,6 @@ Caller-provided rows, or `undefined` for the default row model.
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:295](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L295)
+Defined in: [features/aggregation/aggregationFeature.types.ts:322](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L322)
 
 The table that owns the column.

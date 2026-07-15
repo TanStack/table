@@ -5,7 +5,7 @@ title: AggregationValueResult
 
 # Interface: AggregationValueResult\<TResult\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:299](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L299)
+Defined in: [features/aggregation/aggregationFeature.types.ts:326](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L326)
 
 Marks an aggregation-value override as handled.
 
@@ -23,6 +23,6 @@ Marks an aggregation-value override as handled.
 value: TResult;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L301)
+Defined in: [features/aggregation/aggregationFeature.types.ts:328](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L328)
 
 The supplied value. `undefined` is still a handled result.

@@ -9,7 +9,7 @@ title: row_getAllCells
 function row_getAllCells<TFeatures, TData>(row): Cell<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:225](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L225)
+Defined in: [core/rows/coreRowsFeature.utils.ts:243](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L243)
 
 Constructs one cell for each leaf column in this row.
 

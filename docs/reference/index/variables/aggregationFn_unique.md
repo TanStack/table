@@ -9,6 +9,6 @@ title: aggregationFn_unique
 const aggregationFn_unique: AggregationFnDef<any, any, unknown, unknown[]>;
 ```
 
-Defined in: [features/aggregation/aggregationFns.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L241)
+Defined in: [features/aggregation/aggregationFns.ts:250](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L250)
 
 Collects distinct row values using JavaScript `Set` semantics.

@@ -3,7 +3,7 @@ title: Migrating to TanStack Table V9 (Preact)
 ---
 
 > [!IMPORTANT]
-> `v9.0.0-beta.48` introduces a breaking feature split: `columnGroupingFeature` no longer provides aggregation options or APIs. Tables that group rows and calculate aggregate values must now register both `columnGroupingFeature` and `aggregationFeature`. Grouping-only tables can register only `columnGroupingFeature`, while grand totals or other aggregation without grouping can register only `aggregationFeature`. `stockFeatures` already contains both. If you use an explicit feature list, add `aggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. See the [Grouping Guide](./grouping) and [Aggregation Guide](./aggregation).
+> `v9.0.0-beta.48` and `v9.0.0-beta.49` introduces breaking aggregation changes. `columnGroupingFeature` no longer provides aggregation options or APIs. Tables that group rows and calculate aggregate values must now register both `columnGroupingFeature` and `aggregationFeature`. Grouping-only tables can register only `columnGroupingFeature`, while grand totals or other aggregation without grouping can register only `aggregationFeature`. `stockFeatures` already contains both. If you use an explicit feature list, add `aggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. Aggregation definitions, row-depth selection, and the `getAggregationValue` signature also changed; see [Aggregation Feature Split](#aggregation-feature-split), the [Grouping Guide](./grouping), and the [Aggregation Guide](./aggregation).
 
 > [!NOTE]
 > `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology. These are logical positions: in LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. If you migrated on an earlier beta, update `columnPinning.left` to `columnPinning.start`, `columnPinning.right` to `columnPinning.end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*` / `getRight*` table and row APIs to `getStart*` / `getEnd*`. See the [Column Pinning](#column-pinning) section below for the full mapping.
@@ -213,6 +213,38 @@ const total = constructAggregationFn({
     rows.reduce((sum, row) => sum + Number(getValue(row)), 0),
 })
 ```
+
+Aggregation row selection is now depth-based and shared by every definition on
+a column. `maxAggregationDepth` defaults to `0` (the supplied root rows); use
+`1` for direct sub-rows or `Infinity` for terminal rows. An explicit
+`column.getAggregationValue({ rows, maxDepth })` call can override the column
+default.
+
+`getAggregationValue` now has one options-object signature. Calls without
+arguments are unchanged, but positional row and depth arguments must be moved
+into the object:
+
+```ts
+// Table V8/earlier V9 betas
+column.getAggregationValue(rows, maxDepth)
+
+// Current V9
+column.getAggregationValue({ rows, maxDepth })
+```
+
+All built-in definitions on a column now consume the same depth-selected
+`context.rows` frontier. This replaces the old per-function choice between
+`childRows` and `leafRows`. The default depth `0` preserves direct-child
+grouped aggregation; set `maxAggregationDepth: Infinity` to aggregate terminal
+rows. Custom definitions can still inspect grouped `context.subRows`, and
+`merge` receives matching `subRowResults` for nested groups.
+
+`table.getMaxSubRowDepth()` returns the deepest structural depth in the core
+row model. For example, use `Math.max(0, table.getMaxSubRowDepth() - 1)` as
+`maxDepth` to target one level before the maximum structural depth; shorter
+branches still contribute their deepest available row. Default no-row calls
+are cached; calls with `options.rows` are recomputed because the caller owns
+that array.
 
 `column.getAggregationFn()` is now `column.getAggregationFns()` because a column can run multiple definitions. A single `aggregationFn` still returns a scalar; an array returns an object keyed by function name or descriptor `id`. The old callable `AggregationFn` and `CreatedAggregationFn` types are replaced by `AggregationFnDef`.
 

@@ -108,10 +108,12 @@ function App() {
           aggregationFn: 'sum',
           cell: ({ getValue }) => getValue<number>().toLocaleString(),
           footer: ({ column, table }) =>
-            // formatValue(column.getAggregationValue()), // default - accounts for filtering
             formatValue(
-              column.getAggregationValue({ rows: getAggregationRows(table) }),
-            ), // or pass in whatever array of rows you want to aggregate
+              column.getAggregationValue({
+                // Omit `rows` to use the filtered, pre-grouped rows by default.
+                rows: getAggregationRows(table),
+              }),
+            ),
         }),
         columnHelper.accessor('score', {
           header: 'Score',
@@ -121,10 +123,12 @@ function App() {
             { id: 'range', aggregationFn: 'extent' },
           ],
           footer: ({ column, table }) =>
-            // formatValue(column.getAggregationValue()), // default - accounts for filtering
             formatValue(
-              column.getAggregationValue({ rows: getAggregationRows(table) }),
-            ), // or pass in whatever array of rows you want to aggregate
+              column.getAggregationValue({
+                // Any row model or custom subset can define the total's roots.
+                rows: getAggregationRows(table),
+              }),
+            ),
         }),
       ]),
     [],
