@@ -101,7 +101,9 @@ function App() {
           aggregationFn: 'sum',
           cell: ({ getValue }) => getValue<number>().toLocaleString(),
           footer: ({ column, table }) =>
-            formatValue(column.getAggregationValue(getAggregationRows(table))),
+            formatValue(
+              column.getAggregationValue({ rows: getAggregationRows(table) }),
+            ),
         }),
         columnHelper.accessor('score', {
           header: 'Score',
@@ -111,7 +113,9 @@ function App() {
             { id: 'range', aggregationFn: 'extent' },
           ],
           footer: ({ column, table }) =>
-            formatValue(column.getAggregationValue(getAggregationRows(table))),
+            formatValue(
+              column.getAggregationValue({ rows: getAggregationRows(table) }),
+            ),
         }),
       ]),
     [],

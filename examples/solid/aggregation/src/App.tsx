@@ -95,7 +95,9 @@ function App() {
       cell: ({ getValue }) => getValue<number>().toLocaleString(),
       footer: ({ column, table }) =>
         formatValue(
-          column.getAggregationValue(getAggregationRows(table, rowSource())),
+          column.getAggregationValue({
+            rows: getAggregationRows(table, rowSource()),
+          }),
         ),
     }),
     columnHelper.accessor('score', {
@@ -107,7 +109,9 @@ function App() {
       ],
       footer: ({ column, table }) =>
         formatValue(
-          column.getAggregationValue(getAggregationRows(table, rowSource())),
+          column.getAggregationValue({
+            rows: getAggregationRows(table, rowSource()),
+          }),
         ),
     }),
   ])
@@ -232,9 +236,9 @@ function App() {
                       ) : header.column.id === 'amount' ||
                         header.column.id === 'score' ? (
                         formatValue(
-                          header.column.getAggregationValue(
-                            getAggregationRows(table, rowSource()),
-                          ),
+                          header.column.getAggregationValue({
+                            rows: getAggregationRows(table, rowSource()),
+                          }),
                         )
                       ) : (
                         <table.FlexRender footer={header} />

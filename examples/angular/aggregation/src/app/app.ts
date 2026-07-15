@@ -70,14 +70,18 @@ const columns: Array<ColumnDef<typeof features, Sale>> = [
     aggregationFn: 'sum',
     cell: ({ getValue }) => getValue<number>().toLocaleString(),
     footer: ({ column, table }) =>
-      formatValue(column.getAggregationValue(getAggregationRows(table))),
+      formatValue(
+        column.getAggregationValue({ rows: getAggregationRows(table) }),
+      ),
   },
   {
     accessorKey: 'score',
     header: 'Score',
     aggregationFn: ['count', 'mean', { id: 'range', aggregationFn: 'extent' }],
     footer: ({ column, table }) =>
-      formatValue(column.getAggregationValue(getAggregationRows(table))),
+      formatValue(
+        column.getAggregationValue({ rows: getAggregationRows(table) }),
+      ),
   },
 ]
 

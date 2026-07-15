@@ -109,7 +109,9 @@ function App() {
           cell: ({ getValue }) => getValue<number>().toLocaleString(),
           footer: ({ column, table }) =>
             // formatValue(column.getAggregationValue()), // default - accounts for filtering
-            formatValue(column.getAggregationValue(getAggregationRows(table))), // or pass in whatever array of rows you want to aggregate
+            formatValue(
+              column.getAggregationValue({ rows: getAggregationRows(table) }),
+            ), // or pass in whatever array of rows you want to aggregate
         }),
         columnHelper.accessor('score', {
           header: 'Score',
@@ -120,7 +122,9 @@ function App() {
           ],
           footer: ({ column, table }) =>
             // formatValue(column.getAggregationValue()), // default - accounts for filtering
-            formatValue(column.getAggregationValue(getAggregationRows(table))), // or pass in whatever array of rows you want to aggregate
+            formatValue(
+              column.getAggregationValue({ rows: getAggregationRows(table) }),
+            ), // or pass in whatever array of rows you want to aggregate
         }),
       ]),
     [],
