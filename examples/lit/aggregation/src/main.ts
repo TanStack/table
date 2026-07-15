@@ -82,7 +82,7 @@ const columns = columnHelper.columns([
     cell: ({ getValue }) => getValue<number>().toLocaleString(),
     footer: ({ column, table }) =>
       formatAggregationValue(
-        column.getAggregationValue(getAggregationRows(table)),
+        column.getAggregationValue({ rows: getAggregationRows(table) }),
       ),
   }),
   columnHelper.accessor('score', {
@@ -90,7 +90,7 @@ const columns = columnHelper.columns([
     aggregationFn: ['count', 'mean', { id: 'range', aggregationFn: 'extent' }],
     footer: ({ column, table }) =>
       formatAggregationValue(
-        column.getAggregationValue(getAggregationRows(table)),
+        column.getAggregationValue({ rows: getAggregationRows(table) }),
       ),
   }),
 ])

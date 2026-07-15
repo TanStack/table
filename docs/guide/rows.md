@@ -103,6 +103,7 @@ If you are using either grouping or expanding features, your rows may contain su
 - `row.depth`: The depth of the row (if nested or grouped) relative to the root row array. 0 for root level rows, 1 for child rows, 2 for grandchild rows, etc.
 - `row.parentId`: The unique ID of the parent row for the row (The row that contains this row in its subRows array).
 - `row.getParentRow`: Returns the parent row for the row, if it exists.
+- `table.getMaxSubRowDepth()`: Returns the deepest structural depth in the core row model. The result is memoized until the core row model changes.
 
 ## More Row APIs
 

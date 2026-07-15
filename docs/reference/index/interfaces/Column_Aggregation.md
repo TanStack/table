@@ -5,7 +5,7 @@ title: Column_Aggregation
 
 # Interface: Column\_Aggregation\<TFeatures, TData\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:250](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L250)
+Defined in: [features/aggregation/aggregationFeature.types.ts:264](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L264)
 
 Column instance APIs installed by `aggregationFeature`.
 
@@ -27,7 +27,7 @@ Column instance APIs installed by `aggregationFeature`.
 getAggregationFns: () => readonly ResolvedAggregationFn<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:255](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L255)
+Defined in: [features/aggregation/aggregationFeature.types.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L269)
 
 Resolves the configured scalar or multiple aggregation definitions.
 
@@ -40,14 +40,14 @@ readonly [`ResolvedAggregationFn`](ResolvedAggregationFn.md)\<`TFeatures`, `TDat
 ### getAggregationValue()
 
 ```ts
-getAggregationValue: <TResult>(rows?) => TResult;
+getAggregationValue: <TResult>(options?) => TResult;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:263](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L263)
+Defined in: [features/aggregation/aggregationFeature.types.ts:277](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L277)
 
 Aggregates this column over the default pre-grouped row model, or over a
-caller-provided array of rows. Explicit rows are normalized to unique
-terminal leaves and are intentionally not cached.
+caller-provided array of rows. `options.maxDepth` overrides the column's
+`maxAggregationDepth`. Explicit-row calls are intentionally not cached.
 
 #### Type Parameters
 
@@ -57,9 +57,9 @@ terminal leaves and are intentionally not cached.
 
 #### Parameters
 
-##### rows?
+##### options?
 
-readonly [`Row`](../type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
+[`AggregationValueOptions`](AggregationValueOptions.md)\<`TFeatures`, `TData`\>
 
 #### Returns
 
@@ -75,7 +75,7 @@ getAutoAggregationFn: () =>
   | undefined;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:267](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L267)
+Defined in: [features/aggregation/aggregationFeature.types.ts:281](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L281)
 
 Infers `sum` for a numeric first row and `extent` for a Date first row.
 

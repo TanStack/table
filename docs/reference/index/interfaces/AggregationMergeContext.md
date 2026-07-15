@@ -5,7 +5,7 @@ title: AggregationMergeContext
 
 # Interface: AggregationMergeContext\<TFeatures, TData, TValue, TResult\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L41)
+Defined in: [features/aggregation/aggregationFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L49)
 
 Additional values available when merging nested grouped results.
 
@@ -32,30 +32,6 @@ Additional values available when merging nested grouped results.
 `TResult`
 
 ## Properties
-
-### childResults
-
-```ts
-childResults: readonly TResult[];
-```
-
-Defined in: [features/aggregation/aggregationFeature.types.ts:48](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L48)
-
-Results produced for each immediate child group, in child-row order.
-
-***
-
-### childRows
-
-```ts
-childRows: readonly Row<TFeatures, TData>[];
-```
-
-Defined in: [features/aggregation/aggregationFeature.types.ts:50](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L50)
-
-Immediate child group rows corresponding to `childResults`.
-
-***
 
 ### column
 
@@ -95,7 +71,7 @@ Convenience alias for `column.id`.
 getValue: (row) => TValue;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L24)
+Defined in: [features/aggregation/aggregationFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L32)
 
 Reads this column's value from one of `rows`.
 
@@ -121,7 +97,7 @@ Reads this column's value from one of `rows`.
 optional groupingRow: Row<TFeatures, TData>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L30)
+Defined in: [features/aggregation/aggregationFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L38)
 
 The synthetic grouped row receiving this result. This property is omitted
 for root or caller-supplied-row aggregation. Its `depth` identifies the
@@ -133,20 +109,64 @@ grouping level when grouped aggregation needs that distinction.
 
 ***
 
+### maxDepth
+
+```ts
+maxDepth: number;
+```
+
+Defined in: [features/aggregation/aggregationFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L24)
+
+Maximum relative sub-row depth used to select `rows`.
+
+#### Inherited from
+
+[`AggregationContext`](AggregationContext.md).[`maxDepth`](AggregationContext.md#maxdepth)
+
+***
+
 ### rows
 
 ```ts
 rows: readonly Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L35)
+Defined in: [features/aggregation/aggregationFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L43)
 
-Terminal leaf rows included in this aggregation. The executor normalizes
-hierarchical and duplicate row inputs before invoking the definition.
+Unique rows selected at `maxDepth`. Branches that end before `maxDepth`
+contribute their deepest available row.
 
 #### Inherited from
 
 [`AggregationContext`](AggregationContext.md).[`rows`](AggregationContext.md#rows)
+
+***
+
+### subRowResults
+
+```ts
+subRowResults: readonly TResult[];
+```
+
+Defined in: [features/aggregation/aggregationFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L56)
+
+Results produced for each immediate sub-row group, in sub-row order.
+
+***
+
+### subRows
+
+```ts
+subRows: readonly Row<TFeatures, TData>[];
+```
+
+Defined in: [features/aggregation/aggregationFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L58)
+
+Immediate sub-row groups corresponding to `subRowResults`.
+
+#### Overrides
+
+[`AggregationContext`](AggregationContext.md).[`subRows`](AggregationContext.md#subrows)
 
 ***
 
@@ -156,7 +176,7 @@ hierarchical and duplicate row inputs before invoking the definition.
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L37)
+Defined in: [features/aggregation/aggregationFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L45)
 
 The table that owns the column and rows.
 

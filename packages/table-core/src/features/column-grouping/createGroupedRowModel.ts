@@ -118,7 +118,7 @@ function _createGroupedRowModel<
           subRow.parentId = id
         })
 
-        const leafRows = normalizeAggregationRows(groupedRows)
+        const leafRows = normalizeAggregationRows(groupedRows, Infinity)
 
         const row = constructRow(
           table,
@@ -167,10 +167,10 @@ function _createGroupedRowModel<
             const cache = ((row as any)._aggregationValuesCache ??=
               makeObjectMap())
             cache[colId] = aggregateColumnValue({
-              childRows: subRows,
+              subRows,
               column,
               groupingRow: row,
-              rows: leafRows,
+              rows: groupedRows,
             })
             return cache[colId]
           },

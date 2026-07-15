@@ -39,8 +39,8 @@ function collectRangeValues(context: AggregationContext<any, any, unknown>) {
 }
 
 /**
- * Sums numeric row values. Non-number values contribute zero. As in the
- * previous API, `NaN` is a number and therefore propagates through the sum.
+ * Sums numeric selected-row values. Non-number values contribute zero. As in
+ * the previous API, `NaN` is a number and therefore propagates through the sum.
  */
 export const aggregationFn_sum = constructAggregationFn<
   any,
@@ -56,10 +56,10 @@ export const aggregationFn_sum = constructAggregationFn<
     }
     return sum
   },
-  merge: ({ childResults }) => {
+  merge: ({ subRowResults }) => {
     let sum = 0
-    for (let i = 0; i < childResults.length; i++) {
-      const value = childResults[i]
+    for (let i = 0; i < subRowResults.length; i++) {
+      const value = subRowResults[i]
       if (isNumber(value)) sum += value
     }
     return sum
@@ -67,8 +67,8 @@ export const aggregationFn_sum = constructAggregationFn<
 })
 
 /**
- * Finds the minimum numeric or Date value. Invalid value types are ignored;
- * `NaN` preserves the legacy numeric seeding behavior.
+ * Finds the minimum numeric or Date value from the selected rows. Invalid value
+ * types are ignored; `NaN` preserves the legacy numeric seeding behavior.
  */
 export const aggregationFn_min = constructAggregationFn<
   any,
@@ -84,16 +84,17 @@ export const aggregationFn_min = constructAggregationFn<
     }
     return result
   },
-  merge: ({ childResults }) => {
+  merge: ({ subRowResults }) => {
     let result: RangeValue | undefined
     let kind: 'date' | 'number' | undefined
-    for (let i = 0; i < childResults.length; i++) {
-      const value = childResults[i]
+    for (let i = 0; i < subRowResults.length; i++) {
+      const value = subRowResults[i]
       const valueKind = getRangeKind(value)
       if (!valueKind) continue
+      if (value === undefined) continue
       kind ??= valueKind
       if (kind !== valueKind) continue
-      if (result === undefined || compareRangeValues(value!, result) < 0) {
+      if (result === undefined || compareRangeValues(value, result) < 0) {
         result = value
       }
     }
@@ -102,8 +103,8 @@ export const aggregationFn_min = constructAggregationFn<
 })
 
 /**
- * Finds the maximum numeric or Date value. Invalid value types are ignored;
- * `NaN` preserves the legacy numeric seeding behavior.
+ * Finds the maximum numeric or Date value from the selected rows. Invalid value
+ * types are ignored; `NaN` preserves the legacy numeric seeding behavior.
  */
 export const aggregationFn_max = constructAggregationFn<
   any,
@@ -119,16 +120,17 @@ export const aggregationFn_max = constructAggregationFn<
     }
     return result
   },
-  merge: ({ childResults }) => {
+  merge: ({ subRowResults }) => {
     let result: RangeValue | undefined
     let kind: 'date' | 'number' | undefined
-    for (let i = 0; i < childResults.length; i++) {
-      const value = childResults[i]
+    for (let i = 0; i < subRowResults.length; i++) {
+      const value = subRowResults[i]
       const valueKind = getRangeKind(value)
       if (!valueKind) continue
+      if (value === undefined) continue
       kind ??= valueKind
       if (kind !== valueKind) continue
-      if (result === undefined || compareRangeValues(value!, result) > 0) {
+      if (result === undefined || compareRangeValues(value, result) > 0) {
         result = value
       }
     }
@@ -137,7 +139,8 @@ export const aggregationFn_max = constructAggregationFn<
 })
 
 /**
- * Finds the minimum and maximum numeric or Date values. Empty inputs return
+ * Finds the minimum and maximum numeric or Date values from the selected rows.
+ * Empty inputs return
  * `[undefined, undefined]`, preserving the previous built-in result shape.
  */
 export const aggregationFn_extent = constructAggregationFn<
@@ -158,26 +161,32 @@ export const aggregationFn_extent = constructAggregationFn<
     }
     return [min, max]
   },
-  merge: ({ childResults }) => {
+  merge: ({ subRowResults }) => {
     let result: [RangeValue | undefined, RangeValue | undefined] = [
       undefined,
       undefined,
     ]
     let kind: 'date' | 'number' | undefined
-    for (let i = 0; i < childResults.length; i++) {
-      const extent = childResults[i]!
-      const valueKind = getRangeKind(extent[0])
-      if (!valueKind) continue
+    for (let i = 0; i < subRowResults.length; i++) {
+      const extent = subRowResults[i]!
+      const min = extent[0]
+      const max = extent[1]
+      const valueKind = getRangeKind(min)
+      if (!valueKind || min === undefined || max === undefined) continue
       kind ??= valueKind
       if (kind !== valueKind) continue
       if (result[0] === undefined) {
-        result = [extent[0], extent[1]]
+        result = [min, max]
       } else {
-        if (compareRangeValues(extent[0]!, result[0]) < 0) {
-          result[0] = extent[0]
+        if (compareRangeValues(min, result[0]) < 0) {
+          result[0] = min
         }
-        if (compareRangeValues(extent[1]!, result[1]!) > 0) {
-          result[1] = extent[1]
+        const currentMax = result[1]
+        if (
+          currentMax === undefined ||
+          compareRangeValues(max, currentMax) > 0
+        ) {
+          result[1] = max
         }
       }
     }
@@ -277,10 +286,10 @@ export const aggregationFn_count = constructAggregationFn<
   number
 >({
   aggregate: ({ rows }) => rows.length,
-  merge: ({ childResults }) => {
+  merge: ({ subRowResults }) => {
     let count = 0
-    for (let i = 0; i < childResults.length; i++) {
-      const value = childResults[i]
+    for (let i = 0; i < subRowResults.length; i++) {
+      const value = subRowResults[i]
       if (isNumber(value)) count += value
     }
     return count
@@ -296,7 +305,7 @@ export const aggregationFn_first = constructAggregationFn<
 >({
   aggregate: (context) =>
     context.rows[0] ? context.getValue(context.rows[0]) : undefined,
-  merge: ({ childResults }) => childResults[0],
+  merge: ({ subRowResults }) => subRowResults[0],
 })
 
 /** Returns the last row's value, including a nullish value. */
@@ -310,7 +319,7 @@ export const aggregationFn_last = constructAggregationFn<
     const row = context.rows[context.rows.length - 1]
     return row ? context.getValue(row) : undefined
   },
-  merge: ({ childResults }) => childResults[childResults.length - 1],
+  merge: ({ subRowResults }) => subRowResults[subRowResults.length - 1],
 })
 
 /**

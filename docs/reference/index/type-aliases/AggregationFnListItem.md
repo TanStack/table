@@ -12,7 +12,7 @@ type AggregationFnListItem<TFeatures, TData, TValue> =
 | AggregationFnDescriptor<TFeatures, TData, TValue, any>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L133)
+Defined in: [features/aggregation/aggregationFeature.types.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L141)
 
 One named or explicitly keyed entry in a multiple aggregation option.
 

@@ -5,7 +5,7 @@ title: ResolvedAggregationFn
 
 # Interface: ResolvedAggregationFn\<TFeatures, TData\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:214](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L214)
+Defined in: [features/aggregation/aggregationFeature.types.ts:222](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L222)
 
 A validated aggregation entry returned by `column.getAggregationFns()`.
 
@@ -29,7 +29,7 @@ aggregationFn:
   | undefined;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L219)
+Defined in: [features/aggregation/aggregationFeature.types.ts:227](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L227)
 
 Resolved definition, or `undefined` when configuration is invalid.
 
@@ -41,6 +41,6 @@ Resolved definition, or `undefined` when configuration is invalid.
 id: string | undefined;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L221)
+Defined in: [features/aggregation/aggregationFeature.types.ts:229](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L229)
 
 Key used for a multiple result; scalar inline definitions have no id.

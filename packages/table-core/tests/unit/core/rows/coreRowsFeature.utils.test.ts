@@ -11,6 +11,7 @@ import {
   row_renderValue,
   table_getRow,
   table_getRowId,
+  table_getMaxSubRowDepth,
 } from '../../../../src/core/rows/coreRowsFeature.utils'
 import { testFeatures } from '../../../fixtures/features'
 import { generateTestColumnDefs } from '../../../fixtures/data/generateTestColumnDefs'
@@ -172,6 +173,21 @@ describe('row_renderValue', () => {
 })
 
 describe('row tree readers', () => {
+  it('memoizes the deepest structural sub-row depth on the table', () => {
+    const table = makeNestedTable([2, 2, 2])
+    const coreRowModel = table.getCoreRowModel()
+
+    expect(table_getMaxSubRowDepth(table as any)).toBe(2)
+    expect(table.getMaxSubRowDepth()).toBe(2)
+    expect(table.getMaxSubRowDepth()).toBe(2)
+    expect(table.getCoreRowModel()).toBe(coreRowModel)
+  })
+
+  it('returns zero for flat and empty row models', () => {
+    expect(makeTable(2).getMaxSubRowDepth()).toBe(0)
+    expect(makeTable(0).getMaxSubRowDepth()).toBe(0)
+  })
+
   it('row_getLeafRows should flatten all descendants', () => {
     const table = makeNestedTable([2, 2, 2])
     const row = table.getRow('0')

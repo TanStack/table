@@ -34,8 +34,8 @@
     columnHelper.display({ id: 'select' }),
     columnHelper.accessor('category', { header: 'Category', filterFn: 'includesString' }),
     columnHelper.accessor('item', { header: 'Item', footer: ({ table }) => `${table.options.meta?.rowSource} total` }),
-    columnHelper.accessor('amount', { header: 'Amount', aggregationFn: 'sum', cell: ({ getValue }) => getValue<number>().toLocaleString(), footer: ({ column, table }) => formatValue(column.getAggregationValue(getAggregationRows(table))) }),
-    columnHelper.accessor('score', { header: 'Score', aggregationFn: ['count', 'mean', { id: 'range', aggregationFn: 'extent' }], footer: ({ column, table }) => formatValue(column.getAggregationValue(getAggregationRows(table))) }),
+    columnHelper.accessor('amount', { header: 'Amount', aggregationFn: 'sum', cell: ({ getValue }) => getValue<number>().toLocaleString(), footer: ({ column, table }) => formatValue(column.getAggregationValue({ rows: getAggregationRows(table) })) }),
+    columnHelper.accessor('score', { header: 'Score', aggregationFn: ['count', 'mean', { id: 'range', aggregationFn: 'extent' }], footer: ({ column, table }) => formatValue(column.getAggregationValue({ rows: getAggregationRows(table) })) }),
   ])
   const table = createTable({
     features, columns,

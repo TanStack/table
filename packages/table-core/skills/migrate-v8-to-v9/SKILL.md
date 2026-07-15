@@ -123,14 +123,22 @@ Move registries from table options or factory arguments into these feature slots
 Register only the built-ins the table references by string name, importing each individually (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) alongside any custom functions. The full registry objects (`filterFns`, `sortFns`, `aggregationFns` exports) still work but bundle every built-in. A slot's keys become the valid string names in column definitions, and `'auto'` resolves only registered functions.
 
 Aggregation is independent from grouping. Add `aggregationFeature` for
-`aggregationFn`, `aggregatedCell`, `column.getAggregationValue(rows?)`, and
+`aggregationFn`, `aggregatedCell`, `column.getAggregationValue(options?)`, and
 `cell.getIsAggregated`. A root total does not require grouping. Convert legacy
 custom callables `(columnId, leafRows, childRows) => result` to
 `constructAggregationFn({ aggregate: (context) => result, merge? })`
 definitions. Replace `column.getAggregationFn()` with
 `column.getAggregationFns()`; arrays in `aggregationFn` return keyed objects.
 Replace the old `AggregationFn` and `CreatedAggregationFn` types with
-`AggregationFnDef`.
+`AggregationFnDef`. Aggregation row selection is shared across every definition
+on a column: `maxAggregationDepth` defaults to `0`, while `1` selects direct
+sub-rows and `Infinity` selects terminal rows. Explicit totals can override it
+with the single object signature
+`column.getAggregationValue({ rows, maxDepth })`; positional row and depth
+arguments are not supported. All built-ins consume the same selected `rows`.
+Custom definitions can inspect grouped `subRows`, and `merge` receives matching
+`subRowResults`. Use `table.getMaxSubRowDepth()` when a depth should derive from
+the deepest structural row in the core model.
 
 ### 3. Migrate state reads and whole-state observation
 

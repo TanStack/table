@@ -6,13 +6,13 @@ title: normalizeAggregationRows
 # Function: normalizeAggregationRows()
 
 ```ts
-function normalizeAggregationRows<TFeatures, TData>(rows): Row<TFeatures, TData>[];
+function normalizeAggregationRows<TFeatures, TData>(rows, maxDepth): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.utils.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L57)
+Defined in: [features/aggregation/aggregationFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L66)
 
-Flattens hierarchical row inputs to unique terminal leaves in encounter
-order. This is the normalization used by public aggregation-value calls.
+Selects unique rows at a maximum relative depth in encounter order.
+Branches that end before the requested depth contribute their deepest row.
 
 ## Type Parameters
 
@@ -29,6 +29,10 @@ order. This is the normalization used by public aggregation-value calls.
 ### rows
 
 readonly [`Row`](../../index/type-aliases/Row.md)\<`TFeatures`, `TData`\>[]
+
+### maxDepth
+
+`number` = `0`
 
 ## Returns
 

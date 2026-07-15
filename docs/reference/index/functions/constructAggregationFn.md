@@ -9,7 +9,7 @@ title: constructAggregationFn
 function constructAggregationFn<TFeatures, TData, TValue, TResult>(definition): AggregationFnDef<TFeatures, TData, TValue, TResult>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:75](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L75)
+Defined in: [features/aggregation/aggregationFeature.types.ts:83](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L83)
 
 Creates a typed context-based aggregation definition for a column or
 aggregation-function registry.

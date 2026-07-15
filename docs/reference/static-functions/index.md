@@ -181,6 +181,7 @@ title: static-functions
 - [table\_getIsSomeRowsPinned](functions/table_getIsSomeRowsPinned.md)
 - [table\_getIsSomeRowsSelected](functions/table_getIsSomeRowsSelected.md)
 - [table\_getLeafHeaders](functions/table_getLeafHeaders.md)
+- [table\_getMaxSubRowDepth](functions/table_getMaxSubRowDepth.md)
 - [table\_getOrderColumnsFn](functions/table_getOrderColumnsFn.md)
 - [table\_getPageCount](functions/table_getPageCount.md)
 - [table\_getPageOptions](functions/table_getPageOptions.md)

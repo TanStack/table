@@ -132,12 +132,20 @@ export interface Table_Rows<
   in out TData extends RowData,
 > {
   /**
+   * Returns the deepest structural row depth in the core row model.
+   * Root rows are depth `0`, direct sub-rows are depth `1`, and so on.
+   */
+  getMaxSubRowDepth: () => number
+  /**
    * Returns the rows in the current display order and assigns their display
    * indexes. When expanded rows bypass pagination, expanded descendants are
    * included in this order. This is the memoized source for
    * `row.getDisplayIndex()`.
    */
   getRowsInDisplayOrder: () => Array<Row<TFeatures, TData>>
+  /**
+   * Returns the row id for a given row.
+   */
   getRowId: (_: TData, index: number, parent?: Row<TFeatures, TData>) => string
   /**
    * Returns the row with the given ID.

@@ -13,6 +13,7 @@ title: index
 - [AggregationFns](interfaces/AggregationFns.md)
 - [AggregationMergeContext](interfaces/AggregationMergeContext.md)
 - [AggregationValueContext](interfaces/AggregationValueContext.md)
+- [AggregationValueOptions](interfaces/AggregationValueOptions.md)
 - [AggregationValueResult](interfaces/AggregationValueResult.md)
 - [API](interfaces/API.md)
 - [CachedRowModel\_All](interfaces/CachedRowModel_All.md)

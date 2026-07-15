@@ -5,7 +5,7 @@ title: AggregationFnDef
 
 # Interface: AggregationFnDef\<TFeatures, TData, TValue, TResult\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L54)
+Defined in: [features/aggregation/aggregationFeature.types.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L62)
 
 A context-based aggregation definition and optional grouped-result merge.
 
@@ -35,9 +35,9 @@ A context-based aggregation definition and optional grouped-result merge.
 aggregate: (context) => TResult;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:61](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L61)
+Defined in: [features/aggregation/aggregationFeature.types.ts:69](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L69)
 
-Computes a result directly from normalized terminal rows.
+Computes a result directly from the selected `rows`.
 
 #### Parameters
 
@@ -57,10 +57,10 @@ Computes a result directly from normalized terminal rows.
 optional merge: (context) => TResult;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L66)
+Defined in: [features/aggregation/aggregationFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L74)
 
-Combines already-computed immediate child-group results. When omitted,
-nested grouping falls back to `aggregate` over the group's terminal rows.
+Combines already-computed immediate sub-row results. When omitted,
+nested grouping falls back to `aggregate` over the group's selected rows.
 
 #### Parameters
 

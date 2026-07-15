@@ -16,6 +16,7 @@ export const aggregationFeature: TableFeature = {
     aggregatedCell: ({ column, getValue }: any) =>
       formatAggregatedCellValue(getValue(), column.columnDef.aggregationFn),
     aggregationFn: 'auto',
+    maxAggregationDepth: 0,
   }),
 
   getDefaultTableOptions: () => ({
@@ -36,7 +37,7 @@ export const aggregationFeature: TableFeature = {
         fn: (column) => column_getAggregationFns(column),
       },
       column_getAggregationValue: {
-        fn: (column, rows) => column_getAggregationValue(column, rows),
+        fn: (column, options) => column_getAggregationValue(column, options),
       },
       column_getAutoAggregationFn: {
         fn: (column) => column_getAutoAggregationFn(column),

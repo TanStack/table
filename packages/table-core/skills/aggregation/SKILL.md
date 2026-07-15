@@ -48,15 +48,22 @@ export const features = tableFeatures({
 
 ```ts
 const grandTotal = salaryColumn.getAggregationValue()
-const filteredTotal = salaryColumn.getAggregationValue(
-  table.getFilteredRowModel().rows,
-)
+const filteredTotal = salaryColumn.getAggregationValue({
+  rows: table.getFilteredRowModel().rows,
+})
+const childTotal = salaryColumn.getAggregationValue({
+  rows: table.getCoreRowModel().rows,
+  maxDepth: 1,
+})
 ```
 
 The default uses the pre-grouped row model. Explicit rows can come from any row
-model or caller-selected subset. Hierarchical inputs are normalized to unique
-terminal rows. Default calls are cached; explicit-row calls intentionally are
-not because array identity and contents are caller-owned.
+model or caller-selected subset. `maxAggregationDepth` defaults to `0`, which
+selects the supplied roots; `1` selects direct sub-rows, and `Infinity` selects
+terminal rows. Branches that end early contribute their deepest available row.
+Default calls are cached; explicit-row calls intentionally are not because array
+identity and contents are caller-owned. `table.getMaxSubRowDepth()` returns the
+deepest structural depth in the core row model.
 
 ### Multiple aggregations
 
@@ -86,10 +93,12 @@ const weightedMean = constructAggregationFn({
 })
 ```
 
-The context provides `rows`, `getValue`, `column`, `columnId`, `table`, and an
-optional `groupingRow`. Add `merge({ childResults, childRows, ...context })`
-when nested groups can efficiently combine child results; otherwise the engine
-re-runs `aggregate` over normalized terminal rows.
+The context provides depth-selected `rows`, `maxDepth`, `getValue`, `column`,
+`columnId`, `table`, and optional grouped-only `groupingRow` and `subRows`.
+Every aggregation configured on a column receives the same row frontier. Add
+`merge({ subRowResults, subRows, ...context })` when nested groups can more
+efficiently combine already-computed sub-row results; otherwise the engine calls
+`aggregate` with both row sets. `subRowResults[i]` corresponds to `subRows[i]`.
 
 ### Manual or remote values
 
@@ -109,19 +118,20 @@ Correct: register `aggregationFeature` and call
 
 ### [HIGH] Passing a scope label and rows
 
-There is no scope option. Call `getAggregationValue()` for the default or pass
-the exact rows from the desired row model.
+There is no scope option. Call `getAggregationValue()` for the cached default,
+or pass a single options object containing rows from the desired row model and
+`maxDepth` when the desired frontier is below those rows.
 
 ### [HIGH] Reusing the legacy callable signature
 
 Wrong: `(columnId, leafRows, childRows) => result`.
 
-Correct: `constructAggregationFn({ aggregate: ({ rows, getValue }) => result })`.
+Correct: `constructAggregationFn({ aggregate: ({ rows, subRows, getValue }) => result })`.
 
 ### [MEDIUM] Assuming arbitrary totals run in the worker
 
 The experimental worker computes grouped row-model aggregates. Public
-`getAggregationValue(rows?)` totals execute on the main thread, and custom
+`getAggregationValue(options?)` totals execute on the main thread, and custom
 grouped results sent by the worker must be structured-cloneable.
 
 ## API Discovery

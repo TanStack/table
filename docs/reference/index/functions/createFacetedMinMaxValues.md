@@ -9,7 +9,7 @@ title: createFacetedMinMaxValues
 function createFacetedMinMaxValues<TFeatures, TData>(): (table, columnId) => () => [number, number] | undefined;
 ```
 
-Defined in: [features/column-faceting/createFacetedMinMaxValues.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedMinMaxValues.ts#L13)
+Defined in: [features/column-faceting/createFacetedMinMaxValues.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/createFacetedMinMaxValues.ts#L17)
 
 Creates a memoized faceted min max values helper for faceted filtering.
 
