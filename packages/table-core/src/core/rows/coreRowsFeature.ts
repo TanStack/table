@@ -9,6 +9,7 @@ import {
   row_getUniqueValues,
   row_getValue,
   row_renderValue,
+  table_getMaxSubRowDepth,
   table_getRow,
   table_getRowId,
   table_getRowsInDisplayOrder,
@@ -72,6 +73,10 @@ export const coreRowsFeature: TableFeature = {
       table_getRow: {
         fn: (id: string, searchAll?: boolean) =>
           table_getRow(table, id, searchAll),
+      },
+      table_getMaxSubRowDepth: {
+        fn: () => table_getMaxSubRowDepth(table),
+        memoDeps: () => [table.getCoreRowModel()],
       },
     })
   },

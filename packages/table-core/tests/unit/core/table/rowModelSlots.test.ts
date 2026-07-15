@@ -369,14 +369,16 @@ describe('row model and fn registry feature slots', () => {
     })
     const column = table.getColumn('age')!
     column.getAggregationFns()
-    column.getAggregationValue(table.getCoreRowModel().rows)
+    column.getAggregationValue({ rows: table.getCoreRowModel().rows })
     if (false) {
       // @ts-expect-error - grouping APIs are absent without columnGroupingFeature
       column.getCanGroup()
       // @ts-expect-error - row-selection row models require rowSelectionFeature
       table.getFilteredSelectedRowModel()
-      // @ts-expect-error - aggregation values accept rows directly, not options
-      column.getAggregationValue({ rows: table.getCoreRowModel().rows })
+      // @ts-expect-error - aggregation options use known properties
+      column.getAggregationValue({ scope: 'core' })
+      // @ts-expect-error - rows are provided through the options object
+      column.getAggregationValue(table.getCoreRowModel().rows)
     }
 
     const selectedFeatures = tableFeatures({
@@ -389,9 +391,9 @@ describe('row model and fn registry feature slots', () => {
       data,
       columns: [{ accessorKey: 'age', aggregationFn: 'sum' }],
     })
-    selectedTable
-      .getColumn('age')!
-      .getAggregationValue(selectedTable.getFilteredSelectedRowModel().rows)
+    selectedTable.getColumn('age')!.getAggregationValue({
+      rows: selectedTable.getFilteredSelectedRowModel().rows,
+    })
 
     const groupingFeatures = tableFeatures({
       columnGroupingFeature,

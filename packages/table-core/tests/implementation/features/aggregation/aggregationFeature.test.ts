@@ -45,7 +45,7 @@ describe('aggregationFeature', () => {
     const table = constructTable({ features, data, columns })
 
     expect(table.getColumn('scalar')!.getAggregationValue()).toBe(30)
-    expect(table.getColumn('scalar')!.getAggregationValue([])).toBe(0)
+    expect(table.getColumn('scalar')!.getAggregationValue({ rows: [] })).toBe(0)
     expect(table.getColumn('multiple')!.getAggregationValue()).toEqual({
       count: 3,
       mean: 15,
@@ -107,13 +107,43 @@ describe('aggregationFeature', () => {
     expect(aggregate).toHaveBeenCalledTimes(1)
 
     const rows = table.getCoreRowModel().rows
-    expect(column.getAggregationValue(rows)).toBe(2)
-    expect(column.getAggregationValue(rows)).toBe(2)
+    expect(column.getAggregationValue({ rows })).toBe(2)
+    expect(column.getAggregationValue({ rows })).toBe(2)
     expect(aggregate).toHaveBeenCalledTimes(3)
 
     table.setOptions((old) => ({ ...old, data: [...old.data, { value: 3 }] }))
     expect(column.getAggregationValue()).toBe(3)
     expect(aggregate).toHaveBeenCalledTimes(4)
+  })
+
+  it('includes aggregation depth in the default-row cache key', () => {
+    type Node = { value: number; subRows?: Array<Node> }
+    const aggregate = vi.fn(({ rows }) => rows.length)
+    const sized = constructAggregationFn<any, any, unknown, number>({
+      aggregate,
+    })
+    const features = testFeatures({
+      aggregationFeature,
+      aggregationFns: { sized },
+    })
+    const table = constructTable({
+      features,
+      data: [{ value: 10, subRows: [{ value: 1 }, { value: 2 }] }],
+      columns: [{ accessorKey: 'value', aggregationFn: 'sized' }],
+      getSubRows: (row: Node) => row.subRows,
+    })
+    const column = table.getColumn('value')!
+
+    expect(column.getAggregationValue()).toBe(1)
+    expect(column.getAggregationValue()).toBe(1)
+    expect(aggregate).toHaveBeenCalledTimes(1)
+
+    expect(column.getAggregationValue({ maxDepth: 1 })).toBe(2)
+    expect(column.getAggregationValue({ maxDepth: 1 })).toBe(2)
+    expect(aggregate).toHaveBeenCalledTimes(2)
+
+    expect(column.getAggregationValue()).toBe(1)
+    expect(aggregate).toHaveBeenCalledTimes(3)
   })
 
   it('accepts rows from any row model or custom selection', () => {
@@ -152,17 +182,25 @@ describe('aggregationFeature', () => {
     const column = table.getColumn('amount')!
 
     expect(column.getAggregationValue()).toBe(11)
-    expect(column.getAggregationValue(table.getCoreRowModel().rows)).toBe(15)
-    expect(column.getAggregationValue(table.getRowModel().rows)).toBe(3)
     expect(
-      column.getAggregationValue(table.getFilteredSelectedRowModel().rows),
-    ).toBe(2)
-    expect(column.getAggregationValue([table.getCoreRowModel().rows[2]!])).toBe(
-      4,
+      column.getAggregationValue({ rows: table.getCoreRowModel().rows }),
+    ).toBe(15)
+    expect(column.getAggregationValue({ rows: table.getRowModel().rows })).toBe(
+      3,
     )
+    expect(
+      column.getAggregationValue({
+        rows: table.getFilteredSelectedRowModel().rows,
+      }),
+    ).toBe(2)
+    expect(
+      column.getAggregationValue({
+        rows: [table.getCoreRowModel().rows[2]!],
+      }),
+    ).toBe(4)
   })
 
-  it('normalizes hierarchical and duplicate explicit rows to terminal leaves', () => {
+  it('selects a unique depth frontier and keeps shorter ragged branches', () => {
     type Node = { amount: number; subRows?: Array<Node> }
     const features = testFeatures({ aggregationFeature, aggregationFns })
     const data: Array<Node> = [
@@ -170,6 +208,7 @@ describe('aggregationFeature', () => {
         amount: 100,
         subRows: [{ amount: 2 }, { amount: 3 }],
       },
+      { amount: 200 },
     ]
     const table = constructTable({
       features,
@@ -177,14 +216,20 @@ describe('aggregationFeature', () => {
       columns: [{ accessorKey: 'amount', aggregationFn: 'sum' }],
       getSubRows: (row) => row.subRows,
     })
-    const parent = table.getCoreRowModel().rows[0]!
+    const rows = table.getCoreRowModel().rows
+    const parent = rows[0]!
+    const column = table.getColumn('amount')!
 
-    expect(table.getColumn('amount')!.getAggregationValue()).toBe(5)
+    expect(column.getAggregationValue()).toBe(300)
+    expect(column.getAggregationValue({ maxDepth: 1 })).toBe(205)
+    expect(column.getAggregationValue({ maxDepth: Infinity })).toBe(205)
     expect(
-      table
-        .getColumn('amount')!
-        .getAggregationValue([parent, parent.subRows[0]!]),
+      column.getAggregationValue({
+        maxDepth: 1,
+        rows: [parent, parent.subRows[0]!],
+      }),
     ).toBe(5)
+    expect(table.getMaxSubRowDepth()).toBe(1)
   })
 
   it('uses handled column values and configurable local fallback', () => {
@@ -205,7 +250,9 @@ describe('aggregationFeature', () => {
     })
     const column = table.getColumn('amount')!
 
-    expect(column.getAggregationValue(table.getCoreRowModel().rows)).toBe(99)
+    expect(
+      column.getAggregationValue({ rows: table.getCoreRowModel().rows }),
+    ).toBe(99)
     expect(column.getAggregationValue()).toBe(3)
 
     table.setOptions((old) => ({ ...old, manualAggregation: true }))
@@ -391,6 +438,17 @@ describe('aggregation and grouping integration', () => {
           id: 'extent',
           aggregationFn: 'extent',
         },
+        {
+          accessorFn: (row) => row.amount,
+          id: 'stats',
+          aggregationFn: ['sum', 'mean', 'count'],
+        },
+        {
+          accessorFn: (row) => row.amount,
+          id: 'subRowStats',
+          aggregationFn: ['sum', 'mean', 'count'],
+          maxAggregationDepth: 1,
+        },
       ],
       getSubRows: (row) => row.subRows,
       initialState: { grouping: ['region', 'team'] },
@@ -404,8 +462,21 @@ describe('aggregation and grouping integration', () => {
     expect(region.getValue('min')).toBe(100)
     expect(region.getValue('max')).toBe(200)
     expect(region.getValue('extent')).toEqual([100, 200])
+    expect(region.getValue('stats')).toEqual({
+      count: 2,
+      mean: 150,
+      sum: 300,
+    })
+    expect(region.getValue('subRowStats')).toEqual({
+      count: 4,
+      mean: 2.5,
+      sum: 10,
+    })
 
-    expect(table.getColumn('sum')!.getAggregationValue()).toBe(10)
+    expect(table.getColumn('sum')!.getAggregationValue()).toBe(300)
+    expect(table.getColumn('sum')!.getAggregationValue({ maxDepth: 1 })).toBe(
+      10,
+    )
   })
 
   it('keeps grouping structural when aggregationFeature is absent', () => {
@@ -465,7 +536,7 @@ describe('aggregation and grouping integration', () => {
     const region = table.getGroupedRowModel().rows[0]!
     const level = region.subRows[0]!
 
-    expect(region.getValue('level')).toBe(3)
+    expect(region.getValue('level')).toBe(4)
     expect(level.getValue('level')).toBe(1)
     expect(region.getValue('amount')).toEqual({
       extent: [10, 100],
@@ -570,7 +641,7 @@ describe('aggregation and grouping integration', () => {
     expect(countedGroup.getValue('amount')).toBe(2)
   })
 
-  it('treats supplied hierarchical rows as terminal-leaf subtrees', () => {
+  it('applies depth selection to supplied grouped and expanded rows', () => {
     const features = testFeatures({
       aggregationFeature,
       aggregationFns,
@@ -593,8 +664,18 @@ describe('aggregation and grouping integration', () => {
     })
     const column = table.getColumn('amount')!
 
-    expect(column.getAggregationValue(table.getRowModel().rows)).toBe(3)
+    expect(column.getAggregationValue({ rows: table.getRowModel().rows })).toBe(
+      3,
+    )
     table.setExpanded(true)
-    expect(column.getAggregationValue(table.getRowModel().rows)).toBe(3)
+    expect(column.getAggregationValue({ rows: table.getRowModel().rows })).toBe(
+      6,
+    )
+    expect(
+      column.getAggregationValue({
+        maxDepth: Infinity,
+        rows: table.getRowModel().rows,
+      }),
+    ).toBe(3)
   })
 })

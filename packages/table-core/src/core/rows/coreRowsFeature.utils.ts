@@ -168,6 +168,24 @@ export function row_getLeafRows<
 }
 
 /**
+ * Returns the deepest structural row depth in the core row model.
+ * Root rows are depth `0`, their direct sub-rows are depth `1`, and so on.
+ */
+export function table_getMaxSubRowDepth<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>): number {
+  const rows = table.getCoreRowModel().flatRows
+  let maxDepth = 0
+
+  for (let i = 0; i < rows.length; i++) {
+    maxDepth = Math.max(maxDepth, rows[i]!.depth)
+  }
+
+  return maxDepth
+}
+
+/**
  * Looks up this row's direct parent, if it has one.
  *
  * Parent lookup searches the pre-pagination row model so parent relationships

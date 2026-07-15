@@ -9,6 +9,7 @@ import type {
   AggregationFnDef,
   AggregationFnDescriptor,
   AggregationFnRef,
+  AggregationValueOptions,
   ColumnAggregationValue,
   ResolvedAggregationFn,
 } from './aggregationFeature.types'
@@ -16,6 +17,7 @@ import type {
 interface AggregationCacheEntry {
   aggregationFnOption: unknown
   dependency: unknown
+  maxDepth: number
   registry: unknown
   value: unknown
 }
@@ -51,21 +53,31 @@ function warn(message: string) {
   }
 }
 
+function resolveMaxAggregationDepth(maxDepth: number | undefined) {
+  return maxDepth === undefined || Number.isNaN(maxDepth)
+    ? 0
+    : Math.max(0, Math.floor(maxDepth))
+}
+
 /**
- * Flattens hierarchical row inputs to unique terminal leaves in encounter
- * order. This is the normalization used by public aggregation-value calls.
+ * Selects unique rows at a maximum relative depth in encounter order.
+ * Branches that end before the requested depth contribute their deepest row.
  */
 export function normalizeAggregationRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(rows: ReadonlyArray<Row<TFeatures, TData>>): Array<Row<TFeatures, TData>> {
+>(
+  rows: ReadonlyArray<Row<TFeatures, TData>>,
+  maxDepth = 0,
+): Array<Row<TFeatures, TData>> {
   const result: Array<Row<TFeatures, TData>> = []
   const seen = new Set<string>()
+  const normalizedMaxDepth = resolveMaxAggregationDepth(maxDepth)
 
-  const visit = (row: Row<TFeatures, TData>) => {
-    if (row.subRows.length) {
+  const visit = (row: Row<TFeatures, TData>, depth: number) => {
+    if (row.subRows.length && depth < normalizedMaxDepth) {
       for (let i = 0; i < row.subRows.length; i++) {
-        visit(row.subRows[i]!)
+        visit(row.subRows[i]!, depth + 1)
       }
       return
     }
@@ -77,7 +89,7 @@ export function normalizeAggregationRows<
   }
 
   for (let i = 0; i < rows.length; i++) {
-    visit(rows[i]!)
+    visit(rows[i]!, 0)
   }
 
   return result
@@ -245,11 +257,12 @@ function getSubRowResult(
     : undefined
 }
 
-/** Executes every configured aggregation for a column over normalized rows. */
+/** Executes every configured aggregation over a depth-selected row frontier. */
 export function aggregateColumnValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(args: {
+  maxDepth?: number
   subRows?: ReadonlyArray<Row<TFeatures, TData>>
   column: Column<TFeatures, TData, unknown>
   groupingRow?: Row<TFeatures, TData>
@@ -257,6 +270,10 @@ export function aggregateColumnValue<
 }): unknown {
   const { subRows, column, groupingRow, rows } = args
   const internalColumn = column as Column_Internal<TFeatures, TData, unknown>
+  const maxDepth = resolveMaxAggregationDepth(
+    args.maxDepth ?? internalColumn.columnDef.maxAggregationDepth,
+  )
+  const aggregationRows = normalizeAggregationRows(rows, maxDepth)
   const entries = column_getAggregationFns(internalColumn)
   const isMultiple = Array.isArray(internalColumn.columnDef.aggregationFn)
   const canMerge =
@@ -277,7 +294,8 @@ export function aggregateColumnValue<
       columnId: column.id,
       getValue: (row: Row<TFeatures, TData>) => row.getValue(column.id),
       ...(groupingRow ? { groupingRow } : {}),
-      rows,
+      maxDepth,
+      rows: aggregationRows,
       table: column.table as any,
     }
 
@@ -308,17 +326,22 @@ export function aggregateColumnValue<
   return result
 }
 
-/** Implements `column.getAggregationValue(rows?)` and its default-value cache. */
+/** Implements `column.getAggregationValue(options?)` and its default cache. */
 export function column_getAggregationValue<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
 >(
   column: Column_Internal<TFeatures, TData, TValue>,
-  rows?: ReadonlyArray<Row<TFeatures, TData>>,
+  options?: AggregationValueOptions<TFeatures, TData>,
 ): ColumnAggregationValue<TFeatures> {
+  const rows = options?.rows
+  const resolvedMaxDepth = resolveMaxAggregationDepth(
+    options?.maxDepth ?? column.columnDef.maxAggregationDepth,
+  )
   const providedResult = column.columnDef.getAggregationValue?.({
     column: column as any,
+    maxDepth: resolvedMaxDepth,
     rows,
     table: column.table as any,
   })
@@ -329,7 +352,8 @@ export function column_getAggregationValue<
   if (rows !== undefined) {
     return aggregateColumnValue({
       column: column as any,
-      rows: normalizeAggregationRows(rows),
+      maxDepth: resolvedMaxDepth,
+      rows,
     }) as any
   }
 
@@ -343,6 +367,7 @@ export function column_getAggregationValue<
   if (
     previous &&
     previous.dependency === model &&
+    previous.maxDepth === resolvedMaxDepth &&
     previous.registry === registry &&
     previous.aggregationFnOption === aggregationFnOption
   ) {
@@ -351,11 +376,13 @@ export function column_getAggregationValue<
 
   const value = aggregateColumnValue({
     column: column as any,
-    rows: normalizeAggregationRows(model.rows),
+    maxDepth: resolvedMaxDepth,
+    rows: model.rows,
   })
   ;(column as any)._aggregationValueCache = {
     aggregationFnOption,
     dependency: model,
+    maxDepth: resolvedMaxDepth,
     registry,
     value,
   } satisfies AggregationCacheEntry

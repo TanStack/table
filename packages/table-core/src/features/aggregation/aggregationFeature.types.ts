@@ -20,6 +20,8 @@ export interface AggregationContext<
   column: Column<TFeatures, TData, TValue>
   /** Convenience alias for `column.id`. */
   columnId: string
+  /** Maximum relative sub-row depth used to select `rows`. */
+  maxDepth: number
   /**
    * Immediate sub-rows for grouped aggregation. This property is omitted
    * for root or caller-supplied-row aggregation. At a terminal grouping level
@@ -35,8 +37,8 @@ export interface AggregationContext<
    */
   groupingRow?: Row<TFeatures, TData>
   /**
-   * Terminal leaf rows included in this aggregation. The executor normalizes
-   * hierarchical and duplicate row inputs before invoking the definition.
+   * Unique rows selected at `maxDepth`. Branches that end before `maxDepth`
+   * contribute their deepest available row.
    */
   rows: ReadonlyArray<Row<TFeatures, TData>>
   /** The table that owns the column and rows. */
@@ -63,11 +65,11 @@ export interface AggregationFnDef<
   TValue = unknown,
   TResult = unknown,
 > {
-  /** Computes a result directly from normalized terminal rows. */
+  /** Computes a result directly from the selected `rows`. */
   aggregate: (context: AggregationContext<TFeatures, TData, TValue>) => TResult
   /**
    * Combines already-computed immediate sub-row results. When omitted,
-   * nested grouping falls back to `aggregate` over the group's terminal rows.
+   * nested grouping falls back to `aggregate` over the group's selected rows.
    */
   merge?: (
     context: AggregationMergeContext<TFeatures, TData, TValue, TResult>,
@@ -243,6 +245,12 @@ export interface ColumnDef_Aggregation<
    */
   aggregationFn?: AggregationFnOption<TFeatures, TData, TValue>
   /**
+   * Maximum relative sub-row depth used for grouped aggregation and cached
+   * default totals. `0` selects the supplied root rows, `1` their direct
+   * sub-rows, and so on. Defaults to `0`.
+   */
+  maxAggregationDepth?: number
+  /**
    * Optionally supplies a precomputed aggregation value for this column.
    * Return `{ value }` to handle the request, including `{ value: undefined }`;
    * return `undefined` to use the local aggregation fallback.
@@ -263,16 +271,27 @@ export interface Column_Aggregation<
   >
   /**
    * Aggregates this column over the default pre-grouped row model, or over a
-   * caller-provided array of rows. Explicit rows are normalized to unique
-   * terminal leaves and are intentionally not cached.
+   * caller-provided array of rows. `options.maxDepth` overrides the column's
+   * `maxAggregationDepth`. Explicit-row calls are intentionally not cached.
    */
   getAggregationValue: <TResult = ColumnAggregationValue<TFeatures>>(
-    rows?: ReadonlyArray<Row<TFeatures, TData>>,
+    options?: AggregationValueOptions<TFeatures, TData>,
   ) => TResult
   /** Infers `sum` for a numeric first row and `extent` for a Date first row. */
   getAutoAggregationFn: () =>
     | AggregationFnDef<TFeatures, TData, any, any>
     | undefined
+}
+
+/** Options for a caller-requested column aggregation value. */
+export interface AggregationValueOptions<
+  in out TFeatures extends TableFeatures,
+  in out TData extends RowData,
+> {
+  /** Overrides the column's `maxAggregationDepth` for this request. */
+  maxDepth?: number
+  /** Rows to aggregate instead of the default pre-grouped row model. */
+  rows?: ReadonlyArray<Row<TFeatures, TData>>
 }
 
 /** Cell instance APIs installed by `aggregationFeature`. */
@@ -295,6 +314,8 @@ export interface AggregationValueContext<
 > {
   /** The column whose value was requested. */
   column: Column<TFeatures, TData, TValue>
+  /** Maximum relative sub-row depth used for the request. */
+  maxDepth: number
   /** Caller-provided rows, or `undefined` for the default row model. */
   rows?: ReadonlyArray<Row<TFeatures, TData>>
   /** The table that owns the column. */
