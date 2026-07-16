@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/lit-table'
   framework: lit
-  library_version: '9.0.0-beta.49'
+  library_version: '9.0.0-beta.50'
 requires:
   - '@tanstack/table-core#core'
   - '@tanstack/table-core#table-features'
