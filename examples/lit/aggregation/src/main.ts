@@ -4,7 +4,7 @@ import { repeat } from 'lit/directives/repeat.js'
 import {
   FlexRender,
   TableController,
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -27,7 +27,7 @@ type RowSource = 'all' | 'custom' | 'filtered' | 'page' | 'selected'
 type AggregationTableMeta = { rowSource: RowSource }
 
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,

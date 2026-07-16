@@ -1,5 +1,5 @@
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_extent,
   aggregationFn_mean,
   aggregationFn_median,
@@ -43,7 +43,7 @@ import type { Person } from './makeData'
 // crosses threads at all.
 
 export const sharedFeatures = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   rowSortingFeature,
   columnFilteringFeature,
   globalFilteringFeature,

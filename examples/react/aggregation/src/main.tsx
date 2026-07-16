@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -28,7 +28,7 @@ type AggregationTableMeta = {
 }
 
 const features = {
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,

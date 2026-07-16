@@ -1,6 +1,6 @@
 import './index.css'
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -27,7 +27,7 @@ type AggregationTableMeta = { rowSource: RowSource }
 let data = makeData(10_000)
 let rowSource: RowSource = 'filtered'
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,

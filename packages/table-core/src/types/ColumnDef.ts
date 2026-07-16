@@ -7,7 +7,7 @@ import type {
 import type { CellContext } from '../core/cells/coreCellsFeature.types'
 import type { HeaderContext } from '../core/headers/coreHeadersFeature.types'
 import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
-import type { ColumnDef_Aggregation } from '../features/aggregation/aggregationFeature.types'
+import type { ColumnDef_Aggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type { ColumnDef_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { ColumnDef_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
 import type { ColumnDef_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
@@ -133,7 +133,7 @@ export interface ColumnDef_FeatureMap<
   in out TData extends RowData,
   TValue extends CellData,
 > {
-  aggregationFeature: ColumnDef_Aggregation<TFeatures, TData, TValue>
+  rowAggregationFeature: ColumnDef_Aggregation<TFeatures, TData, TValue>
   columnVisibilityFeature: ColumnDef_ColumnVisibility
   columnPinningFeature: ColumnDef_ColumnPinning
   columnFilteringFeature: ColumnDef_ColumnFiltering<TFeatures, TData>

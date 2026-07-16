@@ -23,16 +23,6 @@ Defined in: [types/ColumnDef.ts:131](https://github.com/TanStack/table/blob/main
 
 ## Properties
 
-### aggregationFeature
-
-```ts
-aggregationFeature: ColumnDef_Aggregation<TFeatures, TData, TValue>;
-```
-
-Defined in: [types/ColumnDef.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L136)
-
-***
-
 ### columnFilteringFeature
 
 ```ts
@@ -100,6 +90,16 @@ globalFilteringFeature: ColumnDef_GlobalFiltering;
 ```
 
 Defined in: [types/ColumnDef.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L140)
+
+***
+
+### rowAggregationFeature
+
+```ts
+rowAggregationFeature: ColumnDef_Aggregation<TFeatures, TData, TValue>;
+```
+
+Defined in: [types/ColumnDef.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L136)
 
 ***
 

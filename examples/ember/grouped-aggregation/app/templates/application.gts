@@ -3,7 +3,7 @@ import { tracked } from '@glimmer/tracking'
 import { on } from '@ember/modifier'
 import {
   useTable,
-  aggregationFeature,
+  rowAggregationFeature,
   FlexRenderCell,
   FlexRenderHeader,
   FlexRenderFooter,
@@ -39,7 +39,7 @@ import type { ComponentLike, ContentValue } from '@glint/template'
 import { makeData, type Person } from '../utils/make-data'
 
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnGroupingFeature,
   rowExpandingFeature,
   rowPaginationFeature,

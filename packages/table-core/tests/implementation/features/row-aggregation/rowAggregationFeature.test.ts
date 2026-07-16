@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFns,
   columnFilteringFeature,
   columnGroupingFeature,
@@ -23,9 +23,9 @@ afterEach(() => {
   vi.unstubAllEnvs()
 })
 
-describe('aggregationFeature', () => {
+describe('rowAggregationFeature', () => {
   it('aggregates scalar and keyed root values without grouping', () => {
-    const features = testFeatures({ aggregationFeature, aggregationFns })
+    const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const data = [{ amount: 10 }, { amount: 20 }, { amount: null }]
     const columns: Array<
       ColumnDef<typeof features, (typeof data)[number], any>
@@ -64,7 +64,7 @@ describe('aggregationFeature', () => {
   })
 
   it('infers auto aggregation from the first core row value', () => {
-    const features = testFeatures({ aggregationFeature, aggregationFns })
+    const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const table = constructTable({
       features,
       data: [{ amount: 2 }, { amount: 3 }],
@@ -89,7 +89,7 @@ describe('aggregationFeature', () => {
       aggregate,
     })
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns: { sized },
     })
     const columns: Array<ColumnDef<typeof features, { value: number }, any>> = [
@@ -123,7 +123,7 @@ describe('aggregationFeature', () => {
       aggregate,
     })
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns: { sized },
     })
     const table = constructTable({
@@ -148,7 +148,7 @@ describe('aggregationFeature', () => {
 
   it('accepts rows from any row model or custom selection', () => {
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
       columnFilteringFeature,
       filterFns: { equalsString: filterFn_equalsString },
@@ -202,7 +202,7 @@ describe('aggregationFeature', () => {
 
   it('selects a unique depth frontier and keeps shorter ragged branches', () => {
     type Node = { amount: number; subRows?: Array<Node> }
-    const features = testFeatures({ aggregationFeature, aggregationFns })
+    const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const data: Array<Node> = [
       {
         amount: 100,
@@ -233,7 +233,7 @@ describe('aggregationFeature', () => {
   })
 
   it('uses handled column values and configurable local fallback', () => {
-    const features = testFeatures({ aggregationFeature, aggregationFns })
+    const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const resolver = vi.fn(({ rows }) => (rows ? { value: 99 } : undefined))
     const columns: Array<ColumnDef<typeof features, { amount: number }, any>> =
       [
@@ -273,7 +273,7 @@ describe('aggregationFeature', () => {
   })
 
   it('supports a shared aggregation value provider through defaultColumn', () => {
-    const features = testFeatures({ aggregationFeature, aggregationFns })
+    const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const resolver = vi.fn(({ column }) =>
       column.id === 'amount' ? { value: 42 } : undefined,
     )
@@ -291,7 +291,7 @@ describe('aggregationFeature', () => {
   it('warns and preserves undefined keys for invalid multi configurations', () => {
     vi.stubEnv('NODE_ENV', 'development')
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-    const features = testFeatures({ aggregationFeature, aggregationFns })
+    const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const table = constructTable({
       features,
       data: [{ amount: 1 }],
@@ -319,7 +319,7 @@ describe('aggregation and grouping integration', () => {
       aggregate,
     })
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns: { sized },
       columnGroupingFeature,
       groupedRowModel: createGroupedRowModel(),
@@ -361,7 +361,7 @@ describe('aggregation and grouping integration', () => {
       aggregate,
     })
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns: { childCount },
       columnGroupingFeature,
       groupedRowModel: createGroupedRowModel(),
@@ -405,7 +405,7 @@ describe('aggregation and grouping integration', () => {
       team?: string
     }
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
       columnGroupingFeature,
       groupedRowModel: createGroupedRowModel(),
@@ -479,7 +479,7 @@ describe('aggregation and grouping integration', () => {
     )
   })
 
-  it('keeps grouping structural when aggregationFeature is absent', () => {
+  it('keeps grouping structural when rowAggregationFeature is absent', () => {
     const features = testFeatures({
       columnGroupingFeature,
       groupedRowModel: createGroupedRowModel(),
@@ -501,7 +501,7 @@ describe('aggregation and grouping integration', () => {
 
   it('computes nested scalar/keyed values and aggregates deeper grouping columns', () => {
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
       columnGroupingFeature,
       groupedRowModel: createGroupedRowModel(),
@@ -580,7 +580,7 @@ describe('aggregation and grouping integration', () => {
       merge,
     })
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns: { sized },
       columnGroupingFeature,
       groupedRowModel: createGroupedRowModel(),
@@ -611,7 +611,7 @@ describe('aggregation and grouping integration', () => {
 
   it('rebuilds grouped aggregation values when column definitions change', () => {
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
       columnGroupingFeature,
       groupedRowModel: createGroupedRowModel(),
@@ -643,7 +643,7 @@ describe('aggregation and grouping integration', () => {
 
   it('applies depth selection to supplied grouped and expanded rows', () => {
     const features = testFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
       columnGroupingFeature,
       expandedRowModel: createExpandedRowModel(),

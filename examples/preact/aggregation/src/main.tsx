@@ -2,7 +2,7 @@ import { render } from 'preact'
 import { useMemo, useState } from 'preact/hooks'
 import './index.css'
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -26,7 +26,7 @@ type RowSource = 'all' | 'custom' | 'filtered' | 'page' | 'selected'
 type AggregationTableMeta = { rowSource: RowSource }
 
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,

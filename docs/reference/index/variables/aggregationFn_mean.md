@@ -9,7 +9,7 @@ title: aggregationFn_mean
 const aggregationFn_mean: AggregationFnDef<any, any, unknown, number | undefined>;
 ```
 
-Defined in: [features/aggregation/aggregationFns.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L201)
+Defined in: [features/row-aggregation/aggregationFns.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/aggregationFns.ts#L201)
 
 Averages number and number-like row values. Nullish and non-numeric values
 are ignored; other values retain the legacy unary-plus coercion behavior.

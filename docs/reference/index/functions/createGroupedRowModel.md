@@ -15,7 +15,7 @@ Creates a memoized grouped row model factory.
 
 The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
 
-When aggregationFeature is also registered, grouped rows use its shared
+When rowAggregationFeature is also registered, grouped rows use its shared
 executor for non-group values. Grouping remains useful without aggregation.
 
 ## Type Parameters

@@ -64,10 +64,10 @@ export * from './core/table/coreTablesFeature.types'
 
 export * from './features/stockFeatures'
 
-// aggregationFeature
-export * from './features/aggregation/aggregationFeature'
-export * from './features/aggregation/aggregationFeature.types'
-export * from './features/aggregation/aggregationFns'
+// rowAggregationFeature
+export * from './features/row-aggregation/rowAggregationFeature'
+export * from './features/row-aggregation/rowAggregationFeature.types'
+export * from './features/row-aggregation/aggregationFns'
 
 // columnFacetingFeature
 export * from './features/column-faceting/columnFacetingFeature'

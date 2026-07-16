@@ -19,16 +19,6 @@ Defined in: [types/TableOptions.ts:58](https://github.com/TanStack/table/blob/ma
 
 ## Properties
 
-### aggregationFeature
-
-```ts
-aggregationFeature: TableOptions_Aggregation;
-```
-
-Defined in: [types/TableOptions.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L62)
-
-***
-
 ### columnFilteringFeature
 
 ```ts
@@ -106,6 +96,16 @@ globalFilteringFeature: TableOptions_GlobalFiltering<TFeatures, TData>;
 ```
 
 Defined in: [types/TableOptions.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L70)
+
+***
+
+### rowAggregationFeature
+
+```ts
+rowAggregationFeature: TableOptions_Aggregation;
+```
+
+Defined in: [types/TableOptions.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L62)
 
 ***
 

@@ -7,7 +7,7 @@ title: Aggregation (Lit) Guide
 - [Aggregation](../examples/aggregation)
 - [Grouped Aggregation](../examples/grouped-aggregation)
 
-Aggregation is independent from column grouping. Register `aggregationFeature`
+Aggregation is independent from column grouping. Register `rowAggregationFeature`
 whenever columns calculate totals or aggregated values. Add
 `columnGroupingFeature` separately only when the table also groups rows.
 
@@ -22,7 +22,7 @@ directly to a column does not require a registry entry.
 ```ts
 import {
   TableController,
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -31,7 +31,7 @@ import {
 } from '@tanstack/lit-table'
 
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFns: {
     count: aggregationFn_count,
     extent: aggregationFn_extent,
@@ -108,7 +108,7 @@ should produce grouped values.
 
 ```ts
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns: { sum: aggregationFn_sum },

@@ -287,7 +287,6 @@ title: index
 
 ## Variables
 
-- [aggregationFeature](variables/aggregationFeature.md)
 - [aggregationFn\_count](variables/aggregationFn_count.md)
 - [aggregationFn\_extent](variables/aggregationFn_extent.md)
 - [aggregationFn\_first](variables/aggregationFn_first.md)
@@ -340,6 +339,7 @@ title: index
 - [~~filterFns~~](variables/filterFns.md)
 - [globalFilteringFeature](variables/globalFilteringFeature.md)
 - [reSplitAlphaNumeric](variables/reSplitAlphaNumeric.md)
+- [rowAggregationFeature](variables/rowAggregationFeature.md)
 - [rowExpandingFeature](variables/rowExpandingFeature.md)
 - [rowPaginationFeature](variables/rowPaginationFeature.md)
 - [rowPinningFeature](variables/rowPinningFeature.md)

@@ -28,7 +28,7 @@ const STOCK_FEATURE_NAMES: Array<string> = Object.keys(stockFeatures)
 const PACKAGE_SIZE_LIMIT_BYTES = 16_987
 
 const FEATURE_SIZE_ESTIMATES_BYTES: Record<string, number> = {
-  aggregationFeature: 1500,
+  rowAggregationFeature: 1500,
   coreCellsFeature: 358,
   coreColumnsFeature: 803,
   coreHeadersFeature: 1012,
@@ -366,7 +366,7 @@ export function FeaturesPanel() {
                   </div>
                 )}
               </For>
-              {tableFeatures().has('aggregationFeature') && (
+              {tableFeatures().has('rowAggregationFeature') && (
                 <div>
                   <div class={styles().rowModelItem}>
                     <span class={styles().featureLabel}>aggregationFns</span>

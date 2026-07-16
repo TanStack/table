@@ -5,13 +5,13 @@ import {
   column_getAggregationValue,
   column_getAutoAggregationFn,
   formatAggregatedCellValue,
-} from './aggregationFeature.utils'
+} from './rowAggregationFeature.utils'
 import type { TableFeature } from '../../types/TableFeatures'
 
 /**
  * Independent aggregation feature for grouped values and root/custom-row totals.
  */
-export const aggregationFeature: TableFeature = {
+export const rowAggregationFeature: TableFeature = {
   getDefaultColumnDef: () => ({
     aggregatedCell: ({ column, getValue }: any) =>
       formatAggregatedCellValue(getValue(), column.columnDef.aggregationFn),
@@ -24,7 +24,7 @@ export const aggregationFeature: TableFeature = {
   }),
 
   assignCellPrototype: (prototype, table) => {
-    assignPrototypeAPIs('aggregationFeature', prototype, table, {
+    assignPrototypeAPIs('rowAggregationFeature', prototype, table, {
       cell_getIsAggregated: {
         fn: (cell) => cell_getIsAggregated(cell),
       },
@@ -32,7 +32,7 @@ export const aggregationFeature: TableFeature = {
   },
 
   assignColumnPrototype: (prototype, table) => {
-    assignPrototypeAPIs('aggregationFeature', prototype, table, {
+    assignPrototypeAPIs('rowAggregationFeature', prototype, table, {
       column_getAggregationFns: {
         fn: (column) => column_getAggregationFns(column),
       },

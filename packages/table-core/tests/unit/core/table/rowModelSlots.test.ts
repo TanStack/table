@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFns,
   columnFilteringFeature,
   columnGroupingFeature,
@@ -38,7 +38,7 @@ import type {
   TableOptions,
   ValidateFeatureSlots,
 } from '../../../../src'
-import type { BuiltInAggregationFn } from '../../../../src/features/aggregation/aggregationFns'
+import type { BuiltInAggregationFn } from '../../../../src/features/row-aggregation/aggregationFns'
 import type { BuiltInFilterFn } from '../../../../src/features/column-filtering/filterFns'
 import type { BuiltInSortFn } from '../../../../src/features/row-sorting/sortFns'
 
@@ -283,12 +283,12 @@ describe('row model and fn registry feature slots', () => {
 
   it('errors when a slot is missing its prerequisite feature', () => {
     const missingAggregation = tableFeatures({
-      // @ts-expect-error - aggregationFns requires aggregationFeature
+      // @ts-expect-error - aggregationFns requires rowAggregationFeature
       aggregationFns,
     })
 
     const withAggregation = tableFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
     })
 
@@ -348,7 +348,7 @@ describe('row model and fn registry feature slots', () => {
 
   it('types scalar, multi, and feature-aware aggregation APIs', () => {
     const aggregateFeatures = tableFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
     })
     const option: AggregationFnOption<typeof aggregateFeatures, Person> = [
@@ -382,7 +382,7 @@ describe('row model and fn registry feature slots', () => {
     }
 
     const selectedFeatures = tableFeatures({
-      aggregationFeature,
+      rowAggregationFeature,
       aggregationFns,
       rowSelectionFeature,
     })
@@ -407,7 +407,7 @@ describe('row model and fn registry feature slots', () => {
     const groupingColumn = groupingTable.getColumn('firstName')!
     groupingColumn.getCanGroup()
     if (false) {
-      // @ts-expect-error - aggregation APIs are absent without aggregationFeature
+      // @ts-expect-error - aggregation APIs are absent without rowAggregationFeature
       groupingColumn.getAggregationValue()
     }
 

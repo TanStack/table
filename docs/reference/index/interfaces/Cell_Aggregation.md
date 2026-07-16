@@ -5,9 +5,9 @@ title: Cell_Aggregation
 
 # Interface: Cell\_Aggregation
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:298](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L298)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:298](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L298)
 
-Cell instance APIs installed by `aggregationFeature`.
+Cell instance APIs installed by `rowAggregationFeature`.
 
 ## Properties
 
@@ -17,7 +17,7 @@ Cell instance APIs installed by `aggregationFeature`.
 getIsAggregated: () => boolean;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L300)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L300)
 
 Whether this cell displays an aggregate on a synthetic grouped row.
 

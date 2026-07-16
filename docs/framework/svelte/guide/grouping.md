@@ -8,7 +8,7 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 - [Grouping](../examples/grouping)
 
-> **Note:** `columnGroupingFeature` and `aggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
+> **Note:** `columnGroupingFeature` and `rowAggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
 

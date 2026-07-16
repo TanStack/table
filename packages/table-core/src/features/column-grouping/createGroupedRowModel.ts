@@ -6,7 +6,7 @@ import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature
 import {
   aggregateColumnValue,
   normalizeAggregationRows,
-} from '../aggregation/aggregationFeature.utils'
+} from '../row-aggregation/rowAggregationFeature.utils'
 import { row_getGroupingValue } from './columnGroupingFeature.utils'
 import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -20,7 +20,7 @@ import type { RowData } from '../../types/type-utils'
  *
  * The factory reads the relevant table state atoms and options, then returns a row model function used by the table row-model pipeline.
  *
- * When aggregationFeature is also registered, grouped rows use its shared
+ * When rowAggregationFeature is also registered, grouped rows use its shared
  * executor for non-group values. Grouping remains useful without aggregation.
  */
 export function createGroupedRowModel<

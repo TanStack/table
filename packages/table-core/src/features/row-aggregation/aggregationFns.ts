@@ -1,5 +1,5 @@
-import { constructAggregationFn } from './aggregationFeature.types'
-import type { AggregationContext } from './aggregationFeature.types'
+import { constructAggregationFn } from './rowAggregationFeature.types'
+import type { AggregationContext } from './rowAggregationFeature.types'
 
 type RangeValue = Date | number
 

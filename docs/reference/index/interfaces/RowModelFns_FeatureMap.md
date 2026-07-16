@@ -19,16 +19,6 @@ Defined in: [types/RowModelFns.ts:9](https://github.com/TanStack/table/blob/main
 
 ## Properties
 
-### aggregationFeature
-
-```ts
-aggregationFeature: RowModelFns_Aggregation<TFeatures, TData>;
-```
-
-Defined in: [types/RowModelFns.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L13)
-
-***
-
 ### columnFilteringFeature
 
 ```ts
@@ -36,6 +26,16 @@ columnFilteringFeature: RowModelFns_ColumnFiltering<TFeatures, TData>;
 ```
 
 Defined in: [types/RowModelFns.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L14)
+
+***
+
+### rowAggregationFeature
+
+```ts
+rowAggregationFeature: RowModelFns_Aggregation<TFeatures, TData>;
+```
+
+Defined in: [types/RowModelFns.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L13)
 
 ***
 

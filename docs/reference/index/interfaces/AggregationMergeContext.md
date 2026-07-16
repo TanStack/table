@@ -5,7 +5,7 @@ title: AggregationMergeContext
 
 # Interface: AggregationMergeContext\<TFeatures, TData, TValue, TResult\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L49)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L49)
 
 Additional values available when merging nested grouped results.
 
@@ -39,7 +39,7 @@ Additional values available when merging nested grouped results.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L20)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L20)
 
 The column whose values are being aggregated.
 
@@ -55,7 +55,7 @@ The column whose values are being aggregated.
 columnId: string;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L22)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L22)
 
 Convenience alias for `column.id`.
 
@@ -71,7 +71,7 @@ Convenience alias for `column.id`.
 getValue: (row) => TValue;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L32)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L32)
 
 Reads this column's value from one of `rows`.
 
@@ -97,7 +97,7 @@ Reads this column's value from one of `rows`.
 optional groupingRow: Row<TFeatures, TData>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L38)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L38)
 
 The synthetic grouped row receiving this result. This property is omitted
 for root or caller-supplied-row aggregation. Its `depth` identifies the
@@ -115,7 +115,7 @@ grouping level when grouped aggregation needs that distinction.
 maxDepth: number;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L24)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L24)
 
 Maximum relative sub-row depth used to select `rows`.
 
@@ -131,7 +131,7 @@ Maximum relative sub-row depth used to select `rows`.
 rows: readonly Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L43)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L43)
 
 Unique rows selected at `maxDepth`. Branches that end before `maxDepth`
 contribute their deepest available row.
@@ -148,7 +148,7 @@ contribute their deepest available row.
 subRowResults: readonly TResult[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L56)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L56)
 
 Results produced for each immediate sub-row group, in sub-row order.
 
@@ -160,7 +160,7 @@ Results produced for each immediate sub-row group, in sub-row order.
 subRows: readonly Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L58)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L58)
 
 Immediate sub-row groups corresponding to `subRowResults`.
 
@@ -176,7 +176,7 @@ Immediate sub-row groups corresponding to `subRowResults`.
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L45)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:45](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L45)
 
 The table that owns the column and rows.
 

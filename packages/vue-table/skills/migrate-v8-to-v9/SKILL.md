@@ -51,7 +51,7 @@ const table = useTable({ features, columns, data })
 | `filterFns` / `aggregationFns` table options | Same-named feature slots                                   |
 | Top-level `onStateChange`                    | Per-slice callbacks, external atoms, or store subscription |
 
-Available feature imports are `columnFilteringFeature`, `globalFilteringFeature`, `rowSortingFeature`, `rowPaginationFeature`, `rowSelectionFeature`, `rowExpandingFeature`, `rowPinningFeature`, `columnPinningFeature`, `columnVisibilityFeature`, `columnOrderingFeature`, `columnSizingFeature`, `columnResizingFeature`, `aggregationFeature`, `columnGroupingFeature`, and `columnFacetingFeature`. APIs are feature-gated. Put every feature before its dependent slot in the same `tableFeatures` call. Aggregation is independent from grouping: register `aggregationFeature` for aggregation APIs and add `columnGroupingFeature` only for grouped rows.
+Available feature imports are `columnFilteringFeature`, `globalFilteringFeature`, `rowSortingFeature`, `rowPaginationFeature`, `rowSelectionFeature`, `rowExpandingFeature`, `rowPinningFeature`, `columnPinningFeature`, `columnVisibilityFeature`, `columnOrderingFeature`, `columnSizingFeature`, `columnResizingFeature`, `rowAggregationFeature`, `columnGroupingFeature`, and `columnFacetingFeature`. APIs are feature-gated. Put every feature before its dependent slot in the same `tableFeatures` call. Aggregation is independent from grouping: register `rowAggregationFeature` for aggregation APIs and add `columnGroupingFeature` only for grouped rows.
 
 ### Row-model mapping
 

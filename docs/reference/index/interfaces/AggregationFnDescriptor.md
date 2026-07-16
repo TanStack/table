@@ -5,7 +5,7 @@ title: AggregationFnDescriptor
 
 # Interface: AggregationFnDescriptor\<TFeatures, TData, TValue, TResult\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L128)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L128)
 
 Gives an aggregation reference a stable key in a multiple result.
 
@@ -35,7 +35,7 @@ Gives an aggregation reference a stable key in a multiple result.
 aggregationFn: AggregationFnRef<TFeatures, TData, TValue, TResult>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L135)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L135)
 
 The named, automatic, or inline definition to execute.
 
@@ -47,6 +47,6 @@ The named, automatic, or inline definition to execute.
 id: string;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L137)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L137)
 
 Stable key used in the object returned by a multiple aggregation.

@@ -70,7 +70,7 @@ V8 bundled all stock features. V9 exposes an API only when its feature is presen
 | --------------------------- | ------------------------- |
 | Column faceting             | `columnFacetingFeature`   |
 | Column filtering            | `columnFilteringFeature`  |
-| Aggregation                 | `aggregationFeature`      |
+| Aggregation                 | `rowAggregationFeature`      |
 | Grouping                    | `columnGroupingFeature`   |
 | Column ordering             | `columnOrderingFeature`   |
 | Column pinning              | `columnPinningFeature`    |
@@ -91,7 +91,7 @@ Honor feature prerequisites in the same `tableFeatures` call:
 - `columnResizingFeature` requires `columnSizingFeature`.
 - `globalFilteringFeature` requires `columnFilteringFeature`.
 - Every row-model or function-registry slot requires its associated feature.
-- `aggregationFns` requires `aggregationFeature`; grouped aggregation uses both `aggregationFeature` and `columnGroupingFeature`.
+- `aggregationFns` requires `rowAggregationFeature`; grouped aggregation uses both `rowAggregationFeature` and `columnGroupingFeature`.
 - Put prerequisite feature properties before dependent slots so inference and diagnostics remain clear.
 
 ### 2. Move row models into feature slots and rename factories
@@ -122,7 +122,7 @@ Move registries from table options or factory arguments into these feature slots
 
 Register only the built-ins the table references by string name, importing each individually (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) alongside any custom functions. The full registry objects (`filterFns`, `sortFns`, `aggregationFns` exports) still work but bundle every built-in. A slot's keys become the valid string names in column definitions, and `'auto'` resolves only registered functions.
 
-Aggregation is independent from grouping. Add `aggregationFeature` for
+Aggregation is independent from grouping. Add `rowAggregationFeature` for
 `aggregationFn`, `aggregatedCell`, `column.getAggregationValue(options?)`, and
 `cell.getIsAggregated`. A root total does not require grouping. Convert legacy
 custom callables `(columnId, leafRows, childRows) => result` to
@@ -300,7 +300,7 @@ Do not confuse new capabilities with required breakages. After the table works, 
 - [ ] Move all remaining `get*RowModel()` options or earlier-beta `rowModels` entries to `create*RowModel()` feature slots.
 - [ ] Register each dependent feature before its row-model slot.
 - [ ] Move `filterFns`, `sortingFns`/`sortFns`, and `aggregationFns` into feature slots, registering individually imported built-ins; pass no registries to factories.
-- [ ] Register `aggregationFeature` independently and migrate custom aggregation callables to context-based `AggregationFnDef` definitions.
+- [ ] Register `rowAggregationFeature` independently and migrate custom aggregation callables to context-based `AggregationFnDef` definitions.
 - [ ] Register `columnFilteringFeature` before global filtering and filter/facet dependencies.
 - [ ] Register `columnSizingFeature` before `columnResizingFeature`.
 - [ ] Replace `table.getState()` and top-level `onStateChange` according to the adapter state guide.
