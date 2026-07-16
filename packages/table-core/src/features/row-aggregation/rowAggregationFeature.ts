@@ -1,4 +1,4 @@
-import { assignPrototypeAPIs, makeObjectMap } from '../../utils'
+import { assignPrototypeAPIs } from '../../utils'
 import {
   cell_getIsAggregated,
   column_getAggregationFns,
@@ -52,9 +52,5 @@ export const rowAggregationFeature: TableFeature = {
   initColumnInstanceData: (column) => {
     ;(column as any)._aggregationValueCache = undefined
     ;(column as any)._resolvedAggregationFnsCache = undefined
-  },
-
-  initRowInstanceData: (row) => {
-    ;(row as any)._aggregationValuesCache = makeObjectMap()
   },
 }

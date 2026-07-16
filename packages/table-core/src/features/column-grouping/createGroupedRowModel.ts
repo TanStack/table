@@ -5,10 +5,10 @@ import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.ut
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import {
   aggregateColumnValue,
-  normalizeAggregationRows,
+  normalizeUniqueAggregationRows,
 } from '../row-aggregation/rowAggregationFeature.utils'
-import { row_getGroupingValue } from './columnGroupingFeature.utils'
 import type { Row_ColumnGrouping } from './columnGroupingFeature.types'
+import type { Column_Internal } from '../../types/Column'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
 import type { Table, Table_Internal } from '../../types/Table'
@@ -103,7 +103,7 @@ function _createGroupedRowModel<
     const columnId = existingGrouping[depth] as string
 
     // Group the rows together for this level
-    const rowGroupsMap = groupBy(rows, columnId)
+    const rowGroupsMap = groupBy(table, rows, columnId)
 
     // Perform aggregations for each group
     const aggregatedGroupedRows = Array.from(rowGroupsMap.entries()).map(
@@ -118,7 +118,13 @@ function _createGroupedRowModel<
           subRow.parentId = id
         })
 
-        const leafRows = normalizeAggregationRows(groupedRows, Infinity)
+        // Rows produced by groupBy are disjoint members of the pre-grouped
+        // row tree, so the duplicate-id guard is unnecessary; flat groups
+        // reuse the partition array as-is.
+        const leafRows = normalizeUniqueAggregationRows(
+          groupedRows,
+          Infinity,
+        ) as Array<Row<TFeatures, TData>>
 
         const row = constructRow(
           table,
@@ -171,6 +177,7 @@ function _createGroupedRowModel<
               column,
               groupingRow: row,
               rows: groupedRows,
+              uniqueRows: true,
             })
             return cache[colId]
           },
@@ -203,19 +210,49 @@ function _createGroupedRowModel<
 }
 
 function groupBy<TFeatures extends TableFeatures, TData extends RowData = any>(
+  table: Table_Internal<TFeatures, TData>,
   rows: Array<Row<TFeatures, TData>>,
   columnId: string,
 ) {
   const groupMap = new Map<any, Array<Row<TFeatures, TData>>>()
 
-  return rows.reduce((map, row) => {
-    const resKey = `${row_getGroupingValue(row, columnId)}`
-    const previous = map.get(resKey)
+  // Resolve the column once instead of per row: `table.getColumn` goes
+  // through the memoized-API dispatcher, which is far too expensive to sit
+  // inside this per-row loop. The branches below mirror
+  // `row_getGroupingValue`'s caching contract exactly.
+  const column = table_getColumn(table, columnId) as
+    | Column_Internal<TFeatures, TData, unknown>
+    | undefined
+  const getGroupingValue = column?.columnDef.getGroupingValue
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]!
+    let groupingValue
+    if (getGroupingValue) {
+      const cache = (row as any)._groupingValuesCache as
+        | Record<string, unknown>
+        | undefined
+      if (cache && hasOwn(cache, columnId)) {
+        groupingValue = cache[columnId]
+      } else if (cache) {
+        groupingValue = cache[columnId] = getGroupingValue(
+          row.original,
+          row.index,
+          row,
+        )
+      }
+    } else {
+      groupingValue = row.getValue(columnId)
+    }
+
+    const resKey = `${groupingValue}`
+    const previous = groupMap.get(resKey)
     if (!previous) {
-      map.set(resKey, [row])
+      groupMap.set(resKey, [row])
     } else {
       previous.push(row)
     }
-    return map
-  }, groupMap)
+  }
+
+  return groupMap
 }
