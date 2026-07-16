@@ -167,7 +167,7 @@ const table = useTable({
 | Column Sizing     | `columnSizingFeature`     |
 | Column Resizing   | `columnResizingFeature`   |
 | Column Grouping   | `columnGroupingFeature`   |
-| Aggregation       | `rowAggregationFeature`      |
+| Aggregation       | `rowAggregationFeature`   |
 | Column Faceting   | `columnFacetingFeature`   |
 
 ### Row Model Factories

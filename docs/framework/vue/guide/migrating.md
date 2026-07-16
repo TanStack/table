@@ -161,7 +161,7 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 | Column Sizing     | `columnSizingFeature`     |
 | Column Resizing   | `columnResizingFeature`   |
 | Column Grouping   | `columnGroupingFeature`   |
-| Aggregation       | `rowAggregationFeature`      |
+| Aggregation       | `rowAggregationFeature`   |
 | Column Faceting   | `columnFacetingFeature`   |
 
 ### Row Model Factories

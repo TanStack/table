@@ -70,7 +70,7 @@ V8 bundled all stock features. V9 exposes an API only when its feature is presen
 | --------------------------- | ------------------------- |
 | Column faceting             | `columnFacetingFeature`   |
 | Column filtering            | `columnFilteringFeature`  |
-| Aggregation                 | `rowAggregationFeature`      |
+| Aggregation                 | `rowAggregationFeature`   |
 | Grouping                    | `columnGroupingFeature`   |
 | Column ordering             | `columnOrderingFeature`   |
 | Column pinning              | `columnPinningFeature`    |
