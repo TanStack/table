@@ -20,8 +20,8 @@
   "dependencies": {
     "@tanstack/match-sorter-utils": "^9.0.0-beta.41",
     "@tanstack/solid-devtools": "^0.8.8",
-    "@tanstack/solid-table": "^9.0.0-beta.50",
-    "@tanstack/solid-table-devtools": "^9.0.0-beta.50",
+    "@tanstack/solid-table": "^9.0.0-beta.51",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.51",
     "solid-js": "^1.9.13"
   }
 }
