@@ -1,5 +1,4 @@
 import { constructAggregationFn } from './rowAggregationFeature.types'
-import type { AggregationContext } from './rowAggregationFeature.types'
 
 type RangeValue = Date | number
 
@@ -23,19 +22,9 @@ function compareRangeValues(left: RangeValue, right: RangeValue) {
   return leftValue - rightValue
 }
 
-function collectRangeValues(context: AggregationContext<any, any, unknown>) {
-  const values: Array<RangeValue> = []
-  let kind: 'date' | 'number' | undefined
-
-  for (let i = 0; i < context.rows.length; i++) {
-    const value = context.getValue(context.rows[i]!)
-    const valueKind = getRangeKind(value)
-    if (!valueKind) continue
-    kind ??= valueKind
-    if (valueKind === kind) values.push(value as RangeValue)
-  }
-
-  return values
+/** Comparable representation of a range value; `Date`s compare by time. */
+function toRangeNumber(value: RangeValue): number {
+  return value instanceof Date ? value.getTime() : value
 }
 
 /**
@@ -49,9 +38,10 @@ export const aggregationFn_sum = constructAggregationFn<
   number
 >({
   aggregate: (context) => {
+    const rows = context.rows
     let sum = 0
-    for (let i = 0; i < context.rows.length; i++) {
-      const value = context.getValue(context.rows[i]!)
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
       sum += typeof value === 'number' ? value : 0
     }
     return sum
@@ -77,10 +67,23 @@ export const aggregationFn_min = constructAggregationFn<
   RangeValue | undefined
 >({
   aggregate: (context) => {
-    const values = collectRangeValues(context)
-    let result = values[0]
-    for (let i = 1; i < values.length; i++) {
-      if (compareRangeValues(values[i]!, result!) < 0) result = values[i]
+    const rows = context.rows
+    let kind: 'date' | 'number' | undefined
+    let result: RangeValue | undefined
+    let resultNumber = 0
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
+      const valueKind = getRangeKind(value)
+      if (!valueKind || (kind !== undefined && valueKind !== kind)) continue
+      const valueNumber = toRangeNumber(value as RangeValue)
+      if (kind === undefined) {
+        kind = valueKind
+        result = value as RangeValue
+        resultNumber = valueNumber
+      } else if (valueNumber - resultNumber < 0) {
+        result = value as RangeValue
+        resultNumber = valueNumber
+      }
     }
     return result
   },
@@ -113,10 +116,23 @@ export const aggregationFn_max = constructAggregationFn<
   RangeValue | undefined
 >({
   aggregate: (context) => {
-    const values = collectRangeValues(context)
-    let result = values[0]
-    for (let i = 1; i < values.length; i++) {
-      if (compareRangeValues(values[i]!, result!) > 0) result = values[i]
+    const rows = context.rows
+    let kind: 'date' | 'number' | undefined
+    let result: RangeValue | undefined
+    let resultNumber = 0
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
+      const valueKind = getRangeKind(value)
+      if (!valueKind || (kind !== undefined && valueKind !== kind)) continue
+      const valueNumber = toRangeNumber(value as RangeValue)
+      if (kind === undefined) {
+        kind = valueKind
+        result = value as RangeValue
+        resultNumber = valueNumber
+      } else if (valueNumber - resultNumber > 0) {
+        result = value as RangeValue
+        resultNumber = valueNumber
+      }
     }
     return result
   },
@@ -150,15 +166,33 @@ export const aggregationFn_extent = constructAggregationFn<
   [RangeValue | undefined, RangeValue | undefined]
 >({
   aggregate: (context) => {
-    const values = collectRangeValues(context)
-    if (!values.length) return [undefined, undefined]
-    let min = values[0]!
-    let max = values[0]!
-    for (let i = 1; i < values.length; i++) {
-      const value = values[i]!
-      if (compareRangeValues(value, min) < 0) min = value
-      if (compareRangeValues(value, max) > 0) max = value
+    const rows = context.rows
+    let kind: 'date' | 'number' | undefined
+    let min: RangeValue | undefined
+    let max: RangeValue | undefined
+    let minNumber = 0
+    let maxNumber = 0
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
+      const valueKind = getRangeKind(value)
+      if (!valueKind || (kind !== undefined && valueKind !== kind)) continue
+      const valueNumber = toRangeNumber(value as RangeValue)
+      if (kind === undefined) {
+        kind = valueKind
+        min = max = value as RangeValue
+        minNumber = maxNumber = valueNumber
+      } else {
+        if (valueNumber - minNumber < 0) {
+          min = value as RangeValue
+          minNumber = valueNumber
+        }
+        if (valueNumber - maxNumber > 0) {
+          max = value as RangeValue
+          maxNumber = valueNumber
+        }
+      }
     }
+    if (kind === undefined) return [undefined, undefined]
     return [min, max]
   },
   merge: ({ subRowResults }) => {
@@ -205,10 +239,11 @@ export const aggregationFn_mean = constructAggregationFn<
   number | undefined
 >({
   aggregate: (context) => {
+    const rows = context.rows
     let count = 0
     let sum = 0
-    for (let i = 0; i < context.rows.length; i++) {
-      const value = context.getValue(context.rows[i]!)
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
       if (value == null) continue
       const numberValue = typeof value === 'number' ? value : +value
       if (!Number.isNaN(numberValue)) {
@@ -231,10 +266,11 @@ export const aggregationFn_median = constructAggregationFn<
   number | undefined
 >({
   aggregate: (context) => {
-    if (!context.rows.length) return undefined
-    const values = new Array<number>(context.rows.length)
-    for (let i = 0; i < context.rows.length; i++) {
-      const value = context.getValue(context.rows[i]!)
+    const rows = context.rows
+    if (!rows.length) return undefined
+    const values = new Array<number>(rows.length)
+    for (let i = 0; i < rows.length; i++) {
+      const value = context.getValue(rows[i]!)
       if (typeof value !== 'number') return undefined
       values[i] = value
     }
@@ -254,9 +290,10 @@ export const aggregationFn_unique = constructAggregationFn<
   Array<unknown>
 >({
   aggregate: (context) => {
+    const rows = context.rows
     const values = new Set<unknown>()
-    for (let i = 0; i < context.rows.length; i++) {
-      values.add(context.getValue(context.rows[i]!))
+    for (let i = 0; i < rows.length; i++) {
+      values.add(context.getValue(rows[i]!))
     }
     return Array.from(values)
   },
@@ -270,9 +307,10 @@ export const aggregationFn_uniqueCount = constructAggregationFn<
   number
 >({
   aggregate: (context) => {
+    const rows = context.rows
     const values = new Set<unknown>()
-    for (let i = 0; i < context.rows.length; i++) {
-      values.add(context.getValue(context.rows[i]!))
+    for (let i = 0; i < rows.length; i++) {
+      values.add(context.getValue(rows[i]!))
     }
     return values.size
   },

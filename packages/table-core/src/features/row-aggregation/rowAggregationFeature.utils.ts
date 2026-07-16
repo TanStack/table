@@ -95,6 +95,52 @@ export function normalizeAggregationRows<
   return result
 }
 
+/**
+ * Frontier selection for rows that are distinct nodes of a single row tree —
+ * the row models the table builds itself. Skips `normalizeAggregationRows`'
+ * duplicate-id guard (disjoint subtrees cannot revisit a row) and returns
+ * `rows` unchanged when no row descends, so the default `maxDepth: 0` case
+ * costs nothing per aggregation.
+ */
+export function normalizeUniqueAggregationRows<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rows: ReadonlyArray<Row<TFeatures, TData>>,
+  maxDepth = 0,
+): ReadonlyArray<Row<TFeatures, TData>> {
+  const normalizedMaxDepth = resolveMaxAggregationDepth(maxDepth)
+
+  let needsDescent = false
+  if (normalizedMaxDepth > 0) {
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i]!.subRows.length) {
+        needsDescent = true
+        break
+      }
+    }
+  }
+  if (!needsDescent) return rows
+
+  const result: Array<Row<TFeatures, TData>> = []
+
+  const visit = (row: Row<TFeatures, TData>, depth: number) => {
+    if (row.subRows.length && depth < normalizedMaxDepth) {
+      for (let i = 0; i < row.subRows.length; i++) {
+        visit(row.subRows[i]!, depth + 1)
+      }
+      return
+    }
+    result.push(row)
+  }
+
+  for (let i = 0; i < rows.length; i++) {
+    visit(rows[i]!, 0)
+  }
+
+  return result
+}
+
 function getAutoAggregationFnName(
   value: unknown,
 ): 'extent' | 'sum' | undefined {
@@ -267,13 +313,21 @@ export function aggregateColumnValue<
   column: Column<TFeatures, TData, unknown>
   groupingRow?: Row<TFeatures, TData>
   rows: ReadonlyArray<Row<TFeatures, TData>>
+  /**
+   * Marks `rows` as distinct nodes of a single row tree (rows the table's own
+   * row models produced), enabling frontier selection without the
+   * duplicate-id guard. Caller-supplied row arrays must omit this.
+   */
+  uniqueRows?: boolean
 }): unknown {
-  const { subRows, column, groupingRow, rows } = args
+  const { subRows, column, groupingRow, rows, uniqueRows } = args
   const internalColumn = column as Column_Internal<TFeatures, TData, unknown>
   const maxDepth = resolveMaxAggregationDepth(
     args.maxDepth ?? internalColumn.columnDef.maxAggregationDepth,
   )
-  const aggregationRows = normalizeAggregationRows(rows, maxDepth)
+  const aggregationRows = uniqueRows
+    ? normalizeUniqueAggregationRows(rows, maxDepth)
+    : normalizeAggregationRows(rows, maxDepth)
   const entries = column_getAggregationFns(internalColumn)
   const isMultiple = Array.isArray(internalColumn.columnDef.aggregationFn)
   const canMerge =
@@ -284,6 +338,8 @@ export function aggregateColumnValue<
         (row as any).groupingColumnId !== column.id,
     )
 
+  const getValue = (row: Row<TFeatures, TData>) => row.getValue(column.id)
+
   const execute = (entry: ResolvedAggregationFn<TFeatures, TData>) => {
     const definition = entry.aggregationFn
     if (!definition) return undefined
@@ -292,7 +348,7 @@ export function aggregateColumnValue<
       ...(subRows ? { subRows } : {}),
       column,
       columnId: column.id,
-      getValue: (row: Row<TFeatures, TData>) => row.getValue(column.id),
+      getValue,
       ...(groupingRow ? { groupingRow } : {}),
       maxDepth,
       rows: aggregationRows,
@@ -378,6 +434,7 @@ export function column_getAggregationValue<
     column: column as any,
     maxDepth: resolvedMaxDepth,
     rows: model.rows,
+    uniqueRows: true,
   })
   ;(column as any)._aggregationValueCache = {
     aggregationFnOption,

@@ -302,8 +302,8 @@ export interface Cell_Aggregation {
 
 /** Internal per-row cache used while grouped aggregates are evaluated. */
 export interface Row_Aggregation {
-  /** Cached aggregate results keyed by column id. */
-  _aggregationValuesCache: Record<string, unknown>
+  /** Cached aggregate results keyed by column id; created lazily on grouped rows. */
+  _aggregationValuesCache?: Record<string, unknown>
 }
 
 /** Values passed to a column-level aggregation-value provider. */
