@@ -68,18 +68,18 @@ V8 bundled all stock features. V9 exposes an API only when its feature is presen
 
 | Capability                  | V9 feature                |
 | --------------------------- | ------------------------- |
+| Aggregation                 | `rowAggregationFeature`   |
 | Column faceting             | `columnFacetingFeature`   |
 | Column filtering            | `columnFilteringFeature`  |
-| Aggregation                 | `rowAggregationFeature`   |
-| Grouping                    | `columnGroupingFeature`   |
 | Column ordering             | `columnOrderingFeature`   |
 | Column pinning              | `columnPinningFeature`    |
-| Interactive column resizing | `columnResizingFeature`   |
 | Column sizes and offsets    | `columnSizingFeature`     |
 | Column visibility           | `columnVisibilityFeature` |
 | Global filtering            | `globalFilteringFeature`  |
-| Row expansion               | `rowExpandingFeature`     |
+| Grouping                    | `columnGroupingFeature`   |
+| Interactive column resizing | `columnResizingFeature`   |
 | Pagination                  | `rowPaginationFeature`    |
+| Row expansion               | `rowExpandingFeature`     |
 | Row pinning                 | `rowPinningFeature`       |
 | Row selection               | `rowSelectionFeature`     |
 | Sorting                     | `rowSortingFeature`       |

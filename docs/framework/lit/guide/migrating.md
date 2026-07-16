@@ -162,21 +162,21 @@ Use it as a temporary migration shortcut. Explicit feature registration is the p
 
 | Feature           | Import Name               |
 | ----------------- | ------------------------- |
-| Column Filtering  | `columnFilteringFeature`  |
-| Global Filtering  | `globalFilteringFeature`  |
-| Row Sorting       | `rowSortingFeature`       |
-| Row Pagination    | `rowPaginationFeature`    |
-| Row Selection     | `rowSelectionFeature`     |
-| Row Expanding     | `rowExpandingFeature`     |
-| Row Pinning       | `rowPinningFeature`       |
-| Column Pinning    | `columnPinningFeature`    |
-| Column Visibility | `columnVisibilityFeature` |
-| Column Ordering   | `columnOrderingFeature`   |
-| Column Sizing     | `columnSizingFeature`     |
-| Column Resizing   | `columnResizingFeature`   |
-| Column Grouping   | `columnGroupingFeature`   |
-| Aggregation       | `rowAggregationFeature`   |
 | Column Faceting   | `columnFacetingFeature`   |
+| Column Filtering  | `columnFilteringFeature`  |
+| Column Grouping   | `columnGroupingFeature`   |
+| Column Ordering   | `columnOrderingFeature`   |
+| Column Pinning    | `columnPinningFeature`    |
+| Column Resizing   | `columnResizingFeature`   |
+| Column Sizing     | `columnSizingFeature`     |
+| Column Visibility | `columnVisibilityFeature` |
+| Global Filtering  | `globalFilteringFeature`  |
+| Row Aggregation   | `rowAggregationFeature`   |
+| Row Expanding     | `rowExpandingFeature`     |
+| Row Pagination    | `rowPaginationFeature`    |
+| Row Pinning       | `rowPinningFeature`       |
+| Row Selection     | `rowSelectionFeature`     |
+| Row Sorting       | `rowSortingFeature`       |
 
 ### Row Model and Function Registry Migration
 
