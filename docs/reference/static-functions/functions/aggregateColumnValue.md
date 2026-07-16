@@ -9,7 +9,7 @@ title: aggregateColumnValue
 function aggregateColumnValue<TFeatures, TData>(args): unknown;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L261)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L261)
 
 Executes every configured aggregation over a depth-selected row frontier.
 

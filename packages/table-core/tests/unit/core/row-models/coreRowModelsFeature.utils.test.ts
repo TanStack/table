@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFns,
   columnFilteringFeature,
   columnGroupingFeature,
@@ -139,7 +139,7 @@ describe('manual option matrix (all six pipeline stages)', () => {
   }
 
   const matrixFeatures = testFeatures({
-    aggregationFeature,
+    rowAggregationFeature,
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,

@@ -18,7 +18,7 @@ interface to get the same validation from `tableFeatures()`.
 ### aggregationFns
 
 ```ts
-aggregationFns: "aggregationFeature";
+aggregationFns: "rowAggregationFeature";
 ```
 
 Defined in: [types/TableFeatures.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L95)

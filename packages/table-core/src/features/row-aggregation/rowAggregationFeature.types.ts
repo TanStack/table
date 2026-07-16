@@ -229,7 +229,7 @@ export interface ResolvedAggregationFn<
   id: string | undefined
 }
 
-/** Column-definition options installed by `aggregationFeature`. */
+/** Column-definition options installed by `rowAggregationFeature`. */
 export interface ColumnDef_Aggregation<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
@@ -260,7 +260,7 @@ export interface ColumnDef_Aggregation<
   ) => AggregationValueResult | undefined
 }
 
-/** Column instance APIs installed by `aggregationFeature`. */
+/** Column instance APIs installed by `rowAggregationFeature`. */
 export interface Column_Aggregation<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
@@ -294,7 +294,7 @@ export interface AggregationValueOptions<
   rows?: ReadonlyArray<Row<TFeatures, TData>>
 }
 
-/** Cell instance APIs installed by `aggregationFeature`. */
+/** Cell instance APIs installed by `rowAggregationFeature`. */
 export interface Cell_Aggregation {
   /** Whether this cell displays an aggregate on a synthetic grouped row. */
   getIsAggregated: () => boolean
@@ -328,7 +328,7 @@ export interface AggregationValueResult<TResult = unknown> {
   value: TResult
 }
 
-/** Table options installed by `aggregationFeature`. */
+/** Table options installed by `rowAggregationFeature`. */
 export interface TableOptions_Aggregation {
   /**
    * Disables local `column.getAggregationValue()` calculation when a column

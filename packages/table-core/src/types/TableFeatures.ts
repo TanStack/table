@@ -10,7 +10,7 @@ import type { StockFeatures } from '../features/stockFeatures'
 import type { RowModel } from '../core/row-models/coreRowModelsFeature.types'
 import type { FilterFn } from '../features/column-filtering/columnFilteringFeature.types'
 import type { SortFn } from '../features/row-sorting/rowSortingFeature.types'
-import type { AggregationFnDef } from '../features/aggregation/aggregationFeature.types'
+import type { AggregationFnDef } from '../features/row-aggregation/rowAggregationFeature.types'
 
 /**
  * Detects whether a type is `any`.
@@ -92,7 +92,7 @@ export interface FeatureSlotPrereqs {
   /**
    * Named aggregation functions require the independent aggregation feature.
    */
-  aggregationFns: 'aggregationFeature'
+  aggregationFns: 'rowAggregationFeature'
   /**
    * Column resizing builds on the column sizing state and APIs.
    */

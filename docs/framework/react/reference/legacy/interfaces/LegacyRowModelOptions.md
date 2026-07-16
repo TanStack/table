@@ -29,7 +29,7 @@ Additional aggregation functions to apply to the table.
 
 #### Deprecated
 
-Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
+Use `rowAggregationFeature` with the `aggregationFns` slot instead. Add `columnGroupingFeature` and `groupedRowModel` only when grouping rows.
 
 ***
 
@@ -157,7 +157,7 @@ Returns the grouped row model for the table.
 
 #### Deprecated
 
-Use the `groupedRowModel`/`aggregationFns` slots on the `features` option with `createGroupedRowModel()` instead.
+Use `columnGroupingFeature` with the `groupedRowModel` slot and `createGroupedRowModel()` instead. Add `rowAggregationFeature` separately when grouped rows aggregate values.
 
 ***
 

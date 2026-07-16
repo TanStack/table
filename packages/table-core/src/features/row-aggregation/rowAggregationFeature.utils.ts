@@ -12,7 +12,7 @@ import type {
   AggregationValueOptions,
   ColumnAggregationValue,
   ResolvedAggregationFn,
-} from './aggregationFeature.types'
+} from './rowAggregationFeature.types'
 
 interface AggregationCacheEntry {
   aggregationFnOption: unknown

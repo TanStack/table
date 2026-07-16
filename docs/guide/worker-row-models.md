@@ -106,7 +106,7 @@ Offloaded stages must form a contiguous prefix of the pipeline (filtered, then g
 
 - **Flat source data only** for now (no `getSubRows`).
 - **Table options that affect processing** (a custom `globalFilterFn`, for example) must be passed to `initTableWorker` in the shared config, not just to your table hook.
-- **Grouping aggregates** require both `aggregationFeature` and `columnGroupingFeature` in the shared feature set. They are computed eagerly in the worker, but only for columns with an explicit `aggregationFn` or `aggregatedCell`; group-row `getValue()` for other columns returns `undefined`.
+- **Grouping aggregates** require both `rowAggregationFeature` and `columnGroupingFeature` in the shared feature set. They are computed eagerly in the worker, but only for columns with an explicit `aggregationFn` or `aggregatedCell`; group-row `getValue()` for other columns returns `undefined`.
 - **Multiple aggregation results** are transferred as keyed objects. Custom aggregation results must be supported by the browser's structured-clone algorithm.
 - **Grand totals and caller-selected row totals** from `column.getAggregationValue(options?)` run on the main thread. The worker currently offloads row-model stages, not arbitrary aggregation requests.
 - **SSR** works out of the box: on the server (no `Worker` global) the table renders unprocessed rows, and the client takes over after hydration.

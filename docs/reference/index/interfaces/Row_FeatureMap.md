@@ -19,16 +19,6 @@ Defined in: [types/Row.ts:18](https://github.com/TanStack/table/blob/main/packag
 
 ## Properties
 
-### aggregationFeature
-
-```ts
-aggregationFeature: Row_Aggregation;
-```
-
-Defined in: [types/Row.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L22)
-
-***
-
 ### columnFilteringFeature
 
 ```ts
@@ -66,6 +56,16 @@ columnVisibilityFeature: Row_ColumnVisibility<TFeatures, TData>;
 ```
 
 Defined in: [types/Row.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L26)
+
+***
+
+### rowAggregationFeature
+
+```ts
+rowAggregationFeature: Row_Aggregation;
+```
+
+Defined in: [types/Row.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L22)
 
 ***
 

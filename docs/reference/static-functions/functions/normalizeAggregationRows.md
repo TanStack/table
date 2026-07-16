@@ -9,7 +9,7 @@ title: normalizeAggregationRows
 function normalizeAggregationRows<TFeatures, TData>(rows, maxDepth): Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/aggregation/aggregationFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.utils.ts#L66)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L66)
 
 Selects unique rows at a maximum relative depth in encounter order.
 Branches that end before the requested depth contribute their deepest row.

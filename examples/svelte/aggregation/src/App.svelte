@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { FlexRender, aggregationFeature, aggregationFn_count, aggregationFn_extent, aggregationFn_mean, aggregationFn_sum, columnFilteringFeature, createColumnHelper, createFilteredRowModel, createPaginatedRowModel, createTable, filterFn_includesString, metaHelper, rowPaginationFeature, rowSelectionFeature, tableFeatures } from '@tanstack/svelte-table'
+  import { FlexRender, rowAggregationFeature, aggregationFn_count, aggregationFn_extent, aggregationFn_mean, aggregationFn_sum, columnFilteringFeature, createColumnHelper, createFilteredRowModel, createPaginatedRowModel, createTable, filterFn_includesString, metaHelper, rowPaginationFeature, rowSelectionFeature, tableFeatures } from '@tanstack/svelte-table'
   import { makeData } from './makeData'
   import type { Sale } from './makeData'
   import type { Table } from '@tanstack/svelte-table'
@@ -7,7 +7,7 @@
   type RowSource = 'all' | 'custom' | 'filtered' | 'page' | 'selected'
   type AggregationTableMeta = { rowSource: RowSource }
   const features = tableFeatures({
-    aggregationFeature, columnFilteringFeature, rowPaginationFeature, rowSelectionFeature,
+    rowAggregationFeature, columnFilteringFeature, rowPaginationFeature, rowSelectionFeature,
     filteredRowModel: createFilteredRowModel(), paginatedRowModel: createPaginatedRowModel(),
     filterFns: { includesString: filterFn_includesString },
     aggregationFns: { count: aggregationFn_count, extent: aggregationFn_extent, mean: aggregationFn_mean, sum: aggregationFn_sum },

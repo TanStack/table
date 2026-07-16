@@ -12,7 +12,7 @@ requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:docs/guide/aggregation.md'
   - 'TanStack/table:docs/framework/react/guide/aggregation.md'
-  - 'TanStack/table:packages/table-core/src/features/aggregation'
+  - 'TanStack/table:packages/table-core/src/features/row-aggregation'
   - 'TanStack/table:examples/react/aggregation'
   - 'TanStack/table:examples/react/grouped-aggregation'
 ---
@@ -27,14 +27,14 @@ for synthetic grouped rows.
 
 ```ts
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_sum,
   tableFeatures,
 } from '@tanstack/table-core'
 
 export const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFns: {
     mean: aggregationFn_mean,
     sum: aggregationFn_sum,
@@ -113,7 +113,7 @@ disables that local fallback.
 
 Wrong: registering `columnGroupingFeature` solely to total a column.
 
-Correct: register `aggregationFeature` and call
+Correct: register `rowAggregationFeature` and call
 `column.getAggregationValue()`. Grouping is only required for grouped rows.
 
 ### [HIGH] Passing a scope label and rows
@@ -136,6 +136,6 @@ grouped results sent by the worker must be structured-cloneable.
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/aggregation/` and the
+Inspect `node_modules/@tanstack/table-core/src/features/row-aggregation/` and the
 Aggregation Guide. Use `Column_Aggregation`, `AggregationFnDef`,
 `AggregationContext`, and `AggregationResult` for the typed public surface.

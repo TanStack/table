@@ -1,7 +1,7 @@
 import Alpine from 'alpinejs'
 import {
   FlexRender,
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -29,7 +29,7 @@ import type { ColumnDef } from '@tanstack/alpine-table'
 import type { Person } from './makeData'
 
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   rowExpandingFeature,

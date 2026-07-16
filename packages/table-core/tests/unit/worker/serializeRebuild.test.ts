@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   aggregationFns,
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   constructTable,
@@ -38,7 +38,7 @@ function makeData(count: number): Array<Person> {
 }
 
 const features = testFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   globalFilteringFeature,

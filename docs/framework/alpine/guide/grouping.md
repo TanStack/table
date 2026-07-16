@@ -8,7 +8,7 @@ Want to skip to the implementation? Check out these Alpine examples:
 
 - [Grouping](../examples/grouping)
 
-> **Note:** `columnGroupingFeature` and `aggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
+> **Note:** `columnGroupingFeature` and `rowAggregationFeature` are now separate features. Register either one independently, or register both when grouped rows should also calculate aggregate values. See the [Aggregation Guide](./aggregation) for aggregation setup.
 
 Read your reactive inputs such as `data` through a getter (for example backing them with `Alpine.reactive`) when creating the table, so the table sees updates.
 

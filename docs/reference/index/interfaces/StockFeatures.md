@@ -9,16 +9,6 @@ Defined in: [features/stockFeatures.ts:17](https://github.com/TanStack/table/blo
 
 ## Properties
 
-### aggregationFeature
-
-```ts
-aggregationFeature: TableFeature;
-```
-
-Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
-
-***
-
 ### columnFacetingFeature
 
 ```ts
@@ -106,6 +96,16 @@ globalFilteringFeature: TableFeature;
 ```
 
 Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
+
+***
+
+### rowAggregationFeature
+
+```ts
+rowAggregationFeature: TableFeature;
+```
+
+Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
 
 ***
 

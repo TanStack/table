@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   aggregationFns,
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   columnVisibilityFeature,
@@ -20,7 +20,7 @@ import type { ColumnDef } from '../../src'
 type TestRow = Record<string, unknown>
 
 const features = testFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   columnVisibilityFeature,

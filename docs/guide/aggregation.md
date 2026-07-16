@@ -9,20 +9,20 @@ grouping when grouped rows should also expose aggregate values.
 
 ## Setup
 
-Register `aggregationFeature` and the named definitions referenced by your
+Register `rowAggregationFeature` and the named definitions referenced by your
 columns. Registering individual built-ins keeps unused functions out of the
 bundle.
 
 ```ts
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_sum,
   tableFeatures,
 } from '@tanstack/table-core'
 
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFns: {
     mean: aggregationFn_mean,
     sum: aggregationFn_sum,
@@ -32,14 +32,14 @@ const features = tableFeatures({
 
 The full `aggregationFns` registry remains available for compatibility, but it
 bundles every built-in. Tables using `stockFeatures` already include
-`aggregationFeature`; they still need the definitions that named column options
+`rowAggregationFeature`; they still need the definitions that named column options
 should resolve.
 
 To combine aggregation with grouped rows, register both independent features:
 
 ```ts
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns: { sum: aggregationFn_sum },
@@ -202,7 +202,7 @@ const amountColumn = columnHelper.accessor('amount', {
 ```
 
 Use `cell.getIsAggregated()` to distinguish these cells. Grouping-only tables
-do not expose this method; it belongs to `aggregationFeature`.
+do not expose this method; it belongs to `rowAggregationFeature`.
 
 ## Providing Server or External Values
 

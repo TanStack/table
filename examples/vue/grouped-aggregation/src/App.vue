@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {
   FlexRender,
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -24,7 +24,7 @@ import { makeData } from './makeData'
 import type { Person } from './makeData'
 
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   rowExpandingFeature,

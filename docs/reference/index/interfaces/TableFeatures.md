@@ -21,20 +21,6 @@ options, and state types.
 
 ## Properties
 
-### aggregationFeature?
-
-```ts
-optional aggregationFeature: TableFeature;
-```
-
-Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
-
-#### Inherited from
-
-[`StockFeatures`](StockFeatures.md).[`aggregationFeature`](StockFeatures.md#aggregationfeature)
-
-***
-
 ### aggregationFns?
 
 ```ts
@@ -585,6 +571,20 @@ server-side pagination.
 ##### Returns
 
 [`RowModel`](RowModel.md)\<`any`, `any`\>
+
+***
+
+### rowAggregationFeature?
+
+```ts
+optional rowAggregationFeature: TableFeature;
+```
+
+Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
+
+#### Inherited from
+
+[`StockFeatures`](StockFeatures.md).[`rowAggregationFeature`](StockFeatures.md#rowaggregationfeature)
 
 ***
 

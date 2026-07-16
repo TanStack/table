@@ -2,14 +2,14 @@
 title: Migrating to TanStack Table V9 (Svelte)
 ---
 
-> [!IMPORTANT]
-> `v9.0.0-beta.48` and `v9.0.0-beta.49` introduces breaking aggregation changes. `columnGroupingFeature` no longer provides aggregation options or APIs. Tables that group rows and calculate aggregate values must now register both `columnGroupingFeature` and `aggregationFeature`. Grouping-only tables can register only `columnGroupingFeature`, while grand totals or other aggregation without grouping can register only `aggregationFeature`. `stockFeatures` already contains both. If you use an explicit feature list, add `aggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. Aggregation definitions, row-depth selection, and the `getAggregationValue` signature also changed; see [Aggregation Feature Split](#aggregation-feature-split), the [Grouping Guide](./grouping), and the [Aggregation Guide](./aggregation).
+> [!NOTE]
+> `v9.0.0-beta.48`/`beta.49` split aggregation out of `columnGroupingFeature` into a new `rowAggregationFeature` (`stockFeatures` includes both). If you declare features explicitly, add `rowAggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. Aggregation function definitions, row-depth selection, and the `getAggregationValue` signature also changed. See [Grouping and Aggregation](#grouping-and-aggregation) below.
 
 > [!NOTE]
-> `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology. These are logical positions: in LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. If you migrated on an earlier beta, update `columnPinning.left` to `columnPinning.start`, `columnPinning.right` to `columnPinning.end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*` / `getRight*` table and row APIs to `getStart*` / `getEnd*`. See the [Column Pinning](#column-pinning) section below for the full mapping.
+> `v9.0.0-beta.38` renames column pinning from physical `left`/`right` terminology to logical `start`/`end` terminology (in LTR layouts `start` usually means left; in RTL it usually means right). Update `columnPinning.left`/`right` to `columnPinning.start`/`end`, `column.pin('left' | 'right')` to `column.pin('start' | 'end')`, and `getLeft*`/`getRight*` APIs to `getStart*`/`getEnd*`. See [Column Pinning](#column-pinning) for the full mapping.
 
 > [!NOTE]
-> `v9.0.0-beta.10` introduces a breaking change in how row models are defined in order to bring increased type-safety features. Row model factories and function registries now live as slots on the `features` object instead of a separate `rowModels` option, and the factories no longer take arguments. If you migrated on an earlier beta, see the [Row Models](#row-models) section below for the new shape.
+> `v9.0.0-beta.10` moves row model factories and the `filterFns`/`sortFns`/`aggregationFns` registries onto the `features` object (the separate `rowModels` option is gone, and the factories no longer take arguments). See the row models section below for the new shape.
 
 ## What's New in TanStack Table V9
 
@@ -44,6 +44,11 @@ TanStack Table V9 is a major release with significant internal architectural imp
 - **`tableOptions()`**: Compose reusable table configuration, including features, row models, and default options.
 - **`createTableHook()`**: Define shared Svelte table factories with pre-bound features, row models, defaults, and registered components.
 
+### 6. Refreshed Feature APIs
+
+- **More capable features**: Aggregation, Row Selection, Column Pinning, and Column Resizing have all been made more feature rich (multiple aggregation definitions per column, Shift range selection, logical `start`/`end` pinning, and more).
+- **New core APIs**: New table and row APIs (like `table.getMaxSubRowDepth()`, `row.getDisplayIndex()`) round out the core feature set.
+
 ### The Good News: Most Table Logic Is Still Familiar
 
 - Column definitions keep the same basic `accessorKey`, `accessorFn`, `header`, `cell`, and `footer` shapes.
@@ -69,35 +74,6 @@ There is no Svelte 3/4 compatibility shim for the v9 Svelte adapter.
 
 ## Core Breaking Changes
 
-### Column Pinning
-
-`v9.0.0-beta.38` changes column pinning to use logical `start`/`end` terminology instead of physical `left`/`right` terminology. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases in beta.38.
-
-| Before beta.38                       | beta.38+                             |
-| ------------------------------------ | ------------------------------------ |
-| `columnPinning.left`                 | `columnPinning.start`                |
-| `columnPinning.right`                | `columnPinning.end`                  |
-| `column.pin('left')`                 | `column.pin('start')`                |
-| `column.pin('right')`                | `column.pin('end')`                  |
-| `column.getIsPinned() === 'left'`    | `column.getIsPinned() === 'start'`   |
-| `column.getIsPinned() === 'right'`   | `column.getIsPinned() === 'end'`     |
-| `row.getLeftVisibleCells()`          | `row.getStartVisibleCells()`         |
-| `row.getRightVisibleCells()`         | `row.getEndVisibleCells()`           |
-| `table.getLeftHeaderGroups()`        | `table.getStartHeaderGroups()`       |
-| `table.getRightHeaderGroups()`       | `table.getEndHeaderGroups()`         |
-| `table.getLeftLeafColumns()`         | `table.getStartLeafColumns()`        |
-| `table.getRightLeafColumns()`        | `table.getEndLeafColumns()`          |
-| `table.getLeftVisibleLeafColumns()`  | `table.getStartVisibleLeafColumns()` |
-| `table.getRightVisibleLeafColumns()` | `table.getEndVisibleLeafColumns()`   |
-| `table.getLeftTotalSize()`           | `table.getStartTotalSize()`          |
-| `table.getRightTotalSize()`          | `table.getEndTotalSize()`            |
-| `column.getStart('left')`            | `column.getStart('start')`           |
-| `column.getAfter('right')`           | `column.getAfter('end')`             |
-| `column.getIndex('left')`            | `column.getIndex('start')`           |
-| `column.getIndex('right')`           | `column.getIndex('end')`             |
-
-This rename is about logical table regions, not automatic DOM direction handling. For sticky column pinning, prefer CSS logical properties like `insetInlineStart` and `insetInlineEnd`. The `columnResizeDirection` table option is unchanged.
-
 ### Entrypoint Rename
 
 ```ts
@@ -111,23 +87,6 @@ import { createTable } from '@tanstack/svelte-table'
 
 const table = createTable(options)
 ```
-
-### Instance Methods Must Be Called on Their Instance
-
-In v9, methods on rows, cells, columns, headers, and similar table objects are shared on the object's prototype instead of being created as arrow functions on each object. This improves memory usage, but it means destructuring those methods loses the `this` context they need to operate on the instance.
-
-```ts
-// v8 - worked because getValue closed over the row object
-const { getValue } = row
-const value = getValue('name')
-
-// v9 - call the method on the instance
-const value = row.getValue('name')
-```
-
-This applies to row, cell, column, header, and related instance APIs, but not to the table instance itself. Audit code that destructures methods from table objects or passes them around as bare callbacks. Prefer calling them through the original object, for example `row.getValue('name')`, `cell.getContext()`, `column.getCanSort()`, or `header.getContext()`.
-
-Because these methods now live on the prototype, they also do not appear as own properties in `Object.keys(instance)`, object spread, or `JSON.stringify`. A shallow clone like `{ ...row }` copies row data but does not copy row methods. The methods are still callable normally because JavaScript looks them up through the prototype chain.
 
 ### New Required `features` Table Option
 
@@ -178,8 +137,6 @@ const table = createTable({
 
 In Svelte 5, pass reactive values like `data` through getters so table options read the current rune value.
 
----
-
 #### Shortcut: Use `stockFeatures` for Table V8-like Behavior
 
 `stockFeatures` is useful for early migration when you have not audited feature usage yet.
@@ -198,94 +155,31 @@ const table = createTable({
 
 Use it as a temporary migration shortcut. Explicit feature registration is the production target.
 
-### Aggregation Feature Split
-
-Aggregation is now independent from column grouping. `stockFeatures` still includes both, so tables using it need no feature-registration change. If you declare features explicitly, add `aggregationFeature` whenever columns use `aggregationFn`, `aggregatedCell`, `getAggregationValue`, or `cell.getIsAggregated`. Add `columnGroupingFeature` and `groupedRowModel` only when you also group rows. Root totals can use aggregation without grouping.
-
-```ts
-const features = tableFeatures({
-  aggregationFeature,
-  columnGroupingFeature, // only for grouped rows
-  groupedRowModel: createGroupedRowModel(),
-  aggregationFns: { sum: aggregationFn_sum },
-})
-```
-
-Custom aggregation callables have changed to context-based definitions:
-
-```ts
-// Table V8/earlier V9 betas
-const total = (columnId, leafRows, childRows) =>
-  leafRows.reduce((sum, row) => sum + row.getValue(columnId), 0)
-
-// Current V9
-const total = constructAggregationFn({
-  aggregate: ({ rows, getValue }) =>
-    rows.reduce((sum, row) => sum + Number(getValue(row)), 0),
-})
-```
-
-Aggregation row selection is now depth-based and shared by every definition on
-a column. `maxAggregationDepth` defaults to `0` (the supplied root rows); use
-`1` for direct sub-rows or `Infinity` for terminal rows. An explicit
-`column.getAggregationValue({ rows, maxDepth })` call can override the column
-default.
-
-`getAggregationValue` now has one options-object signature. Calls without
-arguments are unchanged, but positional row and depth arguments must be moved
-into the object:
-
-```ts
-// Table V8/earlier V9 betas
-column.getAggregationValue(rows, maxDepth)
-
-// Current V9
-column.getAggregationValue({ rows, maxDepth })
-```
-
-All built-in definitions on a column now consume the same depth-selected
-`context.rows` frontier. This replaces the old per-function choice between
-`childRows` and `leafRows`. The default depth `0` preserves direct-child
-grouped aggregation; set `maxAggregationDepth: Infinity` to aggregate terminal
-rows. Custom definitions can still inspect grouped `context.subRows`, and
-`merge` receives matching `subRowResults` for nested groups.
-
-`table.getMaxSubRowDepth()` returns the deepest structural depth in the core
-row model. For example, use `Math.max(0, table.getMaxSubRowDepth() - 1)` as
-`maxDepth` to target one level before the maximum structural depth; shorter
-branches still contribute their deepest available row. Default no-row calls
-are cached; calls with `options.rows` are recomputed because the caller owns
-that array.
-
-`column.getAggregationFn()` is now `column.getAggregationFns()` because a column can run multiple definitions. A single `aggregationFn` still returns a scalar; an array returns an object keyed by function name or descriptor `id`. The old callable `AggregationFn` and `CreatedAggregationFn` types are replaced by `AggregationFnDef`.
-
-### Available Features
+#### Available Features
 
 | Feature           | Import Name               |
 | ----------------- | ------------------------- |
-| Column Filtering  | `columnFilteringFeature`  |
-| Global Filtering  | `globalFilteringFeature`  |
-| Row Sorting       | `rowSortingFeature`       |
-| Row Pagination    | `rowPaginationFeature`    |
-| Row Selection     | `rowSelectionFeature`     |
-| Row Expanding     | `rowExpandingFeature`     |
-| Row Pinning       | `rowPinningFeature`       |
-| Column Pinning    | `columnPinningFeature`    |
-| Column Visibility | `columnVisibilityFeature` |
-| Column Ordering   | `columnOrderingFeature`   |
-| Column Sizing     | `columnSizingFeature`     |
-| Column Resizing   | `columnResizingFeature`   |
-| Column Grouping   | `columnGroupingFeature`   |
-| Aggregation       | `aggregationFeature`      |
 | Column Faceting   | `columnFacetingFeature`   |
+| Column Filtering  | `columnFilteringFeature`  |
+| Column Grouping   | `columnGroupingFeature`   |
+| Column Ordering   | `columnOrderingFeature`   |
+| Column Pinning    | `columnPinningFeature`    |
+| Column Resizing   | `columnResizingFeature`   |
+| Column Sizing     | `columnSizingFeature`     |
+| Column Visibility | `columnVisibilityFeature` |
+| Global Filtering  | `globalFilteringFeature`  |
+| Row Aggregation   | `rowAggregationFeature`   |
+| Row Expanding     | `rowExpandingFeature`     |
+| Row Pagination    | `rowPaginationFeature`    |
+| Row Pinning       | `rowPinningFeature`       |
+| Row Selection     | `rowSelectionFeature`     |
+| Row Sorting       | `rowSortingFeature`       |
 
----
-
-## Row Models
+### Row Models
 
 Row model factories now live as slots directly inside `tableFeatures({...})`. The `rowModels` option no longer exists. Row model slots are type-checked, so each row model must be specified after its associated feature in the same `tableFeatures` call.
 
-### Migration Mapping
+#### Migration Mapping
 
 | Table V8 Option            | Table V9 `tableFeatures` Slot | Table V9 Factory Function     |
 | -------------------------- | ----------------------------- | ----------------------------- |
@@ -301,7 +195,7 @@ Row model factories now live as slots directly inside `tableFeatures({...})`. Th
 
 Function registries move to slots too: pass `filterFns`, `sortFns`, and `aggregationFns` directly to `tableFeatures` instead of as factory arguments.
 
-### Full Migration Example
+#### Full Migration Example
 
 ```svelte
 <script lang="ts">
@@ -368,7 +262,7 @@ Function registries move to slots too: pass `filterFns`, `sortFns`, and `aggrega
 </script>
 ```
 
-### Prefer Individual Fn Imports Over Full Registries
+#### Prefer Individual Fn Imports Over Full Registries
 
 The `filterFns`, `sortFns`, and `aggregationFns` registry exports are now deprecated in favor of importing individual `filterFn_*`, `sortFn_*`, and `aggregationFn_*` functions and registering only the ones you use (or passing functions directly in column definitions with no registration at all). The full registries still work, but spreading them puts every built-in function in your bundle. Keep in mind that string names, including the default `'auto'`, only resolve functions you have registered.
 
@@ -395,6 +289,23 @@ const features = tableFeatures({
   sortFns: { alphanumeric: sortFn_alphanumeric, text: sortFn_text },
 })
 ```
+
+### Instance Methods Must Be Called on Their Instance
+
+In v9, methods on rows, cells, columns, headers, and similar table objects are shared on the object's prototype instead of being created as arrow functions on each object. This improves memory usage, but it means destructuring those methods loses the `this` context they need to operate on the instance.
+
+```ts
+// v8 - worked because getValue closed over the row object
+const { getValue } = row
+const value = getValue('name')
+
+// v9 - call the method on the instance
+const value = row.getValue('name')
+```
+
+This applies to row, cell, column, header, and related instance APIs, but not to the table instance itself. Audit code that destructures methods from table objects or passes them around as bare callbacks. Prefer calling them through the original object, for example `row.getValue('name')`, `cell.getContext()`, `column.getCanSort()`, or `header.getContext()`.
+
+Because these methods now live on the prototype, they also do not appear as own properties in `Object.keys(instance)`, object spread, or `JSON.stringify`. A shallow clone like `{ ...row }` copies row data but does not copy row methods. The methods are still callable normally because JavaScript looks them up through the prototype chain.
 
 ---
 
@@ -567,6 +478,145 @@ Do not provide both `atoms.pagination` and `state.pagination`; the atom owns tha
 
 ---
 
+## Feature-by-Feature Breaking Changes
+
+### Sorting
+
+| v8                   | v9                |
+| -------------------- | ----------------- |
+| `sortingFn`          | `sortFn`          |
+| `sortingFns`         | `sortFns`         |
+| `getSortingFn()`     | `getSortFn()`     |
+| `getAutoSortingFn()` | `getAutoSortFn()` |
+| `SortingFn`          | `SortFn`          |
+
+### Column Pinning
+
+`v9.0.0-beta.38` changes column pinning to use logical `start`/`end` terminology instead of physical `left`/`right` terminology. In LTR languages/layouts, `start` usually corresponds to left and `end` to right; in RTL languages/layouts, `start` usually corresponds to right and `end` to left. There are no deprecated aliases in beta.38.
+
+| Before beta.38                       | beta.38+                             |
+| ------------------------------------ | ------------------------------------ |
+| `columnPinning.left`                 | `columnPinning.start`                |
+| `columnPinning.right`                | `columnPinning.end`                  |
+| `column.pin('left')`                 | `column.pin('start')`                |
+| `column.pin('right')`                | `column.pin('end')`                  |
+| `column.getIsPinned() === 'left'`    | `column.getIsPinned() === 'start'`   |
+| `column.getIsPinned() === 'right'`   | `column.getIsPinned() === 'end'`     |
+| `row.getLeftVisibleCells()`          | `row.getStartVisibleCells()`         |
+| `row.getRightVisibleCells()`         | `row.getEndVisibleCells()`           |
+| `table.getLeftHeaderGroups()`        | `table.getStartHeaderGroups()`       |
+| `table.getRightHeaderGroups()`       | `table.getEndHeaderGroups()`         |
+| `table.getLeftLeafColumns()`         | `table.getStartLeafColumns()`        |
+| `table.getRightLeafColumns()`        | `table.getEndLeafColumns()`          |
+| `table.getLeftVisibleLeafColumns()`  | `table.getStartVisibleLeafColumns()` |
+| `table.getRightVisibleLeafColumns()` | `table.getEndVisibleLeafColumns()`   |
+| `table.getLeftTotalSize()`           | `table.getStartTotalSize()`          |
+| `table.getRightTotalSize()`          | `table.getEndTotalSize()`            |
+| `column.getStart('left')`            | `column.getStart('start')`           |
+| `column.getAfter('right')`           | `column.getAfter('end')`             |
+| `column.getIndex('left')`            | `column.getIndex('start')`           |
+| `column.getIndex('right')`           | `column.getIndex('end')`             |
+
+This rename is about logical table regions, not automatic DOM direction handling. For sticky column pinning, prefer CSS logical properties like `insetInlineStart` and `insetInlineEnd`. The `columnResizeDirection` table option is unchanged.
+
+Table-level `enablePinning` split into:
+
+```ts
+enableColumnPinning: true
+enableRowPinning: true
+```
+
+### Column Sizing vs. Column Resizing Split
+
+Column resizing now has its own feature and state slice.
+
+```ts
+const features = tableFeatures({
+  columnSizingFeature,
+  columnResizingFeature,
+})
+```
+
+`columnSizingInfo` became `columnResizing`, and `onColumnSizingInfoChange` became `onColumnResizingChange`.
+
+### Grouping and Aggregation
+
+Aggregation is now its own feature, independent from column grouping. `stockFeatures` still includes both, so tables using it need no feature-registration change. If you declare features explicitly, add `rowAggregationFeature` whenever columns use `aggregationFn`, `aggregatedCell`, `getAggregationValue`, or `cell.getIsAggregated`. Add `columnGroupingFeature` and `groupedRowModel` only when you also group rows.
+
+```ts
+const features = tableFeatures({
+  rowAggregationFeature,
+  columnGroupingFeature, // only for grouped rows
+  groupedRowModel: createGroupedRowModel(),
+  aggregationFns: { sum: aggregationFn_sum },
+})
+```
+
+Custom aggregation callables have changed to context-based definitions:
+
+```ts
+// Table V8/earlier V9 betas
+const total = (columnId, leafRows, childRows) =>
+  leafRows.reduce((sum, row) => sum + row.getValue(columnId), 0)
+
+// Current V9
+const total = constructAggregationFn({
+  aggregate: ({ rows, getValue }) =>
+    rows.reduce((sum, row) => sum + Number(getValue(row)), 0),
+})
+```
+
+The old per-function choice between `childRows` and `leafRows` is replaced by a single depth-selected `context.rows`, controlled by the `maxAggregationDepth` column option. The default (`0`) preserves V8's direct-child grouped aggregation; use `Infinity` to aggregate terminal leaf rows.
+
+`column.getAggregationValue()` now takes a single options object instead of positional arguments:
+
+```ts
+// Table V8/earlier V9 betas
+column.getAggregationValue(rows, maxDepth)
+
+// Current V9
+column.getAggregationValue({ rows, maxDepth })
+```
+
+`column.getAggregationFn()` is now `column.getAggregationFns()` because a column can run multiple definitions, and the old callable `AggregationFn`/`CreatedAggregationFn` types are replaced by `AggregationFnDef`.
+
+See the [Grouping Guide](./grouping) and the [Aggregation Guide](./aggregation) for full documentation of the new capabilities.
+
+### Row Selection
+
+> [!WARNING]
+> **Minor breaking change:** `row.getToggleSelectedHandler()` now enables inclusive Shift range selection by default when `rowSelectionFeature` is enabled. Existing checkboxes or rows wired through this handler establish an anchor on an ordinary interaction and select or deselect the current display-order range on a Shift interaction. Direct `row.toggleSelected()` calls are unchanged.
+>
+> Set `enableRowRangeSelection: false` to preserve the previous non-range handler behavior. The handler must receive an event that exposes Shift directly or through `nativeEvent`; see [Shift Range Selection](./row-selection.md#shift-range-selection).
+
+The "some rows selected" checks were simplified to mean "at least one row is selected":
+
+| API                                 | v8                                                  | v9                                            |
+| ----------------------------------- | --------------------------------------------------- | --------------------------------------------- |
+| `table.getIsSomeRowsSelected()`     | `true` when some but not all rows are selected      | `true` when at least one row is selected      |
+| `table.getIsSomePageRowsSelected()` | `true` when some but not all page rows are selected | `true` when at least one page row is selected |
+
+In v8 these returned `false` once every row was selected; in v9 they stay `true`. If you use them to drive an indeterminate "select all" checkbox, gate the indeterminate state on the matching all-selected check so it clears at full selection:
+
+`getIsSomeRowsSelected() && !getIsAllRowsSelected()`
+
+### Row and Internal API Changes
+
+Some row APIs have changed from private to public:
+
+| Table V8                                 | Table V9                               |
+| ---------------------------------------- | -------------------------------------- |
+| `row._getAllCellsByColumnId()` (private) | `row.getAllCellsByColumnId()` (public) |
+
+All other internal APIs prefixed with `_` have been removed. If you were using any of these, use their public equivalents:
+
+- Removed: `table._getPinnedRows()`
+- Removed: `table._getFacetedRowModel()`
+- Removed: `table._getFacetedMinMaxValues()`
+- Removed: `table._getFacetedUniqueValues()`
+
+---
+
 ## Column Helper Changes
 
 Column helpers and column types now include `TFeatures` first.
@@ -695,79 +745,6 @@ See the [Composable Tables Guide](./composable-tables) for full patterns.
 
 ---
 
-## Other Breaking Changes
-
-### Column Pinning Option Split
-
-Table-level `enablePinning` split into:
-
-```ts
-enableColumnPinning: true
-enableRowPinning: true
-```
-
-### Column Sizing vs. Column Resizing Split
-
-Column resizing now has its own feature and state slice.
-
-```ts
-const features = tableFeatures({
-  columnSizingFeature,
-  columnResizingFeature,
-})
-```
-
-`columnSizingInfo` became `columnResizing`, and `onColumnSizingInfoChange` became `onColumnResizingChange`.
-
-### Sorting API Renames
-
-| v8                   | v9                |
-| -------------------- | ----------------- |
-| `sortingFn`          | `sortFn`          |
-| `sortingFns`         | `sortFns`         |
-| `getSortingFn()`     | `getSortFn()`     |
-| `getAutoSortingFn()` | `getAutoSortFn()` |
-| `SortingFn`          | `SortFn`          |
-
-### Removed Internal APIs
-
-All internal APIs prefixed with `_` have been removed. If you were using any of these, use their public equivalents:
-
-- Removed: `table._getPinnedRows()`
-- Removed: `table._getFacetedRowModel()`
-- Removed: `table._getFacetedMinMaxValues()`
-- Removed: `table._getFacetedUniqueValues()`
-
-### Row API Changes
-
-Some row APIs have changed from private to public:
-
-| Table V8                                 | Table V9                               |
-| ---------------------------------------- | -------------------------------------- |
-| `row._getAllCellsByColumnId()` (private) | `row.getAllCellsByColumnId()` (public) |
-
-If you were accessing this internal API, you can now use it without the underscore prefix.
-
-### Row Selection API Changes
-
-> [!WARNING]
-> **Minor breaking change:** `row.getToggleSelectedHandler()` now enables inclusive Shift range selection by default when `rowSelectionFeature` is enabled. Existing checkboxes or rows wired through this handler establish an anchor on an ordinary interaction and select or deselect the current display-order range on a Shift interaction. Direct `row.toggleSelected()` calls are unchanged.
->
-> Set `enableRowRangeSelection: false` to preserve the previous non-range handler behavior. The handler must receive an event that exposes Shift directly or through `nativeEvent`; see [Shift Range Selection](./row-selection.md#shift-range-selection).
-
-The "some rows selected" checks were simplified to mean "at least one row is selected":
-
-| API                                 | v8                                                  | v9                                            |
-| ----------------------------------- | --------------------------------------------------- | --------------------------------------------- |
-| `table.getIsSomeRowsSelected()`     | `true` when some but not all rows are selected      | `true` when at least one row is selected      |
-| `table.getIsSomePageRowsSelected()` | `true` when some but not all page rows are selected | `true` when at least one page row is selected |
-
-In v8 these returned `false` once every row was selected; in v9 they stay `true`. If you use them to drive an indeterminate "select all" checkbox, gate the indeterminate state on the matching all-selected check so it clears at full selection:
-
-`getIsSomeRowsSelected() && !getIsAllRowsSelected()`
-
----
-
 ## TypeScript Changes Summary
 
 ### Type Generics
@@ -878,20 +855,19 @@ type Person = {
 
 - [ ] Upgrade the app to Svelte 5.
 - [ ] Replace `createSvelteTable` with `createTable`.
-- [ ] Replace Svelte 3/4 writable-store table patterns with runes and getters.
 - [ ] Define `features` using `tableFeatures()` (or use `stockFeatures`)
-- [ ] If aggregating, add `aggregationFeature`; add `columnGroupingFeature` separately only when grouping rows
-- [ ] Convert custom aggregation callables to `constructAggregationFn({ aggregate, merge? })` definitions.
 - [ ] Move row model factories into `tableFeatures({...})` as slots (e.g. `filteredRowModel: createFilteredRowModel()`).
 - [ ] Remove `getCoreRowModel`; the core row model is automatic.
 - [ ] Pass `sortFns`, `filterFns`, and `aggregationFns` as slots in `tableFeatures({...})` instead of as factory arguments (row model factories no longer take arguments).
-- [ ] Replace `declare module` augmentation of `FilterFns`/`SortFns`/`AggregationFns` with registry-slot registration, and `FilterMeta` augmentation with the `filterMeta` slot.
+- [ ] Replace destructured row/cell/column/header methods with calls on the instance (for example, `row.getValue('name')`).
 - [ ] Rename `sortingFn` to `sortFn`.
-- [ ] Add `typeof features` to column helpers and types.
+- [ ] Convert custom aggregation callables to `constructAggregationFn({ aggregate, merge? })` definitions.
+- [ ] Replace Svelte 3/4 writable-store table patterns with runes and getters.
 - [ ] Pass reactive `data` and controlled `state` slices through getters.
 - [ ] Replace `table.getState()` reads with `table.state`, `table.store.state`, `table.atoms.<slice>.get()`, or `subscribeTable`.
 - [ ] Replace `onStateChange` with per-slice callbacks or external atoms.
-- [ ] Replace destructured row/cell/column/header methods with calls on the instance (for example, `row.getValue('name')`).
+- [ ] Replace `declare module` augmentation of `FilterFns`/`SortFns`/`AggregationFns` with registry-slot registration, and `FilterMeta` augmentation with the `filterMeta` slot.
+- [ ] Add `typeof features` to column helpers and types.
 - [ ] Replace `flexRender(...)` and `<svelte:component>` table rendering with `<FlexRender />`.
 - [ ] Use `renderComponent` or `renderSnippet` for Svelte component/snippet cells.
 - [ ] Audit `stockFeatures` before production.

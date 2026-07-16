@@ -1,5 +1,5 @@
 import type { Cell_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
-import type { Cell_Aggregation } from '../features/aggregation/aggregationFeature.types'
+import type { Cell_Aggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type { CellData, RowData } from './type-utils'
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 import type { Cell_Cell } from '../core/cells/coreCellsFeature.types'
@@ -11,7 +11,7 @@ export interface Cell_Core<
 > extends Cell_Cell<TFeatures, TData, TValue> {}
 
 export interface Cell_FeatureMap {
-  aggregationFeature: Cell_Aggregation
+  rowAggregationFeature: Cell_Aggregation
   columnGroupingFeature: Cell_ColumnGrouping
 }
 

@@ -1,5 +1,5 @@
 import type { RowModelFns_RowSorting } from '../features/row-sorting/rowSortingFeature.types'
-import type { RowModelFns_Aggregation } from '../features/aggregation/aggregationFeature.types'
+import type { RowModelFns_Aggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type { RowData } from './type-utils'
 import type { RowModelFns_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
@@ -10,7 +10,7 @@ export interface RowModelFns_FeatureMap<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
-  aggregationFeature: RowModelFns_Aggregation<TFeatures, TData>
+  rowAggregationFeature: RowModelFns_Aggregation<TFeatures, TData>
   columnFilteringFeature: RowModelFns_ColumnFiltering<TFeatures, TData>
   rowSortingFeature: RowModelFns_RowSorting<TFeatures, TData>
 }

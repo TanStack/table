@@ -843,7 +843,7 @@
         { "label": "coreTablesFeature", "to": "reference/index/variables/coreTablesFeature" },
         { "label": "columnFilteringFeature", "to": "reference/index/variables/columnFilteringFeature" },
         { "label": "columnFacetingFeature", "to": "reference/index/variables/columnFacetingFeature" },
-        { "label": "aggregationFeature", "to": "reference/index/variables/aggregationFeature" },
+        { "label": "rowAggregationFeature", "to": "reference/index/variables/rowAggregationFeature" },
         { "label": "columnGroupingFeature", "to": "reference/index/variables/columnGroupingFeature" },
         { "label": "columnOrderingFeature", "to": "reference/index/variables/columnOrderingFeature" },
         { "label": "columnPinningFeature", "to": "reference/index/variables/columnPinningFeature" },

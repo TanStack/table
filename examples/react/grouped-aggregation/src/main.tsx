@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_mean,
   aggregationFn_median,
   aggregationFn_sum,
@@ -28,7 +28,7 @@ import type { Person } from './makeData'
 // this example happens to use the createTableHook pattern, but it is not required
 const { useAppTable, createAppColumnHelper } = createTableHook({
   features: {
-    aggregationFeature,
+    rowAggregationFeature,
     columnFilteringFeature,
     columnGroupingFeature,
     rowExpandingFeature,

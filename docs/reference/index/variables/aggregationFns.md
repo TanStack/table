@@ -9,7 +9,7 @@ title: aggregationFns
 const aggregationFns: object;
 ```
 
-Defined in: [features/aggregation/aggregationFns.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFns.ts#L331)
+Defined in: [features/row-aggregation/aggregationFns.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/aggregationFns.ts#L331)
 
 Full built-in registry. Register individual definitions for tree-shaking.
 

@@ -19,16 +19,6 @@ Defined in: [types/Column.ts:24](https://github.com/TanStack/table/blob/main/pac
 
 ## Properties
 
-### aggregationFeature
-
-```ts
-aggregationFeature: Column_Aggregation<TFeatures, TData>;
-```
-
-Defined in: [types/Column.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L28)
-
-***
-
 ### columnFacetingFeature
 
 ```ts
@@ -116,6 +106,16 @@ globalFilteringFeature: Column_GlobalFiltering;
 ```
 
 Defined in: [types/Column.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L37)
+
+***
+
+### rowAggregationFeature
+
+```ts
+rowAggregationFeature: Column_Aggregation<TFeatures, TData>;
+```
+
+Defined in: [types/Column.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L28)
 
 ***
 

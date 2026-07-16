@@ -5,7 +5,7 @@ title: RowModelFns_Aggregation
 
 # Interface: RowModelFns\_Aggregation\<TFeatures, TData\>
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L95)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:95](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L95)
 
 Aggregation-definition registry carried by a table feature set.
 
@@ -27,4 +27,4 @@ Aggregation-definition registry carried by a table feature set.
 aggregationFns: Record<string, AggregationFnDef<TFeatures, TData, any, any>>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L99)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:99](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L99)

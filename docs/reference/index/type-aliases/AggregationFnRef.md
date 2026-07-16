@@ -12,7 +12,7 @@ type AggregationFnRef<TFeatures, TData, TValue, TResult> =
 | AggregationFnDef<TFeatures, TData, TValue, TResult>;
 ```
 
-Defined in: [features/aggregation/aggregationFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/aggregation/aggregationFeature.types.ts#L117)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L117)
 
 A registered name, automatic inference, or inline aggregation definition.
 

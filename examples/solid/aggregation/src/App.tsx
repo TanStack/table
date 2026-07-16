@@ -1,5 +1,5 @@
 import {
-  aggregationFeature,
+  rowAggregationFeature,
   aggregationFn_count,
   aggregationFn_extent,
   aggregationFn_mean,
@@ -23,7 +23,7 @@ import type { Table } from '@tanstack/solid-table'
 type RowSource = 'all' | 'custom' | 'filtered' | 'page' | 'selected'
 type AggregationTableMeta = { rowSource: RowSource }
 const features = tableFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,

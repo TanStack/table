@@ -15,7 +15,7 @@ export * from './core/row-models/coreRowModelsFeature.utils'
 export * from './core/table/coreTablesFeature.utils'
 
 // Features
-export * from './features/aggregation/aggregationFeature.utils'
+export * from './features/row-aggregation/rowAggregationFeature.utils'
 export * from './features/column-faceting/columnFacetingFeature.utils'
 export * from './features/column-filtering/columnFilteringFeature.utils'
 export * from './features/column-grouping/columnGroupingFeature.utils'

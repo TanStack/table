@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   aggregationFns,
-  aggregationFeature,
+  rowAggregationFeature,
   columnGroupingFeature,
   constructTable,
   createGroupedRowModel,
@@ -10,7 +10,7 @@ import { testFeatures } from '../../../fixtures/features'
 import type { ColumnDef } from '../../../../src'
 
 const features = testFeatures({
-  aggregationFeature,
+  rowAggregationFeature,
   columnGroupingFeature,
   groupedRowModel: createGroupedRowModel(),
   aggregationFns,

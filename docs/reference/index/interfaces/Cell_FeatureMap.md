@@ -9,16 +9,6 @@ Defined in: [types/Cell.ts:13](https://github.com/TanStack/table/blob/main/packa
 
 ## Properties
 
-### aggregationFeature
-
-```ts
-aggregationFeature: Cell_Aggregation;
-```
-
-Defined in: [types/Cell.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L14)
-
-***
-
 ### columnGroupingFeature
 
 ```ts
@@ -26,3 +16,13 @@ columnGroupingFeature: Cell_ColumnGrouping;
 ```
 
 Defined in: [types/Cell.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L15)
+
+***
+
+### rowAggregationFeature
+
+```ts
+rowAggregationFeature: Cell_Aggregation;
+```
+
+Defined in: [types/Cell.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L14)
