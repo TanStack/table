@@ -95,4 +95,4 @@ Source: TanStack/table:packages/alpine-table/src/createTable.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/alpine-table/src/createTableHook.ts`; do not infer component/context APIs from React, Vue, Solid, Svelte, Angular, or Lit adapters.
+Inspect `node_modules/@tanstack/alpine-table/dist/createTableHook.d.ts`; do not infer component/context APIs from React, Vue, Solid, Svelte, Angular, or Lit adapters.

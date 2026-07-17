@@ -223,4 +223,4 @@ All other underscore-prefixed internals are removed. `getIsSomeRowsSelected()` a
 
 ## API discovery
 
-Inspect `node_modules/@tanstack/react-table/src/index.ts` and `node_modules/@tanstack/table-core/src/index.ts` for the installed v9 exports and types. Inspect `src/legacy.ts` only to identify temporary bridge code that remains to be removed.
+Inspect `node_modules/@tanstack/react-table/dist/index.d.ts` and `node_modules/@tanstack/table-core/dist/index.d.ts` for the installed v9 exports and types. Inspect `dist/legacy.d.ts` only to identify temporary bridge code that remains to be removed.

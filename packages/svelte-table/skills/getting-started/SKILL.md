@@ -169,4 +169,4 @@ Source: `docs/framework/svelte/guide/migrating.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/svelte-table/src/index.ts`, then the exported implementation. Inspect core and feature APIs through `node_modules/@tanstack/table-core/src/index.ts` and `src/features/<feature>/`.
+Inspect `node_modules/@tanstack/svelte-table/dist/index.d.ts`, then the exported implementation. Inspect core and feature APIs through `node_modules/@tanstack/table-core/dist/index.d.ts` and `dist/features/<feature>/`.

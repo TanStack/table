@@ -157,4 +157,4 @@ With `tableFeatures({})`, render `row.getAllCells()`. Add `columnVisibilityFeatu
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/ember-table/src/index.ts` for exports, `use-table.ts` for options/reactivity behavior, `FlexRender.gts` and `flex-render.ts` for renderer contracts, and `node_modules/@tanstack/table-core/src/features/<feature>/` for feature-gated APIs. Do not substitute React hooks, subscriptions, or component signatures.
+Inspect `node_modules/@tanstack/ember-table/declarations/index.d.ts` for exports, `use-table.d.ts` for options/reactivity behavior, `FlexRender.d.ts` and `flex-render.d.ts` for renderer contracts, and `node_modules/@tanstack/table-core/dist/features/<feature>/` for feature-gated APIs. Do not substitute React hooks, subscriptions, or component signatures.

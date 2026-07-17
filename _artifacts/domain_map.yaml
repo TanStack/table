@@ -20,7 +20,7 @@ meta:
 scope:
   goals:
     - 'Route agents to the correct package and skill, then correct common foot-guns and misconceptions.'
-    - 'Use docs and examples for intended workflows, and direct exact API discovery to the installed package src directory.'
+    - 'Use docs and examples for intended workflows, and direct exact API discovery to installed package declarations (dist/**/*.d.ts).'
     - 'Teach headless rendering, feature registration, row-model ownership, framework state, and v8-to-v9 changes as foundations.'
   included:
     - 'All 17 public workspace packages.'
@@ -105,11 +105,13 @@ custom_feature_depth_contract:
     - 'The table_/column_/row_/cell_/header_ static-name prefixes, self argument difference, optional memoDeps, and absence of per-object assign*APIs utilities.'
 
 api_discovery_policy:
-  rule: 'For exact exports, option types, state shapes, and instance APIs, inspect src in the installed package before inventing an API or relying on memory.'
-  adapter_entrypoint: 'node_modules/@tanstack/<framework>-table/src/index.ts'
-  core_entrypoint: 'node_modules/@tanstack/table-core/src/index.ts'
-  feature_source: 'node_modules/@tanstack/table-core/src/features/<feature>/'
-  fallback: 'If source is unavailable because the package manager omitted it, inspect the matching declarations and the installed package version; do not substitute v8 or another adapter API.'
+  rule: 'For exact exports, option types, state shapes, and instance APIs, inspect dist declarations (.d.ts) in the installed package before inventing an API or relying on memory.'
+  adapter_entrypoint: 'node_modules/@tanstack/<framework>-table/dist/index.d.ts'
+  core_entrypoint: 'node_modules/@tanstack/table-core/dist/index.d.ts'
+  feature_source: 'node_modules/@tanstack/table-core/dist/features/<feature>/'
+  ember_entrypoint: 'node_modules/@tanstack/ember-table/declarations/index.d.ts'
+  angular_entrypoint: 'node_modules/@tanstack/angular-table/dist/types/'
+  fallback: 'If declarations are unavailable, resolve the installed package root and inspect published types; do not open package src/ or substitute v8 / another adapter API.'
 
 coverage:
   ignored_packages:
@@ -1573,7 +1575,7 @@ issue_evidence:
 
 documentation_read:
   narrative_docs: 'All 187 narrative Markdown documents were inventoried by title, headings, and admonitions; foundational, feature, state, migration, composable, and virtualization guides were deep-read.'
-  generated_references: 'All 828 generated reference documents were inventoried for exports and API categories; exact API truth is delegated to shipped src in skills.'
+  generated_references: 'All 828 generated reference documents were inventoried for exports and API categories; exact API truth is delegated to installed dist declarations (.d.ts) in skills.'
   examples: 'All 277 example directories were inventoried; basic, state, composable, Query, Virtual, feature, and Devtools-relevant examples were sampled or deep-read by skill.'
   source: 'All public package entrypoints, tableFeatures prerequisites, core construction/state precedence, all 14 feature implementations/defaults, createTableHook implementations, Devtools registration, and match-sorter-utils source were inspected.'
   community: 'Recent v9 issues plus recurring high-signal issues and GitHub discussions were reviewed for failure modes and misconceptions.'
@@ -1613,7 +1615,7 @@ maintainer_interview:
   phase_2_summary:
     - 'Primary journeys are first table setup, adding a feature, v8-to-v9 migration, server-data decisions, and performance debugging.'
     - 'Table is headless and compatible with component libraries/design systems, but no library-specific skills are in scope.'
-    - 'Feature skills should be short, edge-case-first, and route exact API discovery to shipped src.'
+    - 'Feature skills should be short, edge-case-first, and route exact API discovery to installed dist declarations (.d.ts).'
     - 'Framework state guides, createTableHook, Query, and Virtual require dedicated adapter guidance where source exists.'
     - 'Worker row models are excluded and useLegacyTable must not be promoted.'
   phase_4_completed: true

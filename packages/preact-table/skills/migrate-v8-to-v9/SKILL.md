@@ -17,7 +17,7 @@ sources:
   - 'TanStack/table:examples/preact/basic-use-table'
 ---
 
-Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Preact migration checklist. Verify exact APIs in the installed source before assuming another v9 beta has the same surface.
+Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Preact migration checklist. Verify exact APIs in the installed declarations before assuming another v9 beta has the same surface.
 
 Framework prerequisite: Preact 10 or newer (`preact >=10`).
 
@@ -190,4 +190,4 @@ All other underscore-prefixed internals are removed. `getIsSomeRowsSelected()` a
 
 ## API discovery
 
-Inspect `node_modules/@tanstack/preact-table/src/index.ts` and `node_modules/@tanstack/table-core/src/index.ts`. Do not copy React adapter APIs merely because the v8 app used `preact/compat`.
+Inspect `node_modules/@tanstack/preact-table/dist/index.d.ts` and `node_modules/@tanstack/table-core/dist/index.d.ts`. Do not copy React adapter APIs merely because the v8 app used `preact/compat`.

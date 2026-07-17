@@ -145,4 +145,4 @@ Source: `docs/framework/angular/guide/composable-tables.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/angular-table/src/helpers/createTableHook.ts`, `helpers/{table,cell,header}.ts`, and `flex-render/` for exact DI and rendering contracts.
+Inspect `node_modules/@tanstack/angular-table/dist/types/` for exact DI and rendering contracts in the bundled public API.

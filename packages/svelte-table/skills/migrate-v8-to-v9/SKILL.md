@@ -192,4 +192,4 @@ Keep calls bound to row/cell/column/header instances; shallow copies do not cont
 
 ## API Discovery
 
-Verify the installed target in `node_modules/@tanstack/svelte-table/src/index.ts` and its adapter sources. Verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/src`; do not reconstruct v9 APIs from v8 memory.
+Verify the installed target in `node_modules/@tanstack/svelte-table/dist/index.d.ts` and its adapter sources. Verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/dist/`; do not reconstruct v9 APIs from v8 memory.

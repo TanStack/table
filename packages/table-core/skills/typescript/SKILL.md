@@ -123,4 +123,4 @@ Source: `docs/guide/table-and-column-meta.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/helpers/` and the signatures re-exported by `src/index.ts`; avoid copying deep internal generic signatures into application code.
+Inspect `node_modules/@tanstack/table-core/dist/helpers/` and the signatures re-exported by `dist/index.d.ts`; avoid copying deep internal generic signatures into application code.

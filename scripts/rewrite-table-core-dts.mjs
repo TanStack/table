@@ -20,7 +20,7 @@ function walkDeclarationFiles(dir) {
       continue
     }
 
-    if (path.endsWith('.d.ts') || path.endsWith('.d.cts')) {
+    if (path.endsWith('.d.ts')) {
       files.push(path)
     }
   }
@@ -184,8 +184,7 @@ function rewriteInternalImportSpecifiers(source) {
 }
 
 function getImportPath(fromFile, typeName) {
-  const runtimeExtension = fromFile.endsWith('.d.cts') ? '.cjs' : '.js'
-  const target = join(distDir, 'types', `${typeName}${runtimeExtension}`)
+  const target = join(distDir, 'types', `${typeName}.js`)
   let importPath = relative(dirname(fromFile), target).replaceAll('\\', '/')
 
   if (!importPath.startsWith('.')) {
@@ -255,19 +254,11 @@ function ensureNamedImport(source, name, importPath) {
 function ensurePublicTypeImports(source, file) {
   let next = source
 
-  if (
-    !file.endsWith('/types/Table.d.ts') &&
-    !file.endsWith('/types/Table.d.cts') &&
-    /\bTable</.test(next)
-  ) {
+  if (!file.endsWith('/types/Table.d.ts') && /\bTable</.test(next)) {
     next = ensureNamedImport(next, 'Table', getImportPath(file, 'Table'))
   }
 
-  if (
-    !file.endsWith('/types/Column.d.ts') &&
-    !file.endsWith('/types/Column.d.cts') &&
-    /\bColumn</.test(next)
-  ) {
+  if (!file.endsWith('/types/Column.d.ts') && /\bColumn</.test(next)) {
     next = ensureNamedImport(next, 'Column', getImportPath(file, 'Column'))
   }
 

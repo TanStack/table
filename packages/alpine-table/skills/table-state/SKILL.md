@@ -133,4 +133,4 @@ Source: TanStack/table:docs/framework/alpine/guide/table-state.md
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/alpine-table/src/createTable.ts` and `reactivity.ts`. Inspect `node_modules/@tanstack/table-core/src/core/table/constructTable.ts` for state precedence.
+Inspect `node_modules/@tanstack/alpine-table/dist/createTable.d.ts` and `reactivity.d.ts`. Inspect `node_modules/@tanstack/table-core/dist/core/table/constructTable.d.ts` for state precedence.

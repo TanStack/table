@@ -152,4 +152,4 @@ Source: TanStack/table:docs/framework/lit/guide/table-state.md
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/lit-table/src/TableController.ts`, then `node_modules/@tanstack/table-core/src/core/table/` for state precedence and updater behavior.
+Inspect `node_modules/@tanstack/lit-table/dist/TableController.d.ts`, then `node_modules/@tanstack/table-core/dist/core/table/` for state precedence and updater behavior.

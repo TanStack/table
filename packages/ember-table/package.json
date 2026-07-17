@@ -53,7 +53,6 @@
     "addon-main.cjs",
     "declarations",
     "dist",
-    "src",
     "skills"
   ],
   "scripts": {

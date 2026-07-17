@@ -22,30 +22,13 @@
     "tanstack-intent"
   ],
   "type": "module",
-  "types": "./dist/index.d.cts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./experimental-worker-plugin": {
-      "import": "./dist/experimental-worker-plugin.js",
-      "require": "./dist/experimental-worker-plugin.cjs"
-    },
-    "./flex-render": {
-      "import": "./dist/flex-render.js",
-      "require": "./dist/flex-render.cjs"
-    },
-    "./legacy": {
-      "import": "./dist/legacy.js",
-      "require": "./dist/legacy.cjs"
-    },
-    "./static-functions": {
-      "import": "./dist/static-functions.js",
-      "require": "./dist/static-functions.cjs"
-    },
+    ".": "./dist/index.js",
+    "./experimental-worker-plugin": "./dist/experimental-worker-plugin.js",
+    "./flex-render": "./dist/flex-render.js",
+    "./legacy": "./dist/legacy.js",
+    "./static-functions": "./dist/static-functions.js",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -54,7 +37,6 @@
   },
   "files": [
     "dist",
-    "src",
     "skills"
   ],
   "scripts": {

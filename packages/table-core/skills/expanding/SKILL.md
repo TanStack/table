@@ -77,4 +77,4 @@ Source: `packages/table-core/src/features/row-expanding/rowExpandingFeature.type
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/row-expanding/` for expansion state, row APIs, and model placement.
+Inspect `node_modules/@tanstack/table-core/dist/features/row-expanding/` for expansion state, row APIs, and model placement.

@@ -75,4 +75,4 @@ Source: `docs/framework/react/guide/pagination.md#auto-reset-page-index`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/row-pagination/` for reset rules, count calculation, and navigation APIs.
+Inspect `node_modules/@tanstack/table-core/dist/features/row-pagination/` for reset rules, count calculation, and navigation APIs.

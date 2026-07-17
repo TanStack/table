@@ -188,4 +188,4 @@ Source: `packages/vue-table/src/useTable.ts`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/vue-table/src/useTable.ts` and `reactivity.ts`; inspect the exact state slice in the installed core feature directory.
+Inspect `node_modules/@tanstack/vue-table/dist/useTable.d.ts` and `reactivity.d.ts`; inspect the exact state slice in the installed core feature directory.

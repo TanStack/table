@@ -93,6 +93,6 @@ Source: `examples/react/grouping/src/main.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-grouping/` for
+Inspect `node_modules/@tanstack/table-core/dist/features/column-grouping/` for
 grouping. Load the `aggregation` skill when totals, multiple aggregations,
 grouped aggregate values, or custom definitions are part of the task.

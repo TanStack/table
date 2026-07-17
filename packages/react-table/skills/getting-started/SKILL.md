@@ -168,4 +168,4 @@ Source: `docs/framework/react/guide/data.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/react-table/src/index.ts` first, then the exported `useTable.ts`, `FlexRender.tsx`, or core feature source. Use installed source so names match the consumer's exact v9 version.
+Inspect `node_modules/@tanstack/react-table/dist/index.d.ts` first, then the exported `useTable.d.ts`, `FlexRender.d.ts`, or core feature source. Use installed declarations so names match the consumer's exact v9 version.

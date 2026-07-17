@@ -72,4 +72,4 @@ Source: `packages/table-core/src/features/column-visibility/columnVisibilityFeat
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-visibility/` for visibility-aware table, row, and column APIs.
+Inspect `node_modules/@tanstack/table-core/dist/features/column-visibility/` for visibility-aware table, row, and column APIs.

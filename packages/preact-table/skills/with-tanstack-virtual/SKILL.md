@@ -115,4 +115,4 @@ Source: `docs/framework/preact/guide/virtualization.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/preact-table/src/index.ts`. For rendering APIs, inspect installed `node_modules/@tanstack/react-virtual/src/` when using the standard `preact/compat` alias, or `node_modules/@tanstack/virtual-core/src/` for a direct integration. There is no maintained Preact-specific Virtual package or Table example; start from the Preact guide and translate the maintained React examples only through the compat setup it describes.
+Inspect `node_modules/@tanstack/preact-table/dist/index.d.ts`. For rendering APIs, inspect installed `node_modules/@tanstack/react-virtual/dist/` when using the standard `preact/compat` alias, or `node_modules/@tanstack/virtual-core/dist/` for a direct integration. There is no maintained Preact-specific Virtual package or Table example; start from the Preact guide and translate the maintained React examples only through the compat setup it describes.

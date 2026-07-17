@@ -83,4 +83,4 @@ Source: `packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/row-sorting/` and `src/fns/sortFns.ts` for current names and comparator contracts.
+Inspect `node_modules/@tanstack/table-core/dist/features/row-sorting/` and `dist/features/row-sorting/sortFns.d.ts` for current names and comparator contracts.

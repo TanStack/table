@@ -194,4 +194,4 @@ Source: `docs/framework/angular/guide/table-state.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/angular-table/src/injectTable.ts` and `reactivity.ts`; inspect `@tanstack/angular-store/src` for external atoms and installed core feature source for state APIs.
+Inspect `node_modules/@tanstack/angular-table/dist/types/` and `reactivity.d.ts`; inspect `@tanstack/angular-store/dist/` for external atoms and installed core feature source for state APIs.

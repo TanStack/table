@@ -172,4 +172,4 @@ Source: `packages/solid-table/src/createTable.ts`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/solid-table/src/index.tsx`, then `createTable.ts`, `FlexRender.tsx`, and installed core feature directories.
+Inspect `node_modules/@tanstack/solid-table/dist/index.d.ts`, then `createTable.d.ts`, `FlexRender.d.ts`, and installed core feature directories.

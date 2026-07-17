@@ -78,4 +78,4 @@ Source: TanStack/table:packages/vue-table-devtools/src/index.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/vue-table-devtools/src/index.ts` and `useTanStackTableDevtools.ts` for current ref handling.
+Inspect `node_modules/@tanstack/vue-table-devtools/dist/index.d.ts` and `useTanStackTableDevtools.d.ts` for current ref handling.

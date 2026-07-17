@@ -88,4 +88,4 @@ Source: `examples/react/column-resizing-performant/src/main.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-resizing/` and the sizing feature directory for the state it updates.
+Inspect `node_modules/@tanstack/table-core/dist/features/column-resizing/` and the sizing feature directory for the state it updates.

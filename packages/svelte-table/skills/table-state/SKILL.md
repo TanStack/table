@@ -202,4 +202,4 @@ Source: `docs/framework/svelte/guide/pagination.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/svelte-table/src/createTable.svelte.ts`, `createTableState.svelte.ts`, and `subscribe.ts`; inspect registered state slices in the matching core feature source.
+Inspect `node_modules/@tanstack/svelte-table/dist/createTable.svelte.d.ts`, `createTableState.svelte.d.ts`, and `subscribe.d.ts`; inspect registered state slices in the matching core feature source.

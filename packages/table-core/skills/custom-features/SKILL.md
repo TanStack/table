@@ -232,4 +232,4 @@ export const features = tableFeatures({ densityFeature })
 
 ## API Discovery
 
-Inspect exported `*_FeatureMap` interfaces under `node_modules/@tanstack/table-core/src/types/`, `TableFeature` in `types/TableFeatures.ts`, and `assignTableAPIs`/`assignPrototypeAPIs` in `utils.ts`. Copy lifecycle shapes—not domain behavior—from the nearest stock feature under `src/features/`.
+Inspect exported `*_FeatureMap` interfaces under `node_modules/@tanstack/table-core/dist/types/`, `TableFeature` in `types/TableFeatures.d.ts`, and `assignTableAPIs`/`assignPrototypeAPIs` in `utils.d.ts`. Copy lifecycle shapes—not domain behavior—from the nearest stock feature under `dist/features/`.

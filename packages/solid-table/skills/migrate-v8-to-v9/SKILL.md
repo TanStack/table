@@ -17,7 +17,7 @@ sources:
   - 'TanStack/table:examples/solid/basic-use-table'
 ---
 
-Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Solid migration checklist. Check the installed source before emitting APIs for another beta.
+Read `@tanstack/table-core#migrate-v8-to-v9`, `getting-started`, and `table-state`. Use this as the exhaustive Solid migration checklist. Check the installed declarations before emitting APIs for another beta.
 
 Framework prerequisite: Solid 1.3 or newer (`solid-js >=1.3`).
 
@@ -210,4 +210,4 @@ All other underscore-prefixed internals are removed. `getIsSomeRowsSelected()` a
 
 ## API discovery
 
-Inspect `node_modules/@tanstack/solid-table/src/index.tsx` and `node_modules/@tanstack/table-core/src/index.ts`. Compare v8 names only against the migration guide, not current main-branch assumptions.
+Inspect `node_modules/@tanstack/solid-table/dist/index.d.ts` and `node_modules/@tanstack/table-core/dist/index.d.ts`. Compare v8 names only against the migration guide, not current main-branch assumptions.

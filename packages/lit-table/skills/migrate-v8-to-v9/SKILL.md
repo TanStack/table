@@ -195,4 +195,4 @@ Use `row.getValue('name')`; prototype methods require the original instance and 
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/lit-table/src/index.ts` and `TableController.ts`. Verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/src`; do not reconstruct v9 from v8 memory.
+Inspect `node_modules/@tanstack/lit-table/dist/index.d.ts` and `TableController.d.ts`. Verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/dist/`; do not reconstruct v9 from v8 memory.

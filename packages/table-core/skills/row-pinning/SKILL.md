@@ -79,4 +79,4 @@ Source: `packages/table-core/src/features/row-pinning/rowPinningFeature.types.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/row-pinning/` for region getters, row APIs, and `keepPinnedRows` semantics.
+Inspect `node_modules/@tanstack/table-core/dist/features/row-pinning/` for region getters, row APIs, and `keepPinnedRows` semantics.

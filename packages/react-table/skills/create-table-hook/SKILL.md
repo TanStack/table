@@ -179,4 +179,4 @@ Source: `https://github.com/TanStack/table/issues/6348`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/react-table/src/createTableHook.tsx` and `createTableHookContexts.tsx` for the exact returned helpers, component registries, wrapper props, and scoped context types.
+Inspect `node_modules/@tanstack/react-table/dist/createTableHook.d.ts` and `createTableHookContexts.d.ts` for the exact returned helpers, component registries, wrapper props, and scoped context types.

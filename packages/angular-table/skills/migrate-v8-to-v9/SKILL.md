@@ -191,4 +191,4 @@ Use `row.getValue('name')`; prototype methods require the original instance and 
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/angular-table/src/index.ts`, `injectTable.ts`, and rendering sources. Verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/src`; do not reconstruct v9 from v8 memory.
+Inspect `node_modules/@tanstack/angular-table/dist/types/` for the bundled public API; do not reconstruct v9 from v8 memory.

@@ -91,4 +91,4 @@ Source: TanStack/table:examples/lit/composable-tables
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/lit-table/src/createTableHook.ts`. Use the matching installed implementation rather than assuming JSX-adapter component APIs exist in Lit.
+Inspect `node_modules/@tanstack/lit-table/dist/createTableHook.d.ts`. Use the matching installed implementation rather than assuming JSX-adapter component APIs exist in Lit.

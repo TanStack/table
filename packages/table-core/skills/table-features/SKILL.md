@@ -156,4 +156,4 @@ Source: `packages/table-core/src/features/stockFeatures.ts`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/types/TableFeatures.ts` for current slots and `FeatureSlotPrereqs`, and `src/features/stockFeatures.ts` for the stock inventory.
+Inspect `node_modules/@tanstack/table-core/dist/types/TableFeatures.d.ts` for current slots and `FeatureSlotPrereqs`, and `dist/features/stockFeatures.d.ts` for the stock inventory.

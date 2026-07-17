@@ -165,4 +165,4 @@ Source: `docs/framework/svelte/guide/composable-tables.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/svelte-table/src/createTableHook.svelte.ts` and the `App*.svelte` wrappers for exact returned helpers and component contracts.
+Inspect `node_modules/@tanstack/svelte-table/dist/createTableHook.svelte.d.ts` and the `App*.svelte` wrappers for exact returned helpers and component contracts.

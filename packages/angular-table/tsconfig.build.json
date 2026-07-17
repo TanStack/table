@@ -6,6 +6,7 @@
     "module": "ESNext",
     "moduleDetection": "force",
     "moduleResolution": "Bundler",
+    "sourceMap": false,
     "stripInternal": true
   },
   "angularCompilerOptions": {

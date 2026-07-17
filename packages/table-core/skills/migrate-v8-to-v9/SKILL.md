@@ -340,14 +340,14 @@ Both obscure missing feature decisions; `useLegacyTable` is deprecated and React
 
 Core concepts are shared, but reactive reads, constructors, and rendering helpers are not. Load the package-local adapter skills.
 
-## Installed-source API discovery
+## Installed API discovery
 
 Use the installed version, not main-branch memory:
 
-1. Inspect `node_modules/@tanstack/table-core/src/index.ts` for exports.
-2. Inspect `src/types/TableFeatures.ts` for valid slots and prerequisites.
-3. Inspect `src/features/<feature>/*.types.ts` for current options, state, and APIs.
-4. Inspect the installed adapter's `src/index.ts` and its migration skill for entrypoints and rendering.
-5. Inspect `src/legacy.ts` only to remove an existing bridge, never to design new v9 code.
+1. Inspect `node_modules/@tanstack/table-core/dist/index.d.ts` for exports.
+2. Inspect `dist/types/TableFeatures.d.ts` for valid slots and prerequisites.
+3. Inspect `dist/features/<feature>/*.types.d.ts` for current options, state, and APIs.
+4. Inspect the installed adapter's `dist/index.d.ts` and its migration skill for entrypoints and rendering.
+5. Inspect `dist/legacy.d.ts` only to remove an existing bridge, never to design new v9 code.
 
 If package-manager layout prevents that exact path, resolve the installed package root first. Do not substitute APIs from a different v9 beta.

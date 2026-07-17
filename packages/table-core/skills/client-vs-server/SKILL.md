@@ -161,4 +161,4 @@ Source: `docs/guide/data.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/core/row-models/coreRowModelsFeature.utils.ts` for pipeline order and each feature's `.types.ts` for its `manual*` contract.
+Inspect `node_modules/@tanstack/table-core/dist/core/row-models/coreRowModelsFeature.utils.d.ts` for pipeline order and each feature's `.types.d.ts` for its `manual*` contract.

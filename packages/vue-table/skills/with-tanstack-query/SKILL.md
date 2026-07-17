@@ -124,4 +124,4 @@ Source: `docs/framework/vue/guide/pagination.md`
 
 ## API Discovery
 
-Inspect installed `@tanstack/vue-table/src/useTable.ts`, installed `@tanstack/vue-query/src`, and the relevant manual Table feature source for exact option types.
+Inspect installed `@tanstack/vue-table/dist/useTable.d.ts`, installed `@tanstack/vue-query/dist/`, and the relevant manual Table feature source for exact option types.

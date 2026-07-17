@@ -84,4 +84,4 @@ Source: TanStack/table:packages/angular-table-devtools/src/index.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/angular-table-devtools/src/index.ts` and `injectTanStackTableDevtools.ts` for current injection options.
+Inspect `node_modules/@tanstack/angular-table-devtools/dist/index.d.ts` and `injectTanStackTableDevtools.d.ts` for current injection options.

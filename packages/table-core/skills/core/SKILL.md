@@ -172,4 +172,4 @@ Source: `docs/guide/rows.md#row-numbers-and-display-indexes`, `packages/table-co
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/index.ts`, then follow the exported implementation. For UI creation and rendering, inspect `node_modules/@tanstack/<framework>-table/src/index.ts` and load that adapter's getting-started skill.
+Inspect `node_modules/@tanstack/table-core/dist/index.d.ts`, then follow the exported implementation. For UI creation and rendering, inspect `node_modules/@tanstack/<framework>-table/dist/index.d.ts` and load that adapter's getting-started skill.

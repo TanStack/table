@@ -141,4 +141,4 @@ Source: `examples/vue/basic-use-table/src/App.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/vue-table/src/index.ts`, then `useTable.ts` and `FlexRender.ts`. Inspect core feature APIs in `node_modules/@tanstack/table-core/src/features/<feature>/`.
+Inspect `node_modules/@tanstack/vue-table/dist/index.d.ts`, then `useTable.d.ts` and `FlexRender.d.ts`. Inspect core feature APIs in `node_modules/@tanstack/table-core/dist/features/<feature>/`.

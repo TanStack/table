@@ -119,4 +119,4 @@ Source: `packages/solid-table/src/createTableHook.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/solid-table/src/createTableHook.tsx` for exact returned names, component binding, context providers, and reactive option merging.
+Inspect `node_modules/@tanstack/solid-table/dist/createTableHook.d.ts` for exact returned names, component binding, context providers, and reactive option merging.

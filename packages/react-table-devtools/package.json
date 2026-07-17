@@ -44,8 +44,7 @@
     "node": ">=20"
   },
   "files": [
-    "dist/",
-    "src",
+    "dist",
     "skills"
   ],
   "dependencies": {
