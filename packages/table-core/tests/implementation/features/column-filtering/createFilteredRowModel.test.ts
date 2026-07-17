@@ -509,6 +509,19 @@ describe('createFilteredRowModel', () => {
 
       expect(rowNames(table.getFilteredRowModel().rows)).toEqual(['Keep Me'])
     })
+
+    it('should apply a numeric zero global filter value', () => {
+      const table = constructTable<typeof features, TestRow>({
+        features,
+        columns,
+        data: [{ name: 'status 0' }, { name: 'status 1' }],
+        initialState: {
+          globalFilter: 0,
+        },
+      })
+
+      expect(rowNames(table.getFilteredRowModel().rows)).toEqual(['status 0'])
+    })
   })
 
   describe('unresolvable global filter fn', () => {
