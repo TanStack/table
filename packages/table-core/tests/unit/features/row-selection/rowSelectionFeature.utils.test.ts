@@ -353,6 +353,20 @@ describe('row_toggleSelected', () => {
       '0': true,
     })
   })
+
+  it('should select the clicked parent row when multi-select is disabled', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable(
+      { onRowSelectionChange, enableMultiRowSelection: false },
+      [3, 2],
+    )
+
+    row_toggleSelected(table.getRow('0'), true)
+
+    expect(getUpdaterResult(onRowSelectionChange, {})).toEqual({
+      '0': true,
+    })
+  })
 })
 
 describe('row_getIsSomeSelected / row_getIsAllSubRowsSelected', () => {
