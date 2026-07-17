@@ -243,18 +243,21 @@ export function column_toggleSorting<
     let sortAction: 'add' | 'remove' | 'toggle' | 'replace'
     const nextDesc = hasManualValue ? desc : nextSortingOrder === 'desc'
 
+    const isMultiMode = !!(
+      old.length &&
+      column_getCanMultiSort(column) &&
+      multi
+    )
+
     // Multi-mode
-    if (old.length && column_getCanMultiSort(column) && multi) {
+    if (isMultiMode) {
       if (existingSorting) {
         sortAction = 'toggle'
       } else {
         sortAction = 'add'
       }
     } else {
-      // Normal mode
-      if (old.length && existingIndex !== old.length - 1) {
-        sortAction = 'replace'
-      } else if (existingSorting) {
+      if (existingSorting) {
         sortAction = 'toggle'
       } else {
         sortAction = 'replace'
@@ -289,17 +292,19 @@ export function column_toggleSorting<
       )
     } else if (sortAction === 'toggle') {
       // This flips (or sets) the
-      newSorting = old.map((d) => {
-        if (d.id === column.id) {
-          return {
-            ...d,
-            desc: nextDesc,
-          }
-        }
-        return d
-      })
+      newSorting = isMultiMode
+        ? old.map((d) => {
+            if (d.id === column.id) {
+              return {
+                ...d,
+                desc: nextDesc,
+              }
+            }
+            return d
+          })
+        : [{ id: column.id, desc: nextDesc }]
     } else if (sortAction === 'remove') {
-      newSorting = old.filter((d) => d.id !== column.id)
+      newSorting = isMultiMode ? old.filter((d) => d.id !== column.id) : []
     } else {
       newSorting = [
         {

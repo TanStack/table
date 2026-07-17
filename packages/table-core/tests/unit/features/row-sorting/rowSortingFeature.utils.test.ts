@@ -507,6 +507,22 @@ describe('column_toggleSorting', () => {
     ])
   })
 
+  it('should discard other sorts when toggling the last column in single-sort mode', () => {
+    const sorting: SortingState = [
+      { id: 'age', desc: true },
+      { id: 'firstName', desc: false },
+    ]
+    const { table, onSortingChange } = makeTableWithMockOnSortingChange({
+      initialState: { sorting },
+    })
+
+    column_toggleSorting(table.getColumn('firstName')!, undefined, false)
+
+    expect(getUpdaterResult(onSortingChange, sorting)).toEqual([
+      { id: 'firstName', desc: true },
+    ])
+  })
+
   it('should append to the sorting state in multi mode', () => {
     const sorting: SortingState = [{ id: 'age', desc: true }]
     const { table, onSortingChange } = makeTableWithMockOnSortingChange({
