@@ -7,6 +7,7 @@ title: Faceting (Solid) Guide
 Want to skip to the implementation? Check out these Solid examples:
 
 - [Faceted Filters](../examples/filters-faceted)
+- [Bucketed Faceted Filters](../examples/filters-faceted-bucketed)
 
 Use getters for reactive inputs such as `data` when passing Solid signals to `createTable`.
 
@@ -48,103 +49,236 @@ const table = createTable({
 
 ## Faceting (Solid) Guide
 
-Faceting is a feature that generates lists of values from your table's data, either for a single column (column faceting) or across the entire table (global faceting). For example, a list of unique values can be used as search suggestions in an autocomplete filter component, or a tuple of minimum and maximum values from a column of numbers can drive a range slider filter component. The same row models power both the per-column and table-wide APIs.
+### What is Faceting?
 
-### Column Faceting Row Models
+Faceting derives information that can be used to build filtering interfaces. For a given column, faceting can answer questions such as:
 
-In order to use any of the column faceting features, add the `columnFacetingFeature` and the appropriate faceted row model factories to your features. Faceting exists to power filter UIs, so in practice you will also register the `columnFilteringFeature` and a `filteredRowModel`. Without a filtered row model, the faceted row models fall back to the pre-filtered rows and the facet values will not react to other columns' filters.
+- Which values are available?
+- How often does each value occur?
+- What is the minimum and maximum value among the available rows?
+- Which rows should be used for a custom facet calculation?
+
+For example, an application could use faceting to render a plan filter like this:
+
+```text
+Plan
+☐ Free        128
+☐ Pro          47
+☐ Enterprise    9
+```
+
+The plan names and counts are derived from the table's faceted row model. If a filter on another column changes, such as `Region = Europe`, the plan counts update to describe only the rows in that region.
+
+Faceting does not apply filters to the table. It provides values, counts, ranges, or rows that you can use to build a filter UI. The column filtering feature owns the filter state and determines which rows match the selected filter values.
+
+#### Faceting vs Row Aggregation
+
+Faceting and row aggregation both summarize data, but they serve different purposes. Faceting produces metadata for filter controls, such as available values, occurrence counts, or a numeric range. Row aggregation computes result values over a set of rows, such as a sum, average, or total, for display in footers or grouped rows.
+
+Faceted counts do not create aggregate rows or use a column's `aggregationFn`. A useful way to distinguish the features is:
+
+- Filtering answers: Which rows remain?
+- Faceting answers: Which filtering choices remain?
+- Row aggregation answers: What summary value can be calculated from these rows?
+
+### How Column Faceting Responds to Filters
+
+A column's faceted row model includes rows that pass every applicable filter except that column's own filter. This lets a facet continue to show alternative choices while the user edits it.
+
+Consider a table with `Region` and `Plan` filters:
+
+1. The user selects `Region = Europe`.
+2. The `Plan` facet applies the region filter and recalculates its plan counts.
+3. The user selects `Plan = Pro`.
+4. The table displays only European Pro rows.
+5. The `Plan` facet still calculates its choices from all European rows because it excludes its own `Plan` filter.
+
+Other facets do apply the selected plan filter. For example, a `Status` facet would now describe only European Pro rows. This is what allows multiple facets to narrow each other.
+
+Client-side faceting needs both `filteredRowModel` and `facetedRowModel` to provide this behavior. Without a filtered row model, the faceted row model falls back to the pre-filtered rows, so its values will not react to other column filters.
+
+### Faceting APIs
+
+Use the faceting API that matches the filter interface you are building:
+
+| API                               | Result                                  | Common uses                                            |
+| --------------------------------- | --------------------------------------- | ------------------------------------------------------ |
+| `column.getFacetedRowModel()`     | Rows that pass the other active filters | Custom facet calculations                              |
+| `column.getFacetedUniqueValues()` | A `Map` of values to occurrence counts  | Checkboxes, select menus, and autocomplete suggestions |
+| `column.getFacetedMinMaxValues()` | A `[min, max]` tuple or `undefined`     | Number inputs and range sliders                        |
+
+The row model factories registered in `tableFeatures` enable these APIs:
+
+- `createFacetedRowModel()` is required for client-side faceting.
+- `createFacetedUniqueValues()` is required for unique values and counts.
+- `createFacetedMinMaxValues()` is required for numeric minimum and maximum values.
+
+Register only the factories your table uses. The complete setup near the top of this guide registers all three.
+
+### Unique Values and Counts
+
+`column.getFacetedUniqueValues()` returns a `Map` whose keys are facet values and whose values are occurrence counts. You can turn that map into a sorted list for an autocomplete or select control:
 
 ```ts
-import {
-  createTable,
-  tableFeatures,
-  columnFacetingFeature,
-  columnFilteringFeature,
-  createFacetedRowModel,
-  createFacetedMinMaxValues,
-  createFacetedUniqueValues,
-  createFilteredRowModel,
-  filterFns,
-} from '@tanstack/solid-table'
+const suggestions = Array.from(column.getFacetedUniqueValues().entries())
+  .sort(([valueA], [valueB]) => String(valueA).localeCompare(String(valueB)))
+  .slice(0, 5_000)
+```
 
-const features = tableFeatures({
-  columnFacetingFeature,
-  columnFilteringFeature,
-  filteredRowModel: createFilteredRowModel(), // facet values react to other columns' filters
-  facetedRowModel: createFacetedRowModel(), // required for faceting (other faceted row models depend on this)
-  facetedMinMaxValues: createFacetedMinMaxValues(), // if you need min/max values
-  facetedUniqueValues: createFacetedUniqueValues(), // if you need a list of unique values
-  filterFns,
+Each entry contains both the value and its count:
+
+```tsx
+return (
+  <select>
+    <For each={suggestions}>
+      {([value, count]) => (
+        <option value={String(value)}>
+          {String(value)} ({count})
+        </option>
+      )}
+    </For>
+  </select>
+)
+```
+
+For a scalar column, each row normally contributes one value, so the occurrence count is also a row count. A row can contribute more than one facet value by defining the column's `getUniqueValues` option. In that case, the counts describe occurrences and their total can be greater than the number of rows.
+
+```tsx
+columnHelper.accessor('tags', {
+  header: 'Tags',
+  getUniqueValues: (row) => row.tags,
+})
+```
+
+If you want each count to represent rows, make sure `getUniqueValues` returns each value no more than once per row.
+
+### Reactive Facet Controls in Solid
+
+Facet APIs participate in Solid's reactive graph when they are read by a reactive consumer. When a filter component receives a stable `column` prop, define accessor functions for the selected values and facet counts so consumers read the latest table state.
+
+```tsx
+function FacetOptions(props) {
+  const values = () =>
+    Array.from(props.column.getFacetedUniqueValues().entries())
+
+  return (
+    <For each={values()}>
+      {([value, count]) => (
+        <label>
+          <input
+            type="checkbox"
+            checked={isSelected(value)}
+            onChange={() => toggleValue(value)}
+          />
+          {String(value)} ({count})
+        </label>
+      )}
+    </For>
+  )
+}
+```
+
+The filter function for the column still determines how the selected values match rows. See the [Column Filtering Guide](./column-filtering) for filter functions and filter state, or the [Faceted Filters example](../examples/filters-faceted) for a complete implementation.
+
+### Minimum and Maximum Values
+
+`column.getFacetedMinMaxValues()` returns the numeric range available after applying the other active filters. It returns `undefined` when there are no numeric values.
+
+```tsx
+const range = () => column.getFacetedMinMaxValues() ?? [0, 1]
+
+return (
+  <input
+    type="range"
+    min={range()[0]}
+    max={range()[1]}
+    value={currentValue()}
+    onInput={(event) =>
+      column.setFilterValue(Number(event.currentTarget.value))
+    }
+  />
+)
+```
+
+The minimum and maximum describe the values that are available to the filter UI. Your column's filter function determines how a selected value or range filters rows.
+
+### Bucketed Faceting for Continuous Values
+
+Raw unique values are not always useful. Dates, file sizes, durations, prices, and measurements can produce hundreds or thousands of distinct values. These columns are often easier to filter when their values are placed into meaningful buckets:
+
+```text
+Last login
+☐ Today
+☐ Yesterday
+☐ This week
+☐ This month
+☐ Older
+```
+
+You can use the column's `getUniqueValues` option to return a bucket key for faceting while keeping the original accessor value for rendering and other table features.
+
+```tsx
+type StorageBucket =
+  | 'under-1-gb'
+  | '1-to-10-gb'
+  | '10-to-100-gb'
+  | '100-gb-plus'
+
+const GB = 1024 ** 3
+
+function getStorageBucket(value: number): StorageBucket {
+  if (value < GB) return 'under-1-gb'
+  if (value < 10 * GB) return '1-to-10-gb'
+  if (value < 100 * GB) return '10-to-100-gb'
+  return '100-gb-plus'
+}
+
+const storageBucketFilter = constructFilterFn({
+  resolveDataValue: (value) => getStorageBucket(value as number),
+  filter: (bucket, selected: Array<StorageBucket>) => selected.includes(bucket),
+  autoRemove: (selected: Array<StorageBucket>) => selected.length === 0,
 })
 
-const table = createTable({
-  features,
-  columns,
-  data,
+columnHelper.accessor('storageBytes', {
+  header: 'Storage',
+  getUniqueValues: (row) => [getStorageBucket(row.storageBytes)],
+  filterFn: storageBucketFilter,
 })
 ```
 
-First, you must include the `facetedRowModel`. This row model will generate a list of values for a given column. If you need a list of unique values, include the `facetedUniqueValues` row model. If you need a tuple of minimum and maximum values, include the `facetedMinMaxValues` row model.
+Faceting and filtering should use the same bucket definitions so the displayed counts match the rows selected by each bucket. The column keeps its raw numeric value, so there is no need to create a hidden derived column only for faceting. See the [Bucketed Faceted Filters example](../examples/filters-faceted-bucketed) for complete date and storage bucket filters.
 
-### Use Faceted Row Models
+### Client-Side Faceting and Performance
 
-Once you have included the appropriate row models in your table options, you will be able to use the faceting column instance APIs to access the lists of values generated by the faceted row models.
+The built-in client-side faceting row models are memoized. They recalculate when their input rows or relevant filter state changes. The cost still depends on the number of rows, columns, and unique values in the table.
 
-```ts
-// list of unique values for autocomplete filter
-const autoCompleteSuggestions = Array.from(
-  column.getFacetedUniqueValues().keys(),
-)
-  .sort()
-  .slice(0, 5000)
-```
+For columns with many unique values, consider these options:
 
-```ts
-// tuple of min and max values for range filter
-const [min, max] = column.getFacetedMinMaxValues() ?? [0, 1]
-```
+- Render only the first or most relevant values instead of every map entry.
+- Let users search the available values before rendering a long list.
+- Bucket continuous or high-cardinality values into useful ranges.
+- Move faceting to the server when the complete dataset is not available in the browser.
 
-### Global Faceting
+Avoid sorting or converting a large facet map repeatedly in unrelated components. Derive and render facet options close to the component that subscribes to the relevant filter state.
 
-The same `columnFacetingFeature` and faceted row models also power table-wide (global) faceting. Where column faceting derives values from a single column, global faceting derives values across all columns, which is useful for populating a global filter's autocomplete suggestions or a global range slider. If your table also uses global filtering, register the `globalFilteringFeature` so global facet values react to the active global filter.
+### Custom Server-Side Faceting
 
-Use the global faceting table instance APIs to read the values:
+When filtering is performed on the server, the rows loaded into the browser may not contain enough information to calculate complete facet values or counts. In that case, calculate the facets on the server and provide custom `facetedUniqueValues` and `facetedMinMaxValues` factories.
+
+Each factory receives the table and a column ID, then returns a function that resolves the faceted result. The regular column APIs will return the server-provided values.
 
 ```ts
-const globalFacetedRows = table.getGlobalFacetedRowModel().flatRows
-```
-
-```ts
-// list of unique values for autocomplete filter
-const autoCompleteSuggestions = Array.from(
-  table.getGlobalFacetedUniqueValues().keys(),
-)
-  .sort()
-  .slice(0, 5000)
-```
-
-```ts
-// tuple of min and max values for range filter
-const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1]
-```
-
-### Custom (Server-Side) Faceting
-
-Instead of using the built-in client-side faceting features, you can implement your own faceting logic on the server-side and pass the faceted values to the client-side. Supply custom `facetedUniqueValues` and `facetedMinMaxValues` factories in `tableFeatures`. Each factory receives the table and a column ID and returns a thunk that resolves the faceted values. The column instance APIs (`column.getFacetedUniqueValues()` and `column.getFacetedMinMaxValues()`) will then return your server-provided values.
-
-```ts
-const facetingQuery = useQuery()
-//...
+const facetingQuery = createQuery()
 
 const features = tableFeatures({
   columnFacetingFeature,
   facetedUniqueValues: (_table, columnId) => () => {
     const uniqueValueMap = new Map<string, number>()
-    //... populate from facetingQuery data for this columnId
+    // Populate the map from facetingQuery data for columnId.
     return uniqueValueMap
   },
   facetedMinMaxValues: (_table, columnId) => () => {
-    //... read from facetingQuery data for this columnId
+    // Read the range from facetingQuery data for columnId.
     return [min, max]
   },
 })
@@ -152,18 +286,41 @@ const features = tableFeatures({
 const table = createTable({
   features,
   columns,
-  data,
-  //...
+  get data() {
+    return data()
+  },
 })
 ```
 
-The same factories also serve global faceting. Global faceting requests values with the internal `__global__` column ID, so you can branch on it inside the same `facetedUniqueValues` and `facetedMinMaxValues` factories to return table-wide facet values:
+To match the built-in column faceting behavior, a server query for one column should apply the other active filters but exclude that column's own filter. This keeps alternative choices available in the current facet while allowing facets to narrow each other.
+
+You can also fetch facet values and pass them directly to your filter components without using the TanStack Table faceting APIs.
+
+### Global Faceting
+
+Global faceting derives values across every leaf column that can participate in global filtering. It is useful for autocomplete suggestions or other metadata associated with a global filter. The global faceted row model applies active column filters and excludes the global filter itself.
+
+If the table uses global filtering, register `globalFilteringFeature` so the row filtering pipeline evaluates the global filter. The same faceting factories used by column faceting also power these table APIs:
 
 ```ts
-facetedUniqueValues: (_table, columnId) => () => {
-  if (columnId !== '__global__') return new Map() // per-column facets
-  return new Map(globalFacets.uniqueValues) // global facets
-},
+const globalFacetedRows = table.getGlobalFacetedRowModel().flatRows
+
+const suggestions = Array.from(table.getGlobalFacetedUniqueValues().entries())
+
+const [min, max] = table.getGlobalFacetedMinMaxValues() ?? [0, 1]
 ```
 
-Alternatively, you don't have to put any of your faceting logic through the TanStack Table APIs at all. Just fetch your lists and pass them to your filter components directly.
+Custom faceting factories receive the internal `__global__` column ID for global requests. You can branch on that ID when the server returns separate column and global facet results:
+
+```ts
+const features = tableFeatures({
+  columnFacetingFeature,
+  facetedUniqueValues: (_table, columnId) => () => {
+    if (columnId === '__global__') {
+      return new Map(globalFacets.uniqueValues)
+    }
+
+    return new Map(columnFacets[columnId]?.uniqueValues)
+  },
+})
+```

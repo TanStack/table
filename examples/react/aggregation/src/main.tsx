@@ -158,8 +158,8 @@ function App() {
         <button onClick={() => setData(makeData(10_000))}>
           Regenerate Data
         </button>
-        <button onClick={() => setData(makeData(200_000))}>
-          Stress Test (200k rows)
+        <button onClick={() => setData(makeData(1_000_000))}>
+          Stress Test (1M rows)
         </button>
       </div>
       <div className="spacer-sm" />

@@ -108,7 +108,7 @@ export class App {
     return JSON.stringify(this.table.store.get(), null, 2)
   }
   refreshData = () => this.data.set(makeData(10_000))
-  stressTest = () => this.data.set(makeData(200_000))
+  stressTest = () => this.data.set(makeData(1_000_000))
   onCategoryInput(event: Event) {
     this.table
       .getColumn('category')

@@ -52,7 +52,7 @@
 <div class="demo-root">
   <h1>Aggregation without grouping</h1>
   <p>Amount uses a scalar <code>sum</code>. Score runs count, mean, and range together and returns a keyed object.</p>
-  <div><button onclick={() => data = makeData(10_000)}>Regenerate Data</button><button onclick={() => data = makeData(200_000)}>Stress Test (200k rows)</button></div>
+  <div><button onclick={() => data = makeData(10_000)}>Regenerate Data</button><button onclick={() => data = makeData(1_000_000)}>Stress Test (1M rows)</button></div>
   <div class="spacer-sm"></div>
   <div class="controls">
     <label>Category filter: <input value={(table.getColumn('category')?.getFilterValue() ?? '') as string} oninput={(event) => table.getColumn('category')?.setFilterValue(event.currentTarget.value)} /></label>

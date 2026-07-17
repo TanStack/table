@@ -8,6 +8,7 @@ Want to skip to the implementation? Check out these Svelte examples:
 
 - [Column Filters](../examples/filtering)
 - [Faceted Filters](../examples/filters-faceted)
+- [Bucketed Faceted Filters](../examples/filters-faceted-bucketed)
 - [Fuzzy Search](../examples/filters-fuzzy)
 
 Use getters for reactive inputs such as `data` when passing Svelte state to `createTable`.
