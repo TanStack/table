@@ -1,9 +1,10 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.53'
+  version: '9.0.0-beta.54'
   repository: 'https://github.com/TanStack/table'
   description: 'Headless data-grid state and row processing with tree-shakeable v9 features and framework adapters.'
   package_version_overrides:
+    '@tanstack/match-sorter-utils': '9.0.0-beta.53'
 generated_from:
   domain_map: '_artifacts/domain_map.yaml'
   skill_spec: '_artifacts/skill_spec.md'
