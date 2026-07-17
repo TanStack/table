@@ -84,4 +84,4 @@ Source: `packages/table-core/src/features/column-filtering/columnFilteringFeatur
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-filtering/` and `src/fns/filterFns.ts` for exact signatures and auto-remove behavior.
+Inspect `node_modules/@tanstack/table-core/dist/features/column-filtering/` and `dist/features/column-filtering/filterFns.d.ts` for exact signatures and auto-remove behavior.

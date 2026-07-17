@@ -50,12 +50,11 @@
   },
   "files": [
     "dist",
-    "src",
     "static-functions",
     "skills"
   ],
   "scripts": {
-    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json",
+    "build": "ng-packagr -p ng-package.json -c tsconfig.build.json && rimraf ./dist/package.json && find dist -name '*.map' -delete",
     "build:types": "tsc --emitDeclarationOnly",
     "clean": "rimraf ./build && rimraf ./dist",
     "test:build": "publint --strict",

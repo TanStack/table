@@ -72,4 +72,4 @@ Source: `examples/react/column-dnd/src/main.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-ordering/`; combine with pinning/visibility skills when those plugins are registered.
+Inspect `node_modules/@tanstack/table-core/dist/features/column-ordering/`; combine with pinning/visibility skills when those plugins are registered.

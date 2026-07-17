@@ -89,7 +89,7 @@ skills:
     domain: foundations
     path: 'packages/table-core/skills/api-not-found/SKILL.md'
     package: 'packages/table-core'
-    description: 'Diagnose missing TanStack Table exports, options, state slices, and instance methods by checking the installed package src, adapter/version mismatches, tableFeatures registration, and v9 prototype APIs before inventing replacements.'
+    description: 'Diagnose missing TanStack Table exports, options, state slices, and instance methods by checking the installed package declarations (dist/**/*.d.ts), adapter/version mismatches, tableFeatures registration, and v9 prototype APIs before inventing replacements.'
     requires: ['core', 'table-features']
     sources:
       - 'TanStack/table:packages/table-core/src/index.ts'

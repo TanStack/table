@@ -144,4 +144,4 @@ Source: `docs/framework/svelte/guide/pagination.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/svelte-table/src/index.ts` for adapter APIs and installed `@tanstack/svelte-query/src` for the exact Query version. Table manual-stage options live in the matching core feature source.
+Inspect `node_modules/@tanstack/svelte-table/dist/index.d.ts` for adapter APIs and installed `@tanstack/svelte-query/dist/` for the exact Query version. Table manual-stage options live in the matching core feature source.

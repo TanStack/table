@@ -152,4 +152,4 @@ Source: `examples/preact/basic-subscribe`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/preact-table/src/useTable.ts` and `Subscribe.tsx`; use `@tanstack/preact-store` rather than React Store hooks.
+Inspect `node_modules/@tanstack/preact-table/dist/useTable.d.ts` and `Subscribe.d.ts`; use `@tanstack/preact-store` rather than React Store hooks.

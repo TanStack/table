@@ -94,4 +94,4 @@ Source: `docs/framework/react/guide/column-faceting.md#custom-server-side-faceti
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-faceting/` for exact getters and factory return types.
+Inspect `node_modules/@tanstack/table-core/dist/features/column-faceting/` for exact getters and factory return types.

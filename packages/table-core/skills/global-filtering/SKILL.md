@@ -81,4 +81,4 @@ Source: `docs/framework/react/guide/global-filtering.md#manual-server-side-globa
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/global-filtering/` plus `src/features/column-filtering/` for shared state and filter functions.
+Inspect `node_modules/@tanstack/table-core/dist/features/global-filtering/` plus `dist/features/column-filtering/` for shared state and filter functions.

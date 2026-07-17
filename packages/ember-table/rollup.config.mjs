@@ -15,7 +15,10 @@ const tsConfig = resolve(rootDirectory, './tsconfig.publish.json')
 export default {
   // This provides defaults that work well alongside `publicEntrypoints` below.
   // You can augment this if you need to.
-  output: addon.output(),
+  output: {
+    ...addon.output(),
+    sourcemap: false,
+  },
 
   plugins: [
     // These are the modules that users should be able to import from your

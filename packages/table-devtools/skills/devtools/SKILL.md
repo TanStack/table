@@ -87,4 +87,4 @@ Source: TanStack/table:docs/devtools.md
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-devtools/src/index.ts`, `tableTarget.ts`, and `production.ts`. Framework registration belongs to the matching `@tanstack/<framework>-table-devtools` package.
+Inspect `node_modules/@tanstack/table-devtools/dist/index.d.ts`, `tableTarget.d.ts`, and `production.d.ts`. Framework registration belongs to the matching `@tanstack/<framework>-table-devtools` package.

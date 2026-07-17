@@ -69,4 +69,4 @@ Source: `examples/react/column-sizing/src/main.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-sizing/` for defaults and region-aware offset signatures.
+Inspect `node_modules/@tanstack/table-core/dist/features/column-sizing/` for defaults and region-aware offset signatures.

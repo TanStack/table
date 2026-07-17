@@ -80,4 +80,4 @@ Source: TanStack/table:packages/solid-table-devtools/src/index.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/solid-table-devtools/src/index.ts`, `useTanStackTableDevtools.ts`, and `production.ts`.
+Inspect `node_modules/@tanstack/solid-table-devtools/dist/index.d.ts`, `useTanStackTableDevtools.d.ts`, and `production.d.ts`.

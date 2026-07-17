@@ -132,4 +132,4 @@ Source: `docs/framework/preact/guide/pagination.md`
 
 ## API Discovery
 
-Inspect installed `node_modules/@tanstack/preact-table/src/index.ts` and the relevant core feature source; inspect `@tanstack/preact-query` source for exact query APIs.
+Inspect installed `node_modules/@tanstack/preact-table/dist/index.d.ts` and the relevant core feature source; inspect `@tanstack/preact-query` source for exact query APIs.

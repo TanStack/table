@@ -86,4 +86,4 @@ Source: `docs/framework/react/guide/column-pinning.md#useful-column-pinning-apis
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/column-pinning/`; use CSS logical properties for direction-aware rendering.
+Inspect `node_modules/@tanstack/table-core/dist/features/column-pinning/`; use CSS logical properties for direction-aware rendering.

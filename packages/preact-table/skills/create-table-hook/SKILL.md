@@ -173,4 +173,4 @@ Source: `packages/preact-table/src/createTableHook.tsx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/preact-table/src/createTableHook.tsx` and `createTableHookContexts.tsx` for exact return names, provider props, registries, and scoped context types.
+Inspect `node_modules/@tanstack/preact-table/dist/createTableHook.d.ts` and `createTableHookContexts.d.ts` for exact return names, provider props, registries, and scoped context types.

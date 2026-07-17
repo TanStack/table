@@ -24,7 +24,7 @@ const packageJson = JSON.parse(
   await readFile('node_modules/@tanstack/table-core/package.json', 'utf8'),
 )
 const entrypoint = await readFile(
-  'node_modules/@tanstack/table-core/src/index.ts',
+  'node_modules/@tanstack/table-core/dist/index.d.ts',
   'utf8',
 )
 console.log(packageJson.version, entrypoint.includes('rowSortingFeature'))
@@ -35,10 +35,10 @@ console.log(packageJson.version, entrypoint.includes('rowSortingFeature'))
 ### Trace an export to source
 
 ```sh
-rg "export .*rowSortingFeature|rowSortingFeature" node_modules/@tanstack/table-core/src
+rg "export .*rowSortingFeature|rowSortingFeature" node_modules/@tanstack/table-core/dist/
 ```
 
-For an adapter API, start at `node_modules/@tanstack/<framework>-table/src/index.ts`.
+For an adapter API, start at `node_modules/@tanstack/<framework>-table/dist/index.d.ts`.
 
 ### Check feature gating before replacement
 
@@ -110,4 +110,4 @@ Source: `docs/framework/react/guide/migrating.md#instance-methods-must-be-called
 
 ## API Discovery
 
-Use this order: installed `package.json` version, installed adapter `src/index.ts`, installed core `src/index.ts`, then the exported implementation or feature directory. If `src` is absent, inspect installed declarations for that exact version.
+Use this order: installed `package.json` version, installed adapter `dist/index.d.ts`, installed core `dist/index.d.ts`, then the exported implementation or feature directory. Prefer `dist/**/*.d.ts` (Ember: `declarations/**/*.d.ts`; Angular: `dist/types/*.d.ts`).

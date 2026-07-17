@@ -184,4 +184,4 @@ When `atoms.pagination` owns the slice, changing `baseAtoms.pagination` does not
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/ember-table/src/use-table.ts` for option/state precedence and the Glimmer bridge, `signal.ts` for `createAtom` behavior, and `reactivity.ts` for scheduling/tracking. Inspect the registered feature under `node_modules/@tanstack/table-core/src/features/<feature>/` for its state type, update API, and reset semantics.
+Inspect `node_modules/@tanstack/ember-table/declarations/use-table.d.ts` for option/state precedence and the Glimmer bridge, `signal.d.ts` for `createAtom` behavior, and `reactivity.d.ts` for scheduling/tracking. Inspect the registered feature under `node_modules/@tanstack/table-core/dist/features/<feature>/` for its state type, update API, and reset semantics.

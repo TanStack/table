@@ -147,4 +147,4 @@ Source: `docs/framework/svelte/guide/virtualization.md`
 
 ## API Discovery
 
-Inspect installed `@tanstack/svelte-table/src` for Table APIs and `@tanstack/svelte-virtual/src` for the exact virtualizer options. Use the maintained Svelte examples for layout combinations.
+Inspect installed `@tanstack/svelte-table/dist/` for Table APIs and `@tanstack/svelte-virtual/dist/` for the exact virtualizer options. Use the maintained Svelte examples for layout combinations.

@@ -161,4 +161,4 @@ Source: `docs/framework/react/guide/row-selection.md#shift-range-selection`, `ht
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/row-selection/` for state, row-model variants, and selection enablement callbacks.
+Inspect `node_modules/@tanstack/table-core/dist/features/row-selection/` for state, row-model variants, and selection enablement callbacks.

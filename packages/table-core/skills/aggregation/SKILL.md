@@ -136,6 +136,6 @@ grouped results sent by the worker must be structured-cloneable.
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/src/features/row-aggregation/` and the
+Inspect `node_modules/@tanstack/table-core/dist/features/row-aggregation/` and the
 Aggregation Guide. Use `Column_Aggregation`, `AggregationFnDef`,
 `AggregationContext`, and `AggregationResult` for the typed public surface.

@@ -105,4 +105,4 @@ Source: TanStack/table:docs/overview.md
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/alpine-table/src/index.ts` and `createTable.ts`. Exact core APIs live under `node_modules/@tanstack/table-core/src/`.
+Inspect `node_modules/@tanstack/alpine-table/dist/index.d.ts` and `createTable.d.ts`. Exact core APIs live under `node_modules/@tanstack/table-core/dist/`.

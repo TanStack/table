@@ -252,4 +252,4 @@ Source: `docs/framework/react/guide/table-state.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/react-table/src/useTable.ts` and `Subscribe.tsx`. Core atom precedence and state slices live under `node_modules/@tanstack/table-core/src/`.
+Inspect `node_modules/@tanstack/react-table/dist/useTable.d.ts` and `Subscribe.d.ts`. Core atom precedence and state slices live under `node_modules/@tanstack/table-core/dist/`.

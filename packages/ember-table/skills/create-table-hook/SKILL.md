@@ -114,4 +114,4 @@ Use `createAppColumnHelper<Person>()`; do not thread `typeof features` through e
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/ember-table/src/create-table-hook.ts` for the installed factory return shape, omitted options, and merge precedence. Inspect `use-table.ts` for thunk reactivity and `node_modules/@tanstack/table-core/src/features/<feature>/` for the shared feature APIs. Do not infer Ember component/context behavior from another adapter's createTableHook.
+Inspect `node_modules/@tanstack/ember-table/declarations/create-table-hook.d.ts` for the installed factory return shape, omitted options, and merge precedence. Inspect `use-table.d.ts` for thunk reactivity and `node_modules/@tanstack/table-core/dist/features/<feature>/` for the shared feature APIs. Do not infer Ember component/context behavior from another adapter's createTableHook.

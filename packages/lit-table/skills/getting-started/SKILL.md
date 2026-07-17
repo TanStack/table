@@ -151,4 +151,4 @@ Source: TanStack/table:docs/overview.md
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/lit-table/src/index.ts` and the exported implementation. Core table and feature APIs are in `node_modules/@tanstack/table-core/src/`.
+Inspect `node_modules/@tanstack/lit-table/dist/index.d.ts` and the exported implementation. Core table and feature APIs are in `node_modules/@tanstack/table-core/dist/`.

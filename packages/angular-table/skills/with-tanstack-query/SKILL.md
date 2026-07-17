@@ -139,4 +139,4 @@ Source: `docs/framework/angular/guide/pagination.md`
 
 ## API Discovery
 
-Inspect installed `@tanstack/angular-table/src/injectTable.ts`, the relevant core feature source, and installed Angular Query source for the exact `injectQuery` package/version contract.
+Inspect installed `@tanstack/angular-table/dist/types/`, the relevant core feature source, and installed Angular Query source for the exact `injectQuery` package/version contract.

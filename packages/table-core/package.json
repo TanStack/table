@@ -27,34 +27,14 @@
     "tanstack-intent"
   ],
   "type": "module",
-  "types": "./dist/index.d.cts",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
-    },
-    "./experimental-worker-plugin": {
-      "import": "./dist/experimental-worker-plugin.js",
-      "require": "./dist/experimental-worker-plugin.cjs"
-    },
-    "./flex-render": {
-      "import": "./dist/flex-render.js",
-      "require": "./dist/flex-render.cjs"
-    },
-    "./reactivity": {
-      "import": "./dist/reactivity.js",
-      "require": "./dist/reactivity.cjs"
-    },
-    "./static-functions": {
-      "import": "./dist/static-functions.js",
-      "require": "./dist/static-functions.cjs"
-    },
-    "./store-reactivity-bindings": {
-      "import": "./dist/store-reactivity-bindings.js",
-      "require": "./dist/store-reactivity-bindings.cjs"
-    },
+    ".": "./dist/index.js",
+    "./experimental-worker-plugin": "./dist/experimental-worker-plugin.js",
+    "./flex-render": "./dist/flex-render.js",
+    "./reactivity": "./dist/reactivity.js",
+    "./static-functions": "./dist/static-functions.js",
+    "./store-reactivity-bindings": "./dist/store-reactivity-bindings.js",
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -62,8 +42,7 @@
     "node": ">=20"
   },
   "files": [
-    "dist/",
-    "src",
+    "dist",
     "skills"
   ],
   "scripts": {

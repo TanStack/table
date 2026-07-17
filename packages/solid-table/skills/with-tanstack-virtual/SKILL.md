@@ -172,4 +172,4 @@ Source: `examples/solid/virtualized-rows`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/solid-table/src/index.tsx` and installed `node_modules/@tanstack/solid-virtual/src/`; use the maintained row, column, or infinite example for the matching CSS geometry contract.
+Inspect `node_modules/@tanstack/solid-table/dist/index.d.ts` and installed `node_modules/@tanstack/solid-virtual/dist/`; use the maintained row, column, or infinite example for the matching CSS geometry contract.

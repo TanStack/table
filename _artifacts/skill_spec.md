@@ -13,7 +13,7 @@ Generate 75 short package-local skills across all 17 public packages. A loaded s
 
 1. Correct the user or agent mental model.
 2. Show the smallest reliable setup or decision pattern.
-3. Route exact API discovery to src shipped in the installed package.
+3. Route exact API discovery to installed package declarations (`dist/**/*.d.ts`, Ember `declarations/**/*.d.ts`, Angular `dist/types/*.d.ts`).
 
 The skills should not enumerate every option or method. That duplicates generated reference docs, ages badly, and encourages agents to recall the wrong major version.
 
@@ -35,20 +35,22 @@ The skills should not enumerate every option or method. That duplicates generate
 
 Use evidence in this order:
 
-1. Installed package src for exact exports, type signatures, feature prerequisites, defaults, and instance APIs.
+1. Installed package declarations (`.d.ts`) for exact exports, type signatures, feature prerequisites, defaults, and instance APIs.
 2. Current v9 guides for intended mental models and supported workflows.
 3. Current examples for maintained composition and rendering patterns.
 4. Recent and recurring GitHub issues/discussions for silent failures and misconceptions.
 
-Every skill that discusses APIs must tell the consuming agent how to inspect the matching installed source. Preferred routes:
+Every skill that discusses APIs must tell the consuming agent how to inspect the matching installed declarations. Preferred routes:
 
-- Adapter API: node_modules/@tanstack/FRAMEWORK-table/src/index.ts, then the exported implementation/type file.
-- Core API: node_modules/@tanstack/table-core/src/index.ts.
-- Stock feature API: node_modules/@tanstack/table-core/src/features/FEATURE/.
-- Devtools API: node_modules/@tanstack/FRAMEWORK-table-devtools/src/index.ts or @tanstack/table-devtools/src/index.ts.
-- Fuzzy ranking API: node_modules/@tanstack/match-sorter-utils/src/index.ts.
+- Adapter API: node_modules/@tanstack/FRAMEWORK-table/dist/index.d.ts, then the matching exported `*.d.ts` file.
+- Core API: node_modules/@tanstack/table-core/dist/index.d.ts.
+- Stock feature API: node_modules/@tanstack/table-core/dist/features/FEATURE/.
+- Ember API: node_modules/@tanstack/ember-table/declarations/index.d.ts (and sibling `declarations/*.d.ts`).
+- Angular API: node_modules/@tanstack/angular-table/dist/types/\*.d.ts (bundled public API; do not expect `src/helpers/` under the published package).
+- Devtools API: node_modules/@tanstack/FRAMEWORK-table-devtools/dist/index.d.ts or @tanstack/table-devtools/dist/index.d.ts.
+- Fuzzy ranking API: node_modules/@tanstack/match-sorter-utils/dist/index.d.ts.
 
-Do not direct agents to a GitHub main-branch source file when an installed package is available. Installed source keeps guidance aligned with the consumer package version.
+Do not open package `src/` under `node_modules` (it is not published). Do not direct agents to a GitHub main-branch source file when an installed package is available. Installed declarations keep guidance aligned with the consumer package version.
 
 ## Skill writing contract
 
@@ -75,7 +77,7 @@ Use this default structure:
 2. Setup: imports and the smallest valid configuration.
 3. Two to four decision or implementation patterns.
 4. Common mistakes: at least three concrete failures with correction.
-5. API discovery: exact installed src route and identifiers to inspect.
+5. API discovery: exact installed declaration route (`.d.ts`) and identifiers to inspect.
 6. Cross-skill routing only when another skill owns the next decision.
 
 Do not add a reference folder by default. Add one only when a large migration mapping or framework-specific content cannot stay concise in SKILL.md. Progressive disclosure is a size tool, not permission to recreate all docs as references.
@@ -176,7 +178,7 @@ Skill versions ship with package versions. After release tooling calculates pack
 - table-features — explicit registration, prerequisites, row-model/function slots, tree-shaking.
 - client-vs-server — choose ownership for filtering/grouping/sorting/expanding/pagination.
 - typescript — columnHelper, meta helpers, tableOptions, inference, avoid manual generics.
-- api-not-found — inspect installed src, feature gating, version/adapter mismatch, prototypes.
+- api-not-found — inspect installed declarations, feature gating, version/adapter mismatch, prototypes.
 - custom-features — plugin lifecycle after exhausting built-in APIs and meta.
 - migrate-v8-to-v9 — shared breaking changes and adapter migration routing.
 
@@ -203,7 +205,7 @@ Each feature skill must:
 - name only row-model and registry slots relevant to that feature;
 - state its tableFeatures prerequisites;
 - distinguish state from row processing and renderer behavior;
-- route exact API discovery to its shipped feature directory;
+- route exact API discovery to its shipped feature directory under `dist/features/`;
 - include feature-specific edge cases from domain_map.yaml.
 
 Do not combine all column layout features into one summary. Their plugin prerequisites and CSS responsibilities differ enough to route independently.
@@ -346,7 +348,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 - Query: data source and manual processing boundaries, not Table rendering.
 - Virtual: final Table models and renderer geometry, never tableFeatures.
 - Context: createTableHook skills; mention context over prop drilling when a registered reusable component needs typed table/cell/header access.
-- API lookup: api-not-found establishes the workflow; every other skill includes its direct installed src route.
+- API lookup: api-not-found establishes the workflow; every other skill includes its direct installed declaration route.
 
 ## Anti-patterns forbidden during generation
 

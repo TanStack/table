@@ -182,4 +182,4 @@ For `table.Subscribe`, use `children={(atoms) => ...}` explicitly.
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/vue-table/src/index.ts` and `useTable.ts`; verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/src`. Do not reconstruct v9 from v8 memory.
+Inspect `node_modules/@tanstack/vue-table/dist/index.d.ts` and `useTable.d.ts`; verify feature slots and exact beta APIs in `node_modules/@tanstack/table-core/dist/`. Do not reconstruct v9 from v8 memory.

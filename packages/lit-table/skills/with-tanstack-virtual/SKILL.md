@@ -144,4 +144,4 @@ Source: TanStack/table:docs/framework/lit/guide/virtualization.md
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/lit-table/src/index.ts` and `node_modules/@tanstack/lit-virtual/src/`. Use maintained examples for geometry; do not register Virtual in `tableFeatures`.
+Inspect `node_modules/@tanstack/lit-table/dist/index.d.ts` and `node_modules/@tanstack/lit-virtual/dist/`. Use maintained examples for geometry; do not register Virtual in `tableFeatures`.
