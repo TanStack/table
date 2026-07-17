@@ -94,9 +94,9 @@ export function initTableWorker<
           .map(
             (def) =>
               def.id ??
-              (typeof def.accessorKey === 'string'
-                ? def.accessorKey.replaceAll('.', '_')
-                : undefined),
+              (def.accessorKey === undefined
+                ? undefined
+                : String(def.accessorKey).replaceAll('.', '_')),
           )
           .filter((id): id is string => id != null)
       } else {

@@ -254,5 +254,5 @@ export type ColumnDefResolved<
   TData extends RowData,
   TValue extends CellData = CellData,
 > = Partial<UnionToIntersection<ColumnDef<TFeatures, TData, TValue>>> & {
-  accessorKey?: string
+  accessorKey?: (string & {}) | keyof TData
 }
