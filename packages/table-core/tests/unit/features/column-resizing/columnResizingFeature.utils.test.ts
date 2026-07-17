@@ -259,6 +259,27 @@ describe('header_getResizeHandler', () => {
     expect(typeof handler).toBe('function')
   })
 
+  it('should attach listeners to an explicit context document', () => {
+    const table = makeTable(1)
+    const header = createTestResizeHeader(table)
+    const contextDocument = document.implementation.createHTMLDocument()
+    const addEventListener = vi.spyOn(contextDocument, 'addEventListener')
+    const handler = header_getResizeHandler(header as any, contextDocument)
+
+    handler({ type: 'mousedown', clientX: 100 })
+
+    expect(addEventListener).toHaveBeenCalledWith(
+      'mousemove',
+      expect.any(Function),
+      expect.anything(),
+    )
+    expect(addEventListener).toHaveBeenCalledWith(
+      'mouseup',
+      expect.any(Function),
+      expect.anything(),
+    )
+  })
+
   it('should not resize when column resizing is disabled', () => {
     const table = makeTable(1, {
       enableColumnResizing: false,

@@ -239,7 +239,7 @@ export function header_getResizeHandler<
     }
 
     const contextDocument =
-      _contextDocument || typeof document !== 'undefined' ? document : null
+      _contextDocument || (typeof document !== 'undefined' ? document : null)
 
     const mouseEvents = {
       moveHandler: (e: MouseEvent) => onMove(e.clientX),
