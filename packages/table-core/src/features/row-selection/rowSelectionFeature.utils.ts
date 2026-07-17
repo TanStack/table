@@ -487,7 +487,8 @@ export function table_getToggleAllPageRowsSelectedHandler<
  * Selects or deselects this row.
  *
  * Omitting `value` toggles the row. Child rows are selected recursively unless
- * `opts.selectChildren` is `false` or sub-row selection is disabled.
+ * `opts.selectChildren` is `false`, sub-row selection is disabled, or the row
+ * only supports single selection.
  *
  * @example
  * ```ts
@@ -513,7 +514,7 @@ export function row_toggleSelected<
       rowSelection,
       row.id,
       value,
-      opts?.selectChildren ?? true,
+      (opts?.selectChildren ?? true) && row_getCanMultiSelect(row),
       row.table,
     )
 
