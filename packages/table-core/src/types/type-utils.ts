@@ -80,7 +80,7 @@ export type DeepValue<T, TProp> =
   T extends Record<string | number, any>
     ? TProp extends `${infer TBranch}.${infer TDeepProp}`
       ? DeepValue<T[TBranch], TDeepProp>
-      : T[TProp & string]
+      : T[TProp & keyof T]
     : never
 
 export type NoInfer<T> = [T][T extends any ? 0 : never]

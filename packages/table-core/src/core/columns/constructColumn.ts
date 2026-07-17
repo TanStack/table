@@ -51,10 +51,12 @@ export function constructColumn<
   } as ColumnDefResolved<{}, TData, TValue>
 
   const accessorKey = resolvedColumnDef.accessorKey
+  const accessorKeyString =
+    accessorKey === undefined ? undefined : String(accessorKey)
 
   const id =
     resolvedColumnDef.id ??
-    (accessorKey ? accessorKey.replaceAll('.', '_') : undefined) ??
+    accessorKeyString?.replaceAll('.', '_') ??
     (typeof resolvedColumnDef.header === 'string'
       ? resolvedColumnDef.header
       : undefined)
@@ -63,9 +65,9 @@ export function constructColumn<
 
   if (resolvedColumnDef.accessorFn) {
     accessorFn = resolvedColumnDef.accessorFn
-  } else if (accessorKey) {
+  } else if (accessorKey !== undefined) {
     // Support deep accessor keys
-    if (accessorKey.includes('.')) {
+    if (typeof accessorKey === 'string' && accessorKey.includes('.')) {
       const keys = accessorKey.split('.')
       accessorFn = (originalRow: TData) => {
         let result = originalRow as Record<string, any> | undefined
