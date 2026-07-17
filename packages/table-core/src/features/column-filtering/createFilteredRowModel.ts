@@ -57,8 +57,10 @@ function _createFilteredRowModel<
   const rowModel = table.getPreFilteredRowModel()
   const columnFilters = table.atoms.columnFilters?.get()
   const globalFilter = table.atoms.globalFilter?.get()
+  const hasGlobalFilter =
+    globalFilter !== undefined && globalFilter !== null && globalFilter !== ''
 
-  if (!rowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
+  if (!rowModel.rows.length || (!columnFilters?.length && !hasGlobalFilter)) {
     const flatRows = rowModel.flatRows as Array<
       Row<TFeatures, TData> & Partial<Row_ColumnFiltering<TFeatures, TData>>
     >
@@ -106,7 +108,7 @@ function _createFilteredRowModel<
     .getAllLeafColumns()
     .filter((column) => column_getCanGlobalFilter(column))
 
-  if (globalFilter && globalFilterFn && globallyFilterableColumns.length) {
+  if (hasGlobalFilter && globalFilterFn && globallyFilterableColumns.length) {
     filterableIds.push('__global__')
 
     globallyFilterableColumns.forEach((column) => {

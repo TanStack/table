@@ -54,9 +54,15 @@ function _createFacetedRowModel<
   columnId: string,
   preRowModel: RowModel<TFeatures, TData>,
   columnFilters?: ColumnFiltersState,
-  globalFilter?: string,
+  globalFilter?: any,
 ) {
-  if (!preRowModel.rows.length || (!columnFilters?.length && !globalFilter)) {
+  const hasGlobalFilter =
+    globalFilter !== undefined && globalFilter !== null && globalFilter !== ''
+
+  if (
+    !preRowModel.rows.length ||
+    (!columnFilters?.length && !hasGlobalFilter)
+  ) {
     return preRowModel
   }
 
@@ -69,7 +75,7 @@ function _createFacetedRowModel<
   }
   // The global context excludes the global filter itself, mirroring how a
   // column's faceted model excludes that column's own filter
-  if (globalFilter && columnId !== '__global__')
+  if (hasGlobalFilter && columnId !== '__global__')
     filterableIds.push('__global__')
 
   if (!filterableIds.length) {
