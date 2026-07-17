@@ -6,7 +6,7 @@ metadata:
   type: lifecycle
   library: '@tanstack/vue-table'
   framework: vue
-  library_version: '9.0.0-beta.52'
+  library_version: '9.0.0-beta.53'
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'
   - getting-started
