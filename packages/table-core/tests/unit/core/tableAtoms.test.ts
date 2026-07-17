@@ -68,6 +68,26 @@ describe('three-layer atom architecture', () => {
       expect(table.store.state.sorting).toEqual(external)
     })
 
+    it('treats undefined controlled state and callbacks as omitted', () => {
+      const table = makeTable({
+        // Simulate optional wrapper props passed through without conditionally
+        // removing their keys.
+        state: { sorting: undefined } as unknown as { sorting: SortingState },
+        onSortingChange: undefined,
+      })
+
+      expect(table.atoms.sorting.get()).toEqual([])
+
+      table.setOptions((old) => ({
+        ...old,
+        state: { sorting: undefined },
+        onSortingChange: undefined,
+      }))
+      table.setSorting([{ id: 'name', desc: false }])
+
+      expect(table.atoms.sorting.get()).toEqual([{ id: 'name', desc: false }])
+    })
+
     it('options.atoms[key] takes precedence over options.state[key] when both are present', () => {
       const externalAtom = createAtom<SortingState>([
         { id: 'fromAtom', desc: true },

@@ -26,12 +26,16 @@ export function table_syncExternalStateToBaseAtoms<
 
   table._reactivity.batch(() => {
     for (const key in state) {
+      const externalState = state[key as keyof typeof state]
+      if (externalState === undefined) {
+        continue
+      }
+
       const baseAtom = (table.baseAtoms as Record<string, any>)[key]
       if (!baseAtom) {
         continue
       }
 
-      const externalState = state[key as keyof typeof state]
       if (externalState !== table._reactivity.untrack(() => baseAtom.get())) {
         baseAtom.set(() => externalState)
       }
@@ -94,13 +98,20 @@ export function table_mergeOptions<
 
   // simple merge if no mergeOptions is provided - performant
   if (!table.options.mergeOptions) {
+    const mergedOptions = { ...table.options }
+    for (const key in newOptions) {
+      const value = newOptions[key as keyof typeof newOptions]
+      if (value !== undefined) {
+        ;(mergedOptions as Record<string, unknown>)[key] = value
+      }
+    }
+
     return {
-      ...table.options,
-      ...newOptions,
+      ...mergedOptions,
       features,
       atoms,
       initialState,
-    }
+    } as TableOptions<TFeatures, TData>
   }
 
   // else use the mergeOptions function and preserve getters/setters

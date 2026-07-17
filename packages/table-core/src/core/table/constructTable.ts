@@ -74,6 +74,19 @@ export function constructTable<
 
   const mergedOptions = { ...defaultOptions, ...tableOptions }
 
+  // Optional options passed through wrapper components commonly arrive as
+  // explicit `undefined` values. Treat those the same as omitted options so
+  // they do not replace feature defaults such as state updater callbacks.
+  for (const key in tableOptions) {
+    if (
+      tableOptions[key as keyof typeof tableOptions] === undefined &&
+      defaultOptions[key as keyof typeof defaultOptions] !== undefined
+    ) {
+      ;(mergedOptions as Record<string, unknown>)[key] =
+        defaultOptions[key as keyof typeof defaultOptions]
+    }
+  }
+
   if (_reactivity.wrapExternalAtoms && mergedOptions.atoms) {
     for (const [atomKey, _atom] of Object.entries(mergedOptions.atoms)) {
       const atom = _atom as Atom<any>
