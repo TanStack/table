@@ -28,6 +28,13 @@ export const globalFilteringFeature: TableFeature = {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
+        if (
+          'enableGlobalFilter' in column.columnDef &&
+          column.columnDef.enableGlobalFilter === true
+        ) {
+          return true
+        }
+
         const value = table
           .getCoreRowModel()
           .flatRows[0]?.getAllCellsByColumnId()
