@@ -232,5 +232,23 @@ describe('createPaginatedRowModel', () => {
         '4',
       ])
     })
+
+    it('should include expanded children when expanded rows bypass manual pagination', () => {
+      const table = createTable({
+        data: makeNestedData(),
+        manualPagination: true,
+        paginateExpandedRows: false,
+      })
+
+      table.getRow('0').toggleExpanded()
+
+      expect(table.getRowModel().rows.map((row) => row.id)).toEqual([
+        '0',
+        '0.0',
+        '0.1',
+        '1',
+        '2',
+      ])
+    })
   })
 })
