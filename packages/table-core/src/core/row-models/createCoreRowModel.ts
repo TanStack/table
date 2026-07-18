@@ -1,5 +1,6 @@
 import { constructRow } from '../rows/constructRow'
 import { makeObjectMap, tableMemo } from '../../utils'
+import { table_autoResetExpanded } from '../../features/row-expanding/rowExpandingFeature.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
@@ -25,7 +26,10 @@ export function createCoreRowModel<
       fnName: 'table.getCoreRowModel',
       memoDeps: () => [table.options.data],
       fn: () => _createCoreRowModel(table, table.options.data),
-      onAfterUpdate: () => table_autoResetPageIndex(table),
+      onAfterUpdate: () => {
+        table_autoResetExpanded(table)
+        table_autoResetPageIndex(table)
+      },
     })
   }
 }

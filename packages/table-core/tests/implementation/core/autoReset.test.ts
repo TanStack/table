@@ -52,6 +52,10 @@ const features = testFeatures({
   sortFns,
 })
 
+const expandingOnlyFeatures = testFeatures({
+  rowExpandingFeature,
+})
+
 const columns: Array<ColumnDef<typeof features, Person, any>> = [
   { accessorKey: 'name', id: 'name' },
   { accessorKey: 'age', id: 'age' },
@@ -91,7 +95,7 @@ function makeTable(
 
 // Pull the row model once and flush so the initial memo runs (which itself
 // schedules autoReset callbacks) do not interfere with the test assertions.
-async function primeTable(table: ReturnType<typeof makeTable>) {
+async function primeTable(table: { getRowModel: () => unknown }) {
   table.getRowModel()
   await flushMicrotasks()
   await flushMicrotasks()
@@ -241,6 +245,26 @@ describe('autoResetPageIndex end-to-end wiring', () => {
 })
 
 describe('autoResetExpanded end-to-end wiring', () => {
+  it('should reset expanded when data changes without the grouping feature', async () => {
+    const table = constructTable<typeof expandingOnlyFeatures, Person>({
+      features: expandingOnlyFeatures,
+      columns: [{ accessorKey: 'name', id: 'name' }],
+      data: makeData(),
+      getSubRows: (row) => row.subRows,
+    })
+    await primeTable(table)
+
+    table.getRow('1').toggleExpanded(true)
+    expect(table.atoms.expanded.get()).toEqual({ '1': true })
+
+    table.setOptions((old) => ({ ...old, data: makeData() }))
+    table.getRowModel()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    expect(table.atoms.expanded.get()).toEqual({})
+  })
+
   it('should reset expanded to an empty map when grouping changes', async () => {
     const table = makeTable()
     await primeTable(table)
