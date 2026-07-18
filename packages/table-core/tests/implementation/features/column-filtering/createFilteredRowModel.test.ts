@@ -479,6 +479,26 @@ describe('createFilteredRowModel', () => {
   })
 
   describe('global filtering edge cases', () => {
+    it('should filter a column when its first row value is undefined', () => {
+      type NullableNameRow = { name?: string }
+      const nullableColumns: Array<
+        ColumnDef<typeof features, NullableNameRow, any>
+      > = [{ accessorKey: 'name', id: 'name' }]
+
+      const table = constructTable<typeof features, NullableNameRow>({
+        features,
+        columns: nullableColumns,
+        data: [{ name: undefined }, { name: 'hello' }, { name: 'world' }],
+        initialState: {
+          globalFilter: 'hello',
+        },
+      })
+
+      expect(
+        table.getFilteredRowModel().rows.map((row) => row.original.name),
+      ).toEqual(['hello'])
+    })
+
     it('should pass rows through when no columns are globally filterable', () => {
       const table = constructTable<typeof features, TestRow>({
         features,

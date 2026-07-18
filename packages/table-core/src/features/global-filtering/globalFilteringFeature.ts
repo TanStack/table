@@ -28,10 +28,12 @@ export const globalFilteringFeature: TableFeature = {
       onGlobalFilterChange: makeStateUpdater('globalFilter', table),
       globalFilterFn: 'auto',
       getColumnCanGlobalFilter: (column) => {
-        const value = table
+        const row = table
           .getCoreRowModel()
-          .flatRows[0]?.getAllCellsByColumnId()
-          [column.id]?.getValue()
+          .flatRows.find(
+            (row) => row.getAllCellsByColumnId()[column.id]?.getValue() != null,
+          )
+        const value = row?.getAllCellsByColumnId()[column.id]?.getValue()
 
         return typeof value === 'string' || typeof value === 'number'
       },
