@@ -247,6 +247,8 @@ export function table_getAllLeafColumnsById<
   return result
 }
 
+const IS_DEV = process.env.NODE_ENV !== 'production'
+
 /**
  * Looks up a column by id from the flat column map.
  *
@@ -267,7 +269,7 @@ export function table_getColumn<
 ): Column<TFeatures, TData, unknown> | undefined {
   const column = table.getAllFlatColumnsById()[columnId]
 
-  if (process.env.NODE_ENV === 'development' && !column) {
+  if (IS_DEV && !column) {
     console.warn(`[Table] Column with id '${columnId}' does not exist.`)
   }
 

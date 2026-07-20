@@ -14,6 +14,8 @@ import type {
   ResolvedAggregationFn,
 } from './rowAggregationFeature.types'
 
+const IS_DEV = process.env.NODE_ENV !== 'production'
+
 interface AggregationCacheEntry {
   aggregationFnOption: unknown
   dependency: unknown
@@ -48,7 +50,7 @@ function isAggregationFnDescriptor(
 }
 
 function warn(message: string) {
-  if (process.env.NODE_ENV === 'development') {
+  if (IS_DEV) {
     console.warn(message)
   }
 }

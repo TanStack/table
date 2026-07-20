@@ -3,6 +3,8 @@ import type { NoInfer, RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
 
+const IS_DEV = process.env.NODE_ENV === 'development'
+
 /**
  * Applies a TanStack updater to a value.
  *
@@ -253,7 +255,7 @@ export function tableMemo<
   let debug: boolean | undefined
   let debugCache: boolean | undefined
 
-  if (process.env.NODE_ENV === 'development') {
+  if (IS_DEV) {
     const { debugAll } = table.options
     const { parentName } = getFunctionNameInfo(fnName, '.')
 
@@ -314,44 +316,43 @@ export function tableMemo<
     schedule(() => untrack(() => onAfterUpdate()))
   }
 
-  const debugOptions =
-    process.env.NODE_ENV === 'development'
-      ? {
-          onBeforeCompare: () => {
-            if (debugCache) {
-              beforeCompareTime = performance.now()
+  const debugOptions = IS_DEV
+    ? {
+        onBeforeCompare: () => {
+          if (debugCache) {
+            beforeCompareTime = performance.now()
+          }
+        },
+        onAfterCompare: (depsChanged: boolean) => {
+          if (debugCache) {
+            afterCompareTime = performance.now()
+            const compareTime =
+              Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
+            if (!depsChanged) {
+              logTime(compareTime, depsChanged)
             }
-          },
-          onAfterCompare: (depsChanged: boolean) => {
-            if (debugCache) {
-              afterCompareTime = performance.now()
-              const compareTime =
-                Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
-              if (!depsChanged) {
-                logTime(compareTime, depsChanged)
-              }
-            }
-          },
-          onBeforeUpdate: () => {
-            if (debug) {
-              startCalcTime = performance.now()
-            }
-          },
-          onAfterUpdate: () => {
-            if (debug) {
-              endCalcTime = performance.now()
-              const executionTime =
-                Math.round((endCalcTime - startCalcTime) * 100) / 100
-              logTime(executionTime, true)
-            }
-            onAfterUpdateHandler()
-          },
-        }
-      : {
-          onAfterUpdate: () => {
-            onAfterUpdateHandler()
-          },
-        }
+          }
+        },
+        onBeforeUpdate: () => {
+          if (debug) {
+            startCalcTime = performance.now()
+          }
+        },
+        onAfterUpdate: () => {
+          if (debug) {
+            endCalcTime = performance.now()
+            const executionTime =
+              Math.round((endCalcTime - startCalcTime) * 100) / 100
+            logTime(executionTime, true)
+          }
+          onAfterUpdateHandler()
+        },
+      }
+    : {
+        onAfterUpdate: () => {
+          onAfterUpdateHandler()
+        },
+      }
 
   return memo({
     ...memoOptions,

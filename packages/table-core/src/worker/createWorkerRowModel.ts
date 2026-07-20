@@ -9,6 +9,8 @@ import type { RowData } from '../types/type-utils'
 import type { TableWorker } from './createTableWorker'
 import type { TableWorkerStage } from './tableWorkerProtocol'
 
+const IS_DEV = process.env.NODE_ENV !== 'production'
+
 type AnyTable = Table_Internal<any, any>
 
 function capitalize(stage: string) {
@@ -60,7 +62,7 @@ export function createWorkerRowModel(
     let warned = false
 
     const warnOnce = (message: string) => {
-      if (process.env.NODE_ENV === 'development' && !warned) {
+      if (IS_DEV && !warned) {
         warned = true
         console.warn(`[table-worker] ${message}`)
       }

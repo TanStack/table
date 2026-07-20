@@ -8,6 +8,8 @@ import type {
   FilterFn,
 } from './columnFilteringFeature.types'
 
+const IS_DEV = process.env.NODE_ENV !== 'production'
+
 /**
  * Creates the default column filter state.
  *
@@ -71,7 +73,7 @@ export function column_getAutoFilterFn<
 
   const filterFn = filterFns?.[filterFnName]
 
-  if (process.env.NODE_ENV === 'development' && !filterFn) {
+  if (IS_DEV && !filterFn) {
     console.warn(
       `filterFn '${filterFnName}' (auto) for column '${column.id}' is not registered`,
     )
@@ -109,7 +111,7 @@ export function column_getFilterFn<
       : filterFns?.[column.columnDef.filterFn as string]
 
   if (
-    process.env.NODE_ENV === 'development' &&
+    IS_DEV &&
     !filterFn &&
     column.columnDef.filterFn !== 'auto' // the auto picker warns on its own
   ) {

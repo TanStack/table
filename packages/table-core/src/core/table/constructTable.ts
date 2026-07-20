@@ -9,6 +9,8 @@ import type { Table, Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
 import type { TableState, TableState_All } from '../../types/TableState'
 
+const IS_DEV = process.env.NODE_ENV === 'development'
+
 /**
  * Builds the initial table state from registered features and user initial state.
  *
@@ -170,10 +172,7 @@ export function constructTable<
     featuresList[i]!.initTableInstanceData?.(table)
   }
 
-  if (
-    process.env.NODE_ENV === 'development' &&
-    (tableOptions.debugAll || tableOptions.debugTable)
-  ) {
+  if (IS_DEV && (tableOptions.debugAll || tableOptions.debugTable)) {
     const features = Object.keys(table._features)
     const rowModels = Object.entries({
       coreRowModel,

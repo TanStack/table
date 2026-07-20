@@ -526,12 +526,10 @@ describe('createFilteredRowModel', () => {
 
   describe('unresolvable global filter fn', () => {
     afterEach(() => {
-      vi.unstubAllEnvs()
       vi.restoreAllMocks()
     })
 
-    it('should apply no global filtering and warn in dev when the globalFilterFn name is not registered', () => {
-      vi.stubEnv('NODE_ENV', 'development')
+    it('should apply no global filtering and warn when the globalFilterFn name is not registered', () => {
       const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
 
       const table = constructTable<typeof features, TestRow>({

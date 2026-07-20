@@ -21,14 +21,12 @@ const data: Array<Person> = [
   { name: 'amy', age: 20 },
 ]
 
-// The registry warnings only fire in development builds.
-function spyOnDevWarnings() {
-  vi.stubEnv('NODE_ENV', 'development')
+// Registry misconfiguration warnings fire outside production builds.
+function spyOnWarnings() {
   return vi.spyOn(console, 'warn').mockImplementation(() => {})
 }
 
 afterEach(() => {
-  vi.unstubAllEnvs()
   vi.restoreAllMocks()
 })
 
@@ -53,7 +51,7 @@ describe('filter fn registry resolution', () => {
   }
 
   it('warns and ignores the filter when the auto filter fn is not registered', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const table = makeFilterTable(undefined)
 
     expect(table.getFilteredRowModel().rows).toHaveLength(2)
@@ -63,7 +61,7 @@ describe('filter fn registry resolution', () => {
   })
 
   it('warns with the missing name for unregistered string filter fns', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const table = makeFilterTable(undefined, 'doesNotExist')
 
     expect(table.getFilteredRowModel().rows).toHaveLength(2)
@@ -71,7 +69,7 @@ describe('filter fn registry resolution', () => {
   })
 
   it('resolves individually registered filter fns without warning', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const table = makeFilterTable({ includesString: filterFn_includesString })
 
     expect(
@@ -102,7 +100,7 @@ describe('sort fn registry resolution', () => {
   }
 
   it('warns and falls back to basic when the auto sort fn is not registered', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const table = makeSortTable(undefined)
 
     // basic and text agree on plain strings, so sorting still works
@@ -113,7 +111,7 @@ describe('sort fn registry resolution', () => {
   })
 
   it('warns with the missing name for unregistered string sort fns', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const table = makeSortTable(undefined, 'doesNotExist')
 
     expect(
@@ -123,7 +121,7 @@ describe('sort fn registry resolution', () => {
   })
 
   it('resolves individually registered sort fns without warning', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const table = makeSortTable({ text: sortFn_text })
 
     expect(
@@ -135,7 +133,7 @@ describe('sort fn registry resolution', () => {
 
 describe('aggregation fn registry resolution', () => {
   it('warns and returns undefined when the auto aggregation fn is not registered', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const features = testFeatures({ rowAggregationFeature })
     const table = constructTable<typeof features, Person>({
       features,
@@ -148,7 +146,7 @@ describe('aggregation fn registry resolution', () => {
   })
 
   it('leaves non-aggregatable value types unspecified without warning', () => {
-    const warn = spyOnDevWarnings()
+    const warn = spyOnWarnings()
     const features = testFeatures({ rowAggregationFeature })
     const table = constructTable<typeof features, Person>({
       features,

@@ -6,6 +6,8 @@ import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 
+const IS_DEV = process.env.NODE_ENV !== 'production'
+
 /**
  * Checks whether this accessor column participates in global filtering.
  *
@@ -74,11 +76,7 @@ export function table_getGlobalFilterFn<
       ? table_getGlobalAutoFilterFn()
       : filterFns?.[globalFilterFn as string]
 
-  if (
-    process.env.NODE_ENV === 'development' &&
-    !filterFn &&
-    globalFilterFn != null
-  ) {
+  if (IS_DEV && !filterFn && globalFilterFn != null) {
     console.warn(`globalFilterFn '${String(globalFilterFn)}' is not registered`)
   }
 

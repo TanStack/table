@@ -20,7 +20,6 @@ import type { ColumnDef } from '../../../../src'
 
 afterEach(() => {
   vi.restoreAllMocks()
-  vi.unstubAllEnvs()
 })
 
 describe('rowAggregationFeature', () => {
@@ -289,7 +288,6 @@ describe('rowAggregationFeature', () => {
   })
 
   it('warns and preserves undefined keys for invalid multi configurations', () => {
-    vi.stubEnv('NODE_ENV', 'development')
     const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
     const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const table = constructTable({

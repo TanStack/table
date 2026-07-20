@@ -7,6 +7,8 @@ import type { Row } from '../../types/Row'
 import type { Cell } from '../../types/Cell'
 import type { Row_RowExpanding } from '../../features/row-expanding/rowExpandingFeature.types'
 
+const IS_DEV = process.env.NODE_ENV !== 'production'
+
 /**
  * Returns this row's zero-based position in the current pre-pagination row
  * model. Rows outside that model return `-1`.
@@ -341,7 +343,7 @@ export function table_getRow<
   if (!row) {
     row = table.getCoreRowModel().rowsById[rowId]
     if (!row) {
-      if (process.env.NODE_ENV === 'development') {
+      if (IS_DEV) {
         throw new Error(`getRow could not find row with ID: ${rowId}`)
       }
       throw new Error()

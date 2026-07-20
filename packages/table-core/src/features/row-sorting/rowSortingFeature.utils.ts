@@ -10,6 +10,8 @@ import type {
   SortingState,
 } from './rowSortingFeature.types'
 
+const IS_DEV = process.env.NODE_ENV !== 'production'
+
 // State Utils
 
 /**
@@ -120,7 +122,7 @@ export function column_getAutoSortFn<
     let sortFn = sortFns?.[sortFnName]
 
     if (!sortFn) {
-      if (process.env.NODE_ENV === 'development') {
+      if (IS_DEV) {
         console.warn(
           `sortFn '${sortFnName}' (auto) for column '${column.id}' is not registered`,
         )
@@ -197,7 +199,7 @@ export function column_getSortFn<
 
   const sortFn = sortFns?.[column.columnDef.sortFn as string]
 
-  if (process.env.NODE_ENV === 'development' && !sortFn) {
+  if (IS_DEV && !sortFn) {
     console.warn(
       `sortFn '${String(column.columnDef.sortFn)}' for column '${column.id}' is not registered`,
     )
