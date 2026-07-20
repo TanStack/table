@@ -73,7 +73,7 @@ export function constructTable<
   > = []
   for (const feature of featuresList) {
     if (feature.initRowInstanceData) {
-      rowInstanceInitFns.push(feature.initRowInstanceData)
+      rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
     }
   }
   table._rowInstanceInitFns = rowInstanceInitFns
