@@ -5,6 +5,7 @@ import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
 import type {
   IsAny,
+  TableFeature,
   TableFeatures,
   ValidateFeatureSlots,
 } from '../../types/TableFeatures'
@@ -188,6 +189,10 @@ export interface Table_CoreProperties<
    * Prototype cache for Row objects - shared by all rows in this table
    */
   _rowPrototype?: object
+  /**
+   * Cache of the `initRowInstanceData` functions for features that define one.
+   */
+  _rowInstanceInitFns?: Array<NonNullable<TableFeature['initRowInstanceData']>>
   /**
    * The readonly derived atoms for each `TableState` slice. Each derives from
    * its corresponding `baseAtom` plus, optionally, a per-slice external atom or

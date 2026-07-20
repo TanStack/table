@@ -68,6 +68,16 @@ export function constructTable<
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
 
+  const rowInstanceInitFns: Array<
+    NonNullable<TableFeature['initRowInstanceData']>
+  > = []
+  for (const feature of featuresList) {
+    if (feature.initRowInstanceData) {
+      rowInstanceInitFns.push(feature.initRowInstanceData)
+    }
+  }
+  table._rowInstanceInitFns = rowInstanceInitFns
+
   const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
