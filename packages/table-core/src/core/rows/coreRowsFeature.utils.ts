@@ -311,7 +311,7 @@ export function table_getRowId<
 ) {
   return (
     table.options.getRowId?.(originalRow, index, parent) ??
-    `${parent ? [parent.id, index].join('.') : index}`
+    (parent ? `${parent.id}.${index}` : String(index))
   )
 }
 
