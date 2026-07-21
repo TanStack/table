@@ -13,9 +13,6 @@ Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:153](https://gi
 
 Creates an event handler that toggles all rows expanded.
 
-React-style synthetic events are persisted when present before the table state
-is toggled.
-
 ## Type Parameters
 
 ### TFeatures

@@ -648,8 +648,7 @@ export function row_getCanMultiSelect<
  *
  * The handler is a no-op when the row cannot be selected and reads
  * `event.target.checked`. Shift events select or deselect the inclusive range
- * from the most recent selectable row handled by this table. The event's
- * optional `persist()` method is called before it is read. Pass
+ * from the most recent selectable row handled by this table. Pass
  * `selectChildren: false` to limit changes to rows explicitly present in the
  * display-order interval.
  *
@@ -668,10 +667,8 @@ export function row_getToggleSelectedHandler<
     if (!canSelect) return
 
     const event = e as {
-      persist?: () => void
       target: { checked: boolean }
     }
-    event.persist?.()
 
     const table = row.table
     const checked = event.target.checked

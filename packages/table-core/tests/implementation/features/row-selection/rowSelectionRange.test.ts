@@ -236,15 +236,6 @@ describe('row selection range performance', () => {
     expect(toggleSelected).not.toHaveBeenCalled()
     expect(Object.keys(rowSelection).sort()).toEqual(['0', '1', '2', '3', '4'])
   })
-
-  it('persists framework events before reading them', () => {
-    const table = makeSelectionTable()
-    const persist = vi.fn()
-
-    interact(table.getRow('0'), true, { persist })
-
-    expect(persist).toHaveBeenCalledOnce()
-  })
 })
 
 describe('row selection range options and invalid anchors', () => {
