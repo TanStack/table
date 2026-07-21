@@ -272,7 +272,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
               ? `(${column.getFacetedMinMaxValues()?.[0]})`
               : ''
           }`}
-          className="w-24 border shadow rounded"
+          className="w-24 border rounded"
         />
         <DebouncedInput
           type="number"
@@ -287,7 +287,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
               ? `(${column.getFacetedMinMaxValues()?.[1]})`
               : ''
           }`}
-          className="w-24 border shadow rounded"
+          className="w-24 border rounded"
         />
       </div>
       <div className="h-1" />
@@ -318,7 +318,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
         value={(columnFilterValue ?? '') as string}
         onChange={(value) => column.setFilterValue(value)}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        className="w-36 border shadow rounded"
+        className="w-36 border rounded"
         list={column.id + 'list'}
       />
       <div className="h-1" />
@@ -368,3 +368,4 @@ ReactDOM.createRoot(rootElement).render(
     <App />
   </React.StrictMode>,
 )
+

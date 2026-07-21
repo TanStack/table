@@ -212,7 +212,7 @@ const App = component$(() => {
           onInput$={$((e: InputEvent) => {
             globalFilter.value = (e.target as HTMLInputElement).value
           })}
-          class="p-2 font-lg shadow border border-block"
+          class="p-2 font-lg border border-block"
           placeholder="Search all columns..."
         />
       </div>
@@ -312,7 +312,7 @@ function Filter({
               ? `(${column.getFacetedMinMaxValues()?.[0]})`
               : ''
           }`}
-          class="w-24 border shadow rounded"
+          class="w-24 border rounded"
         />
         <input
           type="number"
@@ -329,7 +329,7 @@ function Filter({
               ? `(${column.getFacetedMinMaxValues()?.[1]})`
               : ''
           }`}
-          class="w-24 border shadow rounded"
+          class="w-24 border rounded"
         />
       </div>
       <div class="h-1" />
@@ -351,7 +351,7 @@ function Filter({
           // column.setFilterValue(e.target.value)
         })}
         placeholder={`Search... (${column.getFacetedUniqueValues().size})`}
-        // class="w-36 border shadow rounded"
+        // class="w-36 border rounded"
         // list={column.id + 'list'}
       />
       <div class="h-1" />

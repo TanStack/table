@@ -146,7 +146,7 @@ function App() {
         <DebouncedInput
           value={globalFilter ?? ''}
           onChange={(value) => setGlobalFilter(String(value))}
-          className="p-2 font-lg shadow border border-block"
+          className="p-2 font-lg border border-block"
           placeholder="Search all columns..."
         />
       </div>
@@ -301,7 +301,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
       value={(columnFilterValue ?? '') as string}
       onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="w-36 border rounded"
     />
   )
 }
@@ -348,3 +348,4 @@ ReactDOM.createRoot(rootElement).render(
     <App />
   </React.StrictMode>,
 )
+

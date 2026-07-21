@@ -80,7 +80,7 @@ export default function Table<T extends Record<string, string | number>>({
                         {header.column.getCanFilter() &&
                         fieldMeta?.filterKey !== undefined ? (
                           <DebouncedInput
-                            className="w-36 border shadow rounded"
+                            className="w-36 border rounded"
                             onChange={(value) => {
                               onFilterChange({
                                 [fieldMeta.filterKey as keyof T]: value,
@@ -186,3 +186,4 @@ export default function Table<T extends Record<string, string | number>>({
     </div>
   )
 }
+

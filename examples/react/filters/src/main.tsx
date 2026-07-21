@@ -259,7 +259,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
             column.setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
           placeholder={`Min`}
-          className="w-24 border shadow rounded"
+          className="w-24 border rounded"
         />
         <DebouncedInput
           type="number"
@@ -268,7 +268,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
             column.setFilterValue((old: [number, number]) => [old?.[0], value])
           }
           placeholder={`Max`}
-          className="w-24 border shadow rounded"
+          className="w-24 border rounded"
         />
       </div>
       <div className="h-1" />
@@ -286,7 +286,7 @@ function Filter({ column }: { column: Column<any, unknown> }) {
     </select>
   ) : (
     <DebouncedInput
-      className="w-36 border shadow rounded"
+      className="w-36 border rounded"
       onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       type="text"
@@ -338,3 +338,4 @@ ReactDOM.createRoot(rootElement).render(
     <App />
   </React.StrictMode>,
 )
+

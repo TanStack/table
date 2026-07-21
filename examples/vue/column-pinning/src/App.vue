@@ -129,7 +129,7 @@ function toggleAllColumnsVisibility() {
 
 <template>
   <div class="p-2">
-    <div class="inline-block border border-black rounded shadow">
+    <div class="inline-block border border-black rounded">
       <div class="px-1 border-b border-black">
         <label>
           <input

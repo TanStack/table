@@ -103,7 +103,7 @@ function App() {
 
   return (
     <div className="p-2">
-      <div className="inline-block border border-black shadow rounded">
+      <div className="inline-block border border-black rounded">
         <div className="px-1 border-b border-black">
           <label>
             <input

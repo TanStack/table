@@ -138,7 +138,7 @@ const table = useVueTable({
       <DebouncedInput
         :modelValue="globalFilter ?? ''"
         @update:modelValue="(value) => (globalFilter = String(value))"
-        className="p-2 font-lg shadow border border-block"
+        className="p-2 font-lg border border-block"
         placeholder="Search all columns..."
       />
     </div>

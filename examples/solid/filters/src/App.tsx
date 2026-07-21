@@ -105,7 +105,7 @@ function App() {
   return (
     <div class="p-2">
       <input
-        class="p-2 font-lg shadow border border-block"
+        class="p-2 font-lg border border-block"
         value={globalFilter() ?? ''}
         onInput={(e) => debounceSetGlobalFilter(e.currentTarget.value)}
         placeholder="Search all columns..."

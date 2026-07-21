@@ -146,11 +146,11 @@ export const App = () => {
           <DebouncedInput
             value={globalFilter ?? ''}
             onChange={(value) => setGlobalFilter(String(value))}
-            className="mx-1 p-2 font-lg shadow border border-block"
+            className="mx-1 p-2 font-lg border border-block"
             placeholder="Search all columns..."
           />
         </div>
-        <div className="p-2 inline-block border border-black shadow rounded">
+        <div className="p-2 inline-block border border-black rounded">
           <div className="px-1 border-b border-black">
             <label>
               <input

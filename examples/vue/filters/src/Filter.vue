@@ -40,7 +40,7 @@ const sortedUniqueValues = computed(() =>
             ? `(${column.getFacetedMinMaxValues()?.[0]})`
             : ''
         }`"
-        class="w-24 border shadow rounded"
+        class="w-24 border rounded"
       />
       <DebouncedInput
         type="number"
@@ -56,7 +56,7 @@ const sortedUniqueValues = computed(() =>
             ? `(${column.getFacetedMinMaxValues()?.[1]})`
             : ''
         }`"
-        class="w-24 border shadow rounded"
+        class="w-24 border rounded"
       />
     </div>
     <div class="h-1" />
@@ -74,7 +74,7 @@ const sortedUniqueValues = computed(() =>
       :modelValue="(columnFilterValue ?? '') as string"
       @update:modelValue="(value) => column.setFilterValue(value)"
       :placeholder="`Search... (${column.getFacetedUniqueValues().size})`"
-      class="w-36 border shadow rounded"
+      class="w-36 border rounded"
       :list="column.id + 'list'"
     />
     <div class="h-1" />

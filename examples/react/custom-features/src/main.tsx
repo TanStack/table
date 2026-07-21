@@ -362,7 +362,7 @@ function Filter({
           ])
         }
         placeholder={`Min`}
-        className="w-24 border shadow rounded"
+        className="w-24 border rounded"
       />
       <input
         type="number"
@@ -374,7 +374,7 @@ function Filter({
           ])
         }
         placeholder={`Max`}
-        className="w-24 border shadow rounded"
+        className="w-24 border rounded"
       />
     </div>
   ) : (
@@ -383,7 +383,7 @@ function Filter({
       value={(columnFilterValue ?? '') as string}
       onChange={(e) => column.setFilterValue(e.target.value)}
       placeholder={`Search...`}
-      className="w-36 border shadow rounded"
+      className="w-36 border rounded"
     />
   )
 }
@@ -396,3 +396,4 @@ ReactDOM.createRoot(rootElement).render(
     <App />
   </React.StrictMode>,
 )
+

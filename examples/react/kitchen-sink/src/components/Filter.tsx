@@ -31,7 +31,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
             setFilterValue((old: [number, number]) => [value, old?.[1]])
           }
           placeholder={`Min ${minOpt ? `(${min})` : ''}`}
-          className="w-24 border shadow rounded"
+          className="w-24 border rounded"
         />
         <DebouncedInput
           type="number"
@@ -42,7 +42,7 @@ const NumberInput: React.FC<NumberInputProps> = ({
             setFilterValue((old: [number, number]) => [old?.[0], value])
           }
           placeholder={`Max ${maxOpt ? `(${max})` : ''}`}
-          className="w-24 border shadow rounded"
+          className="w-24 border rounded"
         />
       </div>
       <div className="h-1" />
@@ -79,7 +79,7 @@ const TextInput: React.FC<TextInputProps> = ({
         value={columnFilterValue ?? ''}
         onChange={(value) => setFilterValue(value)}
         placeholder={`Search... (${columnSize})`}
-        className="w-36 border shadow rounded"
+        className="w-36 border rounded"
         list={dataListId}
       />
       <div className="h-1" />
@@ -126,3 +126,4 @@ export function Filter<T extends RowData>({ column, table }: Props<T>) {
 }
 
 export default Filter
+
