@@ -84,7 +84,7 @@ The sorting function to use with this column.
 ### sortUndefined?
 
 ```ts
-optional sortUndefined: false | 1 | "first" | "last" | -1;
+optional sortUndefined: false | 1 | -1 | "first" | "last";
 ```
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L153)

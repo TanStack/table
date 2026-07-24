@@ -162,9 +162,21 @@ export interface Table_CoreProperties<
    */
   readonly _reactivity: TableReactivityBindings
   /**
+   * Cache of the `initCellInstanceData` functions for features that define one.
+   */
+  _cellInstanceInitFns?: Array<
+    NonNullable<TableFeature['initCellInstanceData']>
+  >
+  /**
    * Prototype cache for Cell objects - shared by all cells in this table
    */
   _cellPrototype?: object
+  /**
+   * Cache of the `initColumnInstanceData` functions for features that define one.
+   */
+  _columnInstanceInitFns?: Array<
+    NonNullable<TableFeature['initColumnInstanceData']>
+  >
   /**
    * Prototype cache for Column objects - shared by all columns in this table
    */
@@ -173,6 +185,18 @@ export interface Table_CoreProperties<
    * The features that are enabled for the table.
    */
   readonly _features: Partial<CoreFeatures> & TFeatures
+  /**
+   * Cache of the `initHeaderGroupInstanceData` functions for features that define one.
+   */
+  _headerGroupInstanceInitFns?: Array<
+    NonNullable<TableFeature['initHeaderGroupInstanceData']>
+  >
+  /**
+   * Cache of the `initHeaderInstanceData` functions for features that define one.
+   */
+  _headerInstanceInitFns?: Array<
+    NonNullable<TableFeature['initHeaderInstanceData']>
+  >
   /**
    * Prototype cache for Header objects - shared by all headers in this table
    */

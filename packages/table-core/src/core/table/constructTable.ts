@@ -68,16 +68,6 @@ export function constructTable<
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
 
-  const rowInstanceInitFns: Array<
-    NonNullable<TableFeature['initRowInstanceData']>
-  > = []
-  for (const feature of featuresList) {
-    if (feature.initRowInstanceData) {
-      rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
-    }
-  }
-  table._rowInstanceInitFns = rowInstanceInitFns
-
   const defaultOptions = featuresList.reduce((obj, feature) => {
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
@@ -176,9 +166,50 @@ export function constructTable<
     ),
   )
 
+  // pre-compute the init functions to make the other constructors faster
+  const cellInstanceInitFns: Array<
+    NonNullable<TableFeature['initCellInstanceData']>
+  > = []
+  const columnInstanceInitFns: Array<
+    NonNullable<TableFeature['initColumnInstanceData']>
+  > = []
+  const headerGroupInstanceInitFns: Array<
+    NonNullable<TableFeature['initHeaderGroupInstanceData']>
+  > = []
+  const headerInstanceInitFns: Array<
+    NonNullable<TableFeature['initHeaderInstanceData']>
+  > = []
+  const rowInstanceInitFns: Array<
+    NonNullable<TableFeature['initRowInstanceData']>
+  > = []
+
   for (let i = 0; i < featuresList.length; i++) {
-    featuresList[i]!.initTableInstanceData?.(table)
+    const feature = featuresList[i]!
+    if (feature.initCellInstanceData) {
+      cellInstanceInitFns.push(feature.initCellInstanceData.bind(feature))
+    }
+    if (feature.initColumnInstanceData) {
+      columnInstanceInitFns.push(feature.initColumnInstanceData.bind(feature))
+    }
+    if (feature.initHeaderGroupInstanceData) {
+      headerGroupInstanceInitFns.push(
+        feature.initHeaderGroupInstanceData.bind(feature),
+      )
+    }
+    if (feature.initHeaderInstanceData) {
+      headerInstanceInitFns.push(feature.initHeaderInstanceData.bind(feature))
+    }
+    if (feature.initRowInstanceData) {
+      rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
+    }
+    feature.initTableInstanceData?.(table)
   }
+
+  table._cellInstanceInitFns = cellInstanceInitFns
+  table._columnInstanceInitFns = columnInstanceInitFns
+  table._headerGroupInstanceInitFns = headerGroupInstanceInitFns
+  table._headerInstanceInitFns = headerInstanceInitFns
+  table._rowInstanceInitFns = rowInstanceInitFns
 
   if (
     process.env.NODE_ENV === 'development' &&

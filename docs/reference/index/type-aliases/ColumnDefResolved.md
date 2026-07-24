@@ -16,7 +16,7 @@ Defined in: [types/ColumnDef.ts:252](https://github.com/TanStack/table/blob/main
 ### accessorKey?
 
 ```ts
-optional accessorKey: string;
+optional accessorKey: string & object | keyof TData;
 ```
 
 ## Type Parameters

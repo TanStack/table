@@ -87,6 +87,7 @@ title: static-functions
 - [isSubRowSelected](functions/isSubRowSelected.md)
 - [isTouchStartEvent](functions/isTouchStartEvent.md)
 - [normalizeAggregationRows](functions/normalizeAggregationRows.md)
+- [normalizeUniqueAggregationRows](functions/normalizeUniqueAggregationRows.md)
 - [orderColumns](functions/orderColumns.md)
 - [passiveEventSupported](functions/passiveEventSupported.md)
 - [row\_getAllCells](functions/row_getAllCells.md)
