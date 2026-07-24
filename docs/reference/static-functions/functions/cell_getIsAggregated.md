@@ -9,7 +9,7 @@ title: cell_getIsAggregated
 function cell_getIsAggregated<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:393](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L393)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:450](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L450)
 
 Implements `cell.getIsAggregated()` for synthetic grouped rows.
 

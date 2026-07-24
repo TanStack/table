@@ -105,6 +105,59 @@ describe('constructTable', () => {
     expect(table.apiWithoutInit).toBe(true)
   })
 
+  it('pre-computes per-instance init functions bound to their feature', () => {
+    const initialized = new Set<string>()
+    // Method shorthand so each hook reads `this` from the feature object,
+    // proving the cached init fns are bound to their feature
+    const bindingFeature = {
+      marker: 'bound-feature',
+      initCellInstanceData(this: any) {
+        initialized.add(`cell:${this.marker}`)
+      },
+      initColumnInstanceData(this: any) {
+        initialized.add(`column:${this.marker}`)
+      },
+      initHeaderGroupInstanceData(this: any) {
+        initialized.add(`headerGroup:${this.marker}`)
+      },
+      initHeaderInstanceData(this: any) {
+        initialized.add(`header:${this.marker}`)
+      },
+      initRowInstanceData(this: any) {
+        initialized.add(`row:${this.marker}`)
+      },
+    } as TableFeature
+    const features = {
+      ...testFeatures({}),
+      bindingFeature,
+    } as any
+
+    const table = constructTable({
+      features,
+      columns: [{ id: 'first-name', accessorKey: 'firstName' }],
+      data: [{ firstName: 'Tanner' }],
+    } as any) as any
+
+    expect(table._cellInstanceInitFns).toHaveLength(1)
+    expect(table._columnInstanceInitFns).toHaveLength(1)
+    expect(table._headerGroupInstanceInitFns).toHaveLength(1)
+    expect(table._headerInstanceInitFns).toHaveLength(1)
+    expect(table._rowInstanceInitFns).toHaveLength(1)
+
+    table.getHeaderGroups()
+    table.getRowModel().rows.forEach((row: any) => row.getAllCells())
+
+    expect(initialized).toEqual(
+      new Set([
+        'cell:bound-feature',
+        'column:bound-feature',
+        'headerGroup:bound-feature',
+        'header:bound-feature',
+        'row:bound-feature',
+      ]),
+    )
+  })
+
   it('resets feature-owned table data after internal atoms without rerunning initialization', () => {
     const init = vi.fn((table: any) => {
       table.transientValue = 'initialized'
