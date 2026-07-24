@@ -573,6 +573,22 @@ describe('createFilteredRowModel', () => {
     })
   })
 
+  it('should auto-filter a nullable string column when the first value is null', () => {
+    type NullableTestRow = { name: string | null }
+    const table = constructTable<typeof features, NullableTestRow>({
+      features,
+      columns: [{ accessorKey: 'name', id: 'name' }],
+      data: [{ name: null }, { name: 'hello' }, { name: 'welcome' }],
+      initialState: {
+        columnFilters: [{ id: 'name', value: 'ell' }],
+      },
+    })
+
+    expect(
+      table.getFilteredRowModel().rows.map((row) => row.original.name),
+    ).toEqual(['hello'])
+  })
+
   describe('unresolvable global filter fn', () => {
     afterEach(() => {
       vi.unstubAllEnvs()
