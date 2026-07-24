@@ -15,8 +15,7 @@ Creates a checkbox-style handler that selects or deselects this row.
 
 The handler is a no-op when the row cannot be selected and reads
 `event.target.checked`. Shift events select or deselect the inclusive range
-from the most recent selectable row handled by this table. The event's
-optional `persist()` method is called before it is read. Pass
+from the most recent selectable row handled by this table. Pass
 `selectChildren: false` to limit changes to rows explicitly present in the
 display-order interval.
 
