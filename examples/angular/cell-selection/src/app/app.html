@@ -1,0 +1,179 @@
+<div class="demo-root">
+  <div>
+    <button class="demo-button demo-button-spaced" (click)="refreshData()">Regenerate Data</button>
+    <button class="demo-button demo-button-spaced" (click)="stressTest()">
+      Stress Test (1K rows)
+    </button>
+  </div>
+  <div class="spacer-sm"></div>
+  <p>
+    Click and drag to select a range of cells. Hold Shift while clicking to extend the selection, or
+    Ctrl/Cmd to add a second rectangle. Arrow keys move the selection, Shift+Arrow extends it, Mod+A
+    selects all, Mod+C copies, and Escape clears. Uncomment `enableCellSelection: false` on a column
+    def to opt that column out of selection.
+  </p>
+  <p class="demo-note">
+    Hiding, reordering, and pinning columns all keep a live selection anchored to the same cell ids.
+    Ranges are indexed in render order, so a pinned column moves the rectangle with it rather than
+    splitting it.
+  </p>
+  <div class="column-toggle-panel">
+    <div class="column-toggle-panel-header">
+      <label>
+        <input
+          type="checkbox"
+          [checked]="table.getIsAllColumnsVisible()"
+          (change)="table.getToggleAllColumnsVisibilityHandler()($event)"
+        />
+        Toggle All
+      </label>
+    </div>
+    @for (column of table.getAllLeafColumns(); track column.id) {
+      <div class="column-toggle-row">
+        <label>
+          <input
+            type="checkbox"
+            [checked]="column.getIsVisible()"
+            (change)="column.getToggleVisibilityHandler()($event)"
+          />
+          {{ column.id }}
+        </label>
+      </div>
+    }
+  </div>
+  <div class="spacer-sm"></div>
+  <div class="button-row">
+    <button class="demo-button demo-button-spaced" (click)="randomizeColumns()">
+      Shuffle Columns
+    </button>
+    <button class="demo-button demo-button-spaced" (click)="reverseColumns()">
+      Reverse Column Order
+    </button>
+    <button class="demo-button demo-button-spaced" (click)="table.resetColumnOrder()">
+      Reset Column Order
+    </button>
+    <button class="demo-button demo-button-spaced" (click)="table.resetColumnPinning()">
+      Reset Pinning
+    </button>
+    <button class="demo-button demo-button-spaced" (click)="table.resetColumnVisibility()">
+      Reset Visibility
+    </button>
+  </div>
+  <div class="spacer-sm"></div>
+  <!--
+    Angular's signals keep these reads fresh, so no Subscribe workaround is
+    needed the way it is in React.
+  -->
+  <div>
+    {{ table.getSelectedCellCount().toLocaleString() }} cells selected across
+    {{ table.getCellSelectionRowIds().length.toLocaleString() }} rows and
+    {{ table.getCellSelectionColumnIds().length }} columns
+  </div>
+  <div class="spacer-sm"></div>
+  <div #grid tabindex="-1">
+    <table [tanStackTable]="table">
+      <thead>
+        @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
+          <tr>
+            @for (header of headerGroup.headers; track header.id) {
+              <th [attr.colspan]="header.colSpan">
+                @if (!header.isPlaceholder) {
+                  <div
+                    [class.sortable-header]="header.column.getCanSort()"
+                    (click)="header.column.getToggleSortingHandler()?.($event)"
+                  >
+                    <ng-container *flexRenderHeader="header; let headerCell">
+                      {{ headerCell }}
+                    </ng-container>
+                    {{ sortIndicator(header.column.getIsSorted()) }}
+                  </div>
+                  @if (header.column.getCanPin()) {
+                    <div class="pin-actions">
+                      @if (header.column.getIsPinned() !== 'start') {
+                        <button class="pin-button" (click)="header.column.pin('start')">
+                          &lt;=
+                        </button>
+                      }
+                      @if (header.column.getIsPinned()) {
+                        <button class="pin-button" (click)="header.column.pin(false)">X</button>
+                      }
+                      @if (header.column.getIsPinned() !== 'end') {
+                        <button class="pin-button" (click)="header.column.pin('end')">=&gt;</button>
+                      }
+                    </div>
+                  }
+                }
+              </th>
+            }
+          </tr>
+        }
+      </thead>
+      <tbody>
+        @for (row of table.getRowModel().rows; track row.id) {
+          <tr>
+            @for (cell of row.getVisibleCells(); track cell.id) {
+              @if (cell.getCanSelect()) {
+                <td
+                  [class]="getCellClassName(cell)"
+                  [attr.tabindex]="cell.getTabIndex()"
+                  (mousedown)="cell.getSelectionStartHandler()($event)"
+                  (mouseenter)="cell.getSelectionExtendHandler()($event)"
+                >
+                  <ng-container *flexRenderCell="cell; let renderCell">
+                    {{ renderCell }}
+                  </ng-container>
+                </td>
+              } @else {
+                <td>
+                  <ng-container *flexRenderCell="cell; let renderCell">
+                    {{ renderCell }}
+                  </ng-container>
+                </td>
+              }
+            }
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr>
+          <td [attr.colspan]="20">Rows ({{ table.getRowModel().rows.length.toLocaleString() }})</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+  <div class="spacer-sm"></div>
+  <div>
+    <button class="demo-button demo-button-spaced" (click)="copySelection()">Copy Selection</button>
+    <button class="demo-button demo-button-spaced" (click)="table.selectAllCells()">
+      Select All Cells
+    </button>
+    <button class="demo-button demo-button-spaced" (click)="table.resetCellSelection(true)">
+      Clear Selection
+    </button>
+  </div>
+  <hr />
+  <br />
+  <div>
+    <button class="demo-button demo-button-spaced" (click)="logRangesData()">
+      Log table.getSelectedCellRangesData()
+    </button>
+  </div>
+  <div>
+    <label>State:</label>
+    <pre>{{ stringifiedState() }}</pre>
+  </div>
+  <div>
+    <label for="paste-target">Paste Test:</label>
+    <!--
+      scratch area for pasting a copied selection back in, to eyeball the
+      tab-separated shape. It sits outside the grid element, so the table
+      hotkeys never intercept typing or Mod+V in here.
+    -->
+    <textarea
+      id="paste-target"
+      class="text-input"
+      rows="8"
+      placeholder="Copy a selection, then paste here to check the tab-separated output..."
+    ></textarea>
+  </div>
+</div>

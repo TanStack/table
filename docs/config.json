@@ -215,6 +215,7 @@
             { "label": "Expanding", "to": "framework/alpine/guide/expanding" },
             { "label": "Pagination", "to": "framework/alpine/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/alpine/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/alpine/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/alpine/guide/row-selection" },
             { "label": "Sorting", "to": "framework/alpine/guide/sorting" }
           ]
@@ -236,6 +237,7 @@
             { "label": "Expanding", "to": "framework/angular/guide/expanding" },
             { "label": "Pagination", "to": "framework/angular/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/angular/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/angular/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/angular/guide/row-selection" },
             { "label": "Sorting", "to": "framework/angular/guide/sorting" },
             { "label": "Virtualization", "to": "framework/angular/guide/virtualization" }
@@ -258,6 +260,7 @@
             { "label": "Expanding", "to": "framework/ember/guide/expanding" },
             { "label": "Pagination", "to": "framework/ember/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/ember/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/ember/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/ember/guide/row-selection" },
             { "label": "Sorting", "to": "framework/ember/guide/sorting" }
           ]
@@ -279,6 +282,7 @@
             { "label": "Expanding", "to": "framework/lit/guide/expanding" },
             { "label": "Pagination", "to": "framework/lit/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/lit/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/lit/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/lit/guide/row-selection" },
             { "label": "Sorting", "to": "framework/lit/guide/sorting" },
             { "label": "Virtualization", "to": "framework/lit/guide/virtualization" }
@@ -301,6 +305,7 @@
             { "label": "Expanding", "to": "framework/react/guide/expanding" },
             { "label": "Pagination", "to": "framework/react/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/react/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/react/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/react/guide/row-selection" },
             { "label": "Sorting", "to": "framework/react/guide/sorting" },
             { "label": "Virtualization", "to": "framework/react/guide/virtualization" }
@@ -323,6 +328,7 @@
             { "label": "Expanding", "to": "framework/preact/guide/expanding" },
             { "label": "Pagination", "to": "framework/preact/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/preact/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/preact/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/preact/guide/row-selection" },
             { "label": "Sorting", "to": "framework/preact/guide/sorting" },
             { "label": "Virtualization", "to": "framework/preact/guide/virtualization" }
@@ -345,6 +351,7 @@
             { "label": "Expanding", "to": "framework/solid/guide/expanding" },
             { "label": "Pagination", "to": "framework/solid/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/solid/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/solid/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/solid/guide/row-selection" },
             { "label": "Sorting", "to": "framework/solid/guide/sorting" },
             { "label": "Virtualization", "to": "framework/solid/guide/virtualization" }
@@ -367,6 +374,7 @@
             { "label": "Expanding", "to": "framework/svelte/guide/expanding" },
             { "label": "Pagination", "to": "framework/svelte/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/svelte/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/svelte/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/svelte/guide/row-selection" },
             { "label": "Sorting", "to": "framework/svelte/guide/sorting" },
             { "label": "Virtualization", "to": "framework/svelte/guide/virtualization" }
@@ -389,6 +397,7 @@
             { "label": "Expanding", "to": "framework/vue/guide/expanding" },
             { "label": "Pagination", "to": "framework/vue/guide/pagination" },
             { "label": "Row Pinning", "to": "framework/vue/guide/row-pinning" },
+            { "label": "Cell Selection", "to": "framework/vue/guide/cell-selection" },
             { "label": "Row Selection", "to": "framework/vue/guide/row-selection" },
             { "label": "Sorting", "to": "framework/vue/guide/sorting" },
             { "label": "Virtualization", "to": "framework/vue/guide/virtualization" }
@@ -1079,6 +1088,7 @@
             { "to": "framework/alpine/examples/pagination", "label": "Pagination" },
             { "to": "framework/alpine/examples/row-pinning", "label": "Row Pinning" },
             { "to": "framework/alpine/examples/row-selection", "label": "Row Selection" },
+            { "label": "Cell Selection", "to": "framework/alpine/examples/cell-selection" },
             { "to": "framework/alpine/examples/sorting", "label": "Sorting" },
             { "to": "framework/alpine/examples/sorting-dynamic-data", "label": "Sorting (Dynamic Data)" }
           ]
@@ -1107,6 +1117,7 @@
             { "label": "Pagination", "to": "framework/angular/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/angular/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/angular/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/angular/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/angular/examples/sorting" }
           ]
         },
@@ -1134,6 +1145,7 @@
             { "label": "Pagination", "to": "framework/ember/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/ember/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/ember/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/ember/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/ember/examples/sorting" }
           ]
         },
@@ -1161,6 +1173,7 @@
             { "label": "Pagination", "to": "framework/lit/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/lit/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/lit/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/lit/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/lit/examples/sorting" },
             { "label": "Sorting (Dynamic Data)", "to": "framework/lit/examples/sorting-dynamic-data" }
           ]
@@ -1191,6 +1204,7 @@
             { "label": "Row DnD", "to": "framework/react/examples/row-dnd" },
             { "label": "Row Pinning", "to": "framework/react/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/react/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/react/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/react/examples/sorting" }
           ]
         },
@@ -1218,6 +1232,7 @@
             { "label": "Pagination", "to": "framework/solid/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/solid/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/solid/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/solid/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/solid/examples/sorting" }
           ]
         },
@@ -1245,6 +1260,7 @@
             { "label": "Pagination", "to": "framework/svelte/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/svelte/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/svelte/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/svelte/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/svelte/examples/sorting" }
           ]
         },
@@ -1272,6 +1288,7 @@
             { "label": "Pagination", "to": "framework/vue/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/vue/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/vue/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/vue/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/vue/examples/sorting" }
           ]
         },
@@ -1299,6 +1316,7 @@
             { "label": "Pagination", "to": "framework/preact/examples/pagination" },
             { "label": "Row Pinning", "to": "framework/preact/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/preact/examples/row-selection" },
+            { "label": "Cell Selection", "to": "framework/preact/examples/cell-selection" },
             { "label": "Sorting", "to": "framework/preact/examples/sorting" }
           ]
         },

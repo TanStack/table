@@ -6,10 +6,10 @@ title: TableOptions_All
 # Type Alias: TableOptions\_All\<TFeatures, TData\>
 
 ```ts
-type TableOptions_All<TFeatures, TData> = TableOptions_Core<TFeatures, TData> & Partial<TableOptions_Aggregation & TableOptions_ColumnFiltering<TFeatures, TData> & TableOptions_ColumnGrouping & TableOptions_ColumnOrdering & TableOptions_ColumnPinning & TableOptions_ColumnResizing & TableOptions_ColumnSizing & TableOptions_ColumnVisibility & TableOptions_GlobalFiltering<TFeatures, TData> & TableOptions_RowExpanding<TFeatures, TData> & TableOptions_RowPagination & TableOptions_RowPinning<TFeatures, TData> & TableOptions_RowSelection<TFeatures, TData> & TableOptions_RowSorting & TableOptions_PluginFeatureMapTypes<TFeatures, TData>>;
+type TableOptions_All<TFeatures, TData> = TableOptions_Core<TFeatures, TData> & Partial<TableOptions_RowAggregation & TableOptions_CellSelection<TFeatures, TData> & TableOptions_ColumnFiltering<TFeatures, TData> & TableOptions_ColumnGrouping & TableOptions_ColumnOrdering & TableOptions_ColumnPinning & TableOptions_ColumnResizing & TableOptions_ColumnSizing & TableOptions_ColumnVisibility & TableOptions_GlobalFiltering<TFeatures, TData> & TableOptions_RowExpanding<TFeatures, TData> & TableOptions_RowPagination & TableOptions_RowPinning<TFeatures, TData> & TableOptions_RowSelection<TFeatures, TData> & TableOptions_RowSorting & TableOptions_PluginFeatureMapTypes<TFeatures, TData>>;
 ```
 
-Defined in: [types/TableOptions.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L134)
+Defined in: [types/TableOptions.ts:137](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L137)
 
 Internal broad option shape used where feature code may need to read options
 from features that are not present in the current generic feature set.

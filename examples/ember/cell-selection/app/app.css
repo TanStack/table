@@ -1,0 +1,357 @@
+/* Shared demo styles for the TanStack Table Ember examples. */
+
+html {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* --- Base table --- */
+
+table {
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+tbody {
+  border-bottom: 1px solid lightgray;
+}
+
+th {
+  position: relative;
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+td {
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+tfoot {
+  color: gray;
+}
+
+tfoot th {
+  font-weight: normal;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* --- Div-based grid table (used by the performant resizing example) --- */
+
+.divTable {
+  border: 1px solid lightgray;
+  width: fit-content;
+}
+
+.divTable .tr {
+  display: flex;
+  width: fit-content;
+  height: 30px;
+}
+
+.divTable .th,
+.divTable .td {
+  box-shadow: inset 0 0 0 1px lightgray;
+  padding: 2px 4px;
+  height: 30px;
+}
+
+.divTable .th {
+  position: relative;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* --- Column resizing --- */
+
+.resizer {
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 5px;
+  background: rgba(0, 0, 0, 0.5);
+  cursor: col-resize;
+  user-select: none;
+  touch-action: none;
+}
+
+.resizer.isResizing {
+  background: blue;
+  opacity: 1;
+}
+
+@media (hover: hover) {
+  .resizer {
+    opacity: 0;
+  }
+
+  *:hover > .resizer {
+    opacity: 1;
+  }
+}
+
+/* --- Column pinning --- */
+
+.pinned-rows-top,
+.pinned-rows-bottom {
+  background: #f5f5f5;
+}
+
+.split-tables {
+  display: flex;
+  gap: 1rem;
+}
+
+/* --- Demo layout helpers --- */
+
+.demo-root {
+  padding: 0.5rem;
+}
+
+.spacer-xs {
+  height: 0.25rem;
+}
+
+.spacer-sm {
+  height: 0.5rem;
+}
+
+.spacer-md {
+  height: 1rem;
+}
+
+.controls,
+.button-row,
+.inline-controls,
+.header-controls,
+.pin-actions,
+.filter-row,
+.page-controls {
+  display: flex;
+  align-items: center;
+}
+
+.button-row {
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.controls,
+.page-controls {
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.inline-controls,
+.header-controls,
+.pin-actions {
+  gap: 0.25rem;
+}
+
+.pin-actions {
+  justify-content: center;
+}
+
+.filter-row {
+  gap: 0.5rem;
+}
+
+.sortable-header {
+  cursor: pointer;
+  user-select: none;
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.scroll-container {
+  overflow-x: auto;
+}
+
+.section-title {
+  font-size: 1.25rem;
+}
+
+.demo-note {
+  margin-bottom: 0.5rem;
+  font-size: 0.875rem;
+}
+
+/* --- Column visibility toggle panel --- */
+
+.column-toggle-panel {
+  display: inline-block;
+  border: 1px solid #000;
+  border-radius: 0.25rem;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.2);
+}
+
+.column-toggle-panel-header {
+  border-bottom: 1px solid #000;
+  padding: 0 0.25rem;
+}
+
+.column-toggle-row {
+  padding: 0 0.25rem;
+}
+
+/* --- Buttons and inputs --- */
+
+.demo-button,
+.demo-button-spaced,
+.pin-button,
+.filter-input,
+.filter-select,
+.page-size-input,
+.column-size-input,
+.outlined-control {
+  border: 1px solid currentColor;
+  border-radius: 0.25rem;
+}
+
+.outlined-control {
+  border-color: #000;
+}
+
+.outlined-table {
+  border: 2px solid #000;
+}
+
+.demo-button {
+  padding: 0.5rem;
+}
+
+.demo-button-sm {
+  padding: 0.25rem;
+}
+
+.demo-button-spaced {
+  margin-bottom: 0.5rem;
+  padding: 0.5rem;
+}
+
+.pin-button {
+  padding: 0 0.5rem;
+}
+
+.page-size-input {
+  width: 4rem;
+  padding: 0.25rem;
+}
+
+.column-size-input {
+  width: 6rem;
+  margin-left: 0.5rem;
+  padding: 0.25rem;
+}
+
+.filter-input {
+  width: 6rem;
+}
+
+.filter-select {
+  width: 9rem;
+}
+
+/* --- Status cell demo (basic table) --- */
+
+.status-bar {
+  font-size: 0.875rem;
+}
+
+.status-relationship {
+  color: #16a34a;
+}
+
+.status-complicated {
+  color: #ca8a04;
+}
+
+.status-single {
+  color: #6b7280;
+}
+
+/* --- Row selection --- */
+
+.selected {
+  background: #e0f2fe;
+}
+
+/* --- Code / state output --- */
+
+.code-block {
+  overflow: auto;
+  border-radius: 0.25rem;
+  background: #f3f4f6;
+  padding: 0.5rem;
+  font-size: 0.75rem;
+}
+
+td {
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+}
+
+td:last-child {
+  border-right: 0;
+}
+
+/* Cell selection: a dragged rectangle is tinted, and each cell draws only the
+   sides that getSelectionEdges() reports as the boundary of the selection, so
+   any union of rectangles ends up with a single continuous outline.
+
+   The outline is drawn with inset box-shadows rather than borders. On a
+   border-collapse table a thicker border widens the shared grid line, which
+   would make rows change height as cells become selected; box-shadow never
+   affects layout. Each side is its own custom property so the four edge classes
+   compose, which they could not do if each set `box-shadow` directly. */
+.cell-selectable {
+  user-select: none;
+  cursor: cell;
+  --cell-edge-top: 0 0 0 0 transparent;
+  --cell-edge-right: 0 0 0 0 transparent;
+  --cell-edge-bottom: 0 0 0 0 transparent;
+  --cell-edge-left: 0 0 0 0 transparent;
+  box-shadow:
+    inset var(--cell-edge-top),
+    inset var(--cell-edge-right),
+    inset var(--cell-edge-bottom),
+    inset var(--cell-edge-left);
+}
+
+.cell-selected {
+  background: #dbeafe;
+}
+
+.cell-focused {
+  background: #bfdbfe;
+}
+
+.cell-edge-top {
+  --cell-edge-top: 0 2px 0 0 #2563eb;
+}
+
+.cell-edge-right {
+  --cell-edge-right: -2px 0 0 0 #2563eb;
+}
+
+.cell-edge-bottom {
+  --cell-edge-bottom: 0 -2px 0 0 #2563eb;
+}
+
+.cell-edge-left {
+  --cell-edge-left: 2px 0 0 0 #2563eb;
+}

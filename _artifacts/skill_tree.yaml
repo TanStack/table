@@ -291,6 +291,19 @@ skills:
       - 'TanStack/table:packages/table-core/src/features/row-pinning'
       - 'TanStack/table:examples/react/row-pinning'
 
+  - name: 'Cell Selection'
+    slug: cell-selection
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/cell-selection/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Select rectangular cell ranges with cellSelectionFeature: two-corner range state, drag and Shift and Ctrl handlers, selection edges, and render-order resolution under pinning. Load when ranges widen unexpectedly after sorting or reordering, or when drag re-renders the whole table.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/framework/react/guide/cell-selection.md'
+      - 'TanStack/table:packages/table-core/src/features/cell-selection'
+      - 'TanStack/table:examples/react/cell-selection'
+
   - name: 'Row Selection'
     slug: row-selection
     type: sub-skill
