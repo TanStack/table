@@ -6,7 +6,7 @@ metadata:
   {
     type: sub-skill,
     library: '@tanstack/table-core',
-    library_version: '9.0.0-beta.56',
+    library_version: '9.0.0-beta.58',
   }
 requires: ['core', 'table-features', 'column-sizing']
 sources:
