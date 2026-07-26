@@ -1,13 +1,12 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.56'
+  version: '9.0.0-beta.58'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing primitives with tree-shakeable v9 features and framework adapters.'
   primary_framework: 'framework-agnostic'
   monorepo: true
   package_version_overrides:
-    '@tanstack/ember-table': '9.0.0-beta.57'
     '@tanstack/match-sorter-utils': '9.0.0-beta.53'
 
 meta:
