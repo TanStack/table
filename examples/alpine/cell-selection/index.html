@@ -93,7 +93,7 @@
       -->
       <div x-text="selectionSummary()"></div>
       <div class="spacer-sm"></div>
-      <div tabindex="-1" @keydown="onGridKeyDown($event)">
+      <div tabindex="0" @keydown="onGridKeyDown($event)">
         <table>
           <thead>
             <template
@@ -108,13 +108,16 @@
                   <th :colspan="header.colSpan">
                     <template x-if="!header.isPlaceholder">
                       <div>
-                        <div
+                        <button
+                          type="button"
+                          class="header-button"
                           :class="header.column.getCanSort() ? 'sortable-header' : ''"
+                          :disabled="!header.column.getCanSort()"
                           @click="header.column.getToggleSortingHandler()?.($event)"
                         >
                           <span x-html="FlexRender({ header })"></span>
                           <span x-text="sortIndicator(header)"></span>
-                        </div>
+                        </button>
                         <template x-if="header.column.getCanPin()">
                           <div class="pin-actions">
                             <template

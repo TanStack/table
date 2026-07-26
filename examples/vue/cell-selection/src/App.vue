@@ -44,10 +44,16 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 // the spreadsheet-flavored version.
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
 
   // spreadsheets expect a field to be quoted once it contains a delimiter, a
   // newline, or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -325,7 +331,7 @@ useHotkeys(
       {{ table.getCellSelectionColumnIds().length }} columns
     </div>
     <div class="spacer-sm" />
-    <div ref="grid" tabindex="-1">
+    <div ref="grid" tabindex="0">
       <table>
         <thead>
           <tr
@@ -338,8 +344,14 @@ useHotkeys(
               :colSpan="header.colSpan"
             >
               <template v-if="!header.isPlaceholder">
-                <div
-                  :class="header.column.getCanSort() ? 'sortable-header' : ''"
+                <button
+                  type="button"
+                  :disabled="!header.column.getCanSort()"
+                  :class="
+                    header.column.getCanSort()
+                      ? 'header-button sortable-header'
+                      : 'header-button'
+                  "
                   @click="header.column.getToggleSortingHandler()?.($event)"
                 >
                   <FlexRender :header="header" />
@@ -348,7 +360,7 @@ useHotkeys(
                       header.column.getIsSorted() as string
                     ] ?? ''
                   }}
-                </div>
+                </button>
                 <div v-if="header.column.getCanPin()" class="pin-actions">
                   <button
                     v-if="header.column.getIsPinned() !== 'start'"

@@ -67,10 +67,16 @@ const columns = columnHelper.columns([
 // the spreadsheet-flavored version.
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
 
   // spreadsheets expect a field to be quoted once it contains a delimiter, a
   // newline, or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -164,9 +170,6 @@ const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 export default class CellSelectionTable extends Component {
   @tracked data: Array<Person> = makeData(20)
 
-  private isFirstColumnLayout = true
-  private lastLayoutKey = ''
-
   table = useTable(() => ({
     features,
     columns,
@@ -209,7 +212,6 @@ export default class CellSelectionTable extends Component {
   // Ember's tracked signals keep these reads fresh, so there is no equivalent
   // of React's per-row Subscribe to reach for here.
   get selectedCellCount() {
-    this.resetOnLayoutChange()
     return this.tableInstance.getSelectedCellCount().toLocaleString()
   }
 
@@ -225,30 +227,6 @@ export default class CellSelectionTable extends Component {
     return this.data.length < 1_001
       ? JSON.stringify(this.tableInstance.store.get(), null, 2)
       : ''
-  }
-
-  // optionally, reset the cellSelection state not only when data changes, but
-  // also when column order, pinning, visibility, or sorting changes
-  // customize this to your needs
-  private resetOnLayoutChange() {
-    const table = this.tableInstance
-    const layoutKey = JSON.stringify([
-      table.atoms.columnOrder.get(),
-      table.atoms.columnPinning.get(),
-      table.atoms.columnVisibility.get(),
-      table.atoms.sorting.get(),
-    ])
-
-    if (this.isFirstColumnLayout) {
-      this.isFirstColumnLayout = false
-      this.lastLayoutKey = layoutKey
-      return
-    }
-
-    if (layoutKey !== this.lastLayoutKey) {
-      this.lastLayoutKey = layoutKey
-      queueMicrotask(() => table.resetCellSelection(true))
-    }
   }
 
   toggleAllVisibility = (event: Event) => {
@@ -415,7 +393,7 @@ export default class CellSelectionTable extends Component {
         columns
       </div>
       <div class='spacer-sm'></div>
-      <div tabindex='-1' {{on 'keydown' this.onGridKeyDown}}>
+      <div tabindex='0' {{on 'keydown' this.onGridKeyDown}}>
         <table>
           <thead>
             {{#each this.headerGroups as |headerGroup|}}
@@ -423,13 +401,16 @@ export default class CellSelectionTable extends Component {
                 {{#each headerGroup.headers as |header|}}
                   <th colspan={{header.colSpan}}>
                     {{#unless header.isPlaceholder}}
-                      <div
-                        class={{if (canSort header) 'sortable-header' ''}}
+                      <button
+                        type='button'
+                        class='header-button
+                          {{if (canSort header) "sortable-header"}}'
+                        disabled={{if (canSort header) false true}}
                         {{on 'click' (toggleSorting header)}}
                       >
                         <FlexRenderHeader @header={{header}} />
                         {{sortIndicator header}}
-                      </div>
+                      </button>
                       {{#if (canPin header)}}
                         <div class='pin-actions'>
                           {{#unless (eq (pinnedAt header) 'start')}}

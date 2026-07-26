@@ -9,7 +9,7 @@ title: table_getSelectedCellRangesData
 function table_getSelectedCellRangesData<TFeatures, TData>(table): unknown[][][];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:859](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L859)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:905](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L905)
 
 Returns each selected range's values as a row-major grid.
 

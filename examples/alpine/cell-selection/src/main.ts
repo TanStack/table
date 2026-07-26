@@ -63,10 +63,16 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 // the spreadsheet-flavored version.
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
 
   // spreadsheets expect a field to be quoted once it contains a delimiter, a
   // newline, or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {

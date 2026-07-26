@@ -138,10 +138,15 @@ describe('cellSelectionFeature', () => {
       const seen: Array<CellSelectionState> = []
       let state: CellSelectionState = []
 
-      const table = makeTable({
+      let table: Table<typeof features, TestRow>
+      table = makeTable({
         state: { cellSelection: state },
         onCellSelectionChange: (updater: any) => {
           state = typeof updater === 'function' ? updater(state) : updater
+          table.setOptions((prev) => ({
+            ...prev,
+            state: { ...prev.state, cellSelection: state },
+          }))
           seen.push(state)
         },
       })
@@ -150,6 +155,7 @@ describe('cellSelectionFeature', () => {
 
       expect(seen).toHaveLength(1)
       expect(seen[0]!).toEqual([rangeOf('r0', 'a', 'r1', 'b')])
+      expect(table.atoms.cellSelection.get()).toEqual(seen[0])
     })
   })
 
@@ -427,6 +433,28 @@ describe('cellSelectionFeature', () => {
       expect(table.getSelectedCellIds()).toEqual(['r0_c'])
     })
 
+    it('recovers navigation from an opted-out anchor column', () => {
+      const table = makeTable({
+        columns: [
+          { id: 'a', accessorKey: 'a' },
+          { id: 'b', accessorKey: 'b', enableCellSelection: false },
+          { id: 'c', accessorKey: 'c' },
+        ],
+      })
+
+      table.setFocusedCell('r0', 'b')
+      table.moveCellSelection('right')
+      expect(table.getSelectedCellIds()).toEqual(['r0_c'])
+
+      table.setFocusedCell('r0', 'b')
+      table.moveCellSelection('left')
+      expect(table.getSelectedCellIds()).toEqual(['r0_a'])
+
+      table.setFocusedCell('r0', 'b')
+      table.moveCellSelection('down')
+      expect(table.getSelectedCellIds()).toEqual(['r1_a'])
+    })
+
     it('extendCellSelection moves the focus and keeps the anchor', () => {
       const table = makeTable()
       table.setFocusedCell('r1', 'a')
@@ -475,6 +503,38 @@ describe('cellSelectionFeature', () => {
 
       // 2 rows x 3 columns, minus the whole of r1
       expect(table.getSelectedCellCount()).toBe(3)
+    })
+
+    it('returns no selected cells when selection is disabled', () => {
+      const table = makeTable({
+        enableCellSelection: false,
+        initialState: {
+          cellSelection: [rangeOf('r0', 'a', 'r1', 'b')],
+        },
+      })
+
+      expect(table.getSelectedCellIds()).toEqual([])
+      expect(table.getSelectedCellCount()).toBe(0)
+      expect(table.getSelectedCellRangesData()).toEqual([])
+    })
+
+    it('recomputes derivations when the selection predicate changes', () => {
+      const table = makeTable({
+        enableCellSelection: () => true,
+      })
+      table.selectCellRange(rangeOf('r0', 'a', 'r1', 'b'))
+
+      expect(table.getSelectedCellCount()).toBe(4)
+      expect(table.getSelectedCellIds()).toHaveLength(4)
+
+      table.setOptions((prev) => ({
+        ...prev,
+        enableCellSelection: () => false,
+      }))
+
+      expect(table.getSelectedCellCount()).toBe(0)
+      expect(table.getSelectedCellIds()).toEqual([])
+      expect(table.getSelectedCellRangesData()).toEqual([])
     })
 
     it('getSelectedCellRangesData returns a row-major grid per range', () => {
@@ -704,6 +764,15 @@ describe('cellSelectionFeature', () => {
 
       expect(table._isSelectingCells).toBe(false)
       expect(fake.count('mouseup')).toBe(0)
+    })
+
+    it('does not open a drag without a document to close it', () => {
+      const table = makeTable()
+
+      getCell(table, 'r0', 'a').getSelectionStartHandler()({})
+
+      expect(table._isSelectingCells).toBe(false)
+      expect(table.getSelectedCellIds()).toEqual(['r0_a'])
     })
 
     it('ignores shift when range selection is disabled', () => {

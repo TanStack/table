@@ -267,9 +267,15 @@ Scope the hotkeys to the grid element rather than the document, or arrow keys an
 ```ts
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
   // spreadsheets expect a quoted field once it contains a delimiter, a newline,
   // or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -295,7 +301,13 @@ Ranges store row and column ids, not positions, so they follow their corner cell
 Because a reorder can widen a selection onto columns the user never picked, some applications prefer to clear the selection whenever the column layout changes. That is a userland decision, and one `useEffect` away:
 
 ```ts
+const isFirstLayout = useRef(true)
+
 useEffect(() => {
+  if (isFirstLayout.current) {
+    isFirstLayout.current = false
+    return
+  }
   table.resetCellSelection(true)
 }, [
   table.state.columnOrder,
@@ -360,6 +372,31 @@ whose selected value is unchanged does not re-render:
 The selector needs to encode whether this row's cells fall inside a range,
 whether the rows immediately above and below do (that decides its top and bottom
 edges), and whether it owns the focused cell.
+
+```ts
+function rowSelectionKey(ranges, bounds, rowIndex, rowId) {
+  const active = ranges[ranges.length - 1]
+  let key =
+    ranges.length > 0 && active.anchorRowId === rowId
+      ? `f${active.anchorColumnId}`
+      : ''
+
+  for (const bound of bounds) {
+    const self = rowIndex >= bound.minRowIndex && rowIndex <= bound.maxRowIndex
+    const above =
+      rowIndex - 1 >= bound.minRowIndex && rowIndex - 1 <= bound.maxRowIndex
+    const below =
+      rowIndex + 1 >= bound.minRowIndex && rowIndex + 1 <= bound.maxRowIndex
+
+    if (self || above || below) {
+      key += `|${self ? 1 : 0}${above ? 1 : 0}${below ? 1 : 0}:${bound.minColumnIndex}-${bound.maxColumnIndex}`
+    }
+  }
+
+  return key
+}
+```
+
 `table.getCellSelectionBounds()` is memoized, so it computes once per selection
 change no matter how many rows call it. On a thousand-row table this keeps a drag
 around 10ms per update instead of reconciling every cell.

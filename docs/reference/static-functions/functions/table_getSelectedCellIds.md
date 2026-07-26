@@ -9,9 +9,12 @@ title: table_getSelectedCellIds
 function table_getSelectedCellIds<TFeatures, TData>(table): string[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:838](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L838)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:877](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L877)
 
-Returns the ids of all selected cells, in row-major order per range.
+Returns the ids of all selected cells, in row-major order.
+
+Cells covered by overlapping ranges are returned once, at their first
+occurrence.
 
 ## Type Parameters
 

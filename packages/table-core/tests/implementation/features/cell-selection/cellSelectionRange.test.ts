@@ -112,6 +112,23 @@ describe('cell selection ranges', () => {
       expect(table.getCellSelectionColumnIds()).toEqual(['a', 'b', 'c'])
     })
 
+    it('deduplicates overlapping rectangles in cell ids and count', () => {
+      const table = makeTable()
+      table.selectCellRange(rangeOf('r0', 'a', 'r1', 'b'))
+      table.selectCellRange(rangeOf('r1', 'b', 'r2', 'c'), { additive: true })
+
+      expect(table.getSelectedCellIds()).toEqual([
+        'r0_a',
+        'r0_b',
+        'r1_a',
+        'r1_b',
+        'r1_c',
+        'r2_b',
+        'r2_c',
+      ])
+      expect(table.getSelectedCellCount()).toBe(7)
+    })
+
     it('is memoized between reads', () => {
       const table = makeTable()
       table.selectCellRange(rangeOf('r0', 'a', 'r2', 'b'))

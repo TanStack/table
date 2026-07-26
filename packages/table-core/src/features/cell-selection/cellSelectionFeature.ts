@@ -180,6 +180,7 @@ export const cellSelectionFeature: TableFeature = {
             table_getCellSelectionBounds,
           ),
           table.getRowsInDisplayOrder(),
+          table.options.enableCellSelection,
         ],
       },
       table_getSelectedCellRangesData: {
@@ -191,6 +192,7 @@ export const cellSelectionFeature: TableFeature = {
             table_getCellSelectionBounds,
           ),
           table.getRowsInDisplayOrder(),
+          table.options.enableCellSelection,
         ],
       },
       table_getSelectedCellCount: {
@@ -202,6 +204,7 @@ export const cellSelectionFeature: TableFeature = {
             table_getCellSelectionBounds,
           ),
           table.getRowsInDisplayOrder(),
+          table.options.enableCellSelection,
         ],
       },
       table_getCellSelectionRowIds: {

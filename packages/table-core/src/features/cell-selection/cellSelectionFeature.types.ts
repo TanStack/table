@@ -246,12 +246,12 @@ export interface Table_CellSelection<
   /**
    * Returns the number of selected cells.
    *
-   * Computed as rectangle arithmetic. Falls back to enumerating cells when
-   * `enableCellSelection` is a per-cell predicate.
+   * Computed as rectangle arithmetic for one range. Falls back to enumerating
+   * cells for overlapping ranges or a per-cell `enableCellSelection` predicate.
    */
   getSelectedCellCount: () => number
   /**
-   * Returns the ids of all selected cells, in row-major order per range.
+   * Returns the unique ids of all selected cells, in row-major order.
    *
    * This expands the selection, so it costs one pass over the selected area.
    * It is memoized and never runs unless called.

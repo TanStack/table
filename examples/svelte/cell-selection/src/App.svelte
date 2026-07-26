@@ -1,5 +1,6 @@
 <script lang="ts">
   import { faker } from '@faker-js/faker'
+  import { untrack } from 'svelte'
   import { createHotkeysAttachment } from '@tanstack/svelte-hotkeys'
   import {
     FlexRender,
@@ -19,6 +20,7 @@
   import { makeData } from './makeData'
   import type { Cell } from '@tanstack/svelte-table'
   import type { Person } from './makeData'
+  import './index.css'
 
   const features = tableFeatures({
     cellSelectionFeature,
@@ -42,10 +44,16 @@
   // is the spreadsheet-flavored version.
   function escapeTsvValue(value: unknown) {
     const text = value == null ? '' : String(value)
+    const safeText =
+      typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+        ? `'${text}`
+        : text
 
     // spreadsheets expect a field to be quoted once it contains a delimiter, a
     // newline, or a quote, with inner quotes doubled
-    return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+    return /["\t\n\r]/.test(safeText)
+      ? `"${safeText.replace(/"/g, '""')}"`
+      : safeText
   }
 
   function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -193,7 +201,7 @@
       isFirstColumnLayout = false
       return
     }
-    table.resetCellSelection(true)
+    untrack(() => table.resetCellSelection(true))
   })
 
   // keyboard navigation is TanStack Hotkeys driving the table's imperative
@@ -309,25 +317,32 @@
       .length} columns
   </div>
   <div class="spacer-sm"></div>
-  <div tabindex="-1" {@attach gridKeys}>
-    <table>
+  <div>
+    <table
+      role="grid"
+      aria-label="Cell selection grid"
+      tabindex="0"
+      {@attach gridKeys}
+    >
       <thead>
         {#each table.getHeaderGroups() as headerGroup (headerGroup.id)}
           <tr>
             {#each headerGroup.headers as header (header.id)}
               <th colspan={header.colSpan}>
                 {#if !header.isPlaceholder}
-                  <div
-                    class={header.column.getCanSort() ? 'sortable-header' : ''}
+                  <button
+                    type="button"
+                    disabled={!header.column.getCanSort()}
+                    class={header.column.getCanSort()
+                      ? 'header-button sortable-header'
+                      : 'header-button'}
                     onclick={header.column.getToggleSortingHandler()}
-                    onkeydown={() => {}}
-                    role="presentation"
                   >
                     <FlexRender {header} />
                     {{ asc: ' 🔼', desc: ' 🔽' }[
                       header.column.getIsSorted() as string
                     ] ?? ''}
-                  </div>
+                  </button>
                   {#if header.column.getCanPin()}
                     <div class="pin-actions">
                       {#if header.column.getIsPinned() !== 'start'}

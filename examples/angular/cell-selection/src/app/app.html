@@ -70,7 +70,7 @@
     {{ table.getCellSelectionColumnIds().length }} columns
   </div>
   <div class="spacer-sm"></div>
-  <div #grid tabindex="-1">
+  <div #grid tabindex="0">
     <table [tanStackTable]="table">
       <thead>
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {
@@ -78,15 +78,18 @@
             @for (header of headerGroup.headers; track header.id) {
               <th [attr.colspan]="header.colSpan">
                 @if (!header.isPlaceholder) {
-                  <div
+                  <button
+                    type="button"
+                    class="header-button"
                     [class.sortable-header]="header.column.getCanSort()"
+                    [disabled]="!header.column.getCanSort()"
                     (click)="header.column.getToggleSortingHandler()?.($event)"
                   >
                     <ng-container *flexRenderHeader="header; let headerCell">
                       {{ headerCell }}
                     </ng-container>
                     {{ sortIndicator(header.column.getIsSorted()) }}
-                  </div>
+                  </button>
                   @if (header.column.getCanPin()) {
                     <div class="pin-actions">
                       @if (header.column.getIsPinned() !== 'start') {

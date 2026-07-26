@@ -133,7 +133,7 @@ Wrong: one subscription wrapping the whole `<tbody>`.
 
 Correct: one subscription per row, with a selector returning only what changes that row's appearance.
 
-A drag writes state on every cell boundary crossed. With a table-wide subscription that reconciles every cell each time. Subscribe per row against `table.atoms.cellSelection` and derive a key from `table.getCellSelectionBounds()` (memoized, so it computes once per change) covering the row itself plus the rows above and below, which decide its top and bottom edges.
+A drag writes state on every cell boundary crossed. A table-wide subscription reconciles every cell each time. Subscribe per row against `table.atoms.cellSelection` and derive a key from `table.getCellSelectionBounds()` (memoized, so it computes once per change) covering the row itself plus the rows above and below, which decide its top and bottom edges.
 
 Source: `docs/framework/react/guide/cell-selection.md#performance-with-tablesubscribe`
 

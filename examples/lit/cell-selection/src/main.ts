@@ -41,10 +41,16 @@ const features = tableFeatures({
 // the spreadsheet-flavored version.
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
 
   // spreadsheets expect a field to be quoted once it contains a delimiter, a
   // newline, or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -113,6 +119,7 @@ export class LitCellSelectionExample extends LitElement {
   // tracks whether the layout-change reset should skip its first run
   private _isFirstColumnLayout = true
   private _lastLayoutKey = ''
+  private _table?: LitTable<typeof features, Person>
 
   // Lit renders into shadow DOM, so the demo styles live here rather than in a
   // global stylesheet. The selection outline uses inset box-shadows: on a
@@ -153,6 +160,14 @@ export class LitCellSelectionExample extends LitElement {
 
     button {
       margin-right: 0.5rem;
+    }
+
+    .header-button {
+      padding: 0;
+      border: 0;
+      color: inherit;
+      font: inherit;
+      background: transparent;
     }
 
     .sortable-header {
@@ -243,6 +258,12 @@ export class LitCellSelectionExample extends LitElement {
     }
   }
 
+  protected updated() {
+    if (this._table) {
+      this.resetOnLayoutChange(this._table)
+    }
+  }
+
   protected render() {
     const table = this.tableController.table(
       {
@@ -270,7 +291,7 @@ export class LitCellSelectionExample extends LitElement {
       }),
     )
 
-    this.resetOnLayoutChange(table)
+    this._table = table
 
     // keyboard navigation is TanStack Hotkeys driving the table's imperative
     // APIs; table-core ships no keydown handling of its own. One stateless
@@ -378,7 +399,7 @@ export class LitCellSelectionExample extends LitElement {
         ${table.getCellSelectionRowIds().length.toLocaleString()} rows and
         ${table.getCellSelectionColumnIds().length} columns
       </div>
-      <div tabindex="-1" @keydown=${onGridKeyDown}>
+      <div tabindex="0" @keydown=${onGridKeyDown}>
         <table>
           <thead>
             ${repeat(
@@ -394,17 +415,19 @@ export class LitCellSelectionExample extends LitElement {
                         ${header.isPlaceholder
                           ? null
                           : html`
-                              <div
-                                class=${header.column.getCanSort()
+                              <button
+                                type="button"
+                                class="header-button ${header.column.getCanSort()
                                   ? 'sortable-header'
-                                  : ''}
+                                  : ''}"
+                                ?disabled=${!header.column.getCanSort()}
                                 @click=${header.column.getToggleSortingHandler()}
                               >
                                 ${FlexRender({ header })}
                                 ${{ asc: ' 🔼', desc: ' 🔽' }[
                                   header.column.getIsSorted() as string
                                 ] ?? ''}
-                              </div>
+                              </button>
                               ${header.column.getCanPin()
                                 ? html`
                                     <div class="pin-actions">

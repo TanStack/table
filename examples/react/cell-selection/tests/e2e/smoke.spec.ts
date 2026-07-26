@@ -25,18 +25,21 @@ async function openExample(page: Page) {
   const server = await startExampleServer(exampleDir)
   const errors = collectPageErrors(page)
 
-  await page.route(
-    'https://unpkg.com/react-scan/dist/auto.global.js',
-    (route) =>
-      route.fulfill({
-        contentType: 'application/javascript',
-        body: '',
-      }),
-  )
-
-  await page.goto(server.url)
-
-  return { errors, server }
+  try {
+    await page.route(
+      'https://unpkg.com/react-scan/dist/auto.global.js',
+      (route) =>
+        route.fulfill({
+          contentType: 'application/javascript',
+          body: '',
+        }),
+    )
+    await page.goto(server.url)
+    return { errors, server }
+  } catch (error) {
+    await server.close()
+    throw error
+  }
 }
 
 async function getFirstBodyRowText(table: Locator) {
@@ -79,6 +82,31 @@ test('regenerates table data', async ({ page }) => {
 
     await expect.poll(() => getFirstBodyRowText(table)).not.toBe(firstRowBefore)
     await expect(bodyRows.first()).toBeVisible()
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('selects an inclusive cell range with Shift-click', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const rows = page.locator('table').first().locator('tbody tr')
+    await expect(rows.first()).toBeVisible()
+
+    await rows.nth(0).locator('td').nth(0).click()
+    await rows
+      .nth(2)
+      .locator('td')
+      .nth(2)
+      .click({ modifiers: ['Shift'] })
+
+    await expect(page.locator('td.cell-selected')).toHaveCount(9)
+    await expect(rows.nth(0).locator('td').nth(0)).toHaveClass(/cell-focused/)
+    await expect(rows.nth(3).locator('td').nth(0)).not.toHaveClass(
+      /cell-selected/,
+    )
     expect(errors).toEqual([])
   } finally {
     await server.close()

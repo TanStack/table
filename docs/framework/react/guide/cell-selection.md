@@ -268,9 +268,15 @@ Scope the hotkeys to the grid element rather than the document, or arrow keys an
 ```ts
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
   // spreadsheets expect a quoted field once it contains a delimiter, a newline,
   // or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -296,7 +302,13 @@ Ranges store row and column ids, not positions, so they follow their corner cell
 Because a reorder can widen a selection onto columns the user never picked, some applications prefer to clear the selection whenever the column layout changes. That is a userland decision, and one `useEffect` away:
 
 ```tsx
+const isFirstLayout = useRef(true)
+
 useEffect(() => {
+  if (isFirstLayout.current) {
+    isFirstLayout.current = false
+    return
+  }
   table.resetCellSelection(true)
 }, [
   table.state.columnOrder,

@@ -336,18 +336,6 @@ export function cell_getCanSelect<
 }
 
 /**
- * Checks whether this cell falls inside any selected range.
- *
- * Deliberately not memoized. Registering this through `assignPrototypeAPIs`
- * with `memoDeps` would allocate a memo closure and dependency array per cell,
- * which costs more than the handful of integer comparisons it would save.
- *
- * @example
- * ```ts
- * const isSelected = cell_getIsSelected(cell)
- * ```
- */
-/**
  * Resolves a cell to the coordinates every selection read needs.
  *
  * Shared by `getIsSelected` and `getSelectionEdges` so a render pass resolves
@@ -393,6 +381,18 @@ function resolveCellPosition<
   return { bounds, rowIndex, columnIndex }
 }
 
+/**
+ * Checks whether this cell falls inside any selected range.
+ *
+ * Deliberately not memoized. Registering this through `assignPrototypeAPIs`
+ * with `memoDeps` would allocate a memo closure and dependency array per cell,
+ * which costs more than the handful of integer comparisons it would save.
+ *
+ * @example
+ * ```ts
+ * const isSelected = cell_getIsSelected(cell)
+ * ```
+ */
 export function cell_getIsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -646,7 +646,7 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   direction: CellSelectionDirection,
 ): { rowId: string; columnId: string } | null {
   const rows = table.getRowsInDisplayOrder()
-  const columns = getSelectableColumns(table)
+  const columns = getDisplayOrderedColumns(table)
 
   if (!rows.length || !columns.length) return null
 
@@ -657,13 +657,49 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   if (rowIndex < 0 || columnIndex < 0) return null
 
   const nextRowIndex = rowIndex + rowDelta
-  const nextColumnIndex = columnIndex + columnDelta
+
+  if (nextRowIndex < 0 || nextRowIndex >= rows.length) {
+    return null
+  }
+
+  const selectableColumnIds = new Set(
+    getSelectableColumns(table).map((column) => column.id),
+  )
+
+  if (!selectableColumnIds.size) return null
+
+  let nextColumnIndex = columnIndex
+
+  if (columnDelta) {
+    do {
+      nextColumnIndex += columnDelta
+    } while (
+      nextColumnIndex >= 0 &&
+      nextColumnIndex < columns.length &&
+      !selectableColumnIds.has(columns[nextColumnIndex]!.id)
+    )
+  } else if (!selectableColumnIds.has(columnId)) {
+    // A programmatically restored anchor may point at a column that has since
+    // opted out. Snap vertical navigation to the closest selectable column.
+    for (let distance = 1; distance < columns.length; distance++) {
+      const before = columns[columnIndex - distance]
+      const after = columns[columnIndex + distance]
+
+      if (before && selectableColumnIds.has(before.id)) {
+        nextColumnIndex = columnIndex - distance
+        break
+      }
+      if (after && selectableColumnIds.has(after.id)) {
+        nextColumnIndex = columnIndex + distance
+        break
+      }
+    }
+  }
 
   if (
-    nextRowIndex < 0 ||
-    nextRowIndex >= rows.length ||
     nextColumnIndex < 0 ||
-    nextColumnIndex >= columns.length
+    nextColumnIndex >= columns.length ||
+    !selectableColumnIds.has(columns[nextColumnIndex]!.id)
   ) {
     return null
   }
@@ -828,7 +864,10 @@ function forEachSelectedCell<
 }
 
 /**
- * Returns the ids of all selected cells, in row-major order per range.
+ * Returns the ids of all selected cells, in row-major order.
+ *
+ * Cells covered by overlapping ranges are returned once, at their first
+ * occurrence.
  *
  * @example
  * ```ts
@@ -840,7 +879,14 @@ export function table_getSelectedCellIds<
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): Array<string> {
   const ids: Array<string> = []
-  forEachSelectedCell(table, (cell) => ids.push(cell.id))
+  const seen = new Set<string>()
+
+  forEachSelectedCell(table, (cell) => {
+    if (seen.has(cell.id)) return
+    seen.add(cell.id)
+    ids.push(cell.id)
+  })
+
   return ids
 }
 
@@ -874,9 +920,9 @@ export function table_getSelectedCellRangesData<
 /**
  * Returns the number of selected cells.
  *
- * Uses rectangle arithmetic, which needs no expansion. When
- * `enableCellSelection` is a per-cell predicate the cells have to be visited
- * individually, so that path falls back to enumeration.
+ * Uses rectangle arithmetic for a single range, which needs no expansion.
+ * Multiple ranges are enumerated so overlapping cells are counted once. A
+ * per-cell `enableCellSelection` predicate also requires enumeration.
  *
  * @example
  * ```ts
@@ -887,11 +933,7 @@ export function table_getSelectedCellCount<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>): number {
-  if (typeof table.options.enableCellSelection === 'function') {
-    let count = 0
-    forEachSelectedCell(table, () => count++)
-    return count
-  }
+  if (table.options.enableCellSelection === false) return 0
 
   const bounds = callMemoOrStaticFn(
     table,
@@ -901,28 +943,31 @@ export function table_getSelectedCellCount<
 
   if (!bounds.length) return 0
 
-  const columns = getDisplayOrderedColumns(table)
-
-  let count = 0
-
-  for (let i = 0; i < bounds.length; i++) {
-    const bound = bounds[i]!
-    let selectableColumns = 0
-
-    for (
-      let columnIndex = bound.minColumnIndex;
-      columnIndex <= bound.maxColumnIndex;
-      columnIndex++
-    ) {
-      const columnDef = columns[columnIndex]
-        ?.columnDef as Partial<ColumnDef_CellSelection>
-      if (columnDef.enableCellSelection !== false) selectableColumns++
-    }
-
-    count += (bound.maxRowIndex - bound.minRowIndex + 1) * selectableColumns
+  if (
+    bounds.length > 1 ||
+    typeof table.options.enableCellSelection === 'function'
+  ) {
+    const ids = new Set<string>()
+    forEachSelectedCell(table, (cell) => ids.add(cell.id))
+    return ids.size
   }
 
-  return count
+  const columns = getDisplayOrderedColumns(table)
+  const bound = bounds[0]!
+  let selectableColumns = 0
+
+  for (
+    let columnIndex = bound.minColumnIndex;
+    columnIndex <= bound.maxColumnIndex;
+    columnIndex++
+  ) {
+    const column = columns[columnIndex]
+    if (!column) continue
+    const columnDef = column.columnDef as Partial<ColumnDef_CellSelection>
+    if (columnDef.enableCellSelection !== false) selectableColumns++
+  }
+
+  return (bound.maxRowIndex - bound.minRowIndex + 1) * selectableColumns
 }
 
 /**
@@ -1045,11 +1090,11 @@ export function cell_getSelectionStartHandler<
       options.enableCellSelectionDrag !== false &&
       options.enableCellRangeSelection !== false
 
-    // the open-drag flag is instance data, so closing it never writes state
-    // @ts-ignore - _isSelectingCells is part of the CellSelection feature
-    table._isSelectingCells = dragEnabled
-
     if (dragEnabled && contextDocument) {
+      // the open-drag flag is instance data, so closing it never writes state
+      // @ts-ignore - _isSelectingCells is part of the CellSelection feature
+      table._isSelectingCells = true
+
       const upHandler = () => {
         contextDocument.removeEventListener('mouseup', upHandler)
         // @ts-ignore - _isSelectingCells is part of the CellSelection feature

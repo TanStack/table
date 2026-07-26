@@ -53,10 +53,16 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 // the spreadsheet-flavored version.
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
 
   // spreadsheets expect a field to be quoted once it contains a delimiter, a
   // newline, or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -337,7 +343,7 @@ function App() {
         )}
       </table.Subscribe>
       <div className="spacer-sm" />
-      <div ref={gridRef} tabIndex={-1}>
+      <div ref={gridRef} tabIndex={0}>
         <table>
           <thead>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -347,11 +353,13 @@ function App() {
                     <th key={header.id} colSpan={header.colSpan}>
                       {header.isPlaceholder ? null : (
                         <>
-                          <div
+                          <button
+                            type="button"
+                            disabled={!header.column.getCanSort()}
                             className={
                               header.column.getCanSort()
-                                ? 'sortable-header'
-                                : undefined
+                                ? 'header-button sortable-header'
+                                : 'header-button'
                             }
                             onClick={header.column.getToggleSortingHandler()}
                           >
@@ -359,7 +367,7 @@ function App() {
                             {{ asc: ' 🔼', desc: ' 🔽' }[
                               header.column.getIsSorted() as string
                             ] ?? null}
-                          </div>
+                          </button>
                           {header.column.getCanPin() && (
                             <div className="pin-actions">
                               {header.column.getIsPinned() !== 'start' ? (

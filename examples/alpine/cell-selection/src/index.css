@@ -87,6 +87,14 @@ button:disabled {
   gap: 0.5rem;
 }
 
+.header-button {
+  padding: 0;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+}
+
 .sortable-header {
   cursor: pointer;
   user-select: none;

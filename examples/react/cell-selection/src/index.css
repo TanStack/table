@@ -218,6 +218,14 @@ tfoot th {
   padding: 0.5rem;
 }
 
+.header-button {
+  padding: 0;
+  border: 0;
+  color: inherit;
+  font: inherit;
+  background: transparent;
+}
+
 .sortable-header,
 .sortable {
   cursor: pointer;

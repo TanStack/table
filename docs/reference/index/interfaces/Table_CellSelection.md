@@ -179,8 +179,8 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:252](https://
 
 Returns the number of selected cells.
 
-Computed as rectangle arithmetic. Falls back to enumerating cells when
-`enableCellSelection` is a per-cell predicate.
+Computed as rectangle arithmetic for one range. Falls back to enumerating
+cells for overlapping ranges or a per-cell `enableCellSelection` predicate.
 
 #### Returns
 
@@ -196,7 +196,7 @@ getSelectedCellIds: () => string[];
 
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:259](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L259)
 
-Returns the ids of all selected cells, in row-major order per range.
+Returns the unique ids of all selected cells, in row-major order.
 
 This expands the selection, so it costs one pass over the selected area.
 It is memoized and never runs unless called.

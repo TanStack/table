@@ -259,7 +259,7 @@ onGridKeyDown = createMultiHotkeyHandler({
 })
 
 // then, in the template:
-// <div tabindex='-1' {{on 'keydown' this.onGridKeyDown}}> ... </div>
+// <div tabindex='0' {{on 'keydown' this.onGridKeyDown}}> ... </div>
 ```
 
 Scope the hotkeys to the grid element rather than the document, or arrow keys and Escape will hijack inputs elsewhere on the page.
@@ -271,9 +271,15 @@ Scope the hotkeys to the grid element rather than the document, or arrow keys an
 ```ts
 function escapeTsvValue(value: unknown) {
   const text = value == null ? '' : String(value)
+  const safeText =
+    typeof value === 'string' && /^[\t\r ]*[=+@-]/.test(value)
+      ? `'${text}`
+      : text
   // spreadsheets expect a quoted field once it contains a delimiter, a newline,
   // or a quote, with inner quotes doubled
-  return /["\t\n\r]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text
+  return /["\t\n\r]/.test(safeText)
+    ? `"${safeText.replace(/"/g, '""')}"`
+    : safeText
 }
 
 function toTsv(ranges: Array<Array<Array<unknown>>>) {
@@ -296,19 +302,24 @@ Ranges store row and column ids, not positions, so they follow their corner cell
 - **Hiding a column** that a corner sits on makes the range inert. Nothing renders as selected, but the range stays in state and comes back when the column is shown again.
 - **Pagination** resolves against the pre-pagination order, so a range can span pages and lights up correctly on whichever page you are viewing.
 
-Because a reorder can widen a selection onto columns the user never picked, some applications prefer to clear the selection whenever the column layout changes. That is a userland decision, and one `useEffect` away:
+Because a reorder can widen a selection onto columns the user never picked, some applications prefer to clear the selection whenever the column layout changes. That is a userland decision. Invoke a callback like this from a grid element modifier or resource that tracks the layout atoms:
 
 ```ts
-// compare a layout key, then reset when it changes
-const layoutKey = JSON.stringify([
-  this.table.atoms.columnOrder.get(),
-  this.table.atoms.columnPinning.get(),
-  this.table.atoms.columnVisibility.get(),
-])
+private lastLayoutKey: string | undefined
 
-if (layoutKey !== this.lastLayoutKey) {
-  this.lastLayoutKey = layoutKey
-  queueMicrotask(() => this.table.resetCellSelection(true))
+onLayoutChange() {
+  const layoutKey = JSON.stringify([
+    this.table.atoms.columnOrder.get(),
+    this.table.atoms.columnPinning.get(),
+    this.table.atoms.columnVisibility.get(),
+  ])
+
+  if (this.lastLayoutKey === undefined) {
+    this.lastLayoutKey = layoutKey
+  } else if (layoutKey !== this.lastLayoutKey) {
+    this.lastLayoutKey = layoutKey
+    queueMicrotask(() => this.table.resetCellSelection(true))
+  }
 }
 ```
 
