@@ -90,7 +90,6 @@ export function Spreadsheet() {
             header: column.label,
             size: getInitialColumnSize(column),
             minSize: 72,
-            maxSize: 420,
             filterFn: fieldAwareIncludesStringFilter,
             sortFn:
               column.initialType === 'number' ||

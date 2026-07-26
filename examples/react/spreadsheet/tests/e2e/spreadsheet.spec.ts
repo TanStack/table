@@ -4,6 +4,7 @@ import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampl
 import type { Locator, Page } from '@playwright/test'
 
 const exampleDir = path.resolve()
+const ROW_HEIGHT_FOR_TEST = 24
 
 function collectPageErrors(page: Page) {
   const errors: Array<string> = []
@@ -312,6 +313,37 @@ test('resizes a column without breaking the virtualized layout', async ({
     await expect
       .poll(async () => (await target.boundingBox())?.width ?? 0)
       .toBeGreaterThan(before.width + 30)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('auto-fits a column beyond the default width cap on resize double-click', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const target = cell(page, 1, 0)
+    const row = target.locator('..')
+    const longValue = 'W'.repeat(80)
+
+    await replaceCellValue(target, longValue)
+    await expect(target).toHaveText(longValue)
+    await expect(target.locator('.cell-value')).toHaveCSS(
+      'white-space',
+      'nowrap',
+    )
+    await expect(row).toHaveCSS('height', `${ROW_HEIGHT_FOR_TEST}px`)
+
+    const widthBefore = (await target.boundingBox())?.width ?? 0
+    await page.getByRole('separator', { name: 'Resize column A' }).dblclick()
+
+    await expect
+      .poll(async () => (await target.boundingBox())?.width ?? 0)
+      .toBeGreaterThan(Math.max(420, widthBefore))
+    await expect(row).toHaveCSS('height', `${ROW_HEIGHT_FOR_TEST}px`)
     expect(errors).toEqual([])
   } finally {
     await server.close()

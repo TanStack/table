@@ -25,6 +25,7 @@ import type { GridInteractions } from './useGridInteractions'
 export const ROW_HEIGHT = 24
 export const HEADER_HEIGHT = 26
 export const ROW_HEADER_WIDTH = 42
+const CELL_HORIZONTAL_PADDING = 10
 const EDGE_SCROLL_ZONE = 32
 const MAX_EDGE_SCROLL_SPEED = 22
 
@@ -619,7 +620,11 @@ function HeaderCell({
         aria-label={`Resize column ${meta?.letter}`}
         onDoubleClick={(event) => {
           event.stopPropagation()
-          column.resetSize()
+          const width = getAutoFitColumnWidth(table, column)
+          table.setColumnSizing((current) => ({
+            ...current,
+            [column.id]: width,
+          }))
         }}
         onMouseDown={(event) => {
           event.stopPropagation()
@@ -968,6 +973,42 @@ function formatRenderedValue(value: unknown) {
     }).format(value)
   }
   return String(value)
+}
+
+let textMeasurementContext: CanvasRenderingContext2D | null = null
+
+function measureTextWidth(value: string, bold = false) {
+  if (!textMeasurementContext) {
+    textMeasurementContext = document.createElement('canvas').getContext('2d')
+  }
+  if (!textMeasurementContext) return value.length * 6
+
+  textMeasurementContext.font = `${bold ? '600 ' : ''}11px Arial, sans-serif`
+  return textMeasurementContext.measureText(value).width
+}
+
+function getAutoFitColumnWidth(
+  table: SpreadsheetTable,
+  column: SpreadsheetTableColumn,
+) {
+  const columnIndex = column.columnDef.meta?.index
+  if (columnIndex == null) return column.getSize()
+
+  let widest = 0
+  for (const row of table.options.data) {
+    widest = Math.max(
+      widest,
+      measureTextWidth(
+        formatRenderedValue(row.cells[columnIndex]),
+        row.kind === 'field-header',
+      ),
+    )
+  }
+
+  return Math.max(
+    column.columnDef.minSize ?? 0,
+    Math.ceil(widest + CELL_HORIZONTAL_PADDING + 2),
+  )
 }
 
 function edgeDelta(value: number, start: number, end: number, zone: number) {
