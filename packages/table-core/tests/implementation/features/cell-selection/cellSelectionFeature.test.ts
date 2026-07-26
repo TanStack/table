@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from 'vitest'
+import { beforeEach, describe, expect, it, vi } from 'vitest'
 import {
   cellSelectionFeature,
   columnVisibilityFeature,
@@ -769,7 +769,12 @@ describe('cellSelectionFeature', () => {
     it('does not open a drag without a document to close it', () => {
       const table = makeTable()
 
-      getCell(table, 'r0', 'a').getSelectionStartHandler()({})
+      vi.stubGlobal('document', undefined)
+      try {
+        getCell(table, 'r0', 'a').getSelectionStartHandler()({})
+      } finally {
+        vi.unstubAllGlobals()
+      }
 
       expect(table._isSelectingCells).toBe(false)
       expect(table.getSelectedCellIds()).toEqual(['r0_a'])
