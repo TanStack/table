@@ -1,4 +1,5 @@
 import type { ReadonlyStore } from '@tanstack/store'
+import type { Table_CellSelection } from '../features/cell-selection/cellSelectionFeature.types'
 import type { Table_ColumnFaceting } from '../features/column-faceting/columnFacetingFeature.types'
 import type { Table_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
 import type { Table_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
@@ -51,6 +52,8 @@ export interface Table_FeatureMap<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
+  cellSelectionFeature: Table_CellSelection<TFeatures, TData>
+  columnFacetingFeature: Table_ColumnFaceting<TFeatures, TData>
   columnFilteringFeature: Table_ColumnFiltering
   columnGroupingFeature: Table_ColumnGrouping<TFeatures, TData>
   columnOrderingFeature: Table_ColumnOrdering<TFeatures, TData>
@@ -58,7 +61,6 @@ export interface Table_FeatureMap<
   columnResizingFeature: Table_ColumnResizing
   columnSizingFeature: Table_ColumnSizing
   columnVisibilityFeature: Table_ColumnVisibility<TFeatures, TData>
-  columnFacetingFeature: Table_ColumnFaceting<TFeatures, TData>
   globalFilteringFeature: Table_GlobalFiltering<TFeatures, TData>
   rowExpandingFeature: Table_RowExpanding<TFeatures, TData>
   rowPaginationFeature: Table_RowPagination<TFeatures, TData>

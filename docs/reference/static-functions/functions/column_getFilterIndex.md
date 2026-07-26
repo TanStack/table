@@ -9,7 +9,7 @@ title: column_getFilterIndex
 function column_getFilterIndex<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L197)
+Defined in: [features/column-filtering/columnFilteringFeature.utils.ts:206](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.utils.ts#L206)
 
 Finds this column's position in the ordered `state.columnFilters` array.
 

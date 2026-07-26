@@ -1,5 +1,6 @@
 import { constructRow } from '../rows/constructRow'
 import { makeObjectMap, tableMemo } from '../../utils'
+import { table_autoResetCellSelection } from '../../features/cell-selection/cellSelectionFeature.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
 import type { Table_Internal } from '../../types/Table'
 import type { RowModel } from './coreRowModelsFeature.types'
@@ -25,7 +26,12 @@ export function createCoreRowModel<
       fnName: 'table.getCoreRowModel',
       memoDeps: () => [table.options.data],
       fn: () => _createCoreRowModel(table, table.options.data),
-      onAfterUpdate: () => table_autoResetPageIndex(table),
+      onAfterUpdate: () => {
+        table_autoResetPageIndex(table)
+        // this memo recomputes only when `options.data` changes, which is
+        // exactly when id-keyed cell ranges stop being meaningful
+        table_autoResetCellSelection(table)
+      },
     })
   }
 }

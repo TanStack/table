@@ -9,7 +9,7 @@ title: TableState
 type TableState<TFeatures> = ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>;
 ```
 
-Defined in: [types/TableState.ts:38](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L38)
+Defined in: [types/TableState.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L40)
 
 Complete table state for a specific feature set.
 
