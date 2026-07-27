@@ -1,13 +1,17 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
 import {
   table_setOptions,
   table_syncExternalStateToBaseAtoms,
 } from '@tanstack/table-core/static-functions'
 import { shallow } from '@tanstack/react-store'
-import { reactReactivity, useTableSelector } from './reactivity'
+import {
+  reactReactivity,
+  useIsomorphicLayoutEffect,
+  useTableSelector,
+} from './reactivity'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type { FlexRenderProps } from './FlexRender'
@@ -21,9 +25,6 @@ import type {
   TableState,
 } from '@tanstack/table-core'
 import type { FunctionComponent, ReactNode } from 'react'
-
-const useIsomorphicLayoutEffect =
-  typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 export type ReactTable<
   TFeatures extends TableFeatures,

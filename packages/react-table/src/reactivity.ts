@@ -1,5 +1,5 @@
-import { batch, createAtom } from '@tanstack/react-store'
-import { useRef, useState, useSyncExternalStore } from 'react'
+import { batch, createAtom, useSelector } from '@tanstack/react-store'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import type { Subscription } from '@tanstack/react-store'
 import type {
   TableAtomOptions,
@@ -8,8 +8,11 @@ import type {
 
 interface ExternalSource<T> {
   get: () => T
-  subscribe: (listener: () => void) => Subscription
+  subscribe: (listener: (value: T) => void) => Subscription
 }
+
+export const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 export interface ReactTableReactivityBindings extends TableReactivityBindings {
   /**
@@ -102,48 +105,46 @@ export function useTableSelector<TState, TSelected>(
   selector: ((state: TState) => TSelected) | undefined,
   compare: (previous: TSelected, next: TSelected) => boolean,
 ): TSelected {
-  const selectorRef = useRef(selector)
-  selectorRef.current = selector
-
-  const [selectedSource] = useState(() => {
-    let hasSnapshot = false
-    let snapshot: TSelected
-
-    const getSnapshot = () => {
-      const select =
-        selectorRef.current ??
-        ((state: TState) => state as unknown as TSelected)
-      const nextSnapshot = select(source.get())
-
-      if (!hasSnapshot || !compare(snapshot, nextSnapshot)) {
-        snapshot = nextSnapshot
-        hasSnapshot = true
+  const committedSelectorRef = useRef(selector)
+  const committedSelectionRef = useRef<
+    | { hasSnapshot: false }
+    | {
+        hasSnapshot: true
+        snapshot: TSelected
       }
+  >({ hasSnapshot: false })
 
-      return snapshot
-    }
-
+  const [filteredSource] = useState(() => {
     return {
-      getSnapshot,
-      subscribe: (onStoreChange: () => void) => {
-        const subscription = source.subscribe(() => {
-          const previousSnapshot = snapshot
-          const hadSnapshot = hasSnapshot
-          const nextSnapshot = getSnapshot()
+      get: () => source.get(),
+      subscribe: (onStoreChange: (value: TState) => void) => {
+        return source.subscribe((nextState) => {
+          const select =
+            committedSelectorRef.current ??
+            ((state: TState) => state as unknown as TSelected)
+          const nextSelection = select(nextState)
+          const committedSelection = committedSelectionRef.current
 
-          if (!hadSnapshot || !Object.is(previousSnapshot, nextSnapshot)) {
-            onStoreChange()
+          if (
+            !committedSelection.hasSnapshot ||
+            !compare(committedSelection.snapshot, nextSelection)
+          ) {
+            onStoreChange(nextState)
           }
         })
-
-        return () => subscription.unsubscribe()
       },
     }
   })
 
-  return useSyncExternalStore(
-    selectedSource.subscribe,
-    selectedSource.getSnapshot,
-    selectedSource.getSnapshot,
-  )
+  const selected = useSelector(filteredSource, selector, { compare })
+
+  useIsomorphicLayoutEffect(() => {
+    committedSelectorRef.current = selector
+    committedSelectionRef.current = {
+      hasSnapshot: true,
+      snapshot: selected,
+    }
+  })
+
+  return selected
 }

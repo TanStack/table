@@ -430,7 +430,10 @@ describe('useTable state subscriptions', () => {
     expect(harnessRenderCount).toBe(3)
   })
 
-  it('does not publish controlled state from a suspended render', () => {
+  it('does not mutate base state or notify subscribers from a suspended render', () => {
+    // `table.options` is still shared by the table instance, so this test is
+    // intentionally about committed reactive publication rather than
+    // render-local isolation of imperative getters.
     const suspendedRender = new Promise<never>(() => {})
     let committedTable: ReactTable<typeof features, TestRow, PaginationState>
 
@@ -790,7 +793,10 @@ describe('useTable state subscriptions', () => {
   })
 
   it('settles when a controlled slice is recreated during an unrelated render', () => {
+    let harnessRenderCount = 0
+
     function RecreatedControlledSliceHarness() {
+      harnessRenderCount++
       const [pagination, setPagination] = React.useState<PaginationState>({
         pageIndex: 0,
         pageSize: 10,
@@ -838,6 +844,8 @@ describe('useTable state subscriptions', () => {
 
     render(<RecreatedControlledSliceHarness />)
 
+    expect(harnessRenderCount).toBe(1)
+
     React.act(() => {
       container
         ?.querySelector('[data-action="unrelated-update"]')
@@ -851,6 +859,7 @@ describe('useTable state subscriptions', () => {
       container?.querySelector('[data-testid="recreated-page-index"]')
         ?.textContent,
     ).toBe('0')
+    expect(harnessRenderCount).toBe(2)
 
     React.act(() => {
       container
@@ -866,6 +875,7 @@ describe('useTable state subscriptions', () => {
       container?.querySelector('[data-testid="recreated-atom-page-index"]')
         ?.textContent,
     ).toBe('1')
+    expect(harnessRenderCount).toBe(3)
 
     const errors = consoleError.mock.calls.flat().map(String).join('\n')
 
