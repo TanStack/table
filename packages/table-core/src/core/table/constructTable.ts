@@ -1,5 +1,6 @@
+import { shallow } from '@tanstack/store'
 import { coreFeatures } from '../coreFeatures'
-import { cloneState } from '../../utils'
+import { cloneState, hasOwn } from '../../utils'
 import { atomToStore } from '../reactivity/coreReactivityFeature.utils'
 import { table_syncExternalStateToBaseAtoms } from './coreTablesFeature.utils'
 import type { Atom } from '@tanstack/store'
@@ -133,18 +134,30 @@ export function constructTable<
         debugName: `table/baseAtoms/${key}`,
       },
     ) as any
-
-    // create readonly derived atom: on each get(), read either external atom or base atom
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {
-        const externalAtoms = table.options.atoms as
+        const options = table.options
+        const externalAtoms = options.atoms as
           | Partial<Record<keyof TableState_All, Atom<unknown>>>
           | undefined
         const externalAtom = externalAtoms?.[key]
+        // Always touch the reactive owner so controlled state still has an
+        // invalidation source when it is published after a framework commit.
+        const reactiveState = externalAtom
+          ? externalAtom.get()
+          : table.baseAtoms[key]!.get()
+
         if (externalAtom) {
-          return externalAtom.get()
+          return reactiveState
         }
-        return table.baseAtoms[key]!.get()
+
+        const controlledState = options.state as
+          | Record<string, unknown>
+          | undefined
+
+        return controlledState && hasOwn(controlledState, key)
+          ? controlledState[key]
+          : reactiveState
       },
       { debugName: `table/atoms/${key}` },
     )
@@ -162,7 +175,10 @@ export function constructTable<
         }
         return snapshot
       },
-      { debugName: 'table/store' },
+      {
+        compare: shallow,
+        debugName: 'table/store',
+      },
     ),
   )
 

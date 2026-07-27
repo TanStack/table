@@ -84,3 +84,30 @@ test('regenerates table data', async ({ page }) => {
     await server.close()
   }
 })
+
+test('updates from external atoms without an outer React subscription', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = page.locator('table').first()
+    const nextPageButton = page.getByRole('button', {
+      name: '>',
+      exact: true,
+    })
+    const pageStatus = page.getByText(/^Page$/).locator('..')
+
+    await expect(table.locator('tbody tr').first()).toBeVisible()
+    await expect(pageStatus).toContainText('1 of 100')
+    const firstPageRow = await getFirstBodyRowText(table)
+
+    await nextPageButton.click()
+
+    await expect(pageStatus).toContainText('2 of 100')
+    await expect.poll(() => getFirstBodyRowText(table)).not.toBe(firstPageRow)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

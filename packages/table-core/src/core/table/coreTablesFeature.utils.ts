@@ -3,12 +3,16 @@ import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
+import type { TableState } from '../../types/TableState'
 
 /**
  * Synchronizes externally controlled state slices into the table's base atoms.
  *
  * This keeps legacy `options.state` values reflected in the atom graph so
  * derived atoms, stores, and table APIs read a consistent snapshot.
+ * Passing an explicit state snapshot lets framework adapters publish the state
+ * captured by a committed render. An optional comparator can suppress
+ * semantically unchanged slice writes; the default remains `Object.is`.
  *
  * @example
  * ```ts
@@ -18,8 +22,30 @@ import type { TableOptions } from '../../types/TableOptions'
 export function table_syncExternalStateToBaseAtoms<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): void {
-  const state = table.options.state
+>(table: Table_Internal<TFeatures, TData>): void
+export function table_syncExternalStateToBaseAtoms<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  state: Partial<TableState<TFeatures>> | undefined,
+  compare?: (currentState: unknown, externalState: unknown) => boolean,
+): void
+export function table_syncExternalStateToBaseAtoms<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  state?: Partial<TableState<TFeatures>>,
+  compare: (
+    currentState: unknown,
+    externalState: unknown,
+  ) => boolean = Object.is,
+): void {
+  // The second overload intentionally distinguishes an omitted argument from
+  // an explicitly captured `undefined` state.
+  state = arguments.length === 1 ? table.options.state : state
+
   if (!state) {
     return
   }
@@ -32,7 +58,8 @@ export function table_syncExternalStateToBaseAtoms<
       }
 
       const externalState = state[key as keyof typeof state]
-      if (externalState !== table._reactivity.untrack(() => baseAtom.get())) {
+      const currentState = table._reactivity.untrack(() => baseAtom.get())
+      if (!compare(currentState, externalState)) {
         baseAtom.set(() => externalState)
       }
     }
@@ -147,6 +174,7 @@ export function table_mergeOptions<
  * @example
  * ```ts
  * table_setOptions(table, (old) => old)
+ * table_setOptions(table, (old) => old, { syncExternalState: false })
  * ```
  */
 export function table_setOptions<
@@ -155,6 +183,9 @@ export function table_setOptions<
 >(
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<TableOptions<TFeatures, TData>>,
+  options?: {
+    syncExternalState?: boolean
+  },
 ): void {
   const newOptions = functionalUpdate(
     updater,
@@ -167,5 +198,7 @@ export function table_setOptions<
   } else {
     table.options = mergedOptions
   }
-  table_syncExternalStateToBaseAtoms(table)
+  if (options?.syncExternalState !== false) {
+    table_syncExternalStateToBaseAtoms(table)
+  }
 }

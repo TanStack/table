@@ -6,12 +6,17 @@ import {
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
+import {
+  table_setOptions,
+  table_syncExternalStateToBaseAtoms,
+} from '../../../src/static-functions'
 import { testFeatures } from '../../fixtures/features'
 import type {
   PaginationState,
   SortingState,
   Table,
   TableOptions,
+  Table_Internal,
 } from '../../../src'
 
 const features = testFeatures({
@@ -66,6 +71,39 @@ describe('three-layer atom architecture', () => {
       expect(table.baseAtoms.sorting.get()).toEqual(external)
       expect(table.atoms.sorting.get()).toEqual(external)
       expect(table.store.state.sorting).toEqual(external)
+    })
+
+    it('can defer options.state synchronization for framework adapters', () => {
+      const table = makeTable()
+      const internalTable = table as unknown as Table_Internal<
+        typeof features,
+        any
+      >
+      const controlled: SortingState = [{ id: 'controlled', desc: false }]
+
+      table_setOptions(
+        internalTable,
+        (options) => ({
+          ...options,
+          state: {
+            sorting: controlled,
+          },
+        }),
+        {
+          syncExternalState: false,
+        },
+      )
+
+      expect(table.options.state?.sorting).toBe(controlled)
+      expect(table.baseAtoms.sorting.get()).toEqual([])
+      expect(table.atoms.sorting.get()).toBe(controlled)
+      expect(table.store.get().sorting).toBe(controlled)
+
+      table_syncExternalStateToBaseAtoms(internalTable, {
+        sorting: controlled,
+      })
+
+      expect(table.baseAtoms.sorting.get()).toBe(controlled)
     })
 
     it('options.atoms[key] takes precedence over options.state[key] when both are present', () => {
