@@ -185,50 +185,46 @@ export function constructTable<
   )
 
   // pre-compute the init functions to make the other constructors faster
-  const cellInstanceInitFns: Array<
-    NonNullable<TableFeature['initCellInstanceData']>
-  > = []
-  const columnInstanceInitFns: Array<
-    NonNullable<TableFeature['initColumnInstanceData']>
-  > = []
-  const headerGroupInstanceInitFns: Array<
-    NonNullable<TableFeature['initHeaderGroupInstanceData']>
-  > = []
-  const headerInstanceInitFns: Array<
-    NonNullable<TableFeature['initHeaderInstanceData']>
-  > = []
-  const rowInstanceInitFns: Array<
-    NonNullable<TableFeature['initRowInstanceData']>
-  > = []
+  table._cellInstanceInitFns = []
+  table._columnInstanceInitFns = []
+  table._headerGroupInstanceInitFns = []
+  table._headerInstanceInitFns = []
+  table._rowInstanceInitFns = []
 
   for (let i = 0; i < featuresList.length; i++) {
     const feature = featuresList[i]!
+    // Feature-owned table instance data initializes for EVERY feature before
+    // ANY table APIs are constructed (second loop below): API constructors may
+    // read instance data initialized by other features.
+    feature.initTableInstanceData?.(table)
     if (feature.initCellInstanceData) {
-      cellInstanceInitFns.push(feature.initCellInstanceData.bind(feature))
+      table._cellInstanceInitFns.push(
+        feature.initCellInstanceData.bind(feature),
+      )
     }
     if (feature.initColumnInstanceData) {
-      columnInstanceInitFns.push(feature.initColumnInstanceData.bind(feature))
+      table._columnInstanceInitFns.push(
+        feature.initColumnInstanceData.bind(feature),
+      )
     }
     if (feature.initHeaderGroupInstanceData) {
-      headerGroupInstanceInitFns.push(
+      table._headerGroupInstanceInitFns.push(
         feature.initHeaderGroupInstanceData.bind(feature),
       )
     }
     if (feature.initHeaderInstanceData) {
-      headerInstanceInitFns.push(feature.initHeaderInstanceData.bind(feature))
+      table._headerInstanceInitFns.push(
+        feature.initHeaderInstanceData.bind(feature),
+      )
     }
     if (feature.initRowInstanceData) {
-      rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
+      table._rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
     }
-    feature.initTableInstanceData?.(table)
-    featuresList[i]!.constructTableAPIs?.(table)
   }
 
-  table._cellInstanceInitFns = cellInstanceInitFns
-  table._columnInstanceInitFns = columnInstanceInitFns
-  table._headerGroupInstanceInitFns = headerGroupInstanceInitFns
-  table._headerInstanceInitFns = headerInstanceInitFns
-  table._rowInstanceInitFns = rowInstanceInitFns
+  for (let i = 0; i < featuresList.length; i++) {
+    featuresList[i]!.constructTableAPIs?.(table)
+  }
 
   if (
     process.env.NODE_ENV === 'development' &&
