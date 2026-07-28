@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.55'
+  version: '9.0.0-beta.58'
   repository: 'https://github.com/TanStack/table'
   description: 'Headless data-grid state and row processing with tree-shakeable v9 features and framework adapters.'
   package_version_overrides:
@@ -289,6 +289,19 @@ skills:
       - 'TanStack/table:docs/framework/react/guide/row-pinning.md'
       - 'TanStack/table:packages/table-core/src/features/row-pinning'
       - 'TanStack/table:examples/react/row-pinning'
+
+  - name: 'Cell Selection'
+    slug: cell-selection
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/cell-selection/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Select rectangular cell ranges with cellSelectionFeature: two-corner range state, drag and Shift and Ctrl handlers, selection edges, and render-order resolution under pinning. Load when ranges widen unexpectedly after sorting or reordering, or when drag re-renders the whole table.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/framework/react/guide/cell-selection.md'
+      - 'TanStack/table:packages/table-core/src/features/cell-selection'
+      - 'TanStack/table:examples/react/cell-selection'
 
   - name: 'Row Selection'
     slug: row-selection

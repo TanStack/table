@@ -9,7 +9,7 @@ title: Cell
 type Cell<TFeatures, TData, TValue> = Cell_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap>;
 ```
 
-Defined in: [types/Cell.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L18)
+Defined in: [types/Cell.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L20)
 
 ## Type Parameters
 

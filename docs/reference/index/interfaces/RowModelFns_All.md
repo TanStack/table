@@ -9,7 +9,7 @@ Defined in: [types/RowModelFns.ts:25](https://github.com/TanStack/table/blob/mai
 
 ## Extends
 
-- `Partial`\<[`RowModelFns_ColumnFiltering`](RowModelFns_ColumnFiltering.md)\<`TFeatures`, `TData`\> & [`RowModelFns_Aggregation`](RowModelFns_Aggregation.md)\<`TFeatures`, `TData`\> & [`RowModelFns_RowSorting`](RowModelFns_RowSorting.md)\<`TFeatures`, `TData`\>\>
+- `Partial`\<[`RowModelFns_ColumnFiltering`](RowModelFns_ColumnFiltering.md)\<`TFeatures`, `TData`\> & [`RowModelFns_RowAggregation`](RowModelFns_RowAggregation.md)\<`TFeatures`, `TData`\> & [`RowModelFns_RowSorting`](RowModelFns_RowSorting.md)\<`TFeatures`, `TData`\>\>
 
 ## Type Parameters
 

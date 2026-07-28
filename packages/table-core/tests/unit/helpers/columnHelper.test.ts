@@ -99,4 +99,33 @@ describe('createColumnHelper', () => {
     expect(row.getValue('0')).toBe('Alice')
     expect(row.getValue('1')).toBe(42)
   })
+
+  it('should preserve undefined for optional deep accessor keys', () => {
+    type DeepPerson = {
+      user: {
+        salary?: {
+          amount: number
+        }
+      }
+    }
+    const deepHelper = createColumnHelper<typeof features, DeepPerson>()
+    const column = deepHelper.accessor('user.salary.amount', {
+      cell: (info) => {
+        // `salary` is optional, so the resolved deep value can be `undefined`
+        expectTypeOf(info.getValue()).toEqualTypeOf<number | undefined>()
+        return info.getValue()
+      },
+    })
+    const table = constructTable<typeof features, DeepPerson>({
+      features,
+      columns: deepHelper.columns([column]),
+      data: [{ user: { salary: { amount: 42 } } }],
+    })
+    const row = table.getRowModel().rows[0]!
+
+    expect(table.getAllLeafColumns().map((c) => c.id)).toEqual([
+      'user_salary_amount',
+    ])
+    expect(row.getValue('user_salary_amount')).toBe(42)
+  })
 })

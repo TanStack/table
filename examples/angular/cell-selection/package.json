@@ -1,0 +1,37 @@
+{
+  "name": "tanstack-angular-table-example-cell-selection",
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve --port 6565",
+    "dev": "ng serve --port 6565",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "lint": "eslint ./src",
+    "test:types": "tsc -p tsconfig.app.json --noEmit",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts"
+  },
+  "private": true,
+  "packageManager": "pnpm@11.9.0",
+  "dependencies": {
+    "@angular/cdk": "^22.0.2",
+    "@angular/common": "^22.0.2",
+    "@angular/compiler": "^22.0.2",
+    "@angular/core": "^22.0.2",
+    "@angular/forms": "^22.0.2",
+    "@angular/platform-browser": "^22.0.2",
+    "@angular/router": "^22.0.2",
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/angular-devtools": "^0.0.7",
+    "@tanstack/angular-hotkeys": "^0.10.0",
+    "@tanstack/angular-table": "^9.0.0-beta.58",
+    "@tanstack/angular-table-devtools": "^9.0.0-beta.58",
+    "rxjs": "~7.8.2",
+    "tslib": "^2.8.1"
+  },
+  "devDependencies": {
+    "@angular/build": "^22.0.0",
+    "@angular/cli": "^22.0.0",
+    "@angular/compiler-cli": "^22.0.2",
+    "typescript": "6.0.3"
+  }
+}

@@ -50,8 +50,9 @@ TanStack Table V9 is a major release with significant internal architectural imp
 - **`tableOptions`**: Compose reusable table configuration, including features, row models, and default options.
 - **`createTableHook`**: Create reusable, strongly typed Angular table factories with pre-bound features, row models, default options, and component registries.
 
-### 6. Refreshed Feature APIs
+### 6. New and Refreshed Features
 
+- **New features**: `cellSelectionFeature` adds spreadsheet-style rectangular cell range selection, with drag, Shift-extend, and multiple disjoint ranges. See the [Cell Selection Guide](./cell-selection.md).
 - **More capable features**: Aggregation, Row Selection, Column Pinning, and Column Resizing have all been made more feature rich (multiple aggregation definitions per column, Shift range selection, logical `start`/`end` pinning, and more).
 - **New core APIs**: New table and row APIs (like `table.getMaxSubRowDepth()`, `row.getDisplayIndex()`) round out the core feature set.
 

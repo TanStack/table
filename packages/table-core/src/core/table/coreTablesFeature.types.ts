@@ -5,6 +5,7 @@ import type { RowModelFns } from '../../types/RowModelFns'
 import type { RowData, Updater } from '../../types/type-utils'
 import type {
   IsAny,
+  TableFeature,
   TableFeatures,
   ValidateFeatureSlots,
 } from '../../types/TableFeatures'
@@ -161,9 +162,21 @@ export interface Table_CoreProperties<
    */
   readonly _reactivity: TableReactivityBindings
   /**
+   * Cache of the `initCellInstanceData` functions for features that define one.
+   */
+  _cellInstanceInitFns?: Array<
+    NonNullable<TableFeature['initCellInstanceData']>
+  >
+  /**
    * Prototype cache for Cell objects - shared by all cells in this table
    */
   _cellPrototype?: object
+  /**
+   * Cache of the `initColumnInstanceData` functions for features that define one.
+   */
+  _columnInstanceInitFns?: Array<
+    NonNullable<TableFeature['initColumnInstanceData']>
+  >
   /**
    * Prototype cache for Column objects - shared by all columns in this table
    */
@@ -172,6 +185,18 @@ export interface Table_CoreProperties<
    * The features that are enabled for the table.
    */
   readonly _features: Partial<CoreFeatures> & TFeatures
+  /**
+   * Cache of the `initHeaderGroupInstanceData` functions for features that define one.
+   */
+  _headerGroupInstanceInitFns?: Array<
+    NonNullable<TableFeature['initHeaderGroupInstanceData']>
+  >
+  /**
+   * Cache of the `initHeaderInstanceData` functions for features that define one.
+   */
+  _headerInstanceInitFns?: Array<
+    NonNullable<TableFeature['initHeaderInstanceData']>
+  >
   /**
    * Prototype cache for Header objects - shared by all headers in this table
    */
@@ -188,6 +213,10 @@ export interface Table_CoreProperties<
    * Prototype cache for Row objects - shared by all rows in this table
    */
   _rowPrototype?: object
+  /**
+   * Cache of the `initRowInstanceData` functions for features that define one.
+   */
+  _rowInstanceInitFns?: Array<NonNullable<TableFeature['initRowInstanceData']>>
   /**
    * The readonly derived atoms for each `TableState` slice. Each derives from
    * its corresponding `baseAtom` plus, optionally, a per-slice external atom or

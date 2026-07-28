@@ -9,6 +9,6 @@ title: aggregationFn_last
 const aggregationFn_last: AggregationFnDef<any, any, unknown, unknown>;
 ```
 
-Defined in: [features/row-aggregation/aggregationFns.ts:312](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/aggregationFns.ts#L312)
+Defined in: [features/row-aggregation/aggregationFns.ts:350](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/aggregationFns.ts#L350)
 
 Returns the last row's value, including a nullish value.

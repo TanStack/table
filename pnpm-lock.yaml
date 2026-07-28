@@ -265,6 +265,34 @@ importers:
         specifier: ^8.1.0
         version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/alpine/cell-selection:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/alpine-table':
+        specifier: workspace:*
+        version: link:../../../packages/alpine-table
+      '@tanstack/hotkeys':
+        specifier: ^0.8.0
+        version: 0.8.0
+      alpinejs:
+        specifier: ^3.15.12
+        version: 3.15.12
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      '@types/alpinejs':
+        specifier: ^3.13.11
+        version: 3.13.11
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
   examples/alpine/column-ordering:
     dependencies:
       '@faker-js/faker':
@@ -1105,6 +1133,64 @@ importers:
       '@angular/build':
         specifier: ^22.0.0
         version: 22.0.0(88913f20e866c68ffcd7d9b74c3ad5a6)
+      '@angular/cli':
+        specifier: ^22.0.0
+        version: 22.0.0(@types/node@26.0.0)(chokidar@5.0.0)
+      '@angular/compiler-cli':
+        specifier: ^22.0.2
+        version: 22.0.2(@angular/compiler@22.0.2)(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+
+  examples/angular/cell-selection:
+    dependencies:
+      '@angular/cdk':
+        specifier: ^22.0.2
+        version: 22.0.2(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(@angular/platform-browser@22.0.2(@angular/animations@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)))(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/common':
+        specifier: ^22.0.2
+        version: 22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/compiler':
+        specifier: ^22.0.2
+        version: 22.0.2
+      '@angular/core':
+        specifier: ^22.0.2
+        version: 22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)
+      '@angular/forms':
+        specifier: ^22.0.2
+        version: 22.0.2(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(@angular/platform-browser@22.0.2(@angular/animations@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)))(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@angular/platform-browser':
+        specifier: ^22.0.2
+        version: 22.0.2(@angular/animations@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)))(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))
+      '@angular/router':
+        specifier: ^22.0.2
+        version: 22.0.2(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(@angular/platform-browser@22.0.2(@angular/animations@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)))(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/angular-devtools':
+        specifier: ^0.0.7
+        version: 0.0.7(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(csstype@3.2.3)(solid-js@1.9.13)
+      '@tanstack/angular-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))
+      '@tanstack/angular-table':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table
+      '@tanstack/angular-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/angular-table-devtools
+      rxjs:
+        specifier: ~7.8.2
+        version: 7.8.2
+      tslib:
+        specifier: ^2.8.1
+        version: 2.8.1
+    devDependencies:
+      '@angular/build':
+        specifier: ^22.0.0
+        version: 22.0.0(64f0fa42bd8e1e97164699f0eb2e86f9)
       '@angular/cli':
         specifier: ^22.0.0
         version: 22.0.0(@types/node@26.0.0)(chokidar@5.0.0)
@@ -3110,6 +3196,79 @@ importers:
         specifier: ^8.1.0
         version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/ember/cell-selection:
+    dependencies:
+      '@embroider/macros':
+        specifier: 1.20.5
+        version: 1.20.5(@babel/core@7.29.7)(@glint/template@1.7.8)
+      '@embroider/router':
+        specifier: 3.0.6
+        version: 3.0.6(@embroider/core@4.6.2(@glint/template@1.7.8))
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@glimmer/component':
+        specifier: 2.1.1
+        version: 2.1.1
+      '@tanstack/ember-table':
+        specifier: workspace:*
+        version: link:../../../packages/ember-table
+      '@tanstack/hotkeys':
+        specifier: ^0.8.0
+        version: 0.8.0
+      decorator-transforms:
+        specifier: 2.4.0
+        version: 2.4.0(@babel/core@7.29.7)
+      ember-source:
+        specifier: 7.0.0
+        version: 7.0.0(@glimmer/component@2.1.1)
+      ember-strict-application-resolver:
+        specifier: 0.1.1
+        version: 0.1.1(@babel/core@7.29.7)
+    devDependencies:
+      '@babel/core':
+        specifier: 7.29.7
+        version: 7.29.7
+      '@babel/plugin-transform-runtime':
+        specifier: 7.29.7
+        version: 7.29.7(@babel/core@7.29.7)
+      '@babel/plugin-transform-typescript':
+        specifier: 7.29.7
+        version: 7.29.7(@babel/core@7.29.7)
+      '@babel/runtime':
+        specifier: 7.29.7
+        version: 7.29.7
+      '@ember/app-tsconfig':
+        specifier: 2.0.0
+        version: 2.0.0
+      '@embroider/core':
+        specifier: 4.6.2
+        version: 4.6.2(@glint/template@1.7.8)
+      '@glint/ember-tsc':
+        specifier: 1.8.11
+        version: 1.8.11(ember-source@7.0.0(@glimmer/component@2.1.1))(typescript@6.0.3)
+      '@glint/template':
+        specifier: 1.7.8
+        version: 1.7.8
+      '@glint/tsserver-plugin':
+        specifier: 2.5.17
+        version: 2.5.17(ember-source@7.0.0(@glimmer/component@2.1.1))
+      '@nullvoxpopuli/ember-vite':
+        specifier: 1.0.3
+        version: 1.0.3(@glint/template@1.7.8)(@types/babel__core@7.20.5)(rollup@4.61.1)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      '@rollup/plugin-babel':
+        specifier: 7.1.0
+        version: 7.1.0(@babel/core@7.29.7)(@types/babel__core@7.20.5)(rollup@4.61.1)
+      babel-plugin-ember-template-compilation:
+        specifier: 4.0.0
+        version: 4.0.0
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
   examples/ember/column-ordering:
     dependencies:
       '@embroider/macros':
@@ -5102,6 +5261,31 @@ importers:
         specifier: ^8.1.0
         version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/lit/cell-selection:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/lit-hotkeys':
+        specifier: ^0.11.0
+        version: 0.11.0(lit@3.3.3)
+      '@tanstack/lit-table':
+        specifier: workspace:*
+        version: link:../../../packages/lit-table
+      lit:
+        specifier: ^3.3.3
+        version: 3.3.3
+    devDependencies:
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
   examples/lit/column-ordering:
     dependencies:
       '@faker-js/faker':
@@ -5893,6 +6077,40 @@ importers:
       '@tanstack/preact-devtools':
         specifier: ^0.10.8
         version: 0.10.8(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
+      '@tanstack/preact-table':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
+      preact:
+        specifier: ^10.29.2
+        version: 10.29.2
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.5
+        version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(rollup@4.61.1)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
+  examples/preact/cell-selection:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.8
+        version: 0.10.8(csstype@3.2.3)(preact@10.29.2)(solid-js@1.9.13)
+      '@tanstack/preact-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(preact@10.29.2)
+      '@tanstack/preact-store':
+        specifier: ^0.13.1
+        version: 0.13.1(preact@10.29.2)
       '@tanstack/preact-table':
         specifier: workspace:*
         version: link:../../../packages/preact-table
@@ -6921,6 +7139,58 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^6.0.3
         version: 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/plugin-transform-runtime@7.29.7(@babel/core@7.29.7))(@babel/runtime@7.29.7)(rolldown@1.1.3)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      babel-plugin-react-compiler:
+        specifier: ^1.0.0
+        version: 1.0.0
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
+  examples/react/cell-selection:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/react-devtools':
+        specifier: ^0.10.8
+        version: 0.10.8(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(csstype@3.2.3)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(solid-js@1.9.13)
+      '@tanstack/react-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@tanstack/react-store':
+        specifier: ^0.11.0
+        version: 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@tanstack/react-table':
+        specifier: workspace:*
+        version: link:../../../packages/react-table
+      '@tanstack/react-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/react-table-devtools
+      react:
+        specifier: ^19.2.7
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.2.7
+        version: 19.2.7(react@19.2.7)
+    devDependencies:
+      '@rolldown/plugin-babel':
+        specifier: ^0.2.3
+        version: 0.2.3(@babel/core@7.29.7)(@babel/plugin-transform-runtime@7.29.7(@babel/core@7.29.7))(@babel/runtime@7.29.7)(rolldown@1.1.5)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      '@types/react':
+        specifier: 19.2.16
+        version: 19.2.16
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.16)
+      '@vitejs/plugin-react':
+        specifier: ^6.0.3
+        version: 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/plugin-transform-runtime@7.29.7(@babel/core@7.29.7))(@babel/runtime@7.29.7)(rolldown@1.1.5)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
       babel-plugin-react-compiler:
         specifier: ^1.0.0
         version: 1.0.0
@@ -9171,6 +9441,52 @@ importers:
         specifier: ^8.1.0
         version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
 
+  examples/react/spreadsheet:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/react-store':
+        specifier: ^0.11.0
+        version: 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      '@tanstack/react-table':
+        specifier: workspace:*
+        version: link:../../../packages/react-table
+      '@tanstack/react-virtual':
+        specifier: ^3.14.5
+        version: 3.14.5(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react:
+        specifier: ^19.2.7
+        version: 19.2.7
+      react-dom:
+        specifier: ^19.2.7
+        version: 19.2.7(react@19.2.7)
+    devDependencies:
+      '@rolldown/plugin-babel':
+        specifier: ^0.2.3
+        version: 0.2.3(@babel/core@7.29.7)(@babel/plugin-transform-runtime@7.29.7(@babel/core@7.29.7))(@babel/runtime@7.29.7)(rolldown@1.1.5)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      '@types/react':
+        specifier: 19.2.16
+        version: 19.2.16
+      '@types/react-dom':
+        specifier: ^19.2.3
+        version: 19.2.3(@types/react@19.2.16)
+      '@vitejs/plugin-react':
+        specifier: ^6.0.3
+        version: 6.0.3(@rolldown/plugin-babel@0.2.3(@babel/core@7.29.7)(@babel/plugin-transform-runtime@7.29.7(@babel/core@7.29.7))(@babel/runtime@7.29.7)(rolldown@1.1.5)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))(babel-plugin-react-compiler@1.0.0)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      babel-plugin-react-compiler:
+        specifier: ^1.0.0
+        version: 1.0.0
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
   examples/react/sub-components:
     dependencies:
       '@faker-js/faker':
@@ -9789,6 +10105,37 @@ importers:
         specifier: ^1.9.13
         version: 1.9.13
     devDependencies:
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+      vite-plugin-solid:
+        specifier: ^2.11.12
+        version: 2.11.12(@testing-library/jest-dom@6.9.1)(solid-js@1.9.13)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+
+  examples/solid/cell-selection:
+    dependencies:
+      '@tanstack/solid-devtools':
+        specifier: ^0.8.8
+        version: 0.8.8(csstype@3.2.3)(solid-js@1.9.13)
+      '@tanstack/solid-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(solid-js@1.9.13)
+      '@tanstack/solid-table':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table
+      '@tanstack/solid-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table-devtools
+      solid-js:
+        specifier: ^1.9.13
+        version: 1.9.13
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
       typescript:
         specifier: 6.0.3
         version: 6.0.3
@@ -10710,6 +11057,39 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.1.2
         version: 7.1.2(svelte@5.56.2(@typescript-eslint/types@8.62.0))(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      '@tanstack/svelte-table':
+        specifier: workspace:*
+        version: link:../../../packages/svelte-table
+      '@tsconfig/svelte':
+        specifier: ^5.0.8
+        version: 5.0.8
+      svelte:
+        specifier: ^5.56.2
+        version: 5.56.2(@typescript-eslint/types@8.62.0)
+      svelte-check:
+        specifier: ^4.6.0
+        version: 4.6.0(picomatch@4.0.5)(svelte@5.56.2(@typescript-eslint/types@8.62.0))(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+
+  examples/svelte/cell-selection:
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.61.1)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.1.2
+        version: 7.1.2(svelte@5.56.2(@typescript-eslint/types@8.62.0))(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      '@tanstack/svelte-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(svelte@5.56.2(@typescript-eslint/types@8.62.0))
       '@tanstack/svelte-table':
         specifier: workspace:*
         version: link:../../../packages/svelte-table
@@ -11873,6 +12253,46 @@ importers:
       '@tanstack/vue-devtools':
         specifier: ^0.2.22
         version: 0.2.22(csstype@3.2.3)(solid-js@1.9.13)
+      '@tanstack/vue-table':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table
+      '@tanstack/vue-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/vue-table-devtools
+      vue:
+        specifier: ^3.5.38
+        version: 3.5.38(typescript@6.0.3)
+    devDependencies:
+      '@types/node':
+        specifier: ^26.0.0
+        version: 26.0.0
+      '@vitejs/plugin-vue':
+        specifier: ^6.0.7
+        version: 6.0.7(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))(vue@3.5.38(typescript@6.0.3))
+      '@vitejs/plugin-vue-jsx':
+        specifier: ^5.1.6
+        version: 5.1.6(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))(vue@3.5.38(typescript@6.0.3))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.1.0
+        version: 8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)
+      vue-tsc:
+        specifier: ^3.3.5
+        version: 3.3.5(typescript@6.0.3)
+
+  examples/vue/cell-selection:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/vue-devtools':
+        specifier: ^0.2.22
+        version: 0.2.22(csstype@3.2.3)(solid-js@1.9.13)
+      '@tanstack/vue-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(vue@3.5.38(typescript@6.0.3))
       '@tanstack/vue-table':
         specifier: workspace:*
         version: link:../../../packages/vue-table
@@ -18597,6 +19017,13 @@ packages:
     peerDependencies:
       '@angular/core': '>=19.0.0'
 
+  '@tanstack/angular-hotkeys@0.10.0':
+    resolution: {integrity: sha512-A9bZzMwnO/t6hFfg2IVy0CUR4v72GuY/7ag/k2VYbPbej4Ggmj8BEokBowtlCjSIuBDO5skBIKUfaJbziZdMFQ==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      '@angular/common': '>=19.0.0'
+      '@angular/core': '>=19.0.0'
+
   '@tanstack/angular-pacer@0.23.1':
     resolution: {integrity: sha512-l6GlzHJzeeS1dHlFhYE+Gib9BomzUouq5wkJK5GuiVZKJ3gI1IxUv7GeWIB9yEj+Hx1EI4eCYD6QkI3kXonqsw==}
     engines: {node: '>=18'}
@@ -18746,9 +19173,19 @@ packages:
     resolution: {integrity: sha512-79pf/RkhteYZTRgcR4F9kbk84P2N8rugQJswxfIqovlbRiT3yI7eBE+5QorIrZaOKktsgzRlXh1l/du/xpl4iA==}
     engines: {node: '>=20.19'}
 
+  '@tanstack/hotkeys@0.8.0':
+    resolution: {integrity: sha512-vqH7X9nb0MTJ/O08++dB5bP9jgj4+BIPOUu/U+6myG86lDsirZSVSobpq5UQpE7nBuk62i8eIYeOhd+OMl/UrA==}
+    engines: {node: '>=18'}
+
   '@tanstack/intent@0.3.5':
     resolution: {integrity: sha512-OVeyLejsN+LYGVNCJNhcCOlFkpqdkWG/ZB6mDDVOzfoLYDn/9uKaCmZkV6GsIkF0aKY7uu05RTJNibZ+uaZ1ig==}
     hasBin: true
+
+  '@tanstack/lit-hotkeys@0.11.0':
+    resolution: {integrity: sha512-cVyggoQkd0z7ThOevvny6a8kvwig+dCYx1etOgZ/lBYnZFZwd+oDfx8vxA63lUFKDP9OlLPSZsKlqqoIZktGNg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      lit: '>=3.0.0'
 
   '@tanstack/lit-store@0.14.0':
     resolution: {integrity: sha512-Y7aS5V8b5IdAhJQ+Jx+pNAuHLIyuZlI/qybIEFBOXVivsx/GSYUuQNCesLoiEH9RrBi8+pU5D+UeHPmpnNSIQg==}
@@ -18778,6 +19215,12 @@ packages:
     resolution: {integrity: sha512-4owoAE1hUOS8ht0UdCamWmQunkG2m2cmdRQ0NRy9rlAUt+TxvjoaNO3irosIOoB+BYQAWULpq0qdss2MFRqoqg==}
     peerDependencies:
       preact: '>10.11.0'
+
+  '@tanstack/preact-hotkeys@0.10.0':
+    resolution: {integrity: sha512-HgzwbnekzTOj/5UR3Dt/mXUZXgXKONOcssR+WSNCORcppNvmEo6JaVknS2GOjoRi+Ki1rNSx9iLHwQxsEcpkcg==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      preact: '>=10.0.0'
 
   '@tanstack/preact-pacer@0.22.1':
     resolution: {integrity: sha512-nuwU1WSGloLzlzpQMvPpppeyutVjVrSAn9NMM66YJWXmVtfQE7E0z2VQPIZF4n2+jDSi7238QClbiptwn7At/w==}
@@ -18836,6 +19279,13 @@ packages:
     peerDependenciesMeta:
       '@tanstack/react-start':
         optional: true
+
+  '@tanstack/react-hotkeys@0.10.0':
+    resolution: {integrity: sha512-GwOSndI5j3qBVYTmgP1mYyRTnlxb2MS17cwGlsavSxMQPSnmDf+m3LzMIpRMs+3zzQMjg3cYhHsFYizYlFI2tw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      react: '>=16.8'
+      react-dom: '>=16.8'
 
   '@tanstack/react-pacer@0.22.1':
     resolution: {integrity: sha512-CenQqK0GluSPIrnsG1yuD7w5uMSQ/4lI9AcGEFxBrRd66r260boWcYRIsS5+eHtXb238FoZYhKmJPGlhRzmHRw==}
@@ -18976,6 +19426,12 @@ packages:
     peerDependencies:
       solid-js: '>=1.9.9'
 
+  '@tanstack/solid-hotkeys@0.10.0':
+    resolution: {integrity: sha512-jThxkZMt1ShaQ/ynvyzHfwdbl15gTxJWXnQtbHuRHrzYFvuBB5fx4+D0jKQJ3sSq6XN3HwB3f9cVI0na5rN+Bw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      solid-js: '>=1.7.0'
+
   '@tanstack/solid-pacer@0.21.1':
     resolution: {integrity: sha512-0a0Fv35Ht3P6iQYDZKXInI1DkKzb4WYi3bxh+4lx9FDfvL4GDik7EKTkP8P5N/vJ8fF8by9oqls1BMIlaEywoQ==}
     engines: {node: '>=18'}
@@ -19042,6 +19498,11 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
 
+  '@tanstack/svelte-hotkeys@0.10.0':
+    resolution: {integrity: sha512-B7H+l4J++dHqeOStVqkHLFA/Fn+Y1qOdUZ5sStoLmYH1yZssXRdoeqRPmYluLKcD0W6KuE0D5LCRtvoD1wFnsA==}
+    peerDependencies:
+      svelte: ^5.25.0
+
   '@tanstack/svelte-query@6.1.36':
     resolution: {integrity: sha512-AVyvXPzBh5OQnWFB7rk9gskciPouayAhU9Vm24uMai+Imf+ZfBEbjOAEtdM41oexFK/cdXmpAIySDSVaAzy9zw==}
     peerDependencies:
@@ -19076,6 +19537,12 @@ packages:
     resolution: {integrity: sha512-k6xzSva3pKLFGf1a9l1GJxwzEsemoL5ABMTe/irg5hJmQx8aqPPjUoIk8tsjmSyb6+oY1weBbSEIDQiiRyfIdg==}
     peerDependencies:
       vue: ^3.4.0
+
+  '@tanstack/vue-hotkeys@0.10.0':
+    resolution: {integrity: sha512-ZhhiOORPtHdjW1/ZgwKCiXdSNuTSwAxyPhDHDy7VCb5jV6eMICoCZvIdhJZb07gzy3D93R1J6OMr8Mx0V5rBPw==}
+    engines: {node: '>=18'}
+    peerDependencies:
+      vue: '>=3.0.0'
 
   '@tanstack/vue-query@5.101.2':
     resolution: {integrity: sha512-nFXKNK4dI/PnKNejyIkQmmobBsJWWXTPcpjPvkgFLkpFPz9DcmqIiKIAF2Pa7MZCipH62/+bt2sxEIA0wNEeOg==}
@@ -32004,6 +32471,13 @@ snapshots:
     transitivePeerDependencies:
       - '@angular/common'
 
+  '@tanstack/angular-hotkeys@0.10.0(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))':
+    dependencies:
+      '@angular/common': 22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2)
+      '@angular/core': 22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)
+      '@tanstack/angular-store': 0.11.0(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))
+      '@tanstack/hotkeys': 0.8.0
+
   '@tanstack/angular-pacer@0.23.1(@angular/common@22.0.2(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2))':
     dependencies:
       '@angular/core': 22.0.2(@angular/compiler@22.0.2)(rxjs@7.8.2)
@@ -32172,6 +32646,10 @@ snapshots:
 
   '@tanstack/history@1.162.0': {}
 
+  '@tanstack/hotkeys@0.8.0':
+    dependencies:
+      '@tanstack/store': 0.11.0
+
   '@tanstack/intent@0.3.5':
     dependencies:
       cac: 6.7.14
@@ -32179,6 +32657,11 @@ snapshots:
       semver: 7.8.5
       std-env: 4.1.0
       yaml: 2.9.0
+
+  '@tanstack/lit-hotkeys@0.11.0(lit@3.3.3)':
+    dependencies:
+      '@tanstack/hotkeys': 0.8.0
+      lit: 3.3.3
 
   '@tanstack/lit-store@0.14.0(lit@3.3.3)':
     dependencies:
@@ -32210,6 +32693,12 @@ snapshots:
   '@tanstack/preact-form@1.30.1(preact@10.29.2)':
     dependencies:
       '@tanstack/form-core': 1.33.1
+      '@tanstack/preact-store': 0.13.1(preact@10.29.2)
+      preact: 10.29.2
+
+  '@tanstack/preact-hotkeys@0.10.0(preact@10.29.2)':
+    dependencies:
+      '@tanstack/hotkeys': 0.8.0
       '@tanstack/preact-store': 0.13.1(preact@10.29.2)
       preact: 10.29.2
 
@@ -32288,6 +32777,13 @@ snapshots:
       react: 19.2.7
     transitivePeerDependencies:
       - react-dom
+
+  '@tanstack/react-hotkeys@0.10.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
+    dependencies:
+      '@tanstack/hotkeys': 0.8.0
+      '@tanstack/react-store': 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
+      react: 19.2.7
+      react-dom: 19.2.7(react@19.2.7)
 
   '@tanstack/react-pacer@0.22.1(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
@@ -32482,6 +32978,12 @@ snapshots:
       '@tanstack/solid-store': 0.11.0(solid-js@1.9.13)
       solid-js: 1.9.13
 
+  '@tanstack/solid-hotkeys@0.10.0(solid-js@1.9.13)':
+    dependencies:
+      '@tanstack/hotkeys': 0.8.0
+      '@tanstack/solid-store': 0.11.0(solid-js@1.9.13)
+      solid-js: 1.9.13
+
   '@tanstack/solid-pacer@0.21.1(solid-js@1.9.13)':
     dependencies:
       '@tanstack/pacer': 0.21.1
@@ -32578,6 +33080,11 @@ snapshots:
       '@tanstack/svelte-store': 0.12.0(svelte@5.56.2(@typescript-eslint/types@8.62.0))
       svelte: 5.56.2(@typescript-eslint/types@8.62.0)
 
+  '@tanstack/svelte-hotkeys@0.10.0(svelte@5.56.2(@typescript-eslint/types@8.62.0))':
+    dependencies:
+      '@tanstack/hotkeys': 0.8.0
+      svelte: 5.56.2(@typescript-eslint/types@8.62.0)
+
   '@tanstack/svelte-query@6.1.36(svelte@5.56.2(@typescript-eslint/types@8.62.0))':
     dependencies:
       '@tanstack/query-core': 5.101.2
@@ -32617,6 +33124,14 @@ snapshots:
   '@tanstack/vue-form@1.33.1(vue@3.5.38(typescript@6.0.3))':
     dependencies:
       '@tanstack/form-core': 1.33.1
+      '@tanstack/vue-store': 0.11.0(vue@3.5.38(typescript@6.0.3))
+      vue: 3.5.38(typescript@6.0.3)
+    transitivePeerDependencies:
+      - '@vue/composition-api'
+
+  '@tanstack/vue-hotkeys@0.10.0(vue@3.5.38(typescript@6.0.3))':
+    dependencies:
+      '@tanstack/hotkeys': 0.8.0
       '@tanstack/vue-store': 0.11.0(vue@3.5.38(typescript@6.0.3))
       vue: 3.5.38(typescript@6.0.3)
     transitivePeerDependencies:

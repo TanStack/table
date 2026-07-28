@@ -25,6 +25,7 @@ export function createExpandedRowModel<
         table.atoms.expanded?.get(),
         table.getPreExpandedRowModel(),
         table.options.paginateExpandedRows,
+        table.options.manualPagination,
       ],
       fn: () => _createExpandedRowModel(table),
     })
@@ -45,7 +46,7 @@ function _createExpandedRowModel<
     return rowModel
   }
 
-  if (!table.options.paginateExpandedRows) {
+  if (!table.options.paginateExpandedRows && !table.options.manualPagination) {
     // Only expand rows at this point if they are being paginated
     return rowModel
   }

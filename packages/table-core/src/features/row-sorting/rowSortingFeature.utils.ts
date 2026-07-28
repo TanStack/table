@@ -482,9 +482,8 @@ export function column_clearSorting<
 /**
  * Creates a header event handler that toggles this column's sorting.
  *
- * The handler ignores events when the column cannot sort, persists React-style
- * synthetic events when present, and asks `options.isMultiSortEvent` whether
- * the event should add to a multi-sort.
+ * The handler ignores events when the column cannot sort, and asks
+ * `options.isMultiSortEvent` whether the event should add to a multi-sort.
  *
  * @example
  * ```ts
@@ -500,7 +499,6 @@ export function column_getToggleSortingHandler<
 
   return (e: unknown) => {
     if (!canSort) return
-    ;(e as any).persist?.()
     column_toggleSorting(
       column,
 

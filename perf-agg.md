@@ -131,7 +131,7 @@ All in `packages/table-core`; behavior gates: full unit/implementation suite
    preserved exactly. Other fns hoist `context.rows` out of loop headers.
 
 5. **Removed `initRowInstanceData`** from `rowAggregationFeature`;
-   `Row_Aggregation._aggregationValuesCache` is now optional and created
+   `Row_RowAggregation._aggregationValuesCache` is now optional and created
    lazily on grouped rows only.
 
 ### Behavioral notes
