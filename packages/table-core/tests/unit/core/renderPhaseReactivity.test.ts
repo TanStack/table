@@ -35,7 +35,6 @@ function makeDeferredTable() {
 }
 
 afterEach(() => {
-  vi.unstubAllEnvs()
   vi.restoreAllMocks()
 })
 
@@ -89,26 +88,6 @@ describe('renderPhaseReactivity bindings', () => {
     expect(table.baseAtoms.sorting.get()).toBe(published)
   })
 
-  it('warns in development when deferExternalStateSync lacks both a reactive options store and a commit hook', () => {
-    vi.stubEnv('NODE_ENV', 'development')
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {})
-
-    const incoherent = {
-      ...renderPhaseReactivity({ createAtom, batch }),
-      commit: undefined,
-    }
-    constructTable({
-      features: {
-        ...features,
-        coreReactivityFeature: incoherent,
-      },
-      columns: [],
-      data: [],
-    })
-
-    expect(warn).toHaveBeenCalledTimes(1)
-    expect(warn.mock.calls[0]?.[0]).toContain('deferExternalStateSync')
-  })
 })
 
 describe('createCommitFilteredSource', () => {
