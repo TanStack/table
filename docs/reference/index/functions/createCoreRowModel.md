@@ -9,7 +9,7 @@ title: createCoreRowModel
 function createCoreRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [core/row-models/createCoreRowModel.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/createCoreRowModel.ts#L15)
+Defined in: [core/row-models/createCoreRowModel.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/row-models/createCoreRowModel.ts#L16)
 
 Creates a memoized core row model factory.
 

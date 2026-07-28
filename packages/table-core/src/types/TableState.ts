@@ -1,3 +1,4 @@
+import type { TableState_CellSelection } from '../features/cell-selection/cellSelectionFeature.types'
 import type { TableState_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { TableState_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { TableState_ColumnOrdering } from '../features/column-ordering/columnOrderingFeature.types'
@@ -14,6 +15,7 @@ import type { TableState_RowSorting } from '../features/row-sorting/rowSortingFe
 import type { ExtractFeatureMapTypes, TableFeatures } from './TableFeatures'
 
 export interface TableState_FeatureMap {
+  cellSelectionFeature: TableState_CellSelection
   columnFilteringFeature: TableState_ColumnFiltering
   columnGroupingFeature: TableState_ColumnGrouping
   columnOrderingFeature: TableState_ColumnOrdering
@@ -45,7 +47,8 @@ export type TableState<TFeatures extends TableFeatures> =
  * by other features.
  */
 export interface TableState_All extends Partial<
-  TableState_ColumnFiltering &
+  TableState_CellSelection &
+    TableState_ColumnFiltering &
     TableState_ColumnGrouping &
     TableState_ColumnOrdering &
     TableState_ColumnPinning &

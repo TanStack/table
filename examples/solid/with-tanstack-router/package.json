@@ -22,7 +22,7 @@
     "@tanstack/solid-pacer": "^0.21.1",
     "@tanstack/solid-query": "^5.101.2",
     "@tanstack/solid-router": "^1.170.17",
-    "@tanstack/solid-table": "^9.0.0-beta.55",
+    "@tanstack/solid-table": "^9.0.0-beta.58",
     "solid-js": "^1.9.13"
   }
 }

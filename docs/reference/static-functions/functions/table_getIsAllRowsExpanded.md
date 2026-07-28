@@ -9,7 +9,7 @@ title: table_getIsAllRowsExpanded
 function table_getIsAllRowsExpanded<TFeatures, TData>(table): boolean;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:192](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L192)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:188](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L188)
 
 Checks whether every row in the current row model is expanded.
 

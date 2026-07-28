@@ -9,7 +9,7 @@ title: row_getParentRows
 function row_getParentRows<TFeatures, TData>(row): Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:216](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L216)
+Defined in: [core/rows/coreRowsFeature.utils.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L223)
 
 Collects this row's ancestor chain from root to direct parent.
 

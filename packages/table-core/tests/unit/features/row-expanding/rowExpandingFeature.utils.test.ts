@@ -357,14 +357,12 @@ describe('row_getIsAllParentsExpanded', () => {
 })
 
 describe('handlers', () => {
-  it('table_getToggleAllRowsExpandedHandler should persist and toggle', () => {
+  it('table_getToggleAllRowsExpandedHandler should toggle all rows expanded', () => {
     const onExpandedChange = vi.fn()
     const table = makeTable({ onExpandedChange })
-    const persist = vi.fn()
 
-    table_getToggleAllRowsExpandedHandler(table)({ persist })
+    table_getToggleAllRowsExpandedHandler(table)({})
 
-    expect(persist).toHaveBeenCalled()
     expect(onExpandedChange).toHaveBeenCalledWith(true)
   })
 

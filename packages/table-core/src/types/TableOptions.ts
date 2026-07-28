@@ -3,8 +3,9 @@ import type { TableOptions_Cell } from '../core/cells/coreCellsFeature.types'
 import type { TableOptions_Columns } from '../core/columns/coreColumnsFeature.types'
 import type { TableOptions_Rows } from '../core/rows/coreRowsFeature.types'
 import type { TableOptions_Table } from '../core/table/coreTablesFeature.types'
+import type { TableOptions_CellSelection } from '../features/cell-selection/cellSelectionFeature.types'
 import type { TableOptions_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
-import type { TableOptions_Aggregation } from '../features/row-aggregation/rowAggregationFeature.types'
+import type { TableOptions_RowAggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type { TableOptions_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { TableOptions_ColumnOrdering } from '../features/column-ordering/columnOrderingFeature.types'
 import type { TableOptions_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
@@ -59,7 +60,7 @@ export interface TableOptions_FeatureMap<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
-  rowAggregationFeature: TableOptions_Aggregation
+  cellSelectionFeature: TableOptions_CellSelection<TFeatures, TData>
   columnFilteringFeature: TableOptions_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: TableOptions_ColumnGrouping
   columnOrderingFeature: TableOptions_ColumnOrdering
@@ -68,6 +69,7 @@ export interface TableOptions_FeatureMap<
   columnSizingFeature: TableOptions_ColumnSizing
   columnVisibilityFeature: TableOptions_ColumnVisibility
   globalFilteringFeature: TableOptions_GlobalFiltering<TFeatures, TData>
+  rowAggregationFeature: TableOptions_RowAggregation
   rowExpandingFeature: TableOptions_RowExpanding<TFeatures, TData>
   rowPaginationFeature: TableOptions_RowPagination
   rowPinningFeature: TableOptions_RowPinning<TFeatures, TData>
@@ -76,7 +78,7 @@ export interface TableOptions_FeatureMap<
 }
 
 type TableOptions_StockFeatureKeys =
-  | 'rowAggregationFeature'
+  | 'cellSelectionFeature'
   | 'columnFilteringFeature'
   | 'columnGroupingFeature'
   | 'columnOrderingFeature'
@@ -85,6 +87,7 @@ type TableOptions_StockFeatureKeys =
   | 'columnSizingFeature'
   | 'columnVisibilityFeature'
   | 'globalFilteringFeature'
+  | 'rowAggregationFeature'
   | 'rowExpandingFeature'
   | 'rowPaginationFeature'
   | 'rowPinningFeature'
@@ -136,7 +139,8 @@ export type TableOptions_All<
   TData extends RowData,
 > = TableOptions_Core<TFeatures, TData> &
   Partial<
-    TableOptions_Aggregation &
+    TableOptions_RowAggregation &
+      TableOptions_CellSelection<TFeatures, TData> &
       TableOptions_ColumnFiltering<TFeatures, TData> &
       TableOptions_ColumnGrouping &
       TableOptions_ColumnOrdering &

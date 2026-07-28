@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.55'
+  version: '9.0.0-beta.58'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing primitives with tree-shakeable v9 features and framework adapters.'
@@ -526,6 +526,23 @@ skills:
       - 'Using index-derived row IDs for persistent pinning while sorting, filtering, pagination, or data insertion changes indexes.'
       - 'Expecting row pinning to add sticky CSS or render top/center/bottom collections in the correct order automatically.'
       - 'Ignoring keepPinnedRows, so pinned rows remain visible outside the center row model when the desired product behavior was to filter or paginate them away.'
+
+  - slug: cell-selection
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Maintain spreadsheet-style rectangular cell ranges anchored to row and column ids across sorting, filtering, pagination, and column layout changes.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/cell-selection.md',
+        'TanStack/table:packages/table-core/src/features/cell-selection',
+        'TanStack/table:examples/react/cell-selection',
+      ]
+    failure_modes:
+      - 'Expecting cellSelection to be a per-cell map; it is an array of two-corner rectangles, so a range widens onto new cells when sorting or column order changes what sits between its corners.'
+      - 'Binding only the mousedown handler and expecting drag selection, or reimplementing mouseup even though the start handler owns its own document listener.'
+      - 'Drawing the selection outline with borders on a border-collapse table, which changes row heights as cells become selected.'
+      - 'Re-rendering every cell on each drag update instead of subscribing per row to table.atoms.cellSelection.'
 
   - slug: row-selection
     package: '@tanstack/table-core'

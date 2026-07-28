@@ -70,6 +70,33 @@ export interface TableFeature {
     table: Table_Internal<TFeatures, TData>,
   ) => Partial<TableOptions_All<TFeatures, TData>>
   getInitialState?: (initialState: Partial<TableState_All>) => TableState_All
+  initCellInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    cell: Cell<TFeatures, TData, TValue>,
+  ) => void
+  initColumnInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    column: Column<TFeatures, TData, TValue>,
+  ) => void
+  initHeaderGroupInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    headerGroup: HeaderGroup<TFeatures, TData>,
+  ) => void
+  initHeaderInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    header: Header<TFeatures, TData, TValue>,
+  ) => void
   initRowInstanceData?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
@@ -127,15 +154,21 @@ The `constructTableAPIs` method in a table feature is exclusively responsible fo
 
 <br />
 
-#### assignHeaderPrototype
+#### assignHeaderPrototype and initHeaderInstanceData
 
-The `assignHeaderPrototype` method in a table feature is responsible for adding methods to the shared `header` prototype. For example, the [Column Sizing](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-sizing/columnSizingFeature.ts) feature adds header instance API methods such as `getStart`. So then, when you call `header.getStart()`, you are calling a method that was added by the column sizing feature.
+The `assignHeaderPrototype` method in a table feature is responsible for adding methods to the shared `header` prototype. For example, the [Column Sizing](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/column-sizing/columnSizingFeature.ts) feature adds header instance API methods such as `getStart`. So then, when you call `header.getStart()`, you are calling a method that was added by the column sizing feature. The `initHeaderInstanceData` method is available for per-header instance data or caches that cannot live on the shared prototype. It runs during header construction, before sub-headers are populated and before the header is linked to its header group. Headers are reconstructed whenever header groups recompute, so it reruns on every rebuild.
 
 <br />
 
-#### assignColumnPrototype
+#### initHeaderGroupInstanceData
 
-The `assignColumnPrototype` method in a table feature is responsible for adding methods to the shared `column` prototype. For example, the [Sorting](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature adds column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added by the row sorting feature.
+The `initHeaderGroupInstanceData` method is available for per-header-group instance data. Header groups have no shared prototype, so this is their only per-instance extension point. It runs after a header group's `depth`, `id`, and fully populated `headers` array have been assigned, and reruns whenever header groups are rebuilt.
+
+<br />
+
+#### assignColumnPrototype and initColumnInstanceData
+
+The `assignColumnPrototype` method in a table feature is responsible for adding methods to the shared `column` prototype. For example, the [Sorting](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-sorting/rowSortingFeature.ts) feature adds column instance API methods such as `getNextSortingOrder`, `toggleSorting`, etc. So then, when you call `column.toggleSorting()`, you are calling a method that was added by the row sorting feature. The `initColumnInstanceData` method is available for per-column instance data or caches that cannot live on the shared prototype. For example, the [Aggregation](https://github.com/TanStack/table/blob/beta/packages/table-core/src/features/row-aggregation/rowAggregationFeature.ts) feature uses it to set up a per-column aggregation cache.
 
 <br />
 
@@ -145,9 +178,9 @@ The `assignRowPrototype` method in a table feature is responsible for adding met
 
 <br />
 
-#### assignCellPrototype
+#### assignCellPrototype and initCellInstanceData
 
-The `assignCellPrototype` method in a table feature is responsible for adding methods to the shared `cell` prototype. For example, Column Grouping adds `getIsGrouped` and `getIsPlaceholder`, while Aggregation adds `getIsAggregated`.
+The `assignCellPrototype` method in a table feature is responsible for adding methods to the shared `cell` prototype. For example, Column Grouping adds `getIsGrouped` and `getIsPlaceholder`, while Aggregation adds `getIsAggregated`. The `initCellInstanceData` method is available for per-cell instance data or caches that cannot live on the shared prototype. Cells are constructed lazily on first access per row/column pair and cached, so it runs once per cell instance.
 
 ## Adding a Custom Feature
 
@@ -279,10 +312,15 @@ export const densityPlugin: TableFeature = {
   // initRowInstanceData: (row) => {},
   // if you need to add cell instance APIs...
   // assignCellPrototype: (prototype, table) => {},
+  // initCellInstanceData: (cell) => {},
   // if you need to add column instance APIs...
   // assignColumnPrototype: (prototype, table) => {},
+  // initColumnInstanceData: (column) => {},
   // if you need to add header instance APIs...
   // assignHeaderPrototype: (prototype, table) => {},
+  // initHeaderInstanceData: (header) => {},
+  // if you need to add header group instance data...
+  // initHeaderGroupInstanceData: (headerGroup) => {},
 }
 ```
 
