@@ -145,7 +145,8 @@ export function constructTable<
         // invalidation source when it is published after a framework commit.
         const reactiveState = externalAtom
           ? externalAtom.get()
-          : table.baseAtoms[key]!.get()
+          : // @ts-ignore - looping through stateKeys so we know the key is defined
+            table.baseAtoms[key].get()
 
         if (externalAtom) {
           return reactiveState
@@ -171,7 +172,8 @@ export function constructTable<
         const snapshot = {} as TableState<TFeatures> & TableState_All
         for (let i = 0; i < stateKeys.length; i++) {
           const key = stateKeys[i]!
-          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key]!.get()
+          // @ts-ignore - looping through stateKeys so we know the key is defined
+          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key].get()
         }
         return snapshot
       },
@@ -219,6 +221,7 @@ export function constructTable<
       rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
     }
     feature.initTableInstanceData?.(table)
+    featuresList[i]!.constructTableAPIs?.(table)
   }
 
   table._cellInstanceInitFns = cellInstanceInitFns
@@ -257,10 +260,6 @@ export function constructTable<
   States:     ${states.join('\n              ')}\n`,
       { table },
     )
-  }
-
-  for (let i = 0; i < featuresList.length; i++) {
-    featuresList[i]!.constructTableAPIs?.(table)
   }
 
   return table as unknown as Table<TFeatures, TData>
