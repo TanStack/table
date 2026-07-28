@@ -58,13 +58,19 @@ export function constructTable<
     ...features
   } = tableOptions.features
 
+  // pre-compute the init functions to make the other constructors faster
   const table = {
-    _reactivity,
+    _cellInstanceInitFns: [],
+    _columnInstanceInitFns: [],
     _features: { ...coreFeatures, ...features },
-    _rowModels: {},
+    _headerGroupInstanceInitFns: [],
+    _headerInstanceInitFns: [],
+    _reactivity,
+    _rowInstanceInitFns: [],
     _rowModelFns: { aggregationFns, filterFns, sortFns },
-    baseAtoms: {},
+    _rowModels: {},
     atoms: {},
+    baseAtoms: {},
   } as unknown as Table_Internal<TFeatures, TData>
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
@@ -137,9 +143,7 @@ export function constructTable<
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {
         const options = table.options
-        const externalAtoms = options.atoms as
-          | Partial<Record<keyof TableState_All, Atom<unknown>>>
-          | undefined
+        const externalAtoms = options.atoms
         const externalAtom = externalAtoms?.[key]
         // Always touch the reactive owner so controlled state still has an
         // invalidation source when it is published after a framework commit.
@@ -183,13 +187,6 @@ export function constructTable<
       },
     ),
   )
-
-  // pre-compute the init functions to make the other constructors faster
-  table._cellInstanceInitFns = []
-  table._columnInstanceInitFns = []
-  table._headerGroupInstanceInitFns = []
-  table._headerInstanceInitFns = []
-  table._rowInstanceInitFns = []
 
   for (let i = 0; i < featuresList.length; i++) {
     const feature = featuresList[i]!

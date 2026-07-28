@@ -51,7 +51,7 @@ export function buildHeaderGroups<
 
   const headerGroups: Array<HeaderGroup<TFeatures, TData>> = []
 
-  const headerGroupInitFns = table._headerGroupInstanceInitFns!
+  const headerGroupInitFns = table._headerGroupInstanceInitFns
 
   const constructHeaderGroup = (
     headersToGroup: Array<Header<TFeatures, TData, TValue>>,
