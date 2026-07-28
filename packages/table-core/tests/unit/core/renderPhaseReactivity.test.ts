@@ -87,7 +87,6 @@ describe('renderPhaseReactivity bindings', () => {
 
     expect(table.baseAtoms.sorting.get()).toBe(published)
   })
-
 })
 
 describe('createCommitFilteredSource', () => {
