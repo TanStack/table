@@ -1,5 +1,10 @@
-import { useMemo, useState } from 'preact/hooks'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'preact/hooks'
 import { constructTable } from '@tanstack/table-core'
+import { createCommitFilteredSource } from '@tanstack/table-core/reactivity'
+import {
+  table_setOptions,
+  table_syncExternalStateToBaseAtoms,
+} from '@tanstack/table-core/static-functions'
 import { shallow, useSelector } from '@tanstack/preact-store'
 import { preactReactivity } from './reactivity'
 import { FlexRender } from './FlexRender'
@@ -15,6 +20,9 @@ import type {
 import type { ComponentChildren } from 'preact'
 import type { FlexRenderProps } from './FlexRender'
 import type { SubscribePropsWithStore, SubscribeSource } from './Subscribe'
+
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 export type PreactTable<
   TFeatures extends TableFeatures,
@@ -117,7 +125,7 @@ export function useTable<
   tableOptions: TableOptions<TFeatures, TData>,
   selector?: (state: TableState<TFeatures>) => TSelected,
 ): PreactTable<TFeatures, TData, TSelected> {
-  const [table] = useState(() => {
+  const [{ table, rootSource }] = useState(() => {
     // Explicit type arguments skip generic inference from the spread object (a
     // type-check hot spot); the spread only adds the preact reactivity binding
     // to `features`.
@@ -140,16 +148,49 @@ export function useTable<
 
     tableInstance.FlexRender = FlexRender
 
-    return tableInstance
+    return {
+      table: tableInstance,
+      // The commit publication below re-notifies `table.store` so isolated
+      // `table.Subscribe` consumers update, but this root hook already
+      // rendered that exact snapshot — forwarding the notification here would
+      // re-render the owner once per controlled update just to find nothing
+      // changed. Only this hook's subscription is filtered.
+      rootSource: createCommitFilteredSource<TableState<TFeatures>>(
+        tableInstance.store,
+      ),
+    }
   })
 
-  // sync options on every render
-  table.setOptions((prev) => ({
+  const coreTable = table as unknown as Table<TFeatures, TData>
+
+  // Keep options current during render, so render reads (data, columns,
+  // callbacks, controlled state) never lag a frame behind. The reactivity
+  // bindings declare `deferExternalStateSync`, so no store subscriber is
+  // notified while Preact is still rendering; the readonly atoms expose the
+  // fresh controlled state through their live get() in the meantime.
+  table_setOptions(coreTable, (prev) => ({
     ...prev,
     ...tableOptions,
   }))
 
-  const state = useSelector(table.store, selector, { compare: shallow })
+  // Capture this render's controlled state: `table.options` is a shared
+  // mutable object, and by the time the effect runs it may hold values from a
+  // newer render.
+  const controlledState = coreTable.options.state
+
+  const state = useSelector(rootSource, selector, { compare: shallow })
+
+  useIsomorphicLayoutEffect(() => {
+    // Publish only the state captured by a committed render. Layout effect
+    // (not passive) so isolated table.Subscribe consumers update before
+    // paint. Core batches the writes and bumps the commit version, which also
+    // handles changes in controlled/uncontrolled ownership.
+    table_syncExternalStateToBaseAtoms(
+      coreTable,
+      controlledState ?? null,
+      shallow,
+    )
+  })
 
   return useMemo(
     () => ({

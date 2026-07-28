@@ -1,11 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createAtom } from '@tanstack/store'
+import { batch, createAtom } from '@tanstack/store'
 import {
   constructTable,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
+import { renderPhaseReactivity } from '../../../src/reactivity'
 import {
   table_setOptions,
   table_syncExternalStateToBaseAtoms,
@@ -73,27 +74,30 @@ describe('three-layer atom architecture', () => {
       expect(table.store.state.sorting).toEqual(external)
     })
 
-    it('can defer options.state synchronization for framework adapters', () => {
-      const table = makeTable()
+    it('defers options.state synchronization when bindings declare deferExternalStateSync', () => {
+      const table = constructTable({
+        features: {
+          ...features,
+          coreReactivityFeature: renderPhaseReactivity({ createAtom, batch }),
+        },
+        columns: [],
+        data: [],
+      })
       const internalTable = table as unknown as Table_Internal<
         typeof features,
         any
       >
       const controlled: SortingState = [{ id: 'controlled', desc: false }]
 
-      table_setOptions(
-        internalTable,
-        (options) => ({
-          ...options,
-          state: {
-            sorting: controlled,
-          },
-        }),
-        {
-          syncExternalState: false,
+      table_setOptions(internalTable, (options) => ({
+        ...options,
+        state: {
+          sorting: controlled,
         },
-      )
+      }))
 
+      // Options are current and render reads resolve the controlled value,
+      // but nothing was published into the base atoms yet.
       expect(table.options.state?.sorting).toBe(controlled)
       expect(table.baseAtoms.sorting.get()).toEqual([])
       expect(table.atoms.sorting.get()).toBe(controlled)

@@ -58,13 +58,19 @@ export function constructTable<
     ...features
   } = tableOptions.features
 
+  // pre-compute the init functions to make the other constructors faster
   const table = {
-    _reactivity,
+    _cellInstanceInitFns: [],
+    _columnInstanceInitFns: [],
     _features: { ...coreFeatures, ...features },
-    _rowModels: {},
+    _headerGroupInstanceInitFns: [],
+    _headerInstanceInitFns: [],
+    _reactivity,
+    _rowInstanceInitFns: [],
     _rowModelFns: { aggregationFns, filterFns, sortFns },
-    baseAtoms: {},
+    _rowModels: {},
     atoms: {},
+    baseAtoms: {},
   } as unknown as Table_Internal<TFeatures, TData>
 
   const featuresList: Array<TableFeature> = Object.values(table._features)
@@ -137,15 +143,14 @@ export function constructTable<
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {
         const options = table.options
-        const externalAtoms = options.atoms as
-          | Partial<Record<keyof TableState_All, Atom<unknown>>>
-          | undefined
+        const externalAtoms = options.atoms
         const externalAtom = externalAtoms?.[key]
         // Always touch the reactive owner so controlled state still has an
         // invalidation source when it is published after a framework commit.
         const reactiveState = externalAtom
           ? externalAtom.get()
-          : table.baseAtoms[key]!.get()
+          : // @ts-ignore - looping through stateKeys so we know the key is defined
+            table.baseAtoms[key].get()
 
         if (externalAtom) {
           return reactiveState
@@ -171,7 +176,8 @@ export function constructTable<
         const snapshot = {} as TableState<TFeatures> & TableState_All
         for (let i = 0; i < stateKeys.length; i++) {
           const key = stateKeys[i]!
-          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key]!.get()
+          // @ts-ignore - looping through stateKeys so we know the key is defined
+          ;(snapshot as Record<string, unknown>)[key] = table.atoms[key].get()
         }
         return snapshot
       },
@@ -182,50 +188,34 @@ export function constructTable<
     ),
   )
 
-  // pre-compute the init functions to make the other constructors faster
-  const cellInstanceInitFns: Array<
-    NonNullable<TableFeature['initCellInstanceData']>
-  > = []
-  const columnInstanceInitFns: Array<
-    NonNullable<TableFeature['initColumnInstanceData']>
-  > = []
-  const headerGroupInstanceInitFns: Array<
-    NonNullable<TableFeature['initHeaderGroupInstanceData']>
-  > = []
-  const headerInstanceInitFns: Array<
-    NonNullable<TableFeature['initHeaderInstanceData']>
-  > = []
-  const rowInstanceInitFns: Array<
-    NonNullable<TableFeature['initRowInstanceData']>
-  > = []
-
   for (let i = 0; i < featuresList.length; i++) {
     const feature = featuresList[i]!
+    feature.initTableInstanceData?.(table)
     if (feature.initCellInstanceData) {
-      cellInstanceInitFns.push(feature.initCellInstanceData.bind(feature))
+      table._cellInstanceInitFns.push(
+        feature.initCellInstanceData.bind(feature),
+      )
     }
     if (feature.initColumnInstanceData) {
-      columnInstanceInitFns.push(feature.initColumnInstanceData.bind(feature))
+      table._columnInstanceInitFns.push(
+        feature.initColumnInstanceData.bind(feature),
+      )
     }
     if (feature.initHeaderGroupInstanceData) {
-      headerGroupInstanceInitFns.push(
+      table._headerGroupInstanceInitFns.push(
         feature.initHeaderGroupInstanceData.bind(feature),
       )
     }
     if (feature.initHeaderInstanceData) {
-      headerInstanceInitFns.push(feature.initHeaderInstanceData.bind(feature))
+      table._headerInstanceInitFns.push(
+        feature.initHeaderInstanceData.bind(feature),
+      )
     }
     if (feature.initRowInstanceData) {
-      rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
+      table._rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
     }
-    feature.initTableInstanceData?.(table)
+    feature.constructTableAPIs?.(table)
   }
-
-  table._cellInstanceInitFns = cellInstanceInitFns
-  table._columnInstanceInitFns = columnInstanceInitFns
-  table._headerGroupInstanceInitFns = headerGroupInstanceInitFns
-  table._headerInstanceInitFns = headerInstanceInitFns
-  table._rowInstanceInitFns = rowInstanceInitFns
 
   if (
     process.env.NODE_ENV === 'development' &&
@@ -257,10 +247,6 @@ export function constructTable<
   States:     ${states.join('\n              ')}\n`,
       { table },
     )
-  }
-
-  for (let i = 0; i < featuresList.length; i++) {
-    featuresList[i]!.constructTableAPIs?.(table)
   }
 
   return table as unknown as Table<TFeatures, TData>

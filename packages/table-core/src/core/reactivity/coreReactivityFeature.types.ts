@@ -22,6 +22,30 @@ export interface TableAtomOptions<T> extends AtomOptions<T> {
 export interface TableReactivityBindings {
   createOptionsStore: boolean
   wrapExternalAtoms: boolean
+  /**
+   * Write-timing strategy. When `true`, `table_setOptions` does NOT mirror
+   * `options.state` into the base atoms; the adapter syncs options during its
+   * host framework's render phase (where store notifications are illegal or
+   * wasteful) and publishes the captured controlled state after the host
+   * commits by calling `table_syncExternalStateToBaseAtoms` itself.
+   *
+   * Leave unset (or `false`) for fine-grained adapters whose `setOptions` runs
+   * in a write-safe reactive context (effects, watchers) — eager sync is
+   * correct there and keeps same-tick read-after-write consistency.
+   */
+  deferExternalStateSync?: boolean
+  /**
+   * Invalidates readonly atoms whose compute reads non-reactive inputs (plain
+   * `table.options`). Core calls this at the end of
+   * `table_syncExternalStateToBaseAtoms` — including when nothing was
+   * published — so resolution changes with no atom write (e.g. a controlled
+   * slice released back to internal ownership) still reach subscribers.
+   *
+   * Required when `deferExternalStateSync` is `true` and `createOptionsStore`
+   * is `false`: with plain options and deferred publication there is no other
+   * invalidation source. Adapters with a reactive options store never need it.
+   */
+  commit?: () => void
   addSubscription: (subscription: Subscription) => void
   /**
    * Creates a writable atom with an initial value.

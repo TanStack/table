@@ -164,9 +164,7 @@ export interface Table_CoreProperties<
   /**
    * Cache of the `initCellInstanceData` functions for features that define one.
    */
-  _cellInstanceInitFns?: Array<
-    NonNullable<TableFeature['initCellInstanceData']>
-  >
+  _cellInstanceInitFns: Array<NonNullable<TableFeature['initCellInstanceData']>>
   /**
    * Prototype cache for Cell objects - shared by all cells in this table
    */
@@ -174,7 +172,7 @@ export interface Table_CoreProperties<
   /**
    * Cache of the `initColumnInstanceData` functions for features that define one.
    */
-  _columnInstanceInitFns?: Array<
+  _columnInstanceInitFns: Array<
     NonNullable<TableFeature['initColumnInstanceData']>
   >
   /**
@@ -188,13 +186,13 @@ export interface Table_CoreProperties<
   /**
    * Cache of the `initHeaderGroupInstanceData` functions for features that define one.
    */
-  _headerGroupInstanceInitFns?: Array<
+  _headerGroupInstanceInitFns: Array<
     NonNullable<TableFeature['initHeaderGroupInstanceData']>
   >
   /**
    * Cache of the `initHeaderInstanceData` functions for features that define one.
    */
-  _headerInstanceInitFns?: Array<
+  _headerInstanceInitFns: Array<
     NonNullable<TableFeature['initHeaderInstanceData']>
   >
   /**
@@ -216,7 +214,7 @@ export interface Table_CoreProperties<
   /**
    * Cache of the `initRowInstanceData` functions for features that define one.
    */
-  _rowInstanceInitFns?: Array<NonNullable<TableFeature['initRowInstanceData']>>
+  _rowInstanceInitFns: Array<NonNullable<TableFeature['initRowInstanceData']>>
   /**
    * The readonly derived atoms for each `TableState` slice. Each derives from
    * its corresponding `baseAtom` plus, optionally, a per-slice external atom or
