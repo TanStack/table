@@ -193,9 +193,6 @@ export function constructTable<
 
   for (let i = 0; i < featuresList.length; i++) {
     const feature = featuresList[i]!
-    // Feature-owned table instance data initializes for EVERY feature before
-    // ANY table APIs are constructed (second loop below): API constructors may
-    // read instance data initialized by other features.
     feature.initTableInstanceData?.(table)
     if (feature.initCellInstanceData) {
       table._cellInstanceInitFns.push(
@@ -220,10 +217,7 @@ export function constructTable<
     if (feature.initRowInstanceData) {
       table._rowInstanceInitFns.push(feature.initRowInstanceData.bind(feature))
     }
-  }
-
-  for (let i = 0; i < featuresList.length; i++) {
-    featuresList[i]!.constructTableAPIs?.(table)
+    feature.constructTableAPIs?.(table)
   }
 
   if (
