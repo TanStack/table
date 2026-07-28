@@ -36,6 +36,19 @@ export function constructTable<
 >(tableOptions: TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
   const _reactivity = tableOptions.features.coreReactivityFeature!
 
+  if (
+    process.env.NODE_ENV === 'development' &&
+    _reactivity.deferExternalStateSync &&
+    !_reactivity.createOptionsStore &&
+    !_reactivity.commit
+  ) {
+    console.warn(
+      'TanStack Table: reactivity bindings declare `deferExternalStateSync` with plain (non-reactive) options but no `commit` hook. ' +
+        'Without a reactive options store or a commit hook, controlled-state resolution changes cannot invalidate subscribers. ' +
+        'Provide `commit` (see `renderPhaseReactivity`) or a reactive options store.',
+    )
+  }
+
   // Strip the non-feature slots: type-only meta slots, row model factories,
   // and row model fn registries all live on the `features` option but are not
   // table features themselves.

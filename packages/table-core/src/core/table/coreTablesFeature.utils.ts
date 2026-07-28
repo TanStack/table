@@ -8,61 +8,59 @@ import type { TableState } from '../../types/TableState'
 /**
  * Synchronizes externally controlled state slices into the table's base atoms.
  *
- * This keeps legacy `options.state` values reflected in the atom graph so
- * derived atoms, stores, and table APIs read a consistent snapshot.
- * Passing an explicit state snapshot lets framework adapters publish the state
- * captured by a committed render. An optional comparator can suppress
- * semantically unchanged slice writes; the default remains `Object.is`.
+ * This keeps `options.state` values mirrored in the atom graph so derived
+ * atoms, stores, and table APIs read a consistent snapshot.
+ *
+ * Adapters that update options during their host's render phase pass the
+ * state snapshot captured by the committed render as `capturedState` — the
+ * shared options object may already hold values from a newer render that
+ * never commits. Pass `null` to publish nothing (a captured "no controlled
+ * state"); omitting the argument reads the current `table.options.state`
+ * instead. An optional `compare` suppresses semantically unchanged slice
+ * writes; the default remains reference equality.
+ *
+ * The reactivity `commit` hook (when bound) is invoked inside the same batch,
+ * even when nothing is published, so resolution changes with no atom write
+ * (e.g. a controlled slice released back to internal ownership) still
+ * invalidate subscribers.
  *
  * @example
  * ```ts
  * table_syncExternalStateToBaseAtoms(table)
+ * table_syncExternalStateToBaseAtoms(table, capturedState ?? null, shallow)
  * ```
  */
 export function table_syncExternalStateToBaseAtoms<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): void
-export function table_syncExternalStateToBaseAtoms<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
 >(
   table: Table_Internal<TFeatures, TData>,
-  state: Partial<TableState<TFeatures>> | undefined,
-  compare?: (currentState: unknown, externalState: unknown) => boolean,
-): void
-export function table_syncExternalStateToBaseAtoms<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  table: Table_Internal<TFeatures, TData>,
-  state?: Partial<TableState<TFeatures>>,
-  compare: (
-    currentState: unknown,
-    externalState: unknown,
-  ) => boolean = Object.is,
+  capturedState?: Partial<TableState<TFeatures>> | null,
+  compare: (currentState: unknown, externalState: unknown) => boolean = (
+    currentState,
+    externalState,
+  ) => currentState === externalState,
 ): void {
-  // The second overload intentionally distinguishes an omitted argument from
-  // an explicitly captured `undefined` state.
-  state = arguments.length === 1 ? table.options.state : state
-
-  if (!state) {
-    return
-  }
+  const state =
+    capturedState === undefined ? table.options.state : capturedState
 
   table._reactivity.batch(() => {
-    for (const key in state) {
-      const baseAtom = (table.baseAtoms as Record<string, any>)[key]
-      if (!baseAtom) {
-        continue
-      }
+    if (state) {
+      for (const key in state) {
+        const baseAtom = (table.baseAtoms as Record<string, any>)[key]
+        if (!baseAtom) {
+          continue
+        }
 
-      const externalState = state[key as keyof typeof state]
-      const currentState = table._reactivity.untrack(() => baseAtom.get())
-      if (!compare(currentState, externalState)) {
-        baseAtom.set(() => externalState)
+        const externalState = state[key as keyof typeof state]
+        const currentState = table._reactivity.untrack(() => baseAtom.get())
+        if (!compare(currentState, externalState)) {
+          baseAtom.set(() => externalState)
+        }
       }
     }
+
+    table._reactivity.commit?.()
   })
 }
 
@@ -171,10 +169,14 @@ export function table_mergeOptions<
  * The updater receives the current resolved options and the merged result is
  * immediately assigned to the table instance.
  *
+ * When the adapter's reactivity bindings declare `deferExternalStateSync`,
+ * controlled state is NOT mirrored into the base atoms here — the adapter
+ * publishes the captured state after its host framework commits by calling
+ * `table_syncExternalStateToBaseAtoms` itself.
+ *
  * @example
  * ```ts
  * table_setOptions(table, (old) => old)
- * table_setOptions(table, (old) => old, { syncExternalState: false })
  * ```
  */
 export function table_setOptions<
@@ -183,9 +185,6 @@ export function table_setOptions<
 >(
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<TableOptions<TFeatures, TData>>,
-  options?: {
-    syncExternalState?: boolean
-  },
 ): void {
   const newOptions = functionalUpdate(
     updater,
@@ -198,7 +197,7 @@ export function table_setOptions<
   } else {
     table.options = mergedOptions
   }
-  if (options?.syncExternalState !== false) {
+  if (!table._reactivity.deferExternalStateSync) {
     table_syncExternalStateToBaseAtoms(table)
   }
 }
