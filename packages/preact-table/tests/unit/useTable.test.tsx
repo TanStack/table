@@ -1,4 +1,4 @@
-import { render } from 'preact'
+import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
 import { useState } from 'preact/hooks'
 import { act } from 'preact/test-utils'
 import {
@@ -6,7 +6,8 @@ import {
   rowPaginationFeature,
   tableFeatures,
 } from '@tanstack/table-core'
-import { afterEach, describe, expect, it } from 'vitest'
+import { createAtom } from '@tanstack/preact-store'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 import { useTable } from '../../src/useTable'
 import type { ColumnDef, PaginationState } from '@tanstack/table-core'
 import type { PreactTable } from '../../src/useTable'
@@ -25,32 +26,17 @@ const data: ReadonlyArray<TestRow> = Array.from({ length: 100 }, (_, id) => ({
 }))
 const columns: ReadonlyArray<ColumnDef<typeof features, TestRow>> = []
 
-let container: HTMLDivElement | undefined
-
-function mount(ui: preact.ComponentChildren) {
-  container = document.createElement('div')
-  document.body.append(container)
-  act(() => {
-    render(ui as any, container!)
-  })
+function text(name: string) {
+  return screen.getByRole('status', { name }).textContent
 }
 
-function clickButton() {
-  container?.querySelector('button')?.dispatchEvent(
-    new MouseEvent('click', {
-      bubbles: true,
-    }),
-  )
+function clickButton(name = 'Next page') {
+  fireEvent.click(screen.getByRole('button', { name }))
 }
 
 afterEach(() => {
-  if (container) {
-    act(() => {
-      render(null, container!)
-    })
-    container.remove()
-    container = undefined
-  }
+  cleanup()
+  vi.restoreAllMocks()
 })
 
 describe('useTable controlled state', () => {
@@ -92,7 +78,7 @@ describe('useTable controlled state', () => {
       return <button onClick={() => table.nextPage()}>Next page</button>
     }
 
-    mount(<ControlledPaginationHarness />)
+    render(<ControlledPaginationHarness />)
     expect(renderSnapshots).toHaveLength(1)
 
     act(() => {
@@ -172,7 +158,7 @@ describe('useTable controlled state', () => {
       return <button onClick={() => table.nextPage()}>Next page</button>
     }
 
-    mount(<PublicationHarness />)
+    render(<PublicationHarness />)
 
     const notifications: Array<number> = []
     const subscription = latestTable!.store.subscribe((state) => {
@@ -205,18 +191,305 @@ describe('useTable controlled state', () => {
         (state) => state.pagination.pageIndex,
       )
 
-      return <button onClick={() => table.nextPage()}>{table.state}</button>
+      return (
+        <>
+          <output aria-label="Uncontrolled page index">{table.state}</output>
+          <button onClick={() => table.nextPage()}>Next page</button>
+        </>
+      )
     }
 
-    mount(<UncontrolledHarness />)
+    render(<UncontrolledHarness />)
     expect(harnessRenderCount).toBe(1)
-    expect(container?.querySelector('button')?.textContent).toBe('0')
+    expect(text('Uncontrolled page index')).toBe('0')
 
     act(() => {
       clickButton()
     })
 
     expect(harnessRenderCount).toBe(2)
-    expect(container?.querySelector('button')?.textContent).toBe('1')
+    expect(text('Uncontrolled page index')).toBe('1')
+  })
+
+  it('releases and reacquires ownership when the controlled slice is omitted', () => {
+    let harnessRenderCount = 0
+
+    function OwnershipHarness() {
+      harnessRenderCount++
+      const [controlled, setControlled] = useState(true)
+      const [pagination] = useState<PaginationState>({
+        pageIndex: 5,
+        pageSize: 10,
+      })
+      const table = useTable(
+        {
+          features,
+          columns,
+          data,
+          state: controlled ? { pagination } : {},
+        },
+        (state) => state.pagination,
+      )
+
+      return (
+        <>
+          <output aria-label="Ownership page index">
+            {table.state.pageIndex}
+          </output>
+          <button onClick={() => setControlled((value) => !value)}>
+            Toggle ownership
+          </button>
+          <button onClick={() => table.nextPage()}>Next page</button>
+        </>
+      )
+    }
+
+    render(<OwnershipHarness />)
+
+    expect(text('Ownership page index')).toBe('5')
+    expect(harnessRenderCount).toBe(1)
+
+    act(() => {
+      clickButton('Toggle ownership')
+    })
+
+    expect(text('Ownership page index')).toBe('5')
+    expect(harnessRenderCount).toBe(2)
+
+    act(() => {
+      clickButton()
+    })
+
+    expect(text('Ownership page index')).toBe('6')
+    expect(harnessRenderCount).toBe(3)
+
+    act(() => {
+      clickButton('Toggle ownership')
+    })
+
+    expect(text('Ownership page index')).toBe('5')
+    expect(harnessRenderCount).toBe(4)
+
+    act(() => {
+      clickButton()
+    })
+
+    expect(text('Ownership page index')).toBe('5')
+    expect(harnessRenderCount).toBe(4)
+  })
+
+  it('invalidates an isolated subscriber when the controlled slice is omitted', () => {
+    function OwnershipReleaseHarness() {
+      const [controlled, setControlled] = useState(true)
+      const [pagination] = useState<PaginationState>({
+        pageIndex: 5,
+        pageSize: 10,
+      })
+      const table = useTable(
+        {
+          features,
+          columns,
+          data,
+          state: controlled ? { pagination } : {},
+        },
+        () => null,
+      )
+
+      return (
+        <>
+          <table.Subscribe selector={(state) => state.pagination.pageIndex}>
+            {(pageIndex) => (
+              <output aria-label="Isolated page index">{pageIndex}</output>
+            )}
+          </table.Subscribe>
+          <button onClick={() => table.nextPage()}>Change base</button>
+          <button onClick={() => setControlled(false)}>Release control</button>
+        </>
+      )
+    }
+
+    render(<OwnershipReleaseHarness />)
+
+    expect(text('Isolated page index')).toBe('5')
+
+    act(() => {
+      clickButton('Change base')
+    })
+
+    expect(text('Isolated page index')).toBe('5')
+
+    act(() => {
+      clickButton('Release control')
+    })
+
+    expect(text('Isolated page index')).toBe('6')
+  })
+
+  it('gives an external atom precedence over controlled state and writes back to it', () => {
+    const paginationAtom = createAtom<PaginationState>({
+      pageIndex: 3,
+      pageSize: 10,
+    })
+
+    function ExternalAtomHarness() {
+      const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+      })
+      const table = useTable(
+        {
+          features,
+          columns,
+          data,
+          state: { pagination },
+          atoms: {
+            pagination: paginationAtom,
+          },
+        },
+        (state) => state.pagination.pageIndex,
+      )
+
+      return (
+        <>
+          <output aria-label="External page index">{table.state}</output>
+          <button
+            onClick={() =>
+              setPagination({
+                pageIndex: 7,
+                pageSize: 10,
+              })
+            }
+          >
+            Change controlled page
+          </button>
+          <button onClick={() => table.nextPage()}>Next page</button>
+        </>
+      )
+    }
+
+    render(<ExternalAtomHarness />)
+
+    expect(text('External page index')).toBe('3')
+
+    act(() => {
+      clickButton('Change controlled page')
+    })
+
+    expect(text('External page index')).toBe('3')
+    expect(paginationAtom.get().pageIndex).toBe(3)
+
+    act(() => {
+      clickButton()
+    })
+
+    expect(paginationAtom.get().pageIndex).toBe(4)
+    expect(text('External page index')).toBe('4')
+  })
+
+  it('keeps the owner stable when an update misses its selected slice', () => {
+    let harnessRenderCount = 0
+
+    function SelectedPageIndexHarness() {
+      harnessRenderCount++
+      const table = useTable(
+        {
+          features,
+          columns,
+          data,
+        },
+        (state) => state.pagination.pageIndex,
+      )
+
+      return (
+        <>
+          <output aria-label="Selected page index">{table.state}</output>
+          <table.Subscribe selector={(state) => state.pagination.pageSize}>
+            {(pageSize) => (
+              <output aria-label="Isolated page size">{pageSize}</output>
+            )}
+          </table.Subscribe>
+          <button onClick={() => table.setPageSize(20)}>
+            Set page size to 20
+          </button>
+          <button onClick={() => table.nextPage()}>Next page</button>
+        </>
+      )
+    }
+
+    render(<SelectedPageIndexHarness />)
+
+    expect(harnessRenderCount).toBe(1)
+    expect(text('Selected page index')).toBe('0')
+    expect(text('Isolated page size')).toBe('10')
+
+    act(() => {
+      clickButton('Set page size to 20')
+    })
+
+    expect(harnessRenderCount).toBe(1)
+    expect(text('Selected page index')).toBe('0')
+    expect(text('Isolated page size')).toBe('20')
+
+    act(() => {
+      clickButton()
+    })
+
+    expect(harnessRenderCount).toBe(2)
+    expect(text('Selected page index')).toBe('1')
+  })
+
+  it('publishes the final value after rapid controlled updates', () => {
+    function RapidUpdateHarness() {
+      const [pagination, setPagination] = useState<PaginationState>({
+        pageIndex: 0,
+        pageSize: 10,
+      })
+      const table = useTable(
+        {
+          features,
+          columns,
+          data,
+          state: { pagination },
+          onPaginationChange: setPagination,
+        },
+        () => null,
+      )
+
+      return (
+        <>
+          <output aria-label="Controlled page index">
+            {pagination.pageIndex}
+          </output>
+          <table.Subscribe selector={(state) => state.pagination.pageIndex}>
+            {(pageIndex) => (
+              <output aria-label="Rapid isolated page index">
+                {pageIndex}
+              </output>
+            )}
+          </table.Subscribe>
+          <button
+            onClick={() => {
+              table.nextPage()
+              table.nextPage()
+              table.nextPage()
+            }}
+          >
+            Advance three pages
+          </button>
+        </>
+      )
+    }
+
+    render(<RapidUpdateHarness />)
+
+    expect(text('Controlled page index')).toBe('0')
+    expect(text('Rapid isolated page index')).toBe('0')
+
+    act(() => {
+      clickButton('Advance three pages')
+    })
+
+    expect(text('Controlled page index')).toBe('3')
+    expect(text('Rapid isolated page index')).toBe('3')
   })
 })

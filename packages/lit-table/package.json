@@ -41,6 +41,8 @@
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
     "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "tsdown"
@@ -51,6 +53,7 @@
   },
   "devDependencies": {
     "@lit/context": "^1.1.6",
+    "@testing-library/dom": "^10.4.1",
     "lit": "^3.3.3"
   },
   "peerDependencies": {

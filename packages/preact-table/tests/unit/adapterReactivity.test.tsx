@@ -1,27 +1,23 @@
 // @vitest-environment jsdom
 
-import * as React from 'react'
-import {
-  act,
-  cleanup,
-  fireEvent,
-  screen,
-  render as testingLibraryRender,
-} from '@testing-library/react'
+import { cleanup, fireEvent, render, screen } from '@testing-library/preact'
+import { useLayoutEffect, useState } from 'preact/hooks'
+import { act } from 'preact/test-utils'
 import {
   createPaginatedRowModel,
   stockFeatures,
   tableFeatures,
 } from '@tanstack/table-core'
-import { createAtom } from '@tanstack/react-store'
+import { createAtom } from '@tanstack/preact-store'
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { useTable } from '../src'
+import { useTable } from '../../src'
 import type {
   ColumnDef,
+  OnChangeFn,
   PaginationState,
   RowSelectionState,
 } from '@tanstack/table-core'
-import type { ReactTable } from '../src'
+import type { PreactTable } from '../../src'
 
 type Data = {
   id: string
@@ -62,13 +58,6 @@ const paginatedColumns: Array<ColumnDef<typeof paginatedFeatures, Data>> = [
   },
 ]
 
-let renderedView: ReturnType<typeof testingLibraryRender> | undefined
-
-function render(element: React.ReactNode) {
-  renderedView = testingLibraryRender(element)
-  return renderedView
-}
-
 function text(name: string) {
   return screen.getByRole('status', { name }).textContent
 }
@@ -77,28 +66,19 @@ function click(name: string) {
   fireEvent.click(screen.getByRole('button', { name }))
 }
 
-function unmount() {
-  renderedView!.unmount()
-  renderedView = undefined
-}
-
 afterEach(() => {
   cleanup()
-  renderedView = undefined
   vi.restoreAllMocks()
 })
 
-// Adapter contract only: React/store ownership, subscriptions, lifecycle, and
+// Adapter contract only: Preact/store ownership, subscriptions, lifecycle, and
 // option refreshes. Row-model algorithms remain covered by table-core.
-describe('React adapter reactivity and lifecycle', () => {
-  test('exposes React adapter APIs through the returned table surface', () => {
+describe('Preact adapter reactivity and lifecycle', () => {
+  test('exposes Preact adapter APIs through the returned table surface', () => {
     function TableHarness() {
       const table = useTable(
         {
-          data: [
-            { id: '1', title: 'First' },
-            { id: '2', title: 'Second' },
-          ],
+          data: [{ id: '1', title: 'Title' }],
           features: stockFeatures,
           columns,
           getRowId: (row) => row.id,
@@ -157,8 +137,9 @@ describe('React adapter reactivity and lifecycle', () => {
     }))
     const coreRowModelCaptor = vi.fn()
     const rowModelCaptor = vi.fn()
+
     function TableHarness() {
-      const [pagination, setPagination] = React.useState<PaginationState>({
+      const [pagination, setPagination] = useState<PaginationState>({
         pageIndex: 0,
         pageSize: 5,
       })
@@ -244,13 +225,11 @@ describe('React adapter reactivity and lifecycle', () => {
             )}
           </table.Subscribe>
           <table.Subscribe source={table.atoms.rowSelection}>
-            {(selection) => {
-              return (
-                <output aria-label="External row selection">
-                  {JSON.stringify(selection)}
-                </output>
-              )
-            }}
+            {(selection) => (
+              <output aria-label="External row selection">
+                {JSON.stringify(selection)}
+              </output>
+            )}
           </table.Subscribe>
           <button onClick={() => table.getRow('1').toggleSelected()}>
             Toggle external row
@@ -399,12 +378,12 @@ describe('React adapter reactivity and lifecycle', () => {
     expect(pageSizeRenderCaptor).toHaveBeenCalledTimes(2)
   })
 
-  test('stops root and isolated React observers after unmount', () => {
+  test('stops root and isolated Preact observers after unmount', () => {
     const rowSelectionAtom = createAtom<RowSelectionState>({})
     const rootStoreSelectorCaptor = vi.fn()
     const isolatedStoreCaptor = vi.fn()
     const captureTable =
-      vi.fn<(table: ReactTable<typeof stockFeatures, Data, boolean>) => void>()
+      vi.fn<(table: PreactTable<typeof stockFeatures, Data, boolean>) => void>()
 
     function TableHarness() {
       const table = useTable(
@@ -426,7 +405,7 @@ describe('React adapter reactivity and lifecycle', () => {
         },
       )
 
-      React.useLayoutEffect(() => {
+      useLayoutEffect(() => {
         captureTable(table)
       }, [table])
 
@@ -449,7 +428,7 @@ describe('React adapter reactivity and lifecycle', () => {
       )
     }
 
-    render(<TableHarness />)
+    const view = render(<TableHarness />)
 
     act(() => {
       rowSelectionAtom.set({ 1: true })
@@ -457,7 +436,7 @@ describe('React adapter reactivity and lifecycle', () => {
 
     expect(text('Lifecycle selection')).toBe('true')
 
-    unmount()
+    view.unmount()
 
     const rootCallsAfterUnmount = rootStoreSelectorCaptor.mock.calls.length
     const isolatedCallsAfterUnmount = isolatedStoreCaptor.mock.calls.length
@@ -509,7 +488,7 @@ describe('React adapter reactivity and lifecycle', () => {
     const renderCaptor = vi.fn<(version: number) => void>()
 
     function TableHarness() {
-      const [version, setVersion] = React.useState(0)
+      const [version, setVersion] = useState(0)
       const isUpdated = version === 1
       const table = useTable({
         data: isUpdated ? updatedData : initialData,
@@ -571,5 +550,60 @@ describe('React adapter reactivity and lifecycle', () => {
     expect(text('Dynamic cell value')).toBe('ready')
     expect(text('Dynamic fallback')).toBe('updated fallback')
     expect(renderCaptor.mock.calls).toEqual([[0], [1]])
+  })
+
+  test('table APIs use the latest option callback', () => {
+    const firstHandler = vi.fn<OnChangeFn<RowSelectionState>>()
+    const secondHandler = vi.fn<OnChangeFn<RowSelectionState>>()
+
+    function CallbackHarness() {
+      const [useSecondHandler, setUseSecondHandler] = useState(false)
+      const table = useTable(
+        {
+          data: [{ id: '1', title: 'Title' }],
+          features: stockFeatures,
+          columns,
+          getRowId: (row) => row.id,
+          onRowSelectionChange: useSecondHandler ? secondHandler : firstHandler,
+        },
+        () => null,
+      )
+
+      return (
+        <>
+          <output aria-label="Active selection handler">
+            {useSecondHandler ? 'second' : 'first'}
+          </output>
+          <button onClick={() => table.setRowSelection({ 1: true })}>
+            Request row selection
+          </button>
+          <button onClick={() => setUseSecondHandler(true)}>
+            Use second selection handler
+          </button>
+        </>
+      )
+    }
+
+    render(<CallbackHarness />)
+
+    act(() => {
+      click('Request row selection')
+    })
+
+    expect(firstHandler).toHaveBeenCalledTimes(1)
+    expect(secondHandler).not.toHaveBeenCalled()
+
+    act(() => {
+      click('Use second selection handler')
+    })
+
+    expect(text('Active selection handler')).toBe('second')
+
+    act(() => {
+      click('Request row selection')
+    })
+
+    expect(firstHandler).toHaveBeenCalledTimes(1)
+    expect(secondHandler).toHaveBeenCalledTimes(1)
   })
 })

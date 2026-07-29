@@ -61,8 +61,22 @@
   // or the legacy content/context props.
   const resolved = $derived.by(() => {
     if ('cell' in props && props.cell) {
+      const columnDef = props.cell.column.columnDef
+      const groupingCell = props.cell as typeof props.cell & {
+        getIsAggregated?: () => boolean
+        getIsPlaceholder?: () => boolean
+      }
+      const groupingColumnDef = columnDef as typeof columnDef & {
+        aggregatedCell?: typeof columnDef.cell
+      }
+      const content = groupingCell.getIsAggregated?.()
+        ? (groupingColumnDef.aggregatedCell ?? columnDef.cell)
+        : groupingCell.getIsPlaceholder?.()
+          ? undefined
+          : columnDef.cell
+
       return {
-        content: props.cell.column.columnDef.cell,
+        content,
         context: props.cell.getContext(),
       }
     }

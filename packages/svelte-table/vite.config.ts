@@ -3,4 +3,10 @@ import { defineConfig } from 'vitest/config'
 
 export default defineConfig({
   plugins: [svelte()],
+  resolve: {
+    conditions: ['browser'],
+  },
+  test: {
+    setupFiles: ['./tests/test-setup.ts'],
+  },
 })

@@ -101,22 +101,23 @@ export function createTable<
   // inside createTableState), the effect re-runs and calls setOptions.
   // Use $effect.pre so the table sees updated options BEFORE the DOM renders,
   // ensuring getRowModel() returns current data (not stale, one-frame-behind data).
-  // The reactive reads (state getters, data getter) happen OUTSIDE untrack
-  // so they become dependencies. The setOptions call is INSIDE untrack so
-  // option writes do not subscribe this effect to table internals.
+  // Reactive option getters and nested state keys are read OUTSIDE untrack so
+  // they become dependencies. The setOptions call is INSIDE untrack so option
+  // writes do not subscribe this effect to table internals.
   $effect.pre(() => {
-    // Read reactive getters to create $effect dependencies on external state
-    const state: Record<string, unknown> | undefined = mergedOptions.state
+    // Resolve every option outside untrack so getter-backed data, columns,
+    // callbacks, metadata, and state become dependencies of this effect.
+    const nextOptions = flatMerge(mergedOptions)
+    const state = nextOptions.state as Record<string, unknown> | undefined
     if (state) {
       for (const key in state) {
         void state[key]
       }
     }
-    void mergedOptions.data
 
     untrack(() => {
       table.setOptions((prev) => {
-        return flatMerge(prev, mergedOptions)
+        return flatMerge(prev, nextOptions)
       })
     })
   })

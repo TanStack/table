@@ -154,6 +154,9 @@ export class SubscribeDirective extends AsyncDirective {
   /** Restores the controller subscription when the directive is re-attached to the DOM. */
   reconnected() {
     this.controller?.hostUpdate()
+    if (this.resolvedTemplate && this.controller) {
+      this.setValue(this.resolvedTemplate(this.controller.value))
+    }
   }
 
   /**

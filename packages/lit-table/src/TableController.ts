@@ -250,6 +250,9 @@ export class TableController<
 
   hostConnected() {
     this._setupSubscriptions()
+    if (this._table) {
+      this.host.requestUpdate()
+    }
   }
 
   hostUpdated() {
