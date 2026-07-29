@@ -8,7 +8,6 @@ export default defineConfig({
     name: packageJson.name,
     dir: './tests',
     watch: false,
-    environment: 'jsdom',
     globals: true,
     setupFiles: ['./tests/test-setup.ts'],
   },
