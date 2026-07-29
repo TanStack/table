@@ -138,7 +138,7 @@ The `getInitialState` method in a table feature is responsible for setting the d
 
 #### initTableInstanceData and resetTableInstanceData
 
-Use `initTableInstanceData` for mutable, non-reactive data that belongs to one table instance, such as an interaction anchor or an imperative cache. It runs once after table options, state atoms, and the store have been created. Every feature's initialization hook runs before any feature's `constructTableAPIs` hook.
+Use `initTableInstanceData` for mutable, non-reactive data that belongs to one table instance, such as an interaction anchor or an imperative cache. It runs once after table options, state atoms, and the store have been created. Features are processed in a single pass in registration order; each feature's initialization hook runs just before that feature's `constructTableAPIs` hook, so hooks may rely on data and APIs from features registered earlier.
 
 Use `resetTableInstanceData` to clear that transient data when `table.reset()` runs. Reset hooks run after internally owned table state atoms have been restored to `table.initialState`. They do not reset table state slices or externally controlled state, and `table.reset()` does not rerun `initTableInstanceData`.
 

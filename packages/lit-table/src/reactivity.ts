@@ -1,41 +1,20 @@
 import { batch, createAtom } from '@tanstack/lit-store'
-import type {
-  TableAtomOptions,
-  TableReactivityBindings,
-} from '@tanstack/table-core/reactivity'
+import { renderPhaseReactivity } from '@tanstack/table-core/reactivity'
+import type { RenderPhaseReactivityBindings } from '@tanstack/table-core/reactivity'
+
+export type LitTableReactivityBindings = RenderPhaseReactivityBindings
 
 /**
  * Creates the table-core reactivity bindings used by the Lit adapter.
  *
- * Lit uses TanStack Store atoms directly. `TableController` subscribes to the
- * resulting table store and options store to request host updates.
+ * Lit calls `controller.table(options)` from the host's `render()`, so options
+ * are plain values synchronized during the update cycle — writing a reactive
+ * options store there would schedule a second update per interaction. The
+ * render-phase preset supplies the live readonly-atom facades and the `commit`
+ * hook; `TableController` publishes its captured controlled state from
+ * `hostUpdated()`. Store primitives come from `@tanstack/lit-store` so all
+ * atoms share one store instance with user-provided external atoms.
  */
-export function litReactivity(): TableReactivityBindings {
-  return {
-    createOptionsStore: true,
-    wrapExternalAtoms: false,
-    addSubscription: () => {
-      throw new Error(
-        'Feature not supported in current reactivity implementation',
-      )
-    },
-    unmount: () => {
-      throw new Error(
-        'Feature not supported in current reactivity implementation',
-      )
-    },
-    schedule: (fn) => queueMicrotask(() => fn()),
-    batch,
-    untrack: (fn) => fn(),
-    createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      return createAtom(() => fn(), {
-        compare: options?.compare,
-      })
-    },
-    createWritableAtom: <T>(value: T, options?: TableAtomOptions<T>) => {
-      return createAtom(value, {
-        compare: options?.compare,
-      })
-    },
-  }
+export function litReactivity(): LitTableReactivityBindings {
+  return renderPhaseReactivity({ createAtom, batch })
 }

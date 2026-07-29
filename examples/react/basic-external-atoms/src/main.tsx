@@ -2,7 +2,7 @@ import React from 'react'
 import { TanStackDevtools } from '@tanstack/react-devtools'
 import ReactDOM from 'react-dom/client'
 import './index.css'
-import { useCreateAtom, useSelector } from '@tanstack/react-store'
+import { useCreateAtom } from '@tanstack/react-store'
 import {
   createColumnHelper,
   createPaginatedRowModel,
@@ -79,14 +79,8 @@ function App() {
     pageSize: 10,
   })
 
-  // Subscribe to each atom independently — fine-grained reactivity.
-  const sorting = useSelector(sortingAtom)
-  const pagination = useSelector(paginationAtom)
-
-  console.log('sorting', sorting)
-  console.log('pagination', pagination)
-
-  // Create the table and pass your per-slice external atoms.
+  // Pass the per-slice external atoms directly. The React adapter subscribes
+  // through table.store, so no separate useSelector call is needed here.
   const table = useTable(
     {
       key: 'basic-external-atoms', // needed for devtools
@@ -156,7 +150,7 @@ function App() {
       <div className="controls">
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(0)}
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
@@ -177,7 +171,7 @@ function App() {
         </button>
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
@@ -185,7 +179,7 @@ function App() {
         <span className="inline-controls">
           <div>Page</div>
           <strong>
-            {(table.atoms.pagination.get().pageIndex + 1).toLocaleString()} of{' '}
+            {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
             {table.getPageCount().toLocaleString()}
           </strong>
         </span>
@@ -195,7 +189,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.atoms.pagination.get().pageIndex + 1}
+            defaultValue={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -204,7 +198,7 @@ function App() {
           />
         </span>
         <select
-          value={table.atoms.pagination.get().pageSize}
+          value={table.state.pagination.pageSize}
           onChange={(e) => {
             table.setPageSize(Number(e.target.value))
           }}
@@ -217,7 +211,9 @@ function App() {
         </select>
       </div>
       <div className="spacer-md" />
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

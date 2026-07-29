@@ -117,7 +117,7 @@ export function constructColumn<
   column.parent = parent
 
   // Initialize instance-specific data for features that need it
-  const initFns = table._columnInstanceInitFns!
+  const initFns = table._columnInstanceInitFns
   for (let i = 0; i < initFns.length; i++) {
     initFns[i]!(column as Column<TFeatures, TData, TValue>)
   }

@@ -52,7 +52,7 @@ export function constructCell<
   cell.row = row
 
   // Initialize instance-specific data for features that need it
-  const initFns = table._cellInstanceInitFns!
+  const initFns = table._cellInstanceInitFns
   for (let i = 0; i < initFns.length; i++) {
     initFns[i]!(cell as Cell<TFeatures, TData, TValue>)
   }

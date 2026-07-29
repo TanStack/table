@@ -426,10 +426,13 @@ export interface TableFeature {
    * instance.
    *
    * This runs once during table construction after options, state atoms, and
-   * the store are available, and before any feature's `constructTableAPIs`
-   * hook runs. Use `constructTableAPIs` exclusively for assigning table
-   * methods. Table resets do not rerun this hook; use
-   * `resetTableInstanceData` to clear transient instance data instead.
+   * the store are available. Features are processed in a single pass in
+   * registration order, with each feature's instance data initialized just
+   * before its own `constructTableAPIs` hook, so this hook may rely on data
+   * and APIs of features registered earlier. Use `constructTableAPIs`
+   * exclusively for assigning table methods. Table resets do not rerun this
+   * hook; use `resetTableInstanceData` to clear transient instance data
+   * instead.
    */
   initTableInstanceData?: <
     TFeatures extends TableFeatures,

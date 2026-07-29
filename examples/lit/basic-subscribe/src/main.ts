@@ -118,18 +118,25 @@ class LitTableExample extends LitElement {
 
   private tableController = new TableController<typeof features, Person>(this)
 
-  private table = this.tableController.table(
-    {
+  // Options are re-synced on every render pass (like the other examples), so
+  // reactive inputs such as `this._data` flow into the table in the same
+  // update that renders them.
+  private tableOptions() {
+    return {
       features,
       columns,
       data: this._data,
-      getRowId: (row) => row.id,
+      getRowId: (row: Person) => row.id,
       enableRowSelection: true,
       atoms: {
         rowSelection: rowSelectionAtom,
       },
       debugTable: true,
-    },
+    }
+  }
+
+  private table = this.tableController.table(
+    this.tableOptions(),
     () => null, // subscribe to no table state by default; use table.subscribe below
   )
 
@@ -140,12 +147,6 @@ class LitTableExample extends LitElement {
     globalFilter: state.globalFilter,
     pagination: state.pagination,
   })
-
-  protected updated(changedProperties: Map<string, unknown>) {
-    if (changedProperties.has('_data')) {
-      this.table.setOptions((prev) => ({ ...prev, data: this._data }))
-    }
-  }
 
   private renderColumnFilter(
     context: HeaderContext<typeof features, Person, unknown>,
@@ -211,6 +212,8 @@ class LitTableExample extends LitElement {
   }
 
   protected render() {
+    this.table = this.tableController.table(this.tableOptions(), () => null)
+
     return html`
       <div class="demo-root">
         <div>

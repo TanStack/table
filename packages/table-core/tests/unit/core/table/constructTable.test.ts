@@ -35,7 +35,7 @@ function getterOnlyMerge(...sources: Array<any>) {
 }
 
 describe('constructTable', () => {
-  it('initializes feature-owned table data before constructing any table APIs', () => {
+  it('runs each feature init just before its own API construction, in registration order', () => {
     const calls: Array<string> = []
     const initA = vi.fn((table: any) => {
       calls.push('init-a')
@@ -43,7 +43,9 @@ describe('constructTable', () => {
       expect(table.baseAtoms.lifecycle.get()).toBe('initial')
       expect(table.atoms.lifecycle.get()).toBe('initial')
       expect(table.store.state.lifecycle).toBe('initial')
-      expect(table.reset).toBeUndefined()
+      // Hooks may rely on features registered earlier: the core features'
+      // APIs (like reset) are already constructed by the time this runs.
+      expect(table.reset).toBeTypeOf('function')
       table.firstInitialized = true
     })
     const initB = vi.fn((table: any) => {
@@ -53,8 +55,9 @@ describe('constructTable', () => {
     })
     const apiA = vi.fn((table: any) => {
       calls.push('api-a')
+      // Own feature's instance data is initialized, later features' is not.
       expect(table.firstInitialized).toBe(true)
-      expect(table.secondInitialized).toBe(true)
+      expect(table.secondInitialized).toBeUndefined()
     })
     const apiB = vi.fn((table: any) => {
       calls.push('api-b')
@@ -94,8 +97,8 @@ describe('constructTable', () => {
 
     expect(calls).toEqual([
       'init-a',
-      'init-b',
       'api-a',
+      'init-b',
       'api-b',
       'api-without-init',
     ])

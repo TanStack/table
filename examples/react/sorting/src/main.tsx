@@ -183,7 +183,9 @@ function App() {
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div></div>
       {/* Store mode: dump full table state for debugging */}
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

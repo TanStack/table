@@ -80,3 +80,46 @@ test('regenerates table data', async ({ page }) => {
     await server.close()
   }
 })
+
+test('paginates without resetting to the first page', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const firstEmailBefore = await getFirstEmailText(page)
+
+    await page.getByRole('button', { name: /go to next page/i }).click()
+
+    await expect(page.getByText('11-20 of 50')).toBeVisible()
+    await expect.poll(() => getFirstEmailText(page)).not.toBe(firstEmailBefore)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('groups and ungroups a column without crashing', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const openFirstNameColumnMenu = async () => {
+      await page
+        .locator('thead th')
+        .filter({ hasText: 'First Name' })
+        .getByRole('button', { name: 'Column Actions' })
+        .click()
+    }
+
+    await openFirstNameColumnMenu()
+    await page.getByRole('menuitem', { name: 'Group by First Name' }).click()
+    await expect(page.getByRole('button', { name: 'Expand all' })).toBeVisible()
+
+    await openFirstNameColumnMenu()
+    await page.getByRole('menuitem', { name: 'Ungroup by First Name' }).click()
+    await expect(page.getByRole('button', { name: 'Expand all' })).toHaveCount(
+      0,
+    )
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
