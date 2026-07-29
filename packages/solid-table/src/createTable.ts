@@ -14,7 +14,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 
 export type SolidTable<
@@ -39,27 +38,6 @@ export type SolidTable<
    * <table.FlexRender footer={footer} />
    */
   FlexRender: typeof FlexRender
-}
-
-function overrideStateOption<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
->(
-  options: TableOptions<TFeatures, TData>,
-  state: Partial<TableState<TFeatures>> | undefined,
-): TableOptions<TFeatures, TData> {
-  return Object.defineProperties(
-    Object.create(Object.getPrototypeOf(options)),
-    {
-      ...Object.getOwnPropertyDescriptors(options),
-      state: {
-        configurable: true,
-        enumerable: true,
-        value: state,
-        writable: true,
-      },
-    },
-  ) as TableOptions<TFeatures, TData>
 }
 
 /**
@@ -100,17 +78,7 @@ export function createTable<
         defaultOptions: TableOptions<TFeatures, TData>,
         options: TableOptions<TFeatures, TData>,
       ) => {
-        const merged = mergeProps(defaultOptions, options) as TableOptions<
-          TFeatures,
-          TData
-        >
-
-        // Solid's mergeProps treats `undefined` as a request to fall back to
-        // the previous source. For a controlled table state, however,
-        // `state: undefined` explicitly releases ownership back to the table.
-        return Object.prototype.hasOwnProperty.call(options, 'state')
-          ? overrideStateOption(merged, options.state)
-          : merged
+        return mergeProps(defaultOptions, options)
       },
     },
     mergedOptions,
@@ -131,14 +99,7 @@ export function createTable<
 
     untrack(() => {
       table.setOptions((prev) => {
-        const nextOptions = mergeProps(prev, mergedOptions) as TableOptions<
-          TFeatures,
-          TData
-        >
-
-        return Object.prototype.hasOwnProperty.call(tableOptions, 'state')
-          ? overrideStateOption(nextOptions, userState)
-          : nextOptions
+        return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
       })
     })
   })
