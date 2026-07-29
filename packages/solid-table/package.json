@@ -65,6 +65,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
+    "@solidjs/testing-library": "^0.8.10",
     "solid-js": "^1.9.13",
     "vite-plugin-solid": "^2.11.12"
   },
