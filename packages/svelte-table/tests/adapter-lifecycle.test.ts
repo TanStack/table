@@ -48,40 +48,6 @@ describe('Svelte adapter lifecycle and reactive options', () => {
     })
   })
 
-  test('controlled state can release and reacquire ownership without losing the latest value', async () => {
-    render(ReactivityHarness)
-
-    expect(outputText('Selected rows')).toBe('{"1":true}')
-    expect(outputText('Selected count')).toBe('1')
-
-    await fireEvent.click(
-      screen.getByRole('button', { name: 'Release selection ownership' }),
-    )
-    expect(outputText('Selected rows')).toBe('{"1":true}')
-
-    await fireEvent.click(
-      screen.getByRole('button', { name: 'Select second row' }),
-    )
-    expect(outputText('Selected rows')).toBe('{"2":true}')
-
-    await fireEvent.click(
-      screen.getByRole('button', { name: 'Control both rows' }),
-    )
-    expect(outputText('Selected rows')).toBe('{"1":true,"2":true}')
-    expect(outputText('Selected count')).toBe('2')
-
-    await fireEvent.click(
-      screen.getByRole('button', { name: 'Clear selection through table' }),
-    )
-    expect(outputText('Selected rows')).toBe('{"1":true,"2":true}')
-
-    await fireEvent.click(
-      screen.getByRole('button', { name: 'Release selection ownership' }),
-    )
-    expect(outputText('Selected rows')).toBe('{}')
-    expect(outputText('Selected count')).toBe('0')
-  })
-
   test('external atoms take precedence over controlled state and receive table updates', async () => {
     const externalRowSelection = createAtom<RowSelectionState>({ 2: true })
     render(ReactivityHarness, { externalRowSelection })

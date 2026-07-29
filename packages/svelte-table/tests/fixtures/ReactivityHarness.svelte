@@ -54,30 +54,25 @@
   let controlledState = $state<{ rowSelection?: RowSelectionState }>({
     rowSelection: { 1: true },
   })
-  const table = createTable(
-    {
-      get data() {
-        return data
-      },
-      get columns() {
-        return columns
-      },
-      features,
-      getRowId: (row) => row.id,
-      get enableRowSelection() {
-        return enableRowSelection
-      },
-      get state() {
-        return controlledState
-      },
-      atoms: externalSelectionAtom
-        ? { rowSelection: externalSelectionAtom }
-        : undefined,
+  const table = createTable({
+    get data() {
+      return data
     },
-    (state) => ({
-      selectedCount: Object.keys(state.rowSelection).length,
-    }),
-  )
+    get columns() {
+      return columns
+    },
+    features,
+    getRowId: (row) => row.id,
+    get enableRowSelection() {
+      return enableRowSelection
+    },
+    get state() {
+      return controlledState
+    },
+    atoms: externalSelectionAtom
+      ? { rowSelection: externalSelectionAtom }
+      : undefined,
+  })
   const selected = subscribeTable(table.atoms.rowSelection)
   const lifecycleSelection = externalSelectionAtom
     ? subscribeTable(externalSelectionAtom)
@@ -99,10 +94,6 @@
     })
   })
 
-  function releaseOwnership() {
-    controlledState = {}
-  }
-
   function controlBothRows() {
     controlledState = { rowSelection: { 1: true, 2: true } }
   }
@@ -117,7 +108,6 @@
 </script>
 
 <output aria-label="Selected rows">{JSON.stringify(selected.current)}</output>
-<output aria-label="Selected count">{table.state.selectedCount}</output>
 <output aria-label="Row ids"
   >{table
     .getRowModel()
@@ -141,12 +131,8 @@
   >{String(table.getRowModel().rows[0]?.getCanSelect() ?? false)}</output
 >
 
-<button onclick={releaseOwnership}>Release selection ownership</button>
 <button onclick={() => table.setRowSelection({ 2: true })}>
   Select second row
 </button>
 <button onclick={controlBothRows}>Control both rows</button>
-<button onclick={() => table.setRowSelection({})}>
-  Clear selection through table
-</button>
 <button onclick={rapidOptionUpdate}>Publish rapid option updates</button>

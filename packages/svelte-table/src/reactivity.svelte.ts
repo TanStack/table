@@ -32,26 +32,19 @@ function subscribeToRune<T>(
 }
 
 function createRuneWritableAtom<T>(initialValue: T): Atom<T> {
-  const storeAtom = createAtom(initialValue)
-  let version = $state(0)
+  let value = $state(initialValue)
 
   return {
     set: (updater: T | ((prevVal: T) => T)) => {
-      const previous = storeAtom.get()
-      if (typeof updater === 'function') {
-        storeAtom.set(updater as (prevVal: T) => T)
-      } else {
-        storeAtom.set(updater)
-      }
-      if (!Object.is(previous, storeAtom.get())) {
-        version += 1
-      }
+      value =
+        typeof updater === 'function'
+          ? (updater as (prevVal: T) => T)(value)
+          : updater
     },
-    get: () => {
-      version
-      return storeAtom.get()
-    },
-    subscribe: storeAtom.subscribe,
+    get: () => value,
+    subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
+      return subscribeToRune(() => value, observerOrNext)
+    }) as Atom<T>['subscribe'],
   }
 }
 
