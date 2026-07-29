@@ -11,7 +11,7 @@ export type LitTableReactivityBindings = RenderPhaseReactivityBindings
  * are plain values synchronized during the update cycle — writing a reactive
  * options store there would schedule a second update per interaction. The
  * render-phase preset supplies the live readonly-atom facades and the `commit`
- * hook; `TableController` publishes captured controlled state from
+ * hook; `TableController` publishes its captured controlled state from
  * `hostUpdated()`. Store primitives come from `@tanstack/lit-store` so all
  * atoms share one store instance with user-provided external atoms.
  */

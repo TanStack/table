@@ -2,10 +2,10 @@
 
 import { useEffect, useLayoutEffect, useMemo, useState } from 'react'
 import { constructTable } from '@tanstack/table-core'
-import { createCommitFilteredSource } from '@tanstack/table-core/reactivity'
+import { createRenderPhaseSource } from '@tanstack/table-core/reactivity'
 import {
+  table_publishExternalState,
   table_setOptions,
-  table_syncExternalStateToBaseAtoms,
 } from '@tanstack/table-core/static-functions'
 import { shallow, useSelector } from '@tanstack/react-store'
 import { reactReactivity } from './reactivity'
@@ -167,11 +167,9 @@ export function useTable<
     }) as unknown as ReactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
-      const source = props.source ?? tableInstance.store
-
       return Subscribe({
         ...props,
-        source,
+        source: props.source ?? tableInstance.store,
       })
     }) as ReactTable<TFeatures, TData, TSelected>['Subscribe']
 
@@ -179,46 +177,41 @@ export function useTable<
 
     return {
       table: tableInstance,
-      // The commit publication below re-notifies `table.store` so isolated
-      // `table.Subscribe` consumers update, but this root hook already
-      // rendered that exact snapshot — forwarding the notification here would
-      // re-render the owner once per controlled update just to find nothing
-      // changed. Only this hook's subscription is filtered.
-      rootSource: createCommitFilteredSource<TableState<TFeatures>>(
+      // Only a host render that commits advances this source's notification
+      // baseline. Reads from suspended or abandoned renders remain speculative.
+      rootSource: createRenderPhaseSource<TableState<TFeatures>>(
         tableInstance.store,
+        shallow,
       ),
     }
   })
 
   const coreTable = table as unknown as Table<TFeatures, TData>
 
-  // Keep options current during render, so render reads (data, columns,
-  // callbacks, controlled state) never lag a frame behind. The reactivity
-  // bindings declare `deferExternalStateSync`, so no store subscriber is
-  // notified while React is still rendering; the readonly atoms expose the
-  // fresh controlled state through their live get() in the meantime.
-  table_setOptions(coreTable, (prev) => ({
-    ...prev,
-    ...tableOptions,
-  }))
+  // Keep options current during render without publishing them to reactive
+  // subscribers. Readonly atoms expose the staged snapshot through live get().
+  table_setOptions(
+    coreTable,
+    (prev) => ({
+      ...prev,
+      ...tableOptions,
+    }),
+    { syncExternalState: false },
+  )
 
-  // Capture this render's controlled state: `table.options` is a shared
-  // mutable object, and by the time the effect runs it may hold values from a
-  // newer render that never commits (e.g. a suspended transition).
+  // Capture this render's controlled state: `table.options` is shared and may
+  // hold a newer render by the time the effect runs.
   const controlledState = coreTable.options.state
+  const renderSnapshot = rootSource.get()
 
   const state = useSelector(rootSource, selector, { compare: shallow })
 
   useIsomorphicLayoutEffect(() => {
-    // Publish only the state captured by a committed render. Layout effect
-    // (not passive) so isolated table.Subscribe consumers update before
-    // paint. Core batches the writes and bumps the commit version, which also
-    // handles changes in controlled/uncontrolled ownership.
-    table_syncExternalStateToBaseAtoms(
-      coreTable,
-      controlledState ?? null,
-      shallow,
-    )
+    // Establish the owner render's baseline before publication so its root
+    // subscription drops the matching notification. Isolated subscribers
+    // still receive the post-commit store update before paint.
+    rootSource.markCommitted(renderSnapshot)
+    table_publishExternalState(coreTable, controlledState ?? null, shallow)
   })
 
   // we know this is not the most efficient way to return the table,

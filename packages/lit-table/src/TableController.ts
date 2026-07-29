@@ -1,6 +1,9 @@
 import { constructTable } from '@tanstack/table-core'
-import { createCommitFilteredSource } from '@tanstack/table-core/reactivity'
-import { table_syncExternalStateToBaseAtoms } from '@tanstack/table-core/static-functions'
+import { createRenderPhaseSource } from '@tanstack/table-core/reactivity'
+import {
+  table_publishExternalState,
+  table_setOptions,
+} from '@tanstack/table-core/static-functions'
 import { shallow } from '@tanstack/lit-store'
 import { litReactivity } from './reactivity'
 import { FlexRender } from './flexRender'
@@ -126,13 +129,14 @@ export class TableController<
   private _table: Table<TFeatures, TData> | null = null
   private _rootSource?: {
     get: () => TableState<TFeatures>
+    markCommitted: (snapshot: TableState<TFeatures>) => void
     subscribe: (listener: (value: TableState<TFeatures>) => void) => {
       unsubscribe: () => void
     }
   }
   private _storeSubscription?: { unsubscribe: () => void }
   private _capturedState?: Partial<TableState<TFeatures>>
-  private _notifier = 0
+  private _capturedSnapshot?: TableState<TFeatures>
   private _hasSelector = false
   private _latestSelector?: (state: TableState<TFeatures>) => unknown
   private _lastSelected: unknown
@@ -181,33 +185,29 @@ export class TableController<
 
       this._table = constructTable(mergedOptions)
 
-      // The commit publication in hostUpdated() re-notifies `table.store` so
-      // `table.subscribe` islands update, but the host render already read
-      // that exact snapshot — forwarding the notification here would update
-      // the host once per controlled change just to find nothing changed.
-      // Only the controller's own subscription is filtered.
-      this._rootSource = createCommitFilteredSource<TableState<TFeatures>>(
+      this._rootSource = createRenderPhaseSource<TableState<TFeatures>>(
         this._table.store,
+        shallow,
       )
 
       // Set up subscriptions immediately when table is created
       this._setupSubscriptions()
     }
 
-    // Update options when they change. The reactivity bindings declare
-    // `deferExternalStateSync`, so no store subscriber is notified while the
-    // host is still rendering; the readonly atoms expose fresh controlled
-    // state through their live get() in the meantime. Publication happens in
-    // hostUpdated().
-    this._table.setOptions((prev) => ({
-      ...prev,
-      ...tableOptions,
-    }))
+    // Stage current options for same-render table reads. Publication happens
+    // in hostUpdated() after Lit commits this render.
+    table_setOptions(
+      this._table,
+      (prev) => ({
+        ...prev,
+        ...tableOptions,
+      }),
+      { syncExternalState: false },
+    )
 
-    // Capture this render's controlled state: `table.options` is a shared
-    // mutable object, and by the time hostUpdated() runs it may hold values
-    // from a newer render pass.
     this._capturedState = this._table.options.state
+    const renderSnapshot = this._rootSource!.get()
+    this._capturedSnapshot = renderSnapshot
 
     // Record the latest selector each render pass and re-baseline what the
     // store-subscription gate compares against, so renders triggered by
@@ -218,19 +218,14 @@ export class TableController<
     this._latestSelector = selector as
       | ((state: TableState<TFeatures>) => unknown)
       | undefined
-    this._lastSelected = selector
-      ? selector(this._rootSource!.get())
-      : undefined
-
-    // Capture for closure
-    const rootSource = this._rootSource!
+    this._lastSelected = selector ? selector(renderSnapshot) : renderSnapshot
 
     return {
       ...this._table,
       subscribe,
       FlexRender,
       get state() {
-        return (selector?.(rootSource.get()) ?? rootSource.get()) as TSelected
+        return (selector?.(renderSnapshot) ?? renderSnapshot) as TSelected
       },
     } as unknown as LitTable<TFeatures, TData, TSelected>
   }
@@ -248,7 +243,6 @@ export class TableController<
           }
           this._lastSelected = nextSelected
         }
-        this._notifier++
         this.host.requestUpdate()
       })
     }
@@ -262,11 +256,8 @@ export class TableController<
     if (!this._table) {
       return
     }
-    // Publish the controlled state captured by the committed render so
-    // `table.subscribe` islands and other store subscribers observe it. Core
-    // batches the writes and bumps the commit version, which also handles
-    // changes in controlled/uncontrolled ownership.
-    table_syncExternalStateToBaseAtoms(
+    this._rootSource!.markCommitted(this._capturedSnapshot!)
+    table_publishExternalState(
       this._table,
       this._capturedState ?? null,
       shallow,

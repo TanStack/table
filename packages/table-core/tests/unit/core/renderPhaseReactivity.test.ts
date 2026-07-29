@@ -2,10 +2,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { batch, createAtom } from '@tanstack/store'
 import { constructTable, rowSortingFeature } from '../../../src'
 import {
-  createCommitFilteredSource,
+  createRenderPhaseSource,
   renderPhaseReactivity,
 } from '../../../src/reactivity'
 import {
+  table_publishExternalState,
   table_setOptions,
   table_syncExternalStateToBaseAtoms,
 } from '../../../src/static-functions'
@@ -43,14 +44,14 @@ describe('renderPhaseReactivity bindings', () => {
     const { bindings, internalTable } = makeDeferredTable()
     const commitSpy = vi.spyOn(bindings, 'commit')
 
-    table_syncExternalStateToBaseAtoms(internalTable, {
+    table_publishExternalState(internalTable, {
       sorting: [{ id: 'a', desc: false }],
     })
     expect(commitSpy).toHaveBeenCalledTimes(1)
 
-    // A captured "no controlled state" publishes nothing but still bumps the
-    // commit version so ownership releases invalidate subscribers.
-    table_syncExternalStateToBaseAtoms(internalTable, null)
+    // Publishing options with no controlled state still bumps the commit
+    // version so ownership releases invalidate subscribers.
+    table_publishExternalState(internalTable, null)
     expect(commitSpy).toHaveBeenCalledTimes(2)
   })
 
@@ -58,16 +59,40 @@ describe('renderPhaseReactivity bindings', () => {
     const { table, internalTable } = makeDeferredTable()
     const controlled: SortingState = [{ id: 'controlled', desc: false }]
 
-    table_setOptions(internalTable, (options) => ({
-      ...options,
-      state: { sorting: controlled },
-    }))
+    table_setOptions(
+      internalTable,
+      (options) => ({
+        ...options,
+        state: { sorting: controlled },
+      }),
+      { syncExternalState: false },
+    )
 
     table_syncExternalStateToBaseAtoms(internalTable, null)
     expect(table.baseAtoms.sorting.get()).toEqual([])
 
     table_syncExternalStateToBaseAtoms(internalTable)
     expect(table.baseAtoms.sorting.get()).toBe(controlled)
+  })
+
+  it('keeps public setOptions eager', () => {
+    const { table, internalTable } = makeDeferredTable()
+    const controlled: SortingState = [{ id: 'controlled', desc: false }]
+    const notifications: Array<SortingState> = []
+    const subscription = table.atoms.sorting.subscribe((value) => {
+      notifications.push(value)
+    })
+
+    table_setOptions(internalTable, (options) => ({
+      ...options,
+      state: { sorting: controlled },
+    }))
+
+    expect(table.baseAtoms.sorting.get()).toBe(controlled)
+    expect(table.atoms.sorting.get()).toBe(controlled)
+    expect(notifications).toEqual([controlled])
+
+    subscription.unsubscribe()
   })
 
   it('suppresses semantically equal slice writes through the compare parameter', () => {
@@ -89,8 +114,8 @@ describe('renderPhaseReactivity bindings', () => {
   })
 })
 
-describe('createCommitFilteredSource', () => {
-  it('drops notifications whose snapshot the consumer already read, forwards the rest', () => {
+describe('createRenderPhaseSource', () => {
+  it('filters against explicit commits, not speculative reads', () => {
     const listeners: Array<(value: { n: number }) => void> = []
     let snapshot = { n: 1 }
     const source = {
@@ -101,36 +126,40 @@ describe('createCommitFilteredSource', () => {
       },
     }
 
-    const filtered = createCommitFilteredSource(source)
+    const filtered = createRenderPhaseSource(source)
     const received: Array<{ n: number }> = []
     filtered.subscribe((value) => received.push(value))
 
-    // Never read through the filtered source yet — forwarded.
+    // No render has committed yet, so the notification is forwarded.
     listeners[0]!(snapshot)
     expect(received).toEqual([{ n: 1 }])
 
-    // Read it, then republish the same reference — dropped.
-    expect(filtered.get()).toBe(snapshot)
+    filtered.markCommitted(snapshot)
     listeners[0]!(snapshot)
     expect(received).toHaveLength(1)
 
-    // A new snapshot reference is forwarded again.
+    // Reading a speculative snapshot does not move the commit baseline.
     snapshot = { n: 2 }
+    expect(filtered.get()).toBe(snapshot)
     listeners[0]!(snapshot)
     expect(received).toEqual([{ n: 1 }, { n: 2 }])
+
+    filtered.markCommitted(snapshot)
+    listeners[0]!(snapshot)
+    expect(received).toHaveLength(2)
   })
 
   it('does not filter other subscribers of the underlying source', () => {
     const atom = createAtom({ n: 0 })
-    const filtered = createCommitFilteredSource(atom)
+    const filtered = createRenderPhaseSource(atom)
 
     const direct: Array<number> = []
     atom.subscribe((value) => direct.push(value.n))
 
-    filtered.get()
+    filtered.markCommitted(filtered.get())
     const next = { n: 1 }
     atom.set(next)
-    filtered.get()
+    filtered.markCommitted(filtered.get())
     atom.set({ n: 2 })
 
     expect(direct).toEqual([1, 2])

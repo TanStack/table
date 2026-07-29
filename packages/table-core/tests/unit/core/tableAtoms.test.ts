@@ -74,7 +74,7 @@ describe('three-layer atom architecture', () => {
       expect(table.store.state.sorting).toEqual(external)
     })
 
-    it('defers options.state synchronization when bindings declare deferExternalStateSync', () => {
+    it('stages render options without publishing controlled state', () => {
       const table = constructTable({
         features: {
           ...features,
@@ -89,12 +89,16 @@ describe('three-layer atom architecture', () => {
       >
       const controlled: SortingState = [{ id: 'controlled', desc: false }]
 
-      table_setOptions(internalTable, (options) => ({
-        ...options,
-        state: {
-          sorting: controlled,
-        },
-      }))
+      table_setOptions(
+        internalTable,
+        (options) => ({
+          ...options,
+          state: {
+            sorting: controlled,
+          },
+        }),
+        { syncExternalState: false },
+      )
 
       // Options are current and render reads resolve the controlled value,
       // but nothing was published into the base atoms yet.

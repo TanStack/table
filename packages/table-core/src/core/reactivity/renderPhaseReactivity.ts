@@ -35,7 +35,7 @@ export interface RenderPhaseReactivityPrimitives {
 }
 
 /**
- * Creates reactivity bindings for render-phase adapters (React, Preact):
+ * Creates reactivity bindings for render-phase adapters (React, Preact, Lit):
  * frameworks with plain, non-reactive options that are re-synchronized during
  * component render, where store notifications must not fire until the host
  * commits.
@@ -46,12 +46,8 @@ export interface RenderPhaseReactivityPrimitives {
  * through the configured comparator so external-store consumers (e.g. React's
  * `useSyncExternalStore`) see referentially stable snapshots. `subscribe()`
  * goes through a hidden computed that tracks the resolver's real atom
- * dependencies plus a commit version, so subscribers are invalidated only by
- * actual reactive writes or by `commit()` after the host framework commits.
- *
- * Sets `deferExternalStateSync`, so `table_setOptions` leaves base-atom
- * publication to the adapter's post-commit
- * `table_syncExternalStateToBaseAtoms` call (which invokes `commit` itself).
+ * dependencies plus a commit version, so subscribers are invalidated by
+ * actual reactive writes and by the adapter's post-commit publication.
  *
  * @example
  * ```ts
@@ -70,7 +66,6 @@ export function renderPhaseReactivity(
   return {
     createOptionsStore: false,
     wrapExternalAtoms: false,
-    deferExternalStateSync: true,
     addSubscription: () => {
       throw new Error(
         'Feature not supported in current reactivity implementation',
@@ -124,38 +119,44 @@ export function renderPhaseReactivity(
   }
 }
 
+type SelectionSource<T> = {
+  get: () => T
+  subscribe: (listener: (value: T) => void) => { unsubscribe: () => void }
+}
+
+export interface RenderPhaseSource<T> extends SelectionSource<T> {
+  /**
+   * Records the snapshot observed by a render that actually committed.
+   */
+  markCommitted: (snapshot: T) => void
+}
+
 /**
- * Wraps a store-shaped source so notifications that merely republish the
- * snapshot the consumer has already read through `get()` are dropped.
+ * Creates a render-phase source with an explicit commit baseline.
  *
  * Render-phase adapters publish controlled state after the host framework
  * commits so isolated subscribers update, but the component that owns the
  * table already rendered that exact snapshot — forwarding the notification to
- * its root subscription would make the host re-render it once per controlled
- * update just to find nothing changed. Readonly atoms return referentially
- * stable snapshots while semantically unchanged, so a reference check
- * suffices.
- *
- * Only the returned source is filtered; other subscribers of the underlying
- * store still receive every notification.
+ * its root subscription would produce a redundant render. Unlike a last-read
+ * filter, speculative reads do not change notification behavior: only
+ * `markCommitted()` advances the baseline.
  */
-export function createCommitFilteredSource<T>(source: {
-  get: () => T
-  subscribe: (listener: (value: T) => void) => { unsubscribe: () => void }
-}): {
-  get: () => T
-  subscribe: (listener: (value: T) => void) => { unsubscribe: () => void }
-} {
-  let lastSeenSnapshot: T | undefined
+export function createRenderPhaseSource<T>(
+  source: SelectionSource<T>,
+  compare: (committed: T, published: T) => boolean = Object.is,
+): RenderPhaseSource<T> {
+  let hasCommittedSnapshot = false
+  let committedSnapshot: T
 
   return {
-    get: () => {
-      lastSeenSnapshot = source.get()
-      return lastSeenSnapshot
+    get: source.get,
+    markCommitted: (snapshot) => {
+      committedSnapshot = snapshot
+      hasCommittedSnapshot = true
     },
     subscribe: (listener) =>
       source.subscribe((value) => {
-        if (value !== lastSeenSnapshot) {
+        if (!hasCommittedSnapshot || !compare(committedSnapshot, value)) {
           listener(value)
         }
       }),

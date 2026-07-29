@@ -134,4 +134,33 @@ describe('TableController selector gate', () => {
 
     subscription.unsubscribe()
   })
+
+  test('a no-selector render baselines its commit without another host update', () => {
+    const host = createHost()
+    const controller = new TableController<any, any>(host)
+    const baseOptions = {
+      features: { rowSortingFeature },
+      columns: [],
+      data: [],
+    }
+
+    controller.table({
+      ...baseOptions,
+      state: { sorting: [{ id: 'a', desc: false }] },
+    })
+    controller.hostUpdated()
+
+    const before = host.updateCount
+    const nextSorting = [{ id: 'b', desc: true }]
+    const table = controller.table({
+      ...baseOptions,
+      state: { sorting: nextSorting },
+    })
+
+    // Do not read table.state: table() itself must capture the render snapshot.
+    controller.hostUpdated()
+
+    expect(table.store.get().sorting).toBe(nextSorting)
+    expect(host.updateCount).toBe(before)
+  })
 })

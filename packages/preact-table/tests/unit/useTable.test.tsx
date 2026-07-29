@@ -118,7 +118,29 @@ describe('useTable controlled state', () => {
           firstRow === controlled * 10,
       ),
     ).toBe(true)
-    expect(renderSnapshots[2]).toMatchObject({ controlled: 2, firstRow: 20 })
+    expect(renderSnapshots).toEqual([
+      {
+        controlled: 0,
+        selected: 0,
+        atom: 0,
+        store: 0,
+        firstRow: 0,
+      },
+      {
+        controlled: 1,
+        selected: 1,
+        atom: 1,
+        store: 1,
+        firstRow: 10,
+      },
+      {
+        controlled: 2,
+        selected: 2,
+        atom: 2,
+        store: 2,
+        firstRow: 20,
+      },
+    ])
   })
 
   it('notifies external store subscribers exactly once per controlled update, after commit', () => {

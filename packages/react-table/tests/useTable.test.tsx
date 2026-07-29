@@ -431,9 +431,6 @@ describe('useTable state subscriptions', () => {
   })
 
   it('does not mutate base state or notify subscribers from a suspended render', () => {
-    // `table.options` is still shared by the table instance, so this test is
-    // intentionally about committed reactive publication rather than
-    // render-local isolation of imperative getters.
     const suspendedRender = new Promise<never>(() => {})
     let committedTable: ReactTable<typeof features, TestRow, PaginationState>
 
@@ -479,6 +476,11 @@ describe('useTable state subscriptions', () => {
           >
             Suspend next render
           </button>
+          <table.Subscribe selector={(state) => state.pagination.pageIndex}>
+            {(pageIndex) => (
+              <output data-testid="isolated-page-index">{pageIndex}</output>
+            )}
+          </table.Subscribe>
           <SuspendedRender suspend={version === 1} />
         </>
       )
@@ -508,6 +510,10 @@ describe('useTable state subscriptions', () => {
       container?.querySelector('[data-testid="committed-page-index"]')
         ?.textContent,
     ).toBe('0')
+    expect(
+      container?.querySelector('[data-testid="isolated-page-index"]')
+        ?.textContent,
+    ).toBe('0')
     const committedBasePageIndex =
       committedTable!.baseAtoms.pagination.get().pageIndex
 
@@ -515,6 +521,64 @@ describe('useTable state subscriptions', () => {
 
     expect(committedBasePageIndex).toBe(0)
     expect(storeNotifications).toEqual([])
+  })
+
+  it('keeps imperative table.setOptions eager outside render', () => {
+    let latestTable: ReactTable<typeof features, TestRow, PaginationState>
+
+    function ImperativeOptionsHarness() {
+      const table = useTable(
+        {
+          features,
+          columns,
+          data,
+        },
+        (state) => state.pagination,
+      )
+      latestTable = table
+
+      return (
+        <>
+          <output data-testid="imperative-page-index">
+            {table.state.pageIndex}
+          </output>
+          <table.Subscribe selector={(state) => state.pagination.pageIndex}>
+            {(pageIndex) => (
+              <output data-testid="imperative-subscriber">{pageIndex}</output>
+            )}
+          </table.Subscribe>
+        </>
+      )
+    }
+
+    render(<ImperativeOptionsHarness />)
+
+    const notifications: Array<number> = []
+    const subscription = latestTable!.store.subscribe((state) => {
+      notifications.push(state.pagination.pageIndex)
+    })
+    const pagination = { pageIndex: 3, pageSize: 10 }
+
+    React.act(() => {
+      latestTable!.setOptions((options) => ({
+        ...options,
+        state: { ...options.state, pagination },
+      }))
+    })
+
+    expect(latestTable!.baseAtoms.pagination.get()).toBe(pagination)
+    expect(latestTable!.store.get().pagination).toBe(pagination)
+    expect(
+      container?.querySelector('[data-testid="imperative-page-index"]')
+        ?.textContent,
+    ).toBe('3')
+    expect(
+      container?.querySelector('[data-testid="imperative-subscriber"]')
+        ?.textContent,
+    ).toBe('3')
+    expect(notifications).toEqual([3])
+
+    subscription.unsubscribe()
   })
 
   it('publishes controlled pagination after commit without a render-phase update', () => {
