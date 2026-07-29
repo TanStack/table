@@ -20,7 +20,7 @@ function RowCount() {
   const table = contexts.useTableContext<Person>()
 
   return (
-    <output data-testid="bound-row-count">
+    <output aria-label="Bound row count">
       {table.getRowModel().rows.length}
     </output>
   )
@@ -29,13 +29,13 @@ function RowCount() {
 function NameCell() {
   const cell = contexts.useCellContext<string>()
 
-  return <span data-testid="bound-cell">{cell.getValue().toUpperCase()}</span>
+  return <span>{cell.getValue().toUpperCase()}</span>
 }
 
 function NameHeader() {
   const header = contexts.useHeaderContext<string>()
 
-  return <span data-testid="bound-header">Header {header.column.id}</span>
+  return <span>Header {header.column.id}</span>
 }
 
 const appTable = createTableHook({
@@ -57,12 +57,12 @@ const columns = columnHelper.columns([
   }),
 ])
 
-function text(testId: string) {
-  return screen.getByTestId(testId).textContent
+function text(name: string) {
+  return screen.getByRole('status', { name }).textContent
 }
 
-function click(action: string) {
-  fireEvent.click(screen.getByTestId(action))
+function click(name: string) {
+  fireEvent.click(screen.getByRole('button', { name }))
 }
 
 afterEach(() => {
@@ -91,7 +91,7 @@ describe('createTableHook runtime', () => {
           {(selectedCount) => (
             <>
               <table.RowCount />
-              <output data-testid="app-table-selection">{selectedCount}</output>
+              <output aria-label="App table selection">{selectedCount}</output>
               <table.AppHeader header={header}>
                 {(extendedHeader) => <extendedHeader.FlexRender />}
               </table.AppHeader>
@@ -102,7 +102,7 @@ describe('createTableHook runtime', () => {
                 {(extendedCell, selected) => (
                   <>
                     <extendedCell.FlexRender />
-                    <output data-testid="app-cell-selection">
+                    <output aria-label="App cell selection">
                       {String(selected)}
                     </output>
                   </>
@@ -111,10 +111,9 @@ describe('createTableHook runtime', () => {
               <table.AppFooter header={header}>
                 {(extendedFooter) => <extendedFooter.FlexRender />}
               </table.AppFooter>
-              <button
-                data-testid="select-app-row"
-                onClick={() => cell.row.toggleSelected(true)}
-              />
+              <button onClick={() => cell.row.toggleSelected(true)}>
+                Select app row
+              </button>
             </>
           )}
         </table.AppTable>
@@ -123,19 +122,19 @@ describe('createTableHook runtime', () => {
 
     render(<TableHarness />)
 
-    expect(text('bound-row-count')).toBe('1')
-    expect(text('bound-header')).toBe('Header name')
-    expect(text('bound-cell')).toBe('ADA')
+    expect(text('Bound row count')).toBe('1')
+    expect(screen.getByText('Header name')).toBeTruthy()
+    expect(screen.getByText('ADA')).toBeTruthy()
     expect(screen.getByText('Name footer')).toBeTruthy()
-    expect(text('app-table-selection')).toBe('0')
-    expect(text('app-cell-selection')).toBe('false')
+    expect(text('App table selection')).toBe('0')
+    expect(text('App cell selection')).toBe('false')
 
     act(() => {
-      click('select-app-row')
+      click('Select app row')
     })
 
-    expect(text('app-table-selection')).toBe('1')
-    expect(text('app-cell-selection')).toBe('true')
+    expect(text('App table selection')).toBe('1')
+    expect(text('App cell selection')).toBe('true')
   })
 
   test('keeps App wrappers mounted while their contexts receive new table objects', () => {
@@ -153,12 +152,13 @@ describe('createTableHook runtime', () => {
 
       return (
         <>
+          <label htmlFor="stateful-cell-input">Cell draft</label>
           <input
-            data-testid="stateful-cell-input"
+            id="stateful-cell-input"
             value={draft}
             onChange={(event) => setDraft(event.target.value)}
           />
-          <output data-testid="latest-cell-value">{cell.getValue()}</output>
+          <output aria-label="Latest cell value">{cell.getValue()}</output>
         </>
       )
     }
@@ -191,29 +191,26 @@ describe('createTableHook runtime', () => {
               )}
             </table.AppHeader>
           </table.AppTable>
-          <button
-            data-testid="refresh-app-table"
-            onClick={() => setUpdated(true)}
-          />
+          <button onClick={() => setUpdated(true)}>Refresh app table</button>
         </>
       )
     }
 
     render(<TableHarness />)
 
-    const input = screen.getByTestId('stateful-cell-input')
+    const input = screen.getByRole('textbox', { name: 'Cell draft' })
     fireEvent.change(input, { target: { value: 'edited' } })
 
-    expect(text('latest-cell-value')).toBe('Ada')
+    expect(text('Latest cell value')).toBe('Ada')
     expect(mountCaptor).toHaveBeenCalledOnce()
 
     act(() => {
-      click('refresh-app-table')
+      click('Refresh app table')
     })
 
-    expect(screen.getByTestId('stateful-cell-input')).toBe(input)
+    expect(screen.getByRole('textbox', { name: 'Cell draft' })).toBe(input)
     expect((input as HTMLInputElement).value).toBe('edited')
-    expect(text('latest-cell-value')).toBe('Grace')
+    expect(text('Latest cell value')).toBe('Grace')
     expect(mountCaptor).toHaveBeenCalledOnce()
     expect(unmountCaptor).not.toHaveBeenCalled()
   })

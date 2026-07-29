@@ -44,7 +44,7 @@ const IsolatedPaginationSubscriber = React.memo(
     return (
       <Subscribe selector={(state) => state.pagination.pageIndex}>
         {(pageIndex) => (
-          <output data-testid="isolated-page-index">{pageIndex}</output>
+          <output aria-label="Isolated page index">{pageIndex}</output>
         )}
       </Subscribe>
     )
@@ -55,12 +55,12 @@ function render(element: React.ReactNode) {
   return testingLibraryRender(element)
 }
 
-function text(testId: string) {
-  return screen.getByTestId(testId).textContent
+function text(name: string) {
+  return screen.getByRole('status', { name }).textContent
 }
 
-function click(testId: string) {
-  fireEvent.click(screen.getByTestId(testId))
+function click(name: string) {
+  fireEvent.click(screen.getByRole('button', { name }))
 }
 
 afterEach(() => {
@@ -96,9 +96,7 @@ describe('useTable state subscriptions', () => {
       )
 
       return (
-        <output data-testid="controlled-source-page-index">
-          {table.state}
-        </output>
+        <output aria-label="Controlled source page index">{table.state}</output>
       )
     }
 
@@ -113,7 +111,7 @@ describe('useTable state subscriptions', () => {
       })
     })
 
-    expect(text('controlled-source-page-index')).toBe('1')
+    expect(text('Controlled source page index')).toBe('1')
     expect(harnessRenderCount).toBe(2)
   })
 
@@ -143,12 +141,11 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <button
-            data-testid="toggle-ownership"
-            onClick={() => setControlled((value) => !value)}
-          />
-          <button data-testid="next-page" onClick={() => table.nextPage()} />
-          <output data-testid="ownership-page-index">
+          <button onClick={() => setControlled((value) => !value)}>
+            Toggle ownership
+          </button>
+          <button onClick={() => table.nextPage()}>Next page</button>
+          <output aria-label="Ownership page index">
             {table.state.pageIndex}
           </output>
         </>
@@ -157,13 +154,13 @@ describe('useTable state subscriptions', () => {
 
     render(<OwnershipChangeHarness />)
 
-    const pageIndex = () => text('ownership-page-index')
+    const pageIndex = () => text('Ownership page index')
 
     expect(pageIndex()).toBe('5')
     expect(harnessRenderCount).toBe(1)
 
     act(() => {
-      click('toggle-ownership')
+      click('Toggle ownership')
     })
 
     // Releasing control exposes the last committed controlled value in the
@@ -172,21 +169,21 @@ describe('useTable state subscriptions', () => {
     expect(harnessRenderCount).toBe(2)
 
     act(() => {
-      click('next-page')
+      click('Next page')
     })
 
     expect(pageIndex()).toBe('6')
     expect(harnessRenderCount).toBe(3)
 
     act(() => {
-      click('toggle-ownership')
+      click('Toggle ownership')
     })
 
     expect(pageIndex()).toBe('5')
     expect(harnessRenderCount).toBe(4)
 
     act(() => {
-      click('next-page')
+      click('Next page')
     })
 
     // The controlled prop owns the slice again; base writes are not observed
@@ -215,30 +212,27 @@ describe('useTable state subscriptions', () => {
       return (
         <>
           <IsolatedPaginationSubscriber Subscribe={table.Subscribe} />
-          <button data-testid="change-base" onClick={() => table.nextPage()} />
-          <button
-            data-testid="release-control"
-            onClick={() => setControlled(false)}
-          />
+          <button onClick={() => table.nextPage()}>Change base</button>
+          <button onClick={() => setControlled(false)}>Release control</button>
         </>
       )
     }
 
     render(<OwnershipReleaseHarness />)
 
-    const isolatedPageIndex = () => text('isolated-page-index')
+    const isolatedPageIndex = () => text('Isolated page index')
 
     expect(isolatedPageIndex()).toBe('5')
 
     act(() => {
-      click('change-base')
+      click('Change base')
     })
 
     // The controlled value still wins even though the internal base moved.
     expect(isolatedPageIndex()).toBe('5')
 
     act(() => {
-      click('release-control')
+      click('Release control')
     })
 
     expect(isolatedPageIndex()).toBe('6')
@@ -268,8 +262,8 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="external-atom-page-index">{table.state}</output>
-          <output data-testid="external-atom-first-row">
+          <output aria-label="External atom page index">{table.state}</output>
+          <output aria-label="External atom first row">
             {table.getRowModel().rows[0]?.original.id}
           </output>
         </>
@@ -296,8 +290,8 @@ describe('useTable state subscriptions', () => {
       })
     })
 
-    expect(text('external-atom-page-index')).toBe('1')
-    expect(text('external-atom-first-row')).toBe('20')
+    expect(text('External atom page index')).toBe('1')
+    expect(text('External atom first row')).toBe('20')
     expect(harnessRenderCount).toBe(2)
   })
 
@@ -337,22 +331,19 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="mixed-page-index">{table.state}</output>
-          <output data-testid="mixed-first-row">
+          <output aria-label="Mixed page index">{table.state}</output>
+          <output aria-label="Mixed first row">
             {table.getRowModel().rows[0]?.original.id}
           </output>
-          <button
-            data-testid="mixed-next-page"
-            onClick={() => table.nextPage()}
-          />
+          <button onClick={() => table.nextPage()}>Next page</button>
         </>
       )
     }
 
     render(<MixedOwnershipHarness />)
 
-    expect(text('mixed-page-index')).toBe('3')
-    expect(text('mixed-first-row')).toBe('30')
+    expect(text('Mixed page index')).toBe('3')
+    expect(text('Mixed first row')).toBe('30')
     expect(harnessRenderCount).toBe(1)
 
     act(() => {
@@ -362,7 +353,7 @@ describe('useTable state subscriptions', () => {
       })
     })
 
-    expect(text('mixed-page-index')).toBe('3')
+    expect(text('Mixed page index')).toBe('3')
     expect(harnessRenderCount).toBe(2)
 
     act(() => {
@@ -381,20 +372,20 @@ describe('useTable state subscriptions', () => {
       })
     })
 
-    expect(text('mixed-page-index')).toBe('4')
-    expect(text('mixed-first-row')).toBe('40')
+    expect(text('Mixed page index')).toBe('4')
+    expect(text('Mixed first row')).toBe('40')
     expect(harnessRenderCount).toBe(3)
 
     act(() => {
-      click('mixed-next-page')
+      click('Next page')
     })
 
     expect(paginationAtom.get()).toEqual({
       pageIndex: 5,
       pageSize: 10,
     })
-    expect(text('mixed-page-index')).toBe('5')
-    expect(text('mixed-first-row')).toBe('50')
+    expect(text('Mixed page index')).toBe('5')
+    expect(text('Mixed first row')).toBe('50')
     expect(harnessRenderCount).toBe(4)
   })
 
@@ -434,11 +425,10 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="committed-page-index">
+          <output aria-label="Committed page index">
             {table.state.pageIndex}
           </output>
           <button
-            data-testid="suspend-render"
             onClick={() => {
               React.startTransition(() => setVersion(1))
             }}
@@ -447,7 +437,7 @@ describe('useTable state subscriptions', () => {
           </button>
           <table.Subscribe selector={(state) => state.pagination.pageIndex}>
             {(pageIndex) => (
-              <output data-testid="isolated-page-index">{pageIndex}</output>
+              <output aria-label="Isolated page index">{pageIndex}</output>
             )}
           </table.Subscribe>
           <SuspendedRender suspend={version === 1} />
@@ -457,19 +447,19 @@ describe('useTable state subscriptions', () => {
 
     render(<ConcurrentPaginationHarness />)
 
-    expect(text('committed-page-index')).toBe('0')
+    expect(text('Committed page index')).toBe('0')
     const storeNotifications: Array<number> = []
     const subscription = committedTable!.store.subscribe((state) => {
       storeNotifications.push(state.pagination.pageIndex)
     })
 
     act(() => {
-      click('suspend-render')
+      click('Suspend next render')
     })
 
     // The previous UI is still committed while the transition is suspended.
-    expect(text('committed-page-index')).toBe('0')
-    expect(text('isolated-page-index')).toBe('0')
+    expect(text('Committed page index')).toBe('0')
+    expect(text('Isolated page index')).toBe('0')
     const committedBasePageIndex =
       committedTable!.baseAtoms.pagination.get().pageIndex
 
@@ -497,12 +487,14 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="imperative-page-index">
+          <output aria-label="Imperative page index">
             {table.state.pageIndex}
           </output>
           <table.Subscribe selector={(state) => state.pagination.pageIndex}>
             {(pageIndex) => (
-              <output data-testid="imperative-subscriber">{pageIndex}</output>
+              <output aria-label="Imperative subscriber page index">
+                {pageIndex}
+              </output>
             )}
           </table.Subscribe>
         </>
@@ -526,8 +518,8 @@ describe('useTable state subscriptions', () => {
 
     expect(latestTable!.atoms.pagination.get()).toEqual(pagination)
     expect(latestTable!.store.get().pagination).toEqual(pagination)
-    expect(text('imperative-page-index')).toBe('3')
-    expect(text('imperative-subscriber')).toBe('3')
+    expect(text('Imperative page index')).toBe('3')
+    expect(text('Imperative subscriber page index')).toBe('3')
     expect(notifications).toEqual([3])
 
     subscription.unsubscribe()
@@ -575,23 +567,18 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="page-index">
+          <output aria-label="Selected page index">
             {table.state.pagination.pageIndex}
           </output>
-          <output data-testid="atom-page-index">
+          <output aria-label="Atom page index">
             {table.atoms.pagination.get().pageIndex}
           </output>
           <table.Subscribe selector={(state) => state.pagination.pageIndex}>
             {(pageIndex) => (
-              <output data-testid="subscribed-page-index">{pageIndex}</output>
+              <output aria-label="Subscribed page index">{pageIndex}</output>
             )}
           </table.Subscribe>
-          <button
-            data-testid="controlled-next-page"
-            onClick={() => table.nextPage()}
-          >
-            Next page
-          </button>
+          <button onClick={() => table.nextPage()}>Next page</button>
         </>
       )
     }
@@ -604,22 +591,22 @@ describe('useTable state subscriptions', () => {
       </React.StrictMode>,
     )
 
-    const pageIndex = () => text('page-index')
-    const atomPageIndex = () => text('atom-page-index')
-    const subscribedPageIndex = () => text('subscribed-page-index')
+    const pageIndex = () => text('Selected page index')
+    const atomPageIndex = () => text('Atom page index')
+    const subscribedPageIndex = () => text('Subscribed page index')
 
     expect(pageIndex()).toBe('0')
     expect(atomPageIndex()).toBe('0')
     expect(subscribedPageIndex()).toBe('0')
     act(() => {
-      click('controlled-next-page')
+      click('Next page')
     })
     expect(pageIndex()).toBe('1')
     expect(atomPageIndex()).toBe('1')
     expect(subscribedPageIndex()).toBe('1')
 
     act(() => {
-      click('controlled-next-page')
+      click('Next page')
     })
     expect(pageIndex()).toBe('2')
     expect(atomPageIndex()).toBe('2')
@@ -684,12 +671,11 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="controlled-page-index">
+          <output aria-label="Controlled page index">
             {pagination.pageIndex}
           </output>
           <IsolatedPaginationSubscriber Subscribe={table.Subscribe} />
           <button
-            data-testid="advance-three-pages"
             onClick={() => {
               table.nextPage()
               table.nextPage()
@@ -706,14 +692,14 @@ describe('useTable state subscriptions', () => {
 
     render(<IsolatedControlledPaginationHarness />)
 
-    const controlledPageIndex = () => text('controlled-page-index')
-    const isolatedPageIndex = () => text('isolated-page-index')
+    const controlledPageIndex = () => text('Controlled page index')
+    const isolatedPageIndex = () => text('Isolated page index')
 
     expect(controlledPageIndex()).toBe('0')
     expect(isolatedPageIndex()).toBe('0')
 
     act(() => {
-      click('advance-three-pages')
+      click('Advance three pages')
     })
 
     expect(controlledPageIndex()).toBe('3')
@@ -741,39 +727,32 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="selected-page-index">{table.state}</output>
-          <output data-testid="harness-render-count">
+          <output aria-label="Selected page index">{table.state}</output>
+          <output aria-label="Harness render count">
             {harnessRenderCount}
           </output>
           <table.Subscribe selector={(state) => state.pagination.pageSize}>
             {(pageSize) => (
-              <output data-testid="subscribed-page-size">{pageSize}</output>
+              <output aria-label="Subscribed page size">{pageSize}</output>
             )}
           </table.Subscribe>
-          <button
-            data-testid="resize-page"
-            onClick={() => table.setPageSize(20)}
-          >
-            Resize page
-          </button>
-          <button data-testid="next-page" onClick={() => table.nextPage()}>
-            Next page
-          </button>
+          <button onClick={() => table.setPageSize(20)}>Resize page</button>
+          <button onClick={() => table.nextPage()}>Next page</button>
         </>
       )
     }
 
     render(<SelectedPageIndexHarness />)
 
-    const selectedPageIndex = () => text('selected-page-index')
-    const subscribedPageSize = () => text('subscribed-page-size')
+    const selectedPageIndex = () => text('Selected page index')
+    const subscribedPageSize = () => text('Subscribed page size')
 
     expect(harnessRenderCount).toBe(1)
     expect(selectedPageIndex()).toBe('0')
     expect(subscribedPageSize()).toBe('10')
 
     act(() => {
-      click('resize-page')
+      click('Resize page')
     })
 
     expect(harnessRenderCount).toBe(1)
@@ -781,7 +760,7 @@ describe('useTable state subscriptions', () => {
     expect(subscribedPageSize()).toBe('20')
 
     act(() => {
-      click('next-page')
+      click('Next page')
     })
 
     expect(harnessRenderCount).toBe(2)
@@ -813,25 +792,17 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="unrelated-tick">{tick}</output>
-          <output data-testid="recreated-page-index">
+          <output aria-label="Unrelated tick">{tick}</output>
+          <output aria-label="Recreated page index">
             {table.state.pagination.pageIndex}
           </output>
-          <output data-testid="recreated-atom-page-index">
+          <output aria-label="Recreated atom page index">
             {table.atoms.pagination.get().pageIndex}
           </output>
-          <button
-            data-testid="unrelated-update"
-            onClick={() => setTick((value) => value + 1)}
-          >
+          <button onClick={() => setTick((value) => value + 1)}>
             Unrelated update
           </button>
-          <button
-            data-testid="controlled-next-page"
-            onClick={() => table.nextPage()}
-          >
-            Next page
-          </button>
+          <button onClick={() => table.nextPage()}>Next page</button>
         </>
       )
     }
@@ -843,19 +814,19 @@ describe('useTable state subscriptions', () => {
     expect(harnessRenderCount).toBe(1)
 
     act(() => {
-      click('unrelated-update')
+      click('Unrelated update')
     })
 
-    expect(text('unrelated-tick')).toBe('1')
-    expect(text('recreated-page-index')).toBe('0')
+    expect(text('Unrelated tick')).toBe('1')
+    expect(text('Recreated page index')).toBe('0')
     expect(harnessRenderCount).toBe(2)
 
     act(() => {
-      click('controlled-next-page')
+      click('Next page')
     })
 
-    expect(text('recreated-page-index')).toBe('1')
-    expect(text('recreated-atom-page-index')).toBe('1')
+    expect(text('Recreated page index')).toBe('1')
+    expect(text('Recreated atom page index')).toBe('1')
     expect(harnessRenderCount).toBe(3)
 
     const errors = consoleError.mock.calls.flat().map(String).join('\n')
@@ -878,16 +849,11 @@ describe('useTable state subscriptions', () => {
 
       return (
         <>
-          <output data-testid="page-index">{table.state.pageIndex}</output>
-          <output data-testid="selected-state">
+          <output aria-label="Page index">{table.state.pageIndex}</output>
+          <output aria-label="Selected state">
             {JSON.stringify(table.state)}
           </output>
-          <button
-            data-testid="uncontrolled-next-page"
-            onClick={() => table.nextPage()}
-          >
-            Next page
-          </button>
+          <button onClick={() => table.nextPage()}>Next page</button>
         </>
       )
     }
@@ -896,18 +862,18 @@ describe('useTable state subscriptions', () => {
 
     render(<UncontrolledPaginationHarness />)
 
-    const pageIndex = () => text('page-index')
-    const selectedState = () => text('selected-state')
+    const pageIndex = () => text('Page index')
+    const selectedState = () => text('Selected state')
 
     expect(selectedState()).toBe('{"pageIndex":0}')
     expect(pageIndex()).toBe('0')
     act(() => {
-      click('uncontrolled-next-page')
+      click('Next page')
     })
     expect(pageIndex()).toBe('1')
 
     act(() => {
-      click('uncontrolled-next-page')
+      click('Next page')
     })
     expect(pageIndex()).toBe('2')
 

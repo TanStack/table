@@ -69,12 +69,12 @@ function render(element: React.ReactNode) {
   return renderedView
 }
 
-function text(testId: string) {
-  return screen.getByTestId(testId).textContent
+function text(name: string) {
+  return screen.getByRole('status', { name }).textContent
 }
 
-function click(action: string) {
-  fireEvent.click(screen.getByTestId(action))
+function click(name: string) {
+  fireEvent.click(screen.getByRole('button', { name }))
 }
 
 function unmount() {
@@ -104,7 +104,7 @@ describe('React adapter reactivity and lifecycle', () => {
       )
 
       return (
-        <output data-testid="table-surface">
+        <output aria-label="Table surface">
           {JSON.stringify({
             hasOptions: 'options' in table,
             hasState: 'state' in table,
@@ -119,7 +119,7 @@ describe('React adapter reactivity and lifecycle', () => {
 
     render(<TableHarness />)
 
-    const surface = JSON.parse(text('table-surface')) as {
+    const surface = JSON.parse(text('Table surface')) as {
       hasOptions: boolean
       hasState: boolean
       hasRowModel: boolean
@@ -178,31 +178,30 @@ describe('React adapter reactivity and lifecycle', () => {
 
       return (
         <>
-          <output data-testid="core-row-ids">
+          <output aria-label="Core row IDs">
             {coreRowModel.rows.map((row) => row.id).join(',')}
           </output>
-          <output data-testid="page-row-ids">
+          <output aria-label="Page row IDs">
             {rowModel.rows.map((row) => row.id).join(',')}
           </output>
-          <button
-            data-testid="set-page-size-3"
-            onClick={() => setPagination({ pageIndex: 0, pageSize: 3 })}
-          />
+          <button onClick={() => setPagination({ pageIndex: 0, pageSize: 3 })}>
+            Set page size to 3
+          </button>
         </>
       )
     }
 
     render(<TableHarness />)
 
-    expect(text('core-row-ids')).toBe('0,1,2,3,4,5,6,7,8,9')
-    expect(text('page-row-ids')).toBe('0,1,2,3,4')
+    expect(text('Core row IDs')).toBe('0,1,2,3,4,5,6,7,8,9')
+    expect(text('Page row IDs')).toBe('0,1,2,3,4')
 
     act(() => {
-      click('set-page-size-3')
+      click('Set page size to 3')
     })
 
-    expect(text('core-row-ids')).toBe('0,1,2,3,4,5,6,7,8,9')
-    expect(text('page-row-ids')).toBe('0,1,2')
+    expect(text('Core row IDs')).toBe('0,1,2,3,4,5,6,7,8,9')
+    expect(text('Page row IDs')).toBe('0,1,2')
     expect(coreRowModelCaptor).toHaveBeenCalledTimes(2)
     expect(rowModelCaptor).toHaveBeenCalledTimes(2)
     expect(coreRowModelCaptor.mock.calls[0]![0]).toBe(
@@ -236,7 +235,7 @@ describe('React adapter reactivity and lifecycle', () => {
             selector={(selection) => Boolean(selection['1'])}
           >
             {(selected) => (
-              <output data-testid="external-row-selected">
+              <output aria-label="External row selected">
                 {String(selected)}
               </output>
             )}
@@ -244,39 +243,38 @@ describe('React adapter reactivity and lifecycle', () => {
           <table.Subscribe source={table.atoms.rowSelection}>
             {(selection) => {
               return (
-                <output data-testid="external-row-selection">
+                <output aria-label="External row selection">
                   {JSON.stringify(selection)}
                 </output>
               )
             }}
           </table.Subscribe>
-          <button
-            data-testid="toggle-external-row"
-            onClick={() => table.getRow('1').toggleSelected()}
-          />
+          <button onClick={() => table.getRow('1').toggleSelected()}>
+            Toggle external row
+          </button>
         </>
       )
     }
 
     render(<TableHarness />)
 
-    expect(text('external-row-selected')).toBe('false')
-    expect(text('external-row-selection')).toBe('{}')
+    expect(text('External row selected')).toBe('false')
+    expect(text('External row selection')).toBe('{}')
 
     act(() => {
       rowSelectionAtom.set({ 1: true })
     })
 
-    expect(text('external-row-selected')).toBe('true')
-    expect(text('external-row-selection')).toBe('{"1":true}')
+    expect(text('External row selected')).toBe('true')
+    expect(text('External row selection')).toBe('{"1":true}')
 
     act(() => {
-      click('toggle-external-row')
+      click('Toggle external row')
     })
 
     expect(rowSelectionAtom.get()).toEqual({})
-    expect(text('external-row-selected')).toBe('false')
-    expect(text('external-row-selection')).toBe('{}')
+    expect(text('External row selected')).toBe('false')
+    expect(text('External row selection')).toBe('{}')
   })
 
   test('stops root and isolated React observers after unmount', () => {
@@ -320,7 +318,7 @@ describe('React adapter reactivity and lifecycle', () => {
           {(snapshot) => {
             isolatedStoreCaptor(snapshot)
             return (
-              <output data-testid="lifecycle-selection">
+              <output aria-label="Lifecycle selection">
                 {String(snapshot.selected)}
               </output>
             )
@@ -335,7 +333,7 @@ describe('React adapter reactivity and lifecycle', () => {
       rowSelectionAtom.set({ 1: true })
     })
 
-    expect(text('lifecycle-selection')).toBe('true')
+    expect(text('Lifecycle selection')).toBe('true')
 
     unmount()
 
@@ -408,48 +406,48 @@ describe('React adapter reactivity and lifecycle', () => {
 
       return (
         <>
-          <output data-testid="dynamic-row-id">{row.id}</output>
-          <output data-testid="dynamic-column-ids">
+          <output aria-label="Dynamic row ID">{row.id}</output>
+          <output aria-label="Dynamic column IDs">
             {table
               .getAllLeafColumns()
               .map((column) => column.id)
               .join(',')}
           </output>
-          <output data-testid="dynamic-headers">
+          <output aria-label="Dynamic headers">
             {table
               .getAllLeafColumns()
               .map((column) => column.columnDef.header)
               .join(',')}
           </output>
-          <output data-testid="dynamic-cell-value">
+          <output aria-label="Dynamic cell value">
             {String(cells[0]!.getValue())}
           </output>
-          <output data-testid="dynamic-fallback">
+          <output aria-label="Dynamic fallback">
             {String(cells[1]!.renderValue())}
           </output>
-          <button data-testid="refresh-options" onClick={() => setVersion(1)} />
+          <button onClick={() => setVersion(1)}>Refresh options</button>
         </>
       )
     }
 
     render(<TableHarness />)
 
-    expect(text('dynamic-row-id')).toBe('1')
-    expect(text('dynamic-column-ids')).toBe('title,missing')
-    expect(text('dynamic-headers')).toBe('Title,Missing')
-    expect(text('dynamic-cell-value')).toBe('Alpha')
-    expect(text('dynamic-fallback')).toBe('initial fallback')
+    expect(text('Dynamic row ID')).toBe('1')
+    expect(text('Dynamic column IDs')).toBe('title,missing')
+    expect(text('Dynamic headers')).toBe('Title,Missing')
+    expect(text('Dynamic cell value')).toBe('Alpha')
+    expect(text('Dynamic fallback')).toBe('initial fallback')
 
     await act(async () => {
-      click('refresh-options')
+      click('Refresh options')
       await Promise.resolve()
     })
 
-    expect(text('dynamic-row-id')).toBe('alternate-2')
-    expect(text('dynamic-column-ids')).toBe('status,missing')
-    expect(text('dynamic-headers')).toBe('Status,Absent')
-    expect(text('dynamic-cell-value')).toBe('ready')
-    expect(text('dynamic-fallback')).toBe('updated fallback')
+    expect(text('Dynamic row ID')).toBe('alternate-2')
+    expect(text('Dynamic column IDs')).toBe('status,missing')
+    expect(text('Dynamic headers')).toBe('Status,Absent')
+    expect(text('Dynamic cell value')).toBe('ready')
+    expect(text('Dynamic fallback')).toBe('updated fallback')
     expect(renderCaptor.mock.calls).toEqual([[0], [1]])
   })
 })

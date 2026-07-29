@@ -10,6 +10,10 @@ import { useTable } from '../../src/useTable'
 
 afterEach(cleanup)
 
+function outputText(name: string) {
+  return screen.getByRole('status', { name }).textContent
+}
+
 describe('FlexRender', () => {
   test('supports cell modes, header/footer shorthand, and legacy props', () => {
     const normalContext = { value: 'Normal' }
@@ -33,7 +37,7 @@ describe('FlexRender', () => {
     const Root = defineComponent({
       setup() {
         return () =>
-          h('section', { 'data-testid': 'flex-render-output' }, [
+          h('output', { 'aria-label': 'Flex render output' }, [
             h(FlexRender, {
               cell: {
                 column: {
@@ -97,7 +101,7 @@ describe('FlexRender', () => {
 
     render(Root)
 
-    expect(screen.getByTestId('flex-render-output').textContent).toBe(
+    expect(outputText('Flex render output')).toBe(
       'cell:Normalsum:Aggregatedheader:Titlefooter:Totallegacy:Legacy',
     )
     expect(normalCellRenderer).toHaveBeenCalledOnce()
@@ -121,8 +125,8 @@ describe('FlexRender', () => {
       setup() {
         return () =>
           h(
-            'div',
-            { 'data-testid': 'reactive-flex-render' },
+            'output',
+            { 'aria-label': 'Reactive flex render' },
             h(FlexRender, { cell: cell.value }),
           )
       },
@@ -130,9 +134,7 @@ describe('FlexRender', () => {
 
     render(Root)
 
-    expect(screen.getByTestId('reactive-flex-render').textContent).toBe(
-      'cell:Ada',
-    )
+    expect(outputText('Reactive flex render')).toBe('cell:Ada')
 
     cell.value = {
       column: cell.value.column,
@@ -140,9 +142,7 @@ describe('FlexRender', () => {
     }
     await nextTick()
 
-    expect(screen.getByTestId('reactive-flex-render').textContent).toBe(
-      'cell:Grace',
-    )
+    expect(outputText('Reactive flex render')).toBe('cell:Grace')
   })
 })
 
@@ -163,25 +163,30 @@ describe('table.Subscribe', () => {
               children: (atoms) =>
                 h(
                   'output',
-                  { 'data-testid': 'subscribed-selection' },
+                  { 'aria-label': 'Subscribed row selection' },
                   String(Boolean(atoms.rowSelection.get()['1'])),
                 ),
             }),
-            h('button', {
-              'data-testid': 'select-subscribed-row',
-              onClick: () => table.getRow('1').toggleSelected(true),
-            }),
+            h(
+              'button',
+              {
+                onClick: () => table.getRow('1').toggleSelected(true),
+              },
+              'Select subscribed row',
+            ),
           ])
       },
     })
 
     render(Root)
 
-    expect(screen.getByTestId('subscribed-selection').textContent).toBe('false')
+    expect(outputText('Subscribed row selection')).toBe('false')
 
-    await fireEvent.click(screen.getByTestId('select-subscribed-row'))
+    await fireEvent.click(
+      screen.getByRole('button', { name: 'Select subscribed row' }),
+    )
 
-    expect(screen.getByTestId('subscribed-selection').textContent).toBe('true')
+    expect(outputText('Subscribed row selection')).toBe('true')
   })
 })
 
@@ -190,20 +195,17 @@ describe('createTableHook', () => {
 
   const TableBadge = defineComponent({
     setup() {
-      return () =>
-        h('span', { 'data-testid': 'table-component' }, 'table-component')
+      return () => h('span', 'table-component')
     },
   })
   const CellBadge = defineComponent({
     setup() {
-      return () =>
-        h('span', { 'data-testid': 'cell-component' }, 'cell-component')
+      return () => h('span', 'cell-component')
     },
   })
   const HeaderBadge = defineComponent({
     setup() {
-      return () =>
-        h('span', { 'data-testid': 'header-component' }, 'header-component')
+      return () => h('span', 'header-component')
     },
   })
 
@@ -287,7 +289,6 @@ describe('createTableHook', () => {
         return () =>
           h(
             'main',
-            { 'data-testid': 'table-hook-output' },
             h(table.AppTable, null, {
               default: () => [
                 h(TableConsumer),
@@ -326,16 +327,16 @@ describe('createTableHook', () => {
     expect(cellContextCaptor).toHaveBeenCalledWith(originalCell)
     expect(headerContextCaptor).toHaveBeenCalledWith(originalHeader)
     expect(footerContextCaptor).toHaveBeenCalledWith(originalFooter)
-    expect(screen.getByTestId('table-component').textContent).toBe(
+    expect(screen.getByText('table-component').textContent).toBe(
       'table-component',
     )
-    expect(screen.getByTestId('cell-component').textContent).toBe(
+    expect(screen.getByText('cell-component').textContent).toBe(
       'cell-component',
     )
-    expect(screen.getByTestId('header-component').textContent).toBe(
+    expect(screen.getByText('header-component').textContent).toBe(
       'header-component',
     )
-    expect(screen.getByTestId('table-hook-output').textContent).toBe(
+    expect(screen.getByRole('main').textContent).toBe(
       'table-componentcell-componentcell:First' +
         'header-componentheader:titlefooter:title',
     )
@@ -347,7 +348,7 @@ describe('createTableHook', () => {
       setup() {
         const cell = hook.useCellContext<string>()
         return () =>
-          h('span', { 'data-testid': 'bound-cell-mode' }, h(cell.FlexRender))
+          h('output', { 'aria-label': 'Bound cell mode' }, h(cell.FlexRender))
       },
     })
     const Root = defineComponent({
@@ -378,14 +379,12 @@ describe('createTableHook', () => {
 
     render(Root)
 
-    expect(screen.getByTestId('bound-cell-mode').textContent).toBe(
-      'aggregate:First',
-    )
+    expect(outputText('Bound cell mode')).toBe('aggregate:First')
 
     mode.value = 'placeholder'
     await nextTick()
 
-    expect(screen.getByTestId('bound-cell-mode').textContent).toBe('')
+    expect(outputText('Bound cell mode')).toBe('')
   })
 
   test.each([

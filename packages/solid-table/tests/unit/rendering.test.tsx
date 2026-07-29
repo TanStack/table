@@ -44,9 +44,9 @@ describe('FlexRender', () => {
     }
 
     return (
-      <div data-testid={`cell-${props.mode}`}>
+      <output aria-label={`${props.mode} cell`}>
         <FlexRender cell={cell} />
-      </div>
+      </output>
     )
   }
 
@@ -62,12 +62,12 @@ describe('FlexRender', () => {
 
     return (
       <>
-        <div data-testid="header">
+        <output aria-label="header">
           <FlexRender header={header} />
-        </div>
-        <div data-testid="footer">
+        </output>
+        <output aria-label="footer">
           <FlexRender footer={footer} />
-        </div>
+        </output>
       </>
     )
   }
@@ -82,13 +82,21 @@ describe('FlexRender', () => {
       </>
     ))
 
-    expect(screen.getByTestId('cell-normal').textContent).toBe('cell:Ada')
-    expect(screen.getByTestId('cell-aggregate').textContent).toBe(
-      'aggregate:Ada',
+    expect(
+      screen.getByRole('status', { name: 'normal cell' }).textContent,
+    ).toBe('cell:Ada')
+    expect(
+      screen.getByRole('status', { name: 'aggregate cell' }).textContent,
+    ).toBe('aggregate:Ada')
+    expect(
+      screen.getByRole('status', { name: 'placeholder cell' }).textContent,
+    ).toBe('')
+    expect(screen.getByRole('status', { name: 'header' }).textContent).toBe(
+      'header:name',
     )
-    expect(screen.getByTestId('cell-placeholder').textContent).toBe('')
-    expect(screen.getByTestId('header').textContent).toBe('header:name')
-    expect(screen.getByTestId('footer').textContent).toBe('footer:name')
+    expect(screen.getByRole('status', { name: 'footer' }).textContent).toBe(
+      'footer:name',
+    )
   })
 
   test('updates when a truthy cell prop is replaced with a new instance', () => {
@@ -107,24 +115,27 @@ describe('FlexRender', () => {
 
       return (
         <>
-          <div data-testid="reactive-cell">
+          <output aria-label="rendered cell">
             <FlexRender cell={table.getRowModel().rows[0]!.getAllCells()[0]!} />
-          </div>
-          <button
-            data-testid="replace-cell"
-            onClick={() => setData([{ id: '1', name: 'Grace' }])}
-          />
+          </output>
+          <button onClick={() => setData([{ id: '1', name: 'Grace' }])}>
+            Replace cell
+          </button>
         </>
       )
     }
 
     render(() => <ReactiveCellHarness />)
 
-    expect(screen.getByTestId('reactive-cell').textContent).toBe('cell:Ada')
+    expect(
+      screen.getByRole('status', { name: 'rendered cell' }).textContent,
+    ).toBe('cell:Ada')
 
-    fireEvent.click(screen.getByTestId('replace-cell'))
+    fireEvent.click(screen.getByRole('button', { name: 'Replace cell' }))
 
-    expect(screen.getByTestId('reactive-cell').textContent).toBe('cell:Grace')
+    expect(
+      screen.getByRole('status', { name: 'rendered cell' }).textContent,
+    ).toBe('cell:Grace')
   })
 })
 
@@ -140,36 +151,41 @@ describe('table.Subscribe', () => {
 
       return (
         <>
-          <output data-testid="subscribed-selection">
+          <output aria-label="subscribed selection">
             <table.Subscribe>
               {(atoms) => (
                 <span>{String(Boolean(atoms.rowSelection.get()['1']))}</span>
               )}
             </table.Subscribe>
           </output>
-          <button
-            data-testid="select-subscribed-row"
-            onClick={() => table.getRow('1').toggleSelected(true)}
-          />
+          <button onClick={() => table.getRow('1').toggleSelected(true)}>
+            Select subscribed row
+          </button>
         </>
       )
     }
 
     render(() => <SubscribeHarness />)
 
-    expect(screen.getByTestId('subscribed-selection').textContent).toBe('false')
+    expect(
+      screen.getByRole('status', { name: 'subscribed selection' }).textContent,
+    ).toBe('false')
 
-    fireEvent.click(screen.getByTestId('select-subscribed-row'))
+    fireEvent.click(
+      screen.getByRole('button', { name: 'Select subscribed row' }),
+    )
 
-    expect(screen.getByTestId('subscribed-selection').textContent).toBe('true')
+    expect(
+      screen.getByRole('status', { name: 'subscribed selection' }).textContent,
+    ).toBe('true')
   })
 })
 
 describe('createTableHook runtime', () => {
   type Data = { id: string; name: string }
-  const TableBadge = () => <span data-testid="table-badge">table-badge</span>
-  const CellBadge = () => <span data-testid="cell-badge">cell-badge</span>
-  const HeaderBadge = () => <span data-testid="header-badge">header-badge</span>
+  const TableBadge = () => <span>table-badge</span>
+  const CellBadge = () => <span>cell-badge</span>
+  const HeaderBadge = () => <span>header-badge</span>
 
   function createTestHook() {
     return createTableHook({
@@ -203,9 +219,9 @@ describe('createTableHook runtime', () => {
 
       return (
         <table.AppTable>
-          <span data-testid="can-select">
+          <output aria-label="row can be selected">
             {String(table.getRow('1').getCanSelect())}
-          </span>
+          </output>
           <table.TableBadge />
         </table.AppTable>
       )
@@ -213,8 +229,10 @@ describe('createTableHook runtime', () => {
 
     render(() => <Harness />)
 
-    expect(screen.getByTestId('can-select').textContent).toBe('true')
-    expect(screen.getByTestId('table-badge').textContent).toBe('table-badge')
+    expect(
+      screen.getByRole('status', { name: 'row can be selected' }).textContent,
+    ).toBe('true')
+    expect(screen.getByText('table-badge').textContent).toBe('table-badge')
     expect(hook.appFeatures).toBe(stockFeatures)
     expect(tableRef?.TableBadge).toBe(TableBadge)
     expect(tableRef?.FlexRender).toBe(FlexRender)
@@ -253,9 +271,9 @@ describe('createTableHook runtime', () => {
       function TableContextProbe() {
         tableFromContext = hook.useTableContext<Data>()
         return (
-          <span data-testid="table-context">
+          <output aria-label="table context matches">
             {String(tableFromContext === table)}
-          </span>
+          </output>
         )
       }
 
@@ -268,16 +286,16 @@ describe('createTableHook runtime', () => {
               cellFromContext = hook.useCellContext<string>()
               return (
                 <>
-                  <span data-testid="cell-context">
+                  <output aria-label="cell context matches">
                     {String(cellFromContext === cell)}
-                  </span>
-                  <span data-testid="cell-bound">
+                  </output>
+                  <output aria-label="cell component is bound">
                     {String(value.CellBadge === CellBadge)}
-                  </span>
+                  </output>
                   <value.CellBadge />
-                  <span data-testid="cell-render">
+                  <output aria-label="rendered cell">
                     <value.FlexRender />
-                  </span>
+                  </output>
                 </>
               )
             }}
@@ -287,16 +305,16 @@ describe('createTableHook runtime', () => {
               headerFromContext = hook.useHeaderContext<string>()
               return (
                 <>
-                  <span data-testid="header-context">
+                  <output aria-label="header context matches">
                     {String(headerFromContext === header)}
-                  </span>
-                  <span data-testid="header-bound">
+                  </output>
+                  <output aria-label="header component is bound">
                     {String(value.HeaderBadge === HeaderBadge)}
-                  </span>
+                  </output>
                   <value.HeaderBadge />
-                  <span data-testid="header-render">
+                  <output aria-label="rendered header">
                     <value.FlexRender />
-                  </span>
+                  </output>
                 </>
               )
             }}
@@ -306,12 +324,12 @@ describe('createTableHook runtime', () => {
               footerFromContext = hook.useHeaderContext<string>()
               return (
                 <>
-                  <span data-testid="footer-context">
+                  <output aria-label="footer context matches">
                     {String(footerFromContext === footer)}
-                  </span>
-                  <span data-testid="footer-render">
+                  </output>
+                  <output aria-label="rendered footer">
                     <value.FlexRender />
-                  </span>
+                  </output>
                 </>
               )
             }}
@@ -322,18 +340,40 @@ describe('createTableHook runtime', () => {
 
     render(() => <Harness />)
 
-    expect(screen.getByTestId('table-context').textContent).toBe('true')
-    expect(screen.getByTestId('cell-context').textContent).toBe('true')
-    expect(screen.getByTestId('header-context').textContent).toBe('true')
-    expect(screen.getByTestId('footer-context').textContent).toBe('true')
-    expect(screen.getByTestId('cell-bound').textContent).toBe('true')
-    expect(screen.getByTestId('header-bound').textContent).toBe('true')
-    expect(screen.getByTestId('table-badge').textContent).toBe('table-badge')
-    expect(screen.getByTestId('cell-badge').textContent).toBe('cell-badge')
-    expect(screen.getByTestId('header-badge').textContent).toBe('header-badge')
-    expect(screen.getByTestId('cell-render').textContent).toBe('cell:Ada')
-    expect(screen.getByTestId('header-render').textContent).toBe('header:name')
-    expect(screen.getByTestId('footer-render').textContent).toBe('footer:name')
+    expect(
+      screen.getByRole('status', { name: 'table context matches' }).textContent,
+    ).toBe('true')
+    expect(
+      screen.getByRole('status', { name: 'cell context matches' }).textContent,
+    ).toBe('true')
+    expect(
+      screen.getByRole('status', { name: 'header context matches' })
+        .textContent,
+    ).toBe('true')
+    expect(
+      screen.getByRole('status', { name: 'footer context matches' })
+        .textContent,
+    ).toBe('true')
+    expect(
+      screen.getByRole('status', { name: 'cell component is bound' })
+        .textContent,
+    ).toBe('true')
+    expect(
+      screen.getByRole('status', { name: 'header component is bound' })
+        .textContent,
+    ).toBe('true')
+    expect(screen.getByText('table-badge').textContent).toBe('table-badge')
+    expect(screen.getByText('cell-badge').textContent).toBe('cell-badge')
+    expect(screen.getByText('header-badge').textContent).toBe('header-badge')
+    expect(
+      screen.getByRole('status', { name: 'rendered cell' }).textContent,
+    ).toBe('cell:Ada')
+    expect(
+      screen.getByRole('status', { name: 'rendered header' }).textContent,
+    ).toBe('header:name')
+    expect(
+      screen.getByRole('status', { name: 'rendered footer' }).textContent,
+    ).toBe('footer:name')
     expect(tableFromContext).toBe(tableRef)
   })
 
