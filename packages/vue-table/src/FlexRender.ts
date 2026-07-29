@@ -28,8 +28,16 @@ export interface FlexRenderHeader {
  * @example flexRender(cell.column.columnDef.cell, cell.getContext())
  */
 export function flexRender(render: any, props: any): any {
+  if (render === null || render === undefined) {
+    return render
+  }
+
   if (typeof render === 'function') {
     const rendered = render(props)
+
+    if (rendered === null || rendered === undefined) {
+      return rendered
+    }
 
     if (isVNode(rendered)) {
       return rendered

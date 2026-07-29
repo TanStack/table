@@ -7,6 +7,7 @@ describe('flexRender', () => {
     createRoot((dispose) => {
       expect(flexRender(undefined, { value: 'unused' })).toBeNull()
       expect(flexRender('static', { value: 'unused' })).toBe('static')
+      expect(flexRender(0, { value: 'unused' })).toBe(0)
 
       const Component = vi.fn((props: { value: string }) => {
         return `component:${props.value}`

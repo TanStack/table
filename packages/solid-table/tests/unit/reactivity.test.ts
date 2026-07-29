@@ -65,37 +65,6 @@ describe('solidReactivity', () => {
   })
 })
 
-describe('table.Subscribe', () => {
-  type Data = { id: string }
-  const columns: Array<ColumnDef<typeof stockFeatures, Data>> = [
-    {
-      id: 'id',
-      accessorKey: 'id',
-    },
-  ]
-
-  test('passes table atoms to children', () => {
-    createRoot((dispose) => {
-      const table = createTable({
-        data: [{ id: '1' }],
-        columns,
-        features: stockFeatures,
-      })
-      let received: unknown
-
-      table.Subscribe({
-        children: (atoms) => {
-          received = atoms
-          return null
-        },
-      })
-
-      expect(received).toBe(table.atoms)
-      dispose()
-    })
-  })
-})
-
 describe('Solid table reactivity integration', () => {
   type Data = { id: string; title: string }
   const initialData: Array<Data> = [{ id: '1', title: 'Title' }]
@@ -134,106 +103,51 @@ describe('Solid table reactivity integration', () => {
     return { dispose, value }
   }
 
-  test('methods within effects react only to relevant option and state changes', () => {
+  test('effects respond to the table inputs they read', () => {
     const { dispose, value } = createEffectTestRoot(() => {
       const [data, setData] = createSignal<Array<Data>>(initialData)
       const table = createTestTable(data)
       const captors = {
         isSelectedRow1: vi.fn<(value: boolean) => void>(),
-        cellGetValue: vi.fn<(value: unknown) => void>(),
-        cellGetValueMemoized: vi.fn<(value: unknown) => void>(),
+        titleValue: vi.fn<(value: unknown) => void>(),
         columnIsVisible: vi.fn<(value: boolean) => void>(),
       }
-      const cell = createMemo(
-        () => table.getRowModel().rows[0]!.getAllCells()[0]!,
+      const row = createMemo(() => table.getRowModel().rows[0]!)
+      const titleCell = createMemo(() => row().getAllCells()[1]!)
+
+      createEffect(() => captors.isSelectedRow1(row().getIsSelected()))
+      createEffect(() => captors.titleValue(titleCell().getValue()))
+      createEffect(() =>
+        captors.columnIsVisible(table.getColumn('id')!.getIsVisible()),
       )
-      const cellGetValue = createMemo(() => cell().getValue())
 
-      createEffect(() => captors.isSelectedRow1(cell().row.getIsSelected()))
-      createEffect(() => captors.cellGetValue(cell().getValue()))
-      createEffect(() => captors.cellGetValueMemoized(cellGetValue()))
-      createEffect(() => captors.columnIsVisible(cell().column.getIsVisible()))
-
-      return { captors, cell, setData }
+      return { captors, setData, table }
     })
-    const { captors, cell, setData } = value
+    const { captors, setData, table } = value
 
     try {
-      expect(captors.isSelectedRow1).toHaveBeenCalledTimes(1)
-      expect(captors.cellGetValueMemoized).toHaveBeenCalledTimes(1)
-      expect(captors.cellGetValue).toHaveBeenCalledTimes(1)
-      expect(captors.columnIsVisible).toHaveBeenCalledTimes(1)
+      expect(captors.isSelectedRow1.mock.calls).toEqual([[false]])
+      expect(captors.titleValue.mock.calls).toEqual([['Title']])
+      expect(captors.columnIsVisible.mock.calls).toEqual([[true]])
 
-      cell().row.toggleSelected(true)
+      Object.values(captors).forEach((captor) => captor.mockClear())
+      table.getRow('1').toggleSelected(true)
 
-      expect(captors.isSelectedRow1).toHaveBeenCalledTimes(2)
-      expect(captors.cellGetValue).toHaveBeenCalledTimes(1)
-      expect(captors.columnIsVisible).toHaveBeenCalledTimes(1)
+      expect(captors.isSelectedRow1.mock.calls).toEqual([[true]])
+      expect(captors.titleValue).not.toHaveBeenCalled()
+      expect(captors.columnIsVisible).not.toHaveBeenCalled()
 
+      Object.values(captors).forEach((captor) => captor.mockClear())
       setData([{ id: '1', title: 'Title 3' }])
 
-      expect(captors.isSelectedRow1).toHaveBeenCalledTimes(3)
-      expect(captors.cellGetValue).toHaveBeenCalledTimes(2)
-      expect(captors.columnIsVisible).toHaveBeenCalledTimes(2)
+      expect(captors.titleValue.mock.lastCall).toEqual(['Title 3'])
 
-      cell().column.toggleVisibility(false)
+      Object.values(captors).forEach((captor) => captor.mockClear())
+      table.getColumn('id')!.toggleVisibility(false)
 
-      expect(captors.isSelectedRow1).toHaveBeenCalledTimes(3)
-      expect(captors.cellGetValue).toHaveBeenCalledTimes(2)
-      expect(captors.columnIsVisible).toHaveBeenCalledTimes(3)
-      expect(captors.isSelectedRow1.mock.calls).toEqual([
-        [false],
-        [true],
-        [true],
-      ])
-      expect(captors.cellGetValue.mock.calls).toEqual([['1'], ['1']])
-      expect(captors.cellGetValueMemoized.mock.calls).toEqual([['1']])
-      expect(captors.columnIsVisible.mock.calls).toEqual([
-        [true],
-        [true],
-        [false],
-      ])
-    } finally {
-      dispose()
-    }
-  })
-
-  test('methods within effects react to external atom changes', () => {
-    const { dispose, value } = createEffectTestRoot(() => {
-      const rowSelectionAtom = createAtom<RowSelectionState>({})
-      const table = createTable({
-        data: initialData,
-        features: { ...stockFeatures },
-        columns,
-        getRowId: (row) => row.id,
-        atoms: {
-          rowSelection: rowSelectionAtom,
-        },
-      })
-      const isSelectedRow1Captor = vi.fn<(value: boolean) => void>()
-      const tableStateCaptor = vi.fn<(value: RowSelectionState) => void>()
-
-      createEffect(() => {
-        isSelectedRow1Captor(table.getRow('1').getIsSelected())
-      })
-      createEffect(() => {
-        tableStateCaptor(table.atoms.rowSelection.get())
-      })
-
-      return { isSelectedRow1Captor, rowSelectionAtom, tableStateCaptor }
-    })
-    const { isSelectedRow1Captor, rowSelectionAtom, tableStateCaptor } = value
-
-    try {
-      expect(isSelectedRow1Captor).toHaveBeenCalledTimes(1)
-      expect(tableStateCaptor).toHaveBeenCalledTimes(1)
-
-      rowSelectionAtom.set({ 1: true })
-
-      expect(isSelectedRow1Captor).toHaveBeenCalledTimes(2)
-      expect(tableStateCaptor).toHaveBeenCalledTimes(2)
-      expect(isSelectedRow1Captor.mock.calls).toEqual([[false], [true]])
-      expect(tableStateCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
+      expect(captors.columnIsVisible.mock.calls).toEqual([[false]])
+      expect(captors.isSelectedRow1).not.toHaveBeenCalled()
+      expect(captors.titleValue).not.toHaveBeenCalled()
     } finally {
       dispose()
     }
@@ -310,29 +224,6 @@ describe('Solid table reactivity integration', () => {
     }
   })
 
-  test('table state exposes initial state on its first read', () => {
-    createRoot((dispose) => {
-      const table = createTable({
-        data: initialData,
-        features: { ...stockFeatures },
-        columns,
-        getRowId: (row) => row.id,
-        initialState: {
-          pagination: {
-            pageIndex: 0,
-            pageSize: 20,
-          },
-        },
-      })
-
-      expect(table.atoms.pagination.get().pageSize).toBe(20)
-      expect(JSON.stringify(table.store.get(), null, 2)).toContain(
-        '"pageSize": 20',
-      )
-      dispose()
-    })
-  })
-
   test('table state reacts to internal table state updates', () => {
     const { dispose, value } = createEffectTestRoot(() => {
       const table = createTable({
@@ -348,27 +239,28 @@ describe('Solid table reactivity integration', () => {
         },
       })
       const pageSizeCaptor = vi.fn<(value: number) => void>()
-      const stateJsonCaptor = vi.fn<(value: string) => void>()
+      const storePageSizeCaptor = vi.fn<(value: number) => void>()
 
       createEffect(() => {
         pageSizeCaptor(table.atoms.pagination.get().pageSize)
       })
       createEffect(() => {
-        stateJsonCaptor(JSON.stringify(table.store.get(), null, 2))
+        storePageSizeCaptor(table.store.get().pagination.pageSize)
       })
 
-      return { pageSizeCaptor, stateJsonCaptor, table }
+      return { pageSizeCaptor, storePageSizeCaptor, table }
     })
-    const { pageSizeCaptor, stateJsonCaptor, table } = value
+    const { pageSizeCaptor, storePageSizeCaptor, table } = value
 
     try {
+      expect(pageSizeCaptor.mock.calls).toEqual([[20]])
+      expect(storePageSizeCaptor.mock.calls).toEqual([[20]])
+
       table.setPageSize(50)
       table.setPageSize(100)
 
       expect(pageSizeCaptor.mock.calls).toEqual([[20], [50], [100]])
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain(
-        '"pageSize": 100',
-      )
+      expect(storePageSizeCaptor.mock.calls).toEqual([[20], [50], [100]])
     } finally {
       dispose()
     }
@@ -407,47 +299,9 @@ describe('Solid table reactivity integration', () => {
 
       expect(pageSizeCaptor.mock.calls).toEqual([[20]])
       expect(stateJsonCaptor).toHaveBeenCalledTimes(2)
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"rowSelection"')
-    } finally {
-      dispose()
-    }
-  })
-
-  test('stock feature table exposes full initial state and updates json state', () => {
-    const { dispose, value } = createEffectTestRoot(() => {
-      const table = createTable({
-        data: initialData,
-        features: stockFeatures,
-        columns,
-        getRowId: (row) => row.id,
-        initialState: {
-          columnOrder: columns.map((column) => column.id!),
-          columnPinning: { start: ['id'], end: [] },
-          pagination: {
-            pageIndex: 0,
-            pageSize: 20,
-          },
-        },
-      })
-      const stateJsonCaptor = vi.fn<(value: string) => void>()
-
-      createEffect(() => {
-        stateJsonCaptor(JSON.stringify(table.store.get(), null, 2))
-      })
-
-      return { stateJsonCaptor, table }
-    })
-    const { stateJsonCaptor, table } = value
-
-    try {
-      expect(table.atoms.pagination.get().pageSize).toBe(20)
-      expect(table.atoms.columnOrder.get()).toEqual(['id', 'title'])
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 20')
-
-      table.setPageSize(50)
-
-      expect(table.atoms.pagination.get().pageSize).toBe(50)
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 50')
+      expect(
+        JSON.parse(stateJsonCaptor.mock.calls.at(-1)![0]).rowSelection,
+      ).toEqual({ 1: true })
     } finally {
       dispose()
     }

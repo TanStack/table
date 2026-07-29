@@ -1,7 +1,8 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, test } from 'vitest'
-import { cleanup, render, screen } from '@solidjs/testing-library'
+import { cleanup, fireEvent, render, screen } from '@solidjs/testing-library'
+import { createSignal } from 'solid-js'
 import { stockFeatures } from '@tanstack/table-core'
 import { FlexRender } from '../../src/FlexRender'
 import { createTable } from '../../src/createTable'
@@ -92,6 +93,79 @@ describe('FlexRender', () => {
     expect(screen.getByTestId('cell-placeholder').textContent).toBe('')
     expect(screen.getByTestId('header').textContent).toBe('header:name')
     expect(screen.getByTestId('footer').textContent).toBe('footer:name')
+  })
+
+  test('updates when a truthy cell prop is replaced with a new instance', () => {
+    function ReactiveCellHarness() {
+      const [data, setData] = createSignal<Array<Data>>([
+        { id: '1', name: 'Ada' },
+      ])
+      const table = createTable({
+        get data() {
+          return data()
+        },
+        columns,
+        features: stockFeatures,
+        getRowId: (row) => row.id,
+      })
+
+      return (
+        <>
+          <div data-testid="reactive-cell">
+            <FlexRender cell={table.getRowModel().rows[0]!.getAllCells()[0]!} />
+          </div>
+          <button
+            data-testid="replace-cell"
+            onClick={() => setData([{ id: '1', name: 'Grace' }])}
+          />
+        </>
+      )
+    }
+
+    render(() => <ReactiveCellHarness />)
+
+    expect(screen.getByTestId('reactive-cell').textContent).toBe('cell:Ada')
+
+    fireEvent.click(screen.getByTestId('replace-cell'))
+
+    expect(screen.getByTestId('reactive-cell').textContent).toBe('cell:Grace')
+  })
+})
+
+describe('table.Subscribe', () => {
+  test('updates mounted content for the atom read by its child', () => {
+    function SubscribeHarness() {
+      const table = createTable({
+        data: [{ id: '1' }],
+        columns: [{ id: 'id', accessorKey: 'id' }],
+        features: stockFeatures,
+        getRowId: (row) => row.id,
+      })
+
+      return (
+        <>
+          <output data-testid="subscribed-selection">
+            <table.Subscribe>
+              {(atoms) => (
+                <span>{String(Boolean(atoms.rowSelection.get()['1']))}</span>
+              )}
+            </table.Subscribe>
+          </output>
+          <button
+            data-testid="select-subscribed-row"
+            onClick={() => table.getRow('1').toggleSelected(true)}
+          />
+        </>
+      )
+    }
+
+    render(() => <SubscribeHarness />)
+
+    expect(screen.getByTestId('subscribed-selection').textContent).toBe('false')
+
+    fireEvent.click(screen.getByTestId('select-subscribed-row'))
+
+    expect(screen.getByTestId('subscribed-selection').textContent).toBe('true')
   })
 })
 
