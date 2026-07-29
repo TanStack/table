@@ -20,6 +20,7 @@
         "tests/test-helper.ts"
       ],
       "ignoreDependencies": [
+        "@ember/destroyable",
         "@ember/library-tsconfig",
         "@ember/routing",
         "@embroider/shared-internals",

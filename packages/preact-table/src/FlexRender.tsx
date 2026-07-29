@@ -33,9 +33,12 @@ function isExoticComponent(component: any) {
   return (
     typeof component === 'object' &&
     typeof component.$$typeof === 'symbol' &&
-    ['preact.memo', 'preact.forward_ref'].includes(
-      component.$$typeof.description,
-    )
+    [
+      'preact.memo',
+      'preact.forward_ref',
+      'react.memo',
+      'react.forward_ref',
+    ].includes(component.$$typeof.description)
   )
 }
 
@@ -47,11 +50,11 @@ export function flexRender<TProps extends object>(
   Comp: Renderable<TProps> | null,
   props: TProps,
 ): ComponentChild | Element | null {
-  return !Comp ? null : isPreactComponent<TProps>(Comp) ? (
-    <Comp {...props} />
-  ) : (
-    Comp
-  )
+  if (Comp === null || Comp === undefined) {
+    return null
+  }
+
+  return isPreactComponent<TProps>(Comp) ? <Comp {...props} /> : Comp
 }
 
 /**

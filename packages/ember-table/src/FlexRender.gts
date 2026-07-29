@@ -78,10 +78,31 @@ export class FlexRenderCell<
   @cached
   get result(): CellRenderResult<TFeatures, TData, TValue> {
     const cell = this.args.cell
-    return flexRender(
-      cell.column.columnDef.cell,
-      cell.getContext(),
-    ) as CellRenderResult<TFeatures, TData, TValue>
+    const definition = cell.column.columnDef
+    const groupingCell = cell as typeof cell & {
+      getIsAggregated?: () => boolean
+      getIsPlaceholder?: () => boolean
+    }
+    const groupingDefinition = definition as typeof definition & {
+      aggregatedCell?: typeof definition.cell
+    }
+
+    if (groupingCell.getIsAggregated?.()) {
+      return flexRender(
+        groupingDefinition.aggregatedCell ?? definition.cell,
+        cell.getContext(),
+      ) as CellRenderResult<TFeatures, TData, TValue>
+    }
+
+    if (groupingCell.getIsPlaceholder?.()) {
+      return null
+    }
+
+    return flexRender(definition.cell, cell.getContext()) as CellRenderResult<
+      TFeatures,
+      TData,
+      TValue
+    >
   }
 
   get resolvedContext(): CellContext<TFeatures, TData, TValue> {

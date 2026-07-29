@@ -6,9 +6,11 @@ function createHost() {
   const host = {
     updateCount: 0,
     addController: () => {},
+    removeController: () => {},
     requestUpdate: () => {
       host.updateCount++
     },
+    updateComplete: Promise.resolve(true),
   }
   return host
 }

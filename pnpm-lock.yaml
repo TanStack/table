@@ -13262,6 +13262,9 @@ importers:
         specifier: workspace:*
         version: link:../table-core
     devDependencies:
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
       '@types/alpinejs':
         specifier: ^3.13.11
         version: 3.13.11
@@ -13437,6 +13440,9 @@ importers:
       '@lit/context':
         specifier: ^1.1.6
         version: 1.1.6
+      '@testing-library/dom':
+        specifier: ^10.4.1
+        version: 10.4.1
       lit:
         specifier: ^3.3.3
         version: 3.3.3
@@ -13459,9 +13465,15 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.5
         version: 2.10.5(@babel/core@7.29.7)(preact@10.29.2)(rollup@4.61.1)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))
+      '@testing-library/preact':
+        specifier: ^3.2.4
+        version: 3.2.4(preact@10.29.2)
       preact:
         specifier: ^10.29.2
         version: 10.29.2
+      preact-render-to-string:
+        specifier: ^6.7.0
+        version: 6.7.0(preact@10.29.2)
 
   packages/preact-table-devtools:
     dependencies:
@@ -13612,6 +13624,9 @@ importers:
       '@sveltejs/vite-plugin-svelte':
         specifier: ^7.1.2
         version: 7.1.2(svelte@5.56.2(@typescript-eslint/types@8.62.0))(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.15))(terser@5.46.2)(yaml@2.9.0))
+      '@testing-library/svelte':
+        specifier: ^5.4.2
+        version: 5.4.2(svelte@5.56.2(@typescript-eslint/types@8.62.0))
       eslint-plugin-svelte:
         specifier: ^3.19.0
         version: 3.19.0(eslint@10.5.0(jiti@2.7.0))(svelte@5.56.2(@typescript-eslint/types@8.62.0))
@@ -19590,6 +19605,10 @@ packages:
     resolution: {integrity: sha512-o4PXJQidqJl82ckFaXUeoAW+XysPLauYI43Abki5hABd853iMhitooc6znOnczgbTYmEP6U6/y1ZyKAIsvMKGg==}
     engines: {node: '>=18'}
 
+  '@testing-library/dom@8.20.1':
+    resolution: {integrity: sha512-/DiOQ5xBxgdYRC8LNk7U+RWat0S3qRLeIw3ZIkMQ9kkVlRmwD/Eg8k8CqIpD6GW7u20JIUOfMKbxtiLutpjQ4g==}
+    engines: {node: '>=12'}
+
   '@testing-library/dom@9.3.4':
     resolution: {integrity: sha512-FlS4ZWlp97iiNWig0Muq8p+3rVDjRiYE+YKGbAqXOu9nwJFFOdL00kFpz42M+4huzYi86vAK1sOOfyOG45muIQ==}
     engines: {node: '>=14'}
@@ -19597,6 +19616,12 @@ packages:
   '@testing-library/jest-dom@6.9.1':
     resolution: {integrity: sha512-zIcONa+hVtVSSep9UT3jZ5rizo2BsxgyDYU7WFD5eICBE7no3881HGeb/QkGfsJs6JTkY1aQhT7rIPC7e+0nnA==}
     engines: {node: '>=14', npm: '>=6', yarn: '>=1'}
+
+  '@testing-library/preact@3.2.4':
+    resolution: {integrity: sha512-F+kJ243LP6VmEK1M809unzTE/ijg+bsMNuiRN0JEDIJBELKKDNhdgC/WrUSZ7klwJvtlO3wQZ9ix+jhObG07Fg==}
+    engines: {node: '>= 12'}
+    peerDependencies:
+      preact: '>=10 || ^10.0.0-alpha.0 || ^10.0.0-beta.0'
 
   '@testing-library/react@16.3.2':
     resolution: {integrity: sha512-XU5/SytQM+ykqMnAnvB2umaJNIOsLF3PVv//1Ew4CTcpz0/BRyy/af40qqrt7SjKpDdT1saBMc42CUok5gaw+g==}
@@ -19611,6 +19636,25 @@ packages:
       '@types/react':
         optional: true
       '@types/react-dom':
+        optional: true
+
+  '@testing-library/svelte-core@1.1.3':
+    resolution: {integrity: sha512-KkMAvXeWorxN2Yn0kdC1lfoAItxpoj4uOWzxK5leDrNxonLvS5nwBFvztrroyTszQ0Wf/EU6iLT8JhY5qcn22g==}
+    engines: {node: '>=16'}
+    peerDependencies:
+      svelte: ^3 || ^4 || ^5 || ^5.0.0-next.0
+
+  '@testing-library/svelte@5.4.2':
+    resolution: {integrity: sha512-4o31E4HGo5BU5KwPkulNRocEden+7Tt9JYm9uhln5ajF7DULeyFA46BBWVfKJ8Ms9B3JmOFPTIiVamH7n3KpuQ==}
+    engines: {node: '>= 10'}
+    peerDependencies:
+      svelte: ^3 || ^4 || ^5 || ^5.0.0-next.0
+      vite: '*'
+      vitest: '*'
+    peerDependenciesMeta:
+      vite:
+        optional: true
+      vitest:
         optional: true
 
   '@testing-library/vue@8.1.0':
@@ -24299,6 +24343,11 @@ packages:
   powershell-utils@0.1.0:
     resolution: {integrity: sha512-dM0jVuXJPsDN6DvRpea484tCUaMiXWjuCn++HGTqUWzGDjv5tZkEZldAJ/UMlqRYGFrD/etByo4/xOuC/snX2A==}
     engines: {node: '>=20'}
+
+  preact-render-to-string@6.7.0:
+    resolution: {integrity: sha512-Z4WR8fmLMRpdYqJ9i7vrlXSsSrxVJydwrkEXHapexfARbWfGb7vGcnvNQnIzN0cXciMVOlz/XLoiMCi9gUsy9Q==}
+    peerDependencies:
+      preact: '>=10 || >= 11.0.0-0'
 
   preact@10.29.2:
     resolution: {integrity: sha512-7tNmwg/7mzzAoB/8kSg6Hl37JraAZw3Z3A0JSY7VXlZwo82Xn0G7wKbNNs2qoF4ZEEsQGTwDAroNdqKs1ofJxQ==}
@@ -33351,6 +33400,17 @@ snapshots:
       picocolors: 1.1.1
       pretty-format: 27.5.1
 
+  '@testing-library/dom@8.20.1':
+    dependencies:
+      '@babel/code-frame': 7.29.7
+      '@babel/runtime': 7.29.7
+      '@types/aria-query': 5.0.4
+      aria-query: 5.1.3
+      chalk: 4.1.2
+      dom-accessibility-api: 0.5.16
+      lz-string: 1.5.0
+      pretty-format: 27.5.1
+
   '@testing-library/dom@9.3.4':
     dependencies:
       '@babel/code-frame': 7.29.7
@@ -33371,6 +33431,11 @@ snapshots:
       picocolors: 1.1.1
       redent: 3.0.0
 
+  '@testing-library/preact@3.2.4(preact@10.29.2)':
+    dependencies:
+      '@testing-library/dom': 8.20.1
+      preact: 10.29.2
+
   '@testing-library/react@16.3.2(@testing-library/dom@10.4.1)(@types/react-dom@19.2.3(@types/react@19.2.16))(@types/react@19.2.16)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)':
     dependencies:
       '@babel/runtime': 7.29.7
@@ -33380,6 +33445,16 @@ snapshots:
     optionalDependencies:
       '@types/react': 19.2.16
       '@types/react-dom': 19.2.3(@types/react@19.2.16)
+
+  '@testing-library/svelte-core@1.1.3(svelte@5.56.2(@typescript-eslint/types@8.62.0))':
+    dependencies:
+      svelte: 5.56.2(@typescript-eslint/types@8.62.0)
+
+  '@testing-library/svelte@5.4.2(svelte@5.56.2(@typescript-eslint/types@8.62.0))':
+    dependencies:
+      '@testing-library/dom': 10.4.1
+      '@testing-library/svelte-core': 1.1.3(svelte@5.56.2(@typescript-eslint/types@8.62.0))
+      svelte: 5.56.2(@typescript-eslint/types@8.62.0)
 
   '@testing-library/vue@8.1.0(@vue/compiler-dom@3.5.38)(@vue/compiler-sfc@3.5.38)(@vue/server-renderer@3.5.38(vue@3.5.38(typescript@6.0.3)))(vue@3.5.38(typescript@6.0.3))':
     dependencies:
@@ -39380,6 +39455,10 @@ snapshots:
       source-map-js: 1.2.1
 
   powershell-utils@0.1.0: {}
+
+  preact-render-to-string@6.7.0(preact@10.29.2):
+    dependencies:
+      preact: 10.29.2
 
   preact@10.29.2: {}
 

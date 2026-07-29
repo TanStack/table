@@ -5,7 +5,9 @@ describe('TableController', () => {
   test('uses default reactivity when constructing a table', () => {
     const host = {
       addController: () => {},
+      removeController: () => {},
       requestUpdate: () => {},
+      updateComplete: Promise.resolve(true),
     }
     const controller = new TableController<any, any>(host)
 
