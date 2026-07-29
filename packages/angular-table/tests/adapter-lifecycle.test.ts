@@ -109,7 +109,7 @@ describe('Angular adapter lifecycle and option ownership', () => {
     expect(table.atoms.rowSelection.get()).toEqual({})
   })
 
-  test('gives an external atom precedence over controlled state', () => {
+  test('bridges an external atom in both directions and gives it precedence', () => {
     const rowSelectionAtom = createAtom<RowSelectionState>({ 2: true })
     const controlledState = signal<RowSelectionState>({ 1: true })
     const table = TestBed.runInInjectionContext(() =>
@@ -140,6 +140,11 @@ describe('Angular adapter lifecycle and option ownership', () => {
       1: true,
       2: true,
     })
+
+    table.getRow('1').toggleSelected(false)
+    TestBed.tick()
+    expect(rowSelectionAtom.get()).toEqual({ 2: true })
+    expect(table.atoms.rowSelection.get()).toEqual({ 2: true })
   })
 
   test('coalesces rapid controlled updates into one reactive publication', () => {
