@@ -14,8 +14,8 @@
     "@faker-js/faker": "^10.5.0",
     "@tanstack/react-devtools": "^0.10.8",
     "@tanstack/react-store": "^0.11.0",
-    "@tanstack/react-table": "^9.0.0-beta.58",
-    "@tanstack/react-table-devtools": "^9.0.0-beta.58",
+    "@tanstack/react-table": "^9.0.0-beta.59",
+    "@tanstack/react-table-devtools": "^9.0.0-beta.59",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },
