@@ -17,7 +17,7 @@ import { RowModel, injectTable } from '../src'
 import type { PaginationState } from '../src'
 
 describe('injectTable', () => {
-  test('should support required signal inputs', () => {
+  test('should support required signal inputs', async () => {
     @Component({
       selector: 'app-table',
       template: ``,
@@ -45,7 +45,7 @@ describe('injectTable', () => {
     const fixture = TestBed.createComponent(RootComponent)
     fixture.detectChanges()
 
-    fixture.whenRenderingDone()
+    await fixture.whenRenderingDone()
   })
 
   describe('Proxy table', () => {
@@ -76,7 +76,7 @@ describe('injectTable', () => {
 
     test('supports "Object.keys"', () => {
       const keys = Object.keys(table)
-      expect(keys.some((k) => ['state', 'getRowModel'].includes(k)))
+      expect(keys).toEqual(expect.arrayContaining(['options', 'getRowModel']))
     })
 
     test('Row model is reactive', () => {
@@ -125,7 +125,7 @@ describe('injectTable', () => {
         // optionsStore is a signal -> so if updated with state in queuemicrotask will trigger twice
         expect(coreRowModelFn).toHaveBeenCalledTimes(2)
         expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
-        expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
+        expect(coreRowModelFn.mock.calls[1]![0].rows.length).toEqual(10)
 
         expect(rowModelFn).toHaveBeenCalledTimes(2)
         expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)

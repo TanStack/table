@@ -95,6 +95,7 @@ describe('angularReactivityFeature', () => {
 
       expect(isSelectedRow1Captor.mock.calls).toEqual([[false], [true], [true]])
       expect(cellGetValueCaptor.mock.calls).toEqual([['1'], ['1']])
+      expect(cellGetValueMemoizedCaptor.mock.calls).toEqual([['1']])
       expect(columnIsVisibleCaptor.mock.calls).toEqual([
         [true],
         [true],
@@ -142,7 +143,8 @@ describe('angularReactivityFeature', () => {
 
     test('table store can be subscribed from another reactive effect', () => {
       const table = createTestTable()
-      const tableStateCaptor = vi.fn()
+      const tableStateCaptor =
+        vi.fn<(state: ReturnType<typeof table.store.get>) => void>()
 
       TestBed.runInInjectionContext(() => {
         effect((onCleanup) => {
@@ -154,7 +156,13 @@ describe('angularReactivityFeature', () => {
         })
       })
 
-      expect(() => TestBed.tick()).not.toThrow()
+      TestBed.tick()
+      table.toggleAllRowsSelected(true)
+      TestBed.tick()
+
+      expect(
+        tableStateCaptor.mock.calls.map(([state]) => state.rowSelection),
+      ).toEqual([{}, { 1: true }])
     })
 
     test('table state reacts to every external signal state update', () => {
