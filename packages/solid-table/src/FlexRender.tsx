@@ -24,7 +24,7 @@ export function flexRender<TProps>(
   Comp: ((_props: TProps) => JSX.Element) | JSX.Element | undefined,
   props: TProps,
 ): JSX.Element {
-  if (!Comp) return null
+  if (Comp === null || Comp === undefined) return null
 
   if (typeof Comp === 'function') {
     return createComponent(Comp, props as any)

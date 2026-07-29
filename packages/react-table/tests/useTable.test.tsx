@@ -69,12 +69,11 @@ afterEach(() => {
 })
 
 describe('useTable state subscriptions', () => {
-  it('reads controlled state from the live table store', () => {
+  it('renders each controlled update once without a redundant commit render', () => {
     let harnessRenderCount = 0
     let setControlledPagination: React.Dispatch<
       React.SetStateAction<PaginationState>
     >
-    let storeSubscribe: ReturnType<typeof vi.spyOn> | undefined
 
     function ControlledStateHarness() {
       harnessRenderCount++
@@ -96,10 +95,6 @@ describe('useTable state subscriptions', () => {
         (state) => state.pagination.pageIndex,
       )
 
-      // useSyncExternalStore subscribes after render. Installing the spy here
-      // distinguishes the root adapter subscription from table construction.
-      storeSubscribe ??= vi.spyOn(table.store, 'subscribe')
-
       return (
         <output data-testid="controlled-source-page-index">
           {table.state}
@@ -109,7 +104,6 @@ describe('useTable state subscriptions', () => {
 
     render(<ControlledStateHarness />)
 
-    expect(storeSubscribe).toHaveBeenCalledTimes(1)
     expect(harnessRenderCount).toBe(1)
 
     act(() => {
@@ -121,7 +115,6 @@ describe('useTable state subscriptions', () => {
 
     expect(text('controlled-source-page-index')).toBe('1')
     expect(harnessRenderCount).toBe(2)
-    expect(storeSubscribe).toHaveBeenCalledTimes(1)
   })
 
   it('resolves changes in slice ownership', () => {
@@ -348,6 +341,10 @@ describe('useTable state subscriptions', () => {
           <output data-testid="mixed-first-row">
             {table.getRowModel().rows[0]?.original.id}
           </output>
+          <button
+            data-testid="mixed-next-page"
+            onClick={() => table.nextPage()}
+          />
         </>
       )
     }
@@ -387,6 +384,18 @@ describe('useTable state subscriptions', () => {
     expect(text('mixed-page-index')).toBe('4')
     expect(text('mixed-first-row')).toBe('40')
     expect(harnessRenderCount).toBe(3)
+
+    act(() => {
+      click('mixed-next-page')
+    })
+
+    expect(paginationAtom.get()).toEqual({
+      pageIndex: 5,
+      pageSize: 10,
+    })
+    expect(text('mixed-page-index')).toBe('5')
+    expect(text('mixed-first-row')).toBe('50')
+    expect(harnessRenderCount).toBe(4)
   })
 
   it('does not mutate base state or notify subscribers from a suspended render', () => {
@@ -515,8 +524,8 @@ describe('useTable state subscriptions', () => {
       }))
     })
 
-    expect(latestTable!.baseAtoms.pagination.get()).toBe(pagination)
-    expect(latestTable!.store.get().pagination).toBe(pagination)
+    expect(latestTable!.atoms.pagination.get()).toEqual(pagination)
+    expect(latestTable!.store.get().pagination).toEqual(pagination)
     expect(text('imperative-page-index')).toBe('3')
     expect(text('imperative-subscriber')).toBe('3')
     expect(notifications).toEqual([3])

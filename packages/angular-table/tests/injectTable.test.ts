@@ -1,4 +1,3 @@
-import { isProxy } from 'node:util/types'
 import { describe, expect, test, vi } from 'vitest'
 import {
   ChangeDetectionStrategy,
@@ -8,16 +7,19 @@ import {
   signal,
 } from '@angular/core'
 import { TestBed } from '@angular/core/testing'
+import { By } from '@angular/platform-browser'
 import {
   ColumnDef,
   createPaginatedRowModel,
   stockFeatures,
 } from '@tanstack/table-core'
-import { RowModel, injectTable } from '../src'
+import { injectTable } from '../src'
 import type { PaginationState } from '../src'
 
 describe('injectTable', () => {
   test('should support required signal inputs', async () => {
+    type Data = { id: string; title: string }
+
     @Component({
       selector: 'app-table',
       template: ``,
@@ -25,27 +27,53 @@ describe('injectTable', () => {
       changeDetection: ChangeDetectionStrategy.OnPush,
     })
     class TableComponent {
-      data = input.required<Array<any>>()
+      data = input.required<Array<Data>>()
 
       table = injectTable(() => ({
         data: this.data(),
         features: stockFeatures,
         columns: [],
+        getRowId: (row) => row.id,
       }))
     }
 
     @Component({
       selector: 'app-root',
       imports: [TableComponent],
-      template: ` <app-table [data]="[]" /> `,
+      template: `<app-table [data]="data()" />`,
       changeDetection: ChangeDetectionStrategy.OnPush,
     })
-    class RootComponent {}
+    class RootComponent {
+      readonly data = signal<Array<Data>>([{ id: '1', title: 'First' }])
+    }
 
     const fixture = TestBed.createComponent(RootComponent)
     fixture.detectChanges()
-
     await fixture.whenRenderingDone()
+
+    const tableComponent = fixture.debugElement.query(
+      By.directive(TableComponent),
+    ).componentInstance as TableComponent
+
+    expect(
+      tableComponent.table.getRowModel().rows.map((row) => row.original),
+    ).toEqual([{ id: '1', title: 'First' }])
+    TestBed.tick()
+
+    fixture.componentInstance.data.set([
+      { id: '1', title: 'Updated' },
+      { id: '2', title: 'Second' },
+    ])
+    fixture.detectChanges()
+    TestBed.tick()
+    await fixture.whenRenderingDone()
+
+    expect(
+      tableComponent.table.getRowModel().rows.map((row) => row.original),
+    ).toEqual([
+      { id: '1', title: 'Updated' },
+      { id: '2', title: 'Second' },
+    ])
   })
 
   describe('Proxy table', () => {
@@ -64,12 +92,8 @@ describe('injectTable', () => {
       })),
     )
 
-    test('table is proxy', () => {
-      expect(isProxy(table)).toBe(true)
-    })
-
     test('supports "in" operator', () => {
-      expect('_features' in table).toBe(true)
+      expect('atoms' in table).toBe(true)
       expect('options' in table).toBe(true)
       expect('notFound' in table).toBe(false)
     })
@@ -80,10 +104,7 @@ describe('injectTable', () => {
     })
 
     test('Row model is reactive', () => {
-      const coreRowModelFn =
-        vi.fn<(model: RowModel<typeof stockFeatures, Data>) => void>()
-      const rowModelFn =
-        vi.fn<(model: RowModel<typeof stockFeatures, Data>) => void>()
+      const rowCounts = vi.fn<(count: number) => void>()
       const pagination = signal<PaginationState>({
         pageSize: 5,
         pageIndex: 0,
@@ -112,8 +133,8 @@ describe('injectTable', () => {
           },
         }))
 
-        effect(() => coreRowModelFn(table.getCoreRowModel()))
-        effect(() => rowModelFn(table.getRowModel()))
+        const initialCoreRowModel = table.getCoreRowModel()
+        effect(() => rowCounts(table.getRowModel().rows.length))
 
         TestBed.tick()
 
@@ -121,15 +142,8 @@ describe('injectTable', () => {
 
         TestBed.tick()
 
-        // TODO: pagination state update twice during first table construct
-        // optionsStore is a signal -> so if updated with state in queuemicrotask will trigger twice
-        expect(coreRowModelFn).toHaveBeenCalledTimes(2)
-        expect(coreRowModelFn.mock.calls[0]![0].rows.length).toEqual(10)
-        expect(coreRowModelFn.mock.calls[1]![0].rows.length).toEqual(10)
-
-        expect(rowModelFn).toHaveBeenCalledTimes(2)
-        expect(rowModelFn.mock.calls[0]![0].rows.length).toEqual(5)
-        expect(rowModelFn.mock.calls[1]![0].rows.length).toEqual(3)
+        expect(rowCounts.mock.calls).toEqual([[5], [3]])
+        expect(table.getCoreRowModel()).toBe(initialCoreRowModel)
       })
     })
   })

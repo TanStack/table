@@ -313,22 +313,19 @@ export const AppFlexRender = defineComponent({
     return () => {
       if (props.cell) {
         return h(FlexRender, {
-          render: props.cell.column.columnDef.cell,
-          props: props.cell.getContext(),
+          cell: props.cell,
         })
       }
 
       if (props.header) {
         return h(FlexRender, {
-          render: props.header.column.columnDef.header,
-          props: props.header.getContext(),
+          header: props.header,
         })
       }
 
       if (props.footer) {
         return h(FlexRender, {
-          render: props.footer.column.columnDef.footer,
-          props: props.footer.getContext(),
+          footer: props.footer,
         })
       }
 

@@ -1,5 +1,11 @@
 import { describe, expect, test, vi } from 'vitest'
-import { batch, createEffect, createRoot, createSignal } from 'solid-js'
+import {
+  batch,
+  createEffect,
+  createMemo,
+  createRoot,
+  createSignal,
+} from 'solid-js'
 import { createAtom } from '@tanstack/store'
 import { stockFeatures } from '@tanstack/table-core'
 import { createTable } from '../../src/createTable'
@@ -70,12 +76,16 @@ describe('Solid adapter lifecycle and option ownership', () => {
     expect(sourceAtom.get()).toEqual({ 2: true })
     expect(table.atoms.rowSelection.get()).toEqual({ 1: true })
     expect(stateCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
+
+    table.setRowSelection({ 3: true })
+
+    expect(sourceAtom.get()).toEqual({ 2: true })
   })
 
   test('controlled state can release and reacquire ownership without losing the latest value', () => {
     const { dispose, value } = createEffectTestRoot(() => {
       const [controlledState, setControlledState] = createSignal<
-        { rowSelection: RowSelectionState } | undefined
+        { rowSelection?: RowSelectionState } | undefined
       >({ rowSelection: { 1: true } })
       const table = createTable({
         data: [
@@ -100,8 +110,8 @@ describe('Solid adapter lifecycle and option ownership', () => {
     try {
       expect(table.atoms.rowSelection.get()).toEqual({ 1: true })
 
-      setControlledState(undefined)
-      expect(table.options.state).toBeUndefined()
+      setControlledState({})
+      expect(table.options.state).toEqual({})
       expect(table.atoms.rowSelection.get()).toEqual({ 1: true })
 
       table.setRowSelection({ 2: true })
@@ -155,12 +165,16 @@ describe('Solid adapter lifecycle and option ownership', () => {
         },
       })
       const stateCaptor = vi.fn<(state: RowSelectionState) => void>()
+      const isSelectedCaptor = vi.fn<(selected: boolean) => void>()
+      const isSelected = createMemo(() => table.getRow('1').getIsSelected())
 
       createEffect(() => stateCaptor(table.atoms.rowSelection.get()))
+      createEffect(() => isSelectedCaptor(isSelected()))
 
-      return { setControlledSelection, stateCaptor, table }
+      return { isSelectedCaptor, setControlledSelection, stateCaptor, table }
     })
-    const { setControlledSelection, stateCaptor, table } = value
+    const { isSelectedCaptor, setControlledSelection, stateCaptor, table } =
+      value
 
     try {
       expect(table.atoms.rowSelection.get()).toEqual({ 2: true })
@@ -179,6 +193,7 @@ describe('Solid adapter lifecycle and option ownership', () => {
         [{ 1: true }],
         [{ 2: true }],
       ])
+      expect(isSelectedCaptor.mock.calls).toEqual([[false], [true], [false]])
     } finally {
       dispose()
     }

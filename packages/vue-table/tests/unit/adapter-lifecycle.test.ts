@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
-import { effectScope, nextTick, ref, watchEffect } from 'vue'
+import { computed, effectScope, nextTick, ref, watchEffect } from 'vue'
 import { createAtom } from '@tanstack/store'
 import { stockFeatures } from '@tanstack/table-core'
 import { useTable } from '../../src/useTable'
@@ -84,6 +84,11 @@ describe('Vue adapter lifecycle and reactive options', () => {
     expect(selectionCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
     expect(table.getRowModel().rows.map((row) => row.id)).toEqual(['1', '2'])
     expect(table.atoms.rowSelection.get()).toEqual({ 1: true })
+
+    table.toggleAllRowsSelected(true)
+
+    expect(table.atoms.rowSelection.get()).toEqual({ 1: true, 2: true })
+    expect(externalRowSelection.get()).toEqual({ 2: true })
   })
 
   test('controlled state can release and regain ownership of a slice', async () => {
@@ -125,9 +130,10 @@ describe('Vue adapter lifecycle and reactive options', () => {
       rowSelection: { 2: true },
     })
     const externalRowSelection = createAtom<RowSelectionState>({ 1: true })
+    const isSelectedCaptor = vi.fn<(selected: boolean) => void>()
     const scope = effectScope()
-    const table = scope.run(() =>
-      useTable<typeof stockFeatures, Data>({
+    const table = scope.run(() => {
+      const table = useTable<typeof stockFeatures, Data>({
         data: [
           { id: '1', title: 'First' },
           { id: '2', title: 'Second' },
@@ -139,8 +145,15 @@ describe('Vue adapter lifecycle and reactive options', () => {
         atoms: {
           rowSelection: externalRowSelection,
         },
-      }),
-    )!
+      })
+
+      const isSelected = computed(() => table.getRow('1').getIsSelected())
+      watchEffect(() => isSelectedCaptor(isSelected.value), {
+        flush: 'sync',
+      })
+
+      return table
+    })!
 
     expect(table.atoms.rowSelection.get()).toEqual({ 1: true })
 
@@ -154,6 +167,7 @@ describe('Vue adapter lifecycle and reactive options', () => {
     table.toggleAllRowsSelected(true)
     expect(externalRowSelection.get()).toEqual({ 1: true, 2: true })
     expect(table.atoms.rowSelection.get()).toEqual({ 1: true, 2: true })
+    expect(isSelectedCaptor.mock.calls).toEqual([[true], [false], [true]])
 
     scope.stop()
   })
@@ -171,9 +185,12 @@ describe('Vue adapter lifecycle and reactive options', () => {
         getRowId: (row) => row.id,
       })
 
-      watchEffect(() => {
-        rowIdsCaptor(table.getRowModel().rows.map((row) => row.id))
-      })
+      watchEffect(
+        () => {
+          rowIdsCaptor(table.getRowModel().rows.map((row) => row.id))
+        },
+        { flush: 'sync' },
+      )
     })
 
     data.value = [{ id: '1', title: 'One' }]

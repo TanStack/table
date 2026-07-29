@@ -138,6 +138,86 @@ describe('createTableHook runtime', () => {
     expect(text('app-cell-selection')).toBe('true')
   })
 
+  test('keeps App wrappers mounted while their contexts receive new table objects', () => {
+    const mountCaptor = vi.fn()
+    const unmountCaptor = vi.fn()
+
+    function StatefulCell() {
+      const cell = appTable.useCellContext<string>()
+      const [draft, setDraft] = React.useState('initial')
+
+      React.useEffect(() => {
+        mountCaptor()
+        return () => unmountCaptor()
+      }, [])
+
+      return (
+        <>
+          <input
+            data-testid="stateful-cell-input"
+            value={draft}
+            onChange={(event) => setDraft(event.target.value)}
+          />
+          <output data-testid="latest-cell-value">{cell.getValue()}</output>
+        </>
+      )
+    }
+
+    function TableHarness() {
+      const [updated, setUpdated] = React.useState(false)
+      const table = appTable.useAppTable(
+        {
+          data: [{ id: '1', name: updated ? 'Grace' : 'Ada' }],
+          columns,
+          getRowId: (row) => row.id,
+        },
+        () => null,
+      )
+      const header = table.getHeaderGroups()[0]!.headers[0]!
+      const cell = table.getRowModel().rows[0]!.getAllCells()[0]!
+
+      return (
+        <>
+          <table.AppTable>
+            <table.AppHeader header={header}>
+              {() => (
+                <table.AppFooter header={header}>
+                  {() => (
+                    <table.AppCell cell={cell}>
+                      {() => <StatefulCell />}
+                    </table.AppCell>
+                  )}
+                </table.AppFooter>
+              )}
+            </table.AppHeader>
+          </table.AppTable>
+          <button
+            data-testid="refresh-app-table"
+            onClick={() => setUpdated(true)}
+          />
+        </>
+      )
+    }
+
+    render(<TableHarness />)
+
+    const input = screen.getByTestId('stateful-cell-input')
+    fireEvent.change(input, { target: { value: 'edited' } })
+
+    expect(text('latest-cell-value')).toBe('Ada')
+    expect(mountCaptor).toHaveBeenCalledOnce()
+
+    act(() => {
+      click('refresh-app-table')
+    })
+
+    expect(screen.getByTestId('stateful-cell-input')).toBe(input)
+    expect((input as HTMLInputElement).value).toBe('edited')
+    expect(text('latest-cell-value')).toBe('Grace')
+    expect(mountCaptor).toHaveBeenCalledOnce()
+    expect(unmountCaptor).not.toHaveBeenCalled()
+  })
+
   test('throws focused errors when context hooks are used outside wrappers', () => {
     function MissingTableContext() {
       appTable.useTableContext<Person>()

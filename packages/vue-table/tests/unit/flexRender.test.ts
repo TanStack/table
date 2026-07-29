@@ -9,6 +9,10 @@ describe('flexRender', () => {
       (context: typeof props) => `Hello ${context.value}`,
     )
 
+    expect(flexRender(null, props)).toBeNull()
+    expect(flexRender(undefined, props)).toBeUndefined()
+    expect(flexRender(0, props)).toBe(0)
+    expect(flexRender(() => null, props)).toBeNull()
     expect(flexRender('Plain text', props)).toBe('Plain text')
     expect(flexRender(renderCallback, props)).toBe('Hello Ada')
     expect(renderCallback).toHaveBeenCalledWith(props)
@@ -32,5 +36,11 @@ describe('flexRender', () => {
     expect(isVNode(componentVNode)).toBe(true)
     expect(componentVNode.type).toBe(NameComponent)
     expect(componentVNode.props).toMatchObject(props)
+
+    const returnedComponentVNode = flexRender(() => NameComponent, props)
+
+    expect(isVNode(returnedComponentVNode)).toBe(true)
+    expect(returnedComponentVNode.type).toBe(NameComponent)
+    expect(returnedComponentVNode.props).toMatchObject(props)
   })
 })

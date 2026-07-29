@@ -1,11 +1,12 @@
 // @vitest-environment jsdom
 
 import { afterEach, describe, expect, test, vi } from 'vitest'
-import { defineComponent, h } from 'vue'
-import { cleanup, render, screen } from '@testing-library/vue'
+import { defineComponent, h, nextTick, ref } from 'vue'
+import { cleanup, fireEvent, render, screen } from '@testing-library/vue'
 import { stockFeatures } from '@tanstack/table-core'
 import { FlexRender } from '../../src/FlexRender'
 import { createTableHook } from '../../src/createTableHook'
+import { useTable } from '../../src/useTable'
 
 afterEach(cleanup)
 
@@ -106,6 +107,82 @@ describe('FlexRender', () => {
     expect(headerRenderer).toHaveBeenCalledWith(headerContext)
     expect(footerRenderer).toHaveBeenCalledWith(footerContext)
   })
+
+  test('updates when the shorthand cell prop is replaced', async () => {
+    const cell = ref({
+      column: {
+        columnDef: {
+          cell: (context: { value: string }) => `cell:${context.value}`,
+        },
+      },
+      getContext: () => ({ value: 'Ada' }),
+    })
+    const Root = defineComponent({
+      setup() {
+        return () =>
+          h(
+            'div',
+            { 'data-testid': 'reactive-flex-render' },
+            h(FlexRender, { cell: cell.value }),
+          )
+      },
+    })
+
+    render(Root)
+
+    expect(screen.getByTestId('reactive-flex-render').textContent).toBe(
+      'cell:Ada',
+    )
+
+    cell.value = {
+      column: cell.value.column,
+      getContext: () => ({ value: 'Grace' }),
+    }
+    await nextTick()
+
+    expect(screen.getByTestId('reactive-flex-render').textContent).toBe(
+      'cell:Grace',
+    )
+  })
+})
+
+describe('table.Subscribe', () => {
+  test('updates mounted content for the atom read by its child', async () => {
+    const Root = defineComponent({
+      setup() {
+        const table = useTable<typeof stockFeatures, { id: string }>({
+          data: [{ id: '1' }],
+          columns: [{ id: 'id', accessorKey: 'id' }],
+          features: stockFeatures,
+          getRowId: (row) => row.id,
+        })
+
+        return () =>
+          h('main', [
+            table.Subscribe({
+              children: (atoms) =>
+                h(
+                  'output',
+                  { 'data-testid': 'subscribed-selection' },
+                  String(Boolean(atoms.rowSelection.get()['1'])),
+                ),
+            }),
+            h('button', {
+              'data-testid': 'select-subscribed-row',
+              onClick: () => table.getRow('1').toggleSelected(true),
+            }),
+          ])
+      },
+    })
+
+    render(Root)
+
+    expect(screen.getByTestId('subscribed-selection').textContent).toBe('false')
+
+    await fireEvent.click(screen.getByTestId('select-subscribed-row'))
+
+    expect(screen.getByTestId('subscribed-selection').textContent).toBe('true')
+  })
 })
 
 describe('createTableHook', () => {
@@ -142,6 +219,7 @@ describe('createTableHook', () => {
     columnHelper.accessor('title', {
       header: (context) => `header:${context.column.id}`,
       cell: (context) => `cell:${context.getValue()}`,
+      aggregatedCell: (context) => `aggregate:${context.getValue()}`,
       footer: (context) => `footer:${context.column.id}`,
     }),
   ])
@@ -261,6 +339,51 @@ describe('createTableHook', () => {
       'table-componentcell-componentcell:First' +
         'header-componentheader:titlefooter:title',
     )
+  })
+
+  test('bound cell render helpers preserve aggregate and placeholder modes', async () => {
+    const mode = ref<'aggregate' | 'placeholder'>('aggregate')
+    const CellConsumer = defineComponent({
+      setup() {
+        const cell = hook.useCellContext<string>()
+        return () =>
+          h('span', { 'data-testid': 'bound-cell-mode' }, h(cell.FlexRender))
+      },
+    })
+    const Root = defineComponent({
+      setup() {
+        const table = hook.useAppTable({
+          data: [{ id: '1', title: 'First' }],
+          columns,
+        })
+        const cell = table.getRowModel().rows[0]!.getAllCells()[0]!
+
+        Object.assign(cell, {
+          getIsAggregated: () => mode.value === 'aggregate',
+          getIsPlaceholder: () => mode.value === 'placeholder',
+        })
+
+        return () =>
+          h(
+            table.AppCell,
+            { cell },
+            {
+              default: () => h(CellConsumer),
+            },
+          )
+      },
+    })
+
+    render(Root)
+
+    expect(screen.getByTestId('bound-cell-mode').textContent).toBe(
+      'aggregate:First',
+    )
+
+    mode.value = 'placeholder'
+    await nextTick()
+
+    expect(screen.getByTestId('bound-cell-mode').textContent).toBe('')
   })
 
   test.each([
