@@ -240,38 +240,86 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
   const statefulTableOptions =
     definedTableOptions as MRT_StatefulTableOptions<TData>
 
-  // don't recompute columnDefs while resizing column or dragging column/row
+  // Column preparation mutates/augments definitions and must rerun when an
+  // input that affects those definitions changes. Keep the resulting array
+  // stable across unrelated state updates such as pagination.
   const columnDefsRef = useRef<Array<MRT_ColumnDef<TData>>>([])
-  statefulTableOptions.columns =
-    statefulTableOptions.state.columnResizing.isResizingColumn ||
-    statefulTableOptions.state.draggingColumn ||
-    statefulTableOptions.state.draggingRow
-      ? columnDefsRef.current
-      : prepareColumns({
-          columnDefs: [
-            ...([
-              showRowPinningColumn(statefulTableOptions) &&
-                getMRT_RowPinningColumnDef(statefulTableOptions),
-              showRowDragColumn(statefulTableOptions) &&
-                getMRT_RowDragColumnDef(statefulTableOptions),
-              showRowActionsColumn(statefulTableOptions) &&
-                getMRT_RowActionsColumnDef(statefulTableOptions),
-              showRowExpandColumn(statefulTableOptions) &&
-                getMRT_RowExpandColumnDef(statefulTableOptions),
-              showRowSelectionColumn(statefulTableOptions) &&
-                getMRT_RowSelectColumnDef(statefulTableOptions),
-              showRowNumbersColumn(statefulTableOptions) &&
-                getMRT_RowNumbersColumnDef(statefulTableOptions),
-            ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
-            ...statefulTableOptions.columns,
-            ...([
-              showRowSpacerColumn(statefulTableOptions) &&
-                getMRT_RowSpacerColumnDef(statefulTableOptions),
-            ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
-          ],
-          tableOptions: statefulTableOptions,
-        })
-  columnDefsRef.current = statefulTableOptions.columns
+  const columnPreparationDepsRef = useRef<Array<unknown> | undefined>(undefined)
+  const sourceColumns = statefulTableOptions.columns
+  const columnPreparationDeps: Array<unknown> = [
+    sourceColumns,
+    statefulTableOptions.defaultColumn,
+    statefulTableOptions.defaultDisplayColumn,
+    statefulTableOptions.displayColumnDefOptions,
+    statefulTableOptions.filterFns,
+    statefulTableOptions.sortFns,
+    statefulTableOptions.localization,
+    statefulTableOptions.state.columnFilterFns,
+    statefulTableOptions.state.creatingRow,
+    statefulTableOptions.state.grouping,
+    statefulTableOptions.createDisplayMode,
+    statefulTableOptions.editDisplayMode,
+    statefulTableOptions.enableEditing,
+    statefulTableOptions.enableExpandAll,
+    statefulTableOptions.enableExpanding,
+    statefulTableOptions.enableGrouping,
+    statefulTableOptions.enableMultiRowSelection,
+    statefulTableOptions.enableRowActions,
+    statefulTableOptions.enableRowDragging,
+    statefulTableOptions.enableRowNumbers,
+    statefulTableOptions.enableRowOrdering,
+    statefulTableOptions.enableRowPinning,
+    statefulTableOptions.enableRowSelection,
+    statefulTableOptions.enableSelectAll,
+    statefulTableOptions.groupedColumnMode,
+    statefulTableOptions.layoutMode,
+    statefulTableOptions.positionExpandColumn,
+    statefulTableOptions.renderDetailPanel,
+    statefulTableOptions.rowNumberDisplayMode,
+    statefulTableOptions.rowPinningDisplayMode,
+  ]
+  const previousColumnPreparationDeps = columnPreparationDepsRef.current
+  const columnPreparationChanged =
+    !previousColumnPreparationDeps ||
+    columnPreparationDeps.length !== previousColumnPreparationDeps.length ||
+    columnPreparationDeps.some(
+      (dependency, index) =>
+        !Object.is(dependency, previousColumnPreparationDeps[index]),
+    )
+  const freezePreparedColumns =
+    !!columnDefsRef.current.length &&
+    (statefulTableOptions.state.columnResizing.isResizingColumn ||
+      !!statefulTableOptions.state.draggingColumn ||
+      !!statefulTableOptions.state.draggingRow)
+
+  if (columnPreparationChanged && !freezePreparedColumns) {
+    columnDefsRef.current = prepareColumns({
+      columnDefs: [
+        ...([
+          showRowPinningColumn(statefulTableOptions) &&
+            getMRT_RowPinningColumnDef(statefulTableOptions),
+          showRowDragColumn(statefulTableOptions) &&
+            getMRT_RowDragColumnDef(statefulTableOptions),
+          showRowActionsColumn(statefulTableOptions) &&
+            getMRT_RowActionsColumnDef(statefulTableOptions),
+          showRowExpandColumn(statefulTableOptions) &&
+            getMRT_RowExpandColumnDef(statefulTableOptions),
+          showRowSelectionColumn(statefulTableOptions) &&
+            getMRT_RowSelectColumnDef(statefulTableOptions),
+          showRowNumbersColumn(statefulTableOptions) &&
+            getMRT_RowNumbersColumnDef(statefulTableOptions),
+        ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
+        ...sourceColumns,
+        ...([
+          showRowSpacerColumn(statefulTableOptions) &&
+            getMRT_RowSpacerColumnDef(statefulTableOptions),
+        ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
+      ],
+      tableOptions: statefulTableOptions,
+    })
+    columnPreparationDepsRef.current = columnPreparationDeps
+  }
+  statefulTableOptions.columns = columnDefsRef.current
 
   // if loading, generate blank rows to show skeleton loaders
   statefulTableOptions.data = useMemo(

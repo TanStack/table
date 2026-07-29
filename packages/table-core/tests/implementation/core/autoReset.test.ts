@@ -196,6 +196,21 @@ describe('autoResetPageIndex end-to-end wiring', () => {
     expect(table.atoms.pagination.get().pageIndex).toBe(2)
   })
 
+  it('should not reset pageIndex when only the column definitions reference changes', async () => {
+    const table = makeTable()
+    await primeTable(table)
+
+    table.setPageIndex(2)
+    table.setOptions((old) => ({
+      ...old,
+      columns: [...old.columns],
+    }))
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(2)
+  })
+
   describe('option precedence', () => {
     async function triggerReset(table: ReturnType<typeof makeTable>) {
       await primeTable(table)
