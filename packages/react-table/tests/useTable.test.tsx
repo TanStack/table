@@ -596,7 +596,7 @@ describe('useTable state subscriptions', () => {
       )
     }
 
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleError = vi.spyOn(console, 'error')
 
     render(
       <React.StrictMode>
@@ -702,7 +702,7 @@ describe('useTable state subscriptions', () => {
       )
     }
 
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleError = vi.spyOn(console, 'error')
 
     render(<IsolatedControlledPaginationHarness />)
 
@@ -836,7 +836,7 @@ describe('useTable state subscriptions', () => {
       )
     }
 
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleError = vi.spyOn(console, 'error')
 
     render(<RecreatedControlledSliceHarness />)
 
@@ -892,7 +892,7 @@ describe('useTable state subscriptions', () => {
       )
     }
 
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
+    const consoleError = vi.spyOn(console, 'error')
 
     render(<UncontrolledPaginationHarness />)
 

@@ -20,21 +20,7 @@ describe('Vue adapter lifecycle and reactive options', () => {
   test('scope disposal cleans up external atoms and stops later reactions', async () => {
     const data = ref<ReadonlyArray<Data>>([{ id: '1', title: 'First' }])
     const externalRowSelection = createAtom<RowSelectionState>({})
-    const originalSubscribe =
-      externalRowSelection.subscribe.bind(externalRowSelection)
-    const externalUnsubscribe = vi.fn()
-
-    vi.spyOn(externalRowSelection, 'subscribe').mockImplementation(
-      (observer) => {
-        const subscription = originalSubscribe(observer)
-        return {
-          unsubscribe: () => {
-            externalUnsubscribe()
-            subscription.unsubscribe()
-          },
-        }
-      },
-    )
+    const subscribeSpy = vi.spyOn(externalRowSelection, 'subscribe')
 
     const rowIdsCaptor = vi.fn<(ids: Array<string>) => void>()
     const selectionCaptor = vi.fn<(state: RowSelectionState) => void>()
@@ -70,11 +56,14 @@ describe('Vue adapter lifecycle and reactive options', () => {
 
     expect(rowIdsCaptor.mock.calls).toEqual([[['1']], [['1', '2']]])
     expect(selectionCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
-    expect(externalRowSelection.subscribe).toHaveBeenCalledTimes(1)
+    expect(subscribeSpy).toHaveBeenCalledTimes(1)
+
+    const subscription = subscribeSpy.mock.results[0]!.value
+    const unsubscribeSpy = vi.spyOn(subscription, 'unsubscribe')
 
     scope.stop()
 
-    expect(externalUnsubscribe).toHaveBeenCalledTimes(1)
+    expect(unsubscribeSpy).toHaveBeenCalledTimes(1)
 
     data.value = [{ id: '3', title: 'Third' }]
     externalRowSelection.set({ 2: true })

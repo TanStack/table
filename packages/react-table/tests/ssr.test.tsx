@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import { renderToStaticMarkup, renderToString } from 'react-dom/server'
-import { describe, expect, test } from 'vitest'
+import { describe, expect, test, vi } from 'vitest'
 import { flexRender, stockFeatures, useTable } from '../src'
 import type { ColumnDef } from '../src'
 
@@ -90,15 +90,12 @@ describe('React server rendering', () => {
         columns,
         getRowId: (row) => row.id,
       })
-      const baseAggregatedCell = table.getRow('1').getAllCells()[0]!
-      const basePlaceholderCell = table.getRow('2').getAllCells()[0]!
-      const aggregatedCell = Object.create(baseAggregatedCell, {
-        getIsAggregated: { value: () => true },
-      }) as typeof baseAggregatedCell
-      const placeholderCell = Object.create(basePlaceholderCell, {
-        getIsAggregated: { value: () => false },
-        getIsPlaceholder: { value: () => true },
-      }) as typeof basePlaceholderCell
+      const aggregatedCell = table.getRow('1').getAllCells()[0]!
+      const placeholderCell = table.getRow('2').getAllCells()[0]!
+
+      vi.spyOn(aggregatedCell, 'getIsAggregated').mockReturnValue(true)
+      vi.spyOn(placeholderCell, 'getIsAggregated').mockReturnValue(false)
+      vi.spyOn(placeholderCell, 'getIsPlaceholder').mockReturnValue(true)
 
       return (
         <>

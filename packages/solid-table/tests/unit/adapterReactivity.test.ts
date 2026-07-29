@@ -9,7 +9,6 @@ import {
 import { createAtom } from '@tanstack/store'
 import { stockFeatures } from '@tanstack/table-core'
 import { createTable } from '../../src/createTable'
-import type { Observer } from '@tanstack/store'
 import type { ColumnDef, RowSelectionState } from '@tanstack/table-core'
 
 describe('Solid adapter lifecycle and option ownership', () => {
@@ -34,17 +33,7 @@ describe('Solid adapter lifecycle and option ownership', () => {
 
   test('disposing the owner unsubscribes external atoms and stops reactions', () => {
     const sourceAtom = createAtom<RowSelectionState>({})
-    const originalSubscribe = sourceAtom.subscribe.bind(sourceAtom)
-    const unsubscribeCaptor = vi.fn()
-    sourceAtom.subscribe = ((observer: Observer<RowSelectionState>) => {
-      const subscription = originalSubscribe(observer)
-      return {
-        unsubscribe: () => {
-          unsubscribeCaptor()
-          subscription.unsubscribe()
-        },
-      }
-    }) as typeof sourceAtom.subscribe
+    const subscribeSpy = vi.spyOn(sourceAtom, 'subscribe')
 
     const { dispose, value } = createEffectTestRoot(() => {
       const table = createTable({
@@ -64,12 +53,17 @@ describe('Solid adapter lifecycle and option ownership', () => {
     })
     const { stateCaptor, table } = value
 
+    expect(subscribeSpy).toHaveBeenCalledTimes(1)
+
+    const subscription = subscribeSpy.mock.results[0]!.value
+    const unsubscribeSpy = vi.spyOn(subscription, 'unsubscribe')
+
     sourceAtom.set({ 1: true })
     expect(stateCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
 
     dispose()
 
-    expect(unsubscribeCaptor).toHaveBeenCalledTimes(1)
+    expect(unsubscribeSpy).toHaveBeenCalledTimes(1)
 
     sourceAtom.set({ 2: true })
 
@@ -84,9 +78,9 @@ describe('Solid adapter lifecycle and option ownership', () => {
 
   test('controlled state can release and reacquire ownership without losing the latest value', () => {
     const { dispose, value } = createEffectTestRoot(() => {
-      const [controlledState, setControlledState] = createSignal<
-        { rowSelection?: RowSelectionState } | undefined
-      >({ rowSelection: { 1: true } })
+      const [controlledState, setControlledState] = createSignal<{
+        rowSelection?: RowSelectionState
+      }>({ rowSelection: { 1: true } })
       const table = createTable({
         data: [
           { id: '1', title: 'One' },
@@ -129,7 +123,7 @@ describe('Solid adapter lifecycle and option ownership', () => {
         2: true,
       })
 
-      setControlledState(undefined)
+      setControlledState({})
       expect(table.atoms.rowSelection.get()).toEqual({})
       expect(stateCaptor.mock.calls).toEqual([
         [{ 1: true }],

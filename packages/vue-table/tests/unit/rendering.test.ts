@@ -358,10 +358,12 @@ describe('createTableHook', () => {
         })
         const cell = table.getRowModel().rows[0]!.getAllCells()[0]!
 
-        Object.assign(cell, {
-          getIsAggregated: () => mode.value === 'aggregate',
-          getIsPlaceholder: () => mode.value === 'placeholder',
-        })
+        vi.spyOn(cell, 'getIsAggregated').mockImplementation(
+          () => mode.value === 'aggregate',
+        )
+        vi.spyOn(cell, 'getIsPlaceholder').mockImplementation(
+          () => mode.value === 'placeholder',
+        )
 
         return () =>
           h(

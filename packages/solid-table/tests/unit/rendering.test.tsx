@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 
-import { afterEach, describe, expect, test } from 'vitest'
+import { afterEach, describe, expect, test, vi } from 'vitest'
 import { cleanup, fireEvent, render, screen } from '@solidjs/testing-library'
 import { createSignal } from 'solid-js'
 import { stockFeatures } from '@tanstack/table-core'
@@ -35,16 +35,12 @@ describe('FlexRender', () => {
     const cell = table.getRowModel().rows[0]!.getAllCells()[0]!
 
     if (props.mode === 'aggregate') {
-      Object.assign(cell, {
-        getIsAggregated: () => true,
-      })
+      vi.spyOn(cell, 'getIsAggregated').mockReturnValue(true)
     }
 
     if (props.mode === 'placeholder') {
-      Object.assign(cell, {
-        getIsAggregated: () => false,
-        getIsPlaceholder: () => true,
-      })
+      vi.spyOn(cell, 'getIsAggregated').mockReturnValue(false)
+      vi.spyOn(cell, 'getIsPlaceholder').mockReturnValue(true)
     }
 
     return (
