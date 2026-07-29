@@ -99,6 +99,55 @@ describe('FlexRender', () => {
     )
   })
 
+  test('reacts when a cell changes grouping mode', () => {
+    function GroupingCellHarness() {
+      const [mode, setMode] = createSignal<CellMode>('normal')
+      const table = createTable({
+        data: [{ id: '1', name: 'Ada' }],
+        columns,
+        features: stockFeatures,
+        getRowId: (row) => row.id,
+      })
+      const cell = table.getRowModel().rows[0]!.getAllCells()[0]!
+
+      vi.spyOn(cell, 'getIsAggregated').mockImplementation(
+        () => mode() === 'aggregate',
+      )
+      vi.spyOn(cell, 'getIsPlaceholder').mockImplementation(
+        () => mode() === 'placeholder',
+      )
+
+      return (
+        <>
+          <output aria-label="grouping cell">
+            <FlexRender cell={cell} />
+          </output>
+          <button onClick={() => setMode('aggregate')}>Show aggregate</button>
+          <button onClick={() => setMode('placeholder')}>
+            Show placeholder
+          </button>
+          <button onClick={() => setMode('normal')}>Show normal</button>
+        </>
+      )
+    }
+
+    render(() => <GroupingCellHarness />)
+
+    const renderedCell = () =>
+      screen.getByRole('status', { name: 'grouping cell' }).textContent
+
+    expect(renderedCell()).toBe('cell:Ada')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show aggregate' }))
+    expect(renderedCell()).toBe('aggregate:Ada')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show placeholder' }))
+    expect(renderedCell()).toBe('')
+
+    fireEvent.click(screen.getByRole('button', { name: 'Show normal' }))
+    expect(renderedCell()).toBe('cell:Ada')
+  })
+
   test('updates when a truthy cell prop is replaced with a new instance', () => {
     function ReactiveCellHarness() {
       const [data, setData] = createSignal<Array<Data>>([
