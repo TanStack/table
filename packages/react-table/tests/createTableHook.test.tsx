@@ -1,12 +1,10 @@
 // @vitest-environment jsdom
 
 import * as React from 'react'
-import { createRoot } from 'react-dom/client'
-import { renderToString } from 'react-dom/server'
+import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { rowSelectionFeature, tableFeatures } from '@tanstack/table-core'
 import { afterEach, describe, expect, test, vi } from 'vitest'
 import { createTableHook, createTableHookContexts } from '../src'
-import type { Root } from 'react-dom/client'
 
 type Person = {
   id: string
@@ -59,42 +57,16 @@ const columns = columnHelper.columns([
   }),
 ])
 
-let container: HTMLDivElement | undefined
-let root: Root | undefined
-
-function render(element: React.ReactNode) {
-  container = document.createElement('div')
-  document.body.append(container)
-  root = createRoot(container)
-
-  React.act(() => {
-    root!.render(element)
-  })
-}
-
 function text(testId: string) {
-  return container?.querySelector(`[data-testid="${testId}"]`)?.textContent
+  return screen.getByTestId(testId).textContent
 }
 
 function click(action: string) {
-  const button = container?.querySelector<HTMLButtonElement>(
-    `[data-action="${action}"]`,
-  )
-
-  expect(button).toBeTruthy()
-  button!.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+  fireEvent.click(screen.getByTestId(action))
 }
 
 afterEach(() => {
-  if (root) {
-    React.act(() => {
-      root!.unmount()
-    })
-  }
-
-  container?.remove()
-  container = undefined
-  root = undefined
+  cleanup()
   vi.restoreAllMocks()
 })
 
@@ -140,7 +112,7 @@ describe('createTableHook runtime', () => {
                 {(extendedFooter) => <extendedFooter.FlexRender />}
               </table.AppFooter>
               <button
-                data-action="select-app-row"
+                data-testid="select-app-row"
                 onClick={() => cell.row.toggleSelected(true)}
               />
             </>
@@ -154,11 +126,11 @@ describe('createTableHook runtime', () => {
     expect(text('bound-row-count')).toBe('1')
     expect(text('bound-header')).toBe('Header name')
     expect(text('bound-cell')).toBe('ADA')
-    expect(container?.textContent).toContain('Name footer')
+    expect(screen.getByText('Name footer')).toBeTruthy()
     expect(text('app-table-selection')).toBe('0')
     expect(text('app-cell-selection')).toBe('false')
 
-    React.act(() => {
+    act(() => {
       click('select-app-row')
     })
 
@@ -182,13 +154,15 @@ describe('createTableHook runtime', () => {
       return null
     }
 
-    expect(() => renderToString(<MissingTableContext />)).toThrow(
+    expect(() => render(<MissingTableContext />)).toThrow(
       '`useTableContext` must be used within an `AppTable` component',
     )
-    expect(() => renderToString(<MissingCellContext />)).toThrow(
+    cleanup()
+    expect(() => render(<MissingCellContext />)).toThrow(
       '`useCellContext` must be used within an `AppCell` component',
     )
-    expect(() => renderToString(<MissingHeaderContext />)).toThrow(
+    cleanup()
+    expect(() => render(<MissingHeaderContext />)).toThrow(
       '`useHeaderContext` must be used within an `AppHeader` or `AppFooter` component',
     )
   })

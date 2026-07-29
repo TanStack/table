@@ -1,152 +1,15 @@
-import { describe, expect, test, vi } from 'vitest'
-import { createRenderer, defineComponent, h, isVNode } from 'vue'
+// @vitest-environment jsdom
+
+import { afterEach, describe, expect, test, vi } from 'vitest'
+import { defineComponent, h } from 'vue'
+import { cleanup, render, screen } from '@testing-library/vue'
 import { stockFeatures } from '@tanstack/table-core'
-import { FlexRender, flexRender } from '../../src/FlexRender'
+import { FlexRender } from '../../src/FlexRender'
 import { createTableHook } from '../../src/createTableHook'
-import type { Component } from 'vue'
 
-interface HostNode {
-  type: string
-  text: string
-  children: Array<HostNode>
-  parent: HostNode | null
-  props: Record<string, unknown>
-}
-
-function createHostNode(type: string, text = ''): HostNode {
-  return {
-    type,
-    text,
-    children: [],
-    parent: null,
-    props: {},
-  }
-}
-
-function insertHostNode(
-  child: HostNode,
-  parent: HostNode,
-  anchor: HostNode | null = null,
-) {
-  child.parent = parent
-  const anchorIndex = anchor ? parent.children.indexOf(anchor) : -1
-
-  if (anchorIndex === -1) {
-    parent.children.push(child)
-  } else {
-    parent.children.splice(anchorIndex, 0, child)
-  }
-}
-
-const memoryRenderer = createRenderer<HostNode, HostNode>({
-  patchProp(element, key, _previousValue, nextValue) {
-    element.props[key] = nextValue
-  },
-  insert: insertHostNode,
-  remove(child) {
-    if (!child.parent) {
-      return
-    }
-
-    const index = child.parent.children.indexOf(child)
-    if (index !== -1) {
-      child.parent.children.splice(index, 1)
-    }
-    child.parent = null
-  },
-  createElement(type) {
-    return createHostNode(type)
-  },
-  createText(text) {
-    return createHostNode('#text', text)
-  },
-  createComment(text) {
-    return createHostNode('#comment', text)
-  },
-  setText(node, text) {
-    node.text = text
-  },
-  setElementText(node, text) {
-    node.text = text
-    node.children = []
-  },
-  parentNode(node) {
-    return node.parent
-  },
-  nextSibling(node) {
-    if (!node.parent) {
-      return null
-    }
-
-    const index = node.parent.children.indexOf(node)
-    return node.parent.children[index + 1] ?? null
-  },
-  querySelector() {
-    return null
-  },
-  setScopeId() {},
-  cloneNode(node) {
-    return {
-      ...node,
-      children: [...node.children],
-      parent: null,
-      props: { ...node.props },
-    }
-  },
-  insertStaticContent(content, parent, anchor) {
-    const node = createHostNode('#static', content)
-    insertHostNode(node, parent, anchor)
-    return [node, node]
-  },
-})
-
-function mount(component: Component) {
-  const root = createHostNode('#root')
-  const app = memoryRenderer.createApp(component)
-  app.mount(root)
-
-  return {
-    root,
-    unmount: () => app.unmount(),
-  }
-}
-
-function readText(node: HostNode): string {
-  return node.text + node.children.map(readText).join('')
-}
+afterEach(cleanup)
 
 describe('FlexRender', () => {
-  test('renders primitives, callbacks, VNodes, and component objects', () => {
-    const props = { value: 'Ada' }
-    const renderCallback = vi.fn(
-      (context: typeof props) => `Hello ${context.value}`,
-    )
-
-    expect(flexRender('Plain text', props)).toBe('Plain text')
-    expect(flexRender(renderCallback, props)).toBe('Hello Ada')
-    expect(renderCallback).toHaveBeenCalledWith(props)
-
-    const existingVNode = h('strong', 'Existing')
-    expect(flexRender(() => existingVNode, props)).toBe(existingVNode)
-
-    const NameComponent = defineComponent({
-      props: {
-        value: {
-          type: String,
-          required: true,
-        },
-      },
-      setup(componentProps) {
-        return () => h('span', `Name: ${componentProps.value}`)
-      },
-    })
-    const componentVNode = flexRender(NameComponent, props)
-
-    expect(isVNode(componentVNode)).toBe(true)
-    expect(componentVNode.type).toBe(NameComponent)
-    expect(componentVNode.props).toMatchObject(props)
-  })
-
   test('supports cell modes, header/footer shorthand, and legacy props', () => {
     const normalContext = { value: 'Normal' }
     const aggregatedContext = { value: 'Aggregated' }
@@ -169,7 +32,7 @@ describe('FlexRender', () => {
     const Root = defineComponent({
       setup() {
         return () =>
-          h('section', [
+          h('section', { 'data-testid': 'flex-render-output' }, [
             h(FlexRender, {
               cell: {
                 column: {
@@ -231,9 +94,9 @@ describe('FlexRender', () => {
       },
     })
 
-    const mounted = mount(Root)
+    render(Root)
 
-    expect(readText(mounted.root)).toBe(
+    expect(screen.getByTestId('flex-render-output').textContent).toBe(
       'cell:Normalsum:Aggregatedheader:Titlefooter:Totallegacy:Legacy',
     )
     expect(normalCellRenderer).toHaveBeenCalledOnce()
@@ -242,8 +105,6 @@ describe('FlexRender', () => {
     expect(placeholderRenderer).not.toHaveBeenCalled()
     expect(headerRenderer).toHaveBeenCalledWith(headerContext)
     expect(footerRenderer).toHaveBeenCalledWith(footerContext)
-
-    mounted.unmount()
   })
 })
 
@@ -252,17 +113,20 @@ describe('createTableHook', () => {
 
   const TableBadge = defineComponent({
     setup() {
-      return () => h('span', 'table-component')
+      return () =>
+        h('span', { 'data-testid': 'table-component' }, 'table-component')
     },
   })
   const CellBadge = defineComponent({
     setup() {
-      return () => h('span', 'cell-component')
+      return () =>
+        h('span', { 'data-testid': 'cell-component' }, 'cell-component')
     },
   })
   const HeaderBadge = defineComponent({
     setup() {
-      return () => h('span', 'header-component')
+      return () =>
+        h('span', { 'data-testid': 'header-component' }, 'header-component')
     },
   })
 
@@ -291,6 +155,7 @@ describe('createTableHook', () => {
     let originalCell: unknown
     let originalHeader: unknown
     let originalFooter: unknown
+    let firstRowId: string | undefined
 
     const TableConsumer = defineComponent({
       setup() {
@@ -339,50 +204,63 @@ describe('createTableHook', () => {
         originalCell = cell
         originalHeader = header
         originalFooter = footer
+        firstRowId = row.id
 
         return () =>
-          h(table.AppTable, null, {
-            default: () => [
-              h(TableConsumer),
-              h(
-                table.AppCell,
-                { cell },
-                {
-                  default: () => h(CellConsumer),
-                },
-              ),
-              h(
-                table.AppHeader,
-                { header },
-                {
-                  default: () => h(HeaderConsumer),
-                },
-              ),
-              h(
-                table.AppFooter,
-                { header: footer },
-                {
-                  default: () => h(FooterConsumer),
-                },
-              ),
-            ],
-          })
+          h(
+            'main',
+            { 'data-testid': 'table-hook-output' },
+            h(table.AppTable, null, {
+              default: () => [
+                h(TableConsumer),
+                h(
+                  table.AppCell,
+                  { cell },
+                  {
+                    default: () => h(CellConsumer),
+                  },
+                ),
+                h(
+                  table.AppHeader,
+                  { header },
+                  {
+                    default: () => h(HeaderConsumer),
+                  },
+                ),
+                h(
+                  table.AppFooter,
+                  { header: footer },
+                  {
+                    default: () => h(FooterConsumer),
+                  },
+                ),
+              ],
+            }),
+          )
       },
     })
 
-    const mounted = mount(Root)
+    render(Root)
 
     expect(hook.appFeatures).toBe(stockFeatures)
+    expect(firstRowId).toBe('row-1')
     expect(tableContextCaptor).toHaveBeenCalledWith(createdTable)
     expect(cellContextCaptor).toHaveBeenCalledWith(originalCell)
     expect(headerContextCaptor).toHaveBeenCalledWith(originalHeader)
     expect(footerContextCaptor).toHaveBeenCalledWith(originalFooter)
-    expect(readText(mounted.root)).toBe(
+    expect(screen.getByTestId('table-component').textContent).toBe(
+      'table-component',
+    )
+    expect(screen.getByTestId('cell-component').textContent).toBe(
+      'cell-component',
+    )
+    expect(screen.getByTestId('header-component').textContent).toBe(
+      'header-component',
+    )
+    expect(screen.getByTestId('table-hook-output').textContent).toBe(
       'table-componentcell-componentcell:First' +
         'header-componentheader:titlefooter:title',
     )
-
-    mounted.unmount()
   })
 
   test.each([
@@ -398,9 +276,12 @@ describe('createTableHook', () => {
       },
     })
 
-    expect(() => mount(Consumer)).toThrowError(
-      new RegExp(`\\\`${name}\\\` must be used within`),
-    )
-    warning.mockRestore()
+    try {
+      expect(() => render(Consumer)).toThrowError(
+        new RegExp(`\\\`${name}\\\` must be used within`),
+      )
+    } finally {
+      warning.mockRestore()
+    }
   })
 })

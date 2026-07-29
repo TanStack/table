@@ -1,7 +1,13 @@
 // @vitest-environment jsdom
 
 import * as React from 'react'
-import { createRoot } from 'react-dom/client'
+import {
+  act,
+  cleanup,
+  fireEvent,
+  screen,
+  render as testingLibraryRender,
+} from '@testing-library/react'
 import {
   createPaginatedRowModel,
   stockFeatures,
@@ -16,7 +22,6 @@ import type {
   RowSelectionState,
 } from '@tanstack/table-core'
 import type { ReactTable } from '../src'
-import type { Root } from 'react-dom/client'
 
 type Data = {
   id: string
@@ -57,39 +62,24 @@ const paginatedColumns: Array<ColumnDef<typeof paginatedFeatures, Data>> = [
   },
 ]
 
-let container: HTMLDivElement | undefined
-let root: Root | undefined
+let renderedView: ReturnType<typeof testingLibraryRender> | undefined
 
 function render(element: React.ReactNode) {
-  container = document.createElement('div')
-  document.body.append(container)
-  root = createRoot(container)
-
-  React.act(() => {
-    root!.render(element)
-  })
+  renderedView = testingLibraryRender(element)
+  return renderedView
 }
 
 function text(testId: string) {
-  return container?.querySelector(`[data-testid="${testId}"]`)?.textContent
+  return screen.getByTestId(testId).textContent
 }
 
 function click(action: string) {
-  const button = container?.querySelector<HTMLButtonElement>(
-    `[data-action="${action}"]`,
-  )
-
-  expect(button).toBeTruthy()
-  button!.dispatchEvent(new MouseEvent('click', { bubbles: true }))
+  fireEvent.click(screen.getByTestId(action))
 }
 
 function unmount() {
-  React.act(() => {
-    root!.unmount()
-  })
-  container?.remove()
-  container = undefined
-  root = undefined
+  renderedView!.unmount()
+  renderedView = undefined
 }
 
 const MemoizedCellValueObserver = React.memo(
@@ -106,14 +96,14 @@ const MemoizedCellValueObserver = React.memo(
 )
 
 afterEach(() => {
-  if (root) {
-    unmount()
-  }
-
+  cleanup()
+  renderedView = undefined
   vi.restoreAllMocks()
 })
 
-describe('React adapter parity', () => {
+// Adapter contract only: React/store ownership, subscriptions, lifecycle, and
+// option refreshes. Row-model algorithms remain covered by table-core.
+describe('React adapter reactivity and lifecycle', () => {
   test('accepts required data props and updates row reads when the prop changes', async () => {
     function TableHarness({ data }: { data: Array<Data> }) {
       const table = useTable({
@@ -147,8 +137,8 @@ describe('React adapter parity', () => {
     expect(text('row-ids')).toBe('1')
     expect(text('row-titles')).toBe('Title')
 
-    await React.act(async () => {
-      root!.render(
+    await act(async () => {
+      renderedView!.rerender(
         <TableHarness
           data={[
             { id: '1', title: 'Updated' },
@@ -192,7 +182,7 @@ describe('React adapter parity', () => {
 
     render(<TableHarness />)
 
-    const surface = JSON.parse(text('table-surface')!) as {
+    const surface = JSON.parse(text('table-surface')) as {
       hasFeatures: boolean
       hasOptions: boolean
       hasState: boolean
@@ -256,7 +246,7 @@ describe('React adapter parity', () => {
             {rowModel.rows.map((row) => row.id).join(',')}
           </output>
           <button
-            data-action="set-page-size-3"
+            data-testid="set-page-size-3"
             onClick={() => setPagination({ pageIndex: 0, pageSize: 3 })}
           />
         </>
@@ -268,7 +258,7 @@ describe('React adapter parity', () => {
     expect(text('core-row-ids')).toBe('0,1,2,3,4,5,6,7,8,9')
     expect(text('page-row-ids')).toBe('0,1,2,3,4')
 
-    React.act(() => {
+    act(() => {
       click('set-page-size-3')
     })
 
@@ -333,15 +323,15 @@ describe('React adapter parity', () => {
             }}
           </table.Subscribe>
           <button
-            data-action="select-row"
+            data-testid="select-row"
             onClick={() => table.getRow('1').toggleSelected(true)}
           />
           <button
-            data-action="replace-data"
+            data-testid="replace-data"
             onClick={() => setData([{ id: '1', title: 'Title 3' }])}
           />
           <button
-            data-action="hide-id"
+            data-testid="hide-id"
             onClick={() => table.getColumn('id')!.toggleVisibility(false)}
           />
         </>
@@ -356,7 +346,7 @@ describe('React adapter parity', () => {
     expect(titleValueCaptor.mock.calls).toEqual([['Title']])
     expect(columnIsVisibleCaptor.mock.calls).toEqual([[true]])
 
-    React.act(() => {
+    act(() => {
       click('select-row')
     })
 
@@ -366,7 +356,7 @@ describe('React adapter parity', () => {
     expect(titleValueCaptor).toHaveBeenCalledTimes(1)
     expect(columnIsVisibleCaptor).toHaveBeenCalledTimes(1)
 
-    React.act(() => {
+    act(() => {
       click('replace-data')
     })
 
@@ -376,7 +366,7 @@ describe('React adapter parity', () => {
     expect(titleValueCaptor.mock.calls).toEqual([['Title'], ['Title 3']])
     expect(columnIsVisibleCaptor.mock.calls).toEqual([[true], [true]])
 
-    React.act(() => {
+    act(() => {
       click('hide-id')
     })
 
@@ -432,7 +422,7 @@ describe('React adapter parity', () => {
     expect(isSelectedCaptor.mock.calls).toEqual([[false]])
     expect(tableStateCaptor.mock.calls).toEqual([[{}]])
 
-    React.act(() => {
+    act(() => {
       rowSelectionAtom.set({ 1: true })
     })
 
@@ -478,15 +468,15 @@ describe('React adapter parity', () => {
             {JSON.stringify(table.store.get().rowSelection)}
           </output>
           <button
-            data-action="select-subscribed-row"
+            data-testid="select-subscribed-row"
             onClick={() => table.getRow('1').toggleSelected(true)}
           />
           <button
-            data-action="unsubscribe-store"
+            data-testid="unsubscribe-store"
             onClick={() => setSubscribed(false)}
           />
           <button
-            data-action="deselect-unsubscribed-row"
+            data-testid="deselect-unsubscribed-row"
             onClick={() => table.getRow('1').toggleSelected(false)}
           />
         </>
@@ -496,16 +486,16 @@ describe('React adapter parity', () => {
     render(<TableHarness />)
 
     expect(text('initial-row-selection')).toBe('{}')
-    React.act(() => {
+    act(() => {
       click('select-subscribed-row')
     })
 
     expect(tableStateCaptor.mock.calls).toEqual([[{ 1: true }]])
 
-    React.act(() => {
+    act(() => {
       click('unsubscribe-store')
     })
-    React.act(() => {
+    act(() => {
       click('deselect-unsubscribed-row')
     })
 
@@ -538,15 +528,15 @@ describe('React adapter parity', () => {
             {JSON.stringify(table.state)}
           </output>
           <button
-            data-action="select-row-1"
+            data-testid="select-row-1"
             onClick={() => setRowSelection({ 1: true })}
           />
           <button
-            data-action="select-rows-1-and-2"
+            data-testid="select-rows-1-and-2"
             onClick={() => setRowSelection({ 1: true, 2: true })}
           />
           <button
-            data-action="select-row-2"
+            data-testid="select-row-2"
             onClick={() => setRowSelection({ 2: true })}
           />
         </>
@@ -555,13 +545,13 @@ describe('React adapter parity', () => {
 
     render(<TableHarness />)
 
-    React.act(() => {
+    act(() => {
       click('select-row-1')
     })
-    React.act(() => {
+    act(() => {
       click('select-rows-1-and-2')
     })
-    React.act(() => {
+    act(() => {
       click('select-row-2')
     })
 
@@ -645,11 +635,11 @@ describe('React adapter parity', () => {
             {table.store.get().pagination.pageSize}
           </output>
           <button
-            data-action="set-page-size-50"
+            data-testid="set-page-size-50"
             onClick={() => table.setPageSize(50)}
           />
           <button
-            data-action="set-page-size-100"
+            data-testid="set-page-size-100"
             onClick={() => table.setPageSize(100)}
           />
         </>
@@ -658,10 +648,10 @@ describe('React adapter parity', () => {
 
     render(<TableHarness />)
 
-    React.act(() => {
+    act(() => {
       click('set-page-size-50')
     })
-    React.act(() => {
+    act(() => {
       click('set-page-size-100')
     })
 
@@ -702,7 +692,7 @@ describe('React adapter parity', () => {
             }}
           </table.Subscribe>
           <button
-            data-action="select-all-rows"
+            data-testid="select-all-rows"
             onClick={() => table.toggleAllRowsSelected(true)}
           />
         </>
@@ -711,7 +701,7 @@ describe('React adapter parity', () => {
 
     render(<TableHarness />)
 
-    React.act(() => {
+    act(() => {
       click('select-all-rows')
     })
 
@@ -760,7 +750,7 @@ describe('React adapter parity', () => {
             {table.store.get().pagination.pageSize}
           </output>
           <button
-            data-action="set-stock-page-size-50"
+            data-testid="set-stock-page-size-50"
             onClick={() => table.setPageSize(50)}
           />
         </>
@@ -774,7 +764,7 @@ describe('React adapter parity', () => {
     expect(text('stock-column-pinning')).toBe('{"start":["id"],"end":[]}')
     expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize":20')
 
-    React.act(() => {
+    act(() => {
       click('set-stock-page-size-50')
     })
 
@@ -835,7 +825,7 @@ describe('React adapter parity', () => {
 
     render(<TableHarness />)
 
-    React.act(() => {
+    act(() => {
       rowSelectionAtom.set({ 1: true })
     })
 
@@ -847,7 +837,7 @@ describe('React adapter parity', () => {
     const isolatedCallsAfterUnmount = isolatedStoreCaptor.mock.calls.length
     const table = captureTable.mock.lastCall![0]
 
-    React.act(() => {
+    act(() => {
       rowSelectionAtom.set({})
       table.setPageSize(25)
     })
@@ -931,7 +921,7 @@ describe('React adapter parity', () => {
           <output data-testid="dynamic-fallback">
             {String(cells[1]!.renderValue())}
           </output>
-          <button data-action="refresh-options" onClick={() => setVersion(1)} />
+          <button data-testid="refresh-options" onClick={() => setVersion(1)} />
         </>
       )
     }
@@ -944,7 +934,7 @@ describe('React adapter parity', () => {
     expect(text('dynamic-cell-value')).toBe('Alpha')
     expect(text('dynamic-fallback')).toBe('initial fallback')
 
-    await React.act(async () => {
+    await act(async () => {
       click('refresh-options')
       await Promise.resolve()
     })
