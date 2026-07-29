@@ -226,7 +226,8 @@ button[disabled] {
 }
 
 .sortable-header,
-.sortable {
+.sortable,
+.selection-checkbox {
   cursor: pointer;
   user-select: none;
 }

@@ -189,7 +189,9 @@ function IndeterminateCheckbox({
     if (typeof indeterminate === 'boolean') {
       ref.current.indeterminate = !rest.checked && indeterminate
     }
-  }, [ref, indeterminate])
+    // `checked` belongs here too: `getIsSomePageRowsSelected` stays true when
+    // every page row is selected, so deselecting one only changes `checked`.
+  }, [ref, indeterminate, rest.checked])
 
   return <input type="checkbox" ref={ref} className={className} {...rest} />
 }
@@ -945,7 +947,7 @@ function App() {
         <div className="spacer-md" />
         <details>
           <summary>Table state (live)</summary>
-          <pre className="state-dump">
+          <pre className="state-dump" data-testid="table-state">
             {JSON.stringify(table.state, null, 2)}
           </pre>
         </details>

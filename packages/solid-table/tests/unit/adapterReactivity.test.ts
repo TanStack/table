@@ -9,6 +9,7 @@ import {
 import { createAtom } from '@tanstack/store'
 import { stockFeatures } from '@tanstack/table-core'
 import { createTable } from '../../src/createTable'
+import type { Observer } from '@tanstack/store'
 import type { ColumnDef, RowSelectionState } from '@tanstack/table-core'
 
 describe('Solid adapter lifecycle and option ownership', () => {

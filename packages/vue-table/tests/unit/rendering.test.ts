@@ -337,7 +337,7 @@ describe('createTableHook', () => {
     )
     expect(screen.getByTestId('table-hook-output').textContent).toBe(
       'table-componentcell-componentcell:First' +
-        'header-componentheader:titlefooter:title',
+      'header-componentheader:titlefooter:title',
     )
   })
 
