@@ -178,7 +178,7 @@ describe('FlexRender', () => {
 })
 
 describe('createTableHook', () => {
-  test('binds defaults, wrapper components, contexts, and live render helpers', async () => {
+  test('binds defaults, wrapper components, contexts, and render helpers', () => {
     const tableCaptor =
       vi.fn<(table: AppSvelteTable<any, any, any, any, any, any>) => void>()
     render(HookHarness, { tableCaptor })
@@ -206,20 +206,6 @@ describe('createTableHook', () => {
     expect(outputText('Hook cell')).toBe('cell:First')
     expect(outputText('Hook header')).toBe('header:title')
     expect(outputText('Hook footer')).toBe('footer:title')
-
-    await fireEvent.click(
-      screen.getByRole('button', { name: 'Replace hook row and column' }),
-    )
-
-    expect(screen.getByText('cell-component:Second').textContent).toBe(
-      'cell-component:Second',
-    )
-    expect(screen.getByText('header-component:updated-title').textContent).toBe(
-      'header-component:updated-title',
-    )
-    expect(outputText('Hook cell')).toBe('updated-cell:Second')
-    expect(outputText('Hook header')).toBe('updated-header:updated-title')
-    expect(outputText('Hook footer')).toBe('updated-footer:updated-title')
   })
 
   test.each([

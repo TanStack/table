@@ -38,50 +38,6 @@ import type {
 } from '@tanstack/table-core'
 
 export type ComponentType<T extends Record<string, any>> = Component<T>
-export type BoundFlexRenderComponent = Component<Record<string, never>>
-
-function createLiveView<TCurrent extends object, TExtensions extends object>(
-  getCurrent: () => TCurrent,
-  extensions: TExtensions,
-): TCurrent & TExtensions {
-  const hasExtension = (key: PropertyKey) =>
-    Object.prototype.hasOwnProperty.call(extensions, key)
-
-  return new Proxy({} as TCurrent & TExtensions, {
-    get: (_target, key) => {
-      if (hasExtension(key)) {
-        return Reflect.get(extensions, key, extensions)
-      }
-      const current = getCurrent()
-      return Reflect.get(current, key, current)
-    },
-    getOwnPropertyDescriptor: (_target, key) => {
-      const source = hasExtension(key) ? extensions : getCurrent()
-      const descriptor = Reflect.getOwnPropertyDescriptor(source, key)
-      if (!descriptor) return undefined
-
-      return {
-        configurable: true,
-        enumerable: descriptor.enumerable,
-        get: () => Reflect.get(source, key, source),
-        set: (value) => {
-          Reflect.set(source, key, value, source)
-        },
-      }
-    },
-    has: (_target, key) => hasExtension(key) || Reflect.has(getCurrent(), key),
-    ownKeys: () => [
-      ...new Set([
-        ...Reflect.ownKeys(getCurrent()),
-        ...Reflect.ownKeys(extensions),
-      ]),
-    ],
-    set: (_target, key, value) => {
-      const source = hasExtension(key) ? extensions : getCurrent()
-      return Reflect.set(source, key, value, source)
-    },
-  })
-}
 
 // =============================================================================
 // Enhanced Context Types with Pre-bound Components
@@ -98,7 +54,7 @@ export type AppCellContext<
   TCellComponents extends Record<string, ComponentType<any>>,
 > = {
   cell: Cell<TFeatures, TData, TValue> &
-    TCellComponents & { FlexRender: BoundFlexRenderComponent }
+    TCellComponents & { FlexRender: typeof FlexRenderSvelte }
   column: Column<TFeatures, TData, TValue>
   getValue: CellContext<TFeatures, TData, TValue>['getValue']
   renderValue: CellContext<TFeatures, TData, TValue>['renderValue']
@@ -118,7 +74,7 @@ export type AppHeaderContext<
 > = {
   column: Column<TFeatures, TData, TValue>
   header: Header<TFeatures, TData, TValue> &
-    THeaderComponents & { FlexRender: BoundFlexRenderComponent }
+    THeaderComponents & { FlexRender: typeof FlexRenderSvelte }
   table: Table<TFeatures, TData>
 }
 
@@ -366,9 +322,7 @@ export type AppSvelteTable<
       children: Snippet<
         [
           Cell<TFeatures, TData, any> &
-            NoInfer<TCellComponents> & {
-              FlexRender: BoundFlexRenderComponent
-            },
+            NoInfer<TCellComponents> & { FlexRender: typeof FlexRenderSvelte },
         ]
       >
     }>
@@ -389,7 +343,7 @@ export type AppSvelteTable<
         [
           Header<TFeatures, TData, any> &
             NoInfer<THeaderComponents> & {
-              FlexRender: BoundFlexRenderComponent
+              FlexRender: typeof FlexRenderSvelte
             },
         ]
       >
@@ -411,7 +365,7 @@ export type AppSvelteTable<
         [
           Header<TFeatures, TData, any> &
             NoInfer<THeaderComponents> & {
-              FlexRender: BoundFlexRenderComponent
+              FlexRender: typeof FlexRenderSvelte
             },
         ]
       >
@@ -486,7 +440,7 @@ export interface CreateTableHookResult<
     any,
     TValue
   > &
-    TCellComponents & { FlexRender: BoundFlexRenderComponent }
+    TCellComponents & { FlexRender: typeof FlexRenderSvelte }
   /**
    * Reads the header provided by the nearest `<table.AppHeader>` /
    * `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -497,7 +451,7 @@ export interface CreateTableHookResult<
     any,
     TValue
   > &
-    THeaderComponents & { FlexRender: BoundFlexRenderComponent }
+    THeaderComponents & { FlexRender: typeof FlexRenderSvelte }
 }
 
 // =============================================================================
@@ -627,7 +581,7 @@ export function createTableHook<
     any,
     TValue
   > &
-    TCellComponents & { FlexRender: BoundFlexRenderComponent } {
+    TCellComponents & { FlexRender: typeof FlexRenderSvelte } {
     const cell = getContext(cellContextKey)
 
     if (!cell) {
@@ -637,11 +591,11 @@ export function createTableHook<
       )
     }
 
-    // `<table.AppCell>` provides a live view of the current cell and its bound
-    // components, so same-key row-model replacements stay current without
-    // remounting context consumers.
+    // `<table.AppCell>` Object.assign-es `cellComponents` and `FlexRender` onto
+    // the same cell instance it puts in context, so this asserts the runtime
+    // shape.
     return cell as unknown as Cell<TFeatures, any, TValue> &
-      TCellComponents & { FlexRender: BoundFlexRenderComponent }
+      TCellComponents & { FlexRender: typeof FlexRenderSvelte }
   }
 
   /**
@@ -654,7 +608,7 @@ export function createTableHook<
     any,
     TValue
   > &
-    THeaderComponents & { FlexRender: BoundFlexRenderComponent } {
+    THeaderComponents & { FlexRender: typeof FlexRenderSvelte } {
     const header = getContext(headerContextKey)
 
     if (!header) {
@@ -663,10 +617,10 @@ export function createTableHook<
       )
     }
 
-    // `<table.AppHeader>` / `<table.AppFooter>` provide a live view of the
-    // current header and its bound components.
+    // `<table.AppHeader>` / `<table.AppFooter>` Object.assign `headerComponents`
+    // and `FlexRender` onto the same header instance they put in context.
     return header as unknown as Header<TFeatures, any, TValue> &
-      THeaderComponents & { FlexRender: BoundFlexRenderComponent }
+      THeaderComponents & { FlexRender: typeof FlexRenderSvelte }
   }
 
   /**
@@ -703,103 +657,60 @@ export function createTableHook<
       selector,
     )
 
-    // Create wrapper components using the svelte-form (internal, props) =>
-    // pattern. Svelte keeps the props object live through getter-backed
-    // properties, so preserve it instead of destructuring or spreading it.
-    // Context consumers receive a getter-backed view for the same reason:
-    // row-model refreshes can replace a cell/header without remounting the
-    // wrapper component.
+    // Build cellComponents with FlexRender included
+    const cellComponentsWithFlexRender = {
+      FlexRender: FlexRenderSvelte,
+      ...(cellComponents ?? {}),
+    }
+
+    // Build headerComponents with FlexRender included
+    const headerComponentsWithFlexRender = {
+      FlexRender: FlexRenderSvelte,
+      ...(headerComponents ?? {}),
+    }
+
+    // Create wrapper components using the svelte-form (internal, props) => pattern.
+    // setContext is called in the closure — this runs during component
+    // initialization, so Svelte's context API works correctly.
+    // With keyed {#each} blocks, components are recreated on reorder,
+    // so context is always fresh.
     const AppTable = ((internal: any, props: any) => {
       setContext(tableContextKey, table)
-      return AppTableSvelte(internal, props)
+      return AppTableSvelte(internal, { ...props })
     }) as Component<{ children: Snippet }>
 
-    const AppCell = ((internal: any, props: any) => {
-      const BoundFlexRender = ((componentInternal: any, renderProps: any) => {
-        return FlexRenderSvelte(
-          componentInternal,
-          mergeObjects(renderProps, {
-            get cell() {
-              return props.cell
-            },
-          }),
-        )
-      }) as BoundFlexRenderComponent
-      const boundComponents = {
-        FlexRender: BoundFlexRender,
-        ...(cellComponents ?? {}),
-      }
-      const liveCell = createLiveView(() => props.cell, boundComponents)
-
-      setContext(cellContextKey, liveCell)
-
-      return AppCellSvelte(
-        internal,
-        mergeObjects(props, {
-          cellComponents: boundComponents,
-        }),
-      )
+    const AppCell = ((internal: any, { children, cell }: any) => {
+      setContext(cellContextKey, cell)
+      return AppCellSvelte(internal, {
+        cell,
+        cellComponents: cellComponentsWithFlexRender,
+        children,
+      })
     }) as Component<{
       cell: Cell<TFeatures, TData, any>
       children: Snippet<[any]>
     }>
 
-    const AppHeader = ((internal: any, props: any) => {
-      const BoundFlexRender = ((componentInternal: any, renderProps: any) => {
-        return FlexRenderSvelte(
-          componentInternal,
-          mergeObjects(renderProps, {
-            get header() {
-              return props.header
-            },
-          }),
-        )
-      }) as BoundFlexRenderComponent
-      const boundComponents = {
-        FlexRender: BoundFlexRender,
-        ...(headerComponents ?? {}),
-      }
-      const liveHeader = createLiveView(() => props.header, boundComponents)
-
-      setContext(headerContextKey, liveHeader)
-
-      return AppHeaderSvelte(
-        internal,
-        mergeObjects(props, {
-          headerComponents: boundComponents,
-        }),
-      )
+    const AppHeader = ((internal: any, { children, header }: any) => {
+      setContext(headerContextKey, header)
+      return AppHeaderSvelte(internal, {
+        header,
+        headerComponents: headerComponentsWithFlexRender,
+        children,
+      })
     }) as Component<{
       header: Header<TFeatures, TData, any>
       children: Snippet<[any]>
     }>
 
     // AppFooter reuses AppHeaderSvelte (footers use Header type in table-core)
-    const AppFooter = ((internal: any, props: any) => {
-      const BoundFlexRender = ((componentInternal: any, renderProps: any) => {
-        return FlexRenderSvelte(
-          componentInternal,
-          mergeObjects(renderProps, {
-            get footer() {
-              return props.header
-            },
-          }),
-        )
-      }) as BoundFlexRenderComponent
-      const boundComponents = {
-        FlexRender: BoundFlexRender,
-        ...(headerComponents ?? {}),
-      }
-      const liveHeader = createLiveView(() => props.header, boundComponents)
-
-      setContext(headerContextKey, liveHeader)
-
-      return AppHeaderSvelte(
-        internal,
-        mergeObjects(props, {
-          headerComponents: boundComponents,
-        }),
-      )
+    const AppFooter = ((internal: any, { children, header }: any) => {
+      setContext(headerContextKey, header)
+      return AppHeaderSvelte(internal, {
+        header,
+        headerComponents: headerComponentsWithFlexRender,
+        children,
+      })
     }) as Component<{
       header: Header<TFeatures, TData, any>
       children: Snippet<[any]>

@@ -12,7 +12,6 @@ export type {
   AppGroupColumnDef,
   AppHeaderContext,
   AppSvelteTable,
-  BoundFlexRenderComponent,
   ComponentType,
   CreateTableHookOptions,
   CreateTableHookResult,

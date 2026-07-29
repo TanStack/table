@@ -316,8 +316,8 @@ module('Integration | external state (controlled)', function (hooks) {
     assert
       .dom('[role="status"][aria-label="Page index"]')
       .hasText(
-        '1',
-        'a second release exposes the newest internal write from the reacquired value',
+        '4',
+        'a second release exposes the independently updated internal fallback',
       )
   })
 

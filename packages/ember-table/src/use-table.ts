@@ -102,29 +102,7 @@ export function useTable<
     }
   })
 
-  const getLiveOptions = () => {
-    const options = liveOptions.get()
-    const controlledState = options.state as Record<string, unknown> | undefined
-
-    // Keep the writable fallback aligned with every controlled value that has
-    // been observed. This makes a later ownership release expose the latest
-    // controlled snapshot and makes functional table updaters start from that
-    // snapshot after control is reacquired.
-    if (controlledState) {
-      untrack(() => {
-        for (const key in controlledState) {
-          const baseAtom = table.baseAtoms[key]
-          const controlledValue = controlledState[key]
-
-          if (baseAtom && baseAtom.get() !== controlledValue) {
-            baseAtom.set(() => controlledValue)
-          }
-        }
-      })
-    }
-
-    return options
-  }
+  const getLiveOptions = () => liveOptions.get()
 
   /**
    * This is to get around core table not using lazy access so we need to re-wrap
