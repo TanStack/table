@@ -1,3 +1,5 @@
+// @vitest-environment jsdom
+
 import * as React from 'react'
 import { createRoot } from 'react-dom/client'
 import {
@@ -295,6 +297,7 @@ describe('useTable state subscriptions', () => {
           atoms: {
             pagination: paginationAtom,
           },
+          autoResetPageIndex: false,
         },
         (state) => state.pagination.pageIndex,
       )
@@ -369,6 +372,7 @@ describe('useTable state subscriptions', () => {
           state: {
             pagination,
           },
+          autoResetPageIndex: false,
         },
         (state) => state.pagination.pageIndex,
       )

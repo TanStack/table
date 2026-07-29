@@ -58,11 +58,10 @@ describe('table.Subscribe', () => {
   ]
 
   test('passes table atoms to children', () => {
-    const table = useTable({
+    const table = useTable<typeof stockFeatures, Data>({
       data: [{ id: '1' }],
       columns,
-      _features: stockFeatures,
-      _rowModels: {},
+      features: stockFeatures,
     })
 
     let received: unknown
