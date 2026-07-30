@@ -12,7 +12,7 @@ import {
 } from '@tanstack/react-table'
 import { faker } from '@faker-js/faker'
 import { makeData } from './makeData'
-import type { Column } from '@tanstack/react-table'
+import type { Column, Header } from '@tanstack/react-table'
 import type { CSSProperties } from 'react'
 import type { Person } from './makeData'
 import './index.css'
@@ -31,12 +31,16 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 // View the index.css file for more needed styles such as border-collapse: collapse
 const getCommonPinningStyles = (
   column: Column<typeof features, Person>,
+  firstLeafColumn = column,
+  lastLeafColumn = column,
+  width = column.getSize(),
+  pinnedPosition = column.getIsPinned(),
 ): CSSProperties => {
-  const isPinned = column.getIsPinned()
+  const isPinned = pinnedPosition
   const isLastLeftPinnedColumn =
-    isPinned === 'start' && column.getIsLastColumn('start')
+    isPinned === 'start' && lastLeafColumn.getIsLastColumn('start')
   const isFirstRightPinnedColumn =
-    isPinned === 'end' && column.getIsFirstColumn('end')
+    isPinned === 'end' && firstLeafColumn.getIsFirstColumn('end')
 
   return {
     boxShadow: isLastLeftPinnedColumn
@@ -45,30 +49,73 @@ const getCommonPinningStyles = (
         ? '4px 0 4px -4px gray inset'
         : undefined,
     insetInlineStart:
-      isPinned === 'start' ? `${column.getStart('start')}px` : undefined,
+      isPinned === 'start'
+        ? `${firstLeafColumn.getStart('start')}px`
+        : undefined,
     insetInlineEnd:
-      isPinned === 'end' ? `${column.getAfter('end')}px` : undefined,
+      isPinned === 'end' ? `${lastLeafColumn.getAfter('end')}px` : undefined,
     opacity: isPinned ? 0.95 : 1,
     position: isPinned ? 'sticky' : 'relative',
-    width: column.getSize(),
+    width,
     zIndex: isPinned ? 1 : 0,
   }
 }
 
+const getHeaderLeafColumns = (
+  header: Header<typeof features, Person>,
+): Array<Column<typeof features, Person>> => {
+  if (!header.subHeaders.length) {
+    return header.column.getIsVisible() ? [header.column] : []
+  }
+
+  return header.subHeaders.flatMap(getHeaderLeafColumns)
+}
+
+const getHeaderPinningStyles = (
+  header: Header<typeof features, Person>,
+): CSSProperties => {
+  const leafColumns = getHeaderLeafColumns(header)
+  const firstLeafColumn = leafColumns[0] ?? header.column
+  const lastLeafColumn = leafColumns[leafColumns.length - 1] ?? header.column
+  const isPinned =
+    leafColumns.length > 0 &&
+    leafColumns.every((column) => column.getIsPinned() === 'start')
+      ? 'start'
+      : leafColumns.length > 0 &&
+          leafColumns.every((column) => column.getIsPinned() === 'end')
+        ? 'end'
+        : false
+
+  return getCommonPinningStyles(
+    header.column,
+    firstLeafColumn,
+    lastLeafColumn,
+    header.getSize(),
+    isPinned,
+  )
+}
+
 const defaultColumns = columnHelper.columns([
-  columnHelper.accessor('firstName', {
-    id: 'firstName',
-    header: 'First Name',
-    cell: (info) => info.getValue(),
+  columnHelper.group({
+    id: 'info',
+    header: 'Info',
     footer: (props) => props.column.id,
-    size: 180,
-  }),
-  columnHelper.accessor((row) => row.lastName, {
-    id: 'lastName',
-    cell: (info) => info.getValue(),
-    header: () => <span>Last Name</span>,
-    footer: (props) => props.column.id,
-    size: 180,
+    columns: columnHelper.columns([
+      columnHelper.accessor('firstName', {
+        id: 'firstName',
+        header: 'First Name',
+        cell: (info) => info.getValue(),
+        footer: (props) => props.column.id,
+        size: 180,
+      }),
+      columnHelper.accessor((row) => row.lastName, {
+        id: 'lastName',
+        cell: (info) => info.getValue(),
+        header: () => <span>Last Name</span>,
+        footer: (props) => props.column.id,
+        size: 180,
+      }),
+    ]),
   }),
   columnHelper.accessor('age', {
     id: 'age',
@@ -194,7 +241,7 @@ function App() {
                       key={header.id}
                       colSpan={header.colSpan}
                       // IMPORTANT: This is where the magic happens!
-                      style={{ ...getCommonPinningStyles(column) }}
+                      style={{ ...getHeaderPinningStyles(header) }}
                     >
                       <div className="nowrap">
                         {header.isPlaceholder ? null : (

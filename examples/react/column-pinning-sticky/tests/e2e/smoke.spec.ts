@@ -61,6 +61,21 @@ function leafHeader(page: Page, name: string) {
   return leafHeaderCells(page).filter({ hasText: name })
 }
 
+function groupedHeader(page: Page, name: string) {
+  return page
+    .locator('thead tr')
+    .first()
+    .locator('th')
+    .filter({ hasText: name })
+}
+
+function groupedPinButton(page: Page, name: string, label: '<=' | 'X' | '=>') {
+  return groupedHeader(page, name).getByRole('button', {
+    name: label,
+    exact: true,
+  })
+}
+
 /** An unpinned header offers `<=` and `=>`; a pinned one swaps in `X`. */
 function pinButton(page: Page, name: string, label: '<=' | 'X' | '=>') {
   return leafHeader(page, name).getByRole('button', {
@@ -202,6 +217,113 @@ test('unpins a column back into the scrolling area', async ({ page }) => {
     .poll(() => readColumnPinning(page))
     .toEqual({ start: [], end: [] })
   await expect(leafHeader(page, 'Visits')).toHaveCSS('position', 'relative')
+
+  expect(errors).toEqual([])
+})
+
+test('does not stick a grouped header with mixed pinning', async ({ page }) => {
+  const errors = await openExample(page)
+
+  const infoHeaders = groupedHeader(page, 'Info')
+  await expect(infoHeaders).toHaveCount(1)
+
+  await pinButton(page, 'First Name', '<=').click()
+
+  await expect
+    .poll(async () => (await readColumnPinning(page)).start)
+    .toEqual(['firstName'])
+  await expect(infoHeaders).toHaveCSS('position', 'relative')
+
+  await pinButton(page, 'First Name', 'X').click()
+  await expect
+    .poll(() => readColumnPinning(page))
+    .toEqual({ start: [], end: [] })
+
+  await pinButton(page, 'First Name', '=>').click()
+
+  await expect
+    .poll(async () => (await readColumnPinning(page)).end)
+    .toEqual(['firstName'])
+  await expect(infoHeaders).toHaveCount(2)
+
+  const layouts = await infoHeaders.evaluateAll((headers) =>
+    headers.map((header) => {
+      const style = getComputedStyle(header)
+
+      return {
+        x: header.getBoundingClientRect().x,
+        position: style.position,
+        right: style.right,
+        width: header.getBoundingClientRect().width,
+      }
+    }),
+  )
+  const stickyLayouts = layouts.filter((layout) => layout.position === 'sticky')
+  const relativeLayouts = layouts.filter(
+    (layout) => layout.position === 'relative',
+  )
+
+  expect(stickyLayouts).toHaveLength(1)
+  expect(relativeLayouts).toHaveLength(1)
+  expect(stickyLayouts[0]?.right).toBe('0px')
+  expect(stickyLayouts[0]?.width).toBeCloseTo(180, 0)
+  expect(relativeLayouts[0]?.width).toBeCloseTo(180, 0)
+
+  const firstNameBox = await leafHeader(page, 'First Name').boundingBox()
+  const lastNameBox = await leafHeader(page, 'Last Name').boundingBox()
+  expect(firstNameBox?.x).toBeDefined()
+  expect(lastNameBox?.x).toBeDefined()
+  expect(
+    Math.abs((stickyLayouts[0]?.x ?? 0) - (firstNameBox?.x ?? 0)),
+  ).toBeLessThan(2)
+  expect(
+    Math.abs((relativeLayouts[0]?.x ?? 0) - (lastNameBox?.x ?? 0)),
+  ).toBeLessThan(2)
+
+  expect(errors).toEqual([])
+})
+
+test('offsets a start-pinned grouped header after pinned columns', async ({
+  page,
+}) => {
+  const errors = await openExample(page)
+
+  await pinButton(page, 'Visits', '<=').click()
+  await groupedPinButton(page, 'Info', '<=').click()
+
+  await expect
+    .poll(async () => (await readColumnPinning(page)).start)
+    .toEqual(['visits', 'firstName', 'lastName'])
+
+  const infoHeader = groupedHeader(page, 'Info')
+  await expect(infoHeader).toHaveCount(1)
+  await expect(infoHeader).toHaveCSS('position', 'sticky')
+  await expect(infoHeader).toHaveCSS('left', '180px')
+  const infoBox = await infoHeader.boundingBox()
+  expect(infoBox?.width).toBeCloseTo(360, 0)
+
+  expect(errors).toEqual([])
+})
+
+test('offsets an end-pinned grouped header before pinned columns', async ({
+  page,
+}) => {
+  const errors = await openExample(page)
+
+  await groupedPinButton(page, 'Info', '=>').click()
+  await pinButton(page, 'Visits', '=>').click()
+
+  await expect
+    .poll(async () => (await readColumnPinning(page)).end)
+    .toEqual(['firstName', 'lastName', 'visits'])
+
+  const infoHeader = groupedHeader(page, 'Info')
+  await expect(infoHeader).toHaveCount(1)
+  await expect(infoHeader).toHaveCSS('position', 'sticky')
+  await expect(infoHeader).toHaveCSS('right', '180px')
+
+  const infoBox = await infoHeader.boundingBox()
+  expect(infoBox?.width).toBeCloseTo(360, 0)
 
   expect(errors).toEqual([])
 })
