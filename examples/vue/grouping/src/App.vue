@@ -133,7 +133,7 @@ function handleGoToPage(e: Event) {
               >
                 {{
                   header.column.getIsGrouped()
-                    ? `🛑 (${header.column.getGroupedIndex()}) `
+                    ? `🛑(${header.column.getGroupedIndex()}) `
                     : `👊 `
                 }}
               </button>
@@ -177,7 +177,7 @@ function handleGoToPage(e: Event) {
       <div class="controls">
         <button
           class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(0)"
+          @click="() => table.firstPage()"
           :disabled="!table.getCanPreviousPage()"
         >
           «
@@ -198,7 +198,7 @@ function handleGoToPage(e: Event) {
         </button>
         <button
           class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
+          @click="() => table.lastPage()"
           :disabled="!table.getCanNextPage()"
         >
           »
@@ -236,7 +236,9 @@ function handleGoToPage(e: Event) {
         </select>
       </div>
       <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
+      <pre data-testid="table-state">{{
+        JSON.stringify(table.store.get(), null, 2)
+      }}</pre>
     </div>
     <div class="spacer-sm" />
   </div>

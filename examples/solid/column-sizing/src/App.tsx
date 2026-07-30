@@ -244,7 +244,9 @@ function App() {
         </div>
       </div>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

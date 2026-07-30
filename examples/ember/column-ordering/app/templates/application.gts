@@ -243,6 +243,6 @@ export default class ColumnOrderingTable extends Component {
     </table>
 
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

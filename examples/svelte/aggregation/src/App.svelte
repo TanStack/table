@@ -70,5 +70,5 @@
     <span class="inline-controls">| Go to page:<input type="number" min="1" max={table.getPageCount()} value={table.state.pagination.pageIndex + 1} oninput={(event) => table.setPageIndex(event.currentTarget.value ? Number(event.currentTarget.value) - 1 : 0)} class="page-size-input" /></span>
     <select value={table.state.pagination.pageSize} onchange={(event) => table.setPageSize(Number(event.currentTarget.value))}>{#each [10,20,30,40,50] as size}<option value={size}>Show {size}</option>{/each}</select>
   </div>
-  <div>Showing {table.getRowModel().rows.length.toLocaleString()} of {table.getRowCount().toLocaleString()} Rows</div><pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <div>Showing {table.getRowModel().rows.length.toLocaleString()} of {table.getRowCount().toLocaleString()} Rows</div><pre data-testid="table-state">{JSON.stringify(table.state, null, 2)}</pre>
 </div>

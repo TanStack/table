@@ -209,5 +209,5 @@
     </select>
   </div>
   <div>{table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows</div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.state, null, 2)}</pre>
 </div>

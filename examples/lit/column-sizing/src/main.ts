@@ -146,7 +146,9 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
-      <pre>${JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre
+      >
       <style>
         * {
           font-family: sans-serif;

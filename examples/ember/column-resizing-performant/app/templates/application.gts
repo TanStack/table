@@ -208,6 +208,6 @@ export default class ColumnResizingPerformantTable extends Component {
       </div>
     </div>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

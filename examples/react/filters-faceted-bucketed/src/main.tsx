@@ -285,7 +285,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={(event) => {
               const page = event.target.value
                 ? Number(event.target.value) - 1

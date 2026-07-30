@@ -20,7 +20,6 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 
 const INITIAL_PAGE_INDEX = 0
 
-const goToPageNumber = ref(INITIAL_PAGE_INDEX + 1)
 const pageSizes = [10, 20, 30, 40, 50]
 const data = ref(makeData(1_000))
 
@@ -105,7 +104,6 @@ const stressTest = () => {
 
 function handleGoToPage(e: any) {
   const page = e.target.value ? Number(e.target.value) - 1 : 0
-  goToPageNumber.value = page + 1
   table.setPageIndex(page)
 }
 
@@ -164,31 +162,31 @@ function handlePageSizeChange(e: any) {
       <div class="controls">
         <button
           class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(0)"
+          @click="() => table.firstPage()"
           :disabled="!table.getCanPreviousPage()"
         >
-          «
+          <<
         </button>
         <button
           class="demo-button demo-button-sm"
           @click="() => table.previousPage()"
           :disabled="!table.getCanPreviousPage()"
         >
-          ‹
+          <
         </button>
         <button
           class="demo-button demo-button-sm"
           @click="() => table.nextPage()"
           :disabled="!table.getCanNextPage()"
         >
-          ›
+          >
         </button>
         <button
           class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
+          @click="() => table.lastPage()"
           :disabled="!table.getCanNextPage()"
         >
-          »
+          >>
         </button>
         <span class="inline-controls">
           <div>Page</div>
@@ -202,8 +200,10 @@ function handlePageSizeChange(e: any) {
           | Go to page:
           <input
             type="number"
-            :value="goToPageNumber"
-            @change="handleGoToPage"
+            min="1"
+            :max="table.getPageCount()"
+            :value="table.atoms.pagination.get().pageIndex + 1"
+            @input="handleGoToPage"
             class="page-size-input"
           />
         </span>
@@ -220,8 +220,13 @@ function handlePageSizeChange(e: any) {
           </option>
         </select>
       </div>
-      <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
+      <div>
+        Showing {{ table.getRowModel().rows.length.toLocaleString() }} of
+        {{ table.getRowCount().toLocaleString() }} Rows
+      </div>
+      <pre data-testid="table-state">{{
+        JSON.stringify(table.store.get(), null, 2)
+      }}</pre>
     </div>
     <div class="spacer-sm" />
   </div>

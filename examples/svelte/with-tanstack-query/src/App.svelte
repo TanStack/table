@@ -182,5 +182,5 @@
     Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
     {dataQuery.data?.rowCount?.toLocaleString() ?? 0} Rows
   </div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.state, null, 2)}</pre>
 </div>
