@@ -18,8 +18,6 @@ const features = tableFeatures({
 
 const columnHelper = createColumnHelper<typeof features, Person>()
 
-const INITIAL_PAGE_INDEX = 0
-
 const pageSizes = [10, 20, 30, 40, 50]
 const data = ref(makeData(1_000))
 

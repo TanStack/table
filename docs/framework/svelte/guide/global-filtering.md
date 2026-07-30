@@ -153,7 +153,7 @@ You can also define your own custom global filter function and pass it directly 
 
 ### Global Filter State
 
-The `globalFilter` state slice holds the current global filter value, usually a search string (the slice is typed as `any` so custom global filter functions can accept other value shapes). For reactive reads that should update your UI, use `table.state.globalFilter`. In event handlers, you can read the current snapshot with `table.atoms.globalFilter.get()`, but this read only participates in Svelte dependency tracking when called in a rune-tracked context.
+The `globalFilter` state slice holds the current global filter value, usually a search string (the slice is typed as `any` so custom global filter functions can accept other value shapes). Read it with `table.atoms.globalFilter.get()`. The call returns the current value in event handlers and becomes reactive when it runs in a template, `$derived`, `$derived.by`, or `$effect`.
 
 If you need access to the global filter state outside of the table, you can own the slice yourself. The recommended way in v9 is an external atom passed through the `atoms` table option. Atoms preserve fine-grained subscriptions, and the filter value can be used elsewhere (such as in a query key for server-side filtering) without coupling that code to the table instance.
 
@@ -197,12 +197,12 @@ const table = createTable({
 
 ### Adding global filter input to UI
 
-TanStack table will not add a global filter input UI to your table. You should manually add it to your UI to allow users to filter the table. For example, you can add an input UI above the table to allow users to enter a search term. Read the value reactively with `table.state.globalFilter` and update it with `table.setGlobalFilter`.
+TanStack table will not add a global filter input UI to your table. You should manually add it to your UI to allow users to filter the table. For example, you can add an input UI above the table to allow users to enter a search term. Read the value reactively with `table.atoms.globalFilter.get()` and update it with `table.setGlobalFilter`.
 
 ```svelte
 <input
   type="text"
-  value={table.state.globalFilter ?? ''}
+  value={table.atoms.globalFilter.get() ?? ''}
   oninput={(e) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
   placeholder="Search all columns..."
 />

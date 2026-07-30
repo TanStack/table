@@ -126,7 +126,11 @@ The `pagination` state is an object that contains the following properties:
 - `pageIndex`: The current page index (zero-based).
 - `pageSize`: The current page size.
 
-For reactive reads that should update your UI, use `table.state.pagination` (selected by the `createTable` selector). In event handlers, you can read the current snapshot with `table.atoms.pagination.get()`, but this read only participates in Svelte dependency tracking when called in a rune-tracked context.
+Read pagination from `table.atoms.pagination.get()`. The call returns the current value in event handlers and becomes reactive when it runs in a template, `$derived`, `$derived.by`, or `$effect`.
+
+```ts
+const pagination = $derived(table.atoms.pagination.get())
+```
 
 If you need access to the `pagination` state outside of the table (a server-side query key is the most common case), you can own the slice yourself. The recommended way in v9 is an external atom passed through the `atoms` table option. Atoms preserve fine-grained subscriptions, and the pagination value can be used elsewhere (such as in a query key) without coupling that code to the table instance.
 
@@ -258,7 +262,7 @@ There are several pagination table instance APIs that are useful for hooking up 
 <button onclick={() => table.nextPage()} disabled={!table.getCanNextPage()}>{'>'}</button>
 <button onclick={() => table.lastPage()} disabled={!table.getCanNextPage()}>{'>>'}</button>
 <select
-  value={table.state.pagination.pageSize}
+  value={table.atoms.pagination.get().pageSize}
   onchange={(e) => table.setPageSize(Number((e.target as HTMLSelectElement).value))}
 >
   {#each [10, 20, 30, 40, 50] as pageSize}

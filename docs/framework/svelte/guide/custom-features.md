@@ -330,10 +330,10 @@ const table = createTable({
 
 ### Step 5: Use the Feature in Your Application
 
-Now that the feature is added to the table instance, you can use the new instance APIs, options, and state in your application. `table.state.density` reads the new state slice reactively in your markup, and `table.setDensity` / `table.toggleDensity` update it.
+Now that the feature is added to the table instance, you can use the new instance APIs, options, and state in your application. `table.atoms.density.get()` reads the new state slice reactively in your markup, and `table.setDensity` / `table.toggleDensity` update it.
 
 ```svelte
-{@const density = table.state.density}
+{@const density = table.atoms.density.get()}
 <td
   style:padding={density === 'sm' ? '4px' : density === 'md' ? '8px' : '16px'}
   style:transition="padding 0.2s"

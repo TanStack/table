@@ -96,14 +96,13 @@
       debugHeaders: true,
       debugColumns: true,
     },
-    (state) => state,
   )
 
   function resizerTransform(
     header: ReturnType<typeof table.getHeaderGroups>[number]['headers'][number],
   ) {
     if (columnResizeMode === 'onEnd' && header.column.getIsResizing()) {
-      const delta = table.state.columnResizing.deltaOffset ?? 0
+      const delta = table.atoms.columnResizing.get().deltaOffset ?? 0
       const dir = table.options.columnResizeDirection === 'rtl' ? -1 : 1
       return `translateX(${dir * delta
       }px)`
@@ -275,5 +274,5 @@
     </div>
   </div>
   <div class="spacer-md"></div>
-  <pre data-testid="table-state">{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

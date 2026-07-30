@@ -105,15 +105,8 @@
     debugTable: true,
   })
 
-  const fullHeaderGroups = $derived.by(() => {
-    JSON.stringify(fullTable.state)
-    return fullTable.getHeaderGroups()
-  })
-
-  const fullRows = $derived.by(() => {
-    JSON.stringify(fullTable.state)
-    return fullTable.getRowModel().rows
-  })
+  const fullHeaderGroups = $derived(fullTable.getHeaderGroups())
+  const fullRows = $derived(fullTable.getRowModel().rows)
 
   function refreshFullData() {
     fullData = makeData(100)
@@ -180,15 +173,8 @@
     debugTable: true,
   })
 
-  const rowHeaderGroups = $derived.by(() => {
-    JSON.stringify(rowTable.state)
-    return rowTable.getHeaderGroups()
-  })
-
-  const rowRows = $derived.by(() => {
-    JSON.stringify(rowTable.state)
-    return rowTable.getRowModel().rows
-  })
+  const rowHeaderGroups = $derived(rowTable.getHeaderGroups())
+  const rowRows = $derived(rowTable.getRowModel().rows)
 
   function refreshRowData() {
     rowData = makeData(100)

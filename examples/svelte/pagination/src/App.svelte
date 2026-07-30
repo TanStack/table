@@ -74,8 +74,8 @@
       // rowCount: 1_000, // total rows for manual pagination; pageCount is calculated from this and pageSize
       debugTable: true,
     },
-    (state) => state,
   )
+  const pagination = $derived(table.atoms.pagination.get())
 
 </script>
 
@@ -148,7 +148,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -158,7 +158,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e: Event) => {
           const page = (e.target as HTMLInputElement).value
             ? Number((e.target as HTMLInputElement).value) - 1
@@ -169,7 +169,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e: Event) => {
         table.setPageSize(Number((e.target as HTMLSelectElement).value))
       }}
@@ -184,5 +184,5 @@
     {table.getRowCount().toLocaleString()} Rows
   </div>
   <hr />
-  <pre data-testid="table-state">{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

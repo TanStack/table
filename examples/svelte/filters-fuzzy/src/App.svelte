@@ -63,12 +63,13 @@
       debugHeaders: true,
       debugColumns: false,
     },
-    (state) => state,
   )
+  const pagination = $derived(table.atoms.pagination.get())
+  const globalFilter = $derived(table.atoms.globalFilter.get())
 
   $effect(() => {
-    if (table.state.columnFilters[0]?.id === 'fullName') {
-      if (table.state.sorting[0]?.id !== 'fullName') {
+    if (table.atoms.columnFilters.get()[0]?.id === 'fullName') {
+      if (table.atoms.sorting.get()[0]?.id !== 'fullName') {
         table.setSorting([{ id: 'fullName', desc: false
         }])
       }
@@ -83,7 +84,7 @@
   </div>
   <div>
     <DebouncedInput
-      value={(table.state.globalFilter ?? '') as string}
+      value={(globalFilter ?? '') as string}
       onchange={(value) => table.setGlobalFilter(String(value))}
       class="summary-panel"
       placeholder="Search all columns..."
@@ -181,7 +182,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -189,7 +190,7 @@
       | Go to page:
       <input
         type="number"
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e) => {
           const page = e.currentTarget.value
             ? Number(e.currentTarget.value) - 1
@@ -200,7 +201,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e) => table.setPageSize(Number(e.currentTarget.value))}
     >
       {#each [10, 20, 30, 40, 50] as pageSize}
@@ -209,5 +210,5 @@
     </select>
   </div>
   <div>{table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows</div>
-  <pre data-testid="table-state">{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

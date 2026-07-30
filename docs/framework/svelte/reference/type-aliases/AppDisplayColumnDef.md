@@ -9,7 +9,7 @@ title: AppDisplayColumnDef
 type AppDisplayColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<DisplayColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:119](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L119)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:118](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L118)
 
 Enhanced display column definition with pre-bound components.
 

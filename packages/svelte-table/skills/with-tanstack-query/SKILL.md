@@ -52,8 +52,10 @@ const table = createTable({
     return dataQuery.data?.rowCount ?? 0
   },
   manualPagination: true,
-  get state() {
-    return { pagination }
+  state: {
+    get pagination() {
+      return pagination
+    },
   },
   onPaginationChange: (next) => {
     pagination = typeof next === 'function' ? next(pagination) : next

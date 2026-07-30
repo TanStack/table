@@ -73,7 +73,6 @@
       },
       getRowCanExpand: () => true,
     },
-    (state) => state,
   )
 </script>
 

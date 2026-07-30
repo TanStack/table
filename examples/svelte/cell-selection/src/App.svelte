@@ -168,12 +168,6 @@
       // isCellRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
       debugTable: true,
     },
-    (state) => ({
-      sorting: state.sorting,
-      columnVisibility: state.columnVisibility,
-      columnOrder: state.columnOrder,
-      columnPinning: state.columnPinning,
-    }),
   )
 
   const randomizeColumns = () =>
@@ -189,9 +183,8 @@
   // customize this to your needs
   let isFirstColumnLayout = true
   $effect(() => {
-    // read the atoms directly so this tracks only the layout slices. Reading
-    // table.state here would re-fire on every selection change, because the
-    // selector rebuilds that object each time any selected slice changes.
+    // Read only the layout atoms so selection changes do not re-run this
+    // effect. A full `table.store.get()` read would track every state slice.
     void table.atoms.columnOrder.get()
     void table.atoms.columnPinning.get()
     void table.atoms.columnVisibility.get()
@@ -434,7 +427,7 @@
   <div>
     <label for="state-dump">State:</label>
     <pre id="state-dump">{data.length < 1_001
-        ? JSON.stringify(table.state, null, 2)
+        ? JSON.stringify(table.store.get(), null, 2)
         : ''}</pre>
   </div>
   <div>

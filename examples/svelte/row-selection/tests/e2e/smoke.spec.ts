@@ -69,6 +69,15 @@ async function getFirstBodyRowData(table: Locator) {
   return text?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
+async function readRowSelection(page: Page) {
+  const text = await page.getByTestId('table-state').textContent()
+  const state = JSON.parse(text ?? '{}') as {
+    rowSelection?: Record<string, boolean>
+  }
+
+  return state.rowSelection ?? {}
+}
+
 test('renders the table without crashing', async ({ page }) => {
   const { errors, server } = await openExample(page)
 
@@ -119,6 +128,18 @@ test('selects an inclusive row range with Shift-click', async ({ page }) => {
     await expect(rowCheckboxes.nth(1)).toBeChecked()
     await expect(rowCheckboxes.nth(2)).toBeChecked()
     await expect(rowCheckboxes.nth(3)).not.toBeChecked()
+    await expect(
+      page.locator('div').filter({ hasText: 'Total Rows Selected' }).last(),
+    ).toContainText('3 of')
+    await expect
+      .poll(async () => {
+        const selection = await readRowSelection(page)
+        return {
+          count: Object.keys(selection).length,
+          allSelected: Object.values(selection).every(Boolean),
+        }
+      })
+      .toEqual({ count: 3, allSelected: true })
     expect(errors).toEqual([])
   } finally {
     await server.close()

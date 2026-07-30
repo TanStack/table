@@ -276,13 +276,9 @@ Create each table with `createAppTable`. In Svelte 5, pass reactive data through
     debugTable: true,
   })
 
-  let sorting = $derived(table.state.sorting)
-  let columnFilters = $derived(table.state.columnFilters)
-
-  const rows = $derived.by(() => {
-    JSON.stringify(table.state)
-    return table.getRowModel().rows
-  })
+  const sorting = $derived(table.atoms.sorting.get())
+  const columnFilters = $derived(table.atoms.columnFilters.get())
+  const rows = $derived(table.getRowModel().rows)
 </script>
 ```
 

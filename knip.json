@@ -40,7 +40,8 @@
       "entry": [
         "src/index.ts!",
         "src/static-functions.ts!",
-        "src/flex-render.ts!"
+        "src/flex-render.ts!",
+        "tests/public-api.types.ts!"
       ]
     }
   }

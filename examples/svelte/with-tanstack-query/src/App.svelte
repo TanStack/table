@@ -77,7 +77,6 @@
       manualPagination: true,
       debugTable: true,
     },
-    (state) => state,
   )
 </script>
 
@@ -182,5 +181,5 @@
     Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
     {dataQuery.data?.rowCount?.toLocaleString() ?? 0} Rows
   </div>
-  <pre data-testid="table-state">{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

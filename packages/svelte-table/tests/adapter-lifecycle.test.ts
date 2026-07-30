@@ -6,46 +6,42 @@ import { createAtom } from '@tanstack/svelte-store'
 import CallbackHarness from './fixtures/CallbackHarness.svelte'
 import PaginationHarness from './fixtures/PaginationHarness.svelte'
 import ReactivityHarness from './fixtures/ReactivityHarness.svelte'
-import SelectorHarness from './fixtures/SelectorHarness.svelte'
-import type { OnChangeFn, RowSelectionState } from '@tanstack/table-core'
+import RuneStateHarness from './fixtures/RuneStateHarness.svelte'
+import type {
+  OnChangeFn,
+  RowSelectionState,
+  TableState,
+  stockFeatures,
+} from '@tanstack/table-core'
 
 function outputText(name: string) {
   return screen.getByRole('status', { name }).textContent
 }
 
 describe('Svelte adapter lifecycle and reactive options', () => {
-  test('unmount unsubscribes external atoms and stops later reactions', async () => {
+  test('unmount stops later external atom reactions', async () => {
     const externalRowSelection = createAtom<RowSelectionState>({ 2: true })
-    const subscribeSpy = vi.spyOn(externalRowSelection, 'subscribe')
     const selectionCaptor = vi.fn<(selection: RowSelectionState) => void>()
-    const selectionStoreCaptor =
-      vi.fn<(store: { readonly current: RowSelectionState }) => void>()
     const { unmount } = render(ReactivityHarness, {
       externalRowSelection,
       selectionCaptor,
-      selectionStoreCaptor,
     })
 
     await act()
 
     expect(outputText('Selected rows')).toBe('{"2":true}')
     expect(selectionCaptor.mock.calls).toEqual([[{ 2: true }]])
-    expect(subscribeSpy).toHaveBeenCalled()
 
     await act(() => externalRowSelection.set({ 1: true }))
 
     expect(outputText('Selected rows')).toBe('{"1":true}')
     expect(selectionCaptor.mock.calls).toEqual([[{ 2: true }], [{ 1: true }]])
-    expect(selectionStoreCaptor).toHaveBeenCalledOnce()
 
     unmount()
 
     await act(() => externalRowSelection.set({ 2: true }))
 
     expect(selectionCaptor.mock.calls).toEqual([[{ 2: true }], [{ 1: true }]])
-    expect(selectionStoreCaptor.mock.lastCall?.[0].current).toEqual({
-      1: true,
-    })
   })
 
   test('external atoms take precedence over controlled state and receive table updates', async () => {
@@ -148,24 +144,32 @@ describe('Svelte adapter lifecycle and reactive options', () => {
     expect(outputText('Paginated row ids')).toBe('0,1,2')
   })
 
-  test('selector subscriptions only rerun for their selected dependency', async () => {
+  test('native rune projections only rerun for their tracked dependency', async () => {
     const selectedRowCaptor = vi.fn<(selected: boolean) => void>()
-    const wholeSelectionCaptor = vi.fn<(selection: RowSelectionState) => void>()
+    const selectionCaptor = vi.fn<(selection: RowSelectionState) => void>()
+    const stateCaptor =
+      vi.fn<(state: TableState<typeof stockFeatures>) => void>()
 
-    render(SelectorHarness, { selectedRowCaptor, wholeSelectionCaptor })
+    render(RuneStateHarness, {
+      selectedRowCaptor,
+      selectionCaptor,
+      stateCaptor,
+    })
     await act()
 
     expect(outputText('Selected first row')).toBe('false')
     expect(outputText('Whole row selection')).toBe('{}')
     expect(selectedRowCaptor.mock.calls).toEqual([[false]])
-    expect(wholeSelectionCaptor.mock.calls).toEqual([[{}]])
+    expect(selectionCaptor.mock.calls).toEqual([[{}]])
+    expect(stateCaptor).toHaveBeenCalledTimes(1)
 
     await fireEvent.click(
       screen.getByRole('button', { name: 'Select first row' }),
     )
 
     expect(selectedRowCaptor.mock.calls).toEqual([[false], [true]])
-    expect(wholeSelectionCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
+    expect(selectionCaptor.mock.calls).toEqual([[{}], [{ 1: true }]])
+    expect(stateCaptor).toHaveBeenCalledTimes(2)
 
     await fireEvent.click(
       screen.getByRole('button', { name: 'Select second row too' }),
@@ -174,20 +178,28 @@ describe('Svelte adapter lifecycle and reactive options', () => {
     expect(outputText('Selected first row')).toBe('true')
     expect(outputText('Whole row selection')).toBe('{"1":true,"2":true}')
     expect(selectedRowCaptor).toHaveBeenCalledTimes(2)
-    expect(wholeSelectionCaptor.mock.calls).toEqual([
+    expect(selectionCaptor.mock.calls).toEqual([
       [{}],
       [{ 1: true }],
       [{ 1: true, 2: true }],
     ])
+    expect(stateCaptor).toHaveBeenCalledTimes(3)
 
     await fireEvent.click(
       screen.getByRole('button', { name: 'Set unrelated page size' }),
     )
+
+    expect(selectedRowCaptor).toHaveBeenCalledTimes(2)
+    expect(selectionCaptor).toHaveBeenCalledTimes(3)
+    expect(stateCaptor).toHaveBeenCalledTimes(4)
+    expect(stateCaptor.mock.lastCall?.[0].pagination.pageSize).toBe(20)
+
     await fireEvent.click(
-      screen.getByRole('button', { name: 'Select second row too' }),
+      screen.getByRole('button', { name: 'Publish same selection' }),
     )
 
     expect(selectedRowCaptor).toHaveBeenCalledTimes(2)
-    expect(wholeSelectionCaptor).toHaveBeenCalledTimes(3)
+    expect(selectionCaptor).toHaveBeenCalledTimes(3)
+    expect(stateCaptor).toHaveBeenCalledTimes(4)
   })
 })

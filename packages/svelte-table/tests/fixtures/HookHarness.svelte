@@ -5,7 +5,7 @@
   import type { HookData } from './hook-fixture'
 
   interface Props {
-    tableCaptor?: (table: AppSvelteTable<any, any, any, any, any, any>) => void
+    tableCaptor?: (table: AppSvelteTable<any, any, any, any, any>) => void
   }
 
   let { tableCaptor }: Props = $props()

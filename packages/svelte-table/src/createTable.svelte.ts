@@ -1,5 +1,4 @@
 import { constructTable } from '@tanstack/table-core'
-import { useSelector } from '@tanstack/svelte-store'
 import { untrack } from 'svelte'
 import { flatMerge, mergeObjects } from './merge-objects'
 import { svelteReactivity } from './reactivity.svelte'
@@ -8,67 +7,52 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 
+/**
+ * A Svelte-aware TanStack Table instance.
+ *
+ * Table APIs and `table.atoms.<slice>.get()` reads participate in Svelte
+ * dependency tracking when used in templates, `$derived`, or `$effect`.
+ */
 export type SvelteTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
-> = Omit<Table<TFeatures, TData>, 'store'> & {
-  /**
-   * @deprecated Prefer `table.state` for render reads,
-   * `table.atoms.<slice>.get()` for slice snapshots, or
-   * `useSelector(table.store, selector)` for explicit subscriptions.
-   * `table.store.state` is a current-value snapshot and is easy to misuse in
-   * render code.
-   */
-  readonly store: Table<TFeatures, TData>['store']
-  /**
-   * The selected state of the table. This state may not match the structure of
-   * the full table state because it is selected by the selector function that
-   * you pass as the 2nd argument to `createTable`.
-   *
-   * @example
-   * const table = createTable(options, (state) => ({ globalFilter: state.globalFilter })) // only globalFilter is part of the selected state
-   *
-   * console.log(table.state.globalFilter)
-   */
-  readonly state: Readonly<TSelected>
-}
+> = Table<TFeatures, TData>
 
 /**
  * Creates a Svelte 5 table instance backed by rune-aware TanStack Store atoms.
  *
- * The optional selector projects from `table.store`; the selected value is
- * exposed on `table.state`. The adapter syncs options in `$effect.pre`, so
- * reactive option getters and external `$state` values are applied before DOM
- * updates read table APIs such as `getRowModel()`.
+ * Read a specific state slice with `table.atoms.<slice>.get()` and read the
+ * complete state with `table.store.get()`. Those reads participate in Svelte
+ * dependency tracking when they run in a template, `$derived`, or `$effect`.
+ * The adapter syncs options in `$effect.pre`, so reactive option getters and
+ * external `$state` values are applied before DOM updates read table APIs such
+ * as `getRowModel()`.
  *
  * @example
  * ```svelte
  * <script lang="ts">
- *   const table = createTable(
- *     {
- *       features,
- *       columns,
- *       data,
+ *   const table = createTable({
+ *     features,
+ *     columns,
+ *     get data() {
+ *       return data
  *     },
- *     (state) => ({ pagination: state.pagination }),
- *   )
+ *   })
+ *
+ *   const pagination = $derived(table.atoms.pagination.get())
+ *   const stateJson = $derived(JSON.stringify(table.store.get(), null, 2))
  * </script>
  *
- * {table.state.pagination.pageIndex}
+ * <span>Page {pagination.pageIndex + 1}</span>
+ * <pre>{stateJson}</pre>
  * ```
  */
 export function createTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected = TableState<TFeatures>,
->(
-  tableOptions: TableOptions<TFeatures, TData>,
-  selector?: (state: TableState<TFeatures>) => TSelected,
-): SvelteTable<TFeatures, TData, TSelected> {
+>(tableOptions: TableOptions<TFeatures, TData>): SvelteTable<TFeatures, TData> {
   // 1. Merge reactivity into options using mergeObjects (preserves getters)
   const mergedOptions = mergeObjects(tableOptions, {
     features: {
@@ -91,11 +75,7 @@ export function createTable<
   ) as TableOptions<TFeatures, TData>
 
   // 3. Construct table
-  const table = constructTable(resolvedOptions) as unknown as SvelteTable<
-    TFeatures,
-    TData,
-    TSelected
-  >
+  const table = constructTable(resolvedOptions)
 
   // 4. Sync options reactively. When controlled state changes (e.g., $state
   // inside createTableState), the effect re-runs and calls setOptions.
@@ -120,17 +100,6 @@ export function createTable<
         return flatMerge(prev, nextOptions)
       })
     })
-  })
-
-  // 5. State selector
-  const stateStore = useSelector(table.store, selector)
-
-  Object.defineProperty(table, 'state', {
-    get() {
-      return stateStore.current
-    },
-    configurable: true,
-    enumerable: true,
   })
 
   return table

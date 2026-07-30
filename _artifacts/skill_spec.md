@@ -1,8 +1,8 @@
 # TanStack Table v9 skill specification
 
-Status: reviewed  
-Date: 2026-07-10  
-Library target: TanStack Table v9, authored in stable-release voice  
+Status: reviewed<br>
+Date: 2026-07-29<br>
+Library target: TanStack Table v9, authored in stable-release voice<br>
 Package metadata target: exact workspace package versions; release automation keeps every shipped skill synchronized
 
 This specification is the generation contract for a deliberately smaller, foot-gun-first TanStack Intent skill set. It is not a documentation outline. The complete evidence and failure-mode inventory is in domain_map.yaml.
@@ -305,8 +305,11 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 ### Svelte
 
 - V9 targets Svelte 5 and runes.
+- Read a slice with `table.atoms.<slice>.get()` and the complete state with `table.store.get()` inside templates, `$derived`, `$derived.by`, or `$effect`; reads outside tracked scopes are current snapshots.
+- Starting in beta.59, Svelte has no table-creation selector, selected `table.state`, `subscribeTable`, or `SubscribeSource`; use native `$derived` projections instead.
+- Prefer `$state` plus getter-backed controlled slices, or `createTableState` for an updater-compatible getter/setter pair. Keep `useSelector` only for raw external atoms consumed outside the table.
 - Reactive data and controlled values commonly need getters; avoid passing snapshots.
-- createTableHook implementation belongs in a rune-capable module.
+- The shipped `createTableHook` implementation supplies rune semantics, so an app hook that calls it may live in a normal `.ts` module.
 
 ### Vue
 
@@ -342,7 +345,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 
 ## Cross-cutting placement rules
 
-- Performance: stable inputs in getting-started/core; selectors in table-state; CSS variables in resizing; measurement/overscan in Virtual; row ownership in client-vs-server.
+- Performance: stable inputs in getting-started/core; adapter-specific fine-grained state reads or selectors in table-state; CSS variables in resizing; measurement/overscan in Virtual; row ownership in client-vs-server.
 - CSS: pinning, sizing, resizing, and Virtual skills only. Core may state that CSS is user-owned.
 - Accessibility: core/getting-started may remind that headless rendering leaves semantics and interaction accessibility with the renderer; do not create a component-library integration skill.
 - Query: data source and manual processing boundaries, not Table rendering.

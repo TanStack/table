@@ -102,3 +102,38 @@ test('renders the table without crashing', async ({ page }) => {
     await server.close()
   }
 })
+
+test('keeps createAppTable instances reactive and isolated', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const containers = page.locator('.table-container')
+    const users = containers.filter({ hasText: 'Users Table' }).first()
+    const products = containers.filter({ hasText: 'Products Table' }).first()
+    const usersPage = users.locator('.pagination input[type="number"]')
+    const productsPage = products.locator('.pagination input[type="number"]')
+    const firstNameHeader = users
+      .locator('thead th')
+      .filter({ hasText: 'First Name' })
+      .first()
+
+    await expect(usersPage).toHaveValue('1')
+    await expect(productsPage).toHaveValue('1')
+
+    await firstNameHeader.click({ position: { x: 8, y: 8 } })
+    await expect(firstNameHeader.locator('.sort-indicator')).toHaveText('🔼')
+
+    await users
+      .locator('.pagination')
+      .getByRole('button', { name: '>', exact: true })
+      .click()
+
+    await expect(usersPage).toHaveValue('2')
+    await expect(productsPage).toHaveValue('1')
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

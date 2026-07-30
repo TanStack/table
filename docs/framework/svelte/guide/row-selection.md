@@ -40,19 +40,26 @@ The row selection feature keeps track of which rows are selected and allows you 
 
 The table instance already manages the row selection state for you. You can access the row selection state or the selected rows from a few APIs.
 
-- `table.state.rowSelection` - returns the row selection state reactively (selected by the `createTable` selector)
+- `table.atoms.rowSelection.get()` - returns the current row selection state and participates in Svelte tracking when read in a template or rune
 - `getSelectedRowModel()` - returns selected rows
 - `getFilteredSelectedRowModel()` - returns selected rows after filtering
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting
 
 ```ts
-console.log(table.state.rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
+console.log(table.atoms.rowSelection.get()) // get the row selection state - { 1: true, 2: true }
 console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
 console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
 console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
 ```
 
-In event handlers or other non-reactive code, you can also read the current snapshot with `table.atoms.rowSelection.get()`. This read only participates in Svelte dependency tracking when called in a rune-tracked context, so prefer `table.state.rowSelection` (or `subscribeTable`) in your markup.
+Use the same atom read in markup or a native derived value:
+
+```ts
+const rowSelection = $derived(table.atoms.rowSelection.get())
+const selectedCount = $derived(Object.keys(rowSelection).length)
+```
+
+Outside a tracked context, `table.atoms.rowSelection.get()` is simply the current snapshot.
 
 > Note: If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
 

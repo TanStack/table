@@ -38,20 +38,27 @@ The cell selection feature keeps track of spreadsheet-style rectangular selectio
 
 The table instance already manages the cell selection state for you. You can access the selection or values derived from it through a few APIs.
 
-- `table.state.cellSelection` - returns the cell selection state reactively (selected by the `createTable` selector)
+- `table.atoms.cellSelection.get()` - returns the current cell selection state and participates in Svelte tracking when read in a template or rune
 - `getSelectedCellCount()` - returns how many cells are selected
 - `getSelectedCellIds()` - returns the ids of every selected cell
 - `getCellSelectionRowIds()` / `getCellSelectionColumnIds()` - returns the rows and columns the selection touches
 - `getSelectedCellRangesData()` - returns each selected rectangle's values as a row-major grid
 
 ```ts
-console.log(table.state.cellSelection) //get the cell selection state
+console.log(table.atoms.cellSelection.get()) //get the cell selection state
 console.log(table.getSelectedCellCount()) //3
 console.log(table.getSelectedCellIds()) //['0_firstName', '0_lastName', '1_firstName']
 console.log(table.getSelectedCellRangesData()) //[[['Tanner', 'Linsley'], ['Kevin', 'Vandy']]]
 ```
 
-In event handlers or other non-render code, you can also read the current snapshot with `table.atoms.cellSelection.get()`. This read does not subscribe a component to future changes, so prefer `table.state.cellSelection` in render positions.
+Use the same atom read in markup or a native derived value:
+
+```ts
+const cellSelection = $derived(table.atoms.cellSelection.get())
+const selectedRangeCount = $derived(cellSelection.length)
+```
+
+Outside a tracked context, `table.atoms.cellSelection.get()` is simply the current snapshot.
 
 The expansion APIs (`getSelectedCellIds`, `getSelectedCellRangesData`) are memoized and pull-based. They cost nothing unless you actually call them, so a table that only highlights cells never pays to enumerate a large selection.
 
@@ -313,8 +320,8 @@ Because a reorder can widen a selection onto columns the user never picked, some
 let isFirstColumnLayout = true
 
 $effect(() => {
-  // read the atoms, not table.state: the selector rebuilds that object on every
-  // selected slice change, so reading it here would re-fire on every selection
+  // Read only the layout atoms. A full table.store.get() read would re-run for
+  // every table state change, including selection changes.
   void table.atoms.columnOrder.get()
   void table.atoms.columnPinning.get()
   void table.atoms.columnVisibility.get()
@@ -343,21 +350,8 @@ const table = createTable({
 
 ### Performance
 
-Svelte's runes track these reads and the compiler updates only the DOM nodes
-that actually changed, so the example renders its cells plainly.
+Svelte's runes track atom reads and the compiler updates only the DOM nodes that actually changed, so the example renders its cells plainly.
 
-Measured on a table with a thousand rows and twelve columns, a drag updates in
-roughly 16ms per move with plain reads.
+Measured on a table with a thousand rows and twelve columns, a drag updates in roughly 16ms per move with plain reads.
 
-`subscribeTable` is available if you want an explicit fine-grained subscription:
-
-```svelte
-const selected = subscribeTable( table.atoms.cellSelection, (ranges) =>
-ranges.length, ) // read it as selected.current
-```
-
-One trap worth knowing: do not read `table.state` inside an `$effect` that also
-writes selection state. The selector rebuilds that object whenever any selected
-slice changes, so an effect meant to watch the column layout will re-fire on
-every selection change and clear the selection you just made. Read
-`table.atoms.<slice>.get()` instead.
+One trap worth knowing: do not read `table.store.get()` inside an `$effect` that also writes selection state unless the effect truly depends on every state slice. An effect meant to watch column layout would otherwise re-run on every selection change and clear the selection you just made. Read only the required `table.atoms.<slice>.get()` values instead.

@@ -180,12 +180,13 @@ describe('FlexRender', () => {
 describe('createTableHook', () => {
   test('binds defaults, wrapper components, contexts, and render helpers', () => {
     const tableCaptor =
-      vi.fn<(table: AppSvelteTable<any, any, any, any, any, any>) => void>()
+      vi.fn<(table: AppSvelteTable<any, any, any, any, any>) => void>()
     render(HookHarness, { tableCaptor })
 
     const table = tableCaptor.mock.lastCall?.[0]
 
     expect(hook.appFeatures).toBe(stockFeatures)
+    expect(table).not.toHaveProperty('state')
     expect(table?.getRowModel().rows[0]?.id).toBe('row-1')
     expect(table?.TableBadge).toEqual(expect.any(Function))
     expect(table?.AppTable).toEqual(expect.any(Function))
