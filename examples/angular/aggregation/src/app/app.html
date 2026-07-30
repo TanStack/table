@@ -6,7 +6,7 @@
   </p>
   <div>
     <button (click)="refreshData()">Regenerate Data</button
-    ><button (click)="stressTest()">Stress Test (200k rows)</button>
+    ><button (click)="stressTest()">Stress Test (1M rows)</button>
   </div>
   <div class="spacer-sm"></div>
   <div class="controls">
@@ -134,5 +134,5 @@
     Showing {{ table.getRowModel().rows.length.toLocaleString() }} of
     {{ table.getRowCount().toLocaleString() }} Rows
   </div>
-  <pre>{{ stringifiedState() }}</pre>
+  <pre data-testid="table-state">{{ stringifiedState() }}</pre>
 </div>

@@ -1,5 +1,5 @@
 import { module, test } from 'qunit'
-import { render, click } from '@ember/test-helpers'
+import { click, render, settled } from '@ember/test-helpers'
 import { setupRenderingTest } from 'ember-qunit'
 import Component from '@glimmer/component'
 import { tracked } from '@glimmer/tracking'
@@ -20,6 +20,7 @@ import {
   type Cell,
   type SortingState,
   type PaginationState,
+  type Table,
 } from '#src/index.ts'
 
 // --- Shared fixture ---
@@ -222,6 +223,102 @@ module('Integration | external state (controlled)', function (hooks) {
     assert
       .dom('[data-test-row]')
       .exists({ count: 3 }, 'row model recomputed from the external mutation')
+  })
+
+  test('releases and reacquires ownership when a controlled slice is omitted', async function (assert) {
+    class TableComponent extends Component {
+      @tracked state: { pagination?: PaginationState } = {
+        pagination: { pageIndex: 1, pageSize: 1 },
+      }
+
+      table = useTable(() => ({
+        data: makeData(
+          { firstName: 'A' },
+          { firstName: 'B' },
+          { firstName: 'C' },
+          { firstName: 'D' },
+        ),
+        columns,
+        features,
+        state: this.state,
+        autoResetPageIndex: false,
+      }))
+
+      get pageIndex() {
+        return this.table.store.state.pagination.pageIndex
+      }
+
+      advance = () => {
+        this.table.nextPage()
+      }
+
+      release = () => {
+        this.state = {}
+      }
+
+      reacquire = () => {
+        this.state = {
+          pagination: { pageIndex: 0, pageSize: 1 },
+        }
+      }
+
+      <template>
+        <output
+          role='status'
+          aria-label='Page index'
+        >{{this.pageIndex}}</output>
+        <button
+          type='button'
+          aria-label='Advance page'
+          {{on 'click' this.advance}}
+        >Advance</button>
+        <button
+          type='button'
+          aria-label='Release pagination'
+          {{on 'click' this.release}}
+        >Release</button>
+        <button
+          type='button'
+          aria-label='Control pagination'
+          {{on 'click' this.reacquire}}
+        >Control</button>
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    assert
+      .dom('[role="status"][aria-label="Page index"]')
+      .hasText('1', 'the controlled slice supplies the initial value')
+
+    await click('[aria-label="Advance page"]')
+    assert
+      .dom('[role="status"][aria-label="Page index"]')
+      .hasText('1', 'an internal write cannot replace a controlled value')
+
+    await click('[aria-label="Release pagination"]')
+    assert
+      .dom('[role="status"][aria-label="Page index"]')
+      .hasText('2', 'omitting the slice exposes its latest internal value')
+
+    await click('[aria-label="Advance page"]')
+    assert.dom('[role="status"][aria-label="Page index"]').hasText('3')
+
+    await click('[aria-label="Control pagination"]')
+    assert
+      .dom('[role="status"][aria-label="Page index"]')
+      .hasText('0', 'the external slice can take ownership again')
+
+    await click('[aria-label="Advance page"]')
+    assert.dom('[role="status"][aria-label="Page index"]').hasText('0')
+
+    await click('[aria-label="Release pagination"]')
+    assert
+      .dom('[role="status"][aria-label="Page index"]')
+      .hasText(
+        '4',
+        'a second release exposes the independently updated internal fallback',
+      )
   })
 
   test('controlled slice read wins over internal writes', async function (assert) {
@@ -548,6 +645,188 @@ module('Integration | external atoms', function (hooks) {
         '4',
         'raw reads of an ember createAtom are reactive in the template',
       )
+  })
+
+  test('an external atom takes precedence over controlled state and receives table writes', async function (assert) {
+    const paginationAtom = createAtom<PaginationState>({
+      pageIndex: 0,
+      pageSize: 2,
+    })
+
+    class TableComponent extends Component {
+      @tracked pagination: PaginationState = {
+        pageIndex: 0,
+        pageSize: 3,
+      }
+
+      table = useTable(() => ({
+        data: makeData(...UNSORTED.map((firstName) => ({ firstName }))),
+        columns,
+        features,
+        state: { pagination: this.pagination },
+        atoms: { pagination: paginationAtom },
+      }))
+
+      get tablePageSize() {
+        return this.table.store.state.pagination.pageSize
+      }
+
+      get atomPageSize() {
+        return paginationAtom.get().pageSize
+      }
+
+      get controlledPageSize() {
+        return this.pagination.pageSize
+      }
+
+      replaceControlledState = () => {
+        this.pagination = { pageIndex: 0, pageSize: 1 }
+      }
+
+      writeThroughTable = () => {
+        this.table.setPageSize(4)
+      }
+
+      <template>
+        <output
+          role='status'
+          aria-label='Table page size'
+        >{{this.tablePageSize}}</output>
+        <output
+          role='status'
+          aria-label='Atom page size'
+        >{{this.atomPageSize}}</output>
+        <output
+          role='status'
+          aria-label='Controlled page size'
+        >{{this.controlledPageSize}}</output>
+        <button
+          type='button'
+          aria-label='Replace controlled pagination'
+          {{on 'click' this.replaceControlledState}}
+        >Replace controlled pagination</button>
+        <button
+          type='button'
+          aria-label='Set table page size'
+          {{on 'click' this.writeThroughTable}}
+        >Set table page size</button>
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    assert
+      .dom('[role="status"][aria-label="Table page size"]')
+      .hasText('2', 'the atom wins over controlled state for the same slice')
+    assert.dom('[role="status"][aria-label="Atom page size"]').hasText('2')
+    assert
+      .dom('[role="status"][aria-label="Controlled page size"]')
+      .hasText('3')
+
+    await click('[aria-label="Replace controlled pagination"]')
+
+    assert
+      .dom('[role="status"][aria-label="Controlled page size"]')
+      .hasText('1', 'the controlled source changed')
+    assert
+      .dom('[role="status"][aria-label="Table page size"]')
+      .hasText('2', 'the table continues reading the atom')
+
+    await click('[aria-label="Set table page size"]')
+
+    assert
+      .dom('[role="status"][aria-label="Table page size"]')
+      .hasText('4', 'the table reflects its write through the atom')
+    assert
+      .dom('[role="status"][aria-label="Atom page size"]')
+      .hasText('4', 'the table write was routed to the external atom')
+    assert
+      .dom('[role="status"][aria-label="Controlled page size"]')
+      .hasText('1', 'the lower-precedence controlled state was not mutated')
+  })
+
+  test('destroying the owner disconnects both directions of an external atom bridge', async function (assert) {
+    const paginationAtom = createAtom<PaginationState>({
+      pageIndex: 0,
+      pageSize: 2,
+    })
+    let capturedTable: Table<typeof features, Person> | undefined
+
+    class TableComponent extends Component {
+      table = useTable(this, () => ({
+        data: makeData(...UNSORTED.map((firstName) => ({ firstName }))),
+        columns,
+        features,
+        atoms: { pagination: paginationAtom },
+      }))
+
+      get pageSize() {
+        capturedTable = this.table
+        return this.table.store.state.pagination.pageSize
+      }
+
+      <template>
+        <output
+          role='status'
+          aria-label='Owned table page size'
+        >{{this.pageSize}}</output>
+      </template>
+    }
+
+    class Harness extends Component {
+      @tracked showTable = true
+
+      removeTable = () => {
+        this.showTable = false
+      }
+
+      <template>
+        {{#if this.showTable}}
+          <TableComponent />
+        {{/if}}
+        <button
+          type='button'
+          aria-label='Remove owned table'
+          {{on 'click' this.removeTable}}
+        >Remove table</button>
+      </template>
+    }
+
+    await render(<template><Harness /></template>)
+
+    assert
+      .dom('[role="status"][aria-label="Owned table page size"]')
+      .hasText('2')
+
+    paginationAtom.set({ pageIndex: 0, pageSize: 3 })
+    await settled()
+
+    assert
+      .dom('[role="status"][aria-label="Owned table page size"]')
+      .hasText('3', 'the bridge is live while its owner is mounted')
+
+    await click('[aria-label="Remove owned table"]')
+
+    assert
+      .dom('[role="status"][aria-label="Owned table page size"]')
+      .doesNotExist()
+
+    paginationAtom.set({ pageIndex: 0, pageSize: 4 })
+    await settled()
+
+    assert.strictEqual(
+      capturedTable!.atoms.pagination.get().pageSize,
+      3,
+      'source writes stop reaching the destroyed table',
+    )
+
+    capturedTable!.setPageSize(5)
+
+    assert.strictEqual(
+      paginationAtom.get().pageSize,
+      4,
+      'table writes stop reaching the source after teardown',
+    )
   })
 
   test('atom-backed slices are tracked independently', async function (assert) {

@@ -1,4 +1,3 @@
-import {} from '../../utils'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -51,10 +50,12 @@ export function constructColumn<
   } as ColumnDefResolved<{}, TData, TValue>
 
   const accessorKey = resolvedColumnDef.accessorKey
+  const accessorKeyString =
+    accessorKey === undefined ? undefined : String(accessorKey)
 
   const id =
     resolvedColumnDef.id ??
-    (accessorKey ? accessorKey.replaceAll('.', '_') : undefined) ??
+    accessorKeyString?.replaceAll('.', '_') ??
     (typeof resolvedColumnDef.header === 'string'
       ? resolvedColumnDef.header
       : undefined)
@@ -63,9 +64,9 @@ export function constructColumn<
 
   if (resolvedColumnDef.accessorFn) {
     accessorFn = resolvedColumnDef.accessorFn
-  } else if (accessorKey) {
+  } else if (accessorKey !== undefined) {
     // Support deep accessor keys
-    if (accessorKey.includes('.')) {
+    if (typeof accessorKey === 'string' && accessorKey.includes('.')) {
       const keys = accessorKey.split('.')
       accessorFn = (originalRow: TData) => {
         let result = originalRow as Record<string, any> | undefined
@@ -116,9 +117,9 @@ export function constructColumn<
   column.parent = parent
 
   // Initialize instance-specific data for features that need it
-  const features = Object.values(table._features)
-  for (let i = 0; i < features.length; i++) {
-    features[i]!.initColumnInstanceData?.(column)
+  const initFns = table._columnInstanceInitFns
+  for (let i = 0; i < initFns.length; i++) {
+    initFns[i]!(column as Column<TFeatures, TData, TValue>)
   }
 
   return column as Column<TFeatures, TData, TValue>

@@ -7,6 +7,7 @@
   } from '../hooks/table'
 
   const table = useTableContext()
+  const pagination = $derived(table.atoms.pagination.get())
 </script>
 
 <div class="pagination">
@@ -38,7 +39,7 @@
   <span>
     Page
     <strong>
-      {(table.state.pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
+      {(pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
     </strong>
   </span>
   <span>
@@ -47,7 +48,7 @@
       type="number"
       min="1"
       max={table.getPageCount()}
-      value={table.state.pagination.pageIndex + 1}
+      value={pagination.pageIndex + 1}
       onchange={(e) => {
         const page = e.currentTarget.value ? Number(e.currentTarget.value) - 1 : 0
         table.setPageIndex(page)
@@ -55,7 +56,7 @@
     />
   </span>
   <select
-    value={table.state.pagination.pageSize}
+    value={pagination.pageSize}
     onchange={(e) => {
       table.setPageSize(Number(e.currentTarget.value))
     }}

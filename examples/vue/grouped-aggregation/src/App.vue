@@ -120,7 +120,7 @@ const refreshData = () => {
 }
 
 const stressTest = () => {
-  data.value = makeData(200_000)
+  data.value = makeData(1_000_000)
 }
 
 function handlePageSizeChange(e: Event) {
@@ -140,7 +140,7 @@ function handleGoToPage(e: Event) {
     <div class="button-row">
       <button @click="refreshData" class="demo-button">Regenerate Data</button>
       <button @click="stressTest" class="demo-button">
-        Stress Test (200k rows)
+        Stress Test (1M rows)
       </button>
     </div>
     <div class="spacer-md" />
@@ -222,31 +222,31 @@ function handleGoToPage(e: Event) {
       <div class="controls">
         <button
           class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(0)"
+          @click="() => table.firstPage()"
           :disabled="!table.getCanPreviousPage()"
         >
-          «
+          <<
         </button>
         <button
           class="demo-button demo-button-sm"
           @click="() => table.previousPage()"
           :disabled="!table.getCanPreviousPage()"
         >
-          ‹
+          <
         </button>
         <button
           class="demo-button demo-button-sm"
           @click="() => table.nextPage()"
           :disabled="!table.getCanNextPage()"
         >
-          ›
+          >
         </button>
         <button
           class="demo-button demo-button-sm"
-          @click="() => table.setPageIndex(table.getPageCount() - 1)"
+          @click="() => table.lastPage()"
           :disabled="!table.getCanNextPage()"
         >
-          »
+          >>
         </button>
         <span class="inline-controls">
           <div>Page</div>
@@ -281,7 +281,9 @@ function handleGoToPage(e: Event) {
         </select>
       </div>
       <div>{{ table.getRowModel().rows.length.toLocaleString() }} Rows</div>
-      <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
+      <pre data-testid="table-state">{{
+        JSON.stringify(table.store.get(), null, 2)
+      }}</pre>
     </div>
     <div class="spacer-sm" />
   </div>

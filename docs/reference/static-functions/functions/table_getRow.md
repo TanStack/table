@@ -12,7 +12,7 @@ function table_getRow<TFeatures, TData>(
 searchAll?): Row<TFeatures, TData>;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:329](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L329)
+Defined in: [core/rows/coreRowsFeature.utils.ts:336](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L336)
 
 Looks up a row by id from the current or full row model.
 

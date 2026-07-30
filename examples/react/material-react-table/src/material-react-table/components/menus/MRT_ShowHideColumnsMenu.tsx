@@ -137,7 +137,13 @@ export const MRT_ShowHideColumnsMenu = <
           <Button
             onClick={() =>
               table.setColumnOrder(
-                getDefaultColumnOrderIds(table.options, true),
+                getDefaultColumnOrderIds(
+                  {
+                    ...table.options,
+                    state,
+                  },
+                  true,
+                ),
               )
             }
             disabled={!hasColumnOrderChanged}

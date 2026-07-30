@@ -59,9 +59,9 @@ export const constructRow = <
   row.subRows = subRows ?? []
 
   // Initialize instance-specific data (e.g., caches) for features that need it
-  const features = Object.values(table._features)
-  for (let i = 0; i < features.length; i++) {
-    features[i]!.initRowInstanceData?.(row)
+  const initFns = table._rowInstanceInitFns
+  for (let i = 0; i < initFns.length; i++) {
+    initFns[i]!(row as Row<TFeatures, TData>)
   }
 
   return row as Row<TFeatures, TData>

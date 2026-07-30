@@ -6,17 +6,19 @@ title: createTable
 # Function: createTable()
 
 ```ts
-function createTable<TFeatures, TData, TSelected>(tableOptions, selector?): SvelteTable<TFeatures, TData, TSelected>;
+function createTable<TFeatures, TData>(tableOptions): SvelteTable<TFeatures, TData>;
 ```
 
-Defined in: [packages/svelte-table/src/createTable.svelte.ts:64](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L64)
+Defined in: [packages/svelte-table/src/createTable.svelte.ts:52](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L52)
 
 Creates a Svelte 5 table instance backed by rune-aware TanStack Store atoms.
 
-The optional selector projects from `table.store`; the selected value is
-exposed on `table.state`. The adapter syncs options in `$effect.pre`, so
-reactive option getters and external `$state` values are applied before DOM
-updates read table APIs such as `getRowModel()`.
+Read a specific state slice with `table.atoms.<slice>.get()` and read the
+complete state with `table.store.get()`. Those reads participate in Svelte
+dependency tracking when they run in a template, `$derived`, or `$effect`.
+The adapter syncs options in `$effect.pre`, so reactive option getters and
+external `$state` values are applied before DOM updates read table APIs such
+as `getRowModel()`.
 
 ## Type Parameters
 
@@ -28,37 +30,32 @@ updates read table APIs such as `getRowModel()`.
 
 `TData` *extends* `RowData`
 
-### TSelected
-
-`TSelected` = `TableState`\<`TFeatures`\>
-
 ## Parameters
 
 ### tableOptions
 
 `TableOptions`\<`TFeatures`, `TData`\>
 
-### selector?
-
-(`state`) => `TSelected`
-
 ## Returns
 
-[`SvelteTable`](../type-aliases/SvelteTable.md)\<`TFeatures`, `TData`, `TSelected`\>
+[`SvelteTable`](../type-aliases/SvelteTable.md)\<`TFeatures`, `TData`\>
 
 ## Example
 
 ```svelte
 <script lang="ts">
-  const table = createTable(
-    {
-      features,
-      columns,
-      data,
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data
     },
-    (state) => ({ pagination: state.pagination }),
-  )
+  })
+
+  const pagination = $derived(table.atoms.pagination.get())
+  const stateJson = $derived(JSON.stringify(table.store.get(), null, 2))
 </script>
 
-{table.state.pagination.pageIndex}
+<span>Page {pagination.pageIndex + 1}</span>
+<pre>{stateJson}</pre>
 ```

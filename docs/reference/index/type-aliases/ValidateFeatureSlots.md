@@ -9,7 +9,7 @@ title: ValidateFeatureSlots
 type ValidateFeatureSlots<TFeatures> = IsAny<TFeatures> extends true ? object : { [K in keyof TFeatures as K extends keyof FeatureSlotPrereqs ? K : never]: K extends keyof FeatureSlotPrereqs ? [Extract<FeatureSlotPrereqs[K], keyof TFeatures>] extends [never] ? `Error: '${K & string}' requires '${FeatureSlotPrereqs[K] & string}' to be included in this table's features.` : TFeatures[K] : never };
 ```
 
-Defined in: [types/TableFeatures.ts:158](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L158)
+Defined in: [types/TableFeatures.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L161)
 
 Validates that every row model and fn registry slot in a features object is
 accompanied by its prerequisite feature.

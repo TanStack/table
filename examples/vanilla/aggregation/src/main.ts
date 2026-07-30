@@ -118,8 +118,8 @@ function renderTable(table: Table<typeof features, Sale>) {
       table.setOptions((prev) => ({ ...prev, data }))
       renderTable(table)
     }),
-    button('Stress Test (200k rows)', () => {
-      data = makeData(200_000)
+    button('Stress Test (1M rows)', () => {
+      data = makeData(1_000_000)
       table.setOptions((prev) => ({ ...prev, data }))
       renderTable(table)
     }),

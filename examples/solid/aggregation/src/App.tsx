@@ -150,8 +150,8 @@ function App() {
         <button onClick={() => changeData(makeData(10_000))}>
           Regenerate Data
         </button>
-        <button onClick={() => changeData(makeData(200_000))}>
-          Stress Test (200k rows)
+        <button onClick={() => changeData(makeData(1_000_000))}>
+          Stress Test (1M rows)
         </button>
       </div>
       <div class="spacer-sm" />
@@ -320,7 +320,9 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

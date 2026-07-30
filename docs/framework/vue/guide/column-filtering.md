@@ -8,6 +8,7 @@ Want to skip to the implementation? Check out these Vue examples:
 
 - [Column Filters](../examples/filters)
 - [Faceted Filters](../examples/filters-faceted)
+- [Bucketed Faceted Filters](../examples/filters-faceted-bucketed)
 - [Kitchen Sink](../examples/kitchen-sink) (includes fuzzy search)
 
 Vue refs can be passed directly where the adapter expects reactive table options.

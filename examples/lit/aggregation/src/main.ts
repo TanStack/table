@@ -144,10 +144,10 @@ class LitTableExample extends LitElement {
           </button>
           <button
             @click=${() => {
-              this._data = makeData(200_000)
+              this._data = makeData(1_000_000)
             }}
           >
-            Stress Test (200k rows)
+            Stress Test (1M rows)
           </button>
         </div>
         <div class="spacer-sm"></div>
@@ -321,7 +321,9 @@ class LitTableExample extends LitElement {
           Showing ${table.getRowModel().rows.length.toLocaleString()} of
           ${table.getRowCount().toLocaleString()} Rows
         </div>
-        <pre>${JSON.stringify(table.state, null, 2)}</pre>
+        <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre
+        >
       </div>
       <style>
         * {

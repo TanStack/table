@@ -16,7 +16,7 @@
     "build:all": "nx run-many --targets=build --exclude='examples/**' && size-limit",
     "build:core": "nx build @tanstack/table-core && size-limit",
     "cipublish": "node scripts/publish.js",
-    "clean": "find . -name 'dist' -type d -prune -exec rm -rf {} +",
+    "clean:build": "find . -name 'dist' -type d -prune -exec rm -rf {} +",
     "clean:node_modules": "find . -name 'node_modules' -type d -prune -exec rm -rf {} +",
     "dev": "pnpm run watch",
     "copy:readme": "cp README.md packages/table-core/README.md && cp README.md packages/table-devtools/README.md && cp README.md packages/react-table/README.md && cp README.md packages/react-table-devtools/README.md && cp README.md packages/preact-table/README.md && cp README.md packages/preact-table-devtools/README.md && cp README.md packages/angular-table/README.md && cp README.md packages/ember-table/README.md && cp README.md packages/solid-table/README.md && cp README.md packages/solid-table-devtools/README.md && cp README.md packages/vue-table/README.md && cp README.md packages/vue-table-devtools/README.md && cp README.md packages/lit-table/README.md && cp README.md packages/svelte-table/README.md && cp README.md packages/match-sorter-utils/README.md && cp README.md packages/alpine-table/README.md",

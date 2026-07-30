@@ -207,8 +207,10 @@
       keepPinnedRows: true,
       debugTable: true,
     },
-    (state) => state,
   )
+  const pagination = $derived(table.atoms.pagination.get())
+  const globalFilter = $derived(table.atoms.globalFilter.get())
+  const grouping = $derived(table.atoms.grouping.get())
 
   function debounceSet(key: string, setValue: () => void) {
     clearTimeout(debounceTimers.get(key))
@@ -253,7 +255,7 @@
   }
 
   function cellClass(cell: Cell<typeof features, Person, unknown>) {
-    const groupingActive = table.state.grouping.length > 0
+    const groupingActive = grouping.length > 0
     const hasAggregation = !!cell.column.columnDef.aggregationFn
     return !groupingActive
       ? undefined
@@ -326,7 +328,7 @@
       <input
         class="global-filter-input"
         placeholder="Fuzzy search all columns..."
-        value={(table.state.globalFilter ?? '') as string}
+        value={(globalFilter ?? '') as string}
         oninput={(event) =>
           debounceSet('global', () =>
             table.setGlobalFilter((event.target as HTMLInputElement).value),
@@ -604,7 +606,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -614,7 +616,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(event) => {
           const page = (event.target as HTMLInputElement).value
             ? Number((event.target as HTMLInputElement).value) - 1
@@ -625,7 +627,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(event) =>
         table.setPageSize(Number((event.target as HTMLSelectElement).value))}
     >
@@ -643,6 +645,6 @@
   <div class="spacer-md"></div>
   <details>
     <summary>Table state (live)</summary>
-    <pre class="state-dump">{JSON.stringify(table.state, null, 2)}</pre>
+    <pre class="state-dump">{JSON.stringify(table.store.get(), null, 2)}</pre>
   </details>
 </div>

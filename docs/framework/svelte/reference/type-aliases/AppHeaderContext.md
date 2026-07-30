@@ -9,7 +9,7 @@ title: AppHeaderContext
 type AppHeaderContext<TFeatures, TData, TValue, THeaderComponents> = object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:69](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L69)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:68](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L68)
 
 Enhanced HeaderContext with pre-bound header components.
 The `header` property includes the registered headerComponents.
@@ -40,7 +40,7 @@ The `header` property includes the registered headerComponents.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:75](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L75)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:74](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L74)
 
 ***
 
@@ -50,7 +50,7 @@ Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:75](https://git
 header: Header<TFeatures, TData, TValue> & THeaderComponents & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:76](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L76)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:75](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L75)
 
 #### Type Declaration
 
@@ -68,4 +68,4 @@ FlexRender: typeof FlexRender;
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:78](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L78)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:77](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L77)

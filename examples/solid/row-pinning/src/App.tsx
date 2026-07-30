@@ -327,7 +327,9 @@ function App() {
           </label>
         </div>
       </div>
-      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

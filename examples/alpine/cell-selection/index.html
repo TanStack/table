@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Cell Selection</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div>
+        <button class="demo-button demo-button-spaced" @click="refreshData()">
+          Regenerate Data
+        </button>
+        <button class="demo-button demo-button-spaced" @click="stressTest()">
+          Stress Test (1K rows)
+        </button>
+      </div>
+      <div class="spacer-sm"></div>
+      <p>
+        Click and drag to select a range of cells. Hold Shift while clicking to
+        extend the selection, or Ctrl/Cmd to add a second rectangle. Arrow keys
+        move the selection, Shift+Arrow extends it, Mod+A selects all, Mod+C
+        copies, and Escape clears. Uncomment
+        <code>enableCellSelection: false</code> on a column def to opt that
+        column out of selection.
+      </p>
+      <p class="demo-note">
+        Hiding, reordering, and pinning columns all keep a live selection
+        anchored to the same cell ids. Ranges are indexed in render order, so a
+        pinned column moves the rectangle with it rather than splitting it.
+      </p>
+      <div class="column-toggle-panel">
+        <div class="column-toggle-panel-header">
+          <label>
+            <input
+              type="checkbox"
+              :checked="table.getIsAllColumnsVisible()"
+              @change="table.getToggleAllColumnsVisibilityHandler()($event)"
+            />
+            Toggle All
+          </label>
+        </div>
+        <template x-for="column in table.getAllLeafColumns()" :key="column.id">
+          <div class="column-toggle-row">
+            <label>
+              <input
+                type="checkbox"
+                :checked="column.getIsVisible()"
+                @change="column.getToggleVisibilityHandler()($event)"
+              />
+              <span x-text="column.id"></span>
+            </label>
+          </div>
+        </template>
+      </div>
+      <div class="spacer-sm"></div>
+      <div class="button-row">
+        <button
+          class="demo-button demo-button-spaced"
+          @click="shuffleColumns()"
+        >
+          Shuffle Columns
+        </button>
+        <button
+          class="demo-button demo-button-spaced"
+          @click="reverseColumns()"
+        >
+          Reverse Column Order
+        </button>
+        <button
+          class="demo-button demo-button-spaced"
+          @click="table.resetColumnOrder()"
+        >
+          Reset Column Order
+        </button>
+        <button
+          class="demo-button demo-button-spaced"
+          @click="table.resetColumnPinning()"
+        >
+          Reset Pinning
+        </button>
+        <button
+          class="demo-button demo-button-spaced"
+          @click="table.resetColumnVisibility()"
+        >
+          Reset Visibility
+        </button>
+      </div>
+      <div class="spacer-sm"></div>
+      <!--
+        Alpine re-renders from the table's version counter, which the selector in
+        main.ts gates. There is no equivalent of React's per-row Subscribe here.
+      -->
+      <div x-text="selectionSummary()"></div>
+      <div class="spacer-sm"></div>
+      <div tabindex="0" @keydown="onGridKeyDown($event)">
+        <table>
+          <thead>
+            <template
+              x-for="headerGroup in table.getHeaderGroups()"
+              :key="headerGroup.id"
+            >
+              <tr>
+                <template
+                  x-for="header in headerGroup.headers"
+                  :key="header.id"
+                >
+                  <th :colspan="header.colSpan">
+                    <template x-if="!header.isPlaceholder">
+                      <div>
+                        <button
+                          type="button"
+                          class="header-button"
+                          :class="header.column.getCanSort() ? 'sortable-header' : ''"
+                          :disabled="!header.column.getCanSort()"
+                          @click="header.column.getToggleSortingHandler()?.($event)"
+                        >
+                          <span x-html="FlexRender({ header })"></span>
+                          <span x-text="sortIndicator(header)"></span>
+                        </button>
+                        <template x-if="header.column.getCanPin()">
+                          <div class="pin-actions">
+                            <template
+                              x-if="header.column.getIsPinned() !== 'start'"
+                            >
+                              <button
+                                class="pin-button"
+                                @click="header.column.pin('start')"
+                              >
+                                &lt;=
+                              </button>
+                            </template>
+                            <template x-if="header.column.getIsPinned()">
+                              <button
+                                class="pin-button"
+                                @click="header.column.pin(false)"
+                              >
+                                X
+                              </button>
+                            </template>
+                            <template
+                              x-if="header.column.getIsPinned() !== 'end'"
+                            >
+                              <button
+                                class="pin-button"
+                                @click="header.column.pin('end')"
+                              >
+                                =&gt;
+                              </button>
+                            </template>
+                          </div>
+                        </template>
+                      </div>
+                    </template>
+                  </th>
+                </template>
+              </tr>
+            </template>
+          </thead>
+          <tbody>
+            <template x-for="row in table.getRowModel().rows" :key="row.id">
+              <tr>
+                <template x-for="cell in row.getVisibleCells()" :key="cell.id">
+                  <td
+                    :class="cell.getCanSelect() ? cellClass(cell) : ''"
+                    :tabindex="cell.getCanSelect() ? cell.getTabIndex() : null"
+                    @mousedown="cell.getCanSelect() && onCellMouseDown(cell, $event)"
+                    @mouseenter="cell.getCanSelect() && onCellMouseEnter(cell, $event)"
+                  >
+                    <span x-html="FlexRender({ cell })"></span>
+                  </td>
+                </template>
+              </tr>
+            </template>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colspan="20">
+                Rows (<span
+                  x-text="table.getRowModel().rows.length.toLocaleString()"
+                ></span
+                >)
+              </td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="spacer-sm"></div>
+      <div>
+        <button class="demo-button demo-button-spaced" @click="copySelection()">
+          Copy Selection
+        </button>
+        <button
+          class="demo-button demo-button-spaced"
+          @click="table.selectAllCells()"
+        >
+          Select All Cells
+        </button>
+        <button
+          class="demo-button demo-button-spaced"
+          @click="table.resetCellSelection(true)"
+        >
+          Clear Selection
+        </button>
+      </div>
+      <hr />
+      <br />
+      <div>
+        <button class="demo-button demo-button-spaced" @click="logRangesData()">
+          Log table.getSelectedCellRangesData()
+        </button>
+      </div>
+      <div>
+        <label>State:</label>
+        <pre x-text="stringifiedState()"></pre>
+      </div>
+      <div>
+        <label for="paste-target">Paste Test:</label>
+        <!--
+          scratch area for pasting a copied selection back in, to eyeball the
+          tab-separated shape. It sits outside the grid element, so the table
+          hotkeys never intercept typing or Mod+V in here.
+        -->
+        <textarea
+          id="paste-target"
+          class="text-input"
+          rows="8"
+          placeholder="Copy a selection, then paste here to check the tab-separated output..."
+        ></textarea>
+      </div>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

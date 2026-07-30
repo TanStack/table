@@ -8,6 +8,7 @@ Want to skip to the implementation? Check out these Lit examples:
 
 - [Column Filters](../examples/filters)
 - [Faceted Filters](../examples/filters-faceted)
+- [Bucketed Faceted Filters](../examples/filters-faceted-bucketed)
 - [Fuzzy Search](../examples/filters-fuzzy)
 
 ### Column Filtering Setup

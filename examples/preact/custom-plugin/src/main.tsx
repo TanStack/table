@@ -324,8 +324,8 @@ function App() {
           | Go to page:
           <input
             type="number"
-            defaultValue={table.state.pagination.pageIndex + 1}
-            onChange={(e) => {
+            value={table.state.pagination.pageIndex + 1}
+            onInput={(e) => {
               const page = (e.target as HTMLInputElement).value
                 ? Number((e.target as HTMLInputElement).value) - 1
                 : 0
@@ -351,7 +351,9 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

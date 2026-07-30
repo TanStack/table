@@ -123,8 +123,8 @@ function setPage(event: Event) {
     </p>
     <div>
       <button @click="data = makeData(10_000)">Regenerate Data</button
-      ><button @click="data = makeData(200_000)">
-        Stress Test (200k rows)
+      ><button @click="data = makeData(1_000_000)">
+        Stress Test (1M rows)
       </button>
     </div>
     <div class="spacer-sm" />
@@ -248,6 +248,8 @@ function setPage(event: Event) {
       Showing {{ table.getRowModel().rows.length.toLocaleString() }} of
       {{ table.getRowCount().toLocaleString() }} Rows
     </div>
-    <pre>{{ JSON.stringify(table.atoms.pagination.get(), null, 2) }}</pre>
+    <pre data-testid="table-state">{{
+      JSON.stringify(table.store.get(), null, 2)
+    }}</pre>
   </div>
 </template>

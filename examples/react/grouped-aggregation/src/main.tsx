@@ -116,7 +116,7 @@ function App() {
 
   const [data, setData] = React.useState(() => makeData(10_000))
   const refreshData = () => setData(makeData(10_000))
-  const stressTest = () => setData(makeData(200_000))
+  const stressTest = () => setData(makeData(1_000_000))
 
   const table = useAppTable(
     {
@@ -139,7 +139,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div className="spacer-sm" />
       <table>
@@ -236,7 +236,7 @@ function App() {
       <div className="controls">
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(0)}
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
@@ -257,7 +257,7 @@ function App() {
         </button>
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
@@ -275,7 +275,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -298,7 +298,9 @@ function App() {
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div></div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

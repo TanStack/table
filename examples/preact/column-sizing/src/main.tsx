@@ -91,7 +91,7 @@ function App() {
               <input
                 type="number"
                 value={column.getSize()}
-                onChange={(e) => {
+                onInput={(e) => {
                   // Don't actually do this to resize columns. This is just for demonstration purposes.
                   // See the Column Resizing Example for how to do this with dedicated resizing APIs efficiently.
                   table.setColumnSizing({
@@ -265,7 +265,9 @@ function App() {
         </div>
       </div>
       <div className="spacer-md" />
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

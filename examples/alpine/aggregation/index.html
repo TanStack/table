@@ -14,7 +14,7 @@
       </p>
       <div class="button-row">
         <button @click="refreshData()">Regenerate Data</button>
-        <button @click="stressTest()">Stress Test (200k rows)</button>
+        <button @click="stressTest()">Stress Test (1M rows)</button>
       </div>
       <div class="spacer-sm"></div>
       <div class="controls">
@@ -167,7 +167,10 @@
         of
         <span x-text="table.getRowCount().toLocaleString()"></span> Rows
       </div>
-      <pre x-text="JSON.stringify(table.store.get(), null, 2)"></pre>
+      <pre
+        data-testid="table-state"
+        x-text="JSON.stringify(table.store.get(), null, 2)"
+      ></pre>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

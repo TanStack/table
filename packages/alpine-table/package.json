@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/alpine-table",
-  "version": "9.0.0-beta.53",
+  "version": "9.0.0-beta.63",
   "description": "Headless UI for building powerful tables & datagrids for Alpine.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -41,6 +41,8 @@
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
     "test:eslint": "eslint ./src",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "tsc",
     "test:build": "publint --strict",
     "build": "tsdown"
@@ -50,6 +52,7 @@
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
     "@types/alpinejs": "^3.13.11",
     "alpinejs": "^3.15.12"
   },

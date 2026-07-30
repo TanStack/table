@@ -46,11 +46,11 @@ export function flexRender<TProps extends object>(
   Comp: Renderable<TProps>,
   props: TProps,
 ): ReactNode | JSX.Element {
-  return !Comp ? null : isReactComponent<TProps>(Comp) ? (
-    <Comp {...props} />
-  ) : (
-    Comp
-  )
+  if (Comp === null || Comp === undefined) {
+    return null
+  }
+
+  return isReactComponent<TProps>(Comp) ? <Comp {...props} /> : Comp
 }
 
 /**

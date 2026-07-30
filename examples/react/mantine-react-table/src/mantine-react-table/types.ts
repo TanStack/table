@@ -75,7 +75,7 @@ import type {
 } from '@mantine/core'
 import type { DateInputProps } from '@mantine/dates'
 
-import type { MRT_AggregationFns } from './fns/aggregationFns'
+import type { MRT_RowAggregationFns } from './fns/aggregationFns'
 import type { MRT_FilterFns } from './fns/filterFns'
 import type { MRT_SortFns } from './fns/sortingFns'
 import type { MRT_Icons } from './icons'
@@ -472,10 +472,10 @@ export type MRT_ColumnDef<TData extends MRT_RowData, TValue = unknown> = {
   }) => ReactNode
   aggregationFn?:
     | Array<
-        | MRT_AggregationOption
-        | { aggregationFn: MRT_AggregationFn<TData>; id: string }
+        | MRT_RowAggregationOption
+        | { aggregationFn: MRT_RowAggregationFn<TData>; id: string }
       >
-    | MRT_AggregationFn<TData>
+    | MRT_RowAggregationFn<TData>
   Cell?: (props: {
     cell: MRT_Cell<TData, TValue>
     column: MRT_Column<TData, TValue>
@@ -810,11 +810,12 @@ export type MRT_Cell<TData extends MRT_RowData, TValue = unknown> = {
   row: MRT_Row<TData>
 } & Omit<Cell<StockFeatures, TData, TValue>, 'column' | 'row'>
 
-export type MRT_AggregationOption = keyof typeof MRT_AggregationFns & string
+export type MRT_RowAggregationOption = keyof typeof MRT_RowAggregationFns &
+  string
 
-export type MRT_AggregationFn<TData extends MRT_RowData> =
+export type MRT_RowAggregationFn<TData extends MRT_RowData> =
   | AggregationFnDef<StockFeatures, TData, any, any>
-  | MRT_AggregationOption
+  | MRT_RowAggregationOption
 
 export type MRT_SortingOption = LiteralUnion<keyof typeof MRT_SortFns & string>
 

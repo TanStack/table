@@ -648,8 +648,7 @@ export function row_getCanMultiSelect<
  *
  * The handler is a no-op when the row cannot be selected and reads
  * `event.target.checked`. Shift events select or deselect the inclusive range
- * from the most recent selectable row handled by this table. The event's
- * optional `persist()` method is called before it is read. Pass
+ * from the most recent selectable row handled by this table. Pass
  * `selectChildren: false` to limit changes to rows explicitly present in the
  * display-order interval.
  *
@@ -668,10 +667,8 @@ export function row_getToggleSelectedHandler<
     if (!canSelect) return
 
     const event = e as {
-      persist?: () => void
       target: { checked: boolean }
     }
-    event.persist?.()
 
     const table = row.table
     const checked = event.target.checked
@@ -796,6 +793,51 @@ const mutateRowIsSelected = <
   }
 }
 
+function selectRowsRecursively<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rows: Array<Row<TFeatures, TData>>,
+  rowSelection: RowSelectionState,
+  selectedFlatRows: Array<Row<TFeatures, TData>>,
+  selectedRowsById: Record<string, Row<TFeatures, TData>>,
+): Array<Row<TFeatures, TData>> {
+  const result: Array<Row<TFeatures, TData>> = []
+
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]!
+    const isSelected = isRowSelected(row, rowSelection)
+
+    if (isSelected) {
+      selectedFlatRows.push(row)
+      selectedRowsById[row.id] = row
+    }
+
+    if (row.subRows.length) {
+      // Always recurse — selected descendants of unselected parents must
+      // still be collected into flatRows/rowsById.
+      const newSubRows = selectRowsRecursively(
+        row.subRows,
+        rowSelection,
+        selectedFlatRows,
+        selectedRowsById,
+      )
+
+      if (isSelected) {
+        // Preserve prototype chain so methods like getValue() remain accessible
+        const cloned = Object.create(Object.getPrototypeOf(row))
+        copyInstancePropertiesWithoutMemos(cloned, row)
+        cloned.subRows = newSubRows
+        result.push(cloned)
+      }
+    } else if (isSelected) {
+      result.push(row)
+    }
+  }
+
+  return result
+}
+
 /**
  * Builds a row model containing rows selected by the current row selection state.
  *
@@ -817,42 +859,14 @@ export function selectRowsFn<
   const newSelectedFlatRows: Array<Row<TFeatures, TData>> = []
   const newSelectedRowsById = makeObjectMap<Row<TFeatures, TData>>()
   const rowSelection = table.atoms.rowSelection?.get() ?? {}
-  // Filters top level and nested rows.
-  const recurseRows = (
-    rows: Array<Row<TFeatures, TData>>,
-    depth = 0,
-  ): Array<Row<TFeatures, TData>> => {
-    const result: Array<Row<TFeatures, TData>> = []
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i]!
-      const isSelected = isRowSelected(row, rowSelection)
-
-      if (isSelected) {
-        newSelectedFlatRows.push(row)
-        newSelectedRowsById[row.id] = row
-      }
-
-      if (row.subRows.length) {
-        // Always recurse — selected descendants of unselected parents must
-        // still be collected into flatRows/rowsById.
-        const newSubRows = recurseRows(row.subRows, depth + 1)
-
-        if (isSelected) {
-          // Preserve prototype chain so methods like getValue() remain accessible
-          const cloned = Object.create(Object.getPrototypeOf(row))
-          copyInstancePropertiesWithoutMemos(cloned, row)
-          cloned.subRows = newSubRows
-          result.push(cloned)
-        }
-      } else if (isSelected) {
-        result.push(row)
-      }
-    }
-    return result
-  }
 
   return {
-    rows: recurseRows(rowModel.rows),
+    rows: selectRowsRecursively(
+      rowModel.rows,
+      rowSelection,
+      newSelectedFlatRows,
+      newSelectedRowsById,
+    ),
     flatRows: newSelectedFlatRows,
     rowsById: newSelectedRowsById,
   }

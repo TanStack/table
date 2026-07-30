@@ -116,7 +116,7 @@ function App() {
 
   const [data, setData] = useState(() => makeData(10_000))
   const refreshData = () => setData(() => makeData(10_000))
-  const stressTest = () => setData(() => makeData(200_000))
+  const stressTest = () => setData(() => makeData(1_000_000))
 
   const table = useAppTable(
     {
@@ -138,7 +138,7 @@ function App() {
     <div className="demo-root">
       <div>
         <button onClick={() => refreshData()}>Regenerate Data</button>
-        <button onClick={() => stressTest()}>Stress Test (200k rows)</button>
+        <button onClick={() => stressTest()}>Stress Test (1M rows)</button>
       </div>
       <div className="spacer-sm" />
       <table>
@@ -274,8 +274,8 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
-            onChange={(e) => {
+            value={table.state.pagination.pageIndex + 1}
+            onInput={(e) => {
               const page = (e.target as HTMLInputElement).value
                 ? Number((e.target as HTMLInputElement).value) - 1
                 : 0
@@ -299,7 +299,9 @@ function App() {
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div></div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

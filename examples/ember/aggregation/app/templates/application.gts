@@ -197,7 +197,7 @@ export default class PaginationTable extends Component {
   }
 
   stressTest = () => {
-    this.data = makeData(200_000)
+    this.data = makeData(1_000_000)
   }
 
   goToFirstPage = () => {
@@ -255,7 +255,7 @@ export default class PaginationTable extends Component {
         Regenerate Data
       </button>
       <button class='demo-button' {{on 'click' this.stressTest}}>
-        Stress Test (200k rows)
+        Stress Test (1M rows)
       </button>
     </div>
     <div class='spacer-sm'></div>
@@ -397,6 +397,6 @@ export default class PaginationTable extends Component {
       </select>
     </div>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

@@ -9,7 +9,7 @@ title: AppGroupColumnDef
 type AppGroupColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<GroupColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer" | "columns"> & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:142](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L142)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:141](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L141)
 
 Enhanced group column definition with pre-bound components.
 

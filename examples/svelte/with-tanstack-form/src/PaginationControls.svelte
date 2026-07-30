@@ -2,6 +2,7 @@
   import { useTableContext } from './table'
 
   const table = useTableContext()
+  const pagination = $derived(table.atoms.pagination.get())
 </script>
 
 <div class="spacer-sm"></div>
@@ -41,7 +42,7 @@
   <span class="inline-controls">
     <div>Page</div>
     <strong>
-      {(table.state.pagination.pageIndex + 1).toLocaleString()} of {table
+      {(pagination.pageIndex + 1).toLocaleString()} of {table
         .getPageCount()
         .toLocaleString()}
     </strong>
@@ -52,7 +53,7 @@
       type="number"
       min="1"
       max={table.getPageCount()}
-      value={table.state.pagination.pageIndex + 1}
+      value={pagination.pageIndex + 1}
       oninput={(event) => {
         const page = event.currentTarget.value
           ? Number(event.currentTarget.value) - 1
@@ -63,7 +64,7 @@
     />
   </span>
   <select
-    value={table.state.pagination.pageSize}
+    value={pagination.pageSize}
     onchange={(event) => {
       table.setPageSize(Number(event.currentTarget.value))
     }}

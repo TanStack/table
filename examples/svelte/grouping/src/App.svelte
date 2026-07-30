@@ -64,9 +64,9 @@
     }),
   ])
 
-  let data = $state(makeData(1_000))
-  const refreshData = () => { data = makeData(1_000) }
-  const stressTest = () => { data = makeData(200_000) }
+  let data = $state(makeData(10_000))
+  const refreshData = () => { data = makeData(10_000) }
+  const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createAppTable(
     {
@@ -83,14 +83,14 @@
       // manualGrouping: true, // pass rows that are already grouped, for example from a server
       debugTable: true,
     },
-    (state) => state,
   )
+  const pagination = $derived(table.atoms.pagination.get())
 </script>
 
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()}>Regenerate Data</button>
-    <button onclick={() => stressTest()}>Stress Test (200k rows)</button>
+    <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <div class="spacer-sm"></div>
   <table>
@@ -191,7 +191,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -201,7 +201,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e) => {
           const page = (e.target as HTMLInputElement).value
             ? Number((e.target as HTMLInputElement).value) - 1
@@ -212,7 +212,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e) => table.setPageSize(Number((e.target as HTMLSelectElement).value))}
     >
       {#each [10, 20, 30, 40, 50] as pageSize}
@@ -221,5 +221,5 @@
     </select>
   </div>
   <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

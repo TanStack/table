@@ -142,7 +142,7 @@ Alpine.data('table', () => {
       local.data = makeData(10_000)
     },
     stressTest() {
-      local.data = makeData(200_000)
+      local.data = makeData(1_000_000)
     },
   }
 })

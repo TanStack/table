@@ -8,6 +8,7 @@ Want to skip to the implementation? Check out these Alpine examples:
 
 - [Column Filters](../examples/filters)
 - [Faceted Filters](../examples/filters-faceted)
+- [Bucketed Faceted Filters](../examples/filters-faceted-bucketed)
 
 Read your reactive inputs such as `data` through a getter (for example backing them with `Alpine.reactive`) when creating the table, so the table sees updates.
 

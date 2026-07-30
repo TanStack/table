@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, expectTypeOf, it } from 'vitest'
 import { constructTable, createColumnHelper } from '../../../src'
 import { testFeatures } from '../../fixtures/features'
 
@@ -73,5 +73,59 @@ describe('createColumnHelper', () => {
     expect(row.getValue('firstName')).toBe('Tanner')
     expect(row.getValue('shouty')).toBe('LINSLEY')
     expect(row.getValue('actions')).toBeUndefined()
+  })
+
+  it('should resolve numeric accessor keys for tuple rows', () => {
+    type TupleRow = [string, number]
+    const tupleHelper = createColumnHelper<typeof features, TupleRow>()
+    const firstColumn = tupleHelper.accessor(0, {
+      cell: (info) => {
+        expectTypeOf(info.getValue()).toEqualTypeOf<string>()
+        return info.getValue()
+      },
+    })
+    const secondColumn = tupleHelper.accessor(1, {})
+    const table = constructTable<typeof features, TupleRow>({
+      features,
+      columns: tupleHelper.columns([firstColumn, secondColumn]),
+      data: [['Alice', 42]],
+    })
+    const row = table.getRowModel().rows[0]!
+
+    expect(table.getAllLeafColumns().map((column) => column.id)).toEqual([
+      '0',
+      '1',
+    ])
+    expect(row.getValue('0')).toBe('Alice')
+    expect(row.getValue('1')).toBe(42)
+  })
+
+  it('should preserve undefined for optional deep accessor keys', () => {
+    type DeepPerson = {
+      user: {
+        salary?: {
+          amount: number
+        }
+      }
+    }
+    const deepHelper = createColumnHelper<typeof features, DeepPerson>()
+    const column = deepHelper.accessor('user.salary.amount', {
+      cell: (info) => {
+        // `salary` is optional, so the resolved deep value can be `undefined`
+        expectTypeOf(info.getValue()).toEqualTypeOf<number | undefined>()
+        return info.getValue()
+      },
+    })
+    const table = constructTable<typeof features, DeepPerson>({
+      features,
+      columns: deepHelper.columns([column]),
+      data: [{ user: { salary: { amount: 42 } } }],
+    })
+    const row = table.getRowModel().rows[0]!
+
+    expect(table.getAllLeafColumns().map((c) => c.id)).toEqual([
+      'user_salary_amount',
+    ])
+    expect(row.getValue('user_salary_amount')).toBe(42)
   })
 })

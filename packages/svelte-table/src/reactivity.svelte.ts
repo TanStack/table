@@ -53,7 +53,9 @@ function createRuneWritableAtom<T>(initialValue: T): Atom<T> {
  *
  * Table state atoms are backed by TanStack Store atoms. The options store stays
  * framework-native because row-model APIs read `table.options` directly during
- * render. Readonly table atoms bridge Store dependency tracking into `$derived.by`.
+ * render. Readonly table atoms bridge Store dependency tracking into
+ * `$derived.by`, so their `.get()` methods participate in Svelte dependency
+ * tracking when called in templates, `$derived`, or `$effect`.
  */
 export function svelteReactivity(): TableReactivityBindings {
   return {
@@ -91,6 +93,9 @@ export function svelteReactivity(): TableReactivityBindings {
 
       return {
         get: () => {
+          // Both reads are load-bearing: the Store read preserves dependency
+          // tracking between table atoms, while touching `value` registers the
+          // current Svelte reactive scope with the rune-backed bridge.
           const currentValue = storeAtom.get()
           value
           return currentValue

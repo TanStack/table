@@ -11,6 +11,21 @@ import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Header_Header } from './coreHeadersFeature.types'
 
+function collectLeafHeaders<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue,
+>(
+  header: Header_Header<TFeatures, TData, TValue>,
+  leafHeaders: Array<Header<TFeatures, TData, TValue>>,
+): void {
+  for (let i = 0; i < header.subHeaders.length; i++) {
+    collectLeafHeaders(header.subHeaders[i]!, leafHeaders)
+  }
+
+  leafHeaders.push(header as Header<TFeatures, TData, TValue>)
+}
+
 /**
  * Walks a header tree and collects all descendant leaf headers.
  *
@@ -29,14 +44,7 @@ export function header_getLeafHeaders<
 >(header: Header<TFeatures, TData, TValue>) {
   const leafHeaders: Array<Header<TFeatures, TData, TValue>> = []
 
-  const recurseHeader = (h: Header_Header<TFeatures, TData, TValue>) => {
-    if (h.subHeaders.length) {
-      h.subHeaders.map(recurseHeader)
-    }
-    leafHeaders.push(h as Header<TFeatures, TData, TValue>)
-  }
-
-  recurseHeader(header)
+  collectLeafHeaders(header, leafHeaders)
 
   return leafHeaders
 }

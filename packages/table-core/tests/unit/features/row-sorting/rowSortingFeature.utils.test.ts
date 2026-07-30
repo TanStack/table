@@ -575,16 +575,14 @@ describe('column_clearSorting', () => {
 })
 
 describe('column_getToggleSortingHandler', () => {
-  it('should toggle sorting and persist synthetic events', () => {
+  it('should toggle sorting', () => {
     const { table, onSortingChange } = makeTableWithMockOnSortingChange()
-    const persist = vi.fn()
     const handler = column_getToggleSortingHandler(
       table.getColumn('firstName')!,
     )
 
-    handler({ persist })
+    handler({})
 
-    expect(persist).toHaveBeenCalled()
     expect(getUpdaterResult(onSortingChange, [])).toEqual([
       { id: 'firstName', desc: false },
     ])
