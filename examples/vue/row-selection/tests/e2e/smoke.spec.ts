@@ -73,11 +73,9 @@ function footerCheckbox(page: Page) {
 
 /** Anchored so the regex cannot also match an ancestor with extra text. */
 function selectionSummary(page: Page) {
-  return page
-    .locator('div')
-    .filter({
-      hasText: /^\s*[\d,]+\s+of\s+[\d,]+\s+Total\s+Rows\s+Selected\s*$/,
-    })
+  return page.locator('div').filter({
+    hasText: /^\s*[\d,]+\s+of\s+[\d,]+\s+Total\s+Rows\s+Selected\s*$/,
+  })
 }
 
 function pageRowsLabel(page: Page) {
