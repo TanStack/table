@@ -5,7 +5,7 @@ description: >
 metadata:
   type: sub-skill
   library: '@tanstack/table-core'
-  library_version: '9.0.0-beta.59'
+  library_version: '9.0.0-beta.61'
 requires: ['core']
 sources:
   - 'TanStack/table:docs/guide/row-models.md'
