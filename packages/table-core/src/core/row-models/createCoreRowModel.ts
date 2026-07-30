@@ -36,6 +36,55 @@ export function createCoreRowModel<
   }
 }
 
+function accessRows<TFeatures extends TableFeatures, TData extends RowData>(
+  table: Table_Internal<TFeatures, TData>,
+  rowModel: RowModel<TFeatures, TData>,
+  originalRows: ReadonlyArray<TData>,
+  depth = 0,
+  parentRow?: Row<TFeatures, TData>,
+): Array<Row<TFeatures, TData>> {
+  const rows = [] as Array<Row<TFeatures, TData>>
+
+  for (let i = 0; i < originalRows.length; i++) {
+    const originalRow = originalRows[i]!
+    // Make the row
+    const row = constructRow(
+      table,
+      table.getRowId(originalRow, i, parentRow),
+      originalRow,
+      i,
+      depth,
+      undefined,
+      parentRow?.id,
+    )
+
+    // Keep track of every row in a flat array
+    rowModel.flatRows.push(row)
+    // Also keep track of every row by its ID
+    rowModel.rowsById[row.id] = row
+    // Push table row into parent
+    rows.push(row)
+
+    // Get the original subrows
+    if (table.options.getSubRows) {
+      row.originalSubRows = table.options.getSubRows(originalRow, i)
+
+      // Then recursively access them
+      if (row.originalSubRows?.length) {
+        row.subRows = accessRows(
+          table,
+          rowModel,
+          row.originalSubRows,
+          depth + 1,
+          row,
+        )
+      }
+    }
+  }
+
+  return rows
+}
+
 function _createCoreRowModel<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -53,48 +102,7 @@ function _createCoreRowModel<
     rowsById: makeObjectMap(),
   }
 
-  const accessRows = (
-    originalRows: ReadonlyArray<TData>,
-    depth = 0,
-    parentRow?: Row<TFeatures, TData>,
-  ): Array<Row<TFeatures, TData>> => {
-    const rows = [] as Array<Row<TFeatures, TData>>
-
-    for (let i = 0; i < originalRows.length; i++) {
-      const originalRow = originalRows[i]!
-      // Make the row
-      const row = constructRow(
-        table,
-        table.getRowId(originalRow, i, parentRow),
-        originalRow,
-        i,
-        depth,
-        undefined,
-        parentRow?.id,
-      )
-
-      // Keep track of every row in a flat array
-      rowModel.flatRows.push(row)
-      // Also keep track of every row by its ID
-      rowModel.rowsById[row.id] = row
-      // Push table row into parent
-      rows.push(row)
-
-      // Get the original subrows
-      if (table.options.getSubRows) {
-        row.originalSubRows = table.options.getSubRows(originalRow, i)
-
-        // Then recursively access them
-        if (row.originalSubRows?.length) {
-          row.subRows = accessRows(row.originalSubRows, depth + 1, row)
-        }
-      }
-    }
-
-    return rows
-  }
-
-  rowModel.rows = accessRows(data)
+  rowModel.rows = accessRows(table, rowModel, data)
 
   return rowModel
 }
