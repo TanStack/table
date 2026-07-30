@@ -82,10 +82,6 @@ function pageRowsLabel(page: Page) {
   return page.locator('tfoot td').nth(1)
 }
 
-function globalFilterInput(page: Page) {
-  return page.getByPlaceholder('Search all columns...')
-}
-
 function isIndeterminate(checkbox: Locator) {
   return checkbox.evaluate((el) => (el as HTMLInputElement).indeterminate)
 }
@@ -109,13 +105,6 @@ async function expectSelectionCount(page: Page, expected: number) {
   await expect(selectionSummary(page)).toHaveText(
     `${expected.toLocaleString('en-US')} of ${TOTAL_ROWS} Total Rows Selected`,
   )
-}
-
-async function readGlobalFilter(page: Page) {
-  const text = await page.getByTestId('table-state').textContent()
-  const state = JSON.parse(text ?? '{}') as { globalFilter?: string }
-
-  return state.globalFilter ?? ''
 }
 
 async function getFirstBodyRowText(page: Page) {
