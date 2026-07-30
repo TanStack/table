@@ -9,7 +9,7 @@ title: CreateTableHookOptions
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:251](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L251)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:250](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L250)
 
 Options for creating a table hook with pre-bound components and default table options.
 Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initialState'.

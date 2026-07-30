@@ -53,7 +53,6 @@
       },
       debugTable: true,
     },
-    (state) => state,
   )
 </script>
 

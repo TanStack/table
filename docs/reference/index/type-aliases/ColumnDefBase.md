@@ -9,7 +9,7 @@ title: ColumnDefBase
 type ColumnDefBase<TFeatures, TData, TValue> = ColumnDefBase_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, ColumnDef_FeatureMap<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [types/ColumnDef.ts:147](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L147)
+Defined in: [types/ColumnDef.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L149)
 
 ## Type Parameters
 

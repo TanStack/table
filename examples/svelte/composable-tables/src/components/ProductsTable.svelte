@@ -67,18 +67,9 @@
     enableRowSelection: true,
   })
 
-  // Reactive derived values from table state
-  let sorting = $derived(table.state.sorting)
-  let columnFilters = $derived(table.state.columnFilters)
-
-  // IMPORTANT: Derive rows from table state so Svelte tracks the dependency.
-  // We must read a $state value that changes on every table update.
-  // JSON.stringify forces a deep read, ensuring Svelte sees the dependency.
-  const rows = $derived.by(() => {
-    data
-    JSON.stringify(table.state)
-    return table.getRowModel().rows
-  })
+  const sorting = $derived(table.atoms.sorting.get())
+  const columnFilters = $derived(table.atoms.columnFilters.get())
+  const rows = $derived(table.getRowModel().rows)
 </script>
 
 <table.AppTable>

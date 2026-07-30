@@ -277,7 +277,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={(event) => {
               const page = event.target.value
                 ? Number(event.target.value) - 1
@@ -302,7 +302,9 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

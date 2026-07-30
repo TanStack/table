@@ -57,6 +57,46 @@ describe('table_getAllColumns', () => {
     expect(allColumns[0]!.columns[0]!.parent?.id).toBe('group')
     expect(allColumns[0]!.columns[0]!.depth).toBe(1)
   })
+
+  it('should preserve ordering, parents, depths, and leaf children across three levels', () => {
+    const deepColumns: Array<ColumnDef<typeof features, Item, any>> = [
+      {
+        id: 'outer',
+        columns: [
+          {
+            id: 'inner',
+            columns: [
+              { accessorKey: 'a', id: 'a' },
+              { accessorKey: 'b', id: 'b' },
+            ],
+          },
+          { accessorKey: 'c', id: 'c' },
+        ],
+      },
+    ]
+    const table = constructTable<typeof features, Item>({
+      features,
+      columns: deepColumns,
+      data,
+    })
+
+    const [outer] = table_getAllColumns(table)
+    const [inner, c] = outer!.columns
+    const [a, b] = inner!.columns
+
+    expect(outer!.columns.map((column) => column.id)).toEqual(['inner', 'c'])
+    expect(inner!.columns.map((column) => column.id)).toEqual(['a', 'b'])
+    expect([outer!.depth, inner!.depth, a!.depth, b!.depth, c!.depth]).toEqual([
+      0, 1, 2, 2, 1,
+    ])
+    expect(inner!.parent).toBe(outer)
+    expect(c!.parent).toBe(outer)
+    expect(a!.parent).toBe(inner)
+    expect(b!.parent).toBe(inner)
+    expect(a!.columns).toEqual([])
+    expect(b!.columns).toEqual([])
+    expect(c!.columns).toEqual([])
+  })
 })
 
 describe('column_getFlatColumns', () => {

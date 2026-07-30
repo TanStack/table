@@ -32,7 +32,7 @@ Defined in: [types/RowModelFns.ts:14](https://github.com/TanStack/table/blob/mai
 ### rowAggregationFeature
 
 ```ts
-rowAggregationFeature: RowModelFns_Aggregation<TFeatures, TData>;
+rowAggregationFeature: RowModelFns_RowAggregation<TFeatures, TData>;
 ```
 
 Defined in: [types/RowModelFns.ts:13](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/RowModelFns.ts#L13)

@@ -112,7 +112,7 @@ Defined in: [types/Column.ts:37](https://github.com/TanStack/table/blob/main/pac
 ### rowAggregationFeature
 
 ```ts
-rowAggregationFeature: Column_Aggregation<TFeatures, TData>;
+rowAggregationFeature: Column_RowAggregation<TFeatures, TData>;
 ```
 
 Defined in: [types/Column.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Column.ts#L28)

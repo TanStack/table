@@ -5,9 +5,19 @@ title: StockFeatures
 
 # Interface: StockFeatures
 
-Defined in: [features/stockFeatures.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L17)
+Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
 
 ## Properties
+
+### cellSelectionFeature
+
+```ts
+cellSelectionFeature: TableFeature;
+```
+
+Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L19)
+
+***
 
 ### columnFacetingFeature
 
@@ -15,7 +25,7 @@ Defined in: [features/stockFeatures.ts:17](https://github.com/TanStack/table/blo
 columnFacetingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L19)
+Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
 
 ***
 
@@ -25,7 +35,7 @@ Defined in: [features/stockFeatures.ts:19](https://github.com/TanStack/table/blo
 columnFilteringFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L20)
+Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
 
 ***
 
@@ -35,7 +45,7 @@ Defined in: [features/stockFeatures.ts:20](https://github.com/TanStack/table/blo
 columnGroupingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L21)
+Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
 
 ***
 
@@ -45,7 +55,7 @@ Defined in: [features/stockFeatures.ts:21](https://github.com/TanStack/table/blo
 columnOrderingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L22)
+Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
 
 ***
 
@@ -55,7 +65,7 @@ Defined in: [features/stockFeatures.ts:22](https://github.com/TanStack/table/blo
 columnPinningFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L23)
+Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
 
 ***
 
@@ -65,7 +75,7 @@ Defined in: [features/stockFeatures.ts:23](https://github.com/TanStack/table/blo
 columnResizingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L24)
+Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
 
 ***
 
@@ -75,7 +85,7 @@ Defined in: [features/stockFeatures.ts:24](https://github.com/TanStack/table/blo
 columnSizingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L25)
+Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
 
 ***
 
@@ -85,7 +95,7 @@ Defined in: [features/stockFeatures.ts:25](https://github.com/TanStack/table/blo
 columnVisibilityFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L26)
+Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
 
 ***
 
@@ -95,7 +105,7 @@ Defined in: [features/stockFeatures.ts:26](https://github.com/TanStack/table/blo
 globalFilteringFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L27)
+Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
 
 ***
 
@@ -105,7 +115,7 @@ Defined in: [features/stockFeatures.ts:27](https://github.com/TanStack/table/blo
 rowAggregationFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L18)
+Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
 
 ***
 
@@ -115,7 +125,7 @@ Defined in: [features/stockFeatures.ts:18](https://github.com/TanStack/table/blo
 rowExpandingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L28)
+Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)
 
 ***
 
@@ -125,7 +135,7 @@ Defined in: [features/stockFeatures.ts:28](https://github.com/TanStack/table/blo
 rowPaginationFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L29)
+Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L31)
 
 ***
 
@@ -135,7 +145,7 @@ Defined in: [features/stockFeatures.ts:29](https://github.com/TanStack/table/blo
 rowPinningFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L30)
+Defined in: [features/stockFeatures.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L32)
 
 ***
 
@@ -145,7 +155,7 @@ Defined in: [features/stockFeatures.ts:30](https://github.com/TanStack/table/blo
 rowSelectionFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L31)
+Defined in: [features/stockFeatures.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L33)
 
 ***
 
@@ -155,4 +165,4 @@ Defined in: [features/stockFeatures.ts:31](https://github.com/TanStack/table/blo
 rowSortingFeature: TableFeature;
 ```
 
-Defined in: [features/stockFeatures.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L32)
+Defined in: [features/stockFeatures.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/stockFeatures.ts#L34)

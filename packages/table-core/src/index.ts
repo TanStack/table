@@ -69,6 +69,10 @@ export * from './features/row-aggregation/rowAggregationFeature'
 export * from './features/row-aggregation/rowAggregationFeature.types'
 export * from './features/row-aggregation/aggregationFns'
 
+// cellSelectionFeature
+export * from './features/cell-selection/cellSelectionFeature'
+export * from './features/cell-selection/cellSelectionFeature.types'
+
 // columnFacetingFeature
 export * from './features/column-faceting/columnFacetingFeature'
 export * from './features/column-faceting/columnFacetingFeature.types'

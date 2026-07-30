@@ -63,5 +63,11 @@ export function constructHeader<
   header.rowSpan = 0
   header.subHeaders = []
 
+  // Initialize instance-specific data for features that need it
+  const initFns = table._headerInstanceInitFns
+  for (let i = 0; i < initFns.length; i++) {
+    initFns[i]!(header as Header<TFeatures, TData, TValue>)
+  }
+
   return header as Header<TFeatures, TData, TValue>
 }

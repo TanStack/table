@@ -47,9 +47,18 @@ export function column_getAutoFilterFn<
   const filterFns: Record<string, FilterFn<TFeatures, TData>> | undefined =
     column.table._rowModelFns.filterFns
 
-  const firstRow = column.table.getCoreRowModel().flatRows[0]
+  const rows = column.table.getCoreRowModel().flatRows
+  let value: unknown
 
-  const value = firstRow ? firstRow.getValue(column.id) : undefined
+  // Nullable columns should be inferred from their first available value,
+  // rather than changing filter behavior based on which row happens to lead.
+  for (let i = 0; i < rows.length; i++) {
+    const rowValue = rows[i]!.getValue(column.id)
+    if (rowValue !== null && rowValue !== undefined) {
+      value = rowValue
+      break
+    }
+  }
 
   let filterFnName: string
 

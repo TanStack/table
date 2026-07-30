@@ -1,4 +1,3 @@
-import {} from '../../utils'
 import type { Table_Internal } from '../../types/Table'
 import type { CellData, RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -118,9 +117,9 @@ export function constructColumn<
   column.parent = parent
 
   // Initialize instance-specific data for features that need it
-  const features = Object.values(table._features)
-  for (let i = 0; i < features.length; i++) {
-    features[i]!.initColumnInstanceData?.(column)
+  const initFns = table._columnInstanceInitFns
+  for (let i = 0; i < initFns.length; i++) {
+    initFns[i]!(column as Column<TFeatures, TData, TValue>)
   }
 
   return column as Column<TFeatures, TData, TValue>

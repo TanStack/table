@@ -153,6 +153,6 @@ export default class SubComponentsTable extends Component {
       </tbody>
     </table>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

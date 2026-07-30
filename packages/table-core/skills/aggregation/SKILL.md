@@ -6,7 +6,7 @@ metadata:
   {
     type: sub-skill,
     library: '@tanstack/table-core',
-    library_version: '9.0.0-beta.55',
+    library_version: '9.0.0-beta.63',
   }
 requires: ['core', 'table-features']
 sources:
@@ -137,5 +137,5 @@ grouped results sent by the worker must be structured-cloneable.
 ## API Discovery
 
 Inspect `node_modules/@tanstack/table-core/dist/features/row-aggregation/` and the
-Aggregation Guide. Use `Column_Aggregation`, `AggregationFnDef`,
+Aggregation Guide. Use `Column_RowAggregation`, `AggregationFnDef`,
 `AggregationContext`, and `AggregationResult` for the typed public surface.

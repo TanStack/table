@@ -1,9 +1,28 @@
-import { expect, test } from '@playwright/test'
-import type { Locator, Page } from '@playwright/test'
 import path from 'node:path'
+import { expect, test } from '@playwright/test'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
+import type { Page } from '@playwright/test'
 
 const exampleDir = path.resolve()
+
+const LEAF_COUNT = 6
+
+/** The three tables render the start pinned, unpinned and end pinned columns. */
+const START_TABLE = 0
+const CENTER_TABLE = 1
+const END_TABLE = 2
+
+let server: Awaited<ReturnType<typeof startExampleServer>> | undefined
+
+test.beforeAll(async () => {
+  // One server for the whole file. A cold Vite start costs more than a test.
+  test.setTimeout(180_000)
+  server = await startExampleServer(exampleDir)
+})
+
+test.afterAll(async () => {
+  await server?.close()
+})
 
 function collectPageErrors(page: Page) {
   const errors: Array<string> = []
@@ -22,7 +41,8 @@ function collectPageErrors(page: Page) {
 }
 
 async function openExample(page: Page) {
-  const server = await startExampleServer(exampleDir)
+  if (!server) throw new Error('Example server failed to start')
+
   const errors = collectPageErrors(page)
 
   await page.route(
@@ -36,69 +56,164 @@ async function openExample(page: Page) {
 
   await page.goto(server.url)
 
-  return { errors, server }
+  return errors
 }
 
-function getTable(page: Page) {
-  return page
-    .locator('table:visible, .divTable:visible')
-    .filter({ has: page.locator('thead th, .thead .th') })
-    .filter({ has: page.locator('tbody tr, .tbody .tr') })
-    .first()
+function tableAt(page: Page, index: number) {
+  return page.locator('table.outlined-table').nth(index)
 }
 
-function getHeaderCells(table: Locator) {
-  return table.locator('thead th, .thead .th')
+/** Header rows run group to leaf, so the leaf row holds the data columns. */
+function leafHeaderCells(page: Page, tableIndex: number) {
+  return tableAt(page, tableIndex).locator('thead tr').last().locator('th')
 }
 
-function getBodyRows(table: Locator) {
-  return table.locator('tbody tr, .tbody .tr')
+function leafHeader(page: Page, tableIndex: number, name: string) {
+  return leafHeaderCells(page, tableIndex).filter({ hasText: name })
 }
 
-async function getFirstBodyRowData(table: Locator) {
-  const row = getBodyRows(table).first()
-  const firstInput = row
-    .locator('input:not([type="checkbox"]):not([type="radio"])')
-    .first()
+/** An unpinned header offers `<=` and `=>`; a pinned one swaps in `X`. */
+function pinButton(
+  page: Page,
+  tableIndex: number,
+  name: string,
+  label: '<=' | 'X' | '=>',
+) {
+  return leafHeader(page, tableIndex, name).getByRole('button', {
+    name: label,
+    exact: true,
+  })
+}
 
-  if ((await firstInput.count()) > 0 && (await firstInput.isVisible())) {
-    return firstInput.inputValue()
+/** Row data is random faker output, so `table.state` is the stable oracle. */
+async function readColumnPinning(page: Page) {
+  const text = await page.getByTestId('table-state').textContent()
+  const state = JSON.parse(text ?? '{}') as {
+    columnPinning?: { start?: Array<string>; end?: Array<string> }
   }
 
-  const text = await row.textContent()
+  return {
+    start: state.columnPinning?.start ?? [],
+    end: state.columnPinning?.end ?? [],
+  }
+}
+
+async function leafCount(page: Page, tableIndex: number) {
+  return leafHeaderCells(page, tableIndex).count()
+}
+
+async function getFirstBodyRowText(page: Page) {
+  const text = await tableAt(page, CENTER_TABLE)
+    .locator('tbody tr')
+    .first()
+    .textContent()
   return text?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
 test('renders the table without crashing', async ({ page }) => {
-  const { errors, server } = await openExample(page)
+  const errors = await openExample(page)
 
-  try {
-    const table = getTable(page)
-    const bodyRows = getBodyRows(table)
+  // One table per pinning region, even when two of them are empty.
+  await expect(page.locator('table.outlined-table')).toHaveCount(3)
+  expect(await readColumnPinning(page)).toEqual({ start: [], end: [] })
+  // Nothing is pinned, so every column lives in the centre table.
+  expect(await leafCount(page, START_TABLE)).toBe(0)
+  expect(await leafCount(page, CENTER_TABLE)).toBe(LEAF_COUNT)
+  expect(await leafCount(page, END_TABLE)).toBe(0)
 
-    await expect(table).toBeVisible()
-    await expect(getHeaderCells(table).first()).toBeVisible()
-    await expect(bodyRows.first()).toBeVisible()
+  expect(errors).toEqual([])
+})
 
-    const regenerateButton = page
-      .getByRole('button', { name: /^Regenerate Data$/i })
-      .first()
+test('regenerates table data', async ({ page }) => {
+  const errors = await openExample(page)
+  const regenerateButton = page.getByRole('button', {
+    name: /^Regenerate Data$/i,
+  })
 
-    if ((await regenerateButton.count()) > 0) {
-      await expect(regenerateButton).toBeVisible()
+  await expect(
+    tableAt(page, CENTER_TABLE).locator('tbody tr').first(),
+  ).toBeVisible()
 
-      const firstRowBefore = await getFirstBodyRowData(table)
+  const firstRowBefore = await getFirstBodyRowText(page)
 
-      await regenerateButton.click()
+  await regenerateButton.click()
 
-      await expect
-        .poll(() => getFirstBodyRowData(table))
-        .not.toBe(firstRowBefore)
-      await expect(bodyRows.first()).toBeVisible()
-    }
+  await expect.poll(() => getFirstBodyRowText(page)).not.toBe(firstRowBefore)
 
-    expect(errors).toEqual([])
-  } finally {
-    await server.close()
-  }
+  expect(errors).toEqual([])
+})
+
+test('moves a column into the start table when pinned', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await pinButton(page, CENTER_TABLE, 'Visits', '<=').click()
+
+  await expect
+    .poll(async () => (await readColumnPinning(page)).start)
+    .toEqual(['visits'])
+  // The column leaves the centre table and appears in the start table, so the
+  // split is driven by pinning state rather than by a separate column list.
+  await expect.poll(() => leafCount(page, START_TABLE)).toBe(1)
+  expect(await leafCount(page, CENTER_TABLE)).toBe(LEAF_COUNT - 1)
+  await expect(leafHeaderCells(page, START_TABLE)).toContainText(['Visits'])
+  await expect(leafHeaderCells(page, CENTER_TABLE)).not.toContainText([
+    'Visits',
+  ])
+
+  expect(errors).toEqual([])
+})
+
+test('moves a column into the end table when pinned', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await pinButton(page, CENTER_TABLE, 'Age', '=>').click()
+
+  await expect
+    .poll(async () => (await readColumnPinning(page)).end)
+    .toEqual(['age'])
+  await expect.poll(() => leafCount(page, END_TABLE)).toBe(1)
+  expect(await leafCount(page, CENTER_TABLE)).toBe(LEAF_COUNT - 1)
+  await expect(leafHeaderCells(page, END_TABLE)).toContainText(['Age'])
+
+  expect(errors).toEqual([])
+})
+
+test('returns a column to the centre table when unpinned', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await pinButton(page, CENTER_TABLE, 'Visits', '<=').click()
+  await expect.poll(() => leafCount(page, START_TABLE)).toBe(1)
+
+  await pinButton(page, START_TABLE, 'Visits', 'X').click()
+
+  await expect
+    .poll(() => readColumnPinning(page))
+    .toEqual({ start: [], end: [] })
+  await expect.poll(() => leafCount(page, START_TABLE)).toBe(0)
+  expect(await leafCount(page, CENTER_TABLE)).toBe(LEAF_COUNT)
+
+  expect(errors).toEqual([])
+})
+
+test('keeps every table showing the same rows', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await pinButton(page, CENTER_TABLE, 'Visits', '<=').click()
+  await expect.poll(() => leafCount(page, START_TABLE)).toBe(1)
+  await pinButton(page, CENTER_TABLE, 'Age', '=>').click()
+  await expect.poll(() => leafCount(page, END_TABLE)).toBe(1)
+
+  // The three tables are one table split three ways, so their bodies must stay
+  // row for row aligned or the split would visibly tear.
+  const rowCounts = await Promise.all(
+    [START_TABLE, CENTER_TABLE, END_TABLE].map((index) =>
+      tableAt(page, index).locator('tbody tr').count(),
+    ),
+  )
+
+  expect(rowCounts[0]).toBeGreaterThan(0)
+  expect(rowCounts[1]).toBe(rowCounts[0])
+  expect(rowCounts[2]).toBe(rowCounts[0])
+
+  expect(errors).toEqual([])
 })

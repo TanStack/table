@@ -170,16 +170,24 @@ useTanStackTableDevtools(table)
             />
           </td>
           <td :colSpan="20">
-            Page Rows {{ table.getRowModel().rows.length.toLocaleString() }}
+            Page Rows ({{ table.getRowModel().rows.length.toLocaleString() }})
           </td>
         </tr>
       </tfoot>
     </table>
+    <div>
+      {{ Object.keys(table.atoms.rowSelection.get()).length.toLocaleString() }}
+      of {{ table.getRowModel().rows.length.toLocaleString() }} Total Rows
+      Selected
+    </div>
     <div class="spacer-md" />
     <button @click="toggleRowSelection" class="demo-button">
       {{ enableRowSelection ? 'Disable' : 'Enable' }} Row Selection
     </button>
   </div>
+  <pre data-testid="table-state">{{
+    JSON.stringify(table.store.get(), null, 2)
+  }}</pre>
 </template>
 
 <style>

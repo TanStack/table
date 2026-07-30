@@ -212,7 +212,9 @@ function App() {
         </select>
       </div>
       <div className="spacer-md" />
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

@@ -149,8 +149,8 @@ const renderSubComponent = ({ row }: { row: Row<typeof features, Person> }) => (
 )
 
 function App() {
-  const [data, setData] = createSignal(makeData(20))
-  const refreshData = () => setData(makeData(20))
+  const [data, setData] = createSignal(makeData(10))
+  const refreshData = () => setData(makeData(10))
   const stressTest = () => setData(makeData(1_000))
 
   return (

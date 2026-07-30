@@ -35,7 +35,7 @@ import type {
   Virtualizer,
   VirtualizerOptions,
 } from '@tanstack/react-virtual'
-import type { MRT_AggregationFns } from './fns/aggregationFns'
+import type { MRT_RowAggregationFns } from './fns/aggregationFns'
 import type { MRT_FilterFns } from './fns/filterFns'
 import type { MRT_SortFns } from './fns/sortingFns'
 import type { MRT_Icons } from './icons'
@@ -385,11 +385,12 @@ export type MRT_Cell<TData extends MRT_RowData, TValue = unknown> = Cell<
   TValue
 >
 
-export type MRT_AggregationOption = string & keyof typeof MRT_AggregationFns
+export type MRT_RowAggregationOption = string &
+  keyof typeof MRT_RowAggregationFns
 
-export type MRT_AggregationFn<TData extends MRT_RowData> =
+export type MRT_RowAggregationFn<TData extends MRT_RowData> =
   | AggregationFnDef<StockFeatures, TData, any, any>
-  | MRT_AggregationOption
+  | MRT_RowAggregationOption
 
 export type MRT_SortingOption = LiteralUnion<string & keyof typeof MRT_SortFns>
 

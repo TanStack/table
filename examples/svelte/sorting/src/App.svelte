@@ -106,7 +106,6 @@
       // autoResetPageIndex: false, // with pagination, keep the current page when sorting changes; default true
       debugTable: true,
     },
-    (state) => state, // Select all state for reactivity
   )
 </script>
 
@@ -158,5 +157,5 @@
   </table>
   <div>{table.getRowModel().rows.length.toLocaleString()
   } Rows</div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

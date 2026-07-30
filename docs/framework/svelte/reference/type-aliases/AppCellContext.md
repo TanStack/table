@@ -9,7 +9,7 @@ title: AppCellContext
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:50](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L50)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:49](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L49)
 
 Enhanced CellContext with pre-bound cell components.
 The `cell` property includes the registered cellComponents.
@@ -40,7 +40,7 @@ The `cell` property includes the registered cellComponents.
 cell: Cell<TFeatures, TData, TValue> & TCellComponents & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:56](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L56)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:55](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L55)
 
 #### Type Declaration
 
@@ -58,7 +58,7 @@ FlexRender: typeof FlexRender;
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:58](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L58)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:57](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L57)
 
 ***
 
@@ -68,7 +68,7 @@ Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:58](https://git
 getValue: CellContext<TFeatures, TData, TValue>["getValue"];
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:59](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L59)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:58](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L58)
 
 ***
 
@@ -78,7 +78,7 @@ Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:59](https://git
 renderValue: CellContext<TFeatures, TData, TValue>["renderValue"];
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:60](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L60)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:59](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L59)
 
 ***
 
@@ -88,7 +88,7 @@ Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:60](https://git
 row: Row<TFeatures, TData>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:61](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L61)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:60](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L60)
 
 ***
 
@@ -98,4 +98,4 @@ Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:61](https://git
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:62](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L62)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:61](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L61)

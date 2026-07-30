@@ -88,6 +88,68 @@ describe('table_getHeaderGroups', () => {
       'c',
     ])
   })
+
+  it('should preserve nested spans and shrink them when a leaf is hidden', () => {
+    const deepColumns: Array<ColumnDef<typeof features, Item, any>> = [
+      {
+        id: 'outer',
+        columns: [
+          {
+            id: 'inner',
+            columns: [
+              { accessorKey: 'a', id: 'a' },
+              { accessorKey: 'b', id: 'b' },
+            ],
+          },
+          { accessorKey: 'c', id: 'c' },
+        ],
+      },
+    ]
+    const makeDeepTable = (hideB = false) =>
+      constructTable<typeof features, Item>({
+        features,
+        columns: deepColumns,
+        data,
+        initialState: hideB ? { columnVisibility: { b: false } } : undefined,
+      })
+
+    const headerGroups = table_getHeaderGroups(makeDeepTable())
+    const outer = headerGroups[0]!.headers.find(
+      (header) => header.column.id === 'outer',
+    )!
+    const inner = headerGroups[1]!.headers.find(
+      (header) => header.column.id === 'inner',
+    )!
+
+    expect(headerGroups).toHaveLength(3)
+    expect(outer.colSpan).toBe(3)
+    expect(inner.colSpan).toBe(2)
+    expect(
+      headerGroups[2]!.headers.map((header) => [
+        header.column.id,
+        header.colSpan,
+        header.rowSpan,
+      ]),
+    ).toEqual([
+      ['a', 1, 0],
+      ['b', 1, 0],
+      ['c', 1, 0],
+    ])
+
+    const hiddenHeaderGroups = table_getHeaderGroups(makeDeepTable(true))
+    const hiddenOuter = hiddenHeaderGroups[0]!.headers.find(
+      (header) => header.column.id === 'outer',
+    )!
+    const hiddenInner = hiddenHeaderGroups[1]!.headers.find(
+      (header) => header.column.id === 'inner',
+    )!
+
+    expect(hiddenOuter.colSpan).toBe(2)
+    expect(hiddenInner.colSpan).toBe(1)
+    expect(
+      hiddenHeaderGroups[2]!.headers.map((header) => header.column.id),
+    ).toEqual(['a', 'c'])
+  })
 })
 
 describe('header_getLeafHeaders', () => {
@@ -113,6 +175,42 @@ describe('header_getLeafHeaders', () => {
     )!
 
     expect(header_getLeafHeaders(leafHeader)).toEqual([leafHeader])
+  })
+
+  it('should preserve descendant-first identity across three levels', () => {
+    const deepColumns: Array<ColumnDef<typeof features, Item, any>> = [
+      {
+        id: 'outer',
+        columns: [
+          {
+            id: 'inner',
+            columns: [
+              { accessorKey: 'a', id: 'a' },
+              { accessorKey: 'b', id: 'b' },
+            ],
+          },
+        ],
+      },
+    ]
+    const table = constructTable<typeof features, Item>({
+      features,
+      columns: deepColumns,
+      data,
+    })
+    const headerGroups = table_getHeaderGroups(table)
+    const outer = headerGroups[0]!.headers[0]!
+    const inner = headerGroups[1]!.headers[0]!
+    const [a, b] = headerGroups[2]!.headers
+
+    const leafHeaders = header_getLeafHeaders(outer)
+
+    expect(leafHeaders.map((header) => header.column.id)).toEqual([
+      'a',
+      'b',
+      'inner',
+      'outer',
+    ])
+    expect(leafHeaders).toEqual([a, b, inner, outer])
   })
 })
 

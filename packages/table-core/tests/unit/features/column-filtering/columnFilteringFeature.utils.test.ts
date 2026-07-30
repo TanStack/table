@@ -4,6 +4,7 @@ import {
   constructTable,
   filterFn_arrIncludes,
   filterFn_equals,
+  filterFn_includesString,
   filterFns,
 } from '../../../../src'
 import {
@@ -63,6 +64,19 @@ describe('column_getAutoFilterFn', () => {
     const column = table.getColumn('details')!
 
     expect(column_getAutoFilterFn(column)).toBe(filterFn_equals)
+  })
+
+  it('infers the filter from the first non-null column value', () => {
+    type NullableSample = { name: string | null }
+    const table = constructTable({
+      features,
+      columns: [{ accessorKey: 'name', id: 'name' }],
+      data: [{ name: null }, { name: 'hello' }] satisfies Array<NullableSample>,
+    })
+
+    expect(column_getAutoFilterFn(table.getColumn('name')!)).toBe(
+      filterFn_includesString,
+    )
   })
 })
 

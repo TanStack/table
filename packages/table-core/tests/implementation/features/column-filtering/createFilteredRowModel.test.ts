@@ -80,6 +80,55 @@ const rowNames = (rows: Array<{ original: { name: string } }>) =>
   rows.map((row) => row.original.name)
 
 describe('createFilteredRowModel', () => {
+  it('allows a filter function to inspect structural parent rows', () => {
+    const parentAwareFilter: FilterFn<typeof features, NestedRow> = (
+      row,
+      columnId,
+      filterValue,
+    ) => {
+      const parent = row.getParentRow()
+      return [row, parent]
+        .filter((candidate) => candidate !== undefined)
+        .some((candidate) =>
+          String(candidate.getValue(columnId))
+            .toLowerCase()
+            .includes(String(filterValue).toLowerCase()),
+        )
+    }
+    const table = constructTable<typeof features, NestedRow>({
+      features,
+      columns: [
+        {
+          accessorKey: 'name',
+          id: 'name',
+          filterFn: parentAwareFilter,
+        },
+      ],
+      data: [
+        { name: 'parent', subRows: [{ name: 'child' }] },
+        { name: 'other', subRows: [{ name: 'nested' }] },
+      ],
+      getSubRows: (row) => row.subRows,
+      initialState: {
+        columnFilters: [{ id: 'name', value: 'parent' }],
+      },
+    })
+
+    expect(() => table.getFilteredRowModel()).not.toThrow()
+    expect(rowNames(table.getFilteredRowModel().flatRows).sort()).toEqual([
+      'child',
+      'parent',
+    ])
+
+    table.setColumnFilters([{ id: 'name', value: 'other' }])
+
+    expect(() => table.getFilteredRowModel()).not.toThrow()
+    expect(rowNames(table.getFilteredRowModel().flatRows).sort()).toEqual([
+      'nested',
+      'other',
+    ])
+  })
+
   it('should assign display indexes in filtered row order', () => {
     const table = constructTable<typeof features, TestRow>({
       features,
@@ -542,6 +591,22 @@ describe('createFilteredRowModel', () => {
 
       expect(rowNames(table.getFilteredRowModel().rows)).toEqual(['status 0'])
     })
+  })
+
+  it('should auto-filter a nullable string column when the first value is null', () => {
+    type NullableTestRow = { name: string | null }
+    const table = constructTable<typeof features, NullableTestRow>({
+      features,
+      columns: [{ accessorKey: 'name', id: 'name' }],
+      data: [{ name: null }, { name: 'hello' }, { name: 'welcome' }],
+      initialState: {
+        columnFilters: [{ id: 'name', value: 'ell' }],
+      },
+    })
+
+    expect(
+      table.getFilteredRowModel().rows.map((row) => row.original.name),
+    ).toEqual(['hello'])
   })
 
   describe('unresolvable global filter fn', () => {

@@ -113,8 +113,8 @@
       // manualGrouping: true, // pass rows that are already grouped and aggregated, for example from a server
       debugTable: true,
     },
-    (state) => state,
   )
+  const pagination = $derived(table.atoms.pagination.get())
 </script>
 
 <div class="demo-root">
@@ -241,7 +241,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -251,7 +251,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e) => {
           const page = (e.target as HTMLInputElement).value
             ? Number((e.target as HTMLInputElement).value) - 1
@@ -262,7 +262,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e) => table.setPageSize(Number((e.target as HTMLSelectElement).value))}
     >
       {#each [10, 20, 30, 40, 50] as pageSize}
@@ -271,5 +271,5 @@
     </select>
   </div>
   <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

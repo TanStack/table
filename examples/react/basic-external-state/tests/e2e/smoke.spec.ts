@@ -84,3 +84,40 @@ test('regenerates table data', async ({ page }) => {
     await server.close()
   }
 })
+
+test('updates controlled pagination without render-phase errors', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = page.locator('table').first()
+    const nextPageButton = page.getByRole('button', {
+      name: '>',
+      exact: true,
+    })
+    const pageStatus = page.getByText(/^Page$/).locator('..')
+
+    await expect(table.locator('tbody tr').first()).toBeVisible()
+    await expect(nextPageButton).toBeEnabled()
+    await expect(pageStatus).toContainText('1 of 100')
+
+    const firstPageRow = await getFirstBodyRowText(table)
+
+    await nextPageButton.click()
+
+    await expect(pageStatus).toContainText('2 of 100')
+    await expect.poll(() => getFirstBodyRowText(table)).not.toBe(firstPageRow)
+    expect(errors.join('\n')).not.toContain('Cannot update a component')
+
+    const secondPageRow = await getFirstBodyRowText(table)
+
+    await nextPageButton.click()
+
+    await expect(pageStatus).toContainText('3 of 100')
+    await expect.poll(() => getFirstBodyRowText(table)).not.toBe(secondPageRow)
+    expect(errors.join('\n')).not.toContain('Cannot update a component')
+  } finally {
+    await server.close()
+  }
+})
