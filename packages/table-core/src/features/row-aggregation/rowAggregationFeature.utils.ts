@@ -59,6 +59,54 @@ function resolveMaxAggregationDepth(maxDepth: number | undefined) {
     : Math.max(0, Math.floor(maxDepth))
 }
 
+function collectNormalizedAggregationRow<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  depth: number,
+  maxDepth: number,
+  seen: Set<string>,
+  result: Array<Row<TFeatures, TData>>,
+): void {
+  if (row.subRows.length && depth < maxDepth) {
+    for (let i = 0; i < row.subRows.length; i++) {
+      collectNormalizedAggregationRow(
+        row.subRows[i]!,
+        depth + 1,
+        maxDepth,
+        seen,
+        result,
+      )
+    }
+    return
+  }
+
+  if (!seen.has(row.id)) {
+    seen.add(row.id)
+    result.push(row)
+  }
+}
+
+function collectUniqueAggregationRow<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  row: Row<TFeatures, TData>,
+  depth: number,
+  maxDepth: number,
+  result: Array<Row<TFeatures, TData>>,
+): void {
+  if (row.subRows.length && depth < maxDepth) {
+    for (let i = 0; i < row.subRows.length; i++) {
+      collectUniqueAggregationRow(row.subRows[i]!, depth + 1, maxDepth, result)
+    }
+    return
+  }
+
+  result.push(row)
+}
+
 /**
  * Selects unique rows at a maximum relative depth in encounter order.
  * Branches that end before the requested depth contribute their deepest row.
@@ -74,22 +122,14 @@ export function normalizeAggregationRows<
   const seen = new Set<string>()
   const normalizedMaxDepth = resolveMaxAggregationDepth(maxDepth)
 
-  const visit = (row: Row<TFeatures, TData>, depth: number) => {
-    if (row.subRows.length && depth < normalizedMaxDepth) {
-      for (let i = 0; i < row.subRows.length; i++) {
-        visit(row.subRows[i]!, depth + 1)
-      }
-      return
-    }
-
-    if (!seen.has(row.id)) {
-      seen.add(row.id)
-      result.push(row)
-    }
-  }
-
   for (let i = 0; i < rows.length; i++) {
-    visit(rows[i]!, 0)
+    collectNormalizedAggregationRow(
+      rows[i]!,
+      0,
+      normalizedMaxDepth,
+      seen,
+      result,
+    )
   }
 
   return result
@@ -124,18 +164,8 @@ export function normalizeUniqueAggregationRows<
 
   const result: Array<Row<TFeatures, TData>> = []
 
-  const visit = (row: Row<TFeatures, TData>, depth: number) => {
-    if (row.subRows.length && depth < normalizedMaxDepth) {
-      for (let i = 0; i < row.subRows.length; i++) {
-        visit(row.subRows[i]!, depth + 1)
-      }
-      return
-    }
-    result.push(row)
-  }
-
   for (let i = 0; i < rows.length; i++) {
-    visit(rows[i]!, 0)
+    collectUniqueAggregationRow(rows[i]!, 0, normalizedMaxDepth, result)
   }
 
   return result
