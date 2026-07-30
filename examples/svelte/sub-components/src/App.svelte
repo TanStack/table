@@ -59,8 +59,8 @@
     }),
   ])
 
-  let data = $state(makeData(20))
-  const refreshData = () => { data = makeData(20) }
+  let data = $state(makeData(10))
+  const refreshData = () => { data = makeData(10) }
   const stressTest = () => { data = makeData(1_000) }
 
   const table = createTable(
@@ -82,7 +82,7 @@
       onclick={row.getToggleExpandedHandler()}
       style="cursor: pointer"
     >
-      {row.getIsExpanded() ? 'v' : '>'}
+      {row.getIsExpanded() ? '👇' : '👉'}
     </button>
   {:else}
     *

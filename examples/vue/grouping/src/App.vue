@@ -180,28 +180,28 @@ function handleGoToPage(e: Event) {
           @click="() => table.firstPage()"
           :disabled="!table.getCanPreviousPage()"
         >
-          «
+          <<
         </button>
         <button
           class="demo-button demo-button-sm"
           @click="() => table.previousPage()"
           :disabled="!table.getCanPreviousPage()"
         >
-          ‹
+          <
         </button>
         <button
           class="demo-button demo-button-sm"
           @click="() => table.nextPage()"
           :disabled="!table.getCanNextPage()"
         >
-          ›
+          >
         </button>
         <button
           class="demo-button demo-button-sm"
           @click="() => table.lastPage()"
           :disabled="!table.getCanNextPage()"
         >
-          »
+          >>
         </button>
         <span class="inline-controls">
           <div>Page</div>

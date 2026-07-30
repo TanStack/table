@@ -151,6 +151,9 @@ class LitTableExample extends LitElement {
                       ${header.isPlaceholder
                         ? null
                         : html`<div
+                            class="${header.column.getCanSort()
+                              ? 'sortable-header'
+                              : ''}"
                             title=${header.column.getCanSort()
                               ? header.column.getNextSortingOrder() === 'asc'
                                 ? 'Sort ascending'
@@ -190,6 +193,7 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
+      <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <pre data-testid="table-state">
 ${JSON.stringify(table.state, null, 2)}</pre
       >

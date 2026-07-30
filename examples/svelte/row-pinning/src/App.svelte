@@ -118,7 +118,7 @@
         row.pin(false, includeLeafRows, includeParentRows)
       }
     >
-      X
+      ❌
     </button>
   {:else}
     <div style="display: flex; gap: 4px">
@@ -127,14 +127,14 @@
           row.pin('top', includeLeafRows, includeParentRows)
         }
       >
-        Up
+        ⬆️
       </button>
       <button
         onclick={() =>
           row.pin('bottom', includeLeafRows, includeParentRows)
         }
       >
-        Down
+        ⬇️
       </button>
     </div>
   {/if}
@@ -147,7 +147,7 @@
         onclick={row.getToggleExpandedHandler()}
         style="cursor: pointer"
       >
-        {row.getIsExpanded() ? 'v' : '>'}
+        {row.getIsExpanded() ? '👇' : '👉'}
       </button>
     {:else}
       *
@@ -157,7 +157,7 @@
 
 {#snippet ExpandAllButton()}
   <button onclick={table.getToggleAllRowsExpandedHandler()}>
-    {table.getIsAllRowsExpanded() ? 'v' : '>'}{' '}First Name
+    {table.getIsAllRowsExpanded() ? '👇' : '👉'}{' '}First Name
   </button>
 {/snippet}
 

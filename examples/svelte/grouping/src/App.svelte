@@ -64,8 +64,8 @@
     }),
   ])
 
-  let data = $state(makeData(1_000))
-  const refreshData = () => { data = makeData(1_000) }
+  let data = $state(makeData(10_000))
+  const refreshData = () => { data = makeData(10_000) }
   const stressTest = () => { data = makeData(1_000_000) }
 
   const table = createAppTable(

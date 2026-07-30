@@ -74,7 +74,9 @@ function footerCheckbox(page: Page) {
 function selectionSummary(page: Page) {
   return page
     .locator('div')
-    .filter({ hasText: /^[\d,]+ of [\d,]+ Total Rows Selected$/ })
+    .filter({
+      hasText: /^\s*[\d,]+\s+of\s+[\d,]+\s+Total\s+Rows\s+Selected\s*$/,
+    })
 }
 
 function pageRowsLabel(page: Page) {
