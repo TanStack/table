@@ -111,7 +111,7 @@ interface ColumnDefBase_Core<
    *
    * When omitted, the normal accessor value is wrapped in a single-item array.
    */
-  getUniqueValues?: AccessorFn<TData, Array<unknown>>
+  getUniqueValues?: AccessorFn<TData, ReadonlyArray<unknown>>
   /**
    * Footer template rendered with header context.
    */
