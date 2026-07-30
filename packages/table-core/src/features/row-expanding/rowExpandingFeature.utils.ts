@@ -142,9 +142,6 @@ export function table_getCanSomeRowsExpand<
 /**
  * Creates an event handler that toggles all rows expanded.
  *
- * React-style synthetic events are persisted when present before the table state
- * is toggled.
- *
  * @example
  * ```ts
  * const onClick = table_getToggleAllRowsExpandedHandler(table)
@@ -154,8 +151,7 @@ export function table_getToggleAllRowsExpandedHandler<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  return (e: unknown) => {
-    ;(e as any).persist?.()
+  return (_e: unknown) => {
     table_toggleAllRowsExpanded(table)
   }
 }

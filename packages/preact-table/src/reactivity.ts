@@ -1,105 +1,19 @@
 import { batch, createAtom } from '@tanstack/preact-store'
-import type {
-  TableAtomOptions,
-  TableReactivityBindings,
-} from '@tanstack/table-core/reactivity'
+import { renderPhaseReactivity } from '@tanstack/table-core/reactivity'
+import type { RenderPhaseReactivityBindings } from '@tanstack/table-core/reactivity'
+
+export type PreactTableReactivityBindings = RenderPhaseReactivityBindings
 
 /**
  * Creates the table-core reactivity bindings used by the Preact adapter.
  *
- * Preact stores table state in TanStack Store atoms and leaves options as plain
- * resolved data because `useTable` synchronizes options during render.
+ * Preact stores table state in TanStack Store atoms and leaves options as
+ * plain resolved data because `useTable` synchronizes options during render.
+ * The render-phase preset supplies the live readonly-atom facades and the
+ * `commit` hook; the store primitives are passed in from
+ * `@tanstack/preact-store` so all atoms share one store instance with
+ * user-provided external atoms.
  */
-export function preactReactivity(): TableReactivityBindings {
-  return {
-    createOptionsStore: false,
-    wrapExternalAtoms: false,
-    addSubscription: () => {
-      throw new Error(
-        'Feature not supported in current reactivity implementation',
-      )
-    },
-    unmount: () => {
-      throw new Error(
-        'Feature not supported in current reactivity implementation',
-      )
-    },
-    schedule: (fn) => queueMicrotask(() => fn()),
-    batch,
-    untrack: (fn) => fn(),
-    createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      return createAtom(() => fn(), {
-        compare: options?.compare,
-      })
-    },
-    createWritableAtom: <T>(value: T, options?: TableAtomOptions<T>) => {
-      return createAtom(value, {
-        compare: options?.compare,
-      })
-    },
-  }
+export function preactReactivity(): PreactTableReactivityBindings {
+  return renderPhaseReactivity({ createAtom, batch })
 }
-
-// // TOTO - re-explore preact signals for reactivity
-// import { batch, computed, signal, untracked } from '@preact/signals'
-// import type {
-//   TableAtomOptions,
-//   TableReactivityBindings,
-// } from '@tanstack/table-core/reactivity'
-// import type { Atom, Observer, ReadonlyAtom } from '@tanstack/preact-store'
-
-// function observerToCallback<T>(
-//   observerOrNext: Observer<T> | ((value: T) => void),
-// ): (value: T) => void {
-//   return typeof observerOrNext === 'function'
-//     ? observerOrNext
-//     : (value) => observerOrNext.next?.(value)
-// }
-
-// function signalToReadonlyAtom<T>(source: {
-//   value: T
-//   subscribe: (observer: (value: T) => void) => () => void
-// }): ReadonlyAtom<T> {
-//   return Object.assign(source, {
-//     get: () => source.value,
-//     subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-//       const unsubscribe = source.subscribe(observerToCallback(observerOrNext))
-//       return { unsubscribe }
-//     }) as ReadonlyAtom<T>['subscribe'],
-//   })
-// }
-
-// function signalToWritableAtom<T>(source: {
-//   value: T
-//   subscribe: (observer: (value: T) => void) => () => void
-// }): Atom<T> {
-//   return Object.assign(source, {
-//     set: (updater: T | ((prevVal: T) => T)) => {
-//       source.value =
-//         typeof updater === 'function'
-//           ? (updater as (prevVal: T) => T)(source.value)
-//           : updater
-//     },
-//     get: () => source.value,
-//     subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-//       const unsubscribe = source.subscribe(observerToCallback(observerOrNext))
-//       return { unsubscribe }
-//     }) as Atom<T>['subscribe'],
-//   })
-// }
-
-// export function preactReactivity(): TableReactivityBindings {
-//   return {
-//     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-//       return signalToReadonlyAtom(computed(fn))
-//     },
-//     createWritableAtom: <T>(
-//       value: T,
-//       _options?: TableAtomOptions<T>,
-//     ): Atom<T> => {
-//       return signalToWritableAtom(signal(value))
-//     },
-//     untrack: untracked,
-//     batch: batch,
-//   }
-// }

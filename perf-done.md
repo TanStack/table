@@ -7,14 +7,15 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 58
-- **Source findings:** 56
+- **Entries:** 59
+- **Source findings:** 57
 - **Cross-cutting sweeps:** 2
 - 2026-07-03: #102 (C9) moved here from perf-todo.md after the row-model benchmark confirmed and the fix landed.
 - 2026-07-07: #68 (A4) moved here from perf-todo.md after implementation.
 - 2026-07-07: #76 (A5) moved here from perf-todo.md after implementation.
 - 2026-07-07: #85 (A6) moved here from perf-todo.md after implementation.
 - 2026-07-07: #92 (C11) moved here from perf-todo.md after implementation.
+- 2026-07-29: #65 (F1) moved here from perf-todo.md after the Svelte selector layer was removed.
 
 ## Score 9
 
@@ -679,6 +680,41 @@ function compareAlphanumeric(aStr: string, bStr: string) {
 
 **Risk:** Two observable deltas, both flagged. (a) Digit runs of 16+ digits: `parseInt` saturates double precision so today two huge, nearly equal digit runs can compare "equal" and fall through to the next chunk (and 309+-digit runs both become Infinity); the digit-wise compare orders them exactly instead. Decimal-to-double conversion is monotone, so parseInt only ever COLLAPSES distinctions; the proposal resolves those collapsed cases. Strictly more correct but observable; if bit-identical behavior is required, fall back to `parseInt(slice)` only for runs longer than 15 digits. (b) Return magnitude changes from ±chunk-count to ±1: sign-equivalent for sorting, but verify no test asserts exact comparator magnitudes. **Gate on `tests/unit/fns/sortFns.test.ts`.**
 **Verification:** AMENDED: full re-derivation checks out; huge-digit-run behavior note expanded (parseInt-collapse direction proven), ±1 magnitude delta added, test-suite gate made explicit.
+
+---
+
+## 65. F1: Svelte useSelector subscribes with `===` compare: every subscriber re-renders on every atom write — Score: 8
+
+**Status:** `[x]` done
+**Implementation note:** Completed 2026-07-29 for v9.0.0-beta.59 with a stronger resolution than the proposed shallow comparison. The Svelte creation selector, selector-backed `table.state`, `subscribeTable`, and `SubscribeSource` were removed. `createTable` and `createAppTable` now create no adapter-wide selector subscription. Consumers read rune-aware `table.atoms.<slice>.get()` values for narrow dependencies, use `table.store.get()` when they intentionally need the complete state, and use native `$derived` projections for equality-gated derived values. Unit coverage verifies that unrelated pagination writes do not rerun a row-selection-derived effect while full-store consumers still update; package tests, every Svelte example type/build project, and every Svelte example e2e project pass.
+
+**Location:** Formerly `packages/svelte-table/src/createTable.svelte.ts:125`; the selector path and `packages/svelte-table/src/subscribe.ts` are removed.
+**Category:** `memoization`
+
+Hot path before removal: Every state atom write (resize tick = 2 writes at 60-120Hz, selection, sorting, everything) → store snapshot recompute → `useSelector` subscription callback. `@tanstack/svelte-store`'s `useSelector` defaults `compare` to `===` (verified: `defaultCompare(a,b){return a===b}` and `options.compare ?? defaultCompare`). The store snapshot is a fresh object on every recompute, and the idiomatic selector (`(state) => ({ pagination: state.pagination })`) returns a fresh object too, so `compare(slice, data)` is always false, `slice = data` writes the `$state` rune on EVERY table state write, and every template reading `table.state` re-renders per tick even when the selected slice is unchanged. Verified: even the default no-selector path re-assigned the `$state` slice on every write (identity selector over a fresh snapshot). The former sibling `subscribe.ts:45` passed `{ compare: shallow }`, as do React/Preact `useTable`.
+
+**Before**
+
+```ts
+// Adapter-wide selector subscription
+const stateStore = useSelector(table.store, selector)
+Object.defineProperty(table, 'state', {
+  get: () => stateStore.current,
+})
+```
+
+**After**
+
+```ts
+const table = createTable(options)
+const pagination = $derived(table.atoms.pagination.get())
+const fullState = $derived(table.store.get())
+```
+
+**Big-O:** The adapter-wide O(writes × selector subscribers) invalidation path is removed. Narrow consumers now invalidate only when their atom or `$derived` projection changes; a full-store consumer remains intentionally O(all state writes). At 100Hz resize, a pagination consumer no longer receives the selector layer's spurious invalidations.
+
+**Risk:** Intentional beta breaking change: creation selectors, `table.state`, `subscribeTable`, `SubscribeSource`, and selected-state generic parameters are gone with no compatibility layer. Svelte templates and rune scopes provide the reactive boundary directly.
+**Verification:** CONFIRMED and implemented. No adapter-wide selector subscription remains; focused lifecycle tests verify narrow versus full-store invalidation behavior, including identical selection writes.
 
 ---
 

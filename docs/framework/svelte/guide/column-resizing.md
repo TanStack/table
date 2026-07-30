@@ -148,7 +148,7 @@ TanStack Table keeps track of a `columnResizing` state object that you can use t
 <div
   class="resize-indicator"
   style:transform={header.column.getIsResizing()
-    ? `translateX(${table.state.columnResizing.deltaOffset ?? 0}px)`
+    ? `translateX(${table.atoms.columnResizing.get().deltaOffset ?? 0}px)`
     : ''}
 ></div>
 ```
@@ -253,4 +253,4 @@ Svelte 5's fine-grained reactivity means a resize does not re-render whole compo
 1. **Derive all column widths in one `$derived` value.** Build a single style string that maps each header and column id to a CSS variable, then bind it on the `<table>` element (`<table style={tableStyle}>`). `header.getSize()` reads the rune-backed `columnSizing` atom, so a drag re-runs only this derived and its single attribute effect.
 2. **Reference the variables in cell styles** (`width: calc(var(--col-firstName-size) * 1px)`) so the browser applies new widths without Svelte re-evaluating each cell.
 
-Because nothing in the table body reads resize state, no body memoization is needed, and you do not need a `createTable` selector for this pattern; the resizer's highlight is its own inline binding.
+Because nothing in the table body reads resize state, no body memoization is needed; the resizer's highlight is its own narrow inline atom binding.

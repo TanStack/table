@@ -8,8 +8,13 @@ import {
   useTable,
   FlexRenderCell,
   FlexRenderHeader,
+  aggregationFns,
+  columnGroupingFeature,
+  createGroupedRowModel,
   flexRenderComponent,
+  rowAggregationFeature,
   stockFeatures,
+  tableFeatures,
   type Row,
   type Cell,
   type CellContext,
@@ -22,11 +27,51 @@ type Person = { id: string; firstName: string }
 
 const defaultData: Array<Person> = [{ id: '0', firstName: 'Alice' }]
 
+type GroupedPerson = {
+  id: string
+  region: string
+  team: string
+  amount: number
+}
+
+const groupingFeatures = tableFeatures({
+  aggregationFns,
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  rowAggregationFeature,
+})
+
+const groupingColumns: Array<
+  ColumnDef<typeof groupingFeatures, GroupedPerson>
+> = [
+  {
+    id: 'region',
+    accessorKey: 'region',
+    cell: (context) => `Region ${String(context.getValue())}`,
+  },
+  {
+    id: 'team',
+    accessorKey: 'team',
+    cell: (context) => `Team ${String(context.getValue())}`,
+  },
+  {
+    id: 'amount',
+    accessorKey: 'amount',
+    aggregationFn: 'sum',
+    cell: (context) => `Amount ${String(context.getValue())}`,
+    aggregatedCell: (context) => `Total ${String(context.getValue())}`,
+  },
+]
+
 // Templates can't call bound table methods with `this` context, so expose them
 // as plain helpers (mirrors the demo-app table templates).
 const getVisibleCells = (
   row: Row<typeof stockFeatures, Person>,
 ): Array<Cell<typeof stockFeatures, Person>> => row.getVisibleCells()
+
+const getGroupingCells = (
+  row: Row<typeof groupingFeatures, GroupedPerson>,
+): Array<Cell<typeof groupingFeatures, GroupedPerson>> => row.getAllCells()
 
 // --- Cell/header components used by the tests ---
 
@@ -167,6 +212,50 @@ module('Integration | FlexRender', function (hooks) {
     assert
       .dom('[data-test-cell="c-fn"]')
       .hasText('fn value', 'function return value renders')
+  })
+
+  test('renders aggregate cells and suppresses grouping placeholders', async (assert) => {
+    class TableComponent extends Component {
+      table = useTable(() => ({
+        data: [
+          { id: '1', region: 'Europe', team: 'Blue', amount: 1 },
+          { id: '2', region: 'Europe', team: 'Green', amount: 2 },
+        ],
+        columns: groupingColumns,
+        features: groupingFeatures,
+        initialState: {
+          grouping: ['region', 'team'],
+        },
+      }))
+
+      get rows() {
+        return this.table.getRowModel().rows
+      }
+
+      <template>
+        {{#each this.rows as |row|}}
+          <section role='group' aria-label='Grouped row'>
+            {{#each (getGroupingCells row) as |cell|}}
+              <output role='status' aria-label={{cell.column.id}}>
+                <FlexRenderCell @cell={{cell}} />
+              </output>
+            {{/each}}
+          </section>
+        {{/each}}
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    assert
+      .dom('[role="status"][aria-label="region"]')
+      .hasText('Region Europe', 'the active grouping cell uses its cell render')
+    assert
+      .dom('[role="status"][aria-label="team"]')
+      .hasText('', 'the other grouped column renders as a placeholder')
+    assert
+      .dom('[role="status"][aria-label="amount"]')
+      .hasText('Total 3', 'the aggregate column uses aggregatedCell')
   })
 
   // Angular: "should render components" / "Render component with FlexRenderComponent".

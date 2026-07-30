@@ -123,12 +123,10 @@
       // isRowRangeSelectionEvent: event => Boolean(event.metaKey), // use Meta instead of Shift
       debugTable: true,
     },
-    (state) => ({
-      rowSelection: state.rowSelection,
-      globalFilter: state.globalFilter,
-      pagination: state.pagination,
-    }),
   )
+  const pagination = $derived(table.atoms.pagination.get())
+  const globalFilter = $derived(table.atoms.globalFilter.get())
+  const rowSelection = $derived(table.atoms.rowSelection.get())
 </script>
 
 <div class="demo-root">
@@ -138,7 +136,7 @@
   </div>
   <div>
     <input
-      value={table.state.globalFilter ?? ''}
+      value={globalFilter ?? ''}
       oninput={(e) => table.setGlobalFilter((e.target as HTMLInputElement).value)}
       class="summary-panel"
       placeholder="Search all columns..."
@@ -248,7 +246,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
+        {(pagination.pageIndex + 1).toLocaleString()} of {table.getPageCount().toLocaleString()}
       </strong>
     </span>
     <span class="inline-controls">
@@ -257,7 +255,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e) => {
           const page = (e.target as HTMLInputElement).value ? Number((e.target as HTMLInputElement).value) - 1 : 0
           table.setPageIndex(page)
@@ -266,7 +264,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e) => {
         table.setPageSize(Number((e.target as HTMLSelectElement).value))
       }}
@@ -278,7 +276,7 @@
   </div>
   <br />
   <div>
-    {Object.keys(table.state.rowSelection).length.toLocaleString()} of{' '}
+    {Object.keys(rowSelection).length.toLocaleString()} of{' '}
     {table.getPreFilteredRowModel().rows.length.toLocaleString()} Total Rows Selected
   </div>
   <hr />
@@ -298,14 +296,14 @@
   </div>
   <div>
     <strong>Row Selection State:</strong>
-    <pre>{JSON.stringify(table.state, null, 2)
+    <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)
     }</pre>
   </div>
 </div>
 
 {#snippet Filter(
   column: Column<typeof features, Person>,
-  table: SvelteTable<typeof features, Person, any>,
+  table: SvelteTable<typeof features, Person>,
 )}
   {@const firstValue = table
     .getPreFilteredRowModel()

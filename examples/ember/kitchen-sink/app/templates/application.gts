@@ -830,7 +830,7 @@ export default class KitchenSinkTable extends Component {
     <div class='spacer-md'></div>
     <details>
       <summary>Table state (live)</summary>
-      <pre>{{this.tableState}}</pre>
+      <pre data-testid='table-state'>{{this.tableState}}</pre>
     </details>
   </template>
 }

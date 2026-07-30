@@ -11,7 +11,7 @@ import {
   stockFeatures,
   tableFeatures,
 } from '@tanstack/react-table'
-import { MRT_AggregationFns } from '../fns/aggregationFns'
+import { MRT_RowAggregationFns } from '../fns/aggregationFns'
 import { MRT_FilterFns } from '../fns/filterFns'
 import { MRT_SortFns } from '../fns/sortingFns'
 import { mrtCellActionsFeature } from './mrtCellActionsFeature'
@@ -65,11 +65,11 @@ export const mrtFeatures = tableFeatures({
   // These MRT fn registries are authored against `Row<StockFeatures>`, which is
   // invariant against the `Row<any, any>` the feature slot expects, so they're
   // cast here. Named-function string typing still flows through `MRT_FilterOption`
-  // / `MRT_SortingOption` / `MRT_AggregationOption` (derived from `typeof` each
+  // / `MRT_SortingOption` / `MRT_RowAggregationOption` (derived from `typeof` each
   // registry), so nothing downstream loses inference.
   filterFns: MRT_FilterFns as any,
   sortFns: MRT_SortFns as any,
-  aggregationFns: MRT_AggregationFns as any,
+  aggregationFns: MRT_RowAggregationFns as any,
 })
 
 export type MRT_Features = typeof mrtFeatures

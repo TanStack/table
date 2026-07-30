@@ -341,6 +341,6 @@ export default class GroupingTable extends Component {
       </select>
     </div>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

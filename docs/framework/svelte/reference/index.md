@@ -22,7 +22,6 @@ title: "@tanstack/svelte-table"
 - [ComponentType](type-aliases/ComponentType.md)
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)
 - [FlexRender](type-aliases/FlexRender.md)
-- [SubscribeSource](type-aliases/SubscribeSource.md)
 - [SvelteTable](type-aliases/SvelteTable.md)
 
 ## Variables
@@ -36,4 +35,3 @@ title: "@tanstack/svelte-table"
 - [createTableState](functions/createTableState.md)
 - [renderComponent](functions/renderComponent.md)
 - [renderSnippet](functions/renderSnippet.md)
-- [subscribeTable](functions/subscribeTable.md)

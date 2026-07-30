@@ -107,7 +107,7 @@ function handleSizeChange(columnId: string, e: Event) {
           <input
             type="number"
             :value="column.getSize()"
-            @change="(e) => handleSizeChange(column.id, e)"
+            @input="(e) => handleSizeChange(column.id, e)"
             class="column-size-input"
           />
         </label>
@@ -232,6 +232,8 @@ function handleSizeChange(columnId: string, e: Event) {
       </div>
     </div>
     <div class="spacer-md" />
-    <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
+    <pre data-testid="table-state">{{
+      JSON.stringify(table.store.get(), null, 2)
+    }}</pre>
   </div>
 </template>

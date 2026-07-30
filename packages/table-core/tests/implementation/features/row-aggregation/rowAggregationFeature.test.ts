@@ -232,6 +232,56 @@ describe('rowAggregationFeature', () => {
     expect(table.getMaxSubRowDepth()).toBe(1)
   })
 
+  it('preserves ragged frontier order and deduplicates overlapping row inputs', () => {
+    type Node = { label: string; subRows?: Array<Node> }
+    const collectLabels = constructAggregationFn<
+      any,
+      Node,
+      string,
+      Array<string>
+    >({
+      aggregate: ({ rows }) => rows.map((row) => row.original.label),
+    })
+    const features = testFeatures({
+      rowAggregationFeature,
+      aggregationFns: { collectLabels },
+    })
+    const data: Array<Node> = [
+      {
+        label: 'a',
+        subRows: [
+          {
+            label: 'a0',
+            subRows: [{ label: 'a00' }, { label: 'a01' }],
+          },
+        ],
+      },
+      { label: 'b' },
+    ]
+    const table = constructTable({
+      features,
+      data,
+      columns: [{ accessorKey: 'label', aggregationFn: 'collectLabels' }],
+      getSubRows: (row: Node) => row.subRows,
+    })
+    const column = table.getColumn('label')!
+    const rows = table.getCoreRowModel().rows
+
+    expect(column.getAggregationValue({ maxDepth: 0 })).toEqual(['a', 'b'])
+    expect(column.getAggregationValue({ maxDepth: 1 })).toEqual(['a0', 'b'])
+    expect(column.getAggregationValue({ maxDepth: Infinity })).toEqual([
+      'a00',
+      'a01',
+      'b',
+    ])
+    expect(
+      column.getAggregationValue({
+        maxDepth: Infinity,
+        rows: [rows[0]!, rows[0]!.subRows[0]!],
+      }),
+    ).toEqual(['a00', 'a01'])
+  })
+
   it('uses handled column values and configurable local fallback', () => {
     const features = testFeatures({ rowAggregationFeature, aggregationFns })
     const resolver = vi.fn(({ rows }) => (rows ? { value: 99 } : undefined))

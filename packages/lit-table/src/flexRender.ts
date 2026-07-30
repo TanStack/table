@@ -5,7 +5,22 @@ import type {
   RowData,
   TableFeatures,
 } from '@tanstack/table-core'
-import type { TemplateResult } from 'lit'
+import type { TemplateResult, noChange, nothing } from 'lit'
+import type { DirectiveResult } from 'lit/directive.js'
+
+export type LitRenderable =
+  | TemplateResult
+  | DirectiveResult
+  | Node
+  | string
+  | number
+  | bigint
+  | boolean
+  | null
+  | undefined
+  | typeof nothing
+  | typeof noChange
+  | Iterable<LitRenderable>
 
 /**
  * Renders a Lit table template value with the provided context props.
@@ -20,14 +35,10 @@ import type { TemplateResult } from 'lit'
  * ```
  */
 export function flexRender<TProps>(
-  Comp:
-    | ((props: TProps) => TemplateResult | string)
-    | string
-    | TemplateResult
-    | undefined,
+  Comp: ((props: TProps) => LitRenderable) | LitRenderable,
   props: TProps,
-): TemplateResult | string | null {
-  if (!Comp) return null
+): LitRenderable {
+  if (Comp === null || Comp === undefined) return null
 
   if (typeof Comp === 'function') {
     return Comp(props)
@@ -91,11 +102,30 @@ export function FlexRender<
   TFeatures extends TableFeatures,
   TData extends RowData,
   TValue extends CellData = CellData,
->(
-  props: FlexRenderProps<TFeatures, TData, TValue>,
-): TemplateResult | string | null {
+>(props: FlexRenderProps<TFeatures, TData, TValue>): LitRenderable {
   if ('cell' in props && props.cell) {
-    return flexRender(props.cell.column.columnDef.cell, props.cell.getContext())
+    const cell = props.cell
+    const columnDef = cell.column.columnDef
+    const groupingCell = cell as typeof cell & {
+      getIsAggregated?: () => boolean
+      getIsPlaceholder?: () => boolean
+    }
+    const groupingColumnDef = columnDef as typeof columnDef & {
+      aggregatedCell?: typeof columnDef.cell
+    }
+
+    if (groupingCell.getIsAggregated?.()) {
+      return flexRender(
+        groupingColumnDef.aggregatedCell ?? columnDef.cell,
+        cell.getContext(),
+      )
+    }
+
+    if (groupingCell.getIsPlaceholder?.()) {
+      return null
+    }
+
+    return flexRender(columnDef.cell, cell.getContext())
   }
 
   if ('header' in props && props.header) {

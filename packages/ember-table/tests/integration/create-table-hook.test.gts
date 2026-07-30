@@ -69,7 +69,7 @@ module('Integration | createTableHook', function (hooks) {
       )
 
       // No `features` here: the hook supplies them.
-      table = createAppTable<Person>(() => ({
+      table = createAppTable<Person>(this, () => ({
         columns,
         data: this.data,
       }))

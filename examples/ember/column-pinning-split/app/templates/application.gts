@@ -340,6 +340,6 @@ export default class ColumnPinningSplitTable extends Component {
     </div>
 
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

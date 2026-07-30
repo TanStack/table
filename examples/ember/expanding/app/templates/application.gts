@@ -454,6 +454,6 @@ export default class ExpandingTable extends Component {
     </div>
     <div>{{this.rowCount}} Rows</div>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

@@ -542,6 +542,6 @@ export default class CustomPluginTable extends Component {
     </div>
     <div class='spacer-md'></div>
     <pre>Density: {{this.density}}</pre>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

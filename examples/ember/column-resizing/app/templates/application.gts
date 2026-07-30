@@ -200,6 +200,6 @@ export default class ColumnResizingTable extends Component {
       </table>
     </div>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

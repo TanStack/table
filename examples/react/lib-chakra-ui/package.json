@@ -16,7 +16,7 @@
     "@emotion/react": "^11.14.0",
     "@faker-js/faker": "^10.5.0",
     "@tabler/icons-react": "^3.44.0",
-    "@tanstack/react-table": "^9.0.0-beta.55",
+    "@tanstack/react-table": "^9.0.0-beta.63",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

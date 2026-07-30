@@ -65,10 +65,10 @@ const columns = columnHelper.columns([
   }),
 ])
 
-const data = ref(makeData(20))
+const data = ref(makeData(10))
 
 const refreshData = () => {
-  data.value = makeData(20)
+  data.value = makeData(10)
 }
 
 const stressTest = () => {

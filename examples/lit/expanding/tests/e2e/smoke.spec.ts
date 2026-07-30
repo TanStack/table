@@ -1,9 +1,25 @@
-import { expect, test } from '@playwright/test'
-import type { Locator, Page } from '@playwright/test'
 import path from 'node:path'
+import { expect, test } from '@playwright/test'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
+import type { Page } from '@playwright/test'
 
 const exampleDir = path.resolve()
+
+/** `makeData(100, 5, 3)`: 100 roots, 5 children each, 3 grandchildren each. */
+const CHILDREN_PER_ROW = 5
+const PAGE_SIZE = 10
+
+let server: Awaited<ReturnType<typeof startExampleServer>> | undefined
+
+test.beforeAll(async () => {
+  // One server for the whole file. A cold Vite start costs more than a test.
+  test.setTimeout(180_000)
+  server = await startExampleServer(exampleDir)
+})
+
+test.afterAll(async () => {
+  await server?.close()
+})
 
 function collectPageErrors(page: Page) {
   const errors: Array<string> = []
@@ -22,7 +38,8 @@ function collectPageErrors(page: Page) {
 }
 
 async function openExample(page: Page) {
-  const server = await startExampleServer(exampleDir)
+  if (!server) throw new Error('Example server failed to start')
+
   const errors = collectPageErrors(page)
 
   await page.route(
@@ -36,69 +53,185 @@ async function openExample(page: Page) {
 
   await page.goto(server.url)
 
-  return { errors, server }
+  return errors
 }
 
-function getTable(page: Page) {
-  return page
-    .locator('table:visible, .divTable:visible')
-    .filter({ has: page.locator('thead th, .thead .th') })
-    .filter({ has: page.locator('tbody tr, .tbody .tr') })
-    .first()
+function bodyRows(page: Page) {
+  return page.locator('tbody tr')
 }
 
-function getHeaderCells(table: Locator) {
-  return table.locator('thead th, .thead .th')
+/** The expander lives in each row's first name cell, beside the checkbox. */
+function rowExpander(page: Page, index: number) {
+  return bodyRows(page).nth(index).getByRole('button')
 }
 
-function getBodyRows(table: Locator) {
-  return table.locator('tbody tr, .tbody .tr')
+/** The wrapper whose padding encodes the row's depth. */
+function rowIndent(page: Page, index: number) {
+  return bodyRows(page).nth(index).locator('td').nth(1).locator('div').first()
 }
 
-async function getFirstBodyRowData(table: Locator) {
-  const row = getBodyRows(table).first()
-  const firstInput = row
-    .locator('input:not([type="checkbox"]):not([type="radio"])')
-    .first()
+/** The expand-all control sits in the first name header. */
+function expandAllButton(page: Page) {
+  return page.locator('thead th').nth(1).getByRole('button')
+}
 
-  if ((await firstInput.count()) > 0 && (await firstInput.isVisible())) {
-    return firstInput.inputValue()
+function rowCheckbox(page: Page, index: number) {
+  return bodyRows(page).nth(index).locator('input[type="checkbox"]').first()
+}
+
+/** Row data is random faker output, so `table.state` is the stable oracle. */
+async function readState(page: Page) {
+  const text = await page.getByTestId('table-state').textContent()
+
+  return JSON.parse(text ?? '{}') as {
+    expanded?: Record<string, boolean> | true
+    rowSelection?: Record<string, boolean>
   }
+}
 
-  const text = await row.textContent()
+async function countExpanded(page: Page) {
+  const expanded = (await readState(page)).expanded
+  return expanded === true ? -1 : Object.keys(expanded ?? {}).length
+}
+
+async function countSelected(page: Page) {
+  return Object.keys((await readState(page)).rowSelection ?? {}).length
+}
+
+async function getRowText(page: Page, index: number) {
+  const text = await bodyRows(page).nth(index).textContent()
   return text?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
 test('renders the table without crashing', async ({ page }) => {
-  const { errors, server } = await openExample(page)
+  const errors = await openExample(page)
+  const table = page.locator('table').first()
 
-  try {
-    const table = getTable(page)
-    const bodyRows = getBodyRows(table)
+  await expect(table).toBeVisible()
+  await expect(bodyRows(page)).toHaveCount(PAGE_SIZE)
+  await expect.poll(async () => (await readState(page)).expanded).toEqual({})
+  // Nothing is expanded yet, so every visible row is a root row.
+  await expect(rowExpander(page, 0)).toHaveText('👉')
+  await expect(rowIndent(page, 0)).toHaveCSS('padding-left', '0px')
 
-    await expect(table).toBeVisible()
-    await expect(getHeaderCells(table).first()).toBeVisible()
-    await expect(bodyRows.first()).toBeVisible()
+  expect(errors).toEqual([])
+})
 
-    const regenerateButton = page
-      .getByRole('button', { name: /^Regenerate Data$/i })
-      .first()
+test('regenerates table data', async ({ page }) => {
+  const errors = await openExample(page)
+  const regenerateButton = page.getByRole('button', {
+    name: /^Regenerate Data$/i,
+  })
 
-    if ((await regenerateButton.count()) > 0) {
-      await expect(regenerateButton).toBeVisible()
+  await expect(bodyRows(page).first()).toBeVisible()
 
-      const firstRowBefore = await getFirstBodyRowData(table)
+  const firstRowBefore = await getRowText(page, 0)
 
-      await regenerateButton.click()
+  await regenerateButton.click()
 
-      await expect
-        .poll(() => getFirstBodyRowData(table))
-        .not.toBe(firstRowBefore)
-      await expect(bodyRows.first()).toBeVisible()
-    }
+  await expect.poll(() => getRowText(page, 0)).not.toBe(firstRowBefore)
+  await expect(bodyRows(page)).toHaveCount(PAGE_SIZE)
 
-    expect(errors).toEqual([])
-  } finally {
-    await server.close()
-  }
+  expect(errors).toEqual([])
+})
+
+test('expands and collapses a single row', async ({ page }) => {
+  const errors = await openExample(page)
+  const secondRowBefore = await getRowText(page, 1)
+
+  await rowExpander(page, 0).click()
+
+  await expect(rowExpander(page, 0)).toHaveText('👇')
+  await expect.poll(() => countExpanded(page)).toBe(1)
+
+  // Children are spliced in beneath their parent, but pagination still hands
+  // back one page, so the rows below are pushed out of the window instead.
+  await expect(bodyRows(page)).toHaveCount(PAGE_SIZE)
+  expect(await getRowText(page, 1)).not.toBe(secondRowBefore)
+  await expect(rowIndent(page, 1)).toHaveCSS('padding-left', '32px')
+
+  await rowExpander(page, 0).click()
+
+  await expect(rowExpander(page, 0)).toHaveText('👉')
+  await expect.poll(() => countExpanded(page)).toBe(0)
+  // Collapsing restores exactly the row that was displaced.
+  expect(await getRowText(page, 1)).toBe(secondRowBefore)
+
+  expect(errors).toEqual([])
+})
+
+test('indents each level of sub rows', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await rowExpander(page, 0).click()
+  await expect(rowExpander(page, 0)).toHaveText('👇')
+
+  // Depth drives a 2rem indent per level, and this example sets the root font
+  // size default, so each level adds 32px.
+  await expect(rowIndent(page, 0)).toHaveCSS('padding-left', '0px')
+  await expect(rowIndent(page, 1)).toHaveCSS('padding-left', '32px')
+
+  await rowExpander(page, 1).click()
+
+  await expect(rowExpander(page, 1)).toHaveText('👇')
+  await expect(rowIndent(page, 2)).toHaveCSS('padding-left', '64px')
+  await expect.poll(() => countExpanded(page)).toBe(2)
+
+  expect(errors).toEqual([])
+})
+
+test('expands every row from the header', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await expect(expandAllButton(page)).toHaveText('👉')
+
+  await expandAllButton(page).click()
+
+  await expect(expandAllButton(page)).toHaveText('👇')
+  // Expanding everything is stored as `true` rather than a map of row ids.
+  await expect.poll(async () => (await readState(page)).expanded).toBe(true)
+  // The first page is now a root followed by its own descendants.
+  await expect(rowIndent(page, 1)).toHaveCSS('padding-left', '32px')
+  await expect(rowIndent(page, 2)).toHaveCSS('padding-left', '64px')
+
+  await expandAllButton(page).click()
+
+  await expect(expandAllButton(page)).toHaveText('👉')
+  await expect(rowIndent(page, 1)).toHaveCSS('padding-left', '0px')
+
+  expect(errors).toEqual([])
+})
+
+test('marks rows without children as leaves', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await expandAllButton(page).click()
+  await expect(expandAllButton(page)).toHaveText('👇')
+
+  // The third level has no children of its own, so it renders a leaf marker
+  // instead of an expander.
+  await expect(page.locator('tbody').getByText('🔵').first()).toBeVisible()
+
+  expect(errors).toEqual([])
+})
+
+test('selects sub rows along with their parent', async ({ page }) => {
+  const errors = await openExample(page)
+
+  await rowExpander(page, 0).click()
+  await expect(rowExpander(page, 0)).toHaveText('👇')
+
+  await rowCheckbox(page, 0).check()
+
+  // Selecting a parent cascades to its whole subtree, so one click selects far
+  // more than one row.
+  await expect.poll(() => countSelected(page)).toBeGreaterThan(CHILDREN_PER_ROW)
+  await expect(rowCheckbox(page, 1)).toBeChecked()
+
+  await rowCheckbox(page, 0).uncheck()
+
+  await expect.poll(() => countSelected(page)).toBe(0)
+  await expect(rowCheckbox(page, 1)).not.toBeChecked()
+
+  expect(errors).toEqual([])
 })

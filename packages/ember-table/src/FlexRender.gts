@@ -1,4 +1,5 @@
 import Component from '@glimmer/component'
+import { cached } from '@glimmer/tracking'
 import { FlexRenderComponentConfig } from './flex-render-helpers.ts'
 import { flexRender } from '@tanstack/table-core/flex-render'
 import type {
@@ -74,12 +75,34 @@ export class FlexRenderCell<
   TData extends RowData,
   TValue extends CellData = CellData,
 > extends Component<FlexRenderCellSignature<TFeatures, TData, TValue>> {
+  @cached
   get result(): CellRenderResult<TFeatures, TData, TValue> {
     const cell = this.args.cell
-    return flexRender(
-      cell.column.columnDef.cell,
-      cell.getContext(),
-    ) as CellRenderResult<TFeatures, TData, TValue>
+    const definition = cell.column.columnDef
+    const groupingCell = cell as typeof cell & {
+      getIsAggregated?: () => boolean
+      getIsPlaceholder?: () => boolean
+    }
+    const groupingDefinition = definition as typeof definition & {
+      aggregatedCell?: typeof definition.cell
+    }
+
+    if (groupingCell.getIsAggregated?.()) {
+      return flexRender(
+        groupingDefinition.aggregatedCell ?? definition.cell,
+        cell.getContext(),
+      ) as CellRenderResult<TFeatures, TData, TValue>
+    }
+
+    if (groupingCell.getIsPlaceholder?.()) {
+      return null
+    }
+
+    return flexRender(definition.cell, cell.getContext()) as CellRenderResult<
+      TFeatures,
+      TData,
+      TValue
+    >
   }
 
   get resolvedContext(): CellContext<TFeatures, TData, TValue> {
@@ -142,6 +165,7 @@ export class FlexRenderHeader<
   TData extends RowData,
   TValue extends CellData = CellData,
 > extends Component<FlexRenderHeaderSignature<TFeatures, TData, TValue>> {
+  @cached
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
     const header = this.args.header
     if (header.isPlaceholder) return null
@@ -213,6 +237,7 @@ export class FlexRenderFooter<
   TData extends RowData,
   TValue extends CellData = CellData,
 > extends Component<FlexRenderFooterSignature<TFeatures, TData, TValue>> {
+  @cached
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
     const footer = this.args.footer
     if (footer.isPlaceholder) return null

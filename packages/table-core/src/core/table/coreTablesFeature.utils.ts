@@ -3,39 +3,81 @@ import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
 import type { TableOptions } from '../../types/TableOptions'
+import type { TableState } from '../../types/TableState'
 
 /**
  * Synchronizes externally controlled state slices into the table's base atoms.
  *
- * This keeps legacy `options.state` values reflected in the atom graph so
- * derived atoms, stores, and table APIs read a consistent snapshot.
+ * This keeps `options.state` values mirrored in the atom graph so derived
+ * atoms, stores, and table APIs read a consistent snapshot.
+ *
+ * Adapters that update options during their host's render phase pass the
+ * state snapshot captured by the committed render as `capturedState` — the
+ * shared options object may already hold values from a newer render that
+ * never commits. Pass `null` to publish nothing (a captured "no controlled
+ * state"); omitting the argument reads the current `table.options.state`
+ * instead. An optional `compare` suppresses semantically unchanged slice
+ * writes; the default remains reference equality.
  *
  * @example
  * ```ts
  * table_syncExternalStateToBaseAtoms(table)
+ * table_syncExternalStateToBaseAtoms(table, capturedState ?? null, shallow)
  * ```
  */
 export function table_syncExternalStateToBaseAtoms<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(table: Table_Internal<TFeatures, TData>): void {
-  const state = table.options.state
-  if (!state) {
-    return
-  }
+>(
+  table: Table_Internal<TFeatures, TData>,
+  capturedState?: Partial<TableState<TFeatures>> | null,
+  compare: (currentState: unknown, externalState: unknown) => boolean = (
+    currentState,
+    externalState,
+  ) => currentState === externalState,
+): void {
+  const state =
+    capturedState === undefined ? table.options.state : capturedState
 
   table._reactivity.batch(() => {
-    for (const key in state) {
-      const baseAtom = (table.baseAtoms as Record<string, any>)[key]
-      if (!baseAtom) {
-        continue
-      }
+    if (state) {
+      for (const key in state) {
+        const baseAtom = (table.baseAtoms as Record<string, any>)[key]
+        if (!baseAtom) {
+          continue
+        }
 
-      const externalState = state[key as keyof typeof state]
-      if (externalState !== table._reactivity.untrack(() => baseAtom.get())) {
-        baseAtom.set(() => externalState)
+        const externalState = state[key as keyof typeof state]
+        const currentState = table._reactivity.untrack(() => baseAtom.get())
+        if (!compare(currentState, externalState)) {
+          baseAtom.set(() => externalState)
+        }
       }
     }
+  })
+}
+
+/**
+ * Publishes captured controlled state after a host framework commits.
+ *
+ * Render-phase adapters stage options without synchronizing base atoms, then
+ * pass the state captured by the committed render here. The commit signal also
+ * invalidates ownership changes when no base atom was written.
+ */
+export function table_publishExternalState<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  state: Partial<TableState<TFeatures>> | null,
+  compare: (currentState: unknown, externalState: unknown) => boolean = (
+    currentState,
+    externalState,
+  ) => currentState === externalState,
+): void {
+  table._reactivity.batch(() => {
+    table_syncExternalStateToBaseAtoms(table, state, compare)
+    table._reactivity.commit?.()
   })
 }
 
@@ -147,6 +189,7 @@ export function table_mergeOptions<
  * @example
  * ```ts
  * table_setOptions(table, (old) => old)
+ * table_setOptions(table, (old) => old, { syncExternalState: false })
  * ```
  */
 export function table_setOptions<
@@ -155,6 +198,9 @@ export function table_setOptions<
 >(
   table: Table_Internal<TFeatures, TData>,
   updater: Updater<TableOptions<TFeatures, TData>>,
+  options?: {
+    syncExternalState?: boolean
+  },
 ): void {
   const newOptions = functionalUpdate(
     updater,
@@ -167,5 +213,7 @@ export function table_setOptions<
   } else {
     table.options = mergedOptions
   }
-  table_syncExternalStateToBaseAtoms(table)
+  if (options?.syncExternalState !== false) {
+    table_publishExternalState(table, mergedOptions.state ?? null)
+  }
 }

@@ -106,6 +106,41 @@ export function table_getDefaultColumnDef<
   } as Partial<ColumnDef<TFeatures, TData, unknown>>
 }
 
+function constructColumns<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  table: Table_Internal<TFeatures, TData>,
+  columnDefs: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>,
+  parent?: Column<TFeatures, TData, unknown>,
+  depth = 0,
+): Array<Column<TFeatures, TData, unknown>> {
+  const columns = new Array<Column<TFeatures, TData, unknown>>(
+    columnDefs.length,
+  )
+
+  for (let i = 0; i < columnDefs.length; i++) {
+    if (!(i in columnDefs)) {
+      continue
+    }
+
+    const columnDef = columnDefs[i]!
+    const column = constructColumn(table, columnDef, depth, parent)
+    const groupingColumnDef = columnDef as GroupColumnDef<
+      TFeatures,
+      TData,
+      unknown
+    >
+
+    column.columns = groupingColumnDef.columns
+      ? constructColumns(table, groupingColumnDef.columns, column, depth + 1)
+      : []
+    columns[i] = column
+  }
+
+  return columns
+}
+
 /**
  * Normalizes `options.columns` into the table's nested column tree.
  *
@@ -123,29 +158,7 @@ export function table_getAllColumns<
 >(
   table: Table_Internal<TFeatures, TData>,
 ): Array<Column<TFeatures, TData, unknown>> {
-  const recurseColumns = (
-    colDefs: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>,
-    parent?: Column<TFeatures, TData, unknown>,
-    depth = 0,
-  ): Array<Column<TFeatures, TData, unknown>> => {
-    return colDefs.map((columnDef) => {
-      const column = constructColumn(table, columnDef, depth, parent)
-
-      const groupingColumnDef = columnDef as GroupColumnDef<
-        TFeatures,
-        TData,
-        unknown
-      >
-
-      column.columns = groupingColumnDef.columns
-        ? recurseColumns(groupingColumnDef.columns, column, depth + 1)
-        : []
-
-      return column
-    })
-  }
-
-  return recurseColumns(table.options.columns)
+  return constructColumns(table, table.options.columns)
 }
 
 /**

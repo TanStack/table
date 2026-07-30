@@ -109,6 +109,12 @@ export class SubscribeDirective extends AsyncDirective {
     const shouldReinitialize =
       !this.initialized || sourceChanged || selectorChanged
 
+    // The template closure is recreated by every host render and captures
+    // values from the enclosing render scope (the table wrapper, row models),
+    // so always adopt the latest one — a stale closure would keep rendering
+    // through the previous render's captures on subscription-driven updates.
+    this.resolvedTemplate = actualTemplate
+
     if (shouldReinitialize) {
       if (this.initialized) {
         this.controller?.hostDisconnected()
@@ -117,7 +123,6 @@ export class SubscribeDirective extends AsyncDirective {
 
       this.latestSource = source
       this.latestSelector = selector
-      this.resolvedTemplate = actualTemplate
 
       if (!this.controller) {
         this.controller = new TanStackStoreSelector(
@@ -129,12 +134,16 @@ export class SubscribeDirective extends AsyncDirective {
 
       this.controller.hostUpdate()
       this.initialized = true
-
-      return this.resolvedTemplate?.(this.controller.value)
     }
 
-    // Host rerender with same source + selector, so we can skip updating
-    return noChange
+    // Always re-render on host-driven updates, even with an unchanged source
+    // and selector: the template may read values that changed without a state
+    // notification (e.g. row models after the host received new data). The
+    // subscription still drives updates between host renders; skipping here
+    // would pin the island to stale non-state inputs.
+    return this.resolvedTemplate?.(
+      this.latestSelector!(this.latestSource!.get()),
+    )
   }
 
   /** Cleans up the controller subscription when the directive is removed from the DOM. */
@@ -145,6 +154,9 @@ export class SubscribeDirective extends AsyncDirective {
   /** Restores the controller subscription when the directive is re-attached to the DOM. */
   reconnected() {
     this.controller?.hostUpdate()
+    if (this.resolvedTemplate && this.controller) {
+      this.setValue(this.resolvedTemplate(this.controller.value))
+    }
   }
 
   /**

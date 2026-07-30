@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.55'
+  version: '9.0.0-beta.63'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing primitives with tree-shakeable v9 features and framework adapters.'
@@ -11,7 +11,7 @@ library:
 
 meta:
   generated_by: '@tanstack/intent scaffold domain discovery'
-  date: '2026-07-10'
+  date: '2026-07-29'
   status: reviewed
   maintainer_review_pending: false
   phase_4_date: '2026-07-10'
@@ -527,6 +527,23 @@ skills:
       - 'Expecting row pinning to add sticky CSS or render top/center/bottom collections in the correct order automatically.'
       - 'Ignoring keepPinnedRows, so pinned rows remain visible outside the center row model when the desired product behavior was to filter or paginate them away.'
 
+  - slug: cell-selection
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Maintain spreadsheet-style rectangular cell ranges anchored to row and column ids across sorting, filtering, pagination, and column layout changes.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/cell-selection.md',
+        'TanStack/table:packages/table-core/src/features/cell-selection',
+        'TanStack/table:examples/react/cell-selection',
+      ]
+    failure_modes:
+      - 'Expecting cellSelection to be a per-cell map; it is an array of two-corner rectangles, so a range widens onto new cells when sorting or column order changes what sits between its corners.'
+      - 'Binding only the mousedown handler and expecting drag selection, or reimplementing mouseup even though the start handler owns its own document listener.'
+      - 'Drawing the selection outline with borders on a border-collapse table, which changes row heights as cells become selected.'
+      - 'Re-rendering every cell on each drag update instead of subscribing per row to table.atoms.cellSelection.'
+
   - slug: row-selection
     package: '@tanstack/table-core'
     domain: feature-plugins
@@ -875,7 +892,7 @@ skills:
     domain: framework-adapters
     type: framework
     framework: svelte
-    purpose: 'Create a Svelte 5 table with createTable, rune-backed options, snippets, and headless markup.'
+    purpose: 'Create a Svelte 5 table with createTable, rune-backed option getters, FlexRender, and headless markup.'
     sources:
       [
         'TanStack/table:docs/framework/svelte/guide/migrating.md',
@@ -892,16 +909,19 @@ skills:
     domain: framework-adapters
     type: framework
     framework: svelte
-    purpose: 'Use rune-backed atoms, selected table.state, controlled slices, and external atoms without reactivity mismatches.'
+    purpose: 'Use rune-aware table atoms and stores, native $derived projections, controlled $state or createTableState slices, and external atoms without broad invalidation or snapshot mismatches.'
     sources:
       [
         'TanStack/table:docs/framework/svelte/guide/table-state.md',
         'TanStack/table:docs/framework/svelte/guide/pagination.md',
         'TanStack/table:examples/svelte/basic-external-state',
         'TanStack/table:packages/svelte-table/src/createTable.svelte.ts',
+        'TanStack/table:packages/svelte-table/src/createTableState.svelte.ts',
       ]
     failure_modes:
-      - 'Reading or passing non-reactive snapshots where createTable options need getters over $state or $derived values.'
+      - 'Keeping the removed beta.58 createTable/createAppTable selector argument, selected table.state property, subscribeTable helper, or SubscribeSource type after beta.59.'
+      - 'Reading atom or store snapshots outside a tracked Svelte scope and expecting the read itself to keep a consumer reactive.'
+      - 'Reading table.store.get() in an effect that only needs one atom slice, causing unrelated state changes to rerun the effect.'
       - 'Pairing onSliceChange with a controlled state slice that is not actually written back with value-or-updater semantics.'
       - 'Blaming pagination reactivity when autoResetPageIndex immediately overwrites an externally requested page.'
 
@@ -920,6 +940,7 @@ skills:
     failure_modes:
       - 'Attempting the v9 adapter migration without first adopting Svelte 5-compatible component and reactivity syntax.'
       - 'Keeping readable-store assumptions or v8 row-model table options after switching to createTable.'
+      - 'Keeping beta.58 creation selectors, table.state, subscribeTable, or their removed selected-state generic parameters after beta.59.'
       - 'Missing shared v9 prototype, feature, helper, sorting, and logical-pinning changes.'
 
   - slug: create-table-hook
@@ -935,7 +956,7 @@ skills:
         'TanStack/table:packages/svelte-table/src/createTableHook.svelte.ts',
       ]
     failure_modes:
-      - 'Defining the hook in a plain module that cannot carry the required Svelte rune semantics.'
+      - 'Reimplementing createAppTable around the framework-agnostic core instead of using the shipped rune-capable createTableHook implementation.'
       - 'Passing $state snapshots instead of getters to createAppTable, freezing data or controlled state.'
       - 'Prop-drilling contexts through registered components instead of consuming the typed hooks under matching App wrappers.'
 
