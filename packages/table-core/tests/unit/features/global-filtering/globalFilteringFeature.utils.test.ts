@@ -71,6 +71,15 @@ describe('column_getCanGlobalFilter', () => {
     expect(column_getCanGlobalFilter(table.getColumn('active')!)).toBe(false)
   })
 
+  it('should allow non-string, non-number values to explicitly opt in', () => {
+    const filterColumns: Array<ColumnDef<typeof features, Sample, any>> = [
+      { accessorKey: 'active', id: 'active', enableGlobalFilter: true },
+    ]
+    const table = constructTable({ features, data, columns: filterColumns })
+
+    expect(column_getCanGlobalFilter(table.getColumn('active')!)).toBe(true)
+  })
+
   it('should return false for display columns without an accessor', () => {
     const table = makeTable()
 
@@ -105,6 +114,20 @@ describe('column_getCanGlobalFilter', () => {
 
     expect(column_getCanGlobalFilter(table.getColumn('firstName')!)).toBe(false)
     expect(column_getCanGlobalFilter(table.getColumn('age')!)).toBe(true)
+  })
+
+  it('should let a custom predicate reject an explicit column opt-in', () => {
+    const filterColumns: Array<ColumnDef<typeof features, Sample, any>> = [
+      { accessorKey: 'active', id: 'active', enableGlobalFilter: true },
+    ]
+    const table = constructTable({
+      features,
+      data,
+      columns: filterColumns,
+      getColumnCanGlobalFilter: () => false,
+    })
+
+    expect(column_getCanGlobalFilter(table.getColumn('active')!)).toBe(false)
   })
 })
 
