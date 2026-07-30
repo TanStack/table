@@ -8,6 +8,7 @@ library:
   monorepo: true
   package_version_overrides:
     '@tanstack/match-sorter-utils': '9.0.0-beta.53'
+    '@tanstack/svelte-table': '9.0.0-beta.60'
 
 meta:
   generated_by: '@tanstack/intent scaffold domain discovery'
