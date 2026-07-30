@@ -6,15 +6,12 @@ title: table_getToggleAllRowsExpandedHandler
 # Function: table\_getToggleAllRowsExpandedHandler()
 
 ```ts
-function table_getToggleAllRowsExpandedHandler<TFeatures, TData>(table): (e) => void;
+function table_getToggleAllRowsExpandedHandler<TFeatures, TData>(table): (_e) => void;
 ```
 
-Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L153)
+Defined in: [features/row-expanding/rowExpandingFeature.utils.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-expanding/rowExpandingFeature.utils.ts#L150)
 
 Creates an event handler that toggles all rows expanded.
-
-React-style synthetic events are persisted when present before the table state
-is toggled.
 
 ## Type Parameters
 
@@ -35,12 +32,12 @@ is toggled.
 ## Returns
 
 ```ts
-(e): void;
+(_e): void;
 ```
 
 ### Parameters
 
-#### e
+#### \_e
 
 `unknown`
 

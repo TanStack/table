@@ -216,7 +216,7 @@ function App() {
         <div className="controls">
           <button
             className="demo-button demo-button-sm"
-            onClick={() => table.setPageIndex(0)}
+            onClick={() => table.firstPage()}
             disabled={!table.getCanPreviousPage()}
           >
             {'<<'}
@@ -237,7 +237,7 @@ function App() {
           </button>
           <button
             className="demo-button demo-button-sm"
-            onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+            onClick={() => table.lastPage()}
             disabled={!table.getCanNextPage()}
           >
             {'>>'}
@@ -255,7 +255,7 @@ function App() {
               type="number"
               min="1"
               max={table.getPageCount()}
-              defaultValue={table.state.pagination.pageIndex + 1}
+              value={table.state.pagination.pageIndex + 1}
               onChange={(e) => {
                 const page = e.target.value ? Number(e.target.value) - 1 : 0
                 table.setPageIndex(page)
@@ -303,8 +303,8 @@ function App() {
         </div>
         <div>
           <label>State:</label>
-          <pre>
-            {data.length < 1_001 && JSON.stringify(table.state, null, 2)}
+          <pre data-testid="table-state">
+            {JSON.stringify(table.state, null, 2)}
           </pre>
         </div>
       </div>
@@ -397,13 +397,15 @@ function IndeterminateCheckbox({
     if (typeof indeterminate === 'boolean') {
       ref.current.indeterminate = !rest.checked && indeterminate
     }
-  }, [ref, indeterminate])
+    // `checked` belongs here too: `getIsSomePageRowsSelected` stays true when
+    // every page row is selected, so deselecting one only changes `checked`.
+  }, [ref, indeterminate, rest.checked])
 
   return (
     <input
       type="checkbox"
       ref={ref}
-      className={className + ' sortable-header'}
+      className={className + ' selection-checkbox'}
       {...rest}
     />
   )

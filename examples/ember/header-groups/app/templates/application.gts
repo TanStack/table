@@ -153,6 +153,6 @@ export default class HeaderGroupsTable extends Component {
       </tfoot>
     </table>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

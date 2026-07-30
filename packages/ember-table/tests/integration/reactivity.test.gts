@@ -18,7 +18,10 @@ import {
   createColumnHelper,
   type Row,
   type Cell,
+  type ColumnDef,
   type FlexRenderableSignature,
+  type OnChangeFn,
+  type RowSelectionState,
 } from '#src/index.ts'
 
 // --- Shared fixture ---
@@ -140,6 +143,156 @@ module('Integration | reactivity', function (hooks) {
     assert
       .dom('[data-test-row]:last-child')
       .containsText('Carol', 'new row content rendered')
+  })
+
+  test('rapid tracked option writes publish only the final snapshot', async function (assert) {
+    const firstNameColumn: ColumnDef<typeof features, Person> = {
+      id: 'firstName',
+      accessorKey: 'firstName',
+    }
+    const ageColumn: ColumnDef<typeof features, Person> = {
+      id: 'age',
+      accessorKey: 'age',
+    }
+
+    class TableComponent extends Component {
+      @tracked data: Array<Person> = makeData({
+        id: 'initial',
+        firstName: 'Initial',
+        age: 30,
+      })
+      @tracked activeColumns: Array<ColumnDef<typeof features, Person>> = [
+        firstNameColumn,
+      ]
+      @tracked enableRowSelection = true
+
+      table = useTable(() => ({
+        data: this.data,
+        columns: this.activeColumns,
+        features,
+        getRowId: (row) => row.id,
+        enableRowSelection: this.enableRowSelection,
+      }))
+
+      get optionSnapshot() {
+        const row = this.table.getRowModel().rows[0]!
+        const snapshot = [
+          row.id,
+          this.table
+            .getAllLeafColumns()
+            .map((column) => column.id)
+            .join(','),
+          row
+            .getAllCells()
+            .map((cell) => String(cell.getValue()))
+            .join(','),
+          String(row.getCanSelect()),
+        ].join('|')
+
+        assert.step(snapshot)
+        return snapshot
+      }
+
+      updateRapidly = () => {
+        this.data = makeData({
+          id: 'intermediate',
+          firstName: 'Intermediate',
+          age: 40,
+        })
+        this.activeColumns = [firstNameColumn, ageColumn]
+        this.enableRowSelection = false
+        this.data = makeData({
+          id: 'final',
+          firstName: 'Final',
+          age: 42,
+        })
+        this.activeColumns = [ageColumn]
+      }
+
+      <template>
+        <output
+          role='status'
+          aria-label='Option snapshot'
+        >{{this.optionSnapshot}}</output>
+        <button
+          type='button'
+          aria-label='Update options rapidly'
+          {{on 'click' this.updateRapidly}}
+        >Update</button>
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    assert.verifySteps(
+      ['initial|firstName|Initial|true'],
+      'the initial options are read as one consistent snapshot',
+    )
+
+    await click('[aria-label="Update options rapidly"]')
+
+    assert.verifySteps(
+      ['final|age|42|false'],
+      'the rerender observes only the final tracked option values',
+    )
+    assert
+      .dom('[role="status"][aria-label="Option snapshot"]')
+      .hasText('final|age|42|false')
+  })
+
+  test('table APIs use the latest tracked option callback', async function (assert) {
+    class TableComponent extends Component {
+      @tracked selectionHandler: OnChangeFn<RowSelectionState> = () => {
+        assert.step('first handler')
+      }
+
+      table = useTable(() => ({
+        data: makeData({ id: '1', firstName: 'Alice' }),
+        columns,
+        features,
+        getRowId: (row) => row.id,
+        onRowSelectionChange: this.selectionHandler,
+      }))
+
+      selectAll = () => {
+        this.table.toggleAllRowsSelected(true)
+      }
+
+      replaceHandler = () => {
+        this.selectionHandler = () => {
+          assert.step('second handler')
+        }
+      }
+
+      <template>
+        <button
+          type='button'
+          aria-label='Select all rows'
+          {{on 'click' this.selectAll}}
+        >Select</button>
+        <button
+          type='button'
+          aria-label='Replace selection handler'
+          {{on 'click' this.replaceHandler}}
+        >Replace</button>
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    await click('[aria-label="Select all rows"]')
+    assert.verifySteps(
+      ['first handler'],
+      'the table initially invokes the first callback',
+    )
+
+    await click('[aria-label="Replace selection handler"]')
+    await click('[aria-label="Select all rows"]')
+
+    assert.verifySteps(
+      ['second handler'],
+      'the same table instance invokes the latest tracked callback',
+    )
   })
 
   test('internal state updates propagate to the DOM (pagination + selection)', async function (assert) {

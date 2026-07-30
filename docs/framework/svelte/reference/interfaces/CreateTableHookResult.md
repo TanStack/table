@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:379](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L379)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:378](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L378)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:379](https://gi
 appFeatures: TFeatures;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:386](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L386)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:385](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L385)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:391](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L391)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:390](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L390)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -65,13 +65,17 @@ the cell/header/footer render props expose the bound components.
 ### createAppTable()
 
 ```ts
-createAppTable: <TData, TSelected>(tableOptions, selector?) => AppSvelteTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
+createAppTable: <TData>(tableOptions) => AppSvelteTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:401](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L401)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:404](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L404)
 
 Creates a table with the `App*` wrapper components and registered
 `tableComponents` attached. `TData` is inferred from the `data` option.
+
+Read table state with `table.atoms.<slice>.get()` or `table.store.get()`.
+These reads participate in Svelte dependency tracking inside templates,
+`$derived`, and `$effect`.
 
 #### Type Parameters
 
@@ -79,23 +83,15 @@ Creates a table with the `App*` wrapper components and registered
 
 `TData` *extends* `RowData`
 
-##### TSelected
-
-`TSelected` = `TableState`\<`TFeatures`\>
-
 #### Parameters
 
 ##### tableOptions
 
 `Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"`\>
 
-##### selector?
-
-(`state`) => `TSelected`
-
 #### Returns
 
-[`AppSvelteTable`](../type-aliases/AppSvelteTable.md)\<`TFeatures`, `TData`, `TSelected`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
+[`AppSvelteTable`](../type-aliases/AppSvelteTable.md)\<`TFeatures`, `TData`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
 
 ***
 
@@ -105,7 +101,7 @@ Creates a table with the `App*` wrapper components and registered
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:438](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L438)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:429](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L429)
 
 Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 `cellComponents` and a context-bound `FlexRender`.
@@ -128,7 +124,7 @@ Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:449](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L449)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:440](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L440)
 
 Reads the header provided by the nearest `<table.AppHeader>` /
 `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -149,20 +145,14 @@ context-bound `FlexRender`.
 ### useTableContext()
 
 ```ts
-useTableContext: <TData, TSelected>() => AppSvelteTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
+useTableContext: <TData>() => AppSvelteTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:423](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L423)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:418](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L418)
 
 Reads the table provided by the nearest `<table.AppTable>`. This is the same
 extended instance `createAppTable` returns, so the `App*` components and your
 `tableComponents` are available on it.
-
-Pass `TSelected` to match the selector you gave `createAppTable`, so
-`table.state` is typed as the selected slice. It cannot be inferred
-automatically (context does not carry the provider's generics), so it
-defaults to the full table state, which is correct for the common case of
-`createAppTable` without a selector.
 
 #### Type Parameters
 
@@ -170,10 +160,6 @@ defaults to the full table state, which is correct for the common case of
 
 `TData` *extends* `RowData` = `RowData`
 
-##### TSelected
-
-`TSelected` = `TableState`\<`TFeatures`\>
-
 #### Returns
 
-[`AppSvelteTable`](../type-aliases/AppSvelteTable.md)\<`TFeatures`, `TData`, `TSelected`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>
+[`AppSvelteTable`](../type-aliases/AppSvelteTable.md)\<`TFeatures`, `TData`, `TTableComponents`, `TCellComponents`, `THeaderComponents`\>

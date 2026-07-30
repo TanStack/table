@@ -247,7 +247,7 @@ function getColumnFilterValue(column: Column<typeof features, Person>) {
     <div class="controls">
       <button
         class="demo-button demo-button-sm"
-        @click="() => table.setPageIndex(0)"
+        @click="() => table.firstPage()"
         :disabled="!table.getCanPreviousPage()"
       >
         «
@@ -268,7 +268,7 @@ function getColumnFilterValue(column: Column<typeof features, Person>) {
       </button>
       <button
         class="demo-button demo-button-sm"
-        @click="() => table.setPageIndex(table.getPageCount() - 1)"
+        @click="() => table.lastPage()"
         :disabled="!table.getCanNextPage()"
       >
         »
@@ -315,7 +315,9 @@ function getColumnFilterValue(column: Column<typeof features, Person>) {
     <div>
       {{ table.getPrePaginatedRowModel().rows.length.toLocaleString() }} Rows
     </div>
-    <pre>{{ JSON.stringify(table.store.get(), null, 2) }}</pre>
+    <pre data-testid="table-state">{{
+      JSON.stringify(table.store.get(), null, 2)
+    }}</pre>
     <div class="spacer-md" />
   </div>
 </template>

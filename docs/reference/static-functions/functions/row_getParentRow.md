@@ -15,8 +15,8 @@ Defined in: [core/rows/coreRowsFeature.utils.ts:199](https://github.com/TanStack
 
 Looks up this row's direct parent, if it has one.
 
-Parent lookup searches the pre-pagination row model so parent relationships
-are available even when the parent is not on the current page.
+Parent lookup prefers the core row model for structural parents, then falls
+back to the pre-pagination row model for generated parent rows.
 
 ## Type Parameters
 

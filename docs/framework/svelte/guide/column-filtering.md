@@ -138,7 +138,7 @@ Since the column filter state is an array of objects, you can have multiple colu
 
 #### Accessing Column Filter State
 
-For reactive reads that should update your UI, use `table.state.columnFilters` (selected by the `createTable` selector) or `subscribeTable`. In event handlers or other non-reactive code, you can read the current snapshot with `table.atoms.columnFilters.get()`, but this read only participates in Svelte dependency tracking when called in a rune-tracked context.
+Read column filters from `table.atoms.columnFilters.get()`. The call returns the current value in event handlers and becomes reactive when it runs in a template, `$derived`, `$derived.by`, or `$effect`.
 
 ```ts
 const table = createTable({
@@ -148,8 +148,11 @@ const table = createTable({
   //...
 })
 
-table.state.columnFilters // reactive read
-table.atoms.columnFilters.get() // snapshot read in event handlers
+const columnFilters = $derived(table.atoms.columnFilters.get())
+
+const logCurrentColumnFilters = () => {
+  console.log(table.atoms.columnFilters.get())
+}
 ```
 
 However, if you need access to the column filter state outside of the table, you can "control" the column filter state like down below.

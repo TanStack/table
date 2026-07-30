@@ -85,7 +85,13 @@ export const MRT_ShowHideColumnsMenu = <TData extends MRT_RowData>({
           <Button
             onClick={() =>
               table.setColumnOrder(
-                getDefaultColumnOrderIds(table.options as any, true),
+                getDefaultColumnOrderIds(
+                  {
+                    ...table.options,
+                    state,
+                  },
+                  true,
+                ),
               )
             }
             variant="subtle"

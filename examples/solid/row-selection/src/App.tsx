@@ -306,7 +306,9 @@ function App() {
       </div>
       <div>
         <label>Row Selection State:</label>
-        <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
+        <pre data-testid="table-state">
+          {JSON.stringify(table.store.get(), null, 2)}
+        </pre>
       </div>
     </div>
   )

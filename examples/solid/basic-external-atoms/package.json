@@ -20,8 +20,8 @@
   "dependencies": {
     "@tanstack/solid-devtools": "^0.8.8",
     "@tanstack/solid-store": "^0.11.0",
-    "@tanstack/solid-table": "^9.0.0-beta.55",
-    "@tanstack/solid-table-devtools": "^9.0.0-beta.55",
+    "@tanstack/solid-table": "^9.0.0-beta.59",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.59",
     "solid-js": "^1.9.13"
   }
 }

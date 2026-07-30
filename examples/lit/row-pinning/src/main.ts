@@ -333,7 +333,9 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div class="spacer-sm"></div>
-        <pre>${JSON.stringify(table.state, null, 2)}</pre>
+        <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre
+        >
       </div>
       <style>
         * {

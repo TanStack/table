@@ -79,7 +79,28 @@ export function FlexRender<
   TValue extends CellData = CellData,
 >(props: FlexRenderProps<TFeatures, TData, TValue>): any {
   if ('cell' in props && props.cell) {
-    return flexRender(props.cell.column.columnDef.cell, props.cell.getContext())
+    const cell = props.cell
+    const definition = cell.column.columnDef
+    const groupingCell = cell as typeof cell & {
+      getIsAggregated?: () => boolean
+      getIsPlaceholder?: () => boolean
+    }
+    const groupingDefinition = definition as typeof definition & {
+      aggregatedCell?: typeof definition.cell
+    }
+
+    if (groupingCell.getIsAggregated?.()) {
+      return flexRender(
+        groupingDefinition.aggregatedCell ?? definition.cell,
+        cell.getContext(),
+      )
+    }
+
+    if (groupingCell.getIsPlaceholder?.()) {
+      return null
+    }
+
+    return flexRender(definition.cell, cell.getContext())
   }
 
   if ('header' in props && props.header) {

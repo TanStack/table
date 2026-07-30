@@ -14,7 +14,7 @@ import {
 
 import { useDirection } from '@mantine/core'
 
-import { MRT_AggregationFns } from '../fns/aggregationFns'
+import { MRT_RowAggregationFns } from '../fns/aggregationFns'
 import { MRT_FilterFns } from '../fns/filterFns'
 import { MRT_SortFns } from '../fns/sortingFns'
 import { MRT_Default_Icons } from '../icons'
@@ -125,7 +125,7 @@ export const useMRT_TableOptions: <TData extends MRT_RowData>(
     [localization],
   )
   aggregationFns = useMemo(
-    () => ({ ...MRT_AggregationFns, ...aggregationFns }),
+    () => ({ ...MRT_RowAggregationFns, ...aggregationFns }),
     [],
   )
   filterFns = useMemo(

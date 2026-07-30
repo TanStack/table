@@ -102,3 +102,37 @@ test('renders the table without crashing', async ({ page }) => {
     await server.close()
   }
 })
+
+test('updates controlled pagination without console errors', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = getTable(page)
+    const nextPageButton = page.getByRole('button', {
+      name: '>',
+      exact: true,
+    })
+    const pageStatus = page.getByText(/^Page$/).locator('..')
+
+    await expect(getBodyRows(table).first()).toBeVisible()
+    await expect(pageStatus).toContainText('1 of 100')
+    const firstPageRow = await getFirstBodyRowData(table)
+
+    await nextPageButton.click()
+
+    await expect(pageStatus).toContainText('2 of 100')
+    await expect.poll(() => getFirstBodyRowData(table)).not.toBe(firstPageRow)
+
+    const secondPageRow = await getFirstBodyRowData(table)
+
+    await nextPageButton.click()
+
+    await expect(pageStatus).toContainText('3 of 100')
+    await expect.poll(() => getFirstBodyRowData(table)).not.toBe(secondPageRow)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

@@ -101,8 +101,6 @@ export function header_getResizeHandler<
       return
     }
 
-    ;(event as any).persist?.()
-
     if (isTouchStartEvent(event)) {
       // lets not respond to multiple touches (e.g. 2 or 3 fingers)
       if (event.touches.length > 1) {

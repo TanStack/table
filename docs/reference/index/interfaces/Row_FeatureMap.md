@@ -62,7 +62,7 @@ Defined in: [types/Row.ts:26](https://github.com/TanStack/table/blob/main/packag
 ### rowAggregationFeature
 
 ```ts
-rowAggregationFeature: Row_Aggregation;
+rowAggregationFeature: Row_RowAggregation;
 ```
 
 Defined in: [types/Row.ts:22](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Row.ts#L22)

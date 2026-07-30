@@ -107,12 +107,8 @@
       debugTable: true,
       debugAll: true,
     },
-    (state) => ({
-      pagination: state.pagination,
-      rowPinning: state.rowPinning,
-      expanded: state.expanded,
-    }),
   )
+  const pagination = $derived(table.atoms.pagination.get())
 </script>
 
 {#snippet PinCell(row: ReturnType<typeof table.getRowModel>['rows'][0])}
@@ -184,7 +180,7 @@
   </tr>
 {/snippet}
 
-{#snippet Filter(column: Column<typeof features, Person>, tableRef: SvelteTable<typeof features, Person, any>)}
+{#snippet Filter(column: Column<typeof features, Person>, tableRef: SvelteTable<typeof features, Person>)}
   {@const firstValue = tableRef
     .getPreFilteredRowModel()
     .flatRows[0]?.getValue(column.id)}
@@ -313,7 +309,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -323,7 +319,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e) => {
           const page = (e.target as HTMLInputElement).value
             ? Number((e.target as HTMLInputElement).value) - 1
@@ -334,7 +330,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e) => table.setPageSize(Number((e.target as HTMLSelectElement).value))}
     >
       {#each [10, 20, 30, 40, 50] as pageSize}
@@ -387,5 +383,5 @@
       </label>
     </div>
   </div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

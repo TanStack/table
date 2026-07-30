@@ -1,5 +1,10 @@
-import { useMemo, useState } from 'preact/hooks'
+import { useEffect, useLayoutEffect, useMemo, useState } from 'preact/hooks'
 import { constructTable } from '@tanstack/table-core'
+import { createRenderPhaseSource } from '@tanstack/table-core/reactivity'
+import {
+  table_publishExternalState,
+  table_setOptions,
+} from '@tanstack/table-core/static-functions'
 import { shallow, useSelector } from '@tanstack/preact-store'
 import { preactReactivity } from './reactivity'
 import { FlexRender } from './FlexRender'
@@ -15,6 +20,9 @@ import type {
 import type { ComponentChildren } from 'preact'
 import type { FlexRenderProps } from './FlexRender'
 import type { SubscribePropsWithStore, SubscribeSource } from './Subscribe'
+
+const useIsomorphicLayoutEffect =
+  typeof window === 'undefined' ? useEffect : useLayoutEffect
 
 export type PreactTable<
   TFeatures extends TableFeatures,
@@ -117,7 +125,7 @@ export function useTable<
   tableOptions: TableOptions<TFeatures, TData>,
   selector?: (state: TableState<TFeatures>) => TSelected,
 ): PreactTable<TFeatures, TData, TSelected> {
-  const [table] = useState(() => {
+  const [{ table, rootSource }] = useState(() => {
     // Explicit type arguments skip generic inference from the spread object (a
     // type-check hot spot); the spread only adds the preact reactivity binding
     // to `features`.
@@ -130,26 +138,47 @@ export function useTable<
     }) as unknown as PreactTable<TFeatures, TData, TSelected>
 
     tableInstance.Subscribe = ((props: any) => {
-      const source = props.source ?? tableInstance.store
-
       return Subscribe({
         ...props,
-        source,
+        source: props.source ?? tableInstance.store,
       })
     }) as PreactTable<TFeatures, TData, TSelected>['Subscribe']
 
     tableInstance.FlexRender = FlexRender
 
-    return tableInstance
+    return {
+      table: tableInstance,
+      // Only a host render that commits advances this source's notification
+      // baseline. Reads from abandoned renders remain speculative.
+      rootSource: createRenderPhaseSource<TableState<TFeatures>>(
+        tableInstance.store,
+        shallow,
+      ),
+    }
   })
 
-  // sync options on every render
-  table.setOptions((prev) => ({
-    ...prev,
-    ...tableOptions,
-  }))
+  const coreTable = table as unknown as Table<TFeatures, TData>
 
-  const state = useSelector(table.store, selector, { compare: shallow })
+  // Keep options current during render without publishing them to reactive
+  // subscribers. Readonly atoms expose the staged snapshot through live get().
+  table_setOptions(
+    coreTable,
+    (prev) => ({
+      ...prev,
+      ...tableOptions,
+    }),
+    { syncExternalState: false },
+  )
+
+  const controlledState = coreTable.options.state
+  const renderSnapshot = rootSource.get()
+
+  const state = useSelector(rootSource, selector, { compare: shallow })
+
+  useIsomorphicLayoutEffect(() => {
+    rootSource.markCommitted(renderSnapshot)
+    table_publishExternalState(coreTable, controlledState ?? null, shallow)
+  })
 
   return useMemo(
     () => ({

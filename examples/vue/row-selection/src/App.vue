@@ -180,6 +180,9 @@ useTanStackTableDevtools(table)
       {{ enableRowSelection ? 'Disable' : 'Enable' }} Row Selection
     </button>
   </div>
+  <pre data-testid="table-state">{{
+    JSON.stringify(table.store.get(), null, 2)
+  }}</pre>
 </template>
 
 <style>

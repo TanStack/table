@@ -35,7 +35,7 @@ function getterOnlyMerge(...sources: Array<any>) {
 }
 
 describe('constructTable', () => {
-  it('initializes feature-owned table data before constructing any table APIs', () => {
+  it('runs each feature init just before its own API construction, in registration order', () => {
     const calls: Array<string> = []
     const initA = vi.fn((table: any) => {
       calls.push('init-a')
@@ -43,7 +43,9 @@ describe('constructTable', () => {
       expect(table.baseAtoms.lifecycle.get()).toBe('initial')
       expect(table.atoms.lifecycle.get()).toBe('initial')
       expect(table.store.state.lifecycle).toBe('initial')
-      expect(table.reset).toBeUndefined()
+      // Hooks may rely on features registered earlier: the core features'
+      // APIs (like reset) are already constructed by the time this runs.
+      expect(table.reset).toBeTypeOf('function')
       table.firstInitialized = true
     })
     const initB = vi.fn((table: any) => {
@@ -53,8 +55,9 @@ describe('constructTable', () => {
     })
     const apiA = vi.fn((table: any) => {
       calls.push('api-a')
+      // Own feature's instance data is initialized, later features' is not.
       expect(table.firstInitialized).toBe(true)
-      expect(table.secondInitialized).toBe(true)
+      expect(table.secondInitialized).toBeUndefined()
     })
     const apiB = vi.fn((table: any) => {
       calls.push('api-b')
@@ -94,8 +97,8 @@ describe('constructTable', () => {
 
     expect(calls).toEqual([
       'init-a',
-      'init-b',
       'api-a',
+      'init-b',
       'api-b',
       'api-without-init',
     ])
@@ -103,6 +106,59 @@ describe('constructTable', () => {
     expect(initB).toHaveBeenCalledOnce()
     expect(apiWithoutInit).toHaveBeenCalledOnce()
     expect(table.apiWithoutInit).toBe(true)
+  })
+
+  it('pre-computes per-instance init functions bound to their feature', () => {
+    const initialized = new Set<string>()
+    // Method shorthand so each hook reads `this` from the feature object,
+    // proving the cached init fns are bound to their feature
+    const bindingFeature = {
+      marker: 'bound-feature',
+      initCellInstanceData(this: any) {
+        initialized.add(`cell:${this.marker}`)
+      },
+      initColumnInstanceData(this: any) {
+        initialized.add(`column:${this.marker}`)
+      },
+      initHeaderGroupInstanceData(this: any) {
+        initialized.add(`headerGroup:${this.marker}`)
+      },
+      initHeaderInstanceData(this: any) {
+        initialized.add(`header:${this.marker}`)
+      },
+      initRowInstanceData(this: any) {
+        initialized.add(`row:${this.marker}`)
+      },
+    } as TableFeature
+    const features = {
+      ...testFeatures({}),
+      bindingFeature,
+    } as any
+
+    const table = constructTable({
+      features,
+      columns: [{ id: 'first-name', accessorKey: 'firstName' }],
+      data: [{ firstName: 'Tanner' }],
+    } as any) as any
+
+    expect(table._cellInstanceInitFns).toHaveLength(1)
+    expect(table._columnInstanceInitFns).toHaveLength(1)
+    expect(table._headerGroupInstanceInitFns).toHaveLength(1)
+    expect(table._headerInstanceInitFns).toHaveLength(1)
+    expect(table._rowInstanceInitFns).toHaveLength(1)
+
+    table.getHeaderGroups()
+    table.getRowModel().rows.forEach((row: any) => row.getAllCells())
+
+    expect(initialized).toEqual(
+      new Set([
+        'cell:bound-feature',
+        'column:bound-feature',
+        'headerGroup:bound-feature',
+        'header:bound-feature',
+        'row:bound-feature',
+      ]),
+    )
   })
 
   it('resets feature-owned table data after internal atoms without rerunning initialization', () => {

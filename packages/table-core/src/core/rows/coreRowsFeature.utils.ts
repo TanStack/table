@@ -188,8 +188,8 @@ export function table_getMaxSubRowDepth<
 /**
  * Looks up this row's direct parent, if it has one.
  *
- * Parent lookup searches the pre-pagination row model so parent relationships
- * are available even when the parent is not on the current page.
+ * Parent lookup prefers the core row model for structural parents, then falls
+ * back to the pre-pagination row model for generated parent rows.
  *
  * @example
  * ```ts
@@ -200,7 +200,14 @@ export function row_getParentRow<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>) {
-  return row.parentId ? row.table.getRow(row.parentId, true) : undefined
+  if (!row.parentId) {
+    return undefined
+  }
+
+  return (
+    row.table.getCoreRowModel().rowsById[row.parentId] ??
+    row.table.getRow(row.parentId, true)
+  )
 }
 
 /**

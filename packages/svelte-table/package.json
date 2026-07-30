@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/svelte-table",
-  "version": "9.0.0-beta.55",
+  "version": "9.0.0-beta.60",
   "description": "Headless UI for building powerful tables & datagrids for Svelte.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -57,7 +57,9 @@
   ],
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
-    "test:eslint": "eslint ./src",
+    "test:eslint": "eslint ./src ./tests",
+    "test:lib": "vitest --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib --watch",
     "test:types": "svelte-check --tsconfig ./tsconfig.json",
     "test:build": "publint --strict",
     "build": "svelte-package --input ./src --output ./dist"
@@ -69,6 +71,7 @@
   "devDependencies": {
     "@sveltejs/package": "^2.5.8",
     "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@testing-library/svelte": "^5.4.2",
     "eslint-plugin-svelte": "^3.19.0",
     "svelte": "^5.56.2",
     "svelte-check": "^4.6.0"

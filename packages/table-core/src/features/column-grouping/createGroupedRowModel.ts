@@ -29,6 +29,10 @@ export function createGroupedRowModel<
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
     const table = _table as unknown as Table_Internal<TFeatures, TData>
+    let hasAutoResetDependencies = false
+    let previousGrouping: unknown
+    let previousPreGroupedRowModel: RowModel<TFeatures, TData> | undefined
+
     return tableMemo({
       feature: 'columnGroupingFeature',
       table,
@@ -40,8 +44,25 @@ export function createGroupedRowModel<
       ],
       fn: () => _createGroupedRowModel(table),
       onAfterUpdate: () => {
-        table_autoResetExpanded(table)
-        table_autoResetPageIndex(table)
+        const grouping = table.atoms.grouping?.get()
+        const preGroupedRowModel = table.getPreGroupedRowModel()
+        const rowInputsChanged =
+          !hasAutoResetDependencies ||
+          grouping !== previousGrouping ||
+          preGroupedRowModel !== previousPreGroupedRowModel
+
+        previousGrouping = grouping
+        previousPreGroupedRowModel = preGroupedRowModel
+        hasAutoResetDependencies = true
+
+        // Column definitions participate in grouped-row computation (for
+        // grouping and aggregation metadata), but changing only their
+        // reference does not change which rows belong on the current page or
+        // which group ids are expanded.
+        if (rowInputsChanged) {
+          table_autoResetExpanded(table)
+          table_autoResetPageIndex(table)
+        }
       },
     })
   }

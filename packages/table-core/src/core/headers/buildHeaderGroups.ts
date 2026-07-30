@@ -51,6 +51,8 @@ export function buildHeaderGroups<
 
   const headerGroups: Array<HeaderGroup<TFeatures, TData>> = []
 
+  const headerGroupInitFns = table._headerGroupInstanceInitFns
+
   const constructHeaderGroup = (
     headersToGroup: Array<Header<TFeatures, TData, TValue>>,
     depth: number,
@@ -118,6 +120,11 @@ export function buildHeaderGroups<
       )
       headerToGroup.headerGroup = headerGroup
     })
+
+    // Initialize instance-specific data for features that need it
+    for (let i = 0; i < headerGroupInitFns.length; i++) {
+      headerGroupInitFns[i]!(headerGroup)
+    }
 
     headerGroups.push(headerGroup)
 

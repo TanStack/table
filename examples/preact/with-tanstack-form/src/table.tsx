@@ -91,8 +91,8 @@ function PaginationControls() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
-            onChange={(e) => {
+            value={table.state.pagination.pageIndex + 1}
+            onInput={(e) => {
               const page = e.currentTarget.value
                 ? Number(e.currentTarget.value) - 1
                 : 0

@@ -51,6 +51,7 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
 ): MRT_TableInstance<TData> => {
   const tableRef = useRef<MRT_TableInstance<TData> | null>(null)
   const columnDefsRef = useRef<Array<MRT_ColumnDef<TData>>>([])
+  const columnPreparationDepsRef = useRef<Array<unknown> | undefined>(undefined)
 
   // ---------------------------------------------------------------------------
   // Initial state — the column-order default and the per-column filter-fn map
@@ -133,37 +134,83 @@ export const useMRT_TableInstance = <TData extends MRT_RowData>(
     state: stateForTransforms,
   } as MRT_StatefulTableOptions<TData>
 
-  // Don't recompute columnDefs while resizing or dragging a column/row.
-  const preparedColumns =
-    stateForTransforms.columnResizing.isResizingColumn ||
-    stateForTransforms.draggingColumn ||
-    stateForTransforms.draggingRow
-      ? columnDefsRef.current
-      : prepareColumns({
-          columnDefs: [
-            ...([
-              showRowPinningColumn(optionsForTransforms) &&
-                getMRT_RowPinningColumnDef(optionsForTransforms),
-              showRowDragColumn(optionsForTransforms) &&
-                getMRT_RowDragColumnDef(optionsForTransforms),
-              showRowActionsColumn(optionsForTransforms) &&
-                getMRT_RowActionsColumnDef(optionsForTransforms),
-              showRowExpandColumn(optionsForTransforms) &&
-                getMRT_RowExpandColumnDef(optionsForTransforms),
-              showRowSelectionColumn(optionsForTransforms) &&
-                getMRT_RowSelectColumnDef(optionsForTransforms),
-              showRowNumbersColumn(optionsForTransforms) &&
-                getMRT_RowNumbersColumnDef(optionsForTransforms),
-            ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
-            ...optionsForTransforms.columns,
-            ...([
-              showRowSpacerColumn(optionsForTransforms) &&
-                getMRT_RowSpacerColumnDef(optionsForTransforms),
-            ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
-          ],
-          tableOptions: optionsForTransforms,
-        })
-  columnDefsRef.current = preparedColumns
+  // Column preparation mutates/augments definitions and must rerun when an
+  // input that affects those definitions changes. Keep the resulting array
+  // stable across unrelated state updates such as pagination.
+  const columnPreparationDeps: Array<unknown> = [
+    optionsForTransforms.columns,
+    optionsForTransforms.defaultColumn,
+    optionsForTransforms.defaultDisplayColumn,
+    optionsForTransforms.displayColumnDefOptions,
+    (optionsForTransforms as any).filterFns,
+    (optionsForTransforms as any).sortFns,
+    optionsForTransforms.localization,
+    stateForTransforms.columnFilterFns,
+    stateForTransforms.creatingRow,
+    stateForTransforms.grouping,
+    optionsForTransforms.createDisplayMode,
+    optionsForTransforms.editDisplayMode,
+    optionsForTransforms.enableEditing,
+    optionsForTransforms.enableExpandAll,
+    optionsForTransforms.enableExpanding,
+    optionsForTransforms.enableGrouping,
+    optionsForTransforms.enableMultiRowSelection,
+    optionsForTransforms.enableRowActions,
+    optionsForTransforms.enableRowDragging,
+    optionsForTransforms.enableRowNumbers,
+    optionsForTransforms.enableRowOrdering,
+    optionsForTransforms.enableRowPinning,
+    optionsForTransforms.enableRowSelection,
+    optionsForTransforms.enableSelectAll,
+    optionsForTransforms.groupedColumnMode,
+    optionsForTransforms.layoutMode,
+    optionsForTransforms.positionExpandColumn,
+    optionsForTransforms.renderDetailPanel,
+    optionsForTransforms.rowNumberDisplayMode,
+    optionsForTransforms.rowPinningDisplayMode,
+  ]
+  const previousColumnPreparationDeps = columnPreparationDepsRef.current
+  const columnPreparationChanged =
+    !previousColumnPreparationDeps ||
+    columnPreparationDeps.length !== previousColumnPreparationDeps.length ||
+    columnPreparationDeps.some(
+      (dependency, index) =>
+        !Object.is(dependency, previousColumnPreparationDeps[index]),
+    )
+  const freezePreparedColumns =
+    !!columnDefsRef.current.length &&
+    (stateForTransforms.columnResizing.isResizingColumn ||
+      !!stateForTransforms.draggingColumn ||
+      !!stateForTransforms.draggingRow)
+
+  if (columnPreparationChanged && !freezePreparedColumns) {
+    columnDefsRef.current = prepareColumns({
+      columnDefs: [
+        ...([
+          showRowPinningColumn(optionsForTransforms) &&
+            getMRT_RowPinningColumnDef(optionsForTransforms),
+          showRowDragColumn(optionsForTransforms) &&
+            getMRT_RowDragColumnDef(optionsForTransforms),
+          showRowActionsColumn(optionsForTransforms) &&
+            getMRT_RowActionsColumnDef(optionsForTransforms),
+          showRowExpandColumn(optionsForTransforms) &&
+            getMRT_RowExpandColumnDef(optionsForTransforms),
+          showRowSelectionColumn(optionsForTransforms) &&
+            getMRT_RowSelectColumnDef(optionsForTransforms),
+          showRowNumbersColumn(optionsForTransforms) &&
+            getMRT_RowNumbersColumnDef(optionsForTransforms),
+        ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
+        ...optionsForTransforms.columns,
+        ...([
+          showRowSpacerColumn(optionsForTransforms) &&
+            getMRT_RowSpacerColumnDef(optionsForTransforms),
+        ].filter(Boolean) as Array<MRT_ColumnDef<TData>>),
+      ],
+      tableOptions: optionsForTransforms,
+    })
+    columnPreparationDepsRef.current = columnPreparationDeps
+  }
+  const preparedColumns = columnDefsRef.current
 
   // If loading with empty data, generate blank rows to show skeleton loaders.
   const data = useMemo(

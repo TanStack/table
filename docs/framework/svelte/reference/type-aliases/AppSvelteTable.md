@@ -3,15 +3,16 @@ id: AppSvelteTable
 title: AppSvelteTable
 ---
 
-# Type Alias: AppSvelteTable\<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents\>
+# Type Alias: AppSvelteTable\<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents\>
 
 ```ts
-type AppSvelteTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = SvelteTable<TFeatures, TData, TSelected> & NoInfer<TTableComponents> & object;
+type AppSvelteTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = SvelteTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
 Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:290](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L290)
 
-Extended table API returned by createAppTable with all App wrapper components.
+Svelte-aware table returned by `createAppTable`, extended with the registered
+table components and the `App*` context wrappers.
 
 ## Type Declaration
 
@@ -113,10 +114,6 @@ Convenience FlexRender component attached to the table instance.
 ### TData
 
 `TData` *extends* `RowData`
-
-### TSelected
-
-`TSelected`
 
 ### TTableComponents
 
