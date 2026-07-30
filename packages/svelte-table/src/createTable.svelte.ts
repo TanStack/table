@@ -33,7 +33,13 @@ export type SvelteTable<
  * @example
  * ```svelte
  * <script lang="ts">
- *   const table = createTable({ features, columns, data })
+ *   const table = createTable({
+ *     features,
+ *     columns,
+ *     get data() {
+ *       return data
+ *     },
+ *   })
  *
  *   const pagination = $derived(table.atoms.pagination.get())
  *   const stateJson = $derived(JSON.stringify(table.store.get(), null, 2))

@@ -3,7 +3,7 @@ title: Migrating to TanStack Table V9 (Svelte)
 ---
 
 > [!NOTE]
-> `v9.0.0-beta.59` removes Svelte's table-creation selectors. `createTable` and `createAppTable` now accept only their options object; the selected `table.state` property, `subscribeTable`, and `SubscribeSource` are also removed. Read one slice with `table.atoms.<slice>.get()` and the complete state with `table.store.get()`. These reads update naturally in Svelte templates, `$derived`, `$derived.by`, and `$effect`. This is an intentional beta breaking change with no compatibility overload or runtime shim. See [State Management Changes](#state-management-changes) for examples.
+> `v9.0.0-beta.59` removes Svelte's table-creation selectors. `createTable` and `createAppTable` now accept only their options object; the selected `table.state` property, `subscribeTable`, and `SubscribeSource` are also removed. Read one slice with `table.atoms.<slice>.get()` and the complete state with `table.store.get()`. These reads update naturally in Svelte templates, `$derived`, `$derived.by`, and `$effect`. This is an intentional beta-breaking change with no compatibility overload or runtime shim. See [State Management Changes](#state-management-changes) for examples.
 
 > [!NOTE]
 > `v9.0.0-beta.48`/`beta.49` split aggregation out of `columnGroupingFeature` into a new `rowAggregationFeature` (`stockFeatures` includes both). If you declare features explicitly, add `rowAggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. Aggregation function definitions, row-depth selection, and the `getAggregationValue` signature also changed. See [Grouping and Aggregation](#grouping-and-aggregation) below.

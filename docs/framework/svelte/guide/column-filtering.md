@@ -150,7 +150,9 @@ const table = createTable({
 
 const columnFilters = $derived(table.atoms.columnFilters.get())
 
-table.atoms.columnFilters.get() // current snapshot in an event handler
+const logCurrentColumnFilters = () => {
+  console.log(table.atoms.columnFilters.get())
+}
 ```
 
 However, if you need access to the column filter state outside of the table, you can "control" the column filter state like down below.

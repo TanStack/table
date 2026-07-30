@@ -9,7 +9,7 @@ title: createTable
 function createTable<TFeatures, TData>(tableOptions): SvelteTable<TFeatures, TData>;
 ```
 
-Defined in: [packages/svelte-table/src/createTable.svelte.ts:46](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L46)
+Defined in: [packages/svelte-table/src/createTable.svelte.ts:52](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTable.svelte.ts#L52)
 
 Creates a Svelte 5 table instance backed by rune-aware TanStack Store atoms.
 
@@ -44,7 +44,13 @@ as `getRowModel()`.
 
 ```svelte
 <script lang="ts">
-  const table = createTable({ features, columns, data })
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data
+    },
+  })
 
   const pagination = $derived(table.atoms.pagination.get())
   const stateJson = $derived(JSON.stringify(table.store.get(), null, 2))

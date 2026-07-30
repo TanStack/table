@@ -46,7 +46,7 @@ The table instance already manages the row selection state for you. You can acce
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting
 
 ```ts
-console.log(table.atoms.rowSelection.get()) //get the row selection state - { 1: true, 2: false, etc... }
+console.log(table.atoms.rowSelection.get()) // get the row selection state - { 1: true, 2: true }
 console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
 console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
 console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows

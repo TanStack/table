@@ -78,7 +78,9 @@ const table = createTable({
 
 const sorting = $derived(table.atoms.sorting.get())
 
-table.atoms.sorting.get() // current snapshot in an event handler
+const logCurrentSorting = () => {
+  console.log(table.atoms.sorting.get())
+}
 ```
 
 However, if you need access to the sorting state outside of the table, you can "control" the sorting state like down below.
