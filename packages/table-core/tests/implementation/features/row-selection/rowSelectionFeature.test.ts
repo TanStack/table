@@ -116,6 +116,72 @@ describe('rowSelectionFeature', () => {
       expect(result.rowsById).toHaveProperty('0.0')
     })
 
+    it('should preserve three levels of selected row structure and prototypes', () => {
+      const data = generateTestData(1, 1, 1)
+      const columns = generateColumnDefs(data)
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0': true,
+            '0.0': true,
+            '0.0.0': true,
+          },
+        },
+        columns,
+      })
+      const rowModel = table.getCoreRowModel()
+
+      const result = RowSelectionUtils.selectRowsFn(rowModel, table)
+      const selectedRoot = result.rows[0]!
+      const selectedChild = selectedRoot.subRows[0]!
+      const selectedGrandchild = selectedChild.subRows[0]!
+
+      expect(result.flatRows.map((row) => row.id)).toEqual([
+        '0',
+        '0.0',
+        '0.0.0',
+      ])
+      expect(Object.keys(result.rowsById)).toEqual(['0', '0.0', '0.0.0'])
+      expect(selectedRoot).not.toBe(rowModel.rows[0])
+      expect(selectedChild).not.toBe(rowModel.rows[0]!.subRows[0])
+      expect(selectedGrandchild).toBe(rowModel.rows[0]!.subRows[0]!.subRows[0])
+      expect(typeof selectedRoot.getValue).toBe('function')
+      expect(typeof selectedChild.getValue).toBe('function')
+      expect(typeof selectedGrandchild.getValue).toBe('function')
+    })
+
+    it('should collect a selected grandchild beneath two unselected ancestors', () => {
+      const data = generateTestData(1, 1, 1)
+      const columns = generateColumnDefs(data)
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0.0.0': true,
+          },
+        },
+        columns,
+      })
+      const rowModel = table.getCoreRowModel()
+
+      const result = RowSelectionUtils.selectRowsFn(rowModel, table)
+
+      expect(result.rows).toEqual([])
+      expect(result.flatRows.map((row) => row.id)).toEqual(['0.0.0'])
+      expect(result.rowsById['0.0.0']).toBe(
+        rowModel.rows[0]!.subRows[0]!.subRows[0],
+      )
+    })
+
     it('should preserve row prototype methods on cloned parent rows', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)

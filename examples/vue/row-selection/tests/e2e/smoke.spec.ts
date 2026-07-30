@@ -73,19 +73,13 @@ function footerCheckbox(page: Page) {
 
 /** Anchored so the regex cannot also match an ancestor with extra text. */
 function selectionSummary(page: Page) {
-  return page
-    .locator('div')
-    .filter({
-      hasText: /^\s*[\d,]+\s+of\s+[\d,]+\s+Total\s+Rows\s+Selected\s*$/,
-    })
+  return page.locator('div').filter({
+    hasText: /^\s*[\d,]+\s+of\s+[\d,]+\s+Total\s+Rows\s+Selected\s*$/,
+  })
 }
 
 function pageRowsLabel(page: Page) {
   return page.locator('tfoot td').nth(1)
-}
-
-function globalFilterInput(page: Page) {
-  return page.getByPlaceholder('Search all columns...')
 }
 
 function isIndeterminate(checkbox: Locator) {
@@ -111,13 +105,6 @@ async function expectSelectionCount(page: Page, expected: number) {
   await expect(selectionSummary(page)).toHaveText(
     `${expected.toLocaleString('en-US')} of ${TOTAL_ROWS} Total Rows Selected`,
   )
-}
-
-async function readGlobalFilter(page: Page) {
-  const text = await page.getByTestId('table-state').textContent()
-  const state = JSON.parse(text ?? '{}') as { globalFilter?: string }
-
-  return state.globalFilter ?? ''
 }
 
 async function getFirstBodyRowText(page: Page) {

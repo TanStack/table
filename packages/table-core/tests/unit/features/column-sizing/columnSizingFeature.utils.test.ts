@@ -91,6 +91,39 @@ describe('header_getSize', () => {
     const header = table.getHeaderGroups()[0]!.headers[0]!
     expect(header.getSize()).toBe(250)
   })
+
+  it('sums three levels and recomputes group sizes after a leaf resize', () => {
+    const table = makeTable({
+      columns: [
+        {
+          id: 'outer',
+          columns: [
+            {
+              id: 'inner',
+              columns: [
+                { id: 'a', accessorKey: 'a', size: 100 },
+                { id: 'b', accessorKey: 'b', size: 200 },
+              ],
+            },
+          ],
+        },
+      ],
+    })
+    let headerGroups = table.getHeaderGroups()
+    let outer = headerGroups[0]!.headers[0]!
+    let inner = headerGroups[1]!.headers[0]!
+
+    expect(inner.getSize()).toBe(300)
+    expect(outer.getSize()).toBe(300)
+
+    table.setColumnSizing({ a: 400 })
+    headerGroups = table.getHeaderGroups()
+    outer = headerGroups[0]!.headers[0]!
+    inner = headerGroups[1]!.headers[0]!
+
+    expect(inner.getSize()).toBe(600)
+    expect(outer.getSize()).toBe(600)
+  })
 })
 
 describe('header_getStart', () => {
