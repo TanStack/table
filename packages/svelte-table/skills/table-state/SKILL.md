@@ -1,7 +1,7 @@
 ---
 name: table-state
 description: >
-  Use Svelte 5 rune-aware table atoms and stores, reactive option getters, controlled $state slices, value-or-updater callbacks, external atoms, and auto-reset behavior without snapshot mismatches.
+  Use Svelte 5 rune-aware table atoms and stores, $derived projections, reactive option getters, controlled $state or createTableState slices, external atoms, and auto-reset behavior without broad invalidation or snapshot mismatches.
 metadata:
   type: framework
   library: '@tanstack/svelte-table'
@@ -15,6 +15,7 @@ sources:
   - 'TanStack/table:docs/framework/svelte/guide/pagination.md'
   - 'TanStack/table:examples/svelte/basic-external-state'
   - 'TanStack/table:packages/svelte-table/src/createTable.svelte.ts'
+  - 'TanStack/table:packages/svelte-table/src/createTableState.svelte.ts'
 ---
 
 This skill builds on `@tanstack/table-core#core` and `getting-started`. Read them first for table ownership and Svelte construction.
@@ -89,14 +90,39 @@ const updatePagination = (next: Updater<PaginationState>) => {
 
 Pass a getter-backed `state.pagination` and `onPaginationChange: updatePagination` to `createTable`.
 
-`createTableState` is a convenience for the same updater-compatible pattern:
+### Reduce boilerplate with `createTableState`
 
 ```ts
+import {
+  createTable,
+  createTableState,
+  rowPaginationFeature,
+  tableFeatures,
+  type PaginationState,
+} from '@tanstack/svelte-table'
+
+const features = tableFeatures({ rowPaginationFeature })
+const columns = [{ accessorKey: 'name' }]
+const data = [{ name: 'Ada' }]
 const [pagination, setPagination] = createTableState<PaginationState>({
   pageIndex: 0,
   pageSize: 20,
 })
+
+const table = createTable({
+  features,
+  columns,
+  data,
+  state: {
+    get pagination() {
+      return pagination()
+    },
+  },
+  onPaginationChange: setPagination,
+})
 ```
+
+For better or worse, this resembles a small React `useState` hook: `pagination()` reads the current rune-backed value, while `setPagination` accepts either a value or a functional updater and can be passed directly to `onPaginationChange`.
 
 ## Choose State Ownership
 
@@ -124,6 +150,26 @@ table.resetPagination(true)
 Feature resets use `table.initialState` unless `true` requests the feature default and can flow to external owners. Core `table.reset()` resets internal base atoms only. Use feature types such as `PaginationState` for a slice and `TableState<typeof features>` for the complete registered state.
 
 ## Common Mistakes
+
+### HIGH Keeping removed adapter selectors
+
+Wrong:
+
+```ts
+const table = createTable(options, (state) => state.pagination)
+const pageIndex = table.state.pageIndex
+```
+
+Correct:
+
+```ts
+const table = createTable(options)
+const pagination = $derived(table.atoms.pagination.get())
+```
+
+Starting in beta.59, `createTable` and `createAppTable` take only options, `table.state` is absent, and `subscribeTable` and `SubscribeSource` are no longer exported. Use native tracked Svelte reads and `$derived` projections.
+
+Source: `docs/framework/svelte/guide/migrating.md`
 
 ### HIGH Controlling without writing back
 

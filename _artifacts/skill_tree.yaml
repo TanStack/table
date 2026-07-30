@@ -8,9 +8,9 @@ library:
 generated_from:
   domain_map: '_artifacts/domain_map.yaml'
   skill_spec: '_artifacts/skill_spec.md'
-generated_at: '2026-07-10'
+generated_at: '2026-07-29'
 status: reviewed
-reviewed_at: '2026-07-10'
+reviewed_at: '2026-07-29'
 batch_review: true
 structure: 'flat-per-package'
 monorepo_layout: true
@@ -607,7 +607,7 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/getting-started/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Create a Svelte 5 TanStack Table v9 table with createTable, explicit tableFeatures, rune-backed data getters, stable static inputs, snippets, and headless markup. Load when replacing createSvelteTable or pre-rune patterns.'
+    description: 'Create a Svelte 5 TanStack Table v9 table with createTable, explicit tableFeatures, rune-backed data getters, stable static inputs, FlexRender, and headless markup. Load when replacing createSvelteTable or pre-rune patterns.'
     requires:
       ['@tanstack/table-core#core', '@tanstack/table-core#table-features']
     sources:
@@ -621,13 +621,14 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/table-state/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Use Svelte 5 rune-backed table.atoms/store and selected table.state, reactive option getters, controlled $state slices, value-or-updater callbacks, external atoms, and auto-reset behavior without snapshot mismatches.'
+    description: 'Use Svelte 5 rune-aware table atoms and stores, $derived projections, reactive option getters, controlled $state or createTableState slices, external atoms, and auto-reset behavior without broad invalidation or snapshot mismatches.'
     requires: ['@tanstack/table-core#core', 'getting-started']
     sources:
       - 'TanStack/table:docs/framework/svelte/guide/table-state.md'
+      - 'TanStack/table:docs/framework/svelte/guide/pagination.md'
       - 'TanStack/table:examples/svelte/basic-external-state'
       - 'TanStack/table:packages/svelte-table/src/createTable.svelte.ts'
-      - 'TanStack/table:docs/framework/svelte/guide/pagination.md'
+      - 'TanStack/table:packages/svelte-table/src/createTableState.svelte.ts'
 
   - name: 'Svelte Migrate v8 to v9'
     slug: migrate-v8-to-v9
@@ -635,7 +636,7 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/migrate-v8-to-v9/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Migrate Svelte v8/store-oriented tables to the Svelte 5 v9 createTable adapter, runes, explicit feature and row-model slots, current rendering, prototype methods, sortFn names, helpers, and logical pinning.'
+    description: 'Complete Svelte v8-to-v9 migration reference: Svelte 5, createTable, beta.59 selector removal, explicit features and row-model slots, atom/rune state, rendering helpers, prototype methods, type generics, sorting, sizing, selection, and logical pinning.'
     requires:
       [
         '@tanstack/table-core#migrate-v8-to-v9',
@@ -653,7 +654,7 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/create-table-hook/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Define a Svelte createAppTable/createAppColumnHelper in a rune-capable module with shared features/defaults, reactive per-table getters, optional App component registries, and typed table/cell/header context hooks.'
+    description: "Define a Svelte createAppTable/createAppColumnHelper using the adapter's rune-capable createTableHook implementation, shared features/defaults, reactive per-table getters, optional App component registries, and typed table/cell/header context hooks."
     requires: ['@tanstack/table-core#core', 'getting-started', 'table-state']
     sources:
       - 'TanStack/table:docs/framework/svelte/guide/composable-tables.md'
