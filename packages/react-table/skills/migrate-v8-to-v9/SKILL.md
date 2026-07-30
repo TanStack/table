@@ -5,7 +5,7 @@ description: >
 metadata:
   type: lifecycle
   library: '@tanstack/react-table'
-  library_version: '9.0.0-beta.58'
+  library_version: '9.0.0-beta.59'
   framework: react
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'
