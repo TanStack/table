@@ -50,7 +50,7 @@ const table = createTable({
 
 | v8                                           | v9                                                         |
 | -------------------------------------------- | ---------------------------------------------------------- |
-| `createSvelteTable(options)`                 | `createTable(options, selector?)`                          |
+| `createSvelteTable(options)`                 | `createTable(options)`                                     |
 | All features bundled                         | Required `features: tableFeatures({...})`                  |
 | `getCoreRowModel()` option                   | Remove; the core row model is automatic                    |
 | `get*RowModel()` table options               | `create*RowModel()` slots in `tableFeatures`               |
@@ -78,9 +78,10 @@ Factories take no arguments. Register `filterFns`, `sortFns`, and `aggregationFn
 ## Svelte State Migration
 
 - Reactive option inputs must remain live: use getters for rune values such as `data` and controlled state slices.
-- `table.getState().sorting` becomes `table.state.sorting`, `table.store.state.sorting`, or the narrow `table.atoms.sorting.get()`.
-- `table.state` contains all registered state by default. Pass a second-argument selector to `createTable` only to narrow its reactive surface.
-- `subscribeTable(table.atoms.pagination, selector?)` exposes `.current` for fine-grained template subscriptions.
+- `table.getState().sorting` becomes the narrow `table.atoms.sorting.get()` read. Use `table.store.get()` when code intentionally needs the complete state.
+- Table atom, store, and API reads become reactive inside templates, `$derived`, `$derived.by`, and `$effect`; use native `$derived` values for projections.
+- Starting in beta.59, remove second-argument selectors from `createTable` and `createAppTable`, replace `table.state`, and remove `subscribeTable` / `SubscribeSource` imports.
+- `SvelteTable` now has two generic parameters, `AppSvelteTable` has five, and `useTableContext` no longer accepts a selected-state generic.
 - For Svelte-owned controlled slices, use `createTableState` and matching `onSortingChange`, `onPaginationChange`, and other per-slice callbacks.
 - For shared ownership, provide atoms created by `@tanstack/svelte-store` through `atoms`. Never provide both `atoms.pagination` and `state.pagination`.
 - Subscribe to `table.store` to observe every state change. Do not port the removed top-level `onStateChange`.

@@ -69,6 +69,13 @@ async function getFirstBodyRowData(table: Locator) {
   return text?.replace(/\s+/g, ' ').trim() ?? ''
 }
 
+async function readTableState(page: Page) {
+  const text = await page.getByTestId('table-state').textContent()
+  return JSON.parse(text ?? '{}') as {
+    pagination: { pageIndex: number; pageSize: number }
+  }
+}
+
 test('renders the table without crashing', async ({ page }) => {
   const { errors, server } = await openExample(page)
 
@@ -97,6 +104,41 @@ test('renders the table without crashing', async ({ page }) => {
       await expect(bodyRows.first()).toBeVisible()
     }
 
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('keeps atom-backed pagination controls and the full state dump in sync', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const table = getTable(page)
+    const firstRowBefore = await getFirstBodyRowData(table)
+    const pageInput = page.locator('input.page-size-input')
+    const pageSize = page.locator('.controls select')
+
+    await expect(pageInput).toHaveValue('1')
+    await page.getByRole('button', { name: '>', exact: true }).click()
+
+    await expect(pageInput).toHaveValue('2')
+    await expect
+      .poll(() => readTableState(page))
+      .toMatchObject({
+        pagination: { pageIndex: 1, pageSize: 10 },
+      })
+    await expect.poll(() => getFirstBodyRowData(table)).not.toBe(firstRowBefore)
+
+    await pageSize.selectOption('20')
+
+    await expect
+      .poll(() => readTableState(page))
+      .toMatchObject({
+        pagination: { pageSize: 20 },
+      })
     expect(errors).toEqual([])
   } finally {
     await server.close()

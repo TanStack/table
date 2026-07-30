@@ -2,7 +2,6 @@
   import { untrack } from 'svelte'
   import { createPaginatedRowModel, stockFeatures } from '@tanstack/table-core'
   import { createTable } from '../../src/createTable.svelte'
-  import { subscribeTable } from '../../src/subscribe'
   import type { Atom } from '@tanstack/svelte-store'
   import type { ColumnDef, RowSelectionState } from '@tanstack/table-core'
 
@@ -18,18 +17,11 @@
   interface Props {
     externalRowSelection?: Atom<RowSelectionState>
     selectionCaptor?: (selection: RowSelectionState) => void
-    selectionStoreCaptor?: (store: {
-      readonly current: RowSelectionState
-    }) => void
     snapshotCaptor?: (snapshot: Snapshot) => void
   }
 
-  let {
-    externalRowSelection,
-    selectionCaptor,
-    selectionStoreCaptor,
-    snapshotCaptor,
-  }: Props = $props()
+  let { externalRowSelection, selectionCaptor, snapshotCaptor }: Props =
+    $props()
   const externalSelectionAtom = untrack(() => externalRowSelection)
 
   const features = {
@@ -73,15 +65,10 @@
       ? { rowSelection: externalSelectionAtom }
       : undefined,
   })
-  const selected = subscribeTable(table.atoms.rowSelection)
-  const lifecycleSelection = externalSelectionAtom
-    ? subscribeTable(externalSelectionAtom)
-    : selected
-
-  untrack(() => selectionStoreCaptor?.(lifecycleSelection))
+  const selection = $derived(table.atoms.rowSelection.get())
 
   $effect(() => {
-    selectionCaptor?.(lifecycleSelection.current)
+    selectionCaptor?.(selection)
   })
 
   $effect(() => {
@@ -107,7 +94,7 @@
   }
 </script>
 
-<output aria-label="Selected rows">{JSON.stringify(selected.current)}</output>
+<output aria-label="Selected rows">{JSON.stringify(selection)}</output>
 <output aria-label="Row ids"
   >{table
     .getRowModel()

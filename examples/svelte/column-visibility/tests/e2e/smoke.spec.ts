@@ -94,7 +94,7 @@ function firstBodyRowCells(page: Page) {
   return page.locator('tbody tr').first().locator('td')
 }
 
-/** Row data is random faker output, so `table.state` is the stable oracle. */
+/** Row data is random faker output, so the full state dump is the stable oracle. */
 async function readColumnVisibility(page: Page) {
   const text = await page.getByTestId('table-state').textContent()
   const state = JSON.parse(text ?? '{}') as {

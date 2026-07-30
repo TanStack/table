@@ -1,7 +1,7 @@
 ---
 name: table-state
 description: >
-  Use Svelte 5 rune-backed table.atoms/store and selected table.state, reactive option getters, controlled $state slices, value-or-updater callbacks, external atoms, and auto-reset behavior without snapshot mismatches.
+  Use Svelte 5 rune-aware table atoms and stores, reactive option getters, controlled $state slices, value-or-updater callbacks, external atoms, and auto-reset behavior without snapshot mismatches.
 metadata:
   type: framework
   library: '@tanstack/svelte-table'
@@ -26,13 +26,14 @@ TanStack Table is primarily a state coordinator. Keep state internal unless anot
 - `table.baseAtoms` are internal writable atoms initialized from resolved initial state.
 - `table.atoms` are readonly derived atoms for the active owner of each registered slice.
 - `table.store` is the readonly flat store assembled from those atoms.
-- `table.state` is only the result selected by the second `createTable` argument.
 
-Svelte 5 backs these surfaces with runes and synchronizes reactive options before DOM updates. Only registered features create state and types. If pagination is missing, register `rowPaginationFeature`; do not add a cast or an ad hoc state field. Keep `features` and `columns` stable and pass changing `data` through a getter.
+The Svelte adapter bridges TanStack Store dependency tracking into Svelte runes. `table.atoms.<slice>.get()`, `table.store.get()`, and table APIs become reactive when called in a template, `$derived`, `$derived.by`, or `$effect`. Outside those contexts they return current snapshots.
+
+Only registered features create state and types. If pagination is missing, register `rowPaginationFeature`; do not add a cast or ad hoc state field. Keep `features` and `columns` stable and pass changing `data` through a getter.
 
 ## Setup
 
-Keep state internal unless another subsystem needs to own it. Select only render state that the component needs.
+Keep state internal unless another subsystem needs to own it. Read only the state slices a component needs.
 
 ```svelte
 <script lang="ts">
@@ -45,24 +46,35 @@ Keep state internal unless another subsystem needs to own it. Select only render
   const features = tableFeatures({ rowPaginationFeature })
   const columns = [{ accessorKey: 'name' }]
   let data = $state([{ name: 'Ada' }])
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return data
-      },
+
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data
     },
-    (state) => ({ pagination: state.pagination }),
-  )
+  })
+
+  const pagination = $derived(table.atoms.pagination.get())
 </script>
 
 <button onclick={() => table.nextPage()} disabled={!table.getCanNextPage()}>
-  Page {table.state.pagination.pageIndex + 1}
+  Page {pagination.pageIndex + 1}
 </button>
 ```
 
 ## Core Patterns
+
+### Read narrow or complete state
+
+```ts
+const pagination = $derived(table.atoms.pagination.get())
+const pageIndex = $derived(table.atoms.pagination.get().pageIndex)
+const rows = $derived(table.getRowModel().rows)
+const stateJson = $derived(JSON.stringify(table.store.get(), null, 2))
+```
+
+Use atom reads for normal UI. A `table.store.get()` read intentionally re-runs for any registered state change, so reserve it for debug output, persistence, or computations that need the whole state.
 
 ### Control a slice with value-or-updater semantics
 
@@ -75,20 +87,16 @@ const updatePagination = (next: Updater<PaginationState>) => {
 }
 ```
 
-Pass `get state() { return { pagination } }` and `onPaginationChange: updatePagination` to `createTable`.
+Pass a getter-backed `state.pagination` and `onPaginationChange: updatePagination` to `createTable`.
 
-### Subscribe narrowly outside selected table.state
+`createTableState` is a convenience for the same updater-compatible pattern:
 
 ```ts
-import { subscribeTable } from '@tanstack/svelte-table'
-
-const pageIndex = subscribeTable(
-  table.atoms.pagination,
-  (value) => value.pageIndex,
-)
+const [pagination, setPagination] = createTableState<PaginationState>({
+  pageIndex: 0,
+  pageSize: 20,
+})
 ```
-
-Read `pageIndex.current` in rune-tracked Svelte code. Use feature APIs for writes; `baseAtoms` is a low-level escape hatch.
 
 ## Choose State Ownership
 
@@ -96,10 +104,12 @@ Use one owner per slice:
 
 - Prefer internal state plus feature APIs for table-local interaction.
 - Use `initialState` for starting/reset values; changing it later does not reset state.
-- Prefer a stable external atom in `atoms` for state shared with Query, routing, or another component. Do not also add its change callback.
-- Use a `$state` value exposed through a `state` getter plus the matching callback for simple controlled state. Always resolve value-or-updater semantics.
+- Use Svelte `$state`, a getter-backed `state` entry, and the matching callback for normal Svelte-owned controlled state.
+- Use a stable external atom in `atoms` for state shared as a raw TanStack Store atom. Do not also add its change callback.
 
-External atoms win over controlled `state`, which syncs into the internal base atom. Avoid multiple owners. The global v8 `onStateChange` option is gone; subscribe to `table.store` if all state changes must be observed.
+External atoms win over controlled `state`, which syncs into the internal base atom. Avoid multiple owners. The global v8 `onStateChange` option is gone; subscribe to `table.store` if every state change must be observed imperatively.
+
+When code outside the table consumes a raw external atom, use `useSelector` from `@tanstack/svelte-store`. Inside table-driven UI, read the rune-aware `table.atoms.<slice>.get()` wrapper.
 
 ## Initialize, Update, and Reset
 
@@ -127,8 +137,10 @@ Correct:
 
 ```ts
 const options = {
-  get state() {
-    return { pagination }
+  state: {
+    get pagination() {
+      return pagination
+    },
   },
   onPaginationChange: updatePagination,
 }
@@ -138,24 +150,21 @@ A controlled slice is frozen unless every updater is resolved into the owning ru
 
 Source: `docs/framework/svelte/guide/table-state.md`
 
-### HIGH Reading snapshots outside tracking
+### HIGH Snapshotting outside tracking
 
 Wrong:
 
 ```ts
-const pageIndex = table.store.state.pagination.pageIndex
+const pageIndex = table.store.get().pagination.pageIndex
 ```
 
-Correct:
+Correct inside a component:
 
 ```ts
-const pageIndex = subscribeTable(
-  table.atoms.pagination,
-  (value) => value.pageIndex,
-)
+const pageIndex = $derived(table.atoms.pagination.get().pageIndex)
 ```
 
-`store.state` is a current snapshot; it does not create a future Svelte update outside a tracked scope.
+The first line is only a current snapshot when it runs outside a template or rune. The second line is a narrow native Svelte derivation.
 
 Source: `packages/svelte-table/src/createTable.svelte.ts`
 
@@ -171,8 +180,10 @@ Correct:
 
 ```ts
 const options = {
-  get state() {
-    return { pagination }
+  state: {
+    get pagination() {
+      return pagination
+    },
   },
 }
 ```
@@ -202,4 +213,4 @@ Source: `docs/framework/svelte/guide/pagination.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/svelte-table/dist/createTable.svelte.d.ts`, `createTableState.svelte.d.ts`, and `subscribe.d.ts`; inspect registered state slices in the matching core feature source.
+Inspect `node_modules/@tanstack/svelte-table/dist/createTable.svelte.d.ts`, `createTableHook.svelte.d.ts`, and `createTableState.svelte.d.ts`; inspect registered state slices in the matching core feature source.

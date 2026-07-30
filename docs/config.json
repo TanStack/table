@@ -590,7 +590,6 @@
             { "label": "createTableState", "to": "framework/svelte/reference/functions/createTableState" },
             { "label": "SvelteTable", "to": "framework/svelte/reference/type-aliases/SvelteTable" },
             { "label": "AppSvelteTable", "to": "framework/svelte/reference/type-aliases/AppSvelteTable" },
-            { "label": "subscribeTable", "to": "framework/svelte/reference/functions/subscribeTable" },
             { "label": "renderComponent", "to": "framework/svelte/reference/functions/renderComponent" },
             { "label": "renderSnippet", "to": "framework/svelte/reference/functions/renderSnippet" },
             { "label": "FlexRender", "to": "framework/svelte/reference/variables/FlexRender" }

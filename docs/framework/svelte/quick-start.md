@@ -132,17 +132,13 @@ Features are opt-in in v9. To make columns sortable, register `rowSortingFeature
     sortFns,
   })
 
-  const table = createTable(
-    {
-      features,
-      columns,
-      get data() {
-        return data
-      },
+  const table = createTable({
+    features,
+    columns,
+    get data() {
+      return data
     },
-    // an optional second argument selects which state to track; it defaults
-    // to the full registered state, so it is omitted here
-  )
+  })
 </script>
 
 <table>

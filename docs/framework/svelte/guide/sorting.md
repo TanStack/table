@@ -66,7 +66,7 @@ Since the sorting state is an array, it is possible to sort by multiple columns 
 
 #### Accessing Sorting State
 
-For reactive reads that should update your UI, use `table.state.sorting` (selected by the `createTable` selector) or `subscribeTable`. In event handlers or other non-reactive code, you can read the current snapshot with `table.atoms.sorting.get()`, but be aware that this read only participates in Svelte dependency tracking when called in a rune-tracked context.
+Read sorting from `table.atoms.sorting.get()`. The call returns the current value in event handlers and becomes reactive when it runs in a template, `$derived`, `$derived.by`, or `$effect`.
 
 ```ts
 const table = createTable({
@@ -76,8 +76,9 @@ const table = createTable({
   //...
 })
 
-table.state.sorting // reactive read
-table.atoms.sorting.get() // snapshot read in event handlers
+const sorting = $derived(table.atoms.sorting.get())
+
+table.atoms.sorting.get() // current snapshot in an event handler
 ```
 
 However, if you need access to the sorting state outside of the table, you can "control" the sorting state like down below.

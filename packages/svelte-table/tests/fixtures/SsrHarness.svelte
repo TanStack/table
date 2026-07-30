@@ -46,7 +46,7 @@
 </script>
 
 <output aria-label="Server selected rows"
-  >{JSON.stringify(table.state.rowSelection)}</output
+  >{JSON.stringify(table.atoms.rowSelection.get())}</output
 >
 <output aria-label="Server cell"><FlexRender {cell} /></output>
 <output aria-label="Server aggregate"
