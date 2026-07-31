@@ -32,9 +32,9 @@ export function ColumnsPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
 
-  const tableState = useTableStore(
-    () => table()?.store,
-    (state) => state,
+  const optionsStoreValue = useTableStore(
+    () => table()?.optionsStore,
+    (options) => options,
   )
 
   const columns = createMemo<Array<AnyColumn>>(() => {
@@ -43,7 +43,7 @@ export function ColumnsPanel() {
       return []
     }
 
-    tableState()
+    optionsStoreValue()
 
     const tableWithColumnFns = tableInstance as unknown as {
       getAllFlatColumns?: () => Array<AnyColumn>
