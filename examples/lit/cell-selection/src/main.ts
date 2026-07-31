@@ -443,7 +443,7 @@ export class LitCellSelectionExample extends LitElement {
                                               ? html`<button
                                                   class="pin-button"
                                                   @click=${() =>
-                                                  header.column.pin('start')}
+                                                    header.column.pin('start')}
                                                 >
                                                   &lt;=
                                                 </button>`
@@ -454,7 +454,7 @@ export class LitCellSelectionExample extends LitElement {
                                               ? html`<button
                                                   class="pin-button"
                                                   @click=${() =>
-                                                  header.column.pin(false)}
+                                                    header.column.pin(false)}
                                                 >
                                                   X
                                                 </button>`
@@ -466,7 +466,7 @@ export class LitCellSelectionExample extends LitElement {
                                               ? html`<button
                                                   class="pin-button"
                                                   @click=${() =>
-                                                  header.column.pin('end')}
+                                                    header.column.pin('end')}
                                                 >
                                                   =&gt;
                                                 </button>`
