@@ -49,15 +49,7 @@ export const columnOrderingFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('columnOrderingFeature', table, {
       table_getColumnIndexes: {
-        fn: () => table_getColumnIndexes(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnOrder?.get(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getColumnIndexes(table),
       },
       table_setColumnOrder: {
         fn: (updater) => table_setColumnOrder(table, updater),
@@ -66,12 +58,15 @@ export const columnOrderingFeature: TableFeature = {
         fn: (defaultState) => table_resetColumnOrder(table, defaultState),
       },
       table_getOrderColumnsFn: {
-        fn: () => table_getOrderColumnsFn(table),
-        memoDeps: () => [
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => {
+          // These values are consumed when the returned ordering function runs,
+          // but they also determine that function's behavior. Read them while
+          // resolving the computed so either change replaces the cached
+          // function, matching the former explicit memo dependency list.
+          void table.atoms.grouping?.get()
+          void table.options.groupedColumnMode
+          return table_getOrderColumnsFn(table)
+        },
       },
     })
   },

@@ -29,10 +29,7 @@ export function StatePanel() {
     (state) => state,
   )
   const tableOptions = useTableStore(
-    () => {
-      const tableInstance = table()
-      return tableInstance?.optionsStore ?? tableInstance?.store
-    },
+    () => table()?.optionAtoms.snapshotVersion,
     () => table()?.options as unknown,
   )
 

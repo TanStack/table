@@ -44,8 +44,9 @@ export type ReactTable<
    *
    * This is useful for opting into state re-renders for specific parts of the table state.
    *
-   * Pass `source` to subscribe to a single atom or store (e.g. `table.atoms.rowSelection`
-   * or `table.optionsStore`) instead of the full `table.store`.
+   * Pass `source` to subscribe to a single atom or store (e.g.
+   * `table.atoms.rowSelection` or `table.optionAtoms.data`) instead of the full
+   * `table.store`.
    *
    * @example
    * <table.Subscribe selector={(state) => ({ rowSelection: state.rowSelection })}>
@@ -190,7 +191,7 @@ export function useTable<
 
   // Keep options current during render without publishing them to reactive
   // subscribers. Readonly atoms expose the staged snapshot through live get().
-  table_setOptions(
+  const optionCommitToken = table_setOptions(
     coreTable,
     (prev) => ({
       ...prev,
@@ -211,7 +212,12 @@ export function useTable<
     // subscription drops the matching notification. Isolated subscribers
     // still receive the post-commit store update before paint.
     rootSource.markCommitted(renderSnapshot)
-    table_publishExternalState(coreTable, controlledState ?? null, shallow)
+    table_publishExternalState(
+      coreTable,
+      controlledState ?? null,
+      shallow,
+      optionCommitToken,
+    )
   })
 
   // we know this is not the most efficient way to return the table,
@@ -219,9 +225,8 @@ export function useTable<
   return useMemo(
     () => ({
       ...table,
-      options: tableOptions,
       state,
     }),
-    [table, tableOptions, state],
+    [table, state],
   )
 }

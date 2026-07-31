@@ -9,7 +9,7 @@ title: SolidTable
 type SolidTable<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [createTable.ts:19](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L19)
+Defined in: [createTable.ts:14](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTable.ts#L14)
 
 ## Type Declaration
 

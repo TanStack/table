@@ -23,12 +23,20 @@ function getOptionsWithReactiveValues<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptionsWithReactiveData<TFeatures, TData>) {
-  const resolvedOptions: Record<string, unknown> = {}
+  const resolvedOptions = Object.create(
+    Object.getPrototypeOf(options),
+  ) as Record<PropertyKey, unknown>
 
-  for (const key of Object.keys(options)) {
-    resolvedOptions[key] = unref(
-      options[key as keyof TableOptionsWithReactiveData<TFeatures, TData>],
-    )
+  for (const key of Reflect.ownKeys(options)) {
+    const descriptor = Reflect.getOwnPropertyDescriptor(options, key)
+    const value = unref(Reflect.get(options, key, options))
+    Object.defineProperty(resolvedOptions, key, {
+      configurable: true,
+      enumerable: descriptor?.enumerable ?? true,
+      get() {
+        return value
+      },
+    })
   }
 
   return mergeProxy(options, resolvedOptions)
@@ -38,8 +46,8 @@ function getReactiveOptionDeps<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(options: TableOptionsWithReactiveData<TFeatures, TData>) {
-  return Object.keys(options).map((key) =>
-    unref(options[key as keyof TableOptionsWithReactiveData<TFeatures, TData>]),
+  return Reflect.ownKeys(options).map((key) =>
+    unref(Reflect.get(options, key, options)),
   )
 }
 

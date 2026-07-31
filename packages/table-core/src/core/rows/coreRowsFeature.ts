@@ -26,16 +26,13 @@ export const coreRowsFeature: TableFeature = {
         fn: (row) => row_getDisplayIndex(row),
       },
       row_getAllCellsByColumnId: {
-        fn: (row) => row_getAllCellsByColumnId(row),
-        memoDeps: (row) => [row.getAllCells()],
+        computed: (row) => row_getAllCellsByColumnId(row),
       },
       row_getAllCells: {
-        fn: (row) => row_getAllCells(row),
-        memoDeps: (row) => [row.table.getAllLeafColumns()],
+        computed: (row) => row_getAllCells(row),
       },
       row_getLeafRows: {
-        fn: (row) => row_getLeafRows(row),
-        memoDeps: (row) => [row.subRows],
+        computed: (row) => row_getLeafRows(row),
       },
       row_getParentRow: {
         fn: (row) => row_getParentRow(row),
@@ -57,14 +54,7 @@ export const coreRowsFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('coreRowsFeature', table, {
       table_getRowsInDisplayOrder: {
-        fn: () => table_getRowsInDisplayOrder(table),
-        memoDeps: () => [
-          table.getPrePaginatedRowModel().rows,
-          table.options.paginateExpandedRows,
-          table.options.paginateExpandedRows === false
-            ? table.atoms.expanded?.get()
-            : undefined,
-        ],
+        computed: () => table_getRowsInDisplayOrder(table),
       },
       table_getRowId: {
         fn: (originalRow, index, parent) =>
@@ -75,8 +65,7 @@ export const coreRowsFeature: TableFeature = {
           table_getRow(table, id, searchAll),
       },
       table_getMaxSubRowDepth: {
-        fn: () => table_getMaxSubRowDepth(table),
-        memoDeps: () => [table.getCoreRowModel()],
+        computed: () => table_getMaxSubRowDepth(table),
       },
     })
   },

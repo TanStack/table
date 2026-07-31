@@ -99,11 +99,11 @@ export function createTable<
   // inside the effect registers the dependencies, so the effect re-runs when
   // they change and re-applies the live values via `setOptions`.
   //
-  // `setOptions` writes to the options store, not the state store, so a `data`
-  // (or other option) change does not emit on `table.store` and would not bump
+  // `setOptions` writes option atoms, not the state store, so a `data` (or
+  // other option) change does not emit on `table.store` and would not bump
   // `_ver` on its own. We bump `_ver` here so the template re-pulls derived
-  // APIs like `getRowModel()`, which recompute from the new options. The effect
-  // never reads `_ver`, so writing it does not re-trigger this effect.
+  // APIs like `getRowModel()`. The effect never reads `_ver`, so writing it
+  // does not re-trigger this effect.
   let initialized = false
   Alpine.effect(() => {
     const state = tableOptions.state as Record<string, unknown> | undefined
@@ -168,6 +168,21 @@ export function createTable<
         }
 
         const resolvedValue = Reflect.get(target, prop, receiver)
+        const descriptor = Reflect.getOwnPropertyDescriptor(target, prop)
+
+        // A Proxy must return the exact value of a non-configurable,
+        // non-writable data property. Core exposes options and optionAtoms this
+        // way, which also means callback reads preserve their source identity.
+        // The containing property read still tracks Alpine's version counter.
+        if (
+          descriptor &&
+          !descriptor.configurable &&
+          'value' in descriptor &&
+          !descriptor.writable
+        ) {
+          void reactivity._ver
+          return resolvedValue
+        }
 
         if (typeof resolvedValue === 'function') {
           let targetWrappers = wrapperCache.get(target)

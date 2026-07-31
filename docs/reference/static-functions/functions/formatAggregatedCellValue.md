@@ -9,7 +9,7 @@ title: formatAggregatedCellValue
 function formatAggregatedCellValue(value, option): string | null;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:471](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L471)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:501](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L501)
 
 Formats the default scalar or keyed aggregated-cell representation.
 

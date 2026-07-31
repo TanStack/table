@@ -43,4 +43,25 @@ describe('vueReactivity', () => {
 
     expect(doubled.get()).toBe(4)
   })
+
+  test('readonly atoms preserve identity through their comparator', async () => {
+    const reactivity = vueReactivity()
+    const count = reactivity.createWritableAtom(0)
+    const parity = reactivity.createReadonlyAtom(
+      () => ({ even: count.get() % 2 === 0 }),
+      {
+        compare: (previous, next) => previous.even === next.even,
+        debugName: 'parity',
+      },
+    )
+
+    const initial = parity.get()
+    count.set(2)
+    await nextTick()
+    expect(parity.get()).toBe(initial)
+
+    count.set(3)
+    await nextTick()
+    expect(parity.get()).not.toBe(initial)
+  })
 })

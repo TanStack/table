@@ -7,13 +7,11 @@ export type LitTableReactivityBindings = RenderPhaseReactivityBindings
 /**
  * Creates the table-core reactivity bindings used by the Lit adapter.
  *
- * Lit calls `controller.table(options)` from the host's `render()`, so options
- * are plain values synchronized during the update cycle — writing a reactive
- * options store there would schedule a second update per interaction. The
- * render-phase preset supplies the live readonly-atom facades and the `commit`
- * hook; `TableController` publishes its captured controlled state from
- * `hostUpdated()`. Store primitives come from `@tanstack/lit-store` so all
- * atoms share one store instance with user-provided external atoms.
+ * Lit calls `controller.table(options)` from the host's `render()`, so option
+ * atoms are staged without notification during the update cycle. The
+ * render-phase preset supplies live option facades, cached memo atoms, and the
+ * commit hook; `TableController` publishes its captured state and option token
+ * from `hostUpdated()`. Store primitives come from `@tanstack/lit-store`.
  */
 export function litReactivity(): LitTableReactivityBindings {
   return renderPhaseReactivity({ createAtom, batch })

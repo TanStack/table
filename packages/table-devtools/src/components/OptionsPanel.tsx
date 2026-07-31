@@ -21,10 +21,7 @@ export function OptionsPanel() {
   const { table } = useTableDevtoolsContext()
 
   const tableOptions = useTableStore(
-    () => {
-      const tableInstance = table()
-      return tableInstance?.optionsStore ?? tableInstance?.store
-    },
+    () => table()?.optionAtoms.snapshotVersion,
     () => {
       const tableInstance = table()
       return tableInstance

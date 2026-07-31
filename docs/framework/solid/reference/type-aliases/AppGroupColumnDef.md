@@ -9,7 +9,7 @@ title: AppGroupColumnDef
 type AppGroupColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<GroupColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer" | "columns"> & object;
 ```
 
-Defined in: [createTableHook.tsx:132](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L132)
+Defined in: [createTableHook.tsx:133](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L133)
 
 Enhanced group column definition with pre-bound components.
 
@@ -24,7 +24,7 @@ optional cell: AppColumnDefTemplate<AppCellContext<TFeatures, TData, unknown, TC
 ### columns?
 
 ```ts
-optional columns: ColumnDef<TFeatures, TData, unknown>[];
+optional columns: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
 ### footer?

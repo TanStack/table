@@ -1,4 +1,5 @@
 import { copyInstancePropertiesWithoutMemos, tableMemo } from '../../utils'
+import { row_setSubRows } from '../../core/rows/subRowsTracking'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -31,10 +32,6 @@ export function createSortedRowModel<
       feature: 'rowSortingFeature',
       table,
       fnName: 'table.getSortedRowModel',
-      memoDeps: () => [
-        table.atoms.sorting?.get(),
-        table.getPreSortedRowModel(),
-      ],
       fn: () => _createSortedRowModel(table),
       onAfterUpdate: () => table_autoResetPageIndex(table),
     })
@@ -166,7 +163,7 @@ function _createSortedRowModel<
           // Preserve prototype chain so methods like getValue() remain accessible
           const cloned = Object.create(Object.getPrototypeOf(row))
           copyInstancePropertiesWithoutMemos(cloned, row)
-          cloned.subRows = sortedSubRows.rows
+          row_setSubRows(cloned, sortedSubRows.rows)
           sortedData[i] = cloned
           sortedFlatRows.push(cloned)
           changed = true

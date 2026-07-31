@@ -241,6 +241,7 @@ title: static-functions
 - [table\_moveCellSelection](functions/table_moveCellSelection.md)
 - [table\_nextPage](functions/table_nextPage.md)
 - [table\_previousPage](functions/table_previousPage.md)
+- [table\_publishExternalState](functions/table_publishExternalState.md)
 - [table\_reset](functions/table_reset.md)
 - [table\_resetCellSelection](functions/table_resetCellSelection.md)
 - [table\_resetColumnFilters](functions/table_resetColumnFilters.md)

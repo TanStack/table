@@ -9,7 +9,7 @@ title: useTable
 function useTable<TFeatures, TData, TSelected>(tableOptions, selector?): PreactTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [useTable.ts:112](https://github.com/TanStack/table/blob/main/packages/preact-table/src/useTable.ts#L112)
+Defined in: [useTable.ts:121](https://github.com/TanStack/table/blob/main/packages/preact-table/src/useTable.ts#L121)
 
 Creates a Preact table instance backed by TanStack Store atoms.
 

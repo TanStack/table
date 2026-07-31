@@ -65,6 +65,47 @@ export type ExternalAtoms<TFeatures extends TableFeatures> = Partial<{
   [K in keyof TableState<TFeatures>]: Atom<TableState<TFeatures>[K]>
 }>
 
+type ConstructStaticOptionKey = 'features' | 'atoms' | 'initialState'
+
+/**
+ * One atom per currently resolved table option.
+ *
+ * The atom properties themselves are readonly so their identities stay
+ * stable. Ordinary option atoms are writable; construction-static options
+ * remain readonly.
+ */
+export type TableOptionAtoms<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = {
+  /** Increments once after each atomic update of the resolved options. */
+  readonly snapshotVersion: ReadonlyAtom<number>
+} & {
+  readonly [K in keyof TableOptions<
+    TFeatures,
+    TData
+  > as K extends 'snapshotVersion'
+    ? never
+    : K]: K extends ConstructStaticOptionKey
+    ? ReadonlyAtom<TableOptions<TFeatures, TData>[K]>
+    : Atom<TableOptions<TFeatures, TData>[K]>
+}
+
+/**
+ * The stable readonly options view exposed by `table.options`.
+ *
+ * Every property read is routed to the matching existing option atom.
+ */
+export type TableOptionsLive<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+> = {
+  readonly [K in keyof TableOptions<TFeatures, TData>]: TableOptions<
+    TFeatures,
+    TData
+  >[K]
+}
+
 /**
  * Internal "all features" flat variants of the atom types. `Table_Internal`
  * uses these so feature code (written generically over `TFeatures`) can access
@@ -231,15 +272,17 @@ export interface Table_CoreProperties<
    */
   readonly initialState: TableState<TFeatures>
   /**
-   * A read-only reference to the table's current options.
+   * A stable live view of the table's current resolved options.
+   *
+   * Reading a property reads the matching entry in `optionAtoms`.
    */
-  readonly options: TableOptions<TFeatures, TData>
+  readonly options: TableOptionsLive<TFeatures, TData>
   /**
-   * Writable atom for table options. Only created when `createOptionsStore` is
-   * true on the active core reactivity bindings. Adapters that opt out keep
-   * options as plain resolved data instead of backing them with an atom.
+   * Stable atoms for individual resolved option values.
+   *
+   * Ordinary options are writable. Construction-static options are readonly.
    */
-  readonly optionsStore?: Atom<TableOptions<TFeatures, TData>> | undefined
+  readonly optionAtoms: TableOptionAtoms<TFeatures, TData>
   /**
    * The readonly flat store for the table state. Derives from `table.atoms`
    * only; never reads external state directly.

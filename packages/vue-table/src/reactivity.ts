@@ -54,16 +54,12 @@ function refToWritableAtom<T>(source: ShallowRef<T>): Atom<T> {
 /**
  * Creates the table-core reactivity bindings used by the Vue adapter.
  *
- * Table state atoms are backed by TanStack Store atoms. The options store stays
- * framework-native because row-model APIs read `table.options` directly during
- * render. Readonly table atoms bridge Store dependency tracking into Vue computed
- * refs.
+ * Table state and option atoms bridge table-core reads into Vue computed refs.
  */
 export function vueReactivity(): TableReactivityBindings {
   const subscriptions = new Set<Subscription>()
 
   return {
-    createOptionsStore: true,
     wrapExternalAtoms: true,
     addSubscription: (subscription) => {
       subscriptions.add(subscription)
@@ -73,8 +69,21 @@ export function vueReactivity(): TableReactivityBindings {
       subscriptions.clear()
     },
     schedule: (fn) => queueMicrotask(() => fn()),
-    createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-      return refToReadonlyAtom(computed(() => fn()))
+    createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
+      const compare = options?.compare ?? Object.is
+      let hasStableValue = false
+      let stableValue: T
+
+      return refToReadonlyAtom(
+        computed(() => {
+          const nextValue = fn()
+          if (!hasStableValue || !compare(stableValue, nextValue)) {
+            stableValue = nextValue
+            hasStableValue = true
+          }
+          return stableValue
+        }),
+      )
     },
     createWritableAtom: <T>(
       value: T,

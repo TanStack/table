@@ -14,8 +14,8 @@ import {
   getDefaultColumnSizingState,
   table_getCenterTotalSize,
   table_getColumnOffsets,
-  table_getStartTotalSize,
   table_getEndTotalSize,
+  table_getStartTotalSize,
   table_getTotalSize,
   table_resetColumnSizing,
   table_setColumnSizing,
@@ -487,6 +487,39 @@ describe('column_getSize', () => {
     })
 
     expect(column_getSize(table.getColumn('a')!)).toBe(300)
+  })
+
+  it('does not reevaluate a leaf column or header for a sibling size change', () => {
+    const table = makeTable({
+      columns: [
+        { id: 'a', accessorKey: 'a' },
+        { id: 'b', accessorKey: 'b' },
+      ],
+    })
+    table.setColumnSizing({ a: 100, b: 150 })
+
+    const column = table.getColumn('a')!
+    const header = table.getHeaderGroups()[0]!.headers[0]!
+    let resolverReads = 0
+    Object.defineProperty(column.columnDef, 'minSize', {
+      configurable: true,
+      get: () => {
+        resolverReads++
+        return 20
+      },
+    })
+
+    expect(column.getSize()).toBe(100)
+    resolverReads = 0
+    table.setColumnSizing({ a: 100, b: 200 })
+    expect(column.getSize()).toBe(100)
+    expect(resolverReads).toBe(0)
+
+    expect(header.getSize()).toBe(100)
+    resolverReads = 0
+    table.setColumnSizing({ a: 100, b: 250 })
+    expect(header.getSize()).toBe(100)
+    expect(resolverReads).toBe(0)
   })
 })
 

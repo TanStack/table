@@ -129,7 +129,7 @@ AsyncDirective._$initialize
 disconnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:141](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L141)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:150](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L150)
 
 Cleans up the controller subscription when the directive is removed from the DOM.
 
@@ -151,7 +151,7 @@ AsyncDirective.disconnected
 reconnected(): void;
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:146](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L146)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:155](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L155)
 
 Restores the controller subscription when the directive is re-attached to the DOM.
 

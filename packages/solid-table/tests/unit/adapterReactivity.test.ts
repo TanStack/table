@@ -300,4 +300,53 @@ describe('Solid adapter lifecycle and option ownership', () => {
       dispose()
     })
   })
+
+  test('an existing option can become undefined without falling back to its prior value', () => {
+    createRoot((dispose) => {
+      const [enableRowSelection, setEnableRowSelection] = createSignal<
+        boolean | undefined
+      >(false)
+      const [customOption, setCustomOption] = createSignal('first')
+      const customSymbol = Symbol('custom-option')
+      const prototype = { inheritedOption: 'from-prototype' }
+      const options = Object.create(
+        prototype,
+        Object.getOwnPropertyDescriptors({
+          data: [{ id: '1', title: 'Title' }],
+          columns: [idColumn, titleColumn],
+          features: stockFeatures,
+          getRowId: (row: Data) => row.id,
+          [customSymbol]: 'symbol-value',
+          get enableRowSelection() {
+            return enableRowSelection()
+          },
+          get customOption() {
+            return customOption()
+          },
+        }),
+      )
+      const table = createTable<typeof stockFeatures, Data>(options)
+
+      expect(table.options.enableRowSelection).toBe(false)
+      expect(table.getRowModel().rows[0]!.getCanSelect()).toBe(false)
+      expect((table.options as any)[customSymbol]).toBe('symbol-value')
+      expect((table.options as any).customOption).toBe('first')
+      expect(
+        Object.getOwnPropertyDescriptor(table.options, 'customOption'),
+      ).toMatchObject({
+        value: 'first',
+        writable: false,
+      })
+
+      setEnableRowSelection(undefined)
+      setCustomOption('second')
+
+      expect(table.options.enableRowSelection).toBeUndefined()
+      expect(table.optionAtoms.enableRowSelection!.get()).toBeUndefined()
+      expect(table.getRowModel().rows[0]!.getCanSelect()).toBe(true)
+      expect((table.options as any).customOption).toBe('second')
+
+      dispose()
+    })
+  })
 })

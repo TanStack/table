@@ -36,7 +36,7 @@ export type SubscribePropsWithStore<
 
 /**
  * Subscribe to the full value of a source (e.g. `table.atoms.rowSelection` or
- * `table.optionsStore`). Omitting `selector` is equivalent to the identity
+ * `table.optionAtoms.data`). Omitting `selector` is equivalent to the identity
  * selector — children receive `TSourceValue`.
  */
 export type SubscribePropsWithSourceIdentity<TSourceValue> = {

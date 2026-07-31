@@ -6,10 +6,13 @@ title: table_setOptions
 # Function: table\_setOptions()
 
 ```ts
-function table_setOptions<TFeatures, TData>(table, updater): void;
+function table_setOptions<TFeatures, TData>(
+   table,
+   updater,
+   options?): number | undefined;
 ```
 
-Defined in: [core/table/coreTablesFeature.utils.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L152)
+Defined in: [core/table/coreTablesFeature.utils.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L203)
 
 Updates the table options object.
 
@@ -36,12 +39,19 @@ immediately assigned to the table instance.
 
 [`Updater`](../../index/type-aliases/Updater.md)\<[`TableOptions`](../../index/type-aliases/TableOptions.md)\<`TFeatures`, `TData`\>\>
 
+### options?
+
+#### syncExternalState?
+
+`boolean`
+
 ## Returns
 
-`void`
+`number` \| `undefined`
 
 ## Example
 
 ```ts
 table_setOptions(table, (old) => old)
+table_setOptions(table, (old) => old, { syncExternalState: false })
 ```

@@ -102,7 +102,7 @@ skills:
     domain: foundations
     path: 'packages/table-core/skills/custom-features/SKILL.md'
     package: 'packages/table-core'
-    description: 'Author a TanStack Table v9 feature plugin across all 10 FeatureMaps and every table/column/row/cell/header API installation path, including prototypes, memoDeps, instance data, and advanced row-model maps, after checking built-ins and meta.'
+    description: 'Author a TanStack Table v9 feature plugin across all 10 FeatureMaps and every table/column/row/cell/header API installation path, including prototype and computed APIs, instance data, and advanced row-model maps, after checking built-ins and meta.'
     requires: ['core', 'table-features', 'typescript']
     sources:
       - 'TanStack/table:docs/framework/react/guide/custom-features.md'

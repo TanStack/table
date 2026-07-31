@@ -1,5 +1,6 @@
 import { flattenBy, hasOwn, makeObjectMap } from '../../utils'
 import { constructCell } from '../cells/constructCell'
+import { row_getTrackedSubRows } from './subRowsTracking'
 import type { Table_Internal } from '../../types/Table'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
@@ -164,7 +165,7 @@ export function row_getLeafRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): Array<Row<TFeatures, TData>> {
-  return flattenBy(row.subRows, (d) => d.subRows)
+  return flattenBy(row_getTrackedSubRows(row), row_getTrackedSubRows)
 }
 
 /**

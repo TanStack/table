@@ -25,28 +25,29 @@ export function createFacetedMinMaxValues<
     const table = _table as unknown as Table_Internal<TFeatures, TData>
     return tableMemo({
       feature: 'columnFacetingFeature',
-      fn: (flatRows) => _createFacetedMinMaxValues(table, columnId, flatRows),
       fnName: 'table.getFacetedMinMaxValues',
-      memoDeps: () => {
+      fn: () => {
+        let flatRows: Array<Row<TFeatures, TData>>
+
         if (columnId === '__global__') {
-          return [
-            callMemoOrStaticFn(
-              table,
-              'getGlobalFacetedRowModel',
-              table_getGlobalFacetedRowModel,
-            ).flatRows,
-          ]
-        }
-        const column = table.getColumn(columnId)
-        if (!column) return [table.getPreFilteredRowModel().flatRows]
-        return [
-          callMemoOrStaticFn(
-            column,
-            'getFacetedRowModel',
-            column_getFacetedRowModel,
+          flatRows = callMemoOrStaticFn(
             table,
-          ).flatRows,
-        ]
+            'getGlobalFacetedRowModel',
+            table_getGlobalFacetedRowModel,
+          ).flatRows
+        } else {
+          const column = table.getColumn(columnId)
+          flatRows = column
+            ? callMemoOrStaticFn(
+                column,
+                'getFacetedRowModel',
+                column_getFacetedRowModel,
+                table,
+              ).flatRows
+            : table.getPreFilteredRowModel().flatRows
+        }
+
+        return _createFacetedMinMaxValues(table, columnId, flatRows)
       },
       table,
     })

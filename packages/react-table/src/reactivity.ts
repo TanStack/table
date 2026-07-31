@@ -7,11 +7,11 @@ export type ReactTableReactivityBindings = RenderPhaseReactivityBindings
 /**
  * Creates the table-core reactivity bindings used by the React adapter.
  *
- * React stores table state in TanStack Store atoms and leaves options as plain
- * resolved data because `useTable` synchronizes options during render. The
- * render-phase preset supplies the live readonly-atom facades and the `commit`
- * hook; the store primitives are passed in from `@tanstack/react-store` so all
- * atoms share one store instance with user-provided external atoms.
+ * React synchronizes option atoms during render without publishing them until
+ * commit. The render-phase preset supplies live option facades, cached memo
+ * atoms, and the commit hook; the store primitives come from
+ * `@tanstack/react-store` so all atoms share one store instance with
+ * user-provided external atoms.
  */
 export function reactReactivity(): ReactTableReactivityBindings {
   return renderPhaseReactivity({ createAtom, batch })

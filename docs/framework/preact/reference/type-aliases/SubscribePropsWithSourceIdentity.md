@@ -12,7 +12,7 @@ type SubscribePropsWithSourceIdentity<TSourceValue> = object;
 Defined in: [Subscribe.ts:42](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L42)
 
 Subscribe to the full value of a source (e.g. `table.atoms.rowSelection` or
-`table.optionsStore`). Omitting `selector` is equivalent to the identity
+`table.optionAtoms.data`). Omitting `selector` is equivalent to the identity
 selector — children receive `TSourceValue`.
 
 ## Type Parameters

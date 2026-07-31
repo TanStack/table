@@ -9,7 +9,7 @@ title: row_getIsSomeSelected
 function row_getIsSomeSelected<TFeatures, TData>(row): boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:553](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L553)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:557](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L557)
 
 Checks whether some, but not all, selectable descendants are selected.
 

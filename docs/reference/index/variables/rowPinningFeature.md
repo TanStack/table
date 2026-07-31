@@ -9,6 +9,6 @@ title: rowPinningFeature
 const rowPinningFeature: TableFeature;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.ts#L24)
+Defined in: [features/row-pinning/rowPinningFeature.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.ts#L29)
 
 Feature that adds row pinning state and APIs for top, center, and bottom rows.

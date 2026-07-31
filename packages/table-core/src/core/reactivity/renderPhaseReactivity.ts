@@ -1,4 +1,5 @@
-import type { Atom, AtomOptions, ReadonlyAtom } from '@tanstack/store'
+import { createStableStoreReadonlyAtom } from './createStableStoreReadonlyAtom'
+import type { Atom, AtomOptions, Observer, ReadonlyAtom } from '@tanstack/store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
@@ -9,7 +10,9 @@ import type {
  * during the host framework's render phase, with a guaranteed `commit` hook.
  */
 export interface RenderPhaseReactivityBindings extends TableReactivityBindings {
-  commit: () => void
+  stage: () => number
+  getStageToken: () => number
+  commit: (token?: number) => void
 }
 
 /**
@@ -40,14 +43,12 @@ export interface RenderPhaseReactivityPrimitives {
  * component render, where store notifications must not fire until the host
  * commits.
  *
- * Readonly atoms are exposed as live facades. `get()` re-evaluates the
- * resolver against the options of the render in progress — a normal computed
- * cannot know that plain `options.state` changed — and caches the result
- * through the configured comparator so external-store consumers (e.g. React's
- * `useSyncExternalStore`) see referentially stable snapshots. `subscribe()`
- * goes through a hidden computed that tracks the resolver's real atom
- * dependencies plus a commit version, so subscribers are invalidated by
- * actual reactive writes and by the adapter's post-commit publication.
+ * Regular readonly atoms are exposed as live facades. `get()` re-evaluates the
+ * resolver against the options of the render in progress and caches the result
+ * through the configured comparator. Memo-mode atoms use a native computed for
+ * cached table APIs. A materially changed staged options source rotates those
+ * computeds without notifying subscribers; `subscribe()` observes the current
+ * computed only after the matching host commit.
  *
  * @example
  * ```ts
@@ -62,10 +63,14 @@ export function renderPhaseReactivity(
 ): RenderPhaseReactivityBindings {
   const { createAtom, batch } = primitives
   const commitAtom = createAtom(0)
+  let stagedVersion = 0
+  let committedVersion = 0
+  const publishStagedAtoms = new Set<() => void>()
 
   return {
-    createOptionsStore: false,
     wrapExternalAtoms: false,
+    stage: () => ++stagedVersion,
+    getStageToken: () => stagedVersion,
     addSubscription: () => {
       throw new Error(
         'Feature not supported in current reactivity implementation',
@@ -81,6 +86,42 @@ export function renderPhaseReactivity(
     untrack: (fn) => fn(),
     createReadonlyAtom: <T>(fn: () => T, atomOptions?: TableAtomOptions<T>) => {
       const compare = atomOptions?.compare ?? Object.is
+
+      if (atomOptions?.mode === 'memo') {
+        let memoVersion = -1
+        let memoAtom: ReadonlyAtom<T> | undefined
+
+        const createMemoAtom = () =>
+          createStableStoreReadonlyAtom(createAtom, fn, { compare })
+
+        const getMemoAtom = () => {
+          if (!memoAtom || memoVersion !== stagedVersion) {
+            memoVersion = stagedVersion
+            memoAtom = createMemoAtom()
+          }
+
+          return memoAtom
+        }
+
+        const readMemo = () => getMemoAtom().get()
+
+        // Staging rotates the memo used by render reads without publishing
+        // during render. Subscribers observe it only after the host commit.
+        const reactiveAtom = createStableStoreReadonlyAtom(
+          createAtom,
+          () => {
+            commitAtom.get()
+            return readMemo()
+          },
+          { compare },
+        )
+
+        return {
+          get: readMemo,
+          subscribe: reactiveAtom.subscribe.bind(reactiveAtom),
+        }
+      }
+
       let hasSnapshot = false
       let snapshot: T
 
@@ -95,7 +136,8 @@ export function renderPhaseReactivity(
         return snapshot
       }
 
-      const reactiveAtom = createAtom<T>(
+      const reactiveAtom = createStableStoreReadonlyAtom(
+        createAtom,
         () => {
           commitAtom.get()
           return getSnapshot()
@@ -109,12 +151,77 @@ export function renderPhaseReactivity(
       }
     },
     createWritableAtom: <T>(value: T, atomOptions?: TableAtomOptions<T>) => {
+      if (atomOptions?.mode === 'staged') {
+        const compare = atomOptions.compare ?? Object.is
+        const publishedVersion = createAtom(0)
+        let currentValue = value
+        let dirty = false
+
+        const publish = () => {
+          if (!dirty) {
+            return
+          }
+
+          dirty = false
+          publishedVersion.set((version) => version + 1)
+        }
+
+        publishStagedAtoms.add(publish)
+
+        return {
+          get: () => {
+            // The value itself is live for the render in progress. Reactive
+            // consumers only depend on the version published by commit().
+            publishedVersion.get()
+            return currentValue
+          },
+          set: (updater: T | ((previous: T) => T)) => {
+            const nextValue =
+              typeof updater === 'function'
+                ? (updater as (previous: T) => T)(currentValue)
+                : updater
+
+            if (!compare(currentValue, nextValue)) {
+              currentValue = nextValue
+              dirty = true
+            }
+          },
+          subscribe: ((observer: Observer<T> | ((value: T) => void)) => {
+            let previous = currentValue
+            return publishedVersion.subscribe(() => {
+              const nextValue = currentValue
+              if (!compare(previous, nextValue)) {
+                previous = nextValue
+                if (typeof observer === 'function') {
+                  observer(nextValue)
+                } else {
+                  observer.next?.(nextValue)
+                }
+              }
+            })
+          }) as Atom<T>['subscribe'],
+        }
+      }
+
       return createAtom(value, {
         compare: atomOptions?.compare,
       })
     },
-    commit: () => {
-      commitAtom.set((version) => version + 1)
+    commit: (token = stagedVersion) => {
+      // Publish only the newest staged render. Older effects and commits for a
+      // token that was superseded by an abandoned render must not publish the
+      // newer staged values under the wrong token.
+      if (token !== stagedVersion || token <= committedVersion) {
+        return
+      }
+
+      committedVersion = token
+      batch(() => {
+        for (const publish of publishStagedAtoms) {
+          publish()
+        }
+        commitAtom.set(() => token)
+      })
     },
   }
 }

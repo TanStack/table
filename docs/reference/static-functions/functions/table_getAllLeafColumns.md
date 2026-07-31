@@ -9,7 +9,7 @@ title: table_getAllLeafColumns
 function table_getAllLeafColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L208)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:221](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L221)
 
 Collects all terminal leaf columns in their current table order.
 

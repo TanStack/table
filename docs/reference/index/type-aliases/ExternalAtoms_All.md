@@ -9,4 +9,4 @@ title: ExternalAtoms_All
 type ExternalAtoms_All = Partial<{ [K in keyof TableState_All]: Atom<Exclude<TableState_All[K], undefined>> }>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:84](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L84)
+Defined in: [core/table/coreTablesFeature.types.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L123)

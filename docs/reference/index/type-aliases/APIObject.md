@@ -3,20 +3,10 @@ id: APIObject
 title: APIObject
 ---
 
-# Type Alias: APIObject\<TDeps, TDepArgs\>
+# Type Alias: APIObject
 
 ```ts
-type APIObject<TDeps, TDepArgs> = Record<string, API<TDeps, TDepArgs>>;
+type APIObject = Record<string, API>;
 ```
 
-Defined in: [utils.ts:367](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L367)
-
-## Type Parameters
-
-### TDeps
-
-`TDeps` *extends* `ReadonlyArray`\<`any`\>
-
-### TDepArgs
-
-`TDepArgs`
+Defined in: [utils.ts:337](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L337)

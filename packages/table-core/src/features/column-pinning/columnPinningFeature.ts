@@ -4,7 +4,11 @@ import {
   callMemoOrStaticFn,
   makeStateUpdater,
 } from '../../utils'
-import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
+import {
+  column_getIsVisible,
+  row_getVisibleCellsByColumnId,
+} from '../column-visibility/columnVisibilityFeature.utils'
+import { buildHeaderGroups } from '../../core/headers/buildHeaderGroups'
 import {
   column_getCanPin,
   column_getIsPinned,
@@ -12,8 +16,6 @@ import {
   column_pin,
   getDefaultColumnPinningState,
   row_getCenterVisibleCells,
-  row_getEndVisibleCells,
-  row_getStartVisibleCells,
   table_getCenterFlatHeaders,
   table_getCenterFooterGroups,
   table_getCenterHeaderGroups,
@@ -22,7 +24,6 @@ import {
   table_getCenterVisibleLeafColumns,
   table_getEndFlatHeaders,
   table_getEndFooterGroups,
-  table_getEndHeaderGroups,
   table_getEndLeafColumns,
   table_getEndLeafHeaders,
   table_getEndVisibleLeafColumns,
@@ -31,14 +32,19 @@ import {
   table_getPinnedVisibleLeafColumns,
   table_getStartFlatHeaders,
   table_getStartFooterGroups,
-  table_getStartHeaderGroups,
   table_getStartLeafColumns,
   table_getStartLeafHeaders,
   table_getStartVisibleLeafColumns,
   table_resetColumnPinning,
   table_setColumnPinning,
 } from './columnPinningFeature.utils'
+import type { ReadonlyAtom } from '@tanstack/store'
 import type { TableFeature } from '../../types/TableFeatures'
+
+function createLazySelector<T>(create: () => ReadonlyAtom<T>): () => T {
+  let atom: ReadonlyAtom<T> | undefined
+  return () => (atom ??= create()).get()
+}
 
 /**
  * Feature that adds column pinning state and APIs for logical start, center,
@@ -83,35 +89,110 @@ export const columnPinningFeature: TableFeature = {
   },
 
   assignRowPrototype: (prototype, table) => {
+    const readStartPinning = createLazySelector(() =>
+      table._reactivity.createReadonlyAtom(
+        () => table.atoms.columnPinning?.get()?.start,
+        {
+          debugName: 'table/selectors/columnPinning/start',
+          mode: 'memo',
+        },
+      ),
+    )
+    const readEndPinning = createLazySelector(() =>
+      table._reactivity.createReadonlyAtom(
+        () => table.atoms.columnPinning?.get()?.end,
+        {
+          debugName: 'table/selectors/columnPinning/end',
+          mode: 'memo',
+        },
+      ),
+    )
+
     assignPrototypeAPIs('columnPinningFeature', prototype, table, {
       row_getCenterVisibleCells: {
-        fn: (row) => row_getCenterVisibleCells(row),
-        memoDeps: (row) => [
-          row.getAllCells(),
-          row.table.atoms.columnPinning?.get(),
-          row.table.atoms.columnVisibility?.get(),
-        ],
+        computed: (row) => row_getCenterVisibleCells(row),
       },
       row_getStartVisibleCells: {
-        fn: (row) => row_getStartVisibleCells(row),
-        memoDeps: (row) => [
-          row.getAllCells(),
-          row.table.atoms.columnPinning?.get()?.start,
-          row.table.atoms.columnVisibility?.get(),
-        ],
+        computed: (row) => {
+          const start = readStartPinning() ?? []
+          if (!start.length) return []
+          const cellsByColumnId = callMemoOrStaticFn(
+            row,
+            'getVisibleCellsByColumnId',
+            row_getVisibleCellsByColumnId,
+          )
+          const cells: Array<(typeof cellsByColumnId)[string]> = []
+          for (let i = 0; i < start.length; i++) {
+            const cell = cellsByColumnId[start[i]!]
+            if (cell) {
+              ;(cell as any).position = 'start'
+              cells.push(cell)
+            }
+          }
+          return cells
+        },
       },
       row_getEndVisibleCells: {
-        fn: (row) => row_getEndVisibleCells(row),
-        memoDeps: (row) => [
-          row.getAllCells(),
-          row.table.atoms.columnPinning?.get()?.end,
-          row.table.atoms.columnVisibility?.get(),
-        ],
+        computed: (row) => {
+          const end = readEndPinning() ?? []
+          if (!end.length) return []
+          const cellsByColumnId = callMemoOrStaticFn(
+            row,
+            'getVisibleCellsByColumnId',
+            row_getVisibleCellsByColumnId,
+          )
+          const cells: Array<(typeof cellsByColumnId)[string]> = []
+          for (let i = 0; i < end.length; i++) {
+            const cell = cellsByColumnId[end[i]!]
+            if (cell) {
+              ;(cell as any).position = 'end'
+              cells.push(cell)
+            }
+          }
+          return cells
+        },
       },
     })
   },
 
   constructTableAPIs: (table) => {
+    const readStartPinning = createLazySelector(() =>
+      table._reactivity.createReadonlyAtom(
+        () => table.atoms.columnPinning?.get()?.start,
+        {
+          debugName: 'table/selectors/columnPinning/startHeaderGroups',
+          mode: 'memo',
+        },
+      ),
+    )
+    const readEndPinning = createLazySelector(() =>
+      table._reactivity.createReadonlyAtom(
+        () => table.atoms.columnPinning?.get()?.end,
+        {
+          debugName: 'table/selectors/columnPinning/endHeaderGroups',
+          mode: 'memo',
+        },
+      ),
+    )
+    const buildPinnedHeaderGroups = (
+      position: 'start' | 'end',
+      pinnedColumnIds: ReadonlyArray<string>,
+    ) => {
+      const allColumns = table.getAllColumns()
+      const leafColumnsById = table.getAllLeafColumnsById()
+      const orderedLeafColumns: typeof allColumns = []
+      for (let i = 0; i < pinnedColumnIds.length; i++) {
+        const column = leafColumnsById[pinnedColumnIds[i]!]
+        if (
+          column &&
+          callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+        ) {
+          orderedLeafColumns.push(column)
+        }
+      }
+      return buildHeaderGroups(allColumns, orderedLeafColumns, table, position)
+    }
+
     assignTableAPIs('columnPinningFeature', table, {
       table_setColumnPinning: {
         fn: (updater) => table_setColumnPinning(table, updater),
@@ -124,167 +205,59 @@ export const columnPinningFeature: TableFeature = {
       },
       // header groups
       table_getStartHeaderGroups: {
-        fn: () => table_getStartHeaderGroups(table),
-        memoDeps: () => [
-          table.getAllColumns(),
-          callMemoOrStaticFn(
-            table,
-            'getVisibleLeafColumns',
-            table_getVisibleLeafColumns,
-          ),
-          table.atoms.columnPinning?.get()?.start,
-          table.atoms.columnOrder?.get(),
-        ],
+        computed: () => {
+          table.atoms.columnOrder?.get()
+          return buildPinnedHeaderGroups('start', readStartPinning() ?? [])
+        },
       },
       table_getCenterHeaderGroups: {
-        fn: () => table_getCenterHeaderGroups(table),
-        memoDeps: () => [
-          table.getAllColumns(),
-          callMemoOrStaticFn(
-            table,
-            'getVisibleLeafColumns',
-            table_getVisibleLeafColumns,
-          ),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnOrder?.get(),
-        ],
+        computed: () => table_getCenterHeaderGroups(table),
       },
       table_getEndHeaderGroups: {
-        fn: () => table_getEndHeaderGroups(table),
-        memoDeps: () => [
-          table.getAllColumns(),
-          callMemoOrStaticFn(
-            table,
-            'getVisibleLeafColumns',
-            table_getVisibleLeafColumns,
-          ),
-          table.atoms.columnPinning?.get()?.end,
-          table.atoms.columnOrder?.get(),
-        ],
+        computed: () => {
+          table.atoms.columnOrder?.get()
+          return buildPinnedHeaderGroups('end', readEndPinning() ?? [])
+        },
       },
       // footer groups
       table_getStartFooterGroups: {
-        fn: () => table_getStartFooterGroups(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getStartHeaderGroups',
-            table_getStartHeaderGroups,
-          ),
-        ],
+        computed: () => table_getStartFooterGroups(table),
       },
       table_getCenterFooterGroups: {
-        fn: () => table_getCenterFooterGroups(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCenterHeaderGroups',
-            table_getCenterHeaderGroups,
-          ),
-        ],
+        computed: () => table_getCenterFooterGroups(table),
       },
       table_getEndFooterGroups: {
-        fn: () => table_getEndFooterGroups(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getEndHeaderGroups',
-            table_getEndHeaderGroups,
-          ),
-        ],
+        computed: () => table_getEndFooterGroups(table),
       },
       // flat headers
       table_getStartFlatHeaders: {
-        fn: () => table_getStartFlatHeaders(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getStartHeaderGroups',
-            table_getStartHeaderGroups,
-          ),
-        ],
+        computed: () => table_getStartFlatHeaders(table),
       },
       table_getEndFlatHeaders: {
-        fn: () => table_getEndFlatHeaders(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getEndHeaderGroups',
-            table_getEndHeaderGroups,
-          ),
-        ],
+        computed: () => table_getEndFlatHeaders(table),
       },
       table_getCenterFlatHeaders: {
-        fn: () => table_getCenterFlatHeaders(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCenterHeaderGroups',
-            table_getCenterHeaderGroups,
-          ),
-        ],
+        computed: () => table_getCenterFlatHeaders(table),
       },
       // leaf headers
       table_getStartLeafHeaders: {
-        fn: () => table_getStartLeafHeaders(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getStartHeaderGroups',
-            table_getStartHeaderGroups,
-          ),
-        ],
+        computed: () => table_getStartLeafHeaders(table),
       },
       table_getEndLeafHeaders: {
-        fn: () => table_getEndLeafHeaders(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getEndHeaderGroups',
-            table_getEndHeaderGroups,
-          ),
-        ],
+        computed: () => table_getEndLeafHeaders(table),
       },
       table_getCenterLeafHeaders: {
-        fn: () => table_getCenterLeafHeaders(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCenterHeaderGroups',
-            table_getCenterHeaderGroups,
-          ),
-        ],
+        computed: () => table_getCenterLeafHeaders(table),
       },
       // leaf columns
       table_getStartLeafColumns: {
-        fn: () => table_getStartLeafColumns(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getStartLeafColumns(table),
       },
       table_getEndLeafColumns: {
-        fn: () => table_getEndLeafColumns(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getEndLeafColumns(table),
       },
       table_getCenterLeafColumns: {
-        fn: () => table_getCenterLeafColumns(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getCenterLeafColumns(table),
       },
       table_getPinnedLeafColumns: {
         fn: (position) => table_getPinnedLeafColumns(table, position),
@@ -292,37 +265,13 @@ export const columnPinningFeature: TableFeature = {
       },
       // visible leaf columns
       table_getStartVisibleLeafColumns: {
-        fn: () => table_getStartVisibleLeafColumns(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getStartVisibleLeafColumns(table),
       },
       table_getCenterVisibleLeafColumns: {
-        fn: () => table_getCenterVisibleLeafColumns(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getCenterVisibleLeafColumns(table),
       },
       table_getEndVisibleLeafColumns: {
-        fn: () => table_getEndVisibleLeafColumns(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getEndVisibleLeafColumns(table),
       },
       table_getPinnedVisibleLeafColumns: {
         fn: (position) => table_getPinnedVisibleLeafColumns(table, position),

@@ -24,7 +24,7 @@ type FlexRenderProps<TFeatures, TData, TValue> =
 };
 ```
 
-Defined in: [FlexRender.tsx:64](https://github.com/TanStack/table/blob/main/packages/preact-table/src/FlexRender.tsx#L64)
+Defined in: [FlexRender.tsx:67](https://github.com/TanStack/table/blob/main/packages/preact-table/src/FlexRender.tsx#L67)
 
 Simplified component wrapper of `flexRender`. Use this utility component to render headers, cells, or footers with custom markup.
 Only one prop (`cell`, `header`, or `footer`) may be passed.

@@ -10,6 +10,14 @@ export interface TableAtomOptions<T> extends AtomOptions<T> {
    * A debug name for the atom, useful for debugging.
    */
   debugName: string
+  /**
+   * Selects an internal render-phase behavior. `memo` retains native computed
+   * caching between reads; `staged` makes a writable value live to the current
+   * render while deferring its reactive publication until commit.
+   *
+   * @internal
+   */
+  mode?: 'memo' | 'staged'
 }
 
 /**
@@ -20,15 +28,30 @@ export interface TableAtomOptions<T> extends AtomOptions<T> {
  * scheduling primitives.
  */
 export interface TableReactivityBindings {
-  createOptionsStore: boolean
   wrapExternalAtoms: boolean
+  /**
+   * Advances memo-mode readonly atoms to a newly staged options snapshot.
+   *
+   * Render-phase adapters return a token that must only be published after the
+   * corresponding host render commits.
+   *
+   * @internal
+   */
+  stage?: () => number
+  /**
+   * Returns the token for the currently staged options snapshot without
+   * creating a new stage.
+   *
+   * @internal
+   */
+  getStageToken?: () => number
   /**
    * Invalidates readonly atoms whose compute reads non-reactive inputs (plain
    * options). Render-phase adapters call this after publishing captured
    * controlled state from a host commit, including when no base atom changed,
    * so controlled ownership changes still reach subscribers.
    */
-  commit?: () => void
+  commit?: (token?: number) => void
   addSubscription: (subscription: Subscription) => void
   /**
    * Creates a writable atom with an initial value.

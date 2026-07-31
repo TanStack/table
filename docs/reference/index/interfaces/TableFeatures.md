@@ -745,7 +745,7 @@ When omitted, the global declaration-merged `TableMeta` interface applies.
 optional workerRowModelsFeature: TableFeature;
 ```
 
-Defined in: [worker/createTableWorker.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L23)
+Defined in: [worker/createTableWorker.ts:24](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L24)
 
 #### Inherited from
 

@@ -110,6 +110,25 @@ describe('Svelte adapter lifecycle and reactive options', () => {
     ])
   })
 
+  test('an existing optional top-level option can be cleared to undefined', async () => {
+    render(ReactivityHarness)
+
+    expect(outputText('Row selection option')).toBe('true')
+    expect(outputText('First row can be selected')).toBe('true')
+
+    await fireEvent.click(
+      screen.getByRole('button', { name: 'Disable row selection' }),
+    )
+    expect(outputText('Row selection option')).toBe('false')
+    expect(outputText('First row can be selected')).toBe('false')
+
+    await fireEvent.click(
+      screen.getByRole('button', { name: 'Clear row-selection option' }),
+    )
+    expect(outputText('Row selection option')).toBe('undefined')
+    expect(outputText('First row can be selected')).toBe('true')
+  })
+
   test('table APIs use the latest rune-backed option callback', async () => {
     const firstHandler = vi.fn<OnChangeFn<RowSelectionState>>()
     const secondHandler = vi.fn<OnChangeFn<RowSelectionState>>()

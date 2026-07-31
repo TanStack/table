@@ -14,7 +14,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:396](https://
 Checks whether this cell falls inside any selected range.
 
 Deliberately not memoized. Registering this through `assignPrototypeAPIs`
-with `memoDeps` would allocate a memo closure and dependency array per cell,
+with a native computed would allocate a memo closure per cell,
 which costs more than the handful of integer comparisons it would save.
 
 ## Type Parameters

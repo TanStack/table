@@ -40,11 +40,11 @@ export const rowAggregationFeature: TableFeature = {
         fn: (column, options) => column_getAggregationValue(column, options),
       },
       column_getAutoAggregationFn: {
-        fn: (column) => column_getAutoAggregationFn(column),
-        memoDeps: (column) => [
-          column.table.getCoreRowModel(),
-          column.table._rowModelFns.aggregationFns,
-        ],
+        computed: (column) => {
+          void column.table.getCoreRowModel()
+          void column.table._rowModelFns.aggregationFns
+          return column_getAutoAggregationFn(column)
+        },
       },
     })
   },

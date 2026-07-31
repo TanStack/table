@@ -9,7 +9,7 @@ title: AppCellContext
 type AppCellContext<TFeatures, TData, TValue, TCellComponents> = object;
 ```
 
-Defined in: [createTableHook.tsx:40](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L40)
+Defined in: [createTableHook.tsx:41](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L41)
 
 Enhanced CellContext with pre-bound cell components.
 The `cell` property includes the registered cellComponents.
@@ -40,7 +40,7 @@ The `cell` property includes the registered cellComponents.
 cell: Cell<TFeatures, TData, TValue> & TCellComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:46](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L46)
+Defined in: [createTableHook.tsx:47](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L47)
 
 #### Type Declaration
 
@@ -62,7 +62,7 @@ FlexRender: () => JSXElement;
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [createTableHook.tsx:48](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L48)
+Defined in: [createTableHook.tsx:49](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L49)
 
 ***
 
@@ -72,7 +72,7 @@ Defined in: [createTableHook.tsx:48](https://github.com/TanStack/table/blob/main
 getValue: CellContext<TFeatures, TData, TValue>["getValue"];
 ```
 
-Defined in: [createTableHook.tsx:49](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L49)
+Defined in: [createTableHook.tsx:50](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L50)
 
 ***
 
@@ -82,7 +82,7 @@ Defined in: [createTableHook.tsx:49](https://github.com/TanStack/table/blob/main
 renderValue: CellContext<TFeatures, TData, TValue>["renderValue"];
 ```
 
-Defined in: [createTableHook.tsx:50](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L50)
+Defined in: [createTableHook.tsx:51](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L51)
 
 ***
 
@@ -92,7 +92,7 @@ Defined in: [createTableHook.tsx:50](https://github.com/TanStack/table/blob/main
 row: Row<TFeatures, TData>;
 ```
 
-Defined in: [createTableHook.tsx:51](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L51)
+Defined in: [createTableHook.tsx:52](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L52)
 
 ***
 
@@ -102,4 +102,4 @@ Defined in: [createTableHook.tsx:51](https://github.com/TanStack/table/blob/main
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [createTableHook.tsx:52](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L52)
+Defined in: [createTableHook.tsx:53](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L53)

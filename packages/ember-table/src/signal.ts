@@ -4,7 +4,10 @@ import { tracked, cached } from '@glimmer/tracking'
 import { untrack } from '@glimmer/validator'
 
 export function subscribeNoEffect(): Subscription {
-  return null as unknown as Subscription
+  // Glimmer invalidates computed consumers through tags rather than an
+  // imperative effect API. Still return a valid subscription object so the
+  // public ReadonlyAtom contract is safe for callers that always unsubscribe.
+  return { unsubscribe: () => {} }
 }
 
 /**

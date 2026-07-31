@@ -11,7 +11,6 @@ export function emberReactivity(): TableReactivityBindings {
   const subscriptions = new Set<Subscription>()
 
   return {
-    createOptionsStore: true,
     wrapExternalAtoms: true,
 
     // timing is not important, but the main thing is that the work does *not*
@@ -20,8 +19,19 @@ export function emberReactivity(): TableReactivityBindings {
     batch: (fn) => fn(),
     untrack,
     // @cached
-    createReadonlyAtom: <T>(fn: () => T) => {
-      return computed(fn)
+    createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
+      const compare = options?.compare ?? Object.is
+      let hasStableValue = false
+      let stableValue: T
+
+      return computed(() => {
+        const nextValue = fn()
+        if (!hasStableValue || !compare(stableValue, nextValue)) {
+          stableValue = nextValue
+          hasStableValue = true
+        }
+        return stableValue
+      })
     },
     // @tracked
     createWritableAtom: <T>(value: T, options?: TableAtomOptions<T>) => {

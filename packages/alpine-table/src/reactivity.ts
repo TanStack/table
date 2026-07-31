@@ -1,4 +1,5 @@
 import { batch, createAtom } from '@tanstack/store'
+import { createStableStoreReadonlyAtom } from '@tanstack/table-core/reactivity'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
@@ -12,7 +13,6 @@ import type {
  */
 export function alpineReactivity(): TableReactivityBindings {
   return {
-    createOptionsStore: true,
     wrapExternalAtoms: false,
     addSubscription: () => {
       throw new Error(
@@ -28,7 +28,7 @@ export function alpineReactivity(): TableReactivityBindings {
     batch,
     untrack: (fn) => fn(),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      return createAtom(() => fn(), {
+      return createStableStoreReadonlyAtom(createAtom, fn, {
         compare: options?.compare,
       })
     },

@@ -1,5 +1,6 @@
 import { hasOwn, makeObjectMap, tableMemo } from '../../utils'
 import { constructRow } from '../../core/rows/constructRow'
+import { row_setSubRows } from '../../core/rows/subRowsTracking'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import { table_autoResetExpanded } from '../row-expanding/rowExpandingFeature.utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
@@ -37,11 +38,6 @@ export function createGroupedRowModel<
       feature: 'columnGroupingFeature',
       table,
       fnName: 'table.getGroupedRowModel',
-      memoDeps: () => [
-        table.atoms.grouping?.get(),
-        table.getPreGroupedRowModel(),
-        table.options.columns,
-      ],
       fn: () => _createGroupedRowModel(table),
       onAfterUpdate: () => {
         const grouping = table.atoms.grouping?.get()
@@ -109,7 +105,10 @@ function _createGroupedRowModel<
         // parent group's loop or the root loop), so only descendants below
         // the terminal depth are pushed here.
         if (row.subRows.length) {
-          row.subRows = groupUpRecursively(row.subRows, depth + 1, row.id)
+          row_setSubRows(
+            row,
+            groupUpRecursively(row.subRows, depth + 1, row.id),
+          )
           for (let i = 0; i < row.subRows.length; i++) {
             const subRow = row.subRows[i]!
             groupedFlatRows.push(subRow)

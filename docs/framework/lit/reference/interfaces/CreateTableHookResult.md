@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [packages/lit-table/src/createTableHook.ts:358](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L358)
+Defined in: [packages/lit-table/src/createTableHook.ts:359](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L359)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [packages/lit-table/src/createTableHook.ts:358](https://github.com/T
 appFeatures: TFeatures;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:365](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L365)
+Defined in: [packages/lit-table/src/createTableHook.ts:366](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L366)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:370](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L370)
+Defined in: [packages/lit-table/src/createTableHook.ts:371](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L371)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -68,7 +68,7 @@ the cell/header/footer render props expose the bound components.
 useAppTable: <TData, TSelected>(host, tableOptions, selector?) => object;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:381](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L381)
+Defined in: [packages/lit-table/src/createTableHook.ts:382](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L382)
 
 Creates a controller-like object whose `table()` method returns a table with
 the `App*` wrapper functions, a bound `FlexRender`, and the registered
@@ -120,7 +120,7 @@ table: () => AppLitTable<TFeatures, TData, TSelected, TTableComponents, TCellCom
 useCellContext: <TValue>(host) => ContextConsumer<Context<symbol, Cell<TFeatures, any, TValue>>, ReactiveControllerHost & HTMLElement>;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:410](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L410)
+Defined in: [packages/lit-table/src/createTableHook.ts:411](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L411)
 
 Reads the cell instance from a `@lit/context` `ContextConsumer`. lit never
 provides an extended cell through context, so this is a BARE `Cell`.
@@ -149,7 +149,7 @@ provides an extended cell through context, so this is a BARE `Cell`.
 useHeaderContext: <TValue>(host) => ContextConsumer<Context<symbol, Header<TFeatures, any, TValue>>, ReactiveControllerHost & HTMLElement>;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:420](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L420)
+Defined in: [packages/lit-table/src/createTableHook.ts:421](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L421)
 
 Reads the header instance from a `@lit/context` `ContextConsumer`. lit never
 provides an extended header through context, so this is a BARE `Header`.
@@ -178,7 +178,7 @@ provides an extended header through context, so this is a BARE `Header`.
 useTableContext: <TData>(host) => ContextConsumer<Context<symbol, LitTable<TFeatures, TData, any>>, ReactiveControllerHost & HTMLElement>;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:400](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L400)
+Defined in: [packages/lit-table/src/createTableHook.ts:401](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L401)
 
 Reads the table provided by the nearest ancestor that called `useAppTable`,
 via a `@lit/context` `ContextConsumer`. This is the BARE `LitTable` written

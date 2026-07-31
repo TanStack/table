@@ -1,11 +1,11 @@
 import {
   assignPrototypeAPIs,
   assignTableAPIs,
+  hasOwn,
   makeStateUpdater,
 } from '../../utils'
 import {
   column_getAfter,
-  column_getSize,
   column_getStart,
   column_resetSize,
   getDefaultColumnSizingColumnDef,
@@ -20,7 +20,33 @@ import {
   table_resetColumnSizing,
   table_setColumnSizing,
 } from './columnSizingFeature.utils'
+import type { ReadonlyAtom } from '@tanstack/store'
 import type { TableFeature } from '../../types/TableFeatures'
+
+function createLazySelector<T>(create: () => ReadonlyAtom<T>): () => T {
+  let atom: ReadonlyAtom<T> | undefined
+  return () => (atom ??= create()).get()
+}
+
+function resolveColumnSize(
+  column: {
+    columnDef: {
+      maxSize?: number
+      minSize?: number
+      size?: number
+    }
+  },
+  columnSize: number | undefined,
+): number {
+  const defaults = getDefaultColumnSizingColumnDef()
+  return Math.min(
+    Math.max(
+      column.columnDef.minSize ?? defaults.minSize,
+      columnSize ?? column.columnDef.size ?? defaults.size,
+    ),
+    column.columnDef.maxSize ?? defaults.maxSize,
+  )
+}
 
 /**
  * Feature that adds column sizing state, defaults, and size measurement APIs.
@@ -44,13 +70,35 @@ export const columnSizingFeature: TableFeature = {
   },
 
   assignColumnPrototype: (prototype, table) => {
+    const sizeSelectors = new WeakMap<object, () => number | undefined>()
+    const readColumnSize = (column: { id: string }) => {
+      let readSize = sizeSelectors.get(column)
+      if (!readSize) {
+        readSize = createLazySelector(() =>
+          table._reactivity.createReadonlyAtom(
+            () => {
+              const sizing = table.atoms.columnSizing?.get()
+              return sizing && hasOwn(sizing, column.id)
+                ? sizing[column.id]
+                : undefined
+            },
+            {
+              debugName: `table/selectors/columnSizing/${column.id}`,
+              mode: 'memo',
+            },
+          ),
+        )
+        sizeSelectors.set(column, readSize)
+      }
+      return readSize()
+    }
+
     assignPrototypeAPIs('columnSizingFeature', prototype, table, {
       column_getSize: {
-        fn: (column) => column_getSize(column),
-        memoDeps: (column) => [
-          table.options.columns,
-          table.atoms.columnSizing?.get()?.[column.id], // just this column's size state
-        ],
+        computed: (column) => {
+          void table.options.columns
+          return resolveColumnSize(column, readColumnSize(column))
+        },
       },
       // O(1) lookups into the memoized table-level offsets, so no per-column
       // memos here
@@ -67,27 +115,41 @@ export const columnSizingFeature: TableFeature = {
   },
 
   assignHeaderPrototype: (prototype, table) => {
+    const sizeSelectors = new WeakMap<object, () => number | undefined>()
+    const readColumnSize = (column: { id: string }) => {
+      let readSize = sizeSelectors.get(column)
+      if (!readSize) {
+        readSize = createLazySelector(() =>
+          table._reactivity.createReadonlyAtom(
+            () => {
+              const sizing = table.atoms.columnSizing?.get()
+              return sizing && hasOwn(sizing, column.id)
+                ? sizing[column.id]
+                : undefined
+            },
+            {
+              debugName: `table/selectors/headerColumnSizing/${column.id}`,
+              mode: 'memo',
+            },
+          ),
+        )
+        sizeSelectors.set(column, readSize)
+      }
+      return readSize()
+    }
+
     assignPrototypeAPIs('columnSizingFeature', prototype, table, {
       header_getSize: {
-        fn: (header) => header_getSize(header),
-        memoDeps: (header) => [
-          table.options.columns,
-          header.column.columns.length > 0
-            ? table.atoms.columnSizing?.get() // must be all columns (sum child columns)
-            : table.atoms.columnSizing?.get()?.[header.column.id], // can just check it's associated column size state
-        ],
+        computed: (header) => {
+          void table.options.columns
+          if (header.column.columns.length > 0) {
+            return header_getSize(header)
+          }
+          return resolveColumnSize(header.column, readColumnSize(header.column))
+        },
       },
       header_getStart: {
-        fn: (header) => header_getStart(header),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnSizing?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: (header) => header_getStart(header),
       },
     })
   },
@@ -95,16 +157,7 @@ export const columnSizingFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('columnSizingFeature', table, {
       table_getColumnOffsets: {
-        fn: () => table_getColumnOffsets(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnSizing?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-          table.atoms.grouping?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getColumnOffsets(table),
       },
       table_setColumnSizing: {
         fn: (updater) => table_setColumnSizing(table, updater),
@@ -113,32 +166,16 @@ export const columnSizingFeature: TableFeature = {
         fn: (defaultState) => table_resetColumnSizing(table, defaultState),
       },
       table_getTotalSize: {
-        fn: () => table_getTotalSize(table),
-        memoDeps: () => [
-          table.atoms.columnSizing?.get(),
-          table.getHeaderGroups(),
-        ],
+        computed: () => table_getTotalSize(table),
       },
       table_getStartTotalSize: {
-        fn: () => table_getStartTotalSize(table),
-        memoDeps: () => [
-          table.atoms.columnSizing?.get(),
-          table.getHeaderGroups(),
-        ],
+        computed: () => table_getStartTotalSize(table),
       },
       table_getCenterTotalSize: {
-        fn: () => table_getCenterTotalSize(table),
-        memoDeps: () => [
-          table.atoms.columnSizing?.get(),
-          table.getHeaderGroups(),
-        ],
+        computed: () => table_getCenterTotalSize(table),
       },
       table_getEndTotalSize: {
-        fn: () => table_getEndTotalSize(table),
-        memoDeps: () => [
-          table.atoms.columnSizing?.get(),
-          table.getHeaderGroups(),
-        ],
+        computed: () => table_getEndTotalSize(table),
       },
     })
   },

@@ -22,13 +22,6 @@ export function createPaginatedRowModel<
       feature: 'rowPaginationFeature',
       table,
       fnName: 'table.getPaginatedRowModel',
-      memoDeps: () => [
-        table.getPrePaginatedRowModel(),
-        table.atoms.pagination?.get(),
-        !table.options.paginateExpandedRows
-          ? table.atoms.expanded?.get()
-          : undefined,
-      ],
       fn: () => _createPaginatedRowModel(table),
     })
   }

@@ -5,7 +5,7 @@ title: TableOptions_Table
 
 # Interface: TableOptions\_Table\<TFeatures, TData\>
 
-Defined in: [core/table/coreTablesFeature.types.ts:88](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L88)
+Defined in: [core/table/coreTablesFeature.types.ts:127](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L127)
 
 ## Extended by
 
@@ -29,7 +29,7 @@ Defined in: [core/table/coreTablesFeature.types.ts:88](https://github.com/TanSta
 readonly optional atoms: Partial<{ [K in string | number | symbol]: Atom<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>[K]> }>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L109)
+Defined in: [core/table/coreTablesFeature.types.ts:148](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L148)
 
 Optionally, provide your own external writable atoms for individual state slices.
 When an atom is provided for a given slice, it takes precedence over `options.state[key]`
@@ -45,7 +45,7 @@ model for app-managed table state slices.
 readonly optional autoResetAll: boolean;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L113)
+Defined in: [core/table/coreTablesFeature.types.ts:152](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L152)
 
 Set this option to override any of the `autoReset...` feature options.
 
@@ -57,7 +57,7 @@ Set this option to override any of the `autoReset...` feature options.
 readonly data: readonly TData[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L117)
+Defined in: [core/table/coreTablesFeature.types.ts:156](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L156)
 
 The data for the table to display. When the `data` option changes reference, the table will reprocess the data.
 
@@ -69,7 +69,7 @@ The data for the table to display. When the `data` option changes reference, the
 readonly features: TFeatures & ValidateFeatureSlots<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L101)
+Defined in: [core/table/coreTablesFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L140)
 
 The feature modules registered on this table instance.
 
@@ -87,7 +87,7 @@ slots (`tableMeta`, `columnMeta`).
 readonly optional initialState: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L131)
+Defined in: [core/table/coreTablesFeature.types.ts:170](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L170)
 
 Optionally provide starting values for registered table state slices.
 Feature reset APIs use this value by default, and many reset APIs accept
@@ -102,7 +102,7 @@ object later does not reset table state, so it does not need to be stable.
 readonly optional key: string;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L124)
+Defined in: [core/table/coreTablesFeature.types.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L163)
 
 Optional key used to identify this table instance.
 
@@ -117,7 +117,7 @@ not required unless the table is passed to devtools.
 readonly optional mergeOptions: (defaultOptions, options) => TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L135)
+Defined in: [core/table/coreTablesFeature.types.ts:174](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L174)
 
 This option is used to optionally implement the merging of table options.
 
@@ -143,7 +143,7 @@ This option is used to optionally implement the merging of table options.
 readonly optional meta: ExtractTableMeta<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L145)
+Defined in: [core/table/coreTablesFeature.types.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L184)
 
 You can pass any object to `options.meta` and access it anywhere the `table` is available via `table.options.meta`.
 
@@ -158,7 +158,7 @@ Declare its type per-table via the `tableMeta` type-only slot on the
 readonly optional state: Partial<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L153)
+Defined in: [core/table/coreTablesFeature.types.ts:192](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L192)
 
 Optionally provide externally managed values for individual state slices.
 

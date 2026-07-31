@@ -9,7 +9,7 @@ title: VueTable
 type VueTable<TFeatures, TData> = Table<TFeatures, TData> & object;
 ```
 
-Defined in: [packages/vue-table/src/useTable.ts:46](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L46)
+Defined in: [packages/vue-table/src/useTable.ts:54](https://github.com/TanStack/table/blob/main/packages/vue-table/src/useTable.ts#L54)
 
 ## Type Declaration
 

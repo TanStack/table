@@ -24,7 +24,9 @@ export interface TableDevtoolsTable {
     state?: Record<string, unknown>
     [key: string]: unknown
   }
-  optionsStore?: TableDevtoolsStore
+  optionAtoms: {
+    readonly snapshotVersion: Readable<number>
+  }
   reset: () => void
   store: TableDevtoolsStore
 }

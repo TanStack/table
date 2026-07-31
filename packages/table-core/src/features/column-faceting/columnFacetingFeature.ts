@@ -20,35 +20,36 @@ export const columnFacetingFeature: TableFeature = {
   assignColumnPrototype: (prototype, table) => {
     assignPrototypeAPIs('columnFacetingFeature', prototype, table, {
       column_getFacetedRowModel: {
-        memoDeps: () => [
-          table.getPreFilteredRowModel().rows,
-          table.atoms.columnFilters?.get(),
-          table.atoms.globalFilter?.get(),
-          table.getFilteredRowModel().rows,
-        ],
-        fn: (column) => column_getFacetedRowModel(column, column.table),
+        computed: (column) => {
+          void table.getPreFilteredRowModel().rows
+          void table.atoms.columnFilters?.get()
+          void table.atoms.globalFilter?.get()
+          // Ensure row.columnFilters metadata is populated before faceting.
+          void table.getFilteredRowModel().rows
+          return column_getFacetedRowModel(column, column.table)
+        },
       },
       column_getFacetedMinMaxValues: {
-        memoDeps: (column) => [
-          callMemoOrStaticFn(
+        computed: (column) => {
+          void callMemoOrStaticFn(
             column,
             'getFacetedRowModel',
             column_getFacetedRowModel,
             column.table,
-          ).flatRows,
-        ],
-        fn: (column) => column_getFacetedMinMaxValues(column, column.table),
+          ).flatRows
+          return column_getFacetedMinMaxValues(column, column.table)
+        },
       },
       column_getFacetedUniqueValues: {
-        memoDeps: (column) => [
-          callMemoOrStaticFn(
+        computed: (column) => {
+          void callMemoOrStaticFn(
             column,
             'getFacetedRowModel',
             column_getFacetedRowModel,
             column.table,
-          ).flatRows,
-        ],
-        fn: (column) => column_getFacetedUniqueValues(column, column.table),
+          ).flatRows
+          return column_getFacetedUniqueValues(column, column.table)
+        },
       },
     })
   },
@@ -56,33 +57,34 @@ export const columnFacetingFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('columnFacetingFeature', table, {
       table_getGlobalFacetedRowModel: {
-        memoDeps: () => [
-          table.getPreFilteredRowModel().rows,
-          table.atoms.columnFilters?.get(),
-          table.atoms.globalFilter?.get(),
-          table.getFilteredRowModel().rows,
-        ],
-        fn: () => table_getGlobalFacetedRowModel(table),
+        computed: () => {
+          void table.getPreFilteredRowModel().rows
+          void table.atoms.columnFilters?.get()
+          void table.atoms.globalFilter?.get()
+          // Ensure row.columnFilters metadata is populated before faceting.
+          void table.getFilteredRowModel().rows
+          return table_getGlobalFacetedRowModel(table)
+        },
       },
       table_getGlobalFacetedMinMaxValues: {
-        memoDeps: () => [
-          callMemoOrStaticFn(
+        computed: () => {
+          void callMemoOrStaticFn(
             table,
             'getGlobalFacetedRowModel',
             table_getGlobalFacetedRowModel,
-          ).flatRows,
-        ],
-        fn: () => table_getGlobalFacetedMinMaxValues(table),
+          ).flatRows
+          return table_getGlobalFacetedMinMaxValues(table)
+        },
       },
       table_getGlobalFacetedUniqueValues: {
-        memoDeps: () => [
-          callMemoOrStaticFn(
+        computed: () => {
+          void callMemoOrStaticFn(
             table,
             'getGlobalFacetedRowModel',
             table_getGlobalFacetedRowModel,
-          ).flatRows,
-        ],
-        fn: () => table_getGlobalFacetedUniqueValues(table),
+          ).flatRows
+          return table_getGlobalFacetedUniqueValues(table)
+        },
       },
     })
   },

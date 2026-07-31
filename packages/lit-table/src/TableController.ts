@@ -137,6 +137,7 @@ export class TableController<
   private _storeSubscription?: { unsubscribe: () => void }
   private _capturedState?: Partial<TableState<TFeatures>>
   private _capturedSnapshot?: TableState<TFeatures>
+  private _capturedOptionsToken?: number
   private _hasSelector = false
   private _latestSelector?: (state: TableState<TFeatures>) => unknown
   private _lastSelected: unknown
@@ -165,6 +166,8 @@ export class TableController<
     tableOptions: TableOptions<TFeatures, TData>,
     selector?: (state: TableState<TFeatures>) => TSelected,
   ): LitTable<TFeatures, TData, TSelected> {
+    let constructed = false
+
     if (!this._table) {
       const mergedOptions: TableOptions<TFeatures, TData> = {
         ...tableOptions,
@@ -192,18 +195,24 @@ export class TableController<
 
       // Set up subscriptions immediately when table is created
       this._setupSubscriptions()
+      constructed = true
     }
 
     // Stage current options for same-render table reads. Publication happens
-    // in hostUpdated() after Lit commits this render.
-    table_setOptions(
-      this._table,
-      (prev) => ({
-        ...prev,
-        ...tableOptions,
-      }),
-      { syncExternalState: false },
-    )
+    // in hostUpdated() after Lit commits this render. Construction already
+    // installed this render's options, so avoid a redundant first stage: its
+    // commit would invalidate every render-phase memo after the values that
+    // produced the committed DOM were already read.
+    this._capturedOptionsToken = constructed
+      ? undefined
+      : table_setOptions(
+          this._table,
+          (prev) => ({
+            ...prev,
+            ...tableOptions,
+          }),
+          { syncExternalState: false },
+        )
 
     this._capturedState = this._table.options.state
     const renderSnapshot = this._rootSource!.get()
@@ -264,6 +273,7 @@ export class TableController<
       this._table,
       this._capturedState ?? null,
       shallow,
+      this._capturedOptionsToken,
     )
   }
 

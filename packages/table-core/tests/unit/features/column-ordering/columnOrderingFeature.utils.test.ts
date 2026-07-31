@@ -213,6 +213,28 @@ describe('table_resetColumnOrder', () => {
 })
 
 describe('table_getOrderColumnsFn', () => {
+  it('recreates the memoized function when grouping behavior changes', () => {
+    const table = makeTable(3, {
+      groupedColumnMode: 'reorder',
+    })
+    const getOrderColumnsFn = () =>
+      (
+        table as unknown as { getOrderColumnsFn: () => () => unknown }
+      ).getOrderColumnsFn()
+
+    const initial = getOrderColumnsFn()
+
+    table.setGrouping(['firstName'])
+    const afterGrouping = getOrderColumnsFn()
+    expect(afterGrouping).not.toBe(initial)
+
+    table.setOptions((options) => ({
+      ...options,
+      groupedColumnMode: 'remove',
+    }))
+    expect(getOrderColumnsFn()).not.toBe(afterGrouping)
+  })
+
   it('should return original columns when no column order is specified', () => {
     const table = makeTable(3)
     const columns = table.getAllLeafColumns()

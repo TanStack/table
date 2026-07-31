@@ -78,20 +78,10 @@ export const rowSelectionFeature: TableFeature = {
         fn: (row) => row_getIsSelected(row),
       },
       row_getIsSomeSelected: {
-        fn: (row) => row_getIsSomeSelected(row),
-        memoDeps: (row) => [
-          row.subRows,
-          row.table.atoms.rowSelection?.get(),
-          row.table.options.enableRowSelection,
-        ],
+        computed: (row) => row_getIsSomeSelected(row),
       },
       row_getIsAllSubRowsSelected: {
-        fn: (row) => row_getIsAllSubRowsSelected(row),
-        memoDeps: (row) => [
-          row.subRows,
-          row.table.atoms.rowSelection?.get(),
-          row.table.options.enableRowSelection,
-        ],
+        computed: (row) => row_getIsAllSubRowsSelected(row),
       },
       row_getCanSelect: {
         fn: (row) => row_getCanSelect(row),
@@ -127,57 +117,28 @@ export const rowSelectionFeature: TableFeature = {
         fn: () => table_getPreSelectedRowModel(table),
       },
       table_getSelectedRowModel: {
-        fn: () => table_getSelectedRowModel(table),
-        memoDeps: () => [
-          table.atoms.rowSelection?.get(),
-          table.getCoreRowModel(),
-        ],
+        computed: () => table_getSelectedRowModel(table),
       },
       table_getFilteredSelectedRowModel: {
-        fn: () => table_getFilteredSelectedRowModel(table),
-        memoDeps: () => [
-          table.atoms.rowSelection?.get(),
-          table.getFilteredRowModel(),
-        ],
+        computed: () => table_getFilteredSelectedRowModel(table),
       },
       table_getGroupedSelectedRowModel: {
-        fn: () => table_getGroupedSelectedRowModel(table),
-        memoDeps: () => [
-          table.atoms.rowSelection?.get(),
-          table.getSortedRowModel(),
-        ],
+        computed: () => table_getGroupedSelectedRowModel(table),
       },
       table_getSelectedRowIds: {
-        fn: () => table_getSelectedRowIds(table),
-        memoDeps: () => [table.atoms.rowSelection?.get()],
+        computed: () => table_getSelectedRowIds(table),
       },
       table_getIsAllRowsSelected: {
-        fn: () => table_getIsAllRowsSelected(table),
-        memoDeps: () => [
-          table.atoms.rowSelection?.get(),
-          table.getFilteredRowModel(),
-          table.options.enableRowSelection,
-        ],
+        computed: () => table_getIsAllRowsSelected(table),
       },
       table_getIsAllPageRowsSelected: {
-        fn: () => table_getIsAllPageRowsSelected(table),
-        memoDeps: () => [
-          table.atoms.rowSelection?.get(),
-          table.getPaginatedRowModel(),
-          table.options.enableRowSelection,
-        ],
+        computed: () => table_getIsAllPageRowsSelected(table),
       },
       table_getIsSomeRowsSelected: {
-        fn: () => table_getIsSomeRowsSelected(table),
-        memoDeps: () => [table.atoms.rowSelection?.get()],
+        computed: () => table_getIsSomeRowsSelected(table),
       },
       table_getIsSomePageRowsSelected: {
-        fn: () => table_getIsSomePageRowsSelected(table),
-        memoDeps: () => [
-          table.atoms.rowSelection?.get(),
-          table.getPaginatedRowModel(),
-          table.options.enableRowSelection,
-        ],
+        computed: () => table_getIsSomePageRowsSelected(table),
       },
       table_getToggleAllRowsSelectedHandler: {
         fn: () => table_getToggleAllRowsSelectedHandler(table),

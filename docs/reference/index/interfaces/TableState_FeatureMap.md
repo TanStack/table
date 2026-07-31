@@ -155,4 +155,4 @@ Defined in: [types/TableState.ts:31](https://github.com/TanStack/table/blob/main
 workerRowModelsFeature: TableState_WorkerRowModels;
 ```
 
-Defined in: [worker/createTableWorker.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L28)
+Defined in: [worker/createTableWorker.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/worker/createTableWorker.ts#L29)

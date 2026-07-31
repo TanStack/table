@@ -9,7 +9,7 @@ title: row_getDisplayIndex
 function row_getDisplayIndex<TFeatures, TData>(row): number;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L14)
+Defined in: [core/rows/coreRowsFeature.utils.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L15)
 
 Returns this row's zero-based position in the current pre-pagination row
 model. Rows outside that model return `-1`.

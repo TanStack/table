@@ -13,6 +13,7 @@ import type {
   TableWorkerStage,
   TableWorkerStagePayload,
 } from './tableWorkerProtocol'
+import type { Atom } from '@tanstack/store'
 
 // Importing anything from this module (e.g. `workerRowModelsFeature`)
 // registers the plugin key and its state slice with the core type maps, so
@@ -71,7 +72,7 @@ export interface TableWorkerBridge {
   lastState: Record<string, unknown>
   results: { [K in TableWorkerStage]?: TableWorkerDataPayload }
   /** Bumped per stage only when that stage's payload actually changed. */
-  stageVersions: { [K in TableWorkerStage]?: number }
+  stageVersionAtoms: { [K in TableWorkerStage]?: Atom<number> }
 }
 
 type AnyTable = Table_Internal<any, any>
@@ -156,11 +157,40 @@ export function getTableWorkerBridge(
       sentStageCount: 0,
       lastState: {},
       results: {},
-      stageVersions: {},
+      stageVersionAtoms: {},
     }
     tableWorker._bridges.set(table, bridge)
   }
   return bridge
+}
+
+function getOrCreateStageVersionAtom(
+  table: AnyTable,
+  bridge: TableWorkerBridge,
+  stage: TableWorkerStage,
+): Atom<number> {
+  return (bridge.stageVersionAtoms[stage] ??=
+    table._reactivity.createWritableAtom(0, {
+      debugName: `table/worker/${stage}/version`,
+    }))
+}
+
+/**
+ * Reads the version for one worker stage as a reactive dependency.
+ *
+ * The atom is lazy because only registered worker-backed stages need one.
+ * Unchanged worker payloads deliberately leave the version untouched, keeping
+ * the rebuilt row-model computed cached.
+ *
+ * @internal
+ */
+export function getTableWorkerStageVersion(
+  tableWorker: TableWorker,
+  table: AnyTable,
+  stage: TableWorkerStage,
+): number {
+  const bridge = getTableWorkerBridge(tableWorker, table)
+  return getOrCreateStageVersionAtom(table, bridge, stage).get()
 }
 
 /** Shallow reference comparison; atoms return stable refs when unchanged. */
@@ -234,7 +264,8 @@ function handleResult(
   >) {
     if (payload.kind === 'unchanged') continue
     bridge.results[stage] = payload
-    bridge.stageVersions[stage] = (bridge.stageVersions[stage] ?? 0) + 1
+    const versionAtom = getOrCreateStageVersionAtom(table, bridge, stage)
+    versionAtom.set((version) => version + 1)
     anyChanged = true
     if (stage === 'grouped') groupedChanged = true
   }

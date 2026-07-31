@@ -6,28 +6,21 @@ title: tableMemo
 # Function: tableMemo()
 
 ```ts
-function tableMemo<TFeatures, TDeps, TDepArgs, TResult>(__namedParameters): (depArgs?) => TResult;
+function tableMemo<TFeatures, TResult>(__namedParameters): () => TResult;
 ```
 
-Defined in: [utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L235)
+Defined in: [utils.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L180)
 
 Creates a table-aware memoized function.
 
-This wraps `memo` with table debug options and feature metadata so row models and derived APIs can share consistent diagnostics.
+The native readonly atom is created on the first public read so eager
+framework computeds cannot evaluate during incomplete table construction.
 
 ## Type Parameters
 
 ### TFeatures
 
 `TFeatures` *extends* [`TableFeatures`](../interfaces/TableFeatures.md)
-
-### TDeps
-
-`TDeps` *extends* readonly `any`[]
-
-### TDepArgs
-
-`TDepArgs`
 
 ### TResult
 
@@ -37,19 +30,13 @@ This wraps `memo` with table debug options and feature metadata so row models an
 
 ### \_\_namedParameters
 
-`TableMemoOptions`\<`TFeatures`, `TDeps`, `TDepArgs`, `TResult`\>
+`TableMemoOptions`\<`TFeatures`, `TResult`\>
 
 ## Returns
 
 ```ts
-(depArgs?): TResult;
+(): TResult;
 ```
-
-### Parameters
-
-#### depArgs?
-
-`TDepArgs`
 
 ### Returns
 
