@@ -528,6 +528,54 @@ describe('createFilteredRowModel', () => {
   })
 
   describe('global filtering edge cases', () => {
+    it('should filter a column when its first row value is undefined', () => {
+      type NullableNameRow = { name?: string }
+      const nullableColumns: Array<
+        ColumnDef<typeof features, NullableNameRow, any>
+      > = [{ accessorKey: 'name', id: 'name' }]
+
+      const table = constructTable<typeof features, NullableNameRow>({
+        features,
+        columns: nullableColumns,
+        data: [{ name: undefined }, { name: 'hello' }, { name: 'world' }],
+        initialState: {
+          globalFilter: 'hello',
+        },
+      })
+
+      expect(
+        table.getFilteredRowModel().rows.map((row) => row.original.name),
+      ).toEqual(['hello'])
+    })
+
+    it('should globally filter an object-valued column that explicitly opts in', () => {
+      interface ObjectValueRow {
+        value: { label: string }
+      }
+
+      const table = constructTable<typeof features, ObjectValueRow>({
+        features,
+        columns: [
+          {
+            accessorKey: 'value',
+            id: 'value',
+            enableGlobalFilter: true,
+          },
+        ],
+        data: [{ value: { label: 'keep' } }, { value: { label: 'drop' } }],
+        globalFilterFn: (row, _columnId, filterValue) =>
+          row.original.value.label.includes(String(filterValue)),
+        initialState: {
+          globalFilter: 'keep',
+        },
+      })
+
+      expect(table.getFilteredRowModel().rows).toHaveLength(1)
+      expect(table.getFilteredRowModel().rows[0]!.original.value.label).toBe(
+        'keep',
+      )
+    })
+
     it('should pass rows through when no columns are globally filterable', () => {
       const table = constructTable<typeof features, TestRow>({
         features,
