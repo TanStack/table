@@ -7,8 +7,8 @@ title: table_selectCellRange
 
 ```ts
 function table_selectCellRange<TFeatures, TData>(
-   table, 
-   range, 
+   table,
+   range,
    opts?): void;
 ```
 

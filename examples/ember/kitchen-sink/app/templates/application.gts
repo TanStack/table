@@ -261,8 +261,7 @@ class TableFilter extends Component<TableFilterSignature> {
 
   get range(): [string | number | undefined, string | number | undefined] {
     const value = this.filterValue as
-      | [string | number | undefined, string | number | undefined]
-      | undefined
+      [string | number | undefined, string | number | undefined] | undefined
     return value ?? [undefined, undefined]
   }
 

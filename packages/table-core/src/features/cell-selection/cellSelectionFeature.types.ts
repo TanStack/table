@@ -112,8 +112,7 @@ export interface TableOptions_CellSelection<
    * its own `enableCellSelection: false`. Defaults to `true`.
    */
   enableCellSelection?:
-    | boolean
-    | ((cell: Cell<TFeatures, TData, any>) => boolean)
+    boolean | ((cell: Cell<TFeatures, TData, any>) => boolean)
   /**
    * Enables extending a selection by dragging across cells. Defaults to `true`.
    */

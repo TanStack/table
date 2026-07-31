@@ -6,7 +6,7 @@ title: AggregationFnListItem
 # Type Alias: AggregationFnListItem\<TFeatures, TData, TValue\>
 
 ```ts
-type AggregationFnListItem<TFeatures, TData, TValue> = 
+type AggregationFnListItem<TFeatures, TData, TValue> =
   | "auto"
   | ExtractAggregationFnKeys<TFeatures>
 | AggregationFnDescriptor<TFeatures, TData, TValue, any>;

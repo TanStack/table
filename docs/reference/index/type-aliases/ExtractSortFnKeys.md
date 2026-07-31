@@ -6,7 +6,7 @@ title: ExtractSortFnKeys
 # Type Alias: ExtractSortFnKeys\<TFeatures\>
 
 ```ts
-type ExtractSortFnKeys<TFeatures> = IsAny<TFeatures> extends true ? 
+type ExtractSortFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | keyof SortFns
   | BuiltInSortFn : TFeatures extends object ? Extract<keyof TSortFns, string> : keyof SortFns;
 ```

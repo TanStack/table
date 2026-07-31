@@ -6,7 +6,7 @@ title: NonFeatureKeys
 # Type Alias: NonFeatureKeys
 
 ```ts
-type NonFeatureKeys = 
+type NonFeatureKeys =
   | "aggregationFns"
   | "columnMeta"
   | "coreRowModel"

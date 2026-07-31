@@ -60,22 +60,57 @@ createAppColumnHelper: <TData>() => ColumnHelper<TFeatures, TData>;
 ### createAppTable()
 
 ```ts
-createAppTable: <TData>(getTableOptions) => AppEmberTable<TFeatures, TData>;
+createAppTable: {
+<TData>  (owner, getTableOptions): AppEmberTable<TFeatures, TData>;
+<TData>  (getTableOptions): AppEmberTable<TFeatures, TData>;
+};
 ```
 
-#### Type Parameters
+#### Call Signature
 
-##### TData
+```ts
+<TData>(owner, getTableOptions): AppEmberTable<TFeatures, TData>;
+```
+
+##### Type Parameters
+
+###### TData
 
 `TData` *extends* `RowData`
 
-#### Parameters
+##### Parameters
 
-##### getTableOptions
+###### owner
+
+`object`
+
+###### getTableOptions
 
 () => `Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"`\>
 
-#### Returns
+##### Returns
+
+[`AppEmberTable`](../type-aliases/AppEmberTable.md)\<`TFeatures`, `TData`\>
+
+#### Call Signature
+
+```ts
+<TData>(getTableOptions): AppEmberTable<TFeatures, TData>;
+```
+
+##### Type Parameters
+
+###### TData
+
+`TData` *extends* `RowData`
+
+##### Parameters
+
+###### getTableOptions
+
+() => `Omit`\<`TableOptions`\<`TFeatures`, `TData`\>, `"features"`\>
+
+##### Returns
 
 [`AppEmberTable`](../type-aliases/AppEmberTable.md)\<`TFeatures`, `TData`\>
 
@@ -89,6 +124,6 @@ const { createAppTable, createAppColumnHelper } = createTableHook({
 const columnHelper = createAppColumnHelper<Person>()
 const columns = columnHelper.columns([...])
 
-// inside a Glimmer component; options stay a thunk so tracked reads are reactive
-table = createAppTable(() => ({ columns, data: this.data }))
+// inside a Glimmer component; passing `this` binds cleanup to its lifecycle
+table = createAppTable(this, () => ({ columns, data: this.data }))
 ```

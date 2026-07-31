@@ -279,8 +279,7 @@ export interface Column_RowAggregation<
   ) => TResult
   /** Infers `sum` for a numeric first row and `extent` for a Date first row. */
   getAutoAggregationFn: () =>
-    | AggregationFnDef<TFeatures, TData, any, any>
-    | undefined
+    AggregationFnDef<TFeatures, TData, any, any> | undefined
 }
 
 /** Options for a caller-requested column aggregation value. */

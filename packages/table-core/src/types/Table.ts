@@ -84,11 +84,7 @@ export type Table<
  * construction code can assign them.
  */
 type Table_InternalBroadenedKeys =
-  | '_rowModels'
-  | '_rowModelFns'
-  | 'options'
-  | 'initialState'
-  | 'store'
+  '_rowModels' | '_rowModelFns' | 'options' | 'initialState' | 'store'
 
 /**
  * Internal broad table shape used by feature implementations.

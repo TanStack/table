@@ -239,8 +239,7 @@ export function column_getAggregationFns<
   const registry = column.table._rowModelFns.aggregationFns
   const coreRowModel = column.table.getCoreRowModel()
   const previous = (column as any)._resolvedAggregationFnsCache as
-    | ResolvedAggregationFnsCacheEntry<TFeatures, TData>
-    | undefined
+    ResolvedAggregationFnsCacheEntry<TFeatures, TData> | undefined
 
   if (
     previous &&
@@ -445,8 +444,7 @@ export function column_getAggregationValue<
 
   const model = column.table.getPreGroupedRowModel()
   const previous = (column as any)._aggregationValueCache as
-    | AggregationCacheEntry
-    | undefined
+    AggregationCacheEntry | undefined
   const registry = column.table._rowModelFns.aggregationFns
   const aggregationFnOption = column.columnDef.aggregationFn
 
@@ -483,13 +481,11 @@ export function cell_getIsAggregated<
   TValue extends CellData = CellData,
 >(cell: Cell<TFeatures, TData, TValue>) {
   const groupingColumnId = (cell.row as any).groupingColumnId as
-    | string
-    | undefined
+    string | undefined
   if (!groupingColumnId || groupingColumnId === cell.column.id) return false
 
   const grouping = (cell.column.table as any).atoms.grouping?.get?.() as
-    | Array<string>
-    | undefined
+    Array<string> | undefined
   if (grouping?.includes(cell.column.id)) return false
 
   return column_getAggregationFns(cell.column as any).some(

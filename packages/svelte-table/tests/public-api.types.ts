@@ -49,6 +49,4 @@ type RemovedSubscribeSource = SubscribeSource<unknown>
 void svelteTable
 void typedAppTable
 export type PublicApiAssertions =
-  | SubscribeTableWasRemoved
-  | RemovedSelectedState
-  | RemovedSubscribeSource
+  SubscribeTableWasRemoved | RemovedSelectedState | RemovedSubscribeSource

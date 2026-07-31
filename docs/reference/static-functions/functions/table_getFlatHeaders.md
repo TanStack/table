@@ -9,7 +9,7 @@ title: table_getFlatHeaders
 function table_getFlatHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L160)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L168)
 
 Flattens every header from every header group into one array.
 

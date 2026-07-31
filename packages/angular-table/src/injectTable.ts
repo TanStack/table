@@ -24,10 +24,7 @@ import type {
 } from '@tanstack/angular-store'
 
 export type SubscribeSource<TValue> =
-  | Atom<TValue>
-  | ReadonlyAtom<TValue>
-  | Store<TValue>
-  | ReadonlyStore<TValue>
+  Atom<TValue> | ReadonlyAtom<TValue> | Store<TValue> | ReadonlyStore<TValue>
 
 export type AngularTable<
   TFeatures extends TableFeatures,

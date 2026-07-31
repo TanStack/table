@@ -247,59 +247,71 @@ class LitTableExample extends LitElement {
                             style="${styleMap(getCommonPinningStyles(column))}"
                           >
                             <div class="nowrap">
-                              ${header.isPlaceholder
-                                ? null
-                                : html`${FlexRender({ header })} `}
+                              ${
+                                header.isPlaceholder
+                                  ? null
+                                  : html`${FlexRender({ header })} `
+                              }
                               ${column.getIndex(
                                 column.getIsPinned() || 'center',
                               )}
                             </div>
-                            ${!header.isPlaceholder && header.column.getCanPin()
-                              ? html`
-                                  <div class="pin-actions">
-                                    ${header.column.getIsPinned() !== 'start'
-                                      ? html`
-                                          <button
-                                            class="pin-button"
-                                            @click="${() =>
+                            ${
+                              !header.isPlaceholder && header.column.getCanPin()
+                                ? html`
+                                    <div class="pin-actions">
+                                      ${
+                                      header.column.getIsPinned() !== 'start'
+                                        ? html`
+                                            <button
+                                              class="pin-button"
+                                              @click="${() =>
                                               header.column.pin('start')}"
-                                          >
-                                            ${'<='}
-                                          </button>
-                                        `
-                                      : null}
-                                    ${header.column.getIsPinned()
-                                      ? html`
-                                          <button
-                                            class="pin-button"
-                                            @click="${() =>
+                                            >
+                                              ${'<='}
+                                            </button>
+                                          `
+                                        : null
+                                    }
+                                      ${
+                                      header.column.getIsPinned()
+                                        ? html`
+                                            <button
+                                              class="pin-button"
+                                              @click="${() =>
                                               header.column.pin(false)}"
-                                          >
-                                            X
-                                          </button>
-                                        `
-                                      : null}
-                                    ${header.column.getIsPinned() !== 'end'
-                                      ? html`
-                                          <button
-                                            class="pin-button"
-                                            @click="${() =>
+                                            >
+                                              X
+                                            </button>
+                                          `
+                                        : null
+                                    }
+                                      ${
+                                      header.column.getIsPinned() !== 'end'
+                                        ? html`
+                                            <button
+                                              class="pin-button"
+                                              @click="${() =>
                                               header.column.pin('end')}"
-                                          >
-                                            ${'=>'}
-                                          </button>
-                                        `
-                                      : null}
-                                  </div>
-                                `
-                              : null}
+                                            >
+                                              ${'=>'}
+                                            </button>
+                                          `
+                                        : null
+                                    }
+                                    </div>
+                                  `
+                                : null
+                            }
                             <div
                               @dblclick="${() => header.column.resetSize()}"
                               @mousedown="${header.getResizeHandler()}"
                               @touchstart="${header.getResizeHandler()}"
-                              class="resizer ${header.column.getIsResizing()
-                                ? 'isResizing'
-                                : ''}"
+                              class="resizer ${
+                                header.column.getIsResizing()
+                                  ? 'isResizing'
+                                  : ''
+                              }"
                             ></div>
                           </th>
                         `
@@ -337,8 +349,7 @@ class LitTableExample extends LitElement {
         </div>
         <div class="spacer-md"></div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

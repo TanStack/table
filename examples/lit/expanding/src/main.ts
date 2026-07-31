@@ -144,14 +144,16 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
             // selectChildren: false
           }),
         })}
-        ${row.getCanExpand()
-          ? html`<button
-              @click="${row.getToggleExpandedHandler()}"
-              style="cursor:pointer"
-            >
-              ${row.getIsExpanded() ? '👇' : '👉'}
-            </button>`
-          : '🔵'}
+        ${
+          row.getCanExpand()
+            ? html`<button
+                @click="${row.getToggleExpandedHandler()}"
+                style="cursor:pointer"
+              >
+                ${row.getIsExpanded() ? '👇' : '👉'}
+              </button>`
+            : '🔵'
+        }
         ${getValue()}
       </div>
     `,
@@ -253,18 +255,22 @@ class LitTableExample extends LitElement {
                   ${headerGroup.headers.map(
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`
-                              <div>
-                                ${FlexRender({ header })}
-                                ${header.column.getCanFilter()
-                                  ? html`<div>
-                                      ${renderFilter(header.column, table)}
-                                    </div>`
-                                  : null}
-                              </div>
-                            `}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`
+                                <div>
+                                  ${FlexRender({ header })}
+                                  ${
+                                  header.column.getCanFilter()
+                                    ? html`<div>
+                                        ${renderFilter(header.column, table)}
+                                      </div>`
+                                    : null
+                                }
+                                </div>
+                              `
+                        }
                       </th>
                     `,
                   )}
@@ -347,8 +353,7 @@ class LitTableExample extends LitElement {
         </div>
         <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

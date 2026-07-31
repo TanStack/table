@@ -394,9 +394,9 @@ export function table_getIsAllPageRowsSelected<
 }
 
 /**
- * Checks whether selection is partially applied across filtered rows.
+ * Checks whether at least one row id is selected.
  *
- * The result is true when at least one row id is selected
+ * The result stays true when every row is selected.
  *
  * @example
  * ```ts
@@ -414,7 +414,7 @@ export function table_getIsSomeRowsSelected<
 }
 
 /**
- * Checks whether the current page has a partial selection.
+ * Checks whether at least one selectable row on the current page is selected.
  *
  * @example
  * ```ts

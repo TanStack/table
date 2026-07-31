@@ -6,7 +6,7 @@ title: row_getParentRow
 # Function: row\_getParentRow()
 
 ```ts
-function row_getParentRow<TFeatures, TData>(row): 
+function row_getParentRow<TFeatures, TData>(row):
   | Row<TFeatures, TData>
   | undefined;
 ```

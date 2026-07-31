@@ -1,0 +1,104 @@
+html {
+  font-family: sans-serif;
+  font-size: 14px;
+}
+
+table {
+  border: 1px solid lightgray;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+tbody {
+  border-bottom: 1px solid lightgray;
+}
+
+th {
+  border-bottom: 1px solid lightgray;
+  border-right: 1px solid lightgray;
+  padding: 2px 4px;
+  text-align: left;
+  vertical-align: top;
+}
+
+td {
+  padding: 2px 4px;
+}
+
+.demo-root {
+  padding: 0.5rem;
+}
+
+.spacer-sm {
+  height: 0.5rem;
+}
+
+.controls,
+.pagination,
+.inline-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.demo-button {
+  border: 1px solid currentColor;
+  border-radius: 0.25rem;
+  padding: 0.5rem;
+}
+
+.demo-button-sm {
+  padding: 0.25rem;
+}
+
+.page-size-input {
+  width: 4rem;
+  padding: 0.25rem;
+}
+
+.table-container {
+  overflow-x: auto;
+}
+
+.header-label {
+  margin-bottom: 0.25rem;
+}
+
+.text-filter {
+  width: 8rem;
+}
+
+.facet-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  font-weight: normal;
+}
+
+.facet-options label {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  white-space: nowrap;
+}
+
+.count {
+  margin-left: auto;
+  color: gray;
+}
+
+.pagination {
+  margin-top: 0.5rem;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}

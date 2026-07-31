@@ -129,9 +129,8 @@ function table_getPinnedRows<
       // else get only visible rows that are pinned
       row = visibleRows.find((r) => r.id === rowId)
     }
-    if (!row)
-      continue
-      // Assign position property directly to preserve prototype chain
+    if (!row) continue
+    // Assign position property directly to preserve prototype chain
     ;(row as any).position = position
     result.push(row)
   }

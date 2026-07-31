@@ -19,9 +19,9 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:60](https
 
 ```ts
 FilterFn(
-   row, 
-   columnId, 
-   filterValue, 
+   row,
+   columnId,
+   filterValue,
    addMeta?): boolean;
 ```
 

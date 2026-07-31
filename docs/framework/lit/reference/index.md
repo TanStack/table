@@ -28,6 +28,7 @@ title: "@tanstack/lit-table"
 - [ComponentType](type-aliases/ComponentType.md)
 - [CreateTableHookOptions](type-aliases/CreateTableHookOptions.md)
 - [FlexRenderProps](type-aliases/FlexRenderProps.md)
+- [LitRenderable](type-aliases/LitRenderable.md)
 - [LitTable](type-aliases/LitTable.md)
 - [SelectionSource](type-aliases/SelectionSource.md)
 

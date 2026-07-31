@@ -114,8 +114,7 @@ export class FlexRenderCell<
   }
 
   get componentToRender():
-    | ComponentLike<CellRenderSignature<TFeatures, TData, TValue>>
-    | undefined {
+    ComponentLike<CellRenderSignature<TFeatures, TData, TValue>> | undefined {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component
@@ -184,8 +183,7 @@ export class FlexRenderHeader<
   }
 
   get componentToRender():
-    | ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>>
-    | undefined {
+    ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>> | undefined {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component as unknown as ComponentLike<
@@ -256,8 +254,7 @@ export class FlexRenderFooter<
   }
 
   get componentToRender():
-    | ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>>
-    | undefined {
+    ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>> | undefined {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component as unknown as ComponentLike<

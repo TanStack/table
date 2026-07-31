@@ -14,14 +14,14 @@
   "devDependencies": {
     "@faker-js/faker": "^10.5.0",
     "typescript": "6.0.3",
-    "vite": "^8.1.0",
-    "vite-plugin-solid": "^2.11.12"
+    "vite": "^8.2.0",
+    "vite-plugin-solid": "^2.11.14"
   },
   "dependencies": {
-    "@tanstack/solid-devtools": "^0.8.8",
+    "@tanstack/solid-devtools": "^0.8.9",
     "@tanstack/solid-store": "^0.11.0",
     "@tanstack/solid-table": "^9.0.0-beta.65",
     "@tanstack/solid-table-devtools": "^9.0.0-beta.65",
-    "solid-js": "^1.9.13"
+    "solid-js": "^1.9.14"
   }
 }

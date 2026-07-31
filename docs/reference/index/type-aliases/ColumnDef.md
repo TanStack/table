@@ -6,7 +6,7 @@ title: ColumnDef
 # Type Alias: ColumnDef\<TFeatures, TData, TValue\>
 
 ```ts
-type ColumnDef<TFeatures, TData, TValue> = 
+type ColumnDef<TFeatures, TData, TValue> =
   | DisplayColumnDef<TFeatures, TData, TValue>
   | GroupColumnDef<TFeatures, TData, TValue>
 | AccessorColumnDef<TFeatures, TData, TValue>;

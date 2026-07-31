@@ -2,9 +2,9 @@ import type { InputSignal } from '@angular/core'
 import type { ComponentFixture } from '@angular/core/testing'
 
 type ToSignalInputUpdatableMap<T> = {
-  [K in keyof T as T[K] extends InputSignal<any>
-    ? K
-    : never]?: T[K] extends infer Input
+  [
+    K in keyof T as T[K] extends InputSignal<any> ? K : never
+  ]?: T[K] extends infer Input
     ? Input extends InputSignal<infer T>
       ? T
       : never

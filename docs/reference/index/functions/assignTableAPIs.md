@@ -7,8 +7,8 @@ title: assignTableAPIs
 
 ```ts
 function assignTableAPIs<TFeatures, TData, TDeps, TDepArgs>(
-   feature, 
-   table, 
+   feature,
+   table,
    apis): void;
 ```
 

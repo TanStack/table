@@ -131,8 +131,7 @@ describe('useTable controlled state', () => {
 
   it('notifies external store subscribers exactly once per controlled update, after commit', () => {
     let latestTable:
-      | PreactTable<typeof features, TestRow, PaginationState>
-      | undefined
+      PreactTable<typeof features, TestRow, PaginationState> | undefined
     let harnessRenderCount = 0
 
     function PublicationHarness() {

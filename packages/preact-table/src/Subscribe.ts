@@ -9,10 +9,7 @@ import type { TableFeatures, TableState } from '@tanstack/table-core'
 import type { ComponentChildren } from 'preact'
 
 export type SubscribeSource<TValue> =
-  | Atom<TValue>
-  | ReadonlyAtom<TValue>
-  | Store<TValue>
-  | ReadonlyStore<TValue>
+  Atom<TValue> | ReadonlyAtom<TValue> | Store<TValue> | ReadonlyStore<TValue>
 
 /**
  * Subscribe to `table.store` (full table state). The selector receives the full

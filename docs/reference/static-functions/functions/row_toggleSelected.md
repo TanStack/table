@@ -7,8 +7,8 @@ title: row_toggleSelected
 
 ```ts
 function row_toggleSelected<TFeatures, TData>(
-   row, 
-   value?, 
+   row,
+   value?,
    opts?): void;
 ```
 

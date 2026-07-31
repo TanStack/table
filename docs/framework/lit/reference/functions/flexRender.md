@@ -6,10 +6,10 @@ title: flexRender
 # Function: flexRender()
 
 ```ts
-function flexRender<TProps>(Comp, props): string | TemplateResult | null;
+function flexRender<TProps>(Comp, props): LitRenderable;
 ```
 
-Defined in: [packages/lit-table/src/flexRender.ts:22](https://github.com/TanStack/table/blob/main/packages/lit-table/src/flexRender.ts#L22)
+Defined in: [packages/lit-table/src/flexRender.ts:37](https://github.com/TanStack/table/blob/main/packages/lit-table/src/flexRender.ts#L37)
 
 Renders a Lit table template value with the provided context props.
 
@@ -27,7 +27,7 @@ convenience wrapper for table cell/header/footer objects.
 
 ### Comp
 
-`string` | `TemplateResult` | (`props`) => `string` \| `TemplateResult` | `undefined`
+[`LitRenderable`](../type-aliases/LitRenderable.md) | (`props`) => [`LitRenderable`](../type-aliases/LitRenderable.md)
 
 ### props
 
@@ -35,7 +35,7 @@ convenience wrapper for table cell/header/footer objects.
 
 ## Returns
 
-`string` \| `TemplateResult` \| `null`
+[`LitRenderable`](../type-aliases/LitRenderable.md)
 
 ## Example
 

@@ -127,28 +127,36 @@ export class UsersTable extends LitElement {
                         (header) => html`
                           <th
                             colspan=${header.colSpan}
-                            class=${header.column.getCanSort()
-                              ? 'sortable-header'
-                              : ''}
+                            class=${
+                              header.column.getCanSort()
+                                ? 'sortable-header'
+                                : ''
+                            }
                             @click=${header.column.getToggleSortingHandler()}
                           >
-                            ${header.isPlaceholder
-                              ? nothing
-                              : html`
-                                  ${header.FlexRender()}
-                                  ${header.SortIndicator()}
-                                  ${header.ColumnFilter()}
-                                  ${sorting.length > 1 &&
-                                  sorting.findIndex(
-                                    (s) => s.id === header.column.id,
-                                  ) > -1
-                                    ? html`<span class="sort-order"
-                                        >${sorting.findIndex(
-                                          (s) => s.id === header.column.id,
-                                        ) + 1}</span
-                                      >`
-                                    : nothing}
-                                `}
+                            ${
+                              header.isPlaceholder
+                                ? nothing
+                                : html`
+                                    ${header.FlexRender()}
+                                    ${header.SortIndicator()}
+                                    ${header.ColumnFilter()}
+                                    ${
+                                    sorting.length > 1 &&
+                                    sorting.findIndex(
+                                      (s) => s.id === header.column.id,
+                                    ) > -1
+                                      ? html`<span class="sort-order"
+                                          >${
+                                          sorting.findIndex(
+                                            (s) => s.id === header.column.id,
+                                          ) + 1
+                                        }</span
+                                        >`
+                                      : nothing
+                                  }
+                                  `
+                            }
                           </th>
                         `,
                       ),
@@ -185,30 +193,38 @@ export class UsersTable extends LitElement {
                         )
                         return html`
                           <td colspan=${footer.colSpan}>
-                            ${footer.isPlaceholder
-                              ? nothing
-                              : columnId === 'age' ||
-                                  columnId === 'visits' ||
-                                  columnId === 'progress'
-                                ? html`
-                                    ${footer.FooterSum()}
-                                    ${hasFilter
-                                      ? html`<span class="filtered-indicator">
-                                          (filtered)</span
-                                        >`
-                                      : nothing}
-                                  `
-                                : columnId === 'actions' ||
-                                    columnId === 'select'
-                                  ? nothing
-                                  : html`
-                                      ${footer.FooterColumnId()}
-                                      ${hasFilter
+                            ${
+                              footer.isPlaceholder
+                                ? nothing
+                                : columnId === 'age' ||
+                                    columnId === 'visits' ||
+                                    columnId === 'progress'
+                                  ? html`
+                                      ${footer.FooterSum()}
+                                      ${
+                                      hasFilter
                                         ? html`<span class="filtered-indicator">
-                                            ✓</span
+                                            (filtered)</span
                                           >`
-                                        : nothing}
-                                    `}
+                                        : nothing
+                                    }
+                                    `
+                                  : columnId === 'actions' ||
+                                      columnId === 'select'
+                                    ? nothing
+                                    : html`
+                                        ${footer.FooterColumnId()}
+                                        ${
+                                        hasFilter
+                                          ? html`<span
+                                              class="filtered-indicator"
+                                            >
+                                              ✓</span
+                                            >`
+                                          : nothing
+                                      }
+                                      `
+                            }
                           </td>
                         `
                       }),

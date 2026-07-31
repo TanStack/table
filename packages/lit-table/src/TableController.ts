@@ -216,8 +216,7 @@ export class TableController<
     // entirely, pushing granular reactivity into `table.subscribe` islands.
     this._hasSelector = selector !== undefined
     this._latestSelector = selector as
-      | ((state: TableState<TFeatures>) => unknown)
-      | undefined
+      ((state: TableState<TFeatures>) => unknown) | undefined
     this._lastSelected = selector ? selector(renderSnapshot) : renderSnapshot
 
     return {

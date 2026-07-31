@@ -9,7 +9,7 @@ title: table_mergeOptions
 function table_mergeOptions<TFeatures, TData>(table, newOptions): TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.utils.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L86)
+Defined in: [core/table/coreTablesFeature.utils.ts:128](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L128)
 
 Merges new table options with the current resolved options.
 

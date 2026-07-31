@@ -49,6 +49,24 @@ const table = useTable({
 table.options.meta?.updateData(rowIndex, columnId, newValue)
 ```
 
+# Octane
+
+```ts
+const table = useTable({
+  features,
+  columns,
+  data,
+  meta: {
+    updateData: (rowIndex, columnId, value) => {
+      // ...
+    },
+  },
+})
+
+// ...later, anywhere the table is available (e.g. inside a cell component)
+table.options.meta?.updateData(rowIndex, columnId, newValue)
+```
+
 # Vue
 
 ```ts
@@ -261,6 +279,22 @@ import {
   rowSortingFeature,
   tableFeatures,
 } from '@tanstack/preact-table'
+
+const features = tableFeatures({
+  rowSortingFeature,
+  tableMeta: metaHelper<MyTableMeta>(),
+  columnMeta: metaHelper<MyColumnMeta>(),
+})
+```
+
+# Octane
+
+```ts
+import {
+  metaHelper,
+  rowSortingFeature,
+  tableFeatures,
+} from '@tanstack/octane-table'
 
 const features = tableFeatures({
   rowSortingFeature,
@@ -546,6 +580,26 @@ declare module '@tanstack/react-table' {
 import type { CellData, RowData, TableFeatures } from '@tanstack/preact-table'
 
 declare module '@tanstack/preact-table' {
+  interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
+    updateData: (rowIndex: number, columnId: string, value: unknown) => void
+  }
+
+  interface ColumnMeta<
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  > {
+    filterVariant?: 'text' | 'range' | 'select'
+  }
+}
+```
+
+# Octane
+
+```ts
+import type { CellData, RowData, TableFeatures } from '@tanstack/octane-table'
+
+declare module '@tanstack/octane-table' {
   interface TableMeta<TFeatures extends TableFeatures, TData extends RowData> {
     updateData: (rowIndex: number, columnId: string, value: unknown) => void
   }

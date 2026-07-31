@@ -6,7 +6,7 @@ title: table_getGlobalFilterFn
 # Function: table\_getGlobalFilterFn()
 
 ```ts
-function table_getGlobalFilterFn<TFeatures, TData>(table): 
+function table_getGlobalFilterFn<TFeatures, TData>(table):
   | FilterFn<TFeatures, TData>
   | undefined;
 ```

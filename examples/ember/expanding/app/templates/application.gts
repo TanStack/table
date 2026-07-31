@@ -138,8 +138,7 @@ const rangeValue = (
   index: 0 | 1,
 ): string => {
   const value = column.getFilterValue() as
-    | [string | number, string | number]
-    | undefined
+    [string | number, string | number] | undefined
   return value?.[index] != null ? String(value[index]) : ''
 }
 
