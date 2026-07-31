@@ -9,4 +9,6 @@
 
 Prevent table state updates from remounting the devtools panel, subscribe only
 while the panel is open, cache generated styles by theme, and keep adapter
-registration and production entrypoints reactive and stable.
+registration and production entrypoints reactive and stable. Coalesce
+high-frequency store updates and flush them during browser idle time so the
+devtools UI does not compete with application rendering.

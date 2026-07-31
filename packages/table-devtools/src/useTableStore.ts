@@ -1,4 +1,5 @@
 import { createEffect, createSignal, onCleanup } from 'solid-js'
+import { scheduleDevtoolsUpdate } from './devtoolsUpdateScheduler'
 import type { Accessor } from 'solid-js'
 import type { Readable } from '@tanstack/solid-store'
 
@@ -23,6 +24,8 @@ export function useTableStore<T, U>(
 
   createEffect(() => {
     const store = storeAccessor()
+    let cancelPendingUpdate: (() => void) | undefined
+
     if (!store) {
       setSignal(() => undefined)
       return
@@ -30,11 +33,23 @@ export function useTableStore<T, U>(
 
     setSignal(() => selector(store.get()))
 
+    let latestValue: U
     const subscription = store.subscribe((snapshot) => {
-      setSignal(() => selector(snapshot))
+      latestValue = selector(snapshot)
+
+      if (cancelPendingUpdate) {
+        return
+      }
+
+      cancelPendingUpdate = scheduleDevtoolsUpdate(() => {
+        cancelPendingUpdate = undefined
+        setSignal(() => latestValue)
+      })
     }) as unknown as { unsubscribe: () => void } | (() => void)
 
     onCleanup(() => {
+      cancelPendingUpdate?.()
+
       if (typeof subscription === 'function') {
         subscription()
       } else {
