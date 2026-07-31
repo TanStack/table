@@ -56,7 +56,7 @@
     "build": "tsrx-tsc --noEmit"
   },
   "dependencies": {
-    "@tanstack/octane-store": "^0.12.0",
+    "@tanstack/octane-store": "^0.12.1",
     "@tanstack/table-core": "workspace:*"
   },
   "devDependencies": {
