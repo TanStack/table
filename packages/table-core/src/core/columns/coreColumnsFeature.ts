@@ -19,17 +19,19 @@ export const coreColumnsFeature: TableFeature = {
   assignColumnPrototype: (prototype, table) => {
     assignPrototypeAPIs('coreColumnsFeature', prototype, table, {
       column_getFlatColumns: {
-        fn: (column) => column_getFlatColumns(column),
-        memoDeps: (column) => [column.table.options.columns],
+        computed: (column) => {
+          void column.table.options.columns
+          return column_getFlatColumns(column)
+        },
       },
       column_getLeafColumns: {
-        fn: (column) => column_getLeafColumns(column),
-        memoDeps: (column) => [
-          column.table.atoms.columnOrder?.get(),
-          column.table.atoms.grouping?.get(),
-          column.table.options.columns,
-          column.table.options.groupedColumnMode,
-        ],
+        computed: (column) => {
+          void column.table.atoms.columnOrder?.get()
+          void column.table.atoms.grouping?.get()
+          void column.table.options.columns
+          void column.table.options.groupedColumnMode
+          return column_getLeafColumns(column)
+        },
       },
     })
   },
@@ -37,33 +39,22 @@ export const coreColumnsFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('coreColumnsFeature', table, {
       table_getDefaultColumnDef: {
-        fn: () => table_getDefaultColumnDef(table),
-        memoDeps: () => [table.options.defaultColumn],
+        computed: () => table_getDefaultColumnDef(table),
       },
       table_getAllColumns: {
-        fn: () => table_getAllColumns(table),
-        memoDeps: () => [table.options.columns],
+        computed: () => table_getAllColumns(table),
       },
       table_getAllFlatColumns: {
-        fn: () => table_getAllFlatColumns(table),
-        memoDeps: () => [table.options.columns],
+        computed: () => table_getAllFlatColumns(table),
       },
       table_getAllFlatColumnsById: {
-        fn: () => table_getAllFlatColumnsById(table),
-        memoDeps: () => [table.options.columns],
+        computed: () => table_getAllFlatColumnsById(table),
       },
       table_getAllLeafColumns: {
-        fn: () => table_getAllLeafColumns(table),
-        memoDeps: () => [
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.columns,
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getAllLeafColumns(table),
       },
       table_getAllLeafColumnsById: {
-        fn: () => table_getAllLeafColumnsById(table),
-        memoDeps: () => [table.getAllLeafColumns()],
+        computed: () => table_getAllLeafColumnsById(table),
       },
       table_getColumn: {
         fn: (columnId) => table_getColumn(table, columnId),

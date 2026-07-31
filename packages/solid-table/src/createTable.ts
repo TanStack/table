@@ -1,12 +1,7 @@
 import { constructTable } from '@tanstack/table-core'
-import {
-  createComputed,
-  getOwner,
-  mergeProps,
-  onCleanup,
-  untrack,
-} from 'solid-js'
+import { createComputed, getOwner, onCleanup, untrack } from 'solid-js'
 import { FlexRender } from './FlexRender'
+import { mergeOptionSources } from './merge-options'
 import { solidReactivity } from './reactivity'
 import type { JSX } from 'solid-js'
 import type {
@@ -65,20 +60,20 @@ export function createTable<
   const owner = getOwner()!
   const reactivity = solidReactivity(owner)
 
-  const mergedOptions = mergeProps(tableOptions, {
+  const mergedOptions = mergeOptionSources(tableOptions, {
     features: {
       coreReactivityFeature: reactivity,
       ...tableOptions.features,
     },
   }) as any
 
-  const resolvedOptions = mergeProps(
+  const resolvedOptions = mergeOptionSources(
     {
       mergeOptions: (
         defaultOptions: TableOptions<TFeatures, TData>,
         options: TableOptions<TFeatures, TData>,
       ) => {
-        return mergeProps(defaultOptions, options)
+        return mergeOptionSources(defaultOptions, options)
       },
     },
     mergedOptions,
@@ -90,6 +85,12 @@ export function createTable<
   >
 
   createComputed(() => {
+    // Option atoms store resolved values. Touch every current option while
+    // tracked so a signal-backed getter re-runs this synchronization.
+    for (const key of Reflect.ownKeys(mergedOptions)) {
+      void Reflect.get(mergedOptions, key, mergedOptions)
+    }
+
     const userState = tableOptions.state
     if (userState) {
       for (const key in userState) {
@@ -98,9 +99,7 @@ export function createTable<
     }
 
     untrack(() => {
-      table.setOptions((prev) => {
-        return mergeProps(prev, mergedOptions) as TableOptions<TFeatures, TData>
-      })
+      table.setOptions(() => mergedOptions as TableOptions<TFeatures, TData>)
     })
   })
 

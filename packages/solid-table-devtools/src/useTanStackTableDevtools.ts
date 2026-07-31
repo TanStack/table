@@ -1,5 +1,5 @@
 import { createRenderEffect, onCleanup } from 'solid-js'
-import { upsertTableDevtoolsTarget } from '@tanstack/table-devtools'
+import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 export interface UseTanStackTableDevtoolsOptions {
@@ -13,16 +13,11 @@ export function useTanStackTableDevtools<
   table: Table<TFeatures, TData> | undefined,
   options?: UseTanStackTableDevtoolsOptions,
 ): void {
+  const registration = createTableDevtoolsRegistrationManager()
+  onCleanup(() => registration.dispose())
+
   createRenderEffect(() => {
-    if (!(options?.enabled ?? true) || !table) {
-      return
-    }
-
-    const cleanup = upsertTableDevtoolsTarget({ table })
-
-    onCleanup(() => {
-      cleanup?.()
-    })
+    registration.update(table, options?.enabled ?? true)
   })
 }
 

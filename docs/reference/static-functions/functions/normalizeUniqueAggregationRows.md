@@ -9,7 +9,7 @@ title: normalizeUniqueAggregationRows
 function normalizeUniqueAggregationRows<TFeatures, TData>(rows, maxDepth): readonly Row<TFeatures, TData>[];
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L105)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:145](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L145)
 
 Frontier selection for rows that are distinct nodes of a single row tree —
 the row models the table builds itself. Skips `normalizeAggregationRows`'

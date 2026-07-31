@@ -9,7 +9,7 @@ title: table_getMaxSubRowDepth
 function table_getMaxSubRowDepth<TFeatures, TData>(table): number;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:174](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L174)
+Defined in: [core/rows/coreRowsFeature.utils.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L175)
 
 Returns the deepest structural row depth in the core row model.
 Root rows are depth `0`, their direct sub-rows are depth `1`, and so on.

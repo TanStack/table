@@ -1,4 +1,5 @@
 import { constructRow } from '../rows/constructRow'
+import { row_setSubRows } from '../rows/subRowsTracking'
 import { makeObjectMap, tableMemo } from '../../utils'
 import { table_autoResetCellSelection } from '../../features/cell-selection/cellSelectionFeature.utils'
 import { table_autoResetPageIndex } from '../../features/row-pagination/rowPaginationFeature.utils'
@@ -24,8 +25,20 @@ export function createCoreRowModel<
       feature: 'coreRowModelsFeature',
       table,
       fnName: 'table.getCoreRowModel',
-      memoDeps: () => [table.options.data],
-      fn: () => _createCoreRowModel(table, table.options.data),
+      fn: () => {
+        // `data` was the core row model's sole memo dependency before native
+        // computeds. Read that slice reactively, then take the other row
+        // construction callbacks from the already-installed options source.
+        // This preserves the established contract that a render-created but
+        // semantically unchanged `getRowId` callback does not rebuild every
+        // row, while a later data change still uses the latest callbacks.
+        const data = table.options.data
+        const { getRowId, getSubRows } = table._reactivity.untrack(() => ({
+          getRowId: table.options.getRowId,
+          getSubRows: table.options.getSubRows,
+        }))
+        return _createCoreRowModel(table, data, getRowId, getSubRows)
+      },
       onAfterUpdate: () => {
         table_autoResetPageIndex(table)
         // this memo recomputes only when `options.data` changes, which is
@@ -40,6 +53,19 @@ function accessRows<TFeatures extends TableFeatures, TData extends RowData>(
   table: Table_Internal<TFeatures, TData>,
   rowModel: RowModel<TFeatures, TData>,
   originalRows: ReadonlyArray<TData>,
+  getRowId:
+    | ((
+        originalRow: TData,
+        index: number,
+        parent?: Row<TFeatures, TData>,
+      ) => string)
+    | undefined,
+  getSubRows:
+    | ((
+        originalRow: TData,
+        index: number,
+      ) => ReadonlyArray<TData> | undefined)
+    | undefined,
   depth = 0,
   parentRow?: Row<TFeatures, TData>,
 ): Array<Row<TFeatures, TData>> {
@@ -50,7 +76,8 @@ function accessRows<TFeatures extends TableFeatures, TData extends RowData>(
     // Make the row
     const row = constructRow(
       table,
-      table.getRowId(originalRow, i, parentRow),
+      getRowId?.(originalRow, i, parentRow) ??
+        (parentRow ? `${parentRow.id}.${i}` : String(i)),
       originalRow,
       i,
       depth,
@@ -66,17 +93,22 @@ function accessRows<TFeatures extends TableFeatures, TData extends RowData>(
     rows.push(row)
 
     // Get the original subrows
-    if (table.options.getSubRows) {
-      row.originalSubRows = table.options.getSubRows(originalRow, i)
+    if (getSubRows) {
+      row.originalSubRows = getSubRows(originalRow, i)
 
       // Then recursively access them
       if (row.originalSubRows?.length) {
-        row.subRows = accessRows(
-          table,
-          rowModel,
-          row.originalSubRows,
-          depth + 1,
+        row_setSubRows(
           row,
+          accessRows(
+            table,
+            rowModel,
+            row.originalSubRows,
+            getRowId,
+            getSubRows,
+            depth + 1,
+            row,
+          ),
         )
       }
     }
@@ -91,6 +123,19 @@ function _createCoreRowModel<
 >(
   table: Table_Internal<TFeatures, TData>,
   data: ReadonlyArray<TData>,
+  getRowId:
+    | ((
+        originalRow: TData,
+        index: number,
+        parent?: Row<TFeatures, TData>,
+      ) => string)
+    | undefined,
+  getSubRows:
+    | ((
+        originalRow: TData,
+        index: number,
+      ) => ReadonlyArray<TData> | undefined)
+    | undefined,
 ): {
   rows: Array<Row<TFeatures, TData>>
   flatRows: Array<Row<TFeatures, TData>>
@@ -102,7 +147,7 @@ function _createCoreRowModel<
     rowsById: makeObjectMap(),
   }
 
-  rowModel.rows = accessRows(table, rowModel, data)
+  rowModel.rows = accessRows(table, rowModel, data, getRowId, getSubRows)
 
   return rowModel
 }

@@ -28,20 +28,22 @@ export function createFacetedRowModel<
       feature: 'columnFacetingFeature',
       table,
       fnName: 'createFacetedRowModel',
-      memoDeps: () => [
-        table.getPreFilteredRowModel(),
-        table.atoms.columnFilters?.get(),
-        table.atoms.globalFilter?.get(),
-        table.getFilteredRowModel(),
-      ],
-      fn: (preRowModel, columnFilters, globalFilter) =>
-        _createFacetedRowModel(
+      fn: () => {
+        const preRowModel = table.getPreFilteredRowModel()
+        const columnFilters = table.atoms.columnFilters?.get()
+        const globalFilter = table.atoms.globalFilter?.get()
+
+        // Filtering populates row.columnFilters metadata consumed below.
+        table.getFilteredRowModel()
+
+        return _createFacetedRowModel(
           table,
           columnId,
           preRowModel,
           columnFilters,
           globalFilter,
-        ),
+        )
+      },
     })
   }
 }

@@ -9,7 +9,7 @@ title: BaseAtoms_All
 type BaseAtoms_All = { [K in keyof TableState_All]?: Atom<Exclude<TableState_All[K], undefined>> };
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:78](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L78)
+Defined in: [core/table/coreTablesFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L117)
 
 Internal "all features" flat variants of the atom types. `Table_Internal`
 uses these so feature code (written generically over `TFeatures`) can access

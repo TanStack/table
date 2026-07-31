@@ -1,4 +1,4 @@
-import { createSignal } from 'solid-js'
+import { createSignal, onCleanup } from 'solid-js'
 import { useStyles } from '../styles/use-styles'
 import type { JSX } from 'solid-js'
 
@@ -17,15 +17,24 @@ export function ThreeWayResizableSplit(props: ThreeWayResizableSplitProps) {
   const styles = useStyles()
   const [leftPercent, setLeftPercent] = createSignal(DEFAULT_LEFT_PERCENT)
   const [middlePercent, setMiddlePercent] = createSignal(DEFAULT_MIDDLE_PERCENT)
+  let cleanupDrag: (() => void) | undefined
+
+  onCleanup(() => {
+    cleanupDrag?.()
+  })
 
   const makeDragHandler =
     (which: 'left' | 'right'): ((e: MouseEvent) => void) =>
     // eslint-disable-next-line solid/reactivity
     (e) => {
       e.preventDefault()
+      cleanupDrag?.()
+
       const handleEl = e.currentTarget as HTMLElement
       const container = handleEl.parentElement
       if (!container) return
+      const previousCursor = document.body.style.cursor
+      const previousUserSelect = document.body.style.userSelect
 
       const startLeft = leftPercent()
       const startMiddle = middlePercent()
@@ -56,12 +65,14 @@ export function ThreeWayResizableSplit(props: ThreeWayResizableSplitProps) {
         }
       }
 
-      const onMouseUp = () => {
+      cleanupDrag = () => {
         document.removeEventListener('mousemove', onMouseMove)
         document.removeEventListener('mouseup', onMouseUp)
-        document.body.style.cursor = ''
-        document.body.style.userSelect = ''
+        document.body.style.cursor = previousCursor
+        document.body.style.userSelect = previousUserSelect
+        cleanupDrag = undefined
       }
+      const onMouseUp = () => cleanupDrag?.()
 
       document.addEventListener('mousemove', onMouseMove)
       document.addEventListener('mouseup', onMouseUp)

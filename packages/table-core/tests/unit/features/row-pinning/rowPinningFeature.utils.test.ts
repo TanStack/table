@@ -373,8 +373,7 @@ describe('row_getCanPin', () => {
   })
 
   it('should return false when enableRowPinning is false', () => {
-    const table = makeTable(10)
-    table.options.enableRowPinning = false
+    const table = makeTable(10, { enableRowPinning: false })
 
     const row = table.getRow('0')
 
@@ -382,8 +381,7 @@ describe('row_getCanPin', () => {
   })
 
   it('should return true when enableRowPinning is true', () => {
-    const table = makeTable(10)
-    table.options.enableRowPinning = true
+    const table = makeTable(10, { enableRowPinning: true })
 
     const row = table.getRow('0')
 
@@ -392,9 +390,7 @@ describe('row_getCanPin', () => {
 
   it('should use enableRowPinning function when provided', () => {
     const enableRowPinning = vi.fn((row) => row.id === '1')
-    const table = makeTable(10)
-
-    table.options.enableRowPinning = enableRowPinning
+    const table = makeTable(10, { enableRowPinning })
 
     const row0 = table.getRow('0')
     const row1 = table.getRow('1')

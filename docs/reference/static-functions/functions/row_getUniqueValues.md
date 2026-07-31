@@ -9,7 +9,7 @@ title: row_getUniqueValues
 function row_getUniqueValues<TFeatures, TData>(row, columnId): unknown;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L108)
+Defined in: [core/rows/coreRowsFeature.utils.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L109)
 
 Reads and caches the values used by faceting/grouping for a column.
 

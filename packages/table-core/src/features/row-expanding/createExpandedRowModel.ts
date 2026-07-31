@@ -21,12 +21,6 @@ export function createExpandedRowModel<
       feature: 'rowExpandingFeature',
       table,
       fnName: 'table.getExpandedRowModel',
-      memoDeps: () => [
-        table.atoms.expanded?.get(),
-        table.getPreExpandedRowModel(),
-        table.options.paginateExpandedRows,
-        table.options.manualPagination,
-      ],
       fn: () => _createExpandedRowModel(table),
     })
   }

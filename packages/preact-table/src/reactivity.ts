@@ -7,10 +7,9 @@ export type PreactTableReactivityBindings = RenderPhaseReactivityBindings
 /**
  * Creates the table-core reactivity bindings used by the Preact adapter.
  *
- * Preact stores table state in TanStack Store atoms and leaves options as
- * plain resolved data because `useTable` synchronizes options during render.
- * The render-phase preset supplies the live readonly-atom facades and the
- * `commit` hook; the store primitives are passed in from
+ * Preact synchronizes option atoms during render without publishing them until
+ * commit. The render-phase preset supplies live option facades, cached memo
+ * atoms, and the commit hook; the store primitives come from
  * `@tanstack/preact-store` so all atoms share one store instance with
  * user-provided external atoms.
  */

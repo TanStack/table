@@ -9,7 +9,7 @@ title: table_getRowsInDisplayOrder
 function table_getRowsInDisplayOrder<TFeatures, TData>(table): Row<TFeatures, TData>[];
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:32](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L32)
+Defined in: [core/rows/coreRowsFeature.utils.ts:33](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L33)
 
 Returns the rows in the current display order after assigning their
 zero-based display indexes.

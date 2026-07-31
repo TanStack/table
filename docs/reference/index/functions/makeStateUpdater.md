@@ -9,7 +9,7 @@ title: makeStateUpdater
 function makeStateUpdater<TFeatures, K>(key, instance): (updater) => void;
 ```
 
-Defined in: [utils.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L97)
+Defined in: [utils.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L98)
 
 Creates a table state updater for a single state slice.
 

@@ -27,28 +27,29 @@ export function createFacetedUniqueValues<
       feature: 'columnFacetingFeature',
       table,
       fnName: 'table.getFacetedUniqueValues',
-      memoDeps: () => {
+      fn: () => {
+        let flatRows: Array<Row<TFeatures, TData>>
+
         if (columnId === '__global__') {
-          return [
-            callMemoOrStaticFn(
-              table,
-              'getGlobalFacetedRowModel',
-              table_getGlobalFacetedRowModel,
-            ).flatRows,
-          ]
-        }
-        const column = table.getColumn(columnId)
-        if (!column) return [table.getPreFilteredRowModel().flatRows]
-        return [
-          callMemoOrStaticFn(
-            column,
-            'getFacetedRowModel',
-            column_getFacetedRowModel,
+          flatRows = callMemoOrStaticFn(
             table,
-          ).flatRows,
-        ]
+            'getGlobalFacetedRowModel',
+            table_getGlobalFacetedRowModel,
+          ).flatRows
+        } else {
+          const column = table.getColumn(columnId)
+          flatRows = column
+            ? callMemoOrStaticFn(
+                column,
+                'getFacetedRowModel',
+                column_getFacetedRowModel,
+                table,
+              ).flatRows
+            : table.getPreFilteredRowModel().flatRows
+        }
+
+        return _createFacetedUniqueValues(table, columnId, flatRows)
       },
-      fn: (flatRows) => _createFacetedUniqueValues(table, columnId, flatRows),
     })
   }
 }

@@ -9,7 +9,7 @@ title: columnPinningFeature
 const columnPinningFeature: TableFeature;
 ```
 
-Defined in: [features/column-pinning/columnPinningFeature.ts:51](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L51)
+Defined in: [features/column-pinning/columnPinningFeature.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-pinning/columnPinningFeature.ts#L57)
 
 Feature that adds column pinning state and APIs for logical start, center,
 and end regions.

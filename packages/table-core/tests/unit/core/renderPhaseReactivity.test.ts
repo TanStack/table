@@ -40,6 +40,186 @@ afterEach(() => {
 })
 
 describe('renderPhaseReactivity bindings', () => {
+  it('caches memo-mode reads within a render and refreshes after staging', () => {
+    const bindings = renderPhaseReactivity({ createAtom, batch })
+    const option = bindings.createWritableAtom(1, {
+      debugName: 'option',
+      mode: 'staged',
+    })
+    const evaluate = vi.fn(() => option.get() * 2)
+    const memo = bindings.createReadonlyAtom(evaluate, {
+      debugName: 'memo',
+      mode: 'memo',
+    })
+
+    expect(memo.get()).toBe(2)
+    expect(memo.get()).toBe(2)
+    expect(evaluate).toHaveBeenCalledTimes(1)
+
+    option.set(2)
+    bindings.stage()
+
+    expect(memo.get()).toBe(4)
+    expect(memo.get()).toBe(4)
+    expect(evaluate).toHaveBeenCalledTimes(2)
+  })
+
+  it('uses broad memo invalidation for a materially changed staged source', () => {
+    const bindings = renderPhaseReactivity({ createAtom, batch })
+    const dependency = bindings.createWritableAtom(1, {
+      debugName: 'dependency',
+      mode: 'staged',
+    })
+    const unrelated = bindings.createWritableAtom('before', {
+      debugName: 'unrelated',
+      mode: 'staged',
+    })
+    const evaluate = vi.fn(() => ({ value: dependency.get() }))
+    const memo = bindings.createReadonlyAtom(evaluate, {
+      debugName: 'memo',
+      mode: 'memo',
+    })
+
+    const initial = memo.get()
+
+    unrelated.set('after')
+    bindings.stage()
+
+    expect(memo.get()).not.toBe(initial)
+    expect(evaluate).toHaveBeenCalledTimes(2)
+  })
+
+  it('publishes staged readonly values once for the committed token', () => {
+    const bindings = renderPhaseReactivity({ createAtom, batch })
+    const option = bindings.createWritableAtom(1, {
+      debugName: 'option',
+      mode: 'staged',
+    })
+    const projection = bindings.createReadonlyAtom(() => option.get(), {
+      debugName: 'projection',
+    })
+    const notifications: Array<number> = []
+    const subscription = projection.subscribe((value) => {
+      notifications.push(value)
+    })
+
+    option.set(2)
+    const token = bindings.stage()
+
+    expect(projection.get()).toBe(2)
+    expect(notifications).toEqual([])
+
+    bindings.commit(token)
+    bindings.commit(token)
+
+    expect(notifications).toEqual([2])
+    subscription.unsubscribe()
+  })
+
+  it('does not publish an abandoned staged value', () => {
+    const bindings = renderPhaseReactivity({ createAtom, batch })
+    const option = bindings.createWritableAtom(1, {
+      debugName: 'option',
+      mode: 'staged',
+    })
+    const projection = bindings.createReadonlyAtom(() => option.get(), {
+      debugName: 'projection',
+    })
+    const notifications: Array<number> = []
+    const subscription = projection.subscribe((value) => {
+      notifications.push(value)
+    })
+
+    option.set(2)
+    const abandonedToken = bindings.stage()
+    expect(projection.get()).toBe(2)
+
+    option.set(3)
+    const committedToken = bindings.stage()
+    expect(projection.get()).toBe(3)
+
+    bindings.commit(committedToken)
+    bindings.commit(abandonedToken)
+
+    expect(notifications).toEqual([3])
+    subscription.unsubscribe()
+  })
+
+  it('does not publish newer staged values through an older commit token', () => {
+    const bindings = renderPhaseReactivity({ createAtom, batch })
+    const option = bindings.createWritableAtom(1, {
+      debugName: 'option',
+      mode: 'staged',
+    })
+    const projection = bindings.createReadonlyAtom(() => option.get(), {
+      debugName: 'projection',
+    })
+    const notifications: Array<number> = []
+    const subscription = projection.subscribe((value) => {
+      notifications.push(value)
+    })
+
+    option.set(2)
+    const olderToken = bindings.stage()
+    option.set(3)
+    bindings.stage()
+
+    bindings.commit(olderToken)
+
+    expect(notifications).toEqual([])
+    subscription.unsubscribe()
+  })
+
+  it('gates option atom publication and forwards the captured token', () => {
+    const { bindings, table, internalTable } = makeDeferredTable()
+    const nextData = [{ id: 'next' }]
+    const notifications: Array<ReadonlyArray<unknown>> = []
+    const subscription = table.optionAtoms.data.subscribe((value) => {
+      notifications.push(value)
+    })
+    const commitSpy = vi.spyOn(bindings, 'commit')
+
+    const token = table_setOptions(
+      internalTable,
+      (options) => ({
+        ...options,
+        data: nextData,
+      }),
+      { syncExternalState: false },
+    )
+
+    expect(token).toEqual(expect.any(Number))
+    expect(table.optionAtoms.data.get()).toBe(nextData)
+    expect(notifications).toEqual([])
+
+    table_publishExternalState(internalTable, null, undefined, token)
+
+    expect(commitSpy).toHaveBeenCalledWith(token)
+    expect(notifications).toEqual([nextData])
+    subscription.unsubscribe()
+  })
+
+  it('does not stage a source with unchanged option values', () => {
+    const { bindings, internalTable } = makeDeferredTable()
+    // The first merge installs construct-static undefined slots. Subsequent
+    // render merges with the same values should not rotate memo caches.
+    table_setOptions(
+      internalTable,
+      (options) => ({ ...options }),
+      { syncExternalState: false },
+    )
+    const stageSpy = vi.spyOn(bindings, 'stage')
+
+    const token = table_setOptions(
+      internalTable,
+      (options) => ({ ...options }),
+      { syncExternalState: false },
+    )
+
+    expect(token).toBe(bindings.getStageToken())
+    expect(stageSpy).not.toHaveBeenCalled()
+  })
+
   it('invokes the commit hook on publish, including when nothing is published', () => {
     const { bindings, internalTable } = makeDeferredTable()
     const commitSpy = vi.spyOn(bindings, 'commit')

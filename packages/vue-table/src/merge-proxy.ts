@@ -1,3 +1,5 @@
+import { isRef } from 'vue'
+
 function trueFn() {
   return true
 }
@@ -8,8 +10,10 @@ const $SOURCES = Symbol('merge-proxy-sources')
 // https://github.com/solidjs/solid/blob/c20ca4fd8c36bc0522fedb2c7f38a110b7ee2663/packages/solid/src/render/component.ts#L51-L118
 const propTraps: ProxyHandler<{
   get: (k: string | number | symbol) => any
+  getDescriptor: (k: string | number | symbol) => PropertyDescriptor | undefined
   has: (k: string | number | symbol) => boolean
-  keys: () => Array<string>
+  keys: () => Array<string | symbol>
+  prototype: () => object | null
   sources: Array<any>
 }> = {
   get(_, property, receiver) {
@@ -23,15 +27,20 @@ const propTraps: ProxyHandler<{
   set: trueFn,
   deleteProperty: trueFn,
   getOwnPropertyDescriptor(_, property) {
+    const descriptor = _.getDescriptor(property)
+    if (!descriptor) return undefined
+
     return {
       configurable: true,
-      enumerable: true,
+      enumerable: descriptor.enumerable ?? false,
       get() {
         return _.get(property)
       },
       set: trueFn,
-      deleteProperty: trueFn,
     }
+  },
+  getPrototypeOf(_) {
+    return _.prototype()
   },
   ownKeys(_) {
     return _.keys()
@@ -53,7 +62,32 @@ type MergeProxy<T extends Array<any>> = UnboxIntersection<
 >
 
 function resolveSource(s: any) {
-  return s && typeof s === 'object' && 'value' in s ? s.value : s
+  return isRef(s) ? s.value : s
+}
+
+function getMergedPrototype(sources: Array<any>): object | null {
+  let fallback: object | null = Object.prototype
+
+  for (let i = sources.length - 1; i >= 0; i--) {
+    const source = resolveSource(sources[i])
+    if (
+      (typeof source !== 'object' && typeof source !== 'function') ||
+      source === null
+    ) {
+      continue
+    }
+
+    const prototype = Object.getPrototypeOf(source)
+    fallback = prototype
+
+    // Adapter-injected option fragments are ordinary objects. Prefer a
+    // meaningful user prototype when one is present in another source.
+    if (prototype !== Object.prototype) {
+      return prototype
+    }
+  }
+
+  return fallback
 }
 
 export function mergeProxy<T extends Array<any>>(...sources: T): MergeProxy<T>
@@ -76,21 +110,40 @@ export function mergeProxy(...sources: any): any {
       sources: flattenedSources,
       get(property: string | number | symbol) {
         for (let i = flattenedSources.length - 1; i >= 0; i--) {
-          const v = resolveSource(flattenedSources[i])[property]
-          if (v !== undefined) return v
+          const source = resolveSource(flattenedSources[i])
+          if (source != null && Reflect.has(source, property)) {
+            return Reflect.get(source, property, source)
+          }
         }
+      },
+      getDescriptor(property: string | number | symbol) {
+        for (let i = flattenedSources.length - 1; i >= 0; i--) {
+          const source = resolveSource(flattenedSources[i])
+          if (source == null) continue
+
+          const descriptor = Reflect.getOwnPropertyDescriptor(source, property)
+          if (descriptor) return descriptor
+        }
+        return undefined
       },
       has(property: string | number | symbol) {
         for (let i = flattenedSources.length - 1; i >= 0; i--) {
-          if (property in resolveSource(flattenedSources[i])) return true
+          const source = resolveSource(flattenedSources[i])
+          if (source != null && Reflect.has(source, property)) return true
         }
         return false
       },
       keys() {
-        const keys = []
-        for (const source of flattenedSources)
-          keys.push(...Object.keys(resolveSource(source)))
-        return [...Array.from(new Set(keys))]
+        const keys = new Set<string | symbol>()
+        for (const unresolvedSource of flattenedSources) {
+          const source = resolveSource(unresolvedSource)
+          if (source == null) continue
+          for (const key of Reflect.ownKeys(source)) keys.add(key)
+        }
+        return [...keys]
+      },
+      prototype() {
+        return getMergedPrototype(flattenedSources)
       },
     },
     propTraps,
@@ -114,17 +167,36 @@ export function flatMerge<T, U, V, W>(
   source3: W,
 ): T & U & V & W
 export function flatMerge(...sources: any): any {
-  const result: Record<PropertyKey, unknown> = {}
+  const result = Object.create(getMergedPrototype(sources)) as Record<
+    PropertyKey,
+    unknown
+  >
 
-  for (let source of sources) {
+  for (let sourceIndex = 0; sourceIndex < sources.length; sourceIndex++) {
+    let source = sources[sourceIndex]
     source = resolveSource(source)
     if (!source) continue
 
     for (const key of Reflect.ownKeys(source)) {
-      const value = (source as Record<PropertyKey, unknown>)[key]
-      if (value !== undefined) {
-        result[key] = value
+      const descriptor = Reflect.getOwnPropertyDescriptor(source, key)
+      if (
+        sourceIndex === sources.length - 1 &&
+        descriptor &&
+        !('value' in descriptor)
+      ) {
+        Object.defineProperty(result, key, {
+          ...descriptor,
+          configurable: true,
+        })
+        continue
       }
+
+      Object.defineProperty(result, key, {
+        configurable: true,
+        enumerable: descriptor?.enumerable ?? true,
+        value: Reflect.get(source, key, source),
+        writable: true,
+      })
     }
   }
 

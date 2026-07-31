@@ -13,29 +13,29 @@ import {
   column_pin,
   getDefaultColumnPinningState,
   row_getCenterVisibleCells,
-  row_getStartVisibleCells,
   row_getEndVisibleCells,
+  row_getStartVisibleCells,
   table_getCenterFlatHeaders,
   table_getCenterFooterGroups,
   table_getCenterHeaderGroups,
   table_getCenterLeafColumns,
   table_getCenterLeafHeaders,
   table_getCenterVisibleLeafColumns,
-  table_getIsSomeColumnsPinned,
-  table_getStartFlatHeaders,
-  table_getStartFooterGroups,
-  table_getStartHeaderGroups,
-  table_getStartLeafColumns,
-  table_getStartLeafHeaders,
-  table_getStartVisibleLeafColumns,
-  table_getPinnedLeafColumns,
-  table_getPinnedVisibleLeafColumns,
   table_getEndFlatHeaders,
   table_getEndFooterGroups,
   table_getEndHeaderGroups,
   table_getEndLeafColumns,
   table_getEndLeafHeaders,
   table_getEndVisibleLeafColumns,
+  table_getIsSomeColumnsPinned,
+  table_getPinnedLeafColumns,
+  table_getPinnedVisibleLeafColumns,
+  table_getStartFlatHeaders,
+  table_getStartFooterGroups,
+  table_getStartHeaderGroups,
+  table_getStartLeafColumns,
+  table_getStartLeafHeaders,
+  table_getStartVisibleLeafColumns,
   table_getVisibleLeafColumns,
   table_resetColumnPinning,
   table_setColumnPinning,
@@ -498,6 +498,54 @@ describe('row_getEndVisibleCells', () => {
     const rightCells = row_getEndVisibleCells(row)
 
     expect(rightCells).toHaveLength(0)
+  })
+})
+
+describe('column pinning selector boundaries', () => {
+  it('keeps start results cached when only end pinning changes', () => {
+    const table = makeTable(1, {
+      initialState: {
+        columnPinning: {
+          start: ['firstName'],
+          end: ['lastName'],
+        },
+      },
+    })
+    const row = table.getRowModel().rows[0]!
+    const startCells = row.getStartVisibleCells()
+    const startHeaderGroups = table.getStartHeaderGroups()
+    const current = table.atoms.columnPinning.get()
+
+    table.setColumnPinning({
+      start: current.start,
+      end: ['age'],
+    })
+
+    expect(row.getStartVisibleCells()).toBe(startCells)
+    expect(table.getStartHeaderGroups()).toBe(startHeaderGroups)
+  })
+
+  it('keeps end results cached when only start pinning changes', () => {
+    const table = makeTable(1, {
+      initialState: {
+        columnPinning: {
+          start: ['firstName'],
+          end: ['lastName'],
+        },
+      },
+    })
+    const row = table.getRowModel().rows[0]!
+    const endCells = row.getEndVisibleCells()
+    const endHeaderGroups = table.getEndHeaderGroups()
+    const current = table.atoms.columnPinning.get()
+
+    table.setColumnPinning({
+      start: ['age'],
+      end: current.end,
+    })
+
+    expect(row.getEndVisibleCells()).toBe(endCells)
+    expect(table.getEndHeaderGroups()).toBe(endHeaderGroups)
   })
 })
 

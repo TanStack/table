@@ -1,4 +1,5 @@
 import { cloneState, functionalUpdate } from '../../utils'
+import { applyTableOptions } from './tableOptionAtoms'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -37,7 +38,9 @@ export function table_syncExternalStateToBaseAtoms<
   ) => currentState === externalState,
 ): void {
   const state =
-    capturedState === undefined ? table.options.state : capturedState
+    capturedState === undefined
+      ? table.options.state
+      : capturedState
 
   table._reactivity.batch(() => {
     if (state) {
@@ -74,10 +77,11 @@ export function table_publishExternalState<
     currentState,
     externalState,
   ) => currentState === externalState,
+  commitToken?: number,
 ): void {
   table._reactivity.batch(() => {
     table_syncExternalStateToBaseAtoms(table, state, compare)
-    table._reactivity.commit?.()
+    table._reactivity.commit?.(commitToken)
   })
 }
 
@@ -132,51 +136,55 @@ export function table_mergeOptions<
   table: Table_Internal<TFeatures, TData>,
   newOptions: TableOptions<TFeatures, TData>,
 ) {
-  const { features, atoms, initialState } = table.options
+  const currentOptions = table.options
+  const { features, atoms, initialState } = currentOptions
+  const mergeOptions = currentOptions.mergeOptions
 
   // simple merge if no mergeOptions is provided - performant
-  if (!table.options.mergeOptions) {
+  if (!mergeOptions) {
     return {
-      ...table.options,
+      ...currentOptions,
       ...newOptions,
       features,
       atoms,
       initialState,
-    }
+    } as TableOptions<TFeatures, TData>
   }
 
   // else use the mergeOptions function and preserve getters/setters
-  const mergedOptions = table.options.mergeOptions(
-    table.options as TableOptions<TFeatures, TData>,
-    newOptions,
-  )
-  const descriptors: PropertyDescriptorMap = {
+  // Give custom merge logic a descriptor-preserving snapshot. A merge
+  // function that mutates its first argument must not mutate the controller's
+  // installed source before change detection runs.
+  const currentOptionsSnapshot = Object.create(
+    Object.getPrototypeOf(currentOptions),
+    Object.getOwnPropertyDescriptors(currentOptions),
+  ) as TableOptions<TFeatures, TData>
+  const mergedOptions = mergeOptions(currentOptionsSnapshot, newOptions)
+  const descriptors = {
     ...Object.getOwnPropertyDescriptors(mergedOptions),
-  }
-
-  return Object.defineProperties(
-    Object.create(Object.getPrototypeOf(mergedOptions)),
-    {
-      ...descriptors,
-      features: {
-        value: features,
-        enumerable: true,
-        configurable: true,
-        writable: true,
-      },
-      atoms: {
-        value: atoms,
-        enumerable: true,
-        configurable: true,
-        writable: true,
-      },
-      initialState: {
-        value: initialState,
-        enumerable: true,
-        configurable: true,
-        writable: true,
-      },
+    features: {
+      value: features,
+      enumerable: true,
+      configurable: true,
+      writable: true,
     },
+    atoms: {
+      value: atoms,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+    initialState: {
+      value: initialState,
+      enumerable: true,
+      configurable: true,
+      writable: true,
+    },
+  } as Record<PropertyKey, PropertyDescriptor>
+
+  return Object.create(
+    Object.getPrototypeOf(mergedOptions),
+    descriptors,
   ) as TableOptions<TFeatures, TData>
 }
 
@@ -201,19 +209,21 @@ export function table_setOptions<
   options?: {
     syncExternalState?: boolean
   },
-): void {
+): number | undefined {
   const newOptions = functionalUpdate(
     updater,
     table.options as TableOptions<TFeatures, TData>,
   )
   const mergedOptions = table_mergeOptions(table, newOptions)
 
-  if (table.optionsStore) {
-    table.optionsStore.set(() => mergedOptions)
-  } else {
-    table.options = mergedOptions
-  }
+  const commitToken = applyTableOptions(table.optionAtoms, mergedOptions)
   if (options?.syncExternalState !== false) {
-    table_publishExternalState(table, mergedOptions.state ?? null)
+    table_publishExternalState(
+      table,
+      mergedOptions.state ?? null,
+      undefined,
+      commitToken,
+    )
   }
+  return commitToken
 }

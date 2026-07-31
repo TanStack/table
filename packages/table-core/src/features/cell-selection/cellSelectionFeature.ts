@@ -1,7 +1,6 @@
 import {
   assignPrototypeAPIs,
   assignTableAPIs,
-  callMemoOrStaticFn,
   makeStateUpdater,
 } from '../../utils'
 import {
@@ -127,31 +126,14 @@ export const cellSelectionFeature: TableFeature = {
         fn: () => table_autoResetCellSelection(table),
       },
       table_getCellSelectionColumnIndexes: {
-        fn: () => table_getCellSelectionColumnIndexes(table),
+        computed: () => table_getCellSelectionColumnIndexes(table),
         // Mirrors columnVisibilityFeature's own deps rather than calling
-        // getVisibleLeafColumns() here, so the map stays memoized even when
+        // getVisibleLeafColumns() directly, so the map stays reactive even when
         // that feature is absent and its static rebuilds on every call.
         // columnPinning is added because cells render in pinned order.
-        memoDeps: () => [
-          table.atoms.columnVisibility?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.grouping?.get(),
-          table.options.columns,
-          table.options.groupedColumnMode,
-        ],
       },
       table_getCellSelectionBounds: {
-        fn: () => table_getCellSelectionBounds(table),
-        memoDeps: () => [
-          table.atoms.cellSelection?.get(),
-          table.getRowsInDisplayOrder(),
-          callMemoOrStaticFn(
-            table,
-            'getCellSelectionColumnIndexes',
-            table_getCellSelectionColumnIndexes,
-          ),
-        ],
+        computed: () => table_getCellSelectionBounds(table),
       },
       table_selectCellRange: {
         fn: (range, opts) => table_selectCellRange(table, range, opts),
@@ -172,61 +154,19 @@ export const cellSelectionFeature: TableFeature = {
         fn: (direction) => table_extendCellSelection(table, direction),
       },
       table_getSelectedCellIds: {
-        fn: () => table_getSelectedCellIds(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCellSelectionBounds',
-            table_getCellSelectionBounds,
-          ),
-          table.getRowsInDisplayOrder(),
-          table.options.enableCellSelection,
-        ],
+        computed: () => table_getSelectedCellIds(table),
       },
       table_getSelectedCellRangesData: {
-        fn: () => table_getSelectedCellRangesData(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCellSelectionBounds',
-            table_getCellSelectionBounds,
-          ),
-          table.getRowsInDisplayOrder(),
-          table.options.enableCellSelection,
-        ],
+        computed: () => table_getSelectedCellRangesData(table),
       },
       table_getSelectedCellCount: {
-        fn: () => table_getSelectedCellCount(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCellSelectionBounds',
-            table_getCellSelectionBounds,
-          ),
-          table.getRowsInDisplayOrder(),
-          table.options.enableCellSelection,
-        ],
+        computed: () => table_getSelectedCellCount(table),
       },
       table_getCellSelectionRowIds: {
-        fn: () => table_getCellSelectionRowIds(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCellSelectionBounds',
-            table_getCellSelectionBounds,
-          ),
-          table.getRowsInDisplayOrder(),
-        ],
+        computed: () => table_getCellSelectionRowIds(table),
       },
       table_getCellSelectionColumnIds: {
-        fn: () => table_getCellSelectionColumnIds(table),
-        memoDeps: () => [
-          callMemoOrStaticFn(
-            table,
-            'getCellSelectionBounds',
-            table_getCellSelectionBounds,
-          ),
-        ],
+        computed: () => table_getCellSelectionColumnIds(table),
       },
     })
   },

@@ -6,13 +6,13 @@ title: assignTableAPIs
 # Function: assignTableAPIs()
 
 ```ts
-function assignTableAPIs<TFeatures, TData, TDeps, TDepArgs>(
+function assignTableAPIs<TFeatures, TData>(
    feature, 
    table, 
    apis): void;
 ```
 
-Defined in: [utils.ts:392](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L392)
+Defined in: [utils.ts:359](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L359)
 
 Assigns Table API methods directly to the table instance.
 Unlike row/cell/column/header, the table is a singleton so methods are assigned directly.
@@ -27,14 +27,6 @@ Unlike row/cell/column/header, the table is a singleton so methods are assigned 
 
 `TData` *extends* [`RowData`](../type-aliases/RowData.md)
 
-### TDeps
-
-`TDeps` *extends* readonly `any`[]
-
-### TDepArgs
-
-`TDepArgs`
-
 ## Parameters
 
 ### feature
@@ -47,7 +39,7 @@ keyof `TFeatures` & `string`
 
 ### apis
 
-[`APIObject`](../type-aliases/APIObject.md)\<`TDeps`, [`NoInfer`](../type-aliases/NoInfer.md)\<`TDepArgs`\>\>
+[`APIObject`](../type-aliases/APIObject.md)
 
 ## Returns
 

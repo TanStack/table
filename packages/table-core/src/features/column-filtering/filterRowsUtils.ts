@@ -1,4 +1,5 @@
 import { constructRow } from '../../core/rows/constructRow'
+import { row_setSubRows } from '../../core/rows/subRowsTracking'
 import { makeObjectMap } from '../../utils'
 import type { Row_ColumnFiltering } from './columnFilteringFeature.types'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -65,7 +66,7 @@ function filterRowModelFromLeafs<
       newRow.columnFilters = row.columnFilters
 
       if (row.subRows.length && depth < maxDepth) {
-        newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
+        row_setSubRows(newRow, recurseFilterRows(row.subRows, depth + 1))
         row = newRow
 
         if (filterRow(row) && !newRow.subRows.length) {
@@ -137,7 +138,7 @@ function filterRowModelFromRoot<
             undefined,
             row.parentId,
           )
-          newRow.subRows = recurseFilterRows(row.subRows, depth + 1)
+          row_setSubRows(newRow, recurseFilterRows(row.subRows, depth + 1))
           row = newRow
         }
 

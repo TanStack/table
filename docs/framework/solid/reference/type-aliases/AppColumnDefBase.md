@@ -9,7 +9,7 @@ title: AppColumnDefBase
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [createTableHook.tsx:85](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L85)
+Defined in: [createTableHook.tsx:86](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L86)
 
 Enhanced column definition base with pre-bound components in cell/header/footer contexts.
 

@@ -9,7 +9,7 @@ title: table_getFooterGroups
 function table_getFooterGroups<TFeatures, TData>(table): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:141](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L141)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L149)
 
 Builds footer groups by reversing the current header groups.
 

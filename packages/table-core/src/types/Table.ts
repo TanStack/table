@@ -29,9 +29,10 @@ import type {
   BaseAtoms,
   BaseAtoms_All,
   ExternalAtoms_All,
+  TableOptionsLive,
   Table_Table,
 } from '../core/table/coreTablesFeature.types'
-import type { DebugOptions, TableOptions_All } from './TableOptions'
+import type { TableOptions_All } from './TableOptions'
 
 /**
  * The core table object that only includes the core table functionality such as column, header, row, and table APIS.
@@ -105,12 +106,14 @@ export interface Table_Internal<
     Table_Headers<TFeatures, TData> {
   _rowModels: CachedRowModel_All<TFeatures, TData>
   _rowModelFns: RowModelFns_All<TFeatures, TData>
-  options: DebugOptions<TableFeatures> &
-    TableOptions_All<TFeatures, TData> & {
-      state?: TableState_All
-      initialState?: TableState_All
-      atoms?: ExternalAtoms_All
-    }
+  options: TableOptionsLive<TFeatures, TData> &
+    Readonly<
+      TableOptions_All<TFeatures, TData> & {
+        state?: TableState_All
+        initialState?: TableState_All
+        atoms?: ExternalAtoms_All
+      }
+    >
   initialState: TableState<TFeatures> & TableState_All
   baseAtoms: BaseAtoms<TFeatures> & BaseAtoms_All
   atoms: Atoms<TFeatures> & Atoms_All

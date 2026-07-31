@@ -1,5 +1,5 @@
 import { describe, expect, test, vi } from 'vitest'
-import { computed, effectScope, nextTick, ref, watchEffect } from 'vue'
+import { computed, effectScope, isRef, nextTick, ref, watchEffect } from 'vue'
 import { createAtom } from '@tanstack/store'
 import { stockFeatures } from '@tanstack/table-core'
 import { useTable } from '../../src/useTable'
@@ -237,6 +237,61 @@ describe('Vue adapter lifecycle and reactive options', () => {
     table.toggleAllRowsSelected(true)
     expect(firstSelectionHandler).toHaveBeenCalledTimes(1)
     expect(secondSelectionHandler).toHaveBeenCalledTimes(1)
+
+    scope.stop()
+  })
+
+  test('an existing ref-backed option can be cleared without leaking the Ref', async () => {
+    const firstHandler = vi.fn<OnChangeFn<RowSelectionState>>()
+    const onRowSelectionChange = ref<OnChangeFn<RowSelectionState> | undefined>(
+      firstHandler,
+    )
+    const customOption = ref('first')
+    const customSymbol = Symbol('custom-option')
+    const prototype = { inheritedOption: 'from-prototype' }
+    const options = Object.create(
+      prototype,
+      Object.getOwnPropertyDescriptors({
+        data: [{ id: '1', title: 'First' }],
+        columns,
+        features: stockFeatures,
+        getRowId: (row: Data) => row.id,
+        onRowSelectionChange,
+        value: 'custom-value',
+        [customSymbol]: 'symbol-value',
+        get customOption() {
+          return customOption.value
+        },
+      }),
+    )
+    const scope = effectScope()
+    const table = scope.run(() =>
+      useTable<typeof stockFeatures, Data>(options),
+    )!
+
+    expect(table.options.onRowSelectionChange).toBe(firstHandler)
+    expect(isRef(table.options.onRowSelectionChange)).toBe(false)
+    expect((table.options as any).value).toBe('custom-value')
+    expect((table.options as any)[customSymbol]).toBe('symbol-value')
+    expect((table.options as any).customOption).toBe('first')
+    expect(
+      Object.getOwnPropertyDescriptor(table.options, 'customOption'),
+    ).toMatchObject({
+      value: 'first',
+      writable: false,
+    })
+
+    onRowSelectionChange.value = undefined
+    customOption.value = 'second'
+    await nextTick()
+
+    expect(table.options.onRowSelectionChange).toBeUndefined()
+    expect(table.optionAtoms.onRowSelectionChange!.get()).toBeUndefined()
+    expect(isRef(table.options.onRowSelectionChange)).toBe(false)
+    expect((table.options as any).customOption).toBe('second')
+
+    table.toggleAllRowsSelected(true)
+    expect(firstHandler).not.toHaveBeenCalled()
 
     scope.stop()
   })

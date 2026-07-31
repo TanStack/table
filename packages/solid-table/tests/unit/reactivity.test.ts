@@ -63,6 +63,57 @@ describe('solidReactivity', () => {
       dispose()
     })
   })
+
+  test('readonly atoms pass their comparator to Solid createMemo', () => {
+    createRoot((dispose) => {
+      const owner = getOwner()!
+      const reactivity = solidReactivity(owner)
+      const count = reactivity.createWritableAtom(0)
+      const parity = reactivity.createReadonlyAtom(
+        () => ({ even: count.get() % 2 === 0 }),
+        {
+          compare: (previous, next) => previous.even === next.even,
+          debugName: 'parity',
+        },
+      )
+
+      const initial = parity.get()
+      count.set(2)
+      expect(parity.get()).toBe(initial)
+
+      count.set(3)
+      expect(parity.get()).not.toBe(initial)
+      dispose()
+    })
+  })
+
+  test('atoms retain Solid identity equality when no comparator is provided', () => {
+    let dispose!: () => void
+    const { captor, count } = createRoot((rootDispose) => {
+      dispose = rootDispose
+      const owner = getOwner()!
+      const reactivity = solidReactivity(owner)
+      const count = reactivity.createWritableAtom(0)
+      const parity = reactivity.createReadonlyAtom(() => count.get() % 2, {
+        debugName: 'parity',
+      })
+      const captor = vi.fn<(value: number) => void>()
+
+      createEffect(() => captor(parity.get()))
+
+      return { captor, count }
+    })
+
+    count.set(2)
+    expect(captor.mock.calls).toEqual([[0]])
+
+    count.set(3)
+    expect(captor.mock.calls).toEqual([[0], [1]])
+
+    count.set(3)
+    expect(captor.mock.calls).toEqual([[0], [1]])
+    dispose()
+  })
 })
 
 describe('Solid table reactivity integration', () => {

@@ -12,17 +12,10 @@ import type {
 } from '@tanstack/table-core'
 import type { Atom, ReadonlyAtom, ReadonlyStore } from '@tanstack/store'
 
-// Internal table slots used by the pull-based options/state wiring below.
+// Internal table slots used by the per-slice state wiring below.
 // `Table_Internal` is not exported from the table-core build, so the shape is
 // declared structurally here.
-interface TableInternals<
-  TFeatures extends TableFeatures,
-  TData extends RowData,
-> {
-  optionsStore?: {
-    get(): TableOptions<TFeatures, TData>
-    set(value: () => TableOptions<TFeatures, TData>): void
-  }
+interface TableInternals {
   baseAtoms: Record<
     string,
     {
@@ -32,6 +25,13 @@ interface TableInternals<
   >
   atoms: Record<string, unknown>
 }
+
+const staticOptionKeys = new Set<PropertyKey>([
+  'atoms',
+  'features',
+  'initialState',
+  'mergeOptions',
+])
 
 /**
  * Creates an Ember-reactive table.
@@ -71,6 +71,37 @@ export function useTable<
 
   // Untracked to prevent possible "set on same computation as read" errors in Ember.
   const initialOptions = untrack(() => userOptions.get())
+  const imperativeOptionKeys = new Set<PropertyKey>()
+
+  const mergeOptions = (
+    defaultOptions: TableOptions<TFeatures, TData>,
+    newOptions: Partial<TableOptions<TFeatures, TData>>,
+  ) => {
+    for (const key of Reflect.ownKeys(newOptions)) {
+      if (staticOptionKeys.has(key)) {
+        continue
+      }
+
+      const currentHasKey = Reflect.has(defaultOptions, key)
+      const nextValue = Reflect.get(newOptions, key, newOptions) as unknown
+      const currentValue = currentHasKey
+        ? (Reflect.get(
+            defaultOptions,
+            key,
+            defaultOptions,
+          ) as unknown)
+        : undefined
+
+      if (!currentHasKey || !Object.is(currentValue, nextValue)) {
+        imperativeOptionKeys.add(key)
+      }
+    }
+
+    return {
+      ...defaultOptions,
+      ...newOptions,
+    }
+  }
 
   const table = constructTable<TFeatures, TData>({
     ...initialOptions,
@@ -78,79 +109,45 @@ export function useTable<
       coreReactivityFeature: reactivity,
       ...initialOptions.features,
     },
-    mergeOptions: (
-      defaultOptions: TableOptions<TFeatures, TData>,
-      newOptions: Partial<TableOptions<TFeatures, TData>>,
-    ) => ({
-      ...defaultOptions,
-      ...newOptions,
-    }),
-  }) as Table<TFeatures, TData> & TableInternals<TFeatures, TData>
+    mergeOptions,
+  }) as Table<TFeatures, TData> & TableInternals
 
-  const optionsStore = table.optionsStore!
-
-  const liveOptions = computed(() => {
-    const stored = optionsStore.get()
-    return {
-      ...stored,
-      ...userOptions.get(),
-      // stored options carry construct-time normalization (the reactivity
-      // feature, wrapped external atoms) that must win over the raw user
-      // options.
-      features: stored.features,
-      atoms: stored.atoms,
+  // Keep Ember-specific getter tracking in the adapter. Core option atoms only
+  // store resolved values; these wrappers read the latest tracked user option
+  // until an imperative setOptions/optionAtoms write takes ownership.
+  for (const key of Reflect.ownKeys(table.optionAtoms)) {
+    if (key === 'snapshotVersion' || staticOptionKeys.has(key)) {
+      continue
     }
-  })
 
-  const getLiveOptions = () => liveOptions.get()
+    const coreAtom = table.optionAtoms[
+      key as keyof typeof table.optionAtoms
+    ] as Atom<unknown>
+    const trackedAtom = {
+      get: () => {
+        if (imperativeOptionKeys.has(key)) {
+          return coreAtom.get()
+        }
 
-  /**
-   * This is to get around core table not using lazy access so we need to re-wrap
-   *
-   * Similar to other reactive signal frameworks (solid, angular, svelte)
-   */
-  Object.defineProperty(table, 'options', {
-    configurable: true,
-    enumerable: true,
-    get: getLiveOptions,
-    set: (value: TableOptions<TFeatures, TData>) => {
-      optionsStore.set(() => value)
-    },
-  })
+        const currentOptions = userOptions.get()
+        return Reflect.has(currentOptions, key)
+          ? Reflect.get(currentOptions, key, currentOptions)
+          : coreAtom.get()
+      },
+      subscribe: coreAtom.subscribe.bind(coreAtom),
+      set: coreAtom.set.bind(coreAtom),
+    }
+
+    Object.defineProperty(table.optionAtoms, key, {
+      configurable: true,
+      enumerable: true,
+      value: trackedAtom,
+      writable: false,
+    })
+  }
 
   const atoms: Record<string, ReadonlyAtom<unknown>> = table.atoms
   const stateKeys = Object.keys(table.baseAtoms)
-
-  for (const key of stateKeys) {
-    const baseAtom = (table.baseAtoms as Record<string, ReadonlyAtom<unknown>>)[
-      key
-    ]!
-
-    /**
-     * Original atoms could cause effects for top level properties
-     *
-     * Core table should migrate to pure derived data which would boost render
-     * performance for both signal and non-signal frameworks.
-     */
-    atoms[key] = reactivity.createReadonlyAtom(
-      () => {
-        const externalAtom = (
-          table.options.atoms as Record<string, Atom<unknown>> | undefined
-        )?.[key]
-        if (externalAtom) {
-          return externalAtom.get()
-        }
-        const stateSlice = (
-          table.options.state as Record<string, unknown> | undefined
-        )?.[key]
-        if (stateSlice !== undefined) {
-          return stateSlice
-        }
-        return baseAtom.get()
-      },
-      { debugName: `table/atoms/${key}` },
-    )
-  }
 
   const stateProxy: TableState<TFeatures> = new Proxy(
     {},

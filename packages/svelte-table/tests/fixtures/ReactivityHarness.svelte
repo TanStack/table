@@ -42,7 +42,7 @@
     { id: '2', title: 'Two' },
   ])
   let columns = $state<Array<ColumnDef<typeof features, Data>>>([idColumn])
-  let enableRowSelection = $state(true)
+  let enableRowSelection = $state<boolean | undefined>(true)
   let controlledState = $state<{ rowSelection?: RowSelectionState }>({
     rowSelection: { 1: true },
   })
@@ -92,6 +92,14 @@
     data = [{ id: '4', title: 'Final' }]
     columns = [titleColumn]
   }
+
+  function disableRowSelection() {
+    enableRowSelection = false
+  }
+
+  function clearRowSelectionOption() {
+    enableRowSelection = undefined
+  }
 </script>
 
 <output aria-label="Selected rows">{JSON.stringify(selection)}</output>
@@ -117,9 +125,14 @@
 <output aria-label="First row can be selected"
   >{String(table.getRowModel().rows[0]?.getCanSelect() ?? false)}</output
 >
+<output aria-label="Row selection option"
+  >{String(table.options.enableRowSelection)}</output
+>
 
 <button onclick={() => table.setRowSelection({ 2: true })}>
   Select second row
 </button>
 <button onclick={controlBothRows}>Control both rows</button>
 <button onclick={rapidOptionUpdate}>Publish rapid option updates</button>
+<button onclick={disableRowSelection}>Disable row selection</button>
+<button onclick={clearRowSelectionOption}>Clear row-selection option</button>

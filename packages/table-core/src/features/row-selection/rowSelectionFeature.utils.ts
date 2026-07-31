@@ -5,6 +5,10 @@ import {
   hasOwn,
   makeObjectMap,
 } from '../../utils'
+import {
+  row_getTrackedSubRows,
+  row_setSubRows,
+} from '../../core/rows/subRowsTracking'
 import type { RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { RowModel } from '../../core/row-models/coreRowModelsFeature.types'
@@ -807,17 +811,18 @@ function selectRowsRecursively<
   for (let i = 0; i < rows.length; i++) {
     const row = rows[i]!
     const isSelected = isRowSelected(row, rowSelection)
+    const subRows = row_getTrackedSubRows(row)
 
     if (isSelected) {
       selectedFlatRows.push(row)
       selectedRowsById[row.id] = row
     }
 
-    if (row.subRows.length) {
+    if (subRows.length) {
       // Always recurse — selected descendants of unselected parents must
       // still be collected into flatRows/rowsById.
       const newSubRows = selectRowsRecursively(
-        row.subRows,
+        subRows,
         rowSelection,
         selectedFlatRows,
         selectedRowsById,
@@ -827,7 +832,7 @@ function selectRowsRecursively<
         // Preserve prototype chain so methods like getValue() remain accessible
         const cloned = Object.create(Object.getPrototypeOf(row))
         copyInstancePropertiesWithoutMemos(cloned, row)
-        cloned.subRows = newSubRows
+        row_setSubRows(cloned, newSubRows)
         result.push(cloned)
       }
     } else if (isSelected) {
@@ -901,15 +906,16 @@ export function isSubRowSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>): boolean | 'some' | 'all' {
-  if (!row.subRows.length) return false
+  const subRows = row_getTrackedSubRows(row)
+  if (!subRows.length) return false
 
   const rowSelection = row.table.atoms.rowSelection?.get() ?? {}
 
   let someSelected = false
   let allChildrenSelected = true
 
-  for (let i = 0; i < row.subRows.length; i++) {
-    const subRow = row.subRows[i]!
+  for (let i = 0; i < subRows.length; i++) {
+    const subRow = subRows[i]!
 
     // Bail out early if we know both of these
     if (someSelected && !allChildrenSelected) {
@@ -925,7 +931,7 @@ export function isSubRowSelected<
     }
 
     // Check row selection of nested subrows
-    if (subRow.subRows.length) {
+    if (row_getTrackedSubRows(subRow).length) {
       const subRowChildrenSelected = isSubRowSelected(subRow)
       if (subRowChildrenSelected === 'all') {
         someSelected = true

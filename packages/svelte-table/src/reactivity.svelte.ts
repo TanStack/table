@@ -1,12 +1,11 @@
 import { untrack } from 'svelte'
+import { createSubscriber } from 'svelte/reactivity'
 import { batch, createAtom } from '@tanstack/svelte-store'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
 import type { Atom, Observer, ReadonlyAtom } from '@tanstack/svelte-store'
-
-const optionsStoreDebugName = 'table/optionsStore'
 
 function observerToCallback<T>(
   observerOrNext: Observer<T> | ((value: T) => void),
@@ -16,50 +15,39 @@ function observerToCallback<T>(
     : (value) => observerOrNext.next?.(value)
 }
 
-function subscribeToRune<T>(
-  getValue: () => T,
-  observerOrNext: Observer<T> | ((value: T) => void),
-) {
-  const callback = observerToCallback(observerOrNext)
-  const unsubscribe = $effect.root(() => {
-    $effect(() => {
-      const value = getValue()
-      untrack(() => callback(value))
-    })
-  })
-
-  return { unsubscribe }
-}
-
-function createRuneWritableAtom<T>(initialValue: T): Atom<T> {
-  let value = $state(initialValue)
+function createStableReadonlyAtom<T>(
+  fn: () => T,
+  compare: (previous: T, next: T) => boolean,
+): ReadonlyAtom<T> {
+  let stableBox: { value: T } | undefined
+  const boxedAtom = createAtom(
+    () => {
+      const nextValue = fn()
+      if (!stableBox || !compare(stableBox.value, nextValue)) {
+        stableBox = { value: nextValue }
+      }
+      return stableBox
+    },
+  )
 
   return {
-    set: (updater: T | ((prevVal: T) => T)) => {
-      value =
-        typeof updater === 'function'
-          ? (updater as (prevVal: T) => T)(value)
-          : updater
-    },
-    get: () => value,
+    get: () => boxedAtom.get().value,
     subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-      return subscribeToRune(() => value, observerOrNext)
-    }) as Atom<T>['subscribe'],
+      const callback = observerToCallback(observerOrNext)
+      return boxedAtom.subscribe((box) => callback(box.value))
+    }) as ReadonlyAtom<T>['subscribe'],
   }
 }
 
 /**
  * Creates the table-core reactivity bindings used by the Svelte adapter.
  *
- * Table state atoms are backed by TanStack Store atoms. The options store stays
- * framework-native because row-model APIs read `table.options` directly during
- * render. Readonly table atoms bridge Store dependency tracking into
+ * Table state and option atoms bridge Store dependency tracking into
  * `$derived.by`, so their `.get()` methods participate in Svelte dependency
  * tracking when called in templates, `$derived`, or `$effect`.
  */
 export function svelteReactivity(): TableReactivityBindings {
   return {
-    createOptionsStore: true,
     wrapExternalAtoms: false,
     addSubscription: () => {
       throw new Error(
@@ -73,35 +61,25 @@ export function svelteReactivity(): TableReactivityBindings {
     },
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-      const storeAtom = createAtom(() => fn(), {
-        compare: _options?.compare,
-      })
-      let version = $state(0)
-
-      $effect(() => {
+      const storeAtom = createStableReadonlyAtom(
+        fn,
+        _options?.compare ?? Object.is,
+      )
+      const trackStore = createSubscriber((update) => {
         const subscription = storeAtom.subscribe(() => {
-          version += 1
+          update()
         })
 
         return () => subscription.unsubscribe()
       })
 
-      const value = $derived.by(() => {
-        version
-        return storeAtom.get()
-      })
-
       return {
         get: () => {
-          // Both reads are load-bearing: the Store read preserves dependency
-          // tracking between table atoms, while touching `value` registers the
-          // current Svelte reactive scope with the rune-backed bridge.
-          const currentValue = storeAtom.get()
-          value
-          return currentValue
+          trackStore()
+          return storeAtom.get()
         },
         subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-          return subscribeToRune(() => value, observerOrNext)
+          return storeAtom.subscribe(observerToCallback(observerOrNext))
         }) as ReadonlyAtom<T>['subscribe'],
       }
     },
@@ -109,10 +87,6 @@ export function svelteReactivity(): TableReactivityBindings {
       initialValue: T,
       _options?: TableAtomOptions<T>,
     ): Atom<T> => {
-      if (_options?.debugName === optionsStoreDebugName) {
-        return createRuneWritableAtom(initialValue)
-      }
-
       return createAtom(initialValue, {
         compare: _options?.compare,
       })

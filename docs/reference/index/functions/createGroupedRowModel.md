@@ -9,7 +9,7 @@ title: createGroupedRowModel
 function createGroupedRowModel<TFeatures, TData>(): (table) => () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-grouping/createGroupedRowModel.ts:26](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/createGroupedRowModel.ts#L26)
+Defined in: [features/column-grouping/createGroupedRowModel.ts:27](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-grouping/createGroupedRowModel.ts#L27)
 
 Creates a memoized grouped row model factory.
 

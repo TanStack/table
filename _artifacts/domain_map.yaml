@@ -102,7 +102,7 @@ custom_feature_depth_contract:
     - 'assignPrototypeAPIs inside assignCellPrototype for shared cell methods.'
     - 'assignPrototypeAPIs inside assignHeaderPrototype for shared header methods.'
     - 'initColumnInstanceData and initRowInstanceData for per-instance mutable data rather than shared methods.'
-    - 'The table_/column_/row_/cell_/header_ static-name prefixes, self argument difference, optional memoDeps, and absence of per-object assign*APIs utilities.'
+    - 'The table_/column_/row_/cell_/header_ static-name prefixes, `{ fn }` versus `{ computed, compare? }`, prototype self argument, native dependency tracking, and absence of per-object assign*APIs utilities.'
 
 api_discovery_policy:
   rule: 'For exact exports, option types, state shapes, and instance APIs, inspect dist declarations (.d.ts) in the installed package before inventing an API or relying on memory.'

@@ -1,5 +1,5 @@
 import * as goober from 'goober'
-import { createEffect, createSignal } from 'solid-js'
+import { createMemo } from 'solid-js'
 import { createTheme } from '@tanstack/devtools-ui'
 import { tokens } from './tokens'
 
@@ -398,11 +398,21 @@ const stylesFactory = (theme: 'light' | 'dark') => {
 
 export function useStyles() {
   const { theme } = createTheme()
-  const [styles, setStyles] = createSignal(stylesFactory(theme()))
+  const styles = createMemo(() => getStyles(theme()))
+  return styles
+}
 
-  createEffect(() => {
-    setStyles(stylesFactory(theme()))
-  })
+export type TableDevtoolsStyles = ReturnType<typeof stylesFactory>
 
+const stylesByTheme = new Map<'light' | 'dark', TableDevtoolsStyles>()
+
+function getStyles(theme: 'light' | 'dark'): TableDevtoolsStyles {
+  const cached = stylesByTheme.get(theme)
+  if (cached) {
+    return cached
+  }
+
+  const styles = stylesFactory(theme)
+  stylesByTheme.set(theme, styles)
   return styles
 }

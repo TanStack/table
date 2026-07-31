@@ -32,9 +32,10 @@ A table instance has a few state surfaces:
 - `table.baseAtoms` are the internal writable atoms created from the resolved initial state.
 - `table.atoms` are readonly derived atoms exposed per registered state slice.
 - `table.store` is a readonly flat TanStack Store derived by putting all of the registered `table.atoms` together.
+- `table.optionAtoms` contains stable atoms for individual resolved options, plus the readonly `snapshotVersion` atom for observing aggregate option updates. Ordinary option atoms are writable, while `table.options` is a stable readonly view backed by those atoms.
 - `table.state` is Lit-only selected state. It is the value returned from the selector passed as the second argument to `tableController.table(...)`.
 
-The Lit adapter provides `litReactivity()` to the table's `coreReactivityFeature`. Readonly and writable atoms are TanStack Store atoms. `TableController` subscribes to `table.store` and `table.optionsStore`; atom or options changes flowing through those stores call `host.requestUpdate()`.
+The Lit adapter provides `litReactivity()` to the table's `coreReactivityFeature`. Readonly and writable atoms are TanStack Store atoms. `TableController` stages options so table reads during a render see the current values, publishes that option commit from `hostUpdated()`, and subscribes to `table.store` to request host updates for committed state changes.
 
 ### Feature-based State
 
@@ -88,7 +89,7 @@ const tableState = table.store.state
 const pagination = table.store.state.pagination
 ```
 
-These reads are current-value reads. The `TableController` handles host invalidation through its subscriptions to the table store and options store. If the UI needs to stay reactive to table state changes, use `table.state`, `table.subscribe`, or a TanStack Store subscription.
+These reads are current-value reads. The `TableController` handles host invalidation through its table-store subscription. If the UI needs to stay reactive to table state changes, use `table.state`, `table.subscribe`, or a TanStack Store subscription.
 
 #### Reading Reactive State with TableController
 

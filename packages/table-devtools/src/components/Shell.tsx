@@ -25,7 +25,6 @@ export function Shell() {
     setActiveTab,
     selectedTargetId,
     setSelectedTargetId,
-    table,
     targets,
   } = useTableDevtoolsContext()
 
@@ -81,8 +80,8 @@ export function Shell() {
         </div>
 
         <div class={styles().contentArea}>
-          <Show when={table() ?? EMPTY_PANEL_KEY} keyed>
-            {(_table) => (
+          <Show when={selectedTargetId() ?? EMPTY_PANEL_KEY} keyed>
+            {(_selectedTargetId) => (
               <Switch>
                 <Match when={activeTab() === 'features'}>
                   <FeaturesPanel />

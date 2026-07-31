@@ -62,17 +62,14 @@ function signalToWritableAtom<T>(
 /**
  * Creates the table-core reactivity bindings used by the Angular adapter.
  *
- * Table state atoms are backed by TanStack Store atoms. The options store stays
- * framework-native because row-model APIs read `table.options` directly during
- * render. Readonly table atoms bridge Store dependency tracking into Angular
- * computed signals.
+ * Table state and option atoms bridge table-core reads into Angular computed
+ * signals.
  */
 export function angularReactivity(injector: Injector): TableReactivityBindings {
   const ngZone = injector.get(NgZone)
   const subscriptions = new Set<Subscription>()
 
   return {
-    createOptionsStore: true,
     wrapExternalAtoms: true,
     addSubscription: (subscription) => {
       subscriptions.add(subscription)

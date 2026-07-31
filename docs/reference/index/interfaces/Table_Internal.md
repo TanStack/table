@@ -5,7 +5,7 @@ title: Table_Internal
 
 # Interface: Table\_Internal\<TFeatures, TData\>
 
-Defined in: [types/Table.ts:96](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L96)
+Defined in: [types/Table.ts:97](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L97)
 
 Internal broad table shape used by feature implementations.
 
@@ -25,13 +25,13 @@ Internal broad table shape used by feature implementations.
 
 ## Properties
 
-### \_cellInstanceInitFns?
+### \_cellInstanceInitFns
 
 ```ts
-optional _cellInstanceInitFns: <TFeatures, TData, TValue>(cell) => void[];
+_cellInstanceInitFns: <TFeatures, TData, TValue>(cell) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:167](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L167)
+Defined in: [core/table/coreTablesFeature.types.ts:206](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L206)
 
 Cache of the `initCellInstanceData` functions for features that define one.
 
@@ -73,7 +73,7 @@ Omit._cellInstanceInitFns
 optional _cellPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L173)
+Defined in: [core/table/coreTablesFeature.types.ts:210](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L210)
 
 Prototype cache for Cell objects - shared by all cells in this table
 
@@ -83,13 +83,13 @@ Prototype cache for Cell objects - shared by all cells in this table
 
 ***
 
-### \_columnInstanceInitFns?
+### \_columnInstanceInitFns
 
 ```ts
-optional _columnInstanceInitFns: <TFeatures, TData, TValue>(column) => void[];
+_columnInstanceInitFns: <TFeatures, TData, TValue>(column) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L177)
+Defined in: [core/table/coreTablesFeature.types.ts:214](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L214)
 
 Cache of the `initColumnInstanceData` functions for features that define one.
 
@@ -131,7 +131,7 @@ Omit._columnInstanceInitFns
 optional _columnPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:183](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L183)
+Defined in: [core/table/coreTablesFeature.types.ts:220](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L220)
 
 Prototype cache for Column objects - shared by all columns in this table
 
@@ -147,7 +147,7 @@ Prototype cache for Column objects - shared by all columns in this table
 readonly _features: Partial<CoreFeatures> & TFeatures;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L187)
+Defined in: [core/table/coreTablesFeature.types.ts:224](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L224)
 
 The features that are enabled for the table.
 
@@ -159,13 +159,13 @@ Omit._features
 
 ***
 
-### \_headerGroupInstanceInitFns?
+### \_headerGroupInstanceInitFns
 
 ```ts
-optional _headerGroupInstanceInitFns: <TFeatures, TData>(headerGroup) => void[];
+_headerGroupInstanceInitFns: <TFeatures, TData>(headerGroup) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L191)
+Defined in: [core/table/coreTablesFeature.types.ts:228](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L228)
 
 Cache of the `initHeaderGroupInstanceData` functions for features that define one.
 
@@ -197,13 +197,13 @@ Omit._headerGroupInstanceInitFns
 
 ***
 
-### \_headerInstanceInitFns?
+### \_headerInstanceInitFns
 
 ```ts
-optional _headerInstanceInitFns: <TFeatures, TData, TValue>(header) => void[];
+_headerInstanceInitFns: <TFeatures, TData, TValue>(header) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L197)
+Defined in: [core/table/coreTablesFeature.types.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L234)
 
 Cache of the `initHeaderInstanceData` functions for features that define one.
 
@@ -245,7 +245,7 @@ Omit._headerInstanceInitFns
 optional _headerPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L203)
+Defined in: [core/table/coreTablesFeature.types.ts:240](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L240)
 
 Prototype cache for Header objects - shared by all headers in this table
 
@@ -261,7 +261,7 @@ Prototype cache for Header objects - shared by all headers in this table
 readonly _reactivity: TableReactivityBindings;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:163](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L163)
+Defined in: [core/table/coreTablesFeature.types.ts:202](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L202)
 
 Table reactivity bindings for interacting with TanStack Store.
 
@@ -271,13 +271,13 @@ Table reactivity bindings for interacting with TanStack Store.
 
 ***
 
-### \_rowInstanceInitFns?
+### \_rowInstanceInitFns
 
 ```ts
-optional _rowInstanceInitFns: <TFeatures, TData>(row) => void[];
+_rowInstanceInitFns: <TFeatures, TData>(row) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L219)
+Defined in: [core/table/coreTablesFeature.types.ts:256](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L256)
 
 Cache of the `initRowInstanceData` functions for features that define one.
 
@@ -315,7 +315,7 @@ Omit._rowInstanceInitFns
 _rowModelFns: RowModelFns_All<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L107)
+Defined in: [types/Table.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L108)
 
 ***
 
@@ -325,7 +325,7 @@ Defined in: [types/Table.ts:107](https://github.com/TanStack/table/blob/main/pac
 _rowModels: CachedRowModel_All<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L106)
+Defined in: [types/Table.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L107)
 
 ***
 
@@ -335,7 +335,7 @@ Defined in: [types/Table.ts:106](https://github.com/TanStack/table/blob/main/pac
 optional _rowPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L215)
+Defined in: [core/table/coreTablesFeature.types.ts:252](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L252)
 
 Prototype cache for Row objects - shared by all rows in this table
 
@@ -351,7 +351,7 @@ Prototype cache for Row objects - shared by all rows in this table
 atoms: Atoms<TFeatures> & Atoms_All;
 ```
 
-Defined in: [types/Table.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L116)
+Defined in: [types/Table.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L119)
 
 The readonly derived atoms for each `TableState` slice. Each derives from
 its corresponding `baseAtom` plus, optionally, a per-slice external atom or
@@ -371,7 +371,7 @@ Omit.atoms
 baseAtoms: BaseAtoms<TFeatures> & BaseAtoms_All;
 ```
 
-Defined in: [types/Table.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L115)
+Defined in: [types/Table.ts:118](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L118)
 
 The internal writable atoms for each `TableState` slice. This is the library's
 single write surface — all state mutations from features land here.
@@ -1065,116 +1065,37 @@ Table_RowModels.getSortedRowModel
 initialState: ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap> & TableState_All;
 ```
 
-Defined in: [types/Table.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L114)
+Defined in: [types/Table.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L117)
+
+***
+
+### optionAtoms
+
+```ts
+readonly optionAtoms: TableOptionAtoms<TFeatures, TData>;
+```
+
+Defined in: [core/table/coreTablesFeature.types.ts:283](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L283)
+
+Stable atoms for individual resolved option values.
+
+Ordinary options are writable. Construction-static options are readonly.
+
+#### Inherited from
+
+```ts
+Omit.optionAtoms
+```
 
 ***
 
 ### options
 
 ```ts
-options: object & DebugKeysFor<CoreFeatures & TableFeatures> & TableOptions_Core<TFeatures, TData> & Partial<TableOptions_RowAggregation & TableOptions_CellSelection<TFeatures, TData> & TableOptions_ColumnFiltering<TFeatures, TData> & TableOptions_ColumnGrouping & TableOptions_ColumnOrdering & TableOptions_ColumnPinning & TableOptions_ColumnResizing & TableOptions_ColumnSizing & TableOptions_ColumnVisibility & TableOptions_GlobalFiltering<TFeatures, TData> & TableOptions_RowExpanding<TFeatures, TData> & TableOptions_RowPagination & TableOptions_RowPinning<TFeatures, TData> & TableOptions_RowSelection<TFeatures, TData> & TableOptions_RowSorting> & object;
+options: TableOptionsLive<TFeatures, TData> & Readonly<TableOptions_Core<TFeatures, TData> & Partial<TableOptions_RowAggregation & TableOptions_CellSelection<TFeatures, TData> & TableOptions_ColumnFiltering<TFeatures, TData> & TableOptions_ColumnGrouping & TableOptions_ColumnOrdering & TableOptions_ColumnPinning & TableOptions_ColumnResizing & TableOptions_ColumnSizing & TableOptions_ColumnVisibility & TableOptions_GlobalFiltering<TFeatures, TData> & TableOptions_RowExpanding<TFeatures, TData> & TableOptions_RowPagination & TableOptions_RowPinning<TFeatures, TData> & TableOptions_RowSelection<TFeatures, TData> & TableOptions_RowSorting> & object>;
 ```
 
-Defined in: [types/Table.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L108)
-
-#### Type Declaration
-
-##### debugAll?
-
-```ts
-optional debugAll: boolean;
-```
-
-##### debugCache?
-
-```ts
-optional debugCache: boolean;
-```
-
-##### debugCells?
-
-```ts
-optional debugCells: boolean;
-```
-
-##### debugColumns?
-
-```ts
-optional debugColumns: boolean;
-```
-
-##### debugHeaders?
-
-```ts
-optional debugHeaders: boolean;
-```
-
-##### debugRows?
-
-```ts
-optional debugRows: boolean;
-```
-
-##### debugTable?
-
-```ts
-optional debugTable: boolean;
-```
-
-#### Type Declaration
-
-##### atoms?
-
-```ts
-optional atoms: Partial<{
-  cellSelection?: Atom<CellSelectionState>;
-  columnFilters?: Atom<ColumnFiltersState>;
-  columnOrder?: Atom<ColumnOrderState>;
-  columnPinning?: Atom<ColumnPinningState>;
-  columnResizing?: Atom<columnResizingState>;
-  columnSizing?: Atom<ColumnSizingState>;
-  columnVisibility?: Atom<ColumnVisibilityState>;
-  expanded?: Atom<ExpandedState>;
-  globalFilter?: Atom<any>;
-  grouping?: Atom<GroupingState>;
-  pagination?: Atom<PaginationState>;
-  rowPinning?: Atom<RowPinningState>;
-  rowSelection?: Atom<RowSelectionState>;
-  sorting?: Atom<SortingState>;
-}>;
-```
-
-##### initialState?
-
-```ts
-optional initialState: TableState_All;
-```
-
-##### state?
-
-```ts
-optional state: TableState_All;
-```
-
-***
-
-### optionsStore?
-
-```ts
-readonly optional optionsStore: Atom<TableOptions<TFeatures, TData>>;
-```
-
-Defined in: [core/table/coreTablesFeature.types.ts:244](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L244)
-
-Writable atom for table options. Only created when `createOptionsStore` is
-true on the active core reactivity bindings. Adapters that opt out keep
-options as plain resolved data instead of backing them with an atom.
-
-#### Inherited from
-
-```ts
-Omit.optionsStore
-```
+Defined in: [types/Table.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L109)
 
 ***
 
@@ -1184,7 +1105,7 @@ Omit.optionsStore
 reset: () => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:264](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L264)
+Defined in: [core/table/coreTablesFeature.types.ts:303](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L303)
 
 Resets the table's internal base atoms to `table.initialState`.
 
@@ -1211,7 +1132,7 @@ Omit.reset
 setOptions: (newOptions) => void;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L269)
+Defined in: [core/table/coreTablesFeature.types.ts:308](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L308)
 
 Updates the table options by applying a value or updater to the current
 resolved options and then merging them through `options.mergeOptions`.
@@ -1240,4 +1161,4 @@ Omit.setOptions
 store: ReadonlyStore<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>> & ReadonlyStore<TableState_All>;
 ```
 
-Defined in: [types/Table.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L117)
+Defined in: [types/Table.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L120)

@@ -19,8 +19,7 @@ export const coreCellsFeature: TableFeature = {
         fn: (cell) => cell_renderValue(cell),
       },
       cell_getContext: {
-        fn: (cell) => cell_getContext(cell),
-        memoDeps: (cell) => [cell],
+        computed: (cell) => cell_getContext(cell),
       },
     })
   },

@@ -105,11 +105,12 @@ export function injectTable<
       // Explicit type arguments skip generic inference from the spread object
       // (a type-check hot spot); the spread only adds the angular reactivity
       // binding to `features`.
+      const initialOptions = options()
       const table = constructTable<TFeatures, TData>({
-        ...options(),
+        ...initialOptions,
         features: {
           coreReactivityFeature: angularReactivity(injector),
-          ...options().features,
+          ...initialOptions.features,
         },
       })
 

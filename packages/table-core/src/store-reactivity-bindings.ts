@@ -1,9 +1,10 @@
 import { batch, createAtom } from '@tanstack/store'
+import { createStableStoreReadonlyAtom } from './core/reactivity/createStableStoreReadonlyAtom'
 import type { TableReactivityBindings } from './core/reactivity/coreReactivityFeature.types'
 
 /**
- * TanStack Store–based reactivity for vanilla / non-framework use of `constructTable`,
- * with `createOptionsStore: true` so `table.optionsStore` is available for subscriptions.
+ * TanStack Store–based reactivity for vanilla / non-framework use of
+ * `constructTable`.
  *
  * @example
  * ```ts
@@ -18,7 +19,6 @@ import type { TableReactivityBindings } from './core/reactivity/coreReactivityFe
  */
 export function storeReactivityBindings(): TableReactivityBindings {
   return {
-    createOptionsStore: true,
     wrapExternalAtoms: false,
     addSubscription: () => {
       throw new Error(
@@ -34,7 +34,7 @@ export function storeReactivityBindings(): TableReactivityBindings {
     schedule: (fn) => queueMicrotask(fn),
     untrack: (fn) => fn(),
     createReadonlyAtom: (fn, options) => {
-      return createAtom(() => fn(), {
+      return createStableStoreReadonlyAtom(createAtom, fn, {
         compare: options?.compare,
       })
     },

@@ -1,7 +1,6 @@
 import { describe, expect, it, vi } from 'vitest'
 import {
   aggregationFns,
-  rowAggregationFeature,
   columnFilteringFeature,
   columnGroupingFeature,
   constructTable,
@@ -9,6 +8,7 @@ import {
   createGroupedRowModel,
   createSortedRowModel,
   filterFns,
+  rowAggregationFeature,
   rowSelectionFeature,
   rowSortingFeature,
   sortFns,
@@ -620,6 +620,52 @@ describe('rowSelectionFeature', () => {
       expect(enableRowSelection.mock.calls.length).toBeGreaterThan(
         callsAfterFirst,
       )
+    })
+
+    it('invalidates recursive selection flags when subRows are replaced', () => {
+      const data = generateTestData(1, 2)
+      const table = constructTable<typeof features, Person>({
+        features,
+        data,
+        columns: generateColumnDefs(data),
+        getSubRows: (originalRow) => originalRow.subRows,
+        initialState: {
+          rowSelection: { '0.0': true },
+        },
+      })
+      const parent = table.getRow('0')
+
+      expect(parent.getIsSomeSelected()).toBe(true)
+      expect(parent.getIsAllSubRowsSelected()).toBe(false)
+
+      parent.subRows = [parent.subRows[0]!]
+
+      expect(parent.getIsSomeSelected()).toBe(false)
+      expect(parent.getIsAllSubRowsSelected()).toBe(true)
+    })
+
+    it('invalidates the selected row model when subRows are replaced', () => {
+      const data = generateTestData(1, 2)
+      const table = constructTable<typeof features, Person>({
+        features,
+        data,
+        columns: generateColumnDefs(data),
+        getSubRows: (originalRow) => originalRow.subRows,
+        initialState: {
+          rowSelection: { '0': true, '0.0': true },
+        },
+      })
+      const parent = table.getRow('0')
+      const firstSelected = table.getSelectedRowModel()
+
+      expect(firstSelected.flatRows.map((row) => row.id)).toEqual(['0', '0.0'])
+
+      parent.subRows = []
+
+      const nextSelected = table.getSelectedRowModel()
+      expect(nextSelected).not.toBe(firstSelected)
+      expect(nextSelected.flatRows.map((row) => row.id)).toEqual(['0'])
+      expect(nextSelected.rows[0]!.subRows).toEqual([])
     })
   })
 

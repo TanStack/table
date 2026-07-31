@@ -9,7 +9,7 @@ title: column_getSortIndex
 function column_getSortIndex<TFeatures, TData, TValue>(column): number;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:450](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L450)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:455](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L455)
 
 Finds this column's position in the ordered `state.sorting` array.
 

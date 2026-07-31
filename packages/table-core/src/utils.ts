@@ -1,7 +1,8 @@
 import type { Table_Internal } from './types/Table'
-import type { NoInfer, RowData, Updater } from './types/type-utils'
+import type { RowData, Updater } from './types/type-utils'
 import type { TableFeatures } from './types/TableFeatures'
 import type { TableState, TableState_All } from './types/TableState'
+import type { ReadonlyAtom } from '@tanstack/store'
 
 /**
  * Applies a TanStack updater to a value.
@@ -149,70 +150,13 @@ export function flattenBy<TNode>(
   return flat
 }
 
-interface MemoOptions<TDeps extends ReadonlyArray<any>, TDepArgs, TResult> {
-  fn: (...args: NoInfer<TDeps>) => TResult
-  memoDeps?: (depArgs?: TDepArgs) => [...TDeps] | undefined
-  onAfterCompare?: (depsChanged: boolean) => void
-  onAfterUpdate?: (result: TResult) => void
-  onBeforeCompare?: () => void
-  onBeforeUpdate?: () => void
-}
-
-/**
- * Creates a dependency-tracked memoized function for table internals.
- *
- * The memo recomputes only when its dependency tuple changes and can emit debug timing information.
- */
-export const memo = <TDeps extends ReadonlyArray<any>, TDepArgs, TResult>({
-  fn,
-  memoDeps,
-  onAfterCompare,
-  onAfterUpdate,
-  onBeforeCompare,
-  onBeforeUpdate,
-}: MemoOptions<TDeps, TDepArgs, TResult>): ((
-  depArgs?: TDepArgs,
-) => TResult) => {
-  let deps: Array<any> | undefined = []
-  let result: TResult | undefined
-
-  const memoizedFn = (depArgs?: TDepArgs): TResult => {
-    onBeforeCompare?.()
-    const newDeps = memoDeps?.(depArgs)
-    let depsChanged = !newDeps || newDeps.length !== deps?.length
-    if (!depsChanged && newDeps) {
-      for (let i = 0; i < newDeps.length; i++) {
-        if (newDeps[i] !== deps![i]) {
-          depsChanged = true
-          break
-        }
-      }
-    }
-    onAfterCompare?.(depsChanged)
-
-    if (!depsChanged) {
-      return result!
-    }
-
-    deps = newDeps
-
-    onBeforeUpdate?.()
-    result = fn(...(newDeps ?? ([] as any)))
-    onAfterUpdate?.(result)
-
-    return result
-  }
-
-  return memoizedFn
-}
-
 interface TableMemoOptions<
   TFeatures extends TableFeatures,
-  TDeps extends ReadonlyArray<any>,
-  TDepArgs,
   TResult,
-> extends MemoOptions<TDeps, TDepArgs, TResult> {
+> {
+  compare?: (previous: TResult, next: TResult) => boolean
   feature?: keyof TFeatures & string
+  fn: () => TResult
   fnName: string
   objectId?: string
   onAfterUpdate?: () => void
@@ -230,144 +174,167 @@ const pad = (str: number | string, num: number) => {
 /**
  * Creates a table-aware memoized function.
  *
- * This wraps `memo` with table debug options and feature metadata so row models and derived APIs can share consistent diagnostics.
+ * The native readonly atom is created on the first public read so eager
+ * framework computeds cannot evaluate during incomplete table construction.
  */
 export function tableMemo<
   TFeatures extends TableFeatures,
-  TDeps extends ReadonlyArray<any>,
-  TDepArgs,
   TResult,
 >({
+  compare,
   feature,
+  fn,
   fnName,
   objectId,
   onAfterUpdate,
   table,
-  ...memoOptions
-}: TableMemoOptions<TFeatures, TDeps, TDepArgs, TResult>) {
-  let beforeCompareTime: number
-  let afterCompareTime: number
-  let startCalcTime: number
-  let endCalcTime: number
-  let runCount = 0
-  let debug: boolean | undefined
-  let debugCache: boolean | undefined
+}: TableMemoOptions<TFeatures, TResult>): () => TResult {
+  let atom: ReadonlyAtom<TResult> | undefined
+  let evaluationCount = 0
+  let hasStableResult = false
+  let stableResult: TResult
+  let debug = false
+  let debugCache = false
+  let debugInitialized = false
+  const isDevelopment = process.env.NODE_ENV === 'development'
 
-  if (process.env.NODE_ENV === 'development') {
-    const { debugAll } = table.options
-    const { parentName } = getFunctionNameInfo(fnName, '.')
+  const initializeDebug = () => {
+    if (!isDevelopment || debugInitialized) {
+      return
+    }
+    debugInitialized = true
 
-    const debugByParent =
-      // @ts-expect-error
-      table.options[
-        `debug${(parentName != 'table' ? parentName + 's' : parentName).replace(
-          parentName,
-          parentName.charAt(0).toUpperCase() + parentName.slice(1),
-        )}`
-      ]
-    const debugByFeature = feature
-      ? // @ts-expect-error
-        table.options[
-          `debug${feature.charAt(0).toUpperCase() + feature.slice(1)}`
-        ]
-      : false
+    table._reactivity.untrack(() => {
+      const options = table.options as unknown as Record<
+        PropertyKey,
+        unknown
+      >
+      const { parentName } = getFunctionNameInfo(fnName, '.')
+      const debugParent = (
+        parentName !== 'table' ? `${parentName}s` : parentName
+      ).replace(
+        parentName,
+        parentName.charAt(0).toUpperCase() + parentName.slice(1),
+      )
+      const debugByParent = options[`debug${debugParent}`]
+      const debugByFeature = feature
+        ? options[
+            `debug${feature.charAt(0).toUpperCase() + feature.slice(1)}`
+          ]
+        : false
 
-    debug = debugAll || debugByParent || debugByFeature
+      debug = Boolean(options.debugAll || debugByParent || debugByFeature)
+      debugCache = Boolean(options.debugCache)
+    })
   }
 
-  function logTime(time: number, depsChanged: boolean) {
-    const runType =
-      runCount === 0
+  function logTime(time: number, evaluated: boolean) {
+    const runType = evaluated
+      ? evaluationCount === 1
         ? '(1st run)'
-        : depsChanged
-          ? '(rerun #' + runCount + ')'
-          : '(cache)'
-    runCount++
+        : `(rerun #${evaluationCount - 1})`
+      : '(cache)'
 
     console.groupCollapsed(
       `%c⏱ ${pad(`${time.toFixed(1)} ms`, 12)} %c${runType}%c ${fnName}%c ${objectId ? `(${fnName.split('.')[0]}Id: ${objectId})` : ''}`,
       `font-size: .6rem; font-weight: bold; ${
-        depsChanged
+        evaluated
           ? `color: hsl(
         ${Math.max(0, Math.min(120 - Math.log10(time) * 60, 120))}deg 100% 31%);`
           : ''
       } `,
-      `color: ${runCount < 2 ? '#FF00FF' : '#FF1493'}`,
+      `color: ${evaluationCount < 2 ? '#FF00FF' : '#FF1493'}`,
       'color: #666',
       'color: #87CEEB',
     )
     console.info({
       feature,
       state: table.store.state,
-      deps: memoOptions.memoDeps?.toString(),
     })
     console.trace()
     console.groupEnd()
   }
 
-  const onAfterUpdateHandler = () => {
-    if (!onAfterUpdate) {
-      return
-    }
+  const createAtom = () => {
+    initializeDebug()
+    atom = table._reactivity.createReadonlyAtom(
+      () => {
+        const startedAt = isDevelopment && debug ? performance.now() : 0
+        let result: TResult
+        try {
+          const nextResult = fn()
+          result =
+            hasStableResult && compare?.(stableResult, nextResult)
+              ? stableResult
+              : nextResult
+        } catch (error) {
+          // A few native computed implementations clear their dirty flag
+          // even when evaluation or comparison throws. Drop this instance
+          // so the next public read can retry instead of returning a stale
+          // snapshot.
+          atom = undefined
+          throw error
+        }
 
-    const { schedule, untrack } = table._reactivity
-    schedule(() => untrack(() => onAfterUpdate()))
+        stableResult = result
+        hasStableResult = true
+        if (isDevelopment) {
+          evaluationCount++
+        }
+
+        if (isDevelopment && debug) {
+          const executionTime =
+            Math.round((performance.now() - startedAt) * 100) / 100
+          table._reactivity.untrack(() => logTime(executionTime, true))
+        }
+
+        if (onAfterUpdate) {
+          const { schedule, untrack } = table._reactivity
+          schedule(() => untrack(onAfterUpdate))
+        }
+
+        return result
+      },
+      {
+        debugName: fnName,
+        mode: 'memo',
+      },
+    )
+    return atom
   }
 
-  const debugOptions =
-    process.env.NODE_ENV === 'development'
-      ? {
-          onBeforeCompare: () => {
-            if (debugCache) {
-              beforeCompareTime = performance.now()
-            }
-          },
-          onAfterCompare: (depsChanged: boolean) => {
-            if (debugCache) {
-              afterCompareTime = performance.now()
-              const compareTime =
-                Math.round((afterCompareTime - beforeCompareTime) * 100) / 100
-              if (!depsChanged) {
-                logTime(compareTime, depsChanged)
-              }
-            }
-          },
-          onBeforeUpdate: () => {
-            if (debug) {
-              startCalcTime = performance.now()
-            }
-          },
-          onAfterUpdate: () => {
-            if (debug) {
-              endCalcTime = performance.now()
-              const executionTime =
-                Math.round((endCalcTime - startCalcTime) * 100) / 100
-              logTime(executionTime, true)
-            }
-            onAfterUpdateHandler()
-          },
-        }
-      : {
-          onAfterUpdate: () => {
-            onAfterUpdateHandler()
-          },
-        }
+  if (!isDevelopment) {
+    return () => (atom ?? createAtom()).get()
+  }
 
-  return memo({
-    ...memoOptions,
-    ...debugOptions,
-  })
+  return () => {
+    const startedAt = debugCache ? performance.now() : 0
+    const beforeEvaluation = evaluationCount
+    const result = (atom ?? createAtom()).get()
+
+    if (debugCache && evaluationCount === beforeEvaluation) {
+      const cacheTime =
+        Math.round((performance.now() - startedAt) * 100) / 100
+      table._reactivity.untrack(() => logTime(cacheTime, false))
+    }
+
+    return result
+  }
 }
 
-export interface API<_TDeps extends ReadonlyArray<any>, _TDepArgs> {
-  fn: (...args: any) => any
-  memoDeps?: (depArgs?: any) => [...any] | undefined
-}
+export type API =
+  | {
+      compare?: (previous: any, next: any) => boolean
+      computed: () => any
+      fn?: never
+    }
+  | {
+      compare?: never
+      computed?: never
+      fn: (...args: Array<any>) => any
+    }
 
-export type APIObject<TDeps extends ReadonlyArray<any>, TDepArgs> = Record<
-  string,
-  API<TDeps, TDepArgs>
->
+export type APIObject = Record<string, API>
 
 /**
  * Assumes that a function name is in the format of `parentName_fnKey` and returns the `fnKey` and `fnName` in the format of `parentName.fnKey`.
@@ -392,37 +359,40 @@ export function getFunctionNameInfo(
 export function assignTableAPIs<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TDeps extends ReadonlyArray<any>,
-  TDepArgs,
 >(
   feature: keyof TFeatures & string,
   table: Table_Internal<TFeatures, TData>,
-  apis: APIObject<TDeps, NoInfer<TDepArgs>>,
+  apis: APIObject,
 ): void {
-  for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {
+  for (const [staticFnName, api] of Object.entries(apis)) {
     const { fnKey, fnName } = getFunctionNameInfo(staticFnName)
 
-    ;(table as Record<string, any>)[fnKey] = memoDeps
-      ? tableMemo({
-          memoDeps,
-          fn,
-          fnName,
-          table,
-          feature,
-        })
-      : fn
+    ;(table as Record<string, any>)[fnKey] =
+      'computed' in api && api.computed
+        ? tableMemo({
+            compare: api.compare,
+            fn: api.computed,
+            fnName,
+            table,
+            feature,
+          })
+        : api.fn
   }
 }
 
-export interface PrototypeAPI<_TDeps extends ReadonlyArray<any>, _TDepArgs> {
-  fn: (self: any, ...args: any) => any
-  memoDeps?: (self: any, depArgs?: any) => [...any] | undefined
-}
+export type PrototypeAPI =
+  | {
+      compare?: (previous: any, next: any) => boolean
+      computed: (self: any) => any
+      fn?: never
+    }
+  | {
+      compare?: never
+      computed?: never
+      fn: (self: any, ...args: Array<any>) => any
+    }
 
-export type PrototypeAPIObject<
-  TDeps extends ReadonlyArray<any>,
-  TDepArgs,
-> = Record<string, PrototypeAPI<TDeps, TDepArgs>>
+export type PrototypeAPIObject = Record<string, PrototypeAPI>
 
 /**
  * Assigns API methods to a prototype object for memory-efficient method sharing.
@@ -434,41 +404,39 @@ export type PrototypeAPIObject<
 export function assignPrototypeAPIs<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TDeps extends ReadonlyArray<any>,
-  TDepArgs,
 >(
   feature: keyof TFeatures & string,
   prototype: Record<string, any>,
   table: Table_Internal<TFeatures, TData>,
-  apis: PrototypeAPIObject<TDeps, NoInfer<TDepArgs>>,
+  apis: PrototypeAPIObject,
 ): void {
-  for (const [staticFnName, { fn, memoDeps }] of Object.entries(apis)) {
+  for (const [staticFnName, api] of Object.entries(apis)) {
     const { fnKey, fnName } = getFunctionNameInfo(staticFnName)
 
-    if (memoDeps) {
+    if ('computed' in api && api.computed) {
       // For memoized methods, create a function that lazily initializes
       // the memo on first access and stores it on the instance
       const memoKey = `_memo_${fnKey}`
 
-      prototype[fnKey] = function (this: any, ...args: Array<any>) {
+      prototype[fnKey] = function (this: any) {
         // Lazily create memo on first access for this instance
         if (!this[memoKey]) {
           const self = this
           this[memoKey] = tableMemo({
-            memoDeps: (depArgs) => memoDeps(self, depArgs),
-            fn: (...deps) => fn(self, ...deps),
+            compare: api.compare,
+            fn: () => api.computed(self),
             fnName,
             objectId: self.id,
             table,
             feature,
           })
         }
-        return this[memoKey](...args)
+        return this[memoKey]()
       }
     } else {
       // Non-memoized methods just call the static function with `this`
       prototype[fnKey] = function (this: any, ...args: Array<any>) {
-        return fn(this, ...args)
+        return api.fn(this, ...args)
       }
     }
   }

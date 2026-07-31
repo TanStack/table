@@ -6,14 +6,10 @@ import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { NoTableConnected } from './NoTableConnected'
 import { ThreeWayResizableSplit } from './ThreeWayResizableSplit'
+import type { Accessor } from 'solid-js'
+import type { TableDevtoolsStyles } from '../styles/use-styles'
 
 type AtomSource = 'external-atom' | 'external-state' | 'internal'
-
-interface AtomSlice {
-  key: string
-  value: unknown
-  source: AtomSource
-}
 
 export function StatePanel() {
   const styles = useStyles()
@@ -22,75 +18,60 @@ export function StatePanel() {
   const [storeCopied, setStoreCopied] = createSignal(false)
   const [pasteError, setPasteError] = createSignal<string | null>(null)
 
-  // Subscribe to both stores so the panel re-renders when either the table
-  // state or the options (e.g. options.atoms / options.state) change.
   const tableState = useTableStore(
     () => table()?.store,
     (state) => state,
   )
-  const tableOptions = useTableStore(
-    () => {
-      const tableInstance = table()
-      return tableInstance?.optionsStore ?? tableInstance?.store
-    },
-    () => table()?.options as unknown,
+  const optionsVersion = useTableStore(
+    () => table()?.optionAtoms.snapshotVersion,
+    (version) => version,
   )
 
   const initialState = createMemo((): unknown => {
     const tableInstance = table()
     if (!tableInstance) return undefined
 
-    tableState()
-    tableOptions()
-
     return tableInstance.initialState
   })
 
-  const storeState = createMemo((): unknown => {
+  const storeState = createMemo((): Record<string, unknown> | undefined => {
     const tableInstance = table()
     if (!tableInstance) return undefined
 
-    tableState()
-    tableOptions()
-
-    return tableInstance.store.state
+    return (tableState() ?? tableInstance.store.get()) as Record<
+      string,
+      unknown
+    >
   })
 
-  const atomSlices = createMemo((): Array<AtomSlice> => {
+  const tableOptions = createMemo<Record<string, unknown> | undefined>(() => {
     const tableInstance = table()
-    if (!tableInstance) return []
+    if (!tableInstance) return undefined
 
-    // Touch subscriptions so this recomputes on state or option change.
-    tableState()
-    tableOptions()
+    optionsVersion()
+    return tableInstance.options
+  })
 
-    const options = tableInstance.options as unknown as Record<string, unknown>
+  const atomKeys = createMemo(() => Object.keys(storeState() ?? {}))
+
+  const getAtomSource = (key: string): AtomSource => {
+    const options = tableOptions() ?? {}
     const externalAtoms =
       (options.atoms as Record<string, unknown> | undefined) ?? {}
     const externalState =
       (options.state as Record<string, unknown> | undefined) ?? {}
-    const storeState = tableInstance.store.state as Record<string, unknown>
+    const hasExternalAtom = externalAtoms[key] != null
+    const hasExternalState =
+      !hasExternalAtom &&
+      key in externalState &&
+      externalState[key] !== undefined
 
-    return Object.keys(storeState).map((key) => {
-      const hasExternalAtom = externalAtoms[key] != null
-      const hasExternalState =
-        !hasExternalAtom &&
-        key in externalState &&
-        externalState[key] !== undefined
-
-      const source: AtomSource = hasExternalAtom
-        ? 'external-atom'
-        : hasExternalState
-          ? 'external-state'
-          : 'internal'
-
-      return {
-        key,
-        value: storeState[key],
-        source,
-      }
-    })
-  })
+    return hasExternalAtom
+      ? 'external-atom'
+      : hasExternalState
+        ? 'external-state'
+        : 'internal'
+  }
 
   const copyToClipboard = async (
     value: unknown,
@@ -177,8 +158,15 @@ export function StatePanel() {
                   Reset to initialState
                 </button>
               </div>
-              <For each={atomSlices()}>
-                {(slice) => <AtomRow slice={slice} />}
+              <For each={atomKeys()}>
+                {(key) => (
+                  <AtomRow
+                    atomKey={key}
+                    source={() => getAtomSource(key)}
+                    styles={styles}
+                    value={() => storeState()?.[key]}
+                  />
+                )}
               </For>
             </>
           }
@@ -213,11 +201,14 @@ export function StatePanel() {
   )
 }
 
-function AtomRow(props: { slice: AtomSlice }) {
-  const styles = useStyles()
-
+function AtomRow(props: {
+  atomKey: string
+  source: Accessor<AtomSource>
+  styles: Accessor<TableDevtoolsStyles>
+  value: Accessor<unknown>
+}) {
   const badgeLabel = () => {
-    switch (props.slice.source) {
+    switch (props.source()) {
       case 'external-atom':
         return 'External Atom'
       case 'external-state':
@@ -228,25 +219,25 @@ function AtomRow(props: { slice: AtomSlice }) {
   }
 
   const badgeClass = () => {
-    const base = styles().atomBadge
-    switch (props.slice.source) {
+    const base = props.styles().atomBadge
+    switch (props.source()) {
       case 'external-atom':
-        return `${base} ${styles().atomBadgeExternalAtom}`
+        return `${base} ${props.styles().atomBadgeExternalAtom}`
       case 'external-state':
-        return `${base} ${styles().atomBadgeExternalState}`
+        return `${base} ${props.styles().atomBadgeExternalState}`
       case 'internal':
-        return `${base} ${styles().atomBadgeInternal}`
+        return `${base} ${props.styles().atomBadgeInternal}`
     }
   }
 
   return (
-    <div class={styles().atomRow}>
-      <div class={styles().atomRowHeader}>
-        <span class={styles().atomKey}>{props.slice.key}</span>
+    <div class={props.styles().atomRow}>
+      <div class={props.styles().atomRowHeader}>
+        <span class={props.styles().atomKey}>{props.atomKey}</span>
         <span class={badgeClass()}>{badgeLabel()}</span>
       </div>
-      <div class={styles().atomValue}>
-        <JsonTree copyable value={props.slice.value} />
+      <div class={props.styles().atomValue}>
+        <JsonTree copyable value={props.value()} />
       </div>
     </div>
   )

@@ -130,7 +130,7 @@ describe('Preact adapter reactivity and lifecycle', () => {
     )
   })
 
-  test('updates the paginated row model without invalidating the core row model', () => {
+  test('updates pagination with broad render-phase memo invalidation', () => {
     const data = Array.from({ length: 10 }, (_, index) => ({
       id: String(index),
       title: `Title ${index}`,
@@ -188,7 +188,10 @@ describe('Preact adapter reactivity and lifecycle', () => {
     expect(text('Page row IDs')).toBe('0,1,2')
     expect(coreRowModelCaptor).toHaveBeenCalledTimes(2)
     expect(rowModelCaptor).toHaveBeenCalledTimes(2)
-    expect(coreRowModelCaptor.mock.calls[0]![0]).toBe(
+    // Render-phase adapters intentionally rotate native memo atoms for any
+    // materially changed staged options source. Per-option revisions/read
+    // collectors are deliberately not part of this first implementation.
+    expect(coreRowModelCaptor.mock.calls[0]![0]).not.toBe(
       coreRowModelCaptor.mock.calls[1]![0],
     )
     expect(rowModelCaptor.mock.calls[0]![0].rows).toHaveLength(5)

@@ -226,7 +226,7 @@ export const features = tableFeatures({ densityFeature })
 - Table API `fn` receives declared arguments. Prototype API `fn` receives the current object first.
 - Initialize table-owned mutable data in `initTableInstanceData`, not `constructTableAPIs`; all feature data is initialized before any table API is assigned.
 - Clear transient table-owned data in `resetTableInstanceData`. Reset state slices through atoms/updaters, and do not expect this hook to reset externally controlled state.
-- Add `memoDeps` only for a genuinely derived method. Prototype methods are shared and must not close over per-object mutable data.
+- Register a zero-argument derived method as `{ computed: () => result, compare? }` and read its atoms/options inside the computation so native reactivity tracks them. Prototype computed entries receive the current object as `self`. Keep parameterized methods as `{ fn }`; shared prototype methods must not close over per-object mutable data.
 - There are no `assignColumnAPIs`, `assignRowAPIs`, `assignCellAPIs`, or `assignHeaderAPIs`; use `assignPrototypeAPIs` in the matching hook.
 - Do not mutate constructed instances ad hoc or use a feature for renderer-only callbacks that belong in meta.
 

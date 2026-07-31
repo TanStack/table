@@ -16,12 +16,16 @@ export const coreHeadersFeature: TableFeature = {
   assignHeaderPrototype: (prototype, table) => {
     assignPrototypeAPIs('coreHeadersFeature', prototype, table, {
       header_getLeafHeaders: {
-        fn: (header) => header_getLeafHeaders(header),
-        memoDeps: (header) => [header.column.table.options.columns],
+        computed: (header) => {
+          void header.column.table.options.columns
+          return header_getLeafHeaders(header)
+        },
       },
       header_getContext: {
-        fn: (header) => header_getContext(header),
-        memoDeps: (header) => [header.column.table.options.columns],
+        computed: (header) => {
+          void header.column.table.options.columns
+          return header_getContext(header)
+        },
       },
     })
   },
@@ -29,27 +33,16 @@ export const coreHeadersFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('coreHeadersFeature', table, {
       table_getHeaderGroups: {
-        fn: () => table_getHeaderGroups(table),
-        memoDeps: () => [
-          table.options.columns,
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getHeaderGroups(table),
       },
       table_getFooterGroups: {
-        fn: () => table_getFooterGroups(table),
-        memoDeps: () => [table.getHeaderGroups()],
+        computed: () => table_getFooterGroups(table),
       },
       table_getFlatHeaders: {
-        fn: () => table_getFlatHeaders(table),
-        memoDeps: () => [table.getHeaderGroups()],
+        computed: () => table_getFlatHeaders(table),
       },
       table_getLeafHeaders: {
-        fn: () => table_getLeafHeaders(table),
-        memoDeps: () => [table.getHeaderGroups()],
+        computed: () => table_getLeafHeaders(table),
       },
     })
   },

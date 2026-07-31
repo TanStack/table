@@ -1,5 +1,9 @@
 import { tableMemo } from '../utils'
-import { getTableWorkerBridge, syncTableWorker } from './createTableWorker'
+import {
+  getTableWorkerBridge,
+  getTableWorkerStageVersion,
+  syncTableWorker,
+} from './createTableWorker'
 import { rebuildRowModel } from './rebuildRowModel'
 import { tableWorkerPipeline } from './tableWorkerProtocol'
 import type { RowModel } from '../core/row-models/coreRowModelsFeature.types'
@@ -69,14 +73,13 @@ export function createWorkerRowModel(
     const memoized = tableMemo({
       table,
       fnName: `table.get${capitalize(stage)}RowModel`,
-      // The per-stage version bumps only when this stage's payload actually
-      // changed, so stages the worker reported as `unchanged` skip the O(n)
-      // rebuild entirely (the re-render itself rides the state slice bump).
-      memoDeps: () => [
-        table.getCoreRowModel(),
-        getTableWorkerBridge(tableWorker, table).stageVersions[stage],
-      ],
       fn: () => {
+        // The per-stage atom bumps only when this stage's payload actually
+        // changed, so stages the worker reported as `unchanged` skip the O(n)
+        // rebuild entirely (the re-render itself rides the state slice bump).
+        table.getCoreRowModel()
+        getTableWorkerStageVersion(tableWorker, table, stage)
+
         const bridge = getTableWorkerBridge(tableWorker, table)
         const payload = bridge.results[stage]
         if (!payload) {

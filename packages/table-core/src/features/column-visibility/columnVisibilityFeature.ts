@@ -42,12 +42,7 @@ export const columnVisibilityFeature: TableFeature = {
   assignColumnPrototype: (prototype, table) => {
     assignPrototypeAPIs('columnVisibilityFeature', prototype, table, {
       column_getIsVisible: {
-        fn: (column) => column_getIsVisible(column),
-        memoDeps: (column) => [
-          table.options.columns,
-          table.atoms.columnVisibility?.get(),
-          column.columns,
-        ],
+        computed: (column) => column_getIsVisible(column),
       },
       column_getCanHide: {
         fn: (column) => column_getCanHide(column),
@@ -64,19 +59,10 @@ export const columnVisibilityFeature: TableFeature = {
   assignRowPrototype: (prototype, table) => {
     assignPrototypeAPIs('columnVisibilityFeature', prototype, table, {
       row_getVisibleCells: {
-        fn: (row) => row_getVisibleCells(row),
-        memoDeps: (row) => [
-          row.getAllCells(),
-          table.atoms.columnPinning?.get(),
-          table.atoms.columnVisibility?.get(),
-        ],
+        computed: (row) => row_getVisibleCells(row),
       },
       row_getVisibleCellsByColumnId: {
-        fn: (row) => row_getVisibleCellsByColumnId(row),
-        memoDeps: (row) => [
-          row.getAllCells(),
-          table.atoms.columnVisibility?.get(),
-        ],
+        computed: (row) => row_getVisibleCellsByColumnId(row),
       },
     })
   },
@@ -84,24 +70,10 @@ export const columnVisibilityFeature: TableFeature = {
   constructTableAPIs: (table) => {
     assignTableAPIs('columnVisibilityFeature', table, {
       table_getVisibleFlatColumns: {
-        fn: () => table_getVisibleFlatColumns(table),
-        memoDeps: () => [
-          table.atoms.columnVisibility?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.columns,
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getVisibleFlatColumns(table),
       },
       table_getVisibleLeafColumns: {
-        fn: () => table_getVisibleLeafColumns(table),
-        memoDeps: () => [
-          table.atoms.columnVisibility?.get(),
-          table.atoms.columnOrder?.get(),
-          table.atoms.grouping?.get(),
-          table.options.columns,
-          table.options.groupedColumnMode,
-        ],
+        computed: () => table_getVisibleLeafColumns(table),
       },
       table_setColumnVisibility: {
         fn: (updater) => table_setColumnVisibility(table, updater),

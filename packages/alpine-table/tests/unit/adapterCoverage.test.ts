@@ -225,11 +225,21 @@ describe('Alpine adapter reactivity', () => {
       },
     })
 
+    expect(table.options.onRowSelectionChange).toBe(
+      table.optionAtoms.onRowSelectionChange!.get(),
+    )
+
     table.toggleAllRowsSelected(true)
     expect(firstHandler).toHaveBeenCalledTimes(1)
 
     options.onRowSelectionChange = secondHandler
     await flushEffects()
+
+    expect(table.options.onRowSelectionChange).toBe(secondHandler)
+    expect(table.options.onRowSelectionChange).toBe(
+      table.optionAtoms.onRowSelectionChange!.get(),
+    )
+
     table.toggleAllRowsSelected(false)
 
     expect(firstHandler).toHaveBeenCalledTimes(1)

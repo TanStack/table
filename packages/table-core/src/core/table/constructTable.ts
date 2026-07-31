@@ -1,8 +1,12 @@
 import { shallow } from '@tanstack/store'
 import { coreFeatures } from '../coreFeatures'
-import { cloneState, hasOwn } from '../../utils'
+import { cloneState, functionalUpdate, hasOwn } from '../../utils'
 import { atomToStore } from '../reactivity/coreReactivityFeature.utils'
 import { table_syncExternalStateToBaseAtoms } from './coreTablesFeature.utils'
+import {
+  createTableOptionAtoms,
+  getTableOptionsFromAtoms,
+} from './tableOptionAtoms'
 import type { Atom } from '@tanstack/store'
 import type { RowData } from '../../types/type-utils'
 import type { TableFeature, TableFeatures } from '../../types/TableFeatures'
@@ -79,7 +83,14 @@ export function constructTable<
     return Object.assign(obj, feature.getDefaultTableOptions?.(table))
   }, {}) as TableOptions<TFeatures, TData>
 
-  const mergedOptions = { ...defaultOptions, ...tableOptions }
+  const mergedOptions = Object.create(
+    Object.getPrototypeOf(tableOptions),
+    Object.assign(
+      {},
+      Object.getOwnPropertyDescriptors(defaultOptions),
+      Object.getOwnPropertyDescriptors(tableOptions),
+    ),
+  ) as TableOptions<TFeatures, TData>
 
   if (_reactivity.wrapExternalAtoms && mergedOptions.atoms) {
     for (const [atomKey, _atom] of Object.entries(mergedOptions.atoms)) {
@@ -104,24 +115,35 @@ export function constructTable<
     }
   }
 
-  if (_reactivity.createOptionsStore) {
-    // @ts-ignore - direct set
-    table.optionsStore = _reactivity.createWritableAtom<
-      TableOptions<TFeatures, TData>
-    >(mergedOptions, { debugName: 'table/optionsStore' })
-    Object.defineProperty(table, 'options', {
-      configurable: true,
+  const optionAtoms = createTableOptionAtoms(
+    mergedOptions,
+    _reactivity,
+    (key, updater) => {
+      table.setOptions((previous) => ({
+        ...previous,
+        [key]: functionalUpdate(
+          updater,
+          Reflect.get(previous, key, previous),
+        ),
+      }))
+    },
+  )
+  const options = getTableOptionsFromAtoms(optionAtoms)
+
+  Object.defineProperties(table, {
+    optionAtoms: {
+      configurable: false,
       enumerable: true,
-      get() {
-        return table.optionsStore!.get()
-      },
-      set(value) {
-        table.optionsStore!.set(() => value) // or your real update shape
-      },
-    })
-  } else {
-    table.options = mergedOptions
-  }
+      value: optionAtoms,
+      writable: false,
+    },
+    options: {
+      configurable: false,
+      enumerable: true,
+      value: options,
+      writable: false,
+    },
+  })
 
   table.initialState = getInitialTableState(
     table._features,
@@ -134,6 +156,31 @@ export function constructTable<
 
   for (let i = 0; i < stateKeys.length; i++) {
     const key = stateKeys[i]!
+    const noControlledState = {}
+    const externalAtomOption = _reactivity.createReadonlyAtom(
+      () =>
+        (
+          table.optionAtoms.atoms?.get() as
+            | Record<string, Atom<any>>
+            | undefined
+        )?.[key],
+      {
+        debugName: `table/options/atoms/${key}`,
+      },
+    )
+    const controlledStateOption = _reactivity.createReadonlyAtom(
+      () => {
+        const controlledState = table.optionAtoms.state?.get() as
+          | Record<string, unknown>
+          | undefined
+        return controlledState && hasOwn(controlledState, key)
+          ? controlledState[key]
+          : noControlledState
+      },
+      {
+        debugName: `table/options/state/${key}`,
+      },
+    )
     table.baseAtoms[key] = _reactivity.createWritableAtom(
       table.initialState[key],
       {
@@ -142,9 +189,7 @@ export function constructTable<
     ) as any
     ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
       () => {
-        const options = table.options
-        const externalAtoms = options.atoms
-        const externalAtom = externalAtoms?.[key]
+        const externalAtom = externalAtomOption.get()
         // Always touch the reactive owner so controlled state still has an
         // invalidation source when it is published after a framework commit.
         const reactiveState = externalAtom
@@ -156,13 +201,11 @@ export function constructTable<
           return reactiveState
         }
 
-        const controlledState = options.state as
-          | Record<string, unknown>
-          | undefined
+        const controlledState = controlledStateOption.get()
 
-        return controlledState && hasOwn(controlledState, key)
-          ? controlledState[key]
-          : reactiveState
+        return controlledState === noControlledState
+          ? reactiveState
+          : controlledState
       },
       { debugName: `table/atoms/${key}` },
     )

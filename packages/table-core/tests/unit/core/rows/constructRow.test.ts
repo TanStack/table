@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { constructTable } from '../../../../src'
 import { constructRow } from '../../../../src/core/rows/constructRow'
+import { row_getLeafRows } from '../../../../src/core/rows/coreRowsFeature.utils'
 import { testFeatures } from '../../../fixtures/features'
 import type { Row } from '../../../../src/types/Row'
 
@@ -89,5 +90,57 @@ describe('constructRow', () => {
     const nextLeafRows = parent.getLeafRows()
     expect(nextLeafRows).not.toBe(firstLeafRows)
     expect(nextLeafRows).toEqual([leafB, leafA])
+  })
+
+  it('tracks nested subRows replacements in a readonly atom', () => {
+    const table = constructTable<typeof features, Person>({
+      features,
+      columns: [],
+      data: [],
+    })
+
+    const leafA = constructRow(table, 'leaf-a', { firstName: 'A' }, 0, 2, [])
+    const leafB = constructRow(table, 'leaf-b', { firstName: 'B' }, 0, 2, [])
+    const branch = constructRow(
+      table,
+      'branch',
+      { firstName: 'Branch' },
+      0,
+      1,
+      [leafA],
+    )
+    const parent = constructRow(
+      table,
+      'parent',
+      { firstName: 'Parent' },
+      0,
+      0,
+      [branch],
+    )
+    let evaluations = 0
+    const leafRowsAtom = table._reactivity.createReadonlyAtom(
+      () => {
+        evaluations++
+        return row_getLeafRows(parent)
+      },
+      { debugName: 'test/nestedSubRows' },
+    )
+
+    const firstLeafRows = leafRowsAtom.get()
+    expect(firstLeafRows).toEqual([branch, leafA])
+    expect(leafRowsAtom.get()).toBe(firstLeafRows)
+    expect(evaluations).toBe(1)
+
+    const sameSubRows = branch.subRows
+    branch.subRows = sameSubRows
+    expect(leafRowsAtom.get()).toBe(firstLeafRows)
+    expect(evaluations).toBe(1)
+
+    branch.subRows = [leafB]
+
+    const nextLeafRows = leafRowsAtom.get()
+    expect(nextLeafRows).not.toBe(firstLeafRows)
+    expect(nextLeafRows).toEqual([branch, leafB])
+    expect(evaluations).toBe(2)
   })
 })

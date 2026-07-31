@@ -9,7 +9,7 @@ title: copyInstancePropertiesWithoutMemos
 function copyInstancePropertiesWithoutMemos<TTarget, TSource>(target, source): TTarget & TSource;
 ```
 
-Defined in: [utils.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L58)
+Defined in: [utils.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L59)
 
 Copies prototype-instance own properties without carrying over lazy memo
 closures or the per-row cell cache, both of which are bound to the source

@@ -9,7 +9,7 @@ title: table_setColumnSizing
 function table_setColumnSizing<TFeatures, TData>(table, updater): void;
 ```
 
-Defined in: [features/column-sizing/columnSizingFeature.utils.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L331)
+Defined in: [features/column-sizing/columnSizingFeature.utils.ts:335](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-sizing/columnSizingFeature.utils.ts#L335)
 
 Routes a committed column sizing updater through the table's sizing handler.
 

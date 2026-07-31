@@ -90,9 +90,16 @@ export function createTable<
     const nextOptions = flatMerge(mergedOptions)
     const state = nextOptions.state as Record<string, unknown> | undefined
     if (state) {
+      const resolvedState: Record<string, unknown> = {}
       for (const key in state) {
-        void state[key]
+        resolvedState[key] = state[key]
       }
+      Object.defineProperty(nextOptions, 'state', {
+        configurable: true,
+        enumerable: true,
+        value: resolvedState,
+        writable: true,
+      })
     }
 
     untrack(() => {

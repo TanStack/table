@@ -1,4 +1,5 @@
 import { h } from 'preact'
+import { useMemo } from 'preact/hooks'
 import { createPreactPanel } from '@tanstack/devtools-utils/preact'
 import { TableDevtoolsCore } from '@tanstack/table-devtools'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/preact'
@@ -22,8 +23,22 @@ function resolvePanelProps(
   }
 }
 
-export const TableDevtoolsPanel: TableDevtoolsPanelComponent = (props) =>
-  h(TableDevtoolsPanelBase, resolvePanelProps(props))
+export const TableDevtoolsPanel: TableDevtoolsPanelComponent = (props) => {
+  const theme = props?.theme
+  const devtoolsOpen = props?.devtoolsOpen
+  const panelProps = useMemo(
+    () => resolvePanelProps({ theme, devtoolsOpen }),
+    [devtoolsOpen, theme],
+  )
+  return h(TableDevtoolsPanelBase, panelProps)
+}
 
-export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent = (props) =>
-  h(TableDevtoolsPanelNoOpBase, resolvePanelProps(props))
+export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent = (props) => {
+  const theme = props?.theme
+  const devtoolsOpen = props?.devtoolsOpen
+  const panelProps = useMemo(
+    () => resolvePanelProps({ theme, devtoolsOpen }),
+    [devtoolsOpen, theme],
+  )
+  return h(TableDevtoolsPanelNoOpBase, panelProps)
+}

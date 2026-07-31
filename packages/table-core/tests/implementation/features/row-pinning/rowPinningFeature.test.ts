@@ -191,6 +191,43 @@ describe('table methods', () => {
       expect(table.getTopRows()).toHaveLength(1)
       expect(table.getBottomRows()).toHaveLength(0) // Row 2 is not in visible rows
     })
+
+    it('keeps each pinned region cached when only its sibling changes', () => {
+      const table = makeTable({
+        initialState: {
+          rowPinning: {
+            top: [ROW[0]],
+            bottom: [ROW[1]],
+          },
+        },
+      })
+      const topRows = table.getTopRows()
+      const bottomRows = table.getBottomRows()
+      const initial = table.atoms.rowPinning.get()
+
+      table.setRowPinning({
+        top: initial.top,
+        bottom: [ROW[2]],
+      })
+
+      expect(table.getTopRows()).toBe(topRows)
+
+      const next = table.atoms.rowPinning.get()
+      table.setRowPinning({
+        top: [ROW[1]],
+        bottom: next.bottom,
+      })
+
+      expect(table.getBottomRows()).not.toBe(bottomRows)
+      const currentBottomRows = table.getBottomRows()
+
+      table.setRowPinning({
+        top: [ROW[0]],
+        bottom: table.atoms.rowPinning.get().bottom,
+      })
+
+      expect(table.getBottomRows()).toBe(currentBottomRows)
+    })
   })
 
   it('should handle keepPinnedRows - true', () => {

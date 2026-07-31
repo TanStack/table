@@ -285,7 +285,9 @@ describe('header_getResizeHandler', () => {
       enableColumnResizing: false,
     })
     const onColumnResizingChange = vi.fn()
-    table.options.onColumnResizingChange = onColumnResizingChange
+    table.optionAtoms.onColumnResizingChange!.set(
+      () => onColumnResizingChange,
+    )
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any)
@@ -297,7 +299,9 @@ describe('header_getResizeHandler', () => {
   it('should ignore multi-touch events', () => {
     const table = makeTable(1)
     const onColumnResizingChange = vi.fn()
-    table.options.onColumnResizingChange = onColumnResizingChange
+    table.optionAtoms.onColumnResizingChange!.set(
+      () => onColumnResizingChange,
+    )
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any)
@@ -314,7 +318,7 @@ describe('header_getResizeHandler', () => {
       columnResizeMode: 'onChange',
     })
     const onColumnSizingChange = vi.fn()
-    table.options.onColumnSizingChange = onColumnSizingChange
+    table.optionAtoms.onColumnSizingChange!.set(() => onColumnSizingChange)
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any)
@@ -336,21 +340,25 @@ describe('header_getResizeHandler', () => {
     })
 
     let resizingState = getDefaultColumnResizingState()
-    table.options.onColumnResizingChange = (updater) => {
-      resizingState =
-        typeof updater === 'function' ? updater(resizingState) : updater
-      ;(table.store.state as any).columnResizing = resizingState
-    }
+    table.optionAtoms.onColumnResizingChange!.set(
+      () => (updater) => {
+        resizingState =
+          typeof updater === 'function' ? updater(resizingState) : updater
+        ;(table.store.state as any).columnResizing = resizingState
+      },
+    )
 
     const sizingUpdates: Array<Record<string, number>> = []
-    table.options.onColumnSizingChange = (updater) => {
-      if (typeof updater === 'function') {
-        const result = updater(table.atoms.columnSizing.get())
-        sizingUpdates.push(result)
-      } else {
-        sizingUpdates.push(updater)
-      }
-    }
+    table.optionAtoms.onColumnSizingChange!.set(
+      () => (updater) => {
+        if (typeof updater === 'function') {
+          const result = updater(table.atoms.columnSizing.get())
+          sizingUpdates.push(result)
+        } else {
+          sizingUpdates.push(updater)
+        }
+      },
+    )
 
     const zeroSizeColumn = {
       ...table.getAllColumns()[0],
@@ -392,12 +400,14 @@ describe('header_getResizeHandler', () => {
 
     let resizingState = getDefaultColumnResizingState()
     const resizingUpdates: Array<typeof resizingState> = []
-    table.options.onColumnResizingChange = (updater) => {
-      resizingState =
-        typeof updater === 'function' ? updater(resizingState) : updater
-      ;(table.store.state as any).columnResizing = resizingState
-      resizingUpdates.push(resizingState)
-    }
+    table.optionAtoms.onColumnResizingChange!.set(
+      () => (updater) => {
+        resizingState =
+          typeof updater === 'function' ? updater(resizingState) : updater
+        ;(table.store.state as any).columnResizing = resizingState
+        resizingUpdates.push(resizingState)
+      },
+    )
 
     const zeroSizeColumn = {
       ...table.getAllColumns()[0],
@@ -447,7 +457,7 @@ describe('header_getResizeHandler', () => {
       columnResizeMode: 'onChange',
     })
     const onColumnSizingChange = vi.fn()
-    table.options.onColumnSizingChange = onColumnSizingChange
+    table.optionAtoms.onColumnSizingChange!.set(() => onColumnSizingChange)
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any, document)
@@ -489,13 +499,15 @@ describe('header_getResizeHandler', () => {
       columnResizeMode: 'onChange',
     })
     const sizingUpdates: Array<Record<string, number>> = []
-    table.options.onColumnSizingChange = (updater) => {
-      sizingUpdates.push(
-        typeof updater === 'function'
-          ? updater(table.atoms.columnSizing.get())
-          : updater,
-      )
-    }
+    table.optionAtoms.onColumnSizingChange!.set(
+      () => (updater) => {
+        sizingUpdates.push(
+          typeof updater === 'function'
+            ? updater(table.atoms.columnSizing.get())
+            : updater,
+        )
+      },
+    )
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any, document)
@@ -548,13 +560,15 @@ describe('header_getResizeHandler', () => {
       columnResizeMode: 'onEnd',
     })
     const sizingUpdates: Array<Record<string, number>> = []
-    table.options.onColumnSizingChange = (updater) => {
-      sizingUpdates.push(
-        typeof updater === 'function'
-          ? updater(table.atoms.columnSizing.get())
-          : updater,
-      )
-    }
+    table.optionAtoms.onColumnSizingChange!.set(
+      () => (updater) => {
+        sizingUpdates.push(
+          typeof updater === 'function'
+            ? updater(table.atoms.columnSizing.get())
+            : updater,
+        )
+      },
+    )
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any, document)
@@ -610,13 +624,15 @@ describe('header_getResizeHandler', () => {
       columnResizeMode: 'onChange',
     })
     const sizingUpdates: Array<Record<string, number>> = []
-    table.options.onColumnSizingChange = (updater) => {
-      sizingUpdates.push(
-        typeof updater === 'function'
-          ? updater(table.atoms.columnSizing.get())
-          : updater,
-      )
-    }
+    table.optionAtoms.onColumnSizingChange!.set(
+      () => (updater) => {
+        sizingUpdates.push(
+          typeof updater === 'function'
+            ? updater(table.atoms.columnSizing.get())
+            : updater,
+        )
+      },
+    )
 
     const header = createTestResizeHeader(table)
     const handler = header_getResizeHandler(header as any, document)

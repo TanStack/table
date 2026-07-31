@@ -6,14 +6,14 @@ title: assignPrototypeAPIs
 # Function: assignPrototypeAPIs()
 
 ```ts
-function assignPrototypeAPIs<TFeatures, TData, TDeps, TDepArgs>(
+function assignPrototypeAPIs<TFeatures, TData>(
    feature, 
    prototype, 
    table, 
    apis): void;
 ```
 
-Defined in: [utils.ts:434](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L434)
+Defined in: [utils.ts:404](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L404)
 
 Assigns API methods to a prototype object for memory-efficient method sharing.
 All instances created with this prototype will share the same method references.
@@ -31,14 +31,6 @@ This provides the best of both worlds: shared method code + per-instance caching
 
 `TData` *extends* [`RowData`](../type-aliases/RowData.md)
 
-### TDeps
-
-`TDeps` *extends* readonly `any`[]
-
-### TDepArgs
-
-`TDepArgs`
-
 ## Parameters
 
 ### feature
@@ -55,7 +47,7 @@ keyof `TFeatures` & `string`
 
 ### apis
 
-[`PrototypeAPIObject`](../type-aliases/PrototypeAPIObject.md)\<`TDeps`, [`NoInfer`](../type-aliases/NoInfer.md)\<`TDepArgs`\>\>
+[`PrototypeAPIObject`](../type-aliases/PrototypeAPIObject.md)
 
 ## Returns
 
