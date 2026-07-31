@@ -6,13 +6,12 @@ type StoreReadonlyAtomFactory = <T>(
 ) => ReadonlyAtom<T>
 
 /**
- * Creates a TanStack Store computed whose equality also works for `undefined`.
+ * Creates a TanStack Store computed that can safely return any value.
  *
- * Store uses `undefined` as its uninitialized computed snapshot, so a computed
- * that legitimately returns `undefined` is otherwise reported as changed on
- * every dependency invalidation. Keeping the compared value inside a stable
- * box gives Store a distinct initialized snapshot without changing the public
- * atom value.
+ * TanStack Store treats a function passed to `createAtom` as a computed
+ * resolver and uses `undefined` as its uninitialized computed snapshot.
+ * Keeping the result inside a stable box therefore lets the computed return
+ * function-valued or `undefined` values while preserving result equality.
  */
 export function createStableStoreReadonlyAtom<T>(
   createAtom: StoreReadonlyAtomFactory,

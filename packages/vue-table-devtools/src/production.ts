@@ -1,5 +1,5 @@
-export { TableDevtoolsPanel } from './production/VueTableDevtools'
+export { TableDevtoolsPanel } from './VueTableDevtools'
 export type { TableDevtoolsVueInit } from './VueTableDevtools'
-export { tableDevtoolsPlugin } from './production/plugin'
+export { tableDevtoolsPlugin } from './plugin'
 export { useTanStackTableDevtools } from './useTanStackTableDevtools'
 export type { UseTanStackTableDevtoolsOptions } from './useTanStackTableDevtools'

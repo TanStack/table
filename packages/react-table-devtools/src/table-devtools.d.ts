@@ -31,14 +31,4 @@ declare module '@tanstack/table-devtools' {
   ): (() => void) | undefined
 
   export function removeTableDevtoolsTarget(id: string): void
-
-  export interface TableDevtoolsRegistrationManager {
-    update: <TFeatures extends TableFeatures, TData extends RowData>(
-      table: Table<TFeatures, TData> | undefined,
-      enabled?: boolean,
-    ) => void
-    dispose: () => void
-  }
-
-  export function createTableDevtoolsRegistrationManager(): TableDevtoolsRegistrationManager
 }

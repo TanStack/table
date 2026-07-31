@@ -10,7 +10,6 @@ export const TableDevtoolsCore: ClassType =
 
 export type { TableDevtoolsInit } from './core'
 export {
-  createTableDevtoolsRegistrationManager,
   getTableDevtoolsTargets,
   removeTableDevtoolsTarget,
   setTableDevtoolsTarget,
@@ -19,7 +18,6 @@ export {
 } from './tableTarget'
 export type {
   TableDevtoolsRegistration,
-  TableDevtoolsRegistrationManager,
   TableDevtoolsStore,
   TableDevtoolsTable,
   UpsertTableDevtoolsTargetOptions,

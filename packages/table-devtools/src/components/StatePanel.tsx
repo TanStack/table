@@ -6,10 +6,14 @@ import { useTableStore } from '../useTableStore'
 import { useStyles } from '../styles/use-styles'
 import { NoTableConnected } from './NoTableConnected'
 import { ThreeWayResizableSplit } from './ThreeWayResizableSplit'
-import type { Accessor } from 'solid-js'
-import type { TableDevtoolsStyles } from '../styles/use-styles'
 
 type AtomSource = 'external-atom' | 'external-state' | 'internal'
+
+interface AtomSlice {
+  key: string
+  value: unknown
+  source: AtomSource
+}
 
 export function StatePanel() {
   const styles = useStyles()
@@ -18,60 +22,72 @@ export function StatePanel() {
   const [storeCopied, setStoreCopied] = createSignal(false)
   const [pasteError, setPasteError] = createSignal<string | null>(null)
 
+  // Subscribe to both stores so the panel re-renders when either the table
+  // state or the options (e.g. options.atoms / options.state) change.
   const tableState = useTableStore(
     () => table()?.store,
     (state) => state,
   )
-  const optionsVersion = useTableStore(
+  const tableOptions = useTableStore(
     () => table()?.optionAtoms.snapshotVersion,
-    (version) => version,
+    () => table()?.options as unknown,
   )
 
   const initialState = createMemo((): unknown => {
     const tableInstance = table()
     if (!tableInstance) return undefined
 
+    tableState()
+    tableOptions()
+
     return tableInstance.initialState
   })
 
-  const storeState = createMemo((): Record<string, unknown> | undefined => {
+  const storeState = createMemo((): unknown => {
     const tableInstance = table()
     if (!tableInstance) return undefined
 
-    return (tableState() ?? tableInstance.store.get()) as Record<
-      string,
-      unknown
-    >
+    tableState()
+    tableOptions()
+
+    return tableInstance.store.state
   })
 
-  const tableOptions = createMemo<Record<string, unknown> | undefined>(() => {
+  const atomSlices = createMemo((): Array<AtomSlice> => {
     const tableInstance = table()
-    if (!tableInstance) return undefined
+    if (!tableInstance) return []
 
-    optionsVersion()
-    return tableInstance.options
-  })
+    // Touch subscriptions so this recomputes on state or option change.
+    tableState()
+    tableOptions()
 
-  const atomKeys = createMemo(() => Object.keys(storeState() ?? {}))
-
-  const getAtomSource = (key: string): AtomSource => {
-    const options = tableOptions() ?? {}
+    const options = tableInstance.options as unknown as Record<string, unknown>
     const externalAtoms =
       (options.atoms as Record<string, unknown> | undefined) ?? {}
     const externalState =
       (options.state as Record<string, unknown> | undefined) ?? {}
-    const hasExternalAtom = externalAtoms[key] != null
-    const hasExternalState =
-      !hasExternalAtom &&
-      key in externalState &&
-      externalState[key] !== undefined
+    const storeState = tableInstance.store.state as Record<string, unknown>
 
-    return hasExternalAtom
-      ? 'external-atom'
-      : hasExternalState
-        ? 'external-state'
-        : 'internal'
-  }
+    return Object.keys(storeState).map((key) => {
+      const hasExternalAtom = externalAtoms[key] != null
+      const hasExternalState =
+        !hasExternalAtom &&
+        key in externalState &&
+        externalState[key] !== undefined
+
+      const source: AtomSource = hasExternalAtom
+        ? 'external-atom'
+        : hasExternalState
+          ? 'external-state'
+          : 'internal'
+
+      return {
+        key,
+        value: storeState[key],
+        source,
+      }
+    })
+  })
 
   const copyToClipboard = async (
     value: unknown,
@@ -158,15 +174,8 @@ export function StatePanel() {
                   Reset to initialState
                 </button>
               </div>
-              <For each={atomKeys()}>
-                {(key) => (
-                  <AtomRow
-                    atomKey={key}
-                    source={() => getAtomSource(key)}
-                    styles={styles}
-                    value={() => storeState()?.[key]}
-                  />
-                )}
+              <For each={atomSlices()}>
+                {(slice) => <AtomRow slice={slice} />}
               </For>
             </>
           }
@@ -201,14 +210,11 @@ export function StatePanel() {
   )
 }
 
-function AtomRow(props: {
-  atomKey: string
-  source: Accessor<AtomSource>
-  styles: Accessor<TableDevtoolsStyles>
-  value: Accessor<unknown>
-}) {
+function AtomRow(props: { slice: AtomSlice }) {
+  const styles = useStyles()
+
   const badgeLabel = () => {
-    switch (props.source()) {
+    switch (props.slice.source) {
       case 'external-atom':
         return 'External Atom'
       case 'external-state':
@@ -219,25 +225,25 @@ function AtomRow(props: {
   }
 
   const badgeClass = () => {
-    const base = props.styles().atomBadge
-    switch (props.source()) {
+    const base = styles().atomBadge
+    switch (props.slice.source) {
       case 'external-atom':
-        return `${base} ${props.styles().atomBadgeExternalAtom}`
+        return `${base} ${styles().atomBadgeExternalAtom}`
       case 'external-state':
-        return `${base} ${props.styles().atomBadgeExternalState}`
+        return `${base} ${styles().atomBadgeExternalState}`
       case 'internal':
-        return `${base} ${props.styles().atomBadgeInternal}`
+        return `${base} ${styles().atomBadgeInternal}`
     }
   }
 
   return (
-    <div class={props.styles().atomRow}>
-      <div class={props.styles().atomRowHeader}>
-        <span class={props.styles().atomKey}>{props.atomKey}</span>
+    <div class={styles().atomRow}>
+      <div class={styles().atomRowHeader}>
+        <span class={styles().atomKey}>{props.slice.key}</span>
         <span class={badgeClass()}>{badgeLabel()}</span>
       </div>
-      <div class={props.styles().atomValue}>
-        <JsonTree copyable value={props.value()} />
+      <div class={styles().atomValue}>
+        <JsonTree copyable value={props.slice.value} />
       </div>
     </div>
   )

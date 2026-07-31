@@ -1,4 +1,3 @@
-import { Show } from 'solid-js'
 import { ThemeContextProvider } from '@tanstack/devtools-ui'
 import { TableContextProvider } from './TableContextProvider'
 import { Shell } from './components/Shell'
@@ -10,11 +9,9 @@ export default function TableDevtools(props: {
 }) {
   return (
     <ThemeContextProvider theme={props.theme}>
-      <Show when={props.devtoolsOpen}>
-        <TableContextProvider>
-          <Shell />
-        </TableContextProvider>
-      </Show>
+      <TableContextProvider>
+        <Shell />
+      </TableContextProvider>
     </ThemeContextProvider>
   )
 }

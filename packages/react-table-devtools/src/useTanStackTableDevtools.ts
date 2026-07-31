@@ -1,7 +1,7 @@
 'use client'
 
-import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
-import { useEffect, useState } from 'react'
+import { upsertTableDevtoolsTarget } from '@tanstack/table-devtools'
+import { useEffect } from 'react'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 
 export interface UseTanStackTableDevtoolsOptions {
@@ -16,15 +16,18 @@ export function useTanStackTableDevtools<
   options?: UseTanStackTableDevtoolsOptions,
 ): void {
   const enabled = options?.enabled ?? true
-  const [registration] = useState(createTableDevtoolsRegistrationManager)
 
   useEffect(() => {
-    return () => registration.dispose()
-  }, [registration])
+    if (!enabled || !table) {
+      return
+    }
 
-  useEffect(() => {
-    registration.update(table, enabled)
-  }, [enabled, registration, table, table?.options.key])
+    const cleanup = upsertTableDevtoolsTarget({ table })
+
+    return () => {
+      cleanup?.()
+    }
+  }, [enabled, table, table?.options.key])
 }
 
 export function useTanStackTableDevtoolsNoOp<

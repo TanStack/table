@@ -20,9 +20,14 @@ export function OptionsPanel() {
   const styles = useStyles()
   const { table } = useTableDevtoolsContext()
 
-  const optionsVersion = useTableStore(
+  const tableOptions = useTableStore(
     () => table()?.optionAtoms.snapshotVersion,
-    (version) => version,
+    () => {
+      const tableInstance = table()
+      return tableInstance
+        ? projectOptionsForTree(tableInstance.options)
+        : undefined
+    },
   )
 
   const options = createMemo(() => {
@@ -31,7 +36,7 @@ export function OptionsPanel() {
       return undefined
     }
 
-    optionsVersion()
+    tableOptions()
     return projectOptionsForTree(tableInstance.options)
   })
 

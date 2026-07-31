@@ -157,15 +157,16 @@ export function FeaturesPanel() {
     () => table()?.store,
     (state) => state,
   )
-  const optionsVersion = useTableStore(
+  const tableOptions = useTableStore(
     () => table()?.optionAtoms.snapshotVersion,
-    (version) => version,
+    () => table()?.options as unknown,
   )
 
   const tableFeatures = createMemo((): Set<string> => {
     const tableInstance = table()
     if (!tableInstance) return new Set()
 
+    tableState()
     return new Set(Object.keys(tableInstance._features))
   })
 
@@ -173,7 +174,8 @@ export function FeaturesPanel() {
     const tableInstance = table()
     if (!tableInstance) return []
 
-    optionsVersion()
+    tableState()
+    tableOptions()
 
     return Object.keys(tableInstance.options.features ?? {}).filter((key) =>
       ROW_MODEL_FEATURE_SLOTS.includes(key),
@@ -186,7 +188,8 @@ export function FeaturesPanel() {
     const tableInstance = table()
     if (!tableInstance) return []
 
-    optionsVersion()
+    tableState()
+    tableOptions()
 
     const rowModelFns = toFnBuckets(tableInstance._rowModelFns)
     const optionFns = toFnBuckets(tableInstance.options)

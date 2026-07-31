@@ -1,4 +1,4 @@
-export { TableDevtoolsPanel } from './production/TableDevtools'
+export { TableDevtoolsPanel } from './TableDevtools'
 
 export type { TableDevtoolsSolidInit } from './production/TableDevtools'
 

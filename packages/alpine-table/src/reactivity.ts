@@ -1,39 +1,9 @@
 import { batch, createAtom } from '@tanstack/store'
+import { createStableStoreReadonlyAtom } from '@tanstack/table-core/reactivity'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
 } from '@tanstack/table-core/reactivity'
-import type { Observer, ReadonlyAtom } from '@tanstack/store'
-
-function createStableReadonlyAtom<T>(
-  fn: () => T,
-  compare: (previous: T, next: T) => boolean,
-): ReadonlyAtom<T> {
-  let stableBox: { value: T } | undefined
-  const boxedAtom = createAtom(
-    () => {
-      const nextValue = fn()
-      if (!stableBox || !compare(stableBox.value, nextValue)) {
-        stableBox = { value: nextValue }
-      }
-      return stableBox
-    },
-  )
-
-  return {
-    get: () => boxedAtom.get().value,
-    subscribe: ((
-      observer: Observer<T> | ((value: T) => void),
-    ) =>
-      boxedAtom.subscribe((box) => {
-        if (typeof observer === 'function') {
-          observer(box.value)
-        } else {
-          observer.next?.(box.value)
-        }
-      })) as ReadonlyAtom<T>['subscribe'],
-  }
-}
 
 /**
  * Creates the table-core reactivity bindings used by the Alpine adapter.
@@ -58,9 +28,10 @@ export function alpineReactivity(): TableReactivityBindings {
     batch,
     untrack: (fn) => fn(),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      return createStableReadonlyAtom(
+      return createStableStoreReadonlyAtom(
+        createAtom,
         fn,
-        options?.compare ?? Object.is,
+        { compare: options?.compare },
       )
     },
     createWritableAtom: <T>(value: T, options?: TableAtomOptions<T>) => {

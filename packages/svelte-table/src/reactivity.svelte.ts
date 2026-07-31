@@ -1,6 +1,7 @@
 import { untrack } from 'svelte'
 import { createSubscriber } from 'svelte/reactivity'
 import { batch, createAtom } from '@tanstack/svelte-store'
+import { createStableStoreReadonlyAtom } from '@tanstack/table-core/reactivity'
 import type {
   TableAtomOptions,
   TableReactivityBindings,
@@ -13,30 +14,6 @@ function observerToCallback<T>(
   return typeof observerOrNext === 'function'
     ? observerOrNext
     : (value) => observerOrNext.next?.(value)
-}
-
-function createStableReadonlyAtom<T>(
-  fn: () => T,
-  compare: (previous: T, next: T) => boolean,
-): ReadonlyAtom<T> {
-  let stableBox: { value: T } | undefined
-  const boxedAtom = createAtom(
-    () => {
-      const nextValue = fn()
-      if (!stableBox || !compare(stableBox.value, nextValue)) {
-        stableBox = { value: nextValue }
-      }
-      return stableBox
-    },
-  )
-
-  return {
-    get: () => boxedAtom.get().value,
-    subscribe: ((observerOrNext: Observer<T> | ((value: T) => void)) => {
-      const callback = observerToCallback(observerOrNext)
-      return boxedAtom.subscribe((box) => callback(box.value))
-    }) as ReadonlyAtom<T>['subscribe'],
-  }
 }
 
 /**
@@ -61,9 +38,10 @@ export function svelteReactivity(): TableReactivityBindings {
     },
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-      const storeAtom = createStableReadonlyAtom(
+      const storeAtom = createStableStoreReadonlyAtom(
+        createAtom,
         fn,
-        _options?.compare ?? Object.is,
+        { compare: _options?.compare },
       )
       const trackStore = createSubscriber((update) => {
         const subscription = storeAtom.subscribe(() => {

@@ -1,5 +1,5 @@
-import { onScopeDispose, unref, watchEffect } from 'vue'
-import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
+import { unref, watchEffect } from 'vue'
+import { upsertTableDevtoolsTarget } from '@tanstack/table-devtools'
 import type { RowData, Table, TableFeatures } from '@tanstack/table-core'
 import type { MaybeRef } from 'vue'
 
@@ -14,14 +14,19 @@ export function useTanStackTableDevtools<
   table: MaybeRef<Table<TFeatures, TData> | undefined>,
   options?: MaybeRef<UseTanStackTableDevtoolsOptions | undefined>,
 ): void {
-  const registration = createTableDevtoolsRegistrationManager()
-  onScopeDispose(() => registration.dispose())
-
-  watchEffect(() => {
+  watchEffect((onCleanup) => {
     const resolvedOptions = unref(options)
     const resolvedTable = unref(table)
 
-    registration.update(resolvedTable, resolvedOptions?.enabled ?? true)
+    if (!(resolvedOptions?.enabled ?? true) || !resolvedTable) {
+      return
+    }
+
+    const cleanup = upsertTableDevtoolsTarget({ table: resolvedTable })
+
+    onCleanup(() => {
+      cleanup?.()
+    })
   })
 }
 

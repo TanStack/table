@@ -25,7 +25,7 @@ export interface TableDevtoolsTable {
     [key: string]: unknown
   }
   optionAtoms: {
-    snapshotVersion: Readable<number>
+    readonly snapshotVersion: Readable<number>
   }
   reset: () => void
   store: TableDevtoolsStore
@@ -36,11 +36,6 @@ export interface TableDevtoolsRegistration {
   table: TableDevtoolsTable
 }
 
-interface TableDevtoolsRegistrationEntry {
-  registration: TableDevtoolsRegistration
-  leases: Set<symbol>
-}
-
 export interface UpsertTableDevtoolsTargetOptions<
   TFeatures extends TableFeatures,
   TData extends RowData,
@@ -48,16 +43,8 @@ export interface UpsertTableDevtoolsTargetOptions<
   table: Table<TFeatures, TData>
 }
 
-export interface TableDevtoolsRegistrationManager {
-  update: <TFeatures extends TableFeatures, TData extends RowData>(
-    table: Table<TFeatures, TData> | undefined,
-    enabled?: boolean,
-  ) => void
-  dispose: () => void
-}
-
 const [registrationsMap, setRegistrationsMap] = createSignal<
-  Map<string, TableDevtoolsRegistrationEntry>
+  Map<string, TableDevtoolsRegistration>
 >(new Map())
 
 function getTableKey(table: TableDevtoolsTable) {
@@ -78,59 +65,33 @@ export function upsertTableDevtoolsTarget<
   }
 
   const registrations = untrack(registrationsMap)
-  const existingEntry = registrations.get(key)
-  const lease = Symbol(key)
+  const existingRegistration = registrations.get(key)
 
-  if (existingEntry) {
-    if (
-      existingEntry.registration.table === table ||
-      existingEntry.registration.table.store === table.store
-    ) {
-      if (existingEntry.registration.table !== table) {
-        Object.assign(existingEntry.registration.table, table)
-      }
-      existingEntry.leases.add(lease)
+  if (existingRegistration) {
+    if (existingRegistration.table === table) {
       return () => {
-        releaseTableDevtoolsTarget(key, lease)
+        removeTableDevtoolsTarget(key)
       }
     }
 
     const nextRegistrations = new Map(registrations)
     nextRegistrations.set(key, {
-      registration: {
-        id: key,
-        table,
-      },
-      leases: new Set([lease]),
+      id: key,
+      table,
     })
     setRegistrationsMap(nextRegistrations)
   } else {
     const nextRegistrations = new Map(registrations)
     nextRegistrations.set(key, {
-      registration: {
-        id: key,
-        table,
-      },
-      leases: new Set([lease]),
+      id: key,
+      table,
     })
     setRegistrationsMap(nextRegistrations)
   }
 
   return () => {
-    releaseTableDevtoolsTarget(key, lease)
+    removeTableDevtoolsTarget(key)
   }
-}
-
-function releaseTableDevtoolsTarget(id: string, lease: symbol) {
-  const registrations = untrack(registrationsMap)
-  const entry = registrations.get(id)
-  if (!entry?.leases.delete(lease) || entry.leases.size > 0) {
-    return
-  }
-
-  const nextRegistrations = new Map(registrations)
-  nextRegistrations.delete(id)
-  setRegistrationsMap(nextRegistrations)
 }
 
 export function removeTableDevtoolsTarget(id: string) {
@@ -146,7 +107,7 @@ export function removeTableDevtoolsTarget(id: string) {
 }
 
 export function getTableDevtoolsTargets(): Array<TableDevtoolsRegistration> {
-  return Array.from(registrationsMap().values(), (entry) => entry.registration)
+  return Array.from(registrationsMap().values())
 }
 
 export function subscribeTableDevtoolsTargets(listener: Listener) {
@@ -169,26 +130,4 @@ export function setTableDevtoolsTarget<
   }
 
   upsertTableDevtoolsTarget({ table })
-}
-
-export function createTableDevtoolsRegistrationManager(): TableDevtoolsRegistrationManager {
-  let cleanup: (() => void) | undefined
-
-  return {
-    update: (table, enabled = true) => {
-      if (!enabled || !table) {
-        cleanup?.()
-        cleanup = undefined
-        return
-      }
-
-      const previousCleanup = cleanup
-      cleanup = upsertTableDevtoolsTarget({ table })
-      previousCleanup?.()
-    },
-    dispose: () => {
-      cleanup?.()
-      cleanup = undefined
-    },
-  }
 }
