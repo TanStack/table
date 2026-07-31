@@ -413,31 +413,41 @@ class LitTableExample extends LitElement {
                     ${headerGroup.headers.map(
                       (header) => html`
                         <th colspan=${header.colSpan}>
-                          ${header.isPlaceholder
-                            ? null
-                            : html`
-                                <div
-                                  class=${header.column.getCanSort()
-                                    ? 'sortable-header'
-                                    : ''}
-                                  title=${header.column.getCanSort()
-                                    ? 'Toggle sorting'
-                                    : ''}
-                                  @click=${header.column.getToggleSortingHandler()}
-                                >
-                                  ${FlexRender({ header })}${{
-                                    asc: ' 🔼',
-                                    desc: ' 🔽',
-                                  }[header.column.getIsSorted() as string] ??
-                                  ''}
-                                </div>
-                                ${header.column.getCanFilter()
-                                  ? html`<dynamic-filter
-                                      .column=${header.column}
-                                      .table=${table}
-                                    ></dynamic-filter>`
-                                  : null}
-                              `}
+                          ${
+                            header.isPlaceholder
+                              ? null
+                              : html`
+                                  <div
+                                    class=${
+                                    header.column.getCanSort()
+                                      ? 'sortable-header'
+                                      : ''
+                                  }
+                                    title=${
+                                    header.column.getCanSort()
+                                      ? 'Toggle sorting'
+                                      : ''
+                                  }
+                                    @click=${header.column.getToggleSortingHandler()}
+                                  >
+                                    ${FlexRender({ header })}${
+                                    {
+                                      asc: ' 🔼',
+                                      desc: ' 🔽',
+                                    }[header.column.getIsSorted() as string] ??
+                                    ''
+                                  }
+                                  </div>
+                                  ${
+                                  header.column.getCanFilter()
+                                    ? html`<dynamic-filter
+                                        .column=${header.column}
+                                        .table=${table}
+                                      ></dynamic-filter>`
+                                    : null
+                                }
+                                `
+                          }
                         </th>
                       `,
                     )}

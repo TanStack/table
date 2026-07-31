@@ -101,9 +101,7 @@ The shared context only becomes a problem if you **nest** one table's provider i
 // scoped-table-context.ts (no component imports)
 import { createTableHookContexts, tableFeatures } from '@tanstack/octane-table'
 
-export const features = tableFeatures({
-  /* ... */
-})
+export const features = tableFeatures({/* ... */})
 
 export const {
   tableContext,
@@ -130,9 +128,7 @@ export const { useAppTable } = createTableHook({
   tableContext, // <- providers now use these scoped contexts
   cellContext,
   headerContext,
-  tableComponents: {
-    /* ... */
-  },
+  tableComponents: {/* ... */},
 })
 ```
 

@@ -42,8 +42,7 @@ import type { MRT_Icons } from './icons'
 
 export type { MRT_Icons }
 export type LiteralUnion<T extends U, U = string> =
-  | T
-  | (U & Record<never, never>)
+  T | (U & Record<never, never>)
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & unknown
 
@@ -112,11 +111,11 @@ export type MRT_ColumnHelper<TData extends MRT_RowData> = {
    */
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
-    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
+    TValue extends (TAccessor extends AccessorFn<TData, infer TReturn>
       ? TReturn
       : TAccessor extends DeepKeys<TData>
         ? DeepValue<TData, TAccessor>
-        : never,
+        : never),
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
@@ -337,10 +336,7 @@ export type MRT_AccessorKeyColumnDef<
   accessorKey: DeepKeys<TData> | (string & {})
 }
 
-export type MRT_AccessorColumnDef<
-  TData extends MRT_RowData,
-  TValue = unknown,
-> =
+export type MRT_AccessorColumnDef<TData extends MRT_RowData, TValue = unknown> =
   | MRT_AccessorFnColumnDef<TData, TValue>
   | MRT_AccessorKeyColumnDef<TData, TValue>
 
@@ -389,20 +385,17 @@ export type MRT_RowAggregationOption = string &
   keyof typeof MRT_RowAggregationFns
 
 export type MRT_RowAggregationFn<TData extends MRT_RowData> =
-  | AggregationFnDef<StockFeatures, TData, any, any>
-  | MRT_RowAggregationOption
+  AggregationFnDef<StockFeatures, TData, any, any> | MRT_RowAggregationOption
 
 export type MRT_SortingOption = LiteralUnion<string & keyof typeof MRT_SortFns>
 
 export type MRT_SortFn<TData extends MRT_RowData> =
-  | MRT_SortingOption
-  | SortFn<StockFeatures, TData>
+  MRT_SortingOption | SortFn<StockFeatures, TData>
 
 export type MRT_FilterOption = LiteralUnion<string & keyof typeof MRT_FilterFns>
 
 export type MRT_FilterFn<TData extends MRT_RowData> =
-  | FilterFn<StockFeatures, TData>
-  | MRT_FilterOption
+  FilterFn<StockFeatures, TData> | MRT_FilterOption
 
 export type MRT_InternalFilterOption = {
   divider: boolean

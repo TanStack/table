@@ -2,6 +2,7 @@
   "extends": "@ember/app-tsconfig",
   "compilerOptions": {
     "allowJs": true,
+    "lib": ["ES2025", "DOM", "DOM.Iterable"],
     "types": [
       "ember-source/types",
       "@embroider/core/virtual",

@@ -412,56 +412,70 @@ export class LitCellSelectionExample extends LitElement {
                     (header) => header.id,
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`
-                              <button
-                                type="button"
-                                class="header-button ${header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''}"
-                                ?disabled=${!header.column.getCanSort()}
-                                @click=${header.column.getToggleSortingHandler()}
-                              >
-                                ${FlexRender({ header })}
-                                ${{ asc: ' 🔼', desc: ' 🔽' }[
-                                  header.column.getIsSorted() as string
-                                ] ?? ''}
-                              </button>
-                              ${header.column.getCanPin()
-                                ? html`
-                                    <div class="pin-actions">
-                                      ${header.column.getIsPinned() !== 'start'
-                                        ? html`<button
-                                            class="pin-button"
-                                            @click=${() =>
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`
+                                <button
+                                  type="button"
+                                  class="header-button ${
+                                  header.column.getCanSort()
+                                    ? 'sortable-header'
+                                    : ''
+                                }"
+                                  ?disabled=${!header.column.getCanSort()}
+                                  @click=${header.column.getToggleSortingHandler()}
+                                >
+                                  ${FlexRender({ header })}
+                                  ${
+                                  { asc: ' 🔼', desc: ' 🔽' }[
+                                    header.column.getIsSorted() as string
+                                  ] ?? ''
+                                }
+                                </button>
+                                ${
+                                header.column.getCanPin()
+                                  ? html`
+                                      <div class="pin-actions">
+                                        ${
+                                        header.column.getIsPinned() !== 'start'
+                                          ? html`<button
+                                              class="pin-button"
+                                              @click=${() =>
                                               header.column.pin('start')}
-                                          >
-                                            &lt;=
-                                          </button>`
-                                        : null}
-                                      ${header.column.getIsPinned()
-                                        ? html`<button
-                                            class="pin-button"
-                                            @click=${() =>
+                                            >
+                                              &lt;=
+                                            </button>`
+                                          : null
+                                      }
+                                        ${
+                                        header.column.getIsPinned()
+                                          ? html`<button
+                                              class="pin-button"
+                                              @click=${() =>
                                               header.column.pin(false)}
-                                          >
-                                            X
-                                          </button>`
-                                        : null}
-                                      ${header.column.getIsPinned() !== 'end'
-                                        ? html`<button
-                                            class="pin-button"
-                                            @click=${() =>
+                                            >
+                                              X
+                                            </button>`
+                                          : null
+                                      }
+                                        ${
+                                        header.column.getIsPinned() !== 'end'
+                                          ? html`<button
+                                              class="pin-button"
+                                              @click=${() =>
                                               header.column.pin('end')}
-                                          >
-                                            =&gt;
-                                          </button>`
-                                        : null}
-                                    </div>
-                                  `
-                                : null}
-                            `}
+                                            >
+                                              =&gt;
+                                            </button>`
+                                          : null
+                                      }
+                                      </div>
+                                    `
+                                  : null
+                              }
+                              `
+                        }
                       </th>
                     `,
                   )}
@@ -526,8 +540,7 @@ export class LitCellSelectionExample extends LitElement {
       <div>
         <label>State:</label>
         <pre>
-${this._data.length < 1_001 ? JSON.stringify(table.state, null, 2) : ''}</pre
-        >
+${this._data.length < 1_001 ? JSON.stringify(table.state, null, 2) : ''}</pre>
       </div>
       <div>
         <label for="paste-target">Paste Test:</label>

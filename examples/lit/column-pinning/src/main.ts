@@ -217,49 +217,59 @@ class LitTableExample extends LitElement {
                       (header) => html`
                         <th colspan="${header.colSpan}">
                           <div class="nowrap">
-                            ${header.isPlaceholder
-                              ? null
-                              : FlexRender({ header })}
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
                           </div>
-                          ${!header.isPlaceholder && header.column.getCanPin()
-                            ? html`
-                                <div class="pin-actions">
-                                  ${header.column.getIsPinned() !== 'start'
-                                    ? html`
-                                        <button
-                                          class="pin-button"
-                                          @click="${() =>
+                          ${
+                            !header.isPlaceholder && header.column.getCanPin()
+                              ? html`
+                                  <div class="pin-actions">
+                                    ${
+                                    header.column.getIsPinned() !== 'start'
+                                      ? html`
+                                          <button
+                                            class="pin-button"
+                                            @click="${() =>
                                             header.column.pin('start')}"
-                                        >
-                                          ${'<='}
-                                        </button>
-                                      `
-                                    : null}
-                                  ${header.column.getIsPinned()
-                                    ? html`
-                                        <button
-                                          class="pin-button"
-                                          @click="${() =>
+                                          >
+                                            ${'<='}
+                                          </button>
+                                        `
+                                      : null
+                                  }
+                                    ${
+                                    header.column.getIsPinned()
+                                      ? html`
+                                          <button
+                                            class="pin-button"
+                                            @click="${() =>
                                             header.column.pin(false)}"
-                                        >
-                                          X
-                                        </button>
-                                      `
-                                    : null}
-                                  ${header.column.getIsPinned() !== 'end'
-                                    ? html`
-                                        <button
-                                          class="pin-button"
-                                          @click="${() =>
+                                          >
+                                            X
+                                          </button>
+                                        `
+                                      : null
+                                  }
+                                    ${
+                                    header.column.getIsPinned() !== 'end'
+                                      ? html`
+                                          <button
+                                            class="pin-button"
+                                            @click="${() =>
                                             header.column.pin('end')}"
-                                        >
-                                          ${'=>'}
-                                        </button>
-                                      `
-                                    : null}
-                                </div>
-                              `
-                            : null}
+                                          >
+                                            ${'=>'}
+                                          </button>
+                                        `
+                                      : null
+                                  }
+                                  </div>
+                                `
+                              : null
+                          }
                         </th>
                       `,
                     )}
@@ -286,8 +296,7 @@ class LitTableExample extends LitElement {
         </div>
         <div class="spacer-md"></div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

@@ -126,9 +126,9 @@ class ColumnFilter extends LitElement {
                   parseInt((e.target as HTMLInputElement).value, 10),
                   old[1],
                 ])}"
-              value=${(
-                columnFilterValue as [number, number] | undefined
-              )?.[0] ?? ''}
+              value=${
+                (columnFilterValue as [number, number] | undefined)?.[0] ?? ''
+              }
             />
             <input
               type="number"
@@ -138,9 +138,9 @@ class ColumnFilter extends LitElement {
                   parseInt((e.target as HTMLInputElement).value, 10),
                   old[0],
                 ])}"
-              value=${(
-                columnFilterValue as [number, number] | undefined
-              )?.[1] ?? ''}
+              value=${
+                (columnFilterValue as [number, number] | undefined)?.[1] ?? ''
+              }
             />
           </div>
         `
@@ -212,16 +212,20 @@ class LitTableExample extends LitElement {
                   (header) => header.id,
                   (header) => html`
                     <th colspan="${header.colSpan}">
-                      ${header.isPlaceholder
-                        ? null
-                        : html`<div>${FlexRender({ header })}</div>
-                            ${header.column.getCanFilter()
-                              ? html` <div>
-                                  <column-filter
-                                    .column="${header.column}"
-                                  ></column-filter>
-                                </div>`
-                              : null} `}
+                      ${
+                        header.isPlaceholder
+                          ? null
+                          : html`<div>${FlexRender({ header })}</div>
+                              ${
+                              header.column.getCanFilter()
+                                ? html` <div>
+                                    <column-filter
+                                      .column="${header.column}"
+                                    ></column-filter>
+                                  </div>`
+                                : null
+                            } `
+                      }
                     </th>
                   `,
                 )}
@@ -275,8 +279,7 @@ class LitTableExample extends LitElement {
         </span>
       </div>
       <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-      >
+${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

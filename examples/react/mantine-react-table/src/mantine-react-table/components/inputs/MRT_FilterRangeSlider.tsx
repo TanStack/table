@@ -46,8 +46,7 @@ export const MRT_FilterRangeSlider = <TData extends MRT_RowData>({
 
   const [filterValues, setFilterValues] = useState<[number, number]>([min, max])
   const columnFilterValue = column.getFilterValue() as
-    | [number, number]
-    | undefined
+    [number, number] | undefined
 
   const isMounted = useRef(false)
 

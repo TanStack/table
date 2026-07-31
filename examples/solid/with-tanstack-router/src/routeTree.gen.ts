@@ -9,17 +9,17 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AnotherRouteRouteImport } from './routes/anotherRoute'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AnotherRouteRouteImport } from './routes/anotherRoute'
 
-const AnotherRouteRoute = AnotherRouteRouteImport.update({
-  id: '/anotherRoute',
-  path: '/anotherRoute',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AnotherRouteRoute = AnotherRouteRouteImport.update({
+  id: '/anotherRoute',
+  path: '/anotherRoute',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -51,18 +51,18 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/solid-router' {
   interface FileRoutesByPath {
-    '/anotherRoute': {
-      id: '/anotherRoute'
-      path: '/anotherRoute'
-      fullPath: '/anotherRoute'
-      preLoaderRoute: typeof AnotherRouteRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/': {
       id: '/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/anotherRoute': {
+      id: '/anotherRoute'
+      path: '/anotherRoute'
+      fullPath: '/anotherRoute'
+      preLoaderRoute: typeof AnotherRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

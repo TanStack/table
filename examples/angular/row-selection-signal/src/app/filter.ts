@@ -52,16 +52,14 @@ export class FilterComponent<T extends RowData> implements OnInit {
 
   getMinValue() {
     const minValue = this.column().getFilterValue() as
-      | [string | undefined, string | undefined]
-      | undefined
+      [string | undefined, string | undefined] | undefined
 
     return minValue?.[0] ?? ''
   }
 
   getMaxValue() {
     const maxValue = this.column().getFilterValue() as
-      | [string | undefined, string | undefined]
-      | undefined
+      [string | undefined, string | undefined] | undefined
 
     return maxValue?.[1] ?? ''
   }

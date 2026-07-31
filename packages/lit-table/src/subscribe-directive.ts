@@ -11,10 +11,7 @@ import type {
 } from '@tanstack/lit-store'
 
 export type SelectionSource<TValue> =
-  | Atom<TValue>
-  | ReadonlyAtom<TValue>
-  | Store<TValue>
-  | ReadonlyStore<TValue>
+  Atom<TValue> | ReadonlyAtom<TValue> | Store<TValue> | ReadonlyStore<TValue>
 
 /**
  * A function that selects a specific slice of state from the source.

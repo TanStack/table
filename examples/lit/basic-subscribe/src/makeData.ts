@@ -35,9 +35,7 @@ const newPerson = (): Person => {
 }
 
 export function makeData(len: number) {
-  return range(len).map(
-    (): Person => ({
-      ...newPerson(),
-    }),
-  )
+  return range(len).map((): Person => ({
+    ...newPerson(),
+  }))
 }

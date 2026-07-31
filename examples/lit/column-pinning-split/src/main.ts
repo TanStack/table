@@ -149,27 +149,36 @@ class LitTableExample extends LitElement {
       column: ReturnType<typeof table.getAllLeafColumns>[0],
     ) => html`
       <div class="pin-actions">
-        ${column.getIsPinned() !== 'start'
-          ? html`
-              <button class="pin-button" @click="${() => column.pin('start')}">
-                ${'<='}
-              </button>
-            `
-          : null}
-        ${column.getIsPinned()
-          ? html`
-              <button class="pin-button" @click="${() => column.pin(false)}">
-                X
-              </button>
-            `
-          : null}
-        ${column.getIsPinned() !== 'end'
-          ? html`
-              <button class="pin-button" @click="${() => column.pin('end')}">
-                ${'=>'}
-              </button>
-            `
-          : null}
+        ${
+          column.getIsPinned() !== 'start'
+            ? html`
+                <button
+                  class="pin-button"
+                  @click="${() => column.pin('start')}"
+                >
+                  ${'<='}
+                </button>
+              `
+            : null
+        }
+        ${
+          column.getIsPinned()
+            ? html`
+                <button class="pin-button" @click="${() => column.pin(false)}">
+                  X
+                </button>
+              `
+            : null
+        }
+        ${
+          column.getIsPinned() !== 'end'
+            ? html`
+                <button class="pin-button" @click="${() => column.pin('end')}">
+                  ${'=>'}
+                </button>
+              `
+            : null
+        }
       </div>
     `
 
@@ -246,13 +255,17 @@ class LitTableExample extends LitElement {
                       (header) => html`
                         <th colspan="${header.colSpan}">
                           <div class="nowrap">
-                            ${header.isPlaceholder
-                              ? null
-                              : FlexRender({ header })}
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
                           </div>
-                          ${!header.isPlaceholder && header.column.getCanPin()
-                            ? renderPinButtons(header.column)
-                            : null}
+                          ${
+                            !header.isPlaceholder && header.column.getCanPin()
+                              ? renderPinButtons(header.column)
+                              : null
+                          }
                         </th>
                       `,
                     )}
@@ -290,13 +303,17 @@ class LitTableExample extends LitElement {
                       (header) => html`
                         <th colspan="${header.colSpan}">
                           <div class="nowrap">
-                            ${header.isPlaceholder
-                              ? null
-                              : FlexRender({ header })}
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
                           </div>
-                          ${!header.isPlaceholder && header.column.getCanPin()
-                            ? renderPinButtons(header.column)
-                            : null}
+                          ${
+                            !header.isPlaceholder && header.column.getCanPin()
+                              ? renderPinButtons(header.column)
+                              : null
+                          }
                         </th>
                       `,
                     )}
@@ -334,13 +351,17 @@ class LitTableExample extends LitElement {
                       (header) => html`
                         <th colspan="${header.colSpan}">
                           <div class="nowrap">
-                            ${header.isPlaceholder
-                              ? null
-                              : FlexRender({ header })}
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
                           </div>
-                          ${!header.isPlaceholder && header.column.getCanPin()
-                            ? renderPinButtons(header.column)
-                            : null}
+                          ${
+                            !header.isPlaceholder && header.column.getCanPin()
+                              ? renderPinButtons(header.column)
+                              : null
+                          }
                         </th>
                       `,
                     )}
@@ -367,8 +388,7 @@ class LitTableExample extends LitElement {
         </div>
         <div class="spacer-md"></div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

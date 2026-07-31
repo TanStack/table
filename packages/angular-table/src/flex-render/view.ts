@@ -43,9 +43,7 @@ export function mapToFlexRenderTypedContent(
 }
 
 export type FlexRenderViewAllowedType =
-  | FlexRenderComponentRef<any>
-  | EmbeddedViewRef<unknown>
-  | null
+  FlexRenderComponentRef<any> | EmbeddedViewRef<unknown> | null
 
 export abstract class FlexRenderView<
   TView extends FlexRenderViewAllowedType,

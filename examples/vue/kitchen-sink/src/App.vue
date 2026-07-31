@@ -515,8 +515,7 @@ function shuffleColumns() {
                           :value="
                             (
                               header.column.getFilterValue() as
-                                | [number, number]
-                                | undefined
+                                [number, number] | undefined
                             )?.[0] ?? ''
                           "
                           :placeholder="`Min${header.column.getFacetedMinMaxValues()?.[0] !== undefined ? ` (${header.column.getFacetedMinMaxValues()?.[0]})` : ''}`"
@@ -543,8 +542,7 @@ function shuffleColumns() {
                           :value="
                             (
                               header.column.getFilterValue() as
-                                | [number, number]
-                                | undefined
+                                [number, number] | undefined
                             )?.[1] ?? ''
                           "
                           :placeholder="`Max${header.column.getFacetedMinMaxValues()?.[1] !== undefined ? ` (${header.column.getFacetedMinMaxValues()?.[1]})` : ''}`"

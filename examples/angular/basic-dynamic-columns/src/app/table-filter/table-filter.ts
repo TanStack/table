@@ -7,11 +7,7 @@ import type { Column, Table } from '@tanstack/angular-table'
 // with the extra `enum-select` / `text` distinction for strings decided from the
 // column's faceted unique values (low cardinality -> a select of its values).
 type FilterVariant =
-  | 'number-range'
-  | 'date-range'
-  | 'boolean-select'
-  | 'enum-select'
-  | 'text'
+  'number-range' | 'date-range' | 'boolean-select' | 'enum-select' | 'text'
 
 @Component({
   selector: 'app-table-filter',

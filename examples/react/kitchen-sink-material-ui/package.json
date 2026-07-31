@@ -18,25 +18,25 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.1",
     "@faker-js/faker": "^10.5.0",
-    "@mui/icons-material": "^9.1.1",
-    "@mui/material": "^9.1.2",
+    "@mui/icons-material": "^9.2.0",
+    "@mui/material": "^9.2.0",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.53",
-    "@tanstack/react-devtools": "^0.10.8",
+    "@tanstack/react-devtools": "^0.10.9",
     "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-table": "^9.0.0-beta.65",
     "@tanstack/react-table-devtools": "^9.0.0-beta.65",
     "date-fns": "^4.4.0",
-    "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
   },
   "devDependencies": {
     "@rolldown/plugin-babel": "^0.2.3",
     "@rollup/plugin-replace": "^6.0.3",
-    "@types/react": "^19.2.17",
-    "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^6.0.3",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
     "babel-plugin-react-compiler": "^1.0.0",
     "typescript": "6.0.3",
-    "vite": "^8.1.0"
+    "vite": "^8.2.0"
   }
 }

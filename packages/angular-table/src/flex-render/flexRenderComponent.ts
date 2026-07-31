@@ -107,15 +107,15 @@ interface FlexRenderOptions<
 }
 
 type Inputs<T> = {
-  [K in keyof T as T[K] extends InputSignal<infer _R>
-    ? K
-    : never]?: T[K] extends InputSignal<infer R> ? R : never
+  [
+    K in keyof T as T[K] extends InputSignal<infer _R> ? K : never
+  ]?: T[K] extends InputSignal<infer R> ? R : never
 }
 
 type Outputs<T> = {
-  [K in keyof T as T[K] extends OutputEmitterRef<infer _R>
-    ? K
-    : never]?: T[K] extends OutputEmitterRef<infer R>
+  [
+    K in keyof T as T[K] extends OutputEmitterRef<infer _R> ? K : never
+  ]?: T[K] extends OutputEmitterRef<infer R>
     ? OutputEmitterRef<R>['emit']
     : never
 }

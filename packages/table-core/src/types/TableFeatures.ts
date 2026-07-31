@@ -162,9 +162,9 @@ export type ValidateFeatureSlots<TFeatures extends TableFeatures> =
   IsAny<TFeatures> extends true
     ? {}
     : {
-        [K in keyof TFeatures as K extends keyof FeatureSlotPrereqs
-          ? K
-          : never]: K extends keyof FeatureSlotPrereqs
+        [
+          K in keyof TFeatures as K extends keyof FeatureSlotPrereqs ? K : never
+        ]: K extends keyof FeatureSlotPrereqs
           ? [Extract<FeatureSlotPrereqs[K], keyof TFeatures>] extends [never]
             ? `Error: '${K & string}' requires '${FeatureSlotPrereqs[K] &
                 string}' to be included in this table's features.`
