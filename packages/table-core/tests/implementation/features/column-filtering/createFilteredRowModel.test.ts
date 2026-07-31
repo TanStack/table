@@ -548,6 +548,34 @@ describe('createFilteredRowModel', () => {
       ).toEqual(['hello'])
     })
 
+    it('should globally filter an object-valued column that explicitly opts in', () => {
+      interface ObjectValueRow {
+        value: { label: string }
+      }
+
+      const table = constructTable<typeof features, ObjectValueRow>({
+        features,
+        columns: [
+          {
+            accessorKey: 'value',
+            id: 'value',
+            enableGlobalFilter: true,
+          },
+        ],
+        data: [{ value: { label: 'keep' } }, { value: { label: 'drop' } }],
+        globalFilterFn: (row, _columnId, filterValue) =>
+          row.original.value.label.includes(String(filterValue)),
+        initialState: {
+          globalFilter: 'keep',
+        },
+      })
+
+      expect(table.getFilteredRowModel().rows).toHaveLength(1)
+      expect(table.getFilteredRowModel().rows[0]!.original.value.label).toBe(
+        'keep',
+      )
+    })
+
     it('should pass rows through when no columns are globally filterable', () => {
       const table = constructTable<typeof features, TestRow>({
         features,
