@@ -145,11 +145,11 @@ export interface Table_RowSelection<
    */
   getIsAllRowsSelected: () => boolean
   /**
-   * Checks whether the current page has a partial row selection.
+   * Checks whether at least one selectable row on the current page is selected.
    */
   getIsSomePageRowsSelected: () => boolean
   /**
-   * Checks whether filtered rows have a partial row selection.
+   * Checks whether at least one row id is selected.
    */
   getIsSomeRowsSelected: () => boolean
   /**

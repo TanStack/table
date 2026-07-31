@@ -105,7 +105,7 @@ getIsSomePageRowsSelected: () => boolean;
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L150)
 
-Checks whether the current page has a partial row selection.
+Checks whether at least one selectable row on the current page is selected.
 
 #### Returns
 
@@ -121,7 +121,7 @@ getIsSomeRowsSelected: () => boolean;
 
 Defined in: [features/row-selection/rowSelectionFeature.types.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L154)
 
-Checks whether filtered rows have a partial row selection.
+Checks whether at least one row id is selected.
 
 #### Returns
 
