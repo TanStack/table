@@ -9,9 +9,9 @@ title: cell_getIsSelected
 function cell_getIsSelected<TFeatures, TData, TValue>(cell): boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:396](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L396)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:400](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L400)
 
-Checks whether this cell falls inside any selected range.
+Checks whether this cell falls inside the final positive selection.
 
 Deliberately not memoized. Registering this through `assignPrototypeAPIs`
 with `memoDeps` would allocate a memo closure and dependency array per cell,

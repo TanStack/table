@@ -58,7 +58,7 @@ function toTsv(ranges: Array<Array<Array<unknown>>>) {
     .map((grid) =>
       grid.map((row) => row.map(escapeTsvValue).join('\t')).join('\n'),
     )
-    .join('\n\n') // blank line between disjoint rectangles
+    .join('\n\n') // blank line between final selected regions
 }
 
 function getCellClassName(cell: Cell<typeof features, Person>) {
@@ -321,9 +321,9 @@ export class LitCellSelectionExample extends LitElement {
       </div>
       <p>
         Click and drag to select a range of cells. Hold Shift while clicking to
-        extend the selection, or Ctrl/Cmd to add a second rectangle. Arrow keys
-        move the selection, Shift+Arrow extends it, Mod+A selects all, Mod+C
-        copies, and Escape clears. Uncomment
+        extend the selection, or Ctrl/Cmd to add or subtract a rectangle. Arrow
+        keys move the selection, Shift+Arrow extends it, Mod+A selects all,
+        Mod+C copies, and Escape clears. Uncomment
         <code>enableCellSelection: false</code> on a column def to opt that
         column out of selection.
       </p>

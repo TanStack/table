@@ -44,7 +44,7 @@ function toTsv(ranges: Array<Array<Array<unknown>>>) {
     .map((grid) =>
       grid.map((row) => row.map(escapeTsvValue).join('\t')).join('\n'),
     )
-    .join('\n\n') // blank line between disjoint rectangles
+    .join('\n\n') // blank line between final selected regions
 }
 
 @Component({
