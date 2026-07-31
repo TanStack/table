@@ -111,7 +111,7 @@ api_discovery_policy:
   feature_source: 'node_modules/@tanstack/table-core/dist/features/<feature>/'
   ember_entrypoint: 'node_modules/@tanstack/ember-table/declarations/index.d.ts'
   angular_entrypoint: 'node_modules/@tanstack/angular-table/dist/types/'
-  octane_entrypoint: 'node_modules/@tanstack/octane-table/dist/types/index.d.ts'
+  octane_entrypoint: 'node_modules/@tanstack/octane-table/src/index.d.ts'
   fallback: 'If declarations are unavailable, resolve the installed package root and inspect published types; do not open package src/ or substitute v8 / another adapter API.'
 
 coverage:
