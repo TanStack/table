@@ -13487,13 +13487,13 @@ importers:
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.7(react@19.2.7))(react@19.2.7)
-      '@tanstack/table-core':
-        specifier: workspace:*
-        version: link:../table-core
     devDependencies:
       '@eslint-react/eslint-plugin':
         specifier: ^5.9.2
         version: 5.9.2(eslint@10.5.0(jiti@2.7.0))(typescript@6.0.3)
+      '@tanstack/table-core':
+        specifier: workspace:*
+        version: link:../table-core
       '@types/react':
         specifier: 19.2.16
         version: 19.2.16
