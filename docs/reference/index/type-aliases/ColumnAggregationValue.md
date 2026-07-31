@@ -6,7 +6,7 @@ title: ColumnAggregationValue
 # Type Alias: ColumnAggregationValue\<TFeatures\>
 
 ```ts
-type ColumnAggregationValue<TFeatures> = 
+type ColumnAggregationValue<TFeatures> =
   | RegisteredAggregationResult<TFeatures>
   | Record<string, RegisteredAggregationResult<TFeatures> | undefined>
   | undefined;

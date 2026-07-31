@@ -9,7 +9,7 @@ title: header_getContext
 function header_getContext<TFeatures, TData, TValue>(header): object;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:54](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L54)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:62](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L62)
 
 Builds the render context passed to a column's `header` or `footer` template.
 

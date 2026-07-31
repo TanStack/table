@@ -37,6 +37,10 @@ export const packages = [
     packageDir: 'packages/lit-table',
   },
   {
+    name: '@tanstack/octane-table',
+    packageDir: 'packages/octane-table',
+  },
+  {
     name: '@tanstack/preact-table',
     packageDir: 'packages/preact-table',
   },

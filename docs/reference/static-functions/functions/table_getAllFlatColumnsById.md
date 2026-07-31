@@ -9,7 +9,7 @@ title: table_getAllFlatColumnsById
 function table_getAllFlatColumnsById<TFeatures, TData>(table): Record<string, Column<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:182](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L182)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L195)
 
 Builds an id lookup for every flat column in the table.
 

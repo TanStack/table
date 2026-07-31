@@ -110,7 +110,7 @@ function App({
         columnOrder: columns.map((c) => c.id ?? ''),
       },
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   useTanStackTableDevtools(table)

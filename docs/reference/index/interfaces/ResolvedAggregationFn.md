@@ -24,7 +24,7 @@ A validated aggregation entry returned by `column.getAggregationFns()`.
 ### aggregationFn
 
 ```ts
-aggregationFn: 
+aggregationFn:
   | AggregationFnDef<TFeatures, TData, any, any>
   | undefined;
 ```

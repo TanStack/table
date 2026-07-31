@@ -2,8 +2,8 @@
   "name": "tanstack-angular-table-example-expanding",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 6565",
-    "dev": "ng serve --port 6565",
+    "start": "ng serve --port 7777",
+    "dev": "ng serve --port 7777",
     "build": "ng build",
     "lint": "eslint ./src",
     "test:types": "tsc -p tsconfig.app.json --noEmit",

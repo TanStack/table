@@ -12,7 +12,7 @@ const subscribe: {
 };
 ```
 
-Defined in: [packages/lit-table/src/subscribe-directive.ts:182](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L182)
+Defined in: [packages/lit-table/src/subscribe-directive.ts:194](https://github.com/TanStack/table/blob/main/packages/lit-table/src/subscribe-directive.ts#L194)
 
 A Lit directive that subscribes to a source (Store or Atom)
 and efficiently updates only the wrapped template
@@ -50,8 +50,8 @@ Subscribes to the entire source state without filtering.
 
 ```ts
 <TSource, TSelected>(
-   source, 
-   selector, 
+   source,
+   selector,
 template): DirectiveResult<typeof SubscribeDirective>;
 ```
 

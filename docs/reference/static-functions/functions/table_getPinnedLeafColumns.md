@@ -6,7 +6,7 @@ title: table_getPinnedLeafColumns
 # Function: table\_getPinnedLeafColumns()
 
 ```ts
-function table_getPinnedLeafColumns<TFeatures, TData>(table, position): 
+function table_getPinnedLeafColumns<TFeatures, TData>(table, position):
   | Column<TFeatures, TData, unknown>[]
   | Column_Internal<TFeatures, TData, unknown>[];
 ```

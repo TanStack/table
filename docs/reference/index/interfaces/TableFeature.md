@@ -322,7 +322,7 @@ override feature defaults.
 optional initCellInstanceData: <TFeatures, TData, TValue>(cell) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:449](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L449)
+Defined in: [types/TableFeatures.ts:452](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L452)
 
 Initializes instance-specific data on each cell.
 
@@ -364,7 +364,7 @@ Shared methods should be assigned via `assignCellPrototype` instead.
 optional initColumnInstanceData: <TFeatures, TData, TValue>(column) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:464](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L464)
+Defined in: [types/TableFeatures.ts:467](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L467)
 
 Initializes instance-specific data on each column.
 
@@ -405,7 +405,7 @@ methods should be assigned via `assignColumnPrototype` instead.
 optional initHeaderGroupInstanceData: <TFeatures, TData>(headerGroup) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:480](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L480)
+Defined in: [types/TableFeatures.ts:483](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L483)
 
 Initializes instance-specific data on each header group.
 
@@ -443,7 +443,7 @@ visibility, order, or pinning changes), so this reruns on every rebuild.
 optional initHeaderInstanceData: <TFeatures, TData, TValue>(header) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:497](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L497)
+Defined in: [types/TableFeatures.ts:500](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L500)
 
 Initializes instance-specific data on each header.
 
@@ -487,7 +487,7 @@ instead.
 optional initRowInstanceData: <TFeatures, TData>(row) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:512](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L512)
+Defined in: [types/TableFeatures.ts:515](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L515)
 
 Initializes instance-specific data on each row.
 
@@ -524,16 +524,19 @@ should be assigned via `assignRowPrototype` instead.
 optional initTableInstanceData: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:434](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L434)
+Defined in: [types/TableFeatures.ts:437](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L437)
 
 Initializes mutable, non-reactive data owned by this feature on the table
 instance.
 
 This runs once during table construction after options, state atoms, and
-the store are available, and before any feature's `constructTableAPIs`
-hook runs. Use `constructTableAPIs` exclusively for assigning table
-methods. Table resets do not rerun this hook; use
-`resetTableInstanceData` to clear transient instance data instead.
+the store are available. Features are processed in a single pass in
+registration order, with each feature's instance data initialized just
+before its own `constructTableAPIs` hook, so this hook may rely on data
+and APIs of features registered earlier. Use `constructTableAPIs`
+exclusively for assigning table methods. Table resets do not rerun this
+hook; use `resetTableInstanceData` to clear transient instance data
+instead.
 
 #### Type Parameters
 
@@ -563,7 +566,7 @@ methods. Table resets do not rerun this hook; use
 optional resetTableInstanceData: <TFeatures, TData>(table) => void;
 ```
 
-Defined in: [types/TableFeatures.ts:525](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L525)
+Defined in: [types/TableFeatures.ts:528](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L528)
 
 Resets mutable, non-reactive table-instance data owned by this feature.
 

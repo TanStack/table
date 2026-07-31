@@ -57,6 +57,12 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "Quick Start", "to": "framework/octane/quick-start" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "Quick Start", "to": "framework/solid/quick-start" },
@@ -160,6 +166,15 @@
             { "label": "Composable Tables (createTableHook)", "to": "framework/preact/guide/composable-tables" },
             { "label": "Table Context", "to": "framework/preact/guide/table-context" },
             { "label": "Custom Plugins", "to": "framework/preact/guide/custom-features" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "Table State", "to": "framework/octane/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/octane/guide/composable-tables" },
+            { "label": "Table Context", "to": "framework/octane/guide/table-context" },
+            { "label": "Custom Plugins", "to": "framework/octane/guide/custom-features" }
           ]
         },
         {
@@ -335,6 +350,28 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "Cell Selection", "to": "framework/octane/guide/cell-selection" },
+            { "label": "Column Ordering", "to": "framework/octane/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/octane/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/octane/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/octane/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/octane/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/octane/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/octane/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/octane/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/octane/guide/column-faceting" },
+            { "label": "Aggregation", "to": "framework/octane/guide/aggregation" },
+            { "label": "Grouping", "to": "framework/octane/guide/grouping" },
+            { "label": "Expanding", "to": "framework/octane/guide/expanding" },
+            { "label": "Pagination", "to": "framework/octane/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/octane/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/octane/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/octane/guide/sorting" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "Cell Selection", "to": "framework/solid/guide/cell-selection" },
@@ -445,6 +482,12 @@
           "label": "preact",
           "children": [
             { "label": "Preact API Reference", "to": "framework/preact/reference/index" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "Octane API Reference", "to": "framework/octane/reference/index" }
           ]
         },
         {
@@ -571,6 +614,20 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "useTable", "to": "framework/octane/reference/functions/useTable" },
+            { "label": "createTableHook", "to": "framework/octane/reference/functions/createTableHook" },
+            { "label": "createTableHookContexts", "to": "framework/octane/reference/functions/createTableHookContexts" },
+            { "label": "OctaneTable", "to": "framework/octane/reference/type-aliases/OctaneTable" },
+            { "label": "AppOctaneTable", "to": "framework/octane/reference/type-aliases/AppOctaneTable" },
+            { "label": "CreateTableHookOptions", "to": "framework/octane/reference/type-aliases/CreateTableHookOptions" },
+            { "label": "Subscribe", "to": "framework/octane/reference/variables/Subscribe" },
+            { "label": "FlexRender", "to": "framework/octane/reference/functions/FlexRender-1" },
+            { "label": "flexRender", "to": "framework/octane/reference/functions/flexRender" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "createTable", "to": "framework/solid/reference/functions/createTable" },
@@ -676,6 +733,12 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "AppColumnHelper", "to": "framework/octane/reference/interfaces/AppColumnHelper" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "AppColumnHelper", "to": "framework/solid/reference/type-aliases/AppColumnHelper" }
@@ -755,6 +818,12 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "AppCellContext", "to": "framework/octane/reference/interfaces/AppCellContext" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "AppCellContext", "to": "framework/solid/reference/type-aliases/AppCellContext" }
@@ -808,6 +877,12 @@
           "label": "preact",
           "children": [
             { "label": "AppHeaderContext", "to": "framework/preact/reference/type-aliases/AppHeaderContext" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "AppHeaderContext", "to": "framework/octane/reference/interfaces/AppHeaderContext" }
           ]
         },
         {
@@ -1051,6 +1126,18 @@
             { "label": "Basic (Subscribe)", "to": "framework/preact/examples/basic-subscribe" },
             { "label": "Basic (Dynamic Columns)", "to": "framework/preact/examples/basic-dynamic-columns" },
             { "label": "Header Groups", "to": "framework/preact/examples/header-groups" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "Basic (useTable)", "to": "framework/octane/examples/basic-use-table" },
+            { "label": "Basic (useAppTable)", "to": "framework/octane/examples/basic-use-app-table" },
+            { "label": "Basic (External State)", "to": "framework/octane/examples/basic-external-state" },
+            { "label": "Basic (External Atoms)", "to": "framework/octane/examples/basic-external-atoms" },
+            { "label": "Basic (Subscribe)", "to": "framework/octane/examples/basic-subscribe" },
+            { "label": "Basic (Dynamic Columns)", "to": "framework/octane/examples/basic-dynamic-columns" },
+            { "label": "Header Groups", "to": "framework/octane/examples/header-groups" }
           ]
         },
         {
@@ -1320,6 +1407,33 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/octane/examples/kitchen-sink" },
+            { "label": "Column Filters", "to": "framework/octane/examples/filters" },
+            { "label": "Column Filters (Faceted)", "to": "framework/octane/examples/filters-faceted" },
+            { "label": "Bucketed Faceted Filters", "to": "framework/octane/examples/filters-faceted-bucketed" },
+            { "label": "Fuzzy Search Filters", "to": "framework/octane/examples/filters-fuzzy" },
+            { "label": "Column Ordering", "to": "framework/octane/examples/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/octane/examples/column-pinning" },
+            { "label": "Column Pinning (Split)", "to": "framework/octane/examples/column-pinning-split" },
+            { "label": "Sticky Column Pinning", "to": "framework/octane/examples/column-pinning-sticky" },
+            { "label": "Column Sizing", "to": "framework/octane/examples/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/octane/examples/column-resizing" },
+            { "label": "Performant Column Resizing", "to": "framework/octane/examples/column-resizing-performant" },
+            { "label": "Column Visibility", "to": "framework/octane/examples/column-visibility" },
+            { "label": "Expanding", "to": "framework/octane/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/octane/examples/sub-components" },
+            { "label": "Grouping", "to": "framework/octane/examples/grouping" },
+            { "label": "Aggregation", "to": "framework/octane/examples/aggregation" },
+            { "label": "Grouped Aggregation", "to": "framework/octane/examples/grouped-aggregation" },
+            { "label": "Pagination", "to": "framework/octane/examples/pagination" },
+            { "label": "Row Pinning", "to": "framework/octane/examples/row-pinning" },
+            { "label": "Row Selection", "to": "framework/octane/examples/row-selection" },
+            { "label": "Sorting", "to": "framework/octane/examples/sorting" }
+          ]
+        },
+        {
           "label": "vanilla",
           "children": [
             { "label": "Aggregation", "to": "framework/vanilla/examples/aggregation" },
@@ -1431,6 +1545,13 @@
             { "label": "Composable Tables (createTableHook)", "to": "framework/preact/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/preact/examples/custom-plugin" },
             { "label": "With TanStack Query", "to": "framework/preact/examples/with-tanstack-query" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "Composable Tables (createTableHook)", "to": "framework/octane/examples/composable-tables" },
+            { "label": "Custom Plugin", "to": "framework/octane/examples/custom-plugin" }
           ]
         }
       ]

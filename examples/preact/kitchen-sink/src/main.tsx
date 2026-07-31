@@ -588,7 +588,7 @@ function App() {
       keepPinnedRows: true,
       debugTable: true,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   useTanStackTableDevtools(table)
