@@ -28,7 +28,7 @@
     "@embroider/router": "3.0.6",
     "@faker-js/faker": "^10.5.0",
     "@glimmer/component": "2.1.1",
-    "@tanstack/ember-table": "^9.0.0-beta.64",
+    "@tanstack/ember-table": "^9.0.0-beta.65",
     "@tanstack/hotkeys": "^0.8.0",
     "decorator-transforms": "2.4.0",
     "ember-source": "7.0.0",
