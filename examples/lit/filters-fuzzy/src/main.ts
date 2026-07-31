@@ -256,27 +256,27 @@ class LitTableExample extends LitElement {
                                 <div
                                   @click=${header.column.getToggleSortingHandler()}
                                   style="cursor: ${
-                                  header.column.getCanSort()
-                                    ? 'pointer'
-                                    : 'default'
-                                }"
+                                    header.column.getCanSort()
+                                      ? 'pointer'
+                                      : 'default'
+                                  }"
                                 >
                                   ${FlexRender({ header })}
                                   ${
-                                  { asc: ' 🔼', desc: ' 🔽' }[
-                                    header.column.getIsSorted() as string
-                                  ] ?? null
-                                }
+                                    { asc: ' 🔼', desc: ' 🔽' }[
+                                      header.column.getIsSorted() as string
+                                    ] ?? null
+                                  }
                                 </div>
                                 ${
-                                header.column.getCanFilter()
-                                  ? html`<div>
-                                      <column-filter
-                                        .column=${header.column}
-                                      ></column-filter>
-                                    </div>`
-                                  : null
-                              }
+                                  header.column.getCanFilter()
+                                    ? html`<div>
+                                        <column-filter
+                                          .column=${header.column}
+                                        ></column-filter>
+                                      </div>`
+                                    : null
+                                }
                               `
                         }
                       </th>

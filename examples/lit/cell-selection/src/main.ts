@@ -419,61 +419,62 @@ export class LitCellSelectionExample extends LitElement {
                                 <button
                                   type="button"
                                   class="header-button ${
-                                  header.column.getCanSort()
-                                    ? 'sortable-header'
-                                    : ''
-                                }"
+                                    header.column.getCanSort()
+                                      ? 'sortable-header'
+                                      : ''
+                                  }"
                                   ?disabled=${!header.column.getCanSort()}
                                   @click=${header.column.getToggleSortingHandler()}
                                 >
                                   ${FlexRender({ header })}
                                   ${
-                                  { asc: ' 🔼', desc: ' 🔽' }[
-                                    header.column.getIsSorted() as string
-                                  ] ?? ''
-                                }
+                                    { asc: ' 🔼', desc: ' 🔽' }[
+                                      header.column.getIsSorted() as string
+                                    ] ?? ''
+                                  }
                                 </button>
                                 ${
-                                header.column.getCanPin()
-                                  ? html`
-                                      <div class="pin-actions">
-                                        ${
-                                        header.column.getIsPinned() !== 'start'
-                                          ? html`<button
-                                              class="pin-button"
-                                              @click=${() =>
-                                              header.column.pin('start')}
-                                            >
-                                              &lt;=
-                                            </button>`
-                                          : null
-                                      }
-                                        ${
-                                        header.column.getIsPinned()
-                                          ? html`<button
-                                              class="pin-button"
-                                              @click=${() =>
-                                              header.column.pin(false)}
-                                            >
-                                              X
-                                            </button>`
-                                          : null
-                                      }
-                                        ${
-                                        header.column.getIsPinned() !== 'end'
-                                          ? html`<button
-                                              class="pin-button"
-                                              @click=${() =>
-                                              header.column.pin('end')}
-                                            >
-                                              =&gt;
-                                            </button>`
-                                          : null
-                                      }
-                                      </div>
-                                    `
-                                  : null
-                              }
+                                  header.column.getCanPin()
+                                    ? html`
+                                        <div class="pin-actions">
+                                          ${
+                                          header.column.getIsPinned() !==
+                                          'start'
+                                            ? html`<button
+                                                class="pin-button"
+                                                @click=${() =>
+                                                header.column.pin('start')}
+                                              >
+                                                &lt;=
+                                              </button>`
+                                            : null
+                                        }
+                                          ${
+                                          header.column.getIsPinned()
+                                            ? html`<button
+                                                class="pin-button"
+                                                @click=${() =>
+                                                header.column.pin(false)}
+                                              >
+                                                X
+                                              </button>`
+                                            : null
+                                        }
+                                          ${
+                                          header.column.getIsPinned() !== 'end'
+                                            ? html`<button
+                                                class="pin-button"
+                                                @click=${() =>
+                                                header.column.pin('end')}
+                                              >
+                                                =&gt;
+                                              </button>`
+                                            : null
+                                        }
+                                        </div>
+                                      `
+                                    : null
+                                }
                               `
                         }
                       </th>

@@ -168,19 +168,19 @@ class LitTableExample extends LitElement {
                             ? null
                             : html`<div>
                                 ${
-                                header.column.getCanGroup()
-                                  ? html`<button
-                                      @click=${header.column.getToggleGroupingHandler()}
-                                      style="cursor: pointer"
-                                    >
-                                      ${
-                                      header.column.getIsGrouped()
-                                        ? `🛑(${header.column.getGroupedIndex()}) `
-                                        : '👊 '
-                                    }
-                                    </button>`
-                                  : null
-                              }
+                                  header.column.getCanGroup()
+                                    ? html`<button
+                                        @click=${header.column.getToggleGroupingHandler()}
+                                        style="cursor: pointer"
+                                      >
+                                        ${
+                                        header.column.getIsGrouped()
+                                          ? `🛑(${header.column.getGroupedIndex()}) `
+                                          : '👊 '
+                                      }
+                                      </button>`
+                                    : null
+                                }
                                 ${FlexRender({ header })}
                               </div>`
                         }
@@ -215,8 +215,8 @@ class LitTableExample extends LitElement {
                               ? html`<button
                                   @click=${row.getToggleExpandedHandler()}
                                   style="cursor: ${
-                                  row.getCanExpand() ? 'pointer' : 'normal'
-                                }"
+                                    row.getCanExpand() ? 'pointer' : 'normal'
+                                  }"
                                 >
                                   ${row.getIsExpanded() ? '👇' : '👉'}
                                   ${FlexRender({ cell })}

@@ -274,15 +274,15 @@ class LitTableExample extends LitElement {
                             : html`
                                 ${FlexRender({ header })}
                                 ${
-                                header.column.getCanFilter()
-                                  ? html`<div>
-                                      <faceted-filter
-                                        .column=${header.column}
-                                        .table=${table}
-                                      ></faceted-filter>
-                                    </div>`
-                                  : null
-                              }
+                                  header.column.getCanFilter()
+                                    ? html`<div>
+                                        <faceted-filter
+                                          .column=${header.column}
+                                          .table=${table}
+                                        ></faceted-filter>
+                                      </div>`
+                                    : null
+                                }
                               `
                         }
                       </th>

@@ -271,10 +271,12 @@ class LitTableExample extends LitElement {
                             : html`
                                 <div>${FlexRender({ header })}</div>
                                 ${
-                                header.column.getCanFilter()
-                                  ? this.renderColumnFilter(header.getContext())
-                                  : null
-                              }
+                                  header.column.getCanFilter()
+                                    ? this.renderColumnFilter(
+                                        header.getContext(),
+                                      )
+                                    : null
+                                }
                               `
                         }
                       </th>

@@ -419,33 +419,34 @@ class LitTableExample extends LitElement {
                               : html`
                                   <div
                                     class=${
-                                    header.column.getCanSort()
-                                      ? 'sortable-header'
-                                      : ''
-                                  }
+                                      header.column.getCanSort()
+                                        ? 'sortable-header'
+                                        : ''
+                                    }
                                     title=${
-                                    header.column.getCanSort()
-                                      ? 'Toggle sorting'
-                                      : ''
-                                  }
+                                      header.column.getCanSort()
+                                        ? 'Toggle sorting'
+                                        : ''
+                                    }
                                     @click=${header.column.getToggleSortingHandler()}
                                   >
                                     ${FlexRender({ header })}${
-                                    {
-                                      asc: ' 🔼',
-                                      desc: ' 🔽',
-                                    }[header.column.getIsSorted() as string] ??
-                                    ''
-                                  }
+                                      {
+                                        asc: ' 🔼',
+                                        desc: ' 🔽',
+                                      }[
+                                        header.column.getIsSorted() as string
+                                      ] ?? ''
+                                    }
                                   </div>
                                   ${
-                                  header.column.getCanFilter()
-                                    ? html`<dynamic-filter
-                                        .column=${header.column}
-                                        .table=${table}
-                                      ></dynamic-filter>`
-                                    : null
-                                }
+                                    header.column.getCanFilter()
+                                      ? html`<dynamic-filter
+                                          .column=${header.column}
+                                          .table=${table}
+                                        ></dynamic-filter>`
+                                      : null
+                                  }
                                 `
                           }
                         </th>

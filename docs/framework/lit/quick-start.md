@@ -181,15 +181,17 @@ export class PersonTable extends LitElement {
                           : html`<div
                               @click=${header.column.getToggleSortingHandler()}
                               style="cursor: ${
-                              header.column.getCanSort() ? 'pointer' : 'default'
-                            }"
+                                header.column.getCanSort()
+                                  ? 'pointer'
+                                  : 'default'
+                              }"
                             >
                               ${FlexRender({ header })}
                               ${
-                              { asc: ' 🔼', desc: ' 🔽' }[
-                                header.column.getIsSorted() as string
-                              ] ?? null
-                            }
+                                { asc: ' 🔼', desc: ' 🔽' }[
+                                  header.column.getIsSorted() as string
+                                ] ?? null
+                              }
                             </div>`
                       }
                     </th>

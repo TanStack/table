@@ -217,14 +217,14 @@ class LitTableExample extends LitElement {
                           ? null
                           : html`<div>${FlexRender({ header })}</div>
                               ${
-                              header.column.getCanFilter()
-                                ? html` <div>
-                                    <column-filter
-                                      .column="${header.column}"
-                                    ></column-filter>
-                                  </div>`
-                                : null
-                            } `
+                                header.column.getCanFilter()
+                                  ? html` <div>
+                                      <column-filter
+                                        .column="${header.column}"
+                                      ></column-filter>
+                                    </div>`
+                                  : null
+                              } `
                       }
                     </th>
                   `,

@@ -204,9 +204,9 @@ class LitTableExample extends LitElement {
                       virtualPaddingLeft
                         ? html`<th
                             style="${styleMap({
-                            display: 'flex',
-                            width: `${virtualPaddingLeft}px`,
-                          })}"
+                              display: 'flex',
+                              width: `${virtualPaddingLeft}px`,
+                            })}"
                           ></th>`
                         : null
                     }
@@ -257,9 +257,9 @@ class LitTableExample extends LitElement {
                       virtualPaddingRight
                         ? html`<th
                             style="${styleMap({
-                            display: 'flex',
-                            width: `${virtualPaddingRight}px`,
-                          })}"
+                              display: 'flex',
+                              width: `${virtualPaddingRight}px`,
+                            })}"
                           ></th>`
                         : null
                     }
@@ -297,9 +297,9 @@ class LitTableExample extends LitElement {
                         virtualPaddingLeft
                           ? html`<td
                               style="${styleMap({
-                              display: 'flex',
-                              width: `${virtualPaddingLeft}px`,
-                            })}"
+                                display: 'flex',
+                                width: `${virtualPaddingLeft}px`,
+                              })}"
                             ></td>`
                           : null
                       }
@@ -324,9 +324,9 @@ class LitTableExample extends LitElement {
                         virtualPaddingRight
                           ? html`<td
                               style="${styleMap({
-                              display: 'flex',
-                              width: `${virtualPaddingRight}px`,
-                            })}"
+                                display: 'flex',
+                                width: `${virtualPaddingRight}px`,
+                              })}"
                             ></td>`
                           : null
                       }

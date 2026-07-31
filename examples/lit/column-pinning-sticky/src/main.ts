@@ -261,44 +261,44 @@ class LitTableExample extends LitElement {
                                 ? html`
                                     <div class="pin-actions">
                                       ${
-                                      header.column.getIsPinned() !== 'start'
-                                        ? html`
-                                            <button
-                                              class="pin-button"
-                                              @click="${() =>
-                                              header.column.pin('start')}"
-                                            >
-                                              ${'<='}
-                                            </button>
-                                          `
-                                        : null
-                                    }
+                                        header.column.getIsPinned() !== 'start'
+                                          ? html`
+                                              <button
+                                                class="pin-button"
+                                                @click="${() =>
+                                                header.column.pin('start')}"
+                                              >
+                                                ${'<='}
+                                              </button>
+                                            `
+                                          : null
+                                      }
                                       ${
-                                      header.column.getIsPinned()
-                                        ? html`
-                                            <button
-                                              class="pin-button"
-                                              @click="${() =>
-                                              header.column.pin(false)}"
-                                            >
-                                              X
-                                            </button>
-                                          `
-                                        : null
-                                    }
+                                        header.column.getIsPinned()
+                                          ? html`
+                                              <button
+                                                class="pin-button"
+                                                @click="${() =>
+                                                header.column.pin(false)}"
+                                              >
+                                                X
+                                              </button>
+                                            `
+                                          : null
+                                      }
                                       ${
-                                      header.column.getIsPinned() !== 'end'
-                                        ? html`
-                                            <button
-                                              class="pin-button"
-                                              @click="${() =>
-                                              header.column.pin('end')}"
-                                            >
-                                              ${'=>'}
-                                            </button>
-                                          `
-                                        : null
-                                    }
+                                        header.column.getIsPinned() !== 'end'
+                                          ? html`
+                                              <button
+                                                class="pin-button"
+                                                @click="${() =>
+                                                header.column.pin('end')}"
+                                              >
+                                                ${'=>'}
+                                              </button>
+                                            `
+                                          : null
+                                      }
                                     </div>
                                   `
                                 : null
