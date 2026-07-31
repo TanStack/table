@@ -13,7 +13,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.5.0",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.53",
-    "@tanstack/octane-table": "^9.0.0-beta.66",
+    "@tanstack/octane-table": "^9.0.0-beta.67",
     "octane": "0.1.21"
   },
   "devDependencies": {
