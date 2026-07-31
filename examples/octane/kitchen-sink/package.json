@@ -1,0 +1,24 @@
+{
+  "name": "@tanstack/octane-table-example-kitchen-sink",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "start": "vite",
+    "lint": "eslint ./src --ext .ts",
+    "test:e2e": "PLAYWRIGHT_TEST_DIR=$PWD/tests/e2e playwright test --config ../../../playwright.config.ts",
+    "test:types": "tsrx-tsc --noEmit"
+  },
+  "dependencies": {
+    "@faker-js/faker": "^10.5.0",
+    "@tanstack/match-sorter-utils": "^9.0.0-beta.53",
+    "@tanstack/octane-table": "^9.0.0-beta.65",
+    "octane": "0.1.21"
+  },
+  "devDependencies": {
+    "@tsrx/typescript-plugin": "^0.3.118",
+    "typescript": "6.0.3",
+    "vite": "^8.1.0"
+  }
+}

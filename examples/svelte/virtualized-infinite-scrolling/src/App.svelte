@@ -95,7 +95,7 @@
   const totalFetched = $derived(flatData.length)
 
   const fetchMoreOnBottomReached = (
-    containerRefElement?: HTMLDivElement | null,
+    containerRefElement: HTMLDivElement | null | undefined,
   ) => {
     if (containerRefElement) {
       const { scrollHeight, scrollTop, clientHeight } = containerRefElement

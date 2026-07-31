@@ -131,7 +131,7 @@ function App() {
       debugTable: true,
       debugColumns: true,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   return (

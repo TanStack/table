@@ -153,7 +153,7 @@ function App() {
         columnOrder: columns.map((c) => c.id ?? ''),
       },
     },
-    (state) => state, // default state selector
+    (state) => state, // default selector
   )
 
   useTanStackTableDevtools(table)

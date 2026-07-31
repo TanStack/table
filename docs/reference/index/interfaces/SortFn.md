@@ -19,8 +19,8 @@ Defined in: [features/row-sorting/rowSortingFeature.types.ts:34](https://github.
 
 ```ts
 SortFn(
-   rowA, 
-   rowB, 
+   rowA,
+   rowB,
    columnId): number;
 ```
 

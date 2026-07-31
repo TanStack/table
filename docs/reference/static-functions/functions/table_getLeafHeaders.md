@@ -9,7 +9,7 @@ title: table_getLeafHeaders
 function table_getLeafHeaders<TFeatures, TData>(table): Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.utils.ts:186](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L186)
+Defined in: [core/headers/coreHeadersFeature.utils.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.utils.ts#L194)
 
 Collects only the leaf headers from the current header tree.
 

@@ -2,8 +2,8 @@
   "name": "tanstack-angular-table-example-row-selection",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 6565",
-    "dev": "ng serve --port 6565",
+    "start": "ng serve --port 7777",
+    "dev": "ng serve --port 7777",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "lint": "eslint ./src",

@@ -9,7 +9,7 @@ title: ReactTable
 type ReactTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
-Defined in: [useTable.ts:21](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L21)
+Defined in: [useTable.ts:29](https://github.com/TanStack/table/blob/main/packages/react-table/src/useTable.ts#L29)
 
 ## Type Declaration
 

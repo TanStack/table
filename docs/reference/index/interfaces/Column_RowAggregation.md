@@ -70,7 +70,7 @@ caller-provided array of rows. `options.maxDepth` overrides the column's
 ### getAutoAggregationFn()
 
 ```ts
-getAutoAggregationFn: () => 
+getAutoAggregationFn: () =>
   | AggregationFnDef<TFeatures, TData, any, any>
   | undefined;
 ```

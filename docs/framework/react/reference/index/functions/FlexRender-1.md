@@ -6,7 +6,7 @@ title: FlexRender
 # Function: FlexRender()
 
 ```ts
-function FlexRender<TFeatures, TData, TValue>(props): 
+function FlexRender<TFeatures, TData, TValue>(props):
   | string
   | number
   | bigint

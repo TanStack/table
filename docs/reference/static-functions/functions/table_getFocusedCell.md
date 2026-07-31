@@ -6,7 +6,7 @@ title: table_getFocusedCell
 # Function: table\_getFocusedCell()
 
 ```ts
-function table_getFocusedCell<TFeatures, TData>(table): 
+function table_getFocusedCell<TFeatures, TData>(table):
   | Cell<TFeatures, TData, any>
   | undefined;
 ```

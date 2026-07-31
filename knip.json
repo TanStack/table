@@ -36,6 +36,20 @@
         "experimental-worker-plugin/index.ts!"
       ]
     },
+    "packages/octane-table": {
+      "entry": [
+        "src/index.ts!",
+        "src/Subscribe.tsrx!",
+        "src/createTableHook.tsrx!",
+        "src/useTable.tsrx!",
+        "src/internal.ts!",
+        "src/reactivity.ts!",
+        "src/static-functions.ts!",
+        "src/flex-render.ts!",
+        "src/experimental-worker-plugin.ts!",
+        "tests/type-tests/public-surface.tsx!"
+      ]
+    },
     "packages/svelte-table": {
       "entry": [
         "src/index.ts!",

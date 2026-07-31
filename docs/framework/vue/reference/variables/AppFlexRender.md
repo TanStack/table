@@ -19,7 +19,7 @@ const AppFlexRender: DefineComponent<ExtractPropTypes<{
      default: undefined;
      type: PropType<FlexRenderHeader>;
   };
-}>, () => 
+}>, () =>
   | VNode<RendererNode, RendererElement, {
 [key: string]: any;
 }>

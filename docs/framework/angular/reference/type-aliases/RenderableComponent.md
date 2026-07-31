@@ -6,7 +6,7 @@ title: RenderableComponent
 # Type Alias: RenderableComponent
 
 ```ts
-type RenderableComponent = 
+type RenderableComponent =
   | Type<any>
 | <T>(props) => FlexRenderContent<T>;
 ```

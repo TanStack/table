@@ -10,6 +10,7 @@ overrides:
   '@tanstack/ember-table': 'workspace:*'
   '@tanstack/lit-table': 'workspace:*'
   '@tanstack/match-sorter-utils': 'workspace:*'
+  '@tanstack/octane-table': 'workspace:*'
   '@tanstack/preact-table-devtools': 'workspace:*'
   '@tanstack/preact-table': 'workspace:*'
   '@tanstack/react-table-devtools': 'workspace:*'
@@ -47,6 +48,8 @@ allowBuilds:
 
 cleanupUnusedCatalogs: true
 minimumReleaseAge: 1440
+minimumReleaseAgeExclude:
+  - '@tanstack/octane-store@0.12.0'
 
 linkWorkspacePackages: true
 preferWorkspacePackages: true

@@ -94,7 +94,7 @@ const table = useTable({ features, columns, data })
 
 Read `table.state.workerRowModels.isPending` for a loading indicator; `lastComputeMs` and `lastRoundTripMs` on the same slice expose timings. When results arrive, re-renders flow through the standard table state mechanism.
 
-The plugin entry is available from every framework adapter (`@tanstack/react-table/experimental-worker-plugin`, `@tanstack/vue-table/experimental-worker-plugin`, and so on) as well as `@tanstack/table-core/experimental-worker-plugin`, and it is fully tree-shakable: apps that never import it ship none of it.
+The plugin entry is available from every framework adapter (`@tanstack/react-table/experimental-worker-plugin`, `@tanstack/octane-table/experimental-worker-plugin`, `@tanstack/vue-table/experimental-worker-plugin`, and so on) as well as `@tanstack/table-core/experimental-worker-plugin`, and it is fully tree-shakable: apps that never import it ship none of it.
 
 ## Offloadable Stages and Composition
 

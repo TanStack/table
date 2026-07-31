@@ -7,8 +7,8 @@ title: callMemoOrStaticFn
 
 ```ts
 function callMemoOrStaticFn<TObject, TArgs, TReturn>(
-   obj, 
-   fnKey, 
+   obj,
+   fnKey,
    staticFn, ...
    args): TReturn;
 ```
