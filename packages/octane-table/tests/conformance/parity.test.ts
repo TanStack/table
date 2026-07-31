@@ -3,7 +3,7 @@ import * as core from '@tanstack/table-core'
 import * as binding from '@tanstack/octane-table'
 
 describe('export surface', () => {
-  it('re-exports Table core and the Octane adapter APIs without legacy APIs', () => {
+  it('re-exports Table core and the Octane adapter APIs', () => {
     const adapterExports = [
       'FlexRender',
       'Subscribe',
@@ -15,7 +15,6 @@ describe('export surface', () => {
     const expected = [...Object.keys(core), ...adapterExports].sort()
 
     expect(Object.keys(binding).sort()).toEqual(expected)
-    expect(binding).not.toHaveProperty('useLegacyTable')
   })
 
   it('re-exports the same @tanstack/table-core module instance', () => {

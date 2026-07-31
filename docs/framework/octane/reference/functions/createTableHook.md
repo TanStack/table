@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(options): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsrx.d.ts:13](https://github.com/TanStack/table/blob/main/packages/octane-table/src/createTableHook.tsrx.d.ts#L13)
+Defined in: createTableHook.tsrx.d.ts:11
 
 ## Type Parameters
 

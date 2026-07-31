@@ -162,4 +162,4 @@ Source: `docs/framework/octane/guide/table-state.md`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/octane-table/src/useTable.tsrx.d.ts`, `Subscribe.tsrx.d.ts`, and `types.ts`. Use `@tanstack/octane-store`, not another framework's Store hooks.
+Inspect `node_modules/@tanstack/octane-table/dist/useTable.d.ts`, `Subscribe.d.ts`, and `types.d.ts`. Use `@tanstack/octane-store`, not another framework's Store hooks.

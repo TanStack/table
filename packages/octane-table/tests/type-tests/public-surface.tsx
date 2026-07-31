@@ -17,9 +17,6 @@ import type {
   TableState,
 } from '@tanstack/octane-table'
 
-// @ts-expect-error Octane intentionally has no legacy adapter subpath.
-type LegacyAdapter = typeof import('@tanstack/octane-table/legacy')
-
 type Row = { id: string; label: string }
 const features = tableFeatures({ rowSelectionFeature })
 const columns: Array<ColumnDef<typeof features, Row>> = [
@@ -97,4 +94,3 @@ void checkedUseTable
 void checkedSubscribe
 void checkedFactory
 void invalidSubscribe
-void (null as LegacyAdapter | null)

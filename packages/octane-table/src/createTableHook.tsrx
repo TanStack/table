@@ -2,7 +2,7 @@
 // hooks (`useRef`, `useMemo`). Every type lives in `./types`, so the
 // `.tsrx.d.ts` sidecar only restates this one signature.
 import { createColumnHelper as coreCreateColumnHelper } from '@tanstack/table-core';
-import { createContext, createElement, useContext, useMemo, useRef } from 'octane';
+import { createContext, useContext, useMemo, useRef } from 'octane';
 import { FlexRender } from './FlexRender';
 import { splitSlot } from './internal';
 import { useTable } from './useTable.tsrx';
@@ -325,15 +325,13 @@ export function createTableHook<
 			) {
 				const { children, selector: appTableSelector } = props as any;
 				const currentTable = tableRef.current;
+				const TableSubscribe = currentTable.Subscribe as any;
 
-				// Built in setup with `createElement` so the template stays a single
-				// renderable hole rather than branching JSX inside the Provider.
 				const body =
 					appTableSelector
-						? createElement(currentTable.Subscribe as any, {
-								selector: appTableSelector,
-								children: (state: TAppTableSelected) => children(state),
-							})
+						? <TableSubscribe selector={appTableSelector}>
+								{(state: TAppTableSelected) => children(state)}
+							</TableSubscribe>
 						: children;
 
 				return <TableContext.Provider value={currentTable}>{body}</TableContext.Provider>;
@@ -349,6 +347,7 @@ export function createTableHook<
 			) {
 				const { cell, children, selector: appCellSelector } = props as any;
 				const currentTable = tableRef.current;
+				const TableSubscribe = currentTable.Subscribe as any;
 				const extendedCell = Object.assign(cell, {
 					FlexRender: CellFlexRender,
 					...cellComponents,
@@ -356,10 +355,9 @@ export function createTableHook<
 
 				const body =
 					appCellSelector
-						? createElement(currentTable.Subscribe as any, {
-								selector: appCellSelector,
-								children: (state: TAppCellSelected) => children(extendedCell, state),
-							})
+						? <TableSubscribe selector={appCellSelector}>
+								{(state: TAppCellSelected) => children(extendedCell, state)}
+							</TableSubscribe>
 						: children(extendedCell);
 
 				return <CellContext.Provider value={cell}>{body}</CellContext.Provider>;
@@ -381,6 +379,7 @@ export function createTableHook<
 			) {
 				const { header, children, selector: appHeaderSelector } = props as any;
 				const currentTable = tableRef.current;
+				const TableSubscribe = currentTable.Subscribe as any;
 				const extendedHeader = Object.assign(header, {
 					FlexRender: HeaderFlexRender,
 					...headerComponents,
@@ -388,10 +387,9 @@ export function createTableHook<
 
 				const body =
 					appHeaderSelector
-						? createElement(currentTable.Subscribe as any, {
-								selector: appHeaderSelector,
-								children: (state: TAppHeaderSelected) => children(extendedHeader, state),
-							})
+						? <TableSubscribe selector={appHeaderSelector}>
+								{(state: TAppHeaderSelected) => children(extendedHeader, state)}
+							</TableSubscribe>
 						: children(extendedHeader);
 
 				return <HeaderContext.Provider value={header}>{body}</HeaderContext.Provider>;
@@ -414,6 +412,7 @@ export function createTableHook<
 			) {
 				const { header, children, selector: appFooterSelector } = props as any;
 				const currentTable = tableRef.current;
+				const TableSubscribe = currentTable.Subscribe as any;
 				const extendedHeader = Object.assign(header, {
 					FlexRender: FooterFlexRender,
 					...headerComponents,
@@ -421,10 +420,9 @@ export function createTableHook<
 
 				const body =
 					appFooterSelector
-						? createElement(currentTable.Subscribe as any, {
-								selector: appFooterSelector,
-								children: (state: TAppFooterSelected) => children(extendedHeader, state),
-							})
+						? <TableSubscribe selector={appFooterSelector}>
+								{(state: TAppFooterSelected) => children(extendedHeader, state)}
+							</TableSubscribe>
 						: children(extendedHeader);
 
 				return <HeaderContext.Provider value={header}>{body}</HeaderContext.Provider>;

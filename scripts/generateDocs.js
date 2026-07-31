@@ -37,8 +37,6 @@ await generateReferenceDocs({
     },
     {
       name: 'octane-table',
-      // Octane ships authored .tsrx. TypeDoc reads the package's public
-      // declaration entry, which resolves the focused .tsrx.d.ts companions.
       entryPoints: [
         resolve(__dirname, '../packages/octane-table/docs-entry.d.ts'),
       ],

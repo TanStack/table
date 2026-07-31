@@ -170,4 +170,4 @@ Source: `packages/octane-table/src/createTableHook.tsrx`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/octane-table/src/createTableHook.tsrx.d.ts`, `createTableHookContexts.ts`, and `types.ts` for exact return names, wrapper props, registries, and scoped context types.
+Inspect `node_modules/@tanstack/octane-table/dist/createTableHook.d.ts`, `createTableHookContexts.d.ts`, and `types.d.ts` for exact return names, wrapper props, registries, and scoped context types.

@@ -111,8 +111,8 @@ api_discovery_policy:
   feature_source: 'node_modules/@tanstack/table-core/dist/features/<feature>/'
   ember_entrypoint: 'node_modules/@tanstack/ember-table/declarations/index.d.ts'
   angular_entrypoint: 'node_modules/@tanstack/angular-table/dist/types/'
-  octane_entrypoint: 'node_modules/@tanstack/octane-table/src/index.ts and matching *.tsrx.d.ts sidecars'
-  fallback: 'If declarations are unavailable, resolve the installed package root and inspect published types; do not open package src/ except for source-distributed Octane, or substitute v8 / another adapter API.'
+  octane_entrypoint: 'node_modules/@tanstack/octane-table/dist/types/index.d.ts'
+  fallback: 'If declarations are unavailable, resolve the installed package root and inspect published types; do not open package src/ or substitute v8 / another adapter API.'
 
 coverage:
   ignored_packages:
@@ -1292,7 +1292,7 @@ skills:
     domain: framework-adapters
     type: framework
     framework: octane
-    purpose: 'Create and render an Octane v9 table with authored TSRX, stable inputs, keyed lists, and component-scoped render helpers.'
+    purpose: 'Create and render an Octane v9 table with application-authored TSRX, stable inputs, keyed lists, and component-scoped render helpers.'
     sources:
       [
         'TanStack/table:docs/framework/octane/quick-start.md',

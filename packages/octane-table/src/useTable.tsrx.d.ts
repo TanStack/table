@@ -1,8 +1,6 @@
-// Declaration companion for useTable.tsrx.
-//
-// A SPECIFIC module declaration (resolved by relative path), not an ambient
-// `declare module '*.tsrx'` — so it types only this module and doesn't pollute a
-// consumer's own .tsrx imports. The runtime resolves the real compiled .tsrx.
+// Focused public declaration for the compiled useTable client/server modules.
+// Keeping this specific to useTable avoids a wildcard ambient declaration for
+// consumer-authored .tsrx modules.
 import type {
   RowData,
   TableFeatures,

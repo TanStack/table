@@ -6,9 +6,6 @@
 // core verbatim and ports the adapter — `useTable`, `Subscribe`, `FlexRender`,
 // `createTableHook`, `createTableHookContexts` — onto octane.
 //
-// Upstream's `useLegacyTable` v8-compat layer is deliberately NOT ported: it
-// exists to migrate existing React v8 codebases, which an octane binding has
-// none of. Octane code targets the v9 `useTable` API directly.
 export * from '@tanstack/table-core'
 
 export * from './FlexRender'

@@ -22,17 +22,34 @@
     "tanstack-intent"
   ],
   "type": "module",
-  "main": "./src/index.ts",
-  "module": "./src/index.ts",
-  "types": "./src/index.d.ts",
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/server/index.js",
+  "module": "./dist/client/index.js",
   "exports": {
     ".": {
-      "types": "./src/index.d.ts",
-      "default": "./src/index.ts"
+      "types": "./dist/types/index.d.ts",
+      "browser": "./dist/client/index.js",
+      "node": "./dist/server/index.js",
+      "default": "./dist/client/index.js"
     },
-    "./experimental-worker-plugin": "./src/experimental-worker-plugin.ts",
-    "./flex-render": "./src/flex-render.ts",
-    "./static-functions": "./src/static-functions.ts",
+    "./experimental-worker-plugin": {
+      "types": "./dist/types/experimental-worker-plugin.d.ts",
+      "browser": "./dist/client/experimental-worker-plugin.js",
+      "node": "./dist/server/experimental-worker-plugin.js",
+      "default": "./dist/client/experimental-worker-plugin.js"
+    },
+    "./flex-render": {
+      "types": "./dist/types/flex-render.d.ts",
+      "browser": "./dist/client/flex-render.js",
+      "node": "./dist/server/flex-render.js",
+      "default": "./dist/client/flex-render.js"
+    },
+    "./static-functions": {
+      "types": "./dist/types/static-functions.d.ts",
+      "browser": "./dist/client/static-functions.js",
+      "node": "./dist/server/static-functions.js",
+      "default": "./dist/client/static-functions.js"
+    },
     "./package.json": "./package.json"
   },
   "sideEffects": false,
@@ -40,10 +57,16 @@
     "node": ">=22"
   },
   "files": [
-    "src",
-    "skills",
-    "README.md"
+    "dist",
+    "skills"
   ],
+  "octane": {
+    "hookSlots": {
+      "manual": [
+        "dist"
+      ]
+    }
+  },
   "scripts": {
     "clean": "rimraf ./build && rimraf ./dist",
     "test:eslint": "eslint ./src --ext .ts",
@@ -53,7 +76,7 @@
     "test:lib:dev": "pnpm test:lib:client --watch",
     "test:types": "tsrx-tsc --noEmit",
     "test:build": "publint --strict",
-    "build": "tsrx-tsc --noEmit"
+    "build": "rimraf ./dist && tsdown && tsrx-tsc -p tsconfig.build.json && node scripts/finalize-types.mjs"
   },
   "dependencies": {
     "@tanstack/octane-store": "^0.12.0",

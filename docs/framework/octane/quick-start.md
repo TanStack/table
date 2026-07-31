@@ -95,7 +95,7 @@ A few things to note:
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
 - The core row model is always included automatically. Feature row models (sorting, filtering, pagination) are registered as slots directly on the `tableFeatures({...})` call when you need them.
 - `table.FlexRender` renders the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values or Octane components.
-- Octane compiles authored TSRX for the current client or server target. Keep `.tsrx` source in your application compilation path.
+- Octane compiles your application's authored TSRX for the current client or server target. The Table adapter itself ships compiled JavaScript and declarations.
 
 See the full [Basic useTable example](./examples/basic-use-table) for a runnable version with more columns and a footer.
 

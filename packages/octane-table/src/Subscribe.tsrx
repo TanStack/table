@@ -59,5 +59,3 @@ function SubscribeImpl(props: SubscribeProps<any, any, any>) @{
  * ```
  */
 export const Subscribe = SubscribeImpl as SubscribeComponent;
-
-

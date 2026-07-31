@@ -9,7 +9,7 @@ title: useTable
 function useTable<TFeatures, TData, TSelected>(tableOptions, selector?): OctaneTable<TFeatures, TData, TSelected>;
 ```
 
-Defined in: [useTable.tsrx.d.ts:14](https://github.com/TanStack/table/blob/main/packages/octane-table/src/useTable.tsrx.d.ts#L14)
+Defined in: useTable.tsrx.d.ts:12
 
 ## Type Parameters
 
