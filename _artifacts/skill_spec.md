@@ -9,7 +9,7 @@ This specification is the generation contract for a deliberately smaller, foot-g
 
 ## Outcome
 
-Generate 75 short package-local skills across all 17 public packages. A loaded skill should quickly do three things:
+Generate 78 short package-local skills across all 18 public packages. A loaded skill should quickly do three things:
 
 1. Correct the user or agent mental model.
 2. Show the smallest reliable setup or decision pattern.
@@ -47,10 +47,11 @@ Every skill that discusses APIs must tell the consuming agent how to inspect the
 - Stock feature API: node_modules/@tanstack/table-core/dist/features/FEATURE/.
 - Ember API: node_modules/@tanstack/ember-table/declarations/index.d.ts (and sibling `declarations/*.d.ts`).
 - Angular API: node_modules/@tanstack/angular-table/dist/types/\*.d.ts (bundled public API; do not expect `src/helpers/` under the published package).
+- Octane API: node_modules/@tanstack/octane-table/src/index.ts, the matching `*.tsrx.d.ts` sidecar, and `src/types.ts` (the package intentionally distributes authored TSRX source).
 - Devtools API: node_modules/@tanstack/FRAMEWORK-table-devtools/dist/index.d.ts or @tanstack/table-devtools/dist/index.d.ts.
 - Fuzzy ranking API: node_modules/@tanstack/match-sorter-utils/dist/index.d.ts.
 
-Do not open package `src/` under `node_modules` (it is not published). Do not direct agents to a GitHub main-branch source file when an installed package is available. Installed declarations keep guidance aligned with the consumer package version.
+Do not open package `src/` under `node_modules` unless the package intentionally publishes source, as `@tanstack/octane-table` does. Do not direct agents to a GitHub main-branch source file when an installed package is available. Installed declarations and published source keep guidance aligned with the consumer package version.
 
 ## Skill writing contract
 
@@ -241,7 +242,13 @@ Ember ships three:
 - table-state
 - create-table-hook
 
-Do not add Query where no maintained adapter example exists. Do not add Alpine or Ember migration skills because neither has a v8 adapter journey to teach. Do not add Ember Query or Virtual skills until maintained adapter examples exist. Do not invent Preact virtualization examples; its Virtual skill should rely on the maintained adapter guide and installed APIs.
+Octane ships three:
+
+- getting-started
+- table-state
+- create-table-hook
+
+Do not add Query where no maintained adapter example exists. Do not add Alpine, Ember, or Octane migration skills because none has a v8 adapter journey to teach. Do not add Ember or Octane Query or Virtual skills until maintained adapter examples exist. Do not invent Preact virtualization examples; its Virtual skill should rely on the maintained adapter guide and installed APIs.
 
 ### Devtools set (6)
 
@@ -267,6 +274,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 | @tanstack/table-core             |     21 |
 | @tanstack/react-table            |      6 |
 | @tanstack/preact-table           |      6 |
+| @tanstack/octane-table           |      3 |
 | @tanstack/solid-table            |      6 |
 | @tanstack/svelte-table           |      6 |
 | @tanstack/vue-table              |      6 |
@@ -281,7 +289,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 | @tanstack/vue-table-devtools     |      1 |
 | @tanstack/angular-table-devtools |      1 |
 | @tanstack/match-sorter-utils     |      1 |
-| Total                            |     75 |
+| Total                            |     78 |
 
 ## Framework distinctions that must survive generation
 
@@ -296,6 +304,14 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 
 - Use the native Preact package, not React through preact/compat.
 - State selection and Subscribe resemble React but must use Preact adapter/store imports.
+
+### Octane
+
+- The package distributes authored TSRX; consumer tooling must compile it with Octane, and components use TSRX component bodies plus keyed `@for` loops where appropriate.
+- `useTable` stages fresh options for same-render reads, selects `table.state`, and publishes controlled state only from an accepted layout commit; abandoned work cannot notify the store.
+- Render `table.Subscribe` and the createTableHook App wrappers as components so each has an independent Octane hook/context scope; never invoke them as plain functions.
+- Use `@tanstack/octane-store` for external atoms. External atoms are synchronous owners and take precedence over controlled `options.state`.
+- Native text inputs update on `onInput`; `onChange` follows native change timing rather than React's input-event alias.
 
 ### Solid
 

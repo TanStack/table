@@ -8,7 +8,7 @@ library:
 generated_from:
   domain_map: '_artifacts/domain_map.yaml'
   skill_spec: '_artifacts/skill_spec.md'
-generated_at: '2026-07-29'
+generated_at: '2026-07-31'
 status: reviewed
 reviewed_at: '2026-07-29'
 batch_review: true
@@ -943,6 +943,51 @@ skills:
       - 'TanStack/table:examples/lit/virtualized-rows'
       - 'TanStack/table:examples/lit/virtualized-columns'
       - 'TanStack/table:examples/lit/virtualized-infinite-scrolling'
+
+  - name: 'Octane Getting Started'
+    slug: getting-started
+    type: framework
+    domain: framework-adapters
+    path: 'packages/octane-table/skills/getting-started/SKILL.md'
+    package: 'packages/octane-table'
+    description: 'Create an @tanstack/octane-table v9 table with useTable, tableFeatures, stable inputs, TSRX component bodies, keyed @for rendering, and FlexRender. Load when starting an Octane table or translating a React/Preact example without changing its behavior.'
+    requires:
+      ['@tanstack/table-core#core', '@tanstack/table-core#table-features']
+    sources:
+      - 'TanStack/table:docs/framework/octane/quick-start.md'
+      - 'TanStack/table:examples/octane/basic-use-table'
+      - 'TanStack/table:packages/octane-table/src/index.ts'
+      - 'TanStack/table:packages/octane-table/src/useTable.tsrx'
+
+  - name: 'Octane Table State'
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: 'packages/octane-table/skills/table-state/SKILL.md'
+    package: 'packages/octane-table'
+    description: 'Read and own Octane Table v9 state with useTable selectors, table.state, table.Subscribe, controlled slices, and @tanstack/octane-store atoms. Load for state ownership, render timing, snapshot-versus-subscription bugs, or fine-grained rendering.'
+    requires: ['@tanstack/table-core#core', 'getting-started']
+    sources:
+      - 'TanStack/table:docs/framework/octane/guide/table-state.md'
+      - 'TanStack/table:examples/octane/basic-subscribe'
+      - 'TanStack/table:examples/octane/basic-external-atoms'
+      - 'TanStack/table:packages/octane-table/src/useTable.tsrx'
+      - 'TanStack/table:packages/octane-table/src/Subscribe.tsrx'
+
+  - name: 'Octane createTableHook'
+    slug: create-table-hook
+    type: framework
+    domain: framework-adapters
+    path: 'packages/octane-table/skills/create-table-hook/SKILL.md'
+    package: 'packages/octane-table'
+    description: 'Create reusable Octane table infrastructure with createTableHook, useAppTable, createAppColumnHelper, registered components, stable App wrappers, and typed context hooks. Load for recurring conventions, scoped contexts, or prop drilling.'
+    requires: ['@tanstack/table-core#core', 'getting-started', 'table-state']
+    sources:
+      - 'TanStack/table:docs/framework/octane/guide/composable-tables.md'
+      - 'TanStack/table:docs/framework/octane/guide/table-context.md'
+      - 'TanStack/table:examples/octane/composable-tables'
+      - 'TanStack/table:packages/octane-table/src/createTableHook.tsrx'
+      - 'TanStack/table:packages/octane-table/src/createTableHookContexts.ts'
 
   - name: 'Ember Getting Started'
     slug: getting-started

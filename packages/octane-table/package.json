@@ -41,6 +41,7 @@
   },
   "files": [
     "src",
+    "skills",
     "README.md"
   ],
   "scripts": {

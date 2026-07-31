@@ -38,6 +38,7 @@
     },
     "packages/octane-table": {
       "entry": [
+        "docs-entry.d.ts!",
         "src/index.ts!",
         "src/Subscribe.tsrx!",
         "src/createTableHook.tsrx!",
