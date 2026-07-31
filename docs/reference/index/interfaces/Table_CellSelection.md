@@ -153,7 +153,7 @@ Returns the ids of all rows intersected by the selection.
 ### getFocusedCell()
 
 ```ts
-getFocusedCell: () => 
+getFocusedCell: () =>
   | Cell<TFeatures, TData, any>
   | undefined;
 ```

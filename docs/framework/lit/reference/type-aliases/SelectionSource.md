@@ -6,7 +6,7 @@ title: SelectionSource
 # Type Alias: SelectionSource\<TValue\>
 
 ```ts
-type SelectionSource<TValue> = 
+type SelectionSource<TValue> =
   | Atom<TValue>
   | ReadonlyAtom<TValue>
   | Store<TValue>

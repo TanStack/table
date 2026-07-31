@@ -107,7 +107,7 @@ Returns a map of all leaf-node columns by their ID. This does not include parent
 ### getColumn()
 
 ```ts
-getColumn: (columnId) => 
+getColumn: (columnId) =>
   | Column<TFeatures, TData, unknown>
   | undefined;
 ```

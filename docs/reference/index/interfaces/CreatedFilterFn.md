@@ -30,9 +30,9 @@ any table's rows, regardless of the feature set it was defined against.
 
 ```ts
 CreatedFilterFn<TRowFeatures, TRowData>(
-   row, 
-   columnId, 
-   filterValue, 
+   row,
+   columnId,
+   filterValue,
    addMeta?): boolean;
 ```
 

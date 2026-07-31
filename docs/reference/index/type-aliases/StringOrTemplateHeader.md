@@ -6,7 +6,7 @@ title: StringOrTemplateHeader
 # Type Alias: StringOrTemplateHeader\<TFeatures, TData, TValue\>
 
 ```ts
-type StringOrTemplateHeader<TFeatures, TData, TValue> = 
+type StringOrTemplateHeader<TFeatures, TData, TValue> =
   | string
 | ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>;
 ```

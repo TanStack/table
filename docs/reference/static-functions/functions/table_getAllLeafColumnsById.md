@@ -9,7 +9,7 @@ title: table_getAllLeafColumnsById
 function table_getAllLeafColumnsById<TFeatures, TData>(table): Record<string, Column<TFeatures, TData, unknown>>;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L235)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:248](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L248)
 
 Builds an id lookup for terminal leaf columns only.
 

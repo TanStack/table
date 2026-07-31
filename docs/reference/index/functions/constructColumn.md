@@ -7,9 +7,9 @@ title: constructColumn
 
 ```ts
 function constructColumn<TFeatures, TData, TValue>(
-   table, 
-   columnDef, 
-   depth, 
+   table,
+   columnDef,
+   depth,
 parent?): Column<TFeatures, TData, TValue>;
 ```
 

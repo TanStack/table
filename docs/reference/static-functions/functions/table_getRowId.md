@@ -7,9 +7,9 @@ title: table_getRowId
 
 ```ts
 function table_getRowId<TFeatures, TData>(
-   originalRow, 
-   table, 
-   index, 
+   originalRow,
+   table,
+   index,
    parent?): string;
 ```
 

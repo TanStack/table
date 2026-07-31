@@ -2,9 +2,9 @@
   "name": "tanstack-angular-table-example-remote-data",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 6565",
-    "dev": "ng serve --port 6565",
-    "start:no-ssr": "ng serve --port 6565 --configuration=no-ssr",
+    "start": "ng serve --port 7777",
+    "dev": "ng serve --port 7777",
+    "start:no-ssr": "ng serve --port 7777 --configuration=no-ssr",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",

@@ -6,7 +6,7 @@ title: SubscribeProps
 # Type Alias: SubscribeProps\<TFeatures, TSelected, TSourceValue\>
 
 ```ts
-type SubscribeProps<TFeatures, TSelected, TSourceValue> = 
+type SubscribeProps<TFeatures, TSelected, TSourceValue> =
   | SubscribePropsWithStore<TFeatures, TSelected>
   | SubscribePropsWithSourceIdentity<TSourceValue>
 | SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>;

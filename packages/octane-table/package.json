@@ -1,0 +1,93 @@
+{
+  "name": "@tanstack/octane-table",
+  "version": "9.0.0-beta.65",
+  "description": "Headless UI for building powerful tables & datagrids for Octane.",
+  "author": "Tanner Linsley",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TanStack/table.git",
+    "directory": "packages/octane-table"
+  },
+  "homepage": "https://tanstack.com/table",
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/tannerlinsley"
+  },
+  "keywords": [
+    "octane",
+    "table",
+    "octane-table",
+    "datagrid",
+    "tanstack-intent"
+  ],
+  "type": "module",
+  "types": "./dist/types/index.d.ts",
+  "main": "./dist/server/index.js",
+  "module": "./dist/client/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/types/index.d.ts",
+      "browser": "./dist/client/index.js",
+      "node": "./dist/server/index.js",
+      "default": "./dist/client/index.js"
+    },
+    "./experimental-worker-plugin": {
+      "types": "./dist/types/experimental-worker-plugin.d.ts",
+      "browser": "./dist/client/experimental-worker-plugin.js",
+      "node": "./dist/server/experimental-worker-plugin.js",
+      "default": "./dist/client/experimental-worker-plugin.js"
+    },
+    "./flex-render": {
+      "types": "./dist/types/flex-render.d.ts",
+      "browser": "./dist/client/flex-render.js",
+      "node": "./dist/server/flex-render.js",
+      "default": "./dist/client/flex-render.js"
+    },
+    "./static-functions": {
+      "types": "./dist/types/static-functions.d.ts",
+      "browser": "./dist/client/static-functions.js",
+      "node": "./dist/server/static-functions.js",
+      "default": "./dist/client/static-functions.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "sideEffects": false,
+  "engines": {
+    "node": ">=22"
+  },
+  "files": [
+    "dist",
+    "skills"
+  ],
+  "octane": {
+    "hookSlots": {
+      "manual": [
+        "dist"
+      ]
+    }
+  },
+  "scripts": {
+    "clean": "rimraf ./build && rimraf ./dist",
+    "test:eslint": "eslint ./src --ext .ts",
+    "test:lib": "vitest --passWithNoTests && vitest --config vitest.ssr.config.ts --passWithNoTests",
+    "test:lib:client": "vitest --passWithNoTests",
+    "test:lib:ssr": "vitest --config vitest.ssr.config.ts --passWithNoTests",
+    "test:lib:dev": "pnpm test:lib:client --watch",
+    "test:types": "tsrx-tsc --noEmit",
+    "test:build": "publint --strict",
+    "build": "rimraf ./dist && tsdown && tsrx-tsc -p tsconfig.build.json && node scripts/finalize-types.mjs"
+  },
+  "dependencies": {
+    "@tanstack/octane-store": "^0.12.0",
+    "@tanstack/table-core": "workspace:*"
+  },
+  "devDependencies": {
+    "@tsrx/typescript-plugin": "^0.3.118",
+    "octane": "0.1.21",
+    "typescript": "6.0.3"
+  },
+  "peerDependencies": {
+    "octane": "0.1.21"
+  }
+}

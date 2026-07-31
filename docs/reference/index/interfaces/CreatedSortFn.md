@@ -31,8 +31,8 @@ against.
 
 ```ts
 CreatedSortFn<TRowFeatures, TRowData>(
-   rowA, 
-   rowB, 
+   rowA,
+   rowB,
    columnId): number;
 ```
 

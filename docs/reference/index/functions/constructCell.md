@@ -7,8 +7,8 @@ title: constructCell
 
 ```ts
 function constructCell<TFeatures, TData, TValue>(
-   column, 
-   row, 
+   column,
+   row,
 table): Cell<TFeatures, TData, TValue>;
 ```
 

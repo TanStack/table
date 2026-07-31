@@ -6,12 +6,12 @@ title: column_getAutoAggregationFn
 # Function: column\_getAutoAggregationFn()
 
 ```ts
-function column_getAutoAggregationFn<TFeatures, TData, TValue>(column): 
+function column_getAutoAggregationFn<TFeatures, TData, TValue>(column):
   | AggregationFnDef<TFeatures, TData, any, any>
   | undefined;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:159](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L159)
+Defined in: [features/row-aggregation/rowAggregationFeature.utils.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.utils.ts#L189)
 
 Resolves the `sum` or `extent` definition inferred from the first core row.
 

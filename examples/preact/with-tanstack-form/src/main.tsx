@@ -141,7 +141,7 @@ function FullTableFormExample() {
       data,
       debugTable: true,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   useTanStackTableDevtools(table)
@@ -331,7 +331,7 @@ function RowSubmitFormExample() {
       data,
       debugTable: true,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   useTanStackTableDevtools(table)

@@ -24,7 +24,7 @@ optional cell: AppColumnDefTemplate<AppCellContext<TFeatures, TData, unknown, TC
 ### columns?
 
 ```ts
-optional columns: ColumnDef<TFeatures, TData, unknown>[];
+optional columns: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>;
 ```
 
 ### footer?

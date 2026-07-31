@@ -9,7 +9,7 @@ title: PreactTable
 type PreactTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
-Defined in: [useTable.ts:19](https://github.com/TanStack/table/blob/main/packages/preact-table/src/useTable.ts#L19)
+Defined in: [useTable.ts:27](https://github.com/TanStack/table/blob/main/packages/preact-table/src/useTable.ts#L27)
 
 ## Type Declaration
 

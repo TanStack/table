@@ -10,6 +10,7 @@ Install your table adapter as a dependency using your preferred package manager:
 
 react: @tanstack/react-table@beta
 preact: @tanstack/preact-table@beta
+octane: @tanstack/octane-table@beta
 vue: @tanstack/vue-table@beta
 solid: @tanstack/solid-table@beta
 svelte: @tanstack/svelte-table@beta
@@ -32,6 +33,10 @@ The `@tanstack/react-table` package works with React 18 or newer.
 # Preact
 
 The `@tanstack/preact-table` package works with Preact 10 or newer.
+
+# Octane
+
+The `@tanstack/octane-table` package works with Octane 0.1.21. Configure Octane's compiler integration (for example, `octane()` with Vite) for your application's TSRX components.
 
 # Vue
 

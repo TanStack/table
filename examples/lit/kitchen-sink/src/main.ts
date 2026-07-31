@@ -206,7 +206,7 @@ class LitTableExample extends LitElement {
         keepPinnedRows: true,
         debugTable: true,
       },
-      (state) => state,
+      (state) => state, // default selector
     )
 
     return html`
