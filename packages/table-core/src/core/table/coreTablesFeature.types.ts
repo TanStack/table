@@ -84,7 +84,9 @@ export type TableOptionAtoms<
   readonly [K in keyof TableOptions<
     TFeatures,
     TData
-  > as K extends 'snapshotVersion' ? never : K]: K extends ConstructStaticOptionKey
+  > as K extends 'snapshotVersion'
+    ? never
+    : K]: K extends ConstructStaticOptionKey
     ? ReadonlyAtom<TableOptions<TFeatures, TData>[K]>
     : Atom<TableOptions<TFeatures, TData>[K]>
 }

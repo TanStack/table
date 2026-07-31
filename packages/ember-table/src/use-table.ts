@@ -85,11 +85,7 @@ export function useTable<
       const currentHasKey = Reflect.has(defaultOptions, key)
       const nextValue = Reflect.get(newOptions, key, newOptions) as unknown
       const currentValue = currentHasKey
-        ? (Reflect.get(
-            defaultOptions,
-            key,
-            defaultOptions,
-          ) as unknown)
+        ? (Reflect.get(defaultOptions, key, defaultOptions) as unknown)
         : undefined
 
       if (!currentHasKey || !Object.is(currentValue, nextValue)) {

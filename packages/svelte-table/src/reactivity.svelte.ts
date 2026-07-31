@@ -38,11 +38,9 @@ export function svelteReactivity(): TableReactivityBindings {
     },
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, _options?: TableAtomOptions<T>) => {
-      const storeAtom = createStableStoreReadonlyAtom(
-        createAtom,
-        fn,
-        { compare: _options?.compare },
-      )
+      const storeAtom = createStableStoreReadonlyAtom(createAtom, fn, {
+        compare: _options?.compare,
+      })
       const trackStore = createSubscriber((update) => {
         const subscription = storeAtom.subscribe(() => {
           update()

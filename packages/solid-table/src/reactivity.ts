@@ -68,14 +68,10 @@ export function solidReactivity(owner: Owner): TableReactivityBindings {
     schedule: (fn) => queueMicrotask(() => fn()),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
       const signal = runWithOwner(owner, () =>
-        createMemo(
-          () => fn(),
-          undefined,
-          {
-            ...(options?.compare ? { equals: options.compare } : {}),
-            name: options?.debugName,
-          },
-        ),
+        createMemo(() => fn(), undefined, {
+          ...(options?.compare ? { equals: options.compare } : {}),
+          name: options?.debugName,
+        }),
       )!
       return signalToReadonlyAtom(signal, owner)
     },

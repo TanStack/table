@@ -145,10 +145,7 @@ export const columnSizingFeature: TableFeature = {
           if (header.column.columns.length > 0) {
             return header_getSize(header)
           }
-          return resolveColumnSize(
-            header.column,
-            readColumnSize(header.column),
-          )
+          return resolveColumnSize(header.column, readColumnSize(header.column))
         },
       },
       header_getStart: {

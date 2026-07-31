@@ -121,10 +121,7 @@ export function constructTable<
     (key, updater) => {
       table.setOptions((previous) => ({
         ...previous,
-        [key]: functionalUpdate(
-          updater,
-          Reflect.get(previous, key, previous),
-        ),
+        [key]: functionalUpdate(updater, Reflect.get(previous, key, previous)),
       }))
     },
   )

@@ -61,10 +61,7 @@ function accessRows<TFeatures extends TableFeatures, TData extends RowData>(
       ) => string)
     | undefined,
   getSubRows:
-    | ((
-        originalRow: TData,
-        index: number,
-      ) => ReadonlyArray<TData> | undefined)
+    | ((originalRow: TData, index: number) => ReadonlyArray<TData> | undefined)
     | undefined,
   depth = 0,
   parentRow?: Row<TFeatures, TData>,
@@ -131,10 +128,7 @@ function _createCoreRowModel<
       ) => string)
     | undefined,
   getSubRows:
-    | ((
-        originalRow: TData,
-        index: number,
-      ) => ReadonlyArray<TData> | undefined)
+    | ((originalRow: TData, index: number) => ReadonlyArray<TData> | undefined)
     | undefined,
 ): {
   rows: Array<Row<TFeatures, TData>>

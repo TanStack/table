@@ -186,9 +186,7 @@ export function renderPhaseReactivity(
               dirty = true
             }
           },
-          subscribe: ((
-            observer: Observer<T> | ((value: T) => void),
-          ) => {
+          subscribe: ((observer: Observer<T> | ((value: T) => void)) => {
             let previous = currentValue
             return publishedVersion.subscribe(() => {
               const nextValue = currentValue

@@ -28,11 +28,9 @@ export function alpineReactivity(): TableReactivityBindings {
     batch,
     untrack: (fn) => fn(),
     createReadonlyAtom: <T>(fn: () => T, options?: TableAtomOptions<T>) => {
-      return createStableStoreReadonlyAtom(
-        createAtom,
-        fn,
-        { compare: options?.compare },
-      )
+      return createStableStoreReadonlyAtom(createAtom, fn, {
+        compare: options?.compare,
+      })
     },
     createWritableAtom: <T>(value: T, options?: TableAtomOptions<T>) => {
       return createAtom(value, {

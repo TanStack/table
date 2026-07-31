@@ -25,9 +25,7 @@ const subRowsTracking = new WeakMap<object, SubRowsTrackingState>()
 export function row_getTrackedSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-): Array<Row<TFeatures, TData>> {
+>(row: Row<TFeatures, TData>): Array<Row<TFeatures, TData>> {
   const tracking = subRowsTracking.get(row)
 
   if (!tracking) {
@@ -70,10 +68,7 @@ export function row_getTrackedSubRows<
 export function row_setSubRows<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(
-  row: Row<TFeatures, TData>,
-  subRows: Array<Row<TFeatures, TData>>,
-): void {
+>(row: Row<TFeatures, TData>, subRows: Array<Row<TFeatures, TData>>): void {
   const tracking = subRowsTracking.get(row)
 
   if (!tracking) {

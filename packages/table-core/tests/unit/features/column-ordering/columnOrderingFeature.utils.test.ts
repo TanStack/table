@@ -218,8 +218,9 @@ describe('table_getOrderColumnsFn', () => {
       groupedColumnMode: 'reorder',
     })
     const getOrderColumnsFn = () =>
-      (table as unknown as { getOrderColumnsFn: () => () => unknown })
-        .getOrderColumnsFn()
+      (
+        table as unknown as { getOrderColumnsFn: () => () => unknown }
+      ).getOrderColumnsFn()
 
     const initial = getOrderColumnsFn()
 

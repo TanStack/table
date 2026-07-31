@@ -21,23 +21,19 @@ export function createStableStoreReadonlyAtom<T>(
   const compare = options?.compare ?? Object.is
   let stableBox: { value: T } | undefined
 
-  const boxedAtom = createAtom(
-    () => {
-      const nextValue = fn()
+  const boxedAtom = createAtom(() => {
+    const nextValue = fn()
 
-      if (!stableBox || !compare(stableBox.value, nextValue)) {
-        stableBox = { value: nextValue }
-      }
+    if (!stableBox || !compare(stableBox.value, nextValue)) {
+      stableBox = { value: nextValue }
+    }
 
-      return stableBox
-    },
-  )
+    return stableBox
+  })
 
   return {
     get: () => boxedAtom.get().value,
-    subscribe: ((
-      observer: Observer<T> | ((value: T) => void),
-    ) => {
+    subscribe: ((observer: Observer<T> | ((value: T) => void)) => {
       return boxedAtom.subscribe((box) => {
         if (typeof observer === 'function') {
           observer(box.value)

@@ -203,11 +203,9 @@ describe('renderPhaseReactivity bindings', () => {
     const { bindings, internalTable } = makeDeferredTable()
     // The first merge installs construct-static undefined slots. Subsequent
     // render merges with the same values should not rotate memo caches.
-    table_setOptions(
-      internalTable,
-      (options) => ({ ...options }),
-      { syncExternalState: false },
-    )
+    table_setOptions(internalTable, (options) => ({ ...options }), {
+      syncExternalState: false,
+    })
     const stageSpy = vi.spyOn(bindings, 'stage')
 
     const token = table_setOptions(

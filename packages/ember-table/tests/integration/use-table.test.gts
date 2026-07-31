@@ -245,7 +245,11 @@ module('Integration | useTable', function (hooks) {
         <output data-test-option-atom-data>
           {{this.optionAtomDataLength}}
         </output>
-        <button type='button' data-test-set-api {{on 'click' this.setThroughApi}}>
+        <button
+          type='button'
+          data-test-set-api
+          {{on 'click' this.setThroughApi}}
+        >
           set through API
         </button>
         <button
@@ -318,7 +322,11 @@ module('Integration | useTable', function (hooks) {
         <output data-test-option-value>{{this.optionValue}}</output>
         <output data-test-option-atom-value>{{this.optionAtomValue}}</output>
         <output data-test-has-option>{{this.hasOption}}</output>
-        <button type='button' data-test-add-option {{on 'click' this.addOption}}>
+        <button
+          type='button'
+          data-test-add-option
+          {{on 'click' this.addOption}}
+        >
           add option
         </button>
       </template>

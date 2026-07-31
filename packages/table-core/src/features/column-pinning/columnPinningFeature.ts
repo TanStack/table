@@ -190,12 +190,7 @@ export const columnPinningFeature: TableFeature = {
           orderedLeafColumns.push(column)
         }
       }
-      return buildHeaderGroups(
-        allColumns,
-        orderedLeafColumns,
-        table,
-        position,
-      )
+      return buildHeaderGroups(allColumns, orderedLeafColumns, table, position)
     }
 
     assignTableAPIs('columnPinningFeature', table, {

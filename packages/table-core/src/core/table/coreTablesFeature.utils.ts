@@ -38,9 +38,7 @@ export function table_syncExternalStateToBaseAtoms<
   ) => currentState === externalState,
 ): void {
   const state =
-    capturedState === undefined
-      ? table.options.state
-      : capturedState
+    capturedState === undefined ? table.options.state : capturedState
 
   table._reactivity.batch(() => {
     if (state) {

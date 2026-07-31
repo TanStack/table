@@ -59,10 +59,7 @@ export function createTableOptionAtoms<
     writable: false,
   })
 
-  const setValue = (
-    key: OptionKey,
-    value: unknown,
-  ): boolean => {
+  const setValue = (key: OptionKey, value: unknown): boolean => {
     if (key === snapshotVersionKey) {
       throw new Error(
         `Table option "${snapshotVersionKey}" is reserved by table.optionAtoms`,
@@ -148,10 +145,7 @@ export function createTableOptionAtoms<
     reactivity.batch(() => {
       for (const key of nextKeys) {
         changed =
-          setValue(
-            key,
-            Reflect.get(nextOptions, key, nextOptions),
-          ) || changed
+          setValue(key, Reflect.get(nextOptions, key, nextOptions)) || changed
       }
 
       if (changed) {
@@ -179,8 +173,10 @@ export function getTableOptionsFromAtoms<
 >(
   optionAtoms: TableOptionAtoms<TFeatures, TData>,
 ): TableOptionsLive<TFeatures, TData> {
-  return optionAtomsInternals.get(optionAtoms)!
-    .options as TableOptionsLive<TFeatures, TData>
+  return optionAtomsInternals.get(optionAtoms)!.options as TableOptionsLive<
+    TFeatures,
+    TData
+  >
 }
 
 export function applyTableOptions<

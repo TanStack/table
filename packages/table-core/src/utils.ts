@@ -150,10 +150,7 @@ export function flattenBy<TNode>(
   return flat
 }
 
-interface TableMemoOptions<
-  TFeatures extends TableFeatures,
-  TResult,
-> {
+interface TableMemoOptions<TFeatures extends TableFeatures, TResult> {
   compare?: (previous: TResult, next: TResult) => boolean
   feature?: keyof TFeatures & string
   fn: () => TResult
@@ -177,10 +174,7 @@ const pad = (str: number | string, num: number) => {
  * The native readonly atom is created on the first public read so eager
  * framework computeds cannot evaluate during incomplete table construction.
  */
-export function tableMemo<
-  TFeatures extends TableFeatures,
-  TResult,
->({
+export function tableMemo<TFeatures extends TableFeatures, TResult>({
   compare,
   feature,
   fn,
@@ -205,10 +199,7 @@ export function tableMemo<
     debugInitialized = true
 
     table._reactivity.untrack(() => {
-      const options = table.options as unknown as Record<
-        PropertyKey,
-        unknown
-      >
+      const options = table.options as unknown as Record<PropertyKey, unknown>
       const { parentName } = getFunctionNameInfo(fnName, '.')
       const debugParent = (
         parentName !== 'table' ? `${parentName}s` : parentName
@@ -218,9 +209,7 @@ export function tableMemo<
       )
       const debugByParent = options[`debug${debugParent}`]
       const debugByFeature = feature
-        ? options[
-            `debug${feature.charAt(0).toUpperCase() + feature.slice(1)}`
-          ]
+        ? options[`debug${feature.charAt(0).toUpperCase() + feature.slice(1)}`]
         : false
 
       debug = Boolean(options.debugAll || debugByParent || debugByFeature)
@@ -313,8 +302,7 @@ export function tableMemo<
     const result = (atom ?? createAtom()).get()
 
     if (debugCache && evaluationCount === beforeEvaluation) {
-      const cacheTime =
-        Math.round((performance.now() - startedAt) * 100) / 100
+      const cacheTime = Math.round((performance.now() - startedAt) * 100) / 100
       table._reactivity.untrack(() => logTime(cacheTime, false))
     }
 
