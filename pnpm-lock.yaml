@@ -5905,8 +5905,8 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/octane-store':
-        specifier: ^0.12.0
-        version: 0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
+        specifier: ^0.12.1
+        version: 0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
       '@tanstack/octane-table':
         specifier: workspace:*
         version: link:../../../packages/octane-table
@@ -5952,8 +5952,8 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/octane-store':
-        specifier: ^0.12.0
-        version: 0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
+        specifier: ^0.12.1
+        version: 0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
       '@tanstack/octane-table':
         specifier: workspace:*
         version: link:../../../packages/octane-table
@@ -5999,8 +5999,8 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/octane-store':
-        specifier: ^0.12.0
-        version: 0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
+        specifier: ^0.12.1
+        version: 0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
       '@tanstack/octane-table':
         specifier: workspace:*
         version: link:../../../packages/octane-table
@@ -6238,8 +6238,8 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/octane-store':
-        specifier: ^0.12.0
-        version: 0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
+        specifier: ^0.12.1
+        version: 0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
       '@tanstack/octane-table':
         specifier: workspace:*
         version: link:../../../packages/octane-table
@@ -6495,8 +6495,8 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/octane-store':
-        specifier: ^0.12.0
-        version: 0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
+        specifier: ^0.12.1
+        version: 0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
       '@tanstack/octane-table':
         specifier: workspace:*
         version: link:../../../packages/octane-table
@@ -6542,8 +6542,8 @@ importers:
         specifier: ^10.5.0
         version: 10.5.0
       '@tanstack/octane-store':
-        specifier: ^0.12.0
-        version: 0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
+        specifier: ^0.12.1
+        version: 0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
       '@tanstack/octane-table':
         specifier: workspace:*
         version: link:../../../packages/octane-table
@@ -14163,8 +14163,8 @@ importers:
   packages/octane-table:
     dependencies:
       '@tanstack/octane-store':
-        specifier: ^0.12.0
-        version: 0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
+        specifier: ^0.12.1
+        version: 0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))
       '@tanstack/table-core':
         specifier: workspace:*
         version: link:../table-core
@@ -19964,8 +19964,8 @@ packages:
     peerDependencies:
       lit: ^3.1.0
 
-  '@tanstack/octane-store@0.12.0':
-    resolution: {integrity: sha512-6/iR8gjk0qcFxbuxGeJSSqBRlelEanDm15853sCNXYbJ2JjWO6XJfWUW7/WNrfYu2lTR3nC8R6Zpi/VdB9HZZA==}
+  '@tanstack/octane-store@0.12.1':
+    resolution: {integrity: sha512-/YcDkLEm6ZBahTx5sZQzODyWsORRpBPaTRvAB3xGYK30qopZvay2BCt8azQuC/pYa241bshNzjzhwvJnSHaL/Q==}
     engines: {node: '>=22'}
     peerDependencies:
       octane: 0.1.21
@@ -33673,7 +33673,7 @@ snapshots:
       '@tanstack/virtual-core': 3.17.3
       lit: 3.3.3
 
-  '@tanstack/octane-store@0.12.0(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))':
+  '@tanstack/octane-store@0.12.1(octane@0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0)))':
     dependencies:
       '@tanstack/store': 0.11.0
       octane: 0.1.21(@typescript-eslint/types@8.62.0)(react-dom@19.2.7(react@19.2.7))(react@19.2.7)(vite@8.1.4(@types/node@26.0.0)(esbuild@0.28.0)(jiti@2.7.0)(less@4.6.4)(sass@1.100.0)(sugarss@5.0.1(postcss@8.5.16))(terser@5.46.2)(yaml@2.9.0))

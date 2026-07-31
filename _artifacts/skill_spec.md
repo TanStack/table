@@ -47,11 +47,11 @@ Every skill that discusses APIs must tell the consuming agent how to inspect the
 - Stock feature API: node_modules/@tanstack/table-core/dist/features/FEATURE/.
 - Ember API: node_modules/@tanstack/ember-table/declarations/index.d.ts (and sibling `declarations/*.d.ts`).
 - Angular API: node_modules/@tanstack/angular-table/dist/types/\*.d.ts (bundled public API; do not expect `src/helpers/` under the published package).
-- Octane API: node_modules/@tanstack/octane-table/dist/types/index.d.ts (and sibling `dist/types/*.d.ts`).
+- Octane API: node_modules/@tanstack/octane-table/src/index.d.ts, the matching `*.tsrx.d.ts` sidecar, and `src/types.ts` (the package intentionally distributes authored source).
 - Devtools API: node_modules/@tanstack/FRAMEWORK-table-devtools/dist/index.d.ts or @tanstack/table-devtools/dist/index.d.ts.
 - Fuzzy ranking API: node_modules/@tanstack/match-sorter-utils/dist/index.d.ts.
 
-Do not open package `src/` under `node_modules` (it is not published). Do not direct agents to a GitHub main-branch source file when an installed package is available. Installed declarations keep guidance aligned with the consumer package version.
+Do not open package `src/` under `node_modules` unless the package intentionally publishes source, as `@tanstack/octane-table` does. Do not direct agents to a GitHub main-branch source file when an installed package is available. Installed declarations and published source keep guidance aligned with the consumer package version.
 
 ## Skill writing contract
 
@@ -307,7 +307,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 
 ### Octane
 
-- The adapter ships compiled JavaScript and declarations. Consumer tooling compiles the application's TSRX components, which use TSRX component bodies plus keyed `@for` loops where appropriate.
+- The package distributes authored TypeScript and TSRX; consumer tooling compiles it for the current target and mode. Components use TSRX component bodies plus keyed `@for` loops where appropriate.
 - `useTable` stages fresh options for same-render reads, selects `table.state`, and publishes controlled state only from an accepted layout commit; abandoned work cannot notify the store.
 - Render `table.Subscribe` and the createTableHook App wrappers as components so each has an independent Octane hook/context scope; never invoke them as plain functions.
 - Use `@tanstack/octane-store` for external atoms. External atoms are synchronous owners and take precedence over controlled `options.state`.

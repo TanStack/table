@@ -36,7 +36,7 @@ The `@tanstack/preact-table` package works with Preact 10 or newer.
 
 # Octane
 
-The `@tanstack/octane-table` package works with Octane 0.1.21. Configure Octane's compiler integration (for example, `octane()` with Vite) for your application's TSRX components.
+The `@tanstack/octane-table` package works with Octane 0.1.21. It publishes authored TypeScript and TSRX, so your application must use Octane's compiler integration (for example, the Octane Vite plugin) to compile the package for its current target and mode.
 
 # Vue
 

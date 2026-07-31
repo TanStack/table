@@ -17,7 +17,7 @@ sources:
   - 'TanStack/table:packages/octane-table/src/useTable.tsrx'
 ---
 
-This skill builds on `@tanstack/table-core#core` and `@tanstack/table-core#table-features`. The adapter ships compiled JavaScript; configure Octane's Vite integration to compile the application's TSRX components.
+This skill builds on `@tanstack/table-core#core` and `@tanstack/table-core#table-features`. The adapter publishes authored TypeScript and TSRX, so the consuming app must compile it with Octane's integration.
 
 ## Setup
 
@@ -167,4 +167,4 @@ Source: `examples/octane/basic-use-table`
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/octane-table/dist/types/index.d.ts`, then `useTable.d.ts`, `Subscribe.d.ts`, `createTableHook.d.ts`, or `FlexRender.d.ts`; follow core exports into installed `@tanstack/table-core/dist/`.
+Inspect `node_modules/@tanstack/octane-table/src/index.d.ts`, then the specific `*.tsrx.d.ts` sidecars and `types.ts`. This package intentionally ships authored source; follow core exports into installed `@tanstack/table-core/dist/`.
