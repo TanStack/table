@@ -266,7 +266,7 @@ class LitTableExample extends LitElement {
                                               <button
                                                 class="pin-button"
                                                 @click="${() =>
-                                                header.column.pin('start')}"
+                                                  header.column.pin('start')}"
                                               >
                                                 ${'<='}
                                               </button>
@@ -279,7 +279,7 @@ class LitTableExample extends LitElement {
                                               <button
                                                 class="pin-button"
                                                 @click="${() =>
-                                                header.column.pin(false)}"
+                                                  header.column.pin(false)}"
                                               >
                                                 X
                                               </button>
@@ -292,7 +292,7 @@ class LitTableExample extends LitElement {
                                               <button
                                                 class="pin-button"
                                                 @click="${() =>
-                                                header.column.pin('end')}"
+                                                  header.column.pin('end')}"
                                               >
                                                 ${'=>'}
                                               </button>

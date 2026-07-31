@@ -174,10 +174,10 @@ class LitTableExample extends LitElement {
                                         style="cursor: pointer"
                                       >
                                         ${
-                                        header.column.getIsGrouped()
-                                          ? `🛑(${header.column.getGroupedIndex()}) `
-                                          : '👊 '
-                                      }
+                                          header.column.getIsGrouped()
+                                            ? `🛑(${header.column.getGroupedIndex()}) `
+                                            : '👊 '
+                                        }
                                       </button>`
                                     : null
                                 }

@@ -148,10 +148,11 @@ export class UsersTable extends LitElement {
                                       ) > -1
                                         ? html`<span class="sort-order"
                                             >${
-                                            sorting.findIndex(
-                                              (s) => s.id === header.column.id,
-                                            ) + 1
-                                          }</span
+                                              sorting.findIndex(
+                                                (s) =>
+                                                  s.id === header.column.id,
+                                              ) + 1
+                                            }</span
                                           >`
                                         : nothing
                                     }
