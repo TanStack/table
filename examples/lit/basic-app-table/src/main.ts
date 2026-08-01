@@ -126,26 +126,35 @@ class LitTableExample extends LitElement {
                       header,
                       (h) => html`
                         <th colspan=${h.colSpan}>
-                          ${h.isPlaceholder
-                            ? null
-                            : html`<div
-                                title=${h.column.getCanSort()
-                                  ? h.column.getNextSortingOrder() === 'asc'
-                                    ? 'Sort ascending'
-                                    : h.column.getNextSortingOrder() === 'desc'
-                                      ? 'Sort descending'
-                                      : 'Clear sort'
-                                  : ''}
-                                @click=${h.column.getToggleSortingHandler()}
-                                style="cursor: ${h.column.getCanSort()
-                                  ? 'pointer'
-                                  : 'not-allowed'}"
-                              >
-                                ${h.FlexRender()}
-                                ${{ asc: ' \u{1F53C}', desc: ' \u{1F53D}' }[
-                                  h.column.getIsSorted() as string
-                                ] ?? null}
-                              </div>`}
+                          ${
+                            h.isPlaceholder
+                              ? null
+                              : html`<div
+                                  title=${
+                                    h.column.getCanSort()
+                                      ? h.column.getNextSortingOrder() === 'asc'
+                                        ? 'Sort ascending'
+                                        : h.column.getNextSortingOrder() ===
+                                            'desc'
+                                          ? 'Sort descending'
+                                          : 'Clear sort'
+                                      : ''
+                                  }
+                                  @click=${h.column.getToggleSortingHandler()}
+                                  style="cursor: ${
+                                    h.column.getCanSort()
+                                      ? 'pointer'
+                                      : 'not-allowed'
+                                  }"
+                                >
+                                  ${h.FlexRender()}
+                                  ${
+                                    { asc: ' \u{1F53C}', desc: ' \u{1F53D}' }[
+                                      h.column.getIsSorted() as string
+                                    ] ?? null
+                                  }
+                                </div>`
+                          }
                         </th>
                       `,
                     ),
@@ -190,8 +199,7 @@ class LitTableExample extends LitElement {
           </tfoot>
         </table>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

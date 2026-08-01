@@ -7,8 +7,8 @@ title: table_toggleAllRowsSelected
 
 ```ts
 function table_toggleAllRowsSelected<TFeatures, TData>(
-   table, 
-   value?, 
+   table,
+   value?,
    opts?): void;
 ```
 

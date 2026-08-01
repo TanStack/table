@@ -130,8 +130,7 @@ Hot path: Every `optionsStore.set()` in adapters with `createOptionsStore: true`
 ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
   () => {
     const externalAtoms = table.options.atoms as
-      | Partial<Record<keyof TableState_All, Atom<unknown>>>
-      | undefined
+      Partial<Record<keyof TableState_All, Atom<unknown>>> | undefined
     const externalAtom = externalAtoms?.[key]
     if (externalAtom) {
       return externalAtom.get()
@@ -146,8 +145,7 @@ Hot path: Every `optionsStore.set()` in adapters with `createOptionsStore: true`
 
 ```ts
 const externalAtoms = mergedOptions.atoms as
-  | Partial<Record<keyof TableState_All, Atom<unknown>>>
-  | undefined
+  Partial<Record<keyof TableState_All, Atom<unknown>>> | undefined
 
 for (let i = 0; i < stateKeys.length; i++) {
   const key = stateKeys[i]!

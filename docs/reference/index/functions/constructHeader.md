@@ -7,8 +7,8 @@ title: constructHeader
 
 ```ts
 function constructHeader<TFeatures, TData, TValue>(
-   table, 
-   column, 
+   table,
+   column,
 options): Header<TFeatures, TData, TValue>;
 ```
 

@@ -61,8 +61,7 @@ export type AccessorFn<
  * and can return framework-specific render output.
  */
 export type ColumnDefTemplate<TProps extends object> =
-  | string
-  | ((props: TProps) => any)
+  string | ((props: TProps) => any)
 
 export type StringOrTemplateHeader<
   TFeatures extends TableFeatures,

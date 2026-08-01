@@ -6,10 +6,10 @@ title: FlexRender
 # Function: FlexRender()
 
 ```ts
-function FlexRender<TFeatures, TData, TValue>(props): string | TemplateResult | null;
+function FlexRender<TFeatures, TData, TValue>(props): LitRenderable;
 ```
 
-Defined in: [packages/lit-table/src/flexRender.ts:90](https://github.com/TanStack/table/blob/main/packages/lit-table/src/flexRender.ts#L90)
+Defined in: [packages/lit-table/src/flexRender.ts:101](https://github.com/TanStack/table/blob/main/packages/lit-table/src/flexRender.ts#L101)
 
 Simplified component wrapper of `flexRender`. Use this utility function to render headers, cells, or footers with custom markup.
 Only one prop (`cell`, `header`, or `footer`) may be passed.
@@ -36,7 +36,7 @@ Only one prop (`cell`, `header`, or `footer`) may be passed.
 
 ## Returns
 
-`string` \| `TemplateResult` \| `null`
+[`LitRenderable`](../type-aliases/LitRenderable.md)
 
 ## Example
 

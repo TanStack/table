@@ -23,10 +23,10 @@ Defined in: [core/table/coreTablesFeature.types.ts:156](https://github.com/TanSt
 
 ## Properties
 
-### \_cellInstanceInitFns?
+### \_cellInstanceInitFns
 
 ```ts
-optional _cellInstanceInitFns: <TFeatures, TData, TValue>(cell) => void[];
+_cellInstanceInitFns: <TFeatures, TData, TValue>(cell) => void[];
 ```
 
 Defined in: [core/table/coreTablesFeature.types.ts:167](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L167)
@@ -65,19 +65,19 @@ Cache of the `initCellInstanceData` functions for features that define one.
 optional _cellPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:173](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L173)
+Defined in: [core/table/coreTablesFeature.types.ts:171](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L171)
 
 Prototype cache for Cell objects - shared by all cells in this table
 
 ***
 
-### \_columnInstanceInitFns?
+### \_columnInstanceInitFns
 
 ```ts
-optional _columnInstanceInitFns: <TFeatures, TData, TValue>(column) => void[];
+_columnInstanceInitFns: <TFeatures, TData, TValue>(column) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:177](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L177)
+Defined in: [core/table/coreTablesFeature.types.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L175)
 
 Cache of the `initColumnInstanceData` functions for features that define one.
 
@@ -113,7 +113,7 @@ Cache of the `initColumnInstanceData` functions for features that define one.
 optional _columnPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:183](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L183)
+Defined in: [core/table/coreTablesFeature.types.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L181)
 
 Prototype cache for Column objects - shared by all columns in this table
 
@@ -125,19 +125,19 @@ Prototype cache for Column objects - shared by all columns in this table
 readonly _features: Partial<CoreFeatures> & TFeatures;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L187)
+Defined in: [core/table/coreTablesFeature.types.ts:185](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L185)
 
 The features that are enabled for the table.
 
 ***
 
-### \_headerGroupInstanceInitFns?
+### \_headerGroupInstanceInitFns
 
 ```ts
-optional _headerGroupInstanceInitFns: <TFeatures, TData>(headerGroup) => void[];
+_headerGroupInstanceInitFns: <TFeatures, TData>(headerGroup) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L191)
+Defined in: [core/table/coreTablesFeature.types.ts:189](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L189)
 
 Cache of the `initHeaderGroupInstanceData` functions for features that define one.
 
@@ -163,13 +163,13 @@ Cache of the `initHeaderGroupInstanceData` functions for features that define on
 
 ***
 
-### \_headerInstanceInitFns?
+### \_headerInstanceInitFns
 
 ```ts
-optional _headerInstanceInitFns: <TFeatures, TData, TValue>(header) => void[];
+_headerInstanceInitFns: <TFeatures, TData, TValue>(header) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:197](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L197)
+Defined in: [core/table/coreTablesFeature.types.ts:195](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L195)
 
 Cache of the `initHeaderInstanceData` functions for features that define one.
 
@@ -205,7 +205,7 @@ Cache of the `initHeaderInstanceData` functions for features that define one.
 optional _headerPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:203](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L203)
+Defined in: [core/table/coreTablesFeature.types.ts:201](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L201)
 
 Prototype cache for Header objects - shared by all headers in this table
 
@@ -223,13 +223,13 @@ Table reactivity bindings for interacting with TanStack Store.
 
 ***
 
-### \_rowInstanceInitFns?
+### \_rowInstanceInitFns
 
 ```ts
-optional _rowInstanceInitFns: <TFeatures, TData>(row) => void[];
+_rowInstanceInitFns: <TFeatures, TData>(row) => void[];
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:219](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L219)
+Defined in: [core/table/coreTablesFeature.types.ts:217](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L217)
 
 Cache of the `initRowInstanceData` functions for features that define one.
 
@@ -261,7 +261,7 @@ Cache of the `initRowInstanceData` functions for features that define one.
 readonly _rowModelFns: RowModelFns<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:207](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L207)
+Defined in: [core/table/coreTablesFeature.types.ts:205](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L205)
 
 The row model processing functions that are used to process the data by features.
 
@@ -273,7 +273,7 @@ The row model processing functions that are used to process the data by features
 readonly _rowModels: CachedRowModels<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:211](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L211)
+Defined in: [core/table/coreTablesFeature.types.ts:209](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L209)
 
 The row models that are enabled for the table.
 
@@ -285,7 +285,7 @@ The row models that are enabled for the table.
 optional _rowPrototype: object;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:215](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L215)
+Defined in: [core/table/coreTablesFeature.types.ts:213](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L213)
 
 Prototype cache for Row objects - shared by all rows in this table
 
@@ -297,7 +297,7 @@ Prototype cache for Row objects - shared by all rows in this table
 readonly atoms: Atoms<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:225](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L225)
+Defined in: [core/table/coreTablesFeature.types.ts:223](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L223)
 
 The readonly derived atoms for each `TableState` slice. Each derives from
 its corresponding `baseAtom` plus, optionally, a per-slice external atom or
@@ -311,7 +311,7 @@ external state value (precedence: external atom > external state > base atom).
 readonly baseAtoms: BaseAtoms<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:230](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L230)
+Defined in: [core/table/coreTablesFeature.types.ts:228](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L228)
 
 The internal writable atoms for each `TableState` slice. This is the library's
 single write surface — all state mutations from features land here.
@@ -324,7 +324,7 @@ single write surface — all state mutations from features land here.
 readonly initialState: ExtractFeatureMapTypes<TFeatures>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:234](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L234)
+Defined in: [core/table/coreTablesFeature.types.ts:232](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L232)
 
 This is the resolved initial state of the table.
 
@@ -336,7 +336,7 @@ This is the resolved initial state of the table.
 readonly options: TableOptions<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:238](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L238)
+Defined in: [core/table/coreTablesFeature.types.ts:236](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L236)
 
 A read-only reference to the table's current options.
 
@@ -348,7 +348,7 @@ A read-only reference to the table's current options.
 readonly optional optionsStore: Atom<TableOptions<TFeatures, TData>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:244](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L244)
+Defined in: [core/table/coreTablesFeature.types.ts:242](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L242)
 
 Writable atom for table options. Only created when `createOptionsStore` is
 true on the active core reactivity bindings. Adapters that opt out keep
@@ -362,7 +362,7 @@ options as plain resolved data instead of backing them with an atom.
 readonly store: ReadonlyStore<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:249](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L249)
+Defined in: [core/table/coreTablesFeature.types.ts:247](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L247)
 
 The readonly flat store for the table state. Derives from `table.atoms`
 only; never reads external state directly.

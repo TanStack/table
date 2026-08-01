@@ -131,20 +131,27 @@ class LitTableExample extends LitElement {
                     (header) => header.id,
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`<div
-                              class="${header.column.getCanSort()
-                                ? 'sortable-header'
-                                : ''}"
-                              @click="${header.column.getToggleSortingHandler()}"
-                            >
-                              ${FlexRender({ header })}
-                              ${{
-                                asc: ' 🔼',
-                                desc: ' 🔽',
-                              }[header.column.getIsSorted() as string] ?? null}
-                            </div>`}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`<div
+                                class="${
+                                  header.column.getCanSort()
+                                    ? 'sortable-header'
+                                    : ''
+                                }"
+                                @click="${header.column.getToggleSortingHandler()}"
+                              >
+                                ${FlexRender({ header })}
+                                ${
+                                  {
+                                    asc: ' 🔼',
+                                    desc: ' 🔽',
+                                  }[header.column.getIsSorted() as string] ??
+                                  null
+                                }
+                              </div>`
+                        }
                       </th>
                     `,
                   )}
@@ -235,8 +242,7 @@ class LitTableExample extends LitElement {
         </div>
         <div class="spacer-md"></div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

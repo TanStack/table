@@ -6,7 +6,7 @@ title: FilterFnOption
 # Type Alias: FilterFnOption\<TFeatures, TData\>
 
 ```ts
-type FilterFnOption<TFeatures, TData> = 
+type FilterFnOption<TFeatures, TData> =
   | "auto"
   | ExtractFilterFnKeys<TFeatures>
 | FilterFn<TFeatures, TData>;

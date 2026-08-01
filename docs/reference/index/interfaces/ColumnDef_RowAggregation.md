@@ -53,7 +53,7 @@ result object. Inline definitions in an array require an explicit `id`.
 ### getAggregationValue()?
 
 ```ts
-optional getAggregationValue: (context) => 
+optional getAggregationValue: (context) =>
   | AggregationValueResult<unknown>
   | undefined;
 ```

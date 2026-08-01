@@ -113,17 +113,22 @@ class LitTableExample extends LitElement {
                       style="width: ${header.getSize()}px"
                     >
                       ${FlexRender({ header })}
-                      ${header.isPlaceholder
-                        ? null
-                        : html`<div
-                            class="resizer ${table.options
-                              .columnResizeDirection} ${header.column.getIsResizing()
-                              ? 'is-resizing'
-                              : ''}"
-                            @dblclick="${() => header.column.resetSize()}"
-                            @mousedown="${header.getResizeHandler()}"
-                            @touchstart="${header.getResizeHandler()}"
-                          />`}
+                      ${
+                        header.isPlaceholder
+                          ? null
+                          : html`<div
+                              class="resizer ${
+                                table.options.columnResizeDirection
+                              } ${
+                                header.column.getIsResizing()
+                                  ? 'is-resizing'
+                                  : ''
+                              }"
+                              @dblclick="${() => header.column.resetSize()}"
+                              @mousedown="${header.getResizeHandler()}"
+                              @touchstart="${header.getResizeHandler()}"
+                            />`
+                      }
                     </th>
                   `,
                 )}
@@ -147,8 +152,7 @@ class LitTableExample extends LitElement {
         </tbody>
       </table>
       <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-      >
+${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

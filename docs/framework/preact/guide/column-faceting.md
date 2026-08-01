@@ -214,10 +214,7 @@ You can use the column's `getUniqueValues` option to return a bucket key for fac
 
 ```tsx
 type StorageBucket =
-  | 'under-1-gb'
-  | '1-to-10-gb'
-  | '10-to-100-gb'
-  | '100-gb-plus'
+  'under-1-gb' | '1-to-10-gb' | '10-to-100-gb' | '100-gb-plus'
 
 const GB = 1024 ** 3
 

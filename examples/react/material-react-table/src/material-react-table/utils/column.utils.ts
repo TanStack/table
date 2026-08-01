@@ -29,8 +29,7 @@ export const getAllLeafColumnDefs = <TData extends MRT_RowData>(
   const getLeafColumns = (cols: Array<MRT_ColumnDef<TData>>) => {
     cols.forEach((col) => {
       const subCols = (col as any).columns as
-        | Array<MRT_ColumnDef<TData>>
-        | undefined
+        Array<MRT_ColumnDef<TData>> | undefined
       if (subCols) {
         getLeafColumns(subCols)
       } else {

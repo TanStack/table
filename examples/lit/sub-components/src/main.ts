@@ -124,9 +124,11 @@ class LitTableExample extends LitElement {
                   ${headerGroup.headers.map(
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`<div>${FlexRender({ header })}</div>`}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`<div>${FlexRender({ header })}</div>`
+                        }
                       </th>
                     `,
                   )}
@@ -142,15 +144,17 @@ class LitTableExample extends LitElement {
                     .getAllCells()
                     .map((cell) => html` <td>${FlexRender({ cell })}</td> `)}
                 </tr>
-                ${row.getIsExpanded()
-                  ? html`
-                      <tr>
-                        <td colspan="${row.getAllCells().length}">
-                          ${renderSubComponent(row)}
-                        </td>
-                      </tr>
-                    `
-                  : null}
+                ${
+                  row.getIsExpanded()
+                    ? html`
+                        <tr>
+                          <td colspan="${row.getAllCells().length}">
+                            ${renderSubComponent(row)}
+                          </td>
+                        </tr>
+                      `
+                    : null
+                }
               `,
             )}
           </tbody>

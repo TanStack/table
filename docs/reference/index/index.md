@@ -224,6 +224,8 @@ title: index
 - [Cell](type-aliases/Cell.md)
 - [CellData](type-aliases/CellData.md)
 - [CellSelectionDirection](type-aliases/CellSelectionDirection.md)
+- [CellSelectionRangeMode](type-aliases/CellSelectionRangeMode.md)
+- [CellSelectionRangeOperation](type-aliases/CellSelectionRangeOperation.md)
 - [CellSelectionState](type-aliases/CellSelectionState.md)
 - [Column](type-aliases/Column.md)
 - [ColumnAggregationValue](type-aliases/ColumnAggregationValue.md)

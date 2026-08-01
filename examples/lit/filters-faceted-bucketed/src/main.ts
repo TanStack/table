@@ -190,19 +190,23 @@ class LitTableExample extends LitElement {
                   ${headerGroup.headers.map(
                     (header) => html`
                       <th colspan=${header.colSpan}>
-                        ${header.isPlaceholder
-                          ? null
-                          : html`
-                              ${FlexRender({ header })}
-                              ${header.column.getCanFilter()
-                                ? html`<div>
-                                    <faceted-filter
-                                      .column=${header.column}
-                                      .table=${table}
-                                    ></faceted-filter>
-                                  </div>`
-                                : null}
-                            `}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`
+                                ${FlexRender({ header })}
+                                ${
+                                  header.column.getCanFilter()
+                                    ? html`<div>
+                                        <faceted-filter
+                                          .column=${header.column}
+                                          .table=${table}
+                                        ></faceted-filter>
+                                      </div>`
+                                    : null
+                                }
+                              `
+                        }
                       </th>
                     `,
                   )}
@@ -291,8 +295,7 @@ class LitTableExample extends LitElement {
           ${table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
         </div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

@@ -182,8 +182,7 @@ function _createGroupedRowModel<
             }
 
             const aggregationCache = (row as any)._aggregationValuesCache as
-              | Record<string, unknown>
-              | undefined
+              Record<string, unknown> | undefined
             if (aggregationCache && hasOwn(aggregationCache, colId)) {
               return aggregationCache[colId]
             }
@@ -242,8 +241,7 @@ function groupBy<TFeatures extends TableFeatures, TData extends RowData = any>(
   // inside this per-row loop. The branches below mirror
   // `row_getGroupingValue`'s caching contract exactly.
   const column = table_getColumn(table, columnId) as
-    | Column_Internal<TFeatures, TData, unknown>
-    | undefined
+    Column_Internal<TFeatures, TData, unknown> | undefined
   const getGroupingValue = column?.columnDef.getGroupingValue
 
   for (let i = 0; i < rows.length; i++) {
@@ -251,8 +249,7 @@ function groupBy<TFeatures extends TableFeatures, TData extends RowData = any>(
     let groupingValue
     if (getGroupingValue) {
       const cache = (row as any)._groupingValuesCache as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
       if (cache && hasOwn(cache, columnId)) {
         groupingValue = cache[columnId]
       } else if (cache) {

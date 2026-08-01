@@ -9,7 +9,7 @@ title: flexRender
 function flexRender<TProps>(Comp, props): ComponentChild | Element;
 ```
 
-Defined in: [FlexRender.tsx:46](https://github.com/TanStack/table/blob/main/packages/preact-table/src/FlexRender.tsx#L46)
+Defined in: [FlexRender.tsx:49](https://github.com/TanStack/table/blob/main/packages/preact-table/src/FlexRender.tsx#L49)
 
 If rendering headers, cells, or footers with custom markup, use flexRender instead of `cell.getValue()` or `cell.renderValue()`.
 

@@ -83,8 +83,7 @@ import type { MRT_Icons } from './icons'
 export type { MRT_Icons }
 
 export type LiteralUnion<T extends U, U = string> =
-  | (Record<never, never> & U)
-  | T
+  (Record<never, never> & U) | T
 
 export type Prettify<T> = { [K in keyof T]: T[K] } & unknown
 
@@ -162,11 +161,11 @@ export type MRT_ColumnHelper<TData extends MRT_RowData> = {
    */
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
-    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
+    TValue extends (TAccessor extends AccessorFn<TData, infer TReturn>
       ? TReturn
       : TAccessor extends DeepKeys<TData>
         ? DeepValue<TData, TAccessor>
-        : never,
+        : never),
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
@@ -753,10 +752,7 @@ export type MRT_AccessorKeyColumnDef<
  * Union of `MRT_AccessorFnColumnDef` and `MRT_AccessorKeyColumnDef`.
  * Mirrors v9's `AccessorColumnDef`.
  */
-export type MRT_AccessorColumnDef<
-  TData extends MRT_RowData,
-  TValue = unknown,
-> =
+export type MRT_AccessorColumnDef<TData extends MRT_RowData, TValue = unknown> =
   | MRT_AccessorFnColumnDef<TData, TValue>
   | MRT_AccessorKeyColumnDef<TData, TValue>
 
@@ -814,20 +810,17 @@ export type MRT_RowAggregationOption = keyof typeof MRT_RowAggregationFns &
   string
 
 export type MRT_RowAggregationFn<TData extends MRT_RowData> =
-  | AggregationFnDef<StockFeatures, TData, any, any>
-  | MRT_RowAggregationOption
+  AggregationFnDef<StockFeatures, TData, any, any> | MRT_RowAggregationOption
 
 export type MRT_SortingOption = LiteralUnion<keyof typeof MRT_SortFns & string>
 
 export type MRT_SortFn<TData extends MRT_RowData> =
-  | MRT_SortingOption
-  | SortFn<StockFeatures, TData>
+  MRT_SortingOption | SortFn<StockFeatures, TData>
 
 export type MRT_FilterOption = LiteralUnion<keyof typeof MRT_FilterFns & string>
 
 export type MRT_FilterFn<TData extends MRT_RowData> =
-  | FilterFn<StockFeatures, TData>
-  | MRT_FilterOption
+  FilterFn<StockFeatures, TData> | MRT_FilterOption
 
 export type MRT_FilterTooltipValueFn<TValue = any> = (value: TValue) => string
 
@@ -1295,8 +1288,7 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
   positionToolbarAlertBanner?: 'bottom' | 'head-overlay' | 'none' | 'top'
   positionToolbarDropZone?: 'both' | 'bottom' | 'none' | 'top'
   renderBottomToolbar?:
-    | ((props: { table: MRT_TableInstance<TData> }) => ReactNode)
-    | ReactNode
+    ((props: { table: MRT_TableInstance<TData> }) => ReactNode) | ReactNode
   renderBottomToolbarCustomActions?: (props: {
     table: MRT_TableInstance<TData>
   }) => ReactNode
@@ -1354,8 +1346,7 @@ export type MRT_TableOptions<TData extends MRT_RowData> = {
     table: MRT_TableInstance<TData>
   }) => ReactNode
   renderTopToolbar?:
-    | ((props: { table: MRT_TableInstance<TData> }) => ReactNode)
-    | ReactNode
+    ((props: { table: MRT_TableInstance<TData> }) => ReactNode) | ReactNode
   renderTopToolbarCustomActions?: (props: {
     table: MRT_TableInstance<TData>
   }) => ReactNode

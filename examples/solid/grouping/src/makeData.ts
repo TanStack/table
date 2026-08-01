@@ -32,12 +32,10 @@ const newPerson = (): Person => ({
 export function makeData(...lens: Array<number>) {
   const makeDataLevel = (depth = 0): Array<Person> => {
     const len = lens[depth]
-    return range(len).map(
-      (): Person => ({
-        ...newPerson(),
-        subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
-      }),
-    )
+    return range(len).map((): Person => ({
+      ...newPerson(),
+      subRows: lens[depth + 1] ? makeDataLevel(depth + 1) : undefined,
+    }))
   }
   return makeDataLevel()
 }

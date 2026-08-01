@@ -113,28 +113,37 @@ export class ProductsTable extends LitElement {
                         (header) => html`
                           <th
                             colspan=${header.colSpan}
-                            class=${header.column.getCanSort()
-                              ? 'sortable-header'
-                              : ''}
+                            class=${
+                              header.column.getCanSort()
+                                ? 'sortable-header'
+                                : ''
+                            }
                             @click=${header.column.getToggleSortingHandler()}
                           >
-                            ${header.isPlaceholder
-                              ? nothing
-                              : html`
-                                  ${header.FlexRender()}
-                                  ${header.SortIndicator()}
-                                  ${header.ColumnFilter()}
-                                  ${sorting.length > 1 &&
-                                  sorting.findIndex(
-                                    (s) => s.id === header.column.id,
-                                  ) > -1
-                                    ? html`<span class="sort-order"
-                                        >${sorting.findIndex(
-                                          (s) => s.id === header.column.id,
-                                        ) + 1}</span
-                                      >`
-                                    : nothing}
-                                `}
+                            ${
+                              header.isPlaceholder
+                                ? nothing
+                                : html`
+                                    ${header.FlexRender()}
+                                    ${header.SortIndicator()}
+                                    ${header.ColumnFilter()}
+                                    ${
+                                      sorting.length > 1 &&
+                                      sorting.findIndex(
+                                        (s) => s.id === header.column.id,
+                                      ) > -1
+                                        ? html`<span class="sort-order"
+                                            >${
+                                              sorting.findIndex(
+                                                (s) =>
+                                                  s.id === header.column.id,
+                                              ) + 1
+                                            }</span
+                                          >`
+                                        : nothing
+                                    }
+                                  `
+                            }
                           </th>
                         `,
                       ),
@@ -171,29 +180,39 @@ export class ProductsTable extends LitElement {
                         )
                         return html`
                           <td colspan=${footer.colSpan}>
-                            ${footer.isPlaceholder
-                              ? nothing
-                              : columnId === 'price' ||
-                                  columnId === 'stock' ||
-                                  columnId === 'rating'
-                                ? html`
-                                    ${footer.FooterSum()}
-                                    ${hasFilter
-                                      ? html`<span class="filtered-indicator">
-                                          (filtered)</span
-                                        >`
-                                      : nothing}
-                                  `
-                                : columnId === 'select'
-                                  ? nothing
-                                  : html`
-                                      ${footer.FooterColumnId()}
-                                      ${hasFilter
-                                        ? html`<span class="filtered-indicator">
-                                            ✓</span
-                                          >`
-                                        : nothing}
-                                    `}
+                            ${
+                              footer.isPlaceholder
+                                ? nothing
+                                : columnId === 'price' ||
+                                    columnId === 'stock' ||
+                                    columnId === 'rating'
+                                  ? html`
+                                      ${footer.FooterSum()}
+                                      ${
+                                        hasFilter
+                                          ? html`<span
+                                              class="filtered-indicator"
+                                            >
+                                              (filtered)</span
+                                            >`
+                                          : nothing
+                                      }
+                                    `
+                                  : columnId === 'select'
+                                    ? nothing
+                                    : html`
+                                        ${footer.FooterColumnId()}
+                                        ${
+                                          hasFilter
+                                            ? html`<span
+                                                class="filtered-indicator"
+                                              >
+                                                ✓</span
+                                              >`
+                                            : nothing
+                                        }
+                                      `
+                            }
                           </td>
                         `
                       }),

@@ -733,6 +733,106 @@ describe('cellSelectionFeature', () => {
       expect(table.getSelectedCellCount()).toBe(2)
     })
 
+    it('ctrl-mousedown on a selected cell subtracts it', () => {
+      const table = makeTable()
+      const fake = makeFakeDocument()
+
+      table.selectCellRange(rangeOf('r0', 'a', 'r2', 'c'))
+      getCell(table, 'r1', 'b').getSelectionStartHandler(fake.document)({
+        ctrlKey: true,
+      })
+
+      expect(table.atoms.cellSelection.get()).toEqual([
+        rangeOf('r0', 'a', 'r2', 'c'),
+        { ...rangeOf('r1', 'b', 'r1', 'b'), operation: 'exclude' },
+      ])
+      expect(table.getSelectedCellCount()).toBe(8)
+      expect(getCell(table, 'r1', 'b').getIsSelected()).toBe(false)
+      expect(getCell(table, 'r1', 'b').getIsFocused()).toBe(true)
+    })
+
+    it('ctrl-drag subtracts cells and shrinking the drag restores them', () => {
+      const table = makeTable()
+      const fake = makeFakeDocument()
+
+      table.selectCellRange(rangeOf('r0', 'a', 'r2', 'c'))
+      getCell(table, 'r1', 'a').getSelectionStartHandler(fake.document)({
+        ctrlKey: true,
+      })
+      getCell(table, 'r1', 'c').getSelectionExtendHandler()({})
+      expect(table.getSelectedCellCount()).toBe(6)
+
+      getCell(table, 'r1', 'b').getSelectionExtendHandler()({})
+      expect(table.getSelectedCellCount()).toBe(7)
+      expect(table.atoms.cellSelection.get().at(-1)).toEqual({
+        ...rangeOf('r1', 'a', 'r1', 'b'),
+        operation: 'exclude',
+      })
+    })
+
+    it('shift and keyboard extension preserve an active exclusion', () => {
+      const table = makeTable()
+      const fake = makeFakeDocument()
+
+      table.selectCellRange(rangeOf('r0', 'a', 'r2', 'c'))
+      getCell(table, 'r1', 'a').getSelectionStartHandler(fake.document)({
+        ctrlKey: true,
+      })
+      fake.fire('mouseup')
+      getCell(table, 'r1', 'b').getSelectionStartHandler(fake.document)({
+        shiftKey: true,
+      })
+
+      expect(table.getSelectedCellCount()).toBe(7)
+      expect(table.atoms.cellSelection.get().at(-1)).toEqual({
+        ...rangeOf('r1', 'a', 'r1', 'b'),
+        operation: 'exclude',
+      })
+
+      table.extendCellSelection('right')
+
+      expect(table.getSelectedCellCount()).toBe(6)
+      expect(table.atoms.cellSelection.get().at(-1)).toEqual({
+        ...rangeOf('r1', 'a', 'r1', 'c'),
+        operation: 'exclude',
+      })
+    })
+
+    it('ctrl-drag beginning on an unselected cell only includes the rectangle', () => {
+      const table = makeTable()
+      const fake = makeFakeDocument()
+
+      table.selectCellRange(rangeOf('r0', 'a', 'r0', 'a'))
+      getCell(table, 'r1', 'b').getSelectionStartHandler(fake.document)({
+        ctrlKey: true,
+      })
+      getCell(table, 'r2', 'c').getSelectionExtendHandler()({})
+
+      expect(table.getSelectedCellIds()).toEqual([
+        'r0_a',
+        'r1_b',
+        'r1_c',
+        'r2_b',
+        'r2_c',
+      ])
+      expect(table.atoms.cellSelection.get().at(-1)?.operation).toBeUndefined()
+    })
+
+    it('ignores subtractive modifiers when multi-range selection is disabled', () => {
+      const table = makeTable({ enableMultiCellRangeSelection: false })
+      const fake = makeFakeDocument()
+
+      table.selectCellRange(rangeOf('r0', 'a', 'r2', 'c'))
+      getCell(table, 'r1', 'b').getSelectionStartHandler(fake.document)({
+        ctrlKey: true,
+      })
+
+      expect(table.atoms.cellSelection.get()).toEqual([
+        rangeOf('r1', 'b', 'r1', 'b'),
+      ])
+      expect(table.getSelectedCellCount()).toBe(1)
+    })
+
     it('metaKey works for multi-range as well', () => {
       const table = makeTable()
       const fake = makeFakeDocument()

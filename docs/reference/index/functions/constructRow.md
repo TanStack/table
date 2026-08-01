@@ -7,12 +7,12 @@ title: constructRow
 
 ```ts
 function constructRow<TFeatures, TData>(
-   table, 
-   id, 
-   original, 
-   rowIndex, 
-   depth, 
-   subRows?, 
+   table,
+   id,
+   original,
+   rowIndex,
+   depth,
+   subRows?,
 parentId?): Row<TFeatures, TData>;
 ```
 

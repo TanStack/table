@@ -101,15 +101,13 @@ const filterVariant = (
 
 const rangeMin = (column: Column<typeof features, Person>): string => {
   const value = column.getFilterValue() as
-    | [string | number, string | number]
-    | undefined
+    [string | number, string | number] | undefined
   return value?.[0] != null ? String(value[0]) : ''
 }
 
 const rangeMax = (column: Column<typeof features, Person>): string => {
   const value = column.getFilterValue() as
-    | [string | number, string | number]
-    | undefined
+    [string | number, string | number] | undefined
   return value?.[1] != null ? String(value[1]) : ''
 }
 

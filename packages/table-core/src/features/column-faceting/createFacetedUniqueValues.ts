@@ -78,8 +78,7 @@ function _createFacetedUniqueValues<
       // the declared return type is Array, but rows return undefined for
       // columns without an accessor (e.g. display columns)
       const values = flatRows[i]!.getUniqueValues(columnIds[c]!) as
-        | Array<unknown>
-        | undefined
+        Array<unknown> | undefined
       if (!values) continue
 
       for (let j = 0; j < values.length; j++) {

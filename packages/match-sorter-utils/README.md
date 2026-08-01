@@ -35,6 +35,8 @@
 >
 > - [Angular Table](https://tanstack.com/table/alpha/docs/framework/angular/angular-table)
 > - [Lit Table](https://tanstack.com/table/alpha/docs/framework/lit/lit-table)
+> - [Octane Table](https://tanstack.com/table/beta/docs/framework/octane/quick-start)
+> - [Preact Table](https://tanstack.com/table/beta/docs/framework/preact/quick-start)
 > - [React Table](https://tanstack.com/table/alpha/docs/framework/react/react-table)
 > - [Solid Table](https://tanstack.com/table/alpha/docs/framework/solid/solid-table)
 > - [Svelte Table](https://tanstack.com/table/alpha/docs/framework/svelte/svelte-table)
@@ -44,7 +46,7 @@
 
 A headless table library for building powerful datagrids with full control over markup, styles, and behavior.
 
-- Framework‑agnostic core with bindings for React, Vue & Solid
+- Framework-agnostic core with bindings for React, Preact, Octane, Vue, Solid, Svelte, Angular, Ember, Lit, and Alpine
 - 100% customizable — bring your own UI, components, and styles
 - Sorting, filtering, grouping, aggregation & row selection
 - Lightweight, virtualizable & server‑side friendly

@@ -58,7 +58,7 @@ function toTsv(ranges: Array<Array<Array<unknown>>>) {
     .map((grid) =>
       grid.map((row) => row.map(escapeTsvValue).join('\t')).join('\n'),
     )
-    .join('\n\n') // blank line between disjoint rectangles
+    .join('\n\n') // blank line between final selected regions
 }
 
 function getCellClassName(cell: Cell<typeof features, Person>) {
@@ -321,9 +321,9 @@ export class LitCellSelectionExample extends LitElement {
       </div>
       <p>
         Click and drag to select a range of cells. Hold Shift while clicking to
-        extend the selection, or Ctrl/Cmd to add a second rectangle. Arrow keys
-        move the selection, Shift+Arrow extends it, Mod+A selects all, Mod+C
-        copies, and Escape clears. Uncomment
+        extend the selection, or Ctrl/Cmd to add or subtract a rectangle. Arrow
+        keys move the selection, Shift+Arrow extends it, Mod+A selects all,
+        Mod+C copies, and Escape clears. Uncomment
         <code>enableCellSelection: false</code> on a column def to opt that
         column out of selection.
       </p>
@@ -412,56 +412,72 @@ export class LitCellSelectionExample extends LitElement {
                     (header) => header.id,
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`
-                              <button
-                                type="button"
-                                class="header-button ${header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''}"
-                                ?disabled=${!header.column.getCanSort()}
-                                @click=${header.column.getToggleSortingHandler()}
-                              >
-                                ${FlexRender({ header })}
-                                ${{ asc: ' 🔼', desc: ' 🔽' }[
-                                  header.column.getIsSorted() as string
-                                ] ?? ''}
-                              </button>
-                              ${header.column.getCanPin()
-                                ? html`
-                                    <div class="pin-actions">
-                                      ${header.column.getIsPinned() !== 'start'
-                                        ? html`<button
-                                            class="pin-button"
-                                            @click=${() =>
-                                              header.column.pin('start')}
-                                          >
-                                            &lt;=
-                                          </button>`
-                                        : null}
-                                      ${header.column.getIsPinned()
-                                        ? html`<button
-                                            class="pin-button"
-                                            @click=${() =>
-                                              header.column.pin(false)}
-                                          >
-                                            X
-                                          </button>`
-                                        : null}
-                                      ${header.column.getIsPinned() !== 'end'
-                                        ? html`<button
-                                            class="pin-button"
-                                            @click=${() =>
-                                              header.column.pin('end')}
-                                          >
-                                            =&gt;
-                                          </button>`
-                                        : null}
-                                    </div>
-                                  `
-                                : null}
-                            `}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`
+                                <button
+                                  type="button"
+                                  class="header-button ${
+                                    header.column.getCanSort()
+                                      ? 'sortable-header'
+                                      : ''
+                                  }"
+                                  ?disabled=${!header.column.getCanSort()}
+                                  @click=${header.column.getToggleSortingHandler()}
+                                >
+                                  ${FlexRender({ header })}
+                                  ${
+                                    { asc: ' 🔼', desc: ' 🔽' }[
+                                      header.column.getIsSorted() as string
+                                    ] ?? ''
+                                  }
+                                </button>
+                                ${
+                                  header.column.getCanPin()
+                                    ? html`
+                                        <div class="pin-actions">
+                                          ${
+                                            header.column.getIsPinned() !==
+                                            'start'
+                                              ? html`<button
+                                                  class="pin-button"
+                                                  @click=${() =>
+                                                    header.column.pin('start')}
+                                                >
+                                                  &lt;=
+                                                </button>`
+                                              : null
+                                          }
+                                          ${
+                                            header.column.getIsPinned()
+                                              ? html`<button
+                                                  class="pin-button"
+                                                  @click=${() =>
+                                                    header.column.pin(false)}
+                                                >
+                                                  X
+                                                </button>`
+                                              : null
+                                          }
+                                          ${
+                                            header.column.getIsPinned() !==
+                                            'end'
+                                              ? html`<button
+                                                  class="pin-button"
+                                                  @click=${() =>
+                                                    header.column.pin('end')}
+                                                >
+                                                  =&gt;
+                                                </button>`
+                                              : null
+                                          }
+                                        </div>
+                                      `
+                                    : null
+                                }
+                              `
+                        }
                       </th>
                     `,
                   )}
@@ -526,8 +542,7 @@ export class LitCellSelectionExample extends LitElement {
       <div>
         <label>State:</label>
         <pre>
-${this._data.length < 1_001 ? JSON.stringify(table.state, null, 2) : ''}</pre
-        >
+${this._data.length < 1_001 ? JSON.stringify(table.state, null, 2) : ''}</pre>
       </div>
       <div>
         <label for="paste-target">Paste Test:</label>

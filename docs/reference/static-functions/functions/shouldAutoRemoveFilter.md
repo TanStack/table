@@ -7,8 +7,8 @@ title: shouldAutoRemoveFilter
 
 ```ts
 function shouldAutoRemoveFilter<TFeatures, TData, TValue>(
-   filterFn?, 
-   value?, 
+   filterFn?,
+   value?,
    column?): boolean;
 ```
 

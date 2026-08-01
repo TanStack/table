@@ -265,14 +265,20 @@ class LitTableExample extends LitElement {
                     (h) => h.id,
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`
-                              <div>${FlexRender({ header })}</div>
-                              ${header.column.getCanFilter()
-                                ? this.renderColumnFilter(header.getContext())
-                                : null}
-                            `}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`
+                                <div>${FlexRender({ header })}</div>
+                                ${
+                                  header.column.getCanFilter()
+                                    ? this.renderColumnFilter(
+                                        header.getContext(),
+                                      )
+                                    : null
+                                }
+                              `
+                        }
                       </th>
                     `,
                   )}

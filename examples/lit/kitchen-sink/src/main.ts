@@ -206,7 +206,7 @@ class LitTableExample extends LitElement {
         keepPinnedRows: true,
         debugTable: true,
       },
-      (state) => state,
+      (state) => state, // default selector
     )
 
     return html`
@@ -315,9 +315,11 @@ class LitTableExample extends LitElement {
                           colspan=${header.colSpan}
                           style=${styleMap(this.headerStyle(header))}
                         >
-                          ${header.isPlaceholder
-                            ? null
-                            : this.renderHeader(table, header)}
+                          ${
+                            header.isPlaceholder
+                              ? null
+                              : this.renderHeader(table, header)
+                          }
                         </th>
                       `,
                     )}
@@ -435,78 +437,96 @@ class LitTableExample extends LitElement {
       <div class="header-row">
         <div style="flex: 1; min-width: 0">
           <div class="header-controls">
-            ${column.getCanPin()
-              ? html`
-                  <span class="pin-actions">
-                    ${column.getIsPinned() !== 'start'
-                      ? html`<button
-                          class="pin-button"
-                          @click=${() => column.pin('start')}
-                        >
-                          &lt;
-                        </button>`
-                      : null}
-                    ${column.getIsPinned()
-                      ? html`<button
-                          class="pin-button"
-                          @click=${() => column.pin(false)}
-                        >
-                          x
-                        </button>`
-                      : null}
-                    ${column.getIsPinned() !== 'end'
-                      ? html`<button
-                          class="pin-button"
-                          @click=${() => column.pin('end')}
-                        >
-                          &gt;
-                        </button>`
-                      : null}
-                  </span>
-                `
-              : null}
-            ${column.getCanGroup()
-              ? html`<button
-                  class="pin-button"
-                  @click=${column.getToggleGroupingHandler()}
-                >
-                  ${column.getIsGrouped()
-                    ? `Stop (${column.getGroupedIndex()})`
-                    : 'Group'}
-                </button>`
-              : null}
+            ${
+              column.getCanPin()
+                ? html`
+                    <span class="pin-actions">
+                      ${
+                        column.getIsPinned() !== 'start'
+                          ? html`<button
+                              class="pin-button"
+                              @click=${() => column.pin('start')}
+                            >
+                              &lt;
+                            </button>`
+                          : null
+                      }
+                      ${
+                        column.getIsPinned()
+                          ? html`<button
+                              class="pin-button"
+                              @click=${() => column.pin(false)}
+                            >
+                              x
+                            </button>`
+                          : null
+                      }
+                      ${
+                        column.getIsPinned() !== 'end'
+                          ? html`<button
+                              class="pin-button"
+                              @click=${() => column.pin('end')}
+                            >
+                              &gt;
+                            </button>`
+                          : null
+                      }
+                    </span>
+                  `
+                : null
+            }
+            ${
+              column.getCanGroup()
+                ? html`<button
+                    class="pin-button"
+                    @click=${column.getToggleGroupingHandler()}
+                  >
+                    ${
+                      column.getIsGrouped()
+                        ? `Stop (${column.getGroupedIndex()})`
+                        : 'Group'
+                    }
+                  </button>`
+                : null
+            }
           </div>
-          ${column.id === 'select'
-            ? html`<input
-                type="checkbox"
-                ?checked=${table.getIsAllPageRowsSelected()}
-                .indeterminate=${table.getIsSomePageRowsSelected()}
-                @change=${table.getToggleAllPageRowsSelectedHandler()}
-              />`
-            : column.getCanSort()
-              ? html`<span
-                  class="sortable-header"
-                  @click=${column.getToggleSortingHandler()}
-                >
-                  ${FlexRender({ header })}
-                  ${column.getIsSorted() === 'asc'
-                    ? ' ▲'
-                    : column.getIsSorted() === 'desc'
-                      ? ' ▼'
-                      : ''}
-                </span>`
-              : FlexRender({ header })}
+          ${
+            column.id === 'select'
+              ? html`<input
+                  type="checkbox"
+                  ?checked=${table.getIsAllPageRowsSelected()}
+                  .indeterminate=${table.getIsSomePageRowsSelected()}
+                  @change=${table.getToggleAllPageRowsSelectedHandler()}
+                />`
+              : column.getCanSort()
+                ? html`<span
+                    class="sortable-header"
+                    @click=${column.getToggleSortingHandler()}
+                  >
+                    ${FlexRender({ header })}
+                    ${
+                      column.getIsSorted() === 'asc'
+                        ? ' ▲'
+                        : column.getIsSorted() === 'desc'
+                          ? ' ▼'
+                          : ''
+                    }
+                  </span>`
+                : FlexRender({ header })
+          }
           ${column.getCanFilter() ? this.renderFilter(column) : null}
         </div>
       </div>
-      ${column.getCanResize()
-        ? html`<div
-            @dblclick=${() => column.resetSize()}
-            @mousedown=${header.getResizeHandler()}
-            @touchstart=${header.getResizeHandler()}
-            class="resizer ${column.getIsResizing() ? 'isResizing' : ''}"
-          ></div>`
-        : null}
+      ${
+        column.getCanResize()
+          ? html`<div
+              @dblclick=${() => column.resetSize()}
+              @mousedown=${header.getResizeHandler()}
+              @touchstart=${header.getResizeHandler()}
+              class="resizer ${column.getIsResizing() ? 'isResizing' : ''}"
+            ></div>`
+          : null
+      }
     `
   }
 
@@ -620,49 +640,53 @@ class LitTableExample extends LitElement {
         style=${styleMap(this.cellStyle(cell))}
         class=${this.cellClass(table, cell) ?? ''}
       >
-        ${cell.column.id === 'select'
-          ? html`<div class="column-toggle-row">
-              <input
-                type="checkbox"
-                ?checked=${cell.row.getIsSelected()}
-                ?disabled=${!cell.row.getCanSelect()}
-                .indeterminate=${cell.row.getIsSomeSelected()}
-                @click=${cell.row.getToggleSelectedHandler()}
-              />
-              <button
-                class="pin-button"
-                @click=${() =>
-                  cell.row.pin(
-                    cell.row.getIsPinned() === 'top' ? false : 'top',
-                  )}
-              >
-                ${cell.row.getIsPinned() === 'top' ? 'Pinned' : 'Pin'}
-              </button>
-            </div>`
-          : cell.column.id === 'firstName'
-            ? html`<div style="padding-left: ${cell.row.depth * 1.5}rem">
-                ${cell.row.getCanExpand()
-                  ? html`<button
-                      @click=${cell.row.getToggleExpandedHandler()}
-                      style="cursor: pointer; margin-right: 0.25rem"
-                    >
-                      ${cell.row.getIsExpanded() ? 'v' : '>'}
-                    </button>`
-                  : html`<span style="margin-right: 0.25rem">-</span>`}
-                ${FlexRender({ cell })}
-              </div>`
-            : cell.getIsGrouped()
-              ? html`<button
-                  @click=${cell.row.getToggleExpandedHandler()}
-                  style="cursor: ${cell.row.getCanExpand()
-                    ? 'pointer'
-                    : 'normal'}"
+        ${
+          cell.column.id === 'select'
+            ? html`<div class="column-toggle-row">
+                <input
+                  type="checkbox"
+                  ?checked=${cell.row.getIsSelected()}
+                  ?disabled=${!cell.row.getCanSelect()}
+                  .indeterminate=${cell.row.getIsSomeSelected()}
+                  @click=${cell.row.getToggleSelectedHandler()}
+                />
+                <button
+                  class="pin-button"
+                  @click=${() =>
+                    cell.row.pin(
+                      cell.row.getIsPinned() === 'top' ? false : 'top',
+                    )}
                 >
-                  ${cell.row.getIsExpanded() ? 'v' : '>'}
+                  ${cell.row.getIsPinned() === 'top' ? 'Pinned' : 'Pin'}
+                </button>
+              </div>`
+            : cell.column.id === 'firstName'
+              ? html`<div style="padding-left: ${cell.row.depth * 1.5}rem">
+                  ${
+                    cell.row.getCanExpand()
+                      ? html`<button
+                          @click=${cell.row.getToggleExpandedHandler()}
+                          style="cursor: pointer; margin-right: 0.25rem"
+                        >
+                          ${cell.row.getIsExpanded() ? 'v' : '>'}
+                        </button>`
+                      : html`<span style="margin-right: 0.25rem">-</span>`
+                  }
                   ${FlexRender({ cell })}
-                  (${cell.row.subRows.length.toLocaleString()})
-                </button>`
-              : FlexRender({ cell })}
+                </div>`
+              : cell.getIsGrouped()
+                ? html`<button
+                    @click=${cell.row.getToggleExpandedHandler()}
+                    style="cursor: ${
+                      cell.row.getCanExpand() ? 'pointer' : 'normal'
+                    }"
+                  >
+                    ${cell.row.getIsExpanded() ? 'v' : '>'}
+                    ${FlexRender({ cell })}
+                    (${cell.row.subRows.length.toLocaleString()})
+                  </button>`
+                : FlexRender({ cell })
+        }
       </td>
     `
   }

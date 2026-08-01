@@ -184,8 +184,7 @@ class LitTableExample extends LitElement {
           (state) =>
             // Only this little island re-renders per resize tick
             html`<pre style="height: 10rem; overflow: auto">
-${JSON.stringify(state, null, 2)}</pre
-            >`,
+${JSON.stringify(state, null, 2)}</pre>`,
         )}
         <div class="spacer-md"></div>
         (${this._data.length.toLocaleString()} rows)
@@ -206,9 +205,9 @@ ${JSON.stringify(state, null, 2)}</pre
                           colspan=${header.colSpan}
                           style="display: flex; flex-shrink: 0; width: calc(var(--header-${header.id}-size) * 1px)"
                         >
-                          ${header.isPlaceholder
-                            ? null
-                            : FlexRender({ header })}
+                          ${
+                            header.isPlaceholder ? null : FlexRender({ header })
+                          }
                           ${table.subscribe(
                             table.atoms.columnResizing,
                             // Each resizer subscribes to just its own "am I
@@ -222,9 +221,9 @@ ${JSON.stringify(state, null, 2)}</pre
                                 @dblclick="${() => header.column.resetSize()}"
                                 @mousedown="${header.getResizeHandler()}"
                                 @touchstart="${header.getResizeHandler()}"
-                                class="resizer ${isResizing
-                                  ? 'isResizing'
-                                  : ''}"
+                                class="resizer ${
+                                  isResizing ? 'isResizing' : ''
+                                }"
                               ></div>
                             `,
                           )}
@@ -250,8 +249,9 @@ ${JSON.stringify(state, null, 2)}</pre
                       (cell) => cell.id,
                       (cell) => html`
                         <td
-                          style="display: flex; flex-shrink: 0; width: calc(var(--col-${cell
-                            .column.id}-size) * 1px)"
+                          style="display: flex; flex-shrink: 0; width: calc(var(--col-${
+                            cell.column.id
+                          }-size) * 1px)"
                         >
                           ${cell.renderValue()}
                         </td>

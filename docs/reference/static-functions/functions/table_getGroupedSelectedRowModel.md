@@ -6,7 +6,7 @@ title: table_getGroupedSelectedRowModel
 # Function: table\_getGroupedSelectedRowModel()
 
 ```ts
-function table_getGroupedSelectedRowModel<TFeatures, TData>(table): 
+function table_getGroupedSelectedRowModel<TFeatures, TData>(table):
   | RowModel<TFeatures, TData>
   | {
   flatRows: never[];

@@ -1,5 +1,7 @@
 import { callMemoOrStaticFn, cloneState, makeObjectMap } from '../../utils'
 import { table_getVisibleLeafColumns } from '../column-visibility/columnVisibilityFeature.utils'
+import { applyCellSelectionBoundsOperations } from './cellSelectionGeometry'
+import type { CellSelectionBoundsOperation } from './cellSelectionGeometry'
 import type { CellData, RowData, Updater } from '../../types/type-utils'
 import type { TableFeatures } from '../../types/TableFeatures'
 import type { Table_Internal } from '../../types/Table'
@@ -227,7 +229,8 @@ function resolveRowIndex<
 }
 
 /**
- * Resolves the selected ranges into inclusive display-order index rectangles.
+ * Resolves ordered range operations into disjoint, positive display-order
+ * index rectangles.
  *
  * This is the single cache every per-cell read goes through, so index lookups
  * happen once per invalidation rather than once per cell. A range whose corners
@@ -255,7 +258,7 @@ export function table_getCellSelectionBounds<
     table_getCellSelectionColumnIndexes,
   )
 
-  const bounds: Array<CellSelectionBounds> = []
+  const operations: Array<CellSelectionBoundsOperation> = []
 
   for (let i = 0; i < ranges.length; i++) {
     const range = ranges[i]!
@@ -273,15 +276,16 @@ export function table_getCellSelectionBounds<
       continue
     }
 
-    bounds.push({
+    operations.push({
       minRowIndex: Math.min(anchorRowIndex, focusRowIndex),
       maxRowIndex: Math.max(anchorRowIndex, focusRowIndex),
       minColumnIndex: Math.min(anchorColumnIndex, focusColumnIndex),
       maxColumnIndex: Math.max(anchorColumnIndex, focusColumnIndex),
+      operation: range.operation ?? 'include',
     })
   }
 
-  return bounds
+  return applyCellSelectionBoundsOperations(operations)
 }
 
 /**
@@ -382,7 +386,7 @@ function resolveCellPosition<
 }
 
 /**
- * Checks whether this cell falls inside any selected range.
+ * Checks whether this cell falls inside the final positive selection.
  *
  * Deliberately not memoized. Registering this through `assignPrototypeAPIs`
  * with `memoDeps` would allocate a memo closure and dependency array per cell,
@@ -492,7 +496,7 @@ export function cell_getSelectionEdges<
 // Focus APIs
 
 /**
- * Returns the active cell, i.e. the anchor of the most recent range.
+ * Returns the active cell, i.e. the anchor of the most recent operation.
  *
  * Focus is derived rather than stored: in spreadsheet semantics, dragging from
  * A1 to C5 leaves the active cell at A1, so the active range's anchor already
@@ -544,11 +548,11 @@ export function table_setFocusedCell<
 // Selection writes
 
 /**
- * Selects a rectangle, replacing the current selection unless `additive`.
+ * Selects a rectangle using replace, include, or exclude semantics.
  *
  * @example
  * ```ts
- * table_selectCellRange(table, range, { additive: true })
+ * table_selectCellRange(table, range, { mode: 'exclude' })
  * ```
  */
 export function table_selectCellRange<
@@ -559,8 +563,13 @@ export function table_selectCellRange<
   range: CellSelectionRange,
   opts?: SelectCellRangeOptions,
 ) {
+  const mode = opts?.mode ?? (opts?.additive ? 'include' : 'replace')
+  const { operation: _operation, ...coordinates } = range
+  const nextRange: CellSelectionRange =
+    mode === 'exclude' ? { ...coordinates, operation: 'exclude' } : coordinates
+
   table_setCellSelection(table, (old) =>
-    opts?.additive ? [...old, range] : [range],
+    mode === 'replace' ? [nextRange] : [...old, nextRange],
   )
 }
 
@@ -797,7 +806,7 @@ export function table_extendCellSelection<
 // Derived selection data
 
 /**
- * Walks each resolved rectangle, invoking a visitor per selectable cell.
+ * Walks each final positive region, invoking a visitor per selectable cell.
  *
  * Every expansion API shares this so the per-cell enable predicate is applied
  * in exactly one place.
@@ -891,7 +900,7 @@ export function table_getSelectedCellIds<
 }
 
 /**
- * Returns each selected range's values as a row-major grid.
+ * Returns each final positive region's values as a row-major grid.
  *
  * This is the raw material for clipboard export. Serializing it to text is left
  * to userland, since the delimiter, the null representation, and whether values
@@ -920,9 +929,8 @@ export function table_getSelectedCellRangesData<
 /**
  * Returns the number of selected cells.
  *
- * Uses rectangle arithmetic for a single range, which needs no expansion.
- * Multiple ranges are enumerated so overlapping cells are counted once. A
- * per-cell `enableCellSelection` predicate also requires enumeration.
+ * Uses rectangle arithmetic over the normalized, disjoint positive regions.
+ * A per-cell `enableCellSelection` predicate requires enumeration.
  *
  * @example
  * ```ts
@@ -943,31 +951,30 @@ export function table_getSelectedCellCount<
 
   if (!bounds.length) return 0
 
-  if (
-    bounds.length > 1 ||
-    typeof table.options.enableCellSelection === 'function'
-  ) {
+  if (typeof table.options.enableCellSelection === 'function') {
     const ids = new Set<string>()
     forEachSelectedCell(table, (cell) => ids.add(cell.id))
     return ids.size
   }
 
   const columns = getDisplayOrderedColumns(table)
-  const bound = bounds[0]!
-  let selectableColumns = 0
-
-  for (
-    let columnIndex = bound.minColumnIndex;
-    columnIndex <= bound.maxColumnIndex;
-    columnIndex++
-  ) {
-    const column = columns[columnIndex]
-    if (!column) continue
-    const columnDef = column.columnDef as Partial<ColumnDef_CellSelection>
-    if (columnDef.enableCellSelection !== false) selectableColumns++
+  let count = 0
+  for (const bound of bounds) {
+    let selectableColumns = 0
+    for (
+      let columnIndex = bound.minColumnIndex;
+      columnIndex <= bound.maxColumnIndex;
+      columnIndex++
+    ) {
+      const column = columns[columnIndex]
+      if (!column) continue
+      const columnDef = column.columnDef as Partial<ColumnDef_CellSelection>
+      if (columnDef.enableCellSelection !== false) selectableColumns++
+    }
+    count += (bound.maxRowIndex - bound.minRowIndex + 1) * selectableColumns
   }
 
-  return (bound.maxRowIndex - bound.minRowIndex + 1) * selectableColumns
+  return count
 }
 
 /**
@@ -1105,6 +1112,9 @@ export function cell_getSelectionStartHandler<
 
     const rowId = cell.row.id
     const columnId = cell.column.id
+    const shouldExclude =
+      isMultiRangeEvent &&
+      callMemoOrStaticFn(cell, 'getIsSelected', cell_getIsSelected)
 
     table_setCellSelection(table, (old) => {
       const active = old[old.length - 1]
@@ -1121,6 +1131,7 @@ export function cell_getSelectionStartHandler<
         anchorColumnId: columnId,
         focusRowId: rowId,
         focusColumnId: columnId,
+        ...(shouldExclude ? { operation: 'exclude' as const } : {}),
       }
 
       return isMultiRangeEvent ? [...old, range] : [range]

@@ -10,6 +10,8 @@ import {
 import type {
   CellSelectionBounds,
   CellSelectionDirection,
+  CellSelectionRangeOperation,
+  CellSelectionState,
 } from '@tanstack/react-table'
 import type {
   CellPatch,
@@ -380,130 +382,66 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [execute, getDisplayColumns, getDisplayRows, getValue, selectBounds],
   )
 
-  const selectColumn = React.useCallback(
-    (columnId: string, event: React.MouseEvent) => {
+  const selectColumnRange = React.useCallback(
+    (
+      anchorColumnId: string,
+      focusColumnId: string,
+      baseSelection: CellSelectionState,
+      operation: CellSelectionRangeOperation,
+    ) => {
       const displayRows = getDisplayRows()
       const displayColumns = getDisplayColumns()
-      const clickedIndex = displayColumns.findIndex(
-        (column) => column.id === columnId,
-      )
-      if (!displayRows.length || clickedIndex < 0) return
+      if (!displayRows.length || !displayColumns.length) return
 
-      let minColumnIndex = clickedIndex
-      let maxColumnIndex = clickedIndex
-      if (event.shiftKey) {
-        const activeBound = getSelectedBounds().at(-1)
-        if (activeBound) {
-          minColumnIndex = Math.min(activeBound.minColumnIndex, clickedIndex)
-          maxColumnIndex = Math.max(activeBound.maxColumnIndex, clickedIndex)
-        }
-      }
-
-      table.selectCellRange(
+      table.setCellSelection([
+        ...baseSelection,
         {
           anchorRowId: displayRows[0].id,
           focusRowId: displayRows[displayRows.length - 1].id,
-          anchorColumnId: displayColumns[minColumnIndex].id,
-          focusColumnId: displayColumns[maxColumnIndex].id,
+          anchorColumnId,
+          focusColumnId,
+          operation,
         },
-        { additive: event.metaKey || event.ctrlKey },
-      )
+      ])
     },
-    [getDisplayColumns, getDisplayRows, getSelectedBounds, table],
+    [getDisplayColumns, getDisplayRows, table],
   )
 
-  const selectRow = React.useCallback(
-    (rowId: string, event: React.MouseEvent) => {
+  const selectRowRange = React.useCallback(
+    (
+      anchorRowId: string,
+      focusRowId: string,
+      baseSelection: CellSelectionState,
+      operation: CellSelectionRangeOperation,
+    ) => {
       const displayRows = getDisplayRows()
       const displayColumns = getDisplayColumns()
-      const clickedIndex = displayRows.findIndex((row) => row.id === rowId)
-      if (!displayColumns.length || clickedIndex < 0) return
+      if (!displayRows.length || !displayColumns.length) return
 
-      let minRowIndex = clickedIndex
-      let maxRowIndex = clickedIndex
-      if (event.shiftKey) {
-        const activeBound = getSelectedBounds().at(-1)
-        if (activeBound) {
-          minRowIndex = Math.min(activeBound.minRowIndex, clickedIndex)
-          maxRowIndex = Math.max(activeBound.maxRowIndex, clickedIndex)
-        }
-      }
-
-      table.selectCellRange(
+      table.setCellSelection([
+        ...baseSelection,
         {
-          anchorRowId: displayRows[minRowIndex].id,
-          focusRowId: displayRows[maxRowIndex].id,
+          anchorRowId,
+          focusRowId,
           anchorColumnId: displayColumns[0].id,
           focusColumnId: displayColumns[displayColumns.length - 1].id,
+          operation,
         },
-        { additive: event.metaKey || event.ctrlKey },
-      )
+      ])
     },
-    [getDisplayColumns, getDisplayRows, getSelectedBounds, table],
+    [getDisplayColumns, getDisplayRows, table],
   )
 
-  const handleGridKeyDown = React.useCallback(
+  const startEditingActive = React.useCallback(() => {
+    const active = getActiveRange()
+    if (active) startEditing(active.anchorRowId, active.anchorColumnId)
+  }, [getActiveRange, startEditing])
+
+  const handleGridTextEntry = React.useCallback(
     (event: React.KeyboardEvent<HTMLElement>) => {
       if (editing) return
       const modifier = event.metaKey || event.ctrlKey
       const key = event.key
-
-      if (modifier && key.toLowerCase() === 'z') {
-        event.preventDefault()
-        if (event.shiftKey) redo()
-        else undo()
-        return
-      }
-      if (modifier && key.toLowerCase() === 'y') {
-        event.preventDefault()
-        redo()
-        return
-      }
-      if (modifier && key.toLowerCase() === 'a') {
-        event.preventDefault()
-        table.selectAllCells()
-        return
-      }
-
-      const arrows: Partial<Record<string, CellSelectionDirection>> = {
-        ArrowUp: 'up',
-        ArrowDown: 'down',
-        ArrowLeft: 'left',
-        ArrowRight: 'right',
-      }
-      const direction = arrows[key]
-      if (direction) {
-        event.preventDefault()
-        moveSelection(direction, event.shiftKey)
-        return
-      }
-
-      if (key === 'Tab') {
-        event.preventDefault()
-        moveSelection(event.shiftKey ? 'left' : 'right')
-        return
-      }
-      if (key === 'Enter') {
-        event.preventDefault()
-        moveSelection(event.shiftKey ? 'up' : 'down')
-        return
-      }
-      if (key === 'F2') {
-        event.preventDefault()
-        const active = getActiveRange()
-        if (active) startEditing(active.anchorRowId, active.anchorColumnId)
-        return
-      }
-      if (key === 'Delete' || key === 'Backspace') {
-        event.preventDefault()
-        clearSelection()
-        return
-      }
-      if (key === 'Escape') {
-        event.preventDefault()
-        table.resetCellSelection(true)
-        return
-      }
       if (
         key.length === 1 &&
         !modifier &&
@@ -517,16 +455,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
         }
       }
     },
-    [
-      clearSelection,
-      editing,
-      getActiveRange,
-      moveSelection,
-      redo,
-      startEditing,
-      table,
-      undo,
-    ],
+    [editing, getActiveRange, startEditing],
   )
 
   const handleEditorKeyDown = React.useCallback(
@@ -598,6 +527,8 @@ export function useGridInteractions(options: GridInteractionOptions) {
     getRangeLabel,
     getSelectionSummary,
     startEditing,
+    startEditingActive,
+    moveSelection,
     commitCellValue,
     commitEditing,
     cancelEditing,
@@ -610,10 +541,12 @@ export function useGridInteractions(options: GridInteractionOptions) {
     pasteFromClipboard,
     applyFill,
     selectBounds,
-    selectColumn,
-    selectRow,
-    handleGridKeyDown,
+    selectColumnRange,
+    selectRowRange,
+    handleGridTextEntry,
     handleEditorKeyDown,
+    undo,
+    redo,
   }
 }
 

@@ -21,7 +21,7 @@ Assumes that a function name is in the format of `parentName_fnKey` and returns 
 
 ### splitBy
 
-`"_"` | `"."`
+`"."` | `"_"`
 
 ## Returns
 

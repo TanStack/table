@@ -9,9 +9,10 @@ title: table_getCellSelectionBounds
 function table_getCellSelectionBounds<TFeatures, TData>(table): CellSelectionBounds[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:243](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L243)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:246](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L246)
 
-Resolves the selected ranges into inclusive display-order index rectangles.
+Resolves ordered range operations into disjoint, positive display-order
+index rectangles.
 
 This is the single cache every per-cell read goes through, so index lookups
 happen once per invalidation rather than once per cell. A range whose corners

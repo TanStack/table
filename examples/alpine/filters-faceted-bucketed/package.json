@@ -1,6 +1,7 @@
 {
   "name": "tanstack-alpine-table-example-filters-faceted-bucketed",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -19,6 +20,6 @@
     "@rollup/plugin-replace": "^6.0.3",
     "@types/alpinejs": "^3.13.11",
     "typescript": "6.0.3",
-    "vite": "^8.1.0"
+    "vite": "^8.2.0"
   }
 }
