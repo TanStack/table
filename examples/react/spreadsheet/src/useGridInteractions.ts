@@ -10,6 +10,8 @@ import {
 import type {
   CellSelectionBounds,
   CellSelectionDirection,
+  CellSelectionRangeOperation,
+  CellSelectionState,
 } from '@tanstack/react-table'
 import type {
   CellPatch,
@@ -380,66 +382,54 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [execute, getDisplayColumns, getDisplayRows, getValue, selectBounds],
   )
 
-  const selectColumn = React.useCallback(
-    (columnId: string, event: React.MouseEvent) => {
+  const selectColumnRange = React.useCallback(
+    (
+      anchorColumnId: string,
+      focusColumnId: string,
+      baseSelection: CellSelectionState,
+      operation: CellSelectionRangeOperation,
+    ) => {
       const displayRows = getDisplayRows()
       const displayColumns = getDisplayColumns()
-      const clickedIndex = displayColumns.findIndex(
-        (column) => column.id === columnId,
-      )
-      if (!displayRows.length || clickedIndex < 0) return
+      if (!displayRows.length || !displayColumns.length) return
 
-      let minColumnIndex = clickedIndex
-      let maxColumnIndex = clickedIndex
-      if (event.shiftKey) {
-        const activeBound = getSelectedBounds().at(-1)
-        if (activeBound) {
-          minColumnIndex = Math.min(activeBound.minColumnIndex, clickedIndex)
-          maxColumnIndex = Math.max(activeBound.maxColumnIndex, clickedIndex)
-        }
-      }
-
-      table.selectCellRange(
+      table.setCellSelection([
+        ...baseSelection,
         {
           anchorRowId: displayRows[0].id,
           focusRowId: displayRows[displayRows.length - 1].id,
-          anchorColumnId: displayColumns[minColumnIndex].id,
-          focusColumnId: displayColumns[maxColumnIndex].id,
+          anchorColumnId,
+          focusColumnId,
+          operation,
         },
-        { additive: event.metaKey || event.ctrlKey },
-      )
+      ])
     },
-    [getDisplayColumns, getDisplayRows, getSelectedBounds, table],
+    [getDisplayColumns, getDisplayRows, table],
   )
 
-  const selectRow = React.useCallback(
-    (rowId: string, event: React.MouseEvent) => {
+  const selectRowRange = React.useCallback(
+    (
+      anchorRowId: string,
+      focusRowId: string,
+      baseSelection: CellSelectionState,
+      operation: CellSelectionRangeOperation,
+    ) => {
       const displayRows = getDisplayRows()
       const displayColumns = getDisplayColumns()
-      const clickedIndex = displayRows.findIndex((row) => row.id === rowId)
-      if (!displayColumns.length || clickedIndex < 0) return
+      if (!displayRows.length || !displayColumns.length) return
 
-      let minRowIndex = clickedIndex
-      let maxRowIndex = clickedIndex
-      if (event.shiftKey) {
-        const activeBound = getSelectedBounds().at(-1)
-        if (activeBound) {
-          minRowIndex = Math.min(activeBound.minRowIndex, clickedIndex)
-          maxRowIndex = Math.max(activeBound.maxRowIndex, clickedIndex)
-        }
-      }
-
-      table.selectCellRange(
+      table.setCellSelection([
+        ...baseSelection,
         {
-          anchorRowId: displayRows[minRowIndex].id,
-          focusRowId: displayRows[maxRowIndex].id,
+          anchorRowId,
+          focusRowId,
           anchorColumnId: displayColumns[0].id,
           focusColumnId: displayColumns[displayColumns.length - 1].id,
+          operation,
         },
-        { additive: event.metaKey || event.ctrlKey },
-      )
+      ])
     },
-    [getDisplayColumns, getDisplayRows, getSelectedBounds, table],
+    [getDisplayColumns, getDisplayRows, table],
   )
 
   const handleGridKeyDown = React.useCallback(
@@ -610,8 +600,8 @@ export function useGridInteractions(options: GridInteractionOptions) {
     pasteFromClipboard,
     applyFill,
     selectBounds,
-    selectColumn,
-    selectRow,
+    selectColumnRange,
+    selectRowRange,
     handleGridKeyDown,
     handleEditorKeyDown,
   }

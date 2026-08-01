@@ -96,6 +96,108 @@ test('subtracts cells from a selection with Ctrl/Cmd', async ({ page }) => {
   }
 })
 
+test('keeps selection unchanged when opening a cell context menu', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const start = cell(page, 1, 0)
+    const end = cell(page, 2, 1)
+    const contextTarget = cell(page, 4, 3)
+
+    await start.click()
+    await end.click({ modifiers: ['Shift'] })
+    await expect(page.locator('[data-sheet-cell].cell-selected')).toHaveCount(4)
+
+    await contextTarget.click({ button: 'right' })
+
+    await expect(page.getByRole('menu', { name: 'Cell actions' })).toBeVisible()
+    await expect(page.locator('[data-sheet-cell].cell-selected')).toHaveCount(4)
+    await expect(contextTarget).not.toHaveClass(/cell-selected|cell-focused/)
+    await expect(start).toHaveClass(/cell-focused/)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('selects ranges by dragging across column and row headers', async ({
+  page,
+}) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const columnA = page.getByRole('columnheader', { name: /^A/ })
+    const columnC = page.getByRole('columnheader', { name: /^C/ })
+    const columnABox = await columnA.boundingBox()
+    const columnCBox = await columnC.boundingBox()
+    if (!columnABox || !columnCBox)
+      throw new Error('Column header drag bounds unavailable')
+
+    await page.mouse.move(
+      columnABox.x + columnABox.width / 2,
+      columnABox.y + columnABox.height / 2,
+    )
+    await page.mouse.down()
+    await page.mouse.move(
+      columnCBox.x + columnCBox.width / 2,
+      columnCBox.y + columnCBox.height / 2,
+      { steps: 5 },
+    )
+    await page.mouse.up()
+
+    for (const letter of ['A', 'B', 'C']) {
+      await expect(
+        page.getByRole('columnheader', { name: new RegExp(`^${letter}`) }),
+      ).toHaveAttribute('aria-selected', 'true')
+    }
+    await expect(
+      page.getByRole('columnheader', { name: /^D/ }),
+    ).toHaveAttribute('aria-selected', 'false')
+
+    const row2 = page.getByRole('button', {
+      name: 'Select row 2',
+      exact: true,
+    })
+    const row5 = page.getByRole('button', {
+      name: 'Select row 5',
+      exact: true,
+    })
+    const row2Box = await row2.boundingBox()
+    const row5Box = await row5.boundingBox()
+    if (!row2Box || !row5Box)
+      throw new Error('Row header drag bounds unavailable')
+
+    await page.mouse.move(
+      row2Box.x + row2Box.width / 2,
+      row2Box.y + row2Box.height / 2,
+    )
+    await page.mouse.down()
+    await page.mouse.move(
+      row5Box.x + row5Box.width / 2,
+      row5Box.y + row5Box.height / 2,
+      { steps: 5 },
+    )
+    await page.mouse.up()
+
+    for (const rowNumber of [2, 3, 4, 5]) {
+      await expect(
+        page.getByRole('button', {
+          name: `Select row ${rowNumber}`,
+          exact: true,
+        }),
+      ).toHaveAttribute('aria-selected', 'true')
+    }
+    await expect(
+      page.getByRole('button', { name: 'Select row 6', exact: true }),
+    ).toHaveAttribute('aria-selected', 'false')
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
 test('edits a cell and supports atomic undo and redo', async ({ page }) => {
   const { errors, server } = await openExample(page)
 
@@ -386,6 +488,7 @@ test('provides Excel-style ribbon and cell context actions', async ({
     ).not.toHaveCount(0)
 
     const target = cell(page, 1, 0)
+    await target.click()
     await target.click({ button: 'right' })
     const menu = page.getByRole('menu', { name: 'Cell actions' })
     await expect(menu).toBeVisible()
