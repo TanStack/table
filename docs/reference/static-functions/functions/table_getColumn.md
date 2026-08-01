@@ -6,12 +6,12 @@ title: table_getColumn
 # Function: table\_getColumn()
 
 ```ts
-function table_getColumn<TFeatures, TData>(table, columnId): 
+function table_getColumn<TFeatures, TData>(table, columnId):
   | Column<TFeatures, TData, unknown>
   | undefined;
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:261](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L261)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:274](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L274)
 
 Looks up a column by id from the flat column map.
 

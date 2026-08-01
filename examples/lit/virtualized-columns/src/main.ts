@@ -200,14 +200,16 @@ class LitTableExample extends LitElement {
                 (headerGroup) => headerGroup.id,
                 (headerGroup) => html`
                   <tr style="${styleMap({ display: 'flex', width: '100%' })}">
-                    ${virtualPaddingLeft
-                      ? html`<th
-                          style="${styleMap({
-                            display: 'flex',
-                            width: `${virtualPaddingLeft}px`,
-                          })}"
-                        ></th>`
-                      : null}
+                    ${
+                      virtualPaddingLeft
+                        ? html`<th
+                            style="${styleMap({
+                              display: 'flex',
+                              width: `${virtualPaddingLeft}px`,
+                            })}"
+                          ></th>`
+                        : null
+                    }
                     ${repeat(
                       virtualColumns,
                       (vc) => vc.index,
@@ -222,37 +224,45 @@ class LitTableExample extends LitElement {
                             })}"
                           >
                             <div
-                              class="${header.column.getCanSort()
-                                ? 'sortable-header'
-                                : ''}"
+                              class="${
+                                header.column.getCanSort()
+                                  ? 'sortable-header'
+                                  : ''
+                              }"
                               @click="${header.column.getToggleSortingHandler()}"
                             >
                               ${FlexRender({ header })}
-                              ${{
-                                asc: ' 🔼',
-                                desc: ' 🔽',
-                              }[header.column.getIsSorted() as string] ?? null}
+                              ${
+                                {
+                                  asc: ' 🔼',
+                                  desc: ' 🔽',
+                                }[header.column.getIsSorted() as string] ?? null
+                              }
                             </div>
                             <div
                               @dblclick="${() => header.column.resetSize()}"
                               @mousedown="${header.getResizeHandler()}"
                               @touchstart="${header.getResizeHandler()}"
-                              class="resizer ${header.column.getIsResizing()
-                                ? 'isResizing'
-                                : ''}"
+                              class="resizer ${
+                                header.column.getIsResizing()
+                                  ? 'isResizing'
+                                  : ''
+                              }"
                             ></div>
                           </th>
                         `
                       },
                     )}
-                    ${virtualPaddingRight
-                      ? html`<th
-                          style="${styleMap({
-                            display: 'flex',
-                            width: `${virtualPaddingRight}px`,
-                          })}"
-                        ></th>`
-                      : null}
+                    ${
+                      virtualPaddingRight
+                        ? html`<th
+                            style="${styleMap({
+                              display: 'flex',
+                              width: `${virtualPaddingRight}px`,
+                            })}"
+                          ></th>`
+                        : null
+                    }
                   </tr>
                 `,
               )}
@@ -283,14 +293,16 @@ class LitTableExample extends LitElement {
                         rowVirtualizer.measureElement(node ?? null),
                       )}
                     >
-                      ${virtualPaddingLeft
-                        ? html`<td
-                            style="${styleMap({
-                              display: 'flex',
-                              width: `${virtualPaddingLeft}px`,
-                            })}"
-                          ></td>`
-                        : null}
+                      ${
+                        virtualPaddingLeft
+                          ? html`<td
+                              style="${styleMap({
+                                display: 'flex',
+                                width: `${virtualPaddingLeft}px`,
+                              })}"
+                            ></td>`
+                          : null
+                      }
                       ${repeat(
                         virtualColumns,
                         (vc) => vc.index,
@@ -308,14 +320,16 @@ class LitTableExample extends LitElement {
                           `
                         },
                       )}
-                      ${virtualPaddingRight
-                        ? html`<td
-                            style="${styleMap({
-                              display: 'flex',
-                              width: `${virtualPaddingRight}px`,
-                            })}"
-                          ></td>`
-                        : null}
+                      ${
+                        virtualPaddingRight
+                          ? html`<td
+                              style="${styleMap({
+                                display: 'flex',
+                                width: `${virtualPaddingRight}px`,
+                              })}"
+                            ></td>`
+                          : null
+                      }
                     </tr>
                   `
                 },

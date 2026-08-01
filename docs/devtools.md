@@ -31,6 +31,10 @@ npm install @tanstack/react-devtools @tanstack/react-table-devtools@beta
 npm install @tanstack/preact-devtools @tanstack/preact-table-devtools@beta
 ```
 
+# Octane
+
+There is not currently a dedicated Octane Table Devtools adapter.
+
 # Vue
 
 ```sh
@@ -51,7 +55,7 @@ npm install @tanstack/angular-devtools @tanstack/angular-table-devtools@beta
 
 <!-- ::end:framework -->
 
-Lit, Svelte, Alpine, and vanilla do not currently ship dedicated table devtools adapters.
+Octane, Lit, Svelte, Alpine, and vanilla do not currently ship dedicated table devtools adapters.
 
 ## The Required `key` Table Option
 
@@ -145,6 +149,10 @@ render(
   document.getElementById('root')!,
 )
 ```
+
+# Octane
+
+Octane tables expose the same `table.state`, slice atoms, `table.store`, and `table.Subscribe` inspection surfaces, but there is not currently an Octane Table Devtools plugin to register.
 
 See the [Preact row-selection example](./framework/preact/examples/row-selection).
 
@@ -297,6 +305,10 @@ useTanStackTableDevtools(table, { enabled: false })
 useTanStackTableDevtools(table, { enabled: false })
 ```
 
+# Octane
+
+No adapter toggle is required because Octane does not currently ship a Table Devtools adapter.
+
 # Vue
 
 ```ts
@@ -343,6 +355,10 @@ import {
   useTanStackTableDevtools,
 } from '@tanstack/preact-table-devtools/production'
 ```
+
+# Octane
+
+There is no production Devtools entry point for Octane Table at this time.
 
 # Vue
 

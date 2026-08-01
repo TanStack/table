@@ -6,7 +6,7 @@ title: FlexRenderContext
 # Type Alias: FlexRenderContext\<TFeatures, TData, TValue\>
 
 ```ts
-type FlexRenderContext<TFeatures, TData, TValue> = 
+type FlexRenderContext<TFeatures, TData, TValue> =
   | CellContext<TFeatures, TData, TValue>
 | HeaderContext<TFeatures, TData, TValue>;
 ```

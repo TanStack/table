@@ -131,11 +131,9 @@ export function useTable<
   watch(
     () => {
       const controlledState = unref(tableOptions.state) as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
       const controlledAtoms = unref(tableOptions.atoms) as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
 
       if (!controlledState) {
         return []

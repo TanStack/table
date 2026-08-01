@@ -219,9 +219,7 @@ const features = tableFeatures({
   rowPaginationFeature,
 })
 
-@Component({
-  /* ... */
-})
+@Component({/* ... */})
 export class App {
   readonly paginationAtom = createAtom<PaginationState>({
     pageIndex: 0,

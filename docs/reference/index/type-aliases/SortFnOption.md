@@ -6,7 +6,7 @@ title: SortFnOption
 # Type Alias: SortFnOption\<TFeatures, TData\>
 
 ```ts
-type SortFnOption<TFeatures, TData> = 
+type SortFnOption<TFeatures, TData> =
   | "auto"
   | ExtractSortFnKeys<TFeatures>
 | SortFn<TFeatures, TData>;

@@ -34,7 +34,7 @@ export class App {
 
 ## Cell Selection (Angular) Guide
 
-The cell selection feature keeps track of spreadsheet-style rectangular selections. A user can click a cell, drag across a block of cells, Shift-click to extend, and Ctrl/Cmd-click to add a second rectangle. Let's take a look at some common use cases.
+The cell selection feature keeps track of spreadsheet-style rectangular selections. A user can click a cell, drag across a block of cells, Shift-click to extend, and Ctrl/Cmd-drag to add or subtract a rectangle based on whether the starting cell is selected. Let's take a look at some common use cases.
 
 ### Access Cell Selection State
 
@@ -44,7 +44,7 @@ The table instance already manages the cell selection state for you. You can acc
 - `getSelectedCellCount()` - returns how many cells are selected
 - `getSelectedCellIds()` - returns the ids of every selected cell
 - `getCellSelectionRowIds()` / `getCellSelectionColumnIds()` - returns the rows and columns the selection touches
-- `getSelectedCellRangesData()` - returns each selected rectangle's values as a row-major grid
+- `getSelectedCellRangesData()` - returns each final positive selection region's values as a row-major grid
 
 ```ts
 console.log(table.atoms.cellSelection.get()) //get the cell selection state
@@ -59,7 +59,7 @@ The expansion APIs (`getSelectedCellIds`, `getSelectedCellRangesData`) are memoi
 
 ### Cell Selection State Shape
 
-`CellSelectionState` is an array of rectangles, each stored as its two defining corners:
+`CellSelectionState` is an ordered array of range operations, each stored as its two defining corners:
 
 ```ts
 type CellSelectionRange = {
@@ -67,6 +67,7 @@ type CellSelectionRange = {
   anchorColumnId: string
   focusRowId: string
   focusColumnId: string
+  operation?: 'include' | 'exclude'
 }
 
 type CellSelectionState = Array<CellSelectionRange>
@@ -74,7 +75,7 @@ type CellSelectionState = Array<CellSelectionRange>
 
 The `anchor` corner is where the selection started and stays put. The `focus` corner is the one that moves while dragging or Shift-extending. Storing both corners, rather than a normalized min/max rectangle, is what makes Shift-extend and "collapse back to the active cell" possible.
 
-Because ranges are only two corners, a drag across thousands of cells updates two strings rather than building a map with one entry per selected cell.
+Ranges are applied in order. An omitted `operation` is an inclusion for backward compatibility; an `exclude` range subtracts its rectangle from the selection produced so far. This compact operation log means a “select all except these cells” interaction does not build a map with one entry per selected cell.
 
 ### Manage Cell Selection State
 
@@ -200,14 +201,18 @@ readonly table = injectTable(() => ({
 
 #### Multiple Ranges
 
-Ctrl-clicking or Cmd-clicking pushes an additional rectangle onto the selection instead of replacing it. Set `enableMultiCellRangeSelection: false` to allow only one rectangle at a time, or override `isMultiCellRangeSelectionEvent` to change the modifier.
+Ctrl-clicking or Cmd-clicking an unselected cell adds a new inclusive rectangle. Starting the same modified interaction on a selected cell adds an exclusion instead, so clicking removes that cell and dragging subtracts the whole rectangle. Whether the drag includes or excludes is fixed when it starts; shrinking an exclusion drag restores cells that leave its rectangle. Set `enableMultiCellRangeSelection: false` to disable both behaviors, or override `isMultiCellRangeSelectionEvent` to change the modifier.
+
+#### Programmatic Range Operations
+
+`table.selectCellRange(range)` replaces the current selection. Pass `{ mode: 'include' }` to append an inclusion or `{ mode: 'exclude' }` to append an exclusion. The older `{ additive: true }` option remains as a deprecated alias for include mode; `mode` wins if both options are supplied. `table.getCellSelectionBounds()` resolves the operation log into deterministic, disjoint positive rectangles.
 
 ### Render Cell Selection UI
 
 TanStack Table does not dictate how you render selected cells. These cell APIs give you everything you need:
 
 - `cell.getIsSelected()` - whether this cell falls inside any range
-- `cell.getIsFocused()` - whether this is the active cell
+- `cell.getIsFocused()` - whether this is the active cell (an excluded anchor can be focused without being selected)
 - `cell.getSelectionEdges()` - which sides sit on the selection boundary
 - `cell.getTabIndex()` - `0` for the focused cell and `-1` otherwise, for roving tabindex
 
@@ -287,7 +292,7 @@ Scope the hotkeys to the grid element rather than the document, or arrow keys an
 
 ### Copying a Selection
 
-`getSelectedCellRangesData()` returns raw values indexed as `[rangeIndex][rowIndex][columnIndex]`. Turning that into clipboard text is left to your application, because the delimiter, the representation of `null`, and any quoting rules are decisions only you can make.
+`getSelectedCellRangesData()` returns raw values indexed as `[regionIndex][rowIndex][columnIndex]`. A region is one of the final disjoint positive rectangles after all include and exclude operations are applied, so it does not necessarily correspond one-to-one with stored state. Turning that into clipboard text is left to your application, because the delimiter, the representation of `null`, and any quoting rules are decisions only you can make.
 
 ```ts
 function escapeTsvValue(value: unknown) {

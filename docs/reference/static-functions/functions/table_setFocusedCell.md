@@ -7,8 +7,8 @@ title: table_setFocusedCell
 
 ```ts
 function table_setFocusedCell<TFeatures, TData>(
-   table, 
-   rowId, 
+   table,
+   rowId,
    columnId): void;
 ```
 

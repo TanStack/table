@@ -186,7 +186,7 @@ function App() {
       debugHeaders: true,
       debugColumns: false,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   return (

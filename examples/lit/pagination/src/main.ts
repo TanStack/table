@@ -109,9 +109,11 @@ class LitTableExample extends LitElement {
                   ${headerGroup.headers.map(
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`<div>${FlexRender({ header })}</div>`}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`<div>${FlexRender({ header })}</div>`
+                        }
                       </th>
                     `,
                   )}
@@ -202,8 +204,7 @@ class LitTableExample extends LitElement {
           ${table.getRowCount().toLocaleString()} Rows
         </div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

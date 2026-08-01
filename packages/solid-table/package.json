@@ -66,8 +66,8 @@
   },
   "devDependencies": {
     "@solidjs/testing-library": "^0.8.10",
-    "solid-js": "^1.9.13",
-    "vite-plugin-solid": "^2.11.12"
+    "solid-js": "^1.9.14",
+    "vite-plugin-solid": "^2.11.14"
   },
   "peerDependencies": {
     "solid-js": ">=1.3"

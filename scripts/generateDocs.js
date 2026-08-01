@@ -1,3 +1,4 @@
+import { readdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { generateReferenceDocs } from '@tanstack/typedoc-config'
@@ -32,6 +33,20 @@ await generateReferenceDocs({
       ],
       tsconfig: resolve(__dirname, '../packages/preact-table/tsconfig.json'),
       outputDir: resolve(__dirname, '../docs/framework/preact/reference'),
+      exclude: ['packages/table-core/**/*'],
+    },
+    {
+      name: 'octane-table',
+      // Octane ships authored .tsrx. TypeDoc reads the package's public
+      // declaration entry, which resolves the focused .tsrx.d.ts companions.
+      entryPoints: [
+        resolve(__dirname, '../packages/octane-table/docs-entry.d.ts'),
+      ],
+      tsconfig: resolve(
+        __dirname,
+        '../packages/octane-table/tsconfig.docs.json',
+      ),
+      outputDir: resolve(__dirname, '../docs/framework/octane/reference'),
       exclude: ['packages/table-core/**/*'],
     },
     {
@@ -101,6 +116,42 @@ await generateReferenceDocs({
     },
   ],
 })
+
+async function stripGeneratedTrailingWhitespace(directory) {
+  for (const entry of await readdir(directory, { withFileTypes: true })) {
+    const entryPath = resolve(directory, entry.name)
+
+    if (entry.isDirectory()) {
+      await stripGeneratedTrailingWhitespace(entryPath)
+    } else if (entry.name.endsWith('.md')) {
+      const source = await readFile(entryPath, 'utf8')
+      const formatted = source.replace(/[ \t]+$/gm, '')
+
+      if (formatted !== source) {
+        await writeFile(entryPath, formatted)
+      }
+    }
+  }
+}
+
+await stripGeneratedTrailingWhitespace(resolve(__dirname, '../docs/reference'))
+
+for (const framework of [
+  'react',
+  'preact',
+  'octane',
+  'solid',
+  'svelte',
+  'vue',
+  'angular',
+  'lit',
+  'ember',
+  'alpine',
+]) {
+  await stripGeneratedTrailingWhitespace(
+    resolve(__dirname, `../docs/framework/${framework}/reference`),
+  )
+}
 
 console.log('\n✅ All markdown files have been processed!')
 

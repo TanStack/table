@@ -69,6 +69,7 @@ V8 bundled all stock features. V9 exposes an API only when its feature is presen
 | Capability                  | V9 feature                |
 | --------------------------- | ------------------------- |
 | Aggregation                 | `rowAggregationFeature`   |
+| Cell selection              | `cellSelectionFeature`    |
 | Column faceting             | `columnFacetingFeature`   |
 | Column filtering            | `columnFilteringFeature`  |
 | Column ordering             | `columnOrderingFeature`   |
@@ -294,7 +295,7 @@ Do not confuse new capabilities with required breakages. After the table works, 
 - [ ] Load the installed framework adapter's migration and table-state skills.
 - [ ] Replace the v8 adapter constructor/hook/controller with its v9 entrypoint.
 - [ ] Add a stable `features` object to every table.
-- [ ] Inventory every feature API used by table, row, column, cell, and header code; register all 14 required stock features.
+- [ ] Inventory every feature API used by table, row, column, cell, and header code; register all 16 required stock features.
 - [ ] Use `stockFeatures` only as a temporary parity aid and record an explicit-feature follow-up.
 - [ ] Remove `getCoreRowModel()` unless supplying a deliberate custom `coreRowModel` slot.
 - [ ] Move all remaining `get*RowModel()` options or earlier-beta `rowModels` entries to `create*RowModel()` feature slots.

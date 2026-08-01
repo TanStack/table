@@ -7,8 +7,8 @@ title: table_getRow
 
 ```ts
 function table_getRow<TFeatures, TData>(
-   table, 
-   rowId, 
+   table,
+   rowId,
 searchAll?): Row<TFeatures, TData>;
 ```
 

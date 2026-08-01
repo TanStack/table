@@ -335,11 +335,9 @@ const density = table.state.density
 
 return html`
   <td
-    style="padding: ${density === 'sm'
-      ? '4px'
-      : density === 'md'
-        ? '8px'
-        : '16px'}; transition: padding 0.2s"
+    style="padding: ${
+      density === 'sm' ? '4px' : density === 'md' ? '8px' : '16px'
+    }; transition: padding 0.2s"
   >
     ${FlexRender({ cell })}
   </td>

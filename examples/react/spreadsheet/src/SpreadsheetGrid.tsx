@@ -1,10 +1,12 @@
 import React from 'react'
+import { useHotkeys } from '@tanstack/react-hotkeys'
 import { useVirtualizer } from '@tanstack/react-virtual'
 import { CellContextMenu } from './CellContextMenu'
 import { ColumnMenu } from './ColumnMenu'
 import { getFillPreview } from './spreadsheetModel'
 import type {
   CellSelectionBounds,
+  CellSelectionRangeOperation,
   CellSelectionState,
 } from '@tanstack/react-table'
 import type { VirtualItem } from '@tanstack/react-virtual'
@@ -55,11 +57,79 @@ interface FillDrag {
   preview: FillPreview | null
 }
 
+interface HeaderSelectionDrag {
+  axis: 'column' | 'row'
+  anchorId: string
+  baseSelection: CellSelectionState
+  operation: CellSelectionRangeOperation
+}
+
 export const SpreadsheetGrid = React.forwardRef<
   SpreadsheetGridHandle,
   SpreadsheetGridProps
 >(function SpreadsheetGrid({ table, interactions, zoom }, forwardedRef) {
   const scrollRef = React.useRef<HTMLDivElement>(null)
+
+  useHotkeys(
+    [
+      { hotkey: 'ArrowUp', callback: () => interactions.moveSelection('up') },
+      {
+        hotkey: 'ArrowDown',
+        callback: () => interactions.moveSelection('down'),
+      },
+      {
+        hotkey: 'ArrowLeft',
+        callback: () => interactions.moveSelection('left'),
+      },
+      {
+        hotkey: 'ArrowRight',
+        callback: () => interactions.moveSelection('right'),
+      },
+      {
+        hotkey: 'Shift+ArrowUp',
+        callback: () => interactions.moveSelection('up', true),
+      },
+      {
+        hotkey: 'Shift+ArrowDown',
+        callback: () => interactions.moveSelection('down', true),
+      },
+      {
+        hotkey: 'Shift+ArrowLeft',
+        callback: () => interactions.moveSelection('left', true),
+      },
+      {
+        hotkey: 'Shift+ArrowRight',
+        callback: () => interactions.moveSelection('right', true),
+      },
+      { hotkey: 'Tab', callback: () => interactions.moveSelection('right') },
+      {
+        hotkey: 'Shift+Tab',
+        callback: () => interactions.moveSelection('left'),
+      },
+      { hotkey: 'Enter', callback: () => interactions.moveSelection('down') },
+      {
+        hotkey: 'Shift+Enter',
+        callback: () => interactions.moveSelection('up'),
+      },
+      { hotkey: 'F2', callback: interactions.startEditingActive },
+      { hotkey: 'Delete', callback: interactions.clearSelection },
+      { hotkey: 'Backspace', callback: interactions.clearSelection },
+      {
+        hotkey: 'Escape',
+        callback: () => table.resetCellSelection(true),
+      },
+      { hotkey: 'Mod+A', callback: () => table.selectAllCells() },
+      { hotkey: 'Mod+Z', callback: interactions.undo },
+      { hotkey: 'Mod+Shift+Z', callback: interactions.redo },
+      { hotkey: 'Mod+Y', callback: interactions.redo },
+    ],
+    {
+      target: scrollRef,
+      enabled: interactions.editing == null,
+      preventDefault: true,
+      stopPropagation: true,
+    },
+  )
   const startColumns = table.getStartVisibleLeafColumns()
   const centerColumns = table.getCenterVisibleLeafColumns()
   const endColumns = table.getEndVisibleLeafColumns()
@@ -139,6 +209,7 @@ export const SpreadsheetGrid = React.forwardRef<
   )
   const [fillPreview, setFillPreview] = React.useState<FillPreview | null>(null)
   const fillDragRef = React.useRef<FillDrag | null>(null)
+  const headerSelectionDragRef = React.useRef<HeaderSelectionDrag | null>(null)
   const pointerRef = React.useRef({ clientX: 0, clientY: 0 })
   const scrollFrameRef = React.useRef<number | null>(null)
 
@@ -220,6 +291,27 @@ export const SpreadsheetGrid = React.forwardRef<
     ],
   )
 
+  const applyHeaderSelectionDrag = React.useCallback(
+    (drag: HeaderSelectionDrag, focusId: string) => {
+      if (drag.axis === 'column') {
+        interactions.selectColumnRange(
+          drag.anchorId,
+          focusId,
+          drag.baseSelection,
+          drag.operation,
+        )
+      } else {
+        interactions.selectRowRange(
+          drag.anchorId,
+          focusId,
+          drag.baseSelection,
+          drag.operation,
+        )
+      }
+    },
+    [interactions],
+  )
+
   const updateDragTarget = React.useCallback(
     (event: MouseEvent) => {
       const coordinate = resolveCoordinate(event.clientX, event.clientY)
@@ -233,17 +325,33 @@ export const SpreadsheetGrid = React.forwardRef<
         return
       }
 
+      const headerDrag = headerSelectionDragRef.current
+      if (headerDrag) {
+        const focusId =
+          headerDrag.axis === 'column'
+            ? getDisplayColumns()[coordinate.columnIndex]?.id
+            : table.getRowsInDisplayOrder()[coordinate.rowIndex]?.id
+        if (focusId) applyHeaderSelectionDrag(headerDrag, focusId)
+        return
+      }
+
       if (!table._isSelectingCells) return
       const row = table.getRowsInDisplayOrder()[coordinate.rowIndex]
       const column = getDisplayColumns()[coordinate.columnIndex]
       row.getAllCellsByColumnId()[column.id].getSelectionExtendHandler()(event)
     },
-    [getDisplayColumns, resolveCoordinate, table],
+    [applyHeaderSelectionDrag, getDisplayColumns, resolveCoordinate, table],
   )
 
   const runEdgeScroll = React.useCallback(() => {
     scrollFrameRef.current = null
-    if (!fillDragRef.current && !table._isSelectingCells) return
+    if (
+      !fillDragRef.current &&
+      !headerSelectionDragRef.current &&
+      !table._isSelectingCells
+    ) {
+      return
+    }
 
     const element = scrollRef.current
     if (!element) return
@@ -253,18 +361,15 @@ export const SpreadsheetGrid = React.forwardRef<
     const leftBoundary = rect.left + ROW_HEADER_WIDTH + startWidth
     const rightBoundary = rect.right - endWidth
 
-    const deltaX = edgeDelta(
-      clientX,
-      leftBoundary,
-      rightBoundary,
-      EDGE_SCROLL_ZONE,
-    )
-    const deltaY = edgeDelta(
-      clientY,
-      topBoundary,
-      rect.bottom,
-      EDGE_SCROLL_ZONE,
-    )
+    const headerDrag = headerSelectionDragRef.current
+    const deltaX =
+      headerDrag?.axis === 'row'
+        ? 0
+        : edgeDelta(clientX, leftBoundary, rightBoundary, EDGE_SCROLL_ZONE)
+    const deltaY =
+      headerDrag?.axis === 'column'
+        ? 0
+        : edgeDelta(clientY, topBoundary, rect.bottom, EDGE_SCROLL_ZONE)
 
     if (deltaX || deltaY) {
       element.scrollLeft += deltaX
@@ -286,13 +391,63 @@ export const SpreadsheetGrid = React.forwardRef<
     }
   }, [runEdgeScroll])
 
+  const startHeaderSelection = React.useCallback(
+    (
+      event: React.MouseEvent<HTMLElement>,
+      axis: HeaderSelectionDrag['axis'],
+      id: string,
+      fullySelected: boolean,
+    ) => {
+      if (event.button !== 0) return
+      event.preventDefault()
+      scrollRef.current?.focus({ preventScroll: true })
+
+      const currentSelection = table.atoms.cellSelection.get()
+      const activeOperation = currentSelection.at(-1)
+      let anchorId = id
+      let baseSelection: CellSelectionState = []
+      let operation: CellSelectionRangeOperation = 'include'
+
+      if (event.shiftKey && activeOperation) {
+        anchorId =
+          axis === 'column'
+            ? activeOperation.anchorColumnId
+            : activeOperation.anchorRowId
+        baseSelection = currentSelection.slice(0, -1)
+        operation = activeOperation.operation ?? 'include'
+      } else if (event.metaKey || event.ctrlKey) {
+        baseSelection = currentSelection
+        operation = fullySelected ? 'exclude' : 'include'
+      }
+
+      const drag = { axis, anchorId, baseSelection, operation }
+      headerSelectionDragRef.current = drag
+      pointerRef.current = { clientX: event.clientX, clientY: event.clientY }
+      applyHeaderSelectionDrag(drag, id)
+      ensureEdgeScroll()
+    },
+    [applyHeaderSelectionDrag, ensureEdgeScroll, table],
+  )
+
+  const extendHeaderSelection = React.useCallback(
+    (axis: HeaderSelectionDrag['axis'], id: string) => {
+      const drag = headerSelectionDragRef.current
+      if (drag?.axis === axis) applyHeaderSelectionDrag(drag, id)
+    },
+    [applyHeaderSelectionDrag],
+  )
+
   React.useEffect(() => {
     const handleMouseMove = (event: MouseEvent) => {
       pointerRef.current = {
         clientX: event.clientX,
         clientY: event.clientY,
       }
-      if (fillDragRef.current || table._isSelectingCells) {
+      if (
+        fillDragRef.current ||
+        headerSelectionDragRef.current ||
+        table._isSelectingCells
+      ) {
         updateDragTarget(event)
         ensureEdgeScroll()
       }
@@ -304,6 +459,7 @@ export const SpreadsheetGrid = React.forwardRef<
         interactions.applyFill(fillDrag.source, fillDrag.preview)
       }
       fillDragRef.current = null
+      headerSelectionDragRef.current = null
       setFillPreview(null)
       if (scrollFrameRef.current != null) {
         cancelAnimationFrame(scrollFrameRef.current)
@@ -353,7 +509,7 @@ export const SpreadsheetGrid = React.forwardRef<
         tabIndex={0}
         aria-rowcount={table.getRowsInDisplayOrder().length}
         aria-colcount={getDisplayColumns().length}
-        onKeyDown={interactions.handleGridKeyDown}
+        onKeyDown={interactions.handleGridTextEntry}
         onCopy={interactions.copySelection}
         onCut={interactions.cutSelection}
         onPaste={interactions.pasteSelection}
@@ -380,7 +536,8 @@ export const SpreadsheetGrid = React.forwardRef<
                 centerHeaders={table.getCenterLeafHeaders()}
                 startHeaders={table.getStartLeafHeaders()}
                 endHeaders={table.getEndLeafHeaders()}
-                interactions={interactions}
+                onStartSelection={startHeaderSelection}
+                onExtendSelection={extendHeaderSelection}
                 onOpenMenu={(column, rect) => setOpenMenu({ column, rect })}
               />
             )}
@@ -400,6 +557,8 @@ export const SpreadsheetGrid = React.forwardRef<
                   table={table}
                   virtualColumns={virtualColumns}
                   interactions={interactions}
+                  onStartHeaderSelection={startHeaderSelection}
+                  onExtendHeaderSelection={extendHeaderSelection}
                   fillPreview={fillPreview}
                   onStartFill={startFillDrag}
                   onOpenContextMenu={(x, y, column) => {
@@ -422,6 +581,8 @@ export const SpreadsheetGrid = React.forwardRef<
                 table={table}
                 virtualColumns={virtualColumns}
                 interactions={interactions}
+                onStartHeaderSelection={startHeaderSelection}
+                onExtendHeaderSelection={extendHeaderSelection}
                 fillPreview={fillPreview}
                 onStartFill={startFillDrag}
                 onOpenContextMenu={(x, y, column) => {
@@ -462,7 +623,13 @@ interface HeaderRowProps {
   centerHeaders: Array<SpreadsheetTableHeader>
   startHeaders: Array<SpreadsheetTableHeader>
   endHeaders: Array<SpreadsheetTableHeader>
-  interactions: GridInteractions
+  onStartSelection: (
+    event: React.MouseEvent<HTMLElement>,
+    axis: 'column',
+    id: string,
+    fullySelected: boolean,
+  ) => void
+  onExtendSelection: (axis: 'column', id: string) => void
   onOpenMenu: (column: SpreadsheetTableColumn, rect: DOMRect) => void
 }
 
@@ -472,7 +639,8 @@ function HeaderRow({
   centerHeaders,
   startHeaders,
   endHeaders,
-  interactions,
+  onStartSelection,
+  onExtendSelection,
   onOpenMenu,
 }: HeaderRowProps) {
   const bounds = table.getCellSelectionBounds()
@@ -500,7 +668,8 @@ function HeaderRow({
           table={table}
           bounds={bounds}
           rowCount={rowCount}
-          interactions={interactions}
+          onStartSelection={onStartSelection}
+          onExtendSelection={onExtendSelection}
           onOpenMenu={onOpenMenu}
         />
       ))}
@@ -514,7 +683,8 @@ function HeaderRow({
             table={table}
             bounds={bounds}
             rowCount={rowCount}
-            interactions={interactions}
+            onStartSelection={onStartSelection}
+            onExtendSelection={onExtendSelection}
             onOpenMenu={onOpenMenu}
           />
         )
@@ -527,7 +697,8 @@ function HeaderRow({
           table={table}
           bounds={bounds}
           rowCount={rowCount}
-          interactions={interactions}
+          onStartSelection={onStartSelection}
+          onExtendSelection={onExtendSelection}
           onOpenMenu={onOpenMenu}
         />
       ))}
@@ -540,7 +711,8 @@ interface HeaderCellProps {
   table: SpreadsheetTable
   bounds: Array<CellSelectionBounds>
   rowCount: number
-  interactions: GridInteractions
+  onStartSelection: HeaderRowProps['onStartSelection']
+  onExtendSelection: HeaderRowProps['onExtendSelection']
   left?: number
   pinned?: 'start' | 'end'
   onOpenMenu: (column: SpreadsheetTableColumn, rect: DOMRect) => void
@@ -551,7 +723,8 @@ function HeaderCell({
   table,
   bounds,
   rowCount,
-  interactions,
+  onStartSelection,
+  onExtendSelection,
   left,
   pinned,
   onOpenMenu,
@@ -583,7 +756,10 @@ function HeaderCell({
       aria-colindex={columnIndex + 1}
       aria-selected={fullySelected}
       style={style}
-      onClick={(event) => interactions.selectColumn(column.id, event)}
+      onMouseDown={(event) =>
+        onStartSelection(event, 'column', column.id, fullySelected)
+      }
+      onMouseEnter={() => onExtendSelection('column', column.id)}
     >
       <span className="column-letter">{meta?.letter}</span>
       <button
@@ -646,6 +822,13 @@ interface SubscribedRowProps {
   table: SpreadsheetTable
   virtualColumns: Array<VirtualItem>
   interactions: GridInteractions
+  onStartHeaderSelection: (
+    event: React.MouseEvent<HTMLElement>,
+    axis: 'row',
+    id: string,
+    fullySelected: boolean,
+  ) => void
+  onExtendHeaderSelection: (axis: 'row', id: string) => void
   fillPreview: FillPreview | null
   onStartFill: (event: React.MouseEvent, source: GridBounds) => void
   onOpenContextMenu: (
@@ -681,6 +864,8 @@ function SpreadsheetRowView({
   table,
   virtualColumns,
   interactions,
+  onStartHeaderSelection,
+  onExtendHeaderSelection,
   fillPreview,
   onStartFill,
   onOpenContextMenu,
@@ -728,7 +913,10 @@ function SpreadsheetRowView({
         className={fullySelected ? 'row-header header-selected' : 'row-header'}
         aria-label={`Select row ${rowIndex + 1}`}
         aria-selected={fullySelected}
-        onClick={(event) => interactions.selectRow(row.id, event)}
+        onMouseDown={(event) =>
+          onStartHeaderSelection(event, 'row', row.id, fullySelected)
+        }
+        onMouseEnter={() => onExtendHeaderSelection('row', row.id)}
       >
         {rowIndex + 1}
       </button>
@@ -850,7 +1038,7 @@ function SpreadsheetCell({
       tabIndex={isEditing ? -1 : cell.getTabIndex()}
       style={getColumnPositionStyle(cell.column, left, pinned)}
       onMouseDown={(event) => {
-        if (isEditing) return
+        if (isEditing || event.button !== 0) return
         const grid =
           event.currentTarget.closest<HTMLElement>('.spreadsheet-grid')
         grid?.focus({ preventScroll: true })
@@ -862,9 +1050,6 @@ function SpreadsheetCell({
       }
       onContextMenu={(event) => {
         event.preventDefault()
-        if (!cell.getIsSelected()) {
-          table.setFocusedCell(cell.row.id, cell.column.id)
-        }
         event.currentTarget
           .closest<HTMLElement>('.spreadsheet-grid')
           ?.focus({ preventScroll: true })

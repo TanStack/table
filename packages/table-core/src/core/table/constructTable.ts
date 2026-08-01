@@ -157,8 +157,7 @@ export function constructTable<
         }
 
         const controlledState = options.state as
-          | Record<string, unknown>
-          | undefined
+          Record<string, unknown> | undefined
 
         return controlledState && hasOwn(controlledState, key)
           ? controlledState[key]

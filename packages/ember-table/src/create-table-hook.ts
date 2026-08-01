@@ -68,8 +68,7 @@ export function createTableHook<TFeatures extends TableFeatures>({
   ): AppEmberTable<TFeatures, TData>
   function createAppTable<TData extends RowData>(
     ownerOrGetTableOptions:
-      | object
-      | (() => Omit<TableOptions<TFeatures, TData>, 'features'>),
+      object | (() => Omit<TableOptions<TFeatures, TData>, 'features'>),
     maybeGetTableOptions?: () => Omit<
       TableOptions<TFeatures, TData>,
       'features'

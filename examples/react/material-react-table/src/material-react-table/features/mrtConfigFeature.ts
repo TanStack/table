@@ -112,8 +112,7 @@ export interface MRT_TableOptions_Config<
   enableBatchRowSelection?: boolean
   enableBottomToolbar?: boolean
   enableCellActions?:
-    | ((cell: Cell<TFeatures, TData, unknown>) => boolean)
-    | boolean
+    ((cell: Cell<TFeatures, TData, unknown>) => boolean) | boolean
   enableClickToCopy?:
     | 'context-menu'
     | ((cell: Cell<TFeatures, TData, unknown>) => 'context-menu' | boolean)
@@ -168,8 +167,7 @@ export interface MRT_TableOptions_Config<
   memoMode?: 'cells' | 'rows' | 'table-body'
   mrtTheme?: ((theme: Theme) => Partial<MRT_Theme>) | Partial<MRT_Theme>
   muiBottomToolbarProps?:
-    | ((props: { table: Table<TFeatures, TData> }) => BoxProps)
-    | BoxProps
+    ((props: { table: Table<TFeatures, TData> }) => BoxProps) | BoxProps
   muiCircularProgressProps?:
     | ((props: {
         table: Table<TFeatures, TData>
@@ -289,8 +287,7 @@ export interface MRT_TableOptions_Config<
           SelectProps?: Partial<SelectProps>
           disabled?: boolean
           rowsPerPageOptions?:
-            | Array<{ label: string; value: number }>
-            | Array<number>
+            Array<{ label: string; value: number }> | Array<number>
           showRowsPerPage?: boolean
         }
       >)
@@ -299,8 +296,7 @@ export interface MRT_TableOptions_Config<
           SelectProps?: Partial<SelectProps>
           disabled?: boolean
           rowsPerPageOptions?:
-            | Array<{ label: string; value: number }>
-            | Array<number>
+            Array<{ label: string; value: number }> | Array<number>
           showRowsPerPage?: boolean
         }
       >
@@ -384,20 +380,15 @@ export interface MRT_TableOptions_Config<
       }) => TableRowProps)
     | TableRowProps
   muiTablePaperProps?:
-    | ((props: { table: Table<TFeatures, TData> }) => PaperProps)
-    | PaperProps
+    ((props: { table: Table<TFeatures, TData> }) => PaperProps) | PaperProps
   muiTableProps?:
-    | ((props: { table: Table<TFeatures, TData> }) => TableProps)
-    | TableProps
+    ((props: { table: Table<TFeatures, TData> }) => TableProps) | TableProps
   muiToolbarAlertBannerChipProps?:
-    | ((props: { table: Table<TFeatures, TData> }) => ChipProps)
-    | ChipProps
+    ((props: { table: Table<TFeatures, TData> }) => ChipProps) | ChipProps
   muiToolbarAlertBannerProps?:
-    | ((props: { table: Table<TFeatures, TData> }) => AlertProps)
-    | AlertProps
+    ((props: { table: Table<TFeatures, TData> }) => AlertProps) | AlertProps
   muiTopToolbarProps?:
-    | ((props: { table: Table<TFeatures, TData> }) => BoxProps)
-    | BoxProps
+    ((props: { table: Table<TFeatures, TData> }) => BoxProps) | BoxProps
   onCreatingRowCancel?: (props: {
     row: Row<TFeatures, TData>
     table: Table<TFeatures, TData>
@@ -427,14 +418,12 @@ export interface MRT_TableOptions_Config<
   positionToolbarAlertBanner?: 'bottom' | 'head-overlay' | 'none' | 'top'
   positionToolbarDropZone?: 'both' | 'bottom' | 'none' | 'top'
   renderBottomToolbar?:
-    | ((props: { table: Table<TFeatures, TData> }) => ReactNode)
-    | ReactNode
+    ((props: { table: Table<TFeatures, TData> }) => ReactNode) | ReactNode
   renderBottomToolbarCustomActions?: (props: {
     table: Table<TFeatures, TData>
   }) => ReactNode
   renderCaption?:
-    | ((props: { table: Table<TFeatures, TData> }) => ReactNode)
-    | ReactNode
+    ((props: { table: Table<TFeatures, TData> }) => ReactNode) | ReactNode
   renderCellActionMenuItems?: (props: {
     cell: Cell<TFeatures, TData, unknown>
     closeMenu: () => void
@@ -500,8 +489,7 @@ export interface MRT_TableOptions_Config<
     table: Table<TFeatures, TData>
   }) => ReactNode
   renderTopToolbar?:
-    | ((props: { table: Table<TFeatures, TData> }) => ReactNode)
-    | ReactNode
+    ((props: { table: Table<TFeatures, TData> }) => ReactNode) | ReactNode
   renderTopToolbarCustomActions?: (props: {
     table: Table<TFeatures, TData>
   }) => ReactNode

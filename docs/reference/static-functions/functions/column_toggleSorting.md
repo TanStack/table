@@ -7,8 +7,8 @@ title: column_toggleSorting
 
 ```ts
 function column_toggleSorting<TFeatures, TData, TValue>(
-   column, 
-   desc?, 
+   column,
+   desc?,
    multi?): void;
 ```
 

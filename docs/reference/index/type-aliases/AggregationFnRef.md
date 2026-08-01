@@ -6,7 +6,7 @@ title: AggregationFnRef
 # Type Alias: AggregationFnRef\<TFeatures, TData, TValue, TResult\>
 
 ```ts
-type AggregationFnRef<TFeatures, TData, TValue, TResult> = 
+type AggregationFnRef<TFeatures, TData, TValue, TResult> =
   | "auto"
   | ExtractAggregationFnKeys<TFeatures>
 | AggregationFnDef<TFeatures, TData, TValue, TResult>;

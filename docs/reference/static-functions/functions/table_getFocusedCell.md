@@ -6,14 +6,14 @@ title: table_getFocusedCell
 # Function: table\_getFocusedCell()
 
 ```ts
-function table_getFocusedCell<TFeatures, TData>(table): 
+function table_getFocusedCell<TFeatures, TData>(table):
   | Cell<TFeatures, TData, any>
   | undefined;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:506](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L506)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:510](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L510)
 
-Returns the active cell, i.e. the anchor of the most recent range.
+Returns the active cell, i.e. the anchor of the most recent operation.
 
 Focus is derived rather than stored: in spreadsheet semantics, dragging from
 A1 to C5 leaves the active cell at A1, so the active range's anchor already

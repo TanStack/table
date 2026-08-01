@@ -102,9 +102,9 @@ function renderPinnedRow(
 
   return html`
     <tr
-      style="background-color:lightblue;position:sticky;${topOffset
-        ? `top:${topOffset}`
-        : ''}${bottomOffset ? `bottom:${bottomOffset}` : ''}"
+      style="background-color:lightblue;position:sticky;${
+        topOffset ? `top:${topOffset}` : ''
+      }${bottomOffset ? `bottom:${bottomOffset}` : ''}"
     >
       ${row
         .getAllCells()
@@ -137,14 +137,16 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
     `,
     cell: ({ row, getValue }) => html`
       <div style="padding-left:${row.depth * 2}rem">
-        ${row.getCanExpand()
-          ? html`<button
-              @click="${row.getToggleExpandedHandler()}"
-              style="cursor:pointer"
-            >
-              ${row.getIsExpanded() ? '👇' : '👉'}
-            </button>`
-          : '🔵'}
+        ${
+          row.getCanExpand()
+            ? html`<button
+                @click="${row.getToggleExpandedHandler()}"
+                style="cursor:pointer"
+              >
+                ${row.getIsExpanded() ? '👇' : '👉'}
+              </button>`
+            : '🔵'
+        }
         ${getValue()}
       </div>
     `,
@@ -236,18 +238,22 @@ class LitTableExample extends LitElement {
                     ${headerGroup.headers.map(
                       (header) => html`
                         <th colspan="${header.colSpan}">
-                          ${header.isPlaceholder
-                            ? null
-                            : html`
-                                <div>
-                                  ${FlexRender({ header })}
-                                  ${header.column.getCanFilter()
-                                    ? html`<div>
-                                        ${renderFilter(header.column, table)}
-                                      </div>`
-                                    : null}
-                                </div>
-                              `}
+                          ${
+                            header.isPlaceholder
+                              ? null
+                              : html`
+                                  <div>
+                                    ${FlexRender({ header })}
+                                    ${
+                                      header.column.getCanFilter()
+                                        ? html`<div>
+                                            ${renderFilter(header.column, table)}
+                                          </div>`
+                                        : null
+                                    }
+                                  </div>
+                                `
+                          }
                         </th>
                       `,
                     )}
@@ -334,8 +340,7 @@ class LitTableExample extends LitElement {
         </div>
         <div class="spacer-sm"></div>
         <pre data-testid="table-state">
-${JSON.stringify(table.state, null, 2)}</pre
-        >
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

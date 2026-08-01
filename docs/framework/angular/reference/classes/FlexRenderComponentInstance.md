@@ -27,11 +27,11 @@ Prefer [flexRenderComponent](../functions/flexRenderComponent.md) helper for bet
 
 ```ts
 new FlexRenderComponentInstance<TComponent>(
-   component, 
-   inputs?, 
-   injector?, 
-   outputs?, 
-   directives?, 
+   component,
+   inputs?,
+   injector?,
+   outputs?,
+   directives?,
 bindings?): FlexRenderComponentInstance<TComponent>;
 ```
 

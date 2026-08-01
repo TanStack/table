@@ -131,8 +131,7 @@ export function RowsPanel() {
 
     const tableRecord = tableInstance as unknown as Record<string, unknown>
     const getter = tableRecord[selectedRowModel()] as
-      | (() => { rows: Array<AnyRow> })
-      | undefined
+      (() => { rows: Array<AnyRow> }) | undefined
 
     return getter?.().rows ?? []
   })

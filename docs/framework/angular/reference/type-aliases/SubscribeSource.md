@@ -6,7 +6,7 @@ title: SubscribeSource
 # Type Alias: SubscribeSource\<TValue\>
 
 ```ts
-type SubscribeSource<TValue> = 
+type SubscribeSource<TValue> =
   | Atom<TValue>
   | ReadonlyAtom<TValue>
   | Store<TValue>
