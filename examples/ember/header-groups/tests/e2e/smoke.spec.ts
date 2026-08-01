@@ -102,3 +102,88 @@ test('renders the table without crashing', async ({ page }) => {
     await server.close()
   }
 })
+
+// The example renders four tables: an even tree with no placeholders, an even
+// tree of nested groups, an uneven tree that keeps placeholder headers as
+// empty cells, and an uneven tree that merges headers vertically via
+// `header.rowSpan`.
+function tableAt(page: Page, index: number) {
+  return page.locator('table').nth(index)
+}
+
+function headerRow(table: Locator, index: number) {
+  return table.locator('thead tr').nth(index).locator('th')
+}
+
+async function readSpans(cells: Locator, attribute: 'colspan' | 'rowspan') {
+  return cells.evaluateAll((elements, attributeName) => {
+    return elements.map((element) =>
+      Number(element.getAttribute(attributeName) ?? '1'),
+    )
+  }, attribute)
+}
+
+test('renders each header group layout', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const basicTable = tableAt(page, 0)
+    const nestedTable = tableAt(page, 1)
+    const placeholderTable = tableAt(page, 2)
+    const rowSpanTable = tableAt(page, 3)
+
+    await expect(page.locator('table')).toHaveCount(4)
+
+    // Even tree: two header rows, no placeholders.
+    await expect(basicTable.locator('thead tr')).toHaveCount(2)
+    await expect(headerRow(basicTable, 0)).toHaveText([
+      'Name',
+      'Stats',
+      'Profile',
+    ])
+    expect(await readSpans(headerRow(basicTable, 0), 'colspan')).toEqual([
+      2, 2, 2,
+    ])
+
+    // Groups inside groups, still even: three header rows, no placeholders.
+    await expect(nestedTable.locator('thead tr')).toHaveCount(3)
+    await expect(headerRow(nestedTable, 0)).toHaveText(['Person', 'Activity'])
+    await expect(headerRow(nestedTable, 1)).toHaveText([
+      'Name',
+      'Demographics',
+      'Engagement',
+      'Progress',
+    ])
+    expect(await readSpans(headerRow(nestedTable, 0), 'colspan')).toEqual([
+      3, 3,
+    ])
+
+    // Uneven tree: the middle row is mostly empty placeholder cells.
+    await expect(placeholderTable.locator('thead tr')).toHaveCount(3)
+    await expect(headerRow(placeholderTable, 1)).toHaveText([
+      '',
+      '',
+      '',
+      'More Info',
+    ])
+
+    // Uneven tree merged vertically: shallow leaf headers span extra rows and
+    // the headers they cover are skipped.
+    await expect(rowSpanTable.locator('thead tr')).toHaveCount(3)
+    await expect(headerRow(rowSpanTable, 0)).toHaveText([
+      'Full Name',
+      'Info',
+      'Profile Progress',
+    ])
+    expect(await readSpans(headerRow(rowSpanTable, 0), 'rowspan')).toEqual([
+      3, 1, 3,
+    ])
+    expect(await readSpans(headerRow(rowSpanTable, 1), 'rowspan')).toEqual([
+      2, 1,
+    ])
+
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

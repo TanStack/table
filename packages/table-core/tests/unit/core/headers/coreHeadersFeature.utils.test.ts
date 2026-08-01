@@ -131,8 +131,9 @@ describe('table_getHeaderGroups', () => {
         header.rowSpan,
       ]),
     ).toEqual([
-      ['a', 1, 0],
-      ['b', 1, 0],
+      ['a', 1, 1],
+      ['b', 1, 1],
+      // c is covered by the spanning placeholder in the row above it.
       ['c', 1, 0],
     ])
 
@@ -149,6 +150,152 @@ describe('table_getHeaderGroups', () => {
     expect(
       hiddenHeaderGroups[2]!.headers.map((header) => header.column.id),
     ).toEqual(['a', 'c'])
+  })
+})
+
+describe('header rowSpan for uneven column trees', () => {
+  it('should give the top placeholder of a chain the full span and cover the leaf', () => {
+    // group[a, b] is two levels deep while c is a top-level leaf, so c gets a
+    // placeholder above its real header. The placeholder carries the rowSpan
+    // and the covered real header reports 0 so renderers can skip it.
+    const table = makeTable()
+    const headerGroups = table_getHeaderGroups(table)
+
+    expect(headerGroups).toHaveLength(2)
+
+    const topRow = headerGroups[0]!.headers
+    expect(
+      topRow.map((header) => [
+        header.column.id,
+        header.isPlaceholder,
+        header.colSpan,
+        header.rowSpan,
+      ]),
+    ).toEqual([
+      ['group', false, 2, 1],
+      ['c', true, 1, 2],
+    ])
+
+    const leafRow = headerGroups[1]!.headers
+    expect(
+      leafRow.map((header) => [
+        header.id,
+        header.column.id,
+        header.isPlaceholder,
+        header.colSpan,
+        header.rowSpan,
+      ]),
+    ).toEqual([
+      ['a', 'a', false, 1, 1],
+      ['b', 'b', false, 1, 1],
+      // The real leaf header stays in the bottom row with its plain column id,
+      // covered by the spanning placeholder above it.
+      ['c', 'c', false, 1, 0],
+    ])
+  })
+
+  it('should give every rowSpan length in a three-level mixed tree', () => {
+    const mixedColumns: Array<ColumnDef<typeof features, Item, any>> = [
+      { accessorKey: 'a', id: 'a' },
+      {
+        id: 'group',
+        header: 'Group',
+        columns: [
+          { accessorKey: 'b', id: 'b' },
+          {
+            id: 'nested',
+            header: 'Nested',
+            columns: [{ accessorKey: 'c', id: 'c' }],
+          },
+        ],
+      },
+    ]
+    const table = constructTable<typeof features, Item>({
+      features,
+      columns: mixedColumns,
+      data,
+    })
+    const headerGroups = table_getHeaderGroups(table)
+
+    expect(headerGroups).toHaveLength(3)
+
+    const spansByRow = headerGroups.map((headerGroup) =>
+      headerGroup.headers.map((header) => [
+        header.column.id,
+        header.isPlaceholder,
+        header.rowSpan,
+      ]),
+    )
+    expect(spansByRow).toEqual([
+      [
+        // a spans all three rows from its top placeholder.
+        ['a', true, 3],
+        ['group', false, 1],
+      ],
+      [
+        ['a', true, 0],
+        // b spans the bottom two rows from its own top placeholder.
+        ['b', true, 2],
+        ['nested', false, 1],
+      ],
+      [
+        ['a', false, 0],
+        ['b', false, 0],
+        ['c', false, 1],
+      ],
+    ])
+
+    // Every row still covers the full leaf width.
+    for (const headerGroup of headerGroups) {
+      const totalColSpan = headerGroup.headers.reduce(
+        (total, header) => total + header.colSpan,
+        0,
+      )
+      expect(totalColSpan).toBe(3)
+    }
+  })
+
+  it('should shrink rowSpans when hiding columns flattens the tree', () => {
+    // Hiding both leaves of the group removes the second header row entirely,
+    // so c no longer needs a spanning placeholder.
+    const table = makeTable({
+      initialState: { columnVisibility: { a: false, b: false } },
+    })
+    const headerGroups = table_getHeaderGroups(table)
+
+    expect(headerGroups).toHaveLength(1)
+    expect(
+      headerGroups[0]!.headers.map((header) => [
+        header.column.id,
+        header.isPlaceholder,
+        header.rowSpan,
+      ]),
+    ).toEqual([['c', false, 1]])
+  })
+
+  it('should keep rowSpans consistent through the pin partitioning path', () => {
+    const table = makeTable({
+      initialState: { columnPinning: { start: ['c'], end: [] } },
+    })
+    const headerGroups = table_getHeaderGroups(table)
+
+    const spanningPlaceholder = headerGroups[0]!.headers.find(
+      (header) => header.column.id === 'c',
+    )!
+    expect(spanningPlaceholder.isPlaceholder).toBe(true)
+    expect(spanningPlaceholder.rowSpan).toBe(2)
+
+    expect(
+      headerGroups[1]!.headers.map((header) => [
+        header.column.id,
+        header.isPlaceholder,
+        header.rowSpan,
+      ]),
+    ).toEqual([
+      ['c', false, 0],
+      ['a', false, 1],
+      ['b', false, 1],
+    ])
   })
 })
 

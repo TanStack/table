@@ -167,7 +167,11 @@ export class FlexRenderHeader<
   @cached
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
     const header = this.args.header
-    if (header.isPlaceholder) return null
+    // Placeholder headers are not skipped here. Whether a placeholder renders
+    // is the template's decision: the usual pattern wraps this component in
+    // `{{#unless header.isPlaceholder}}`, but merging headers vertically with
+    // `header.rowSpan` requires the spanning placeholder to render its
+    // column's header content. This matches every other framework adapter.
     return flexRender(
       header.column.columnDef.header,
       header.getContext(),
@@ -238,7 +242,8 @@ export class FlexRenderFooter<
   @cached
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
     const footer = this.args.footer
-    if (footer.isPlaceholder) return null
+    // Placeholder footers are not skipped here; see `FlexRenderHeader`. The
+    // template decides, which matches every other framework adapter.
     return flexRender(
       footer.column.columnDef.footer,
       footer.getContext(),
