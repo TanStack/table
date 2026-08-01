@@ -1,6 +1,7 @@
 {
   "name": "tanstack-react-table-example-mantine-react-table",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
