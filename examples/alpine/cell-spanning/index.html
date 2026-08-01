@@ -1,0 +1,244 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>TanStack Alpine Table - Cell Spanning</title>
+  </head>
+  <body>
+    <div id="root" class="demo-root" x-data="table">
+      <div class="controls">
+        <button class="demo-button" @click="refreshData()">
+          Regenerate Data
+        </button>
+        <label>
+          <input
+            type="checkbox"
+            :checked="spanningEnabled"
+            @change="setSpanningEnabled($event.target.checked)"
+          />
+          Row spanning
+        </label>
+        <template x-for="columnId in ['team', 'shift']" :key="columnId">
+          <label>
+            <input
+              type="checkbox"
+              :checked="table.getColumn(columnId).getIsVisible()"
+              @change="table.getColumn(columnId).getToggleVisibilityHandler()($event)"
+            />
+            <span x-text="columnLabel(columnId)"></span>
+          </label>
+        </template>
+        <select
+          data-testid="status-filter"
+          :value="statusFilterValue()"
+          @change="setStatusFilter($event.target.value)"
+        >
+          <option value="">All statuses</option>
+          <option value="Approved">Approved</option>
+          <option value="Pending">Pending</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+        <input
+          data-testid="employee-filter"
+          class="filter-input"
+          placeholder="Filter employees..."
+          :value="employeeFilterValue()"
+          @input="setEmployeeFilter($event.target.value)"
+        />
+      </div>
+      <div class="spacer-sm"></div>
+      <div class="controls">
+        <button
+          class="demo-button-sm"
+          @click="table.previousPage()"
+          :disabled="!table.getCanPreviousPage()"
+        >
+          &lt;
+        </button>
+        <button
+          class="demo-button-sm"
+          @click="table.nextPage()"
+          :disabled="!table.getCanNextPage()"
+        >
+          &gt;
+        </button>
+        <span x-text="pageLabel()"></span>
+        <select
+          data-testid="page-size"
+          :value="pageSize()"
+          @change="table.setPageSize(Number($event.target.value))"
+        >
+          <option value="10">Show 10</option>
+          <option value="12">Show 12</option>
+          <option value="36">Show 36</option>
+        </select>
+        <span>
+          Visible columns:
+          <span
+            data-testid="visible-leaf-count"
+            x-text="table.getVisibleLeafColumns().length"
+          ></span>
+        </span>
+        <span>
+          Selected cells:
+          <span
+            data-testid="selected-count"
+            x-text="table.getSelectedCellCount()"
+          ></span>
+        </span>
+      </div>
+      <div class="spacer-md"></div>
+      <!-- The panels wrap into a grid whenever the viewport is wide enough. -->
+      <div class="example-grid">
+        <section class="example-panel">
+          <h2 class="section-title">Row Spanning</h2>
+          <table data-testid="span-table">
+            <thead>
+              <template
+                x-for="headerGroup in table.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <button
+                        type="button"
+                        class="sortable-header header-sort-button"
+                        @click="header.column.getToggleSortingHandler()?.($event)"
+                      >
+                        <span x-html="FlexRender({ header })"></span>
+                        <span x-text="sortIndicator(header)"></span>
+                      </button>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template x-for="row in table.getRowModel().rows" :key="row.id">
+                <tr>
+                  <!--
+                    spanCells() skips every covered cell (getRowSpan() or
+                    getColSpan() of 0). Do NOT render `rowspan="0"`: in HTML
+                    that means "span to the end of the row group", so
+                    forgetting the skip merges the cell down the whole tbody
+                    instead of rendering nothing.
+                  -->
+                  <template x-for="cell in spanCells(row)" :key="cell.id">
+                    <td
+                      :rowspan="cell.getRowSpan()"
+                      :colspan="cell.getColSpan()"
+                      :class="cellClass(cell)"
+                      @mousedown="onCellMouseDown(cell, $event)"
+                      @mouseenter="onCellMouseEnter(cell, $event)"
+                    >
+                      <span x-html="FlexRender({ cell })"></span>
+                    </td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="example-panel">
+          <h2 class="section-title">Reference (no spanning)</h2>
+          <!--
+            The same table instance rendered flat. Under every sort, filter,
+            and page combination the merged panel must describe exactly this
+            grid.
+          -->
+          <table data-testid="reference-table">
+            <thead>
+              <template
+                x-for="headerGroup in table.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <button
+                        type="button"
+                        class="sortable-header header-sort-button"
+                        @click="header.column.getToggleSortingHandler()?.($event)"
+                      >
+                        <span x-html="FlexRender({ header })"></span>
+                        <span x-text="sortIndicator(header)"></span>
+                      </button>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template x-for="row in table.getRowModel().rows" :key="row.id">
+                <tr>
+                  <template
+                    x-for="cell in row.getVisibleCells()"
+                    :key="cell.id"
+                  >
+                    <td>
+                      <span x-html="FlexRender({ cell })"></span>
+                    </td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </section>
+
+        <section class="example-panel">
+          <h2 class="section-title">Summary Rows (colSpan)</h2>
+          <table data-testid="summary-table">
+            <thead>
+              <template
+                x-for="headerGroup in summaryTable.getHeaderGroups()"
+                :key="headerGroup.id"
+              >
+                <tr>
+                  <template
+                    x-for="header in headerGroup.headers"
+                    :key="header.id"
+                  >
+                    <th :colspan="header.colSpan">
+                      <span x-html="FlexRender({ header })"></span>
+                    </th>
+                  </template>
+                </tr>
+              </template>
+            </thead>
+            <tbody>
+              <template
+                x-for="row in summaryTable.getRowModel().rows"
+                :key="row.id"
+              >
+                <tr
+                  :class="row.original.kind === 'subtotal' ? 'subtotal-row' : ''"
+                >
+                  <template x-for="cell in spanCells(row)" :key="cell.id">
+                    <td
+                      :rowspan="cell.getRowSpan()"
+                      :colspan="cell.getColSpan()"
+                    >
+                      <span x-html="FlexRender({ cell })"></span>
+                    </td>
+                  </template>
+                </tr>
+              </template>
+            </tbody>
+          </table>
+        </section>
+      </div>
+      <div class="spacer-md"></div>
+      <pre data-testid="table-state" x-text="stringifiedState()"></pre>
+    </div>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

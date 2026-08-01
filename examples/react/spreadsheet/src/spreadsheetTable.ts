@@ -1,5 +1,6 @@
 import {
   cellSelectionFeature,
+  cellSpanningFeature,
   columnFilteringFeature,
   columnPinningFeature,
   columnResizingFeature,
@@ -68,6 +69,7 @@ function createSpreadsheetSortedRowModel<
 
 export const spreadsheetFeatures = tableFeatures({
   cellSelectionFeature,
+  cellSpanningFeature,
   columnFilteringFeature,
   columnPinningFeature,
   columnResizingFeature,

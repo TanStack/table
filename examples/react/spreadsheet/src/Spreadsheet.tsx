@@ -38,6 +38,34 @@ const columnHelper = createColumnHelper<
   SpreadsheetRow
 >()
 
+/**
+ * An Excel-style merged cell region, anchored by ids rather than indexes so it
+ * survives sorting: members that get sorted apart simply stop rendering as one
+ * cell until they are adjacent again. The first row and column ids are the
+ * anchor, whose value the merged cell displays. Underlying values of covered
+ * cells are preserved, so unmerging restores them.
+ */
+export interface CellMerge {
+  columnIds: Array<string>
+  rowIds: Array<string>
+}
+
+type MergeLookup = Map<string, Map<string, CellMerge>>
+
+function buildMergeLookup(merges: Array<CellMerge>): MergeLookup {
+  const lookup: MergeLookup = new Map()
+  for (const merge of merges) {
+    for (const rowId of merge.rowIds) {
+      let byColumn = lookup.get(rowId)
+      if (!byColumn) lookup.set(rowId, (byColumn = new Map()))
+      for (const columnId of merge.columnIds) {
+        byColumn.set(columnId, merge)
+      }
+    }
+  }
+  return lookup
+}
+
 const fieldAwareIncludesStringFilter = constructFilterFn({
   ...filterFn_includesString,
   filter: (dataValue, filterValue, row, columnId, addMeta) =>
@@ -72,6 +100,9 @@ export function Spreadsheet() {
     'home',
   )
 
+  const [merges, setMerges] = React.useState<Array<CellMerge>>([])
+  const mergeLookup = React.useMemo(() => buildMergeLookup(merges), [merges])
+
   const columnIndexById = React.useMemo(
     () =>
       new Map(
@@ -81,6 +112,9 @@ export function Spreadsheet() {
   )
   const history = useSpreadsheetHistory(spreadsheetData.rows, columnIndexById)
 
+  // Rebuilding the defs when `merges` changes is deliberate: the span index
+  // memoizes on `options.columns` identity, so a new columns array is the
+  // supported way to invalidate it from userland state.
   const columns = React.useMemo(
     () =>
       columnHelper.columns(
@@ -99,10 +133,31 @@ export function Spreadsheet() {
                   ? 'alphanumeric'
                   : 'text',
             meta: column,
+            // Explicit Excel-style merges expressed through the value-run
+            // hooks: a row joins the anchor's run when both belong to the same
+            // stored merge. Frozen rows opt out, since they render in a
+            // separate sticky region; frozen columns merge normally and the
+            // core clamps any span at the frozen-region boundary.
+            spanRows: ({ anchorRow, row, column: spanColumn }) => {
+              if (anchorRow.getIsPinned() || row.getIsPinned()) return false
+              const merge = mergeLookup.get(anchorRow.id)?.get(spanColumn.id)
+              return (
+                merge !== undefined &&
+                merge.columnIds[0] === spanColumn.id &&
+                merge === mergeLookup.get(row.id)?.get(spanColumn.id)
+              )
+            },
+            spanColumns: ({ row, column: spanColumn }) => {
+              if (row.getIsPinned()) return 1
+              const merge = mergeLookup.get(row.id)?.get(spanColumn.id)
+              return merge !== undefined && merge.columnIds[0] === spanColumn.id
+                ? merge.columnIds.length
+                : 1
+            },
           }),
         ),
       ),
-    [spreadsheetData.columns],
+    [mergeLookup, spreadsheetData.columns],
   )
 
   const cellSelectionAtom = useCreateAtom<CellSelectionState>([])
@@ -182,6 +237,70 @@ export function Spreadsheet() {
     scrollToCell,
   })
 
+  /**
+   * Excel's Merge & Center toggle: when the selection touches any merge, the
+   * button unmerges; otherwise a multi-cell rectangular selection merges.
+   * Span-aware selection guarantees a touched merge is entirely inside the
+   * selection, so intersecting merges can be removed wholesale.
+   */
+  const getMergeAction = React.useCallback(():
+    | { type: 'merge'; merge: CellMerge }
+    | { type: 'unmerge'; merges: Array<CellMerge> }
+    | null => {
+    const bounds = table.getCellSelectionBounds()
+    if (bounds.length !== 1) return null
+
+    const rowIds = table.getCellSelectionRowIds()
+    const columnIds = table.getCellSelectionColumnIds()
+
+    const intersected = new Set<CellMerge>()
+    for (const rowId of rowIds) {
+      const byColumn = mergeLookup.get(rowId)
+      if (!byColumn) continue
+      for (const columnId of columnIds) {
+        const merge = byColumn.get(columnId)
+        if (merge) intersected.add(merge)
+      }
+    }
+    if (intersected.size) {
+      return { type: 'unmerge', merges: [...intersected] }
+    }
+
+    // Frozen rows render in a separate sticky region and never merge; drop
+    // them from the candidate rectangle. Columns may merge inside the frozen
+    // region or inside the scrolling region, but a span cannot cross the
+    // boundary between them, so a mixed selection cannot merge.
+    const rowsById = table.getRowModel().rowsById
+    const mergeRowIds = rowIds.filter(
+      (rowId) => rowsById[rowId].getIsPinned() === false,
+    )
+    const columnRegions = new Set(
+      columnIds.map(
+        (columnId) => table.getColumn(columnId)?.getIsPinned() || 'center',
+      ),
+    )
+    if (columnRegions.size > 1) return null
+    if (mergeRowIds.length * columnIds.length < 2) return null
+
+    return {
+      type: 'merge',
+      merge: { rowIds: mergeRowIds, columnIds },
+    }
+  }, [mergeLookup, table])
+
+  const toggleMergeSelection = React.useCallback(() => {
+    const action = getMergeAction()
+    if (!action) return
+
+    if (action.type === 'unmerge') {
+      const removed = new Set(action.merges)
+      setMerges((current) => current.filter((merge) => !removed.has(merge)))
+      return
+    }
+
+    setMerges((current) => [...current, action.merge])
+  }, [getMergeAction])
+
   const resetTableView = React.useCallback(() => {
     table.resetSorting(true)
     table.resetColumnFilters(true)
@@ -194,6 +313,7 @@ export function Spreadsheet() {
       seedRef.current++
       const next = makeSpreadsheetData(rowCount, columnCount, seedRef.current)
       setSpreadsheetData(next)
+      setMerges([])
       history.reset(next.rows)
       resetTableView()
       setFrozenRowCount(1)
@@ -224,6 +344,7 @@ export function Spreadsheet() {
       setSheets(persistActiveSheet)
       setActiveSheetId(target.id)
       setSpreadsheetData(target.data)
+      setMerges([])
       history.reset(target.data.rows)
       resetTableView()
     },
@@ -247,6 +368,7 @@ export function Spreadsheet() {
     setSheets((current) => [...persistActiveSheet(current), sheet])
     setActiveSheetId(sheet.id)
     setSpreadsheetData(data)
+    setMerges([])
     history.reset(data.rows)
     resetTableView()
     setFrozenRowCount(1)
@@ -345,6 +467,30 @@ export function Spreadsheet() {
                   </div>
                 </div>
                 <small>Clipboard</small>
+              </div>
+              <div className="ribbon-group">
+                <div className="ribbon-buttons">
+                  <table.Subscribe source={table.atoms.cellSelection}>
+                    {() => {
+                      const action = getMergeAction()
+                      return (
+                        <button
+                          type="button"
+                          disabled={!action}
+                          aria-pressed={action?.type === 'unmerge'}
+                          title="Merge or unmerge the selected cells (Ctrl/Cmd+M)"
+                          onClick={toggleMergeSelection}
+                        >
+                          ⧉{' '}
+                          {action?.type === 'unmerge'
+                            ? 'Unmerge cells'
+                            : 'Merge & center'}
+                        </button>
+                      )
+                    }}
+                  </table.Subscribe>
+                </div>
+                <small>Alignment</small>
               </div>
               <div className="ribbon-group">
                 <div className="ribbon-buttons">
@@ -490,6 +636,7 @@ export function Spreadsheet() {
         table={table}
         interactions={interactions}
         zoom={zoom}
+        onToggleMerge={toggleMergeSelection}
       />
 
       <footer className="spreadsheet-footer">

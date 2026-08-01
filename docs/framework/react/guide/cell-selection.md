@@ -30,6 +30,8 @@ const table = useTable({
 
 ## Cell Selection (React) Guide
 
+> Note: When the optional [cell spanning](./cell-spanning) feature is registered, selection rectangles expand to fully enclose any merged cell they touch, so a merge is always entirely selected or entirely unselected.
+
 The cell selection feature keeps track of spreadsheet-style rectangular selections. A user can click a cell, drag across a block of cells, Shift-click to extend, and Ctrl/Cmd-drag to add or subtract a rectangle based on whether the starting cell is selected. Let's take a look at some common use cases.
 
 ### Access Cell Selection State

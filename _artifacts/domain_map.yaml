@@ -24,7 +24,7 @@ scope:
     - 'Teach headless rendering, feature registration, row-model ownership, framework state, and v8-to-v9 changes as foundations.'
   included:
     - 'All 18 public workspace packages.'
-    - 'All 16 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
+    - 'All 17 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
     - 'Renderer-owned CSS edge cases for sticky positioning, column widths, resizing, layout, and virtualization.'
   excluded:
     - 'Component-library-specific integrations such as shadcn, Material UI, Mantine, and equivalent design systems.'
@@ -155,7 +155,7 @@ domains:
     description: 'Headless philosophy, feature registration, client/server ownership, TypeScript inference, API discovery, custom features, and v8 migration.'
   - slug: feature-plugins
     name: 'Feature plugins'
-    description: 'The 16 stock optional features, their prerequisites, state, row-model participation, and UI responsibilities.'
+    description: 'The 17 stock optional features, their prerequisites, state, row-model participation, and UI responsibilities.'
   - slug: framework-adapters
     name: 'Framework adapters'
     description: 'Per-framework setup, reactive table state, v8 migration, reusable createTableHook patterns, and supported Query/Virtual composition.'
@@ -547,6 +547,24 @@ skills:
       - 'Binding only the mousedown handler and expecting drag selection, or reimplementing mouseup even though the start handler owns its own document listener.'
       - 'Drawing the selection outline with borders on a border-collapse table, which changes row heights as cells become selected.'
       - 'Re-rendering every cell on each drag update instead of subscribing per row to table.atoms.cellSelection.'
+
+  - slug: cell-spanning
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Merge adjacent body cells into row- and column-spanning cells derived from the rendered row model, with covered cells reporting a span of 0 that renderers must skip.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/cell-spanning.md',
+        'TanStack/table:packages/table-core/src/features/cell-spanning',
+        'TanStack/table:examples/react/cell-spanning',
+      ]
+    failure_modes:
+      - 'Rendering a covered cell with rowSpan={0} instead of skipping it; HTML rowspan="0" means span to the end of the row group, so the cell merges down the entire tbody.'
+      - 'Expecting spanning to sort or group rows; it merges adjacent equal values only, so unsorted data renders no merges at all.'
+      - 'Precomputing spans from the source data array, which survives sorting, filtering, and page changes and produces ragged rows.'
+      - 'Assuming a run continues across a page or pinned-section boundary; runs are clipped to the rendered rows of each section.'
+      - 'Pre-expanding stored selection corners to cover merges; selection bounds already expand at derivation time when both features are registered, and pre-expanded corners go stale when sorting or paging changes the merges.'
 
   - slug: row-selection
     package: '@tanstack/table-core'

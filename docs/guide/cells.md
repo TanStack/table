@@ -82,3 +82,7 @@ const columns = [
   })}
 </tr>
 ```
+
+### Cell Spanning
+
+When the optional `cellSpanningFeature` is registered, adjacent cells can merge into one rendered cell. A cell reporting a span of `0` is covered by another cell's span and must be skipped instead of rendered. See the [Cell Spanning Guide](../framework/react/guide/cell-spanning) for the full rendering pattern.
