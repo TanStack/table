@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.65'
+  version: '9.0.0-beta.69'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing primitives with tree-shakeable v9 features and framework adapters.'
@@ -8,7 +8,6 @@ library:
   monorepo: true
   package_version_overrides:
     '@tanstack/match-sorter-utils': '9.0.0-beta.53'
-    '@tanstack/octane-table': '9.0.0-beta.67'
 
 meta:
   generated_by: '@tanstack/intent scaffold domain discovery'
