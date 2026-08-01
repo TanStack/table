@@ -142,19 +142,20 @@ export class UsersTable extends LitElement {
                                     ${header.SortIndicator()}
                                     ${header.ColumnFilter()}
                                     ${
-                                    sorting.length > 1 &&
-                                    sorting.findIndex(
-                                      (s) => s.id === header.column.id,
-                                    ) > -1
-                                      ? html`<span class="sort-order"
-                                          >${
-                                          sorting.findIndex(
-                                            (s) => s.id === header.column.id,
-                                          ) + 1
-                                        }</span
-                                        >`
-                                      : nothing
-                                  }
+                                      sorting.length > 1 &&
+                                      sorting.findIndex(
+                                        (s) => s.id === header.column.id,
+                                      ) > -1
+                                        ? html`<span class="sort-order"
+                                            >${
+                                              sorting.findIndex(
+                                                (s) =>
+                                                  s.id === header.column.id,
+                                              ) + 1
+                                            }</span
+                                          >`
+                                        : nothing
+                                    }
                                   `
                             }
                           </th>
@@ -202,12 +203,14 @@ export class UsersTable extends LitElement {
                                   ? html`
                                       ${footer.FooterSum()}
                                       ${
-                                      hasFilter
-                                        ? html`<span class="filtered-indicator">
-                                            (filtered)</span
-                                          >`
-                                        : nothing
-                                    }
+                                        hasFilter
+                                          ? html`<span
+                                              class="filtered-indicator"
+                                            >
+                                              (filtered)</span
+                                            >`
+                                          : nothing
+                                      }
                                     `
                                   : columnId === 'actions' ||
                                       columnId === 'select'
@@ -215,14 +218,14 @@ export class UsersTable extends LitElement {
                                     : html`
                                         ${footer.FooterColumnId()}
                                         ${
-                                        hasFilter
-                                          ? html`<span
-                                              class="filtered-indicator"
-                                            >
-                                              ✓</span
-                                            >`
-                                          : nothing
-                                      }
+                                          hasFilter
+                                            ? html`<span
+                                                class="filtered-indicator"
+                                              >
+                                                ✓</span
+                                              >`
+                                            : nothing
+                                        }
                                       `
                             }
                           </td>

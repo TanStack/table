@@ -112,3 +112,30 @@ test('selects an inclusive cell range with Shift-click', async ({ page }) => {
     await server.close()
   }
 })
+
+test('subtracts a selected cell with Ctrl/Cmd-click', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const rows = page.locator('table').first().locator('tbody tr')
+    const center = rows.nth(1).locator('td').nth(1)
+    await expect(rows.first()).toBeVisible()
+
+    await rows.nth(0).locator('td').nth(0).click()
+    await rows
+      .nth(2)
+      .locator('td')
+      .nth(2)
+      .click({ modifiers: ['Shift'] })
+    await expect(page.locator('td.cell-selected')).toHaveCount(9)
+
+    await center.click({ modifiers: ['ControlOrMeta'] })
+
+    await expect(page.locator('td.cell-selected')).toHaveCount(8)
+    await expect(center).not.toHaveClass(/cell-selected/)
+    await expect(center).toHaveClass(/cell-focused/)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})

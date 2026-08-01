@@ -442,35 +442,35 @@ class LitTableExample extends LitElement {
                 ? html`
                     <span class="pin-actions">
                       ${
-                      column.getIsPinned() !== 'start'
-                        ? html`<button
-                            class="pin-button"
-                            @click=${() => column.pin('start')}
-                          >
-                            &lt;
-                          </button>`
-                        : null
-                    }
+                        column.getIsPinned() !== 'start'
+                          ? html`<button
+                              class="pin-button"
+                              @click=${() => column.pin('start')}
+                            >
+                              &lt;
+                            </button>`
+                          : null
+                      }
                       ${
-                      column.getIsPinned()
-                        ? html`<button
-                            class="pin-button"
-                            @click=${() => column.pin(false)}
-                          >
-                            x
-                          </button>`
-                        : null
-                    }
+                        column.getIsPinned()
+                          ? html`<button
+                              class="pin-button"
+                              @click=${() => column.pin(false)}
+                            >
+                              x
+                            </button>`
+                          : null
+                      }
                       ${
-                      column.getIsPinned() !== 'end'
-                        ? html`<button
-                            class="pin-button"
-                            @click=${() => column.pin('end')}
-                          >
-                            &gt;
-                          </button>`
-                        : null
-                    }
+                        column.getIsPinned() !== 'end'
+                          ? html`<button
+                              class="pin-button"
+                              @click=${() => column.pin('end')}
+                            >
+                              &gt;
+                            </button>`
+                          : null
+                      }
                     </span>
                   `
                 : null
@@ -482,10 +482,10 @@ class LitTableExample extends LitElement {
                     @click=${column.getToggleGroupingHandler()}
                   >
                     ${
-                    column.getIsGrouped()
-                      ? `Stop (${column.getGroupedIndex()})`
-                      : 'Group'
-                  }
+                      column.getIsGrouped()
+                        ? `Stop (${column.getGroupedIndex()})`
+                        : 'Group'
+                    }
                   </button>`
                 : null
             }
@@ -505,12 +505,12 @@ class LitTableExample extends LitElement {
                   >
                     ${FlexRender({ header })}
                     ${
-                    column.getIsSorted() === 'asc'
-                      ? ' ▲'
-                      : column.getIsSorted() === 'desc'
-                        ? ' ▼'
-                        : ''
-                  }
+                      column.getIsSorted() === 'asc'
+                        ? ' ▲'
+                        : column.getIsSorted() === 'desc'
+                          ? ' ▼'
+                          : ''
+                    }
                   </span>`
                 : FlexRender({ header })
           }
@@ -653,9 +653,9 @@ class LitTableExample extends LitElement {
                 <button
                   class="pin-button"
                   @click=${() =>
-                  cell.row.pin(
-                    cell.row.getIsPinned() === 'top' ? false : 'top',
-                  )}
+                    cell.row.pin(
+                      cell.row.getIsPinned() === 'top' ? false : 'top',
+                    )}
                 >
                   ${cell.row.getIsPinned() === 'top' ? 'Pinned' : 'Pin'}
                 </button>
@@ -663,23 +663,23 @@ class LitTableExample extends LitElement {
             : cell.column.id === 'firstName'
               ? html`<div style="padding-left: ${cell.row.depth * 1.5}rem">
                   ${
-                  cell.row.getCanExpand()
-                    ? html`<button
-                        @click=${cell.row.getToggleExpandedHandler()}
-                        style="cursor: pointer; margin-right: 0.25rem"
-                      >
-                        ${cell.row.getIsExpanded() ? 'v' : '>'}
-                      </button>`
-                    : html`<span style="margin-right: 0.25rem">-</span>`
-                }
+                    cell.row.getCanExpand()
+                      ? html`<button
+                          @click=${cell.row.getToggleExpandedHandler()}
+                          style="cursor: pointer; margin-right: 0.25rem"
+                        >
+                          ${cell.row.getIsExpanded() ? 'v' : '>'}
+                        </button>`
+                      : html`<span style="margin-right: 0.25rem">-</span>`
+                  }
                   ${FlexRender({ cell })}
                 </div>`
               : cell.getIsGrouped()
                 ? html`<button
                     @click=${cell.row.getToggleExpandedHandler()}
                     style="cursor: ${
-                    cell.row.getCanExpand() ? 'pointer' : 'normal'
-                  }"
+                      cell.row.getCanExpand() ? 'pointer' : 'normal'
+                    }"
                   >
                     ${cell.row.getIsExpanded() ? 'v' : '>'}
                     ${FlexRender({ cell })}

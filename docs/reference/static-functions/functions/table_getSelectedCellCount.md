@@ -9,13 +9,12 @@ title: table_getSelectedCellCount
 function table_getSelectedCellCount<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:932](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L932)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:940](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L940)
 
 Returns the number of selected cells.
 
-Uses rectangle arithmetic for a single range, which needs no expansion.
-Multiple ranges are enumerated so overlapping cells are counted once. A
-per-cell `enableCellSelection` predicate also requires enumeration.
+Uses rectangle arithmetic over the normalized, disjoint positive regions.
+A per-cell `enableCellSelection` predicate requires enumeration.
 
 ## Type Parameters
 

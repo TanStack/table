@@ -129,6 +129,72 @@ describe('cell selection ranges', () => {
       expect(table.getSelectedCellCount()).toBe(7)
     })
 
+    it('subtracts a range from the positive selection geometry', () => {
+      const table = makeTable()
+      table.selectCellRange(rangeOf('r0', 'a', 'r2', 'c'))
+      table.selectCellRange(rangeOf('r1', 'b', 'r1', 'b'), {
+        mode: 'exclude',
+      })
+
+      expect(table.getSelectedCellCount()).toBe(8)
+      expect(table.getSelectedCellIds()).not.toContain('r1_b')
+      expect(table.getCellSelectionBounds()).toEqual([
+        {
+          minRowIndex: 0,
+          maxRowIndex: 0,
+          minColumnIndex: 0,
+          maxColumnIndex: 2,
+        },
+        {
+          minRowIndex: 1,
+          maxRowIndex: 1,
+          minColumnIndex: 0,
+          maxColumnIndex: 0,
+        },
+        {
+          minRowIndex: 1,
+          maxRowIndex: 1,
+          minColumnIndex: 2,
+          maxColumnIndex: 2,
+        },
+        {
+          minRowIndex: 2,
+          maxRowIndex: 2,
+          minColumnIndex: 0,
+          maxColumnIndex: 2,
+        },
+      ])
+    })
+
+    it('can include cells again after excluding them', () => {
+      const table = makeTable()
+      const center = rangeOf('r1', 'b', 'r1', 'b')
+      table.selectCellRange(rangeOf('r0', 'a', 'r2', 'c'))
+      table.selectCellRange(center, { mode: 'exclude' })
+      table.selectCellRange(center, { mode: 'include' })
+
+      expect(table.getSelectedCellCount()).toBe(9)
+      expect(table.getCellSelectionBounds()).toEqual([
+        {
+          minRowIndex: 0,
+          maxRowIndex: 2,
+          minColumnIndex: 0,
+          maxColumnIndex: 2,
+        },
+      ])
+    })
+
+    it('lets mode override the deprecated additive option', () => {
+      const table = makeTable()
+      table.selectCellRange(rangeOf('r0', 'a', 'r1', 'b'))
+      table.selectCellRange(rangeOf('r0', 'a', 'r0', 'a'), {
+        additive: true,
+        mode: 'replace',
+      })
+
+      expect(table.getSelectedCellIds()).toEqual(['r0_a'])
+    })
+
     it('is memoized between reads', () => {
       const table = makeTable()
       table.selectCellRange(rangeOf('r0', 'a', 'r2', 'b'))

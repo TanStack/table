@@ -9,9 +9,9 @@ title: table_getSelectedCellRangesData
 function table_getSelectedCellRangesData<TFeatures, TData>(table): unknown[][][];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:905](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L905)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:914](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L914)
 
-Returns each selected range's values as a row-major grid.
+Returns each final positive region's values as a row-major grid.
 
 This is the raw material for clipboard export. Serializing it to text is left
 to userland, since the delimiter, the null representation, and whether values

@@ -1,6 +1,7 @@
 {
   "name": "tanstack-alpine-table-example-basic-app-table",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

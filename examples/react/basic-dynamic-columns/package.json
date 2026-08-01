@@ -1,6 +1,7 @@
 {
   "name": "tanstack-react-table-example-basic-dynamic-columns",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -1,6 +1,7 @@
 {
   "name": "tanstack-lit-table-example-virtualized-infinite-scrolling",
   "private": true,
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

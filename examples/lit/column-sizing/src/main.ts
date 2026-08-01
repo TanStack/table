@@ -118,10 +118,12 @@ class LitTableExample extends LitElement {
                           ? null
                           : html`<div
                               class="resizer ${
-                              table.options.columnResizeDirection
-                            } ${
-                              header.column.getIsResizing() ? 'is-resizing' : ''
-                            }"
+                                table.options.columnResizeDirection
+                              } ${
+                                header.column.getIsResizing()
+                                  ? 'is-resizing'
+                                  : ''
+                              }"
                               @dblclick="${() => header.column.resetSize()}"
                               @mousedown="${header.getResizeHandler()}"
                               @touchstart="${header.getResizeHandler()}"

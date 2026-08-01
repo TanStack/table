@@ -73,6 +73,29 @@ test('renders a virtualized spreadsheet without page errors', async ({
   }
 })
 
+test('subtracts cells from a selection with Ctrl/Cmd', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const start = cell(page, 1, 0)
+    const end = cell(page, 3, 2)
+    const center = cell(page, 2, 1)
+
+    await start.click()
+    await end.click({ modifiers: ['Shift'] })
+    await expect(page.locator('[data-sheet-cell].cell-selected')).toHaveCount(9)
+
+    await center.click({ modifiers: ['ControlOrMeta'] })
+
+    await expect(page.locator('[data-sheet-cell].cell-selected')).toHaveCount(8)
+    await expect(center).not.toHaveClass(/cell-selected/)
+    await expect(center).toHaveClass(/cell-focused/)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
 test('edits a cell and supports atomic undo and redo', async ({ page }) => {
   const { errors, server } = await openExample(page)
 

@@ -12,9 +12,9 @@ function table_selectCellRange<TFeatures, TData>(
    opts?): void;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:554](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L554)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:558](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L558)
 
-Selects a rectangle, replacing the current selection unless `additive`.
+Selects a rectangle using replace, include, or exclude semantics.
 
 ## Type Parameters
 
@@ -47,5 +47,5 @@ Selects a rectangle, replacing the current selection unless `additive`.
 ## Example
 
 ```ts
-table_selectCellRange(table, range, { additive: true })
+table_selectCellRange(table, range, { mode: 'exclude' })
 ```

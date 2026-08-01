@@ -21,11 +21,18 @@ export interface CellSelectionRange {
   anchorRowId: string
   focusColumnId: string
   focusRowId: string
+  /**
+   * How this range changes the selection produced by the ranges before it.
+   * Defaults to `include`.
+   */
+  operation?: CellSelectionRangeOperation
 }
 
+export type CellSelectionRangeOperation = 'include' | 'exclude'
+
 /**
- * The selected rectangles. The last entry is the active one that shift-extend
- * and drag operate on.
+ * Ordered range operations that produce the final selection. The last entry is
+ * the active operation that shift-extend and drag operate on.
  *
  * A bare array, matching `SortingState` and `ColumnFiltersState`. Drag session
  * state deliberately lives outside this slice as non-reactive instance data, so
@@ -62,10 +69,19 @@ export interface CellSelectionEdges {
 
 export type CellSelectionDirection = 'up' | 'down' | 'left' | 'right'
 
+export type CellSelectionRangeMode = 'replace' | 'include' | 'exclude'
+
 export interface SelectCellRangeOptions {
+  /**
+   * Whether to replace the selection, add the range, or subtract the range.
+   * Defaults to `replace`.
+   */
+  mode?: CellSelectionRangeMode
   /**
    * Whether the range should be added alongside existing ranges rather than
    * replacing them. Defaults to `false`.
+   *
+   * @deprecated Use `mode: 'include'` instead.
    */
   additive?: boolean
 }
@@ -102,8 +118,7 @@ export interface TableOptions_CellSelection<
    */
   enableCellSelectionDrag?: boolean
   /**
-   * Allows multiple disjoint rectangles to be selected at once. Defaults to
-   * `true`.
+   * Allows modifier interactions to add or subtract ranges. Defaults to `true`.
    */
   enableMultiCellRangeSelection?: boolean
   /**
@@ -115,8 +130,8 @@ export interface TableOptions_CellSelection<
    */
   isCellRangeSelectionEvent?: (event: unknown) => boolean
   /**
-   * Determines whether a selection-start event should add a new rectangle
-   * alongside the existing ones.
+   * Determines whether a selection-start event should add or subtract a new
+   * rectangle. The operation depends on whether the starting cell is selected.
    *
    * By default, events with `ctrlKey` or `metaKey` directly on the event or on
    * `event.nativeEvent` are treated as multi-range events.
@@ -151,7 +166,7 @@ export interface Cell_CellSelection {
    */
   getIsFocused: () => boolean
   /**
-   * Checks whether this cell falls inside any selected range.
+   * Checks whether this cell falls inside the final positive selection.
    */
   getIsSelected: () => boolean
   /**
@@ -215,7 +230,8 @@ export interface Table_CellSelection<
    */
   extendCellSelection: (direction: CellSelectionDirection) => void
   /**
-   * Returns the selected ranges resolved into inclusive display-order indexes.
+   * Returns the final positive selection as disjoint, inclusive display-order
+   * index rectangles after all include and exclude operations are applied.
    *
    * This is the memoized cache every per-cell read goes through. Ranges whose
    * corners no longer resolve are omitted.
@@ -239,14 +255,15 @@ export interface Table_CellSelection<
    */
   getCellSelectionRowIds: () => Array<string>
   /**
-   * Returns the active cell, i.e. the anchor of the most recent range.
+   * Returns the active cell, i.e. the anchor of the most recent operation.
+   * An exclusion's active cell is focused even though it is not selected.
    */
   getFocusedCell: () => Cell<TFeatures, TData, any> | undefined
   /**
    * Returns the number of selected cells.
    *
-   * Computed as rectangle arithmetic for one range. Falls back to enumerating
-   * cells for overlapping ranges or a per-cell `enableCellSelection` predicate.
+   * Computed with rectangle arithmetic unless a per-cell
+   * `enableCellSelection` predicate requires enumeration.
    */
   getSelectedCellCount: () => number
   /**
@@ -257,9 +274,9 @@ export interface Table_CellSelection<
    */
   getSelectedCellIds: () => Array<string>
   /**
-   * Returns each selected range's values as a row-major grid.
+   * Returns each final positive selection region's values as a row-major grid.
    *
-   * Indexed as `[rangeIndex][rowIndex][columnIndex]`. Serializing this to
+   * Indexed as `[regionIndex][rowIndex][columnIndex]`. Serializing this to
    * clipboard text is left to userland, since the delimiter, the null
    * representation, and any quoting rules are application decisions.
    */
@@ -280,7 +297,7 @@ export interface Table_CellSelection<
    */
   selectAllCells: () => void
   /**
-   * Selects a rectangle, replacing the current selection unless `additive`.
+   * Selects a rectangle using the requested replace/include/exclude mode.
    */
   selectCellRange: (
     range: CellSelectionRange,

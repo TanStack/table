@@ -9,7 +9,7 @@ library:
 generated_from:
   domain_map: '_artifacts/domain_map.yaml'
   skill_spec: '_artifacts/skill_spec.md'
-generated_at: '2026-07-31'
+generated_at: '2026-08-01'
 status: reviewed
 reviewed_at: '2026-07-29'
 batch_review: true
@@ -119,7 +119,7 @@ skills:
     domain: foundations
     path: 'packages/table-core/skills/migrate-v8-to-v9/SKILL.md'
     package: 'packages/table-core'
-    description: 'Perform a complete TanStack Table v8-to-v9 migration audit: all 14 feature registrations, every row-model and registry slot, state/store changes, prototype methods, full pinning and resizing mappings, sorting and selection semantics, removed internals, helpers, meta typing, and generic changes. useLegacyTable is only a deprecated temporary bridge when already encountered.'
+    description: 'Perform a complete TanStack Table v8-to-v9 migration audit: all 16 feature registrations, every row-model and registry slot, state/store changes, prototype methods, full pinning and resizing mappings, sorting and selection semantics, removed internals, helpers, meta typing, and generic changes. useLegacyTable is only a deprecated temporary bridge when already encountered.'
     requires: ['core', 'table-features', 'typescript']
     sources:
       - 'TanStack/table:docs/framework/react/guide/migrating.md'
@@ -173,6 +173,21 @@ skills:
       - 'TanStack/table:docs/framework/react/guide/grouping.md'
       - 'TanStack/table:packages/table-core/src/features/column-grouping'
       - 'TanStack/table:examples/react/grouping'
+
+  - name: 'Aggregation'
+    slug: aggregation
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/aggregation/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Aggregate columns independently of grouping with rowAggregationFeature, built-in or custom aggregation functions, caller-selected row scopes, keyed results, grouped merges, and manual values.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/guide/aggregation.md'
+      - 'TanStack/table:docs/framework/react/guide/aggregation.md'
+      - 'TanStack/table:packages/table-core/src/features/row-aggregation'
+      - 'TanStack/table:examples/react/aggregation'
+      - 'TanStack/table:examples/react/grouped-aggregation'
 
   - name: 'Column Ordering'
     slug: column-ordering
@@ -297,7 +312,7 @@ skills:
     domain: feature-plugins
     path: 'packages/table-core/skills/cell-selection/SKILL.md'
     package: 'packages/table-core'
-    description: 'Select rectangular cell ranges with cellSelectionFeature: two-corner range state, drag and Shift and Ctrl handlers, selection edges, and render-order resolution under pinning. Load when ranges widen unexpectedly after sorting or reordering, or when drag re-renders the whole table.'
+    description: 'Select, add, and subtract rectangular cell ranges with cellSelectionFeature: ordered include/exclude operations, modifier dragging, final positive bounds, selection edges, and render-order resolution under pinning. Load for spreadsheet-style or “select all except” behavior.'
     requires: ['core', 'table-features']
     sources:
       - 'TanStack/table:docs/framework/react/guide/cell-selection.md'

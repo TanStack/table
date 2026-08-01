@@ -133,19 +133,20 @@ class LitTableExample extends LitElement {
                             ? null
                             : html`<div
                                 class="${
-                                header.column.getCanSort()
-                                  ? 'sortable-header'
-                                  : ''
-                              }"
+                                  header.column.getCanSort()
+                                    ? 'sortable-header'
+                                    : ''
+                                }"
                                 @click="${header.column.getToggleSortingHandler()}"
                               >
                                 ${FlexRender({ header })}
                                 ${
-                                {
-                                  asc: ' 🔼',
-                                  desc: ' 🔽',
-                                }[header.column.getIsSorted() as string] ?? null
-                              }
+                                  {
+                                    asc: ' 🔼',
+                                    desc: ' 🔽',
+                                  }[header.column.getIsSorted() as string] ??
+                                  null
+                                }
                               </div>`
                         }
                       </th>

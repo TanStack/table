@@ -153,33 +153,34 @@ class LitTableExample extends LitElement {
                           ? null
                           : html`<div
                               class="${
-                              header.column.getCanSort()
-                                ? 'sortable-header'
-                                : ''
-                            }"
+                                header.column.getCanSort()
+                                  ? 'sortable-header'
+                                  : ''
+                              }"
                               title=${
-                              header.column.getCanSort()
-                                ? header.column.getNextSortingOrder() === 'asc'
-                                  ? 'Sort ascending'
-                                  : header.column.getNextSortingOrder() ===
-                                      'desc'
-                                    ? 'Sort descending'
-                                    : 'Clear sort'
-                                : undefined
-                            }
+                                header.column.getCanSort()
+                                  ? header.column.getNextSortingOrder() ===
+                                    'asc'
+                                    ? 'Sort ascending'
+                                    : header.column.getNextSortingOrder() ===
+                                        'desc'
+                                      ? 'Sort descending'
+                                      : 'Clear sort'
+                                  : undefined
+                              }
                               @click="${header.column.getToggleSortingHandler()}"
                               style="cursor: ${
-                              header.column.getCanSort()
-                                ? 'pointer'
-                                : 'not-allowed'
-                            }"
+                                header.column.getCanSort()
+                                  ? 'pointer'
+                                  : 'not-allowed'
+                              }"
                             >
                               ${FlexRender({ header })}
                               ${
-                              { asc: ' 🔼', desc: ' 🔽' }[
-                                header.column.getIsSorted() as string
-                              ] ?? null
-                            }
+                                { asc: ' 🔼', desc: ' 🔽' }[
+                                  header.column.getIsSorted() as string
+                                ] ?? null
+                              }
                             </div>`
                       }
                     </th>

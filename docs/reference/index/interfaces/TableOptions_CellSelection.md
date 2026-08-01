@@ -5,7 +5,7 @@ title: TableOptions_CellSelection
 
 # Interface: TableOptions\_CellSelection\<TFeatures, TData\>
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L73)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:89](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L89)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:73](https://g
 optional autoResetCellSelection: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L86)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:102](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L102)
 
 Resets cell selection to `initialState.cellSelection` whenever `data`
 changes. Defaults to `true`.
@@ -43,7 +43,7 @@ across data changes, and note `autoResetAll` overrides this.
 optional enableCellRangeSelection: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:91](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L91)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L107)
 
 Enables inclusive cell range selection through shift-click and drag.
 Defaults to `true`.
@@ -56,7 +56,7 @@ Defaults to `true`.
 optional enableCellSelection: boolean | (cell) => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L98)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L114)
 
 Allows cells to be selected.
 
@@ -71,7 +71,7 @@ its own `enableCellSelection: false`. Defaults to `true`.
 optional enableCellSelectionDrag: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L104)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L120)
 
 Enables extending a selection by dragging across cells. Defaults to `true`.
 
@@ -83,10 +83,9 @@ Enables extending a selection by dragging across cells. Defaults to `true`.
 optional enableMultiCellRangeSelection: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L109)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L124)
 
-Allows multiple disjoint rectangles to be selected at once. Defaults to
-`true`.
+Allows modifier interactions to add or subtract ranges. Defaults to `true`.
 
 ***
 
@@ -96,7 +95,7 @@ Allows multiple disjoint rectangles to be selected at once. Defaults to
 optional isCellRangeSelectionEvent: (event) => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L117)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:132](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L132)
 
 Determines whether a selection-start event should extend the active range
 instead of replacing the selection.
@@ -122,10 +121,10 @@ By default, events with `shiftKey` directly on the event or on
 optional isMultiCellRangeSelectionEvent: (event) => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L125)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L140)
 
-Determines whether a selection-start event should add a new rectangle
-alongside the existing ones.
+Determines whether a selection-start event should add or subtract a new
+rectangle. The operation depends on whether the starting cell is selected.
 
 By default, events with `ctrlKey` or `metaKey` directly on the event or on
 `event.nativeEvent` are treated as multi-range events.
@@ -148,7 +147,7 @@ By default, events with `ctrlKey` or `metaKey` directly on the event or on
 optional onCellSelectionChange: OnChangeFn<CellSelectionState>;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L134)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L149)
 
 Called with an updater when cell selection state changes. Pair this with
 `state.cellSelection` when using external state; external atoms can own the

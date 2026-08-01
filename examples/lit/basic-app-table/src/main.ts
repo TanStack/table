@@ -131,28 +131,28 @@ class LitTableExample extends LitElement {
                               ? null
                               : html`<div
                                   title=${
-                                  h.column.getCanSort()
-                                    ? h.column.getNextSortingOrder() === 'asc'
-                                      ? 'Sort ascending'
-                                      : h.column.getNextSortingOrder() ===
-                                          'desc'
-                                        ? 'Sort descending'
-                                        : 'Clear sort'
-                                    : ''
-                                }
+                                    h.column.getCanSort()
+                                      ? h.column.getNextSortingOrder() === 'asc'
+                                        ? 'Sort ascending'
+                                        : h.column.getNextSortingOrder() ===
+                                            'desc'
+                                          ? 'Sort descending'
+                                          : 'Clear sort'
+                                      : ''
+                                  }
                                   @click=${h.column.getToggleSortingHandler()}
                                   style="cursor: ${
-                                  h.column.getCanSort()
-                                    ? 'pointer'
-                                    : 'not-allowed'
-                                }"
+                                    h.column.getCanSort()
+                                      ? 'pointer'
+                                      : 'not-allowed'
+                                  }"
                                 >
                                   ${h.FlexRender()}
                                   ${
-                                  { asc: ' \u{1F53C}', desc: ' \u{1F53D}' }[
-                                    h.column.getIsSorted() as string
-                                  ] ?? null
-                                }
+                                    { asc: ' \u{1F53C}', desc: ' \u{1F53D}' }[
+                                      h.column.getIsSorted() as string
+                                    ] ?? null
+                                  }
                                 </div>`
                           }
                         </th>

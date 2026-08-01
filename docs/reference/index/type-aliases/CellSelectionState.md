@@ -9,10 +9,10 @@ title: CellSelectionState
 type CellSelectionState = CellSelectionRange[];
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:34](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L34)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L41)
 
-The selected rectangles. The last entry is the active one that shift-extend
-and drag operate on.
+Ordered range operations that produce the final selection. The last entry is
+the active operation that shift-extend and drag operate on.
 
 A bare array, matching `SortingState` and `ColumnFiltersState`. Drag session
 state deliberately lives outside this slice as non-reactive instance data, so

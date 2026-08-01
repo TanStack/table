@@ -54,3 +54,16 @@ focusRowId: string;
 ```
 
 Defined in: [features/cell-selection/cellSelectionFeature.types.ts:23](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L23)
+
+***
+
+### operation?
+
+```ts
+optional operation: CellSelectionRangeOperation;
+```
+
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:28](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L28)
+
+How this range changes the selection produced by the ranges before it.
+Defaults to `include`.
