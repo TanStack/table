@@ -9,7 +9,7 @@ This specification is the generation contract for a deliberately smaller, foot-g
 
 ## Outcome
 
-Generate 78 short package-local skills across all 18 public packages. A loaded skill should quickly do three things:
+Generate 80 short package-local skills across all 18 public packages. A loaded skill should quickly do three things:
 
 1. Correct the user or agent mental model.
 2. Show the smallest reliable setup or decision pattern.
@@ -183,8 +183,10 @@ Skill versions ship with package versions. After release tooling calculates pack
 - custom-features — plugin lifecycle after exhausting built-in APIs and meta.
 - migrate-v8-to-v9 — shared breaking changes and adapter migration routing.
 
-### Stock feature plugins — @tanstack/table-core (14)
+### Stock feature plugins — @tanstack/table-core (16)
 
+- aggregation
+- cell-selection
 - column-faceting
 - column-filtering
 - grouping
@@ -271,7 +273,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 
 | Package                          | Skills |
 | -------------------------------- | -----: |
-| @tanstack/table-core             |     21 |
+| @tanstack/table-core             |     23 |
 | @tanstack/react-table            |      6 |
 | @tanstack/preact-table           |      6 |
 | @tanstack/octane-table           |      3 |
@@ -289,7 +291,7 @@ All Devtools skills must emphasize the required non-empty table options.key, lif
 | @tanstack/vue-table-devtools     |      1 |
 | @tanstack/angular-table-devtools |      1 |
 | @tanstack/match-sorter-utils     |      1 |
-| Total                            |     78 |
+| Total                            |     80 |
 
 ## Framework distinctions that must survive generation
 

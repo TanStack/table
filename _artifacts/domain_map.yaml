@@ -12,7 +12,7 @@ library:
 
 meta:
   generated_by: '@tanstack/intent scaffold domain discovery'
-  date: '2026-07-31'
+  date: '2026-08-01'
   status: reviewed
   maintainer_review_pending: false
   phase_4_date: '2026-07-10'
@@ -25,7 +25,7 @@ scope:
     - 'Teach headless rendering, feature registration, row-model ownership, framework state, and v8-to-v9 changes as foundations.'
   included:
     - 'All 18 public workspace packages.'
-    - 'All 14 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
+    - 'All 16 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
     - 'Renderer-owned CSS edge cases for sticky positioning, column widths, resizing, layout, and virtualization.'
   excluded:
     - 'Component-library-specific integrations such as shadcn, Material UI, Mantine, and equivalent design systems.'
@@ -47,7 +47,7 @@ migration_depth_contract:
     - 'Framework package and construction entrypoint changes, including framework-version prerequisites.'
     - 'Logical start/end column-pinning rename and the full old-to-new API mapping.'
     - 'Prototype-bound row, cell, column, and header methods; object-spread/Object.keys/JSON implications.'
-    - 'Required tableFeatures registration, stockFeatures audit guidance, all 14 feature imports, and feature-gated state/APIs.'
+    - 'Required tableFeatures registration, stockFeatures audit guidance, all 16 feature imports, and feature-gated state/APIs.'
     - 'Core row model removal plus every get*RowModel to create*RowModel feature-slot mapping.'
     - 'filterFns, sortFns, aggregationFns, and filterMeta registry-slot migration.'
     - 'Adapter state access, selectors/subscriptions, controlled slices, external atoms, precedence, and onStateChange removal.'
@@ -156,7 +156,7 @@ domains:
     description: 'Headless philosophy, feature registration, client/server ownership, TypeScript inference, API discovery, custom features, and v8 migration.'
   - slug: feature-plugins
     name: 'Feature plugins'
-    description: 'The 14 stock optional features, their prerequisites, state, row-model participation, and UI responsibilities.'
+    description: 'The 16 stock optional features, their prerequisites, state, row-model participation, and UI responsibilities.'
   - slug: framework-adapters
     name: 'Framework adapters'
     description: 'Per-framework setup, reactive table state, v8 migration, reusable createTableHook patterns, and supported Query/Virtual composition.'
@@ -533,7 +533,7 @@ skills:
     package: '@tanstack/table-core'
     domain: feature-plugins
     type: feature
-    purpose: 'Maintain spreadsheet-style rectangular cell ranges anchored to row and column ids across sorting, filtering, pagination, and column layout changes.'
+    purpose: 'Maintain spreadsheet-style rectangular selections as ordered include/exclude operations anchored to row and column ids, resolving them into disjoint positive regions across sorting, filtering, pagination, and column layout changes.'
     sources:
       [
         'TanStack/table:docs/framework/react/guide/cell-selection.md',
@@ -541,7 +541,10 @@ skills:
         'TanStack/table:examples/react/cell-selection',
       ]
     failure_modes:
-      - 'Expecting cellSelection to be a per-cell map; it is an array of two-corner rectangles, so a range widens onto new cells when sorting or column order changes what sits between its corners.'
+      - 'Expecting cellSelection to be a per-cell map or a list of final positive regions; it is an ordered log of two-corner include/exclude operations, and derived bounds may split one stored range into several regions.'
+      - 'Reordering, deduplicating, or serializing only the corners of controlled cellSelection state and thereby changing or losing subtraction semantics.'
+      - 'Using additive when the intended operation is explicit subtraction; selectCellRange mode is replace, include, or exclude, while additive is only a deprecated include alias.'
+      - 'Assuming Ctrl/Cmd always adds a range; a modified interaction excludes when it starts on a selected cell and includes when it starts on an unselected cell.'
       - 'Binding only the mousedown handler and expecting drag selection, or reimplementing mouseup even though the start handler owns its own document listener.'
       - 'Drawing the selection outline with borders on a border-collapse table, which changes row heights as cells become selected.'
       - 'Re-rendering every cell on each drag update instead of subscribing per row to table.atoms.cellSelection.'
@@ -1656,7 +1659,7 @@ documentation_read:
   narrative_docs: 'All 187 narrative Markdown documents were inventoried by title, headings, and admonitions; foundational, feature, state, migration, composable, and virtualization guides were deep-read.'
   generated_references: 'All 828 generated reference documents were inventoried for exports and API categories; exact API truth is delegated to installed dist declarations (.d.ts) in skills.'
   examples: 'All 277 example directories were inventoried; basic, state, composable, Query, Virtual, feature, and Devtools-relevant examples were sampled or deep-read by skill.'
-  source: 'All public package entrypoints, tableFeatures prerequisites, core construction/state precedence, all 14 feature implementations/defaults, createTableHook implementations, Devtools registration, and match-sorter-utils source were inspected.'
+  source: 'All public package entrypoints, tableFeatures prerequisites, core construction/state precedence, all 16 feature implementations/defaults, createTableHook implementations, Devtools registration, and match-sorter-utils source were inspected.'
   community: 'Recent v9 issues plus recurring high-signal issues and GitHub discussions were reviewed for failure modes and misconceptions.'
 
 open_gaps:

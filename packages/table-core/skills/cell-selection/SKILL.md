@@ -1,7 +1,7 @@
 ---
 name: cell-selection
 description: >
-  Select rectangular cell ranges with cellSelectionFeature: two-corner range state keyed by row and column id, mousedown/mouseenter handlers, selection edges, render-order resolution under pinning, and autoResetCellSelection. Load when ranges widen unexpectedly after sorting or column reordering, when a drag re-renders the whole table, or when building copy-to-clipboard from a selection.
+  Select, add, and subtract rectangular cell ranges with cellSelectionFeature: ordered include/exclude operations keyed by row and column id, modifier dragging, final positive bounds, selection edges, render-order resolution under pinning, and autoResetCellSelection. Load for spreadsheet-style selection, “select all except” behavior, unexpected range changes after sorting or reordering, drag performance, or copy-to-clipboard.
 metadata:
   {
     type: sub-skill,
@@ -15,7 +15,7 @@ sources:
   - 'TanStack/table:examples/react/cell-selection'
 ---
 
-This skill builds on `core` and `table-features`. `cellSelection` is an array of rectangles, each stored as two corner cells identified by row and column id. It is not a per-cell map, and it is not positional.
+This skill builds on `core` and `table-features`. `cellSelection` is an ordered operation log of rectangles, each stored as two corner cells identified by row and column id. It is not a per-cell map, and it is not positional. Table resolves the log into disjoint positive rectangles for membership and derived reads.
 
 ## Setup
 
@@ -37,11 +37,12 @@ type CellSelectionRange = {
   anchorColumnId: string
   focusRowId: string
   focusColumnId: string
+  operation?: 'include' | 'exclude'
 }
 type CellSelectionState = Array<CellSelectionRange>
 ```
 
-The `anchor` corner stays put; the `focus` corner moves during a drag or Shift-extend. Two corners are what make Shift-extend possible, and they keep a drag across thousands of cells to a two-field write.
+The `anchor` corner stays put; the `focus` corner moves during a drag or Shift-extend. Two corners are what make Shift-extend possible, and they keep a drag across thousands of cells to a two-field write. Operations apply in array order. An omitted `operation` means `include` for backward compatibility; `exclude` subtracts from the selection produced by preceding entries.
 
 ## Core Patterns
 
@@ -54,14 +55,27 @@ const onMouseEnter = cell.getSelectionExtendHandler()
 
 The start handler attaches its own document-level `mouseup` listener and removes it when the drag ends, so a pointer released outside the table still finishes correctly. Pass a document explicitly (`cell.getSelectionStartHandler(iframeDocument)`) only when the table renders into another document.
 
+With the default event predicates, Shift extends the active operation. Ctrl/Cmd starts an inclusion when the starting cell is unselected and an exclusion when it is selected. That choice remains fixed for the drag, so shrinking an exclusion restores cells that leave its rectangle. Set `enableMultiCellRangeSelection: false` to disable both modifier behaviors.
+
+### Apply ranges programmatically
+
+```ts
+table.selectCellRange(range) // replace
+table.selectCellRange(range, { mode: 'include' })
+table.selectCellRange(range, { mode: 'exclude' })
+```
+
+Use `mode` when the operation is known. The deprecated `{ additive: true }` option is only an alias for include mode; an explicit `mode` wins.
+
 ### Read the selection
 
 ```ts
 const count = table.getSelectedCellCount()
+const bounds = table.getCellSelectionBounds()
 const grids = table.getSelectedCellRangesData() // [range][row][column]
 ```
 
-Expansion APIs are memoized and pull-based, so a table that only highlights cells never pays to enumerate a large selection.
+`bounds` and `grids` describe the final disjoint positive regions after all operations, not one entry per stored state operation. Expansion APIs are memoized and pull-based, so a table that only highlights cells never pays to enumerate a large selection. Cell count uses rectangle arithmetic unless a per-cell `enableCellSelection` predicate requires enumeration.
 
 ### Draw the outline from edges
 
@@ -69,7 +83,7 @@ Expansion APIs are memoized and pull-based, so a table that only highlights cell
 
 ### Drive keyboard navigation externally
 
-The feature ships no keydown handling. Call `table.moveCellSelection(direction)`, `table.extendCellSelection(direction)`, `table.setFocusedCell(rowId, columnId)`, `table.selectAllCells()`, and `table.resetCellSelection(true)` from a hotkey library such as `@tanstack/react-hotkeys`, scoped to the grid element rather than the document.
+The feature ships no keydown handling. Call `table.moveCellSelection(direction)`, `table.extendCellSelection(direction)`, `table.setFocusedCell(rowId, columnId)`, `table.selectAllCells()`, and `table.resetCellSelection(true)` from a hotkey library such as `@tanstack/react-hotkeys`, scoped to the grid element rather than the document. Extending preserves the active operation. `getFocusedCell()` follows the latest anchor, so an excluded cell can remain focused without being selected.
 
 ## Common Mistakes
 
@@ -79,9 +93,19 @@ Wrong: `const isSelected = table.state.cellSelection[cell.id]`
 
 Correct: `const isSelected = cell.getIsSelected()`
 
-`cellSelection` holds rectangles, not cell keys. Membership is resolved by comparing the cell's row and column index against the memoized bounds.
+`cellSelection` holds ordered rectangle operations, not cell keys. Membership is resolved against the memoized final positive bounds.
 
 Source: `packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts`
+
+### [HIGH] Treating stored operations as final selected regions
+
+Wrong: serialize or render each `table.state.cellSelection` entry as a selected rectangle.
+
+Correct: use `table.getCellSelectionBounds()`, `cell.getIsSelected()`, or `table.getSelectedCellRangesData()` for the resolved selection.
+
+An exclusion is an instruction, not a selected region, and a subtraction can split one included rectangle into four disjoint positive regions. Re-including a later rectangle applies after the exclusion because state order is significant.
+
+Source: `packages/table-core/src/features/cell-selection/cellSelectionGeometry.ts`
 
 ### [HIGH] Assuming a range is frozen to the cells it originally covered
 
@@ -159,7 +183,7 @@ Source: `docs/framework/react/guide/cell-selection.md#copying-a-selection`
 
 ### [MEDIUM] Persisting a selection and expecting drag state with it
 
-`cellSelection` is safe to persist because drag session state is deliberately non-reactive instance data, not part of the slice. Do not add an `isSelecting` field to the persisted state; a stored `true` would rehydrate into a drag that hovering extends and nothing ever ends.
+`cellSelection` is safe to persist because drag session state is deliberately non-reactive instance data, not part of the slice. Preserve array order and each `operation`; sorting or deduplicating the entries changes the resolved selection. Do not add an `isSelecting` field to the persisted state; a stored `true` would rehydrate into a drag that hovering extends and nothing ever ends.
 
 Source: `packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts`
 
@@ -177,4 +201,4 @@ Source: `packages/table-core/src/features/cell-selection/cellSelectionFeature.ts
 
 ## API Discovery
 
-Inspect `node_modules/@tanstack/table-core/dist/features/cell-selection/` for `CellSelectionRange`, `CellSelectionState`, `CellSelectionBounds`, `CellSelectionEdges`, the enablement and `is*Event` options, and the cell and table instance APIs.
+Inspect `node_modules/@tanstack/table-core/dist/features/cell-selection/` for `CellSelectionRange`, `CellSelectionRangeOperation`, `CellSelectionRangeMode`, `CellSelectionState`, `CellSelectionBounds`, `SelectCellRangeOptions`, the enablement and `is*Event` options, and the cell and table instance APIs.
