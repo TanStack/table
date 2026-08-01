@@ -10153,6 +10153,9 @@ importers:
       '@faker-js/faker':
         specifier: ^10.5.0
         version: 10.5.0
+      '@tanstack/react-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
       '@tanstack/react-store':
         specifier: ^0.11.0
         version: 0.11.0(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -11367,6 +11370,34 @@ importers:
         specifier: ^2.11.14
         version: 2.11.14(@testing-library/jest-dom@7.0.0(@testing-library/dom@10.4.1))(solid-js@1.9.14)(supports-color@8.1.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
 
+  examples/solid/spreadsheet:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@tanstack/solid-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(solid-js@1.9.14)
+      '@tanstack/solid-table':
+        specifier: workspace:*
+        version: link:../../../packages/solid-table
+      '@tanstack/solid-virtual':
+        specifier: ^3.13.36
+        version: 3.13.36(solid-js@1.9.14)
+      solid-js:
+        specifier: ^1.9.14
+        version: 1.9.14
+    devDependencies:
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.2.0
+        version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
+      vite-plugin-solid:
+        specifier: ^2.11.14
+        version: 2.11.14(@testing-library/jest-dom@7.0.0(@testing-library/dom@10.4.1))(solid-js@1.9.14)(supports-color@8.1.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+
   examples/solid/sub-components:
     dependencies:
       '@tanstack/solid-table':
@@ -12466,6 +12497,42 @@ importers:
       '@tanstack/svelte-table':
         specifier: workspace:*
         version: link:../../../packages/svelte-table
+      '@tsconfig/svelte':
+        specifier: ^5.0.8
+        version: 5.0.8
+      svelte:
+        specifier: ^5.56.8
+        version: 5.56.8(@typescript-eslint/types@8.65.0)
+      svelte-check:
+        specifier: ^4.7.4
+        version: 4.7.4(picomatch@4.0.5)(svelte@5.56.8(@typescript-eslint/types@8.65.0))(typescript@6.0.3)
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.2.0
+        version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
+
+  examples/svelte/spreadsheet:
+    devDependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@rollup/plugin-replace':
+        specifier: ^6.0.3
+        version: 6.0.3(rollup@4.62.3)
+      '@sveltejs/vite-plugin-svelte':
+        specifier: ^7.2.0
+        version: 7.2.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@tanstack/svelte-hotkeys':
+        specifier: ^0.10.0
+        version: 0.10.0(svelte@5.56.8(@typescript-eslint/types@8.65.0))
+      '@tanstack/svelte-table':
+        specifier: workspace:*
+        version: link:../../../packages/svelte-table
+      '@tanstack/svelte-virtual':
+        specifier: ^3.13.35
+        version: 3.13.35(svelte@5.56.8(@typescript-eslint/types@8.65.0))
       '@tsconfig/svelte':
         specifier: ^5.0.8
         version: 5.0.8

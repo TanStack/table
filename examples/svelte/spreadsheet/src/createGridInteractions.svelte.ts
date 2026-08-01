@@ -1,4 +1,3 @@
-import React from 'react'
 import {
   buildFillPatches,
   cellValuesEqual,
@@ -12,7 +11,7 @@ import type {
   CellSelectionDirection,
   CellSelectionRangeOperation,
   CellSelectionState,
-} from '@tanstack/react-table'
+} from '@tanstack/svelte-table'
 import type {
   CellPatch,
   CellValue,
@@ -31,42 +30,40 @@ export interface EditingCell {
 
 interface GridInteractionOptions {
   table: SpreadsheetTable
-  rows: Array<SpreadsheetRow>
-  columns: Array<SpreadsheetColumnMeta>
+  rows: () => Array<SpreadsheetRow>
+  columns: () => Array<SpreadsheetColumnMeta>
   execute: (label: string, patches: Array<CellPatch>) => void
   undo: () => void
   redo: () => void
   scrollToCell: (rowId: string, columnId: string) => void
 }
 
-export function useGridInteractions(options: GridInteractionOptions) {
-  const { table, rows, columns, execute, undo, redo, scrollToCell } = options
-  const [editing, setEditing] = React.useState<EditingCell | null>(null)
+export function createGridInteractions(options: GridInteractionOptions) {
+  const { table, execute, undo, redo, scrollToCell } = options
+  const [editing, setEditing] = createSignal<EditingCell | null>(null)
 
-  const rowById = React.useMemo(
-    () => new Map(rows.map((row) => [row.id, row])),
-    [rows],
+  const rowById = createMemo(
+    () => new Map(options.rows().map((row) => [row.id, row])),
   )
-  const columnIndexById = React.useMemo(
-    () => new Map(columns.map((column) => [column.id, column.index])),
-    [columns],
+  const columnIndexById = createMemo(
+    () => new Map(options.columns().map((column) => [column.id, column.index])),
   )
 
-  const getValue = React.useCallback(
+  const getValue = useCallback(
     (rowId: string, columnId: string): CellValue => {
-      const row = rowById.get(rowId)
-      const columnIndex = columnIndexById.get(columnId)
+      const row = rowById().get(rowId)
+      const columnIndex = columnIndexById().get(columnId)
       if (!row || columnIndex == null) return null
       return row.cells[columnIndex] ?? null
     },
     [columnIndexById, rowById],
   )
 
-  const getDisplayRows = React.useCallback(
+  const getDisplayRows = useCallback(
     () => table.getRowsInDisplayOrder(),
     [table],
   )
-  const getDisplayColumns = React.useCallback(
+  const getDisplayColumns = useCallback(
     () => [
       ...table.getStartVisibleLeafColumns(),
       ...table.getCenterVisibleLeafColumns(),
@@ -75,19 +72,19 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [table],
   )
 
-  const getActiveRange = React.useCallback(() => {
+  const getActiveRange = useCallback(() => {
     const ranges = table.atoms.cellSelection.get()
     return ranges.at(-1)
   }, [table])
 
-  const scrollToActiveCorner = React.useCallback(() => {
+  const scrollToActiveCorner = useCallback(() => {
     requestAnimationFrame(() => {
       const active = getActiveRange()
       if (active) scrollToCell(active.focusRowId, active.focusColumnId)
     })
   }, [getActiveRange, scrollToCell])
 
-  const moveSelection = React.useCallback(
+  const moveSelection = useCallback(
     (direction: CellSelectionDirection, extend = false) => {
       if (extend) table.extendCellSelection(direction)
       else table.moveCellSelection(direction)
@@ -96,7 +93,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [scrollToActiveCorner, table],
   )
 
-  const startEditing = React.useCallback(
+  const startEditing = useCallback(
     (rowId: string, columnId: string, replacement?: string) => {
       table.setFocusedCell(rowId, columnId)
       setEditing({
@@ -109,7 +106,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [getValue, scrollToCell, table],
   )
 
-  const commitCellValue = React.useCallback(
+  const commitCellValue = useCallback(
     (
       rowId: string,
       columnId: string,
@@ -139,22 +136,23 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [execute, getValue, scrollToActiveCorner, table],
   )
 
-  const commitEditing = React.useCallback(
+  const commitEditing = useCallback(
     (move?: CellSelectionDirection) => {
-      if (!editing) return
-      commitCellValue(editing.rowId, editing.columnId, editing.draft, move)
+      const current = editing()
+      if (!current) return
+      commitCellValue(current.rowId, current.columnId, current.draft, move)
     },
     [commitCellValue, editing],
   )
 
-  const cancelEditing = React.useCallback(() => setEditing(null), [])
+  const cancelEditing = useCallback(() => setEditing(null), [])
 
-  const getSelectedBounds = React.useCallback(
+  const getSelectedBounds = useCallback(
     () => table.getCellSelectionBounds(),
     [table],
   )
 
-  const patchesForBounds = React.useCallback(
+  const patchesForBounds = useCallback(
     (
       bounds: ReadonlyArray<CellSelectionBounds>,
       getAfter: (
@@ -207,22 +205,22 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [getDisplayColumns, getDisplayRows, getValue],
   )
 
-  const clearSelection = React.useCallback(() => {
+  const clearSelection = useCallback(() => {
     const patches = patchesForBounds(getSelectedBounds(), () => null)
     execute('Clear cells', patches)
   }, [execute, getSelectedBounds, patchesForBounds])
 
-  const copySelection = React.useCallback(
-    (event: React.ClipboardEvent<HTMLElement>) => {
+  const copySelection = useCallback(
+    (event: ClipboardEvent) => {
       const text = serializeTsv(table.getSelectedCellRangesData())
       if (!text) return
       event.preventDefault()
-      event.clipboardData.setData('text/plain', text)
+      event.clipboardData?.setData('text/plain', text)
     },
     [table],
   )
 
-  const copyToClipboard = React.useCallback(async () => {
+  const copyToClipboard = useCallback(async () => {
     const text = serializeTsv(table.getSelectedCellRangesData())
     if (!text) return
     try {
@@ -233,8 +231,8 @@ export function useGridInteractions(options: GridInteractionOptions) {
     }
   }, [table])
 
-  const cutSelection = React.useCallback(
-    (event: React.ClipboardEvent<HTMLElement>) => {
+  const cutSelection = useCallback(
+    (event: ClipboardEvent) => {
       copySelection(event)
       const patches = patchesForBounds(getSelectedBounds(), () => null)
       execute('Cut cells', patches)
@@ -242,13 +240,13 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [copySelection, execute, getSelectedBounds, patchesForBounds],
   )
 
-  const cutToClipboard = React.useCallback(async () => {
+  const cutToClipboard = useCallback(async () => {
     await copyToClipboard()
     const patches = patchesForBounds(getSelectedBounds(), () => null)
     execute('Cut cells', patches)
   }, [copyToClipboard, execute, getSelectedBounds, patchesForBounds])
 
-  const selectBounds = React.useCallback(
+  const selectBounds = useCallback(
     (bounds: GridBounds) => {
       const displayRows = getDisplayRows()
       const displayColumns = getDisplayColumns()
@@ -269,7 +267,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [getDisplayColumns, getDisplayRows, scrollToCell, table],
   )
 
-  const pasteText = React.useCallback(
+  const pasteText = useCallback(
     (text: string) => {
       const active = getActiveRange()
       if (!active) return
@@ -347,16 +345,16 @@ export function useGridInteractions(options: GridInteractionOptions) {
     ],
   )
 
-  const pasteSelection = React.useCallback(
-    (event: React.ClipboardEvent<HTMLElement>) => {
+  const pasteSelection = useCallback(
+    (event: ClipboardEvent) => {
       if (!getActiveRange()) return
       event.preventDefault()
-      pasteText(event.clipboardData.getData('text/plain'))
+      pasteText(event.clipboardData?.getData('text/plain') ?? '')
     },
     [getActiveRange, pasteText],
   )
 
-  const pasteFromClipboard = React.useCallback(async () => {
+  const pasteFromClipboard = useCallback(async () => {
     try {
       pasteText(await navigator.clipboard.readText())
     } catch {
@@ -364,7 +362,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
     }
   }, [pasteText])
 
-  const applyFill = React.useCallback(
+  const applyFill = useCallback(
     (source: GridBounds, preview: FillPreview) => {
       const displayRows = getDisplayRows()
       const displayColumns = getDisplayColumns()
@@ -382,7 +380,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [execute, getDisplayColumns, getDisplayRows, getValue, selectBounds],
   )
 
-  const selectColumnRange = React.useCallback(
+  const selectColumnRange = useCallback(
     (
       anchorColumnId: string,
       focusColumnId: string,
@@ -407,7 +405,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [getDisplayColumns, getDisplayRows, table],
   )
 
-  const selectRowRange = React.useCallback(
+  const selectRowRange = useCallback(
     (
       anchorRowId: string,
       focusRowId: string,
@@ -432,21 +430,21 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [getDisplayColumns, getDisplayRows, table],
   )
 
-  const startEditingActive = React.useCallback(() => {
+  const startEditingActive = useCallback(() => {
     const active = getActiveRange()
     if (active) startEditing(active.anchorRowId, active.anchorColumnId)
   }, [getActiveRange, startEditing])
 
-  const handleGridTextEntry = React.useCallback(
-    (event: React.KeyboardEvent<HTMLElement>) => {
-      if (editing) return
+  const handleGridTextEntry = useCallback(
+    (event: KeyboardEvent) => {
+      if (editing()) return
       const modifier = event.metaKey || event.ctrlKey
       const key = event.key
       if (
         key.length === 1 &&
         !modifier &&
         !event.altKey &&
-        !event.nativeEvent.isComposing
+        !event.isComposing
       ) {
         event.preventDefault()
         const active = getActiveRange()
@@ -458,8 +456,8 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [editing, getActiveRange, startEditing],
   )
 
-  const handleEditorKeyDown = React.useCallback(
-    (event: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleEditorKeyDown = useCallback(
+    (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         event.preventDefault()
         cancelEditing()
@@ -474,9 +472,10 @@ export function useGridInteractions(options: GridInteractionOptions) {
     [cancelEditing, commitEditing],
   )
 
-  const getRangeLabel = React.useCallback(() => {
+  const getRangeLabel = useCallback(() => {
     const bound = getSelectedBounds().at(-1)
     if (!bound) return ''
+    const columns = options.columns()
     const start = `${columns[bound.minColumnIndex]?.letter ?? '?'}${
       bound.minRowIndex + 1
     }`
@@ -484,9 +483,9 @@ export function useGridInteractions(options: GridInteractionOptions) {
       bound.maxRowIndex + 1
     }`
     return start === end ? start : `${start}:${end}`
-  }, [columns, getSelectedBounds])
+  }, [options.columns, getSelectedBounds])
 
-  const getSelectionSummary = React.useCallback(() => {
+  const getSelectionSummary = useCallback(() => {
     const count = table.getSelectedCellCount()
     // Materializing the values for a whole 10k × 250 stress grid would turn a
     // cheap selection into millions of allocations just to populate the
@@ -516,7 +515,7 @@ export function useGridInteractions(options: GridInteractionOptions) {
 
   return {
     editing,
-    setEditingDraft: React.useCallback(
+    setEditingDraft: useCallback(
       (draft: string) =>
         setEditing((current) => (current ? { ...current, draft } : current)),
       [],
@@ -550,4 +549,27 @@ export function useGridInteractions(options: GridInteractionOptions) {
   }
 }
 
-export type GridInteractions = ReturnType<typeof useGridInteractions>
+export type GridInteractions = ReturnType<typeof createGridInteractions>
+
+function createSignal<T>(initialValue: T) {
+  let value = $state(initialValue)
+  return [
+    () => value,
+    (next: T | ((current: T) => T)) => {
+      value =
+        typeof next === 'function' ? (next as (current: T) => T)(value) : next
+      return value
+    },
+  ] as const
+}
+
+function createMemo<T>(read: () => T) {
+  return read
+}
+
+function useCallback<TArgs extends Array<unknown>, TResult>(
+  callback: (...args: TArgs) => TResult,
+  _dependencies?: Array<unknown>,
+): (...args: TArgs) => TResult {
+  return callback
+}

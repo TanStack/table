@@ -1509,6 +1509,7 @@
           "label": "solid",
           "children": [
             { "label": "Composable Tables (createTableHook)", "to": "framework/solid/examples/composable-tables" },
+            { "label": "Experimental Spreadsheet", "to": "framework/solid/examples/spreadsheet" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/solid/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/solid/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/solid/examples/virtualized-infinite-scrolling" },
@@ -1521,6 +1522,7 @@
           "label": "svelte",
           "children": [
             { "label": "Composable Tables (createTableHook)", "to": "framework/svelte/examples/composable-tables" },
+            { "label": "Experimental Spreadsheet", "to": "framework/svelte/examples/spreadsheet" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/svelte/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/svelte/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/svelte/examples/virtualized-infinite-scrolling" },
