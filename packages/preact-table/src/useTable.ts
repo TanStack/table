@@ -6,7 +6,7 @@ import {
   table_setOptions,
 } from '@tanstack/table-core/static-functions'
 import { shallow, useSelector } from '@tanstack/preact-store'
-import { preactReactivity } from './reactivity'
+import { renderReactivity } from './renderReactivity'
 import { FlexRender } from './FlexRender'
 import { Subscribe } from './Subscribe'
 import type {
@@ -132,7 +132,7 @@ export function useTable<
     const tableInstance = constructTable<TFeatures, TData>({
       ...tableOptions,
       features: {
-        coreReactivityFeature: preactReactivity(),
+        coreReactivityFeature: renderReactivity(),
         ...tableOptions.features,
       },
     }) as unknown as PreactTable<TFeatures, TData, TSelected>

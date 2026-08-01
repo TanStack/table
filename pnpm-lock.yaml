@@ -6779,6 +6779,37 @@ importers:
         specifier: ^8.2.0
         version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
 
+  examples/preact/basic-use-signal-table:
+    dependencies:
+      '@faker-js/faker':
+        specifier: ^10.5.0
+        version: 10.5.0
+      '@preact/signals':
+        specifier: ^2.10.0
+        version: 2.10.0(preact@10.29.7)
+      '@tanstack/preact-devtools':
+        specifier: ^0.10.9
+        version: 0.10.9(csstype@3.2.3)(preact@10.29.7)(solid-js@1.9.14)
+      '@tanstack/preact-table':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table
+      '@tanstack/preact-table-devtools':
+        specifier: workspace:*
+        version: link:../../../packages/preact-table-devtools
+      preact:
+        specifier: ^10.29.7
+        version: 10.29.7(preact-render-to-string@6.7.0)
+    devDependencies:
+      '@preact/preset-vite':
+        specifier: ^2.10.6
+        version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.7)(rollup@4.62.3)(supports-color@8.1.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      typescript:
+        specifier: 6.0.3
+        version: 6.0.3
+      vite:
+        specifier: ^8.2.0
+        version: 8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0)
+
   examples/preact/basic-use-table:
     dependencies:
       '@tanstack/preact-devtools':
@@ -14191,6 +14222,9 @@ importers:
       '@preact/preset-vite':
         specifier: ^2.10.6
         version: 2.10.6(@babel/core@7.29.7(supports-color@8.1.1))(preact@10.29.7)(rollup@4.62.3)(supports-color@8.1.1)(vite@8.2.0(@types/node@26.1.2)(esbuild@0.28.1)(jiti@2.7.0)(less@4.6.7)(sass@1.101.0)(sugarss@5.0.1(postcss@8.5.25))(terser@5.49.0)(yaml@2.9.0))
+      '@preact/signals':
+        specifier: ^2.10.0
+        version: 2.10.0(preact@10.29.7)
       '@testing-library/preact':
         specifier: ^3.2.4
         version: 3.2.4(preact@10.29.7)
@@ -18086,6 +18120,14 @@ packages:
     peerDependencies:
       '@babel/core': 7.x
       vite: 2.x || 3.x || 4.x || 5.x || 6.x || 7.x || 8.x
+
+  '@preact/signals-core@1.14.4':
+    resolution: {integrity: sha512-HNB6HYeYKhQbJ1aKl+YRjrS4+QWHLKX6qKoUsfS/m0vqzsVaEBiZiaKbG/e+NKk2ch5ALQr/ihWaMHxiCuuWHA==}
+
+  '@preact/signals@2.10.0':
+    resolution: {integrity: sha512-avH1zQLZR6c0DmH3pT/sn4RIzsNDXAue+MEoyS5RIvApKALSU8m05KyBOL8ua21gxeDYp1DclTMcFd+N1zaL1Q==}
+    peerDependencies:
+      preact: '>= 10.25.0 || >=11.0.0-0'
 
   '@prefresh/babel-plugin@0.5.3':
     resolution: {integrity: sha512-57LX2SHs4BX2s1IwCjNzTE2OJeEepRCNf1VTEpbNcUyHfMO68eeOWGDIt4ob9aYlW6PEWZ1SuwNikuoIXANDtQ==}
@@ -31802,6 +31844,13 @@ snapshots:
       - preact
       - rollup
       - supports-color
+
+  '@preact/signals-core@1.14.4': {}
+
+  '@preact/signals@2.10.0(preact@10.29.7)':
+    dependencies:
+      '@preact/signals-core': 1.14.4
+      preact: 10.29.7(preact-render-to-string@6.7.0)
 
   '@prefresh/babel-plugin@0.5.3': {}
 

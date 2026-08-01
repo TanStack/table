@@ -14,6 +14,6 @@ export type PreactTableReactivityBindings = RenderPhaseReactivityBindings
  * `@tanstack/preact-store` so all atoms share one store instance with
  * user-provided external atoms.
  */
-export function preactReactivity(): PreactTableReactivityBindings {
+export function renderReactivity(): PreactTableReactivityBindings {
   return renderPhaseReactivity({ createAtom, batch })
 }

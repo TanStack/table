@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { preactReactivity } from '../../src/reactivity'
+import { renderReactivity } from '../../src/renderReactivity'
 
-describe('preactReactivity', () => {
+describe('renderReactivity', () => {
   test('creates writable and readonly atoms from TanStack Store', () => {
-    const reactivity = preactReactivity()
+    const reactivity = renderReactivity()
     const count = reactivity.createWritableAtom(1, { debugName: 'count' })
     const doubled = reactivity.createReadonlyAtom(() => count.get() * 2, {
       debugName: 'doubled',

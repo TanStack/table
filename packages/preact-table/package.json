@@ -27,6 +27,7 @@
     ".": "./dist/index.js",
     "./experimental-worker-plugin": "./dist/experimental-worker-plugin.js",
     "./flex-render": "./dist/flex-render.js",
+    "./signals": "./dist/signals.js",
     "./static-functions": "./dist/static-functions.js",
     "./package.json": "./package.json"
   },
@@ -53,11 +54,18 @@
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.10.6",
+    "@preact/signals": "^2.10.0",
     "@testing-library/preact": "^3.2.4",
     "preact": "^10.29.7",
     "preact-render-to-string": "^6.7.0"
   },
   "peerDependencies": {
+    "@preact/signals": ">=1.3",
     "preact": ">=10"
+  },
+  "peerDependenciesMeta": {
+    "@preact/signals": {
+      "optional": true
+    }
   }
 }
