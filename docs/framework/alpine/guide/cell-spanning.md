@@ -15,6 +15,7 @@ Here's how you set up your table to use cell spanning features. Adding the cell 
 ```ts
 import Alpine from 'alpinejs'
 import {
+  FlexRender,
   createTable,
   tableFeatures,
   cellSpanningFeature,
@@ -33,7 +34,7 @@ Alpine.data('table', () => {
     },
   })
 
-  return { table }
+  return { table, FlexRender }
 })
 ```
 

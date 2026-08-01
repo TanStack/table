@@ -386,3 +386,87 @@ describe('spanning absent or disabled leaves selection untouched', () => {
     ])
   })
 })
+
+describe('column spans map into merge bounds', () => {
+  it('emits a horizontal-only span as a one-row merge and expands to it', () => {
+    // `team` has no `spanRows`, so this merge only exists in the colSpans half
+    // of the span index and must survive the horizontal-only pass.
+    const table = makeTable({
+      columns: [
+        { id: 'region', accessorKey: 'region', spanRows: true },
+        {
+          id: 'team',
+          accessorKey: 'team',
+          spanColumns: ({ row }: { row: { original: TestRow } }) =>
+            row.original.id === 'South-1' ? 2 : 1,
+        },
+        { id: 'amount', accessorKey: 'amount' },
+      ] as Array<ColumnDef<typeof features, TestRow>>,
+    })
+
+    expect(table.getCellSelectionMergeBounds()).toEqual([
+      { minRowIndex: 0, maxRowIndex: 2, minColumnIndex: 0, maxColumnIndex: 0 },
+      { minRowIndex: 3, maxRowIndex: 5, minColumnIndex: 0, maxColumnIndex: 0 },
+      { minRowIndex: 6, maxRowIndex: 8, minColumnIndex: 0, maxColumnIndex: 0 },
+      { minRowIndex: 4, maxRowIndex: 4, minColumnIndex: 1, maxColumnIndex: 2 },
+    ])
+
+    // Selecting the covered half of the merge expands to its full width and
+    // counts the merge once.
+    table.setCellSelection([
+      {
+        anchorRowId: 'South-1',
+        anchorColumnId: 'amount',
+        focusRowId: 'South-1',
+        focusColumnId: 'amount',
+      },
+    ])
+
+    expect(table.getCellSelectionBounds()).toEqual([
+      { minRowIndex: 4, maxRowIndex: 4, minColumnIndex: 1, maxColumnIndex: 2 },
+    ])
+    expect(table.getSelectedCellCount()).toBe(1)
+  })
+
+  it('emits a row-and-column rectangle as one merge, not one per row', () => {
+    // North rows carry both a vertical run and a colSpan of 2, forming a 3x2
+    // rectangle. Its vertically covered rows keep their colSpan in the index,
+    // so the horizontal-only pass must skip them: emitting them too would
+    // stack duplicate one-row merges inside the rectangle.
+    const table = makeTable({
+      columns: [
+        {
+          id: 'region',
+          accessorKey: 'region',
+          spanRows: true,
+          spanColumns: ({ row }: { row: { original: TestRow } }) =>
+            row.original.region === 'North' ? 2 : 1,
+        },
+        { id: 'team', accessorKey: 'team' },
+        { id: 'amount', accessorKey: 'amount' },
+      ] as Array<ColumnDef<typeof features, TestRow>>,
+    })
+
+    expect(table.getCellSelectionMergeBounds()).toEqual([
+      { minRowIndex: 0, maxRowIndex: 2, minColumnIndex: 0, maxColumnIndex: 1 },
+      { minRowIndex: 3, maxRowIndex: 5, minColumnIndex: 0, maxColumnIndex: 0 },
+      { minRowIndex: 6, maxRowIndex: 8, minColumnIndex: 0, maxColumnIndex: 0 },
+    ])
+
+    // A single covered lattice cell drags in the whole rectangle.
+    table.setCellSelection([
+      {
+        anchorRowId: 'North-1',
+        anchorColumnId: 'team',
+        focusRowId: 'North-1',
+        focusColumnId: 'team',
+      },
+    ])
+
+    expect(table.getCellSelectionBounds()).toEqual([
+      { minRowIndex: 0, maxRowIndex: 2, minColumnIndex: 0, maxColumnIndex: 1 },
+    ])
+    expect(table.getSelectedCellCount()).toBe(1)
+    expect(getCell(table, 'North-2', 'team').getIsSelected()).toBe(true)
+  })
+})

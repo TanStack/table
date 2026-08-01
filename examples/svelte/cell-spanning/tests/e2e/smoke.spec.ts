@@ -459,6 +459,13 @@ test('renders one cell per column when spanning is turned off', async ({
 
   await page.getByLabel('Row spanning', { exact: true }).uncheck()
 
+  // The uncheck resolves when the DOM event is dispatched, not when the
+  // framework has re-rendered, so poll until the spans are gone before
+  // snapshotting the grid.
+  await expect
+    .poll(async () => (await readSpanReport(spanTable(page))).rowSpanningCells)
+    .toBe(0)
+
   const columnCount = await visibleLeafCount(page)
   const spans = await readSpanReport(spanTable(page))
   const reference = await readSpanReport(referenceTable(page))
