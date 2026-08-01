@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/alpine-table'
   framework: alpine
-  library_version: '9.0.0-beta.65'
+  library_version: '9.0.0-beta.69'
 requires:
   - '@tanstack/table-core#core'
   - getting-started
