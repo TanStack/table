@@ -16,7 +16,12 @@ import {
   sortFns,
 } from '../../../src'
 import { testFeatures } from '../../fixtures/features'
-import type { ColumnDef, ExpandedState, TableOptions } from '../../../src'
+import type {
+  ColumnDef,
+  ExpandedState,
+  SortingState,
+  TableOptions,
+} from '../../../src'
 
 /**
  * End-to-end tests for the autoReset wiring.
@@ -73,9 +78,11 @@ function makeTable(
   options?: Partial<TableOptions<typeof features, Person>> & {
     initialExpanded?: ExpandedState
     initialPageIndex?: number
+    initialSorting?: SortingState
   },
 ) {
-  const { initialExpanded, initialPageIndex, ...rest } = options ?? {}
+  const { initialExpanded, initialPageIndex, initialSorting, ...rest } =
+    options ?? {}
   return constructTable<typeof features, Person>({
     features,
     columns,
@@ -84,6 +91,7 @@ function makeTable(
     initialState: {
       pagination: { pageIndex: initialPageIndex ?? 0, pageSize: 2 },
       ...(initialExpanded ? { expanded: initialExpanded } : {}),
+      ...(initialSorting ? { sorting: initialSorting } : {}),
     },
     ...rest,
   })
@@ -252,6 +260,117 @@ describe('autoResetPageIndex end-to-end wiring', () => {
       await triggerReset(table)
       expect(table.atoms.pagination.get().pageIndex).toBe(2)
     })
+  })
+})
+
+describe('autoResetSorting end-to-end wiring', () => {
+  const ageSorting: SortingState = [{ id: 'age', desc: true }]
+  const nameSorting: SortingState = [{ id: 'name', desc: false }]
+
+  async function replaceData(table: ReturnType<typeof makeTable>) {
+    table.setOptions((old) => ({ ...old, data: makeData() }))
+    table.getRowModel()
+    await flushMicrotasks()
+  }
+
+  it('should preserve sorting by default when data changes', async () => {
+    const table = makeTable()
+    await primeTable(table)
+
+    expect(table.options.autoResetSorting).toBe(false)
+
+    table.setSorting(ageSorting)
+    await replaceData(table)
+
+    expect(table.atoms.sorting.get()).toEqual(ageSorting)
+  })
+
+  it('should reset sorting when data changes and autoResetSorting is true', async () => {
+    const table = makeTable({ autoResetSorting: true })
+    await primeTable(table)
+
+    table.setSorting(ageSorting)
+    await replaceData(table)
+
+    expect(table.atoms.sorting.get()).toEqual([])
+  })
+
+  it('should reset sorting to initialState.sorting', async () => {
+    const table = makeTable({
+      autoResetSorting: true,
+      initialSorting: ageSorting,
+    })
+    await primeTable(table)
+
+    expect(table.atoms.sorting.get()).toEqual(ageSorting)
+
+    table.setSorting(nameSorting)
+    await replaceData(table)
+
+    expect(table.atoms.sorting.get()).toEqual(ageSorting)
+  })
+
+  it('should not reset sorting when the sorting state itself changes', async () => {
+    const table = makeTable({ autoResetSorting: true })
+    await primeTable(table)
+
+    table.setSorting(ageSorting)
+    table.getRowModel()
+    await flushMicrotasks()
+
+    expect(table.atoms.sorting.get()).toEqual(ageSorting)
+  })
+
+  it('should not reset sorting when filters or grouping change', async () => {
+    const table = makeTable({ autoResetSorting: true })
+    await primeTable(table)
+
+    table.setSorting(ageSorting)
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+    expect(table.atoms.sorting.get()).toEqual(ageSorting)
+
+    table.setGrouping(['group'])
+    table.getRowModel()
+    await flushMicrotasks()
+    expect(table.atoms.sorting.get()).toEqual(ageSorting)
+  })
+
+  it('should allow autoResetAll to enable the reset', async () => {
+    const table = makeTable({ autoResetAll: true })
+    await primeTable(table)
+
+    table.setSorting(ageSorting)
+    await replaceData(table)
+
+    expect(table.atoms.sorting.get()).toEqual([])
+  })
+
+  it('should allow autoResetAll to disable an explicit sorting reset', async () => {
+    const table = makeTable({
+      autoResetAll: false,
+      autoResetSorting: true,
+    })
+    await primeTable(table)
+
+    table.setSorting(ageSorting)
+    await replaceData(table)
+
+    expect(table.atoms.sorting.get()).toEqual(ageSorting)
+  })
+
+  it('should honor an explicit reset with manual sorting', async () => {
+    const table = makeTable({
+      autoResetSorting: true,
+      manualSorting: true,
+    })
+    await primeTable(table)
+
+    table.setSorting(ageSorting)
+    await replaceData(table)
+
+    expect(table.atoms.sorting.get()).toEqual([])
   })
 })
 
