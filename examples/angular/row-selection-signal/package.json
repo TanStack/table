@@ -23,8 +23,8 @@
     "@angular/platform-browser-dynamic": "^22.1.0",
     "@faker-js/faker": "^10.5.0",
     "@tanstack/angular-devtools": "^0.0.8",
-    "@tanstack/angular-table": "^9.0.0-beta.75",
-    "@tanstack/angular-table-devtools": "^9.0.0-beta.75",
+    "@tanstack/angular-table": "^9.0.0-beta.76",
+    "@tanstack/angular-table-devtools": "^9.0.0-beta.76",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
   },
