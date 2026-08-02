@@ -8,6 +8,7 @@ import { TanStackRouterVite } from '@tanstack/router-vite-plugin'
 export default defineConfig({
   server: {
     port: 7777,
+    allowedHosts: true,
   },
   plugins: [
     rollupReplace({

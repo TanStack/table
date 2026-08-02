@@ -94,7 +94,8 @@ const getIsExpanded = (row: Row<typeof features, Person>): boolean =>
   row.getIsExpanded()
 const getDepth = (row: Row<typeof features, Person>): number => row.depth
 const getIsSelected = (row: Row<typeof features, Person>): boolean =>
-  row.getIsSelected()
+  row.getIsSelected() ||
+  (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
 const getIsSomeSelected = (row: Row<typeof features, Person>): boolean =>
   row.getIsSomeSelected()
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
