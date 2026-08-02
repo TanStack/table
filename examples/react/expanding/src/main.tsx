@@ -146,6 +146,7 @@ function App() {
       columns,
       data,
       getSubRows: (row) => row.subRows, // tell the table where nested rows live
+      // enableSubRowSelection: false,
       // initialState: { expanded: { '0': true } }, // expand rows on first render
       // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
       // state: { expanded }, // classic controlled state; pair with onExpandedChange

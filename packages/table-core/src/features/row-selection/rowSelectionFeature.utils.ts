@@ -88,7 +88,10 @@ export function table_resetRowSelection<
  * Selects or deselects every selectable row before grouping.
  *
  * Omitting `value` toggles based on `table_getIsAllRowsSelected(table)`.
- * Deselecting removes matching ids from the existing selection map.
+ * Selecting skips sub-rows whose ancestors block descent via
+ * `enableSubRowSelection`. Deselecting removes matching selectable ids from the
+ * existing selection map; rows that cannot be selected keep their selection
+ * unless `opts.deselectAll` is `true`.
  *
  * @example
  * ```ts
@@ -126,14 +129,17 @@ export function table_toggleAllRowsSelected<
     // We don't use `mutateRowIsSelected` here for performance reasons.
     // All of the rows are flat already, so it wouldn't be worth it
     if (value) {
+      const subtreeCache = new Map<string, boolean>()
       preGroupedFlatRows.forEach((row) => {
-        if (row_getCanSelect(row)) {
+        if (isRowSelectableInSelectAll(row, subtreeCache)) {
           rowSelection[row.id] = true
         }
       })
     } else {
       preGroupedFlatRows.forEach((row) => {
-        delete rowSelection[row.id]
+        if (row_getCanSelect(row)) {
+          delete rowSelection[row.id]
+        }
       })
     }
 
@@ -183,7 +189,14 @@ export function table_toggleAllPageRowsSelected<
     )
 
     table.getRowModel().rows.forEach((row) => {
-      mutateRowIsSelected(rowSelection, row.id, resolvedValue, true, table)
+      mutateRowIsSelected(
+        rowSelection,
+        row.id,
+        resolvedValue,
+        true,
+        table,
+        true,
+      )
     })
 
     return rowSelection
@@ -331,7 +344,8 @@ export function table_getSelectedRowIds<
  * Checks whether every selectable filtered row is selected.
  *
  * The result is false when there are no filtered rows or when selection state is
- * empty.
+ * empty. Sub-rows whose ancestors block descent via `enableSubRowSelection` are
+ * ignored, matching the rows that `table_toggleAllRowsSelected` selects.
  *
  * @example
  * ```ts
@@ -350,9 +364,14 @@ export function table_getIsAllRowsSelected<
   )
 
   if (isAllRowsSelected) {
+    // The cheap map lookup runs first so already-selected rows skip the
+    // capability checks entirely
+    const subtreeCache = new Map<string, boolean>()
     if (
       preGroupedFlatRows.some(
-        (row) => row_getCanSelect(row) && !isRowSelected(row, rowSelection),
+        (row) =>
+          !isRowSelected(row, rowSelection) &&
+          isRowSelectableInSelectAll(row, subtreeCache),
       )
     ) {
       isAllRowsSelected = false
@@ -365,7 +384,8 @@ export function table_getIsAllRowsSelected<
 /**
  * Checks whether every selectable row on the current page is selected.
  *
- * Non-selectable rows are ignored for this calculation.
+ * Non-selectable rows are ignored for this calculation, as are sub-rows whose
+ * ancestors block descent via `enableSubRowSelection`.
  *
  * @example
  * ```ts
@@ -376,21 +396,29 @@ export function table_getIsAllPageRowsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
-  const paginationFlatRows = table
-    .getPaginatedRowModel()
-    .flatRows.filter((row) => row_getCanSelect(row))
+  const paginationFlatRows = table.getPaginatedRowModel().flatRows
   const rowSelection = table.atoms.rowSelection?.get() ?? {}
+  const subtreeCache = new Map<string, boolean>()
 
-  let isAllPageRowsSelected = !!paginationFlatRows.length
-
-  if (
-    isAllPageRowsSelected &&
-    paginationFlatRows.some((row) => !isRowSelected(row, rowSelection))
-  ) {
-    isAllPageRowsSelected = false
+  // Single pass, cheap map lookup first: an unselected row only matters if
+  // select-all could have reached it, and once one selected eligible row is
+  // seen the remaining selected rows skip the capability checks entirely.
+  let sawSelectableRow = false
+  for (let i = 0; i < paginationFlatRows.length; i++) {
+    const row = paginationFlatRows[i]!
+    if (!isRowSelected(row, rowSelection)) {
+      if (isRowSelectableInSelectAll(row, subtreeCache)) {
+        return false
+      }
+    } else if (
+      !sawSelectableRow &&
+      isRowSelectableInSelectAll(row, subtreeCache)
+    ) {
+      sawSelectableRow = true
+    }
   }
 
-  return isAllPageRowsSelected
+  return sawSelectableRow
 }
 
 /**
@@ -488,7 +516,8 @@ export function table_getToggleAllPageRowsSelectedHandler<
  *
  * Omitting `value` toggles the row. Child rows are selected recursively unless
  * `opts.selectChildren` is `false`, sub-row selection is disabled, or the row
- * only supports single selection.
+ * only supports single selection. Pass `deselectParents: true` to also remove
+ * ancestor row ids from the selection when this row is deselected.
  *
  * @example
  * ```ts
@@ -496,7 +525,7 @@ export function table_getToggleAllPageRowsSelectedHandler<
  * row_toggleSelected(row, true)
  * row_toggleSelected(row, false)
  * row_toggleSelected(row, true, { selectChildren: false })
- * row_toggleSelected(row, false, { selectChildren: false })
+ * row_toggleSelected(row, false, { deselectParents: true })
  * ```
  */
 export function row_toggleSelected<
@@ -517,6 +546,10 @@ export function row_toggleSelected<
       (opts?.selectChildren ?? true) && row_getCanMultiSelect(row),
       row.table,
     )
+
+    if (!value && opts?.deselectParents) {
+      pruneAncestorRowIds(rowSelection, row)
+    }
 
     return rowSelection
   })
@@ -650,7 +683,8 @@ export function row_getCanMultiSelect<
  * `event.target.checked`. Shift events select or deselect the inclusive range
  * from the most recent selectable row handled by this table. Pass
  * `selectChildren: false` to limit changes to rows explicitly present in the
- * display-order interval.
+ * display-order interval, and `deselectParents: true` to remove ancestor row
+ * ids from the selection when rows are deselected.
  *
  * @example
  * ```ts
@@ -680,10 +714,7 @@ export function row_getToggleSelectedHandler<
       row_getCanMultiSelect(row) &&
       (table.options.isRowRangeSelectionEvent?.(e) ?? false)
 
-    if (
-      !canSelectRange ||
-      !selectRowRange(row, anchorId, checked, opts?.selectChildren ?? true)
-    ) {
+    if (!canSelectRange || !selectRowRange(row, anchorId, checked, opts)) {
       row_toggleSelected(row, checked, opts)
     }
 
@@ -707,8 +738,9 @@ function selectRowRange<TFeatures extends TableFeatures, TData extends RowData>(
   row: Row<TFeatures, TData>,
   anchorId: string,
   value: boolean,
-  includeChildren: boolean,
+  opts?: ToggleSelectedOptions,
 ): boolean {
+  const includeChildren = opts?.selectChildren ?? true
   const table = row.table
   const rows = table.getRowsInDisplayOrder()
   const anchorRow =
@@ -755,6 +787,9 @@ function selectRowRange<TFeatures extends TableFeatures, TData extends RowData>(
         includeChildren,
         table,
       )
+      if (!value && opts?.deselectParents) {
+        pruneAncestorRowIds(rowSelection, rangeRow)
+      }
     }
 
     return rowSelection
@@ -763,7 +798,7 @@ function selectRowRange<TFeatures extends TableFeatures, TData extends RowData>(
   return true
 }
 
-const mutateRowIsSelected = <
+function mutateRowIsSelected<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(
@@ -772,7 +807,8 @@ const mutateRowIsSelected = <
   value: boolean,
   includeChildren: boolean,
   table: Table_Internal<TFeatures, TData>,
-): void => {
+  respectCanSelectOnDeselect?: boolean,
+): void {
   const row = table.getRow(rowId, true)
 
   if (value) {
@@ -782,14 +818,84 @@ const mutateRowIsSelected = <
     if (row_getCanSelect(row)) {
       rowSelection[rowId] = true
     }
-  } else {
+  } else if (!respectCanSelectOnDeselect || row_getCanSelect(row)) {
     delete rowSelection[rowId]
   }
 
   if (includeChildren && row.subRows.length && row_getCanSelectSubRows(row)) {
     row.subRows.forEach((r) =>
-      mutateRowIsSelected(rowSelection, r.id, value, includeChildren, table),
+      mutateRowIsSelected(
+        rowSelection,
+        r.id,
+        value,
+        includeChildren,
+        table,
+        respectCanSelectOnDeselect,
+      ),
     )
+  }
+}
+
+/**
+ * Returns whether a select-all cascade can reach this row: the row itself is
+ * selectable and no ancestor blocks descent via `enableSubRowSelection`.
+ *
+ * `subtreeCache` memoizes the per-ancestor verdict for one select-all pass, so
+ * ancestor chains shared by sibling rows are only walked (and the
+ * `enableSubRowSelection` predicate only invoked) once per unique ancestor.
+ */
+function isRowSelectableInSelectAll<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(row: Row<TFeatures, TData>, subtreeCache: Map<string, boolean>): boolean {
+  if (!row_getCanSelect(row)) return false
+
+  const table = row.table
+  // Fast path: the default `true` means every selectable row is reachable
+  if (table.options.enableSubRowSelection === true) return true
+
+  const parentId = row.parentId
+  if (parentId === undefined) return true
+
+  const cached = subtreeCache.get(parentId)
+  if (cached !== undefined) return cached
+
+  // Walk uncached ancestors upward, then record the shared verdict for every
+  // id visited. A blocked ancestor blocks its whole subtree.
+  const rowsById = table.getCoreRowModel().rowsById
+  const visited: Array<string> = []
+  let selectable = true
+  let currentId: string | undefined = parentId
+  while (currentId !== undefined) {
+    const known = subtreeCache.get(currentId)
+    if (known !== undefined) {
+      selectable = known
+      break
+    }
+    visited.push(currentId)
+    const parent: Row<TFeatures, TData> =
+      rowsById[currentId] ?? table.getRow(currentId, true)
+    if (!row_getCanSelectSubRows(parent)) {
+      selectable = false
+      break
+    }
+    currentId = parent.parentId
+  }
+  visited.forEach((id) => subtreeCache.set(id, selectable))
+  return selectable
+}
+
+function pruneAncestorRowIds<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(rowSelection: RowSelectionState, row: Row<TFeatures, TData>): void {
+  // Deselecting a descendant always invalidates "all children selected", so
+  // every ancestor id can be deleted unconditionally.
+  const rowsById = row.table.getCoreRowModel().rowsById
+  let parentId = row.parentId
+  while (parentId !== undefined) {
+    delete rowSelection[parentId]
+    parentId = (rowsById[parentId] ?? row.table.getRow(parentId, true)).parentId
   }
 }
 

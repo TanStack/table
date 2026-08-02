@@ -1,14 +1,14 @@
 # TanStack Table remaining open-issue audit
 
-Generated 2026-07-30 and updated 2026-08-01 to remove closed entries. This audit now covers the **96** issues still open in [`TanStack/table`](https://github.com/TanStack/table/issues), cross-referenced against the two 2026-07-26 audits (`issues-gpt.md`, `issues-claude.md`) and re-verified against current v9 `alpha` source (post module-level-fns perf refactor; `9.0.0-beta.61` era, which includes PR [#6458](https://github.com/TanStack/table/pull/6458) merged 2026-07-29).
+Generated 2026-07-30, updated 2026-08-01 and again 2026-08-02 to remove closed entries. This audit now covers the **94** issues still open in [`TanStack/table`](https://github.com/TanStack/table/issues), cross-referenced against the two 2026-07-26 audits (`issues-gpt.md`, `issues-claude.md`) and re-verified against current v9 `alpha` source (post module-level-fns perf refactor; `9.0.0-beta.61` era, which includes PR [#6458](https://github.com/TanStack/table/pull/6458) merged 2026-07-29).
 
 ## Result
 
 - **52 issues can close now without a new PR.**
-- **44 issues should remain open:** 8 verified & urgent, 34 valid, 2 needing investigation.
-- **129 of the 225 issues from the July 26 audits are now closed; zero new issues have been filed since.** Every currently open issue was covered by both prior audits.
+- **42 issues should remain open:** 6 verified & urgent, 34 valid, 2 needing investigation.
+- **131 of the 225 issues from the July 26 audits are now closed; zero new issues have been filed since.** Every currently open issue was covered by both prior audits.
 - Where the two audits disagreed (27 issues), each was re-adjudicated against current source: 9 resolved to close, 18 to keep open.
-- **13 already-open PRs target keep-open issues** (see table below); landing or porting them to `alpha` would clear roughly a third of the keep-open list.
+- **9 already-open PRs target keep-open issues** (see table below); landing or porting them to `beta` would clear a chunk of the keep-open list.
 
 ## Audit baseline
 
@@ -25,10 +25,10 @@ Generated 2026-07-30 and updated 2026-08-01 to remove closed entries. This audit
 | Junk Issue                  |     10 | Close as support-only, malformed, user error, or unreproducible-v8-era. |
 | Couldn't Reproduce          |      0 | Close unless a current minimal reproduction is supplied.                |
 | Duplicate                   |      2 | Close as duplicates of canonical #6049.                                 |
-| Verified & Urgent           |      8 | Keep open and prioritize.                                               |
+| Verified & Urgent           |      6 | Keep open and prioritize.                                               |
 | Valid                       |     34 | Keep open; many have fix PRs waiting to land or port.                   |
 | Maybe & Needs Investigation |      2 | Keep only for additional triage.                                        |
-| **Total**                   | **96** | **52 close candidates; 44 keep open.**                                  |
+| **Total**                   | **94** | **52 close candidates; 42 keep open.**                                  |
 
 ## Fix-first priority list
 
@@ -43,20 +43,17 @@ Ranked by user impact. Fixing the top four clusters closes or unblocks ~20 issue
 
 ## Open PRs to land or port
 
-| PR                                                                                                          | Fixes                                                 | Status                                            |
-| ----------------------------------------------------------------------------------------------------------- | ----------------------------------------------------- | ------------------------------------------------- |
-| [#6313](https://github.com/TanStack/table/pull/6313)                                                        | #6007 (exclude non-numeric from `inNumberRange`)      | Open                                              |
-| [#6361](https://github.com/TanStack/table/pull/6361)                                                        | #5987 (`maxLeafRowFilterDepth` flatRows)              | Open                                              |
-| [#6443](https://github.com/TanStack/table/pull/6443)                                                        | #5801 (reset expansion on data change)                | Open (base `beta`)                                |
-| [#5790](https://github.com/TanStack/table/pull/5790) / [#6177](https://github.com/TanStack/table/pull/6177) | #5173 (`isSubRowSelected` with unselectable children) | Open                                              |
-| [#6075](https://github.com/TanStack/table/pull/6075)                                                        | #6074 (`columnFiltersMeta` wipe)                      | Open, targets v8 `main` — needs alpha port        |
-| [#5823](https://github.com/TanStack/table/pull/5823)                                                        | #5822 (pinned-row lookup crash)                       | Open since 2024-12, targets v8 — needs alpha port |
-| [#6186](https://github.com/TanStack/table/pull/6186)                                                        | #6077 (Vue empty-string hydration)                    | Open, targets v8 — needs alpha port               |
-| [#6116](https://github.com/TanStack/table/pull/6116)                                                        | #6115 (expand-all writes non-expandable ids)          | Open, targets v8 — needs alpha port               |
-| [#6184](https://github.com/TanStack/table/pull/6184)                                                        | #6136 (no-op toggleExpanded rerender)                 | Open, targets v8 — needs alpha port               |
-| [#6176](https://github.com/TanStack/table/pull/6176)                                                        | #6175 (example `server.allowedHosts`)                 | Open                                              |
-| [#5031](https://github.com/TanStack/table/pull/5031)                                                        | #4703-adjacent pageIndex clamp                        | Open, targets v8                                  |
-| [#5582](https://github.com/TanStack/table/pull/5582)                                                        | #4485/#5363 (`_valuesCache` invalidation approach)    | Open, targets v8 — port concept to alpha          |
+| PR                                                   | Fixes                                              | Status                                    |
+| ---------------------------------------------------- | -------------------------------------------------- | ----------------------------------------- |
+| [#6313](https://github.com/TanStack/table/pull/6313) | #6007 (exclude non-numeric from `inNumberRange`)   | Open                                      |
+| [#6361](https://github.com/TanStack/table/pull/6361) | #5987 (`maxLeafRowFilterDepth` flatRows)           | Open                                      |
+| [#6443](https://github.com/TanStack/table/pull/6443) | #5801 (reset expansion on data change)             | Open (base `beta`)                        |
+| [#6075](https://github.com/TanStack/table/pull/6075) | #6074 (`columnFiltersMeta` wipe)                   | Open, targets v8 `main` — needs beta port |
+| [#6186](https://github.com/TanStack/table/pull/6186) | #6077 (Vue empty-string hydration)                 | Open, targets v8 — needs beta port        |
+| [#6116](https://github.com/TanStack/table/pull/6116) | #6115 (expand-all writes non-expandable ids)       | Open, targets v8 — needs beta port        |
+| [#6184](https://github.com/TanStack/table/pull/6184) | #6136 (no-op toggleExpanded rerender)              | Open, targets v8 — needs beta port        |
+| [#5031](https://github.com/TanStack/table/pull/5031) | #4703-adjacent pageIndex clamp                     | Open, targets v8                          |
+| [#5582](https://github.com/TanStack/table/pull/5582) | #4485/#5363 (`_valuesCache` invalidation approach) | Open, targets v8 — port concept to beta   |
 
 ## Close now
 
@@ -126,15 +123,13 @@ Ranked by user impact. Fixing the top four clusters closes or unblocks ~20 issue
 
 ## Keep open
 
-### Verified & Urgent (8)
+### Verified & Urgent (6)
 
 - [#4919 — Filter not working if accessorFn returns null for any row](https://github.com/TanStack/table/issues/4919) — **high.** The column-filter half is fixed in v9 (`column_getAutoFilterFn` scans past nullish), but the global-filter half persists. Same cluster and pending PRs as #4783.
-- [#5173 — row.getIsSomeSelected returning true for row with disabled subrows](https://github.com/TanStack/table/issues/5173) — **medium.** `isSubRowSelected` (`rowSelectionFeature.utils.ts:909-941`) still initializes `allChildrenSelected = true` and never clears it when all children are non-selectable, returning `'all'` with zero selected rows and propagating bogus `someSelected` upward. Two open fix PRs (#5790, #6177) — land one on alpha.
 - [#5363 — `getValue` cache not invalidating when `accessorFn` is updated](https://github.com/TanStack/table/issues/5363) — **high.** `row_getValue` serves `row._valuesCache` forever and `createCoreRowModel` memoizes on `[options.data]` only, so swapping columns/`accessorFn` silently feeds stale values into rendering, sorting, and filtering. v8 PR #5582 shows the fix approach; same root cause as #4485/#4702.
-- [#5822 — Pinning aggregation rows then ungrouping causes a hard error](https://github.com/TanStack/table/issues/5822) — **medium.** `table_getPinnedRows` still calls the throwing `table.getRow(rowId, true)` unguarded (`rowPinningFeature.utils.ts:126`), so a pinned synthetic group id crashes `getTopRows()`/`getBottomRows()` after ungrouping. Reporter's fix PR #5823 open and unreviewed since 2024-12.
 - [#5968 — Invoking `table.getRowModel()` causes rows to collapse](https://github.com/TanStack/table/issues/5968) — **high.** v9 dropped v8's first-run auto-reset guard: `memo` fires `onAfterUpdate` on the first computation and `createGroupedRowModel` forces `rowInputsChanged = true` on that first run, so the first `getRowModel()` schedules `table_autoResetExpanded`/`table_autoResetPageIndex` — wiping controlled `expanded` and any initial `pageIndex` on mount (`table_resetPageIndex(table, true)` hard-codes 0, ignoring `initialState`). Canonical survivor of the #5970/#6025/#6030 cluster (all since closed).
 - [#6007 — When using filterVariant: 'range' and filtering with a min value of 0, null values are also included in the results](https://github.com/TanStack/table/issues/6007) — **high.** `filterFn_inNumberRange` has no `resolveDataValue`, so `null`/`''`/`false` coerce to 0 and match any zero-spanning range — and it is the auto-selected default filter for number columns. Sibling `inDateRange` already does this correctly. PR #6313 open.
-- [#6049 — Row Selection: Incorrect Parent Row Selection Behavior with Nested Data](https://github.com/TanStack/table/issues/6049) — **high; canonical for the selection-reconciliation cluster.** Deselecting descendants never removes the ancestor id and `row_getIsSelected` reads only its own id, so a parent can report `getIsSelected()` and `getIsSomeSelected()` true simultaneously; the shipped expanding example renders it fully checked with an unselected child, and `getSelectedRowModel()` keeps the stale parent. Close #4878/#5416 into this.
+- [#6049 — Row Selection: Incorrect Parent Row Selection Behavior with Nested Data](https://github.com/TanStack/table/issues/6049) — **FIX IMPLEMENTED 2026-08-02 (pending PR).** Maintainer decision: upward reconciliation is opt-in, not default — new `deselectParents` flag on `ToggleSelectedOptions` prunes ancestor ids on deselect (toggleSelected + Shift-range paths). Scenario 1 (bottom-up select) was already covered by the recommended checked expression, now taught in the guide's canonical snippet. Close #4878/#5416 into this when the PR lands.
 - [#6078 — `process is not defined` when used in Vanilla JS (without Node.js)](https://github.com/TanStack/table/issues/6078) — **high.** Raw `process.env.NODE_ENV` reads persist in source (~14 sites) and survive into the published build (`packages/table-core/dist/utils.js`) because `tsdown.config.ts` has no `define`; any bundler-less consumer gets a hard `ReferenceError`, and v9 dropped the v8 UMD escape hatch. PR #6185 targets v8 `main` only — needs an alpha fix.
 
 ### Valid (34)
@@ -149,12 +144,12 @@ Ranked by user impact. Fixing the top four clusters closes or unblocks ~20 issue
 - [#4825 — implement full width resize handler](https://github.com/TanStack/table/issues/4825) — The redistribute-delta-into-next-column mode still doesn't exist and is pure `ColumnSizingState` math (no DOM measurement), so the headless-boundary objection fails. Canonical tracking issue for #4880/#4852/#6010-family demand.
 - [#4946 — enableMultiRemove attribute is invalid](https://github.com/TanStack/table/issues/4946) — `column_toggleSorting` calls `column_getNextSortingOrder(column)` with no `multi` argument, so the documented option is dead on every path including the recommended handler.
 - [#5008 — Median aggregation fails if null values](https://github.com/TanStack/table/issues/5008) — `aggregationFn_median` bails to `undefined` on the first non-number while `mean`/`sum`/`min`/`max` skip nullish values; now documented as-is, making it intentional-by-inertia rather than by design.
-- [#5116 — getToggleAllRowsSelectedHandler doesn't take into account enableSubRowSelection property](https://github.com/TanStack/table/issues/5116) — Four select-all paths disagree: `table_toggleAllRowsSelected` ignores `row_getCanSelectSubRows`, the page variant honors it, and `table_getIsAllPageRowsSelected` still requires sub-rows selected, so the page header checkbox can never render checked with `enableSubRowSelection: false`. Contradicts docs; distinct from the #6049 cluster.
+- [#5116 — getToggleAllRowsSelectedHandler doesn't take into account enableSubRowSelection property](https://github.com/TanStack/table/issues/5116) — **FIX IMPLEMENTED 2026-08-02 (pending PR).** New `isRowSelectableInSelectAll` eligibility helper (selectable AND no ancestor blocks `enableSubRowSelection`) applied to `table_toggleAllRowsSelected` and symmetrically to `getIsAllRowsSelected`/`getIsAllPageRowsSelected`, with new memoDeps on `enableSubRowSelection`. All four select-all paths now agree.
 - [#5138 — column.enableGlobalFilter is not considered in the default implemenation of table.getColumnCanGlobalFilter](https://github.com/TanStack/table/issues/5138) — The opt-in half of the #4673 cluster; PR #6439 targets exactly this. Workaround exists (custom `getColumnCanGlobalFilter`), hence medium; closeable as duplicate once the fix lands.
 - [#5147 — Sorting direction not updating properly with manual sorting and same values on current page](https://github.com/TanStack/table/issues/5147) — `column_getAutoSortDir` derives direction from `flatRows[0]` only, so a manual-sorting server data swap flips the toggle cycle and silently drops a state. `sortDescFirst` is the documented workaround; shares root cause with #5832.
 - [#5202 — The header object has the 'rowSpan' property, but there is an issue where it is not applied](https://github.com/TanStack/table/issues/5202) — `Header.rowSpan` is 0 for every header in every table shape (`buildHeaderGroups.ts` `updateHeaderSpans`); dead public API that should be implemented or removed before v9 stable.
 - [#5397 — there is a bug when you try sticky pin column group](https://github.com/TanStack/table/issues/5397) — `table_getColumnOffsets` builds offsets from visible leaf columns only, so `column_getStart`/`getAfter` fall through to `?? 0` for group columns and pinned group headers stack at offset 0. `header.getStart()` is correct, giving a workaround.
-- [#5398 — Toggle select all rows doesn't respect `canSelect()` condition](https://github.com/TanStack/table/issues/5398) — Deselect branches unconditionally delete while select branches guard on `row_getCanSelect`; a commenter documents the guard existed in PR #5061 commit b76bb8d and was dropped in 42f7595 — a regression, not a design decision.
+- [#5398 — Toggle select all rows doesn't respect `canSelect()` condition](https://github.com/TanStack/table/issues/5398) — **FIX IMPLEMENTED 2026-08-02 (pending PR).** Deselect branches of the two table-level select-all paths now guard on `row_getCanSelect` (disabled rows keep their selection); `{ deselectAll: true }`/`resetRowSelection(true)` remain the full-clear escapes. Git archaeology corrected the thread's regression claim: the #5061 guard that was lost in merge 42f7595 was on `getIsSomeRowsSelected`'s denominator (moot in v9); the deselect branch was never guarded anywhere.
 - [#5497 — Column visibility APIs do not work with column groups](https://github.com/TanStack/table/issues/5497) — `column_toggleVisibility` writes a dead state key for group ids while `column_getIsVisible` derives from children, and `column_getCanHide` advertises hideability it cannot deliver.
 - [#5653 — Custom sortingFn not being run when row key is undefined](https://github.com/TanStack/table/issues/5653) — The default `sortUndefined: 1` short-circuits before invoking the user's sortFn for undefined pairs, and `docs/framework/react/guide/sorting.md:430` describes `false` incorrectly ("considered tied" vs actually passing undefined through). At minimum a docs defect plus a legitimate pass-through-mode request.
 - [#5778 — ColumnGrouping.getDefaultColumnDef should not return aggregatedCell](https://github.com/TanStack/table/issues/5778) — The aggregation feature unconditionally injects a default `aggregatedCell` and FlexRender resolves `aggregatedCell ?? cell`, so a user's `cell` formatter can never win on aggregated cells without the `aggregatedCell: null` workaround. Small breaking change that belongs in the alpha.
@@ -189,15 +184,15 @@ Ranked by user impact. Fixing the top four clusters closes or unblocks ~20 issue
 
 ## Root-cause clusters (updated from the July 26 audits)
 
-| #   | Root cause                                                                                                        | Open issues                                                | Status                                                                   |
-| --- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------ |
-| 1   | v9 dropped v8's first-run auto-reset guard; first `getRowModel()` wipes controlled/initial `expanded`/`pageIndex` | #5968 (canonical; #5970/#6025/#6030 already closed)        | Unfixed; `table_resetPageIndex(table, true)` also ignores `initialState` |
-| 2   | Global-filter eligibility decided from `flatRows[0]`; explicit `enableGlobalFilter: true` cannot override         | #4919, #5138                                               | Fixed by merged PRs #6438/#6439; remaining issues can close              |
-| 3   | `row._valuesCache` never invalidated when columns/`accessorFn` change                                             | #4485, #5363 (#4702 closed)                                | v8 PR #5582 open; port concept to alpha                                  |
-| 4   | Parent/child selection never reconciled upward                                                                    | #6049 (canonical), #5116, #5398; close #4878/#5416 as dups | Unfixed; one refactor fixes the family                                   |
-| 5   | `column_getAutoSortDir` samples `flatRows[0]`                                                                     | #5147, #5832                                               | Unfixed; `sortDescFirst` workaround                                      |
-| 7   | Group (non-leaf) columns second-class in visibility/offsets                                                       | #5497, #5770, #5397 (#4872/#5577 closed as docs-direction) | Unfixed; #5770 has maintainer-approved direction                         |
-| 8   | v8-targeted fix PRs never ported to alpha                                                                         | #6074, #6077, #6078, #6115, #6136, #5822                   | Six open PRs against `main` need alpha ports                             |
+| #   | Root cause                                                                                                        | Open issues                                                | Status                                                                                                      |
+| --- | ----------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| 1   | v9 dropped v8's first-run auto-reset guard; first `getRowModel()` wipes controlled/initial `expanded`/`pageIndex` | #5968 (canonical; #5970/#6025/#6030 already closed)        | Unfixed; `table_resetPageIndex(table, true)` also ignores `initialState`                                    |
+| 2   | Global-filter eligibility decided from `flatRows[0]`; explicit `enableGlobalFilter: true` cannot override         | #4919, #5138                                               | Fixed by merged PRs #6438/#6439; remaining issues can close                                                 |
+| 3   | `row._valuesCache` never invalidated when columns/`accessorFn` change                                             | #4485, #5363 (#4702 closed)                                | v8 PR #5582 open; port concept to alpha                                                                     |
+| 4   | Parent/child selection never reconciled upward                                                                    | #6049 (canonical), #5116, #5398; close #4878/#5416 as dups | Fix implemented 2026-08-02 (opt-in `deselectParents` + select-all eligibility + deselect guard); pending PR |
+| 5   | `column_getAutoSortDir` samples `flatRows[0]`                                                                     | #5147, #5832                                               | Unfixed; `sortDescFirst` workaround                                                                         |
+| 7   | Group (non-leaf) columns second-class in visibility/offsets                                                       | #5497, #5770, #5397 (#4872/#5577 closed as docs-direction) | Unfixed; #5770 has maintainer-approved direction                                                            |
+| 8   | v8-targeted fix PRs never ported to beta                                                                          | #6074, #6077, #6078, #6115, #6136                          | Five open PRs against `main` need beta ports                                                                |
 
 ## Changes vs the July 26 audits
 
@@ -207,3 +202,9 @@ Ranked by user impact. Fixing the top four clusters closes or unblocks ~20 issue
 - **#4994:** was Verified & Urgent in the GPT audit; **flips to close** — the reporter explicitly opted out with `autoResetPageIndex: false`, and the docs assign reset responsibility to the app; the real clamp gap is tracked by #4703 (closed) and PR #5031.
 - **#4878 / #5416:** keep-verdicts consolidated into close-as-duplicate of canonical #6049.
 - **#5850:** GPT's close verdict overturned — Kevin committed in-thread to adding `removeRowSelection(ids)` to the v9 alpha; the helper does not exist yet.
+
+## Changes in the 2026-08-02 update
+
+- **#5173** (Verified & Urgent) closed — fixed on `beta` by PR [#6491](https://github.com/TanStack/table/pull/6491) (`isSubRowSelected` returns false when no subRows are selectable). Stale v8 PRs #5790 (closed) and #6177 (still open) are superseded.
+- **#5822** (Verified & Urgent) closed — fixed on `beta` by PR [#6493](https://github.com/TanStack/table/pull/6493) (row pinning after ungrouping). Stale v8 PR #5823 (still open) is superseded.
+- **#6176** merged on `main`, so the #6175 example-config row was removed from the land-or-port table.
