@@ -73,6 +73,10 @@ export * from './features/row-aggregation/aggregationFns'
 export * from './features/cell-selection/cellSelectionFeature'
 export * from './features/cell-selection/cellSelectionFeature.types'
 
+// cellSpanningFeature
+export * from './features/cell-spanning/cellSpanningFeature'
+export * from './features/cell-spanning/cellSpanningFeature.types'
+
 // columnFacetingFeature
 export * from './features/column-faceting/columnFacetingFeature'
 export * from './features/column-faceting/columnFacetingFeature.types'

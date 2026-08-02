@@ -9,6 +9,7 @@ import type { HeaderContext } from '../core/headers/coreHeadersFeature.types'
 import type { ColumnDef_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { ColumnDef_RowAggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type { ColumnDef_CellSelection } from '../features/cell-selection/cellSelectionFeature.types'
+import type { ColumnDef_CellSpanning } from '../features/cell-spanning/cellSpanningFeature.types'
 import type { ColumnDef_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
 import type { ColumnDef_ColumnPinning } from '../features/column-pinning/columnPinningFeature.types'
 import type { ColumnDef_ColumnResizing } from '../features/column-resizing/columnResizingFeature.types'
@@ -134,6 +135,7 @@ export interface ColumnDef_FeatureMap<
   TValue extends CellData,
 > {
   cellSelectionFeature: ColumnDef_CellSelection
+  cellSpanningFeature: ColumnDef_CellSpanning<TFeatures, TData, TValue>
   columnFilteringFeature: ColumnDef_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: ColumnDef_ColumnGrouping<TFeatures, TData>
   columnPinningFeature: ColumnDef_ColumnPinning
@@ -163,6 +165,7 @@ export type ColumnDefBase_All<
   Partial<
     ColumnDef_RowAggregation<TFeatures, TData, TValue> &
       ColumnDef_CellSelection &
+      ColumnDef_CellSpanning<TFeatures, TData, TValue> &
       ColumnDef_ColumnVisibility &
       ColumnDef_ColumnPinning &
       ColumnDef_ColumnFiltering<TFeatures, TData> &

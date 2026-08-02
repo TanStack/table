@@ -318,6 +318,19 @@ skills:
       - 'TanStack/table:packages/table-core/src/features/cell-selection'
       - 'TanStack/table:examples/react/cell-selection'
 
+  - name: 'Cell Spanning'
+    slug: cell-spanning
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/cell-spanning/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Merge adjacent body cells with cellSpanningFeature: value-based rowSpan via spanRows, per-row colSpan via spanColumns, and the covered-cell convention where a span of 0 means skip the cell. Load for merged grids, spans lost after sorting or paging, or ragged rows.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/framework/react/guide/cell-spanning.md'
+      - 'TanStack/table:packages/table-core/src/features/cell-spanning'
+      - 'TanStack/table:examples/react/cell-spanning'
+
   - name: 'Row Selection'
     slug: row-selection
     type: sub-skill

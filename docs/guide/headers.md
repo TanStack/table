@@ -101,3 +101,5 @@ If your column tree is uneven (some leaf columns are nested deeper than others),
 ```
 
 > Note: This recipe is for the `<thead>` section only. Footer groups render the header rows in reverse order, which puts a spanning placeholder below the cells it would need to cover, so keep the `header.isPlaceholder` empty-cell pattern in the `<tfoot>` section.
+
+The body-cell equivalent of this convention lives in the optional `cellSpanningFeature`. See the [Cell Spanning Guide](../framework/react/guide/cell-spanning).

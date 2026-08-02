@@ -238,6 +238,15 @@ export interface Table_CellSelection<
    */
   getCellSelectionBounds: () => Array<CellSelectionBounds>
   /**
+   * Returns the merged-cell rectangles of the rendered rows in selection's
+   * display-order index space, or an empty array when `cellSpanningFeature`
+   * is not registered.
+   *
+   * Selection rectangles expand to fully enclose these, so a merged cell is
+   * always entirely selected or entirely unselected.
+   */
+  getCellSelectionMergeBounds: () => Array<CellSelectionBounds>
+  /**
    * Returns the ids of all columns intersected by the selection.
    */
   getCellSelectionColumnIds: () => Array<string>
