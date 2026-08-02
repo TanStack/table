@@ -67,6 +67,30 @@ export function table_resetSorting<
   )
 }
 
+/**
+ * Resets sorting after the table data changes when explicitly enabled.
+ *
+ * Unlike other auto-reset behaviors, sorting is preserved by default. An
+ * explicit `autoResetAll` value takes precedence over `autoResetSorting`.
+ *
+ * @example
+ * ```ts
+ * table_autoResetSorting(table)
+ * ```
+ */
+export function table_autoResetSorting<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>) {
+  // The core row model is available without the sorting feature. Avoid
+  // routing an update when this table has no sorting state to reset.
+  if (!table.atoms.sorting) return
+
+  if (table.options.autoResetAll ?? table.options.autoResetSorting ?? false) {
+    table_resetSorting(table)
+  }
+}
+
 // Column Utils
 
 /**

@@ -559,6 +559,14 @@ const table = this.tableController.table({
 })
 ```
 
+### Reset Sorting When Data Changes
+
+Sorting state is preserved when the `data` option changes by default. Set `autoResetSorting: true` to reset sorting whenever a new data reference is processed. The reset restores `initialState.sorting`, or an empty sorting state when no initial value was provided.
+
+This option responds only to data changes. Changing sorting, filters, or grouping does not trigger it. The global `autoResetAll` option overrides `autoResetSorting` when explicitly set.
+
+Be careful when combining this option with manual/server-side sorting: a server response normally replaces `data`, so enabling the reset can immediately clear the sorting state that requested that response.
+
 ### Sorting APIs
 
 There are a lot of sorting related APIs that you can use to hook up to your UI or other logic. Here is a list of all of the sorting APIs and some of their use-cases.

@@ -209,6 +209,13 @@ export interface Column_RowSorting<
 
 export interface TableOptions_RowSorting {
   /**
+   * Resets sorting to its initial state when the `data` option changes.
+   *
+   * This is disabled by default. `autoResetAll` overrides this option when it
+   * is explicitly set.
+   */
+  autoResetSorting?: boolean
+  /**
    * Allows multi-sort toggles to remove a column from sorting state.
    */
   enableMultiRemove?: boolean
