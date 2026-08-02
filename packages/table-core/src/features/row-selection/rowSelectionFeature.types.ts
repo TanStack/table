@@ -18,6 +18,11 @@ export interface ToggleSelectedOptions {
    * Whether ancestor row ids should be removed from the selection when this
    * row is deselected. Useful after a parent cascade wrote the parent id into
    * state and a child is later deselected. Defaults to `false`.
+   *
+   * Ancestor ids are removed even when the ancestor itself cannot be selected.
+   * Like the other targeted deselection paths, pruning is not gated by
+   * `enableRowSelection`; only the bulk select-all paths preserve
+   * non-selectable rows.
    */
   deselectParents?: boolean
 }

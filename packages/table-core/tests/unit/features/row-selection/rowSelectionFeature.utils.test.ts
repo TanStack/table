@@ -483,6 +483,28 @@ describe('row_toggleSelected', () => {
     })
   })
 
+  it('should prune ancestors that cannot be selected', () => {
+    // Pruning is deliberately not gated by enableRowSelection: a skipped
+    // ancestor would keep reporting getIsSelected() over a deselected child,
+    // the exact stale state deselectParents exists to remove. Only the bulk
+    // select-all paths preserve non-selectable rows.
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable(
+      { onRowSelectionChange, enableRowSelection: (row) => row.id !== '0' },
+      [3, 2],
+    )
+
+    row_toggleSelected(table.getRow('0.0'), false, { deselectParents: true })
+
+    expect(
+      getUpdaterResult(onRowSelectionChange, {
+        '0': true,
+        '0.0': true,
+        '0.1': true,
+      }),
+    ).toEqual({ '0.1': true })
+  })
+
   it('should not add or prune ancestors when selecting with deselectParents', () => {
     const onRowSelectionChange = vi.fn()
     const table = makeTable({ onRowSelectionChange }, [3, 2])

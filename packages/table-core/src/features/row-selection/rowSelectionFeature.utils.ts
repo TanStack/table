@@ -890,7 +890,11 @@ function pruneAncestorRowIds<
   TData extends RowData,
 >(rowSelection: RowSelectionState, row: Row<TFeatures, TData>): void {
   // Deselecting a descendant always invalidates "all children selected", so
-  // every ancestor id can be deleted unconditionally.
+  // every ancestor id can be deleted unconditionally. Deliberately not gated
+  // by `row_getCanSelect`: like the other targeted deselection paths, pruning
+  // may clear ids of rows that cannot be interactively selected — a skipped
+  // ancestor would keep reporting `getIsSelected()` over a deselected child,
+  // which is the exact stale-parent state this opt-in exists to remove.
   const rowsById = row.table.getCoreRowModel().rowsById
   let parentId = row.parentId
   while (parentId !== undefined) {
