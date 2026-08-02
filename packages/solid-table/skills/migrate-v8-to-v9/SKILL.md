@@ -5,7 +5,7 @@ description: >
 metadata:
   type: lifecycle
   library: '@tanstack/solid-table'
-  library_version: '9.0.0-beta.72'
+  library_version: '9.0.0-beta.73'
   framework: solid
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'
