@@ -1,9 +1,8 @@
 <script lang="ts">
   // This example uses the standalone `createTable` function to create a table without the `createTableHook` util.
 
-  import { createTable, FlexRender, tableFeatures
+  import { createColumnHelper, createTable, FlexRender, tableFeatures
   } from '@tanstack/svelte-table'
-  import type { ColumnDef } from '@tanstack/svelte-table'
   import { makeData, type Person } from './makeData'
   import './index.css'
 
@@ -11,46 +10,42 @@
   const features = tableFeatures({
   }) // util method to create sharable TFeatures object/type
 
-  // 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns.
-  //    Alternatively, check out the createTableHook/createAppColumnHelper util for an even more type-safe way to define columns.
-  const columns: Array<ColumnDef<typeof features, Person>> = [
-    {
-      accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
+  // 2. Create a column helper with the table features and row type
+  const columnHelper = createColumnHelper<typeof features, Person>()
+
+  // 3. Define the columns for your table with the column helper
+  const columns = columnHelper.columns([
+    columnHelper.accessor('firstName', {
       header: 'First Name',
       cell: (info) => info.getValue(),
-    },
-    {
-      accessorFn: (row) => row.lastName, // accessorFn used (alternative) along with a custom id
+    }),
+    columnHelper.accessor((row) => row.lastName, {
       id: 'lastName',
       header: () => 'Last Name',
       cell: (info) => info.getValue(),
-    },
-    {
-      accessorFn: (row) => Number(row.age), // accessorFn used to transform the data
+    }),
+    columnHelper.accessor((row) => Number(row.age), {
       id: 'age',
       header: () => 'Age',
       cell: (info) => info.renderValue(),
-    },
-    {
-      accessorKey: 'visits',
+    }),
+    columnHelper.accessor('visits', {
       header: () => 'Visits',
-    },
-    {
-      accessorKey: 'status',
+    }),
+    columnHelper.accessor('status', {
       header: 'Status',
-    },
-    {
-      accessorKey: 'progress',
+    }),
+    columnHelper.accessor('progress', {
       header: 'Profile Progress',
-    },
-  ]
+    }),
+  ])
 
-  // 5. Store data with a $state rune for reactivity
+  // 4. Store data with a $state rune for reactivity
   let data = $state(makeData(20))
   const refreshData = () => { data = makeData(20) }
   const stressTest = () => { data = makeData(1_000) }
 
-  // 6. Create the table instance with required features, columns, and data
+  // 5. Create the table instance with required features, columns, and data
   const table = createTable({
     debugTable: true,
     features, // new required option in V9. Tell the table which features you are importing and using (better tree-shaking)
@@ -62,7 +57,7 @@
   })
 </script>
 
-<!-- 7. Render your table markup from the table instance APIs -->
+<!-- 6. Render your table markup from the table instance APIs -->
 <div class="demo-root">
   <div>
     <button onclick={() => refreshData()

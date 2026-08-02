@@ -20,6 +20,7 @@ const columns = columnHelper.columns([
     footer: (props) => props.column.id,
     columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
+        // enableHiding: false, // keep this column visible
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       }),

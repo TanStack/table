@@ -118,6 +118,7 @@ function App() {
       data,
       getRowId: (row) => row.id,
       enableRowSelection: true, // enable row selection for all rows
+      // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
       // initialState: { rowSelection: { '0': true } }, // select rows on first render
       // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
       // onRowSelectionChange: setRowSelection,

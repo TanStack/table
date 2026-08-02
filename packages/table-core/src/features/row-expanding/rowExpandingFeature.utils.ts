@@ -39,6 +39,10 @@ export function table_autoResetExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>) {
+  // The core row model is available without the expanding feature. Avoid
+  // routing an update when this table has no expanded state to reset.
+  if (!table.atoms.expanded) return
+
   if (
     table.options.autoResetAll ??
     table.options.autoResetExpanded ??

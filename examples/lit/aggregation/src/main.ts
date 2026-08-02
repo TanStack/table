@@ -113,6 +113,7 @@ class LitTableExample extends LitElement {
         data: this._data,
         meta: { rowSource: this._rowSource },
         initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+        // manualAggregation: true, // supply aggregate values yourself instead of calculating them locally
         // initialState: { pagination: { pageIndex: 1, pageSize: 20 } }, // set the initial page once
         // atoms: { pagination: paginationAtom }, // preferred: own pagination state with an external atom
         // state: { pagination }, // classic controlled state; pair with onPaginationChange
