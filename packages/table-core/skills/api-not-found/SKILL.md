@@ -5,7 +5,7 @@ description: >
 metadata:
   type: sub-skill
   library: '@tanstack/table-core'
-  library_version: '9.0.0-beta.72'
+  library_version: '9.0.0-beta.73'
 requires: ['core', 'table-features']
 sources:
   - 'TanStack/table:packages/table-core/src/index.ts'
