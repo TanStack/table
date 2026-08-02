@@ -907,6 +907,7 @@ export function isSubRowSelected<
 
   let someSelected = false
   let allChildrenSelected = true
+  let someSelectable = false
 
   for (let i = 0; i < row.subRows.length; i++) {
     const subRow = row.subRows[i]!
@@ -917,6 +918,7 @@ export function isSubRowSelected<
     }
 
     if (row_getCanSelect(subRow)) {
+      someSelectable = true
       if (isRowSelected(subRow, rowSelection)) {
         someSelected = true
       } else {
@@ -929,14 +931,19 @@ export function isSubRowSelected<
       const subRowChildrenSelected = isSubRowSelected(subRow)
       if (subRowChildrenSelected === 'all') {
         someSelected = true
+        someSelectable = true
       } else if (subRowChildrenSelected === 'some') {
         someSelected = true
         allChildrenSelected = false
+        someSelectable = true
       } else {
         allChildrenSelected = false
       }
     }
   }
+
+  // A row with no selectable descendants can never be in a selected state
+  if (!someSelectable) return false
 
   return allChildrenSelected ? 'all' : someSelected ? 'some' : false
 }
