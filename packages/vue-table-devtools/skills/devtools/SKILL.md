@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/vue-table-devtools'
   framework: vue
-  library_version: '9.0.0-beta.74'
+  library_version: '9.0.0-beta.75'
 requires:
   - '@tanstack/table-core#core'
   - '@tanstack/table-devtools#devtools'

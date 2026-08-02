@@ -21,8 +21,8 @@
     "@angular/router": "^22.1.0",
     "@faker-js/faker": "^10.5.0",
     "@tanstack/angular-devtools": "^0.0.8",
-    "@tanstack/angular-table": "^9.0.0-beta.74",
-    "@tanstack/angular-table-devtools": "^9.0.0-beta.74",
+    "@tanstack/angular-table": "^9.0.0-beta.75",
+    "@tanstack/angular-table-devtools": "^9.0.0-beta.75",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.53",
     "rxjs": "~7.8.2",
     "tslib": "^2.8.1"
