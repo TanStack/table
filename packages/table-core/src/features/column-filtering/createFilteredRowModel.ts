@@ -1,4 +1,4 @@
-import { makeObjectMap, tableMemo } from '../../utils'
+import { makeObjectMap, skipFirstRun, tableMemo } from '../../utils'
 import { table_getColumn } from '../../core/columns/coreColumnsFeature.utils'
 import {
   column_getCanGlobalFilter,
@@ -45,7 +45,7 @@ export function createFilteredRowModel<
         table.atoms.globalFilter?.get(),
       ],
       fn: () => _createFilteredRowModel(table),
-      onAfterUpdate: () => table_autoResetPageIndex(table),
+      onAfterUpdate: skipFirstRun(() => table_autoResetPageIndex(table)),
     })
   }
 }

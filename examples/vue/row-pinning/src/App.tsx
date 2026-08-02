@@ -234,7 +234,10 @@ export default defineComponent({
         return data.value
       },
       getSubRows: (row: Person) => row.subRows,
-      initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+      initialState: {
+        pagination: { pageSize: 20, pageIndex: 0 },
+        // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+      },
       get keepPinnedRows() {
         return keepPinnedRows.value
       },

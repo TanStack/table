@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import {
   columnFilteringFeature,
   columnGroupingFeature,
@@ -97,9 +97,10 @@ function makeTable(
   })
 }
 
-// Pull the row model once and flush so the initial memo runs (which itself
-// schedules autoReset callbacks) do not interfere with the test assertions.
-async function primeTable(table: ReturnType<typeof makeTable>) {
+// Pull the row model once and flush so each stage memo records its initial
+// inputs. Auto-resets skip the first computation (it is not a change), so a
+// table must be primed before a change can trigger a reset.
+async function primeTable(table: { getRowModel: () => unknown }) {
   table.getRowModel()
   await flushMicrotasks()
   await flushMicrotasks()
@@ -375,6 +376,27 @@ describe('autoResetSorting end-to-end wiring', () => {
 })
 
 describe('autoResetExpanded end-to-end wiring', () => {
+  it('should reset expanded when data changes without the grouping feature', async () => {
+    const expandingOnlyFeatures = testFeatures({ rowExpandingFeature })
+    const table = constructTable<typeof expandingOnlyFeatures, Person>({
+      features: expandingOnlyFeatures,
+      columns: [{ accessorKey: 'name', id: 'name' }],
+      data: makeData(),
+      getSubRows: (row) => row.subRows,
+    })
+    await primeTable(table)
+
+    table.getRow('1').toggleExpanded(true)
+    expect(table.atoms.expanded.get()).toEqual({ '1': true })
+
+    table.setOptions((old) => ({ ...old, data: makeData() }))
+    table.getRowModel()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    expect(table.atoms.expanded.get()).toEqual({})
+  })
+
   it('should reset expanded to an empty map when grouping changes', async () => {
     const table = makeTable()
     await primeTable(table)
@@ -422,10 +444,11 @@ describe('autoResetExpanded end-to-end wiring', () => {
     await flushMicrotasks()
     await flushMicrotasks()
 
-    // Only createGroupedRowModel wires table_autoResetExpanded, and the
-    // pipeline order is core -> filtered -> grouped -> sorted -> expanded ->
-    // paginated. Sorting is downstream of grouping, so a sorting change never
-    // recomputes the grouped memo and expanded state is preserved.
+    // table_autoResetExpanded is wired from createCoreRowModel (data changes)
+    // and createGroupedRowModel. The pipeline order is core -> filtered ->
+    // grouped -> sorted -> expanded -> paginated. Sorting is downstream of
+    // grouping and does not touch data, so a sorting change never recomputes
+    // either wiring stage and expanded state is preserved.
     expect(table.atoms.expanded.get()).toEqual({ '1': true })
   })
 
@@ -439,8 +462,7 @@ describe('autoResetExpanded end-to-end wiring', () => {
     await flushMicrotasks()
     await flushMicrotasks()
 
-    // Pinned CURRENT behavior: even though table_autoResetExpanded is wired
-    // only from createGroupedRowModel, the grouped memo depends on
+    // Pinned CURRENT behavior: the grouped memo depends on
     // getPreGroupedRowModel() (the filtered model). Any upstream change
     // (data or filters) recomputes the grouped memo even when no grouping is
     // active, so filter changes also reset expanded state.
@@ -489,5 +511,51 @@ describe('autoResetExpanded end-to-end wiring', () => {
       await triggerReset(table)
       expect(table.atoms.expanded.get()).toEqual({ '1': true })
     })
+  })
+})
+
+describe('first-run guard', () => {
+  it('should not reset initialState.pageIndex on the first row model read', async () => {
+    const table = makeTable({ initialPageIndex: 1 })
+    expect(table.atoms.pagination.get().pageIndex).toBe(1)
+
+    table.getRowModel()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(1)
+  })
+
+  it('should not push controlled-state resets to the consumer on mount', async () => {
+    const onExpandedChange = vi.fn()
+    const onPaginationChange = vi.fn()
+    const table = makeTable({
+      state: {
+        expanded: { '0': true },
+        pagination: { pageIndex: 2, pageSize: 2 },
+      },
+      onExpandedChange,
+      onPaginationChange,
+    })
+
+    table.getRowModel()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+    expect(onPaginationChange).not.toHaveBeenCalled()
+  })
+
+  it('should still auto-reset on the first change after mount', async () => {
+    const table = makeTable({ initialPageIndex: 1 })
+    await primeTable(table)
+
+    table.setPageIndex(2)
+    table.setColumnFilters([{ id: 'group', value: 'even' }])
+    table.getRowModel()
+    await flushMicrotasks()
+    await flushMicrotasks()
+
+    expect(table.atoms.pagination.get().pageIndex).toBe(0)
   })
 })

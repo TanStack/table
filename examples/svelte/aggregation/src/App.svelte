@@ -41,7 +41,9 @@
     features, columns,
     get data() { return data },
     get meta() { return { rowSource } },
-    initialState: { pagination: { pageIndex: 0, pageSize: 10 } }, debugTable: true, debugColumns: true,
+    initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+    // manualAggregation: true, // supply aggregate values yourself instead of calculating them locally
+    debugTable: true, debugColumns: true,
   })
   const pagination = $derived(table.atoms.pagination.get())
   function changeRowSource(value: RowSource) {

@@ -201,7 +201,11 @@ class LitTableExample extends LitElement {
         features,
         columns,
         data: this._data,
-        getSubRows: (row) => row.subRows,
+        getSubRows: (row) => row.subRows, // tell the table where nested rows live
+        // enableRowSelection: row => row.original.age > 18, // enable selection conditionally; default true
+        // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+        // enableSubRowSelection: false, // disable sub-row selection; default true
+        // enableRowRangeSelection: false, // disable shift-click range selection; default true
         // initialState: { expanded: { '0': true } }, // expand rows on first render
         // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
         // state: { expanded }, // classic controlled state; pair with onExpandedChange
@@ -213,8 +217,11 @@ class LitTableExample extends LitElement {
         // paginateExpandedRows: false, // keep expanded children on their parent page; default true
         // autoResetExpanded: false, // keep expanded rows after page-altering changes; default true
         // autoResetAll: false, // turn off every feature's automatic reset, including expansion
+        // enableFilters: false, // disable all column and global filtering; default true
+        // enableColumnFilters: false, // disable per-column filters; default true
         // filterFromLeafRows: true, // with filtering, keep parents whose descendants match
         // maxLeafRowFilterDepth: 0, // with filtering, only filter root rows
+        // manualFiltering: true, // pass data that is already filtered, for example from a server
         debugTable: true,
       },
       (state) => ({

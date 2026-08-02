@@ -50,6 +50,7 @@ function App() {
         }),
         columnHelper.accessor('firstName', {
           cell: (info) => info.getValue(),
+          // enableColumnFilter: false, // disable filtering for this column
         }),
         columnHelper.accessor((row) => row.lastName, {
           id: 'lastName',

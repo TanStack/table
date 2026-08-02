@@ -25,6 +25,8 @@ const columns = columnHelper.columns([
     footer: (props) => props.column.id,
     columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
+        // enableResizing: false, // prevent this column from being resized
+        // size: 180, minSize: 80, maxSize: 400, // override sizing defaults for this column
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       }),

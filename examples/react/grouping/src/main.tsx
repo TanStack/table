@@ -67,6 +67,7 @@ function App() {
         }),
         columnHelper.accessor('age', {
           header: () => 'Age',
+          // enableGrouping: false, // prevent grouping by this column
         }),
         columnHelper.accessor('visits', {
           header: () => <span>Visits</span>,

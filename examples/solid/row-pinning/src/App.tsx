@@ -138,7 +138,10 @@ function App() {
     get data() {
       return data()
     },
-    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+      // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+    },
     get state() {
       return {
         expanded: expanded(),
