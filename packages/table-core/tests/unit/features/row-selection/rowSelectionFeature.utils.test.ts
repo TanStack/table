@@ -68,12 +68,14 @@ function makePaginatedTable(
       'data' | 'columns' | 'features'
     >
   >,
+  lengths: Array<number> = [5],
 ): Table<typeof featuresWithPagination, Person> {
-  const data = generateTestData(5)
+  const data = generateTestData(...lengths)
   return constructTable({
     features: featuresWithPagination,
     data,
     columns: generateTestColumnDefs<typeof featuresWithPagination>(data),
+    getSubRows: (row) => row.subRows,
     ...options,
   })
 }
@@ -193,6 +195,50 @@ describe('table_getIsAllRowsSelected', () => {
   it('should return false with an empty selection', () => {
     expect(table_getIsAllRowsSelected(makeTable())).toBe(false)
   })
+
+  it('should ignore sub-rows when enableSubRowSelection is false', () => {
+    const table = makeTable(
+      {
+        enableSubRowSelection: false,
+        initialState: { rowSelection: { '0': true, '1': true, '2': true } },
+      },
+      [3, 2],
+    )
+
+    expect(table_getIsAllRowsSelected(table)).toBe(true)
+
+    const partial = makeTable(
+      {
+        enableSubRowSelection: false,
+        initialState: { rowSelection: { '0': true, '1': true } },
+      },
+      [3, 2],
+    )
+
+    expect(table_getIsAllRowsSelected(partial)).toBe(false)
+  })
+
+  it('should ignore only blocked subtrees with an enableSubRowSelection predicate', () => {
+    const table = makeTable(
+      {
+        enableSubRowSelection: (row) => row.id !== '0',
+        initialState: {
+          rowSelection: {
+            '0': true,
+            '1': true,
+            '1.0': true,
+            '1.1': true,
+            '2': true,
+            '2.0': true,
+            '2.1': true,
+          },
+        },
+      },
+      [3, 2],
+    )
+
+    expect(table_getIsAllRowsSelected(table)).toBe(true)
+  })
 })
 
 describe('table_getIsAllPageRowsSelected', () => {
@@ -216,6 +262,21 @@ describe('table_getIsAllPageRowsSelected', () => {
     })
 
     expect(table_getIsAllPageRowsSelected(table)).toBe(false)
+  })
+
+  it('should ignore sub-rows when enableSubRowSelection is false', () => {
+    const table = makePaginatedTable(
+      {
+        enableSubRowSelection: false,
+        initialState: {
+          pagination: { pageIndex: 0, pageSize: 2 },
+          rowSelection: { '0': true, '1': true },
+        },
+      },
+      [3, 2],
+    )
+
+    expect(table_getIsAllPageRowsSelected(table)).toBe(true)
   })
 })
 
@@ -365,6 +426,94 @@ describe('row_toggleSelected', () => {
 
     expect(getUpdaterResult(onRowSelectionChange, {})).toEqual({
       '0': true,
+    })
+  })
+
+  it('should prune ancestor ids when deselecting with deselectParents', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({ onRowSelectionChange }, [3, 2])
+
+    row_toggleSelected(table.getRow('0.0'), false, { deselectParents: true })
+
+    expect(
+      getUpdaterResult(onRowSelectionChange, {
+        '0': true,
+        '0.0': true,
+        '0.1': true,
+      }),
+    ).toEqual({ '0.1': true })
+  })
+
+  it('should leave ancestor ids by default when deselecting a child', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({ onRowSelectionChange }, [3, 2])
+
+    row_toggleSelected(table.getRow('0.0'), false)
+
+    expect(
+      getUpdaterResult(onRowSelectionChange, {
+        '0': true,
+        '0.0': true,
+        '0.1': true,
+      }),
+    ).toEqual({ '0': true, '0.1': true })
+  })
+
+  it('should prune every ancestor on a deep deselect with deselectParents', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({ onRowSelectionChange }, [2, 2, 2])
+
+    row_toggleSelected(table.getRow('0.0.0'), false, { deselectParents: true })
+
+    expect(
+      getUpdaterResult(onRowSelectionChange, {
+        '0': true,
+        '0.0': true,
+        '0.0.0': true,
+        '0.0.1': true,
+        '0.1': true,
+        '0.1.0': true,
+        '0.1.1': true,
+      }),
+    ).toEqual({
+      '0.0.1': true,
+      '0.1': true,
+      '0.1.0': true,
+      '0.1.1': true,
+    })
+  })
+
+  it('should prune ancestors that cannot be selected', () => {
+    // Pruning is deliberately not gated by enableRowSelection: a skipped
+    // ancestor would keep reporting getIsSelected() over a deselected child,
+    // the exact stale state deselectParents exists to remove. Only the bulk
+    // select-all paths preserve non-selectable rows.
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable(
+      { onRowSelectionChange, enableRowSelection: (row) => row.id !== '0' },
+      [3, 2],
+    )
+
+    row_toggleSelected(table.getRow('0.0'), false, { deselectParents: true })
+
+    expect(
+      getUpdaterResult(onRowSelectionChange, {
+        '0': true,
+        '0.0': true,
+        '0.1': true,
+      }),
+    ).toEqual({ '0.1': true })
+  })
+
+  it('should not add or prune ancestors when selecting with deselectParents', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({ onRowSelectionChange }, [3, 2])
+
+    row_toggleSelected(table.getRow('0.0'), true, { deselectParents: true })
+
+    expect(getUpdaterResult(onRowSelectionChange, { '0': true })).toEqual({
+      '0': true,
+      '0.0': true,
     })
   })
 })
@@ -554,5 +703,117 @@ describe('table_toggleAllRowsSelected', () => {
 
     const result = getUpdaterResult(onRowSelectionChange, {})
     expect(Object.keys(result)).toHaveLength(5)
+  })
+
+  it('should select every row including sub-rows by default', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({ onRowSelectionChange }, [3, 2])
+
+    table_toggleAllRowsSelected(table, true)
+
+    expect(
+      Object.keys(getUpdaterResult(onRowSelectionChange, {})),
+    ).toHaveLength(9)
+  })
+
+  it('should not select sub-rows when enableSubRowSelection is false', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable(
+      { onRowSelectionChange, enableSubRowSelection: false },
+      [3, 2],
+    )
+
+    table_toggleAllRowsSelected(table, true)
+
+    expect(getUpdaterResult(onRowSelectionChange, {})).toEqual({
+      '0': true,
+      '1': true,
+      '2': true,
+    })
+  })
+
+  it('should skip subtrees blocked by an enableSubRowSelection predicate', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable(
+      { onRowSelectionChange, enableSubRowSelection: (row) => row.id !== '0' },
+      [3, 2],
+    )
+
+    table_toggleAllRowsSelected(table, true)
+
+    expect(getUpdaterResult(onRowSelectionChange, {})).toEqual({
+      '0': true,
+      '1': true,
+      '1.0': true,
+      '1.1': true,
+      '2': true,
+      '2.0': true,
+      '2.1': true,
+    })
+  })
+
+  it('should skip descendants of blocked ancestors at any depth', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable(
+      { onRowSelectionChange, enableSubRowSelection: (row) => row.id !== '0' },
+      [2, 2, 2],
+    )
+
+    table_toggleAllRowsSelected(table, true)
+
+    const result = getUpdaterResult(onRowSelectionChange, {})
+    expect(result['0']).toBe(true)
+    expect(result['0.0']).toBeUndefined()
+    expect(result['0.0.0']).toBeUndefined()
+    expect(result['1.0']).toBe(true)
+    expect(result['1.0.0']).toBe(true)
+  })
+
+  it('should evaluate the enableSubRowSelection predicate once per unique parent', () => {
+    // [2, 2, 2] has 14 rows but only 6 unique parents; the per-pass subtree
+    // cache must keep the predicate from re-running for every descendant
+    const enableSubRowSelection = vi.fn(() => true)
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable(
+      { onRowSelectionChange, enableSubRowSelection },
+      [2, 2, 2],
+    )
+
+    table_toggleAllRowsSelected(table, true)
+
+    expect(
+      Object.keys(getUpdaterResult(onRowSelectionChange, {})),
+    ).toHaveLength(14)
+    expect(enableSubRowSelection).toHaveBeenCalledTimes(6)
+  })
+
+  it('should keep rows that cannot be selected when deselecting all', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionChange,
+      enableRowSelection: (row) => row.id !== '0',
+      initialState: { rowSelection: { '0': true, '1': true } },
+    })
+
+    table_toggleAllRowsSelected(table, false)
+
+    expect(
+      getUpdaterResult(onRowSelectionChange, { '0': true, '1': true }),
+    ).toEqual({ '0': true })
+  })
+
+  it('should clear rows that cannot be selected with deselectAll', () => {
+    const onRowSelectionChange = vi.fn()
+    const table = makeTable({
+      onRowSelectionChange,
+      enableRowSelection: (row) => row.id !== '0',
+      initialState: { rowSelection: { '0': true, '1': true } },
+    })
+
+    table_toggleAllRowsSelected(table, false, { deselectAll: true })
+
+    expect(
+      getUpdaterResult(onRowSelectionChange, { '0': true, '1': true }),
+    ).toEqual({})
   })
 })

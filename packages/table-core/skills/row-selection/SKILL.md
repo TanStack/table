@@ -1,7 +1,7 @@
 ---
 name: row-selection
 description: >
-  Maintain rowSelection ID state with stable getRowId, single, multi, subrow, and Shift-range rules, selected row models, handler anchors, and manual-pagination semantics. Load when implementing getToggleSelectedHandler, enableRowRangeSelection, selectChildren, or selected IDs that outlive loaded Row objects.
+  Maintain rowSelection ID state with stable getRowId, single, multi, subrow, and Shift-range rules, selected row models, handler anchors, and manual-pagination semantics. Load when implementing getToggleSelectedHandler, enableRowRangeSelection, selectChildren, deselectParents, or selected IDs that outlive loaded Row objects.
 metadata:
   {
     type: sub-skill,
@@ -64,6 +64,20 @@ export function getDisplayedRowsOnlyHandler(row: Row<typeof features, Person>) {
 ```
 
 The default `selectChildren: true` recursively changes selectable descendants of parents encountered in the range. Set it to `false` when collapsed descendants outside the display-order interval must remain unchanged.
+
+### Prune stale parent ids on child deselection
+
+```ts
+export function getPruningHandler(row: Row<typeof features, Person>) {
+  return row.getToggleSelectedHandler({ deselectParents: true })
+}
+```
+
+Selecting a parent cascades its id plus selectable descendant ids into state, but deselecting a child later leaves the parent id behind by default (some tables treat state ids as literal selections, e.g. with `selectChildren: false`). The default `deselectParents: false` preserves that; set it to `true` so deselecting any row also deletes every ancestor id, keeping `row.getIsSelected()` honest for parents. Applies to `toggleSelected` and both plain and Shift-range handler paths.
+
+### Select-all honors sub-row selection rules
+
+With `enableSubRowSelection: false` (or a per-row predicate), `table.toggleAllRowsSelected()` skips descendants of blocking parents, and `getIsAllRowsSelected()`/`getIsAllPageRowsSelected()` exclude those descendants from the all-selected computation, so the header checkbox still reads checked. Deselect-all skips rows whose `enableRowSelection` resolves false, preserving their selection; use `toggleAllRowsSelected(false, { deselectAll: true })` or `resetRowSelection(true)` to clear everything including disabled and out-of-model ids.
 
 ## Common Mistakes
 
