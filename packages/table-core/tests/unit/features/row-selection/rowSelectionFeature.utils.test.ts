@@ -399,6 +399,14 @@ describe('row_getIsSomeSelected / row_getIsAllSubRowsSelected', () => {
     expect(row_getIsSomeSelected(row)).toBe(false)
     expect(row_getIsAllSubRowsSelected(row)).toBe(false)
   })
+
+  it('should report nothing when no sub-rows are selectable', () => {
+    const table = makeTable({ enableRowSelection: false }, [3, 2])
+    const parent = table.getRow('0')
+
+    expect(row_getIsSomeSelected(parent)).toBe(false)
+    expect(row_getIsAllSubRowsSelected(parent)).toBe(false)
+  })
 })
 
 describe('row selection flags', () => {

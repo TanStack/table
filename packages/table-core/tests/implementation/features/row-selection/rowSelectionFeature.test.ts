@@ -416,6 +416,52 @@ describe('rowSelectionFeature', () => {
       expect(result).toEqual(false)
     })
 
+    it('should return false if no sub-rows are selectable', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: false,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: {},
+        },
+        columns,
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]!
+
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
+
+      expect(result).toEqual(false)
+    })
+
+    it('should return some if no children are selectable, but a grand-child is and is selected', () => {
+      const data = generateTestData(3, 2, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: (row) => row.id === '0.0.1',
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: { '0.0.1': true },
+        },
+        columns,
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]!
+
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
+
+      expect(result).toEqual('some')
+    })
+
     it('should return some if some sub-rows are selected', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)
