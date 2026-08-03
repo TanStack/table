@@ -303,5 +303,74 @@ describe('no-factory fallbacks', () => {
     expect(ageColumn.getFacetedUniqueValues()).toEqual(new Map())
     expect(ageColumn.getFacetedUniqueValues().size).toBe(0)
     expect(ageColumn.getFacetedMinMaxValues()).toBeUndefined()
+
+    // The fallback empty Map is referentially stable across reads, like the
+    // stock factories' internally memoized results
+    expect(ageColumn.getFacetedUniqueValues()).toBe(
+      ageColumn.getFacetedUniqueValues(),
+    )
+  })
+})
+
+describe('custom faceted row-model factories', () => {
+  it('should call a custom facetedUniqueValues factory live on every read', () => {
+    // Custom factories own their memoization: the feature layer must not
+    // cache their results, or data that changes independently of the faceted
+    // row model (e.g. server-side facets) would be frozen at first read
+    let currentValues = new Map<any, number>([['placeholder', 1]])
+
+    const customFeatures = testFeatures({
+      columnFacetingFeature,
+      columnFilteringFeature,
+      facetedUniqueValues: () => () => currentValues,
+      filteredRowModel: createFilteredRowModel(),
+      filterFns,
+    })
+
+    const customColumns: Array<ColumnDef<typeof customFeatures, Person, any>> =
+      [{ accessorKey: 'team', id: 'team' }]
+
+    const table = constructTable<typeof customFeatures, Person>({
+      data,
+      columns: customColumns,
+      features: customFeatures,
+    })
+
+    expect(table.getColumn('team')!.getFacetedUniqueValues()).toBe(
+      currentValues,
+    )
+
+    currentValues = new Map<any, number>([
+      ['value1', 1],
+      ['value2', 1],
+    ])
+
+    expect(table.getColumn('team')!.getFacetedUniqueValues()).toBe(
+      currentValues,
+    )
+  })
+
+  it('should keep the stock facetedUniqueValues reference stable until its inputs change', () => {
+    const table = makeTable()
+    const teamColumn = table.getColumn('team')!
+
+    const first = teamColumn.getFacetedUniqueValues()
+
+    // The stock factory memoizes internally, so repeated reads with
+    // unchanged inputs return the same Map instance without recomputing
+    expect(teamColumn.getFacetedUniqueValues()).toBe(first)
+    expect(teamColumn.getFacetedRowModel()).toBe(
+      teamColumn.getFacetedRowModel(),
+    )
+    expect(teamColumn.getFacetedMinMaxValues()).toBe(
+      teamColumn.getFacetedMinMaxValues(),
+    )
+
+    // Filtering another column changes this column's faceted inputs, so a
+    // new Map is computed exactly once and is then stable again
+    table.setColumnFilters([{ id: 'name', value: 'Alice' }])
+    const second = teamColumn.getFacetedUniqueValues()
+    expect(second).not.toBe(first)
+    expect(teamColumn.getFacetedUniqueValues()).toBe(second)
   })
 })
