@@ -5,7 +5,7 @@ description: >
 metadata:
   type: composition
   library: '@tanstack/react-table'
-  library_version: '9.0.0-beta.77'
+  library_version: '9.0.0-beta.78'
   framework: react
 requires:
   - '@tanstack/table-core#client-vs-server'
