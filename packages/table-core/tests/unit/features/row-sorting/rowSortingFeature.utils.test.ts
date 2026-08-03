@@ -323,6 +323,37 @@ describe('column_getAutoSortDir', () => {
 
     expect(column_getAutoSortDir(table.getColumn('firstName')!)).toBe('desc')
   })
+
+  it('should skip leading nullish values when inferring the direction', () => {
+    // Regression #5147/#5832: sampling only the first row flipped the toggle
+    // cycle when a sort or data swap moved a null value into the first row
+    const data = [
+      { firstName: null, lastName: 'young', age: 40 },
+      { firstName: undefined, lastName: 'xi', age: 30 },
+      { firstName: 'amy', lastName: 'zulu', age: 20 },
+    ] as unknown as Array<Person>
+    const table = constructTable<typeof features, Person>({
+      data,
+      columns: personColumns,
+      features,
+    })
+
+    expect(column_getAutoSortDir(table.getColumn('firstName')!)).toBe('asc')
+  })
+
+  it('should return desc when all sampled values are nullish', () => {
+    const data = [
+      { firstName: null, lastName: 'young', age: 40 },
+      { firstName: undefined, lastName: 'xi', age: 30 },
+    ] as unknown as Array<Person>
+    const table = constructTable<typeof features, Person>({
+      data,
+      columns: personColumns,
+      features,
+    })
+
+    expect(column_getAutoSortDir(table.getColumn('firstName')!)).toBe('desc')
+  })
 })
 
 describe('column_getFirstSortDir', () => {
@@ -535,6 +566,52 @@ describe('column_toggleSorting', () => {
       { id: 'age', desc: true },
       { id: 'firstName', desc: false },
     ])
+  })
+
+  it('should flip instead of removing in multi mode when enableMultiRemove is false', () => {
+    // Regression #4946: toggleSorting never forwarded `multi` to
+    // getNextSortingOrder, so enableMultiRemove was ignored on every path
+    const sorting: SortingState = [{ id: 'firstName', desc: true }]
+    const { table, onSortingChange } = makeTableWithMockOnSortingChange({
+      enableMultiRemove: false,
+      initialState: { sorting },
+    })
+
+    column_toggleSorting(table.getColumn('firstName')!, undefined, true)
+
+    expect(getUpdaterResult(onSortingChange, sorting)).toEqual([
+      { id: 'firstName', desc: false },
+    ])
+  })
+
+  it('should remove at the end of the cycle in multi mode by default', () => {
+    const sorting: SortingState = [
+      { id: 'age', desc: true },
+      { id: 'firstName', desc: true },
+    ]
+    const { table, onSortingChange } = makeTableWithMockOnSortingChange({
+      initialState: { sorting },
+    })
+
+    column_toggleSorting(table.getColumn('firstName')!, undefined, true)
+
+    expect(getUpdaterResult(onSortingChange, sorting)).toEqual([
+      { id: 'age', desc: true },
+    ])
+  })
+
+  it('should ignore enableMultiRemove when the column cannot multi-sort', () => {
+    const sorting: SortingState = [{ id: 'firstName', desc: true }]
+    const { table, onSortingChange } = makeTableWithMockOnSortingChange({
+      enableMultiRemove: false,
+      enableMultiSort: false,
+      initialState: { sorting },
+    })
+
+    column_toggleSorting(table.getColumn('firstName')!, undefined, true)
+
+    // Falls back to single-sort semantics, where enableSortingRemoval governs
+    expect(getUpdaterResult(onSortingChange, sorting)).toEqual([])
   })
 
   it('should keep only the latest maxMultiSortColCount columns', () => {

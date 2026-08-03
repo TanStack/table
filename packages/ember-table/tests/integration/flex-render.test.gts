@@ -464,6 +464,8 @@ module('Integration | FlexRender', function (hooks) {
       table = useTable(() => ({
         data: this.data,
         features: stockFeatures,
+        // The flat test rows have no subRows, so opt them into expandability
+        getRowCanExpand: () => true,
         columns: [
           {
             id: 'expand',
@@ -525,6 +527,8 @@ module('Integration | FlexRender', function (hooks) {
       table = useTable(() => ({
         data: this.data,
         features: stockFeatures,
+        // The flat test rows have no subRows, so opt them into expandability
+        getRowCanExpand: () => true,
         columns: [
           {
             id: 'expand',
