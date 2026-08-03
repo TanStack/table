@@ -7,48 +7,17 @@ Entries are sorted by adjusted effectiveness score descending.
 
 ## Counts
 
-- **Entries:** 75
-- **Source findings:** 75
+- **Entries:** 74
+- **Source findings:** 74
 - **Cross-cutting sweeps:** 0
 - 2026-07-03: #102 (C9) completed and moved to perf-done.md.
 - 2026-07-07: #68 (A4) completed and moved to perf-done.md.
 - 2026-07-07: #76 (A5) completed and moved to perf-done.md.
 - 2026-07-07: #85 (A6) completed and moved to perf-done.md.
 - 2026-07-07: #92 (C11) completed and moved to perf-done.md.
+- 2026-07-29: #65 (F1) completed and moved to perf-done.md after the Svelte selector layer was removed.
 
 ## Score 8
-
-## 65. F1: Svelte useSelector subscribes with `===` compare: every subscriber re-renders on every atom write — Score: 8
-
-**Status:** `[ ]` not started
-**Implementation note:** _(none)_
-
-**Location:** `packages/svelte-table/src/createTable.svelte.ts:125`
-**Category:** `memoization`
-
-Hot path: Every state atom write (resize tick = 2 writes at 60-120Hz, selection, sorting, everything) → store snapshot recompute → `useSelector` subscription callback. `@tanstack/svelte-store`'s `useSelector` defaults `compare` to `===` (verified: `defaultCompare(a,b){return a===b}` and `options.compare ?? defaultCompare`). The store snapshot is a fresh object on every recompute, and the idiomatic selector (`(state) => ({ pagination: state.pagination })`) returns a fresh object too, so `compare(slice, data)` is always false, `slice = data` writes the `$state` rune on EVERY table state write, and every template reading `table.state` re-renders per tick even when the selected slice is unchanged. Verified: even the default no-selector path re-assigns the `$state` slice on every write (identity selector over a fresh snapshot). The sibling `subscribe.ts:45` correctly passes `{ compare: shallow }`, as do React/Preact `useTable`.
-
-**Before**
-
-```ts
-// 5. State selector
-const stateStore = useSelector(table.store, selector)
-```
-
-**After**
-
-```ts
-import { shallow, useSelector } from '@tanstack/svelte-store'
-// ...
-const stateStore = useSelector(table.store, selector, { compare: shallow })
-```
-
-**Big-O:** O(writes × subscribers) re-renders → O(changed-slice writes × subscribers). At 100Hz resize with a `pagination` selector: 200 spurious `$state` invalidations/sec eliminated per consumer, each of which cascades to a Svelte template re-evaluation over the visible grid. Shallow compare additionally avoids re-proxying the slice per tick.
-
-**Risk:** Matches react/preact/subscribe.ts behavior exactly; only risk is a consumer relying on re-render-per-write with an identity selector (they should use `subscribe`/atoms for that).
-**Verification:** CONFIRMED (drop-in, adapter-wide, per-write).
-
----
 
 ## Score 7
 
@@ -161,8 +130,7 @@ Hot path: Every `optionsStore.set()` in adapters with `createOptionsStore: true`
 ;(table.atoms as any)[key] = _reactivity.createReadonlyAtom(
   () => {
     const externalAtoms = table.options.atoms as
-      | Partial<Record<keyof TableState_All, Atom<unknown>>>
-      | undefined
+      Partial<Record<keyof TableState_All, Atom<unknown>>> | undefined
     const externalAtom = externalAtoms?.[key]
     if (externalAtom) {
       return externalAtom.get()
@@ -177,8 +145,7 @@ Hot path: Every `optionsStore.set()` in adapters with `createOptionsStore: true`
 
 ```ts
 const externalAtoms = mergedOptions.atoms as
-  | Partial<Record<keyof TableState_All, Atom<unknown>>>
-  | undefined
+  Partial<Record<keyof TableState_All, Atom<unknown>>> | undefined
 
 for (let i = 0; i < stateKeys.length; i++) {
   const key = stateKeys[i]!

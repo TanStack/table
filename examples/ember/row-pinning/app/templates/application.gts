@@ -114,7 +114,10 @@ export default class RowPinningTable extends Component {
     getRowId: (row: Person, index: number) =>
       `${row.firstName}-${row.lastName}-${index}`,
     getSubRows: (row: Person) => row.subRows,
-    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+      // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+    },
     state: {
       rowPinning: this.rowPinning,
     },
@@ -353,6 +356,6 @@ export default class RowPinningTable extends Component {
       </select>
     </div>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

@@ -14,6 +14,10 @@ title: Overview
 
 - [Migrating to v9](./framework/preact/guide/migrating)
 
+# Octane
+
+- Octane support is new in v9, so there is nothing to migrate. Start with the [Octane Quick Start](./framework/octane/quick-start).
+
 # Solid
 
 - [Migrating to v9](./framework/solid/guide/migrating)
@@ -54,7 +58,7 @@ In this new age of AI, where markup can be generated in seconds, the old value p
 
 TanStack Table might be a bit of a different table library than you are used to. It is **_NOT_** a pre-built table component, like you might find from a library like [AG Grid](https://ag-grid.com?utm_source=reacttable&utm_campaign=githubreacttable). Instead, TanStack Table is a headless UI library that gives you the power to build your own fully customizable table and datagrid components the right way with whatever JavaScript libraries, component libraries, or design systems you want. TanStack Table is the _engine_ that you can hook up to your own favorite front-end tech, no matter what you're already using or want to use.
 
-At its core, TanStack Table is **agnostic**. ~95% of the source code of TanStack Table is written in vanilla, framework-agnostic TypeScript, and thin framework adapters are available for your favorite frameworks. Official adapters are provided for React, Preact, Vue, Solid, Svelte, Angular, Lit, and Alpine, or you can use the core directly in vanilla JavaScript via `@tanstack/table-core`.
+At its core, TanStack Table is **agnostic**. ~95% of the source code of TanStack Table is written in vanilla, framework-agnostic TypeScript, and thin framework adapters are available for your favorite frameworks. Official adapters are provided for React, Preact, Octane, Vue, Solid, Svelte, Angular, Ember, Lit, and Alpine, or you can use the core directly in vanilla JavaScript via `@tanstack/table-core`.
 
 It also **does not care which CSS or component library** you use, and is compatible with anything from Tailwind, Bootstrap, Material UI, ShadCN UI, or even your own custom design system.
 
@@ -122,6 +126,31 @@ Here's the difference in practice. With a pre-built table component, you pass pr
 +     </tbody>
 +   </table>
 + )
+```
+
+# Octane
+
+```diff
+- {/* Pass props into a pre-built component and hope you can style it */}
+- <PrebuiltDataGrid
+-   data={data}
+-   columns={columns}
+-   theme={messyThemeOverrides}
+-   sx={cssOverridesThatHopefullyWork}
+-   positionPagination={"however-my-stakeholders-are-feeling-today"}
+- />
++ // Build your own markup from the table instance's state and APIs
++ const table = useTable({ features, columns, data })
++
++ <table className="anything-you-want">
++   <thead>
++     {/* need to really customize the functionality in your headers? no problem! */}
++     @for (const headerGroup of table.getHeaderGroups(); key headerGroup.id) { ... }
++   </thead>
++   <tbody>
++     @for (const row of table.getRowModel().rows; key row.id) { ... }
++   </tbody>
++ </table>
 ```
 
 # Solid
@@ -391,6 +420,23 @@ We like to think of TanStack Table as more of a "system" for building tables tha
 - [Row Selection](./framework/preact/guide/row-selection) - Select/deselect rows (checkboxes)
 - [Row Sorting](./framework/preact/guide/sorting) - Sort rows by column values
 
+# Octane
+
+- [Column Filtering](./framework/octane/guide/column-filtering) - Filter rows based on search values for a column
+- [Column Grouping](./framework/octane/guide/grouping) - Group columns together, run aggregations, and more
+- [Column Ordering](./framework/octane/guide/column-ordering) - Dynamically change the order of columns
+- [Column Pinning](./framework/octane/guide/column-pinning) - Pin (Freeze) columns to the left or right of the table
+- [Column Resizing](./framework/octane/guide/column-resizing) - Let users resize columns with drag handles
+- [Column Sizing](./framework/octane/guide/column-sizing) - Dynamically change the size of columns
+- [Column Visibility](./framework/octane/guide/column-visibility) - Hide/show columns
+- [Faceting](./framework/octane/guide/column-faceting) - List unique values or min/max values for a column or for the entire table
+- [Global Filtering](./framework/octane/guide/global-filtering) - Filter rows based on search values for the entire table
+- [Row Expanding](./framework/octane/guide/expanding) - Expand/collapse rows (sub-rows)
+- [Row Pagination](./framework/octane/guide/pagination) - Paginate rows
+- [Row Pinning](./framework/octane/guide/row-pinning) - Pin (Freeze) rows to the top or bottom of the table
+- [Row Selection](./framework/octane/guide/row-selection) - Select/deselect rows (checkboxes)
+- [Row Sorting](./framework/octane/guide/sorting) - Sort rows by column values
+
 # Solid
 
 - [Column Filtering](./framework/solid/guide/column-filtering) - Filter rows based on search values for a column
@@ -554,6 +600,11 @@ Using a component library? These examples pair TanStack Table with popular React
 
 - [Preact Quick Start](./framework/preact/quick-start)
 - [Kitchen Sink example](./framework/preact/examples/kitchen-sink) - Most of the built-in features working together in one table
+
+# Octane
+
+- [Octane Quick Start](./framework/octane/quick-start)
+- [Kitchen Sink example](./framework/octane/examples/kitchen-sink) - Most of the built-in features working together in one table
 
 # Solid
 

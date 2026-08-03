@@ -228,9 +228,11 @@ class LitTableExample extends LitElement {
                   ${footerGroup.headers.map(
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : FlexRender({ footer: header })}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : FlexRender({ footer: header })
+                        }
                       </th>
                     `,
                   )}
@@ -240,7 +242,8 @@ class LitTableExample extends LitElement {
           </tfoot>
         </table>
         <div class="spacer-md"></div>
-        <pre>${JSON.stringify(table.state, null, 2)}</pre>
+        <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

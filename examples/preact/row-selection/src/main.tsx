@@ -121,6 +121,7 @@ function App() {
       data,
       getRowId: (row) => row.id,
       enableRowSelection: true, // enable row selection for all rows
+      // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
       // initialState: { rowSelection: { '0': true } }, // select rows on first render
       // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
       // onRowSelectionChange: setRowSelection,
@@ -249,8 +250,8 @@ function App() {
               type="number"
               min="1"
               max={table.getPageCount()}
-              defaultValue={table.state.pagination.pageIndex + 1}
-              onChange={(e) => {
+              value={table.state.pagination.pageIndex + 1}
+              onInput={(e) => {
                 const page = (e.target as HTMLInputElement).value
                   ? Number((e.target as HTMLInputElement).value) - 1
                   : 0
@@ -299,7 +300,9 @@ function App() {
         </div>
         <div>
           <label>Row Selection State:</label>
-          <pre>{JSON.stringify(table.state, null, 2)}</pre>
+          <pre data-testid="table-state">
+            {JSON.stringify(table.state, null, 2)}
+          </pre>
         </div>
       </div>
     </>

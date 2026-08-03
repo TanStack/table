@@ -134,21 +134,27 @@ class LitTableExample extends LitElement {
                   ${headerGroup.headers.map(
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : html`<div>
-                              ${header.column.getCanGroup()
-                                ? html`<button
-                                    @click=${header.column.getToggleGroupingHandler()}
-                                    style="cursor: pointer"
-                                  >
-                                    ${header.column.getIsGrouped()
-                                      ? `🛑(${header.column.getGroupedIndex()}) `
-                                      : '👊 '}
-                                  </button>`
-                                : null}
-                              ${FlexRender({ header })}
-                            </div>`}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`<div>
+                                ${
+                                  header.column.getCanGroup()
+                                    ? html`<button
+                                        @click=${header.column.getToggleGroupingHandler()}
+                                        style="cursor: pointer"
+                                      >
+                                        ${
+                                          header.column.getIsGrouped()
+                                            ? `🛑(${header.column.getGroupedIndex()}) `
+                                            : '👊 '
+                                        }
+                                      </button>`
+                                    : null
+                                }
+                                ${FlexRender({ header })}
+                              </div>`
+                        }
                       </th>
                     `,
                   )}
@@ -165,26 +171,30 @@ class LitTableExample extends LitElement {
                     .map(
                       (cell) => html`
                         <td
-                          style="background: ${cell.getIsGrouped()
-                            ? '#0aff0082'
-                            : cell.getIsPlaceholder()
-                              ? '#ff000042'
-                              : 'white'}"
+                          style="background: ${
+                            cell.getIsGrouped()
+                              ? '#0aff0082'
+                              : cell.getIsPlaceholder()
+                                ? '#ff000042'
+                                : 'white'
+                          }"
                         >
-                          ${cell.getIsGrouped()
-                            ? html`<button
-                                @click=${row.getToggleExpandedHandler()}
-                                style="cursor: ${row.getCanExpand()
-                                  ? 'pointer'
-                                  : 'normal'}"
-                              >
-                                ${row.getIsExpanded() ? '👇' : '👉'}
-                                ${FlexRender({ cell })}
-                                (${row.subRows.length.toLocaleString()})
-                              </button>`
-                            : cell.getIsPlaceholder() || row.getIsGrouped()
-                              ? null
-                              : FlexRender({ cell })}
+                          ${
+                            cell.getIsGrouped()
+                              ? html`<button
+                                  @click=${row.getToggleExpandedHandler()}
+                                  style="cursor: ${
+                                    row.getCanExpand() ? 'pointer' : 'normal'
+                                  }"
+                                >
+                                  ${row.getIsExpanded() ? '👇' : '👉'}
+                                  ${FlexRender({ cell })}
+                                  (${row.subRows.length.toLocaleString()})
+                                </button>`
+                              : cell.getIsPlaceholder() || row.getIsGrouped()
+                                ? null
+                                : FlexRender({ cell })
+                          }
                         </td>
                       `,
                     )}
@@ -254,7 +264,8 @@ class LitTableExample extends LitElement {
           </select>
         </div>
         <div>${table.getRowModel().rows.length.toLocaleString()} Rows</div>
-        <pre>${JSON.stringify(table.state, null, 2)}</pre>
+        <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

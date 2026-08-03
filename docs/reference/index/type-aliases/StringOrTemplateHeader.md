@@ -6,12 +6,12 @@ title: StringOrTemplateHeader
 # Type Alias: StringOrTemplateHeader\<TFeatures, TData, TValue\>
 
 ```ts
-type StringOrTemplateHeader<TFeatures, TData, TValue> = 
+type StringOrTemplateHeader<TFeatures, TData, TValue> =
   | string
 | ColumnDefTemplate<HeaderContext<TFeatures, TData, TValue>>;
 ```
 
-Defined in: [types/ColumnDef.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L66)
+Defined in: [types/ColumnDef.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/ColumnDef.ts#L67)
 
 ## Type Parameters
 

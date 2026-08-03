@@ -1,4 +1,5 @@
 import Component from '@glimmer/component'
+import { cached } from '@glimmer/tracking'
 import { FlexRenderComponentConfig } from './flex-render-helpers.ts'
 import { flexRender } from '@tanstack/table-core/flex-render'
 import type {
@@ -74,12 +75,34 @@ export class FlexRenderCell<
   TData extends RowData,
   TValue extends CellData = CellData,
 > extends Component<FlexRenderCellSignature<TFeatures, TData, TValue>> {
+  @cached
   get result(): CellRenderResult<TFeatures, TData, TValue> {
     const cell = this.args.cell
-    return flexRender(
-      cell.column.columnDef.cell,
-      cell.getContext(),
-    ) as CellRenderResult<TFeatures, TData, TValue>
+    const definition = cell.column.columnDef
+    const groupingCell = cell as typeof cell & {
+      getIsAggregated?: () => boolean
+      getIsPlaceholder?: () => boolean
+    }
+    const groupingDefinition = definition as typeof definition & {
+      aggregatedCell?: typeof definition.cell
+    }
+
+    if (groupingCell.getIsAggregated?.()) {
+      return flexRender(
+        groupingDefinition.aggregatedCell ?? definition.cell,
+        cell.getContext(),
+      ) as CellRenderResult<TFeatures, TData, TValue>
+    }
+
+    if (groupingCell.getIsPlaceholder?.()) {
+      return null
+    }
+
+    return flexRender(definition.cell, cell.getContext()) as CellRenderResult<
+      TFeatures,
+      TData,
+      TValue
+    >
   }
 
   get resolvedContext(): CellContext<TFeatures, TData, TValue> {
@@ -91,8 +114,7 @@ export class FlexRenderCell<
   }
 
   get componentToRender():
-    | ComponentLike<CellRenderSignature<TFeatures, TData, TValue>>
-    | undefined {
+    ComponentLike<CellRenderSignature<TFeatures, TData, TValue>> | undefined {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component
@@ -142,9 +164,14 @@ export class FlexRenderHeader<
   TData extends RowData,
   TValue extends CellData = CellData,
 > extends Component<FlexRenderHeaderSignature<TFeatures, TData, TValue>> {
+  @cached
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
     const header = this.args.header
-    if (header.isPlaceholder) return null
+    // Placeholder headers are not skipped here. Whether a placeholder renders
+    // is the template's decision: the usual pattern wraps this component in
+    // `{{#unless header.isPlaceholder}}`, but merging headers vertically with
+    // `header.rowSpan` requires the spanning placeholder to render its
+    // column's header content. This matches every other framework adapter.
     return flexRender(
       header.column.columnDef.header,
       header.getContext(),
@@ -160,8 +187,7 @@ export class FlexRenderHeader<
   }
 
   get componentToRender():
-    | ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>>
-    | undefined {
+    ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>> | undefined {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component as unknown as ComponentLike<
@@ -213,9 +239,11 @@ export class FlexRenderFooter<
   TData extends RowData,
   TValue extends CellData = CellData,
 > extends Component<FlexRenderFooterSignature<TFeatures, TData, TValue>> {
+  @cached
   get result(): HeaderRenderResult<TFeatures, TData, TValue> {
     const footer = this.args.footer
-    if (footer.isPlaceholder) return null
+    // Placeholder footers are not skipped here; see `FlexRenderHeader`. The
+    // template decides, which matches every other framework adapter.
     return flexRender(
       footer.column.columnDef.footer,
       footer.getContext(),
@@ -231,8 +259,7 @@ export class FlexRenderFooter<
   }
 
   get componentToRender():
-    | ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>>
-    | undefined {
+    ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>> | undefined {
     const result = this.result
     if (result instanceof FlexRenderComponentConfig) {
       return result.component as unknown as ComponentLike<

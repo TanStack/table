@@ -7,9 +7,9 @@ import {
   createFilteredRowModel,
   createPaginatedRowModel,
   createSortedRowModel,
+  filterFn_between,
   filterFn_inNumberRange,
   filterFn_includesString,
-  filterFns,
   rowExpandingFeature,
   rowPaginationFeature,
   rowSelectionFeature,
@@ -37,7 +37,7 @@ const features = tableFeatures({
   paginatedRowModel: createPaginatedRowModel(),
   sortedRowModel: createSortedRowModel(),
   filterFns: {
-    between: filterFns.between, // no individual export for this fn (yet)
+    between: filterFn_between,
     includesString: filterFn_includesString,
     inNumberRange: filterFn_inNumberRange,
   },
@@ -146,6 +146,10 @@ function App() {
       columns,
       data,
       getSubRows: (row) => row.subRows, // tell the table where nested rows live
+      // enableRowSelection: row => row.original.age > 18, // enable selection conditionally; default true
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableSubRowSelection: false, // disable sub-row selection; default true
+      // enableRowRangeSelection: false, // disable shift-click range selection; default true
       // initialState: { expanded: { '0': true } }, // expand rows on first render
       // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
       // state: { expanded }, // classic controlled state; pair with onExpandedChange
@@ -157,8 +161,11 @@ function App() {
       // paginateExpandedRows: false, // keep expanded children on their parent page; default true
       // autoResetExpanded: false, // keep expanded rows after page-altering changes; default true
       // autoResetAll: false, // turn off every feature's automatic reset, including expansion
+      // enableFilters: false, // disable all column and global filtering; default true
+      // enableColumnFilters: false, // disable per-column filters; default true
       // filterFromLeafRows: true, // with filtering, keep parents whose descendants match
       // maxLeafRowFilterDepth: 0, // with filtering, only filter root rows
+      // manualFiltering: true, // pass data that is already filtered, for example from a server
       debugTable: true,
       debugRows: true,
     },
@@ -215,7 +222,7 @@ function App() {
       <div className="controls">
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(0)}
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
@@ -236,7 +243,7 @@ function App() {
         </button>
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
@@ -254,7 +261,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -277,7 +284,9 @@ function App() {
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div></div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

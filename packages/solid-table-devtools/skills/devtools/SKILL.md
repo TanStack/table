@@ -6,7 +6,7 @@ metadata:
   type: framework
   library: '@tanstack/solid-table-devtools'
   framework: solid
-  library_version: '9.0.0-beta.55'
+  library_version: '9.0.0-beta.76'
 requires:
   - '@tanstack/table-core#core'
   - '@tanstack/table-devtools#devtools'

@@ -11,7 +11,7 @@ function table_getIsSomePageRowsSelected<TFeatures, TData>(table): boolean;
 
 Defined in: [features/row-selection/rowSelectionFeature.utils.ts:424](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L424)
 
-Checks whether the current page has a partial selection.
+Checks whether at least one selectable row on the current page is selected.
 
 ## Type Parameters
 

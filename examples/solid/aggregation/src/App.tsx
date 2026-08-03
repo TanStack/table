@@ -125,6 +125,7 @@ function App() {
       return { rowSource: rowSource() }
     },
     initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+    // manualAggregation: true, // supply aggregate values yourself instead of calculating them locally
     debugTable: true,
     debugColumns: true,
   })
@@ -320,7 +321,9 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

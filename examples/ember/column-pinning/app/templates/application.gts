@@ -281,6 +281,6 @@ export default class ColumnPinningTable extends Component {
       </tfoot>
     </table>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

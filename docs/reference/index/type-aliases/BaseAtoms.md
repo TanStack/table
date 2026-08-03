@@ -9,7 +9,7 @@ title: BaseAtoms
 type BaseAtoms<TFeatures> = { [K in keyof TableState<TFeatures>]-?: Atom<TableState<TFeatures>[K]> };
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L43)
+Defined in: [core/table/coreTablesFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L44)
 
 A map of writable atoms, one per `TableState` slice. These are the internal
 writable atoms that the library always writes to via `makeStateUpdater`.

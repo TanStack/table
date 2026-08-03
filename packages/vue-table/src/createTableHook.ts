@@ -58,8 +58,7 @@ export type AppHeaderContext<
 }
 
 export type AppColumnDefTemplate<TProps extends object> =
-  | string
-  | ((props: TProps) => any)
+  string | ((props: TProps) => any)
 
 export type AppColumnDefBase<
   TFeatures extends TableFeatures,
@@ -120,7 +119,7 @@ export type AppGroupColumnDef<
   footer?: AppColumnDefTemplate<
     AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>
   >
-  columns?: Array<ColumnDef<TFeatures, TData, unknown>>
+  columns?: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>
 }
 
 export type AppColumnHelper<
@@ -131,11 +130,11 @@ export type AppColumnHelper<
 > = {
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
-    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
+    TValue extends (TAccessor extends AccessorFn<TData, infer TReturn>
       ? TReturn
       : TAccessor extends DeepKeys<TData>
         ? DeepValue<TData, TAccessor>
-        : never,
+        : never),
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
@@ -313,22 +312,19 @@ export const AppFlexRender = defineComponent({
     return () => {
       if (props.cell) {
         return h(FlexRender, {
-          render: props.cell.column.columnDef.cell,
-          props: props.cell.getContext(),
+          cell: props.cell,
         })
       }
 
       if (props.header) {
         return h(FlexRender, {
-          render: props.header.column.columnDef.header,
-          props: props.header.getContext(),
+          header: props.header,
         })
       }
 
       if (props.footer) {
         return h(FlexRender, {
-          render: props.footer.column.columnDef.footer,
-          props: props.footer.getContext(),
+          footer: props.footer,
         })
       }
 

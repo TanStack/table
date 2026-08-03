@@ -9,7 +9,7 @@ title: ComponentType
 type ComponentType<T> = (props) => any;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:32](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L32)
+Defined in: [packages/lit-table/src/createTableHook.ts:33](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L33)
 
 ## Type Parameters
 

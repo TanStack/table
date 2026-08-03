@@ -9,7 +9,7 @@ title: ExtractFeatureMapTypes
 type ExtractFeatureMapTypes<TFeatures, TFeatureMap> = IsAny<TFeatures> extends true ? UnionToIntersection<TFeatureMap[keyof TFeatureMap]> : UnionToIntersectionOrEmpty<TFeatureMap[Extract<keyof TFeatures, keyof TFeatureMap>]>;
 ```
 
-Defined in: [types/TableFeatures.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L40)
+Defined in: [types/TableFeatures.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L43)
 
 Extracts the API/types contributed by the features present in `TFeatures`.
 

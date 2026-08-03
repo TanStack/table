@@ -20,6 +20,7 @@ const columns = columnHelper.columns([
     footer: (props) => props.column.id,
     columns: columnHelper.columns([
       columnHelper.accessor('firstName', {
+        // enableHiding: false, // keep this column visible
         cell: (info) => info.getValue(),
         footer: (props) => props.column.id,
       }),
@@ -161,7 +162,9 @@ function App() {
       </table>
       <div className="spacer-md" />
       <div className="spacer-md" />
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

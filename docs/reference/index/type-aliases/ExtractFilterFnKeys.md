@@ -6,7 +6,7 @@ title: ExtractFilterFnKeys
 # Type Alias: ExtractFilterFnKeys\<TFeatures\>
 
 ```ts
-type ExtractFilterFnKeys<TFeatures> = IsAny<TFeatures> extends true ? 
+type ExtractFilterFnKeys<TFeatures> = IsAny<TFeatures> extends true ?
   | keyof FilterFns
   | BuiltInFilterFn : TFeatures extends object ? Extract<keyof TFilterFns, string> : keyof FilterFns;
 ```

@@ -224,15 +224,13 @@ class ColumnFilter extends Component<ColumnFilterSignature> {
 
   get minValue(): string {
     const value = this.args.column.getFilterValue() as
-      | [number, number]
-      | undefined
+      [number, number] | undefined
     return value?.[0] != null ? String(value[0]) : ''
   }
 
   get maxValue(): string {
     const value = this.args.column.getFilterValue() as
-      | [number, number]
-      | undefined
+      [number, number] | undefined
     return value?.[1] != null ? String(value[1]) : ''
   }
 
@@ -542,6 +540,6 @@ export default class CustomPluginTable extends Component {
     </div>
     <div class='spacer-md'></div>
     <pre>Density: {{this.density}}</pre>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

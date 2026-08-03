@@ -38,6 +38,7 @@ const columns = columnHelper.columns([
       }),
       columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
+        // enablePinning: false, // prevent this column from being pinned
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,
@@ -224,7 +225,9 @@ function App() {
           </tbody>
         </table>
       </div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

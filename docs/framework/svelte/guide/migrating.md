@@ -3,6 +3,9 @@ title: Migrating to TanStack Table V9 (Svelte)
 ---
 
 > [!NOTE]
+> `v9.0.0-beta.59` removes Svelte's table-creation selectors. `createTable` and `createAppTable` now accept only their options object; the selected `table.state` property, `subscribeTable`, and `SubscribeSource` are also removed. Read one slice with `table.atoms.<slice>.get()` and the complete state with `table.store.get()`. These reads update naturally in Svelte templates, `$derived`, `$derived.by`, and `$effect`. This is an intentional beta-breaking change with no compatibility overload or runtime shim. See [State Management Changes](#state-management-changes) for examples.
+
+> [!NOTE]
 > `v9.0.0-beta.48`/`beta.49` split aggregation out of `columnGroupingFeature` into a new `rowAggregationFeature` (`stockFeatures` includes both). If you declare features explicitly, add `rowAggregationFeature` anywhere you use `aggregationFns`, `aggregationFn`, `aggregatedCell`, `cell.getIsAggregated()`, or `column.getAggregationValue()`. Aggregation function definitions, row-depth selection, and the `getAggregationValue` signature also changed. See [Grouping and Aggregation](#grouping-and-aggregation) below.
 
 > [!NOTE]
@@ -25,7 +28,7 @@ TanStack Table V9 is a major release with significant internal architectural imp
 
 - **TanStack Store foundation**: Table state is backed by TanStack Store atoms.
 - **Svelte 5 reactivity**: The adapter uses Svelte 5 runes and Svelte-aware atom bindings.
-- **Fine-grained subscriptions**: `table.state` contains the full registered state by default; use a custom selector, `subscribeTable`, or `useSelector` from `@tanstack/svelte-store` when you need a narrower reactive surface.
+- **Native fine-grained reads**: Use `table.atoms.<slice>.get()` for narrow state and native `$derived` values for projections. Use `table.store.get()` when a computation intentionally needs the complete state.
 
 ### 3. Type-Safety Improvements
 
@@ -44,8 +47,10 @@ TanStack Table V9 is a major release with significant internal architectural imp
 - **`tableOptions()`**: Compose reusable table configuration, including features, row models, and default options.
 - **`createTableHook()`**: Define shared Svelte table factories with pre-bound features, row models, defaults, and registered components.
 
-### 6. Refreshed Feature APIs
+### 6. New and Refreshed Features
 
+- **New features**: `cellSelectionFeature` adds spreadsheet-style rectangular cell range selection, with drag, Shift-extend, and multiple disjoint ranges. See the [Cell Selection Guide](./cell-selection.md).
+- **Cell and header spanning**: the new `cellSpanningFeature` merges body cells across rows and columns (`spanRows` / `spanColumns`, with span-aware cell selection), and header groups now compute `header.rowSpan` so shallow columns can span header rows. See the [Cell Spanning Guide](./cell-spanning.md).
 - **More capable features**: Aggregation, Row Selection, Column Pinning, and Column Resizing have all been made more feature rich (multiple aggregation definitions per column, Shift range selection, logical `start`/`end` pinning, and more).
 - **New core APIs**: New table and row APIs (like `table.getMaxSubRowDepth()`, `row.getDisplayIndex()`) round out the core feature set.
 
@@ -313,13 +318,11 @@ Because these methods now live on the prototype, they also do not appear as own 
 
 Svelte v9 table state is atom-backed and rune-aware. Do not port v8 writable-store table option patterns directly except as "before" code.
 
-| Surface                             | Use                                                                                                  |
-| ----------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `table.state`                       | Full registered table state by default, or selected state from the second argument to `createTable`. |
-| `table.store.state`                 | Current full table state snapshot.                                                                   |
-| `table.atoms.<slice>.get()`         | Narrow current-value read for one state slice.                                                       |
-| `subscribeTable(source, selector?)` | Fine-grained Svelte subscription helper that exposes `.current`.                                     |
-| `table.baseAtoms.<slice>`           | Internal writable atoms. Prefer feature APIs or external atoms.                                      |
+| Surface                     | Use                                                                             |
+| --------------------------- | ------------------------------------------------------------------------------- |
+| `table.atoms.<slice>.get()` | Narrow, rune-aware read for one registered state slice.                         |
+| `table.store.get()`         | Rune-aware full-state read; intentionally updates for any table state change.   |
+| `table.baseAtoms.<slice>`   | Internal writable atoms. Prefer feature APIs or externally owned state instead. |
 
 ### Accessing State
 
@@ -327,69 +330,73 @@ Svelte v9 table state is atom-backed and rune-aware. Do not port v8 writable-sto
 // v8
 const sorting = table.getState().sorting
 
-// v9: full snapshot
-const sorting = table.store.state.sorting
-
-// v9: narrow atom read
+// v9: narrow read (preferred for one slice)
 const sorting = table.atoms.sorting.get()
+
+// v9: complete state
+const state = table.store.get()
 ```
 
-By default, `table.state` contains the full registered table state.
+The same reads become reactive dependencies when they run in a Svelte template, `$derived`, `$derived.by`, or `$effect`:
 
-```ts
-const table = createTable({
-  features,
-  columns,
-  get data() {
-    return data
-  },
-})
-
-const { pagination, sorting } = table.state
-```
-
-Pass a second-argument selector when you want `table.state` to contain only the values that should cause reactive updates.
-
-```ts
-const table = createTable(
-  {
+```svelte
+<script lang="ts">
+  const table = createTable({
     features,
     columns,
     get data() {
       return data
     },
-  },
-  (state) => ({
-    pagination: state.pagination,
-  }),
-)
+  })
+
+  const pagination = $derived(table.atoms.pagination.get())
+  const pageIndex = $derived(table.atoms.pagination.get().pageIndex)
+  const stateJson = $derived(JSON.stringify(table.store.get(), null, 2))
+</script>
+
+<strong>Page {pagination.pageIndex + 1}</strong>
+```
+
+`$derived` now owns projection and equality behavior. A full-store read is appropriate for debug output, persistence, or computations that intentionally depend on every slice; use an atom when only one slice matters.
+
+#### Migrating a `createTable` Selector
+
+```ts
+// Before beta.59
+const table = createTable(options, (state) => ({
+  pagination: state.pagination,
+}))
 
 table.state.pagination
 ```
 
-Passing `(state) => state` is equivalent to the default selector and is no longer necessary.
+```ts
+// beta.59+
+const table = createTable(options)
+const pagination = $derived(table.atoms.pagination.get())
+```
 
-### Fine-grained Updates with `subscribeTable`
+Identity selectors and selectors returning `null` should simply be deleted. Atom and table API reads already register the relevant Svelte dependencies.
+
+#### Migrating a `createAppTable` Selector
 
 ```ts
-import { subscribeTable } from '@tanstack/svelte-table'
+// Before beta.59
+const table = createAppTable(options, (state) => ({
+  sorting: state.sorting,
+}))
+table.state.sorting
 
-const pagination = subscribeTable(table.atoms.pagination)
-const pageIndex = subscribeTable(
-  table.atoms.pagination,
-  (pagination) => pagination.pageIndex,
-)
+// beta.59+
+const table = createAppTable(options)
+const sorting = $derived(table.atoms.sorting.get())
 ```
 
-```svelte
-<strong>
-  Page {pagination.current.pageIndex + 1} of {table.getPageCount()}
-</strong>
-```
+The selected-state generic was removed with the selector. `SvelteTable` now has two generic parameters, `AppSvelteTable` has five, and `useTableContext` only accepts its optional row-data generic.
 
 ### Controlled State
 
-The v8-style `state` plus `on[State]Change` pattern still works in v9 and is the most direct migration path, but [External Atoms](#external-atoms) (below) are the preferred v9 way to own state slices outside the table.
+The v8-style `state` plus `on[State]Change` pattern still works in v9 and is the most direct migration path. Prefer Svelte `$state` for state owned by a component. Use [External Atoms](#external-atoms) when the app must share raw TanStack Store atoms outside the table.
 
 Use `createTableState` for Svelte-owned state slices that need to accept TanStack Table updater functions.
 
@@ -864,7 +871,10 @@ type Person = {
 - [ ] Convert custom aggregation callables to `constructAggregationFn({ aggregate, merge? })` definitions.
 - [ ] Replace Svelte 3/4 writable-store table patterns with runes and getters.
 - [ ] Pass reactive `data` and controlled `state` slices through getters.
-- [ ] Replace `table.getState()` reads with `table.state`, `table.store.state`, `table.atoms.<slice>.get()`, or `subscribeTable`.
+- [ ] Remove second-argument selectors from `createTable` and `createAppTable`.
+- [ ] Replace `table.state` and `table.getState()` reads with `table.atoms.<slice>.get()` or `table.store.get()`.
+- [ ] Replace selector projections with native `$derived` values.
+- [ ] Remove `subscribeTable` / `SubscribeSource` imports and update `SvelteTable` / `AppSvelteTable` generic arity.
 - [ ] Replace `onStateChange` with per-slice callbacks or external atoms.
 - [ ] Replace `declare module` augmentation of `FilterFns`/`SortFns`/`AggregationFns` with registry-slot registration, and `FilterMeta` augmentation with the `filterMeta` slot.
 - [ ] Add `typeof features` to column helpers and types.

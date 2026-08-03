@@ -57,6 +57,12 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "Quick Start", "to": "framework/octane/quick-start" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "Quick Start", "to": "framework/solid/quick-start" },
@@ -163,6 +169,15 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "Table State", "to": "framework/octane/guide/table-state" },
+            { "label": "Composable Tables (createTableHook)", "to": "framework/octane/guide/composable-tables" },
+            { "label": "Table Context", "to": "framework/octane/guide/table-context" },
+            { "label": "Custom Plugins", "to": "framework/octane/guide/custom-features" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "Table State", "to": "framework/solid/guide/table-state" },
@@ -201,6 +216,8 @@
         {
           "label": "alpine",
           "children": [
+            { "label": "Cell Selection", "to": "framework/alpine/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/alpine/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/alpine/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/alpine/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/alpine/guide/column-sizing" },
@@ -222,6 +239,8 @@
         {
           "label": "angular",
           "children": [
+            { "label": "Cell Selection", "to": "framework/angular/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/angular/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/angular/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/angular/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/angular/guide/column-sizing" },
@@ -244,6 +263,8 @@
         {
           "label": "ember",
           "children": [
+            { "label": "Cell Selection", "to": "framework/ember/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/ember/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/ember/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/ember/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/ember/guide/column-sizing" },
@@ -265,6 +286,8 @@
         {
           "label": "lit",
           "children": [
+            { "label": "Cell Selection", "to": "framework/lit/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/lit/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/lit/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/lit/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/lit/guide/column-sizing" },
@@ -287,6 +310,8 @@
         {
           "label": "react",
           "children": [
+            { "label": "Cell Selection", "to": "framework/react/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/react/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/react/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/react/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/react/guide/column-sizing" },
@@ -309,6 +334,8 @@
         {
           "label": "preact",
           "children": [
+            { "label": "Cell Selection", "to": "framework/preact/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/preact/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/preact/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/preact/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/preact/guide/column-sizing" },
@@ -329,8 +356,33 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "Cell Selection", "to": "framework/octane/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/octane/guide/cell-spanning" },
+            { "label": "Column Ordering", "to": "framework/octane/guide/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/octane/guide/column-pinning" },
+            { "label": "Column Sizing", "to": "framework/octane/guide/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/octane/guide/column-resizing" },
+            { "label": "Column Visibility", "to": "framework/octane/guide/column-visibility" },
+            { "label": "Column Filtering", "to": "framework/octane/guide/column-filtering" },
+            { "label": "Global Filtering", "to": "framework/octane/guide/global-filtering" },
+            { "label": "Fuzzy Filtering", "to": "framework/octane/guide/fuzzy-filtering" },
+            { "label": "Faceting", "to": "framework/octane/guide/column-faceting" },
+            { "label": "Aggregation", "to": "framework/octane/guide/aggregation" },
+            { "label": "Grouping", "to": "framework/octane/guide/grouping" },
+            { "label": "Expanding", "to": "framework/octane/guide/expanding" },
+            { "label": "Pagination", "to": "framework/octane/guide/pagination" },
+            { "label": "Row Pinning", "to": "framework/octane/guide/row-pinning" },
+            { "label": "Row Selection", "to": "framework/octane/guide/row-selection" },
+            { "label": "Sorting", "to": "framework/octane/guide/sorting" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
+            { "label": "Cell Selection", "to": "framework/solid/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/solid/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/solid/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/solid/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/solid/guide/column-sizing" },
@@ -353,6 +405,8 @@
         {
           "label": "svelte",
           "children": [
+            { "label": "Cell Selection", "to": "framework/svelte/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/svelte/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/svelte/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/svelte/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/svelte/guide/column-sizing" },
@@ -375,6 +429,8 @@
         {
           "label": "vue",
           "children": [
+            { "label": "Cell Selection", "to": "framework/vue/guide/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/vue/guide/cell-spanning" },
             { "label": "Column Ordering", "to": "framework/vue/guide/column-ordering" },
             { "label": "Column Pinning", "to": "framework/vue/guide/column-pinning" },
             { "label": "Column Sizing", "to": "framework/vue/guide/column-sizing" },
@@ -436,6 +492,12 @@
           "label": "preact",
           "children": [
             { "label": "Preact API Reference", "to": "framework/preact/reference/index" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "Octane API Reference", "to": "framework/octane/reference/index" }
           ]
         },
         {
@@ -562,6 +624,20 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "useTable", "to": "framework/octane/reference/functions/useTable" },
+            { "label": "createTableHook", "to": "framework/octane/reference/functions/createTableHook" },
+            { "label": "createTableHookContexts", "to": "framework/octane/reference/functions/createTableHookContexts" },
+            { "label": "OctaneTable", "to": "framework/octane/reference/type-aliases/OctaneTable" },
+            { "label": "AppOctaneTable", "to": "framework/octane/reference/type-aliases/AppOctaneTable" },
+            { "label": "CreateTableHookOptions", "to": "framework/octane/reference/type-aliases/CreateTableHookOptions" },
+            { "label": "Subscribe", "to": "framework/octane/reference/variables/Subscribe" },
+            { "label": "FlexRender", "to": "framework/octane/reference/functions/FlexRender-1" },
+            { "label": "flexRender", "to": "framework/octane/reference/functions/flexRender" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "createTable", "to": "framework/solid/reference/functions/createTable" },
@@ -581,7 +657,6 @@
             { "label": "createTableState", "to": "framework/svelte/reference/functions/createTableState" },
             { "label": "SvelteTable", "to": "framework/svelte/reference/type-aliases/SvelteTable" },
             { "label": "AppSvelteTable", "to": "framework/svelte/reference/type-aliases/AppSvelteTable" },
-            { "label": "subscribeTable", "to": "framework/svelte/reference/functions/subscribeTable" },
             { "label": "renderComponent", "to": "framework/svelte/reference/functions/renderComponent" },
             { "label": "renderSnippet", "to": "framework/svelte/reference/functions/renderSnippet" },
             { "label": "FlexRender", "to": "framework/svelte/reference/variables/FlexRender" }
@@ -668,6 +743,12 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "AppColumnHelper", "to": "framework/octane/reference/interfaces/AppColumnHelper" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "AppColumnHelper", "to": "framework/solid/reference/type-aliases/AppColumnHelper" }
@@ -747,6 +828,12 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "AppCellContext", "to": "framework/octane/reference/interfaces/AppCellContext" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "AppCellContext", "to": "framework/solid/reference/type-aliases/AppCellContext" }
@@ -803,6 +890,12 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "AppHeaderContext", "to": "framework/octane/reference/interfaces/AppHeaderContext" }
+          ]
+        },
+        {
           "label": "solid",
           "children": [
             { "label": "AppHeaderContext", "to": "framework/solid/reference/type-aliases/AppHeaderContext" }
@@ -841,6 +934,7 @@
         { "label": "coreRowModelsFeature", "to": "reference/index/variables/coreRowModelsFeature" },
         { "label": "coreRowsFeature", "to": "reference/index/variables/coreRowsFeature" },
         { "label": "coreTablesFeature", "to": "reference/index/variables/coreTablesFeature" },
+        { "label": "cellSpanningFeature", "to": "reference/index/variables/cellSpanningFeature" },
         { "label": "columnFilteringFeature", "to": "reference/index/variables/columnFilteringFeature" },
         { "label": "columnFacetingFeature", "to": "reference/index/variables/columnFacetingFeature" },
         { "label": "rowAggregationFeature", "to": "reference/index/variables/rowAggregationFeature" },
@@ -1046,6 +1140,18 @@
           ]
         },
         {
+          "label": "octane",
+          "children": [
+            { "label": "Basic (useTable)", "to": "framework/octane/examples/basic-use-table" },
+            { "label": "Basic (useAppTable)", "to": "framework/octane/examples/basic-use-app-table" },
+            { "label": "Basic (External State)", "to": "framework/octane/examples/basic-external-state" },
+            { "label": "Basic (External Atoms)", "to": "framework/octane/examples/basic-external-atoms" },
+            { "label": "Basic (Subscribe)", "to": "framework/octane/examples/basic-subscribe" },
+            { "label": "Basic (Dynamic Columns)", "to": "framework/octane/examples/basic-dynamic-columns" },
+            { "label": "Header Groups", "to": "framework/octane/examples/header-groups" }
+          ]
+        },
+        {
           "label": "vanilla",
           "children": [
             { "label": "Basic", "to": "framework/vanilla/examples/basic" }
@@ -1060,6 +1166,8 @@
         {
           "label": "alpine",
           "children": [
+            { "to": "framework/alpine/examples/cell-selection", "label": "Cell Selection" },
+            { "to": "framework/alpine/examples/cell-spanning", "label": "Cell Spanning" },
             { "to": "framework/alpine/examples/filters", "label": "Column Filters" },
             { "to": "framework/alpine/examples/filters-faceted", "label": "Column Filters (Faceted)" },
             { "to": "framework/alpine/examples/filters-faceted-bucketed", "label": "Bucketed Faceted Filters" },
@@ -1087,6 +1195,8 @@
           "label": "angular",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/angular/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/angular/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/angular/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/angular/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/angular/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/angular/examples/filters-faceted-bucketed" },
@@ -1114,6 +1224,8 @@
           "label": "ember",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/ember/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/ember/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/ember/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/ember/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/ember/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/ember/examples/filters-faceted-bucketed" },
@@ -1141,6 +1253,8 @@
           "label": "lit",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/lit/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/lit/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/lit/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/lit/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/lit/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/lit/examples/filters-faceted-bucketed" },
@@ -1169,6 +1283,8 @@
           "label": "react",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/react/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/react/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/react/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/react/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/react/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/react/examples/filters-faceted-bucketed" },
@@ -1198,6 +1314,8 @@
           "label": "solid",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/solid/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/solid/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/solid/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/solid/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/solid/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/solid/examples/filters-faceted-bucketed" },
@@ -1225,6 +1343,8 @@
           "label": "svelte",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/svelte/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/svelte/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/svelte/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/svelte/examples/filtering" },
             { "label": "Column Filters (Faceted)", "to": "framework/svelte/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/svelte/examples/filters-faceted-bucketed" },
@@ -1252,6 +1372,8 @@
           "label": "vue",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/vue/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/vue/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/vue/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/vue/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/vue/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/vue/examples/filters-faceted-bucketed" },
@@ -1279,6 +1401,8 @@
           "label": "preact",
           "children": [
             { "label": "Kitchen Sink (All Features)", "to": "framework/preact/examples/kitchen-sink" },
+            { "label": "Cell Selection", "to": "framework/preact/examples/cell-selection" },
+            { "label": "Cell Spanning", "to": "framework/preact/examples/cell-spanning" },
             { "label": "Column Filters", "to": "framework/preact/examples/filters" },
             { "label": "Column Filters (Faceted)", "to": "framework/preact/examples/filters-faceted" },
             { "label": "Bucketed Faceted Filters", "to": "framework/preact/examples/filters-faceted-bucketed" },
@@ -1300,6 +1424,34 @@
             { "label": "Row Pinning", "to": "framework/preact/examples/row-pinning" },
             { "label": "Row Selection", "to": "framework/preact/examples/row-selection" },
             { "label": "Sorting", "to": "framework/preact/examples/sorting" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "Kitchen Sink (All Features)", "to": "framework/octane/examples/kitchen-sink" },
+            { "label": "Cell Spanning", "to": "framework/octane/examples/cell-spanning" },
+            { "label": "Column Filters", "to": "framework/octane/examples/filters" },
+            { "label": "Column Filters (Faceted)", "to": "framework/octane/examples/filters-faceted" },
+            { "label": "Bucketed Faceted Filters", "to": "framework/octane/examples/filters-faceted-bucketed" },
+            { "label": "Fuzzy Search Filters", "to": "framework/octane/examples/filters-fuzzy" },
+            { "label": "Column Ordering", "to": "framework/octane/examples/column-ordering" },
+            { "label": "Column Pinning", "to": "framework/octane/examples/column-pinning" },
+            { "label": "Column Pinning (Split)", "to": "framework/octane/examples/column-pinning-split" },
+            { "label": "Sticky Column Pinning", "to": "framework/octane/examples/column-pinning-sticky" },
+            { "label": "Column Sizing", "to": "framework/octane/examples/column-sizing" },
+            { "label": "Column Resizing", "to": "framework/octane/examples/column-resizing" },
+            { "label": "Performant Column Resizing", "to": "framework/octane/examples/column-resizing-performant" },
+            { "label": "Column Visibility", "to": "framework/octane/examples/column-visibility" },
+            { "label": "Expanding", "to": "framework/octane/examples/expanding" },
+            { "label": "Expanding Sub Components", "to": "framework/octane/examples/sub-components" },
+            { "label": "Grouping", "to": "framework/octane/examples/grouping" },
+            { "label": "Aggregation", "to": "framework/octane/examples/aggregation" },
+            { "label": "Grouped Aggregation", "to": "framework/octane/examples/grouped-aggregation" },
+            { "label": "Pagination", "to": "framework/octane/examples/pagination" },
+            { "label": "Row Pinning", "to": "framework/octane/examples/row-pinning" },
+            { "label": "Row Selection", "to": "framework/octane/examples/row-selection" },
+            { "label": "Sorting", "to": "framework/octane/examples/sorting" }
           ]
         },
         {
@@ -1363,6 +1515,7 @@
             { "label": "Composable Tables (createTableHook)", "to": "framework/react/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/react/examples/custom-plugin" },
             { "label": "Experimental Web Workers Plugin", "to": "framework/react/examples/web-worker-row-models" },
+            { "label": "Experimental Spreadsheet", "to": "framework/react/examples/spreadsheet" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/react/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Columns (Exp)", "to": "framework/react/examples/virtualized-columns-experimental" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/react/examples/virtualized-rows" },
@@ -1377,6 +1530,7 @@
           "label": "solid",
           "children": [
             { "label": "Composable Tables (createTableHook)", "to": "framework/solid/examples/composable-tables" },
+            { "label": "Experimental Spreadsheet", "to": "framework/solid/examples/spreadsheet" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/solid/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/solid/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/solid/examples/virtualized-infinite-scrolling" },
@@ -1389,6 +1543,7 @@
           "label": "svelte",
           "children": [
             { "label": "Composable Tables (createTableHook)", "to": "framework/svelte/examples/composable-tables" },
+            { "label": "Experimental Spreadsheet", "to": "framework/svelte/examples/spreadsheet" },
             { "label": "With TanStack Virtual - Columns", "to": "framework/svelte/examples/virtualized-columns" },
             { "label": "With TanStack Virtual - Rows", "to": "framework/svelte/examples/virtualized-rows" },
             { "label": "With TanStack Virtual - Infinite Scrolling", "to": "framework/svelte/examples/virtualized-infinite-scrolling" },
@@ -1413,6 +1568,13 @@
             { "label": "Composable Tables (createTableHook)", "to": "framework/preact/examples/composable-tables" },
             { "label": "Custom Plugin", "to": "framework/preact/examples/custom-plugin" },
             { "label": "With TanStack Query", "to": "framework/preact/examples/with-tanstack-query" }
+          ]
+        },
+        {
+          "label": "octane",
+          "children": [
+            { "label": "Composable Tables (createTableHook)", "to": "framework/octane/examples/composable-tables" },
+            { "label": "Custom Plugin", "to": "framework/octane/examples/custom-plugin" }
           ]
         }
       ]

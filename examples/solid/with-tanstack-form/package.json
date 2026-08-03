@@ -14,16 +14,16 @@
   "devDependencies": {
     "@faker-js/faker": "^10.5.0",
     "typescript": "6.0.3",
-    "vite": "^8.1.0",
-    "vite-plugin-solid": "^2.11.12"
+    "vite": "^8.2.0",
+    "vite-plugin-solid": "^2.11.14"
   },
   "dependencies": {
-    "@tanstack/solid-devtools": "^0.8.8",
-    "@tanstack/solid-form": "^1.33.1",
-    "@tanstack/solid-form-devtools": "^0.2.30",
-    "@tanstack/solid-table": "^9.0.0-beta.55",
-    "@tanstack/solid-table-devtools": "^9.0.0-beta.55",
-    "solid-js": "^1.9.13",
+    "@tanstack/solid-devtools": "^0.8.9",
+    "@tanstack/solid-form": "^1.33.2",
+    "@tanstack/solid-form-devtools": "^0.2.31",
+    "@tanstack/solid-table": "^9.0.0-beta.76",
+    "@tanstack/solid-table-devtools": "^9.0.0-beta.76",
+    "solid-js": "^1.9.14",
     "zod": "^4.4.3"
   }
 }

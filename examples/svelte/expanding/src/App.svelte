@@ -102,7 +102,11 @@
       get data() {
         return data
       },
-      getSubRows: (row) => row.subRows,
+      getSubRows: (row) => row.subRows, // tell the table where nested rows live
+      // enableRowSelection: row => row.original.age > 18, // enable selection conditionally; default true
+      // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+      // enableSubRowSelection: false, // disable sub-row selection; default true
+      // enableRowRangeSelection: false, // disable shift-click range selection; default true
       // initialState: { expanded: { '0': true } }, // expand rows on first render
       // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
       // state: { expanded }, // classic controlled state; pair with onExpandedChange
@@ -114,18 +118,15 @@
       // paginateExpandedRows: false, // keep expanded children on their parent page; default true
       // autoResetExpanded: false, // keep expanded rows after page-altering changes; default true
       // autoResetAll: false, // turn off every feature's automatic reset, including expansion
+      // enableFilters: false, // disable all column and global filtering; default true
+      // enableColumnFilters: false, // disable per-column filters; default true
       // filterFromLeafRows: true, // with filtering, keep parents whose descendants match
       // maxLeafRowFilterDepth: 0, // with filtering, only filter root rows
+      // manualFiltering: true, // pass data that is already filtered, for example from a server
       debugTable: true,
     },
-    (state) => ({
-      expanded: state.expanded,
-      pagination: state.pagination,
-      rowSelection: state.rowSelection,
-      columnFilters: state.columnFilters,
-      sorting: state.sorting,
-    }),
   )
+  const pagination = $derived(table.atoms.pagination.get())
 </script>
 
 <div class="demo-root">
@@ -249,7 +250,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -259,7 +260,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e) => {
           const page = (e.target as HTMLInputElement).value
             ? Number((e.target as HTMLInputElement).value) - 1
@@ -270,7 +271,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e) => {
         table.setPageSize(Number((e.target as HTMLSelectElement).value))
       }}
@@ -281,7 +282,7 @@
     </select>
   </div>
   <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>
 
 {#snippet Filter(column: Column<typeof features, Person>, table: SvelteTable<typeof features, Person>)}

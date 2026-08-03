@@ -6,7 +6,7 @@ import type { Row } from '../../types/Row'
 export type RowSelectionState = Record<string, true>
 
 /**
- * Controls how toggling a row affects its descendants.
+ * Controls how toggling a row affects its descendants and ancestors.
  */
 export interface ToggleSelectedOptions {
   /**
@@ -14,6 +14,17 @@ export interface ToggleSelectedOptions {
    * `true`.
    */
   selectChildren?: boolean
+  /**
+   * Whether ancestor row ids should be removed from the selection when this
+   * row is deselected. Useful after a parent cascade wrote the parent id into
+   * state and a child is later deselected. Defaults to `false`.
+   *
+   * Ancestor ids are removed even when the ancestor itself cannot be selected.
+   * Like the other targeted deselection paths, pruning is not gated by
+   * `enableRowSelection`; only the bulk select-all paths preserve
+   * non-selectable rows.
+   */
+  deselectParents?: boolean
 }
 
 export interface TableState_RowSelection {
@@ -45,7 +56,8 @@ export interface TableOptions_RowSelection<
    * Controls whether selecting a parent row also selects its subRows.
    *
    * Provide a predicate to decide per row. This is most useful with expanding or
-   * grouping features and defaults to `true`.
+   * grouping features and defaults to `true`. Select-all and the all-selected
+   * getters also skip descendants of parents that block sub-row selection.
    */
   enableSubRowSelection?: boolean | ((row: Row<TFeatures, TData>) => boolean)
   /**
@@ -138,18 +150,20 @@ export interface Table_RowSelection<
   getSelectedRowIds: () => Array<string>
   /**
    * Checks whether every selectable row on the current page is selected.
+   * Sub-rows whose ancestors block sub-row selection are ignored.
    */
   getIsAllPageRowsSelected: () => boolean
   /**
    * Checks whether every selectable filtered row is selected.
+   * Sub-rows whose ancestors block sub-row selection are ignored.
    */
   getIsAllRowsSelected: () => boolean
   /**
-   * Checks whether the current page has a partial row selection.
+   * Checks whether at least one selectable row on the current page is selected.
    */
   getIsSomePageRowsSelected: () => boolean
   /**
-   * Checks whether filtered rows have a partial row selection.
+   * Checks whether at least one row id is selected.
    */
   getIsSomeRowsSelected: () => boolean
   /**
@@ -187,6 +201,9 @@ export interface Table_RowSelection<
   ) => void
   /**
    * Selects/deselects all rows in the table.
+   *
+   * Deselecting keeps rows that cannot be selected in the selection map unless
+   * `opts.deselectAll` is `true`.
    */
   toggleAllRowsSelected: (
     value?: boolean,

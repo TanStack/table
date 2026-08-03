@@ -165,7 +165,7 @@ Defined in: packages/ember-table/declarations/FlexRender.d.ts:45
 #### Get Signature
 
 ```ts
-get componentToRender(): 
+get componentToRender():
   | ComponentLike<HeaderRenderSignature<TFeatures, TData, TValue>>
   | undefined;
 ```

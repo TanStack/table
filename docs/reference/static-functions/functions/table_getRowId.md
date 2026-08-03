@@ -7,13 +7,13 @@ title: table_getRowId
 
 ```ts
 function table_getRowId<TFeatures, TData>(
-   originalRow, 
-   table, 
-   index, 
+   originalRow,
+   table,
+   index,
    parent?): string;
 ```
 
-Defined in: [core/rows/coreRowsFeature.utils.ts:303](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L303)
+Defined in: [core/rows/coreRowsFeature.utils.ts:310](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/rows/coreRowsFeature.utils.ts#L310)
 
 Resolves the stable id for a row.
 

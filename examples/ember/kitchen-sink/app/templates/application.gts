@@ -261,8 +261,7 @@ class TableFilter extends Component<TableFilterSignature> {
 
   get range(): [string | number | undefined, string | number | undefined] {
     const value = this.filterValue as
-      | [string | number | undefined, string | number | undefined]
-      | undefined
+      [string | number | undefined, string | number | undefined] | undefined
     return value ?? [undefined, undefined]
   }
 
@@ -830,7 +829,7 @@ export default class KitchenSinkTable extends Component {
     <div class='spacer-md'></div>
     <details>
       <summary>Table state (live)</summary>
-      <pre>{{this.tableState}}</pre>
+      <pre data-testid='table-state'>{{this.tableState}}</pre>
     </details>
   </template>
 }

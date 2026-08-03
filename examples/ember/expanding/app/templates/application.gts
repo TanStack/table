@@ -94,7 +94,8 @@ const getIsExpanded = (row: Row<typeof features, Person>): boolean =>
   row.getIsExpanded()
 const getDepth = (row: Row<typeof features, Person>): number => row.depth
 const getIsSelected = (row: Row<typeof features, Person>): boolean =>
-  row.getIsSelected()
+  row.getIsSelected() ||
+  (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())
 const getIsSomeSelected = (row: Row<typeof features, Person>): boolean =>
   row.getIsSomeSelected()
 const getCanSort = (column: Column<typeof features, Person>): boolean =>
@@ -138,8 +139,7 @@ const rangeValue = (
   index: 0 | 1,
 ): string => {
   const value = column.getFilterValue() as
-    | [string | number, string | number]
-    | undefined
+    [string | number, string | number] | undefined
   return value?.[index] != null ? String(value[index]) : ''
 }
 
@@ -231,8 +231,12 @@ export default class ExpandingTable extends Component {
     features,
     columns,
     data: this.data,
-    getSubRows: (row: Person) => row.subRows,
+    getSubRows: (row: Person) => row.subRows, // tell the table where nested rows live
     getRowCanExpand: () => true,
+    // enableRowSelection: row => row.original.age > 18, // enable selection conditionally; default true
+    // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+    // enableSubRowSelection: false, // disable sub-row selection; default true
+    // enableRowRangeSelection: false, // disable shift-click range selection; default true
     // initialState: { expanded: { '0': true } }, // expand rows on first render
     // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
     // state: { expanded }, // classic controlled state; pair with onExpandedChange
@@ -243,8 +247,11 @@ export default class ExpandingTable extends Component {
     // paginateExpandedRows: false, // keep expanded children on their parent page; default true
     // autoResetExpanded: false, // keep expanded rows after page-altering changes; default true
     // autoResetAll: false, // turn off every feature's automatic reset, including expansion
+    // enableFilters: false, // disable all column and global filtering; default true
+    // enableColumnFilters: false, // disable per-column filters; default true
     // filterFromLeafRows: true, // with filtering, keep parents whose descendants match
     // maxLeafRowFilterDepth: 0, // with filtering, only filter root rows
+    // manualFiltering: true, // pass data that is already filtered, for example from a server
   }))
 
   get headerGroups() {
@@ -454,6 +461,6 @@ export default class ExpandingTable extends Component {
     </div>
     <div>{{this.rowCount}} Rows</div>
     <div class='spacer-md'></div>
-    <pre>{{this.tableState}}</pre>
+    <pre data-testid='table-state'>{{this.tableState}}</pre>
   </template>
 }

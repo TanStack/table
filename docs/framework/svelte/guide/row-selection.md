@@ -40,19 +40,26 @@ The row selection feature keeps track of which rows are selected and allows you 
 
 The table instance already manages the row selection state for you. You can access the row selection state or the selected rows from a few APIs.
 
-- `table.state.rowSelection` - returns the row selection state reactively (selected by the `createTable` selector)
+- `table.atoms.rowSelection.get()` - returns the current row selection state and participates in Svelte tracking when read in a template or rune
 - `getSelectedRowModel()` - returns selected rows
 - `getFilteredSelectedRowModel()` - returns selected rows after filtering
 - `getGroupedSelectedRowModel()` - returns selected rows after grouping and sorting
 
 ```ts
-console.log(table.state.rowSelection) //get the row selection state - { 1: true, 2: false, etc... }
+console.log(table.atoms.rowSelection.get()) // get the row selection state - { 1: true, 2: true }
 console.log(table.getSelectedRowModel().rows) //get full client-side selected rows
 console.log(table.getFilteredSelectedRowModel().rows) //get filtered client-side selected rows
 console.log(table.getGroupedSelectedRowModel().rows) //get grouped client-side selected rows
 ```
 
-In event handlers or other non-reactive code, you can also read the current snapshot with `table.atoms.rowSelection.get()`. This read only participates in Svelte dependency tracking when called in a rune-tracked context, so prefer `table.state.rowSelection` (or `subscribeTable`) in your markup.
+Use the same atom read in markup or a native derived value:
+
+```ts
+const rowSelection = $derived(table.atoms.rowSelection.get())
+const selectedCount = $derived(Object.keys(rowSelection).length)
+```
+
+Outside a tracked context, `table.atoms.rowSelection.get()` is simply the current snapshot.
 
 > Note: If you are using `manualPagination`, be aware that the `getSelectedRowModel` API will only return selected rows on the current page because table row models can only generate rows based on the `data` that is passed in. Row selection state, however, can contain row ids that are not present in the `data` array just fine.
 
@@ -175,6 +182,16 @@ const table = createTable({
 })
 ```
 
+Sub-row selection also applies to the select-all APIs. When a parent row blocks sub-row selection, `table.toggleAllRowsSelected()` and `table.toggleAllPageRowsSelected()` skip that parent's descendants, and `table.getIsAllRowsSelected()` and `table.getIsAllPageRowsSelected()` ignore those descendants when deciding whether everything is selected.
+
+Selecting a parent row writes the parent id and its selectable descendant ids into the row selection state. Deselecting a child afterwards does not remove the parent id by default, since some tables treat the state ids as literal selections. Pass the `deselectParents` option to the toggle APIs to remove ancestor ids whenever a row is deselected:
+
+```ts
+row.getToggleSelectedHandler({ deselectParents: true })
+// or
+row.toggleSelected(false, { deselectParents: true })
+```
+
 ### Shift Range Selection
 
 `row.getToggleSelectedHandler()` supports Shift range selection by default. After an ordinary selectable-row interaction establishes an anchor, Shift-selecting another row selects or deselects the inclusive interval between them. The clicked checkbox's resulting checked value controls the whole range, and the clicked endpoint becomes the anchor for the next Shift interaction.
@@ -245,12 +262,15 @@ The `indeterminate` checkbox property cannot be set from markup, so define a sma
 
 <input
   type="checkbox"
-  checked={row.getIsSelected()}
+  checked={row.getIsSelected() ||
+    (row.getCanSelectSubRows() && row.getIsAllSubRowsSelected())}
   disabled={!row.getCanSelect()}
   use:setIndeterminate={!row.getIsSelected() && row.getIsSomeSelected()}
   onclick={row.getToggleSelectedHandler()}
 />
 ```
+
+> **Note:** The `getCanSelectSubRows()` and `getIsAllSubRowsSelected()` clauses on the row checkbox only matter for tables with sub-rows. With flat data, `row.getIsSelected()` alone is enough. See the expanding example for the full pattern, including the `deselectParents` option for pruning stale parent ids when children are deselected.
 
 #### Connect Row Selection APIs to UI
 

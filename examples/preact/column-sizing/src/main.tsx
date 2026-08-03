@@ -64,6 +64,7 @@ function App() {
       features,
       columns,
       data,
+      // defaultColumn: { size: 150, minSize: 50, maxSize: 500 }, // set sizing defaults for every column
       // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
       // atoms: { columnSizing: columnSizingAtom }, // preferred: own sizing state with an external atom
       // state: { columnSizing }, // classic controlled state; pair with onColumnSizingChange
@@ -91,7 +92,7 @@ function App() {
               <input
                 type="number"
                 value={column.getSize()}
-                onChange={(e) => {
+                onInput={(e) => {
                   // Don't actually do this to resize columns. This is just for demonstration purposes.
                   // See the Column Resizing Example for how to do this with dedicated resizing APIs efficiently.
                   table.setColumnSizing({
@@ -265,7 +266,9 @@ function App() {
         </div>
       </div>
       <div className="spacer-md" />
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

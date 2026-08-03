@@ -9,7 +9,7 @@ title: table_getAllColumns
 function table_getAllColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L120)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L155)
 
 Normalizes `options.columns` into the table's nested column tree.
 

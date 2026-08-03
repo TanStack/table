@@ -162,9 +162,11 @@ TanStack Table keeps track of a `columnResizing` state object that you can use t
 html`
   <div
     class="resize-indicator"
-    style="transform: ${header.column.getIsResizing()
-      ? `translateX(${table.state.columnResizing.deltaOffset ?? 0}px)`
-      : ''}"
+    style="transform: ${
+      header.column.getIsResizing()
+        ? `translateX(${table.state.columnResizing.deltaOffset ?? 0}px)`
+        : ''
+    }"
   ></div>
 `
 ```

@@ -567,6 +567,47 @@ describe('table_getCenterHeaderGroups', () => {
   })
 })
 
+describe('header group ids', () => {
+  it('should preserve depth and family prefixes for grouped columns', () => {
+    const data = generateTestData(1)
+    const groupedColumns: Array<ColumnDef<typeof features, Person, any>> = [
+      {
+        id: 'identity',
+        columns: [
+          { accessorKey: 'firstName', id: 'firstName' },
+          { accessorKey: 'age', id: 'age' },
+          { accessorKey: 'lastName', id: 'lastName' },
+        ],
+      },
+    ]
+    const table = constructTable<typeof features, Person>({
+      features,
+      data,
+      columns: groupedColumns,
+      initialState: {
+        columnPinning: {
+          start: ['firstName'],
+          end: ['lastName'],
+        },
+      },
+    })
+
+    const start = table_getStartHeaderGroups(table)
+    const center = table_getCenterHeaderGroups(table)
+    const end = table_getEndHeaderGroups(table)
+
+    expect(start.map((group) => group.id)).toEqual(['start_0', 'start_1'])
+    expect(center.map((group) => group.id)).toEqual(['center_0', 'center_1'])
+    expect(end.map((group) => group.id)).toEqual(['end_0', 'end_1'])
+    expect(start[0]!.headers[0]!.id).toBe('start_1_identity_firstName')
+    expect(center[0]!.headers[0]!.id).toBe('center_1_identity_age')
+    expect(end[0]!.headers[0]!.id).toBe('end_1_identity_lastName')
+    expect(start[1]!.headers[0]!.id).toBe('firstName')
+    expect(center[1]!.headers[0]!.id).toBe('age')
+    expect(end[1]!.headers[0]!.id).toBe('lastName')
+  })
+})
+
 describe('table_getStartLeafColumns', () => {
   it('should return start pinned leaf columns', () => {
     const table = makeTable(1, {

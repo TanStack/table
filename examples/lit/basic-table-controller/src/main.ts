@@ -139,9 +139,11 @@ class LitTableExample extends LitElement {
                     (header) => header.id,
                     (header) => html`
                       <th>
-                        ${header.isPlaceholder
-                          ? null
-                          : FlexRender({ footer: header })}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : FlexRender({ footer: header })
+                        }
                       </th>
                     `,
                   )}

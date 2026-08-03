@@ -58,6 +58,7 @@ function App() {
     get data() {
       return data()
     },
+    // defaultColumn: { size: 150, minSize: 50, maxSize: 500 }, // set sizing defaults for every column
     // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
     // atoms: { columnSizing: columnSizingAtom }, // preferred: own sizing state with an external atom
     // state: { columnSizing }, // classic controlled state; pair with onColumnSizingChange
@@ -244,7 +245,9 @@ function App() {
         </div>
       </div>
       <div class="spacer-md" />
-      <pre>{JSON.stringify(table.store.get(), null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.store.get(), null, 2)}
+      </pre>
     </div>
   )
 }

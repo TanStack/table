@@ -1,4 +1,4 @@
-import { Match, Switch, createComponent } from 'solid-js'
+import { Match, Show, Switch, createComponent } from 'solid-js'
 import type { JSX } from 'solid-js'
 import type {
   Cell,
@@ -24,7 +24,7 @@ export function flexRender<TProps>(
   Comp: ((_props: TProps) => JSX.Element) | JSX.Element | undefined,
   props: TProps,
 ): JSX.Element {
-  if (!Comp) return null
+  if (Comp === null || Comp === undefined) return null
 
   if (typeof Comp === 'function') {
     return createComponent(Comp, props as any)
@@ -105,16 +105,22 @@ export function FlexRender<
           const groupingDef = def as typeof def & {
             aggregatedCell?: typeof def.cell
           }
-          if (groupingCell.getIsAggregated?.()) {
-            return flexRender(
-              groupingDef.aggregatedCell ?? def.cell,
-              c.getContext(),
-            )
-          }
-          if (groupingCell.getIsPlaceholder?.()) {
-            return null
-          }
-          return flexRender(def.cell, c.getContext())
+
+          return (
+            <Show
+              when={groupingCell.getIsAggregated?.()}
+              fallback={
+                <Show when={!groupingCell.getIsPlaceholder?.()} fallback={null}>
+                  {flexRender(def.cell, c.getContext())}
+                </Show>
+              }
+            >
+              {flexRender(
+                groupingDef.aggregatedCell ?? def.cell,
+                c.getContext(),
+              )}
+            </Show>
+          )
         }}
       </Match>
       <Match keyed when={'header' in props && props.header}>

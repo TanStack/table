@@ -8,6 +8,120 @@ import type { Person } from './makeData'
 
 const features = tableFeatures({})
 
+// A traditional header group setup: every leaf column sits under a top-level
+// group, so the tree is even (2 header rows) and no placeholder headers are
+// created.
+const basicColumns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    header: 'Name',
+    columns: [
+      {
+        accessorKey: 'firstName',
+        header: 'First Name',
+        footer: 'First Name',
+      },
+      {
+        accessorFn: (row) => row.lastName,
+        id: 'lastName',
+        header: 'Last Name',
+        footer: 'Last Name',
+      },
+    ],
+  },
+  {
+    header: 'Stats',
+    columns: [
+      { accessorKey: 'age', header: 'Age', footer: 'Age' },
+      { accessorKey: 'visits', header: 'Visits', footer: 'Visits' },
+    ],
+  },
+  {
+    header: 'Profile',
+    columns: [
+      { accessorKey: 'status', header: 'Status', footer: 'Status' },
+      {
+        accessorKey: 'progress',
+        header: 'Profile Progress',
+        footer: 'Profile Progress',
+      },
+    ],
+  },
+]
+
+// Groups nested inside groups, with every leaf column at the same depth. The
+// tree stays even, so there are three header rows and still no placeholders,
+// and each group's colSpan is the sum of its descendants.
+const nestedColumns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    header: 'Person',
+    columns: [
+      {
+        header: 'Name',
+        columns: [
+          { accessorKey: 'firstName', header: 'First Name' },
+          {
+            accessorFn: (row) => row.lastName,
+            id: 'lastName',
+            header: 'Last Name',
+          },
+        ],
+      },
+      {
+        header: 'Demographics',
+        columns: [{ accessorKey: 'age', header: 'Age' }],
+      },
+    ],
+  },
+  {
+    header: 'Activity',
+    columns: [
+      {
+        header: 'Engagement',
+        columns: [
+          { accessorKey: 'visits', header: 'Visits' },
+          { accessorKey: 'status', header: 'Status' },
+        ],
+      },
+      {
+        header: 'Progress',
+        columns: [{ accessorKey: 'progress', header: 'Profile Progress' }],
+      },
+    ],
+  },
+]
+
+// An uneven column tree: `fullName` and `progress` are top-level leaf columns
+// while their siblings nest two and three levels deep. The placeholder at the
+// top of each column's placeholder chain carries the chain's full
+// `header.rowSpan`, and the headers it covers report a rowSpan of 0 so the
+// renderer can skip them.
+const unevenColumns: Array<ColumnDef<typeof features, Person>> = [
+  {
+    accessorFn: (row) =>
+      [row.firstName, row.lastName].filter(Boolean).join(' '),
+    id: 'fullName',
+    header: 'Full Name',
+    cell: (info) => info.getValue(),
+  },
+  {
+    header: 'Info',
+    columns: [
+      { accessorKey: 'age', header: () => 'Age' },
+      {
+        header: 'More Info',
+        columns: [
+          {
+            accessorKey: 'visits',
+            header: () => html`<span>Visits</span>`,
+          },
+          { accessorKey: 'status', header: 'Status' },
+        ],
+      },
+    ],
+  },
+  { accessorKey: 'progress', header: 'Profile Progress' },
+]
+
 const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
   {
     header: 'Name',
@@ -63,9 +177,18 @@ const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
 @customElement('lit-table-example')
 class LitTableExample extends LitElement {
   @state()
-  private _data: Array<Person> = makeData(20)
+  private _data: Array<Person> = makeData(5)
 
   private tableController = new TableController<typeof features, Person>(this)
+  private basicTableController = new TableController<typeof features, Person>(
+    this,
+  )
+  private nestedTableController = new TableController<typeof features, Person>(
+    this,
+  )
+  private unevenTableController = new TableController<typeof features, Person>(
+    this,
+  )
 
   protected render() {
     const table = this.tableController.table(
@@ -76,13 +199,55 @@ class LitTableExample extends LitElement {
       },
       () => ({}),
     )
+    const basicTable = this.basicTableController.table(
+      {
+        features,
+        columns: basicColumns,
+        data: this._data,
+      },
+      () => ({}),
+    )
+    const nestedTable = this.nestedTableController.table(
+      {
+        features,
+        columns: nestedColumns,
+        data: this._data,
+      },
+      () => ({}),
+    )
+    const unevenTable = this.unevenTableController.table(
+      {
+        features,
+        columns: unevenColumns,
+        data: this._data,
+      },
+      () => ({}),
+    )
+
+    const renderBody = (bodyTable: typeof table) => html`
+      <tbody>
+        ${repeat(
+          bodyTable.getRowModel().rows,
+          (row) => row.id,
+          (row) => html`
+            <tr>
+              ${repeat(
+                row.getAllCells(),
+                (cell) => cell.id,
+                (cell) => html` <td>${FlexRender({ cell })}</td> `,
+              )}
+            </tr>
+          `,
+        )}
+      </tbody>
+    `
 
     return html`
       <div class="demo-root">
         <div>
           <button
             @click=${() => {
-              this._data = makeData(20)
+              this._data = makeData(5)
             }}
           >
             Regenerate Data
@@ -95,63 +260,178 @@ class LitTableExample extends LitElement {
             Stress Test (1k rows)
           </button>
         </div>
-        <table>
-          <thead>
-            ${repeat(
-              table.getHeaderGroups(),
-              (headerGroup) => headerGroup.id,
-              (headerGroup) => html`
-                <tr>
-                  ${repeat(
-                    headerGroup.headers,
-                    (header) => header.id,
-                    (header) => html`
-                      <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder ? null : FlexRender({ header })}
-                      </th>
-                    `,
-                  )}
-                </tr>
-              `,
-            )}
-          </thead>
-          <tbody>
-            ${repeat(
-              table.getRowModel().rows,
-              (row) => row.id,
-              (row) => html`
-                <tr>
-                  ${repeat(
-                    row.getAllCells(),
-                    (cell) => cell.id,
-                    (cell) => html` <td>${FlexRender({ cell })}</td> `,
-                  )}
-                </tr>
-              `,
-            )}
-          </tbody>
-          <tfoot>
-            ${repeat(
-              table.getFooterGroups(),
-              (footerGroup) => footerGroup.id,
-              (footerGroup) => html`
-                <tr>
-                  ${repeat(
-                    footerGroup.headers,
-                    (header) => header.id,
-                    (header) => html`
-                      <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : FlexRender({ footer: header })}
-                      </th>
-                    `,
-                  )}
-                </tr>
-              `,
-            )}
-          </tfoot>
-        </table>
+        <div class="spacer-md"></div>
+        <!-- The panels wrap into a grid whenever the viewport is wide enough. -->
+        <div class="example-grid">
+          <section class="example-panel">
+            <h2 class="section-title">Basic Header Groups</h2>
+            <table>
+              <thead>
+                ${repeat(
+                  basicTable.getHeaderGroups(),
+                  (headerGroup) => headerGroup.id,
+                  (headerGroup) => html`
+                    <tr>
+                      ${repeat(
+                        headerGroup.headers,
+                        (header) => header.id,
+                        (header) => html`
+                          <th colspan="${header.colSpan}">
+                            ${FlexRender({ header })}
+                          </th>
+                        `,
+                      )}
+                    </tr>
+                  `,
+                )}
+              </thead>
+              ${renderBody(basicTable)}
+              <tfoot>
+                ${repeat(
+                  basicTable
+                    .getFooterGroups()
+                    // Only the leaf columns declare footers, so skip the group
+                    // row instead of rendering a blank one.
+                    .filter((footerGroup) =>
+                      footerGroup.headers.some(
+                        (header) =>
+                          !header.isPlaceholder &&
+                          header.column.columnDef.footer,
+                      ),
+                    ),
+                  (footerGroup) => footerGroup.id,
+                  (footerGroup) => html`
+                    <tr>
+                      ${repeat(
+                        footerGroup.headers,
+                        (header) => header.id,
+                        (header) => html`
+                          <th colspan="${header.colSpan}">
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ footer: header })
+                            }
+                          </th>
+                        `,
+                      )}
+                    </tr>
+                  `,
+                )}
+              </tfoot>
+            </table>
+          </section>
+
+          <section class="example-panel">
+            <h2 class="section-title">Nested Header Groups</h2>
+            <table>
+              <thead>
+                ${repeat(
+                  nestedTable.getHeaderGroups(),
+                  (headerGroup) => headerGroup.id,
+                  (headerGroup) => html`
+                    <tr>
+                      ${repeat(
+                        headerGroup.headers,
+                        (header) => header.id,
+                        (header) => html`
+                          <th colspan="${header.colSpan}">
+                            ${FlexRender({ header })}
+                          </th>
+                        `,
+                      )}
+                    </tr>
+                  `,
+                )}
+              </thead>
+              ${renderBody(nestedTable)}
+            </table>
+          </section>
+
+          <section class="example-panel">
+            <h2 class="section-title">Placeholder Headers</h2>
+            <table>
+              <thead>
+                ${repeat(
+                  table.getHeaderGroups(),
+                  (headerGroup) => headerGroup.id,
+                  (headerGroup) => html`
+                    <tr>
+                      ${repeat(
+                        headerGroup.headers,
+                        (header) => header.id,
+                        (header) => html`
+                          <th colspan="${header.colSpan}">
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
+                          </th>
+                        `,
+                      )}
+                    </tr>
+                  `,
+                )}
+              </thead>
+              ${renderBody(table)}
+              <tfoot>
+                ${repeat(
+                  table.getFooterGroups(),
+                  (footerGroup) => footerGroup.id,
+                  (footerGroup) => html`
+                    <tr>
+                      ${repeat(
+                        footerGroup.headers,
+                        (header) => header.id,
+                        (header) => html`
+                          <th colspan="${header.colSpan}">
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ footer: header })
+                            }
+                          </th>
+                        `,
+                      )}
+                    </tr>
+                  `,
+                )}
+              </tfoot>
+            </table>
+          </section>
+
+          <section class="example-panel">
+            <h2 class="section-title">Header Row Spanning</h2>
+            <table>
+              <thead>
+                ${repeat(
+                  unevenTable.getHeaderGroups(),
+                  (headerGroup) => headerGroup.id,
+                  (headerGroup) => html`
+                    <tr>
+                      ${repeat(
+                        headerGroup.headers.filter(
+                          (header) => header.rowSpan !== 0,
+                        ),
+                        (header) => header.id,
+                        (header) => html`
+                          <th
+                            colspan="${header.colSpan}"
+                            rowspan="${header.rowSpan}"
+                          >
+                            ${FlexRender({ header })}
+                          </th>
+                        `,
+                      )}
+                    </tr>
+                  `,
+                )}
+              </thead>
+              ${renderBody(unevenTable)}
+            </table>
+          </section>
+        </div>
       </div>
       <style>
         * {
@@ -384,6 +664,17 @@ class LitTableExample extends LitElement {
           flex-wrap: wrap;
           justify-content: center;
           gap: 0.5rem;
+        }
+        /* Lays the header group examples side by side when the viewport
+           allows it. */
+        .example-grid {
+          display: flex;
+          flex-wrap: wrap;
+          align-items: flex-start;
+          gap: 1rem 1.5rem;
+        }
+        .example-panel {
+          flex: 0 1 auto;
         }
       </style>
     `

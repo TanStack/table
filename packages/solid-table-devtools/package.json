@@ -1,6 +1,6 @@
 {
   "name": "@tanstack/solid-table-devtools",
-  "version": "9.0.0-beta.55",
+  "version": "9.0.0-beta.76",
   "description": "Solid devtools for TanStack Table.",
   "author": "Tanner Linsley",
   "license": "MIT",
@@ -53,8 +53,8 @@
   },
   "devDependencies": {
     "@tanstack/table-core": "workspace:*",
-    "solid-js": "^1.9.13",
-    "vite-plugin-solid": "^2.11.12"
+    "solid-js": "^1.9.14",
+    "vite-plugin-solid": "^2.11.14"
   },
   "peerDependencies": {
     "@tanstack/table-core": "^9.0.0-beta.5",

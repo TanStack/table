@@ -1,7 +1,10 @@
 import type { CoreFeatures } from '../core/coreFeatures'
 import type { CellData, RowData, UnionToIntersection } from './type-utils'
+import type { Cell } from './Cell'
 import type { Column } from './Column'
 import type { ColumnDefBase_All } from './ColumnDef'
+import type { Header } from './Header'
+import type { HeaderGroup } from './HeaderGroup'
 import type { Row } from './Row'
 import type { Table_Internal } from './Table'
 import type { TableOptions_All } from './TableOptions'
@@ -159,9 +162,9 @@ export type ValidateFeatureSlots<TFeatures extends TableFeatures> =
   IsAny<TFeatures> extends true
     ? {}
     : {
-        [K in keyof TFeatures as K extends keyof FeatureSlotPrereqs
-          ? K
-          : never]: K extends keyof FeatureSlotPrereqs
+        [
+          K in keyof TFeatures as K extends keyof FeatureSlotPrereqs ? K : never
+        ]: K extends keyof FeatureSlotPrereqs
           ? [Extract<FeatureSlotPrereqs[K], keyof TFeatures>] extends [never]
             ? `Error: '${K & string}' requires '${FeatureSlotPrereqs[K] &
                 string}' to be included in this table's features.`
@@ -310,8 +313,8 @@ export interface TableFeatures
  *
  * Feature objects are registered in the table's `features` option. They can
  * contribute default state/options, default column definitions, table APIs,
- * shared prototype APIs for rows/columns/headers/cells, and per-instance row
- * or column data.
+ * shared prototype APIs for rows/columns/headers/cells, and per-instance data
+ * for tables, columns, rows, headers, header groups, and cells.
  */
 export interface TableFeature {
   /**
@@ -423,16 +426,35 @@ export interface TableFeature {
    * instance.
    *
    * This runs once during table construction after options, state atoms, and
-   * the store are available, and before any feature's `constructTableAPIs`
-   * hook runs. Use `constructTableAPIs` exclusively for assigning table
-   * methods. Table resets do not rerun this hook; use
-   * `resetTableInstanceData` to clear transient instance data instead.
+   * the store are available. Features are processed in a single pass in
+   * registration order, with each feature's instance data initialized just
+   * before its own `constructTableAPIs` hook, so this hook may rely on data
+   * and APIs of features registered earlier. Use `constructTableAPIs`
+   * exclusively for assigning table methods. Table resets do not rerun this
+   * hook; use `resetTableInstanceData` to clear transient instance data
+   * instead.
    */
   initTableInstanceData?: <
     TFeatures extends TableFeatures,
     TData extends RowData,
   >(
     table: Table_Internal<TFeatures, TData>,
+  ) => void
+  /**
+   * Initializes instance-specific data on each cell.
+   *
+   * This runs for every constructed cell after core cell fields such as `id`,
+   * `column`, and `row` have been assigned. Cells are constructed lazily on
+   * first access per row/column pair and cached, so this runs once per cell
+   * instance. Use this for per-cell mutable data, caches, or annotations.
+   * Shared methods should be assigned via `assignCellPrototype` instead.
+   */
+  initCellInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    cell: Cell<TFeatures, TData, TValue>,
   ) => void
   /**
    * Initializes instance-specific data on each column.
@@ -448,6 +470,39 @@ export interface TableFeature {
     TValue extends CellData = CellData,
   >(
     column: Column<TFeatures, TData, TValue>,
+  ) => void
+  /**
+   * Initializes instance-specific data on each header group.
+   *
+   * This runs for every constructed header group after `depth`, `id`, and the
+   * fully populated `headers` array have been assigned. Header groups have no
+   * shared prototype, so this is their only per-instance extension point.
+   * Header groups are reconstructed whenever they recompute (e.g. column
+   * visibility, order, or pinning changes), so this reruns on every rebuild.
+   */
+  initHeaderGroupInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+  >(
+    headerGroup: HeaderGroup<TFeatures, TData>,
+  ) => void
+  /**
+   * Initializes instance-specific data on each header.
+   *
+   * This runs for every constructed header after core header fields such as
+   * `id`, `column`, `depth`, `index`, and `isPlaceholder` have been assigned,
+   * but before `subHeaders` are populated and before `headerGroup` is linked.
+   * Headers are reconstructed on every header group rebuild, so this reruns
+   * on every rebuild. Use this for per-header mutable data, caches, or
+   * annotations. Shared methods should be assigned via `assignHeaderPrototype`
+   * instead.
+   */
+  initHeaderInstanceData?: <
+    TFeatures extends TableFeatures,
+    TData extends RowData,
+    TValue extends CellData = CellData,
+  >(
+    header: Header<TFeatures, TData, TValue>,
   ) => void
   /**
    * Initializes instance-specific data on each row.

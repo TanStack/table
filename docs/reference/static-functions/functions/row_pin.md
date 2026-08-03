@@ -7,9 +7,9 @@ title: row_pin
 
 ```ts
 function row_pin<TFeatures, TData>(
-   row, 
-   position, 
-   includeLeafRows?, 
+   row,
+   position,
+   includeLeafRows?,
    includeParentRows?): void;
 ```
 

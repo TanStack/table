@@ -1,17 +1,25 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createAtom } from '@tanstack/store'
+import { batch, createAtom } from '@tanstack/store'
 import {
+  columnFilteringFeature,
   constructTable,
+  globalFilteringFeature,
   rowPaginationFeature,
   rowSelectionFeature,
   rowSortingFeature,
 } from '../../../src'
+import { renderPhaseReactivity } from '../../../src/reactivity'
+import {
+  table_setOptions,
+  table_syncExternalStateToBaseAtoms,
+} from '../../../src/static-functions'
 import { testFeatures } from '../../fixtures/features'
 import type {
   PaginationState,
   SortingState,
   Table,
   TableOptions,
+  Table_Internal,
 } from '../../../src'
 
 const features = testFeatures({
@@ -66,6 +74,46 @@ describe('three-layer atom architecture', () => {
       expect(table.baseAtoms.sorting.get()).toEqual(external)
       expect(table.atoms.sorting.get()).toEqual(external)
       expect(table.store.state.sorting).toEqual(external)
+    })
+
+    it('stages render options without publishing controlled state', () => {
+      const table = constructTable({
+        features: {
+          ...features,
+          coreReactivityFeature: renderPhaseReactivity({ createAtom, batch }),
+        },
+        columns: [],
+        data: [],
+      })
+      const internalTable = table as unknown as Table_Internal<
+        typeof features,
+        any
+      >
+      const controlled: SortingState = [{ id: 'controlled', desc: false }]
+
+      table_setOptions(
+        internalTable,
+        (options) => ({
+          ...options,
+          state: {
+            sorting: controlled,
+          },
+        }),
+        { syncExternalState: false },
+      )
+
+      // Options are current and render reads resolve the controlled value,
+      // but nothing was published into the base atoms yet.
+      expect(table.options.state?.sorting).toBe(controlled)
+      expect(table.baseAtoms.sorting.get()).toEqual([])
+      expect(table.atoms.sorting.get()).toBe(controlled)
+      expect(table.store.get().sorting).toBe(controlled)
+
+      table_syncExternalStateToBaseAtoms(internalTable, {
+        sorting: controlled,
+      })
+
+      expect(table.baseAtoms.sorting.get()).toBe(controlled)
     })
 
     it('options.atoms[key] takes precedence over options.state[key] when both are present', () => {
@@ -131,6 +179,71 @@ describe('three-layer atom architecture', () => {
         pageIndex: 0,
         pageSize: 10,
       })
+    })
+  })
+
+  describe('explicitly undefined controlled state (#5909)', () => {
+    it('falls back to the slice initial default at construct', () => {
+      const table = makeTable({ state: { sorting: undefined } })
+      expect(table.atoms.sorting.get()).toEqual([])
+      expect(table.store.state.sorting).toEqual([])
+      expect(table.baseAtoms.sorting.get()).toEqual([])
+    })
+
+    it('falls back to user-provided initialState', () => {
+      const table = makeTable({
+        initialState: { sorting: [{ id: 'name', desc: true }] },
+        state: { sorting: undefined },
+      })
+      expect(table.store.state.sorting).toEqual([{ id: 'name', desc: true }])
+    })
+
+    it('does not poison baseAtoms when a controlled slice becomes undefined', () => {
+      const controlled: SortingState = [{ id: 'name', desc: false }]
+      const table = makeTable({ state: { sorting: controlled } })
+      const internalTable = table as unknown as Table_Internal<
+        typeof features,
+        any
+      >
+      expect(table.baseAtoms.sorting.get()).toBe(controlled)
+
+      table_setOptions(internalTable, (options) => ({
+        ...options,
+        state: { sorting: undefined },
+      }))
+      expect(table.store.state.sorting).toEqual([])
+      expect(table.baseAtoms.sorting.get()).toEqual([])
+
+      // removing the key returns the slice to uncontrolled internal writes
+      table_setOptions(internalTable, (options) => ({
+        ...options,
+        state: {},
+      }))
+      table.setSorting([{ id: 'age', desc: true }])
+      expect(table.store.state.sorting).toEqual([{ id: 'age', desc: true }])
+    })
+
+    it('controlled globalFilter can still be cleared with undefined', () => {
+      const gfFeatures = testFeatures({
+        columnFilteringFeature,
+        globalFilteringFeature,
+      })
+      const table = constructTable({
+        features: gfFeatures,
+        columns: [],
+        data: [],
+        state: { globalFilter: 'search' },
+      })
+      expect(table.store.state.globalFilter).toBe('search')
+
+      table_setOptions(
+        table as unknown as Table_Internal<typeof gfFeatures, any>,
+        (options) => ({
+          ...options,
+          state: { globalFilter: undefined },
+        }),
+      )
+      expect(table.store.state.globalFilter).toBeUndefined()
     })
   })
 

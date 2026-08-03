@@ -73,7 +73,10 @@ export class App {
     features,
     columns,
     data: this.data(),
-    initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+    initialState: {
+      pagination: { pageSize: 20, pageIndex: 0 },
+      // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+    },
     state: { expanded: this.expanded(), rowPinning: this.rowPinning() },
     onExpandedChange: (updater: Updater<ExpandedState>) =>
       isFunction(updater)

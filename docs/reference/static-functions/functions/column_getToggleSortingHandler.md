@@ -9,13 +9,12 @@ title: column_getToggleSortingHandler
 function column_getToggleSortingHandler<TFeatures, TData, TValue>(column): (e) => void;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:494](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L494)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:498](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L498)
 
 Creates a header event handler that toggles this column's sorting.
 
-The handler ignores events when the column cannot sort, persists React-style
-synthetic events when present, and asks `options.isMultiSortEvent` whether
-the event should add to a multi-sort.
+The handler ignores events when the column cannot sort, and asks
+`options.isMultiSortEvent` whether the event should add to a multi-sort.
 
 ## Type Parameters
 

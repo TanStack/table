@@ -67,6 +67,30 @@ export function table_resetSorting<
   )
 }
 
+/**
+ * Resets sorting after the table data changes when explicitly enabled.
+ *
+ * Unlike other auto-reset behaviors, sorting is preserved by default. An
+ * explicit `autoResetAll` value takes precedence over `autoResetSorting`.
+ *
+ * @example
+ * ```ts
+ * table_autoResetSorting(table)
+ * ```
+ */
+export function table_autoResetSorting<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(table: Table_Internal<TFeatures, TData>) {
+  // The core row model is available without the sorting feature. Avoid
+  // routing an update when this table has no sorting state to reset.
+  if (!table.atoms.sorting) return
+
+  if (table.options.autoResetAll ?? table.options.autoResetSorting ?? false) {
+    table_resetSorting(table)
+  }
+}
+
 // Column Utils
 
 /**
@@ -141,10 +165,13 @@ export function column_getAutoSortFn<
 }
 
 /**
- * Chooses the default first sort direction from the first filtered row value.
+ * Chooses the default first sort direction from sampled filtered row values.
  *
- * String columns start ascending so alphabetical order is natural; other value
- * types start descending.
+ * The first non-nullish value among the sampled rows decides: string columns
+ * start ascending so alphabetical order is natural; other value types (or
+ * columns with no non-nullish sample) start descending. Sampling past leading
+ * nullish values keeps the toggle cycle stable when sorting or a data swap
+ * moves an empty value into the first row.
  *
  * @example
  * ```ts
@@ -156,12 +183,16 @@ export function column_getAutoSortDir<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const firstRow = column.table.getFilteredRowModel().flatRows[0]
+  const firstRows = column.table.getFilteredRowModel().flatRows.slice(0, 10)
 
-  const value = firstRow ? firstRow.getValue(column.id) : undefined
+  for (let i = 0; i < firstRows.length; i++) {
+    const value = firstRows[i]!.getValue(column.id)
 
-  if (typeof value === 'string') {
-    return 'asc'
+    if (value == null) {
+      continue
+    }
+
+    return typeof value === 'string' ? 'asc' : 'desc'
   }
 
   return 'desc'
@@ -210,8 +241,8 @@ export function column_getSortFn<
  * Applies the next sorting state for this column.
  *
  * The toggle can add, replace, flip, or remove this column's sort entry. Multi
- * sorting respects `enableMultiSort`, `maxMultiSortColCount`, and the `multi`
- * argument.
+ * sorting respects `enableMultiSort`, `enableMultiRemove`,
+ * `maxMultiSortColCount`, and the `multi` argument.
  *
  * @example
  * ```ts
@@ -228,7 +259,10 @@ export function column_toggleSorting<
   multi?: boolean,
 ) {
   // this needs to be outside of table.setSorting to be in sync with rerender
-  const nextSortingOrder = column_getNextSortingOrder(column)
+  const nextSortingOrder = column_getNextSortingOrder(
+    column,
+    multi && column_getCanMultiSort(column),
+  )
   const hasManualValue = typeof desc !== 'undefined'
 
   table_setSorting(column.table, (old) => {
@@ -243,18 +277,21 @@ export function column_toggleSorting<
     let sortAction: 'add' | 'remove' | 'toggle' | 'replace'
     const nextDesc = hasManualValue ? desc : nextSortingOrder === 'desc'
 
+    const isMultiMode = !!(
+      old.length &&
+      column_getCanMultiSort(column) &&
+      multi
+    )
+
     // Multi-mode
-    if (old.length && column_getCanMultiSort(column) && multi) {
+    if (isMultiMode) {
       if (existingSorting) {
         sortAction = 'toggle'
       } else {
         sortAction = 'add'
       }
     } else {
-      // Normal mode
-      if (old.length && existingIndex !== old.length - 1) {
-        sortAction = 'replace'
-      } else if (existingSorting) {
+      if (existingSorting) {
         sortAction = 'toggle'
       } else {
         sortAction = 'replace'
@@ -289,17 +326,19 @@ export function column_toggleSorting<
       )
     } else if (sortAction === 'toggle') {
       // This flips (or sets) the
-      newSorting = old.map((d) => {
-        if (d.id === column.id) {
-          return {
-            ...d,
-            desc: nextDesc,
-          }
-        }
-        return d
-      })
+      newSorting = isMultiMode
+        ? old.map((d) => {
+            if (d.id === column.id) {
+              return {
+                ...d,
+                desc: nextDesc,
+              }
+            }
+            return d
+          })
+        : [{ id: column.id, desc: nextDesc }]
     } else if (sortAction === 'remove') {
-      newSorting = old.filter((d) => d.id !== column.id)
+      newSorting = isMultiMode ? old.filter((d) => d.id !== column.id) : []
     } else {
       newSorting = [
         {
@@ -482,9 +521,8 @@ export function column_clearSorting<
 /**
  * Creates a header event handler that toggles this column's sorting.
  *
- * The handler ignores events when the column cannot sort, persists React-style
- * synthetic events when present, and asks `options.isMultiSortEvent` whether
- * the event should add to a multi-sort.
+ * The handler ignores events when the column cannot sort, and asks
+ * `options.isMultiSortEvent` whether the event should add to a multi-sort.
  *
  * @example
  * ```ts
@@ -500,7 +538,6 @@ export function column_getToggleSortingHandler<
 
   return (e: unknown) => {
     if (!canSort) return
-    ;(e as any).persist?.()
     column_toggleSorting(
       column,
 

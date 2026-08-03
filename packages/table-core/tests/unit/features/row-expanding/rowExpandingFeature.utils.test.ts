@@ -131,11 +131,53 @@ describe('table_toggleAllRowsExpanded', () => {
 
   it('should apply an explicit value without toggling', () => {
     const onExpandedChange = vi.fn()
-    const table = makeTable({ onExpandedChange })
+    const table = makeTable({
+      onExpandedChange,
+      initialState: { expanded: { '0': true } },
+    })
 
     table_toggleAllRowsExpanded(table, false)
 
     expect(onExpandedChange).toHaveBeenCalledWith({})
+  })
+
+  it('should be a no-op when collapsing with nothing expanded', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange })
+
+    table_toggleAllRowsExpanded(table, false)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when already in the expanded-all state', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({
+      onExpandedChange,
+      initialState: { expanded: true },
+    })
+
+    table_toggleAllRowsExpanded(table, true)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when no rows can expand', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange }, [3])
+
+    table_toggleAllRowsExpanded(table, true)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when expanding is disabled', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange, enableExpanding: false })
+
+    table_toggleAllRowsExpanded(table, true)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
   })
 })
 
@@ -196,8 +238,24 @@ describe('table_getIsAllRowsExpanded', () => {
     expect(table_getIsAllRowsExpanded(table)).toBe(true)
   })
 
-  it('should return false when any row is collapsed', () => {
+  it('should return true when only every expandable row id is expanded', () => {
+    // A materialized expanded-all map only contains expandable row ids, so
+    // leaf rows must not count against the all-expanded check
+    const table = makeTable({
+      initialState: { expanded: { '0': true, '1': true, '2': true } },
+    })
+
+    expect(table_getIsAllRowsExpanded(table)).toBe(true)
+  })
+
+  it('should return false when any expandable row is collapsed', () => {
     const table = makeTable({ initialState: { expanded: { '0': true } } })
+
+    expect(table_getIsAllRowsExpanded(table)).toBe(false)
+  })
+
+  it('should return false for stale expanded ids when no rows can expand', () => {
+    const table = makeTable({ initialState: { expanded: { '0': true } } }, [3])
 
     expect(table_getIsAllRowsExpanded(table)).toBe(false)
   })
@@ -223,10 +281,16 @@ describe('table_getExpandedDepth', () => {
     ).toBe(2)
   })
 
-  it('should measure depth from the row model for the expanded-all state', () => {
+  it('should measure depth from the row model expandable rows for the expanded-all state', () => {
+    // With 2 levels of data only the root rows can expand, so the deepest
+    // expandable (and therefore expanded) id depth is 1, not the leaf depth
     const table = makeTable({ initialState: { expanded: true } })
 
-    expect(table_getExpandedDepth(table)).toBe(2)
+    expect(table_getExpandedDepth(table)).toBe(1)
+
+    const deepTable = makeTable({ initialState: { expanded: true } }, [2, 2, 2])
+
+    expect(table_getExpandedDepth(deepTable)).toBe(2)
   })
 })
 
@@ -254,7 +318,7 @@ describe('row_toggleExpanded', () => {
     ).toEqual({ '1': true })
   })
 
-  it('should return the previous state unchanged for a redundant expand', () => {
+  it('should be a no-op for a redundant expand', () => {
     const onExpandedChange = vi.fn()
     const table = makeTable({
       onExpandedChange,
@@ -263,11 +327,75 @@ describe('row_toggleExpanded', () => {
 
     row_toggleExpanded(table.getRow('0'), true)
 
-    const old = { '0': true }
-    expect(getUpdaterResult(onExpandedChange, old)).toBe(old)
+    expect(onExpandedChange).not.toHaveBeenCalled()
   })
 
-  it('should materialize the expanded-all state when collapsing one row', () => {
+  it('should be a no-op for a redundant collapse', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange })
+
+    row_toggleExpanded(table.getRow('0'), false)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op for a redundant expand in the expanded-all state', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({
+      onExpandedChange,
+      initialState: { expanded: true },
+    })
+
+    row_toggleExpanded(table.getRow('0'), true)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when expanding a row that cannot expand', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange })
+
+    row_toggleExpanded(table.getRow('0.0', true))
+    row_toggleExpanded(table.getRow('0.0', true), true)
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should be a no-op when expanding is disabled', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({ onExpandedChange, enableExpanding: false })
+
+    row_toggleExpanded(table.getRow('0'))
+
+    expect(onExpandedChange).not.toHaveBeenCalled()
+  })
+
+  it('should let options.getRowCanExpand allow expanding a row without subRows', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({
+      onExpandedChange,
+      getRowCanExpand: (row) => row.id === '0.0',
+    })
+
+    row_toggleExpanded(table.getRow('0.0', true))
+
+    expect(getUpdaterResult(onExpandedChange, {})).toEqual({ '0.0': true })
+  })
+
+  it('should still collapse an expanded row that can no longer expand', () => {
+    const onExpandedChange = vi.fn()
+    const table = makeTable({
+      onExpandedChange,
+      enableExpanding: false,
+      initialState: { expanded: { '0': true } },
+    })
+
+    row_toggleExpanded(table.getRow('0'))
+
+    expect(getUpdaterResult(onExpandedChange, { '0': true })).toEqual({})
+  })
+
+  it('should materialize the expanded-all state with only expandable row ids when collapsing one row', () => {
     const onExpandedChange = vi.fn()
     const table = makeTable({
       onExpandedChange,
@@ -279,7 +407,10 @@ describe('row_toggleExpanded', () => {
     const result = getUpdaterResult(onExpandedChange, true)
     expect(result['0']).toBeUndefined()
     expect(result['1']).toBe(true)
-    expect(result['0.1']).toBe(true)
+    // Leaf rows cannot expand, so they must not leak into the materialized map
+    expect(result['0.1']).toBeUndefined()
+    expect(result['1.0']).toBeUndefined()
+    expect(result).toEqual({ '1': true, '2': true })
   })
 })
 
@@ -357,14 +488,12 @@ describe('row_getIsAllParentsExpanded', () => {
 })
 
 describe('handlers', () => {
-  it('table_getToggleAllRowsExpandedHandler should persist and toggle', () => {
+  it('table_getToggleAllRowsExpandedHandler should toggle all rows expanded', () => {
     const onExpandedChange = vi.fn()
     const table = makeTable({ onExpandedChange })
-    const persist = vi.fn()
 
-    table_getToggleAllRowsExpandedHandler(table)({ persist })
+    table_getToggleAllRowsExpandedHandler(table)({})
 
-    expect(persist).toHaveBeenCalled()
     expect(onExpandedChange).toHaveBeenCalledWith(true)
   })
 

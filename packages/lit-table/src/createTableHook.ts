@@ -3,8 +3,9 @@ import { ContextConsumer, ContextProvider, createContext } from '@lit/context'
 import { FlexRender, flexRender } from './flexRender'
 import { TableController } from './TableController'
 import type { Context } from '@lit/context'
+import type { LitRenderable } from './flexRender'
 import type { LitTable } from './TableController'
-import type { ReactiveControllerHost, TemplateResult } from 'lit'
+import type { ReactiveControllerHost } from 'lit'
 import type {
   AccessorFn,
   AccessorFnColumnDef,
@@ -53,7 +54,7 @@ export type AppCellContext<
 > = {
   cell: Cell<TFeatures, TData, TValue> &
     BoundComponents<TCellComponents> & {
-      FlexRender: () => TemplateResult | string | null
+      FlexRender: () => LitRenderable
     }
   column: Column<TFeatures, TData, TValue>
   getValue: CellContext<TFeatures, TData, TValue>['getValue']
@@ -75,7 +76,7 @@ export type AppHeaderContext<
   column: Column<TFeatures, TData, TValue>
   header: Header<TFeatures, TData, TValue> &
     BoundComponents<THeaderComponents> & {
-      FlexRender: () => TemplateResult | string | null
+      FlexRender: () => LitRenderable
     }
   table: Table<TFeatures, TData>
 }
@@ -88,8 +89,7 @@ export type AppHeaderContext<
  * Template type for column definitions that can be a string or a function.
  */
 export type AppColumnDefTemplate<TProps extends object> =
-  | string
-  | ((props: TProps) => any)
+  string | ((props: TProps) => any)
 
 /**
  * Enhanced column definition base with pre-bound components in cell/header/footer contexts.
@@ -159,7 +159,7 @@ export type AppGroupColumnDef<
   footer?: AppColumnDefTemplate<
     AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>
   >
-  columns?: Array<ColumnDef<TFeatures, TData, unknown>>
+  columns?: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>
 }
 
 // =============================================================================
@@ -182,11 +182,11 @@ export type AppColumnHelper<
    */
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
-    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
+    TValue extends (TAccessor extends AccessorFn<TData, infer TReturn>
       ? TReturn
       : TAccessor extends DeepKeys<TData>
         ? DeepValue<TData, TAccessor>
-        : never,
+        : never),
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
@@ -306,10 +306,10 @@ export type AppLitTable<
       renderFn: (
         cell: Cell<TFeatures, TData, TValue> &
           BoundComponents<TCellComponents> & {
-            FlexRender: () => TemplateResult | string | null
+            FlexRender: () => LitRenderable
           },
-      ) => TemplateResult | string,
-    ) => TemplateResult | string
+      ) => LitRenderable,
+    ) => LitRenderable
     /**
      * Wraps a header and provides header context with pre-bound headerComponents.
      * @example
@@ -322,10 +322,10 @@ export type AppLitTable<
       renderFn: (
         header: Header<TFeatures, TData, TValue> &
           BoundComponents<THeaderComponents> & {
-            FlexRender: () => TemplateResult | string | null
+            FlexRender: () => LitRenderable
           },
-      ) => TemplateResult | string,
-    ) => TemplateResult | string
+      ) => LitRenderable,
+    ) => LitRenderable
     /**
      * Wraps a footer and provides header context with pre-bound headerComponents.
      * @example
@@ -338,10 +338,10 @@ export type AppLitTable<
       renderFn: (
         header: Header<TFeatures, TData, TValue> &
           BoundComponents<THeaderComponents> & {
-            FlexRender: () => TemplateResult | string | null
+            FlexRender: () => LitRenderable
           },
-      ) => TemplateResult | string,
-    ) => TemplateResult | string
+      ) => LitRenderable,
+    ) => LitRenderable
     /**
      * Convenience FlexRender function attached to the table instance.
      * Renders cell, header, or footer content from column definitions.
@@ -739,12 +739,11 @@ export function createTableHook<
           renderFn: (
             cell: Cell<TFeatures, TData, TValue> &
               BoundComponents<TCellComponents> & {
-                FlexRender: () => TemplateResult | string | null
+                FlexRender: () => LitRenderable
               },
-          ) => TemplateResult | string,
-        ): TemplateResult | string {
-          const cellFlexRender = () =>
-            flexRender(cell.column.columnDef.cell, cell.getContext())
+          ) => LitRenderable,
+        ): LitRenderable {
+          const cellFlexRender = () => FlexRender({ cell })
 
           // Bind each cell component so it receives the cell as its first argument.
           // This allows column defs to call `cell.TextCell()` which internally
@@ -759,7 +758,7 @@ export function createTableHook<
             ...boundCellComponents,
           }) as Cell<TFeatures, TData, TValue> &
             BoundComponents<TCellComponents> & {
-              FlexRender: () => TemplateResult | string | null
+              FlexRender: () => LitRenderable
             }
 
           return renderFn(extendedCell)
@@ -771,10 +770,10 @@ export function createTableHook<
           renderFn: (
             header: Header<TFeatures, TData, TValue> &
               BoundComponents<THeaderComponents> & {
-                FlexRender: () => TemplateResult | string | null
+                FlexRender: () => LitRenderable
               },
-          ) => TemplateResult | string,
-        ): TemplateResult | string {
+          ) => LitRenderable,
+        ): LitRenderable {
           const headerFlexRender = () =>
             flexRender(header.column.columnDef.header, header.getContext())
 
@@ -789,7 +788,7 @@ export function createTableHook<
             ...boundHeaderComponents,
           }) as Header<TFeatures, TData, TValue> &
             BoundComponents<THeaderComponents> & {
-              FlexRender: () => TemplateResult | string | null
+              FlexRender: () => LitRenderable
             }
 
           return renderFn(extendedHeader)
@@ -801,10 +800,10 @@ export function createTableHook<
           renderFn: (
             header: Header<TFeatures, TData, TValue> &
               BoundComponents<THeaderComponents> & {
-                FlexRender: () => TemplateResult | string | null
+                FlexRender: () => LitRenderable
               },
-          ) => TemplateResult | string,
-        ): TemplateResult | string {
+          ) => LitRenderable,
+        ): LitRenderable {
           const footerFlexRender = () =>
             flexRender(header.column.columnDef.footer, header.getContext())
 
@@ -819,7 +818,7 @@ export function createTableHook<
             ...boundFooterComponents,
           }) as Header<TFeatures, TData, TValue> &
             BoundComponents<THeaderComponents> & {
-              FlexRender: () => TemplateResult | string | null
+              FlexRender: () => LitRenderable
             }
 
           return renderFn(extendedHeader)

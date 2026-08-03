@@ -8,8 +8,13 @@ import {
   useTable,
   FlexRenderCell,
   FlexRenderHeader,
+  aggregationFns,
+  columnGroupingFeature,
+  createGroupedRowModel,
   flexRenderComponent,
+  rowAggregationFeature,
   stockFeatures,
+  tableFeatures,
   type Row,
   type Cell,
   type CellContext,
@@ -22,11 +27,51 @@ type Person = { id: string; firstName: string }
 
 const defaultData: Array<Person> = [{ id: '0', firstName: 'Alice' }]
 
+type GroupedPerson = {
+  id: string
+  region: string
+  team: string
+  amount: number
+}
+
+const groupingFeatures = tableFeatures({
+  aggregationFns,
+  columnGroupingFeature,
+  groupedRowModel: createGroupedRowModel(),
+  rowAggregationFeature,
+})
+
+const groupingColumns: Array<
+  ColumnDef<typeof groupingFeatures, GroupedPerson>
+> = [
+  {
+    id: 'region',
+    accessorKey: 'region',
+    cell: (context) => `Region ${String(context.getValue())}`,
+  },
+  {
+    id: 'team',
+    accessorKey: 'team',
+    cell: (context) => `Team ${String(context.getValue())}`,
+  },
+  {
+    id: 'amount',
+    accessorKey: 'amount',
+    aggregationFn: 'sum',
+    cell: (context) => `Amount ${String(context.getValue())}`,
+    aggregatedCell: (context) => `Total ${String(context.getValue())}`,
+  },
+]
+
 // Templates can't call bound table methods with `this` context, so expose them
 // as plain helpers (mirrors the demo-app table templates).
 const getVisibleCells = (
   row: Row<typeof stockFeatures, Person>,
 ): Array<Cell<typeof stockFeatures, Person>> => row.getVisibleCells()
+
+const getGroupingCells = (
+  row: Row<typeof groupingFeatures, GroupedPerson>,
+): Array<Cell<typeof groupingFeatures, GroupedPerson>> => row.getAllCells()
 
 // --- Cell/header components used by the tests ---
 
@@ -167,6 +212,50 @@ module('Integration | FlexRender', function (hooks) {
     assert
       .dom('[data-test-cell="c-fn"]')
       .hasText('fn value', 'function return value renders')
+  })
+
+  test('renders aggregate cells and suppresses grouping placeholders', async (assert) => {
+    class TableComponent extends Component {
+      table = useTable(() => ({
+        data: [
+          { id: '1', region: 'Europe', team: 'Blue', amount: 1 },
+          { id: '2', region: 'Europe', team: 'Green', amount: 2 },
+        ],
+        columns: groupingColumns,
+        features: groupingFeatures,
+        initialState: {
+          grouping: ['region', 'team'],
+        },
+      }))
+
+      get rows() {
+        return this.table.getRowModel().rows
+      }
+
+      <template>
+        {{#each this.rows as |row|}}
+          <section role='group' aria-label='Grouped row'>
+            {{#each (getGroupingCells row) as |cell|}}
+              <output role='status' aria-label={{cell.column.id}}>
+                <FlexRenderCell @cell={{cell}} />
+              </output>
+            {{/each}}
+          </section>
+        {{/each}}
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    assert
+      .dom('[role="status"][aria-label="region"]')
+      .hasText('Region Europe', 'the active grouping cell uses its cell render')
+    assert
+      .dom('[role="status"][aria-label="team"]')
+      .hasText('', 'the other grouped column renders as a placeholder')
+    assert
+      .dom('[role="status"][aria-label="amount"]')
+      .hasText('Total 3', 'the aggregate column uses aggregatedCell')
   })
 
   // Angular: "should render components" / "Render component with FlexRenderComponent".
@@ -375,6 +464,8 @@ module('Integration | FlexRender', function (hooks) {
       table = useTable(() => ({
         data: this.data,
         features: stockFeatures,
+        // The flat test rows have no subRows, so opt them into expandability
+        getRowCanExpand: () => true,
         columns: [
           {
             id: 'expand',
@@ -436,6 +527,8 @@ module('Integration | FlexRender', function (hooks) {
       table = useTable(() => ({
         data: this.data,
         features: stockFeatures,
+        // The flat test rows have no subRows, so opt them into expandability
+        getRowCanExpand: () => true,
         columns: [
           {
             id: 'expand',
@@ -530,5 +623,88 @@ module('Integration | FlexRender', function (hooks) {
       .dom('[data-test-header="h1"]')
       .hasText('My Header', 'renders a string header')
     assert.dom('[data-test-header-badge]').exists('renders a component header')
+  })
+
+  // Placeholder headers must render their column's header content. Skipping
+  // them is the template's job (`{{#unless header.isPlaceholder}}`), which is
+  // what makes `header.rowSpan` usable for merging header cells vertically.
+  // Every other framework adapter behaves this way.
+  test('renders placeholder headers instead of suppressing them', async (assert) => {
+    const unevenColumns: Array<ColumnDef<typeof stockFeatures, Person>> = [
+      {
+        id: 'shallow',
+        accessorKey: 'firstName',
+        header: 'Shallow',
+      },
+      {
+        id: 'group',
+        header: 'Group',
+        columns: [
+          {
+            id: 'deep',
+            accessorKey: 'firstName',
+            header: 'Deep',
+          },
+        ],
+      },
+    ]
+
+    class TableComponent extends Component {
+      table = useTable(() => ({
+        data: defaultData,
+        features: stockFeatures,
+        columns: unevenColumns,
+      }))
+
+      get headerGroups() {
+        return this.table.getHeaderGroups()
+      }
+
+      <template>
+        <table>
+          <thead>
+            {{#each this.headerGroups as |headerGroup|}}
+              <tr data-test-row={{headerGroup.depth}}>
+                {{#each headerGroup.headers as |header|}}
+                  <th
+                    data-test-cell='{{headerGroup.depth}}-{{header.column.id}}'
+                    data-test-placeholder={{header.isPlaceholder}}
+                  ><FlexRenderHeader @header={{header}} /></th>
+                {{/each}}
+              </tr>
+            {{/each}}
+          </thead>
+        </table>
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    // `shallow` is a leaf one level above the deepest leaf, so the top row
+    // holds its spanning placeholder.
+    // Glimmer serializes a `true` attribute value as an empty string, so
+    // assert presence rather than value.
+    assert
+      .dom('[data-test-cell="0-shallow"]')
+      .hasAttribute(
+        'data-test-placeholder',
+        '',
+        'the top cell is a placeholder',
+      )
+    assert
+      .dom('[data-test-cell="0-group"]')
+      .doesNotHaveAttribute(
+        'data-test-placeholder',
+        'the group header is not a placeholder',
+      )
+    assert
+      .dom('[data-test-cell="0-shallow"]')
+      .hasText('Shallow', 'the placeholder still renders its column header')
+    assert
+      .dom('[data-test-cell="0-group"]')
+      .hasText('Group', 'real group headers are unaffected')
+    assert
+      .dom('[data-test-cell="1-deep"]')
+      .hasText('Deep', 'leaf headers are unaffected')
   })
 })

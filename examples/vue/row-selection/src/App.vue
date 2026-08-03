@@ -115,6 +115,7 @@ const table = useTable({
   get enableRowSelection() {
     return enableRowSelection.value
   },
+  // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
   // initialState: { rowSelection: { '0': true } }, // select rows on first render
   // atoms: { rowSelection: rowSelectionAtom }, // preferred: own selection state with an external atom
   // state: { rowSelection }, // classic controlled state; pair with onRowSelectionChange
@@ -170,16 +171,24 @@ useTanStackTableDevtools(table)
             />
           </td>
           <td :colSpan="20">
-            Page Rows {{ table.getRowModel().rows.length.toLocaleString() }}
+            Page Rows ({{ table.getRowModel().rows.length.toLocaleString() }})
           </td>
         </tr>
       </tfoot>
     </table>
+    <div>
+      {{ Object.keys(table.atoms.rowSelection.get()).length.toLocaleString() }}
+      of {{ table.getRowModel().rows.length.toLocaleString() }} Total Rows
+      Selected
+    </div>
     <div class="spacer-md" />
     <button @click="toggleRowSelection" class="demo-button">
       {{ enableRowSelection ? 'Disable' : 'Enable' }} Row Selection
     </button>
   </div>
+  <pre data-testid="table-state">{{
+    JSON.stringify(table.store.get(), null, 2)
+  }}</pre>
 </template>
 
 <style>

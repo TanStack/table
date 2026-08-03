@@ -134,12 +134,20 @@ Reads this column's current sort direction, or `false` when unsorted.
 ### getNextSortingOrder()
 
 ```ts
-getNextSortingOrder: () => false | SortDirection;
+getNextSortingOrder: (multi?) => false | SortDirection;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L191)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:193](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L193)
 
-Returns the next sorting order.
+Returns the next sorting order. Pass `multi` to resolve the order for a
+multi-sort toggle, where `enableMultiRemove` governs whether the cycle can
+remove the sort.
+
+#### Parameters
+
+##### multi?
+
+`boolean`
 
 #### Returns
 

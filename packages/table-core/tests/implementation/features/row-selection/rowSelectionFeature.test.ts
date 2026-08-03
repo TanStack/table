@@ -116,6 +116,72 @@ describe('rowSelectionFeature', () => {
       expect(result.rowsById).toHaveProperty('0.0')
     })
 
+    it('should preserve three levels of selected row structure and prototypes', () => {
+      const data = generateTestData(1, 1, 1)
+      const columns = generateColumnDefs(data)
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0': true,
+            '0.0': true,
+            '0.0.0': true,
+          },
+        },
+        columns,
+      })
+      const rowModel = table.getCoreRowModel()
+
+      const result = RowSelectionUtils.selectRowsFn(rowModel, table)
+      const selectedRoot = result.rows[0]!
+      const selectedChild = selectedRoot.subRows[0]!
+      const selectedGrandchild = selectedChild.subRows[0]!
+
+      expect(result.flatRows.map((row) => row.id)).toEqual([
+        '0',
+        '0.0',
+        '0.0.0',
+      ])
+      expect(Object.keys(result.rowsById)).toEqual(['0', '0.0', '0.0.0'])
+      expect(selectedRoot).not.toBe(rowModel.rows[0])
+      expect(selectedChild).not.toBe(rowModel.rows[0]!.subRows[0])
+      expect(selectedGrandchild).toBe(rowModel.rows[0]!.subRows[0]!.subRows[0])
+      expect(typeof selectedRoot.getValue).toBe('function')
+      expect(typeof selectedChild.getValue).toBe('function')
+      expect(typeof selectedGrandchild.getValue).toBe('function')
+    })
+
+    it('should collect a selected grandchild beneath two unselected ancestors', () => {
+      const data = generateTestData(1, 1, 1)
+      const columns = generateColumnDefs(data)
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: true,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person) => originalRow.subRows,
+        initialState: {
+          rowSelection: {
+            '0.0.0': true,
+          },
+        },
+        columns,
+      })
+      const rowModel = table.getCoreRowModel()
+
+      const result = RowSelectionUtils.selectRowsFn(rowModel, table)
+
+      expect(result.rows).toEqual([])
+      expect(result.flatRows.map((row) => row.id)).toEqual(['0.0.0'])
+      expect(result.rowsById['0.0.0']).toBe(
+        rowModel.rows[0]!.subRows[0]!.subRows[0],
+      )
+    })
+
     it('should preserve row prototype methods on cloned parent rows', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)
@@ -350,6 +416,52 @@ describe('rowSelectionFeature', () => {
       expect(result).toEqual(false)
     })
 
+    it('should return false if no sub-rows are selectable', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: false,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: {},
+        },
+        columns,
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]!
+
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
+
+      expect(result).toEqual(false)
+    })
+
+    it('should return some if no children are selectable, but a grand-child is and is selected', () => {
+      const data = generateTestData(3, 2, 2)
+      const columns = generateColumnDefs(data)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: (row) => row.id === '0.0.1',
+        renderFallbackValue: '',
+        data,
+        getSubRows: (originalRow: Person, _idx: number) => originalRow.subRows,
+        initialState: {
+          rowSelection: { '0.0.1': true },
+        },
+        columns,
+      })
+
+      const firstRow = table.getCoreRowModel().rows[0]!
+
+      const result = RowSelectionUtils.isSubRowSelected(firstRow)
+
+      expect(result).toEqual('some')
+    })
+
     it('should return some if some sub-rows are selected', () => {
       const data = generateTestData(3, 2)
       const columns = generateColumnDefs(data)
@@ -486,12 +598,126 @@ describe('rowSelectionFeature', () => {
       table.toggleAllRowsSelected(true, { deselectAll: true })
       expect(table.atoms.rowSelection.get()['99']).toBe(true)
     })
+
+    it('toggles top-level rows only when enableSubRowSelection is false', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableSubRowSelection: false,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        columns,
+      })
+
+      table.toggleAllRowsSelected()
+      expect(Object.keys(table.atoms.rowSelection.get()).sort()).toEqual([
+        '0',
+        '1',
+        '2',
+      ])
+      expect(table.getIsAllRowsSelected()).toBe(true)
+
+      // The second no-value call must resolve to a deselect, proving the
+      // header toggle no longer sticks when sub-rows are skipped
+      table.toggleAllRowsSelected()
+      expect(Object.keys(table.atoms.rowSelection.get())).toEqual([])
+    })
+
+    it('keeps rows that cannot be selected when deselecting all', () => {
+      const data = generateTestData(5)
+      const columns = generateColumnDefs(data)
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection: (row) => row.id !== '0',
+        renderFallbackValue: '',
+        data,
+        initialState: { rowSelection: { '0': true, '1': true } },
+        columns,
+      })
+
+      table.toggleAllRowsSelected(false)
+      expect(Object.keys(table.atoms.rowSelection.get())).toEqual(['0'])
+
+      table.toggleAllRowsSelected(false, { deselectAll: true })
+      expect(Object.keys(table.atoms.rowSelection.get())).toEqual([])
+    })
+  })
+
+  describe('deselectParents', () => {
+    it('prunes stale parent ids through a select-parent-then-deselect-children sequence', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
+      const table = constructTable<typeof features, Person>({
+        features,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        columns,
+      })
+      const parent = table.getRow('0')
+
+      parent.toggleSelected(true)
+      expect(Object.keys(table.atoms.rowSelection.get()).sort()).toEqual([
+        '0',
+        '0.0',
+        '0.1',
+      ])
+
+      table.getRow('0.0').toggleSelected(false, { deselectParents: true })
+      expect(Object.keys(table.atoms.rowSelection.get())).toEqual(['0.1'])
+      expect(parent.getIsSelected()).toBe(false)
+      expect(parent.getIsSomeSelected()).toBe(true)
+
+      table.getRow('0.1').toggleSelected(false, { deselectParents: true })
+      expect(Object.keys(table.atoms.rowSelection.get())).toEqual([])
+      expect(parent.getIsSomeSelected()).toBe(false)
+    })
   })
   describe('memoization', () => {
-    // The `enableRowSelection` predicate is invoked once per row by
-    // `row_getCanSelect`, so its call count is a proxy for how many times the
-    // selection getters actually walk the row model.
+    // The `enableRowSelection` predicate is invoked by `row_getCanSelect` for
+    // rows the scan actually has to evaluate, so its call count is a proxy for
+    // how many times the selection getters walk the row model. Selected rows
+    // skip the predicate entirely via the `isRowSelected` short-circuit, so
+    // the probe uses a partial selection that forces the scan to reach an
+    // unselected row.
     it('memoizes getIsAllRowsSelected until selection or row model changes', () => {
+      const data = generateTestData(10)
+      const columns = generateColumnDefs(data)
+      const enableRowSelection = vi.fn(() => true)
+
+      const table = constructTable<typeof features, Person>({
+        features,
+        enableRowSelection,
+        renderFallbackValue: '',
+        data,
+        initialState: {
+          rowSelection: Object.fromEntries(
+            data.slice(0, 9).map((_, index) => [String(index), true]),
+          ),
+        },
+        columns,
+      })
+
+      expect(table.getIsAllRowsSelected()).toBe(false)
+      const callsAfterFirst = enableRowSelection.mock.calls.length
+      expect(callsAfterFirst).toBeGreaterThan(0)
+
+      // Repeated calls with unchanged deps must not re-walk the row model
+      table.getIsAllRowsSelected()
+      table.getIsAllRowsSelected()
+      expect(enableRowSelection.mock.calls.length).toBe(callsAfterFirst)
+
+      // Changing the selection invalidates the memo and recomputes
+      table.setRowSelection({ '0': true })
+      expect(table.getIsAllRowsSelected()).toBe(false)
+      expect(enableRowSelection.mock.calls.length).toBeGreaterThan(
+        callsAfterFirst,
+      )
+    })
+
+    it('skips the enableRowSelection predicate for already-selected rows', () => {
       const data = generateTestData(10)
       const columns = generateColumnDefs(data)
       const enableRowSelection = vi.fn(() => true)
@@ -509,21 +735,34 @@ describe('rowSelectionFeature', () => {
         columns,
       })
 
+      // Every row is selected, so the all-selected scan never needs to ask
+      // whether a row is selectable
       expect(table.getIsAllRowsSelected()).toBe(true)
-      const callsAfterFirst = enableRowSelection.mock.calls.length
-      expect(callsAfterFirst).toBeGreaterThan(0)
+      expect(enableRowSelection).not.toHaveBeenCalled()
+    })
 
-      // Repeated calls with unchanged deps must not re-walk the row model
-      table.getIsAllRowsSelected()
-      table.getIsAllRowsSelected()
-      expect(enableRowSelection.mock.calls.length).toBe(callsAfterFirst)
+    it('recomputes getIsAllRowsSelected when enableSubRowSelection changes', () => {
+      const data = generateTestData(3, 2)
+      const columns = generateColumnDefs(data)
 
-      // Changing the selection invalidates the memo and recomputes
-      table.setRowSelection({ '0': true })
+      const table = constructTable<typeof features, Person>({
+        features,
+        renderFallbackValue: '',
+        data,
+        getSubRows: (row) => row.subRows,
+        initialState: {
+          rowSelection: { '0': true, '1': true, '2': true },
+        },
+        columns,
+      })
+
+      // Sub-rows are unselected, so all-selected is false by default
       expect(table.getIsAllRowsSelected()).toBe(false)
-      expect(enableRowSelection.mock.calls.length).toBeGreaterThan(
-        callsAfterFirst,
-      )
+
+      table.setOptions((prev) => ({ ...prev, enableSubRowSelection: false }))
+
+      // The option is a memo dep, so the getter must recompute
+      expect(table.getIsAllRowsSelected()).toBe(true)
     })
 
     it('memoizes getIsSomePageRowsSelected until selection changes', () => {

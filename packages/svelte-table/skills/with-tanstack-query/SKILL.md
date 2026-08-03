@@ -6,7 +6,7 @@ metadata:
   type: composition
   library: '@tanstack/svelte-table'
   framework: svelte
-  library_version: '9.0.0-beta.55'
+  library_version: '9.0.0-beta.76'
 requires:
   - '@tanstack/table-core#client-vs-server'
   - getting-started
@@ -52,8 +52,10 @@ const table = createTable({
     return dataQuery.data?.rowCount ?? 0
   },
   manualPagination: true,
-  get state() {
-    return { pagination }
+  state: {
+    get pagination() {
+      return pagination
+    },
   },
   onPaginationChange: (next) => {
     pagination = typeof next === 'function' ? next(pagination) : next

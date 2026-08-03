@@ -7,9 +7,9 @@ title: assignPrototypeAPIs
 
 ```ts
 function assignPrototypeAPIs<TFeatures, TData, TDeps, TDepArgs>(
-   feature, 
-   prototype, 
-   table, 
+   feature,
+   prototype,
+   table,
    apis): void;
 ```
 

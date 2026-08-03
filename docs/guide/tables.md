@@ -61,6 +61,20 @@ const table = useTable({
 })
 ```
 
+# Octane
+
+```ts
+import { tableFeatures, useTable } from '@tanstack/octane-table'
+
+const features = tableFeatures({}) // Core features only; add columnFilteringFeature, rowSortingFeature, etc. as needed
+
+const table = useTable({
+  features,
+  columns,
+  data,
+})
+```
+
 # Vue
 
 ```ts
@@ -207,6 +221,12 @@ const table = useTable({ features, columns, data })
 const table = useTable({ features, columns, data })
 ```
 
+# Octane
+
+```ts
+const table = useTable({ features, columns, data })
+```
+
 # Vue
 
 ```ts
@@ -311,6 +331,10 @@ Direct reads like `table.atoms.rowSelection.get()` and `table.store.state.rowSel
 # Preact
 
 [Table State Guide](../framework/preact/guide/table-state)
+
+# Octane
+
+[Table State Guide](../framework/octane/guide/table-state)
 
 # Vue
 

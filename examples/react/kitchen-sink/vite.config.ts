@@ -9,7 +9,8 @@ export default defineConfig({
     __DEV__: JSON.stringify(true),
   },
   server: {
-    port: 6565,
+    port: 7777,
+    allowedHosts: true,
   },
   plugins: [
     tanstackStart(),

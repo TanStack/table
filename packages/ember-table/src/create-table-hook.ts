@@ -45,8 +45,8 @@ export type AppColumnHelper<
  * const columnHelper = createAppColumnHelper<Person>()
  * const columns = columnHelper.columns([...])
  *
- * // inside a Glimmer component; options stay a thunk so tracked reads are reactive
- * table = createAppTable(() => ({ columns, data: this.data }))
+ * // inside a Glimmer component; passing `this` binds cleanup to its lifecycle
+ * table = createAppTable(this, () => ({ columns, data: this.data }))
  * ```
  */
 export function createTableHook<TFeatures extends TableFeatures>({
@@ -60,19 +60,39 @@ export function createTableHook<TFeatures extends TableFeatures>({
   }
 
   function createAppTable<TData extends RowData>(
+    owner: object,
     getTableOptions: () => Omit<TableOptions<TFeatures, TData>, 'features'>,
+  ): AppEmberTable<TFeatures, TData>
+  function createAppTable<TData extends RowData>(
+    getTableOptions: () => Omit<TableOptions<TFeatures, TData>, 'features'>,
+  ): AppEmberTable<TFeatures, TData>
+  function createAppTable<TData extends RowData>(
+    ownerOrGetTableOptions:
+      object | (() => Omit<TableOptions<TFeatures, TData>, 'features'>),
+    maybeGetTableOptions?: () => Omit<
+      TableOptions<TFeatures, TData>,
+      'features'
+    >,
   ): AppEmberTable<TFeatures, TData> {
+    const hasOwner = maybeGetTableOptions !== undefined
+    const owner = hasOwner ? ownerOrGetTableOptions : undefined
+    const getTableOptions = (
+      hasOwner ? maybeGetTableOptions : ownerOrGetTableOptions
+    ) as () => Omit<TableOptions<TFeatures, TData>, 'features'>
+
     // Keep options a thunk: the merge runs inside `useTable`'s options thunk,
     // so tracked properties read in `getTableOptions` stay reactive. Per-table
     // options take precedence over the shared defaults (except `features`,
     // which only the hook provides).
-    return useTable<TFeatures, TData>(
-      () =>
-        ({
-          ...defaultTableOptions,
-          ...getTableOptions(),
-        }) as TableOptions<TFeatures, TData>,
-    )
+    const getMergedOptions = () =>
+      ({
+        ...defaultTableOptions,
+        ...getTableOptions(),
+      }) as TableOptions<TFeatures, TData>
+
+    return owner
+      ? useTable<TFeatures, TData>(owner, getMergedOptions)
+      : useTable<TFeatures, TData>(getMergedOptions)
   }
 
   return {

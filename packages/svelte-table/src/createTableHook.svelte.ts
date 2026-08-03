@@ -34,7 +34,6 @@ import type {
   Table,
   TableFeatures,
   TableOptions,
-  TableState,
 } from '@tanstack/table-core'
 
 export type ComponentType<T extends Record<string, any>> = Component<T>
@@ -86,8 +85,7 @@ export type AppHeaderContext<
  * Template type for column definitions that can be a string or a function.
  */
 export type AppColumnDefTemplate<TProps extends object> =
-  | string
-  | ((props: TProps) => any)
+  string | ((props: TProps) => any)
 
 /**
  * Enhanced column definition base with pre-bound components in cell/header/footer contexts.
@@ -157,7 +155,7 @@ export type AppGroupColumnDef<
   footer?: AppColumnDefTemplate<
     AppHeaderContext<TFeatures, TData, unknown, THeaderComponents>
   >
-  columns?: Array<ColumnDef<TFeatures, TData, unknown>>
+  columns?: ReadonlyArray<ColumnDef<TFeatures, TData, unknown>>
 }
 
 // =============================================================================
@@ -180,11 +178,11 @@ export type AppColumnHelper<
    */
   accessor: <
     TAccessor extends AccessorFn<TData> | DeepKeys<TData>,
-    TValue extends TAccessor extends AccessorFn<TData, infer TReturn>
+    TValue extends (TAccessor extends AccessorFn<TData, infer TReturn>
       ? TReturn
       : TAccessor extends DeepKeys<TData>
         ? DeepValue<TData, TAccessor>
-        : never,
+        : never),
   >(
     accessor: TAccessor,
     column: TAccessor extends AccessorFn<TData>
@@ -285,16 +283,16 @@ export type CreateTableHookOptions<
 // =============================================================================
 
 /**
- * Extended table API returned by createAppTable with all App wrapper components.
+ * Svelte-aware table returned by `createAppTable`, extended with the registered
+ * table components and the `App*` context wrappers.
  */
 export type AppSvelteTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
-  TSelected,
   TTableComponents extends Record<string, ComponentType<any>>,
   TCellComponents extends Record<string, ComponentType<any>>,
   THeaderComponents extends Record<string, ComponentType<any>>,
-> = SvelteTable<TFeatures, TData, TSelected> &
+> = SvelteTable<TFeatures, TData> &
   NoInfer<TTableComponents> & {
     /**
      * Root wrapper component that provides table context.
@@ -397,14 +395,16 @@ export interface CreateTableHookResult<
   /**
    * Creates a table with the `App*` wrapper components and registered
    * `tableComponents` attached. `TData` is inferred from the `data` option.
+   *
+   * Read table state with `table.atoms.<slice>.get()` or `table.store.get()`.
+   * These reads participate in Svelte dependency tracking inside templates,
+   * `$derived`, and `$effect`.
    */
-  createAppTable: <TData extends RowData, TSelected = TableState<TFeatures>>(
+  createAppTable: <TData extends RowData>(
     tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
-    selector?: (state: TableState<TFeatures>) => TSelected,
   ) => AppSvelteTable<
     TFeatures,
     TData,
-    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -413,20 +413,10 @@ export interface CreateTableHookResult<
    * Reads the table provided by the nearest `<table.AppTable>`. This is the same
    * extended instance `createAppTable` returns, so the `App*` components and your
    * `tableComponents` are available on it.
-   *
-   * Pass `TSelected` to match the selector you gave `createAppTable`, so
-   * `table.state` is typed as the selected slice. It cannot be inferred
-   * automatically (context does not carry the provider's generics), so it
-   * defaults to the full table state, which is correct for the common case of
-   * `createAppTable` without a selector.
    */
-  useTableContext: <
-    TData extends RowData = RowData,
-    TSelected = TableState<TFeatures>,
-  >() => AppSvelteTable<
+  useTableContext: <TData extends RowData = RowData>() => AppSvelteTable<
     TFeatures,
     TData,
-    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -538,13 +528,9 @@ export function createTableHook<
    * Use this in custom `tableComponents` passed to `createTableHook`.
    * TFeatures is already known from the createTableHook call.
    */
-  function useTableContext<
-    TData extends RowData = RowData,
-    TSelected = TableState<TFeatures>,
-  >(): AppSvelteTable<
+  function useTableContext<TData extends RowData = RowData>(): AppSvelteTable<
     TFeatures,
     TData,
-    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -564,7 +550,6 @@ export function createTableHook<
     return table as unknown as AppSvelteTable<
       TFeatures,
       TData,
-      TSelected,
       TTableComponents,
       TCellComponents,
       THeaderComponents
@@ -632,16 +617,11 @@ export function createTableHook<
    *
    * TFeatures is already known from the createTableHook call; TData is inferred from the data prop.
    */
-  function createAppTable<
-    TData extends RowData,
-    TSelected = TableState<TFeatures>,
-  >(
+  function createAppTable<TData extends RowData>(
     tableOptions: Omit<TableOptions<TFeatures, TData>, 'features'>,
-    selector?: (state: TableState<TFeatures>) => TSelected,
   ): AppSvelteTable<
     TFeatures,
     TData,
-    TSelected,
     TTableComponents,
     TCellComponents,
     THeaderComponents
@@ -652,10 +632,7 @@ export function createTableHook<
       tableOptions,
     ) as TableOptions<TFeatures, TData>
 
-    const table = createTable<TFeatures, TData, TSelected>(
-      mergedTableOptions,
-      selector,
-    )
+    const table = createTable<TFeatures, TData>(mergedTableOptions)
 
     // Build cellComponents with FlexRender included
     const cellComponentsWithFlexRender = {
@@ -727,7 +704,6 @@ export function createTableHook<
     }) as AppSvelteTable<
       TFeatures,
       TData,
-      TSelected,
       TTableComponents,
       TCellComponents,
       THeaderComponents

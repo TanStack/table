@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.55'
+  version: '9.0.0-beta.76'
   repository: 'https://github.com/TanStack/table'
   homepage: 'https://tanstack.com/table'
   description: 'Headless, framework-agnostic data-grid state and row-processing primitives with tree-shakeable v9 features and framework adapters.'
@@ -11,7 +11,7 @@ library:
 
 meta:
   generated_by: '@tanstack/intent scaffold domain discovery'
-  date: '2026-07-10'
+  date: '2026-08-01'
   status: reviewed
   maintainer_review_pending: false
   phase_4_date: '2026-07-10'
@@ -23,8 +23,8 @@ scope:
     - 'Use docs and examples for intended workflows, and direct exact API discovery to installed package declarations (dist/**/*.d.ts).'
     - 'Teach headless rendering, feature registration, row-model ownership, framework state, and v8-to-v9 changes as foundations.'
   included:
-    - 'All 17 public workspace packages.'
-    - 'All 14 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
+    - 'All 18 public workspace packages.'
+    - 'All 17 stock Table v9 features, custom features, TypeScript helpers, migrations, framework state, composable table hooks, Query, Virtual, Devtools, and fuzzy ranking.'
     - 'Renderer-owned CSS edge cases for sticky positioning, column widths, resizing, layout, and virtualization.'
   excluded:
     - 'Component-library-specific integrations such as shadcn, Material UI, Mantine, and equivalent design systems.'
@@ -46,7 +46,7 @@ migration_depth_contract:
     - 'Framework package and construction entrypoint changes, including framework-version prerequisites.'
     - 'Logical start/end column-pinning rename and the full old-to-new API mapping.'
     - 'Prototype-bound row, cell, column, and header methods; object-spread/Object.keys/JSON implications.'
-    - 'Required tableFeatures registration, stockFeatures audit guidance, all 14 feature imports, and feature-gated state/APIs.'
+    - 'Required tableFeatures registration, stockFeatures audit guidance, all 16 feature imports, and feature-gated state/APIs.'
     - 'Core row model removal plus every get*RowModel to create*RowModel feature-slot mapping.'
     - 'filterFns, sortFns, aggregationFns, and filterMeta registry-slot migration.'
     - 'Adapter state access, selectors/subscriptions, controlled slices, external atoms, precedence, and onStateChange removal.'
@@ -111,6 +111,7 @@ api_discovery_policy:
   feature_source: 'node_modules/@tanstack/table-core/dist/features/<feature>/'
   ember_entrypoint: 'node_modules/@tanstack/ember-table/declarations/index.d.ts'
   angular_entrypoint: 'node_modules/@tanstack/angular-table/dist/types/'
+  octane_entrypoint: 'node_modules/@tanstack/octane-table/src/index.d.ts'
   fallback: 'If declarations are unavailable, resolve the installed package root and inspect published types; do not open package src/ or substitute v8 / another adapter API.'
 
 coverage:
@@ -154,7 +155,7 @@ domains:
     description: 'Headless philosophy, feature registration, client/server ownership, TypeScript inference, API discovery, custom features, and v8 migration.'
   - slug: feature-plugins
     name: 'Feature plugins'
-    description: 'The 14 stock optional features, their prerequisites, state, row-model participation, and UI responsibilities.'
+    description: 'The 17 stock optional features, their prerequisites, state, row-model participation, and UI responsibilities.'
   - slug: framework-adapters
     name: 'Framework adapters'
     description: 'Per-framework setup, reactive table state, v8 migration, reusable createTableHook patterns, and supported Query/Virtual composition.'
@@ -527,6 +528,44 @@ skills:
       - 'Expecting row pinning to add sticky CSS or render top/center/bottom collections in the correct order automatically.'
       - 'Ignoring keepPinnedRows, so pinned rows remain visible outside the center row model when the desired product behavior was to filter or paginate them away.'
 
+  - slug: cell-selection
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Maintain spreadsheet-style rectangular selections as ordered include/exclude operations anchored to row and column ids, resolving them into disjoint positive regions across sorting, filtering, pagination, and column layout changes.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/cell-selection.md',
+        'TanStack/table:packages/table-core/src/features/cell-selection',
+        'TanStack/table:examples/react/cell-selection',
+      ]
+    failure_modes:
+      - 'Expecting cellSelection to be a per-cell map or a list of final positive regions; it is an ordered log of two-corner include/exclude operations, and derived bounds may split one stored range into several regions.'
+      - 'Reordering, deduplicating, or serializing only the corners of controlled cellSelection state and thereby changing or losing subtraction semantics.'
+      - 'Using additive when the intended operation is explicit subtraction; selectCellRange mode is replace, include, or exclude, while additive is only a deprecated include alias.'
+      - 'Assuming Ctrl/Cmd always adds a range; a modified interaction excludes when it starts on a selected cell and includes when it starts on an unselected cell.'
+      - 'Binding only the mousedown handler and expecting drag selection, or reimplementing mouseup even though the start handler owns its own document listener.'
+      - 'Drawing the selection outline with borders on a border-collapse table, which changes row heights as cells become selected.'
+      - 'Re-rendering every cell on each drag update instead of subscribing per row to table.atoms.cellSelection.'
+
+  - slug: cell-spanning
+    package: '@tanstack/table-core'
+    domain: feature-plugins
+    type: feature
+    purpose: 'Merge adjacent body cells into row- and column-spanning cells derived from the rendered row model, with covered cells reporting a span of 0 that renderers must skip.'
+    sources:
+      [
+        'TanStack/table:docs/framework/react/guide/cell-spanning.md',
+        'TanStack/table:packages/table-core/src/features/cell-spanning',
+        'TanStack/table:examples/react/cell-spanning',
+      ]
+    failure_modes:
+      - 'Rendering a covered cell with rowSpan={0} instead of skipping it; HTML rowspan="0" means span to the end of the row group, so the cell merges down the entire tbody.'
+      - 'Expecting spanning to sort or group rows; it merges adjacent equal values only, so unsorted data renders no merges at all.'
+      - 'Precomputing spans from the source data array, which survives sorting, filtering, and page changes and produces ragged rows.'
+      - 'Assuming a run continues across a page or pinned-section boundary; runs are clipped to the rendered rows of each section.'
+      - 'Pre-expanding stored selection corners to cover merges; selection bounds already expand at derivation time when both features are registered, and pre-expanded corners go stale when sorting or paging changes the merges.'
+
   - slug: row-selection
     package: '@tanstack/table-core'
     domain: feature-plugins
@@ -875,7 +914,7 @@ skills:
     domain: framework-adapters
     type: framework
     framework: svelte
-    purpose: 'Create a Svelte 5 table with createTable, rune-backed options, snippets, and headless markup.'
+    purpose: 'Create a Svelte 5 table with createTable, rune-backed option getters, FlexRender, and headless markup.'
     sources:
       [
         'TanStack/table:docs/framework/svelte/guide/migrating.md',
@@ -892,16 +931,19 @@ skills:
     domain: framework-adapters
     type: framework
     framework: svelte
-    purpose: 'Use rune-backed atoms, selected table.state, controlled slices, and external atoms without reactivity mismatches.'
+    purpose: 'Use rune-aware table atoms and stores, native $derived projections, controlled $state or createTableState slices, and external atoms without broad invalidation or snapshot mismatches.'
     sources:
       [
         'TanStack/table:docs/framework/svelte/guide/table-state.md',
         'TanStack/table:docs/framework/svelte/guide/pagination.md',
         'TanStack/table:examples/svelte/basic-external-state',
         'TanStack/table:packages/svelte-table/src/createTable.svelte.ts',
+        'TanStack/table:packages/svelte-table/src/createTableState.svelte.ts',
       ]
     failure_modes:
-      - 'Reading or passing non-reactive snapshots where createTable options need getters over $state or $derived values.'
+      - 'Keeping the removed beta.58 createTable/createAppTable selector argument, selected table.state property, subscribeTable helper, or SubscribeSource type after beta.59.'
+      - 'Reading atom or store snapshots outside a tracked Svelte scope and expecting the read itself to keep a consumer reactive.'
+      - 'Reading table.store.get() in an effect that only needs one atom slice, causing unrelated state changes to rerun the effect.'
       - 'Pairing onSliceChange with a controlled state slice that is not actually written back with value-or-updater semantics.'
       - 'Blaming pagination reactivity when autoResetPageIndex immediately overwrites an externally requested page.'
 
@@ -920,6 +962,7 @@ skills:
     failure_modes:
       - 'Attempting the v9 adapter migration without first adopting Svelte 5-compatible component and reactivity syntax.'
       - 'Keeping readable-store assumptions or v8 row-model table options after switching to createTable.'
+      - 'Keeping beta.58 creation selectors, table.state, subscribeTable, or their removed selected-state generic parameters after beta.59.'
       - 'Missing shared v9 prototype, feature, helper, sorting, and logical-pinning changes.'
 
   - slug: create-table-hook
@@ -935,7 +978,7 @@ skills:
         'TanStack/table:packages/svelte-table/src/createTableHook.svelte.ts',
       ]
     failure_modes:
-      - 'Defining the hook in a plain module that cannot carry the required Svelte rune semantics.'
+      - 'Reimplementing createAppTable around the framework-agnostic core instead of using the shipped rune-capable createTableHook implementation.'
       - 'Passing $state snapshots instead of getters to createAppTable, freezing data or controlled state.'
       - 'Prop-drilling contexts through registered components instead of consuming the typed hooks under matching App wrappers.'
 
@@ -1266,6 +1309,62 @@ skills:
       - 'Assuming Virtual or Table owns absolute positioning, measurement attributes, sticky CSS, or column widths.'
 
   - slug: getting-started
+    package: '@tanstack/octane-table'
+    domain: framework-adapters
+    type: framework
+    framework: octane
+    purpose: 'Create and render an Octane v9 table with application-authored TSRX, stable inputs, keyed lists, and component-scoped render helpers.'
+    sources:
+      [
+        'TanStack/table:docs/framework/octane/quick-start.md',
+        'TanStack/table:examples/octane/basic-use-table',
+        'TanStack/table:packages/octane-table/src/index.ts',
+        'TanStack/table:packages/octane-table/src/useTable.tsrx',
+      ]
+    failure_modes:
+      - 'Importing another framework adapter or translating React component-return semantics directly instead of using Octane TSRX component bodies.'
+      - 'Invoking FlexRender or other component-scoped helpers as plain functions instead of rendering them as components.'
+      - 'Recreating stable features, columns, or data on each render and causing unnecessary option and row-model work.'
+
+  - slug: table-state
+    package: '@tanstack/octane-table'
+    domain: framework-adapters
+    type: framework
+    framework: octane
+    purpose: 'Use selected table.state, component-scoped Subscribe islands, controlled slices, and synchronous Octane Store atom ownership with commit-safe publication.'
+    sources:
+      [
+        'TanStack/table:docs/framework/octane/guide/table-state.md',
+        'TanStack/table:examples/octane/basic-subscribe',
+        'TanStack/table:examples/octane/basic-external-atoms',
+        'TanStack/table:packages/octane-table/src/useTable.tsrx',
+        'TanStack/table:packages/octane-table/src/Subscribe.tsrx',
+      ]
+    failure_modes:
+      - 'Reading atom/store snapshots in render as though they establish an Octane subscription.'
+      - 'Calling table.Subscribe as a normal function and sharing compiler slots instead of mounting an independent component scope.'
+      - 'Expecting controlled options.state to publish during render, or mixing it with an external atom that has ownership precedence.'
+
+  - slug: create-table-hook
+    package: '@tanstack/octane-table'
+    domain: framework-adapters
+    type: framework
+    framework: octane
+    purpose: 'Build a typed reusable Octane table hook with stable App wrappers, registered components, and default or isolated contexts.'
+    sources:
+      [
+        'TanStack/table:docs/framework/octane/guide/composable-tables.md',
+        'TanStack/table:docs/framework/octane/guide/table-context.md',
+        'TanStack/table:examples/octane/composable-tables',
+        'TanStack/table:packages/octane-table/src/createTableHook.tsrx',
+        'TanStack/table:packages/octane-table/src/createTableHookContexts.ts',
+      ]
+    failure_modes:
+      - 'Using the app hook for one table when standalone useTable is clearer.'
+      - 'Reading a factory context outside its matching AppTable/AppCell/AppHeader provider or invoking a wrapper as a plain function.'
+      - 'Creating the factory in render and destabilizing wrapper, context, and registered-component identities.'
+
+  - slug: getting-started
     package: '@tanstack/ember-table'
     domain: framework-adapters
     type: framework
@@ -1577,7 +1676,7 @@ documentation_read:
   narrative_docs: 'All 187 narrative Markdown documents were inventoried by title, headings, and admonitions; foundational, feature, state, migration, composable, and virtualization guides were deep-read.'
   generated_references: 'All 828 generated reference documents were inventoried for exports and API categories; exact API truth is delegated to installed dist declarations (.d.ts) in skills.'
   examples: 'All 277 example directories were inventoried; basic, state, composable, Query, Virtual, feature, and Devtools-relevant examples were sampled or deep-read by skill.'
-  source: 'All public package entrypoints, tableFeatures prerequisites, core construction/state precedence, all 14 feature implementations/defaults, createTableHook implementations, Devtools registration, and match-sorter-utils source were inspected.'
+  source: 'All public package entrypoints, tableFeatures prerequisites, core construction/state precedence, all 16 feature implementations/defaults, createTableHook implementations, Devtools registration, and match-sorter-utils source were inspected.'
   community: 'Recent v9 issues plus recurring high-signal issues and GitHub discussions were reviewed for failure modes and misconceptions.'
 
 open_gaps:

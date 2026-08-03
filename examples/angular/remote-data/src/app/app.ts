@@ -88,9 +88,10 @@ export class App {
       }
 
       return this.client
-        .get<
-          Array<Todo>
-        >(`https://jsonplaceholder.typicode.com/todos`, { params: httpParams, observe: 'response' })
+        .get<Array<Todo>>(`https://jsonplaceholder.typicode.com/todos`, {
+          params: httpParams,
+          observe: 'response',
+        })
         .pipe(
           map((response) => {
             return {

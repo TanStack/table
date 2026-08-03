@@ -36,8 +36,7 @@ describe('angularReactivityFeature', () => {
   }
 
   describe('Integration', () => {
-    // TODO this switches between 1 and 2 calls on every other run, so it's not a reliable test
-    test('methods within effect will be re-trigger when options/state changes', () => {
+    test('effects track their state slices and row-model instance changes', () => {
       const data = signal<Array<Data>>([{ id: '1', title: 'Title' }])
       const table = createTestTable(data)
       const isSelectedRow1Captor = vi.fn<(val: boolean) => void>()
@@ -95,6 +94,7 @@ describe('angularReactivityFeature', () => {
 
       expect(isSelectedRow1Captor.mock.calls).toEqual([[false], [true], [true]])
       expect(cellGetValueCaptor.mock.calls).toEqual([['1'], ['1']])
+      expect(cellGetValueMemoizedCaptor.mock.calls).toEqual([['1']])
       expect(columnIsVisibleCaptor.mock.calls).toEqual([
         [true],
         [true],
@@ -142,7 +142,8 @@ describe('angularReactivityFeature', () => {
 
     test('table store can be subscribed from another reactive effect', () => {
       const table = createTestTable()
-      const tableStateCaptor = vi.fn()
+      const tableStateCaptor =
+        vi.fn<(state: ReturnType<typeof table.store.get>) => void>()
 
       TestBed.runInInjectionContext(() => {
         effect((onCleanup) => {
@@ -154,7 +155,13 @@ describe('angularReactivityFeature', () => {
         })
       })
 
-      expect(() => TestBed.tick()).not.toThrow()
+      TestBed.tick()
+      table.toggleAllRowsSelected(true)
+      TestBed.tick()
+
+      expect(
+        tableStateCaptor.mock.calls.map(([state]) => state.rowSelection),
+      ).toEqual([{}, { 1: true }])
     })
 
     test('table state reacts to every external signal state update', () => {
@@ -211,9 +218,10 @@ describe('angularReactivityFeature', () => {
       )
 
       expect(table.atoms.pagination.get().pageSize).toBe(20)
-      expect(JSON.stringify(table.store.get(), null, 2)).toContain(
-        '"pageSize": 20',
-      )
+      expect(table.store.get().pagination).toEqual({
+        pageIndex: 0,
+        pageSize: 20,
+      })
     })
 
     test('table state reacts to internal table state updates', () => {
@@ -250,9 +258,12 @@ describe('angularReactivityFeature', () => {
       TestBed.tick()
 
       expect(pageSizeCaptor.mock.calls).toEqual([[20], [50], [100]])
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain(
-        '"pageSize": 100',
-      )
+      expect(
+        JSON.parse(stateJsonCaptor.mock.calls.at(-1)![0]).pagination,
+      ).toEqual({
+        pageIndex: 0,
+        pageSize: 100,
+      })
     })
 
     test('table state property reads only track the accessed slice', () => {
@@ -288,7 +299,9 @@ describe('angularReactivityFeature', () => {
 
       expect(pageSizeCaptor.mock.calls).toEqual([[20]])
       expect(stateJsonCaptor).toHaveBeenCalledTimes(2)
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"rowSelection"')
+      expect(
+        JSON.parse(stateJsonCaptor.mock.calls.at(-1)![0]).rowSelection,
+      ).toEqual({ 1: true })
     })
 
     test('stock feature table exposes full initial state and updates json state', () => {
@@ -319,13 +332,22 @@ describe('angularReactivityFeature', () => {
       TestBed.tick()
       expect(table.atoms.pagination.get().pageSize).toBe(20)
       expect(table.atoms.columnOrder.get()).toEqual(['id', 'title'])
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 20')
+      expect(JSON.parse(stateJsonCaptor.mock.calls.at(-1)![0])).toMatchObject({
+        columnOrder: ['id', 'title'],
+        columnPinning: { start: ['id'], end: [] },
+        pagination: { pageIndex: 0, pageSize: 20 },
+      })
 
       table.setPageSize(50)
       TestBed.tick()
 
       expect(table.atoms.pagination.get().pageSize).toBe(50)
-      expect(stateJsonCaptor.mock.calls.at(-1)?.[0]).toContain('"pageSize": 50')
+      expect(
+        JSON.parse(stateJsonCaptor.mock.calls.at(-1)![0]).pagination,
+      ).toEqual({
+        pageIndex: 0,
+        pageSize: 50,
+      })
     })
   })
 })

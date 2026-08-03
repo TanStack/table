@@ -192,9 +192,11 @@ class LitTableExample extends LitElement {
                           @click="${header.column.getToggleSortingHandler()}"
                         >
                           ${FlexRender({ header })}
-                          ${{ asc: ' 🔼', desc: ' 🔽' }[
-                            header.column.getIsSorted() as string
-                          ] ?? null}
+                          ${
+                            { asc: ' 🔼', desc: ' 🔽' }[
+                              header.column.getIsSorted() as string
+                            ] ?? null
+                          }
                         </th>
                       `,
                     )}

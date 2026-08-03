@@ -6,7 +6,7 @@ title: FlexRenderProps
 # Type Alias: FlexRenderProps\<TFeatures, TData, TValue\>
 
 ```ts
-type FlexRenderProps<TFeatures, TData, TValue> = 
+type FlexRenderProps<TFeatures, TData, TValue> =
   | {
   cell: Cell<TFeatures, TData, TValue>;
   footer?: never;

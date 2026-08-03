@@ -159,7 +159,10 @@ function App() {
       features,
       columns,
       data,
-      initialState: { pagination: { pageSize: 20, pageIndex: 0 } },
+      initialState: {
+        pagination: { pageSize: 20, pageIndex: 0 },
+        // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
+      },
       state: {
         expanded,
         rowPinning,
@@ -277,8 +280,8 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
-            onChange={(e) => {
+            value={table.state.pagination.pageIndex + 1}
+            onInput={(e) => {
               const page = (e.target as HTMLInputElement).value
                 ? Number((e.target as HTMLInputElement).value) - 1
                 : 0
@@ -346,7 +349,9 @@ function App() {
         </div>
       </div>
       <div></div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

@@ -429,7 +429,7 @@ If not specified, the default value for `sortUndefined` is `1`, and undefined va
 
 - `'first'` - Undefined values will be pushed to the beginning of the list
 - `'last'` - Undefined values will be pushed to the end of the list
-- `false` - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
+- `false` - Undefined values will be passed to the sorting function like any other value with no special handling; the sorting function is responsible for handling them
 - `-1` - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
 - `1` - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
 
@@ -541,6 +541,14 @@ const table = useTable({
   enableMultiRemove: false, // disable the ability to remove multi-sorts
 })
 ```
+
+### Reset Sorting When Data Changes
+
+Sorting state is preserved when the `data` option changes by default. Set `autoResetSorting: true` to reset sorting whenever a new data reference is processed. The reset restores `initialState.sorting`, or an empty sorting state when no initial value was provided.
+
+This option responds only to data changes. Changing sorting, filters, or grouping does not trigger it. The global `autoResetAll` option overrides `autoResetSorting` when explicitly set.
+
+Be careful when combining this option with manual/server-side sorting: a server response normally replaces `data`, so enabling the reset can immediately clear the sorting state that requested that response.
 
 ### Sorting APIs
 

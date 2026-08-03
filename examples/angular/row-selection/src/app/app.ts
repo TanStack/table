@@ -102,6 +102,7 @@ export class App {
     },
 
     enableRowSelection: this.enableRowSelection(), // enable row selection for all rows
+    // enableRowSelection: row => row.original.age > 18, // or enable selection conditionally
     onRowSelectionChange: (updaterOrValue) => {
       this.rowSelection.set(
         typeof updaterOrValue === 'function'

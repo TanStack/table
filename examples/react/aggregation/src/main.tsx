@@ -106,6 +106,8 @@ function App() {
         columnHelper.accessor('amount', {
           header: 'Amount',
           aggregationFn: 'sum',
+          // maxAggregationDepth: 1, // include one level of descendants in this column's aggregate
+          // getAggregationValue: () => ({ value: 0 }), // provide a precomputed value and skip local fallback
           cell: ({ getValue }) => getValue<number>().toLocaleString(),
           footer: ({ column, table }) =>
             formatValue(
@@ -141,6 +143,7 @@ function App() {
       data,
       meta: { rowSource },
       initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+      // manualAggregation: true, // supply aggregate values yourself instead of calculating them locally
       debugTable: true,
       debugColumns: true,
     },
@@ -277,7 +280,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={(event) => {
               const page = event.target.value
                 ? Number(event.target.value) - 1
@@ -302,7 +305,9 @@ function App() {
         Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
         {table.getRowCount().toLocaleString()} Rows
       </div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

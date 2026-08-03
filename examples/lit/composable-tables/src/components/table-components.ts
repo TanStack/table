@@ -128,14 +128,18 @@ export class TableToolbar extends LitElement {
       <div class="table-toolbar">
         <h2>${this.title}</h2>
         <div class="table-toolbar-actions">
-          ${this.onRefresh
-            ? html`<button @click=${this.onRefresh}>Regenerate Data</button>`
-            : nothing}
-          ${this.onStressTest
-            ? html`<button @click=${this.onStressTest}>
-                Stress Test (1M rows)
-              </button>`
-            : nothing}
+          ${
+            this.onRefresh
+              ? html`<button @click=${this.onRefresh}>Regenerate Data</button>`
+              : nothing
+          }
+          ${
+            this.onStressTest
+              ? html`<button @click=${this.onStressTest}>
+                  Stress Test (1M rows)
+                </button>`
+              : nothing
+          }
           <button @click=${() => table.resetColumnFilters()}>
             Clear Filters
           </button>

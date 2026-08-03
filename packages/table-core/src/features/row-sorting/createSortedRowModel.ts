@@ -1,4 +1,8 @@
-import { copyInstancePropertiesWithoutMemos, tableMemo } from '../../utils'
+import {
+  copyInstancePropertiesWithoutMemos,
+  skipFirstRun,
+  tableMemo,
+} from '../../utils'
 import { table_autoResetPageIndex } from '../row-pagination/rowPaginationFeature.utils'
 import { column_getCanSort, column_getSortFn } from './rowSortingFeature.utils'
 import type { Column_Internal } from '../../types/Column'
@@ -36,7 +40,7 @@ export function createSortedRowModel<
         table.getPreSortedRowModel(),
       ],
       fn: () => _createSortedRowModel(table),
-      onAfterUpdate: () => table_autoResetPageIndex(table),
+      onAfterUpdate: skipFirstRun(() => table_autoResetPageIndex(table)),
     })
   }
 }

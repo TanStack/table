@@ -88,8 +88,9 @@
       debugHeaders: true,
       debugColumns: false,
     },
-    (state) => state,
   )
+  const pagination = $derived(table.atoms.pagination.get())
+  const globalFilter = $derived(table.atoms.globalFilter.get())
 </script>
 
 <div class="demo-root">
@@ -98,7 +99,7 @@
     <button onclick={() => stressTest()}>Stress Test (1M rows)</button>
   </div>
   <DebouncedInput
-    value={table.state.globalFilter ?? ''}
+    value={globalFilter ?? ''}
     onchange={(value) => table.setGlobalFilter(String(value))}
     class="summary-panel"
     placeholder="Search all columns..."
@@ -170,7 +171,7 @@
     <span class="inline-controls">
       <div>Page</div>
       <strong>
-        {(table.state.pagination.pageIndex + 1).toLocaleString()} of{' '}
+        {(pagination.pageIndex + 1).toLocaleString()} of{' '}
         {table.getPageCount().toLocaleString()}
       </strong>
     </span>
@@ -180,7 +181,7 @@
         type="number"
         min="1"
         max={table.getPageCount()}
-        value={table.state.pagination.pageIndex + 1}
+        value={pagination.pageIndex + 1}
         oninput={(e: Event) => {
           const page = (e.target as HTMLInputElement).value
             ? Number((e.target as HTMLInputElement).value) - 1
@@ -191,7 +192,7 @@
       />
     </span>
     <select
-      value={table.state.pagination.pageSize}
+      value={pagination.pageSize}
       onchange={(e: Event) => {
         table.setPageSize(Number((e.target as HTMLSelectElement).value))
       }}
@@ -205,5 +206,5 @@
     Showing {table.getRowModel().rows.length.toLocaleString()} of{' '}
     {table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
   </div>
-  <pre>{JSON.stringify(table.state, null, 2)}</pre>
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)}</pre>
 </div>

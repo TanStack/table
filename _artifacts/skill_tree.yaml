@@ -1,6 +1,6 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.55'
+  version: '9.0.0-beta.76'
   repository: 'https://github.com/TanStack/table'
   description: 'Headless data-grid state and row processing with tree-shakeable v9 features and framework adapters.'
   package_version_overrides:
@@ -8,9 +8,9 @@ library:
 generated_from:
   domain_map: '_artifacts/domain_map.yaml'
   skill_spec: '_artifacts/skill_spec.md'
-generated_at: '2026-07-10'
+generated_at: '2026-08-01'
 status: reviewed
-reviewed_at: '2026-07-10'
+reviewed_at: '2026-07-29'
 batch_review: true
 structure: 'flat-per-package'
 monorepo_layout: true
@@ -118,7 +118,7 @@ skills:
     domain: foundations
     path: 'packages/table-core/skills/migrate-v8-to-v9/SKILL.md'
     package: 'packages/table-core'
-    description: 'Perform a complete TanStack Table v8-to-v9 migration audit: all 14 feature registrations, every row-model and registry slot, state/store changes, prototype methods, full pinning and resizing mappings, sorting and selection semantics, removed internals, helpers, meta typing, and generic changes. useLegacyTable is only a deprecated temporary bridge when already encountered.'
+    description: 'Perform a complete TanStack Table v8-to-v9 migration audit: all 16 feature registrations, every row-model and registry slot, state/store changes, prototype methods, full pinning and resizing mappings, sorting and selection semantics, removed internals, helpers, meta typing, and generic changes. useLegacyTable is only a deprecated temporary bridge when already encountered.'
     requires: ['core', 'table-features', 'typescript']
     sources:
       - 'TanStack/table:docs/framework/react/guide/migrating.md'
@@ -172,6 +172,21 @@ skills:
       - 'TanStack/table:docs/framework/react/guide/grouping.md'
       - 'TanStack/table:packages/table-core/src/features/column-grouping'
       - 'TanStack/table:examples/react/grouping'
+
+  - name: 'Aggregation'
+    slug: aggregation
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/aggregation/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Aggregate columns independently of grouping with rowAggregationFeature, built-in or custom aggregation functions, caller-selected row scopes, keyed results, grouped merges, and manual values.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/guide/aggregation.md'
+      - 'TanStack/table:docs/framework/react/guide/aggregation.md'
+      - 'TanStack/table:packages/table-core/src/features/row-aggregation'
+      - 'TanStack/table:examples/react/aggregation'
+      - 'TanStack/table:examples/react/grouped-aggregation'
 
   - name: 'Column Ordering'
     slug: column-ordering
@@ -289,6 +304,32 @@ skills:
       - 'TanStack/table:docs/framework/react/guide/row-pinning.md'
       - 'TanStack/table:packages/table-core/src/features/row-pinning'
       - 'TanStack/table:examples/react/row-pinning'
+
+  - name: 'Cell Selection'
+    slug: cell-selection
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/cell-selection/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Select, add, and subtract rectangular cell ranges with cellSelectionFeature: ordered include/exclude operations, modifier dragging, final positive bounds, selection edges, and render-order resolution under pinning. Load for spreadsheet-style or “select all except” behavior.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/framework/react/guide/cell-selection.md'
+      - 'TanStack/table:packages/table-core/src/features/cell-selection'
+      - 'TanStack/table:examples/react/cell-selection'
+
+  - name: 'Cell Spanning'
+    slug: cell-spanning
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/cell-spanning/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Merge adjacent body cells with cellSpanningFeature: value-based rowSpan via spanRows, per-row colSpan via spanColumns, and the covered-cell convention where a span of 0 means skip the cell. Load for merged grids, spans lost after sorting or paging, or ragged rows.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/framework/react/guide/cell-spanning.md'
+      - 'TanStack/table:packages/table-core/src/features/cell-spanning'
+      - 'TanStack/table:examples/react/cell-spanning'
 
   - name: 'Row Selection'
     slug: row-selection
@@ -594,7 +635,7 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/getting-started/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Create a Svelte 5 TanStack Table v9 table with createTable, explicit tableFeatures, rune-backed data getters, stable static inputs, snippets, and headless markup. Load when replacing createSvelteTable or pre-rune patterns.'
+    description: 'Create a Svelte 5 TanStack Table v9 table with createTable, explicit tableFeatures, rune-backed data getters, stable static inputs, FlexRender, and headless markup. Load when replacing createSvelteTable or pre-rune patterns.'
     requires:
       ['@tanstack/table-core#core', '@tanstack/table-core#table-features']
     sources:
@@ -608,13 +649,14 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/table-state/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Use Svelte 5 rune-backed table.atoms/store and selected table.state, reactive option getters, controlled $state slices, value-or-updater callbacks, external atoms, and auto-reset behavior without snapshot mismatches.'
+    description: 'Use Svelte 5 rune-aware table atoms and stores, $derived projections, reactive option getters, controlled $state or createTableState slices, external atoms, and auto-reset behavior without broad invalidation or snapshot mismatches.'
     requires: ['@tanstack/table-core#core', 'getting-started']
     sources:
       - 'TanStack/table:docs/framework/svelte/guide/table-state.md'
+      - 'TanStack/table:docs/framework/svelte/guide/pagination.md'
       - 'TanStack/table:examples/svelte/basic-external-state'
       - 'TanStack/table:packages/svelte-table/src/createTable.svelte.ts'
-      - 'TanStack/table:docs/framework/svelte/guide/pagination.md'
+      - 'TanStack/table:packages/svelte-table/src/createTableState.svelte.ts'
 
   - name: 'Svelte Migrate v8 to v9'
     slug: migrate-v8-to-v9
@@ -622,7 +664,7 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/migrate-v8-to-v9/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Migrate Svelte v8/store-oriented tables to the Svelte 5 v9 createTable adapter, runes, explicit feature and row-model slots, current rendering, prototype methods, sortFn names, helpers, and logical pinning.'
+    description: 'Complete Svelte v8-to-v9 migration reference: Svelte 5, createTable, beta.59 selector removal, explicit features and row-model slots, atom/rune state, rendering helpers, prototype methods, type generics, sorting, sizing, selection, and logical pinning.'
     requires:
       [
         '@tanstack/table-core#migrate-v8-to-v9',
@@ -640,7 +682,7 @@ skills:
     domain: framework-adapters
     path: 'packages/svelte-table/skills/create-table-hook/SKILL.md'
     package: 'packages/svelte-table'
-    description: 'Define a Svelte createAppTable/createAppColumnHelper in a rune-capable module with shared features/defaults, reactive per-table getters, optional App component registries, and typed table/cell/header context hooks.'
+    description: "Define a Svelte createAppTable/createAppColumnHelper using the adapter's rune-capable createTableHook implementation, shared features/defaults, reactive per-table getters, optional App component registries, and typed table/cell/header context hooks."
     requires: ['@tanstack/table-core#core', 'getting-started', 'table-state']
     sources:
       - 'TanStack/table:docs/framework/svelte/guide/composable-tables.md'
@@ -929,6 +971,51 @@ skills:
       - 'TanStack/table:examples/lit/virtualized-rows'
       - 'TanStack/table:examples/lit/virtualized-columns'
       - 'TanStack/table:examples/lit/virtualized-infinite-scrolling'
+
+  - name: 'Octane Getting Started'
+    slug: getting-started
+    type: framework
+    domain: framework-adapters
+    path: 'packages/octane-table/skills/getting-started/SKILL.md'
+    package: 'packages/octane-table'
+    description: 'Create an @tanstack/octane-table v9 table with useTable, tableFeatures, stable inputs, TSRX component bodies, keyed @for rendering, and FlexRender. Load when starting an Octane table or translating a React/Preact example without changing its behavior.'
+    requires:
+      ['@tanstack/table-core#core', '@tanstack/table-core#table-features']
+    sources:
+      - 'TanStack/table:docs/framework/octane/quick-start.md'
+      - 'TanStack/table:examples/octane/basic-use-table'
+      - 'TanStack/table:packages/octane-table/src/index.ts'
+      - 'TanStack/table:packages/octane-table/src/useTable.tsrx'
+
+  - name: 'Octane Table State'
+    slug: table-state
+    type: framework
+    domain: framework-adapters
+    path: 'packages/octane-table/skills/table-state/SKILL.md'
+    package: 'packages/octane-table'
+    description: 'Read and own Octane Table v9 state with useTable selectors, table.state, table.Subscribe, controlled slices, and @tanstack/octane-store atoms. Load for state ownership, render timing, snapshot-versus-subscription bugs, or fine-grained rendering.'
+    requires: ['@tanstack/table-core#core', 'getting-started']
+    sources:
+      - 'TanStack/table:docs/framework/octane/guide/table-state.md'
+      - 'TanStack/table:examples/octane/basic-subscribe'
+      - 'TanStack/table:examples/octane/basic-external-atoms'
+      - 'TanStack/table:packages/octane-table/src/useTable.tsrx'
+      - 'TanStack/table:packages/octane-table/src/Subscribe.tsrx'
+
+  - name: 'Octane createTableHook'
+    slug: create-table-hook
+    type: framework
+    domain: framework-adapters
+    path: 'packages/octane-table/skills/create-table-hook/SKILL.md'
+    package: 'packages/octane-table'
+    description: 'Create reusable Octane table infrastructure with createTableHook, useAppTable, createAppColumnHelper, registered components, stable App wrappers, and typed context hooks. Load for recurring conventions, scoped contexts, or prop drilling.'
+    requires: ['@tanstack/table-core#core', 'getting-started', 'table-state']
+    sources:
+      - 'TanStack/table:docs/framework/octane/guide/composable-tables.md'
+      - 'TanStack/table:docs/framework/octane/guide/table-context.md'
+      - 'TanStack/table:examples/octane/composable-tables'
+      - 'TanStack/table:packages/octane-table/src/createTableHook.tsrx'
+      - 'TanStack/table:packages/octane-table/src/createTableHookContexts.ts'
 
   - name: 'Ember Getting Started'
     slug: getting-started

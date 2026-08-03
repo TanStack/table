@@ -149,15 +149,17 @@ html`
             .getVisibleCells()
             .map((cell) => html`<td>${FlexRender({ cell })}</td>`)}
         </tr>
-        ${row.getIsExpanded()
-          ? html`
-              <tr>
-                <td colspan=${row.getAllCells().length}>
-                  <!-- Your custom UI goes here -->
-                </td>
-              </tr>
-            `
-          : null}
+        ${
+          row.getIsExpanded()
+            ? html`
+                <tr>
+                  <td colspan=${row.getAllCells().length}>
+                    <!-- Your custom UI goes here -->
+                  </td>
+                </tr>
+              `
+            : null
+        }
       `,
     )}
   </tbody>

@@ -68,6 +68,7 @@ class LitTableExample extends LitElement {
         columns,
         columnResizeMode: 'onChange',
         columnResizeDirection: 'ltr',
+        // defaultColumn: { size: 150, minSize: 50, maxSize: 500 }, // set sizing defaults for every column
         // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
         // atoms: { columnSizing: columnSizingAtom }, // preferred: own sizing state with an external atom
         // state: { columnSizing }, // classic controlled state; pair with onColumnSizingChange
@@ -113,17 +114,22 @@ class LitTableExample extends LitElement {
                       style="width: ${header.getSize()}px"
                     >
                       ${FlexRender({ header })}
-                      ${header.isPlaceholder
-                        ? null
-                        : html`<div
-                            class="resizer ${table.options
-                              .columnResizeDirection} ${header.column.getIsResizing()
-                              ? 'is-resizing'
-                              : ''}"
-                            @dblclick="${() => header.column.resetSize()}"
-                            @mousedown="${header.getResizeHandler()}"
-                            @touchstart="${header.getResizeHandler()}"
-                          />`}
+                      ${
+                        header.isPlaceholder
+                          ? null
+                          : html`<div
+                              class="resizer ${
+                                table.options.columnResizeDirection
+                              } ${
+                                header.column.getIsResizing()
+                                  ? 'is-resizing'
+                                  : ''
+                              }"
+                              @dblclick="${() => header.column.resetSize()}"
+                              @mousedown="${header.getResizeHandler()}"
+                              @touchstart="${header.getResizeHandler()}"
+                            />`
+                      }
                     </th>
                   `,
                 )}
@@ -146,7 +152,8 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
-      <pre>${JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

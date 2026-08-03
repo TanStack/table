@@ -6,7 +6,7 @@ title: NonFeatureKeys
 # Type Alias: NonFeatureKeys
 
 ```ts
-type NonFeatureKeys = 
+type NonFeatureKeys =
   | "aggregationFns"
   | "columnMeta"
   | "coreRowModel"
@@ -24,7 +24,7 @@ type NonFeatureKeys =
   | "tableMeta";
 ```
 
-Defined in: [types/TableFeatures.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L67)
+Defined in: [types/TableFeatures.ts:70](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableFeatures.ts#L70)
 
 Keys of the `features` option that are not table features themselves.
 

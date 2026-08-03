@@ -187,7 +187,7 @@ function App() {
       debugHeaders: true,
       debugColumns: false,
     },
-    (state) => state,
+    (state) => state, // default selector
   )
 
   return (
@@ -286,8 +286,8 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
-            onChange={(event) => {
+            value={table.state.pagination.pageIndex + 1}
+            onInput={(event) => {
               const page = event.currentTarget.value
                 ? Number(event.currentTarget.value) - 1
                 : 0
@@ -314,7 +314,9 @@ function App() {
       </div>
       <div></div>
 
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

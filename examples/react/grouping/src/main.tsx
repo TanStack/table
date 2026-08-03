@@ -67,6 +67,7 @@ function App() {
         }),
         columnHelper.accessor('age', {
           header: () => 'Age',
+          // enableGrouping: false, // prevent grouping by this column
         }),
         columnHelper.accessor('visits', {
           header: () => <span>Visits</span>,
@@ -184,7 +185,7 @@ function App() {
       <div className="controls">
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(0)}
+          onClick={() => table.firstPage()}
           disabled={!table.getCanPreviousPage()}
         >
           {'<<'}
@@ -205,7 +206,7 @@ function App() {
         </button>
         <button
           className="demo-button demo-button-sm"
-          onClick={() => table.setPageIndex(table.getPageCount() - 1)}
+          onClick={() => table.lastPage()}
           disabled={!table.getCanNextPage()}
         >
           {'>>'}
@@ -223,7 +224,7 @@ function App() {
             type="number"
             min="1"
             max={table.getPageCount()}
-            defaultValue={table.state.pagination.pageIndex + 1}
+            value={table.state.pagination.pageIndex + 1}
             onChange={(e) => {
               const page = e.target.value ? Number(e.target.value) - 1 : 0
               table.setPageIndex(page)
@@ -246,7 +247,9 @@ function App() {
       </div>
       <div>{table.getRowModel().rows.length.toLocaleString()} Rows</div>
       <div></div>
-      <pre>{JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+        {JSON.stringify(table.state, null, 2)}
+      </pre>
     </div>
   )
 }

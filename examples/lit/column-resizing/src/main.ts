@@ -186,17 +186,20 @@ class LitTableExample extends LitElement {
                               width: `${header.getSize()}px`,
                             })}"
                           >
-                            ${header.isPlaceholder
-                              ? null
-                              : FlexRender({ header })}
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
                             <div
                               @dblclick="${() => header.column.resetSize()}"
                               @mousedown="${header.getResizeHandler()}"
                               @touchstart="${header.getResizeHandler()}"
-                              class="resizer ${this
-                                .columnResizeDirection} ${header.column.getIsResizing()
-                                ? 'isResizing'
-                                : ''}"
+                              class="resizer ${this.columnResizeDirection} ${
+                                header.column.getIsResizing()
+                                  ? 'isResizing'
+                                  : ''
+                              }"
                               style="${styleMap({
                                 transform: resizerTransform(header),
                               })}"
@@ -256,17 +259,20 @@ class LitTableExample extends LitElement {
                               width: `${header.getSize()}px`,
                             })}"
                           >
-                            ${header.isPlaceholder
-                              ? null
-                              : FlexRender({ header })}
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
                             <div
                               @dblclick="${() => header.column.resetSize()}"
                               @mousedown="${header.getResizeHandler()}"
                               @touchstart="${header.getResizeHandler()}"
-                              class="resizer ${this
-                                .columnResizeDirection} ${header.column.getIsResizing()
-                                ? 'isResizing'
-                                : ''}"
+                              class="resizer ${this.columnResizeDirection} ${
+                                header.column.getIsResizing()
+                                  ? 'isResizing'
+                                  : ''
+                              }"
                               style="${styleMap({
                                 transform: resizerTransform(header),
                               })}"
@@ -332,17 +338,20 @@ class LitTableExample extends LitElement {
                               width: `${header.getSize()}px`,
                             })}"
                           >
-                            ${header.isPlaceholder
-                              ? null
-                              : FlexRender({ header })}
+                            ${
+                              header.isPlaceholder
+                                ? null
+                                : FlexRender({ header })
+                            }
                             <div
                               @dblclick="${() => header.column.resetSize()}"
                               @mousedown="${header.getResizeHandler()}"
                               @touchstart="${header.getResizeHandler()}"
-                              class="resizer ${this
-                                .columnResizeDirection} ${header.column.getIsResizing()
-                                ? 'isResizing'
-                                : ''}"
+                              class="resizer ${this.columnResizeDirection} ${
+                                header.column.getIsResizing()
+                                  ? 'isResizing'
+                                  : ''
+                              }"
                               style="${styleMap({
                                 transform: resizerTransform(header),
                               })}"
@@ -387,7 +396,8 @@ class LitTableExample extends LitElement {
           </div>
         </div>
         <div class="spacer-md"></div>
-        <pre>${JSON.stringify(table.state, null, 2)}</pre>
+        <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

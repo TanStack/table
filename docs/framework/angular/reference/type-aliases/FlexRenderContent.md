@@ -6,7 +6,7 @@ title: FlexRenderContent
 # Type Alias: FlexRenderContent\<TProps\>
 
 ```ts
-type FlexRenderContent<TProps> = 
+type FlexRenderContent<TProps> =
   | string
   | number
   | Type<TProps>

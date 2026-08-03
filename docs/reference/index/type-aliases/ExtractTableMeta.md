@@ -9,7 +9,7 @@ title: ExtractTableMeta
 type ExtractTableMeta<TFeatures, TData> = IsAny<TFeatures> extends true ? TableMeta<TFeatures, TData> : TFeatures extends object ? TMeta : TableMeta<TFeatures, TData>;
 ```
 
-Defined in: [core/table/coreTablesFeature.types.ts:29](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L29)
+Defined in: [core/table/coreTablesFeature.types.ts:30](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.types.ts#L30)
 
 Resolves the type of `options.meta` for a feature set.
 

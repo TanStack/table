@@ -150,8 +150,7 @@ class LitTableExample extends LitElement {
         id="multiplier"
         @change="${(e: Event) => {
           const inputElement = (e as CustomEvent).target as
-            | HTMLInputElement
-            | undefined
+            HTMLInputElement | undefined
           if (inputElement) {
             this._multiplier = +inputElement.value
             this.requestUpdate('_multiplier')
@@ -168,26 +167,36 @@ class LitTableExample extends LitElement {
                 ${headerGroup.headers.map(
                   (header) => html`
                     <th colspan="${header.colSpan}">
-                      ${header.isPlaceholder
-                        ? null
-                        : html`<div
-                            title=${header.column.getCanSort()
-                              ? header.column.getNextSortingOrder() === 'asc'
-                                ? 'Sort ascending'
-                                : header.column.getNextSortingOrder() === 'desc'
-                                  ? 'Sort descending'
-                                  : 'Clear sort'
-                              : undefined}
-                            @click="${header.column.getToggleSortingHandler()}"
-                            style="cursor: ${header.column.getCanSort()
-                              ? 'pointer'
-                              : 'not-allowed'}"
-                          >
-                            ${FlexRender({ header })}
-                            ${{ asc: ' 🔼', desc: ' 🔽' }[
-                              header.column.getIsSorted() as string
-                            ] ?? null}
-                          </div>`}
+                      ${
+                        header.isPlaceholder
+                          ? null
+                          : html`<div
+                              title=${
+                                header.column.getCanSort()
+                                  ? header.column.getNextSortingOrder() ===
+                                    'asc'
+                                    ? 'Sort ascending'
+                                    : header.column.getNextSortingOrder() ===
+                                        'desc'
+                                      ? 'Sort descending'
+                                      : 'Clear sort'
+                                  : undefined
+                              }
+                              @click="${header.column.getToggleSortingHandler()}"
+                              style="cursor: ${
+                                header.column.getCanSort()
+                                  ? 'pointer'
+                                  : 'not-allowed'
+                              }"
+                            >
+                              ${FlexRender({ header })}
+                              ${
+                                { asc: ' 🔼', desc: ' 🔽' }[
+                                  header.column.getIsSorted() as string
+                                ] ?? null
+                              }
+                            </div>`
+                      }
                     </th>
                   `,
                 )}
@@ -210,7 +219,8 @@ class LitTableExample extends LitElement {
             )}
         </tbody>
       </table>
-      <pre>${JSON.stringify(table.state, null, 2)}</pre>
+      <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       <style>
         * {
           font-family: sans-serif;

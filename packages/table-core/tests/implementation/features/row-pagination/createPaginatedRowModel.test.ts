@@ -199,6 +199,35 @@ describe('createPaginatedRowModel', () => {
         table.getPaginatedRowModel().flatRows.map((row) => row.id),
       ).toEqual(['0', '0.0', '0.1', '1', '1.0', '1.1'])
     })
+
+    it('should not duplicate expanded sub-rows in flatRows (default paginateExpandedRows)', () => {
+      const table = createTable({ data: makeNestedData(), pageSize: 3 })
+
+      table.getRow('0').toggleExpanded()
+
+      // The page slice is ['0', '0.0', '0.1']; the sub-rows appear both
+      // inline and under their parent's subRows, but flatRows must list each
+      // row exactly once
+      expect(
+        table.getPaginatedRowModel().flatRows.map((row) => row.id),
+      ).toEqual(['0', '0.0', '0.1'])
+    })
+
+    it('should not duplicate expanded sub-rows in flatRows with paginateExpandedRows: false', () => {
+      const table = createTable({
+        data: makeNestedData(),
+        pageSize: 2,
+        paginateExpandedRows: false,
+      })
+
+      table.getRow('0').toggleExpanded()
+
+      // Page rows are ['0', '0.0', '0.1', '1']; collapsed sub-rows of '1'
+      // still join flatRows once via the subRows walk
+      expect(
+        table.getPaginatedRowModel().flatRows.map((row) => row.id),
+      ).toEqual(['0', '0.0', '0.1', '1', '1.0', '1.1'])
+    })
   })
 
   describe('rowsById passthrough', () => {
@@ -230,6 +259,24 @@ describe('createPaginatedRowModel', () => {
         '2',
         '3',
         '4',
+      ])
+    })
+
+    it('should include expanded children when expanded rows bypass manual pagination', () => {
+      const table = createTable({
+        data: makeNestedData(),
+        manualPagination: true,
+        paginateExpandedRows: false,
+      })
+
+      table.getRow('0').toggleExpanded()
+
+      expect(table.getRowModel().rows.map((row) => row.id)).toEqual([
+        '0',
+        '0.0',
+        '0.1',
+        '1',
+        '2',
       ])
     })
   })

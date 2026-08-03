@@ -1,8 +1,12 @@
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core'
 import {
   FlexRender,
+  columnFilteringFeature,
   createExpandedRowModel,
+  createFilteredRowModel,
   createPaginatedRowModel,
+  filterFn_inNumberRange,
+  filterFn_includesString,
   flexRenderComponent,
   injectTable,
   rowExpandingFeature,
@@ -17,14 +21,20 @@ import {
   ExpandableHeaderCell,
 } from './expandable-cell/expandable-cell'
 import type { Person } from './makeData'
-import type { ColumnDef, ExpandedState } from '@tanstack/angular-table'
+import type { Column, ColumnDef, ExpandedState } from '@tanstack/angular-table'
 
 export const features = tableFeatures({
+  columnFilteringFeature,
   rowExpandingFeature: rowExpandingFeature,
   rowPaginationFeature: rowPaginationFeature,
   rowSelectionFeature: rowSelectionFeature,
+  filteredRowModel: createFilteredRowModel(),
   paginatedRowModel: createPaginatedRowModel(),
   expandedRowModel: createExpandedRowModel(),
+  filterFns: {
+    includesString: filterFn_includesString,
+    inNumberRange: filterFn_inNumberRange,
+  },
 })
 
 const defaultColumns: Array<ColumnDef<typeof features, Person>> = [
@@ -93,7 +103,11 @@ export class App {
       typeof updater === 'function'
         ? this.expanded.update(updater)
         : this.expanded.set(updater),
-    getSubRows: (row) => row.subRows,
+    getSubRows: (row) => row.subRows, // tell the table where nested rows live
+    // enableRowSelection: row => row.original.age > 18, // enable selection conditionally; default true
+    // enableMultiRowSelection: false, // allow only one selected row at a time; default true
+    // enableSubRowSelection: false, // disable sub-row selection; default true
+    // enableRowRangeSelection: false, // disable shift-click range selection; default true
     // initialState: { expanded: { '0': true } }, // expand rows on first render
     // atoms: { expanded: expandedAtom }, // preferred: own expanded state with an external atom
     // enableExpanding: false, // disable expanding for every row; default true
@@ -103,8 +117,11 @@ export class App {
     // paginateExpandedRows: false, // keep expanded children on their parent page; default true
     // autoResetExpanded: false, // keep expanded rows after page-altering changes; default true
     // autoResetAll: false, // turn off every feature's automatic reset, including expansion
+    // enableFilters: false, // disable all column and global filtering; default true
+    // enableColumnFilters: false, // disable per-column filters; default true
     // filterFromLeafRows: true, // with filtering, keep parents whose descendants match
     // maxLeafRowFilterDepth: 0, // with filtering, only filter root rows
+    // manualFiltering: true, // pass data that is already filtered, for example from a server
     debugTable: true,
   }))
 
@@ -120,6 +137,38 @@ export class App {
 
   onPageSizeChange(event: any): void {
     this.table.setPageSize(Number(event.target.value))
+  }
+
+  isNumberColumn(column: Column<typeof features, Person>): boolean {
+    const firstValue = this.table
+      .getPreFilteredRowModel()
+      .flatRows[0]?.getValue(column.id)
+    return typeof firstValue === 'number'
+  }
+
+  setTextFilter(column: Column<typeof features, Person>, event: Event): void {
+    column.setFilterValue((event.target as HTMLInputElement).value)
+  }
+
+  getNumberFilterValue(
+    column: Column<typeof features, Person>,
+    index: 0 | 1,
+  ): number | '' {
+    const value = column.getFilterValue() as [number?, number?] | undefined
+    return value?.[index] ?? ''
+  }
+
+  setNumberFilter(
+    column: Column<typeof features, Person>,
+    event: Event,
+    index: 0 | 1,
+  ): void {
+    const value = (event.target as HTMLInputElement).value
+    column.setFilterValue((old: [number?, number?] | undefined) => {
+      const next: [number?, number?] = [...(old ?? [])]
+      next[index] = value === '' ? undefined : Number(value)
+      return next
+    })
   }
 
   refreshData = () => this.data.set(makeData(100, 5, 3))

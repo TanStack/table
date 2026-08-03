@@ -1,4 +1,5 @@
 import { constructTable } from '@tanstack/table-core'
+import { registerDestructor } from '@ember/destroyable'
 import { untrack } from '@glimmer/validator'
 import { emberReactivity } from './reactivity.ts'
 import { computed, subscribeNoEffect } from './signal.ts'
@@ -22,14 +23,47 @@ interface TableInternals<
     get(): TableOptions<TFeatures, TData>
     set(value: () => TableOptions<TFeatures, TData>): void
   }
-  baseAtoms: Record<string, { get(): unknown }>
+  baseAtoms: Record<
+    string,
+    {
+      get(): unknown
+      set(value: unknown): void
+    }
+  >
   atoms: Record<string, unknown>
 }
 
+/**
+ * Creates an Ember-reactive table.
+ *
+ * Pass the containing component (or another Ember destroyable) as the first
+ * argument to tie external-atom subscriptions to its lifecycle. The one-arg
+ * form remains available for standalone tables that do not have an Ember
+ * owner.
+ */
 export function useTable<
   TFeatures extends TableFeatures,
   TData extends RowData,
->(getOptions: () => TableOptions<TFeatures, TData>): Table<TFeatures, TData> {
+>(
+  owner: object,
+  getOptions: () => TableOptions<TFeatures, TData>,
+): Table<TFeatures, TData>
+export function useTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(getOptions: () => TableOptions<TFeatures, TData>): Table<TFeatures, TData>
+export function useTable<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  ownerOrGetOptions: object | (() => TableOptions<TFeatures, TData>),
+  maybeGetOptions?: () => TableOptions<TFeatures, TData>,
+): Table<TFeatures, TData> {
+  const hasOwner = maybeGetOptions !== undefined
+  const owner = hasOwner ? ownerOrGetOptions : undefined
+  const getOptions = (
+    hasOwner ? maybeGetOptions : ownerOrGetOptions
+  ) as () => TableOptions<TFeatures, TData>
   const reactivity = emberReactivity()
 
   // Creates reactive read only signal for options
@@ -68,6 +102,8 @@ export function useTable<
     }
   })
 
+  const getLiveOptions = () => liveOptions.get()
+
   /**
    * This is to get around core table not using lazy access so we need to re-wrap
    *
@@ -76,7 +112,7 @@ export function useTable<
   Object.defineProperty(table, 'options', {
     configurable: true,
     enumerable: true,
-    get: () => liveOptions.get(),
+    get: getLiveOptions,
     set: (value: TableOptions<TFeatures, TData>) => {
       optionsStore.set(() => value)
     },
@@ -148,6 +184,10 @@ export function useTable<
       return stateProxy
     },
     subscribe: subscribeNoEffect,
+  }
+
+  if (owner) {
+    registerDestructor(owner, () => reactivity.unmount?.())
   }
 
   return table

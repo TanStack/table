@@ -29,6 +29,10 @@ export function createGroupedRowModel<
 >(): (table: Table<TFeatures, TData>) => () => RowModel<TFeatures, TData> {
   return (_table) => {
     const table = _table as unknown as Table_Internal<TFeatures, TData>
+    let hasAutoResetDependencies = false
+    let previousGrouping: unknown
+    let previousPreGroupedRowModel: RowModel<TFeatures, TData> | undefined
+
     return tableMemo({
       feature: 'columnGroupingFeature',
       table,
@@ -40,8 +44,27 @@ export function createGroupedRowModel<
       ],
       fn: () => _createGroupedRowModel(table),
       onAfterUpdate: () => {
-        table_autoResetExpanded(table)
-        table_autoResetPageIndex(table)
+        const grouping = table.atoms.grouping?.get()
+        const preGroupedRowModel = table.getPreGroupedRowModel()
+        // The first computation is not a change; auto-resets fire only once
+        // a previously observed grouping or pre-grouped row model differs.
+        const rowInputsChanged =
+          hasAutoResetDependencies &&
+          (grouping !== previousGrouping ||
+            preGroupedRowModel !== previousPreGroupedRowModel)
+
+        previousGrouping = grouping
+        previousPreGroupedRowModel = preGroupedRowModel
+        hasAutoResetDependencies = true
+
+        // Column definitions participate in grouped-row computation (for
+        // grouping and aggregation metadata), but changing only their
+        // reference does not change which rows belong on the current page or
+        // which group ids are expanded.
+        if (rowInputsChanged) {
+          table_autoResetExpanded(table)
+          table_autoResetPageIndex(table)
+        }
       },
     })
   }
@@ -161,8 +184,7 @@ function _createGroupedRowModel<
             }
 
             const aggregationCache = (row as any)._aggregationValuesCache as
-              | Record<string, unknown>
-              | undefined
+              Record<string, unknown> | undefined
             if (aggregationCache && hasOwn(aggregationCache, colId)) {
               return aggregationCache[colId]
             }
@@ -221,8 +243,7 @@ function groupBy<TFeatures extends TableFeatures, TData extends RowData = any>(
   // inside this per-row loop. The branches below mirror
   // `row_getGroupingValue`'s caching contract exactly.
   const column = table_getColumn(table, columnId) as
-    | Column_Internal<TFeatures, TData, unknown>
-    | undefined
+    Column_Internal<TFeatures, TData, unknown> | undefined
   const getGroupingValue = column?.columnDef.getGroupingValue
 
   for (let i = 0; i < rows.length; i++) {
@@ -230,8 +251,7 @@ function groupBy<TFeatures extends TableFeatures, TData extends RowData = any>(
     let groupingValue
     if (getGroupingValue) {
       const cache = (row as any)._groupingValuesCache as
-        | Record<string, unknown>
-        | undefined
+        Record<string, unknown> | undefined
       if (cache && hasOwn(cache, columnId)) {
         groupingValue = cache[columnId]
       } else if (cache) {

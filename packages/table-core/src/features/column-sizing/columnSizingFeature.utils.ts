@@ -255,6 +255,22 @@ export function column_resetSize<
   })
 }
 
+function sumHeaderSize<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+  TValue extends CellData,
+>(header: Header<TFeatures, TData, TValue>): number {
+  if (!header.subHeaders.length) {
+    return column_getSize(header.column)
+  }
+
+  let sum = 0
+  for (let i = 0; i < header.subHeaders.length; i++) {
+    sum += sumHeaderSize(header.subHeaders[i]!)
+  }
+  return sum
+}
+
 /**
  * Computes a header's rendered size from its leaf headers.
  *
@@ -271,19 +287,7 @@ export function header_getSize<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(header: Header<TFeatures, TData, TValue>) {
-  let sum = 0
-
-  const recurse = (h: Header<TFeatures, TData, TValue>) => {
-    if (h.subHeaders.length) {
-      h.subHeaders.forEach(recurse)
-    } else {
-      sum += column_getSize(h.column)
-    }
-  }
-
-  recurse(header)
-
-  return sum
+  return sumHeaderSize(header)
 }
 
 /**

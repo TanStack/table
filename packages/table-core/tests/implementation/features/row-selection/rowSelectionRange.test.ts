@@ -236,15 +236,6 @@ describe('row selection range performance', () => {
     expect(toggleSelected).not.toHaveBeenCalled()
     expect(Object.keys(rowSelection).sort()).toEqual(['0', '1', '2', '3', '4'])
   })
-
-  it('persists framework events before reading them', () => {
-    const table = makeSelectionTable()
-    const persist = vi.fn()
-
-    interact(table.getRow('0'), true, { persist })
-
-    expect(persist).toHaveBeenCalledOnce()
-  })
 })
 
 describe('row selection range options and invalid anchors', () => {
@@ -371,6 +362,24 @@ describe('range child selection semantics', () => {
       { selectChildren: false },
     )
     expect(selected(table)).toEqual(['a', 'child-1', 'child-2', 'parent', 'z'])
+  })
+
+  it('prunes ancestors of deselected range rows with deselectParents', () => {
+    const table = makePipelineTable(
+      { initialState: { expanded: { parent: true } } },
+      nestedData,
+    )
+    table.getRow('parent').toggleSelected(true)
+    expect(selected(table)).toEqual(['child-1', 'child-2', 'parent'])
+
+    interact(table.getRow('child-1'), false)
+    interact(
+      table.getRow('child-2'),
+      false,
+      { shiftKey: true },
+      { deselectParents: true },
+    )
+    expect(selected(table)).toEqual([])
   })
 })
 

@@ -1,3 +1,5 @@
+import { cellSelectionFeature } from './cell-selection/cellSelectionFeature'
+import { cellSpanningFeature } from './cell-spanning/cellSpanningFeature'
 import { columnFacetingFeature } from './column-faceting/columnFacetingFeature'
 import { rowAggregationFeature } from './row-aggregation/rowAggregationFeature'
 import { columnFilteringFeature } from './column-filtering/columnFilteringFeature'
@@ -15,7 +17,8 @@ import { rowSelectionFeature } from './row-selection/rowSelectionFeature'
 import { rowSortingFeature } from './row-sorting/rowSortingFeature'
 
 export interface StockFeatures {
-  rowAggregationFeature: typeof rowAggregationFeature
+  cellSelectionFeature: typeof cellSelectionFeature
+  cellSpanningFeature: typeof cellSpanningFeature
   columnFacetingFeature: typeof columnFacetingFeature
   columnFilteringFeature: typeof columnFilteringFeature
   columnGroupingFeature: typeof columnGroupingFeature
@@ -25,6 +28,7 @@ export interface StockFeatures {
   columnSizingFeature: typeof columnSizingFeature
   columnVisibilityFeature: typeof columnVisibilityFeature
   globalFilteringFeature: typeof globalFilteringFeature
+  rowAggregationFeature: typeof rowAggregationFeature
   rowExpandingFeature: typeof rowExpandingFeature
   rowPaginationFeature: typeof rowPaginationFeature
   rowPinningFeature: typeof rowPinningFeature
@@ -38,7 +42,8 @@ export interface StockFeatures {
  * Use individual feature exports for tree-shaking, or this aggregate when a table should include every built-in feature.
  */
 export const stockFeatures: StockFeatures = {
-  rowAggregationFeature,
+  cellSelectionFeature,
+  cellSpanningFeature,
   columnFacetingFeature,
   columnFilteringFeature,
   columnGroupingFeature,
@@ -48,6 +53,7 @@ export const stockFeatures: StockFeatures = {
   columnSizingFeature,
   columnVisibilityFeature,
   globalFilteringFeature,
+  rowAggregationFeature,
   rowExpandingFeature,
   rowPaginationFeature,
   rowPinningFeature,

@@ -249,28 +249,36 @@ class LitTableExample extends LitElement {
                   ${headerGroup.headers.map(
                     (header) => html`
                       <th colspan=${header.colSpan}>
-                        ${header.isPlaceholder
-                          ? null
-                          : html`
-                              <div
-                                @click=${header.column.getToggleSortingHandler()}
-                                style="cursor: ${header.column.getCanSort()
-                                  ? 'pointer'
-                                  : 'default'}"
-                              >
-                                ${FlexRender({ header })}
-                                ${{ asc: ' 🔼', desc: ' 🔽' }[
-                                  header.column.getIsSorted() as string
-                                ] ?? null}
-                              </div>
-                              ${header.column.getCanFilter()
-                                ? html`<div>
-                                    <column-filter
-                                      .column=${header.column}
-                                    ></column-filter>
-                                  </div>`
-                                : null}
-                            `}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : html`
+                                <div
+                                  @click=${header.column.getToggleSortingHandler()}
+                                  style="cursor: ${
+                                    header.column.getCanSort()
+                                      ? 'pointer'
+                                      : 'default'
+                                  }"
+                                >
+                                  ${FlexRender({ header })}
+                                  ${
+                                    { asc: ' 🔼', desc: ' 🔽' }[
+                                      header.column.getIsSorted() as string
+                                    ] ?? null
+                                  }
+                                </div>
+                                ${
+                                  header.column.getCanFilter()
+                                    ? html`<div>
+                                        <column-filter
+                                          .column=${header.column}
+                                        ></column-filter>
+                                      </div>`
+                                    : null
+                                }
+                              `
+                        }
                       </th>
                     `,
                   )}
@@ -351,7 +359,8 @@ class LitTableExample extends LitElement {
         <div>
           ${table.getPrePaginatedRowModel().rows.length.toLocaleString()} Rows
         </div>
-        <pre>${JSON.stringify(table.state, null, 2)}</pre>
+        <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

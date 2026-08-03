@@ -7,13 +7,13 @@ title: constructColumn
 
 ```ts
 function constructColumn<TFeatures, TData, TValue>(
-   table, 
-   columnDef, 
-   depth, 
+   table,
+   columnDef,
+   depth,
 parent?): Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [core/columns/constructColumn.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/constructColumn.ts#L36)
+Defined in: [core/columns/constructColumn.ts:35](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/constructColumn.ts#L35)
 
 Constructs a column instance from normalized table internals.
 

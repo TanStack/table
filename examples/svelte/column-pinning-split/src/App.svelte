@@ -93,7 +93,6 @@
       debugHeaders: true,
       debugColumns: true,
     },
-    (state) => state,
   )
 
   const randomizeColumns = () => {
@@ -316,6 +315,6 @@
       </tbody>
     </table>
   </div>
-  <pre>{JSON.stringify(table.state, null, 2)
+  <pre data-testid="table-state">{JSON.stringify(table.store.get(), null, 2)
   }</pre>
 </div>

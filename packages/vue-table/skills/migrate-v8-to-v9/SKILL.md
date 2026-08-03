@@ -6,7 +6,7 @@ metadata:
   type: lifecycle
   library: '@tanstack/vue-table'
   framework: vue
-  library_version: '9.0.0-beta.55'
+  library_version: '9.0.0-beta.76'
 requires:
   - '@tanstack/table-core#migrate-v8-to-v9'
   - getting-started
@@ -51,7 +51,7 @@ const table = useTable({ features, columns, data })
 | `filterFns` / `aggregationFns` table options | Same-named feature slots                                   |
 | Top-level `onStateChange`                    | Per-slice callbacks, external atoms, or store subscription |
 
-Available feature imports are `columnFilteringFeature`, `globalFilteringFeature`, `rowSortingFeature`, `rowPaginationFeature`, `rowSelectionFeature`, `rowExpandingFeature`, `rowPinningFeature`, `columnPinningFeature`, `columnVisibilityFeature`, `columnOrderingFeature`, `columnSizingFeature`, `columnResizingFeature`, `rowAggregationFeature`, `columnGroupingFeature`, and `columnFacetingFeature`. APIs are feature-gated. Put every feature before its dependent slot in the same `tableFeatures` call. Aggregation is independent from grouping: register `rowAggregationFeature` for aggregation APIs and add `columnGroupingFeature` only for grouped rows.
+Available feature imports are `cellSelectionFeature`, `columnFilteringFeature`, `globalFilteringFeature`, `rowSortingFeature`, `rowPaginationFeature`, `rowSelectionFeature`, `rowExpandingFeature`, `rowPinningFeature`, `columnPinningFeature`, `columnVisibilityFeature`, `columnOrderingFeature`, `columnSizingFeature`, `columnResizingFeature`, `rowAggregationFeature`, `columnGroupingFeature`, and `columnFacetingFeature`. APIs are feature-gated. Put every feature before its dependent slot in the same `tableFeatures` call. Aggregation is independent from grouping: register `rowAggregationFeature` for aggregation APIs and add `columnGroupingFeature` only for grouped rows.
 
 ### Row-model mapping
 

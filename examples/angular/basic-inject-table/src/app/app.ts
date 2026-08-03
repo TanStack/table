@@ -5,9 +5,13 @@ import {
   inject,
   signal,
 } from '@angular/core'
-import { FlexRender, injectTable, tableFeatures } from '@tanstack/angular-table'
+import {
+  FlexRender,
+  createColumnHelper,
+  injectTable,
+  tableFeatures,
+} from '@tanstack/angular-table'
 import { injectTanStackTableDevtools } from '@tanstack/angular-table-devtools'
-import type { ColumnDef } from '@tanstack/angular-table'
 
 // This example uses the Angular standalone `injectTable` helper to create a table without the `createTableHook` util.
 
@@ -61,39 +65,35 @@ const defaultData: Array<Person> = [
 // In this case, this will be a basic table with no additional features
 const features = tableFeatures({})
 
-// 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns.
-// Alternatively, check out the createTableHook/createColumnHelper util for an even more type-safe way to define columns.
-const columns: Array<ColumnDef<typeof features, Person>> = [
-  {
-    accessorKey: 'firstName',
+// 4. Create a column helper with the table features and row type
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+// 5. Define the columns for your table with the column helper
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
-  },
-  {
-    accessorFn: (row) => row.lastName,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     header: () => 'Last Name',
-    cell: (info) => info.getValue<string>(),
-  },
-  {
-    accessorFn: (row) => Number(row.age),
+    cell: (info) => info.getValue(),
+  }),
+  columnHelper.accessor((row) => Number(row.age), {
     id: 'age',
     header: () => 'Age',
     cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     header: () => 'Visits',
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: 'Status',
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     header: 'Profile Progress',
-  },
-]
+  }),
+])
 
 @Component({
   selector: 'app-root',
@@ -104,10 +104,10 @@ const columns: Array<ColumnDef<typeof features, Person>> = [
 export class App {
   private readonly injector = inject(Injector)
 
-  // 5. Store data with a stable reference
+  // 6. Store data with a stable reference
   readonly data = signal<Array<Person>>([...defaultData])
 
-  // 6. Create the table instance with required features, columns, and data
+  // 7. Create the table instance with required features, columns, and data
   readonly table = injectTable(() => ({
     key: 'basic-inject-table', // needed for devtools
     debugTable: true,

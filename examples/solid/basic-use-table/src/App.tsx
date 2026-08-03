@@ -1,7 +1,11 @@
-import { FlexRender, createTable, tableFeatures } from '@tanstack/solid-table'
+import {
+  FlexRender,
+  createColumnHelper,
+  createTable,
+  tableFeatures,
+} from '@tanstack/solid-table'
 import { useTanStackTableDevtools } from '@tanstack/solid-table-devtools'
 import { For, createSignal } from 'solid-js'
-import type { ColumnDef } from '@tanstack/solid-table'
 
 // This example uses the standalone `createTable` function to create a table without the `createTableHook` util.
 
@@ -54,44 +58,41 @@ const defaultData: Array<Person> = [
 // 3. New in V9! Tell the table which features and row models we want to use. In this case, this will be a basic table with no additional features
 const features = tableFeatures({}) // util method to create sharable TFeatures object/type
 
-// 4. Define the columns for your table. This uses the new `ColumnDef` type to define columns. Alternatively, check out the createTableHook/createAppColumnHelper util for an even more type-safe way to define columns.
-const columns: Array<ColumnDef<typeof features, Person>> = [
-  {
-    accessorKey: 'firstName', // accessorKey method (most common for simple use-cases)
+// 4. Create a column helper with the table features and row type
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+// 5. Define the columns for your table with the column helper
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
-  },
-  {
-    accessorFn: (row) => row.lastName, // accessorFn used (alternative) along with a custom id
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     header: () => <span>Last Name</span>,
-    cell: (info) => <i>{info.getValue<string>()}</i>,
-  },
-  {
-    accessorFn: (row) => Number(row.age), // accessorFn used to transform the data
+    cell: (info) => <i>{info.getValue()}</i>,
+  }),
+  columnHelper.accessor((row) => Number(row.age), {
     id: 'age',
     header: () => 'Age',
     cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     header: () => <span>Visits</span>,
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: 'Status',
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     header: 'Profile Progress',
-  },
-]
+  }),
+])
 
 function App() {
-  // 5. Store data with a reactive reference
+  // 6. Store data with a reactive reference
   const [data] = createSignal([...defaultData])
 
-  // 6. Create the table instance with required features, columns, and data
+  // 7. Create the table instance with required features, columns, and data
   const table = createTable({
     key: 'basic-use-table', // needed for devtools
     debugTable: true,
@@ -104,7 +105,7 @@ function App() {
 
   useTanStackTableDevtools(table)
 
-  // 7. Render your table markup from the table instance APIs
+  // 8. Render your table markup from the table instance APIs
   return (
     <div class="demo-root">
       <table>

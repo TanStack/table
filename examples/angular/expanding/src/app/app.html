@@ -22,6 +22,32 @@
                   >
                     <div [innerHTML]="header"></div>
                   </ng-container>
+
+                  @if (header.column.getCanFilter()) {
+                    <div>
+                      @if (isNumberColumn(header.column)) {
+                        <input
+                          type="number"
+                          placeholder="Min"
+                          [value]="getNumberFilterValue(header.column, 0)"
+                          (input)="setNumberFilter(header.column, $event, 0)"
+                        />
+                        <input
+                          type="number"
+                          placeholder="Max"
+                          [value]="getNumberFilterValue(header.column, 1)"
+                          (input)="setNumberFilter(header.column, $event, 1)"
+                        />
+                      } @else {
+                        <input
+                          type="text"
+                          placeholder="Search..."
+                          [value]="header.column.getFilterValue() ?? ''"
+                          (input)="setTextFilter(header.column, $event)"
+                        />
+                      }
+                    </div>
+                  }
                 }
               </th>
             }
@@ -101,5 +127,5 @@
   </div>
 
   <label>State:</label>
-  <pre>{{ stringifiedState() }}</pre>
+  <pre data-testid="table-state">{{ stringifiedState() }}</pre>
 </div>

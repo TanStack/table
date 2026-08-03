@@ -9,7 +9,7 @@ title: table_getAllFlatColumns
 function table_getAllFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/columns/coreColumnsFeature.utils.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L162)
+Defined in: [core/columns/coreColumnsFeature.utils.ts:175](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/columns/coreColumnsFeature.utils.ts#L175)
 
 Flattens every table column, including group columns and leaf columns.
 

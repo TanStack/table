@@ -36,8 +36,7 @@ export function ColumnFilter() {
     table.store,
     (state) =>
       state.columnFilters.find((f) => f.id === columnId)?.value as
-        | string
-        | undefined,
+        string | undefined,
     { compare: shallow },
   )
 

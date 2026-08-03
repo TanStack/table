@@ -5,7 +5,7 @@ title: TableState_All
 
 # Interface: TableState\_All
 
-Defined in: [types/TableState.ts:47](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L47)
+Defined in: [types/TableState.ts:49](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableState.ts#L49)
 
 Internal broad state shape containing every registered feature state slice.
 
@@ -14,9 +14,23 @@ by other features.
 
 ## Extends
 
-- `Partial`\<[`TableState_ColumnFiltering`](TableState_ColumnFiltering.md) & [`TableState_ColumnGrouping`](TableState_ColumnGrouping.md) & [`TableState_ColumnOrdering`](TableState_ColumnOrdering.md) & [`TableState_ColumnPinning`](TableState_ColumnPinning.md) & [`TableState_ColumnResizing`](TableState_ColumnResizing.md) & [`TableState_ColumnSizing`](TableState_ColumnSizing.md) & [`TableState_ColumnVisibility`](TableState_ColumnVisibility.md) & [`TableState_GlobalFiltering`](TableState_GlobalFiltering.md) & [`TableState_RowExpanding`](TableState_RowExpanding.md) & [`TableState_RowPagination`](TableState_RowPagination.md) & [`TableState_RowPinning`](TableState_RowPinning.md) & [`TableState_RowSelection`](TableState_RowSelection.md) & [`TableState_RowSorting`](TableState_RowSorting.md)\>
+- `Partial`\<[`TableState_CellSelection`](TableState_CellSelection.md) & [`TableState_ColumnFiltering`](TableState_ColumnFiltering.md) & [`TableState_ColumnGrouping`](TableState_ColumnGrouping.md) & [`TableState_ColumnOrdering`](TableState_ColumnOrdering.md) & [`TableState_ColumnPinning`](TableState_ColumnPinning.md) & [`TableState_ColumnResizing`](TableState_ColumnResizing.md) & [`TableState_ColumnSizing`](TableState_ColumnSizing.md) & [`TableState_ColumnVisibility`](TableState_ColumnVisibility.md) & [`TableState_GlobalFiltering`](TableState_GlobalFiltering.md) & [`TableState_RowExpanding`](TableState_RowExpanding.md) & [`TableState_RowPagination`](TableState_RowPagination.md) & [`TableState_RowPinning`](TableState_RowPinning.md) & [`TableState_RowSelection`](TableState_RowSelection.md) & [`TableState_RowSorting`](TableState_RowSorting.md)\>
 
 ## Properties
+
+### cellSelection?
+
+```ts
+optional cellSelection: CellSelectionState;
+```
+
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L37)
+
+#### Inherited from
+
+[`TableState_CellSelection`](TableState_CellSelection.md).[`cellSelection`](TableState_CellSelection.md#cellselection)
+
+***
 
 ### columnFilters?
 

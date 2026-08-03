@@ -20,6 +20,7 @@
         "tests/test-helper.ts"
       ],
       "ignoreDependencies": [
+        "@ember/destroyable",
         "@ember/library-tsconfig",
         "@ember/routing",
         "@embroider/shared-internals",
@@ -35,11 +36,23 @@
         "experimental-worker-plugin/index.ts!"
       ]
     },
+    "packages/octane-table": {
+      "entry": [
+        "docs-entry.d.ts!",
+        "src/Subscribe.tsrx!",
+        "src/createTableHook.tsrx!",
+        "src/useTable.tsrx!",
+        "src/internal.ts!",
+        "src/reactivity.ts!",
+        "tests/type-tests/public-surface.tsx!"
+      ]
+    },
     "packages/svelte-table": {
       "entry": [
         "src/index.ts!",
         "src/static-functions.ts!",
-        "src/flex-render.ts!"
+        "src/flex-render.ts!",
+        "tests/public-api.types.ts!"
       ]
     }
   }

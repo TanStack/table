@@ -113,6 +113,7 @@ class LitTableExample extends LitElement {
         data: this._data,
         meta: { rowSource: this._rowSource },
         initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+        // manualAggregation: true, // supply aggregate values yourself instead of calculating them locally
         // initialState: { pagination: { pageIndex: 1, pageSize: 20 } }, // set the initial page once
         // atoms: { pagination: paginationAtom }, // preferred: own pagination state with an external atom
         // state: { pagination }, // classic controlled state; pair with onPaginationChange
@@ -192,15 +193,17 @@ class LitTableExample extends LitElement {
                   ${headerGroup.headers.map(
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.column.id === 'select'
-                          ? html`<input
-                              type="checkbox"
-                              .checked=${table.getIsAllPageRowsSelected()}
-                              @change=${() => table.toggleAllPageRowsSelected()}
-                            />`
-                          : header.isPlaceholder
-                            ? null
-                            : html`<div>${FlexRender({ header })}</div>`}
+                        ${
+                          header.column.id === 'select'
+                            ? html`<input
+                                type="checkbox"
+                                .checked=${table.getIsAllPageRowsSelected()}
+                                @change=${() => table.toggleAllPageRowsSelected()}
+                              />`
+                            : header.isPlaceholder
+                              ? null
+                              : html`<div>${FlexRender({ header })}</div>`
+                        }
                       </th>
                     `,
                   )}
@@ -219,13 +222,15 @@ class LitTableExample extends LitElement {
                         <td
                           class=${cell.column.id === 'amount' ? 'numeric' : ''}
                         >
-                          ${cell.column.id === 'select'
-                            ? html`<input
-                                type="checkbox"
-                                .checked=${row.getIsSelected()}
-                                @change=${() => row.toggleSelected()}
-                              />`
-                            : FlexRender({ cell })}
+                          ${
+                            cell.column.id === 'select'
+                              ? html`<input
+                                  type="checkbox"
+                                  .checked=${row.getIsSelected()}
+                                  @change=${() => row.toggleSelected()}
+                                />`
+                              : FlexRender({ cell })
+                          }
                         </td>
                       `,
                     )}
@@ -240,9 +245,11 @@ class LitTableExample extends LitElement {
                   ${footerGroup.headers.map(
                     (header) => html`
                       <th colspan="${header.colSpan}">
-                        ${header.isPlaceholder
-                          ? null
-                          : FlexRender({ footer: header })}
+                        ${
+                          header.isPlaceholder
+                            ? null
+                            : FlexRender({ footer: header })
+                        }
                       </th>
                     `,
                   )}
@@ -321,7 +328,8 @@ class LitTableExample extends LitElement {
           Showing ${table.getRowModel().rows.length.toLocaleString()} of
           ${table.getRowCount().toLocaleString()} Rows
         </div>
-        <pre>${JSON.stringify(table.state, null, 2)}</pre>
+        <pre data-testid="table-state">
+${JSON.stringify(table.state, null, 2)}</pre>
       </div>
       <style>
         * {

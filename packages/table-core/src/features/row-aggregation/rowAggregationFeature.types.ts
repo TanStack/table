@@ -92,7 +92,7 @@ export function constructAggregationFn<
 }
 
 /** Aggregation-definition registry carried by a table feature set. */
-export interface RowModelFns_Aggregation<
+export interface RowModelFns_RowAggregation<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
@@ -230,7 +230,7 @@ export interface ResolvedAggregationFn<
 }
 
 /** Column-definition options installed by `rowAggregationFeature`. */
-export interface ColumnDef_Aggregation<
+export interface ColumnDef_RowAggregation<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
   TValue extends CellData = CellData,
@@ -261,7 +261,7 @@ export interface ColumnDef_Aggregation<
 }
 
 /** Column instance APIs installed by `rowAggregationFeature`. */
-export interface Column_Aggregation<
+export interface Column_RowAggregation<
   in out TFeatures extends TableFeatures,
   in out TData extends RowData,
 > {
@@ -279,8 +279,7 @@ export interface Column_Aggregation<
   ) => TResult
   /** Infers `sum` for a numeric first row and `extent` for a Date first row. */
   getAutoAggregationFn: () =>
-    | AggregationFnDef<TFeatures, TData, any, any>
-    | undefined
+    AggregationFnDef<TFeatures, TData, any, any> | undefined
 }
 
 /** Options for a caller-requested column aggregation value. */
@@ -295,13 +294,13 @@ export interface AggregationValueOptions<
 }
 
 /** Cell instance APIs installed by `rowAggregationFeature`. */
-export interface Cell_Aggregation {
+export interface Cell_RowAggregation {
   /** Whether this cell displays an aggregate on a synthetic grouped row. */
   getIsAggregated: () => boolean
 }
 
 /** Internal per-row cache used while grouped aggregates are evaluated. */
-export interface Row_Aggregation {
+export interface Row_RowAggregation {
   /** Cached aggregate results keyed by column id; created lazily on grouped rows. */
   _aggregationValuesCache?: Record<string, unknown>
 }
@@ -329,7 +328,7 @@ export interface AggregationValueResult<TResult = unknown> {
 }
 
 /** Table options installed by `rowAggregationFeature`. */
-export interface TableOptions_Aggregation {
+export interface TableOptions_RowAggregation {
   /**
    * Disables local `column.getAggregationValue()` calculation when a column
    * override does not handle the request. Group values supplied by manually
