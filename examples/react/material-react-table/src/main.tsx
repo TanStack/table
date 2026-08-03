@@ -144,7 +144,7 @@ function App() {
         View Profile
       </Box>,
       <Box
-        key="edit"
+        key="custom-edit"
         onClick={closeMenu}
         sx={{ p: '6px 16px', cursor: 'pointer' }}
       >

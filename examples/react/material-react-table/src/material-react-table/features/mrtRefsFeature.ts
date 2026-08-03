@@ -38,8 +38,8 @@ declare module '@tanstack/react-table' {
 
 /**
  * The v9 table instance is constructed once (via `useState(() =>
- * constructTable(...))`), so a bag of plain mutable `{ current: null }` refs
- * assigned here persists for the table's lifetime — no `useRef` needed. This
+ * constructTable(...))`), so the plain mutable ref objects assigned here
+ * persist for the table's lifetime — no `useRef` needed. This
  * replaces the twelve `useRef`s MRT threaded through `useMRT_TableInstance`.
  */
 export const mrtRefsFeature: TableFeature = {
@@ -47,8 +47,8 @@ export const mrtRefsFeature: TableFeature = {
     ;(table as unknown as MRT_Table_Refs).refs = {
       actionCellRef: { current: null },
       bottomToolbarRef: { current: null },
-      editInputRefs: { current: null },
-      filterInputRefs: { current: null },
+      editInputRefs: { current: {} },
+      filterInputRefs: { current: {} },
       lastSelectedRowId: { current: null },
       searchInputRef: { current: null },
       tableContainerRef: { current: null },

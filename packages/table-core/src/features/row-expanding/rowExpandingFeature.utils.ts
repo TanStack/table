@@ -77,6 +77,9 @@ export function table_setExpanded<
  * an empty map. Omitting the value toggles based on whether all rows are
  * currently expanded.
  *
+ * The call is a no-op (no `onExpandedChange`) when no row can expand or when
+ * the requested state matches the current state exactly.
+ *
  * @example
  * ```ts
  * table_toggleAllRowsExpanded(table)
@@ -86,9 +89,14 @@ export function table_toggleAllRowsExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(table: Table_Internal<TFeatures, TData>, expanded?: boolean) {
+  const currentExpanded = table.atoms.expanded?.get() ?? {}
+
   if (expanded ?? !table_getIsAllRowsExpanded(table)) {
+    if (currentExpanded === true) return
+    if (!table_getCanSomeRowsExpand(table)) return
     table_setExpanded(table, true)
   } else {
+    if (currentExpanded !== true && !Object.keys(currentExpanded).length) return
     table_setExpanded(table, makeObjectMap())
   }
 }
@@ -179,10 +187,12 @@ export function table_getIsSomeRowsExpanded<
 }
 
 /**
- * Checks whether every row in the current row model is expanded.
+ * Checks whether every expandable row in the current row model is expanded.
  *
  * The special expanded-all value `true` returns true immediately. Empty
- * expanded state returns false.
+ * expanded state returns false. Rows that cannot expand are ignored, so a
+ * materialized expanded-all map (which only contains expandable row ids)
+ * still counts as all rows expanded.
  *
  * @example
  * ```ts
@@ -204,8 +214,16 @@ export function table_getIsAllRowsExpanded<
     return false
   }
 
-  // If any row is not expanded, return false
-  if (table.getRowModel().flatRows.some((row) => !row_getIsExpanded(row))) {
+  const expandableRows = table
+    .getRowModel()
+    .flatRows.filter((row) => row_getCanExpand(row))
+
+  if (!expandableRows.length) {
+    return false
+  }
+
+  // If any expandable row is not expanded, return false
+  if (expandableRows.some((row) => !row_getIsExpanded(row))) {
     return false
   }
 
@@ -216,8 +234,8 @@ export function table_getIsAllRowsExpanded<
 /**
  * Computes the deepest expanded row id depth.
  *
- * Row ids are split on `.`; expanded-all state scans the current row model,
- * while explicit expanded state scans its expanded id keys.
+ * Row ids are split on `.`; expanded-all state scans the current row model's
+ * expandable rows, while explicit expanded state scans its expanded id keys.
  *
  * @example
  * ```ts
@@ -230,10 +248,14 @@ export function table_getExpandedDepth<
 >(table: Table_Internal<TFeatures, TData>) {
   let maxDepth = 0
 
+  const expanded = table.atoms.expanded?.get()
+
   const rowIds =
-    table.atoms.expanded?.get() === true
-      ? Object.keys(table.getRowModel().rowsById)
-      : Object.keys(table.atoms.expanded?.get() ?? {})
+    expanded === true
+      ? Object.values(table.getRowModel().rowsById)
+          .filter((row) => row_getCanExpand(row))
+          .map((row) => row.id)
+      : Object.keys(expanded ?? {})
 
   rowIds.forEach((id) => {
     const splitId = id.split('.')
@@ -247,8 +269,12 @@ export function table_getExpandedDepth<
  * Expands or collapses this row.
  *
  * Omitting `expanded` toggles the row. If the current state is expanded-all,
- * the function first materializes that state into a row-id map before applying
- * the row-specific change.
+ * the function first materializes that state into a row-id map (containing
+ * only expandable row ids) before applying the row-specific change.
+ *
+ * The call is a no-op (no `onExpandedChange`) when the requested state matches
+ * the current state, or when expanding a row that cannot expand. Collapsing is
+ * always allowed so stale expanded ids can be cleaned up.
  *
  * @example
  * ```ts
@@ -259,27 +285,35 @@ export function row_toggleExpanded<
   TFeatures extends TableFeatures,
   TData extends RowData,
 >(row: Row<TFeatures, TData>, expanded?: boolean) {
+  const currentExpanded = row.table.atoms.expanded?.get() ?? {}
+  const currentExists =
+    currentExpanded === true || isExpandedRowId(currentExpanded, row.id)
+  const targetExpanded = expanded ?? !currentExists
+
+  if (targetExpanded === currentExists) return
+  if (targetExpanded && !row_getCanExpand(row)) return
+
   table_setExpanded(row.table, (old) => {
     const exists = old === true ? true : isExpandedRowId(old, row.id)
 
     let oldExpanded: ExpandedStateList = makeObjectMap()
 
     if (old === true) {
-      Object.keys(row.table.getRowModel().rowsById).forEach((rowId) => {
-        oldExpanded[rowId] = true
+      Object.values(row.table.getRowModel().rowsById).forEach((rowModelRow) => {
+        if (row_getCanExpand(rowModelRow)) {
+          oldExpanded[rowModelRow.id] = true
+        }
       })
     } else {
       oldExpanded = Object.assign(makeObjectMap<boolean | undefined>(), old)
     }
 
-    expanded = expanded ?? !exists
-
-    if (!exists && expanded) {
+    if (!exists && targetExpanded) {
       oldExpanded[row.id] = true
       return oldExpanded
     }
 
-    if (exists && !expanded) {
+    if (exists && !targetExpanded) {
       const rest: ExpandedStateList = makeObjectMap()
       const rowIds = Object.keys(oldExpanded)
       for (let i = 0; i < rowIds.length; i++) {

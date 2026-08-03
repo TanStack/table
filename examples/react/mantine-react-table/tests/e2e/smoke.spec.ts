@@ -1,7 +1,7 @@
-import { expect, test } from '@playwright/test'
-import type { Page } from '@playwright/test'
 import path from 'node:path'
+import { expect, test } from '@playwright/test'
 import { startExampleServer } from '../../../../../tests/e2e/helpers/startExampleServer'
+import type { Page } from '@playwright/test'
 
 const exampleDir = path.resolve()
 
@@ -91,6 +91,52 @@ test('paginates without resetting to the first page', async ({ page }) => {
 
     await expect(page.getByText('11-20 of 50')).toBeVisible()
     await expect.poll(() => getFirstEmailText(page)).not.toBe(firstEmailBefore)
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('updates the sort direction indicator', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    const firstNameHeader = page
+      .locator('thead th')
+      .filter({ hasText: 'First Name' })
+    const sortTarget = firstNameHeader.locator('.mrt-table-head-cell-labels')
+    const sortLabel = firstNameHeader.locator('.mrt-table-head-sort-button')
+
+    await sortTarget.click()
+    await expect(sortLabel).toHaveAttribute('data-sorted', 'asc')
+    await expect(sortLabel).toHaveAttribute(
+      'aria-label',
+      'Sorted by First Name ascending',
+    )
+
+    await sortTarget.click()
+    await expect(sortLabel).toHaveAttribute('data-sorted', 'desc')
+    await expect(sortLabel).toHaveAttribute(
+      'aria-label',
+      'Sorted by First Name descending',
+    )
+    expect(errors).toEqual([])
+  } finally {
+    await server.close()
+  }
+})
+
+test('opens the edit row modal without crashing', async ({ page }) => {
+  const { errors, server } = await openExample(page)
+
+  try {
+    await page.getByRole('button', { name: 'Row Actions' }).first().click()
+    await page.getByRole('menuitem', { name: 'Edit', exact: true }).click()
+
+    await expect(page.getByRole('dialog')).toBeVisible()
+    await expect(
+      page.getByRole('textbox', { name: 'First Name' }),
+    ).toBeVisible()
     expect(errors).toEqual([])
   } finally {
     await server.close()

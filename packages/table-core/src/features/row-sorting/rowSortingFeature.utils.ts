@@ -165,10 +165,13 @@ export function column_getAutoSortFn<
 }
 
 /**
- * Chooses the default first sort direction from the first filtered row value.
+ * Chooses the default first sort direction from sampled filtered row values.
  *
- * String columns start ascending so alphabetical order is natural; other value
- * types start descending.
+ * The first non-nullish value among the sampled rows decides: string columns
+ * start ascending so alphabetical order is natural; other value types (or
+ * columns with no non-nullish sample) start descending. Sampling past leading
+ * nullish values keeps the toggle cycle stable when sorting or a data swap
+ * moves an empty value into the first row.
  *
  * @example
  * ```ts
@@ -180,12 +183,16 @@ export function column_getAutoSortDir<
   TData extends RowData,
   TValue extends CellData = CellData,
 >(column: Column_Internal<TFeatures, TData, TValue>) {
-  const firstRow = column.table.getFilteredRowModel().flatRows[0]
+  const firstRows = column.table.getFilteredRowModel().flatRows.slice(0, 10)
 
-  const value = firstRow ? firstRow.getValue(column.id) : undefined
+  for (let i = 0; i < firstRows.length; i++) {
+    const value = firstRows[i]!.getValue(column.id)
 
-  if (typeof value === 'string') {
-    return 'asc'
+    if (value == null) {
+      continue
+    }
+
+    return typeof value === 'string' ? 'asc' : 'desc'
   }
 
   return 'desc'
@@ -234,8 +241,8 @@ export function column_getSortFn<
  * Applies the next sorting state for this column.
  *
  * The toggle can add, replace, flip, or remove this column's sort entry. Multi
- * sorting respects `enableMultiSort`, `maxMultiSortColCount`, and the `multi`
- * argument.
+ * sorting respects `enableMultiSort`, `enableMultiRemove`,
+ * `maxMultiSortColCount`, and the `multi` argument.
  *
  * @example
  * ```ts
@@ -252,7 +259,10 @@ export function column_toggleSorting<
   multi?: boolean,
 ) {
   // this needs to be outside of table.setSorting to be in sync with rerender
-  const nextSortingOrder = column_getNextSortingOrder(column)
+  const nextSortingOrder = column_getNextSortingOrder(
+    column,
+    multi && column_getCanMultiSort(column),
+  )
   const hasManualValue = typeof desc !== 'undefined'
 
   table_setSorting(column.table, (old) => {

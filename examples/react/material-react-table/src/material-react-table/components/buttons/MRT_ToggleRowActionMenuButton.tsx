@@ -69,7 +69,7 @@ export const MRT_ToggleRowActionMenuButton = <TData extends MRT_RowData>({
 
   const handleStartEditMode = (event: MouseEvent) => {
     event.stopPropagation()
-    setEditingRow({ ...row })
+    setEditingRow(row)
     setAnchorEl(null)
   }
 
