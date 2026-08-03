@@ -258,6 +258,7 @@ const table = constructTable({
   columns,
   meta: { rowSource },
   initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+  // manualAggregation: true, // supply aggregate values yourself instead of calculating them locally
   debugTable: true,
   debugColumns: true,
 })

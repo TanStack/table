@@ -4,6 +4,7 @@ import type { TableOptions_Columns } from '../core/columns/coreColumnsFeature.ty
 import type { TableOptions_Rows } from '../core/rows/coreRowsFeature.types'
 import type { TableOptions_Table } from '../core/table/coreTablesFeature.types'
 import type { TableOptions_CellSelection } from '../features/cell-selection/cellSelectionFeature.types'
+import type { TableOptions_CellSpanning } from '../features/cell-spanning/cellSpanningFeature.types'
 import type { TableOptions_ColumnFiltering } from '../features/column-filtering/columnFilteringFeature.types'
 import type { TableOptions_RowAggregation } from '../features/row-aggregation/rowAggregationFeature.types'
 import type { TableOptions_ColumnGrouping } from '../features/column-grouping/columnGroupingFeature.types'
@@ -63,6 +64,7 @@ export interface TableOptions_FeatureMap<
   in out TData extends RowData,
 > {
   cellSelectionFeature: TableOptions_CellSelection<TFeatures, TData>
+  cellSpanningFeature: TableOptions_CellSpanning
   columnFilteringFeature: TableOptions_ColumnFiltering<TFeatures, TData>
   columnGroupingFeature: TableOptions_ColumnGrouping
   columnOrderingFeature: TableOptions_ColumnOrdering
@@ -81,6 +83,7 @@ export interface TableOptions_FeatureMap<
 
 type TableOptions_StockFeatureKeys =
   | 'cellSelectionFeature'
+  | 'cellSpanningFeature'
   | 'columnFilteringFeature'
   | 'columnGroupingFeature'
   | 'columnOrderingFeature'
@@ -143,6 +146,7 @@ export type TableOptions_All<
   Partial<
     TableOptions_RowAggregation &
       TableOptions_CellSelection<TFeatures, TData> &
+      TableOptions_CellSpanning &
       TableOptions_ColumnFiltering<TFeatures, TData> &
       TableOptions_ColumnGrouping &
       TableOptions_ColumnOrdering &

@@ -144,11 +144,15 @@ export interface ColumnDef_RowSorting<
   /**
    * The priority of undefined values when sorting this column.
    * - `false`
-   *   - Undefined values will be considered tied and need to be sorted by the next column filter or original index (whichever applies)
+   *   - Undefined values will be passed to the sorting function like any other value with no special handling; the sorting function is responsible for handling them
    * - `-1`
    *   - Undefined values will be sorted with higher priority (ascending) (if ascending, undefined will appear on the beginning of the list)
    * - `1`
    *   - Undefined values will be sorted with lower priority (descending) (if ascending, undefined will appear on the end of the list)
+   * - `'first'`
+   *   - Undefined values will be pushed to the beginning of the list regardless of sort direction
+   * - `'last'`
+   *   - Undefined values will be pushed to the end of the list regardless of sort direction
    */
   sortUndefined?: false | -1 | 1 | 'first' | 'last'
 }
@@ -186,9 +190,11 @@ export interface Column_RowSorting<
    */
   getIsSorted: () => false | SortDirection
   /**
-   * Returns the next sorting order.
+   * Returns the next sorting order. Pass `multi` to resolve the order for a
+   * multi-sort toggle, where `enableMultiRemove` governs whether the cycle can
+   * remove the sort.
    */
-  getNextSortingOrder: () => SortDirection | false
+  getNextSortingOrder: (multi?: boolean) => SortDirection | false
   /**
    * Finds this column's position in the ordered sorting state.
    */
@@ -208,6 +214,13 @@ export interface Column_RowSorting<
 }
 
 export interface TableOptions_RowSorting {
+  /**
+   * Resets sorting to its initial state when the `data` option changes.
+   *
+   * This is disabled by default. `autoResetAll` overrides this option when it
+   * is explicitly set.
+   */
+  autoResetSorting?: boolean
   /**
    * Allows multi-sort toggles to remove a column from sorting state.
    */

@@ -32,7 +32,9 @@ export function getDefaultColumnVisibilityState(): ColumnVisibilityState {
  * Updates this column's visibility when hiding is allowed.
  *
  * Passing `visible` stores that value. Omitting it flips the column's current
- * visibility state. Columns that cannot hide are start unchanged.
+ * visibility state. Group columns update their hideable leaf columns because
+ * visibility state is keyed by leaf column ids. Columns that cannot hide stay
+ * unchanged.
  *
  * @example
  * ```ts
@@ -47,9 +49,18 @@ export function column_toggleVisibility<
   if (column_getCanHide(column)) {
     table_setColumnVisibility(column.table, (old) => {
       const next = Object.assign(makeObjectMap<boolean>(), old)
-      next[column.id] =
+      const nextVisible =
         visible ??
         !callMemoOrStaticFn(column, 'getIsVisible', column_getIsVisible)
+
+      const leafColumns = column.getLeafColumns()
+      for (let i = 0; i < leafColumns.length; i++) {
+        const leafColumn = leafColumns[i]!
+        if (column_getCanHide(leafColumn)) {
+          next[leafColumn.id] = nextVisible
+        }
+      }
+
       return next
     })
   }

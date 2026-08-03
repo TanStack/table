@@ -97,6 +97,7 @@ const table = useTable({
     return { rowSource: rowSource.value }
   },
   initialState: { pagination: { pageIndex: 0, pageSize: 10 } },
+  // manualAggregation: true, // supply aggregate values yourself instead of calculating them locally
   debugTable: true,
   debugColumns: true,
 })

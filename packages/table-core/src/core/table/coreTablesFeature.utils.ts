@@ -47,7 +47,13 @@ export function table_syncExternalStateToBaseAtoms<
           continue
         }
 
-        const externalState = state[key as keyof typeof state]
+        // An explicitly `undefined` controlled slice syncs the slice's
+        // initial state instead so the base atom never holds `undefined`.
+        const rawExternalState = state[key as keyof typeof state]
+        const externalState =
+          rawExternalState === undefined
+            ? (table.initialState as Record<string, unknown>)[key]
+            : rawExternalState
         const currentState = table._reactivity.untrack(() => baseAtom.get())
         if (!compare(currentState, externalState)) {
           baseAtom.set(() => externalState)

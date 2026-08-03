@@ -18,6 +18,7 @@ import {
   table_getCellSelectionBounds,
   table_getCellSelectionColumnIds,
   table_getCellSelectionColumnIndexes,
+  table_getCellSelectionMergeBounds,
   table_getCellSelectionRowIds,
   table_getFocusedCell,
   table_getSelectedCellCount,
@@ -141,6 +142,23 @@ export const cellSelectionFeature: TableFeature = {
           table.options.groupedColumnMode,
         ],
       },
+      table_getCellSelectionMergeBounds: {
+        fn: () => table_getCellSelectionMergeBounds(table),
+        // The first dep probes the API `cellSpanningFeature` installs; when
+        // that feature is absent the dep is undefined and the memo settles on
+        // the empty result once.
+        memoDeps: () => [
+          (
+            table as unknown as { getCellSpanIndex?: () => unknown }
+          ).getCellSpanIndex?.(),
+          table.getRowsInDisplayOrder(),
+          callMemoOrStaticFn(
+            table,
+            'getCellSelectionColumnIndexes',
+            table_getCellSelectionColumnIndexes,
+          ),
+        ],
+      },
       table_getCellSelectionBounds: {
         fn: () => table_getCellSelectionBounds(table),
         memoDeps: () => [
@@ -150,6 +168,11 @@ export const cellSelectionFeature: TableFeature = {
             table,
             'getCellSelectionColumnIndexes',
             table_getCellSelectionColumnIndexes,
+          ),
+          callMemoOrStaticFn(
+            table,
+            'getCellSelectionMergeBounds',
+            table_getCellSelectionMergeBounds,
           ),
         ],
       },
@@ -179,6 +202,11 @@ export const cellSelectionFeature: TableFeature = {
             'getCellSelectionBounds',
             table_getCellSelectionBounds,
           ),
+          callMemoOrStaticFn(
+            table,
+            'getCellSelectionMergeBounds',
+            table_getCellSelectionMergeBounds,
+          ),
           table.getRowsInDisplayOrder(),
           table.options.enableCellSelection,
         ],
@@ -202,6 +230,11 @@ export const cellSelectionFeature: TableFeature = {
             table,
             'getCellSelectionBounds',
             table_getCellSelectionBounds,
+          ),
+          callMemoOrStaticFn(
+            table,
+            'getCellSelectionMergeBounds',
+            table_getCellSelectionMergeBounds,
           ),
           table.getRowsInDisplayOrder(),
           table.options.enableCellSelection,

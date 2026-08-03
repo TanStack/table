@@ -99,6 +99,7 @@ Alpine.data('table', () => {
     },
     initialState: {
       pagination: { pageSize: 20, pageIndex: 0 },
+      // rowPinning: { top: ['0'], bottom: ['1'] }, // pin rows on first render
     },
     getSubRows: (row) => row.subRows,
     keepPinnedRows: true,

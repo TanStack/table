@@ -464,6 +464,8 @@ module('Integration | FlexRender', function (hooks) {
       table = useTable(() => ({
         data: this.data,
         features: stockFeatures,
+        // The flat test rows have no subRows, so opt them into expandability
+        getRowCanExpand: () => true,
         columns: [
           {
             id: 'expand',
@@ -525,6 +527,8 @@ module('Integration | FlexRender', function (hooks) {
       table = useTable(() => ({
         data: this.data,
         features: stockFeatures,
+        // The flat test rows have no subRows, so opt them into expandability
+        getRowCanExpand: () => true,
         columns: [
           {
             id: 'expand',
@@ -619,5 +623,88 @@ module('Integration | FlexRender', function (hooks) {
       .dom('[data-test-header="h1"]')
       .hasText('My Header', 'renders a string header')
     assert.dom('[data-test-header-badge]').exists('renders a component header')
+  })
+
+  // Placeholder headers must render their column's header content. Skipping
+  // them is the template's job (`{{#unless header.isPlaceholder}}`), which is
+  // what makes `header.rowSpan` usable for merging header cells vertically.
+  // Every other framework adapter behaves this way.
+  test('renders placeholder headers instead of suppressing them', async (assert) => {
+    const unevenColumns: Array<ColumnDef<typeof stockFeatures, Person>> = [
+      {
+        id: 'shallow',
+        accessorKey: 'firstName',
+        header: 'Shallow',
+      },
+      {
+        id: 'group',
+        header: 'Group',
+        columns: [
+          {
+            id: 'deep',
+            accessorKey: 'firstName',
+            header: 'Deep',
+          },
+        ],
+      },
+    ]
+
+    class TableComponent extends Component {
+      table = useTable(() => ({
+        data: defaultData,
+        features: stockFeatures,
+        columns: unevenColumns,
+      }))
+
+      get headerGroups() {
+        return this.table.getHeaderGroups()
+      }
+
+      <template>
+        <table>
+          <thead>
+            {{#each this.headerGroups as |headerGroup|}}
+              <tr data-test-row={{headerGroup.depth}}>
+                {{#each headerGroup.headers as |header|}}
+                  <th
+                    data-test-cell='{{headerGroup.depth}}-{{header.column.id}}'
+                    data-test-placeholder={{header.isPlaceholder}}
+                  ><FlexRenderHeader @header={{header}} /></th>
+                {{/each}}
+              </tr>
+            {{/each}}
+          </thead>
+        </table>
+      </template>
+    }
+
+    await render(<template><TableComponent /></template>)
+
+    // `shallow` is a leaf one level above the deepest leaf, so the top row
+    // holds its spanning placeholder.
+    // Glimmer serializes a `true` attribute value as an empty string, so
+    // assert presence rather than value.
+    assert
+      .dom('[data-test-cell="0-shallow"]')
+      .hasAttribute(
+        'data-test-placeholder',
+        '',
+        'the top cell is a placeholder',
+      )
+    assert
+      .dom('[data-test-cell="0-group"]')
+      .doesNotHaveAttribute(
+        'data-test-placeholder',
+        'the group header is not a placeholder',
+      )
+    assert
+      .dom('[data-test-cell="0-shallow"]')
+      .hasText('Shallow', 'the placeholder still renders its column header')
+    assert
+      .dom('[data-test-cell="0-group"]')
+      .hasText('Group', 'real group headers are unaffected')
+    assert
+      .dom('[data-test-cell="1-deep"]')
+      .hasText('Deep', 'leaf headers are unaffected')
   })
 })

@@ -72,6 +72,8 @@ export interface TableWorkerBridge {
   results: { [K in TableWorkerStage]?: TableWorkerDataPayload }
   /** Bumped per stage only when that stage's payload actually changed. */
   stageVersions: { [K in TableWorkerStage]?: number }
+  /** The first applied result is not a change; auto-resets skip it. */
+  hasAppliedResults: boolean
 }
 
 type AnyTable = Table_Internal<any, any>
@@ -157,6 +159,7 @@ export function getTableWorkerBridge(
       lastState: {},
       results: {},
       stageVersions: {},
+      hasAppliedResults: false,
     }
     tableWorker._bridges.set(table, bridge)
   }
@@ -250,8 +253,11 @@ function handleResult(
   // The async equivalent of the sync models' `onAfterUpdate` hooks. The
   // worker's unchanged-detection is its memo identity, so `groupedChanged`
   // mirrors exactly when the sync grouped model would have recomputed (and
-  // reset expansion).
-  if (anyChanged) {
+  // reset expansion). Like the sync models, the first applied result is not
+  // a change and must not fire auto-resets.
+  const isFirstAppliedResult = !bridge.hasAppliedResults
+  bridge.hasAppliedResults = true
+  if (anyChanged && !isFirstAppliedResult) {
     table._reactivity.schedule(() =>
       table._reactivity.untrack(() => {
         if (groupedChanged) {

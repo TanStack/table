@@ -144,6 +144,19 @@ function filterRowModelFromRoot<
         filteredRows.push(row)
         newFilteredFlatRows.push(row)
         newFilteredRowsById[row.id] = row
+
+        // When maxLeafRowFilterDepth stops the recursion, the kept row's
+        // subtree stays visible through row.subRows, so those descendants
+        // must still enter flatRows and rowsById to keep the flat
+        // representation (and anything derived from it, like facet counts)
+        // consistent with the visible tree
+        if (row.subRows.length && depth >= maxDepth) {
+          addSubRowsToFlatArrays(
+            row.subRows,
+            newFilteredFlatRows,
+            newFilteredRowsById,
+          )
+        }
       }
     }
 
@@ -154,5 +167,22 @@ function filterRowModelFromRoot<
     rows: recurseFilterRows(rowsToFilter),
     flatRows: newFilteredFlatRows,
     rowsById: newFilteredRowsById,
+  }
+}
+
+function addSubRowsToFlatArrays<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  subRows: Array<Row<TFeatures, TData>>,
+  flatRows: Array<Row<TFeatures, TData>>,
+  rowsById: Record<string, Row<TFeatures, TData>>,
+): void {
+  for (const subRow of subRows) {
+    flatRows.push(subRow)
+    rowsById[subRow.id] = subRow
+    if (subRow.subRows.length) {
+      addSubRowsToFlatArrays(subRow.subRows, flatRows, rowsById)
+    }
   }
 }

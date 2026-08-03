@@ -11,10 +11,13 @@ function column_getAutoSortDir<TFeatures, TData, TValue>(column): "asc" | "desc"
 
 Defined in: [features/row-sorting/rowSortingFeature.utils.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L154)
 
-Chooses the default first sort direction from the first filtered row value.
+Chooses the default first sort direction from sampled filtered row values.
 
-String columns start ascending so alphabetical order is natural; other value
-types start descending.
+The first non-nullish value among the sampled rows decides: string columns
+start ascending so alphabetical order is natural; other value types (or
+columns with no non-nullish sample) start descending. Sampling past leading
+nullish values keeps the toggle cycle stable when sorting or a data swap
+moves an empty value into the first row.
 
 ## Type Parameters
 

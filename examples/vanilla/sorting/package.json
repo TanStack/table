@@ -18,6 +18,6 @@
     "vite": "^8.2.0"
   },
   "dependencies": {
-    "@tanstack/table-core": "^9.0.0-beta.65"
+    "@tanstack/table-core": "^9.0.0-beta.77"
   }
 }

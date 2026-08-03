@@ -123,8 +123,10 @@ function table_getPinnedRows<
     if (keepPinnedRows) {
       // get all rows that are pinned even if they would not be otherwise
       // visible; account for expanded parent rows, but not pagination/filtering
-      const fullRow = table.getRow(rowId, true)
-      if (row_getIsAllParentsExpanded(fullRow)) row = fullRow
+      const fullRow =
+        table.getPrePaginatedRowModel().rowsById[rowId] ??
+        table.getCoreRowModel().rowsById[rowId]
+      if (fullRow && row_getIsAllParentsExpanded(fullRow)) row = fullRow
     } else {
       // else get only visible rows that are pinned
       row = visibleRows.find((r) => r.id === rowId)

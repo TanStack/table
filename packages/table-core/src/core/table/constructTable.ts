@@ -159,9 +159,15 @@ export function constructTable<
         const controlledState = options.state as
           Record<string, unknown> | undefined
 
-        return controlledState && hasOwn(controlledState, key)
-          ? controlledState[key]
-          : reactiveState
+        if (controlledState && hasOwn(controlledState, key)) {
+          // An explicitly `undefined` controlled slice falls back to the
+          // slice's initial state so required snapshot slices stay defined.
+          const controlledValue = controlledState[key]
+          return controlledValue === undefined
+            ? table.initialState[key]
+            : controlledValue
+        }
+        return reactiveState
       },
       { debugName: `table/atoms/${key}` },
     )

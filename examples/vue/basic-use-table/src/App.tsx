@@ -1,13 +1,12 @@
 import { defineComponent, ref } from 'vue'
-import { FlexRender, tableFeatures, useTable } from '@tanstack/vue-table'
-import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
-import type {
-  Cell,
-  ColumnDef,
-  Header,
-  HeaderGroup,
-  Row,
+import {
+  FlexRender,
+  createColumnHelper,
+  tableFeatures,
+  useTable,
 } from '@tanstack/vue-table'
+import { useTanStackTableDevtools } from '@tanstack/vue-table-devtools'
+import type { Cell, Header, HeaderGroup, Row } from '@tanstack/vue-table'
 
 type Person = {
   firstName: string
@@ -55,37 +54,33 @@ const defaultData: Array<Person> = [
 
 const features = tableFeatures({})
 
-const columns: Array<ColumnDef<typeof features, Person>> = [
-  {
-    accessorKey: 'firstName',
+const columnHelper = createColumnHelper<typeof features, Person>()
+
+const columns = columnHelper.columns([
+  columnHelper.accessor('firstName', {
     header: 'First Name',
     cell: (info) => info.getValue(),
-  },
-  {
-    accessorFn: (row) => row.lastName,
+  }),
+  columnHelper.accessor((row) => row.lastName, {
     id: 'lastName',
     header: () => <span>Last Name</span>,
-    cell: (info) => <i>{info.getValue<string>()}</i>,
-  },
-  {
-    accessorFn: (row) => Number(row.age),
+    cell: (info) => <i>{info.getValue()}</i>,
+  }),
+  columnHelper.accessor((row) => Number(row.age), {
     id: 'age',
     header: () => 'Age',
     cell: (info) => info.renderValue(),
-  },
-  {
-    accessorKey: 'visits',
+  }),
+  columnHelper.accessor('visits', {
     header: () => <span>Visits</span>,
-  },
-  {
-    accessorKey: 'status',
+  }),
+  columnHelper.accessor('status', {
     header: 'Status',
-  },
-  {
-    accessorKey: 'progress',
+  }),
+  columnHelper.accessor('progress', {
     header: 'Profile Progress',
-  },
-]
+  }),
+])
 
 export default defineComponent({
   name: 'BasicUseTableExample',

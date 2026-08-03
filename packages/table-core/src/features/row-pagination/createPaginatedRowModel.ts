@@ -70,7 +70,13 @@ function _createPaginatedRowModel<
 
   paginatedRowModel.flatRows = []
 
+  // The page rows can contain expanded sub-rows inline alongside their
+  // parents, so track seen ids to keep each row unique in flatRows.
+  const seenFlatRows = new Set<string>()
+
   const handleRow = (row: Row<TFeatures, TData>) => {
+    if (seenFlatRows.has(row.id)) return
+    seenFlatRows.add(row.id)
     paginatedRowModel.flatRows.push(row)
     if (row.subRows.length) {
       row.subRows.forEach(handleRow)

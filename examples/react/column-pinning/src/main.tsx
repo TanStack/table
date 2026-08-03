@@ -38,6 +38,7 @@ const columns = columnHelper.columns([
       }),
       columnHelper.accessor((row) => row.lastName, {
         id: 'lastName',
+        // enablePinning: false, // prevent this column from being pinned
         cell: (info) => info.getValue(),
         header: () => <span>Last Name</span>,
         footer: (props) => props.column.id,

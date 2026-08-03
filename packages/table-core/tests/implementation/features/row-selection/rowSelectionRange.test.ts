@@ -363,6 +363,24 @@ describe('range child selection semantics', () => {
     )
     expect(selected(table)).toEqual(['a', 'child-1', 'child-2', 'parent', 'z'])
   })
+
+  it('prunes ancestors of deselected range rows with deselectParents', () => {
+    const table = makePipelineTable(
+      { initialState: { expanded: { parent: true } } },
+      nestedData,
+    )
+    table.getRow('parent').toggleSelected(true)
+    expect(selected(table)).toEqual(['child-1', 'child-2', 'parent'])
+
+    interact(table.getRow('child-1'), false)
+    interact(
+      table.getRow('child-2'),
+      false,
+      { shiftKey: true },
+      { deselectParents: true },
+    )
+    expect(selected(table)).toEqual([])
+  })
 })
 
 describe('range selection follows the display pipeline', () => {

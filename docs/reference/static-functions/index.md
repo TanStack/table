@@ -136,6 +136,7 @@ title: static-functions
 - [table\_autoResetCellSelection](functions/table_autoResetCellSelection.md)
 - [table\_autoResetExpanded](functions/table_autoResetExpanded.md)
 - [table\_autoResetPageIndex](functions/table_autoResetPageIndex.md)
+- [table\_autoResetSorting](functions/table_autoResetSorting.md)
 - [table\_extendCellSelection](functions/table_extendCellSelection.md)
 - [table\_firstPage](functions/table_firstPage.md)
 - [table\_getAllColumns](functions/table_getAllColumns.md)

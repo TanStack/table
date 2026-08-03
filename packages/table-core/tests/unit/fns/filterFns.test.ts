@@ -682,6 +682,76 @@ describe('Filter Functions', () => {
         expect(autoRemove('' as any)).toBe(true)
       })
     })
+
+    describe('filterFn_inNumberRange', () => {
+      // Mirror the real filtering pipeline: the raw `[min, max]` the user
+      // sets is run through `resolveFilterValue` before the filter fn sees it
+      const resolve = (val: [any, any]) =>
+        filterFn_inNumberRange.resolveFilterValue!(val)
+      const makeRow = (value: unknown) => ({ getValue: () => value }) as any
+
+      it('should match numbers inside the range and on the inclusive boundaries', () => {
+        expect(
+          filterFn_inNumberRange(makeRow(15), 'age', resolve([0, 20])),
+        ).toBe(true)
+        expect(
+          filterFn_inNumberRange(makeRow(0), 'age', resolve([0, 20])),
+        ).toBe(true)
+        expect(
+          filterFn_inNumberRange(makeRow(20), 'age', resolve([0, 20])),
+        ).toBe(true)
+      })
+
+      it('should not match numbers outside the range', () => {
+        expect(
+          filterFn_inNumberRange(makeRow(25), 'age', resolve([0, 20])),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow(-5), 'age', resolve([0, 20])),
+        ).toBe(false)
+      })
+
+      it('should not match nullish or blank values in a zero-spanning range', () => {
+        // `null >= 0 && null <= 20` coerces to true in JS, so nullable
+        // numeric columns used to leak empty rows into a [0, max] range
+        expect(
+          filterFn_inNumberRange(makeRow(null), 'age', resolve([0, 20])),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow(undefined), 'age', resolve([0, 20])),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow(''), 'age', resolve([0, 20])),
+        ).toBe(false)
+      })
+
+      it('should not match booleans, numeric strings, or NaN', () => {
+        expect(
+          filterFn_inNumberRange(makeRow(true), 'age', resolve([0, 20])),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow(false), 'age', resolve([0, 20])),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow('15'), 'age', resolve([0, 20])),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow(NaN), 'age', resolve([0, 20])),
+        ).toBe(false)
+      })
+
+      it('should keep matching real numbers in open-ended ranges while excluding empty values', () => {
+        expect(
+          filterFn_inNumberRange(makeRow(-5), 'age', resolve(['', 20])),
+        ).toBe(true)
+        expect(
+          filterFn_inNumberRange(makeRow(null), 'age', resolve(['', 20])),
+        ).toBe(false)
+        expect(
+          filterFn_inNumberRange(makeRow(500), 'age', resolve([0, ''])),
+        ).toBe(true)
+      })
+    })
   })
 
   describe('Array Filters', () => {

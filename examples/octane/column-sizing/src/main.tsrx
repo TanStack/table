@@ -64,6 +64,7 @@ function App() @{
       features,
       columns,
       data,
+      // defaultColumn: { size: 150, minSize: 50, maxSize: 500 }, // set sizing defaults for every column
       // initialState: { columnSizing: { firstName: 200 } }, // set column sizes on first render
       // atoms: { columnSizing: columnSizingAtom }, // preferred: own sizing state with an external atom
       // state: { columnSizing }, // classic controlled state; pair with onColumnSizingChange

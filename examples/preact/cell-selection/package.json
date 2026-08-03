@@ -16,8 +16,8 @@
     "@tanstack/preact-devtools": "^0.10.9",
     "@tanstack/preact-hotkeys": "^0.10.0",
     "@tanstack/preact-store": "^0.13.1",
-    "@tanstack/preact-table": "^9.0.0-beta.65",
-    "@tanstack/preact-table-devtools": "^9.0.0-beta.65",
+    "@tanstack/preact-table": "^9.0.0-beta.77",
+    "@tanstack/preact-table-devtools": "^9.0.0-beta.77",
     "preact": "^10.29.7"
   },
   "devDependencies": {

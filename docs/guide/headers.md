@@ -53,9 +53,9 @@ For simple headers with no advanced nested or grouped headers logic, the `header
 There are a few properties on `header` objects that are only useful if the header is part of a nested or grouped header structure. These properties include:
 
 - `colspan`: The number of columns that the header should span. This is useful for rendering the `colSpan` attribute on the `<th>` element.
-- `rowSpan`: The number of rows that the header should span. This is useful for rendering the `rowSpan` attribute on the `<th>` element. (Currently not implemented in default TanStack Table)
+- `rowSpan`: The number of rows that the header should span when merging header cells vertically. A leaf column that is shallower than the deepest leaf column produces a chain of placeholder headers above its real header. The placeholder at the top of the chain reports the chain's full span, and every header it covers (including the real leaf header in the bottom row) reports 0. This is useful for rendering the `rowSpan` attribute on the `<th>` element. See [Header Row Spanning](#header-row-spanning) below.
 - `depth`: The header group "row index" that the header group belongs to.
-- `isPlaceholder`: A boolean flag that is true if the header is a placeholder header. Placeholder headers are used to fill in the gaps when a column is hidden or when a column is part of a group column.
+- `isPlaceholder`: A boolean flag that is true if the header is a placeholder header. Placeholder headers fill the rows above a shallow leaf column's real header so that every header row accounts for every visible column. Render them as empty cells to keep the header grid aligned, or use `header.rowSpan` to merge each placeholder chain into one vertically spanning header cell.
 - `placeholderId`: The unique identifier for the placeholder header.
 - `subHeaders`: The array of sub/child headers that belong to this header. Will be empty if the header is a leaf header.
 
@@ -83,3 +83,23 @@ Since the `header` column option you defined can be either a string, jsx, or a f
   ))
 }
 ```
+
+### Header Row Spanning
+
+If your column tree is uneven (some leaf columns are nested deeper than others), each shallow leaf column produces a chain of placeholder headers above its real header. The placeholder at the top of the chain reports the chain's full `rowSpan`, and every header it covers reports a `rowSpan` of 0. To merge those header cells vertically, skip headers with a `rowSpan` of 0 and render everything else with the `rowSpan` attribute. Note that this replaces the usual `header.isPlaceholder` check: the spanning placeholder renders its column's header content instead of an empty cell.
+
+```jsx
+{
+  headerGroup.headers.map((header) =>
+    header.rowSpan === 0 ? null : (
+      <th key={header.id} colSpan={header.colSpan} rowSpan={header.rowSpan}>
+        {flexRender(header.column.columnDef.header, header.getContext())}
+      </th>
+    ),
+  )
+}
+```
+
+> Note: This recipe is for the `<thead>` section only. Footer groups render the header rows in reverse order, which puts a spanning placeholder below the cells it would need to cover, so keep the `header.isPlaceholder` empty-cell pattern in the `<tfoot>` section.
+
+The body-cell equivalent of this convention lives in the optional `cellSpanningFeature`. See the [Cell Spanning Guide](../framework/react/guide/cell-spanning).

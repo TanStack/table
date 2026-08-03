@@ -46,10 +46,12 @@ export function createGroupedRowModel<
       onAfterUpdate: () => {
         const grouping = table.atoms.grouping?.get()
         const preGroupedRowModel = table.getPreGroupedRowModel()
+        // The first computation is not a change; auto-resets fire only once
+        // a previously observed grouping or pre-grouped row model differs.
         const rowInputsChanged =
-          !hasAutoResetDependencies ||
-          grouping !== previousGrouping ||
-          preGroupedRowModel !== previousPreGroupedRowModel
+          hasAutoResetDependencies &&
+          (grouping !== previousGrouping ||
+            preGroupedRowModel !== previousPreGroupedRowModel)
 
         previousGrouping = grouping
         previousPreGroupedRowModel = preGroupedRowModel

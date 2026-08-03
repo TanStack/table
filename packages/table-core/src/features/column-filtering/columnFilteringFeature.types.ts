@@ -70,6 +70,11 @@ export interface FilterFn<
   /**
    * Removes the filter from `state.columnFilters` when the filter value fails
    * this test (e.g. empty strings for text filters).
+   *
+   * When provided, this test is authoritative: values it keeps stay in filter
+   * state even when they are empty strings, which the default heuristic would
+   * otherwise remove. An `undefined` filter value always clears the filter
+   * regardless.
    */
   autoRemove?: ColumnFilterAutoRemoveTestFn<TFeatures, TData>
   /**

@@ -1,11 +1,10 @@
 library:
   name: '@tanstack/table'
-  version: '9.0.0-beta.65'
+  version: '9.0.0-beta.77'
   repository: 'https://github.com/TanStack/table'
   description: 'Headless data-grid state and row processing with tree-shakeable v9 features and framework adapters.'
   package_version_overrides:
     '@tanstack/match-sorter-utils': '9.0.0-beta.53'
-    '@tanstack/octane-table': '9.0.0-beta.67'
 generated_from:
   domain_map: '_artifacts/domain_map.yaml'
   skill_spec: '_artifacts/skill_spec.md'
@@ -318,6 +317,19 @@ skills:
       - 'TanStack/table:docs/framework/react/guide/cell-selection.md'
       - 'TanStack/table:packages/table-core/src/features/cell-selection'
       - 'TanStack/table:examples/react/cell-selection'
+
+  - name: 'Cell Spanning'
+    slug: cell-spanning
+    type: sub-skill
+    domain: feature-plugins
+    path: 'packages/table-core/skills/cell-spanning/SKILL.md'
+    package: 'packages/table-core'
+    description: 'Merge adjacent body cells with cellSpanningFeature: value-based rowSpan via spanRows, per-row colSpan via spanColumns, and the covered-cell convention where a span of 0 means skip the cell. Load for merged grids, spans lost after sorting or paging, or ragged rows.'
+    requires: ['core', 'table-features']
+    sources:
+      - 'TanStack/table:docs/framework/react/guide/cell-spanning.md'
+      - 'TanStack/table:packages/table-core/src/features/cell-spanning'
+      - 'TanStack/table:examples/react/cell-spanning'
 
   - name: 'Row Selection'
     slug: row-selection
