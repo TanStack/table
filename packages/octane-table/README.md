@@ -1,5 +1,19 @@
 <div align="center">
-  <img src="./media/header_table.png" alt="TanStack Table">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://tanstack.com/api/readme/table.png?framework=octane&theme=dark"
+    />
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="https://tanstack.com/api/readme/table.png?framework=octane"
+    />
+    <img
+      src="https://tanstack.com/api/readme/table.png?framework=octane"
+      alt="TanStack Octane Table"
+      width="900"
+    />
+  </picture>
 </div>
 
 <br />

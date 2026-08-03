@@ -1,5 +1,19 @@
 <div align="center">
-  <img src="./media/header_table.png" alt="TanStack Table">
+  <picture>
+    <source
+      media="(prefers-color-scheme: dark)"
+      srcset="https://tanstack.com/api/readme/table.png?framework=ember&theme=dark"
+    />
+    <source
+      media="(prefers-color-scheme: light)"
+      srcset="https://tanstack.com/api/readme/table.png?framework=ember"
+    />
+    <img
+      src="https://tanstack.com/api/readme/table.png?framework=ember"
+      alt="TanStack Ember Table"
+      width="900"
+    />
+  </picture>
 </div>
 
 <br />
