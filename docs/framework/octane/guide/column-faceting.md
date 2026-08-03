@@ -268,24 +268,26 @@ Each factory receives the table and a column ID, then returns a function that re
 Factories are resolved once per table and column, but the function each factory returns runs on every read; the table does not cache its result. Read live values inside that returned function (from a signal, store, or `table.options.meta`) so updated server facets show up immediately, and memoize inside the factory if the calculation is expensive.
 
 ```ts
-const facetingData = await fetchFacets(activeFilters)
+// Refreshed whenever the facet request resolves; read live below
+const facets = { data: await fetchFacets(activeFilters) }
 
 const features = tableFeatures({
   columnFacetingFeature,
-  facetedUniqueValues: (_table, columnId) => () => {
-    const uniqueValueMap = new Map<string, number>()
-    // Populate the map from facetingData for columnId.
-    return uniqueValueMap
+  // The returned functions run on every read and table.options stays in
+  // sync with the latest render, so read live data through options.meta
+  facetedUniqueValues: (table, columnId) => () => {
+    const facetingData = table.options.meta?.facetingData
+    return new Map<string, number>(facetingData?.uniqueValues[columnId] ?? [])
   },
-  facetedMinMaxValues: (_table, columnId) => () => {
-    // Read the range from facetingData for columnId.
-    return [min, max]
+  facetedMinMaxValues: (table, columnId) => () => {
+    return table.options.meta?.facetingData?.minMaxValues[columnId]
   },
 })
 
 const table = useTable({
   features,
   columns,
+  meta: { facetingData: facets.data },
   data,
 })
 ```
