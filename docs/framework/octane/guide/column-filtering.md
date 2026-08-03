@@ -326,7 +326,7 @@ You can attach a few other properties to filter functions to customize their beh
 
 - `filterFn.resolveDataValue` - This optional "hanging" method normalizes each row's value before it is compared against the filter value. It is honored by every filter function built with the `constructFilterFn` helper, which includes all built-in filter functions.
 
-- `filterFn.autoRemove` - This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`.
+- `filterFn.autoRemove` - This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`. When provided, this test is authoritative: values it keeps stay in filter state even when they are empty strings, which the default heuristic would otherwise remove. An `undefined` filter value always clears the filter regardless.
 
 The `constructFilterFn` helper builds a filter function from a value-level comparator plus those optional resolvers:
 

@@ -265,6 +265,8 @@ When filtering is performed on the server, the rows loaded into the browser may 
 
 Each factory receives the table and a column ID, then returns a function that resolves the faceted result. The regular column APIs will return the server-provided values.
 
+Factories are resolved once per table and column, but the function each factory returns runs on every read; the table does not cache its result. Read live values inside that returned function (from a signal, store, or `table.options.meta`) so updated server facets show up immediately, and memoize inside the factory if the calculation is expensive.
+
 ```ts
 const facetingData = await fetchFacets(activeFilters)
 

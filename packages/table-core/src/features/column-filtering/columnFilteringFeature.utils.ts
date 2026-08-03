@@ -328,7 +328,12 @@ export function table_resetColumnFilters<
 /**
  * Returns whether a filter value should be removed from filter state.
  *
- * This checks the filter function's `autoRemove` hook and built-in empty-value rules.
+ * `undefined` always removes: it is the universal "clear this filter"
+ * sentinel used by `setFilterValue(undefined)` and functional updaters. For
+ * any other value, a filter function's `autoRemove` hook is authoritative
+ * when provided, so custom filter functions can keep values (such as empty
+ * strings) that the default heuristic would drop. Without an `autoRemove`
+ * hook, empty strings are removed.
  *
  * @example
  * ```ts
@@ -344,11 +349,13 @@ export function shouldAutoRemoveFilter<
   value?: any,
   column?: Column_Internal<TFeatures, TData, TValue>,
 ) {
-  return (
-    (filterFn && filterFn.autoRemove
-      ? filterFn.autoRemove(value, column as any)
-      : false) ||
-    typeof value === 'undefined' ||
-    (typeof value === 'string' && !value)
-  )
+  if (typeof value === 'undefined') {
+    return true
+  }
+
+  if (filterFn?.autoRemove) {
+    return !!filterFn.autoRemove(value, column as any)
+  }
+
+  return typeof value === 'string' && !value
 }
