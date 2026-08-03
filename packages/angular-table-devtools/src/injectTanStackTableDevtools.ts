@@ -1,5 +1,6 @@
-import { upsertTableDevtoolsTarget } from '@tanstack/table-devtools'
+import { createTableDevtoolsRegistrationManager } from '@tanstack/table-devtools'
 import {
+  DestroyRef,
   Injector,
   assertInInjectionContext,
   effect,
@@ -30,17 +31,15 @@ export function injectTanStackTableDevtools<
     injector = inject(Injector)
   }
 
+  const destroyRef = injector.get(DestroyRef)
+  const registration = createTableDevtoolsRegistrationManager()
+  destroyRef.onDestroy(() => registration.dispose())
+
   effect(
-    (onCleanup) => {
+    () => {
       const { table } = options()
       const enabledValue = enabled()
-      if (!enabledValue || !table) {
-        return
-      }
-      const cleanup = untracked(() => upsertTableDevtoolsTarget({ table }))
-      onCleanup(() => {
-        cleanup?.()
-      })
+      untracked(() => registration.update(table, enabledValue))
     },
     { injector },
   )

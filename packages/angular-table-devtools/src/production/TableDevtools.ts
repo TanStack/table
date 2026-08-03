@@ -1,8 +1,7 @@
-import { TableDevtoolsCore } from '@tanstack/table-devtools'
 import { computed, effect } from '@angular/core'
+import { TableDevtoolsCore } from '@tanstack/table-devtools/production'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/angular'
-
-export interface TableDevtoolsAngularInit extends Partial<DevtoolsPanelProps> {}
+import type { TableDevtoolsAngularInit } from '../TableDevtools'
 
 function resolvePanelProps(
   props?: TableDevtoolsAngularInit,
@@ -40,6 +39,3 @@ export const TableDevtoolsPanel: TableDevtoolsPanelComponent =
       panel.remove()
     }
   }
-
-export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent =
-  () => (_props, _host) => () => {}

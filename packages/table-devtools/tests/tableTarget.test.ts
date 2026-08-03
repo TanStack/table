@@ -2,8 +2,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { constructTable, coreFeatures } from '@tanstack/table-core'
 import { storeReactivityBindings } from '@tanstack/table-core/store-reactivity-bindings'
 import {
+  createTableDevtoolsRegistrationManager,
   getTableDevtoolsTargets,
   removeTableDevtoolsTarget,
+  subscribeTableDevtoolsTargets,
   upsertTableDevtoolsTarget,
 } from '../src/tableTarget'
 
@@ -62,6 +64,100 @@ describe('tableTarget', () => {
     cleanup?.()
 
     expect(getTableDevtoolsTargets()).toEqual([])
+  })
+
+  it('does not let stale cleanup remove a replacement table', () => {
+    const firstTable = createTable('users-table')
+    const nextTable = createTable('users-table')
+
+    const cleanupFirst = upsertTableDevtoolsTarget({ table: firstTable })
+    const cleanupNext = upsertTableDevtoolsTarget({ table: nextTable })
+
+    cleanupFirst?.()
+
+    expect(getTableDevtoolsTargets()).toEqual([
+      {
+        id: 'users-table',
+        table: nextTable,
+      },
+    ])
+
+    cleanupNext?.()
+    expect(getTableDevtoolsTargets()).toEqual([])
+  })
+
+  it('keeps a shared table registered until its final lease is released', () => {
+    const table = createTable('users-table')
+
+    const cleanupFirst = upsertTableDevtoolsTarget({ table })
+    const cleanupSecond = upsertTableDevtoolsTarget({ table })
+
+    cleanupFirst?.()
+    expect(getTableDevtoolsTargets()).toHaveLength(1)
+
+    cleanupSecond?.()
+    expect(getTableDevtoolsTargets()).toEqual([])
+  })
+
+  it('replaces a managed registration without publishing an empty registry', () => {
+    const manager = createTableDevtoolsRegistrationManager()
+    const firstTable = createTable('users-table')
+    const nextTable = createTable('users-table')
+
+    manager.update(firstTable)
+
+    const targetCounts: Array<number> = []
+    const unsubscribe = subscribeTableDevtoolsTargets((targets) => {
+      targetCounts.push(targets.length)
+    })
+
+    manager.update(nextTable)
+
+    expect(targetCounts).toEqual([1, 1])
+    expect(getTableDevtoolsTargets()).toEqual([
+      {
+        id: 'users-table',
+        table: nextTable,
+      },
+    ])
+
+    manager.dispose()
+
+    expect(targetCounts).toEqual([1, 1, 0])
+    unsubscribe()
+  })
+
+  it('updates transient wrappers without publishing a new target', () => {
+    const manager = createTableDevtoolsRegistrationManager()
+    const table = createTable('users-table')
+    const firstWrapper = {
+      ...table,
+      options: {
+        ...table.options,
+        debugAll: false,
+      },
+    }
+    const nextWrapper = {
+      ...table,
+      options: {
+        ...table.options,
+        debugAll: true,
+      },
+    }
+
+    manager.update(firstWrapper)
+
+    const listener = vi.fn()
+    const unsubscribe = subscribeTableDevtoolsTargets(listener)
+
+    manager.update(nextWrapper)
+
+    expect(listener).toHaveBeenCalledTimes(1)
+    expect(getTableDevtoolsTargets()[0]?.table).toBe(firstWrapper)
+    expect(getTableDevtoolsTargets()[0]?.table.options.debugAll).toBe(true)
+
+    unsubscribe()
+    manager.dispose()
   })
 
   it('logs and skips registration when the key is missing', () => {

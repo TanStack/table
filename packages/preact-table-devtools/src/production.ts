@@ -1,7 +1,7 @@
 'use client'
 
-export { TableDevtoolsPanel } from './PreactTableDevtools'
+export { TableDevtoolsPanel } from './production/PreactTableDevtools'
 export type { TableDevtoolsPreactInit } from './PreactTableDevtools'
-export { tableDevtoolsPlugin } from './plugin'
+export { tableDevtoolsPlugin } from './production/plugin'
 export { useTanStackTableDevtools } from './useTanStackTableDevtools'
 export type { UseTanStackTableDevtoolsOptions } from './useTanStackTableDevtools'

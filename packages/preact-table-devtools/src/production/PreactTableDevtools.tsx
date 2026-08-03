@@ -1,18 +1,16 @@
 import { h } from 'preact'
 import { useMemo } from 'preact/hooks'
 import { createPreactPanel } from '@tanstack/devtools-utils/preact'
-import { TableDevtoolsCore } from '@tanstack/table-devtools'
+import { TableDevtoolsCore } from '@tanstack/table-devtools/production'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/preact'
 import type { JSX } from 'preact'
-
-export interface TableDevtoolsPreactInit extends Partial<DevtoolsPanelProps> {}
+import type { TableDevtoolsPreactInit } from '../PreactTableDevtools'
 
 type TableDevtoolsPanelComponent = (
   props?: TableDevtoolsPreactInit,
 ) => JSX.Element
 
-const [TableDevtoolsPanelBase, TableDevtoolsPanelNoOpBase] =
-  createPreactPanel(TableDevtoolsCore)
+const [TableDevtoolsPanelBase] = createPreactPanel(TableDevtoolsCore)
 
 function resolvePanelProps(
   props?: TableDevtoolsPreactInit,
@@ -31,14 +29,4 @@ export const TableDevtoolsPanel: TableDevtoolsPanelComponent = (props) => {
     [devtoolsOpen, theme],
   )
   return h(TableDevtoolsPanelBase, panelProps)
-}
-
-export const TableDevtoolsPanelNoOp: TableDevtoolsPanelComponent = (props) => {
-  const theme = props?.theme
-  const devtoolsOpen = props?.devtoolsOpen
-  const panelProps = useMemo(
-    () => resolvePanelProps({ theme, devtoolsOpen }),
-    [devtoolsOpen, theme],
-  )
-  return h(TableDevtoolsPanelNoOpBase, panelProps)
 }

@@ -51,12 +51,9 @@ export function RowsPanel() {
     () => table()?.store,
     (state) => state,
   )
-  const tableOptions = useTableStore(
-    () => {
-      const tableInstance = table()
-      return tableInstance?.optionsStore ?? tableInstance?.store
-    },
-    () => table()?.options as unknown,
+  const optionsStoreValue = useTableStore(
+    () => table()?.optionsStore,
+    (options) => options,
   )
 
   const [selectedRowModel, setSelectedRowModel] =
@@ -66,8 +63,7 @@ export function RowsPanel() {
     const tableInstance = table()
     if (!tableInstance) return undefined
 
-    tableState()
-    tableOptions()
+    optionsStoreValue()
 
     const data = tableInstance.options.data as ReadonlyArray<unknown>
     if (!Array.isArray(data)) return data
@@ -79,8 +75,7 @@ export function RowsPanel() {
     const tableInstance = table()
     if (!tableInstance) return 0
 
-    tableState()
-    tableOptions()
+    optionsStoreValue()
 
     const data = tableInstance.options.data as ReadonlyArray<unknown>
     return Array.isArray(data) ? data.length : 0
@@ -91,7 +86,7 @@ export function RowsPanel() {
     if (!tableInstance) return []
 
     tableState()
-    tableOptions()
+    optionsStoreValue()
 
     const tableWithColumnFns = tableInstance as unknown as {
       getVisibleLeafColumns?: () => Array<AnyColumn>
@@ -220,18 +215,25 @@ export function RowsPanel() {
                   </thead>
                   <tbody>
                     <For each={rows()}>
-                      {(row) => (
-                        <tr>
-                          <td class={styles().bodyCellMono}>{row.id}</td>
-                          <For each={getCells(row)}>
-                            {(cell) => (
-                              <td class={styles().bodyCell}>
-                                {stringifyValue(cell.getValue())}
-                              </td>
-                            )}
-                          </For>
-                        </tr>
-                      )}
+                      {(row) => {
+                        const cells = createMemo(() => {
+                          tableState()
+                          return getCells(row)
+                        })
+
+                        return (
+                          <tr>
+                            <td class={styles().bodyCellMono}>{row.id}</td>
+                            <For each={cells()}>
+                              {(cell) => (
+                                <td class={styles().bodyCell}>
+                                  {stringifyValue(cell.getValue())}
+                                </td>
+                              )}
+                            </For>
+                          </tr>
+                        )
+                      }}
                     </For>
                   </tbody>
                 </table>
