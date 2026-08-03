@@ -5,7 +5,7 @@ title: AppColumnHelper
 
 # Interface: AppColumnHelper\<TFeatures, TData, TCellComponents, THeaderComponents\>
 
-Defined in: [types.ts:459](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L459)
+Defined in: [types.ts:455](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L455)
 
 Enhanced column helper with pre-bound components in cell/header/footer
 contexts. This enables TypeScript to know about the registered components
@@ -37,7 +37,7 @@ when defining columns.
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types.ts:469](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L469)
+Defined in: [types.ts:465](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L465)
 
 Creates a data column definition with an accessor key or function.
 The cell, header, and footer contexts include pre-bound components.
@@ -74,7 +74,7 @@ The cell, header, and footer contexts include pre-bound components.
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns[]];
 ```
 
-Defined in: [types.ts:503](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L503)
+Defined in: [types.ts:499](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L499)
 
 Wraps an array of column definitions to preserve each column's individual
 TValue type.
@@ -103,7 +103,7 @@ TValue type.
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [types.ts:511](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L511)
+Defined in: [types.ts:507](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L507)
 
 Creates a display column definition for non-data columns.
 The cell, header, and footer contexts include pre-bound components.
@@ -126,7 +126,7 @@ The cell, header, and footer contexts include pre-bound components.
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [types.ts:524](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L524)
+Defined in: [types.ts:520](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L520)
 
 Creates a group column definition with nested child columns.
 The cell, header, and footer contexts include pre-bound components.

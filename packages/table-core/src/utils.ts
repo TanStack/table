@@ -494,7 +494,7 @@ export function assignPrototypeAPIs<
 }
 
 /**
- * Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fallback to the static method passed in.
+ * Looks to run the memoized function with the builder pattern on the object if it exists, otherwise fall back to the static method passed in.
  */
 export function callMemoOrStaticFn<
   TObject extends Record<string, any>,

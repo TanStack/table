@@ -15,7 +15,7 @@ function table_getSelectedRowModel<TFeatures, TData>(table):
 };
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:222](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L222)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L235)
 
 Builds a row model containing selected rows from the core row model.
 

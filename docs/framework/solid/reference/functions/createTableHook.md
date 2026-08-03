@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:572](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L572)
+Defined in: [createTableHook.tsx:571](https://github.com/TanStack/table/blob/main/packages/solid-table/src/createTableHook.tsx#L571)
 
 Creates a custom table hook with pre-bound components for composition.
 

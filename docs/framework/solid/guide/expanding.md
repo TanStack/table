@@ -74,7 +74,7 @@ Expanded data can either contain table rows or any other data you want to displa
 
 ### Table rows as expanded data
 
-Expanded rows are essentially child rows that inherit the same column structure as their parent rows. If your data object already includes these expanded rows data, you can utilize the `getSubRows` function to specify these child rows. However, if your data object does not contain the expanded rows data, they can be treated as custom expanded data, which is discussed in next section.
+Expanded rows are essentially child rows that inherit the same column structure as their parent rows. If your data object already includes expanded row data, you can utilize the `getSubRows` function to specify these child rows. However, if your data object does not contain expanded row data, it can be treated as custom expanded data, which is discussed in the next section.
 
 For example, if you have a data object like this:
 
@@ -194,11 +194,11 @@ The ExpandedState type is defined as follows:
 type ExpandedState = true | Record<string, boolean>
 ```
 
-If the ExpandedState is true, it means all rows are expanded. If it's a record, only the rows with IDs present as keys in the record and have their value set to true are expanded. For example, if the expanded state is { row1: true, row2: false }, it means the row with ID row1 is expanded and the row with ID row2 is not expanded. This state is used by the table to determine which rows are expanded and should display their subRows, if any.
+If the ExpandedState is true, it means all rows are expanded. If it's a record, only the rows whose IDs are present as keys in the record and have a value of true are expanded. For example, if the expanded state is { row1: true, row2: false }, it means the row with ID row1 is expanded and the row with ID row2 is not expanded. This state is used by the table to determine which rows are expanded and should display their subRows, if any.
 
 ### UI toggling handler for expanded rows
 
-TanStack table will not add a toggling handler UI for expanded data to your table. You should manually add it within each row's UI to allow users to expand and collapse the row. For example, you can add a button UI within the columns definition.
+TanStack table will not add a toggling handler UI for expanded data to your table. You should manually add it within each row's UI to allow users to expand and collapse the row. For example, you can add a button UI within the column definition.
 
 ```tsx
 const columns = [
@@ -276,7 +276,7 @@ const table = createTable({
 
 ### Paginating Expanded Rows
 
-By default, expanded rows are paginated along with the rest of the table (which means expanded rows may span multiple pages). If you want to disable this behavior (which means expanded rows will always render on their parents page. This also means more rows will be rendered than the set page size) you can use the `paginateExpandedRows` option.
+By default, expanded rows are paginated along with the rest of the table (which means expanded rows may span multiple pages). If you want to disable this behavior (which means expanded rows will always render on their parent's page. This also means more rows will be rendered than the set page size) you can use the `paginateExpandedRows` option.
 
 ```ts
 const table = createTable({

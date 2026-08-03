@@ -9,7 +9,7 @@ title: AppColumnHelper
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:170](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L170)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:169](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L169)
 
 Enhanced column helper with pre-bound components in cell/header/footer contexts.
 This enables TypeScript to know about the registered components when defining columns.
@@ -40,7 +40,7 @@ This enables TypeScript to know about the registered components when defining co
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:180](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L180)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:179](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L179)
 
 Creates a data column definition with an accessor key or function.
 The cell, header, and footer contexts include pre-bound components.
@@ -77,7 +77,7 @@ The cell, header, and footer contexts include pre-bound components.
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:211](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L211)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:210](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L210)
 
 Wraps an array of column definitions to preserve each column's individual TValue type.
 
@@ -105,7 +105,7 @@ Wraps an array of column definitions to preserve each column's individual TValue
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:219](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L219)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:218](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L218)
 
 Creates a display column definition for non-data columns.
 The cell, header, and footer contexts include pre-bound components.
@@ -128,7 +128,7 @@ The cell, header, and footer contexts include pre-bound components.
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:232](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L232)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:231](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L231)
 
 Creates a group column definition with nested child columns.
 The cell, header, and footer contexts include pre-bound components.

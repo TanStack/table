@@ -13,7 +13,7 @@ function buildHeaderGroups<TFeatures, TData, TValue>(
    headerFamily?): HeaderGroup<TFeatures, TData>[];
 ```
 
-Defined in: [core/headers/buildHeaderGroups.ts:211](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/buildHeaderGroups.ts#L211)
+Defined in: [core/headers/buildHeaderGroups.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/buildHeaderGroups.ts#L235)
 
 Builds the nested header group structure for a table.
 

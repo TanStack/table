@@ -9,7 +9,7 @@ title: CreateTableContextOptions
 type CreateTableContextOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:271](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L271)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:270](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L270)
 
 Options for creating a table hook with pre-bound components and default table options.
 Extends all TableOptions except 'columns' | 'data' | 'store' | 'state' | 'initialState'.

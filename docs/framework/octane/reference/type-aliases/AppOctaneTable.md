@@ -9,7 +9,7 @@ title: AppOctaneTable
 type AppOctaneTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents> = OctaneTable<TFeatures, TData, TSelected> & CoreNoInfer<TTableComponents> & object;
 ```
 
-Defined in: [types.ts:737](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L737)
+Defined in: [types.ts:733](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L733)
 
 Extended table API returned by `useAppTable` with all App wrapper components.
 

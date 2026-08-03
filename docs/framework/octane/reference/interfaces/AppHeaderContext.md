@@ -5,7 +5,7 @@ title: AppHeaderContext
 
 # Interface: AppHeaderContext\<TFeatures, TData, TValue, THeaderComponents\>
 
-Defined in: [types.ts:363](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L363)
+Defined in: [types.ts:360](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L360)
 
 Enhanced HeaderContext with pre-bound header components.
 The `header` property includes the registered headerComponents.
@@ -36,7 +36,7 @@ The `header` property includes the registered headerComponents.
 column: Column<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types.ts:369](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L369)
+Defined in: [types.ts:366](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L366)
 
 ***
 
@@ -46,7 +46,7 @@ Defined in: [types.ts:369](https://github.com/TanStack/table/blob/main/packages/
 header: Header_Core<TFeatures, TData, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [types.ts:370](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L370)
+Defined in: [types.ts:367](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L367)
 
 #### Type Declaration
 
@@ -68,4 +68,4 @@ FlexRender: () => unknown;
 table: Table<TFeatures, TData>;
 ```
 
-Defined in: [types.ts:372](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L372)
+Defined in: [types.ts:369](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L369)

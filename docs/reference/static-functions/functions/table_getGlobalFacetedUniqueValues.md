@@ -9,7 +9,7 @@ title: table_getGlobalFacetedUniqueValues
 function table_getGlobalFacetedUniqueValues<TFeatures, TData>(table): Map<any, number>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L168)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:176](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L176)
 
 Computes unique values and occurrence counts for the global filter context.
 

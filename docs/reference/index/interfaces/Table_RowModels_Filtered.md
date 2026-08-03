@@ -5,7 +5,7 @@ title: Table_RowModels_Filtered
 
 # Interface: Table\_RowModels\_Filtered\<TFeatures, TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L289)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:294](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L294)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:289](http
 getFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:296](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L296)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L301)
 
 Resolves the row model after column and global filters have been applied.
 
@@ -41,7 +41,7 @@ Resolves the row model after column and global filters have been applied.
 getPreFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L300)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:305](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L305)
 
 Reads the row model immediately before filtering.
 

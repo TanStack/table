@@ -292,7 +292,7 @@ export function FeaturesPanel() {
                 </div>
                 <div class={styles().featureEstimateSummaryNote}>
                   Allocated from the current `size-limit` metric: minified and
-                  brotlied.
+                  Brotli-compressed.
                 </div>
               </div>
 

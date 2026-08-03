@@ -11,7 +11,7 @@
     <button (click)="stressTest()">Stress Test (1M rows)</button>
   </div>
   <div #scrollContainer class="container" style="overflow: auto; position: relative; height: 800px">
-    <!-- Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights -->
+    <!-- Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights -->
     <table style="display: grid" [style.width.px]="table.getTotalSize()">
       <thead style="display: grid; height: 34px; position: sticky; top: 0; z-index: 1">
         @for (headerGroup of table.getHeaderGroups(); track headerGroup.id) {

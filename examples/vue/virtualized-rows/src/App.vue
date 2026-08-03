@@ -163,9 +163,9 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
 <template>
   <div>
     <p class="centered-text">
-      For tables, the basis for the offset of the translate css function is from
+      For tables, the basis for the offset of the translate CSS function is from
       the row's initial position itself. Because of this, we need to calculate
-      the translateY pixel count different and base it off the the index.
+      the translateY pixel count differently and base it off the index.
     </p>
     <h1 class="virtualized-title">Virtualized Rows</h1>
     <p>Hold Shift while selecting rows to select or deselect a range.</p>
@@ -196,7 +196,7 @@ function measureElement(el: Element | ComponentPublicInstance | null) {
     }"
   >
     <div :style="{ height: `${totalSize}px` }">
-      <!-- Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights -->
+      <!-- Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights -->
       <table :style="{ display: 'grid' }">
         <thead
           :style="{

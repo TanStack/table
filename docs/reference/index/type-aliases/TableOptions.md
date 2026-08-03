@@ -9,7 +9,7 @@ title: TableOptions
 type TableOptions<TFeatures, TData> = TableOptions_Core<TFeatures, TData> & ExtractFeatureMapTypes<TFeatures, TableOptions_FeatureMap<TFeatures, TData>> & DebugOptions<TFeatures>;
 ```
 
-Defined in: [types/TableOptions.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L126)
+Defined in: [types/TableOptions.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/TableOptions.ts#L131)
 
 Complete table options for a specific feature set.
 

@@ -9,7 +9,7 @@ title: table_getSelectedCellCount
 function table_getSelectedCellCount<TFeatures, TData>(table): number;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:940](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L940)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:1241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L1241)
 
 Returns the number of selected cells.
 

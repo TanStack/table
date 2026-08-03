@@ -9,7 +9,7 @@ title: column_getIsSorted
 function column_getIsSorted<TFeatures, TData, TValue>(column): false | SortDirection;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:434](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L434)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:468](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L468)
 
 Reads this column's current sort direction.
 

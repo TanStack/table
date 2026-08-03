@@ -53,7 +53,7 @@ const table = useTable({
 })
 ```
 
-> Note: In some features like grouping and expanding, the `row.id` will have additional string appended to it.
+> Note: In some features like grouping and expanding, the `row.id` will have an additional string appended to it.
 
 ### Row Numbers and Display Indexes
 
@@ -107,4 +107,4 @@ If you are using either grouping or expanding features, your rows may contain su
 
 ## More Row APIs
 
-Depending on the features that you are using for your table, there are dozens more useful APIs for interacting with rows. See each features' respective API docs or guide for more information.
+Depending on the features that you are using for your table, there are dozens more useful APIs for interacting with rows. See each feature's respective API docs or guide for more information.

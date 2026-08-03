@@ -9,7 +9,7 @@ title: AppColumnDefBase
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [createTableHook.tsx:93](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L93)
+Defined in: [createTableHook.tsx:92](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L92)
 
 Enhanced column definition base with pre-bound components in cell/header/footer contexts.
 

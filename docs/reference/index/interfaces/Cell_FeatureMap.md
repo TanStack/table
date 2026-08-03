@@ -5,7 +5,7 @@ title: Cell_FeatureMap
 
 # Interface: Cell\_FeatureMap
 
-Defined in: [types/Cell.ts:14](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L14)
+Defined in: [types/Cell.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L15)
 
 ## Properties
 
@@ -15,7 +15,17 @@ Defined in: [types/Cell.ts:14](https://github.com/TanStack/table/blob/main/packa
 cellSelectionFeature: Cell_CellSelection;
 ```
 
-Defined in: [types/Cell.ts:15](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L15)
+Defined in: [types/Cell.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L16)
+
+***
+
+### cellSpanningFeature
+
+```ts
+cellSpanningFeature: Cell_CellSpanning;
+```
+
+Defined in: [types/Cell.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L17)
 
 ***
 
@@ -25,7 +35,7 @@ Defined in: [types/Cell.ts:15](https://github.com/TanStack/table/blob/main/packa
 columnGroupingFeature: Cell_ColumnGrouping;
 ```
 
-Defined in: [types/Cell.ts:16](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L16)
+Defined in: [types/Cell.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L18)
 
 ***
 
@@ -35,4 +45,4 @@ Defined in: [types/Cell.ts:16](https://github.com/TanStack/table/blob/main/packa
 rowAggregationFeature: Cell_RowAggregation;
 ```
 
-Defined in: [types/Cell.ts:17](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L17)
+Defined in: [types/Cell.ts:19](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Cell.ts#L19)

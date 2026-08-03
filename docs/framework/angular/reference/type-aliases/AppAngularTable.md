@@ -9,7 +9,7 @@ title: AppAngularTable
 type AppAngularTable<TFeatures, TData, TTableComponents, TCellComponents, THeaderComponents> = AngularTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [packages/angular-table/src/helpers/createTableHook.ts:242](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L242)
+Defined in: [packages/angular-table/src/helpers/createTableHook.ts:241](https://github.com/TanStack/table/blob/main/packages/angular-table/src/helpers/createTableHook.ts#L241)
 
 Extended table API returned by useAppTable with all App wrapper components
 

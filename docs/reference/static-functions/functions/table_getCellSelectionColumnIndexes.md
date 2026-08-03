@@ -9,7 +9,7 @@ title: table_getCellSelectionColumnIndexes
 function table_getCellSelectionColumnIndexes<TFeatures, TData>(table): Record<string, number>;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:187](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L187)
+Defined in: [features/cell-selection/cellSelectionFeature.utils.ts:192](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.utils.ts#L192)
 
 Builds a column id to render-order index map.
 

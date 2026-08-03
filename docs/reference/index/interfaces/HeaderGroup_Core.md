@@ -33,7 +33,7 @@ Defined in: [types/HeaderGroup.ts:5](https://github.com/TanStack/table/blob/main
 depth: number;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.types.ts:122](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L122)
+Defined in: [core/headers/coreHeadersFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L134)
 
 #### Inherited from
 
@@ -47,7 +47,7 @@ Defined in: [core/headers/coreHeadersFeature.types.ts:122](https://github.com/Ta
 headers: Header<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [core/headers/coreHeadersFeature.types.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L123)
+Defined in: [core/headers/coreHeadersFeature.types.ts:135](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L135)
 
 #### Inherited from
 
@@ -61,7 +61,7 @@ Defined in: [core/headers/coreHeadersFeature.types.ts:123](https://github.com/Ta
 id: string;
 ```
 
-Defined in: [core/headers/coreHeadersFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L124)
+Defined in: [core/headers/coreHeadersFeature.types.ts:136](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/headers/coreHeadersFeature.types.ts#L136)
 
 #### Inherited from
 

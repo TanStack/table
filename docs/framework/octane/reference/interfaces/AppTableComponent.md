@@ -5,7 +5,7 @@ title: AppTableComponent
 
 # Interface: AppTableComponent()\<TFeatures\>
 
-Defined in: [types.ts:727](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L727)
+Defined in: [types.ts:723](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L723)
 
 Component type for AppTable — root wrapper with optional Subscribe.
 
@@ -21,7 +21,7 @@ Component type for AppTable — root wrapper with optional Subscribe.
 AppTableComponent(props): unknown;
 ```
 
-Defined in: [types.ts:728](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L728)
+Defined in: [types.ts:724](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L724)
 
 Component type for AppTable — root wrapper with optional Subscribe.
 
@@ -41,7 +41,7 @@ Component type for AppTable — root wrapper with optional Subscribe.
 AppTableComponent<TSelected>(props): unknown;
 ```
 
-Defined in: [types.ts:729](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L729)
+Defined in: [types.ts:725](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L725)
 
 Component type for AppTable — root wrapper with optional Subscribe.
 

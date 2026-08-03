@@ -57,10 +57,15 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:64](https
 optional autoRemove: ColumnFilterAutoRemoveTestFn<TFeatures, TData, unknown>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:74](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L74)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:79](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L79)
 
 Removes the filter from `state.columnFilters` when the filter value fails
 this test (e.g. empty strings for text filters).
+
+When provided, this test is authoritative: values it keeps stay in filter
+state even when they are empty strings, which the default heuristic would
+otherwise remove. An `undefined` filter value always clears the filter
+regardless.
 
 ***
 
@@ -70,7 +75,7 @@ this test (e.g. empty strings for text filters).
 optional resolveDataValue: TransformDataValueFn;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:87](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L87)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:92](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L92)
 
 Normalizes each row's value before it is compared against the filter
 value. Only honored by filter functions built with `constructFilterFn`
@@ -84,7 +89,7 @@ value. Only honored by filter functions built with `constructFilterFn`
 optional resolveFilterValue: TransformFilterValueFn<TFeatures, TData, unknown>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:81](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L81)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:86](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L86)
 
 Normalizes the filter value before filtering runs.
 

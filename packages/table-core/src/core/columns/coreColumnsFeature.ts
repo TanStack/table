@@ -13,7 +13,7 @@ import {
 import type { TableFeature } from '../../types/TableFeatures'
 
 /**
- * Core feature that builds the column tree and exposes table/column column APIs.
+ * Core feature that builds the column tree and exposes table/column APIs.
  */
 export const coreColumnsFeature: TableFeature = {
   assignColumnPrototype: (prototype, table) => {

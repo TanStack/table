@@ -62,7 +62,7 @@ export interface Header_CoreProperties<
    */
   column: Column<TFeatures, TData, TValue>
   /**
-   * The depth of the header, zero-indexed based.
+   * The depth of the header, zero-indexed.
    */
   depth: number
   /**

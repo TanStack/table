@@ -12,7 +12,7 @@ function table_publishExternalState<TFeatures, TData>(
    compare): void;
 ```
 
-Defined in: [core/table/coreTablesFeature.utils.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L67)
+Defined in: [core/table/coreTablesFeature.utils.ts:73](https://github.com/TanStack/table/blob/main/packages/table-core/src/core/table/coreTablesFeature.utils.ts#L73)
 
 Publishes captured controlled state after a host framework commits.
 

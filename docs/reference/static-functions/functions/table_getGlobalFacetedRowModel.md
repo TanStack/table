@@ -9,7 +9,7 @@ title: table_getGlobalFacetedRowModel
 function table_getGlobalFacetedRowModel<TFeatures, TData>(table): RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:143](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L143)
+Defined in: [features/column-faceting/columnFacetingFeature.utils.ts:151](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-faceting/columnFacetingFeature.utils.ts#L151)
 
 Computes the row model used to derive global facet values.
 

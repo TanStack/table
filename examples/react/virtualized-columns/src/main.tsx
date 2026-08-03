@@ -163,7 +163,7 @@ function TableContainer({ table }: TableContainerProps) {
         height: '800px', // should be a fixed height
       }}
     >
-      {/* Even though we're still using sematic table tags, we must use CSS grid and flexbox for dynamic row heights */}
+      {/* Even though we're still using semantic table tags, we must use CSS grid and flexbox for dynamic row heights */}
       <table style={{ display: 'grid' }}>
         <TableHead
           columnVirtualizer={columnVirtualizer}

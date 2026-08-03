@@ -5,7 +5,7 @@ title: API
 
 # Interface: API\<_TDeps, _TDepArgs\>
 
-Defined in: [utils.ts:362](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L362)
+Defined in: [utils.ts:381](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L381)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [utils.ts:362](https://github.com/TanStack/table/blob/main/packages/
 fn: (...args) => any;
 ```
 
-Defined in: [utils.ts:363](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L363)
+Defined in: [utils.ts:382](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L382)
 
 #### Parameters
 
@@ -45,7 +45,7 @@ Defined in: [utils.ts:363](https://github.com/TanStack/table/blob/main/packages/
 optional memoDeps: (depArgs?) => any[] | undefined;
 ```
 
-Defined in: [utils.ts:364](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L364)
+Defined in: [utils.ts:383](https://github.com/TanStack/table/blob/main/packages/table-core/src/utils.ts#L383)
 
 #### Parameters
 

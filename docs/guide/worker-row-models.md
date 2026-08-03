@@ -100,7 +100,7 @@ The plugin entry is available from every framework adapter (`@tanstack/react-tab
 
 `createWorkerRowModel(tableWorker, stage)` accepts `'filtered'`, `'grouped'`, `'sorted'`, or `'expanded'`. All stages on a table share one worker and one round trip per state change, and stages whose inputs did not change are skipped entirely.
 
-Offloaded stages must form a contiguous prefix of the pipeline (filtered, then grouped, then sorted, then expanded). Offloading `filtered` alone is fine because downstream sync stages consume it normally, but offloading `sorted` while filtering runs on the main thread would silently bypass the filter. A dev-mode warning fires on mismatches. In practice: offload `expanded` never (it changes on every toggle), and keep pagination on the main thread (it only slices the current page).
+Offloaded stages must form a contiguous prefix of the pipeline (filtered, then grouped, then sorted, then expanded). Offloading `filtered` alone is fine because downstream sync stages consume it normally, but offloading `sorted` while filtering runs on the main thread would silently bypass the filter. A dev-mode warning fires on mismatches. In practice: never offload `expanded` (it changes on every toggle), and keep pagination on the main thread (it only slices the current page).
 
 ## Constraints and Behavior
 

@@ -342,7 +342,7 @@ const sorting = table.atoms.sorting.get()
 
 The `onStateChange` table option was removed in Table V9, although individual `on[State]Change` handlers are still available for specific state slices.
 
-If you want to lift or listen to any state change, you can set up a subscription to the `table.store`
+If you want to lift or listen to any state change, you can set up a subscription to the `table.store`:
 
 ```tsx
 const unsubscribe = table.store.subscribe((state) => {

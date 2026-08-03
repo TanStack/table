@@ -9,7 +9,7 @@ title: AppColumnDefBase
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:64](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L64)
+Defined in: [packages/vue-table/src/createTableHook.ts:63](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L63)
 
 ## Type Declaration
 

@@ -75,8 +75,8 @@ export type {
  * }
  * ```
  *
- * Can be imported through {@link FlexRenderDirective} or {@link FlexRender} import,
- * which the latter is preferred.
+ * Can be imported through {@link FlexRenderDirective} or {@link FlexRender},
+ * with the latter preferred.
  */
 @Directive({
   selector: 'ng-template[flexRender]',

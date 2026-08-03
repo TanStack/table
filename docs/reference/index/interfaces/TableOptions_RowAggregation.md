@@ -5,7 +5,7 @@ title: TableOptions_RowAggregation
 
 # Interface: TableOptions\_RowAggregation
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:332](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L332)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:331](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L331)
 
 Table options installed by `rowAggregationFeature`.
 
@@ -17,7 +17,7 @@ Table options installed by `rowAggregationFeature`.
 optional manualAggregation: boolean;
 ```
 
-Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:338](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L338)
+Defined in: [features/row-aggregation/rowAggregationFeature.types.ts:337](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-aggregation/rowAggregationFeature.types.ts#L337)
 
 Disables local `column.getAggregationValue()` calculation when a column
 override does not handle the request. Group values supplied by manually

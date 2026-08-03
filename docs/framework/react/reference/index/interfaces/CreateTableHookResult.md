@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [createTableHook.tsx:299](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L299)
+Defined in: [createTableHook.tsx:298](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L298)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [createTableHook.tsx:299](https://github.com/TanStack/table/blob/mai
 appFeatures: TFeatures;
 ```
 
-Defined in: [createTableHook.tsx:306](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L306)
+Defined in: [createTableHook.tsx:305](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L305)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:311](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L311)
+Defined in: [createTableHook.tsx:310](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L310)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -68,7 +68,7 @@ the cell/header/footer render props expose the bound components.
 useAppTable: <TData, TSelected>(tableOptions, selector?) => AppReactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:321](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L321)
+Defined in: [createTableHook.tsx:320](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L320)
 
 Creates a table with the `App*` wrapper components and registered
 `tableComponents` attached. `TData` is inferred from the `data` option.
@@ -105,7 +105,7 @@ Creates a table with the `App*` wrapper components and registered
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:358](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L358)
+Defined in: [createTableHook.tsx:357](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L357)
 
 Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 `cellComponents` and a context-bound `FlexRender`.
@@ -128,7 +128,7 @@ Reads the cell provided by the nearest `<table.AppCell>`, extended with your
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [createTableHook.tsx:369](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L369)
+Defined in: [createTableHook.tsx:368](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L368)
 
 Reads the header provided by the nearest `<table.AppHeader>` /
 `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -152,7 +152,7 @@ context-bound `FlexRender`.
 useTableContext: <TData, TSelected>() => AppReactTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [createTableHook.tsx:343](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L343)
+Defined in: [createTableHook.tsx:342](https://github.com/TanStack/table/blob/main/packages/react-table/src/createTableHook.tsx#L342)
 
 Reads the table provided by the nearest `<table.AppTable>`. This is the same
 extended instance `useAppTable` returns, so the `App*` components and your

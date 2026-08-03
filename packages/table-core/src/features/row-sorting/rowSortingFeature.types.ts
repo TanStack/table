@@ -208,7 +208,7 @@ export interface Column_RowSorting<
    */
   getToggleSortingHandler: () => undefined | ((event: unknown) => void)
   /**
-   * Toggles this columns sorting state. If `desc` is provided, it will force the sort direction to that value. If `isMulti` is provided, it will additivity multi-sort the column (or toggle it if it is already sorted).
+   * Toggles this column's sorting state. If `desc` is provided, it will force the sort direction to that value. If `isMulti` is provided, it will additively multi-sort the column (or toggle it if it is already sorted).
    */
   toggleSorting: (desc?: boolean, isMulti?: boolean) => void
 }
@@ -235,8 +235,8 @@ export interface TableOptions_RowSorting {
   enableSorting?: boolean
   /**
    * Enables/Disables the ability to remove sorting for the table.
-   * - If `true` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
-   * - If `false` then changing sort order will circle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
+   * - If `true` then changing sort order will cycle like: 'none' -> 'desc' -> 'asc' -> 'none' -> ...
+   * - If `false` then changing sort order will cycle like: 'none' -> 'desc' -> 'asc' -> 'desc' -> 'asc' -> ...
    */
   enableSortingRemoval?: boolean
   /**

@@ -5,7 +5,7 @@ title: SubscribePropsWithSourceWithSelector
 
 # Interface: SubscribePropsWithSourceWithSelector\<TSourceValue, TSelected\>
 
-Defined in: [types.ts:147](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L147)
+Defined in: [types.ts:144](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L144)
 
 Subscribe to a projected value from a source (atom or store). The selector
 receives the source value; children receive the projected `TSelected`.
@@ -30,7 +30,7 @@ children:
   | (state) => unknown;
 ```
 
-Defined in: [types.ts:150](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L150)
+Defined in: [types.ts:147](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L147)
 
 ***
 
@@ -40,7 +40,7 @@ Defined in: [types.ts:150](https://github.com/TanStack/table/blob/main/packages/
 selector: (state) => TSelected;
 ```
 
-Defined in: [types.ts:149](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L149)
+Defined in: [types.ts:146](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L146)
 
 #### Parameters
 
@@ -60,4 +60,4 @@ Defined in: [types.ts:149](https://github.com/TanStack/table/blob/main/packages/
 source: SubscribeSource<TSourceValue>;
 ```
 
-Defined in: [types.ts:148](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L148)
+Defined in: [types.ts:145](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L145)

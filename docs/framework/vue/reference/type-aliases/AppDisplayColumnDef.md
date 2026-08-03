@@ -9,7 +9,7 @@ title: AppDisplayColumnDef
 type AppDisplayColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<DisplayColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:85](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L85)
+Defined in: [packages/vue-table/src/createTableHook.ts:84](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L84)
 
 ## Type Declaration
 

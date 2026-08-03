@@ -15,7 +15,7 @@ function table_getGroupedSelectedRowModel<TFeatures, TData>(table):
 };
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:290](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L290)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:303](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L303)
 
 Builds a row model containing selected rows from the grouped row model.
 

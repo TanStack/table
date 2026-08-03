@@ -71,7 +71,7 @@ its own `enableCellSelection: false`. Defaults to `true`.
 optional enableCellSelectionDrag: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:120](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L120)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:119](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L119)
 
 Enables extending a selection by dragging across cells. Defaults to `true`.
 
@@ -83,7 +83,7 @@ Enables extending a selection by dragging across cells. Defaults to `true`.
 optional enableMultiCellRangeSelection: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:124](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L124)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:123](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L123)
 
 Allows modifier interactions to add or subtract ranges. Defaults to `true`.
 
@@ -95,7 +95,7 @@ Allows modifier interactions to add or subtract ranges. Defaults to `true`.
 optional isCellRangeSelectionEvent: (event) => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:132](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L132)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:131](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L131)
 
 Determines whether a selection-start event should extend the active range
 instead of replacing the selection.
@@ -121,7 +121,7 @@ By default, events with `shiftKey` directly on the event or on
 optional isMultiCellRangeSelectionEvent: (event) => boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:140](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L140)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:139](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L139)
 
 Determines whether a selection-start event should add or subtract a new
 rectangle. The operation depends on whether the starting cell is selected.
@@ -147,7 +147,7 @@ By default, events with `ctrlKey` or `metaKey` directly on the event or on
 optional onCellSelectionChange: OnChangeFn<CellSelectionState>;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:149](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L149)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:148](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L148)
 
 Called with an updater when cell selection state changes. Pair this with
 `state.cellSelection` when using external state; external atoms can own the

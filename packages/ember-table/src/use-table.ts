@@ -171,7 +171,7 @@ export function useTable<
   ) as TableState<TFeatures>
 
   /**
-   * Store is reasigned to point to proxy object to allow individual state slices to be independently reactive.
+   * Store is reassigned to point to proxy object to allow individual state slices to be independently reactive.
    *
    * Type cast is needed because we are setting during construction
    * Table store is readonly after first initialization.

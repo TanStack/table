@@ -9,7 +9,7 @@ title: createTableHook
 function createTableHook<TFeatures, TTableComponents, TCellComponents, THeaderComponents>(__namedParameters): CreateTableHookResult<TFeatures, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:488](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L488)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:487](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L487)
 
 Creates a custom table hook with pre-bound components for composition.
 

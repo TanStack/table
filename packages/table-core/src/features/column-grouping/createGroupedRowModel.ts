@@ -100,8 +100,8 @@ function _createGroupedRowModel<
     depth = 0,
     parentId?: string,
   ) => {
-    // Grouping depth has been been met
-    // Stop grouping and simply rewrite thd depth and row relationships
+    // Grouping depth has been met
+    // Stop grouping and simply rewrite the depth and row relationships
     if (depth >= existingGrouping.length) {
       return rows.map((row) => {
         row.depth = depth

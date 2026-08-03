@@ -5,7 +5,7 @@ title: CreatedFilterFn
 
 # Interface: CreatedFilterFn()\<TFeatures, TData\>
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:121](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L121)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L126)
 
 The shape returned by `constructFilterFn`: a `FilterFn` with its definition
 attached, so variants can be built by spreading it into another
@@ -36,7 +36,7 @@ CreatedFilterFn<TRowFeatures, TRowData>(
    addMeta?): boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:125](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L125)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L130)
 
 The shape returned by `constructFilterFn`: a `FilterFn` with its definition
 attached, so variants can be built by spreading it into another
@@ -85,7 +85,7 @@ any table's rows, regardless of the feature set it was defined against.
 optional autoRemove: (filterValue) => boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L108)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L113)
 
 #### Parameters
 
@@ -109,7 +109,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:108](http
 filter: (dataValue, filterValue, row, columnId, addMeta?) => boolean;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L101)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L106)
 
 #### Parameters
 
@@ -149,7 +149,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:101](http
 optional resolveDataValue: TransformDataValueFn;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:110](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L110)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L115)
 
 #### Inherited from
 
@@ -163,7 +163,7 @@ Defined in: [features/column-filtering/columnFilteringFeature.types.ts:110](http
 optional resolveFilterValue: (filterValue) => any;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:109](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L109)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L114)
 
 #### Parameters
 

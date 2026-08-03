@@ -9,7 +9,7 @@ title: CreateTableHookOptions
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptionsWithReactiveData<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:180](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L180)
+Defined in: [packages/vue-table/src/createTableHook.ts:179](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L179)
 
 ## Type Declaration
 

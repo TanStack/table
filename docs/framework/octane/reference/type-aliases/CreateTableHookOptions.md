@@ -9,7 +9,7 @@ title: CreateTableHookOptions
 type CreateTableHookOptions<TFeatures, TTableComponents, TCellComponents, THeaderComponents> = Omit<TableOptions<TFeatures, any>, "columns" | "data" | "store" | "state" | "initialState"> & object;
 ```
 
-Defined in: [types.ts:539](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L539)
+Defined in: [types.ts:535](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L535)
 
 Options for creating a table hook with pre-bound components and default table
 options. Extends all TableOptions except

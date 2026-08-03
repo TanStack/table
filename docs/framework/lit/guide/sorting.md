@@ -178,7 +178,7 @@ Whether or not you should use client-side or server-side sorting depends entirel
 
 ### Manual Server-Side Sorting
 
-If you plan to just use your own server-side sorting in your back-end logic, you do not need to provide a sorted row model. But if you have provided a sorting row model, but you want to disable it, you can use the `manualSorting` table option.
+If you plan to just use your own server-side sorting in your back-end logic, you do not need to provide a sorted row model. But if you have provided a sorted row model, but you want to disable it, you can use the `manualSorting` table option.
 
 ```ts
 import { createAtom } from '@tanstack/store'
@@ -270,7 +270,7 @@ const myCustomSortFn: SortFn<TFeatures, TData> = (
 
 > Note: The comparison function does not need to take whether or not the column is in descending or ascending order into account. The row models will take care of that logic. `sortFn` functions only need to provide a consistent comparison.
 
-Every sorting function receives 2 rows and a column ID and are expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
+Every sorting function receives 2 rows and a column ID and is expected to compare the two rows using the column ID to return `-1`, `0`, or `1` in ascending order. Here's a cheat sheet:
 
 | Return | Ascending Order |
 | ------ | --------------- |

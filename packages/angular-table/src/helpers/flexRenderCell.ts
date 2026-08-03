@@ -40,12 +40,12 @@ import type { CellContext, HeaderContext } from '@tanstack/table-core'
  * <td *flexRender="footer.column.columnDef.footer; props: footer.getContext(); let footer">{{footer}}</td>
  * ```
  *
- * Can be imported through {@link FlexRenderCell} or {@link FlexRender} import,
- * which the latter is preferred.
+ * Can be imported through {@link FlexRenderCell} or {@link FlexRender}, with
+ * the latter preferred.
  *
  * @example
  * ```ts
- * import {FlexRender} from '@tanstack/angular-table
+ * import {FlexRender} from '@tanstack/angular-table'
  *
  * @Component({
  *  // ...

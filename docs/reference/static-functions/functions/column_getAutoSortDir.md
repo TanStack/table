@@ -9,7 +9,7 @@ title: column_getAutoSortDir
 function column_getAutoSortDir<TFeatures, TData, TValue>(column): "asc" | "desc";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.utils.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L154)
+Defined in: [features/row-sorting/rowSortingFeature.utils.ts:181](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.utils.ts#L181)
 
 Chooses the default first sort direction from sampled filtered row values.
 

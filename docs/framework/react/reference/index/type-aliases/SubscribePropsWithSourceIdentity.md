@@ -9,7 +9,7 @@ title: SubscribePropsWithSourceIdentity
 type SubscribePropsWithSourceIdentity<TSourceValue> = object;
 ```
 
-Defined in: [Subscribe.ts:44](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L44)
+Defined in: [Subscribe.ts:41](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L41)
 
 Subscribe to the full value of a source (e.g. `table.atoms.rowSelection` or
 `table.optionsStore`). Omitting `selector` is equivalent to the identity
@@ -29,7 +29,7 @@ selector — children receive `TSourceValue`.
 children: (state) => ReactNode | ReactNode;
 ```
 
-Defined in: [Subscribe.ts:47](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L47)
+Defined in: [Subscribe.ts:44](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L44)
 
 ***
 
@@ -39,7 +39,7 @@ Defined in: [Subscribe.ts:47](https://github.com/TanStack/table/blob/main/packag
 optional selector: undefined;
 ```
 
-Defined in: [Subscribe.ts:46](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L46)
+Defined in: [Subscribe.ts:43](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L43)
 
 ***
 
@@ -49,4 +49,4 @@ Defined in: [Subscribe.ts:46](https://github.com/TanStack/table/blob/main/packag
 source: SubscribeSource<TSourceValue>;
 ```
 
-Defined in: [Subscribe.ts:45](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L45)
+Defined in: [Subscribe.ts:42](https://github.com/TanStack/table/blob/main/packages/react-table/src/Subscribe.ts#L42)

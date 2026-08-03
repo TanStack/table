@@ -5,7 +5,7 @@ title: CreateTableHookResult
 
 # Interface: CreateTableHookResult\<TFeatures, TTableComponents, TCellComponents, THeaderComponents\>
 
-Defined in: [types.ts:811](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L811)
+Defined in: [types.ts:807](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L807)
 
 ## Type Parameters
 
@@ -33,7 +33,7 @@ Defined in: [types.ts:811](https://github.com/TanStack/table/blob/main/packages/
 appFeatures: TFeatures;
 ```
 
-Defined in: [types.ts:818](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L818)
+Defined in: [types.ts:814](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L814)
 
 The features object that was passed to `createTableHook`.
 
@@ -45,7 +45,7 @@ The features object that was passed to `createTableHook`.
 createAppColumnHelper: <TData>() => AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [types.ts:823](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L823)
+Defined in: [types.ts:819](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L819)
 
 A column helper pre-bound to `TFeatures` and the registered components, so
 the cell/header/footer render props expose the bound components.
@@ -68,7 +68,7 @@ the cell/header/footer render props expose the bound components.
 useAppTable: <TData, TSelected>(tableOptions, selector?) => AppOctaneTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [types.ts:833](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L833)
+Defined in: [types.ts:829](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L829)
 
 Creates a table with the `App*` wrapper components and registered
 `tableComponents` attached. `TData` is inferred from the `data` option.
@@ -105,7 +105,7 @@ Creates a table with the `App*` wrapper components and registered
 useCellContext: <TValue>() => Cell_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Cell_FeatureMap> & TCellComponents & object;
 ```
 
-Defined in: [types.ts:870](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L870)
+Defined in: [types.ts:866](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L866)
 
 Reads the cell provided by the nearest `<table.AppCell>`, extended with
 your `cellComponents` and a context-bound `FlexRender`.
@@ -128,7 +128,7 @@ your `cellComponents` and a context-bound `FlexRender`.
 useHeaderContext: <TValue>() => Header_Core<TFeatures, any, TValue> & ExtractFeatureMapTypes<TFeatures, Header_FeatureMap> & THeaderComponents & object;
 ```
 
-Defined in: [types.ts:881](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L881)
+Defined in: [types.ts:877](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L877)
 
 Reads the header provided by the nearest `<table.AppHeader>` /
 `<table.AppFooter>`, extended with your `headerComponents` and a
@@ -152,7 +152,7 @@ context-bound `FlexRender`.
 useTableContext: <TData, TSelected>() => AppOctaneTable<TFeatures, TData, TSelected, TTableComponents, TCellComponents, THeaderComponents>;
 ```
 
-Defined in: [types.ts:855](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L855)
+Defined in: [types.ts:851](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L851)
 
 Reads the table provided by the nearest `<table.AppTable>`. This is the
 same extended instance `useAppTable` returns, so the `App*` components and

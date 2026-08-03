@@ -9,7 +9,7 @@ title: AppColumnHelper
 type AppColumnHelper<TFeatures, TData, TCellComponents, THeaderComponents> = object;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:174](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L174)
+Defined in: [packages/lit-table/src/createTableHook.ts:173](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L173)
 
 Enhanced column helper with pre-bound components in cell/header/footer contexts.
 This enables TypeScript to know about the registered components when defining columns.
@@ -40,7 +40,7 @@ This enables TypeScript to know about the registered components when defining co
 accessor: <TAccessor, TValue>(accessor, column) => TAccessor extends AccessorFn<TData> ? AccessorFnColumnDef<TFeatures, TData, TValue> : AccessorKeyColumnDef<TFeatures, TData, TValue>;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:184](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L184)
+Defined in: [packages/lit-table/src/createTableHook.ts:183](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L183)
 
 Creates a data column definition with an accessor key or function.
 The cell, header, and footer contexts include pre-bound components.
@@ -77,7 +77,7 @@ The cell, header, and footer contexts include pre-bound components.
 columns: <TColumns>(columns) => ColumnDef<TFeatures, TData, any>[] & [...TColumns];
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:215](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L215)
+Defined in: [packages/lit-table/src/createTableHook.ts:214](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L214)
 
 Wraps an array of column definitions to preserve each column's individual TValue type.
 
@@ -105,7 +105,7 @@ Wraps an array of column definitions to preserve each column's individual TValue
 display: (column) => DisplayColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:223](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L223)
+Defined in: [packages/lit-table/src/createTableHook.ts:222](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L222)
 
 Creates a display column definition for non-data columns.
 The cell, header, and footer contexts include pre-bound components.
@@ -128,7 +128,7 @@ The cell, header, and footer contexts include pre-bound components.
 group: (column) => GroupColumnDef<TFeatures, TData, unknown>;
 ```
 
-Defined in: [packages/lit-table/src/createTableHook.ts:236](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L236)
+Defined in: [packages/lit-table/src/createTableHook.ts:235](https://github.com/TanStack/table/blob/main/packages/lit-table/src/createTableHook.ts#L235)
 
 Creates a group column definition with nested child columns.
 The cell, header, and footer contexts include pre-bound components.

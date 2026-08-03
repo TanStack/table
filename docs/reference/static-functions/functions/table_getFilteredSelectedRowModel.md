@@ -15,7 +15,7 @@ function table_getFilteredSelectedRowModel<TFeatures, TData>(table):
 };
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:256](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L256)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:269](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L269)
 
 Builds a row model containing selected rows from the filtered row model.
 

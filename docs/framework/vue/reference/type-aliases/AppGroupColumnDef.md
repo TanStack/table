@@ -9,7 +9,7 @@ title: AppGroupColumnDef
 type AppGroupColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<GroupColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer" | "columns"> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:105](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L105)
+Defined in: [packages/vue-table/src/createTableHook.ts:104](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L104)
 
 ## Type Declaration
 

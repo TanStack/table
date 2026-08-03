@@ -9,7 +9,7 @@ title: AppColumnDefBase
 type AppColumnDefBase<TFeatures, TData, TValue, TCellComponents, THeaderComponents> = Omit<IdentifiedColumnDef<TFeatures, TData, TValue>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:94](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L94)
+Defined in: [packages/svelte-table/src/createTableHook.svelte.ts:93](https://github.com/TanStack/table/blob/main/packages/svelte-table/src/createTableHook.svelte.ts#L93)
 
 Enhanced column definition base with pre-bound components in cell/header/footer contexts.
 

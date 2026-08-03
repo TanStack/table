@@ -5,7 +5,7 @@ title: CellSelectionEdges
 
 # Interface: CellSelectionEdges
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:56](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L56)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:63](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L63)
 
 Which sides of a selected cell sit on the outer boundary of the selection.
 
@@ -17,7 +17,7 @@ Which sides of a selected cell sit on the outer boundary of the selection.
 bottom: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:57](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L57)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:64](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L64)
 
 ***
 
@@ -27,7 +27,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:57](https://g
 left: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:58](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L58)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:65](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L65)
 
 ***
 
@@ -37,7 +37,7 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:58](https://g
 right: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:59](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L59)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:66](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L66)
 
 ***
 
@@ -47,4 +47,4 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:59](https://g
 top: boolean;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:60](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L60)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:67](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L67)

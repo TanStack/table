@@ -11,7 +11,7 @@ type SubscribePropsWithSource<TSourceValue, TSelected> =
 | SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>;
 ```
 
-Defined in: [types.ts:159](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L159)
+Defined in: [types.ts:156](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L156)
 
 Subscribe to a single source — atom or store (identity or projected). Prefer
 [SubscribePropsWithSourceIdentity](../interfaces/SubscribePropsWithSourceIdentity.md) or

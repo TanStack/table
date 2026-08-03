@@ -9,7 +9,7 @@ title: row_getIsPinned
 function row_getIsPinned<TFeatures, TData>(row): RowPinningPosition;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:235](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L235)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:236](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L236)
 
 Reads this row's current pinning region.
 

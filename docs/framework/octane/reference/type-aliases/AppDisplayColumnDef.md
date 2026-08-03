@@ -9,7 +9,7 @@ title: AppDisplayColumnDef
 type AppDisplayColumnDef<TFeatures, TData, TCellComponents, THeaderComponents> = Omit<DisplayColumnDef<TFeatures, TData, unknown>, "cell" | "header" | "footer"> & object;
 ```
 
-Defined in: [types.ts:410](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L410)
+Defined in: [types.ts:406](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L406)
 
 Enhanced display column definition with pre-bound components.
 

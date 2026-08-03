@@ -9,7 +9,7 @@ title: row_getPinnedIndex
 function row_getPinnedIndex<TFeatures, TData>(row): number;
 ```
 
-Defined in: [features/row-pinning/rowPinningFeature.utils.ts:259](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L259)
+Defined in: [features/row-pinning/rowPinningFeature.utils.ts:260](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pinning/rowPinningFeature.utils.ts#L260)
 
 Finds this row's visible index within its pinned region.
 

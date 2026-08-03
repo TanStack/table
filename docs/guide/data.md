@@ -14,7 +14,7 @@ Having a basic understanding of what TypeScript Generics are and how they work w
 
 ### Defining Data Types
 
-`data` is an array of objects that will be turned into the rows of your table. Each object in the array represents a row of data (under normal circumstances). If you are using TypeScript, we usually define a type for the shape of our data. This type is used as a generic type for all of the other table, column, row, and cell instances. This Generic is usually referred to as `TData` throughout the rest of the TanStack Table types and APIs.
+`data` is an array of objects that will be turned into the rows of your table. Each object in the array represents a row of data (under normal circumstances). If you are using TypeScript, we usually define a type for the shape of our data. This type is used as a generic type for all of the other table, column, row, and cell instances. This generic is usually referred to as `TData` throughout the rest of the TanStack Table types and APIs.
 
 For example, if we have a table that displays a list of users in an array like this:
 
@@ -133,7 +133,7 @@ const columns = [
 
 This is discussed in more detail in the [Column Def Guide](./column-defs).
 
-> NOTE: The "keys" in your json data can usually be anything, but any periods in an `accessorKey` will be interpreted as a deep key path. If a key in your data contains a literal period, use an `accessorFn` to read it instead.
+> NOTE: The "keys" in your JSON data can usually be anything, but any periods in an `accessorKey` will be interpreted as a deep key path. If a key in your data contains a literal period, use an `accessorFn` to read it instead.
 
 ### Nested Sub-Row Data
 
@@ -312,7 +312,7 @@ See the [With TanStack Query example](../framework/react/examples/with-tanstack-
 
 ## How TanStack Table Transforms Data
 
-Later, in other parts of these docs, you will see how TanStack Table processes the `data` that you pass to the table and generates the row and cell objects that are used to create the table. The `data` that you pass to the table is never mutated by TanStack Table, but the actual values in the rows and cells may be transformed by the accessors in your column definitions, or by other features performed by [row models](./row-models) like grouping or aggregation.
+Later, in other parts of these docs, you will see how TanStack Table processes the `data` that you pass to the table and generates the row and cell objects that are used to create the table. The `data` that you pass to the table is never mutated by TanStack Table, but the actual values in the rows and cells may be transformed by the accessors in your column definitions, or by other transformations performed by [row models](./row-models) like grouping or aggregation.
 
 ## How Much Data Can TanStack Table Handle?
 

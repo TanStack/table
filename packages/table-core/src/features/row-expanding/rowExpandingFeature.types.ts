@@ -64,7 +64,7 @@ export interface TableOptions_RowExpanding<
    */
   onExpandedChange?: OnChangeFn<ExpandedState>
   /**
-   * If `true` expanded rows will be paginated along with the rest of the table (which means expanded rows may span multiple pages). If `false` expanded rows will not be considered for pagination (which means expanded rows will always render on their parents page. This also means more rows will be rendered than the set page size)
+   * If `true` expanded rows will be paginated along with the rest of the table (which means expanded rows may span multiple pages). If `false` expanded rows will not be considered for pagination (which means expanded rows will always render on their parent's page). This also means more rows will be rendered than the set page size.
    */
   paginateExpandedRows?: boolean
 }

@@ -5,7 +5,7 @@ title: Table_RowSelection
 
 # Interface: Table\_RowSelection\<TFeatures, TData\>
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L117)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:129](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L129)
 
 ## Type Parameters
 
@@ -25,7 +25,7 @@ Defined in: [features/row-selection/rowSelectionFeature.types.ts:117](https://gi
 _lastSelectedRowId: string | null;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:126](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L126)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L138)
 
 **`Internal`**
 
@@ -39,7 +39,7 @@ The most recent row interacted with through the row selection handler.
 getFilteredSelectedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:130](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L130)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:142](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L142)
 
 Builds a selected-row model from rows after filtering.
 
@@ -55,7 +55,7 @@ Builds a selected-row model from rows after filtering.
 getGroupedSelectedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:134](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L134)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L146)
 
 Builds a selected-row model from rows after grouping.
 
@@ -71,9 +71,10 @@ Builds a selected-row model from rows after grouping.
 getIsAllPageRowsSelected: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:142](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L142)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L155)
 
 Checks whether every selectable row on the current page is selected.
+Sub-rows whose ancestors block sub-row selection are ignored.
 
 #### Returns
 
@@ -87,9 +88,10 @@ Checks whether every selectable row on the current page is selected.
 getIsAllRowsSelected: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:146](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L146)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:160](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L160)
 
 Checks whether every selectable filtered row is selected.
+Sub-rows whose ancestors block sub-row selection are ignored.
 
 #### Returns
 
@@ -103,7 +105,7 @@ Checks whether every selectable filtered row is selected.
 getIsSomePageRowsSelected: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L150)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:164](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L164)
 
 Checks whether at least one selectable row on the current page is selected.
 
@@ -119,7 +121,7 @@ Checks whether at least one selectable row on the current page is selected.
 getIsSomeRowsSelected: () => boolean;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:154](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L154)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:168](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L168)
 
 Checks whether at least one row id is selected.
 
@@ -135,7 +137,7 @@ Checks whether at least one row id is selected.
 getPreSelectedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:158](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L158)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:172](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L172)
 
 Returns the core row model of all rows before row selection has been applied.
 
@@ -151,7 +153,7 @@ Returns the core row model of all rows before row selection has been applied.
 getSelectedRowIds: () => string[];
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:138](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L138)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:150](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L150)
 
 Returns the ids of all selected rows.
 
@@ -167,7 +169,7 @@ Returns the ids of all selected rows.
 getSelectedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:162](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L162)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:176](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L176)
 
 Builds a selected-row model from the core row model.
 
@@ -183,7 +185,7 @@ Builds a selected-row model from the core row model.
 getToggleAllPageRowsSelectedHandler: () => (event) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:166](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L166)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L180)
 
 Creates a checkbox-style handler that toggles all current-page rows.
 
@@ -211,7 +213,7 @@ Creates a checkbox-style handler that toggles all current-page rows.
 getToggleAllRowsSelectedHandler: () => (event) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:170](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L170)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L184)
 
 Creates a checkbox-style handler that toggles all selectable rows.
 
@@ -239,7 +241,7 @@ Creates a checkbox-style handler that toggles all selectable rows.
 resetRowSelection: (defaultState?) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:176](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L176)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:190](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L190)
 
 Resets `rowSelection` to `initialState.rowSelection`.
 
@@ -263,7 +265,7 @@ Pass `true` to ignore initial state and reset to `{}`.
 setRowSelection: (updater) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:180](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L180)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:194](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L194)
 
 Updates row selection state with a next map or updater function.
 
@@ -285,7 +287,7 @@ Updates row selection state with a next map or updater function.
 toggleAllPageRowsSelected: (value?, opts?) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:184](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L184)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:198](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L198)
 
 Selects/deselects all rows on the current page.
 
@@ -313,9 +315,12 @@ Selects/deselects all rows on the current page.
 toggleAllRowsSelected: (value?, opts?) => void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.types.ts:191](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L191)
+Defined in: [features/row-selection/rowSelectionFeature.types.ts:208](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.types.ts#L208)
 
 Selects/deselects all rows in the table.
+
+Deselecting keeps rows that cannot be selected in the selection map unless
+`opts.deselectAll` is `true`.
 
 #### Parameters
 

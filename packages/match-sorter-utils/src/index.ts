@@ -68,7 +68,7 @@ export const rankings = {
 export type Ranking = (typeof rankings)[keyof typeof rankings]
 
 /**
- * Gets the highest ranking for value for the given item based on its values for the given keys
+ * Gets the highest ranking value for the given item based on its values for the given keys
  * @param {*} item - the item to rank
  * @param {String} value - the value to rank against
  * @param {Object} options - options to control the ranking
@@ -294,7 +294,7 @@ function prepareValueForComparison<TItem>(
   { keepDiacritics }: RankItemOptions<TItem>,
 ): string {
   // value might not actually be a string at this point (we don't get to choose)
-  // so part of preparing the value for comparison is ensure that it is a string
+  // so part of preparing the value for comparison is ensuring that it is a string
   value = `${value}` // toString
   if (!keepDiacritics) {
     value = removeAccents(value)

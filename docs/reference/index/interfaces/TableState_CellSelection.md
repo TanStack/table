@@ -5,7 +5,7 @@ title: TableState_CellSelection
 
 # Interface: TableState\_CellSelection
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:36](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L36)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:43](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L43)
 
 ## Properties
 
@@ -15,4 +15,4 @@ Defined in: [features/cell-selection/cellSelectionFeature.types.ts:36](https://g
 cellSelection: CellSelectionState;
 ```
 
-Defined in: [features/cell-selection/cellSelectionFeature.types.ts:37](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L37)
+Defined in: [features/cell-selection/cellSelectionFeature.types.ts:44](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/cell-selection/cellSelectionFeature.types.ts#L44)

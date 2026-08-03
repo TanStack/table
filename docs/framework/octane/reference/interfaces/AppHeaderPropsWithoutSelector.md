@@ -5,7 +5,7 @@ title: AppHeaderPropsWithoutSelector
 
 # Interface: AppHeaderPropsWithoutSelector\<TFeatures, TData, TValue, THeaderComponents\>
 
-Defined in: [types.ts:639](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L639)
+Defined in: [types.ts:635](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L635)
 
 Props for AppHeader/AppFooter component — without selector.
 
@@ -35,7 +35,7 @@ Props for AppHeader/AppFooter component — without selector.
 children: (header) => unknown;
 ```
 
-Defined in: [types.ts:646](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L646)
+Defined in: [types.ts:642](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L642)
 
 #### Parameters
 
@@ -55,7 +55,7 @@ Defined in: [types.ts:646](https://github.com/TanStack/table/blob/main/packages/
 header: Header<TFeatures, TData, TValue>;
 ```
 
-Defined in: [types.ts:645](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L645)
+Defined in: [types.ts:641](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L641)
 
 ***
 
@@ -65,4 +65,4 @@ Defined in: [types.ts:645](https://github.com/TanStack/table/blob/main/packages/
 optional selector: undefined;
 ```
 
-Defined in: [types.ts:650](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L650)
+Defined in: [types.ts:646](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L646)

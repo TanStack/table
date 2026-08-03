@@ -5,7 +5,7 @@
  *
  * We currently don't support app-tree merging from libraries.
  *
- * For services, I highly recommend looking in to either of
+ * For services, I highly recommend looking into either of
  * - https://github.com/chancancode/ember-polaris-service-
  * - https://ember-primitives.pages.dev/6-utils/createService.md
  *   - https://ember-primitives.pages.dev/6-utils/createAsyncService.md

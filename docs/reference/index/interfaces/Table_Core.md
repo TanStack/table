@@ -5,7 +5,7 @@ title: Table_Core
 
 # Interface: Table\_Core\<TFeatures, TData\>
 
-Defined in: [types/Table.ts:40](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L40)
+Defined in: [types/Table.ts:41](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L41)
 
 The core table object that only includes the core table functionality such as column, header, row, and table APIS.
 No features are included.
@@ -652,7 +652,7 @@ Table_RowModels.getFacetedUniqueValues
 getFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:296](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L296)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L301)
 
 Resolves the row model after column and global filters have been applied.
 
@@ -843,7 +843,7 @@ Table_RowModels.getPreExpandedRowModel
 getPreFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L300)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:305](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L305)
 
 Reads the row model immediately before filtering.
 
@@ -909,7 +909,7 @@ Table_RowModels.getPrePaginatedRowModel
 getPreSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:276](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L276)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L289)
 
 Reads the row model immediately before sorting.
 
@@ -1040,7 +1040,7 @@ included in this order. This is the memoized source for
 getSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:280](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L280)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:293](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L293)
 
 Resolves the row model after sorting has been applied.
 

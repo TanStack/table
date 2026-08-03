@@ -87,7 +87,7 @@ The sorting function to use with this column.
 optional sortUndefined: false | 1 | -1 | "first" | "last";
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:153](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L153)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:157](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L157)
 
 The priority of undefined values when sorting this column.
 - `false`

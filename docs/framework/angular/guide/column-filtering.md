@@ -123,7 +123,7 @@ readonly table = injectTable(() => ({
 
 ### Column Filter State
 
-Whether or not you use client-side or server-side filtering, you can take advantage of the built-in column filter state management that TanStack Table provides. There are many table and column APIs to mutate and interact with the filter state and retrieving the column filter state.
+Whether or not you use client-side or server-side filtering, you can take advantage of the built-in column filter state management that TanStack Table provides. There are many table and column APIs to mutate and interact with the filter state and retrieve the column filter state.
 
 The column filtering state is defined as an array of objects with the following shape:
 

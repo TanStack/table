@@ -12,12 +12,15 @@ function table_toggleAllRowsSelected<TFeatures, TData>(
    opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:98](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L98)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:101](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L101)
 
 Selects or deselects every selectable row before grouping.
 
 Omitting `value` toggles based on `table_getIsAllRowsSelected(table)`.
-Deselecting removes matching ids from the existing selection map.
+Selecting skips sub-rows whose ancestors block descent via
+`enableSubRowSelection`. Deselecting removes matching selectable ids from the
+existing selection map; rows that cannot be selected keep their selection
+unless `opts.deselectAll` is `true`.
 
 ## Type Parameters
 

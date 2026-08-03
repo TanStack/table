@@ -249,7 +249,7 @@ const not = (value: unknown): boolean => !value
 const eq = (a: unknown, b: unknown): boolean => String(a) === String(b)
 
 export default class PaginationTable extends Component {
-  // ...columns, data, and
+  // ...columns and data
   // table = useTable(() => ({ features, columns, data: this.data }))
 
   get canPreviousPage() {

@@ -33,7 +33,7 @@ const column = table.getColumn('firstName')
 
 #### Get Columns
 
-The simplest column API is `table.getAllColumns`, which will return a list of all columns in the table. There are dozens of other column APIs that are affected by other features and the state of the table that come alongside this API though. `table.getAllFlatColumns`, `table.getAllLeafColumns`, `getCenterLeafColumns`, `table.getStartVisibleLeafColumns` are just some examples of other column APIs that you might use in tandem with the column visibility or column pinning features.
+The simplest column API is `table.getAllColumns`, which will return a list of all columns in the table. There are dozens of other column APIs that are affected by other features and the state of the table that come alongside this API though. `table.getAllFlatColumns`, `table.getAllLeafColumns`, `table.getCenterLeafColumns`, `table.getStartVisibleLeafColumns` are just some examples of other column APIs that you might use in tandem with the column visibility or column pinning features.
 
 ## Column Objects
 
@@ -41,7 +41,7 @@ Column objects are not actually meant to be used to render out the table UI dire
 
 ### Column IDs
 
-Every column must have a unique `id` defined in their associated [Column Definition](./column-defs). Usually, you define this `id` yourself, or it is derived from the `accessorKey` or `header` properties in the column definition.
+Every column must have a unique `id` defined in its associated [Column Definition](./column-defs). Usually, you define this `id` yourself, or it is derived from the `accessorKey` or `header` properties in the column definition.
 
 ### ColumnDef
 
@@ -57,7 +57,7 @@ There are a few properties on `column` objects that are only useful if the colum
 
 ## More Column APIs
 
-There are dozens of Column APIs that you can use to interact with the table state and extract cell values from the table based on the state of the table. See each features column API documentation for more information.
+There are dozens of Column APIs that you can use to interact with the table state and extract cell values from the table based on the state of the table. See each feature's column API documentation for more information.
 
 ## Column Rendering
 

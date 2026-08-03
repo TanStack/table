@@ -16,7 +16,7 @@ type SubscribeStaticChild =
 | ReadonlyArray<unknown>;
 ```
 
-Defined in: [types.ts:103](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L103)
+Defined in: [types.ts:100](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L100)
 
 A non-render-prop child accepted by Subscribe. This stays concrete instead
 of using `OctaneNode` (currently `unknown`) so function children retain

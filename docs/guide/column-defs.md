@@ -241,7 +241,7 @@ Columns are uniquely identified with 3 strategies:
 - If defining an accessor column with an object key or array index, the same will be used to uniquely identify the column.
   - Any periods (`.`) in an object key will be replaced by underscores (`_`).
 - If defining an accessor column with an accessor function
-  - The columns `id` property will be used to uniquely identify the column OR
+  - The column's `id` property will be used to uniquely identify the column OR
   - If a primitive `string` header is supplied, that header string will be used to uniquely identify the column
 
 > 🧠 An easy way to remember: If you define a column with an accessor function, either provide a string header or provide a unique `id` property.
@@ -275,7 +275,7 @@ See the [Dynamic Columns example](../framework/react/examples/basic-dynamic-colu
 
 ## Column Formatting & Rendering
 
-By default, columns cells will display their data model value as a string. You can override this behavior by providing custom rendering implementations. Each implementation is provided relevant information about the cell, header or footer and returns something your framework adapter can render eg. JSX/Components/strings/etc. This will depend on which adapter you are using.
+By default, column cells will display their data model value as a string. You can override this behavior by providing custom rendering implementations. Each implementation is provided with relevant information about the cell, header or footer and returns something your framework adapter can render eg. JSX/Components/strings/etc. This will depend on which adapter you are using.
 
 There are a couple of formatters available to you:
 

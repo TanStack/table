@@ -9,7 +9,7 @@ title: table_getVisibleFlatColumns
 function table_getVisibleFlatColumns<TFeatures, TData>(table): Column<TFeatures, TData, unknown>[];
 ```
 
-Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:230](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L230)
+Defined in: [features/column-visibility/columnVisibilityFeature.utils.ts:241](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-visibility/columnVisibilityFeature.utils.ts#L241)
 
 Filters the flat column list down to visible columns.
 

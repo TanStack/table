@@ -12,7 +12,7 @@ function table_toggleAllPageRowsSelected<TFeatures, TData>(
    opts?): void;
 ```
 
-Defined in: [features/row-selection/rowSelectionFeature.utils.ts:155](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L155)
+Defined in: [features/row-selection/rowSelectionFeature.utils.ts:161](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-selection/rowSelectionFeature.utils.ts#L161)
 
 Selects or deselects every selectable row on the current page.
 

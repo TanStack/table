@@ -9,7 +9,7 @@ title: OctaneTable
 type OctaneTable<TFeatures, TData, TSelected> = Omit<Table<TFeatures, TData>, "store"> & object;
 ```
 
-Defined in: [types.ts:205](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L205)
+Defined in: [types.ts:202](https://github.com/TanStack/table/blob/main/packages/octane-table/src/types.ts#L202)
 
 The table instance returned by [useTable](../functions/useTable.md): the framework-agnostic
 `Table` from table-core, plus octane's `Subscribe`/`FlexRender` components

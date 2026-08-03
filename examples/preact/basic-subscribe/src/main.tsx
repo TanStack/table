@@ -48,7 +48,7 @@ const columnHelper = createColumnHelper<typeof features, Person>()
 /**
  * This is an example showing how to use advanced re-rendering optimizations with more fine-grained control over what is subscribed to.
  * Subscribe/table.Subscribe is a higher-order component that allows you to subscribe to the table state or individual atoms/stores.
- * This is useful for making sure that re-renders only happen at certain parts of the preact tree exactly where need to be.
+ * This is useful for making sure that re-renders only happen at certain parts of the preact tree exactly where they need to be.
  * We recommend only using these patterns when you run into specific performance issues.
  */
 function App() {

@@ -33,7 +33,7 @@ const features = tableFeatures({
 The full `aggregationFns` registry remains available for compatibility, but it
 bundles every built-in. Tables using `stockFeatures` already include
 `rowAggregationFeature`; they still need the definitions that named column options
-should resolve.
+should resolve to.
 
 To combine aggregation with grouped rows, register both independent features:
 

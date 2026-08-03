@@ -5,7 +5,7 @@ title: Table_Internal
 
 # Interface: Table\_Internal\<TFeatures, TData\>
 
-Defined in: [types/Table.ts:96](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L96)
+Defined in: [types/Table.ts:94](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L94)
 
 Internal broad table shape used by feature implementations.
 
@@ -315,7 +315,7 @@ Omit._rowInstanceInitFns
 _rowModelFns: RowModelFns_All<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:107](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L107)
+Defined in: [types/Table.ts:105](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L105)
 
 ***
 
@@ -325,7 +325,7 @@ Defined in: [types/Table.ts:107](https://github.com/TanStack/table/blob/main/pac
 _rowModels: CachedRowModel_All<TFeatures, TData>;
 ```
 
-Defined in: [types/Table.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L106)
+Defined in: [types/Table.ts:104](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L104)
 
 ***
 
@@ -351,7 +351,7 @@ Prototype cache for Row objects - shared by all rows in this table
 atoms: Atoms<TFeatures> & Atoms_All;
 ```
 
-Defined in: [types/Table.ts:116](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L116)
+Defined in: [types/Table.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L114)
 
 The readonly derived atoms for each `TableState` slice. Each derives from
 its corresponding `baseAtom` plus, optionally, a per-slice external atom or
@@ -371,7 +371,7 @@ Omit.atoms
 baseAtoms: BaseAtoms<TFeatures> & BaseAtoms_All;
 ```
 
-Defined in: [types/Table.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L115)
+Defined in: [types/Table.ts:113](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L113)
 
 The internal writable atoms for each `TableState` slice. This is the library's
 single write surface — all state mutations from features land here.
@@ -655,7 +655,7 @@ Table_RowModels.getFacetedUniqueValues
 getFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:296](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L296)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:301](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L301)
 
 Resolves the row model after column and global filters have been applied.
 
@@ -846,7 +846,7 @@ Table_RowModels.getPreExpandedRowModel
 getPreFilteredRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/column-filtering/columnFilteringFeature.types.ts:300](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L300)
+Defined in: [features/column-filtering/columnFilteringFeature.types.ts:305](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/column-filtering/columnFilteringFeature.types.ts#L305)
 
 Reads the row model immediately before filtering.
 
@@ -912,7 +912,7 @@ Table_RowModels.getPrePaginatedRowModel
 getPreSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:276](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L276)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:289](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L289)
 
 Reads the row model immediately before sorting.
 
@@ -1043,7 +1043,7 @@ included in this order. This is the memoized source for
 getSortedRowModel: () => RowModel<TFeatures, TData>;
 ```
 
-Defined in: [features/row-sorting/rowSortingFeature.types.ts:280](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L280)
+Defined in: [features/row-sorting/rowSortingFeature.types.ts:293](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L293)
 
 Resolves the row model after sorting has been applied.
 
@@ -1065,17 +1065,17 @@ Table_RowModels.getSortedRowModel
 initialState: ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap> & TableState_All;
 ```
 
-Defined in: [types/Table.ts:114](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L114)
+Defined in: [types/Table.ts:112](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L112)
 
 ***
 
 ### options
 
 ```ts
-options: object & DebugKeysFor<CoreFeatures & TableFeatures> & TableOptions_Core<TFeatures, TData> & Partial<TableOptions_RowAggregation & TableOptions_CellSelection<TFeatures, TData> & TableOptions_ColumnFiltering<TFeatures, TData> & TableOptions_ColumnGrouping & TableOptions_ColumnOrdering & TableOptions_ColumnPinning & TableOptions_ColumnResizing & TableOptions_ColumnSizing & TableOptions_ColumnVisibility & TableOptions_GlobalFiltering<TFeatures, TData> & TableOptions_RowExpanding<TFeatures, TData> & TableOptions_RowPagination & TableOptions_RowPinning<TFeatures, TData> & TableOptions_RowSelection<TFeatures, TData> & TableOptions_RowSorting> & object;
+options: object & DebugKeysFor<CoreFeatures & TableFeatures> & TableOptions_Core<TFeatures, TData> & Partial<TableOptions_RowAggregation & TableOptions_CellSelection<TFeatures, TData> & TableOptions_CellSpanning & TableOptions_ColumnFiltering<TFeatures, TData> & TableOptions_ColumnGrouping & TableOptions_ColumnOrdering & TableOptions_ColumnPinning & TableOptions_ColumnResizing & TableOptions_ColumnSizing & TableOptions_ColumnVisibility & TableOptions_GlobalFiltering<TFeatures, TData> & TableOptions_RowExpanding<TFeatures, TData> & TableOptions_RowPagination & TableOptions_RowPinning<TFeatures, TData> & TableOptions_RowSelection<TFeatures, TData> & TableOptions_RowSorting> & object;
 ```
 
-Defined in: [types/Table.ts:108](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L108)
+Defined in: [types/Table.ts:106](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L106)
 
 #### Type Declaration
 
@@ -1240,4 +1240,4 @@ Omit.setOptions
 store: ReadonlyStore<ExtractFeatureMapTypes<TFeatures, TableState_FeatureMap>> & ReadonlyStore<TableState_All>;
 ```
 
-Defined in: [types/Table.ts:117](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L117)
+Defined in: [types/Table.ts:115](https://github.com/TanStack/table/blob/main/packages/table-core/src/types/Table.ts#L115)

@@ -224,7 +224,7 @@ TanStack table does not dictate how you should render your row selection UI. You
 
 #### Connect Row Selection APIs to Checkbox Inputs
 
-TanStack Table provides some handler functions that you can connect directly to your checkbox inputs to make it easy to toggle row selection. These function automatically call other internal APIs to update the row selection state and re-render the table.
+TanStack Table provides some handler functions that you can connect directly to your checkbox inputs to make it easy to toggle row selection. These functions automatically call other internal APIs to update the row selection state and re-render the table.
 
 Use the `row.getToggleSelectedHandler()` API to connect to your checkbox inputs to toggle the selection of a row.
 

@@ -11,7 +11,7 @@ type SubscribePropsWithSource<TSourceValue, TSelected> =
 | SubscribePropsWithSourceWithSelector<TSourceValue, TSelected>;
 ```
 
-Defined in: [Subscribe.ts:60](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L60)
+Defined in: [Subscribe.ts:57](https://github.com/TanStack/table/blob/main/packages/preact-table/src/Subscribe.ts#L57)
 
 Subscribe to a single source — atom or store (identity or projected).
 

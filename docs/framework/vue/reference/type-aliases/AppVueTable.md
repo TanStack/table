@@ -9,7 +9,7 @@ title: AppVueTable
 type AppVueTable<TFeatures, TData, TTableComponents, _TCellComponents, _THeaderComponents> = VueTable<TFeatures, TData> & NoInfer<TTableComponents> & object;
 ```
 
-Defined in: [packages/vue-table/src/createTableHook.ts:212](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L212)
+Defined in: [packages/vue-table/src/createTableHook.ts:211](https://github.com/TanStack/table/blob/main/packages/vue-table/src/createTableHook.ts#L211)
 
 ## Type Declaration
 
