@@ -10,18 +10,18 @@ html {
   border: 1px solid lightgray;
 }
 
-table {
+.table-container table {
   /* box-shadow / borders + position: sticky don't play well otherwise */
   border-collapse: collapse;
   border-spacing: 0;
   table-layout: fixed;
 }
 
-thead {
+.table-container thead {
   position: relative;
 }
 
-th {
+.table-container th {
   background-color: #f3f4f6;
   border-bottom: 1px solid lightgray;
   border-right: 1px solid lightgray;
@@ -32,18 +32,18 @@ th {
   vertical-align: top;
 }
 
-td {
+.table-container td {
   background-color: white;
   border-bottom: 1px solid #eee;
   padding: 2px 4px;
   vertical-align: middle;
 }
 
-tfoot {
+.table-container tfoot {
   color: gray;
 }
 
-tfoot th {
+.table-container tfoot th {
   font-weight: normal;
 }
 
