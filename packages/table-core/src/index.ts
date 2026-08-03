@@ -142,5 +142,6 @@ export * from './features/row-sorting/rowSortingFeature'
 export * from './features/row-sorting/rowSortingFeature.types'
 export * from './features/row-sorting/createSortedRowModel'
 export * from './features/row-sorting/sortFns'
+export * from './features/row-sorting/ariaSort'
 
 // force

@@ -18,6 +18,7 @@ import {
   tableDevtoolsPlugin,
   useTanStackTableDevtools,
 } from '@tanstack/react-table-devtools'
+import { getAriaSort } from '@tanstack/react-table'
 import type { Column } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 import type { Person } from '@/lib/make-data'
@@ -26,12 +27,6 @@ import { makeData } from '@/lib/make-data'
 import { useAppTable } from '@/hooks/table'
 import { columns } from '@/columns'
 import './styles/globals.css'
-
-function getAriaSort(sortDirection: false | 'asc' | 'desc') {
-  if (sortDirection === 'asc') return 'ascending'
-  if (sortDirection === 'desc') return 'descending'
-  return 'none'
-}
 
 function getCommonPinningStyles(
   column: Column<typeof features, Person>,

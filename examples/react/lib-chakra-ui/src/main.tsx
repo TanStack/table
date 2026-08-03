@@ -26,6 +26,7 @@ import {
   createPaginatedRowModel,
   createSortedRowModel,
   filterFn_includesString,
+  getAriaSort,
   globalFilteringFeature,
   rowPaginationFeature,
   rowSortingFeature,
@@ -56,11 +57,6 @@ const features = tableFeatures({
 })
 
 const columnHelper = createColumnHelper<typeof features, Person>()
-function getAriaSort(sortDirection: false | 'asc' | 'desc') {
-  if (sortDirection === 'asc') return 'ascending'
-  if (sortDirection === 'desc') return 'descending'
-  return 'none'
-}
 
 const columns = columnHelper.columns([
   columnHelper.accessor('firstName', {

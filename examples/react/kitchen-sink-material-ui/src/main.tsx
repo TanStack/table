@@ -31,6 +31,7 @@ import DarkModeIcon from '@mui/icons-material/DarkMode'
 import LightModeIcon from '@mui/icons-material/LightMode'
 import SearchIcon from '@mui/icons-material/Search'
 import { useTanStackTableDevtools } from '@tanstack/react-table-devtools'
+import { getAriaSort } from '@tanstack/react-table'
 import type { Column } from '@tanstack/react-table'
 import type { ExtendedColumnFilter } from '@/types'
 import type { Person } from '@/lib/make-data'
@@ -40,14 +41,6 @@ import { useAppTable } from '@/hooks/table'
 import { columns } from '@/columns'
 import { toSentenceCase } from '@/components/data-table/shared'
 import './styles/globals.css'
-
-function getAriaSort(
-  sortDirection: false | 'asc' | 'desc',
-): 'ascending' | 'descending' | 'none' {
-  if (sortDirection === 'asc') return 'ascending'
-  if (sortDirection === 'desc') return 'descending'
-  return 'none'
-}
 
 function getCommonPinningStyles(
   column: Column<typeof features, Person>,
