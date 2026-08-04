@@ -316,10 +316,6 @@ Later, in other parts of these docs, you will see how TanStack Table processes t
 
 ## How Much Data Can TanStack Table Handle?
 
-Believe it or not, TanStack Table was actually built to scale up to handle potentially hundreds of thousands of rows of data in the client. Many of the official examples (such as the [Sorting](../framework/react/examples/sorting) and [Filters](../framework/react/examples/filters) examples) include a "Stress Test" button that loads 1 million client-side rows. This is obviously not always possible, depending on the size of each column's data and the number of columns. However, the sorting, filtering, pagination, and grouping features are all built with performance in mind for large datasets.
+TanStack Table's client-side row models are built to handle large datasets, and the official examples include much larger stress tests. The practical limit depends on the payload, table features, rendering strategy, and target hardware, so test with representative data instead of choosing from row count alone.
 
-Keep in mind that with large datasets, _rendering_ is usually the bottleneck rather than data processing. Sorting a million rows is fast; putting a million `<tr>` elements in the DOM is not. Client-side pagination solves this by rendering one page at a time, or you can render all rows through virtualization: see the [Virtualized Rows example](../framework/react/examples/virtualized-rows).
-
-The default mindset of a developer building a data grid is to implement server-side pagination, sorting, and filtering for large datasets. This is still usually a good idea, but a lot of developers underestimate how much data can actually be handled in the client with modern browsers and the right optimizations. If your table will never have more than a few thousand rows, you can probably take advantage of the client-side features in TanStack Table instead of implementing them yourself on the server. Before committing to letting TanStack Table's client-side features handle your large dataset, you should test it with your actual data to see if it performs well enough for your needs, of course.
-
-This is discussed in more detail in the [Pagination Guide](../framework/react/guide/pagination#should-you-use-client-side-pagination).
+See the [Client-Side vs Server-Side Guide](./client-side-vs-server-side) for the complete decision framework and the distinction between data processing, pagination, and virtualization.

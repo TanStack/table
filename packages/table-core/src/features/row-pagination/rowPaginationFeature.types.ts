@@ -13,7 +13,7 @@ export interface TableState_RowPagination {
 
 export interface TableOptions_RowPagination {
   /**
-   * If set to `true`, pagination will be reset to the first page when page-altering state changes eg. `data` is updated, filters change, grouping changes, etc.
+   * If set to `true`, pagination will be reset to the first page when page-altering state changes e.g. `data` is updated, filters change, grouping changes, etc.
    */
   autoResetPageIndex?: boolean
   /**

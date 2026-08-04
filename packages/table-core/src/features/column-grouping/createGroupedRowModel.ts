@@ -78,10 +78,11 @@ function _createGroupedRowModel<
   const grouping = table.atoms.grouping?.get()
 
   if (!rowModel.rows.length || !grouping?.length) {
-    rowModel.rows.forEach((row) => {
-      row.depth = 0
-      row.parentId = undefined
-    })
+    // A previous grouped pass rewrote depth/parentId on these shared row
+    // objects, shifting the whole tree down by the number of grouping levels.
+    // Restore the natural relationships all the way down, not just at the
+    // top level.
+    resetRowRelationships(rowModel.rows, 0, undefined)
     return rowModel
   }
 
@@ -228,6 +229,24 @@ function _createGroupedRowModel<
     rows: groupedRows,
     flatRows: groupedFlatRows,
     rowsById: groupedRowsById,
+  }
+}
+
+function resetRowRelationships<
+  TFeatures extends TableFeatures,
+  TData extends RowData,
+>(
+  rows: Array<Row<TFeatures, TData>>,
+  depth: number,
+  parentId: string | undefined,
+) {
+  for (let i = 0; i < rows.length; i++) {
+    const row = rows[i]!
+    row.depth = depth
+    row.parentId = parentId
+    if (row.subRows.length) {
+      resetRowRelationships(row.subRows, depth + 1, row.id)
+    }
   }
 }
 

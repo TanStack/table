@@ -51,7 +51,7 @@ optional invertSorting: boolean;
 
 Defined in: [features/row-sorting/rowSortingFeature.types.ts:133](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-sorting/rowSortingFeature.types.ts#L133)
 
-Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring
+Inverts the order of the sorting for this column. This is useful for values that have an inverted best/worst scale where lower numbers are better, e.g. a ranking (1st, 2nd, 3rd) or golf-like scoring
 
 ***
 

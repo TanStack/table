@@ -17,7 +17,7 @@ optional autoResetPageIndex: boolean;
 
 Defined in: [features/row-pagination/rowPaginationFeature.types.ts:18](https://github.com/TanStack/table/blob/main/packages/table-core/src/features/row-pagination/rowPaginationFeature.types.ts#L18)
 
-If set to `true`, pagination will be reset to the first page when page-altering state changes eg. `data` is updated, filters change, grouping changes, etc.
+If set to `true`, pagination will be reset to the first page when page-altering state changes e.g. `data` is updated, filters change, grouping changes, etc.
 
 ***
 

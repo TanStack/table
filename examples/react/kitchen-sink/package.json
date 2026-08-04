@@ -19,6 +19,7 @@
     "@faker-js/faker": "^10.5.0",
     "@tanstack/match-sorter-utils": "^9.0.0-beta.53",
     "@tanstack/react-devtools": "^0.10.9",
+    "@tanstack/react-hotkeys": "^0.10.0",
     "@tanstack/react-pacer": "^0.22.1",
     "@tanstack/react-router": "^1.170.18",
     "@tanstack/react-start": "^1.168.27",

@@ -3,6 +3,8 @@ import {
   cellSelectionFeature,
   columnVisibilityFeature,
   constructTable,
+  createPaginatedRowModel,
+  rowPaginationFeature,
 } from '../../../../src'
 import { testFeatures } from '../../../fixtures/features'
 import type { CellSelectionState, ColumnDef, Table } from '../../../../src'
@@ -10,6 +12,8 @@ import type { CellSelectionState, ColumnDef, Table } from '../../../../src'
 const features = testFeatures({
   cellSelectionFeature,
   columnVisibilityFeature,
+  rowPaginationFeature,
+  paginatedRowModel: createPaginatedRowModel(),
 })
 
 interface TestRow {
@@ -472,6 +476,41 @@ describe('cellSelectionFeature', () => {
       table.extendCellSelection('up')
 
       expect(table.getSelectedCellCount()).toBe(1)
+    })
+
+    it('keeps movement within the current pagination page', () => {
+      const table = makeTable({
+        data: makeData(6),
+        initialState: {
+          pagination: { pageIndex: 1, pageSize: 2 },
+        },
+      })
+
+      table.moveCellSelection('down')
+      expect(table.getSelectedCellIds()).toEqual(['r2_a'])
+
+      table.moveCellSelection('down')
+      expect(table.getSelectedCellIds()).toEqual(['r3_a'])
+
+      table.moveCellSelection('down')
+      expect(table.getSelectedCellIds()).toEqual(['r3_a'])
+    })
+
+    it('keeps range extension within the current pagination page', () => {
+      const table = makeTable({
+        data: makeData(6),
+        initialState: {
+          pagination: { pageIndex: 1, pageSize: 2 },
+        },
+      })
+
+      table.setFocusedCell('r2', 'a')
+      table.extendCellSelection('down')
+      table.extendCellSelection('down')
+
+      expect(table.atoms.cellSelection.get()).toEqual([
+        rangeOf('r2', 'a', 'r3', 'a'),
+      ])
     })
   })
 
