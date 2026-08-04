@@ -39,6 +39,7 @@ Before proceeding with development, ensure you match one of the following criter
 - To test in your own projects:
   - Build/watch for changes with `pnpm build`/`pnpm dev`
 - Document your changes in the appropriate documentation website markdown pages
+- Create a changeset (changelog entry) for your changes by running `pnpm changeset`
 - Commit your work and open a pull request
 - Submit the PR for review
 

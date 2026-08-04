@@ -82,24 +82,5 @@ export const packages = [
   },
 ]
 
-/**
- * Contains config for publishable branches.
- * @type {Record<string, import('./types').BranchConfig>}
- */
-export const branchConfigs = {
-  main: {
-    prerelease: false,
-  },
-  alpha: {
-    prerelease: true,
-  },
-  beta: {
-    prerelease: true,
-  },
-  rc: {
-    prerelease: true,
-  },
-}
-
 const __dirname = fileURLToPath(new URL('.', import.meta.url))
 export const rootDir = resolve(__dirname, '..')
