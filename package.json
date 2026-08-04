@@ -64,11 +64,11 @@
     }
   ],
   "devDependencies": {
+    "@changesets/changelog-github": "^0.7.0",
     "@changesets/cli": "^2.31.0",
     "@faker-js/faker": "^10.5.0",
     "@playwright/test": "^1.62.1",
     "@size-limit/preset-small-lib": "^13.0.3",
-    "@svitejs/changesets-changelog-github-compact": "^1.2.0",
     "@tanstack/eslint-config": "0.4.0",
     "@tanstack/intent": "^0.3.6",
     "@tanstack/typedoc-config": "0.3.3",
