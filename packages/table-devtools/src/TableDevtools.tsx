@@ -6,11 +6,11 @@ import type { TanStackDevtoolsTheme } from '@tanstack/devtools-ui'
 
 export default function TableDevtools(props: {
   theme: TanStackDevtoolsTheme
-  devtoolsOpen: boolean
+  devtoolsOpen?: boolean
 }) {
   return (
     <ThemeContextProvider theme={props.theme}>
-      <Show when={props.devtoolsOpen}>
+      <Show when={props.devtoolsOpen ?? true}>
         <TableContextProvider>
           <Shell />
         </TableContextProvider>

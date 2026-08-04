@@ -14,7 +14,7 @@ class TableDevtoolsVueCore {
   mount(el: HTMLElement, props?: DevtoolsPanelProps) {
     void this.core.mount(el, {
       theme: props?.theme ?? 'dark',
-      devtoolsOpen: props?.devtoolsOpen ?? false,
+      devtoolsOpen: props?.devtoolsOpen ?? true,
     })
   }
 
@@ -39,7 +39,7 @@ function createPanelWrapper(
       return () => {
         const devtoolsProps = {
           theme: props.theme ?? 'dark',
-          devtoolsOpen: props.devtoolsOpen ?? false,
+          devtoolsOpen: props.devtoolsOpen ?? true,
         }
         return h(Component, {
           key: `${devtoolsProps.theme}:${devtoolsProps.devtoolsOpen}`,

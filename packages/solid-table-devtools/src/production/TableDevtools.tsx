@@ -18,7 +18,7 @@ function resolvePanelProps(props?: TableDevtoolsSolidInit): DevtoolsPanelProps {
       return props?.theme ?? 'dark'
     },
     get devtoolsOpen() {
-      return props?.devtoolsOpen ?? false
+      return props?.devtoolsOpen ?? true
     },
   }
 }

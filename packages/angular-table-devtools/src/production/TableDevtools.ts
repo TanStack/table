@@ -3,12 +3,12 @@ import { TableDevtoolsCore } from '@tanstack/table-devtools/production'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/angular'
 import type { TableDevtoolsAngularInit } from '../TableDevtools'
 
-function resolvePanelProps(
+export function resolvePanelProps(
   props?: TableDevtoolsAngularInit,
 ): DevtoolsPanelProps {
   return {
     theme: props?.theme ?? 'dark',
-    devtoolsOpen: props?.devtoolsOpen ?? false,
+    devtoolsOpen: props?.devtoolsOpen ?? true,
   }
 }
 
