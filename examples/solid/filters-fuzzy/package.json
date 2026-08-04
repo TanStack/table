@@ -18,9 +18,9 @@
     "vite-plugin-solid": "^2.11.14"
   },
   "dependencies": {
-    "@tanstack/match-sorter-utils": "^9.0.0-beta.53",
+    "@tanstack/match-sorter-utils": "^9.0.0-beta.80",
     "@tanstack/solid-pacer": "^0.21.1",
-    "@tanstack/solid-table": "^9.0.0-beta.78",
+    "@tanstack/solid-table": "^9.0.0-beta.80",
     "solid-js": "^1.9.14"
   }
 }
