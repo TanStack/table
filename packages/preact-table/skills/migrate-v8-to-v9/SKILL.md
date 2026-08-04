@@ -59,7 +59,7 @@ V8 did not have a first-party Preact adapter; many Preact apps used `@tanstack/r
 | `getFacetedMinMaxValues()`                                | `facetedMinMaxValues: createFacetedMinMaxValues()`                  |
 | `getFacetedUniqueValues()`                                | `facetedUniqueValues: createFacetedUniqueValues()`                  |
 | Table/factory `sortingFns`, `filterFns`, `aggregationFns` | `sortFns`, `filterFns`, `aggregationFns` slots in `tableFeatures()` |
-| Removed `rowModels: { ... }` object                           | Direct named slots in `tableFeatures()`                             |
+| Removed `rowModels: { ... }` object                       | Direct named slots in `tableFeatures()`                             |
 
 In the registry slots, register individually imported built-ins (`filterFn_includesString`, `sortFn_alphanumeric`, `aggregationFn_sum`, and so on) under their conventional keys alongside custom functions; the full `filterFns`/`sortFns`/`aggregationFns` registry objects still work but bundle every built-in.
 
@@ -110,7 +110,7 @@ Infer with `typeof features`; use `StockFeatures` only for deliberate `stockFeat
 
 ### Shared API and semantic changes
 
-| v8 pinning                                       | v9                                                   |
+| v8 pinning                                                     | v9                                                            |
 | -------------------------------------------------------------- | ------------------------------------------------------------- |
 | `columnPinning.left` / `.right`                                | `.start` / `.end`                                             |
 | `column.pin('left' \| 'right')`                                | `column.pin('start' \| 'end')`                                |
