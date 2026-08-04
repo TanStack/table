@@ -4,7 +4,7 @@ title: Migrating to TanStack Table V9 (Angular)
 
 ## What's New in TanStack Table V9
 
-TanStack Table V9 is a major release with significant internal architectural improvements while maintaining the core table logic you're familiar with. Here are the key changes:
+TanStack Table V9 delivers major performance improvements, hundreds of bug fixes, new and refreshed features, and optional helpers for composing and managing tables. Despite the scale of the release, the headless model, core table logic, column definitions, and rendering patterns remain familiar. Here are the key changes:
 
 ### 1. Better Performance
 
@@ -37,10 +37,12 @@ TanStack Table V9 is a major release with significant internal architectural imp
 
 ### 6. New and Refreshed Features
 
-- **New features**: `cellSelectionFeature` adds spreadsheet-style rectangular cell range selection, with drag, Shift-extend, and multiple disjoint ranges. See the [Cell Selection Guide](./cell-selection.md).
-- **Cell and header spanning**: the new `cellSpanningFeature` merges body cells across rows and columns (`spanRows` / `spanColumns`, with span-aware cell selection), and header groups now compute `header.rowSpan` so shallow columns can span header rows. See the [Cell Spanning Guide](./cell-spanning.md).
-- **More capable features**: Aggregation, Row Selection, Column Pinning, and Column Resizing have all been made more feature rich (multiple aggregation definitions per column, Shift range selection, logical `start`/`end` pinning, and more).
-- **New core APIs**: New table and row APIs (like `table.getMaxSubRowDepth()`, `row.getDisplayIndex()`) round out the core feature set.
+- **New Features**
+  - **Cell Selection**: `cellSelectionFeature` adds spreadsheet-style rectangular cell range selection, with drag, Shift-extend, and multiple disjoint ranges. See the [Cell Selection Guide](./cell-selection.md).
+  - **Cell Spanning**: `cellSpanningFeature` merges body cells across rows and columns (`spanRows` / `spanColumns`, with span-aware cell selection), and header groups now compute `header.rowSpan` so shallow columns can span header rows. See the [Cell Spanning Guide](./cell-spanning.md).
+- **Refreshed Features**
+  - **More capable features**: Aggregation, Row Selection, Column Pinning, and Column Resizing have all been made more feature rich (multiple aggregation definitions per column, Shift range selection, logical `start`/`end` pinning, and more).
+  - **New core APIs**: New table and row APIs (like `table.getMaxSubRowDepth()`, `row.getDisplayIndex()`) round out the core feature set.
 
 ### The Good News: Most Upgrades Are Opt-in
 
@@ -368,7 +370,9 @@ class TableCmp {
   // Use computed when deriving from a slice or applying equality.
   private readonly pagination = computed(
     () => this.table.atoms.pagination.get(),
-    { equal: shallow },
+    {
+      equal: shallow,
+    },
   )
 
   constructor() {
