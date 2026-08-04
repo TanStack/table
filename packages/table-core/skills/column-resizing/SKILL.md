@@ -3,11 +3,7 @@ name: column-resizing
 description: >
   Wire columnResizingFeature, header.getResizeHandler, resize mode and direction, pointer or touch events, and performant CSS-variable updates. Load when resize state changes but widths do not, or large tables resize slowly.
 metadata:
-  {
-    type: sub-skill,
-    library: '@tanstack/table-core',
-    library_version: '9.0.0-beta.80',
-  }
+  { type: sub-skill, library: '@tanstack/table-core', library_version: '9.0.0' }
 requires: ['core', 'table-features', 'column-sizing']
 sources:
   - 'TanStack/table:docs/framework/react/guide/column-resizing.md'
