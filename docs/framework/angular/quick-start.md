@@ -116,7 +116,7 @@ A few things to note:
 
 - `tableFeatures({})` declares which optional features the table uses. Registering only what you need keeps bundles small and gives TypeScript accurate types for the table instance.
 - `injectTable` must be called in an injection context. Its initializer re-runs when Angular signals read inside it change (like `this.data()` here), and the adapter syncs the table options.
-- The `FlexRender` directives (`*flexRenderHeader`, `*flexRenderCell`, `*flexRenderFooter`) render the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values, templates, or components. See the [Rendering Guide](./guide/rendering.md) for `flexRenderComponent` and render context helpers.
+- The `FlexRender` directives (`*flexRenderHeader`, `*flexRenderCell`, `*flexRenderFooter`) render the `header`, `cell`, and `footer` definitions from your columns, whether they are plain values, templates, or components. See the [FlexRender Guide](./guide/flex-render) for `flexRenderComponent` and render context helpers.
 - The `key` option is optional unless you use the [TanStack Table Devtools](../../devtools). The devtools identify tables by `key`, and you register a table with `injectTanStackTableDevtools` from `@tanstack/angular-table-devtools`.
 
 See the full [Basic injectTable example](./examples/basic-inject-table) for a runnable version with more columns and a footer.

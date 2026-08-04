@@ -23,6 +23,8 @@ import {
 import { useTanStackTableDevtools } from '@tanstack/react-table-devtools'
 import { compareItems, rankItem } from '@tanstack/match-sorter-utils'
 import { useDebouncedCallback } from '@tanstack/react-pacer/debouncer'
+import { useHotkeys } from '@tanstack/react-hotkeys'
+import { useCreateAtom } from '@tanstack/react-store'
 import {
   DndContext,
   KeyboardSensor,
@@ -47,6 +49,8 @@ import type { RankingInfo } from '@tanstack/match-sorter-utils'
 import type { Person } from '../makeData'
 import type {
   Cell,
+  CellSelectionBounds,
+  CellSelectionState,
   Column,
   FilterFn,
   Header,
@@ -54,6 +58,7 @@ import type {
   Row,
   SortFn,
   TableFeatures,
+  TableState,
 } from '@tanstack/react-table'
 
 // =====================================================================
@@ -131,6 +136,11 @@ const features = tableFeatures({
   sortFns: { ...sortFns, fuzzy: fuzzySort },
   aggregationFns,
 })
+
+type KitchenSinkSelectedState = Omit<
+  TableState<typeof features>,
+  'cellSelection'
+>
 
 // =====================================================================
 // Custom status sort (from sorting example)
@@ -310,7 +320,7 @@ function DraggableTableHeader({
   table,
 }: {
   header: Header<typeof features, Person, unknown>
-  table: ReactTable<typeof features, Person>
+  table: ReactTable<typeof features, Person, KitchenSinkSelectedState>
 }) {
   const { attributes, isDragging, listeners, setNodeRef, transform } =
     useSortable({ id: header.column.id })
@@ -455,13 +465,21 @@ function DragAlongCell({
   table,
 }: {
   cell: Cell<typeof features, Person, unknown>
-  table: ReactTable<typeof features, Person>
+  table: ReactTable<typeof features, Person, KitchenSinkSelectedState>
 }) {
   const { isDragging, setNodeRef, transform } = useSortable({
     id: cell.column.id,
   })
 
   const pinningStyles = getCommonPinningStyles(cell.column)
+  const rowSpan = cell.getRowSpan()
+  const colSpan = cell.getColSpan()
+
+  // A span of 0 marks a cell covered by another cell. Rendering rowSpan={0}
+  // would mean "span to the end of the row group" in HTML, so covered cells
+  // must be omitted entirely.
+  if (rowSpan === 0 || colSpan === 0) return null
+
   const style: CSSProperties = {
     ...pinningStyles,
     opacity: isDragging ? 0.8 : (pinningStyles.opacity ?? 1),
@@ -478,7 +496,7 @@ function DragAlongCell({
   // aggregated highlight from showing on plain nested data.
   const groupingActive = table.state.grouping.length > 0
   const hasAggregation = !!cell.column.columnDef.aggregationFn
-  const className = !groupingActive
+  const groupingClassName = !groupingActive
     ? undefined
     : cell.getIsGrouped()
       ? 'cell-grouped'
@@ -488,12 +506,46 @@ function DragAlongCell({
           ? 'cell-placeholder'
           : undefined
 
+  const selectionClassNames = cell.getCanSelect()
+    ? (() => {
+        const isSelected = cell.getIsSelected()
+        const edges = isSelected ? cell.getSelectionEdges() : undefined
+
+        return [
+          'cell-selectable',
+          isSelected && 'cell-selected',
+          cell.getIsFocused() && 'cell-focused',
+          edges?.top && 'cell-edge-top',
+          edges?.right && 'cell-edge-right',
+          edges?.bottom && 'cell-edge-bottom',
+          edges?.left && 'cell-edge-left',
+        ]
+      })()
+    : []
+
+  const className = [groupingClassName, ...selectionClassNames]
+    .filter(Boolean)
+    .join(' ')
+
   // FlexRender now handles aggregatedCell / placeholder dispatch internally
   // (returns null for placeholders, picks aggregatedCell when available).
   // The only state we still wrap manually is the grouped-cell expander —
   // that's UI specific to this example.
   return (
-    <td ref={setNodeRef} style={style} className={className}>
+    <td
+      ref={setNodeRef}
+      style={style}
+      className={className || undefined}
+      rowSpan={rowSpan}
+      colSpan={colSpan}
+      tabIndex={cell.getCanSelect() ? cell.getTabIndex() : undefined}
+      onMouseDown={
+        cell.getCanSelect() ? cell.getSelectionStartHandler() : undefined
+      }
+      onMouseEnter={
+        cell.getCanSelect() ? cell.getSelectionExtendHandler() : undefined
+      }
+    >
       {cell.getIsGrouped() ? (
         <button
           onClick={cell.row.getToggleExpandedHandler()}
@@ -519,36 +571,77 @@ function PinnedRow({
   table,
 }: {
   row: Row<typeof features, Person>
-  table: ReactTable<typeof features, Person>
+  table: ReactTable<typeof features, Person, KitchenSinkSelectedState>
 }) {
   const bottomRows = table.getBottomRows()
   return (
-    <tr
-      className="pinned-row"
-      style={{
-        position: 'sticky',
-        top:
-          row.getIsPinned() === 'top'
-            ? `${row.getPinnedIndex() * 32 + 48}px`
-            : undefined,
-        bottom:
-          row.getIsPinned() === 'bottom'
-            ? `${(bottomRows.length - 1 - row.getPinnedIndex()) * 32}px`
-            : undefined,
-        zIndex: 1,
-      }}
+    <Subscribe
+      source={table.atoms.cellSelection}
+      selector={(ranges) =>
+        rowSelectionKey(
+          ranges,
+          table.getCellSelectionBounds(),
+          row.getDisplayIndex(),
+          row.id,
+        )
+      }
     >
-      {row.getVisibleCells().map((cell) => (
-        <SortableContext
-          key={cell.id}
-          items={table.state.columnOrder}
-          strategy={horizontalListSortingStrategy}
+      {() => (
+        <tr
+          className="pinned-row"
+          style={{
+            position: 'sticky',
+            top:
+              row.getIsPinned() === 'top'
+                ? `${row.getPinnedIndex() * 32 + 48}px`
+                : undefined,
+            bottom:
+              row.getIsPinned() === 'bottom'
+                ? `${(bottomRows.length - 1 - row.getPinnedIndex()) * 32}px`
+                : undefined,
+            zIndex: 1,
+          }}
         >
-          <DragAlongCell key={cell.id} cell={cell} table={table} />
-        </SortableContext>
-      ))}
-    </tr>
+          {row.getVisibleCells().map((cell) => (
+            <SortableContext
+              key={cell.id}
+              items={table.state.columnOrder}
+              strategy={horizontalListSortingStrategy}
+            >
+              <DragAlongCell key={cell.id} cell={cell} table={table} />
+            </SortableContext>
+          ))}
+        </tr>
+      )}
+    </Subscribe>
   )
+}
+
+function rowSelectionKey(
+  ranges: CellSelectionState,
+  bounds: Array<CellSelectionBounds>,
+  rowIndex: number,
+  rowId: string,
+) {
+  const active = ranges[ranges.length - 1]
+  let key =
+    ranges.length > 0 && active.anchorRowId === rowId
+      ? `f${active.anchorColumnId}`
+      : ''
+
+  for (const bound of bounds) {
+    const self = rowIndex >= bound.minRowIndex && rowIndex <= bound.maxRowIndex
+    const above =
+      rowIndex - 1 >= bound.minRowIndex && rowIndex - 1 <= bound.maxRowIndex
+    const below =
+      rowIndex + 1 >= bound.minRowIndex && rowIndex + 1 <= bound.maxRowIndex
+
+    if (self || above || below) {
+      key += `|${self ? 1 : 0}${above ? 1 : 0}${below ? 1 : 0}:${bound.minColumnIndex}-${bound.maxColumnIndex}`
+    }
+  }
+
+  return key
 }
 
 // =====================================================================
@@ -568,6 +661,8 @@ function App() {
         enableGrouping: false,
         enableHiding: false,
         enableResizing: false,
+        enableCellSelection: false,
+        enableCellSpanning: false,
         header: ({ table }) => (
           // work around react compiler memoization for nested components using table APIs
           <Subscribe source={table.atoms.rowSelection}>
@@ -623,6 +718,9 @@ function App() {
         meta: { filterVariant: 'text' },
         // override grouping value so first+last combine as a group key
         getGroupingValue: (row) => `${row.firstName} ${row.lastName}`,
+        // Other grouped columns do not aggregate names. An explicit empty
+        // renderer avoids coercing their missing aggregate to "undefined".
+        aggregatedCell: () => null,
         cell: ({ row, getValue }) => (
           <div style={{ paddingLeft: `${row.depth * 1.5}rem` }}>
             {/* On a grouped row the grouped-cell wrapper already renders the
@@ -638,7 +736,7 @@ function App() {
             ) : (
               <span style={{ marginRight: '0.25rem' }}>·</span>
             )}
-            {String(getValue())}
+            {getValue()}
           </div>
         ),
       }),
@@ -671,6 +769,9 @@ function App() {
         header: 'Status',
         sortFn: sortStatusFn,
         meta: { filterVariant: 'select' },
+        // Adjacent equal statuses are merged in the rendered row model.
+        // Sort by Status to make the spanning behavior especially visible.
+        spanRows: true,
       }),
       columnHelper.accessor('progress', {
         id: 'progress',
@@ -692,14 +793,18 @@ function App() {
   const nestedData = () => setData(makeData(100, 5, 3))
   const stress10k = () => setData(makeData(10_000))
   const stress100k = () => setData(makeData(100_000))
+  const cellSelectionAtom = useCreateAtom<CellSelectionState>([])
 
   const table = useTable(
     {
       key: 'kitchen-sink', // needed for devtools
       features,
+      atoms: { cellSelection: cellSelectionAtom },
       columns,
       data,
       getSubRows: (row) => row.subRows,
+      enableCellSelection: true,
+      enableCellSpanning: true,
       globalFilterFn: 'fuzzy',
       columnResizeMode: 'onChange',
       defaultColumn: { minSize: 200, maxSize: 800 },
@@ -712,7 +817,23 @@ function App() {
       debugTable: true,
       autoResetExpanded: false, // keep expanded rows during filtering changes
     },
-    (state) => state, // default selector
+    // Cell selection deliberately stays out of the root subscription. Each
+    // rendered row subscribes only to the geometry that can change its cells.
+    (state) => ({
+      columnFilters: state.columnFilters,
+      columnOrder: state.columnOrder,
+      columnPinning: state.columnPinning,
+      columnResizing: state.columnResizing,
+      columnSizing: state.columnSizing,
+      columnVisibility: state.columnVisibility,
+      expanded: state.expanded,
+      globalFilter: state.globalFilter,
+      grouping: state.grouping,
+      pagination: state.pagination,
+      rowPinning: state.rowPinning,
+      rowSelection: state.rowSelection,
+      sorting: state.sorting,
+    }),
   )
 
   useTanStackTableDevtools(table)
@@ -748,6 +869,40 @@ function App() {
   )
 
   const selectedCount = table.getSelectedRowModel().flatRows.length
+  const gridRef = React.useRef<HTMLDivElement>(null)
+
+  // Keyboard handling is intentionally userland: TanStack Hotkeys scopes the
+  // shortcuts to the focused grid and drives the table's selection APIs.
+  useHotkeys(
+    [
+      { hotkey: 'ArrowUp', callback: () => table.moveCellSelection('up') },
+      { hotkey: 'ArrowDown', callback: () => table.moveCellSelection('down') },
+      { hotkey: 'ArrowLeft', callback: () => table.moveCellSelection('left') },
+      {
+        hotkey: 'ArrowRight',
+        callback: () => table.moveCellSelection('right'),
+      },
+      {
+        hotkey: 'Shift+ArrowUp',
+        callback: () => table.extendCellSelection('up'),
+      },
+      {
+        hotkey: 'Shift+ArrowDown',
+        callback: () => table.extendCellSelection('down'),
+      },
+      {
+        hotkey: 'Shift+ArrowLeft',
+        callback: () => table.extendCellSelection('left'),
+      },
+      {
+        hotkey: 'Shift+ArrowRight',
+        callback: () => table.extendCellSelection('right'),
+      },
+      { hotkey: 'Mod+A', callback: () => table.selectAllCells() },
+      { hotkey: 'Escape', callback: () => table.resetCellSelection(true) },
+    ],
+    { target: gridRef },
+  )
 
   return (
     <DndContext
@@ -799,6 +954,25 @@ function App() {
               {table.getCoreRowModel().flatRows.length.toLocaleString()}{' '}
               selected
             </span>
+            <table.Subscribe source={table.atoms.cellSelection}>
+              {() => (
+                <span className="nowrap">
+                  {table.getSelectedCellCount().toLocaleString()} cells selected
+                </span>
+              )}
+            </table.Subscribe>
+            <button
+              onClick={() => table.resetCellSelection(true)}
+              className="demo-button demo-button-sm"
+            >
+              Clear cells
+            </button>
+            <button
+              onClick={() => table.selectAllCells()}
+              className="demo-button demo-button-sm"
+            >
+              Select all cells
+            </button>
           </div>
           <details className="column-toggle-panel">
             <summary className="column-toggle-panel-header">
@@ -831,7 +1005,7 @@ function App() {
         </div>
 
         {/* Table */}
-        <div className="table-container">
+        <div className="table-container" ref={gridRef} tabIndex={0}>
           <table style={{ ...columnSizeVars, width: table.getTotalSize() }}>
             <thead>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -856,17 +1030,36 @@ function App() {
                 <PinnedRow key={row.id} row={row} table={table} />
               ))}
               {table.getCenterRows().map((row) => (
-                <tr key={row.id}>
-                  {row.getVisibleCells().map((cell) => (
-                    <SortableContext
-                      key={cell.id}
-                      items={table.state.columnOrder}
-                      strategy={horizontalListSortingStrategy}
-                    >
-                      <DragAlongCell key={cell.id} cell={cell} table={table} />
-                    </SortableContext>
-                  ))}
-                </tr>
+                <Subscribe
+                  key={row.id}
+                  source={table.atoms.cellSelection}
+                  selector={(ranges) =>
+                    rowSelectionKey(
+                      ranges,
+                      table.getCellSelectionBounds(),
+                      row.getDisplayIndex(),
+                      row.id,
+                    )
+                  }
+                >
+                  {() => (
+                    <tr>
+                      {row.getVisibleCells().map((cell) => (
+                        <SortableContext
+                          key={cell.id}
+                          items={table.state.columnOrder}
+                          strategy={horizontalListSortingStrategy}
+                        >
+                          <DragAlongCell
+                            key={cell.id}
+                            cell={cell}
+                            table={table}
+                          />
+                        </SortableContext>
+                      ))}
+                    </tr>
+                  )}
+                </Subscribe>
               ))}
               {table.getBottomRows().map((row) => (
                 <PinnedRow key={row.id} row={row} table={table} />

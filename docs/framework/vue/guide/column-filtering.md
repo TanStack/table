@@ -55,19 +55,9 @@ TanStack table supports both client-side and manual server-side filtering. This 
 
 ### Client-Side vs Server-Side Filtering
 
-If you have a large dataset, you may not want to load all of that data into the client's browser in order to filter it. In this case, you will most likely want to implement server-side filtering, sorting, pagination, etc.
+Filtering should operate over the same dataset as sorting and pagination. Use client-side filtering when the browser has the complete dataset; use server-side filtering when it has only a page or another subset, unless filtering just the loaded rows is intentional.
 
-However, as also discussed in the [Pagination Guide](./pagination#should-you-use-client-side-pagination), a lot of developers underestimate how many rows can be loaded client-side without a performance hit. The TanStack table examples are often tested to handle up to 100,000 rows or more with decent performance for client-side filtering, sorting, pagination, and grouping. This doesn't necessarily mean that your app will be able to handle that many rows, but if your table is only going to have a few thousand rows at most, you might be able to take advantage of the client-side filtering, sorting, pagination, and grouping that TanStack table provides.
-
-> TanStack Table can handle thousands of client-side rows with good performance. Don't rule out client-side filtering, pagination, sorting, etc. without some thought first.
-
-Every use-case is different and will depend on the complexity of the table, how many columns you have, how large every piece of data is, etc. The main bottlenecks to pay attention to are:
-
-1. Can your server query all of the data in a reasonable amount of time (and cost)?
-2. What is the total size of the fetch? (This might not scale as badly as you think if you don't have many columns.)
-3. Is the client's browser using too much memory if all of the data is loaded at once?
-
-If you're not sure, you can always start with client-side filtering and pagination and then switch to server-side strategies in the future as your data grows.
+See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework, performance factors, and guidance for combining data operations.
 
 ### Manual Server-Side Filtering
 
@@ -330,7 +320,7 @@ You can attach a few other properties to filter functions to customize their beh
 
 - `filterFn.resolveDataValue` - This optional "hanging" method normalizes each row's value before it is compared against the filter value. It is honored by every filter function built with the `constructFilterFn` helper, which includes all built-in filter functions.
 
-- `filterFn.autoRemove` - This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. eg. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`. When provided, this test is authoritative: values it keeps stay in filter state even when they are empty strings, which the default heuristic would otherwise remove. An `undefined` filter value always clears the filter regardless.
+- `filterFn.autoRemove` - This optional "hanging" method on any given `filterFn` is passed a filter value and expected to return `true` if the filter value should be removed from the filter state. e.g. Some boolean-style filters may want to remove the filter value from the table state if the filter value is set to `false`. When provided, this test is authoritative: values it keeps stay in filter state even when they are empty strings, which the default heuristic would otherwise remove. An `undefined` filter value always clears the filter regardless.
 
 The `constructFilterFn` helper builds a filter function from a value-level comparator plus those optional resolvers:
 

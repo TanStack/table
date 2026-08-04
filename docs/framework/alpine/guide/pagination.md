@@ -46,17 +46,9 @@ Using client-side pagination means that the `data` that you fetch will contain *
 
 #### Should You Use Client-Side Pagination?
 
-Client-side pagination is usually the simplest way to implement pagination when using TanStack Table, but it might not be practical for very large datasets.
+Client-side pagination is usually the simplest option when the browser can fetch and retain the complete dataset. Use server-side pagination when the full dataset would be too expensive to query, transfer, or store in the browser.
 
-However, a lot of people underestimate just how much data can be handled client-side. If your table will only ever have a few thousand rows or less, client-side pagination can still be a viable option. TanStack Table is designed to scale up to 10s of thousands of rows with decent performance for pagination, filtering, sorting, and grouping. The [official pagination example](../examples/pagination) loads 1,000 rows by default and includes a 100,000 row stress-test button that still performs well, albeit with only a handful of columns.
-
-Every use-case is different and will depend on the complexity of the table, how many columns you have, how large every piece of data is, etc. The main bottlenecks to pay attention to are:
-
-1. Can your server query all of the data in a reasonable amount of time (and cost)?
-2. What is the total size of the fetch? (This might not scale as badly as you think if you don't have many columns.)
-3. Is the client's browser using too much memory if all of the data is loaded at once?
-
-If you're not sure, you can always start with client-side pagination and then switch to server-side pagination in the future as your data grows.
+Row count alone does not decide the boundary. See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework, performance factors, and guidance for keeping filtering and sorting consistent with pagination.
 
 #### Pagination Row Model
 

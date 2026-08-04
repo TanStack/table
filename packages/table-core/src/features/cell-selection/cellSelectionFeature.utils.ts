@@ -896,13 +896,16 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   columnId: string,
   direction: CellSelectionDirection,
 ): { rowId: string; columnId: string } | null {
-  const rows = table.getRowsInDisplayOrder()
+  // Navigation is constrained to the final row model. In particular, the
+  // pre-pagination display-order model contains rows from every page and
+  // would let ArrowDown move focus into a row that is not rendered.
+  const rows = table.getRowModel().rows
   const columns = getDisplayOrderedColumns(table)
 
   if (!rows.length || !columns.length) return null
 
   const { rowDelta, columnDelta } = getDirectionDelta(direction)
-  const rowIndex = resolveRowIndex(table, rows, rowId)
+  const rowIndex = rows.findIndex((row) => row.id === rowId)
   const columnIndex = columns.findIndex((column) => column.id === columnId)
 
   if (rowIndex < 0 || columnIndex < 0) return null
@@ -915,7 +918,7 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
     'getCellSelectionMergeBounds',
     table_getCellSelectionMergeBounds,
   )
-  let fromRowIndex = rowIndex
+  let fromRowIndex = rows[rowIndex]!.getDisplayIndex()
   let fromColumnIndex = columnIndex
 
   if (merges.length) {
@@ -928,7 +931,15 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
     }
   }
 
-  const nextRowIndex = fromRowIndex + rowDelta
+  let nextRowIndex = rowIndex + rowDelta
+
+  if (rowDelta && fromRowIndex !== rows[rowIndex]!.getDisplayIndex()) {
+    const edgeRowIndex = rows.findIndex(
+      (row) => row.getDisplayIndex() === fromRowIndex,
+    )
+    if (edgeRowIndex < 0) return null
+    nextRowIndex = edgeRowIndex + rowDelta
+  }
 
   if (nextRowIndex < 0 || nextRowIndex >= rows.length) {
     return null
@@ -980,13 +991,17 @@ function stepCoordinate<TFeatures extends TableFeatures, TData extends RowData>(
   let landingColumnIndex = nextColumnIndex
 
   if (merges.length) {
+    const landingDisplayRowIndex = rows[nextRowIndex]!.getDisplayIndex()
     const landingMerge = findMergeBoundsAt(
       merges,
-      nextRowIndex,
+      landingDisplayRowIndex,
       nextColumnIndex,
     )
     if (landingMerge) {
-      landingRowIndex = landingMerge.minRowIndex
+      landingRowIndex = rows.findIndex(
+        (row) => row.getDisplayIndex() === landingMerge.minRowIndex,
+      )
+      if (landingRowIndex < 0) return null
       landingColumnIndex = landingMerge.minColumnIndex
     }
   }
@@ -1021,7 +1036,7 @@ export function table_moveCellSelection<
   const active = ranges?.[ranges.length - 1]
 
   if (!active) {
-    const rows = table.getRowsInDisplayOrder()
+    const rows = table.getRowModel().rows
     const columns = getSelectableColumns(table)
 
     if (!rows.length || !columns.length) return

@@ -9,7 +9,7 @@ Column defs are the single most important part of building a table. They are res
 - Building the underlying data model that will be used for everything including sorting, filtering, grouping, etc.
 - Formatting the data model into what will be displayed in the table
 - Creating [header groups](../reference/index/interfaces/HeaderGroup_Core), [headers](../reference/index/interfaces/Header_Core) and footers
-- Creating columns for display-only purposes, eg. action buttons, checkboxes, expanders, sparklines, etc.
+- Creating columns for display-only purposes, e.g. action buttons, checkboxes, expanders, sparklines, etc.
 
 ## Column Def Types
 
@@ -18,7 +18,7 @@ The following "types" of column defs aren't actually TypeScript types, but more 
 - `Accessor Columns`
   - Accessor columns have an underlying data model which means they can be sorted, filtered, grouped, etc.
 - `Display Columns`
-  - Display columns do **not** have a data model which means they cannot be sorted, filtered, etc, but they can be used to display arbitrary content in the table, eg. a row actions button, checkbox, expander, etc.
+  - Display columns do **not** have a data model which means they cannot be sorted, filtered, etc, but they can be used to display arbitrary content in the table, e.g. a row actions button, checkbox, expander, etc.
 - `Grouping Columns`
   - Group columns do **not** have a data model so they too cannot be sorted, filtered, etc, and are used to group other columns together. It's common to define a header or footer for a column group.
 
@@ -275,7 +275,7 @@ See the [Dynamic Columns example](../framework/react/examples/basic-dynamic-colu
 
 ## Column Formatting & Rendering
 
-By default, column cells will display their data model value as a string. You can override this behavior by providing custom rendering implementations. Each implementation is provided with relevant information about the cell, header or footer and returns something your framework adapter can render eg. JSX/Components/strings/etc. This will depend on which adapter you are using.
+By default, column cells will display their data model value as a string. You can override this behavior by providing custom rendering implementations. Each implementation is provided with relevant information about the cell, header or footer and returns something your framework adapter can render e.g. JSX/Components/strings/etc. This will depend on which adapter you are using.
 
 There are a couple of formatters available to you:
 

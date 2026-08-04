@@ -726,7 +726,7 @@ When a component is rendered through the FlexRender directives, you can also acc
 
 If you need to render an Angular component with explicit configuration (custom `inputs`, `outputs`, `injector`, and Angular v20+ creation-time `bindings`/`directives`), return a `flexRenderComponent(Component, options)` wrapper from your column definition.
 
-For complete rendering details (including component rendering, `TemplateRef`, `flexRenderComponent`, and context helpers), see the [Rendering components Guide](./rendering.md).
+For complete rendering details (including component rendering, `TemplateRef`, `flexRenderComponent`, and context helpers), see the [FlexRender Guide](./flex-render).
 
 ---
 

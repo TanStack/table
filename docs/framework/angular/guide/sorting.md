@@ -153,7 +153,9 @@ readonly table = injectTable(() => ({
 
 ### Client-Side vs Server-Side Sorting
 
-Whether or not you should use client-side or server-side sorting depends entirely on whether you are also using client-side or server-side pagination or filtering. Be consistent, because using client-side sorting with server-side pagination or filtering will only sort the data that is currently loaded, and not the entire dataset.
+Sorting should operate over the same dataset as filtering and pagination. If the server returns only a page or filtered subset, client-side sorting sorts only those loaded rows, not the full dataset.
+
+See the [Client-Side vs Server-Side Guide](../../../guide/client-side-vs-server-side) for the full decision framework and the cases where mixing client-side and server-side operations is intentional.
 
 ### Manual Server-Side Sorting
 
@@ -413,7 +415,7 @@ readonly table = injectTable(() => ({
 
 #### Invert Sorting
 
-Inverting sorting is not the same as changing the default sorting direction. If `invertSorting` column option is `true` for a column, then the "desc/asc" sorting states will still cycle like normal, but the actual sorting of the rows will be inverted. This is useful for values that have an inverted best/worst scale where lower numbers are better, eg. a ranking (1st, 2nd, 3rd) or golf-like scoring.
+Inverting sorting is not the same as changing the default sorting direction. If `invertSorting` column option is `true` for a column, then the "desc/asc" sorting states will still cycle like normal, but the actual sorting of the rows will be inverted. This is useful for values that have an inverted best/worst scale where lower numbers are better, e.g. a ranking (1st, 2nd, 3rd) or golf-like scoring.
 
 ```ts
 const columns = [

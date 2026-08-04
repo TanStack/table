@@ -24,8 +24,7 @@
           "label": "angular",
           "children": [
             { "label": "Quick Start", "to": "framework/angular/quick-start" },
-            { "label": "Migrating to V9", "to": "framework/angular/guide/migrating" },
-            { "label": "Rendering components", "to": "framework/angular/guide/rendering" }
+            { "label": "Migrating to V9", "to": "framework/angular/guide/migrating" }
           ]
         },
         {
@@ -94,11 +93,12 @@
     {
       "label": "Core Guides",
       "children": [
+        { "label": "Features", "to": "guide/features" },
         { "label": "Data", "to": "guide/data" },
+        { "label": "Client-Side vs Server-Side", "to": "guide/client-side-vs-server-side" },
         { "label": "Column Definitions", "to": "guide/column-defs" },
         { "label": "Table Instance", "to": "guide/tables" },
         { "label": "Row Models", "to": "guide/row-models" },
-        { "label": "Aggregation", "to": "guide/aggregation" },
         { "label": "Worker Row Models (Experimental)", "to": "guide/worker-row-models" },
         { "label": "Rows", "to": "guide/rows" },
         { "label": "Cells", "to": "guide/cells" },
@@ -120,6 +120,7 @@
               "label": "Composable Tables (createTableHook)",
               "to": "framework/alpine/guide/composable-tables"
             },
+            { "label": "FlexRender", "to": "framework/alpine/guide/flex-render" },
             {
               "label": "Custom Plugins",
               "to": "framework/alpine/guide/custom-features"
@@ -131,6 +132,7 @@
           "children": [
             { "label": "Table State", "to": "framework/angular/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/angular/guide/composable-tables" },
+            { "label": "FlexRender", "to": "framework/angular/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/angular/guide/custom-features" }
           ]
         },
@@ -139,6 +141,7 @@
           "children": [
             { "label": "Table State", "to": "framework/ember/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/ember/guide/composable-tables" },
+            { "label": "FlexRender", "to": "framework/ember/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/ember/guide/custom-features" }
           ]
         },
@@ -147,6 +150,7 @@
           "children": [
             { "label": "Table State", "to": "framework/lit/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/lit/guide/composable-tables" },
+            { "label": "FlexRender", "to": "framework/lit/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/lit/guide/custom-features" }
           ]
         },
@@ -156,6 +160,7 @@
             { "label": "Table State", "to": "framework/react/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/react/guide/composable-tables" },
             { "label": "Table Context", "to": "framework/react/guide/table-context" },
+            { "label": "FlexRender", "to": "framework/react/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/react/guide/custom-features" }
           ]
         },
@@ -165,6 +170,7 @@
             { "label": "Table State", "to": "framework/preact/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/preact/guide/composable-tables" },
             { "label": "Table Context", "to": "framework/preact/guide/table-context" },
+            { "label": "FlexRender", "to": "framework/preact/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/preact/guide/custom-features" }
           ]
         },
@@ -174,6 +180,7 @@
             { "label": "Table State", "to": "framework/octane/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/octane/guide/composable-tables" },
             { "label": "Table Context", "to": "framework/octane/guide/table-context" },
+            { "label": "FlexRender", "to": "framework/octane/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/octane/guide/custom-features" }
           ]
         },
@@ -182,6 +189,7 @@
           "children": [
             { "label": "Table State", "to": "framework/solid/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/solid/guide/composable-tables" },
+            { "label": "FlexRender", "to": "framework/solid/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/solid/guide/custom-features" }
           ]
         },
@@ -190,6 +198,7 @@
           "children": [
             { "label": "Table State", "to": "framework/svelte/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/svelte/guide/composable-tables" },
+            { "label": "FlexRender", "to": "framework/svelte/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/svelte/guide/custom-features" }
           ]
         },
@@ -198,13 +207,15 @@
           "children": [
             { "label": "Table State", "to": "framework/vue/guide/table-state" },
             { "label": "Composable Tables (createTableHook)", "to": "framework/vue/guide/composable-tables" },
+            { "label": "FlexRender", "to": "framework/vue/guide/flex-render" },
             { "label": "Custom Plugins", "to": "framework/vue/guide/custom-features" }
           ]
         },
         {
           "label": "vanilla",
           "children": [
-            { "label": "Table State", "to": "framework/vanilla/guide/table-state" }
+            { "label": "Table State", "to": "framework/vanilla/guide/table-state" },
+            { "label": "FlexRender", "to": "framework/vanilla/guide/flex-render" }
           ]
         }
       ]

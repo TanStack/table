@@ -1,10 +1,16 @@
 ---
-title: Rendering components
+title: FlexRender (Angular) Guide
 ---
 
 The `@tanstack/angular-table` adapter provides structural directives and dependency injection primitives for rendering table content in Angular templates.
 
-## FlexRender
+## `FlexRender` vs `flexRender`
+
+Angular uses the names for two related template concepts:
+
+- `FlexRender` is the exported tuple of rendering directives. Add it to a component's `imports` array.
+- `*flexRender` is the lower-level structural directive.
+- `*flexRenderCell`, `*flexRenderHeader`, and `*flexRenderFooter` are table-aware shorthand selectors included in `FlexRender`.
 
 `FlexRender` is the rendering primitive.
 It is exported as a tuple of two directives:
