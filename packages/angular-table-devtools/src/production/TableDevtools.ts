@@ -3,7 +3,7 @@ import { TableDevtoolsCore } from '@tanstack/table-devtools/production'
 import type { DevtoolsPanelProps } from '@tanstack/devtools-utils/angular'
 import type { TableDevtoolsAngularInit } from '../TableDevtools'
 
-export function resolvePanelProps(
+function resolvePanelProps(
   props?: TableDevtoolsAngularInit,
 ): DevtoolsPanelProps {
   return {
